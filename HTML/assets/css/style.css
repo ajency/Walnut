@@ -2151,7 +2151,7 @@ display:none;
 }
 .page-content .admin-bar {
     -moz-box-sizing: border-box;
-    bottom: -115px;
+    bottom: -160px;
     position: fixed;
     width: 100%;
 }
