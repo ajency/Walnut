@@ -24,3 +24,5 @@ function upload_attachment($file_handler, $post_id, $setthumb = 'false') {
 		update_post_meta($post_id, '_thumbnail_id', $attach_id);
 	return $attach_id;
 }
+
+ wp_localize_script( 'theme-js', 'SITEURL', get_site_url() );
