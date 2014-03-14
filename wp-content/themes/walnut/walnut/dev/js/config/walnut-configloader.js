@@ -1,1 +1,1 @@
-define(['config/marionette'], function() {});
+define(['config/marionette', 'config/backbone', 'config/jquery-validate'], function() {});

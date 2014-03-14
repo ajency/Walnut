@@ -1,1 +1,1 @@
-define(['underscore', 'jquery', 'backbone', 'marionette', 'text'], function() {});
+define(['underscore', 'jquery', 'backbone', 'marionette', 'syphon', 'text', 'jqueryvalidate'], function() {});

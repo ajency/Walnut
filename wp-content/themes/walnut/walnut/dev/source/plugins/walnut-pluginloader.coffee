@@ -3,5 +3,7 @@ define [
 			'jquery'
 			'backbone'
 			'marionette'
+			'syphon'
 			'text'
+			'jqueryvalidate'
 		], ->
