@@ -3,6 +3,9 @@
 # <li>-this file sets the requirejs configurations </li> 
 # <li>-load all JS files</li>
 # </ul>
+
+AJAXURL = 'http://localhost/walnut/wp-admin/admin-ajax.php'
+
 require.config 
 	
 	urlArgs : "ver=#{(new Date()).getTime()}"
@@ -42,6 +45,7 @@ require [	'plugins/walnut-pluginloader'
 			'config/walnut-configloader'
 			'app'
 			'apps/walnut-appsloader'
+			'entities/walnut-entities-loader'
 			], (plugins, configs, App)->
 
 				App.start()

@@ -24,3 +24,16 @@ function upload_attachment($file_handler, $post_id, $setthumb = 'false') {
 		update_post_meta($post_id, '_thumbnail_id', $attach_id);
 	return $attach_id;
 }
+
+
+add_action( 'wp_ajax_get-user-profile', 'authenticate_login' );
+
+function authenticate_login() {
+	$login_data=$_GET['data'];
+	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
+	if(is_wp_error($login_check))
+		echo(json_encode(array("error"=>"Invalid Username or Password")));
+	else
+		echo(json_encode($login_check));
+	die;
+}

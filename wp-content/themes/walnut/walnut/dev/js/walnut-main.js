@@ -1,3 +1,7 @@
+var AJAXURL;
+
+AJAXURL = 'http://localhost/walnut/wp-admin/admin-ajax.php';
+
 require.config({
   urlArgs: "ver=" + ((new Date()).getTime()),
   baseUrl: './wp-content/themes/walnut/walnut/dev/js',
@@ -32,6 +36,6 @@ require.config({
   }
 });
 
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader'], function(plugins, configs, App) {
+require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader'], function(plugins, configs, App) {
   return App.start();
 });

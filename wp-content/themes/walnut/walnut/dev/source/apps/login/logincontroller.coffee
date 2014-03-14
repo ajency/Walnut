@@ -6,7 +6,7 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 			initialize : ->
 				
-				view = @_getLoginView()
+				@view= view = @_getLoginView()
 
 				# listen to authenticate:user event from the view
 				@listenTo view, 'authenticate:user' , @authenticateUser
@@ -17,10 +17,12 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 				new LoginView
 
 
-			authenticateUser : (data)->
-				
-
-			
+			authenticateUser : (data)=>
+				$.get(AJAXURL + '?action=get-user-profile' 
+					data: data
+					(response) ->
+						@view.close()
+					'json');
 
 
 		class LoginView extends Marionette.ItemView

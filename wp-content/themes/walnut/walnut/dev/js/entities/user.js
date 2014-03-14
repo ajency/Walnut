@@ -10,24 +10,13 @@ define(["app", 'backbone'], function(App, Backbone) {
         return UserModel.__super__.constructor.apply(this, arguments);
       }
 
-      UserModel.prototype.relations = [
-        {
-          type: Backbone.HasMany,
-          key: 'rooms',
-          relatedModel: 'App.Entities.Rooms.Room',
-          collectionType: 'App.Entities.Rooms.RoomCollection'
-        }
-      ];
-
-      UserModel.prototype.url = function() {
-        return AJAXURL + '?action=get-user-profile';
-      };
+      UserModel.prototype.name = 'user';
 
       UserModel.prototype.defaults = function() {
         return {
-          user_name: 'surajair',
-          display_name: 'Suraj Air',
-          user_email: 'surajair@gmail.com'
+          user_name: '',
+          display_name: '',
+          user_email: ''
         };
       };
 

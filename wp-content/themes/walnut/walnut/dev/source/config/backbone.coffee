@@ -5,7 +5,7 @@ define ["backbone"], (Backbone) ->
 
 		# Extended implementation of Bacbone.Model.sync to work with wordpress ajax
 		# Purpose of this function is to make the backbone sync compatible with 
-		# wordpress ajax. WP ajax requires a “action” param with ajax to identity the ajax actio to perform
+		# wordpress ajax. WP ajax requires a “action” param with ajax to identity the ajax action to perform
 		# This implementation states that each model definition MUST have a “name” property which will be used to create 
 		# action parameter.
 		# Ex:
@@ -114,7 +114,7 @@ define ["backbone"], (Backbone) ->
 			# trigger the request event of the model
 			model.trigger "request", model, xhr, options
 
-			# attache _fetch to model
+			# attach _fetch to model
 			model._fetch = xhr if method is 'read' or method is 'create'
 
 			# return the xhr object. this is a jquery deffered object

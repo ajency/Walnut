@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'text!apps/login/templates/login.html'], function(App, RegionController, loginTpl) {
@@ -8,12 +9,13 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       __extends(LoginController, _super);
 
       function LoginController() {
+        this.authenticateUser = __bind(this.authenticateUser, this);
         return LoginController.__super__.constructor.apply(this, arguments);
       }
 
       LoginController.prototype.initialize = function() {
         var view;
-        view = this._getLoginView();
+        this.view = view = this._getLoginView();
         this.listenTo(view, 'authenticate:user', this.authenticateUser);
         return this.show(view);
       };
@@ -22,7 +24,13 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         return new LoginView;
       };
 
-      LoginController.prototype.authenticateUser = function(data) {};
+      LoginController.prototype.authenticateUser = function(data) {
+        return $.get(AJAXURL + '?action=get-user-profile', {
+          data: data
+        }, function(response) {
+          return this.view.close();
+        }, 'json');
+      };
 
       return LoginController;
 

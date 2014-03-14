@@ -5,17 +5,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 			# User model
 			class Users.UserModel extends Backbone.Model
 
-				relations :[(
-								type : Backbone.HasMany
-								key  : 'rooms'
-								relatedModel : 'App.Entities.Rooms.Room'
-								collectionType : 'App.Entities.Rooms.RoomCollection'
-							)]
-
-				url : ->
-					AJAXURL + '?action=get-user-profile'
+				name: 'user'
 
 				defaults : ->
-					user_name 		: 'surajair'
-					display_name 	: 'Suraj Air'
-					user_email 		: 'surajair@gmail.com'
+					user_name 		: ''
+					display_name 	: ''
+					user_email 		: ''

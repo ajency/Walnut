@@ -16,7 +16,6 @@
 
 ?>
 
-
 <?php
 
 $section = file_get_contents(get_site_url().'/wp-content/themes/walnut/walnut/index.html', NULL, NULL);
