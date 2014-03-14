@@ -8,7 +8,7 @@ define ['app'
 				class LoginRouter extends Marionette.AppRouter
 
 					appRoutes : 
-						'login' : 'showLogin'
+						'' : 'showLogin'
 
 
 				Controller = 

@@ -14,12 +14,15 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginController.prototype.initialize = function() {
         var view;
         view = this._getLoginView();
+        this.listenTo(view, 'authenticate:user', this.authenticateUser);
         return this.show(view);
       };
 
       LoginController.prototype._getLoginView = function() {
         return new LoginView;
       };
+
+      LoginController.prototype.authenticateUser = function(data) {};
 
       return LoginController;
 
@@ -34,6 +37,19 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginView.prototype.template = loginTpl;
 
       LoginView.prototype.className = 'error-body no-top  pace-done';
+
+      LoginView.prototype.events = {
+        'click #login-submit': 'submitLogin'
+      };
+
+      LoginView.prototype.submitLogin = function(e) {
+        var data;
+        e.preventDefault();
+        if (this.$el.find('form').valid()) {
+          data = Backbone.Syphon.serialize(this);
+          return this.trigger("authenticate:user", data);
+        }
+      };
 
       return LoginView;
 

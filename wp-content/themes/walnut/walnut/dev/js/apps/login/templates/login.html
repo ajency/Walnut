@@ -15,14 +15,14 @@
 		    </button>
         </div>
         <div class="col-md-5 "> <br>
-		 <form id="login-form" class="login-form" action="index.html" method="post" novalidate="novalidate">
+		 <form id="login-form" class="login-form" action="" method="post" novalidate="novalidate">
 		 <div class="row">
 		 <div class="form-group col-md-10">
             <label class="form-label">Username</label>
             <div class="controls">
 				<div class="input-with-icon  right">                                       
 					<i class=""></i>
-					<input type="text" name="txtusername" id="txtusername" class="form-control">                                 
+					<input type="text" required name="txtusername" id="txtusername" class="form-control">                                 
 				</div>
             </div>
           </div>
@@ -34,7 +34,7 @@
             <div class="controls">
 				<div class="input-with-icon  right">                                       
 					<i class=""></i>
-					<input type="password" name="txtpassword" id="txtpassword" class="form-control">                                 
+					<input type="password"  required name="txtpassword" id="txtpassword" class="form-control">                                 
 				</div>
             </div>
           </div>
@@ -49,7 +49,7 @@
           </div>
           <div class="row">
             <div class="col-md-10">
-              <button class="btn btn-primary btn-cons pull-right" type="submit">Login</button>
+              <button id="login-submit" class="btn btn-primary btn-cons pull-right" type="submit">Login</button>
             </div>
           </div>
 		  </form>

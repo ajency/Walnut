@@ -4,11 +4,13 @@ require.config({
   paths: {
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
+    jqueryvalidate: 'plugins/jquery.validate.min',
     underscore: 'plugins/underscore',
     backbone: 'plugins/backbone',
     marionette: 'plugins/backbone.marionette',
     text: 'plugins/text',
-    app: 'walnut-app'
+    app: 'walnut-app',
+    syphon: 'plugins/backbone.syphon'
   },
   shim: {
     underscore: {
@@ -24,6 +26,8 @@ require.config({
       deps: ['backbone'],
       exports: 'Marionette'
     },
+    jqueryvalidate: ['jquery'],
+    syphon: ['backbone'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

@@ -8,10 +8,19 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 				
 				view = @_getLoginView()
 
+				# listen to authenticate:user event from the view
+				@listenTo view, 'authenticate:user' , @authenticateUser
+
 				@show view
 
 			_getLoginView : ->
 				new LoginView
+
+
+			authenticateUser : (data)->
+				
+
+			
 
 
 		class LoginView extends Marionette.ItemView
@@ -19,4 +28,16 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 			template : loginTpl
 
 			className : 'error-body no-top  pace-done'
+
+			events: 
+				'click #login-submit'	: 'submitLogin' 
+			
+			submitLogin: (e)->
+				e.preventDefault()
+				if @$el.find('form').valid()
+					data = Backbone.Syphon.serialize (@)
+					@trigger "authenticate:user",data
+
+
+
 

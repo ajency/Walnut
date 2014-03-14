@@ -12,7 +12,7 @@ define(['app', 'apps/login/logincontroller'], function(App) {
       }
 
       LoginRouter.prototype.appRoutes = {
-        'login': 'showLogin'
+        '': 'showLogin'
       };
 
       return LoginRouter;
