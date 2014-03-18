@@ -21,7 +21,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			# PUBLIC API FOR ENitity
 			API =
 				getElements: (param = {})->
-				   new ElementBox.ElementCollection [{element : "hotspot"}]
+				   new ElementBox.ElementCollection [{element : "Hotspot"}]
 
 
 			# REQUEST HANDLERS

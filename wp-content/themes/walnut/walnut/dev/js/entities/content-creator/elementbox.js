@@ -39,7 +39,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
         return new ElementBox.ElementCollection([
           {
-            element: "hotspot"
+            element: "Hotspot"
           }
         ]);
       }
