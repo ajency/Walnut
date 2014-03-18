@@ -48,36 +48,121 @@ tbody.rowlink td {
 #myCanvas {
   background: #fff;
   position: absolute;
-  right: 50px;
+  left: 260px;
   top: 0px;
+  width: 730px;
+  height: 500px;
 }
 #toolbox {
-  width: 290px;
-  padding: 15px 10px;
+  width: 240px;
+  background: #fff;
 }
-#toolbox ul {
+#toolbox .tools,
+#toolbox .qstns {
+  padding: 0 10px 20px;
+}
+#toolbox .tools ul,
+#toolbox .qstns ul {
   padding: 0;
 }
-#toolbox ul li {
+#toolbox .tools ul li,
+#toolbox .qstns ul li {
   float: left;
-  border: 1px solid #e5e9ec;
-  background: #e5e9ec;
-  width: 82px;
-  height: 82px;
+  border: 2px solid #e5e9ec;
+  width: 65px;
+  height: 65px;
   margin: 4px;
   list-style-type: none;
   cursor: move;
   text-align: center;
   padding: 0;
-  padding-top: 7%;
-  font-size: 14px;
+  padding-top: 5%;
+  font-size: 12px;
 }
-#toolbox ul li a {
+#toolbox .tools ul li:hover,
+#toolbox .qstns ul li:hover {
+  background: #0090d9;
+  transition: all 0.2s linear;
+}
+#toolbox .tools ul li:hover a,
+#toolbox .qstns ul li:hover a {
+  color: #fff;
   cursor: move;
 }
-#toolbox ul li a:hover {
+#toolbox .tools ul li i,
+#toolbox .qstns ul li i {
+  font-size: 20px;
+}
+#toolbox .qstns ul li {
+  width: 102px;
+  height: 40px;
+  font-weight: bold;
+}
+#toolbox .qstns ul li i {
+  font-size: 16px;
+}
+.dock {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 240px;
+  height: 500px;
+}
+.scrollup {
+  left: auto;
+  right: 50px;
+}
+.tiles-head {
+  padding: 10px 18px 5px 24px;
+}
+.docket .tile-footer.drag {
+  cursor: move;
+}
+.docket ul {
+  padding: 0;
+}
+.docket ul li {
+  float: left;
+  border: 2px solid #e5e9ec;
+  width: 65px;
+  height: 65px;
+  margin: 4px;
+  list-style-type: none;
+  cursor: move;
+  text-align: center;
+  padding: 0;
+  padding-top: 5%;
+}
+.docket ul li a {
+  cursor: move;
+}
+.docket ul li a:hover {
   color: #0aa699;
 }
-#toolbox ul li i {
-  font-size: 25px;
+.docket ul li i {
+  font-size: 42px;
+}
+.docket-body {
+  background: #fff;
+  padding: 15px 10px;
+  color: #000;
+}
+.docket-body label {
+  color: #777a80;
+}
+.docket-body select.marks {
+  width: auto;
+}
+.mashmenu {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 25px;
+}
+.mashmenu .menu .sub-content {
+  background-color: #fff;
+  padding: 20px;
+}
+.mashmenu .wrapper {
+  width: auto;
+  min-height: 400px;
 }

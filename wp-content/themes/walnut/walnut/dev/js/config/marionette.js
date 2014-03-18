@@ -1,6 +1,3 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
 define(['marionette'], function(Marionette) {
   _.extend(Marionette.Application.prototype, {
     navigate: function(route, options) {
@@ -86,7 +83,7 @@ define(['marionette'], function(Marionette) {
       return this.$el.show();
     }
   });
-  Marionette.TemplateCache.prototype.loadTemplate = function(templateId) {
+  return Marionette.TemplateCache.prototype.loadTemplate = function(templateId) {
     var err, msg, template;
     template = templateId;
     if (!template || template.length === 0) {
@@ -97,22 +94,4 @@ define(['marionette'], function(Marionette) {
     }
     return template;
   };
-  return Marionette.FormView = (function(_super) {
-    __extends(FormView, _super);
-
-    function FormView() {
-      return FormView.__super__.constructor.apply(this, arguments);
-    }
-
-    FormView.prototype.tagName = 'form';
-
-    FormView.prototype.className = 'form-horizontal';
-
-    FormView.prototype.onShow = function() {
-      return this.$el.validate();
-    };
-
-    return FormView;
-
-  })(Marionette.ItemView);
 });

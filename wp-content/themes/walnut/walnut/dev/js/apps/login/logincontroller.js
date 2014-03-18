@@ -17,6 +17,9 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         var view;
         this.view = view = this._getLoginView();
         this.listenTo(view, 'authenticate:user', this.authenticateUser);
+        this.listenTo(view, 'close', function() {
+          return App.vent.trigger('show:dashboard');
+        });
         return this.show(view);
       };
 
@@ -25,11 +28,17 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginController.prototype.authenticateUser = function(data) {
-        return $.get(AJAXURL + '?action=get-user-profile', {
+        return $.post(AJAXURL + '?action=get-user-profile', {
           data: data
-        }, function(response) {
-          return this.view.close();
-        }, 'json');
+        }, (function(_this) {
+          return function(response) {
+            if (response.error) {
+              return _this.view.triggerMethod('login:fail', response);
+            } else {
+              return _this.view.close();
+            }
+          };
+        })(this), 'json');
       };
 
       return LoginController;
@@ -54,9 +63,16 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         var data;
         e.preventDefault();
         if (this.$el.find('form').valid()) {
+          this.$el.find('#checking_login').remove();
+          this.$el.find('#login-submit').append('<i id="checking_login" class="fa fa-spinner fa fa-1x fa-spin"></i>');
           data = Backbone.Syphon.serialize(this);
           return this.trigger("authenticate:user", data);
         }
+      };
+
+      LoginView.prototype.onLoginFail = function(resp) {
+        this.$el.find('#checking_login, #invalid_login').remove();
+        return this.$el.find('#login-form').before('<span id="invalid_login" class="btn btn-danger btn-cons">' + resp.error + '</span>');
       };
 
       return LoginView;
