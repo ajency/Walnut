@@ -6,4 +6,8 @@ define [
 			'syphon'
 			'text'
 			'jqueryvalidate'
+			'sidr'
+			'slimroll'
+			'core'
+			'breakpoints'
 		], ->

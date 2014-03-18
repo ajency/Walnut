@@ -36,8 +36,11 @@ define(['marionette'], function(Marionette) {
   });
   App.vent.on("show:dashboard", function() {
     console.log('headerRegion');
-    return App.execute("show:headerapp", {
+    App.execute("show:headerapp", {
       region: App.headerRegion
+    });
+    return App.execute("show:leftnavapp", {
+      region: App.leftNavRegion
     });
   });
   return App;

@@ -1,9 +1,9 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/login/templates/login.html'], function(App, RegionController, loginTpl) {
+define(['app', 'controllers/region-controller', 'text!apps/left-nav/templates/leftnav.html'], function(App, RegionController, leftNavTpl) {
   return App.module("LeftNavApp.Controller", function(Controller, App) {
-    var LoginView;
+    var LeftNavView;
     Controller.LeftNavController = (function(_super) {
       __extends(LeftNavController, _super);
 
@@ -24,19 +24,27 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       return LeftNavController;
 
     })(RegionController);
-    return LoginView = (function(_super) {
-      __extends(LoginView, _super);
+    LeftNavView = (function(_super) {
+      __extends(LeftNavView, _super);
 
-      function LoginView() {
-        return LoginView.__super__.constructor.apply(this, arguments);
+      function LeftNavView() {
+        return LeftNavView.__super__.constructor.apply(this, arguments);
       }
 
-      LoginView.prototype.template = loginTpl;
+      LeftNavView.prototype.template = leftNavTpl;
 
-      LoginView.prototype.className = 'error-body no-top  pace-done';
+      LeftNavView.prototype.id = 'main-menu';
 
-      return LoginView;
+      LeftNavView.prototype.className = 'page-sidebar';
+
+      return LeftNavView;
 
     })(Marionette.ItemView);
+    return App.commands.setHandler("show:leftnavapp", function(opt) {
+      if (opt == null) {
+        opt = {};
+      }
+      return new Controller.LeftNavController(opt);
+    });
   });
 });
