@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app'], function(App, RegionController) {
   return App.module("ContentCreator", function(ContentCreator, App) {
     var ContentCreatorController, ContentCreatorLayout;
     ContentCreatorController = (function(_super) {
@@ -15,8 +15,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         this.layout = this._getContentCreatorLayout();
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
-            return App.execute("show:element:box", {
+            App.execute("show:element:box", {
               region: _this.layout.elementBoxRegion
+            });
+            return App.execute("show:content:builder", {
+              region: _this.layout.contentBuilderRegion
             });
           };
         })(this));
