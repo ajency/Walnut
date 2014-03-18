@@ -1,1 +1,4 @@
-define ['apps/login/loginapp'], ->
+define [
+		'apps/login/loginapp'
+		'apps/header/headerapp'
+		], ->

@@ -1,1 +1,1 @@
-define(['apps/login/loginapp'], function() {});
+define(['apps/login/loginapp', 'apps/header/headerapp'], function() {});
