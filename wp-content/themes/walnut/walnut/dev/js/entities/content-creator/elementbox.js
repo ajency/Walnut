@@ -40,6 +40,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         return new ElementBox.ElementCollection([
           {
             element: "Hotspot"
+          }, {
+            element: "Row"
           }
         ]);
       }

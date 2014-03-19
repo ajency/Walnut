@@ -1,7 +1,7 @@
 ##
 ## Set backbone overrites or mixins
 ##
-define ['marionette'], (Marionette)->
+define ['marionette','mustache'], (Marionette, Mustache)->
 
 	# Extends the Marionette.Application to add some additional functions 
 	_.extend Marionette.Application::,
@@ -64,16 +64,16 @@ define ['marionette'], (Marionette)->
 		unhide:->
 			@$el.show()
 
-	# # overwrite the default rendering engine to mustache
-	# Marionette.Renderer.render = (template, data)->
+	# overwrite the default rendering engine to mustache
+	Marionette.Renderer.render = (template, data)->
 		
-	# 	if not template
-	# 		template = ''
+		if not template
+			template = ''
 
-	# 	if typeof template is "function"
-	# 	  template = template()
+		if typeof template is "function"
+		  template = template()
 		
-	# 	Mustache.to_html template,data
+		Mustache.to_html template,data
 	
 	# override the serialize data function
 	# Marionette.View serializeData:

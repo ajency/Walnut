@@ -190,6 +190,66 @@ $(document).ready(function() {
             responsiveHelper.respond();
         }
 	});
+
+	var tableElement = $('#questionsAll');
+
+    tableElement.dataTable( {
+		"sDom": "<'row'<'col-xs-6'<'filters'> ><'col-xs-6'f>r<'clearfix'><'col-sm-12' >>t<'row'<'col-md-12'p i>>",
+		"sPaginationType": "bootstrap",
+		 "aoColumnDefs": [
+          { 'bSortable': false, 'aTargets': [ 0 ] }
+		],
+		"aaSorting": [[ 1, "asc" ]],
+		"oLanguage": {
+			"sLengthMenu": "_MENU_ ",
+			"sInfo": "Showing <b>_START_ to _END_</b> of _TOTAL_ entries"
+		},
+		 bAutoWidth     : false,
+        fnPreDrawCallback: function () {
+            // Initialize the responsive datatables helper once.
+            if (!responsiveHelper) {
+                responsiveHelper = new ResponsiveDatatablesHelper(tableElement, breakpointDefinition);
+            }
+        },
+        fnRowCallback  : function (nRow) {
+            responsiveHelper.createExpandIcon(nRow);
+        },
+        fnDrawCallback : function (oSettings) {
+            responsiveHelper.respond();
+        }
+	});
+
+	$('#example_wrapper .dataTables_filter input').addClass("input-medium "); // modify table search input
+    $('#example_wrapper .dataTables_length select').addClass("select2-wrapper span12"); // modify table per page dropdown
+
+
+	var tableElement = $('#questionsMY');
+
+    tableElement.dataTable( {
+		"sDom": "<'row'<'col-xs-6' <'filters'>><'col-xs-6'f>r<'clearfix'><'col-sm-12' >>t<'row'<'col-md-12'p i>>",
+		"sPaginationType": "bootstrap",
+		 "aoColumnDefs": [
+          { 'bSortable': false, 'aTargets': [ 0 ] }
+		],
+		"aaSorting": [[ 1, "asc" ]],
+		"oLanguage": {
+			"sLengthMenu": "_MENU_ ",
+			"sInfo": "Showing <b>_START_ to _END_</b> of _TOTAL_ entries"
+		},
+		 bAutoWidth     : false,
+        fnPreDrawCallback: function () {
+            // Initialize the responsive datatables helper once.
+            if (!responsiveHelper) {
+                responsiveHelper = new ResponsiveDatatablesHelper(tableElement, breakpointDefinition);
+            }
+        },
+        fnRowCallback  : function (nRow) {
+            responsiveHelper.createExpandIcon(nRow);
+        },
+        fnDrawCallback : function (oSettings) {
+            responsiveHelper.respond();
+        }
+	});
 	
 	$('#example_wrapper .dataTables_filter input').addClass("input-medium "); // modify table search input
     $('#example_wrapper .dataTables_length select').addClass("select2-wrapper span12"); // modify table per page dropdown
@@ -257,6 +317,7 @@ $(document).ready(function() {
 		},
     });
 	$("div.toolbar").html('<div class="table-tools-actions"><button class="btn btn-primary" style="margin-left:12px" id="test2">Add</button></div>');
+	$("div.filters").html('<div class="table-tools-actions"><select><option value="one">Textbook</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select><select><option value="one">Chapter</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select><select><option value="one">Section</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select></div>');
 	
 	$('#test2').on( "click",function() {
 		$("#quick-access").css("bottom","0px");

@@ -3,8 +3,12 @@ define ['app'],(App)->
 	App.module "ContentCreator.ContentBuilder.Views", (Views, App)->
 
 		class Views.ContentBuilderView extends Marionette.ItemView
- 
-			template : '<div id="site-page-content-region" class="droppable-column" height="300"></div>'
+
+			template : '<div id="myCanvas" class="droppable-column" height="300"></div>'
+
+			onRender : ->
+				@$el.attr 'id','site-page-content-region'
+
 
 			onShow:->
 				@$el.find('.droppable-column').sortable

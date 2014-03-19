@@ -13,9 +13,10 @@ define(['app'], function(App) {
 
       ElementView.prototype.tagName = 'li';
 
-      ElementView.prototype.template = '<a href="#" class="drag builder-element" > <i class="fa fa-font"></i> <div class="aj-imp-builder-title"><%= element %></div> </a>';
+      ElementView.prototype.template = '<a href="#" class="drag builder-element" > <div class="aj-imp-builder-title">{{element}}</div> </a>';
 
       ElementView.prototype.onRender = function() {
+        console.log(this.model.toJSON());
         return this.$el.attr('data-element', this.model.get('element'));
       };
 
@@ -29,7 +30,7 @@ define(['app'], function(App) {
         return ElementBoxView.__super__.constructor.apply(this, arguments);
       }
 
-      ElementBoxView.prototype.template = '<h4 class="text-white b-b b-grey p-b-10"> <span class="semi-bold">Tool</span>box </h4> <div class> <ul class="elements"> </ul> <div class="clearfix"></div> </div>';
+      ElementBoxView.prototype.template = '<div class="tiles green"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Tool</span>box</h4> </div> </div> <h5 class="semi-bold text-center b-b b-grey p-b-10">Questions</h5> <div class="qstns"> <ul class="elements"></ul> <div class="clearfix"></div> </div>';
 
       ElementBoxView.prototype.itemView = ElementView;
 

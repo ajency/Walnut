@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app'], function(App, RegionController) {
   return App.module("ContentCreator", function(ContentCreator, App) {
-    var ContentCreatorController, ContentCreatorLayout;
+    var ContentCreatorController;
     ContentCreatorController = (function(_super) {
       __extends(ContentCreatorController, _super);
 
@@ -27,13 +27,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       };
 
       ContentCreatorController.prototype._getContentCreatorLayout = function() {
-        return new ContentCreatorLayout;
+        return new ContentCreator.ContentCreatorLayout;
       };
 
       return ContentCreatorController;
 
     })(RegionController);
-    ContentCreatorLayout = (function(_super) {
+    ContentCreator.ContentCreatorLayout = (function(_super) {
       __extends(ContentCreatorLayout, _super);
 
       function ContentCreatorLayout() {
@@ -42,11 +42,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
 
       ContentCreatorLayout.prototype.className = 'content';
 
-      ContentCreatorLayout.prototype.template = '<div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> </div>';
+      ContentCreatorLayout.prototype.template = '<div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div class="dock tiles"> <div class="tiles green"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4> </div> </div> <div id="questionProperties" class="docket"></div> <div id="hotspotProperties" class="docket"></div> </div> </div>';
 
       ContentCreatorLayout.prototype.regions = {
         elementBoxRegion: '#toolbox',
-        contentBuilderRegion: '#content-builder'
+        contentBuilderRegion: '#content-builder',
+        questionPropertiesRegion: '#questionProperties',
+        hotspotPropertiesRegion: '#hotspotProperties'
       };
 
       return ContentCreatorLayout;
