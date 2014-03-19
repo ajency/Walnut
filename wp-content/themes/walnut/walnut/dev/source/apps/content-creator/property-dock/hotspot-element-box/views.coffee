@@ -1,8 +1,8 @@
 define ['app'],(App)->
 
-	App.module "ContentCreator.PropertyDock.QuestionElementBox.Views",(Views,App)->
+	App.module "ContentCreator.PropertyDock.HotspotElementBox.Views",(Views,App)->
 
-		class Views.QuestionElementBoxView extends Marionette.ItemView
+		class Views.HotspotElementBoxView extends Marionette.ItemView
 
 			template : '<div class="tile-more-content no-padding">
 							<div class="tiles green">

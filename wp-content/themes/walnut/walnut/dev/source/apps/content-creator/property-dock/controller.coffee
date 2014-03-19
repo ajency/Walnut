@@ -19,7 +19,11 @@ define ['app'
 					_getLayout: ->
 						new PropertyDock.Views.Layout
 
-					_getElementBox:(model)
+					_getElementBox:(elementName)->
+
+						if(elementName=="Hotspot")
+								App.execute "show:hotspot:elements",
+										region : @layout.questElementRegion
 
 
 				App.commands.setHandler "show:property:dock",(options)->

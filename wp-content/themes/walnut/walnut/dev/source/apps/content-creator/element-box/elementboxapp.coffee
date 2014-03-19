@@ -11,9 +11,9 @@ define ['app'
 
 					initialize : (options)->
 
-						elementsCollection = App.request "get:elementbox:elements"
+						# elementsCollection = App.request "get:elementbox:elements"
 						# get the main view for the element box
-						@view = @_getElementBoxView(elementsCollection)
+						@view = @_getElementBoxView() #elementsCollection)
 
 						# show the view
 						@show @view
@@ -21,7 +21,7 @@ define ['app'
 					_getElementBoxView:(elementsCollection)->
 						
 						new ElementBox.Views.ElementBoxView
-									collection : elementsCollection
+									# collection : elementsCollection
 
 
 
