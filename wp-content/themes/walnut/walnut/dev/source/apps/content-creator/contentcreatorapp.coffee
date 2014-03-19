@@ -1,7 +1,8 @@
 define ['app'
 		'controllers/region-controller'
 		'apps/content-creator/element-box/elementboxapp'
-		'apps/content-creator/content-builder/app'],(App,RegionController)->
+		'apps/content-creator/content-builder/app'
+		'apps/content-creator/property-dock/controller'],(App,RegionController)->
 
 			
 			App.module "ContentCreator", (ContentCreator,App)->	
@@ -21,6 +22,9 @@ define ['app'
 
 							App.execute "show:content:builder",
 										region : @layout.contentBuilderRegion
+
+							App.execute "show:property:dock",
+										region : @layout.PropertyRegion
 						# show the layout
 						@show @layout
 
@@ -38,23 +42,14 @@ define ['app'
 								<div class="creator">
 									<div class="tiles" id="toolbox"></div>
 									<div class="" id="content-builder"></div>
-									<div class="dock tiles">
-										<div class="tiles green">
-											<div class="tiles-head">
-												<h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4>
-											</div>
-										</div>
-										<div id="questionProperties" class="docket"></div>
-										<div id="hotspotProperties" class="docket"></div>
-									</div>
+									<div class="dock tiles" id="property-dock"></div>
 								</div>
 								'
 
 					regions : 
 						elementBoxRegion : '#toolbox'
 						contentBuilderRegion : '#content-builder' 
-						questionPropertiesRegion : '#questionProperties'
-						hotspotPropertiesRegion : '#hotspotProperties'
+						PropertyRegion : '#property-dock'
 
 
 				# create a command handler to start the content creator controller

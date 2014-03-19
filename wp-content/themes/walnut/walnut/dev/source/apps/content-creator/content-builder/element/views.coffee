@@ -4,7 +4,7 @@ define ['app'
 		(App, Holder, elementTpl)->
 
 			# Headerapp views
-			App.module 'ContentBuilder.Element.Views', (Views, App, Backbone, Marionette, $, _)->
+			App.module 'ContentCreator.ContentBuilder.Element.Views', (Views, App, Backbone, Marionette, $, _)->
 
 				# Pages single view
 				class Views.ElementView extends Marionette.Layout
