@@ -6,19 +6,19 @@ define ['app'],(App)->
 
 			tagName : 'li'
 
-			template : 'menu item {{post_title}} '
+			template : '<a href="{{menu_item_link}}"><span class="title">{{post_title}}</span></a>'
 
 
 		class Views.LeftNavView extends Marionette.CompositeView
 
-			template 	: ' <p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
-							<ul class="menu"></ul>'
+			template 	: '<div id="main-menu-wrapper" class="page-sidebar-wrapper"><p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
+							<ul class="menu"></ul></div>'
 			
-			id 			: 'main-menu-wrapper' 
+			id 			: 'main-menu' 
 
-			className	: 'page-sidebar-wrapper'
+			className	: 'page-sidebar'
 
 			itemView 	: MenuItemView
 
-			itemViewContainer : '> ul.menu'
+			itemViewContainer : '> .page-sidebar-wrapper > ul.menu'
 

@@ -10,4 +10,5 @@ define [
 			'slimroll'
 			'core'
 			'breakpoints'
+			'mustache'
 		], ->

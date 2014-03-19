@@ -13,7 +13,7 @@ define(['app'], function(App) {
 
       MenuItemView.prototype.tagName = 'li';
 
-      MenuItemView.prototype.template = 'menu item {{post_title}} ';
+      MenuItemView.prototype.template = '<a href="{{menu_item_link}}"><span class="title">{{post_title}}</span></a>';
 
       return MenuItemView;
 
@@ -25,15 +25,15 @@ define(['app'], function(App) {
         return LeftNavView.__super__.constructor.apply(this, arguments);
       }
 
-      LeftNavView.prototype.template = ' <p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p> <ul class="menu"></ul>';
+      LeftNavView.prototype.template = '<div id="main-menu-wrapper" class="page-sidebar-wrapper"><p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p> <ul class="menu"></ul></div>';
 
-      LeftNavView.prototype.id = 'main-menu-wrapper';
+      LeftNavView.prototype.id = 'main-menu';
 
-      LeftNavView.prototype.className = 'page-sidebar-wrapper';
+      LeftNavView.prototype.className = 'page-sidebar';
 
       LeftNavView.prototype.itemView = MenuItemView;
 
-      LeftNavView.prototype.itemViewContainer = '> ul.menu';
+      LeftNavView.prototype.itemViewContainer = '> .page-sidebar-wrapper > ul.menu';
 
       return LeftNavView;
 

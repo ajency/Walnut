@@ -25,6 +25,7 @@ require.config
 		sidr 				: 'plugins/jquery.sidr.min'
 		slimroll			: 'plugins/jquery.slimscroll.min'
 		breakpoints			: 'plugins/breakpoints'
+		mustache			: 'plugins/mustache'
 		core				: 'plugins/core'
 
 	shim:
