@@ -49,7 +49,7 @@ tbody.rowlink td {
   background: #fff;
   position: absolute;
   left: 260px;
-  top: 0px;
+  top: 0;
   width: 730px;
   height: 500px;
 }
@@ -153,10 +153,37 @@ tbody.rowlink td {
 .docket-body select.marks {
   width: auto;
 }
+.mashmenu .mod .mod-content,
+.mashmenu .menu .sub-content {
+  border-bottom-color: #0090d9;
+}
+.mashmenu .mod:hover a,
+.mashmenu .menu li.level0:hover > a,
+.mashmenu .menu .sub-channel li a,
+.mashmenu .menu li.level0:hover .sub-channel li.hover a .fa-chevron-right,
+.mashmenu .columns .list a {
+  color: #2aa4cf;
+}
+.mashmenu .mod .mod-content,
+.mashmenu .mod:hover,
+.mashmenu .menu li.level0:hover > a,
+.mashmenu .menu li.level0:hover .sub-channel li.hover a {
+  background-color: #ffffff;
+}
+.mashmenu .mlogo:hover {
+  background: none;
+}
+.mashmenu .sub-channel {
+  background-color: #c7e6f5;
+}
 .mashmenu {
   position: relative;
   z-index: 1;
   margin-bottom: 25px;
+  background: #0090D9;
+}
+.mashmenu div.mlogo {
+  margin-left: 10px;
 }
 .mashmenu .menu .sub-content {
   background-color: #fff;
@@ -165,4 +192,11 @@ tbody.rowlink td {
 .mashmenu .wrapper {
   width: auto;
   min-height: 400px;
+}
+.mashmenu .filters select {
+  width: 30%;
+  margin-right: 5px;
+}
+.mashmenu .filters .table-tools-actions {
+  margin: 0;
 }
