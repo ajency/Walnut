@@ -1,6 +1,6 @@
 define ['app'
 		'controllers/region-controller'
-		'text!apps/left-nav/templates/leftnav.html'], (App, RegionController, leftNavTpl)->
+		'apps/left-nav/views'], (App, RegionController)->
 
 	App.module "LeftNavApp.Controller", (Controller, App)->
 
@@ -8,20 +8,15 @@ define ['app'
 
 			initialize : ->
 				
-				@view= view = @_getLeftNavView()
+				menuCollection = App.request "get:site:menus"
+
+				@view= view = @_getLeftNavView menuCollection
 
 				@show view
 
-			_getLeftNavView : ->
-				new LeftNavView
-
-
-		class LeftNavView extends Marionette.ItemView
-
-			template 	: leftNavTpl
-			id 			: 'main-menu' 
-			className	: 'page-sidebar'
-
+			_getLeftNavView :(collection) ->
+				new Controller.Views.LeftNavView
+								collection: collection
 
 
 		# set handlers

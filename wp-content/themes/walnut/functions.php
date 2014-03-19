@@ -5,6 +5,10 @@ if ( ! isset( $content_width ) )
 require_once 'modules/school/functions.php';
 require_once 'modules/questions/functions.php';
 require_once 'modules/textbooks/functions.php';
+require_once 'modules/menus/ajax.php';
+require_once 'modules/menus/functions.php';
+
+add_theme_support('menus');
 
 //add extra fields to custom taxonomy edit form callback function
 
