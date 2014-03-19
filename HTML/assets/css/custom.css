@@ -12,24 +12,31 @@
 }
 #textbooks.list .list_header .meta span {
   margin-top: 0;
+  width: 15px;
+}
+#textbooks.list .list_header .meta span:after {
+  left: 2px;
 }
 #textbooks.list .meta.name {
   width: 30%;
 }
+#textbooks.list .meta.area {
+  width: 15%;
+}
 #textbooks.list .meta {
-  width: 17%;
-  padding: 0 4% 0 2%;
+  width: 20%;
+  padding: 0 2% 0 2%;
   float: left;
 }
 #textbooks.list .img_wrapper {
-  width: 50%;
+  width: 40%;
   float: left;
   height: 65px;
   margin-right: 10px;
 }
 #textbooks.list .titles {
   vertical-align: top;
-  width: 45%;
+  width: 54%;
   float: left;
   word-break: break-word;
 }

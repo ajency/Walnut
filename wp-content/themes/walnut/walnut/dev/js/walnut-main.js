@@ -14,7 +14,12 @@ require.config({
     marionette: 'plugins/backbone.marionette',
     text: 'plugins/text',
     app: 'walnut-app',
-    syphon: 'plugins/backbone.syphon'
+    syphon: 'plugins/backbone.syphon',
+    sidr: 'plugins/jquery.sidr.min',
+    slimroll: 'plugins/jquery.slimscroll.min',
+    breakpoints: 'plugins/breakpoints',
+    mustache: 'plugins/mustache',
+    core: 'plugins/core'
   },
   shim: {
     underscore: {
@@ -30,6 +35,10 @@ require.config({
       deps: ['backbone'],
       exports: 'Marionette'
     },
+    sidr: ['jquery'],
+    slimroll: ['jquery'],
+    core: ['sidr', 'jquery'],
+    breakpoints: ['jquery'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
