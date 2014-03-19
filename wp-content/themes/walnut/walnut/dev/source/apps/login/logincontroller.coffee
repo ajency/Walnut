@@ -11,6 +11,10 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 				# listen to authenticate:user event from the view
 				@listenTo view, 'authenticate:user' , @authenticateUser
 
+				# listen to the close event of the view
+				@listenTo view, 'close', ->
+					App.vent.trigger 'show:dashboard'
+
 				@show view
 
 			_getLoginView : ->
@@ -18,10 +22,13 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 
 			authenticateUser : (data)=>
-				$.get(AJAXURL + '?action=get-user-profile' 
+				$.post(AJAXURL + '?action=get-user-profile' 
 					data: data
-					(response) ->
-						@view.close()
+					(response) =>
+						if response.error
+							@view.triggerMethod 'login:fail', response
+						else
+							@view.close()
 					'json');
 
 
@@ -37,8 +44,19 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 			submitLogin: (e)->
 				e.preventDefault()
 				if @$el.find('form').valid()
+					@$el.find('#checking_login').remove();
+
+					@$el.find '#login-submit' 
+					.append '<i id="checking_login" class="fa fa-spinner fa fa-1x fa-spin"></i>'
+
 					data = Backbone.Syphon.serialize (@)
 					@trigger "authenticate:user",data
+
+			onLoginFail: (resp) ->
+				@$el.find('#checking_login, #invalid_login').remove();
+				
+				@$el.find('#login-form')
+				.before '<span id="invalid_login" class="btn btn-danger btn-cons">'+resp.error+'</span>';
 
 
 

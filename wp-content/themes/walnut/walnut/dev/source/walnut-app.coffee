@@ -41,6 +41,17 @@ define ['marionette'], (Marionette)->
 
 	App.on "initialize:after", (options) ->
 		App.startHistory()
+
+		# check app login status
+		
+		# if not logged in change rootRoute to login		
+
 		App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
+
+		App.vent.trigger "show:dashboard"
+
+	App.vent.on "show:dashboard", ->
+		console.log 'headerRegion'
+		App.execute "show:headerapp", region:App.headerRegion
 			
 	App

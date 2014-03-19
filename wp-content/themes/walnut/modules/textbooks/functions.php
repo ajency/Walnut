@@ -79,7 +79,7 @@ function load_fileupload($hook){
     if($hook=='edit-tags.php'){    
         wp_enqueue_script('jquery-ui-widget');
         wp_enqueue_script('file-upload', get_template_directory_uri() .
-                   '/dev/js/plugins/jquery.fileupload.js', array(), false, true);
+                   '/walnut/dev/js/plugins/jquery.fileupload.js', array(), false, true);
         wp_enqueue_script('theme-js', get_template_directory_uri() .
                 '/modules/school/js/wp_global.js', array(), false, true);
     }

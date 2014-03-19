@@ -28,10 +28,17 @@ define(['marionette'], function(Marionette) {
   App.on("initialize:after", function(options) {
     App.startHistory();
     if (!this.getCurrentRoute()) {
-      return App.navigate(this.rootRoute, {
+      App.navigate(this.rootRoute, {
         trigger: true
       });
     }
+    return App.vent.trigger("show:dashboard");
+  });
+  App.vent.on("show:dashboard", function() {
+    console.log('headerRegion');
+    return App.execute("show:headerapp", {
+      region: App.headerRegion
+    });
   });
   return App;
 });

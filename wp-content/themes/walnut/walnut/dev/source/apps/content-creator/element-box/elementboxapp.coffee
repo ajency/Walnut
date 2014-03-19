@@ -5,14 +5,14 @@ define ['app'
 		],(App,RegionController)->
 
 			
-			App.module "ContentCreator.ElementBox", (ElementBox,App)->	
+			App.module "ContentCreator.ElementBox", (ElementBox,App, Backbone, Marionette, $, _)->	
 
 				class ElementBoxController extends RegionController
 
 					initialize : (options)->
 
 						elementsCollection = App.request "get:elementbox:elements"
-						# get the main view for the content creator
+						# get the main view for the element box
 						@view = @_getElementBoxView(elementsCollection)
 
 						# show the view
@@ -27,7 +27,7 @@ define ['app'
 
 				
 
-				# create a command handler to start the content creator controller
+				# create a command handler to start the element box controller
 				App.commands.setHandler "show:element:box", (options)->
 								new ElementBoxController
 											region : options.region

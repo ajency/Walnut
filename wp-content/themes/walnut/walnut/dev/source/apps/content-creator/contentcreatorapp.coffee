@@ -1,6 +1,7 @@
 define ['app'
 		'controllers/region-controller'
-		'apps/content-creator/element-box/elementboxapp'],(App,RegionController)->
+		'apps/content-creator/element-box/elementboxapp'
+		'apps/content-creator/content-builder/app'],(App,RegionController)->
 
 			
 			App.module "ContentCreator", (ContentCreator,App)->	
@@ -17,6 +18,9 @@ define ['app'
 						@listenTo @layout,'show',=>
 							App.execute "show:element:box", 
 										region : @layout.elementBoxRegion
+
+							App.execute "show:content:builder",
+										region : @layout.contentBuilderRegion
 						# show the layout
 						@show @layout
 
@@ -45,3 +49,6 @@ define ['app'
 				App.commands.setHandler "show:content:creator", (options)->
 								new ContentCreatorController
 											region : options.region
+
+
+
