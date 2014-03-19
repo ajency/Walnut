@@ -7,25 +7,38 @@ define ['app'],(App)->
 			tagName : 'li'
 
 			template : '<a href="#" class="drag builder-element" >
-							<i class="fa fa-font"></i>
-							<div class="aj-imp-builder-title"><%= element %></div>
+							
+							<div class="aj-imp-builder-title">{{element}}</div>
 						</a>'
 
 			onRender :->
+				console.log @model.toJSON()
 				@$el.attr 'data-element', @model.get 'element'
 
 
 		class Views.ElementBoxView extends Marionette.CompositeView
 
-			template : '<h4 class="text-white b-b b-grey p-b-10">
-							<span class="semi-bold">Tool</span>box
-						</h4>
-						<div class>
-							<ul class="elements">
+			# template : '<h4 class="text-white b-b b-grey p-b-10">
+			# 				<span class="semi-bold">Tool</span>box
+			# 			</h4>
+			# 			<div class>
+			# 				<ul class="elements">
 
-							</ul>
+			# 				</ul>
+			# 				<div class="clearfix"></div>
+			# 			</div>'
+
+			template : '<div class="tiles green">
+							<div class="tiles-head">
+								<h4 class="text-white"><span class="semi-bold">Tool</span>box</h4>
+							</div>
+						</div>
+						<h5 class="semi-bold text-center b-b b-grey p-b-10">Questions</h5>
+						<div class="qstns">
+							<ul class="elements"></ul>
 							<div class="clearfix"></div>
-						</div>'
+						</div>
+						'
 
 			itemView : ElementView
 

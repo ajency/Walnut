@@ -1,9 +1,9 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app', 'apps/content-creator/property-dock/controller'], function(App, RegionController) {
   return App.module("ContentCreator", function(ContentCreator, App) {
-    var ContentCreatorController, ContentCreatorLayout;
+    var ContentCreatorController;
     ContentCreatorController = (function(_super) {
       __extends(ContentCreatorController, _super);
 
@@ -18,8 +18,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
             App.execute("show:element:box", {
               region: _this.layout.elementBoxRegion
             });
-            return App.execute("show:content:builder", {
+            App.execute("show:content:builder", {
               region: _this.layout.contentBuilderRegion
+            });
+            return App.execute("show:property:dock", {
+              region: _this.layout.PropertyRegion
             });
           };
         })(this));
@@ -27,13 +30,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       };
 
       ContentCreatorController.prototype._getContentCreatorLayout = function() {
-        return new ContentCreatorLayout;
+        return new ContentCreator.ContentCreatorLayout;
       };
 
       return ContentCreatorController;
 
     })(RegionController);
-    ContentCreatorLayout = (function(_super) {
+    ContentCreator.ContentCreatorLayout = (function(_super) {
       __extends(ContentCreatorLayout, _super);
 
       function ContentCreatorLayout() {
@@ -42,11 +45,12 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
 
       ContentCreatorLayout.prototype.className = 'content';
 
-      ContentCreatorLayout.prototype.template = '<div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> </div>';
+      ContentCreatorLayout.prototype.template = '<div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div class="dock tiles" id="property-dock"></div> </div>';
 
       ContentCreatorLayout.prototype.regions = {
         elementBoxRegion: '#toolbox',
-        contentBuilderRegion: '#content-builder'
+        contentBuilderRegion: '#content-builder',
+        PropertyRegion: '#property-dock'
       };
 
       return ContentCreatorLayout;

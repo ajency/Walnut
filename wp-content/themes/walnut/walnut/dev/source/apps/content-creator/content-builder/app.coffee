@@ -1,7 +1,7 @@
 define ['app'
 		'controllers/region-controller'
 		'apps/content-creator/content-builder/view'
-		'apps/content-creator/content-builder/element/app'
+		'apps/content-creator/content-builder/element/controller'
 		'apps/content-creator/content-builder/elements-loader'],(App,RegionController)->
 
 			App.module "ContentCreator.ContentBuilder", (ContentBuilder, App, Backbone, Marionette, $, _)->
@@ -24,10 +24,11 @@ define ['app'
 
 				API = 
 					# add a new element to the builder region
-					addNewElement : (container , type)->
+					addNewElement : (container , type, modelData)->
 
 						new ContentBuilder.Element[type].Controller
 										container : container
+										modelData : modelData
 
 
 
@@ -37,6 +38,6 @@ define ['app'
 											region : options.region
 
 				#Request handler for new element
-				App.reqres.setHandler "add:new:element" , (container, type)->
+				App.reqres.setHandler "add:new:element" , (container, type, modelData = {})->
 
-					API.addNewElement container, type
+					API.addNewElement container, type, modelData
