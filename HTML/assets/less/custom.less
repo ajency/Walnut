@@ -15,31 +15,31 @@
 
 #textbooks.list{
 	.list_header .meta{
-		margin-top:0;
+		margin-top: 0;
 		span{
-			margin-top:0;
+			margin-top: 0;
 		}
 	}	
 	.meta.name{
 		width: 30%;
 	}
 	.meta{
-		//width:210px;
-		width:17%;
-		padding:0 4% 0 2%;
-		float:left;
+		//width: 210px;
+		width: 17%;
+		padding: 0 4% 0 2%;
+		float: left;
 		}
 	.img_wrapper{
 		//width: 125px;
 		width: 50%;
-		float:left;
+		float: left;
 		height: 65px;
 		margin-right: 10px;
 	}
 	.titles{
 		vertical-align: top;
 		width: 45%;
-		float:left;
+		float: left;
 		word-break: break-word;
 		h2{
 			letter-spacing: 1px;
@@ -49,51 +49,51 @@
 
 tbody.rowlink{
 	td{
-		cursor:pointer;
+		cursor: pointer;
 	}
 }
 
 .form-chptrAdd{
-	margin-bottom:10px;
+	margin-bottom: 10px;
 }
 
 .creator{
-	position:relative;
+	position: relative;
 }
 
 #myCanvas{
-	//border:1px solid #505458;
-	background:#fff;
-	position:absolute;
-	left:260px;
-	top:0px;
+	//border: 1px solid #505458;
+	background: #fff;
+	position: absolute;
+	left: 260px;
+	top: 0;
 	width: 730px;
 	height: 500px;
 }
 
 #toolbox{
-	width:240px;
-	background:#fff;
-	//padding:15px 10px;
+	width: 240px;
+	background: #fff;
+	//padding: 15px 10px;
 	.tools, .qstns{
 		padding: 0 10px 20px;
 		ul{
-			padding:0;
+			padding: 0;
 			li{
-				float:left;
-				border:2px solid #e5e9ec;
-				//background:#e5e9ec;
-				width:65px;
-				height:65px;
-				margin:4px;
-				list-style-type:none;
+				float: left;
+				border: 2px solid #e5e9ec;
+				//background: #e5e9ec;
+				width: 65px;
+				height: 65px;
+				margin: 4px;
+				list-style-type: none;
 				cursor: move;
 				text-align: center;
-				padding:0;
+				padding: 0;
 				padding-top: 5%;
 				font-size: 12px;
 				&:hover{
-					background:#0090d9;
+					background: #0090d9;
 					transition: all 0.2s linear;
 					
 					a{
@@ -128,7 +128,7 @@ tbody.rowlink{
 	top: 0;
 	width: 240px;
 	height: 500px;
-	//padding:15px 10px;
+	//padding: 15px 10px;
 }
 
 .scrollup{
@@ -147,21 +147,21 @@ tbody.rowlink{
 	ul{
 		padding:0;
 		li{
-			float:left;
-			border:2px solid #e5e9ec;
+			float: left;
+			border: 2px solid #e5e9ec;
 			//background:#e5e9ec;
-			width:65px;
-			height:65px;
-			margin:4px;
-			list-style-type:none;
+			width: 65px;
+			height: 65px;
+			margin: 4px;
+			list-style-type: none;
 			cursor: move;
 			text-align: center;
-			padding:0;
+			padding: 0;
 			padding-top: 5%;
 			a{
 				cursor: move;
 				&:hover{
-					color:#0aa699;
+					color: #0aa699;
 				}
 			}
 			i{
@@ -173,30 +173,54 @@ tbody.rowlink{
 
 .docket-body{
 	background: #fff;
-	padding:15px 10px;
+	padding: 15px 10px;
 	color: #000;
 	label{
-		color:#777a80;
+		color: #777a80;
 	}
 	select.marks{
 		width: auto;
 	}
 }
 
+
+.mashmenu .mod .mod-content,.mashmenu .menu .sub-content{border-bottom-color:#0090D9}
+.mashmenu .mod:hover a,.mashmenu .menu li.level0:hover>a,.mashmenu .menu .sub-channel li a,.mashmenu .menu li.level0:hover .sub-channel li.hover a .fa-chevron-right,.mashmenu .columns .list a{color:#2AA4CF}
+.mashmenu .mod .mod-content,.mashmenu .mod:hover,.mashmenu .menu li.level0:hover>a,.mashmenu .menu li.level0:hover .sub-channel li.hover a{background-color:#fff}
+.mashmenu .mlogo:hover{background:none}
+.mashmenu .sub-channel{background-color:#C7E6F5}
+
 .mashmenu{
 	position: relative;
 	z-index: 1;
 	margin-bottom: 25px;
+	//background: #0AA699;
+	background: #0090D9;
+
+	div.mlogo{
+		margin-left: 10px;
+	}
 
 	.menu{
 		.sub-content{
 			background-color: #fff;
-			padding:20px;
+			padding: 20px;
+
 		}
 	}
 
 	.wrapper{
 		width: auto;
 		min-height: 400px;
+	}
+
+	.filters{
+		select{
+			width: 30%;
+			margin-right: 5px;
+		}
+		.table-tools-actions {
+			margin: 0;
+			}
 	}
 }
