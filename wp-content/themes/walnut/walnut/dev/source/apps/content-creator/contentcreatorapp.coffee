@@ -25,10 +25,10 @@ define ['app'
 						@show @layout
 
 					_getContentCreatorLayout:->
-						new ContentCreatorLayout
+						new ContentCreator.ContentCreatorLayout
 
 
-				class ContentCreatorLayout extends Marionette.Layout 
+				class ContentCreator.ContentCreatorLayout extends Marionette.Layout 
 
 					className : 'content'
 
@@ -38,11 +38,23 @@ define ['app'
 								<div class="creator">
 									<div class="tiles" id="toolbox"></div>
 									<div class="" id="content-builder"></div>
-								</div>'
+									<div class="dock tiles">
+										<div class="tiles green">
+											<div class="tiles-head">
+												<h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4>
+											</div>
+										</div>
+										<div id="questionProperties" class="docket"></div>
+										<div id="hotspotProperties" class="docket"></div>
+									</div>
+								</div>
+								'
 
 					regions : 
 						elementBoxRegion : '#toolbox'
 						contentBuilderRegion : '#content-builder' 
+						questionPropertiesRegion : '#questionProperties'
+						hotspotPropertiesRegion : '#hotspotProperties'
 
 
 				# create a command handler to start the content creator controller

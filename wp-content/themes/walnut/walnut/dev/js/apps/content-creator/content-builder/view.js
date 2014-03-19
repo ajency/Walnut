@@ -10,7 +10,11 @@ define(['app'], function(App) {
         return ContentBuilderView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentBuilderView.prototype.template = '<div id="site-page-content-region" class="droppable-column" height="300"></div>';
+      ContentBuilderView.prototype.template = '<div id="myCanvas" class="droppable-column" height="300"></div>';
+
+      ContentBuilderView.prototype.onRender = function() {
+        return this.$el.attr('id', 'site-page-content-region');
+      };
 
       ContentBuilderView.prototype.onShow = function() {
         return this.$el.find('.droppable-column').sortable({

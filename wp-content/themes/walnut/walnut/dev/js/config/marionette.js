@@ -1,4 +1,4 @@
-define(['marionette'], function(Marionette) {
+define(['marionette', 'mustache'], function(Marionette, Mustache) {
   _.extend(Marionette.Application.prototype, {
     navigate: function(route, options) {
       if (options == null) {
@@ -83,6 +83,15 @@ define(['marionette'], function(Marionette) {
       return this.$el.show();
     }
   });
+  Marionette.Renderer.render = function(template, data) {
+    if (!template) {
+      template = '';
+    }
+    if (typeof template === "function") {
+      template = template();
+    }
+    return Mustache.to_html(template, data);
+  };
   return Marionette.TemplateCache.prototype.loadTemplate = function(templateId) {
     var err, msg, template;
     template = templateId;

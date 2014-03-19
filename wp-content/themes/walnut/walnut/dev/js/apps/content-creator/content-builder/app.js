@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/content-builder/view', 'apps/content-creator/content-builder/element/app', 'apps/content-creator/content-builder/elements-loader'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/content-creator/content-builder/view', 'apps/content-creator/content-builder/element/controller', 'apps/content-creator/content-builder/elements-loader'], function(App, RegionController) {
   return App.module("ContentCreator.ContentBuilder", function(ContentBuilder, App, Backbone, Marionette, $, _) {
     var API, ContentBuilderController;
     ContentBuilderController = (function(_super) {
@@ -27,9 +27,10 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
 
     })(RegionController);
     API = {
-      addNewElement: function(container, type) {
+      addNewElement: function(container, type, modelData) {
         return new ContentBuilder.Element[type].Controller({
-          container: container
+          container: container,
+          modelData: modelData
         });
       }
     };
@@ -38,8 +39,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         region: options.region
       });
     });
-    return App.reqres.setHandler("add:new:element", function(container, type) {
-      return API.addNewElement(container, type);
+    return App.reqres.setHandler("add:new:element", function(container, type, modelData) {
+      if (modelData == null) {
+        modelData = {};
+      }
+      return API.addNewElement(container, type, modelData);
     });
   });
 });
