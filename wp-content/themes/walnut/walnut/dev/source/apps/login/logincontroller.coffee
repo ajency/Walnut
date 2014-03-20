@@ -8,7 +8,7 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 				
 				@view= view = @_getLoginView()
 
-				# listen to authenticate:user event from the view
+				# listen to authenticate:user event from the view.
 				@listenTo view, 'authenticate:user' , @authenticateUser
 
 				# listen to the close event of the view
@@ -22,14 +22,15 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 
 			authenticateUser : (data)=>
-				$.post(AJAXURL + '?action=get-user-profile' 
+				$.middle_layer(AJAXURL + '?action=get-user-profile' 
 					data: data
 					(response) =>
 						if response.error
 							@view.triggerMethod 'login:fail', response
 						else
 							@view.close()
-					'json');
+					);
+
 
 
 		class LoginView extends Marionette.ItemView

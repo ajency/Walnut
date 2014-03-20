@@ -28,7 +28,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginController.prototype.authenticateUser = function(data) {
-        return $.post(AJAXURL + '?action=get-user-profile', {
+        return $.middle_layer(AJAXURL + '?action=get-user-profile', {
           data: data
         }, (function(_this) {
           return function(response) {
@@ -38,7 +38,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
               return _this.view.close();
             }
           };
-        })(this), 'json');
+        })(this));
       };
 
       return LoginController;

@@ -34,10 +34,15 @@ add_action( 'wp_ajax_get-user-profile', 'authenticate_login' );
 
 function authenticate_login() {
 	$login_data=$_POST['data'];
-	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
-	if(is_wp_error($login_check))
-		echo(json_encode(array("error"=>"Invalid Username or Password")));
+	$status=$_POST['ntwkStatus'];
+	if($status=='online'){
+		$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
+		if(is_wp_error($login_check))
+			echo(json_encode(array("error"=>"Invalid Username or Password")));
+		else
+			echo(json_encode($login_check));
+	}
 	else
-		echo(json_encode($login_check));
+		echo(json_encode(array("error"=>"Connection could not be established. Please try again.")));
 	die;
 }
