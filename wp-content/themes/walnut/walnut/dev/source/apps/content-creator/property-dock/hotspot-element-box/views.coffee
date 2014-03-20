@@ -11,15 +11,20 @@ define ['app'],(App)->
 								</div>
 								<div class="docket-body">
 									<ul>
-										<li class="hotspot-elements" data-element="Hotspot-Circle">
+										<li class="hotspot-elements hotspotable" data-element="Hotspot-Circle">
 											<a href="#" class="drag builder-element">
 																<i class="fa fa-circle-o"></i>
 															</a>
 										</li>
-										<li class="hotspot-elements" data-element="Hotspot-Rectangle">
+										<li class="hotspot-elements hotspotable" data-element="Hotspot-Rectangle">
 											<a href="#" class="drag builder-element">
 																<i class="fa fa-square-o"></i>
 															</a>
+										</li>
+										<li data-element="Image" class="hotspot-elements hotspotable">
+											<a href="#" class="drag builder-element" >
+												<i class="fa fa-camera"></i>
+											</a>
 										</li>
 										<div class="clearfix"></div>
 									</ul>

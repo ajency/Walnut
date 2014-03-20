@@ -27,22 +27,27 @@ define(['app'], function(App) {
       HotspotView.prototype.onShow = function() {
         this.stage = new Kinetic.Stage({
           container: 'stage',
-          width: 300,
-          height: 500
+          width: this.model.get('width'),
+          height: this.model.get('height')
         });
         this.imageLayer = new Kinetic.Layer;
         this.optionLayer = new Kinetic.Layer;
         this.stage.add(this.imageLayer);
         this.stage.add(this.optionLayer);
         this.listenTo(this, 'add:hotspot:element', function(type) {
+          if (type === "Image") {
+            this.trigger("show:media:manager");
+          }
           return this._addShapes(type);
         });
         return $('.stage .kineticjs-content').droppable({
+          accept: '.hotspotable',
           drop: (function(_this) {
             return function(evt, ui) {
               var type;
               if (ui.draggable.prop("tagName") === 'LI') {
                 type = ui.draggable.attr('data-element');
+                console.log(type);
                 return _this.trigger("add:hotspot:element", type);
               }
             };
@@ -51,31 +56,28 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addShapes = function(type) {
-        var box;
+        var box, circle;
         if (type === "Hotspot-Circle") {
-          console.log(type);
-          box = new Kinetic.Circle({
+          circle = new Kinetic.Circle({
             name: "rect1",
             x: 100,
             y: 100,
             radius: 20,
             stroke: 'black',
-            strokeWidth: 4,
-            draggable: true
+            strokeWidth: 4
           });
-          this.optionLayer.add(box);
+          resizeCircle(circle, this.optionLayer);
         } else if (type === "Hotspot-Rectangle") {
           box = new Kinetic.Rect({
-            name: "rect1",
+            name: "rect2",
             x: 10,
             y: 15,
             width: 25,
             height: 25,
             stroke: 'black',
-            strokeWidth: 4,
-            draggable: true
+            strokeWidth: 4
           });
-          this.optionLayer.add(box);
+          resizeRect(box, this.optionLayer);
         }
         return this.optionLayer.draw();
       };

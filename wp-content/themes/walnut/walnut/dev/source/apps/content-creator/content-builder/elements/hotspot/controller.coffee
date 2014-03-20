@@ -11,11 +11,16 @@ define ['app'
 					# intializer
 					initialize:(options)->
 
+
 						_.defaults options.modelData,
 											element  	: 'Hotspot'
-											
+											width		: options.container.width()
+											height		: options.container.height()		
+											image_id	: 0
 											elements 	: []
 											meta_id 	: 1
+											size 		: 'thumbnail'
+											align 		: 'left'
 
 						super(options)
 						
@@ -35,9 +40,19 @@ define ['app'
 						@removeSpinner()
 						# get menu 
 						view = @_getHotspotView()
+
+						@listenTo view, "show:media:manager", =>
+									App.navigate "media-manager", trigger : true
+									@listenTo App.vent,"media:manager:choosed:media",(media)=>
+										@layout.model.set 'image_id', media.get 'id'
+										@layout.model.save()
+										@stopListening App.vent,"media:manager:choosed:media"
+
+
+						
 						@layout.elementRegion.show view
 
-						console.log @layout.model
+						# console.log @layout.model
 						App.execute "show:question:elements",
 						 			model : @layout.model
 								

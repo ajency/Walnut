@@ -1,7 +1,8 @@
 define ['app'
 		'controllers/region-controller'
 		'apps/content-creator/element-box/elementboxapp'
-		'apps/content-creator/content-builder/app'],(App,RegionController)->
+		'apps/content-creator/content-builder/app'
+		'apps/content-creator/property-dock/controller'],(App,RegionController)->
 
 			
 			App.module "ContentCreator", (ContentCreator,App)->	
