@@ -27,8 +27,8 @@ define(['app'], function(App) {
       HotspotView.prototype.onShow = function() {
         this.stage = new Kinetic.Stage({
           container: 'stage',
-          width: this.model.get('width'),
-          height: this.model.get('height')
+          width: this.$el.width(),
+          height: this.$el.height()
         });
         this.imageLayer = new Kinetic.Layer;
         this.optionLayer = new Kinetic.Layer;
