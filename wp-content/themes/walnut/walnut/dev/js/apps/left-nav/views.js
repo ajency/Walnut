@@ -25,7 +25,7 @@ define(['app'], function(App) {
         return LeftNavView.__super__.constructor.apply(this, arguments);
       }
 
-      LeftNavView.prototype.template = '<div id="main-menu-wrapper" class="page-sidebar-wrapper"><p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p> <ul class="menu"></ul></div>';
+      LeftNavView.prototype.template = '<div id="main-menu-wrapper" class="page-sidebar-wrapper"> <p class="menu-title">SCHOOL 1 <span class="pull-right"> <a href="javascript:;"> <i class="fa fa-refresh"></i> </a> </span> </p> <ul class="menu"></ul> </div>';
 
       LeftNavView.prototype.id = 'main-menu';
 
