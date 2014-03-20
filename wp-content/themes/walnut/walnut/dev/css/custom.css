@@ -23,7 +23,7 @@
   left: 260px;
   top: 0;
   width: 730px;
-  min-height: 500px;
+  min-height: 500px !important;
   padding: 15px 10px;
 }
 #toolbox {
@@ -382,9 +382,6 @@
   background: #00acec;
   color: #fff;
   border-color: #00acec;
-}
-.aj-imp-col-divider:hover {
-  background: transparent;
 }
 .row {
   margin: 0 0 1em;
