@@ -11,8 +11,16 @@ define ['app'],(App)->
 
 		class Views.LeftNavView extends Marionette.CompositeView
 
-			template 	: '<div id="main-menu-wrapper" class="page-sidebar-wrapper"><p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
-							<ul class="menu"></ul></div>'
+			template 	: '<div id="main-menu-wrapper" class="page-sidebar-wrapper">
+								<p class="menu-title">SCHOOL 1
+									<span class="pull-right">
+										<a href="javascript:;">
+											<i class="fa fa-refresh"></i>
+										</a>
+									</span>
+								</p>
+								<ul class="menu"></ul>
+							</div>'
 			
 			id 			: 'main-menu' 
 
