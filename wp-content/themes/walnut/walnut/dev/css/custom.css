@@ -23,7 +23,7 @@
   left: 260px;
   top: 0;
   width: 730px;
-  height: 500px;
+  min-height: 500px;
   padding: 15px 10px;
 }
 #toolbox {
@@ -289,9 +289,6 @@
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 
-}
-.element-wrapper.hover-class:hover > .element-markup > .row > .column {
-  border-right: 1px dotted #c3c3c3;
 }
 .element-wrapper.hover-class:hover > .element-markup > .row > .column:last-child {
   border-right: 0;
