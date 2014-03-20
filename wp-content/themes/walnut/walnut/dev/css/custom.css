@@ -1,3 +1,4 @@
+/*Custom Colors*/
 /*Custom Mixins*/
 .ease {
   -webkit-transition: all 0.3s ease-out;
@@ -118,19 +119,10 @@
 .docket-body select.marks {
   width: auto;
 }
-/*.element-controls{
-	border: 2px solid lighten(@color-grey, 30%);
-	transition: all 0.2s linear;
-	&:hover{
-		border-color: lighten(@color-blue, 0%);
-		transition: all 0.2s linear;
-	}
-}*/
-/****Colors****/
 .element-wrapper {
   border: 2px solid #f3f3f3;
   padding-top: 7px;
-  margin: 0 0 12px;
+  margin: 4px 0 11px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
 
@@ -146,7 +138,6 @@
 }
 .element-wrapper .element-controls {
   position: relative;
-  min-height: 100px;
 }
 .element-wrapper .element-controls .aj-imp-drag-handle,
 .element-wrapper .element-controls .aj-imp-delete-btn,
@@ -367,12 +358,14 @@
   top: 1em;
   bottom: 1.2em;
   left: 50%;
+  z-index: 2;
+  height: 74px;
 }
 .aj-imp-col-divider p {
   cursor: ew-resize;
   text-align: center;
   display: block;
-  color: #00acec;
+  color: #dddddd;
   font-size: 18px;
   line-height: 6px;
   width: 40px;
@@ -387,10 +380,14 @@
   -ms-transform: rotate(-90deg);
   -o-transform: rotate(-90deg);
 }
-.aj-imp-col-divider p:hover {
+.aj-imp-col-divider p:hover,
+.aj-imp-col-divider p:active {
   background: #00acec;
   color: #fff;
   border-color: #00acec;
+}
+.aj-imp-col-divider:hover {
+  background: transparent;
 }
 .row {
   margin: 0 0 1em;
@@ -398,16 +395,17 @@
   border: 1px solid transparent;
 }
 .row .column {
+  background: transparent;
   height: 100%;
   position: relative;
   background-clip: content-box;
   background: #fff;
 }
 .row .column.empty-column {
-  background: url(../images/empty-drag-bg.svg) no-repeat center center #ffffff;
+  background: url(../../../images/empty-drag-bg.svg) no-repeat center center #ffffff;
   background-clip: content-box;
   background-size: contain;
-  min-height: 100px;
+  min-height: 100px !important;
   padding: 0.5em;
 }
 .row .column .container {
