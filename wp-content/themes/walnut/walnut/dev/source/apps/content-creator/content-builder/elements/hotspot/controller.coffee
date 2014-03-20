@@ -11,8 +11,11 @@ define ['app'
 					# intializer
 					initialize:(options)->
 
+
 						_.defaults options.modelData,
 											element  	: 'Hotspot'
+											width		: options.container.width()
+											height		: options.container.height()		
 											image_id	: 0
 											elements 	: []
 											meta_id 	: 1

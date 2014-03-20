@@ -14,6 +14,8 @@ define ['app'],(App)->
 
 			initialize:(opt = {})->
 
+
+
 			# events:
 			# 	'click'	: (e)->
 			# 				e.stopPropagation()
@@ -28,8 +30,8 @@ define ['app'],(App)->
 			onShow:()->	
 				@stage = new Kinetic.Stage
 								container: 'stage'
-								width: 300
-								height: 500
+								width: @model.get 'width'
+								height: @model.get 'height'
 
 				@imageLayer = new Kinetic.Layer
 				@optionLayer = new Kinetic.Layer
