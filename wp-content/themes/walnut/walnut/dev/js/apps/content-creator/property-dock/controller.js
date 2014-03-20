@@ -25,7 +25,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         return new PropertyDock.Views.Layout;
       };
 
-      PropertyDockController.prototype._getElementBox = model;
+      PropertyDockController.prototype._getElementBox = function(elementName) {
+        if (elementName === "Hotspot") {
+          return App.execute("show:hotspot:elements", {
+            region: this.layout.questElementRegion
+          });
+        }
+      };
 
       return PropertyDockController;
 

@@ -23,20 +23,60 @@ define ['app'],(App)->
 				@stage = new Kinetic.Stage
 								container: 'stage'
 								width: 300
-								height: 400
+								height: 500
+
+				@imageLayer = new Kinetic.Layer
+				@optionLayer = new Kinetic.Layer
+
+				@stage.add @imageLayer
+				@stage.add @optionLayer
+
+				@listenTo @, 'add:hotspot:element' ,(type)->
+						@_addShapes type
 
 
-				@layer = new Kinetic.Layer
-							width : 100
+				$('.stage .kineticjs-content').droppable
+						drop : (evt, ui)=>
+								if ui.draggable.prop("tagName") is 'LI'
+										type  = ui.draggable.attr 'data-element'
+										@trigger "add:hotspot:element", type
 
-				
 
-				@stage.add @layer
-				# @stage.scaleX(0.5)
-				# @layer.scaleX 2
+			_addShapes: (type)->
 
-				# @layer.draw()
+				if(type=="Hotspot-Circle")
+						console.log type
+						box = new Kinetic.Circle
+							name : "rect1",
+							x: 100,
+							y:100,
 
-				# @stage.draw()
+							radius :20
+							stroke: 'black',
+							strokeWidth: 4,
+							draggable: true,
+
+						@optionLayer.add box
+
+				else if(type=="Hotspot-Rectangle")
+						box = new Kinetic.Rect
+							name : "rect1",
+							x: 10,
+							y:15,
+
+							width: 25,
+							height: 25,
+							stroke: 'black',
+							strokeWidth: 4,
+							draggable: true,
+
+						@optionLayer.add box
+
+				@optionLayer.draw()
+					       
+			      		
+
+
+
 				
 		

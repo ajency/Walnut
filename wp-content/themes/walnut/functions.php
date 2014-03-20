@@ -34,18 +34,17 @@ add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_login' );
 
 function authenticate_login() {
 	$login_data=$_POST['data'];
-	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
-        
-	if(is_wp_error($login_check))
-		echo(json_encode(array("error"=>"Invalid Username or Password")));
-	else{
-            wp_set_auth_cookie( $login_check->ID );
-            echo(json_encode($login_check));
-        }
+	$status=$_POST['ntwkStatus'];
+	if($status=='online'){
+		$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
+		if(is_wp_error($login_check))
+			echo(json_encode(array("error"=>"Invalid Username or Password")));
+		else{
+                    wp_set_auth_cookie( $login_check->ID );
+                    echo(json_encode($login_check));
+                }
+	}
+	else
+		echo(json_encode(array("error"=>"Connection could not be established. Please try again.")));
 	die;
-}
-
-add_filter( 'authenticate', 'myplugin_auth_signon', 30, 3 );
-function myplugin_auth_signon( $user, $username, $password ) {
-     return $user;
 }

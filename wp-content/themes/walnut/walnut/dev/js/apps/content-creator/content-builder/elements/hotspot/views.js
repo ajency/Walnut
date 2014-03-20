@@ -28,12 +28,56 @@ define(['app'], function(App) {
         this.stage = new Kinetic.Stage({
           container: 'stage',
           width: 300,
-          height: 400
+          height: 500
         });
-        this.layer = new Kinetic.Layer({
-          width: 100
+        this.imageLayer = new Kinetic.Layer;
+        this.optionLayer = new Kinetic.Layer;
+        this.stage.add(this.imageLayer);
+        this.stage.add(this.optionLayer);
+        this.listenTo(this, 'add:hotspot:element', function(type) {
+          return this._addShapes(type);
         });
-        return this.stage.add(this.layer);
+        return $('.stage .kineticjs-content').droppable({
+          drop: (function(_this) {
+            return function(evt, ui) {
+              var type;
+              if (ui.draggable.prop("tagName") === 'LI') {
+                type = ui.draggable.attr('data-element');
+                return _this.trigger("add:hotspot:element", type);
+              }
+            };
+          })(this)
+        });
+      };
+
+      HotspotView.prototype._addShapes = function(type) {
+        var box;
+        if (type === "Hotspot-Circle") {
+          console.log(type);
+          box = new Kinetic.Circle({
+            name: "rect1",
+            x: 100,
+            y: 100,
+            radius: 20,
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+          });
+          this.optionLayer.add(box);
+        } else if (type === "Hotspot-Rectangle") {
+          box = new Kinetic.Rect({
+            name: "rect1",
+            x: 10,
+            y: 15,
+            width: 25,
+            height: 25,
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+          });
+          this.optionLayer.add(box);
+        }
+        return this.optionLayer.draw();
       };
 
       return HotspotView;
