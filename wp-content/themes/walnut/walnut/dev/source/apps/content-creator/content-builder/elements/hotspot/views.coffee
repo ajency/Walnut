@@ -27,11 +27,13 @@ define ['app'],(App)->
 				@$el.attr 'id','stage'
 				
 
-			onShow:()->	
+			onShow:()->
+				# width = @$el.parent().width()
+				# @$el.width width	
 				@stage = new Kinetic.Stage
 								container: 'stage'
-								width: @model.get 'width'
-								height: @model.get 'height'
+								width: @$el.width()
+								height: @$el.height()
 
 				@imageLayer = new Kinetic.Layer
 				@optionLayer = new Kinetic.Layer
