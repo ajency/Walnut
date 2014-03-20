@@ -10,10 +10,23 @@ define ['app'],(App)->
 								<h4 class="text-white"><span class="semi-bold">Tool</span>box</h4>
 							</div>
 						</div>
+						<h5 class="semi-bold text-center b-b b-grey p-b-10">Components</h5>
+						<div class="tools">
+							<ul>
+								<li data-element="Row">
+									<a href="#" class="drag builder-element" >
+										<i class="fa fa-font"></i>
+										<div class="aj-imp-builder-title">Row</div>
+									</a>
+								</li>
+								<div class="clearfix"></div>
+							</ul>
+						</div>
+
 						<h5 class="semi-bold text-center b-b b-grey p-b-10">Questions</h5>
 						<div class="qstns">
 							<ul class="elements">
-								<li data-element="Hotspot">
+								<li data-element="Hotspot" >
 									<a href="#" class="drag builder-element" >
 										<div class="aj-imp-builder-title">Hotspot</div>
 									</a>
@@ -25,15 +38,15 @@ define ['app'],(App)->
 						<div class="tools">
 							<ul>
 								
-								<li data-element="Row">
+								<li data-element="Image" class="hotspotable">
 									<a href="#" class="drag builder-element" >
-										<i class="fa fa-font"></i>
-										<div class="aj-imp-builder-title">Row</div>
+										<i class="fa fa-camera"></i>
+										<div class="aj-imp-builder-title">Image</div>
 									</a>
 								</li>
 								<div class="clearfix"></div>
 							</ul>
-					</div>
+						</div>
 						'
 
 			onShow:->

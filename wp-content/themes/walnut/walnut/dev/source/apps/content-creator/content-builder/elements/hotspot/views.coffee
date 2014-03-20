@@ -14,16 +14,26 @@ define ['app'],(App)->
 
 			initialize:(opt = {})->
 
+
+
+			# events:
+			# 	'click'	: (e)->
+			# 				e.stopPropagation()
+			# 				@trigger "show:media:manager"
+
+
 			onRender:->
 
 				@$el.attr 'id','stage'
 				
 
-			onShow:()->	
+			onShow:()->
+				# width = @$el.parent().width()
+				# @$el.width width	
 				@stage = new Kinetic.Stage
 								container: 'stage'
-								width: 300
-								height: 500
+								width: @$el.width()
+								height: @$el.height()
 
 				@imageLayer = new Kinetic.Layer
 				@optionLayer = new Kinetic.Layer
@@ -32,45 +42,47 @@ define ['app'],(App)->
 				@stage.add @optionLayer
 
 				@listenTo @, 'add:hotspot:element' ,(type)->
+
+						if(type=="Image")
+							@trigger "show:media:manager"
+
 						@_addShapes type
 
 
 				$('.stage .kineticjs-content').droppable
+						accept : '.hotspotable'
 						drop : (evt, ui)=>
 								if ui.draggable.prop("tagName") is 'LI'
 										type  = ui.draggable.attr 'data-element'
+										console.log type
 										@trigger "add:hotspot:element", type
 
 
 			_addShapes: (type)->
 
 				if(type=="Hotspot-Circle")
-						console.log type
-						box = new Kinetic.Circle
-							name : "rect1",
-							x: 100,
-							y:100,
-
+						circle = new Kinetic.Circle
+							name : "rect1"
+							x: 100
+							y:100
 							radius :20
-							stroke: 'black',
-							strokeWidth: 4,
-							draggable: true,
+							stroke: 'black'
+							strokeWidth: 4
+							
 
-						@optionLayer.add box
+						resizeCircle circle,@optionLayer
 
 				else if(type=="Hotspot-Rectangle")
 						box = new Kinetic.Rect
-							name : "rect1",
-							x: 10,
-							y:15,
+							name : "rect2"
+							x: 10
+							y:15
+							width: 25
+							height: 25
+							stroke: 'black'
+							strokeWidth: 4
 
-							width: 25,
-							height: 25,
-							stroke: 'black',
-							strokeWidth: 4,
-							draggable: true,
-
-						@optionLayer.add box
+						resizeRect box,@optionLayer
 
 				@optionLayer.draw()
 					       

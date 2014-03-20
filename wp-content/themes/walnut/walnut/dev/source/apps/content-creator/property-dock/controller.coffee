@@ -12,7 +12,7 @@ define ['app'
 						@layout = @_getLayout()
 
 						App.commands.setHandler "show:question:elements",(options)=>
-							  @_getElementBox options.model.get('element')
+								@_getElementBox options.model.get('element')
 
 						@show @layout
 

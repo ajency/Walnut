@@ -171,7 +171,7 @@ define(['app'], function(App) {
         if (this.columnCount() === 1) {
           return;
         }
-        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="bicon bicon-uniF140"></span> </p> </div>';
+        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="fa fa-ellipsis-h"></span> </p> </div>';
         numberOfResizers = this.columnCount() - 1;
         return _.each(_.range(numberOfResizers), (function(_this) {
           return function(ele, index) {

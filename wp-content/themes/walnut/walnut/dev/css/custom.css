@@ -1,46 +1,18 @@
-.header .quick-section2 {
-  margin-top: 16px;
-  margin-right: 10px;
-  display: inline-block;
-  float: left;
-}
-.logo {
-  margin: 18px 32px;
-}
-#textbooks.list .list_header .meta {
-  margin-top: 0;
-}
-#textbooks.list .list_header .meta span {
-  margin-top: 0;
-}
-#textbooks.list .meta.name {
-  width: 30%;
-}
-#textbooks.list .meta {
-  width: 17%;
-  padding: 0 4% 0 2%;
-  float: left;
-}
-#textbooks.list .img_wrapper {
-  width: 50%;
-  float: left;
-  height: 65px;
-  margin-right: 10px;
-}
-#textbooks.list .titles {
-  vertical-align: top;
-  width: 45%;
-  float: left;
-  word-break: break-word;
-}
-#textbooks.list .titles h2 {
-  letter-spacing: 1px;
-}
-tbody.rowlink td {
-  cursor: pointer;
-}
-.form-chptrAdd {
-  margin-bottom: 10px;
+/*Custom Colors*/
+/*Custom Mixins*/
+.ease {
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
 }
 .creator {
   position: relative;
@@ -49,9 +21,10 @@ tbody.rowlink td {
   background: #fff;
   position: absolute;
   left: 260px;
-  top: 0px;
+  top: 0;
   width: 730px;
-  height: 500px;
+  min-height: 500px !important;
+  padding: 15px 10px;
 }
 #toolbox {
   width: 240px;
@@ -108,13 +81,6 @@ tbody.rowlink td {
   width: 240px;
   height: 500px;
 }
-.scrollup {
-  left: auto;
-  right: 50px;
-}
-.tiles-head {
-  padding: 10px 18px 5px 24px;
-}
 .docket .tile-footer.drag {
   cursor: move;
 }
@@ -153,10 +119,412 @@ tbody.rowlink td {
 .docket-body select.marks {
   width: auto;
 }
+.element-wrapper {
+  border: 2px solid #f3f3f3;
+  padding-top: 7px;
+  margin: 4px 0 11px;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.element-wrapper .element-controls {
+  position: relative;
+}
+.element-wrapper .element-controls .aj-imp-drag-handle,
+.element-wrapper .element-controls .aj-imp-delete-btn,
+.element-wrapper .element-controls .aj-imp-settings-btn {
+  position: absolute;
+  display: none;
+  top: -20px;
+  z-index: 2;
+}
+.element-wrapper .element-controls .aj-imp-drag-handle {
+  left: 0;
+  height: 10px;
+  width: 100%;
+  text-align: center;
+}
+.element-wrapper .element-controls .aj-imp-drag-handle p {
+  cursor: move;
+  display: block;
+  width: 10%;
+  min-width: 60px;
+  margin: auto;
+  color: #00acec;
+  font-size: 20px;
+  line-height: 20px;
+  background: #fff;
+  border: 2px solid #00acec;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.element-wrapper .element-controls .aj-imp-drag-handle p:hover {
+  background: #00acec;
+  color: #fff;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.element-wrapper .element-controls .aj-imp-delete-btn {
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  text-align: center;
+  cursor: pointer;
+}
+.element-wrapper .element-controls .aj-imp-delete-btn span {
+  color: #00acec;
+  font-size: 20px;
+  line-height: 20px;
+  display: block;
+}
+.element-wrapper .element-controls .aj-imp-delete-btn:hover {
+  background: #00acec;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.element-wrapper .element-controls .aj-imp-delete-btn:hover span {
+  color: #fff;
+}
+.element-wrapper .element-controls .aj-imp-settings-btn {
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  text-align: center;
+  cursor: pointer;
+}
+.element-wrapper .element-controls .aj-imp-settings-btn span {
+  color: #00acec;
+  font-size: 13px;
+  line-height: 18px;
+  display: block;
+  width: 1.5em;
+}
+.element-wrapper .element-controls .aj-imp-settings-btn:hover {
+  background: #00acec;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.element-wrapper .element-controls .aj-imp-settings-btn:hover span {
+  color: #fff;
+}
+.element-wrapper.hover-class:hover {
+  border-color: #00acec;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.element-wrapper.hover-class:hover > .element-controls .aj-imp-drag-handle,
+.element-wrapper.hover-class:hover > .element-controls .aj-imp-delete-btn,
+.element-wrapper.hover-class:hover > .element-controls .aj-imp-settings-btn {
+  display: block;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.element-wrapper.hover-class:hover > .element-markup > .row > .column:last-child {
+  border-right: 0;
+}
+.aj-imp-col-sel {
+  top: -4.6em;
+  display: none;
+}
+.aj-imp-col-sel .tooltip-arrow {
+  border-top-color: #29333F;
+  left: 2em;
+}
+.aj-imp-col-sel .tooltip-inner {
+  width: auto;
+  min-width: 250px;
+  max-width: 300px;
+  background: #29333F;
+}
+.aj-imp-col-sel .tooltip-inner label {
+  display: inline-block;
+  margin: 0;
+  padding: 0 0.5em;
+  position: relative;
+  top: -3px;
+}
+.aj-imp-col-sel .tooltip-inner ul {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.aj-imp-col-sel .tooltip-inner ul li {
+  float: left;
+  margin: 0 0.05em;
+}
+.aj-imp-col-sel .tooltip-inner ul li a {
+  padding: 0.3em 0.5em;
+  color: #fff;
+  border-radius: 3px;
+  font-weight: 700;
+}
+.aj-imp-col-sel .tooltip-inner ul li:hover a,
+.aj-imp-col-sel .tooltip-inner ul li.active a {
+  background: #00acec;
+}
+.aj-imp-drag-elements-message {
+  width: 100%;
+  text-align: center;
+  z-index: 0;
+  color: #aaaaaa;
+  text-transform: uppercase;
+  position: relative;
+  top: 20%;
+}
+.aj-imp-drag-elements-message .glyphicon {
+  font-size: 2em;
+  display: block;
+  margin: 0 0 0.5em;
+}
+.aj-imp-col-divider {
+  position: absolute !important;
+  width: 1px;
+  background: #dddddd;
+  top: 1em;
+  bottom: 1.2em;
+  left: 50%;
+  z-index: 2;
+  height: 74px;
+}
+.aj-imp-col-divider p {
+  cursor: ew-resize;
+  text-align: center;
+  display: block;
+  color: #dddddd;
+  font-size: 18px;
+  line-height: 6px;
+  width: 40px;
+  height: 20px;
+  background: #fff;
+  border: 2px solid #dddddd;
+  position: absolute;
+  top: 1.5em;
+  left: -20px;
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.aj-imp-col-divider p:hover,
+.aj-imp-col-divider p:active {
+  background: #00acec;
+  color: #fff;
+  border-color: #00acec;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.row {
+  margin: 0 0 1em;
+  position: relative;
+  border: 1px solid transparent;
+}
+.row .column {
+  background: transparent;
+  height: 100%;
+  position: relative;
+  background-clip: content-box;
+  background: #fff;
+}
+.row .column.empty-column {
+  background: url(../../../images/empty-drag-bg.svg) no-repeat center center #ffffff;
+  background-clip: content-box;
+  background-size: contain;
+  min-height: 100px !important;
+  padding: 0.5em;
+}
+.row .column .container {
+  padding: 0;
+}
+.row .column .row {
+  margin: 0.5em;
+  border: 1px solid transparent;
+}
+.row:last-child {
+  margin: 0;
+}
+.header .quick-section2 {
+  margin-top: 16px;
+  margin-right: 10px;
+  display: inline-block;
+  float: left;
+}
+.logo {
+  margin: 18px 32px;
+}
+#textbooks.list .list_header .meta {
+  margin-top: 0;
+}
+#textbooks.list .list_header .meta span {
+  margin-top: 0;
+  width: 15px;
+}
+#textbooks.list .list_header .meta span:after {
+  left: 2px;
+}
+#textbooks.list .meta.name {
+  width: 30%;
+}
+#textbooks.list .meta.area {
+  width: 15%;
+}
+#textbooks.list .meta {
+  width: 20%;
+  padding: 0 2% 0 2%;
+  float: left;
+}
+#textbooks.list .img_wrapper {
+  width: 40%;
+  float: left;
+  height: 65px;
+  margin-right: 10px;
+}
+#textbooks.list .titles {
+  vertical-align: top;
+  width: 54%;
+  float: left;
+  word-break: break-word;
+}
+#textbooks.list .titles h2 {
+  letter-spacing: 1px;
+}
+tbody.rowlink td {
+  cursor: pointer;
+}
+.form-chptrAdd {
+  margin-bottom: 10px;
+}
+.scrollup {
+  left: auto;
+  right: 50px;
+}
+.tiles-head {
+  padding: 10px 18px 5px 24px;
+}
+.mashmenu .mod .mod-content,
+.mashmenu .menu .sub-content {
+  border-bottom-color: #0090d9;
+}
+.mashmenu .mod:hover a,
+.mashmenu .menu li.level0:hover > a,
+.mashmenu .menu .sub-channel li a,
+.mashmenu .menu li.level0:hover .sub-channel li.hover a .fa-chevron-right,
+.mashmenu .columns .list a {
+  color: #2aa4cf;
+}
+.mashmenu .mod .mod-content,
+.mashmenu .mod:hover,
+.mashmenu .menu li.level0:hover > a,
+.mashmenu .menu li.level0:hover .sub-channel li.hover a {
+  background-color: #ffffff;
+}
+.mashmenu .mlogo:hover {
+  background: none;
+}
+.mashmenu .sub-channel {
+  background-color: #c7e6f5;
+}
 .mashmenu {
   position: relative;
   z-index: 1;
   margin-bottom: 25px;
+  background: #0090d9;
+}
+.mashmenu div.mlogo {
+  margin-left: 10px;
 }
 .mashmenu .menu .sub-content {
   background-color: #fff;
@@ -165,4 +533,11 @@ tbody.rowlink td {
 .mashmenu .wrapper {
   width: auto;
   min-height: 400px;
+}
+.mashmenu .filters select {
+  width: 30%;
+  margin-right: 5px;
+}
+.mashmenu .filters .table-tools-actions {
+  margin: 0;
 }
