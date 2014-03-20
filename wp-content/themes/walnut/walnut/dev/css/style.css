@@ -7722,6 +7722,11 @@ ul.my-friends li .profile-pic{
 #textbooks ul{
 	padding-left:0;
 }
+#textbooks ul.textbooks_list li{
+	display: block !important;  opacity: 1 !important;
+}
+
+
 /** Global Profile pics **/
 .user-profile img{
 	border-radius: 100px 100px 100px 100px;

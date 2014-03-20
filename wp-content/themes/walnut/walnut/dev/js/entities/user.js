@@ -3,7 +3,8 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Users", function(Users, App, Backbone, Marionette, $, _) {
-    return Users.UserModel = (function(_super) {
+    var user;
+    Users.UserModel = (function(_super) {
       __extends(UserModel, _super);
 
       function UserModel() {
@@ -23,5 +24,9 @@ define(["app", 'backbone'], function(App, Backbone) {
       return UserModel;
 
     })(Backbone.Model);
+    user = new Users.UserModel;
+    return App.reqres.setHandler("get:user:model", function() {
+      return user;
+    });
   });
 });
