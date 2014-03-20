@@ -15,8 +15,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.initialize = function(options) {
         _.defaults(options.modelData, {
           element: 'Hotspot',
+          image_id: 0,
           elements: [],
-          meta_id: 1
+          meta_id: 1,
+          size: 'thumbnail',
+          align: 'left'
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -31,8 +34,19 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         var view;
         this.removeSpinner();
         view = this._getHotspotView();
+        this.listenTo(view, "show:media:manager", (function(_this) {
+          return function() {
+            App.navigate("media-manager", {
+              trigger: true
+            });
+            return _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
+              _this.layout.model.set('image_id', media.get('id'));
+              _this.layout.model.save();
+              return _this.stopListening(App.vent, "media:manager:choosed:media");
+            });
+          };
+        })(this));
         this.layout.elementRegion.show(view);
-        console.log(this.layout.model);
         return App.execute("show:question:elements", {
           model: this.layout.model
         });

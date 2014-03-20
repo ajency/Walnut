@@ -10,7 +10,7 @@ define(['app'], function(App) {
         return HotspotElementBoxView.__super__.constructor.apply(this, arguments);
       }
 
-      HotspotElementBoxView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot Properties </div> <div class="docket-body"> <ul> <li class="hotspot-elements" data-element="Hotspot-Circle"> <a href="#" class="drag builder-element"> <i class="fa fa-circle-o"></i> </a> </li> <li class="hotspot-elements" data-element="Hotspot-Rectangle"> <a href="#" class="drag builder-element"> <i class="fa fa-square-o"></i> </a> </li> <div class="clearfix"></div> </ul> </div> </div> </div>';
+      HotspotElementBoxView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot Properties </div> <div class="docket-body"> <ul> <li class="hotspot-elements hotspotable" data-element="Hotspot-Circle"> <a href="#" class="drag builder-element"> <i class="fa fa-circle-o"></i> </a> </li> <li class="hotspot-elements hotspotable" data-element="Hotspot-Rectangle"> <a href="#" class="drag builder-element"> <i class="fa fa-square-o"></i> </a> </li> <li data-element="Image" class="hotspot-elements hotspotable"> <a href="#" class="drag builder-element" > <i class="fa fa-camera"></i> </a> </li> <div class="clearfix"></div> </ul> </div> </div> </div>';
 
       HotspotElementBoxView.prototype.onShow = function() {
         return this.$el.find('.hotspot-elements').draggable({
