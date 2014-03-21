@@ -1,5 +1,5 @@
 require.config({
-  urlArgs: "ver=" + ((new Date()).getTime()),
+  urlArgs: "ver=1",
   baseUrl: '../wp-content/themes/walnut/walnut/dev/js',
   paths: {
     jquery: 'plugins/jquery',

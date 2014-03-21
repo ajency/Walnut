@@ -49,16 +49,6 @@ Template Name: Content Creator
 </head>
 <body class="">
 
-	<script type="text/javascript">
-var THEMEURL = 'http://localhost/impruw/testsite93/wp-content/themes/impruwclientparent';
-var SITEURL = 'http://localhost/impruw/testsite93';
-var AJAXURL = 'http://localhost/impruw/testsite93/wp-admin/admin-ajax.php';
-var UPLOADURL = 'http://localhost/impruw/testsite93/wp-admin/async-upload.php';
-var _WPNONCE = '8182442cce';
-var JSVERSION = '0.1';
-var ROOMS = [];
-var ISTHEMESELECTED = 1;
-</script>
 
 <div>
 	<div id="header-region"></div>
@@ -72,11 +62,15 @@ var ISTHEMESELECTED = 1;
 	
 </div>
 </div>
+<script type="text/javascript">
+var THEMEURL = 'http://localhost/impruw/testsite93/wp-content/themes/impruwclientparent';
+var SITEURL = '<?php echo site_url();?>'
+AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
+var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
+var _WPNONCE = '8182442cce';
 
-<script>
-    AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
 </script>
-<?php if(ENV=='dev') { ?>
+<?php if(ENV!=='dev') { ?>
 <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php
 } else { ?>

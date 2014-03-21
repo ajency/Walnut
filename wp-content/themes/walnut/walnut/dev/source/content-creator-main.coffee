@@ -5,7 +5,7 @@
 # </ul>
 require.config 
 	
-	urlArgs : "ver=#{(new Date()).getTime()}"
+	urlArgs : "ver=1"
 	
 	baseUrl : '../wp-content/themes/walnut/walnut/dev/js'
 	
@@ -62,4 +62,4 @@ require [	'plugins/content-creator-pluginloader'
 			'apps/content-creator-appsloader'
 			], (plugins, configs, App)->
 
-				App.start()
+				App.start() 
