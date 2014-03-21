@@ -6,4 +6,13 @@ $(document).ready(function() {
 		$('#my-task-list').popover({
 			html:true			
 		})
+		
+	 $('.toggle').hide('fast');
+    $('.togglelink').on('click', function (e) {
+        e.preventDefault();
+        var elem = $(this).next('.toggle')
+        $('.toggle').not(elem).hide('fast');
+        elem.toggle('fast');
+    });
 });
+
