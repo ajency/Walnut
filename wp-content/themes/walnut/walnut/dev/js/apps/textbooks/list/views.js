@@ -35,8 +35,37 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
 
       ListView.prototype.itemViewContainer = 'ul.textbooks_list';
 
+      ListView.prototype.serializeData = function() {
+        var data, num;
+        data = ListView.__super__.serializeData.call(this);
+        data.classes = [];
+        num = 0;
+        num = (function() {
+          var _results;
+          _results = [];
+          while (num < 15) {
+            data.classes.push('Class ' + num);
+            _results.push(num++);
+          }
+          return _results;
+        })();
+        return data;
+      };
+
+      ListView.prototype.events = {
+        'click .btn-group': 'dropdown_popup'
+      };
+
       ListView.prototype.initialize = function() {
         return console.log('textbooks');
+      };
+
+      ListView.prototype.dropdown_popup = function(e) {
+        if ($(e.target).closest('div').hasClass('open')) {
+          return $(e.target).closest('div').removeClass('open');
+        } else {
+          return $(e.target).closest('div').addClass('open');
+        }
       };
 
       return ListView;

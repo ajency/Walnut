@@ -43,8 +43,10 @@ define ['marionette'], (Marionette)->
 	App.on 'start', ->
 		# start the content creator app
 		App.execute "show:content:creator", 
-					region : App.mainContentRegion
-
+						region : App.mainContentRegion
+		
+		App.execute "show:headerapp", region:App.headerRegion
+		App.execute "show:leftnavapp", region:App.leftNavRegion
 		# start header app
 
 		# start left nav app

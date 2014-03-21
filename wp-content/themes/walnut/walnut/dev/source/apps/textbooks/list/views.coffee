@@ -21,6 +21,29 @@ define ['app'
 
 			itemViewContainer : 'ul.textbooks_list'
 
+			serializeData : ->
+
+				data = super()
+				data.classes = []
+				num = 0
+				num = while num < 15
+					data.classes.push 'Class '+num
+					num++
+
+				data
+
+			events: 
+				'click .btn-group'	: 'dropdown_popup'
 
 			initialize: ->
 				console.log 'textbooks'
+
+			dropdown_popup : (e)->
+				if $(e.target)
+					.closest 'div'
+					.hasClass 'open'
+						$(e.target).closest 'div' 
+						.removeClass 'open'
+				else
+					$(e.target).closest 'div' 
+					.addClass 'open'

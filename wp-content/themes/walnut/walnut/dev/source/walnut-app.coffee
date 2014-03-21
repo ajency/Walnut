@@ -61,7 +61,6 @@ define ['marionette'], (Marionette)->
 		
 			
 	App.vent.on "show:dashboard", ->
-		console.log 'headerRegion'
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion
 			

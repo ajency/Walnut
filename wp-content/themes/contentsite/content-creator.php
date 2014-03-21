@@ -63,7 +63,7 @@ var ISTHEMESELECTED = 1;
 <div>
 	<div id="header-region"></div>
 	<div id="left-nav-region"></div>
-	<div id="main-content-region" class="page-content condensed" data-height="1006">
+	<div id="main-content-region" class="page-content" data-height="1006">
 
 	</div>
 </div>

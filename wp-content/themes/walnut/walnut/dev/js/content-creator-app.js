@@ -36,8 +36,14 @@ define(['marionette'], function(Marionette) {
     }
   });
   App.on('start', function() {
-    return App.execute("show:content:creator", {
+    App.execute("show:content:creator", {
       region: App.mainContentRegion
+    });
+    App.execute("show:headerapp", {
+      region: App.headerRegion
+    });
+    return App.execute("show:leftnavapp", {
+      region: App.leftNavRegion
     });
   });
   return App;
