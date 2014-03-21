@@ -63,5 +63,6 @@ define ['marionette'], (Marionette)->
 	App.vent.on "show:dashboard", ->
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion
+		App.navigate('textbooks', trigger: true)
 			
 	App
