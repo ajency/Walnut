@@ -70,7 +70,7 @@ var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE = '8182442cce';
 
 </script>
-<?php if(ENV!=='dev') { ?>
+<?php if(ENV=='dev') { ?>
 <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php
 } else { ?>
