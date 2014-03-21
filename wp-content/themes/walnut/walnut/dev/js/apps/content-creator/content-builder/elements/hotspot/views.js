@@ -27,41 +27,44 @@ define(['app'], function(App) {
       HotspotView.prototype.onShow = function() {
         this.stage = new Kinetic.Stage({
           container: 'stage',
-          width: this.$el.width(),
-          height: this.$el.height()
+          width: this.$el.parent().width() - 15,
+          height: this.$el.parent().height() + 80
         });
         this.imageLayer = new Kinetic.Layer;
         this.optionLayer = new Kinetic.Layer;
         this.stage.add(this.imageLayer);
         this.stage.add(this.optionLayer);
-        this.listenTo(this, 'add:hotspot:element', function(type) {
+        this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
           if (type === "Image") {
             this.trigger("show:media:manager");
           }
-          return this._addShapes(type);
+          return this._addShapes(type, elementPos);
         });
         return $('.stage .kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
             return function(evt, ui) {
-              var type;
+              var elementPos, type;
               if (ui.draggable.prop("tagName") === 'LI') {
                 type = ui.draggable.attr('data-element');
-                console.log(type);
-                return _this.trigger("add:hotspot:element", type);
+                elementPos = {
+                  left: evt.clientX - $('.stage .kineticjs-content').offset().left,
+                  top: evt.clientY - $('.stage .kineticjs-content').offset().top + window.pageYOffset
+                };
+                return _this.trigger("add:hotspot:element", type, elementPos);
               }
             };
           })(this)
         });
       };
 
-      HotspotView.prototype._addShapes = function(type) {
+      HotspotView.prototype._addShapes = function(type, elementPos) {
         var box, circle;
         if (type === "Hotspot-Circle") {
           circle = new Kinetic.Circle({
             name: "rect1",
-            x: 100,
-            y: 100,
+            x: elementPos.left,
+            y: elementPos.top,
             radius: 20,
             stroke: 'black',
             strokeWidth: 4
@@ -70,8 +73,8 @@ define(['app'], function(App) {
         } else if (type === "Hotspot-Rectangle") {
           box = new Kinetic.Rect({
             name: "rect2",
-            x: 10,
-            y: 15,
+            x: elementPos.left,
+            y: elementPos.top,
             width: 25,
             height: 25,
             stroke: 'black',
