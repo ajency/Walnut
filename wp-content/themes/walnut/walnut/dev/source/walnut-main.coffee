@@ -4,7 +4,7 @@
 # <li>-load all JS files</li>
 # </ul>
 
-AJAXURL = 'http://localhost/walnut/wp-admin/admin-ajax.php'
+AJAXURL = 'http://walmiki.com/wp-admin/admin-ajax.php';
 
 require.config 
 	
