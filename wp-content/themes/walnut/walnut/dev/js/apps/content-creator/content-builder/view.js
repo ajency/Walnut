@@ -10,7 +10,15 @@ define(['app'], function(App) {
         return ContentBuilderView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentBuilderView.prototype.template = '<div id="myCanvas" class="droppable-column" height="300"></div>';
+      ContentBuilderView.prototype.template = '<div id="myCanvas" class="droppable-column" height="300"></div> <input type="button" value="Save" id="save-question">';
+
+      ContentBuilderView.prototype.events = {
+        'click  #save-question': 'saveQuestion'
+      };
+
+      ContentBuilderView.prototype.saveQuestion = function() {
+        return App.execute("save:question");
+      };
 
       ContentBuilderView.prototype.onRender = function() {
         return this.$el.attr('id', 'site-page-content-region');

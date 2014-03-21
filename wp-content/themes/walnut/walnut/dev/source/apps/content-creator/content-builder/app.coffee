@@ -2,7 +2,8 @@ define ['app'
 		'controllers/region-controller'
 		'apps/content-creator/content-builder/view'
 		'apps/content-creator/content-builder/element/controller'
-		'apps/content-creator/content-builder/elements-loader'],(App,RegionController)->
+		'apps/content-creator/content-builder/elements-loader'
+		'apps/content-creator/content-builder/autosave/controller'],(App,RegionController)->
 
 			App.module "ContentCreator.ContentBuilder", (ContentBuilder, App, Backbone, Marionette, $, _)->
 
@@ -30,6 +31,10 @@ define ['app'
 										container : container
 										modelData : modelData
 
+					saveQuestion :->
+
+						autoSave = new ContentBuilder.AutoSave.Controller
+						autoSave.autoSave()
 
 
 				# create a command handler to start the content builder controller
@@ -40,4 +45,8 @@ define ['app'
 				#Request handler for new element
 				App.reqres.setHandler "add:new:element" , (container, type, modelData = {})->
 
-					API.addNewElement container, type, modelData
+						API.addNewElement container, type, modelData
+
+
+				App.commands.setHandler "save:question",->
+						API.saveQuestion()

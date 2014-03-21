@@ -18,24 +18,26 @@ define(['app'], function(App) {
         if (opt == null) {
           opt = {};
         }
+        return this.stageName = "stage" + new Date().getTime();
       };
 
       HotspotView.prototype.onRender = function() {
-        return this.$el.attr('id', 'stage');
+        return this.$el.attr('id', this.stageName);
       };
 
       HotspotView.prototype.onShow = function() {
+        console.log("in canvas");
         this.stage = new Kinetic.Stage({
-          container: 'stage',
+          container: this.stageName,
           width: this.$el.parent().width() - 15,
           height: this.$el.parent().height() + 80
         });
-        $('#stage.stage').resize((function(_this) {
+        $('#' + this.stageName + '.stage').resize((function(_this) {
           return function() {
-            console.log($('#stage.stage').width());
+            console.log($('#' + _this.stageName + '.stage').width());
             return _this.stage.setSize({
-              width: $('#stage.stage').width(),
-              height: $('#stage.stage').height() - 5
+              width: $('#' + _this.stageName + '.stage').width(),
+              height: $('#' + _this.stageName + '.stage').height() - 5
             });
           };
         })(this));
@@ -49,7 +51,7 @@ define(['app'], function(App) {
           }
           return this._addShapes(type, elementPos);
         });
-        return $('.stage .kineticjs-content').droppable({
+        return $('#' + this.stageName + ' .kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
             return function(evt, ui) {
@@ -57,8 +59,8 @@ define(['app'], function(App) {
               if (ui.draggable.prop("tagName") === 'LI') {
                 type = ui.draggable.attr('data-element');
                 elementPos = {
-                  left: evt.clientX - $('.stage .kineticjs-content').offset().left,
-                  top: evt.clientY - $('.stage .kineticjs-content').offset().top + window.pageYOffset
+                  left: evt.clientX - $('#' + _this.stageName + ' .kineticjs-content').offset().left,
+                  top: evt.clientY - $('#' + _this.stageName + ' .kineticjs-content').offset().top + window.pageYOffset
                 };
                 return _this.trigger("add:hotspot:element", type, elementPos);
               }

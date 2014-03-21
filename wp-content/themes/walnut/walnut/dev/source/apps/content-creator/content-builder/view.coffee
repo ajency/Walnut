@@ -4,7 +4,15 @@ define ['app'],(App)->
 
 		class Views.ContentBuilderView extends Marionette.ItemView
 
-			template : '<div id="myCanvas" class="droppable-column" height="300"></div>'
+			template : '<div id="myCanvas" class="droppable-column" height="300"></div>
+						<input type="button" value="Save" id="save-question">'
+
+			events :
+				'click  #save-question' : 'saveQuestion'
+
+			saveQuestion:->
+				App.execute "save:question"
+
 
 			onRender : ->
 				@$el.attr 'id','site-page-content-region'
