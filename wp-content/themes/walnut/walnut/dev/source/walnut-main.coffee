@@ -4,8 +4,6 @@
 # <li>-load all JS files</li>
 # </ul>
 
-AJAXURL = 'http://walmiki.com/wp-admin/admin-ajax.php';
-
 require.config 
 	
 	urlArgs : "ver=#{(new Date()).getTime()}"

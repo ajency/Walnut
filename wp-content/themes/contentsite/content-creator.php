@@ -72,6 +72,17 @@ var ISTHEMESELECTED = 1;
 	
 </div>
 </div>
-<script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+
+<script>
+    AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
+</script>
+<?php if(ENV=='dev') { ?>
+<script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+<?php
+} else { ?>
+<script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/content-creator-main.js"></script>
+<? } ?>
+
+
 </body>
 </html>

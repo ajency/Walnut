@@ -53,7 +53,7 @@ require.config
 		app 		: ['plugins/content-creator-pluginloader','config/content-creator-configloader']
 
 	
-window.AJAXURL = 'http://localhost/walnut/wp-admin/admin-ajax.php'
+
 ## Start with application
 require [	'plugins/content-creator-pluginloader'
 			'configs/content-creator-configloader'

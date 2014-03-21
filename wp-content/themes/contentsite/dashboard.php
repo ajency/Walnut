@@ -60,6 +60,15 @@ Template Name: Dashboard
 <div id="dialog-region"></div>
 <div id="login-region"></div>
 
+<script>
+    AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
+</script>
+<?php if(ENV=='dev') { ?>
 <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+<?php
+} else { ?>
+<script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/walnut-main.js"></script>
+<? } ?>
+
 </body>
 </html>

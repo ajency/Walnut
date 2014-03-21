@@ -49,8 +49,6 @@ require.config({
   }
 });
 
-window.AJAXURL = 'http://localhost/walnut/wp-admin/admin-ajax.php';
-
 require(['plugins/content-creator-pluginloader', 'configs/content-creator-configloader', 'app', 'entitiesloader', 'apps/content-creator-appsloader'], function(plugins, configs, App) {
   return App.start();
 });
