@@ -198,14 +198,18 @@ function get_textbooks($args = array()) {
 
     extract($args);
 
+    //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all)
         $textbooks = get_terms('textbook', $args);
-
-
+    
+    //if filtering for a particular class, get textbooks based on which class they belong to
     else if (is_numeric($class_id))
         $textbooks = get_textbooks_for_class($class_id);
+    
+    //get textbooks for logged in user depending on the class the user belongs to
+    //generally used for logged in students
     else
-        $textbooks = get_textbooks_for_class($class_id);
+        $textbooks = get_textbooks_for_user($user_id);
 
 
 
@@ -254,5 +258,9 @@ function get_book($book) {
 }
 
 function get_textbooks_for_class() {
+    
+}
+
+function get_textbooks_for_user(){
     
 }
