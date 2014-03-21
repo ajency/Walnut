@@ -81,6 +81,13 @@
   width: 240px;
   height: 500px;
 }
+.dock .builder_actions {
+  background: #e5e9ec;
+  padding-bottom: 15px;
+}
+.dock .btn-cons2 {
+  width: 118px;
+}
 .docket .tile-footer.drag {
   cursor: move;
 }
@@ -408,9 +415,7 @@
 
 }
 .row {
-  margin: 0 0 1em;
   position: relative;
-  border: 1px solid transparent;
 }
 .row .column {
   background: transparent;
