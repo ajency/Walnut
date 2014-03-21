@@ -204,6 +204,7 @@ $(document).ready(function() {
 				}
 			]
 		},
+		"aLengthMenu": [ 25, 50, 100 ],
 		"sPaginationType": "bootstrap",
 		 "aoColumnDefs": [
           { 'bSortable': false, 'aTargets': [ 1, 3, 4 ] }

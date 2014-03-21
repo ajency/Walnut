@@ -71,6 +71,16 @@
 	width: 240px;
 	height: 500px;
 	//padding: 15px 10px;
+
+	.builder_actions{
+		background: @body-bg;
+		padding-bottom: 15px;
+	}
+
+	.btn-cons2{
+		width: 118px;
+		//border-radius: 0;
+	}
 }
 
 .docket{
@@ -117,233 +127,236 @@
 }
 
 .element-wrapper {
-		border: 2px solid @preview-grey;
-		padding-top: 7px;
-		margin: 4px 0 11px;
-		.ease;
-		//border-radius: 4px;
-		.element-controls {
-			position: relative;
-			//min-height: 100px;
-			.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-settings-btn {
-				position: absolute;
-				display: none;
-				top: -20px;
-				z-index: 2;
-			}
-			.aj-imp-drag-handle {
-				left: 0;
-				height: 10px;
-				width: 100%;
-				text-align: center;
-				p {
-					cursor: move;
-					display: block;
-					width: 10%;
-					min-width: 60px;
-					margin: auto;
-					color: @color-blue;
-					font-size: 20px;
-					line-height: 20px;
-					background: #fff;
-					border: 2px solid @color-blue;
-					//border-radius: 3px;
-					.ease;
-					&:hover {
-						background: @color-blue;
-						color: #fff;
-						.ease;
-					}
-				}
-			}
-			.aj-imp-delete-btn {
-				right: -10px;
-				width: 20px;
-				height: 20px;
-				background: #fff;
-				text-align: center;
-				cursor: pointer;
-				span {
-					color: @color-blue;
-					font-size: 20px;
-					//font-weight: 700;
-					line-height: 20px;
-					display: block;
-				}
-				&:hover{
-					background: @color-blue;
-					.ease;
-					span{
-						color: #fff;
-					}
-				}
-			}
-			.aj-imp-settings-btn {
-				right: 20px;
-				width: 20px;
-				height: 20px;
-				background: #fff;
-				text-align: center;
-				cursor: pointer;
-				span {
-					color: @color-blue;
-					font-size: 13px;
-					line-height: 18px;
-					display: block;
-					width:1.5em
-				}
-				&:hover{
-					background: @color-blue;
-					.ease;
-					span{
-						color: #fff;
-					}
-				}
-			}
-		}
-		&.hover-class:hover {
-			border-color: @color-blue;
-			.ease;
-			>.element-controls {
-				.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-settings-btn {
-					display: block;
-					.ease;
-				}
-			}
-			>.element-markup {
-				>.row {
-					>.column {
-						//border-right: 1px dotted lighten(@dash-grey, 10%);
-						&:last-child {
-							border-right: 0;
-						}
-					}
-				}
-			}
-		}
-	}
-	.aj-imp-col-sel {
-		top: -4.6em;
-        display: none;
-		.tooltip-arrow {
-			border-top-color: #29333F;
-			left: 2em;
-		}
-		.tooltip-inner {
-			width: auto;
-			min-width: 250px;
-			max-width: 300px;
-			background: #29333F;
-			label {
-				display: inline-block;
-				margin: 0;
-				padding: 0 0.5em;
-				position: relative;
-				top: -3px;
-			}
-			ul {
-				display: inline-block;
-				list-style: none;
-				margin: 0;
-				padding: 0;
-				li {
-					float: left;
-					margin: 0 0.05em;
-					a {
-						padding: 0.3em 0.5em;
-						color: #fff;
-						border-radius: 3px;
-						font-weight: 700;
-					}
-					&:hover, &.active {
-						a {
-							background: @color-blue;
-						}
-					}
-				}
-			}
-		}
-	}
-	.aj-imp-drag-elements-message {
-		width: 100%;
-		text-align: center;
-		z-index: 0;
-		color: @dash-grey;
-		text-transform: uppercase;
+	border: 2px solid @preview-grey;
+	padding-top: 7px;
+	margin: 4px 0 11px;
+	.ease;
+	//border-radius: 4px;
+	.element-controls {
 		position: relative;
-		top: 20%;
-		.glyphicon {
-			font-size: 2em;
-			display: block;
-			margin: 0 0 0.5em;
+		//min-height: 100px;
+		.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-settings-btn {
+			position: absolute;
+			display: none;
+			top: -20px;
+			z-index: 2;
 		}
-	}
-	.aj-imp-col-divider {
-		position: absolute !important;
-		width: 1px;
-		background: lighten(@dash-grey, 20%);
-		top: 1em;
-		bottom: 1.2em;
-		left: 50%;
-		z-index: 2;
-		height: 74px;
-		p {
-			cursor: ew-resize;
+		.aj-imp-drag-handle {
+			left: 0;
+			height: 10px;
+			width: 100%;
 			text-align: center;
-			display: block;
-			color: lighten(@dash-grey, 20%);
-			font-size: 18px;
-			line-height: 6px;
-			width: 40px;
+			p {
+				cursor: move;
+				display: block;
+				width: 10%;
+				min-width: 60px;
+				margin: auto;
+				color: @color-blue;
+				font-size: 20px;
+				line-height: 20px;
+				background: #fff;
+				border: 2px solid @color-blue;
+				//border-radius: 3px;
+				.ease;
+				&:hover {
+					background: @color-blue;
+					color: #fff;
+				.ease;
+				}
+			}
+		}
+		.aj-imp-delete-btn {
+			right: -10px;
+			width: 20px;
 			height: 20px;
 			background: #fff;
-			border: 2px solid lighten(@dash-grey, 20%);
-			//border-radius: 3px;
-			position: absolute;
-			top: 1.5em;
-			left: -20px;
-			-webkit-transform: rotate(-90deg);
-			   -moz-transform: rotate(-90deg);
-			    -ms-transform: rotate(-90deg);
-			     -o-transform: rotate(-90deg);
-			.ease;
-			&:hover, &:active {
+			text-align: center;
+			cursor: pointer;
+			span {
+				color: @color-blue;
+				font-size: 20px;
+				//font-weight: 700;
+				line-height: 20px;
+				display: block;
+			}
+			&:hover{
 				background: @color-blue;
-				color: #fff;
-				border-color: @color-blue;
+				.ease;
+				span{
+					color: #fff;
+				}
+			}
+		}
+		.aj-imp-settings-btn {
+			right: 20px;
+			width: 20px;
+			height: 20px;
+			background: #fff;
+			text-align: center;
+			cursor: pointer;
+			span {
+				color: @color-blue;
+				font-size: 13px;
+				line-height: 18px;
+				display: block;
+				width:1.5em
+			}
+			&:hover{
+				background: @color-blue;
+				.ease;
+				span{
+					color: #fff;
+				}
+			}
+		}
+	}
+	&.hover-class:hover {
+		border-color: @color-blue;
+		.ease;
+		>.element-controls {
+			.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-settings-btn {
+				display: block;
 				.ease;
 			}
 		}
-		&:hover{
-			//background: transparent;
+		>.element-markup {
+			>.row {
+				>.column {
+					//border-right: 1px dotted lighten(@dash-grey, 10%);
+					&:last-child {
+						border-right: 0;
+					}
+				}
+			}
 		}
 	}
-	.row {
-		margin: 0 0 1em;
-		position: relative;
-		border: 1px solid transparent;
-		.column {
-			background: transparent;
-			height: 100%;
-			position: relative;
-			background-clip: content-box;
-			background: #fff;
-			&.empty-column {
-				background: url(../../../images/empty-drag-bg.svg) no-repeat center center #fff;
-				background-clip: content-box;
-				background-size: contain;
-				min-height:100px !important;
-				padding: 0.5em;
-			}
-			.container {
-				padding: 0;
-			}
-			.row {
-				margin: 0.5em;
-				border: 1px solid transparent;
-			}
-		}
-		&:last-child {
+}
+.aj-imp-col-sel {
+	top: -4.6em;
+       display: none;
+	.tooltip-arrow {
+		border-top-color: #29333F;
+		left: 2em;
+	}
+	.tooltip-inner {
+		width: auto;
+		min-width: 250px;
+		max-width: 300px;
+		background: #29333F;
+		label {
+			display: inline-block;
 			margin: 0;
+			padding: 0 0.5em;
+			position: relative;
+			top: -3px;
+		}
+		ul {
+			display: inline-block;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		li {
+				float: left;
+				margin: 0 0.05em;
+				a {
+					padding: 0.3em 0.5em;
+					color: #fff;
+					border-radius: 3px;
+					font-weight: 700;
+				}
+				&:hover, &.active {
+					a {
+						background: @color-blue;
+					}
+				}
+			}
 		}
 	}
+}
+
+.aj-imp-drag-elements-message {
+	width: 100%;
+	text-align: center;
+	z-index: 0;
+	color: @dash-grey;
+	text-transform: uppercase;
+	position: relative;
+	top: 20%;
+	.glyphicon {
+		font-size: 2em;
+		display: block;
+		margin: 0 0 0.5em;
+	}
+}
+
+.aj-imp-col-divider {
+	position: absolute !important;
+	width: 1px;
+	background: lighten(@dash-grey, 20%);
+	top: 1em;
+	bottom: 1.2em;
+	left: 50%;
+	z-index: 2;
+	height: 74px;
+	p {
+		cursor: ew-resize;
+		text-align: center;
+		display: block;
+		color: lighten(@dash-grey, 20%);
+		font-size: 18px;
+		line-height: 6px;
+		width: 40px;
+		height: 20px;
+		background: #fff;
+		border: 2px solid lighten(@dash-grey, 20%);
+		//border-radius: 3px;
+		position: absolute;
+		top: 1.5em;
+		left: -20px;
+		-webkit-transform: rotate(-90deg);
+		   -moz-transform: rotate(-90deg);
+		    -ms-transform: rotate(-90deg);
+		     -o-transform: rotate(-90deg);
+		.ease;
+		&:hover, &:active {
+			background: @color-blue;
+			color: #fff;
+			border-color: @color-blue;
+			.ease;
+		}
+	}
+	&:hover{
+		//background: transparent;
+	}
+}
+
+.row {
+	//margin: 0 0 1em;
+	position: relative;
+	//border: 1px solid transparent;
+	.column {
+		background: transparent;
+		height: 100%;
+		position: relative;
+		background-clip: content-box;
+		background: #fff;
+		&.empty-column {
+			background: url(../../../images/empty-drag-bg.svg) no-repeat center center #fff;
+			background-clip: content-box;
+			background-size: contain;
+			min-height:100px !important;
+			padding: 0.5em;
+		}
+		.container {
+			padding: 0;
+		}
+		.row {
+			margin: 0.5em;
+			border: 1px solid transparent;
+		}
+	}
+	&:last-child {
+		margin: 0;
+	}
+}
