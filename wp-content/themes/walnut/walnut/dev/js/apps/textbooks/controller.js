@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/textbooks/templates/textbooks.html'], function(App, RegionController, textbooksTpl) {
+define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module("TextbooksApp.Controller", function(Controller, App) {
     var TextbooksView;
     Controller.TextbooksController = (function(_super) {
@@ -18,7 +18,7 @@ define(['app', 'controllers/region-controller', 'text!apps/textbooks/templates/t
       };
 
       TextbooksController.prototype._getTextbooksView = function() {
-        return new LoginView;
+        return new TextbooksView;
       };
 
       return TextbooksController;

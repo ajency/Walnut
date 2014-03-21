@@ -1,7 +1,3 @@
-var AJAXURL;
-
-AJAXURL = 'http://localhost/walnut/wp-admin/admin-ajax.php';
-
 require.config({
   urlArgs: "ver=" + ((new Date()).getTime()),
   baseUrl: './wp-content/themes/walnut/walnut/dev/js',

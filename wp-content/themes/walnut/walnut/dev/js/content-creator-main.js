@@ -1,9 +1,10 @@
 require.config({
-  urlArgs: "ver=" + ((new Date()).getTime()),
+  urlArgs: "ver=1",
   baseUrl: '../wp-content/themes/walnut/walnut/dev/js',
   paths: {
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
+    jqueryresize: 'plugins/jquery.ba-resize.min',
     kinetic: 'plugins/kinetic',
     kineticresize: 'plugins/kinetic.plugin.resize',
     jqueryvalidate: 'plugins/jquery.validate.min',
@@ -26,6 +27,7 @@ require.config({
     },
     jquery: ['underscore'],
     jqueryui: ['jquery'],
+    jqueryresize: ['jquery', 'jqueryui'],
     kineticresize: ['kinetic'],
     backbone: {
       deps: ['jquery', 'underscore'],
@@ -46,8 +48,6 @@ require.config({
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 });
-
-window.AJAXURL = 'http://localhost/walnut/wp-admin/admin-ajax.php';
 
 require(['plugins/content-creator-pluginloader', 'configs/content-creator-configloader', 'app', 'entitiesloader', 'apps/content-creator-appsloader'], function(plugins, configs, App) {
   return App.start();

@@ -34,7 +34,7 @@ resizeCircle = function(circle,layer){
         var y1=this.getAbsolutePosition().y;
         var x2=circle.getAbsolutePosition().x;
         var y2=circle.getAbsolutePosition().y;
-        console.log(circle.getAbsolutePosition().x +" ,  "+circle.getAbsolutePosition().y)
+        
         var dx=x1-x2;
         var dy=y1-y2;
         var r=Math.sqrt(dx*dx+dy*dy)-draggerOffset;

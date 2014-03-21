@@ -1,4 +1,4 @@
-define ['app', 'controllers/region-controller','text!apps/textbooks/templates/textbooks.html'], (App, RegionController, textbooksTpl)->
+define ['app', 'controllers/region-controller'], (App, RegionController)->
 
 	App.module "TextbooksApp.Controller", (Controller, App)->
 
@@ -10,7 +10,7 @@ define ['app', 'controllers/region-controller','text!apps/textbooks/templates/te
 				@show view
 
 			_getTextbooksView : ->
-				new LoginView
+				new TextbooksView
 
 		
 

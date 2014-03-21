@@ -30,10 +30,22 @@ define ['app'],(App)->
 			onShow:()->
 				# width = @$el.parent().width()
 				# @$el.width width	
+				
+
+
 				@stage = new Kinetic.Stage
 								container: 'stage'
-								width: @$el.width()
-								height: @$el.height()
+								width: @$el.parent().width()-15
+								height: @$el.parent().height()+80
+
+
+				$('#stage.stage').resize ()=>
+					console.log $('#stage.stage').width()
+					@stage.setSize
+						width: $('#stage.stage').width()
+						height: $('#stage.stage').height()-5
+							
+					
 
 				@imageLayer = new Kinetic.Layer
 				@optionLayer = new Kinetic.Layer
@@ -41,12 +53,12 @@ define ['app'],(App)->
 				@stage.add @imageLayer
 				@stage.add @optionLayer
 
-				@listenTo @, 'add:hotspot:element' ,(type)->
+				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
 
 						if(type=="Image")
 							@trigger "show:media:manager"
 
-						@_addShapes type
+						@_addShapes type, elementPos
 
 
 				$('.stage .kineticjs-content').droppable
@@ -54,17 +66,19 @@ define ['app'],(App)->
 						drop : (evt, ui)=>
 								if ui.draggable.prop("tagName") is 'LI'
 										type  = ui.draggable.attr 'data-element'
-										console.log type
-										@trigger "add:hotspot:element", type
+										elementPos = 
+											left : evt.clientX-$('.stage .kineticjs-content').offset().left
+											top  : evt.clientY-$('.stage .kineticjs-content').offset().top + window.pageYOffset
+										@trigger "add:hotspot:element", type , elementPos
 
 
-			_addShapes: (type)->
+			_addShapes: (type,elementPos)->
 
 				if(type=="Hotspot-Circle")
 						circle = new Kinetic.Circle
 							name : "rect1"
-							x: 100
-							y:100
+							x: elementPos.left
+							y:elementPos.top
 							radius :20
 							stroke: 'black'
 							strokeWidth: 4
@@ -75,8 +89,8 @@ define ['app'],(App)->
 				else if(type=="Hotspot-Rectangle")
 						box = new Kinetic.Rect
 							name : "rect2"
-							x: 10
-							y:15
+							x: elementPos.left
+							y:elementPos.top
 							width: 25
 							height: 25
 							stroke: 'black'

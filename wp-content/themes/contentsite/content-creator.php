@@ -49,21 +49,11 @@ Template Name: Content Creator
 </head>
 <body class="">
 
-	<script type="text/javascript">
-var THEMEURL = 'http://localhost/impruw/testsite93/wp-content/themes/impruwclientparent';
-var SITEURL = 'http://localhost/impruw/testsite93';
-var AJAXURL = 'http://localhost/impruw/testsite93/wp-admin/admin-ajax.php';
-var UPLOADURL = 'http://localhost/impruw/testsite93/wp-admin/async-upload.php';
-var _WPNONCE = '8182442cce';
-var JSVERSION = '0.1';
-var ROOMS = [];
-var ISTHEMESELECTED = 1;
-</script>
 
 <div>
 	<div id="header-region"></div>
 	<div id="left-nav-region"></div>
-	<div id="main-content-region" class="page-content condensed" data-height="1006">
+	<div id="main-content-region" class="page-content" data-height="1006">
 
 	</div>
 </div>
@@ -72,6 +62,21 @@ var ISTHEMESELECTED = 1;
 	
 </div>
 </div>
-<script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+<script type="text/javascript">
+var THEMEURL = 'http://localhost/impruw/testsite93/wp-content/themes/impruwclientparent';
+var SITEURL = '<?php echo site_url();?>'
+AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
+var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
+var _WPNONCE = '8182442cce';
+
+</script>
+<?php if(ENV!=='dev') { ?>
+<script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+<?php
+} else { ?>
+<script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/content-creator-main.js"></script>
+<? } ?>
+
+
 </body>
 </html>

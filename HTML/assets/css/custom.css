@@ -26,6 +26,14 @@
   min-height: 500px !important;
   padding: 15px 10px;
 }
+#myCanvas-miki {
+  background: none;
+  position: absolute;
+  left: 260px;
+  top: 0;
+  width: 750px;
+  height: auto;
+}
 #toolbox {
   width: 240px;
   background: #fff;
@@ -540,4 +548,20 @@ tbody.rowlink td {
 }
 .mashmenu .filters .table-tools-actions {
   margin: 0;
+}
+
+
+/*miki css*/
+
+.cbp_tmtimeline > li .cbp_tmtime {
+	display: block;
+	width: 13%;
+	padding-right: 0px;
+}
+.cbp_tmtimeline > li .cbp_tmtime .date {
+	font-size: 1.0em;
+}
+
+.togglelink{
+	cursor:pointer;
 }

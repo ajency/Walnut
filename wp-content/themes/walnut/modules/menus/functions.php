@@ -14,9 +14,11 @@ function get_site_menu($user_role) {
     }
     
     $menu_name = $user_role.'-menu';
-
     $wp_menu = get_menu_to_array( $menu_name );
-
+    
+    if($wp_menu['code']=='ERROR')
+        $wp_menu= array('error'=>'menu does not exist');
+        
     return $wp_menu;
     
 }
@@ -80,5 +82,5 @@ function get_menu_to_array( $mn , $by = 'name') {
         'menu_items'    => $sorted_menu_items
     );
 
-    return $wp_menu;
+    return $wp_menu['menu_items'];
 }

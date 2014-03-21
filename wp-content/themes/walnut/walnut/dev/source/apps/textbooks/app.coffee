@@ -1,5 +1,5 @@
-define ['app
-		apps/textbooks/controller'], (App)->
+define ['app'
+		'apps/textbooks/list/listcontroller'], (App)->
 
 			App.module "TextbooksApp", (TextbooksApp, App)->
 
@@ -12,8 +12,8 @@ define ['app
 
 				Controller = 
 					showTextbooks : ->
-						new TextbooksApp.Controller.TextbooksController
-											region : App.contentRegion
+						new TextbooksApp.List.ListController
+											region : App.mainContentRegion
 
 
 				TextbooksApp.on "start", ->
