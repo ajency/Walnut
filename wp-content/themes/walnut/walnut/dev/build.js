@@ -1,6 +1,10 @@
-require.config({
-  urlArgs: "ver=" + ((new Date()).getTime()),
-  baseUrl: './wp-content/themes/walnut/walnut/dev/js',
+({
+  baseUrl: './js',
+  name: 'plugins/almond',
+  include : 'walnut-main',
+  //optimize: 'none',
+  wrap: false,
+  out: '../production/walnut-main.js',
   paths: {
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
@@ -39,8 +43,4 @@ require.config({
     syphon: ['backbone'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
-});
-
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader'], function(plugins, configs, App) {
-  return App.start();
-});
+})

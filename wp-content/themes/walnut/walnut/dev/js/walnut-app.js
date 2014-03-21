@@ -48,8 +48,11 @@ define(['marionette'], function(Marionette) {
     App.execute("show:headerapp", {
       region: App.headerRegion
     });
-    return App.execute("show:leftnavapp", {
+    App.execute("show:leftnavapp", {
       region: App.leftNavRegion
+    });
+    return App.navigate('textbooks', {
+      trigger: true
     });
   });
   return App;
