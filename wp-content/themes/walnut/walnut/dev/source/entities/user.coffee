@@ -11,3 +11,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 					user_name 		: ''
 					display_name 	: ''
 					user_email 		: ''
+
+			user = new Users.UserModel
+			
+			App.reqres.setHandler "get:user:model", ->
+				user		

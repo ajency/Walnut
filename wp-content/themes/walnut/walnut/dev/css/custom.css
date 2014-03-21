@@ -23,7 +23,7 @@
   left: 260px;
   top: 0;
   width: 730px;
-  height: 500px;
+  min-height: 500px !important;
   padding: 15px 10px;
 }
 #toolbox {
@@ -290,9 +290,6 @@
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 
 }
-.element-wrapper.hover-class:hover > .element-markup > .row > .column {
-  border-right: 1px dotted #c3c3c3;
-}
 .element-wrapper.hover-class:hover > .element-markup > .row > .column:last-child {
   border-right: 0;
 }
@@ -379,15 +376,36 @@
   -moz-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);
   -o-transform: rotate(-90deg);
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
 }
 .aj-imp-col-divider p:hover,
 .aj-imp-col-divider p:active {
   background: #00acec;
   color: #fff;
   border-color: #00acec;
-}
-.aj-imp-col-divider:hover {
-  background: transparent;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
 }
 .row {
   margin: 0 0 1em;

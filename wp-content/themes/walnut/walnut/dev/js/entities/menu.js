@@ -39,27 +39,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       return MenuItemCollection;
 
     })(Backbone.Collection);
-    Menus.MenuCollection = (function(_super) {
-      __extends(MenuCollection, _super);
-
-      function MenuCollection() {
-        return MenuCollection.__super__.constructor.apply(this, arguments);
-      }
-
-      MenuCollection.prototype.model = Menus.MenuModel;
-
-      MenuCollection.prototype.getSiteMenus = function() {
-        return this.map(function(model) {
-          return {
-            menu_id: model.get('id'),
-            menu_name: model.get('menu_name')
-          };
-        });
-      };
-
-      return MenuCollection;
-
-    })(Backbone.Collection);
     API = {
       getMenus: function(param) {
         var menuCollection;
@@ -73,28 +52,10 @@ define(["app", 'backbone'], function(App, Backbone) {
           data: param
         });
         return menuCollection;
-      },
-      getMenuItems: function(menuId) {
-        var menuItems;
-        if (menuId == null) {
-          menuId = 0;
-        }
-        menuItems = new Menus.MenuItemCollection;
-        menuItems.url = "" + AJAXURL + "?action=get-menu-items";
-        menuItems.fetch({
-          reset: true,
-          data: {
-            menu_id: menuId
-          }
-        });
-        return menuItems;
       }
     };
-    App.reqres.setHandler("get:site:menus", function() {
+    return App.reqres.setHandler("get:site:menus", function() {
       return API.getMenus();
-    });
-    return App.reqres.setHandler("get:menu:menuitems", function(menuId) {
-      return API.getMenuItems(menuId);
     });
   });
   return App.Entities.Menus;

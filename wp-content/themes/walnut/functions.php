@@ -4,9 +4,12 @@ if ( ! isset( $content_width ) )
 
 require_once 'modules/school/functions.php';
 require_once 'modules/questions/functions.php';
+require_once 'modules/textbooks/ajax.php';
 require_once 'modules/textbooks/functions.php';
 require_once 'modules/menus/ajax.php';
 require_once 'modules/menus/functions.php';
+require_once 'modules/user/ajax.php';
+require_once 'modules/user/functions.php';
 
 add_theme_support('menus');
 
