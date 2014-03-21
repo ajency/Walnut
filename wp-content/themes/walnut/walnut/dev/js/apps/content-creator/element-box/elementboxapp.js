@@ -12,16 +12,12 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       }
 
       ElementBoxController.prototype.initialize = function(options) {
-        var elementsCollection;
-        elementsCollection = App.request("get:elementbox:elements");
-        this.view = this._getElementBoxView(elementsCollection);
+        this.view = this._getElementBoxView();
         return this.show(this.view);
       };
 
       ElementBoxController.prototype._getElementBoxView = function(elementsCollection) {
-        return new ElementBox.Views.ElementBoxView({
-          collection: elementsCollection
-        });
+        return new ElementBox.Views.ElementBoxView;
       };
 
       return ElementBoxController;

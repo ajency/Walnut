@@ -1,0 +1,39 @@
+<div class="content">
+  <ul class="breadcrumb">
+        <li>
+          <p>Dashboard</p>
+        </li>
+    <li>
+          <a href="#"> Content Management</a>
+        </li>
+        <li><a class="active" href="#">Textbooks</a> </li>
+      </ul>
+  <div class="page-title"> <i class="icon-custom-left"></i>
+      <h3>Text<span class="semi-bold">books</span></h3>
+    </div>
+    <div id="Filters" class="pull-left">
+          <div class="btn-group"> <a class="btn dropdown-toggle btn-demo-space" data-toggle="dropdown" href="javascript://"> <span class="anim150">Class</span> <span class="caret"></span> </a>
+            <ul class="dropdown-menu">
+              {{#classes}}
+              <li data-dimension="region" data-filter="southeast"><a href="javascript://">{{.}}</a></li>
+              {{/classes}}
+          </div>
+      </div>
+        <div class="clearfix"></div>
+
+        <div class="just list" id="textbooks">
+          <!-- "TABLE" HEADER CONTAINING SORT BUTTONS (HIDDEN IN GRID MODE)-->
+          <div class="list_header">
+            <div id="SortByName" class="meta name active desc"> Name &nbsp; <span data-order="desc" data-sort="data-name" class="sort anim150 asc active"></span> <span data-order="asc" data-sort="data-name" class="sort anim150 desc"></span> </div>
+            <div class="meta class">Class <span data-order="desc" data-sort="data-class" class="sort anim150 asc"></span> <span data-order="asc" data-sort="data-class" class="sort anim150 desc"></span></div>
+            <div class="meta rec">Chapters</div>
+            <div class="meta area"> Questions/Quizzes </div>
+          </div>
+
+          <!-- FAIL ELEMENT -->
+          <div class="fail_element anim250">Sorry &mdash; we could not find any Textbooks matching matching these criteria</div>
+          <!-- BEGIN LIST OF textbooks (MANY OF THESE ELEMENTS ARE VISIBLE ONLY IN LIST MODE)-->
+          <ul class="textbooks_list">
+          </ul>
+      </div>
+  </div>

@@ -49,10 +49,21 @@ Template Name: Content Creator
 </head>
 <body class="">
 
+	<script type="text/javascript">
+var THEMEURL = 'http://localhost/impruw/testsite93/wp-content/themes/impruwclientparent';
+var SITEURL = 'http://localhost/impruw/testsite93';
+var AJAXURL = 'http://localhost/impruw/testsite93/wp-admin/admin-ajax.php';
+var UPLOADURL = 'http://localhost/impruw/testsite93/wp-admin/async-upload.php';
+var _WPNONCE = '8182442cce';
+var JSVERSION = '0.1';
+var ROOMS = [];
+var ISTHEMESELECTED = 1;
+</script>
+
 <div>
 	<div id="header-region"></div>
 	<div id="left-nav-region"></div>
-	<div id="main-content-region" class="page-content condensed" data-height="1006">
+	<div id="main-content-region" class="page-content" data-height="1006">
 
 	</div>
 </div>

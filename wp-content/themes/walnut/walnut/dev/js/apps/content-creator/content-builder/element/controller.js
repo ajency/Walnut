@@ -3,7 +3,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/element-controller', 'apps/content-creator/content-builder/element/views'], function(App, ElementController) {
-  return App.module('ContentBuilder.Element', function(Element, App, Backbone, Marionette, $, _) {
+  return App.module('ContentCreator.ContentBuilder.Element', function(Element, App, Backbone, Marionette, $, _) {
     return Element.Controller = (function(_super) {
       __extends(Controller, _super);
 

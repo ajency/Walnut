@@ -1,3 +1,6 @@
+@import "variables.less";
+@import "mixins.less";
+@import "builder.less";
  
  .header{
 	.quick-section2{
@@ -18,27 +21,34 @@
 		margin-top: 0;
 		span{
 			margin-top: 0;
+			width: 15px;
+			&:after{
+				left:2px;
+			}
 		}
 	}	
 	.meta.name{
 		width: 30%;
 	}
+	.meta.area{
+		width: 15%;
+	}
 	.meta{
 		//width: 210px;
-		width: 17%;
-		padding: 0 4% 0 2%;
+		width: 20%;
+		padding: 0 2% 0 2%;
 		float: left;
 		}
 	.img_wrapper{
 		//width: 125px;
-		width: 50%;
+		width: 40%;
 		float: left;
 		height: 65px;
 		margin-right: 10px;
 	}
 	.titles{
 		vertical-align: top;
-		width: 45%;
+		width: 54%;
 		float: left;
 		word-break: break-word;
 		h2{
@@ -57,80 +67,6 @@ tbody.rowlink{
 	margin-bottom: 10px;
 }
 
-.creator{
-	position: relative;
-}
-
-#myCanvas{
-	//border: 1px solid #505458;
-	background: #fff;
-	position: absolute;
-	left: 260px;
-	top: 0;
-	width: 730px;
-	height: 500px;
-}
-
-#toolbox{
-	width: 240px;
-	background: #fff;
-	//padding: 15px 10px;
-	.tools, .qstns{
-		padding: 0 10px 20px;
-		ul{
-			padding: 0;
-			li{
-				float: left;
-				border: 2px solid #e5e9ec;
-				//background: #e5e9ec;
-				width: 65px;
-				height: 65px;
-				margin: 4px;
-				list-style-type: none;
-				cursor: move;
-				text-align: center;
-				padding: 0;
-				padding-top: 5%;
-				font-size: 12px;
-				&:hover{
-					background: #0090d9;
-					transition: all 0.2s linear;
-					
-					a{
-						color: #fff;
-						cursor: move;
-					}
-				}
-				
-				i{
-					font-size: 20px;
-				}
-			}
-		}
-	}
-	.qstns{
-		ul{
-			li{
-				width: 102px;
-				height: 40px;
-				font-weight: bold;
-				i{
-					font-size: 16px;
-				}
-			}
-		}
-	}
-}
-
-.dock{
-	position: absolute;
-	right: 0;
-	top: 0;
-	width: 240px;
-	height: 500px;
-	//padding: 15px 10px;
-}
-
 .scrollup{
 	left:auto;
 	right:50px;
@@ -140,51 +76,7 @@ tbody.rowlink{
 	padding: 10px 18px 5px 24px;
 }
 
-.docket{
-	.tile-footer.drag{
-		cursor: move;
-	}
-	ul{
-		padding:0;
-		li{
-			float: left;
-			border: 2px solid #e5e9ec;
-			//background:#e5e9ec;
-			width: 65px;
-			height: 65px;
-			margin: 4px;
-			list-style-type: none;
-			cursor: move;
-			text-align: center;
-			padding: 0;
-			padding-top: 5%;
-			a{
-				cursor: move;
-				&:hover{
-					color: #0aa699;
-				}
-			}
-			i{
-				font-size: 42px;
-			}
-		}
-	}
-}
-
-.docket-body{
-	background: #fff;
-	padding: 15px 10px;
-	color: #000;
-	label{
-		color: #777a80;
-	}
-	select.marks{
-		width: auto;
-	}
-}
-
-
-.mashmenu .mod .mod-content,.mashmenu .menu .sub-content{border-bottom-color:#0090D9}
+.mashmenu .mod .mod-content,.mashmenu .menu .sub-content{border-bottom-color:@color-info}
 .mashmenu .mod:hover a,.mashmenu .menu li.level0:hover>a,.mashmenu .menu .sub-channel li a,.mashmenu .menu li.level0:hover .sub-channel li.hover a .fa-chevron-right,.mashmenu .columns .list a{color:#2AA4CF}
 .mashmenu .mod .mod-content,.mashmenu .mod:hover,.mashmenu .menu li.level0:hover>a,.mashmenu .menu li.level0:hover .sub-channel li.hover a{background-color:#fff}
 .mashmenu .mlogo:hover{background:none}
@@ -194,8 +86,8 @@ tbody.rowlink{
 	position: relative;
 	z-index: 1;
 	margin-bottom: 25px;
-	//background: #0AA699;
-	background: #0090D9;
+	//background: @color-green;
+	background: @color-info;
 
 	div.mlogo{
 		margin-left: 10px;

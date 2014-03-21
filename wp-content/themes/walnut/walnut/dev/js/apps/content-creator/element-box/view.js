@@ -3,26 +3,6 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app'], function(App) {
   return App.module("ContentCreator.ElementBox.Views", function(Views, App) {
-    var ElementView;
-    ElementView = (function(_super) {
-      __extends(ElementView, _super);
-
-      function ElementView() {
-        return ElementView.__super__.constructor.apply(this, arguments);
-      }
-
-      ElementView.prototype.tagName = 'li';
-
-      ElementView.prototype.template = '<a href="#" class="drag builder-element" > <div class="aj-imp-builder-title">{{element}}</div> </a>';
-
-      ElementView.prototype.onRender = function() {
-        console.log(this.model.toJSON());
-        return this.$el.attr('data-element', this.model.get('element'));
-      };
-
-      return ElementView;
-
-    })(Marionette.ItemView);
     return Views.ElementBoxView = (function(_super) {
       __extends(ElementBoxView, _super);
 
@@ -30,11 +10,7 @@ define(['app'], function(App) {
         return ElementBoxView.__super__.constructor.apply(this, arguments);
       }
 
-      ElementBoxView.prototype.template = '<div class="tiles green"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Tool</span>box</h4> </div> </div> <h5 class="semi-bold text-center b-b b-grey p-b-10">Questions</h5> <div class="qstns"> <ul class="elements"></ul> <div class="clearfix"></div> </div>';
-
-      ElementBoxView.prototype.itemView = ElementView;
-
-      ElementBoxView.prototype.itemViewContainer = 'ul.elements';
+      ElementBoxView.prototype.template = '<div class="tiles green"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Tool</span>box</h4> </div> </div> <h5 class="semi-bold text-center b-b b-grey p-b-10">Components</h5> <div class="tools"> <ul> <li data-element="Row"> <a href="#" class="drag builder-element" > <i class="fa fa-font"></i> <div class="aj-imp-builder-title">Row</div> </a> </li> <div class="clearfix"></div> </ul> </div> <h5 class="semi-bold text-center b-b b-grey p-b-10">Questions</h5> <div class="qstns"> <ul class="elements"> <li data-element="Hotspot" > <a href="#" class="drag builder-element" > <div class="aj-imp-builder-title">Hotspot</div> </a> </li> </ul> <div class="clearfix"></div> </div> <h5 class="semi-bold text-center b-b b-grey p-b-10">Elements</h5> <div class="tools"> <ul> <li data-element="Image" class="hotspotable"> <a href="#" class="drag builder-element" > <i class="fa fa-camera"></i> <div class="aj-imp-builder-title">Image</div> </a> </li> <div class="clearfix"></div> </ul> </div>';
 
       ElementBoxView.prototype.onShow = function() {
         return this.$el.find('*[data-element]').draggable({
@@ -49,6 +25,6 @@ define(['app'], function(App) {
 
       return ElementBoxView;
 
-    })(Marionette.CompositeView);
+    })(Marionette.ItemView);
   });
 });

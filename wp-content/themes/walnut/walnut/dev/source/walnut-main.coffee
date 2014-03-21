@@ -4,7 +4,7 @@
 # <li>-load all JS files</li>
 # </ul>
 
-AJAXURL = 'http://localhost/walnut/wp-admin/admin-ajax.php'
+AJAXURL = 'http://walmiki.com/wp-admin/admin-ajax.php';
 
 require.config 
 	
@@ -22,6 +22,11 @@ require.config
 		text				: 'plugins/text'
 		app 				: 'walnut-app' 
 		syphon				: 'plugins/backbone.syphon'
+		sidr 				: 'plugins/jquery.sidr.min'
+		slimroll			: 'plugins/jquery.slimscroll.min'
+		breakpoints			: 'plugins/breakpoints'
+		mustache			: 'plugins/mustache'
+		core				: 'plugins/core'
 
 	shim:
 		underscore: 
@@ -34,6 +39,10 @@ require.config
 		marionette : 
 			deps 	: ['backbone']
 			exports : 'Marionette'
+		sidr 		: ['jquery']
+		slimroll 		: ['jquery']
+		core 		: ['sidr','jquery']
+		breakpoints 		: ['jquery']
 		jqueryvalidate: ['jquery']
 		syphon		: ['backbone']
 		app 		: ['plugins/walnut-pluginloader','config/walnut-configloader']

@@ -7,7 +7,7 @@ define ['marionette'], (Marionette)->
 		leftNavRegion 		: '#left-nav-region'
 		headerRegion  		: '#header-region'
 		mainContentRegion 	: '#main-content-region'
-		dialogRegion 		: '#dialog-region'
+		dialogRegion 		: Marionette.Region.Dialog.extend el : '#dialog-region'
 		loginRegion 		: '#login-region' 
 
 	# The default route for app
@@ -43,8 +43,10 @@ define ['marionette'], (Marionette)->
 	App.on 'start', ->
 		# start the content creator app
 		App.execute "show:content:creator", 
-					region : App.mainContentRegion
-
+						region : App.mainContentRegion
+		
+		App.execute "show:headerapp", region:App.headerRegion
+		App.execute "show:leftnavapp", region:App.leftNavRegion
 		# start header app
 
 		# start left nav app

@@ -2,7 +2,7 @@
 define ['app', 'controllers/element-controller'
 		'apps/content-creator/content-builder/element/views'], (App, ElementController)->
 
-			App.module 'ContentBuilder.Element', (Element, App, Backbone, Marionette, $, _)->
+			App.module 'ContentCreator.ContentBuilder.Element', (Element, App, Backbone, Marionette, $, _)->
 
 				# Controller class for showing header resion
 				class Element.Controller extends ElementController

@@ -4,7 +4,9 @@ define(['marionette'], function(Marionette) {
     leftNavRegion: '#left-nav-region',
     headerRegion: '#header-region',
     mainContentRegion: '#main-content-region',
-    dialogRegion: '#dialog-region',
+    dialogRegion: Marionette.Region.Dialog.extend({
+      el: '#dialog-region'
+    }),
     loginRegion: '#login-region'
   });
   App.rootRoute = "";
@@ -34,8 +36,14 @@ define(['marionette'], function(Marionette) {
     }
   });
   App.on('start', function() {
-    return App.execute("show:content:creator", {
+    App.execute("show:content:creator", {
       region: App.mainContentRegion
+    });
+    App.execute("show:headerapp", {
+      region: App.headerRegion
+    });
+    return App.execute("show:leftnavapp", {
+      region: App.leftNavRegion
     });
   });
   return App;

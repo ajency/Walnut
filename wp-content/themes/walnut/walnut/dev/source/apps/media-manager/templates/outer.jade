@@ -1,0 +1,15 @@
+ul.nav.nav-tabs
+	li.active: a(href="#upload-region" data-toggle="tab") Upload
+	li: a(href="#all-media-region" data-toggle="tab") All Media
+	//li: a(href="#gallery-region" data-toggle="tab") Gallery
+.tab-content
+	.tab-pane.active#upload-region
+	.tab-pane#all-media-region
+		#grid-region.col-md-9
+		#edit-media-region.col-md-3
+			.pick-image
+				span.glyphicon.glyphicon-hand-left
+				h4 Select an Image from the library
+	.tab-pane#gallery-region
+.clearfix
+	button.btn.btn-primary.media-manager-select Select

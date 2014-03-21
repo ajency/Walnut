@@ -149,7 +149,7 @@ Page sidebar
 .page-sidebar  .page-sidebar-wrapper > ul > li:hover >a {  
   background: #1b1e24;
  /* border-left:4px solid  #0aa699;*/
-  padding:11.5px 31px;
+  padding:11.5px 20px;
   color: #fff;
 }
 .page-sidebar  .page-sidebar-wrapper > ul > li.open > a i, 
@@ -264,7 +264,7 @@ Page sidebar
 .notification-alert{
 	width:29px;
 	height:29px;
-	background-image: url("../img/notification-alert.png");
+	background-image: url("../../../images/notification-alert.png");
 	position:absolute;
 	float:right;
 	right:-15px;
@@ -525,7 +525,7 @@ span.iconset{
 }
 
 .iconset{
-	background: url('../img/icon/top-tray.png') no-repeat;
+	background: url('../../../images/icon/top-tray.png') no-repeat;
 	position: relative;
 	top: 1px;
 }
@@ -533,7 +533,7 @@ span.iconset{
 
 .iconset.top-settings { background-position: -35px -6px; width: 16px; height: 16px; top: 1px;}
 
-.iconset.top-messages { background-position: -63px -8px; width: 16px; height: 12px; top: 1px;}
+.iconset.top-messages { background-position: -63px -8px; width: 16px; height: 12px; top: 2px;}
 
 .iconset.top-back { background-position: -92px -8px; width: 15px; height: 14px;}
 
@@ -1166,7 +1166,7 @@ span.iconset{
 	margin-right:5px;
 	display:inline-block;
 	float:left;
-	min-width:163px;
+	/*min-width:163px;*/
 }
 
 .header .chat-toggler .user-details{
@@ -1309,8 +1309,8 @@ span.iconset{
   position: absolute;
   font-size: 10px !important;
   font-weight: 700;
-  top: 0px;
-  right:2px;
+  top: -5px;
+  right:-7px;
   text-align: center;
   background-color: #fb3c4a;
   padding: 4px 6px;
@@ -1402,7 +1402,7 @@ span.iconset{
   position: relative;
   margin: 0;
   border: 0px;
-  padding: 11.5px 31px 11.5px 31px;
+  padding: 11.5px 20px 11.5px 20px;
   text-decoration: none;
   font-size: 14px;
   font-weight: normal;
@@ -1425,7 +1425,7 @@ span.iconset{
   display: block;
   width: 8px;
   height: 25px;
-  background-image: url("../img/sidebar-menu-arrow.png");
+  background-image: url("../../../images/sidebar-menu-arrow.png");
   float: right;
   position: absolute;
   right:-8px;
@@ -1586,7 +1586,7 @@ span.iconset{
 
 /*** Scroll to top *****/
 .scrollup{
-	background: url('../img/pullup.png') no-repeat;
+	background: url('../../../images/pullup.png') no-repeat;
 	background-position:0px 0px;
     width: 27px; height: 27px;
     position:fixed;
@@ -3444,7 +3444,7 @@ form legend,.form-view legend {
 }
  .grid.simple .grid-title .tools a,.grid.solid .grid-title .tools a{
   	position:relative;
-	background: url('../img/icon/portlet-tray.png') no-repeat;
+	background: url('../../../images/icon/portlet-tray.png') no-repeat;
 	transition: all 0.1s linear 0s;
 }
 .grid.simple .grid-title .tools > a.remove, 
@@ -3605,7 +3605,7 @@ border-left:4px solid #736086; border-top:none !important;
   margin-top: 3px;
 }
 .grid.box .grid-title .tools a{
-  background:url(../img/icon/portlet-tray.png) no-repeat;
+  background:url(../../../images/icon/portlet-tray.png) no-repeat;
   width:23px;
   height:23px
 }
@@ -3823,7 +3823,7 @@ border-left:4px solid #736086; border-top:none !important;
           transition: width 30.0s ease !important;
 }
 .status-icon{
-	background: url('../img/icon/status.png') no-repeat;
+	background: url('../../../images/icon/status.png') no-repeat;
 	position: relative;
 	display:inline-block;
 	margin-right:10px;
@@ -4010,7 +4010,7 @@ div.DTTT_print_info p {
  
  .tiles .controller a{
   	position:relative;
-	background: url('../img/icon/portlet-tray.png') no-repeat;
+	background: url('../../../images/icon/portlet-tray.png') no-repeat;
 	transition: all 0.1s linear 0s;	
 	display:inline-block;
 }
@@ -4383,7 +4383,7 @@ border:0;
  }
 .widget-item .controller a{
   	position:relative;
-	background: url('../img/icon/portlet-tray.png') no-repeat;
+	background: url('../../../images/icon/portlet-tray.png') no-repeat;
 	transition: all 0.1s linear 0s;	
 	display:inline-block;
 }
@@ -4499,7 +4499,7 @@ border:0;
  
  .widget .controller a{
   	position:relative;
-	background: url('../img/icon/portlet-tray.png') no-repeat;
+	background: url('../../../images/icon/portlet-tray.png') no-repeat;
 	transition: all 0.1s linear 0s;	
 	display:inline-block;
 }
@@ -5152,7 +5152,7 @@ border-bottom-right-radius: 3px;
 
 .nav .tools a{
   	position:relative;
-	background: url('../img/icon/portlet-tray.png') no-repeat;
+	background: url('../../../images/icon/portlet-tray.png') no-repeat;
 	transition: all 0.1s linear 0s;
 }
 .nav .tools > a.remove, 
@@ -5521,7 +5521,7 @@ box-shadow: inset 0px 1px 2px 0px rgba(0,0,0,0.11)!important;
 	top: 8px;
 }
 .alert .close{
-	background: url("../img/icon/noti-cross.png") no-repeat scroll 0 0 transparent;
+	background: url("../../../images/icon/noti-cross.png") no-repeat scroll 0 0 transparent;
 	background-position: -9px -10px;
 	width: 10px; height: 9px;
     position: relative;
@@ -7456,7 +7456,7 @@ ul.my-friends li .profile-pic{
 
 /*** Search Results ***/
 
-#Parks{
+#textbooks{
 	margin-bottom: 30px;
 }
 
@@ -7486,7 +7486,7 @@ ul.my-friends li .profile-pic{
 
 /* FAIL ELEMENT */
 
-#Parks{
+#textbooks{
 	position: relative;
 	margin:0px;
 	padding:0;
@@ -7510,7 +7510,7 @@ ul.my-friends li .profile-pic{
 
 /* LIST VIEW STYLES */
 
-#Parks.list .list_header{
+#textbooks.list .list_header{
 	height: 38px;
 	line-height: 38px;
 	background: #d1dade;
@@ -7522,7 +7522,7 @@ ul.my-friends li .profile-pic{
 	border-radius: 3px;
 }
 
-#Parks.list .meta{
+#textbooks.list .meta{
 	display: inline-block;
 	width: 205px;
 	text-align: center;
@@ -7532,25 +7532,25 @@ ul.my-friends li .profile-pic{
 	vertical-align: top;
 }
 
-#Parks.list .list_header .meta{
+#textbooks.list .list_header .meta{
 	line-height: 38px;
 	border: 0 none;
 	 margin-top: -8px;
 	 vertical-align: inherit;
 }
 
-#Parks.list .meta.name{
+#textbooks.list .meta.name{
 	float: left;
 	text-align: left;
 	width: auto;
 	border-left: 0 none;
 }
 
-#Parks.list .list_header .meta.name{
+#textbooks.list .list_header .meta.name{
 	padding-left: 15px;
 }
 
-#Parks.list .list_header .meta span{
+#textbooks.list .list_header .meta span{
 	position: relative;
 	display: inline-block;
 	width: 24px;
@@ -7563,7 +7563,7 @@ ul.my-friends li .profile-pic{
 	border-radius: 3px;
 }
 
-#Parks.list .list_header .meta span:after{
+#textbooks.list .list_header .meta span:after{
 	content: '';
 	position: absolute;
 	top: 9px;
@@ -7571,37 +7571,37 @@ ul.my-friends li .profile-pic{
 	border: 5px solid transparent;
 }
 
-#Parks.list .list_header .meta span.asc:after{
+#textbooks.list .list_header .meta span.asc:after{
 	border-top: 7px solid #8E9AA2;
 }
 
-#Parks.list .list_header .meta span.desc:after{
+#textbooks.list .list_header .meta span.desc:after{
 	top: 4px;
 	border-bottom: 7px solid #8e9aa2;
 }
 
-#Parks.list .list_header .meta span:hover{
+#textbooks.list .list_header .meta span:hover{
 	background: #b8bbbe;
 }
 
-#Parks.list .list_header .meta span.asc:hover:after{
+#textbooks.list .list_header .meta span.asc:hover:after{
 	border-top-color: #e5e9ec;
 }
 
-#Parks.list .list_header .meta span.desc:hover:after{
+#textbooks.list .list_header .meta span.desc:hover:after{
 	border-bottom-color: #e5e9ec;
 }
 
-#Parks.list .list_header .meta span.active.asc:after{
+#textbooks.list .list_header .meta span.active.asc:after{
 	border-top-color: #505458;
 }
 
-#Parks.list .list_header .meta span.active.desc:after{
+#textbooks.list .list_header .meta span.active.desc:after{
 	border-bottom-color: #505458;
 }
 
 
-#Parks.list .mix{
+#textbooks.list .mix{
 	display: none;
 	opacity: 0;
 	padding: 18px 0 14px;
@@ -7614,22 +7614,22 @@ ul.my-friends li .profile-pic{
 	font-weight: 300;
 }
 
-#Parks.list .mix .meta *{
+#textbooks.list .mix .meta *{
 	line-height: 1;
 }
 
-#Parks.list .mix .meta p,
-#Parks.list .mix .meta ul{
+#textbooks.list .mix .meta p,
+#textbooks.list .mix .meta ul{
 	display: inline-block;
 	vertical-align: middle;
 	list-style: none;
 }
 
-#Parks.list .mix .meta li{
+#textbooks.list .mix .meta li{
 	margin-bottom: 5px;
 }
 
-#Parks.list .img_wrapper{
+#textbooks.list .img_wrapper{
 	display: inline-block;
 	width: 177px;
 	height: 95px;
@@ -7637,12 +7637,12 @@ ul.my-friends li .profile-pic{
 	margin-right: 30px;
 }
 
-#Parks.list .titles{
+#textbooks.list .titles{
 	display: inline-block;
 	vertical-align: middle;
 }
 
-#Parks.list .titles h2{
+#textbooks.list .titles h2{
 	font-weight: 700;
 	font-size: 17px;
 	text-transform: uppercase;
@@ -7652,22 +7652,22 @@ ul.my-friends li .profile-pic{
 	line-height: 1.2 !important;
 }
 
-#Parks.list .titles p{
+#textbooks.list .titles p{
 	text-indent: -2px;
 }
 
 /* GRID VIEW STYLES */
 
-#Parks.grid{
+#textbooks.grid{
 	text-align: justify;
 }
 
-#Parks.grid .list_header,
-#Parks.grid .meta{
+#textbooks.grid .list_header,
+#textbooks.grid .meta{
 	display: none;
 }
 
-#Parks.grid .meta.name{
+#textbooks.grid .meta.name{
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -7675,7 +7675,7 @@ ul.my-friends li .profile-pic{
 	display: block;
 }
 
-#Parks.grid .mix{
+#textbooks.grid .mix{
 	display: none;
 	opacity: 0;
 	position: relative;
@@ -7684,14 +7684,14 @@ ul.my-friends li .profile-pic{
 	margin-bottom: 3%;
 }
 
-#Parks.grid .img_wrapper{
+#textbooks.grid .img_wrapper{
 	position: absolute;
 	width: 100%;
 	height: 100%;
 	background: #000;
 }
 
-#Parks.grid .titles{
+#textbooks.grid .titles{
 	position: relative;
 	width: 90%;
 	max-width: 400px;
@@ -7706,7 +7706,7 @@ ul.my-friends li .profile-pic{
 	text-align: center;
 }
 
-#Parks.grid .titles h2{
+#textbooks.grid .titles h2{
 	font-weight: 700;
 	font-size: 17px;
 	text-transform: uppercase;
@@ -7715,13 +7715,18 @@ ul.my-friends li .profile-pic{
 	margin-bottom: 3px;
 }
 
-#Parks.grid .titles p{
+#textbooks.grid .titles p{
 	font-weight: 300;
 	text-indent: -2px;
 }
-#Parks ul{
+#textbooks ul{
 	padding-left:0;
 }
+#textbooks ul.textbooks_list li{
+	display: block !important;  opacity: 1 !important;
+}
+
+
 /** Global Profile pics **/
 .user-profile img{
 	border-radius: 100px 100px 100px 100px;

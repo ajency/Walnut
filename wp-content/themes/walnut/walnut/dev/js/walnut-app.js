@@ -26,18 +26,30 @@ define(['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
+    var xhr;
     App.startHistory();
-    if (!this.getCurrentRoute()) {
-      App.navigate(this.rootRoute, {
-        trigger: true
-      });
-    }
-    return App.vent.trigger("show:dashboard");
+    return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, function(resp) {
+      var user;
+      if (resp.success) {
+        user = App.request("get:user:model");
+        user.set(resp.data);
+        return App.vent.trigger("show:dashboard");
+      } else {
+        this.rootRoute = 'login';
+        if (!this.getCurrentRoute()) {
+          return App.navigate(this.rootRoute, {
+            trigger: true
+          });
+        }
+      }
+    }, 'json');
   });
   App.vent.on("show:dashboard", function() {
-    console.log('headerRegion');
-    return App.execute("show:headerapp", {
+    App.execute("show:headerapp", {
       region: App.headerRegion
+    });
+    return App.execute("show:leftnavapp", {
+      region: App.leftNavRegion
     });
   });
   return App;
