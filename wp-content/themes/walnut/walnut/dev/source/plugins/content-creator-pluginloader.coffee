@@ -2,6 +2,7 @@ define [
 			'underscore'
 			'jquery'
 			'jqueryui'
+			'jqueryresize'
 			'underscorestring'
 			'kinetic'
 			'plupload'

@@ -39,9 +39,11 @@ define ['app'],(App)->
 								height: @$el.parent().height()+80
 
 
-				# @$el.parent().width().on 'change',->
-				# 		@stage.setSize
-				# 				width : @
+				$('#stage.stage').resize ()=>
+					console.log $('#stage.stage').width()
+					@stage.setSize
+						width: $('#stage.stage').width()
+						height: $('#stage.stage').height()-5
 							
 					
 

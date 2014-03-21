@@ -12,6 +12,7 @@ require.config
 	paths:
 		jquery 				: 'plugins/jquery'
 		jqueryui 			: 'plugins/jquery.ui'
+		jqueryresize		: 'plugins/jquery.ba-resize.min'
 		kinetic				: 'plugins/kinetic'
 		kineticresize		: 'plugins/kinetic.plugin.resize'
 		jqueryvalidate		: 'plugins/jquery.validate.min'
@@ -34,6 +35,7 @@ require.config
 			exports : '_'
 		jquery 		: ['underscore']
 		jqueryui 	: ['jquery']
+		jqueryresize : ['jquery','jqueryui']
 		kineticresize : ['kinetic']
 		backbone: 
 			deps 	: ['jquery','underscore']
