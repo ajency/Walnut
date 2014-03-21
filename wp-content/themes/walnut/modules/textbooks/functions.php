@@ -257,8 +257,10 @@ function get_book($book) {
     return $book_dets;
 }
 
-function get_textbooks_for_class() {
-    
+//fetching textbooks list based on the classid passed
+function get_textbooks_for_class($classid) {
+    global $wbpd;
+    $textbook_ids=$wpdb->get_results("select ");
 }
 
 function get_textbooks_for_user(){
