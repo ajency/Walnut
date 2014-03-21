@@ -4,7 +4,7 @@ var __hasProp = {}.hasOwnProperty,
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module("ContentCreator.PropertyDock.QuestionPropertyBox", function(QuestionPropertyBox, App, Backbone, Marionette, $, _) {
     var QuestionPropertyBoxController;
-    return QuestionPropertyBoxController = (function(_super) {
+    QuestionPropertyBoxController = (function(_super) {
       __extends(QuestionPropertyBoxController, _super);
 
       function QuestionPropertyBoxController() {
@@ -14,5 +14,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return QuestionPropertyBoxController;
 
     })(RegionController);
+    return App.commands.setHandler("");
   });
 });

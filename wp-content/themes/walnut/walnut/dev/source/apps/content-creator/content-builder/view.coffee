@@ -6,6 +6,7 @@ define ['app'],(App)->
 
 			template : '<div id="myCanvas" class="droppable-column" height="300"></div>'
 
+
 			onRender : ->
 				@$el.attr 'id','site-page-content-region'
 
