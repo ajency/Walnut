@@ -11,6 +11,13 @@
 	width: 730px;
 	min-height: 500px !important;
 	padding: 15px 10px;
+
+	li.ui-sortable-placeholder{
+		list-style: none;
+		padding: 20px 0;
+		background: lighten(@dash-grey, 15%);
+		border: none;
+	}
 }
 
 #toolbox{
@@ -24,7 +31,7 @@
 			li{
 				float: left;
 				border: 2px solid #e5e9ec;
-				//background: #e5e9ec;
+				background: #fff;
 				width: 65px;
 				height: 65px;
 				margin: 4px;
@@ -215,7 +222,7 @@
 		border-color: @color-blue;
 		.ease;
 		>.element-controls {
-			.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-settings-btn {
+			.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-settings-btn, .aj-imp-col-divider {
 				display: block;
 				.ease;
 			}
@@ -292,6 +299,7 @@
 
 .aj-imp-col-divider {
 	position: absolute !important;
+	display: none;
 	width: 1px;
 	background: lighten(@dash-grey, 20%);
 	top: 1em;
