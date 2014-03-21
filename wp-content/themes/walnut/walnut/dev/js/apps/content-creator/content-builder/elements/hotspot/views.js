@@ -30,6 +30,15 @@ define(['app'], function(App) {
           width: this.$el.parent().width() - 15,
           height: this.$el.parent().height() + 80
         });
+        $('#stage.stage').resize((function(_this) {
+          return function() {
+            console.log($('#stage.stage').width());
+            return _this.stage.setSize({
+              width: $('#stage.stage').width(),
+              height: $('#stage.stage').height() - 5
+            });
+          };
+        })(this));
         this.imageLayer = new Kinetic.Layer;
         this.optionLayer = new Kinetic.Layer;
         this.stage.add(this.imageLayer);
