@@ -9,4 +9,4 @@ define ['app'
 					class QuestionPropertyBoxController extends RegionController
 
 
-					
+					App.commands.setHandler ""

@@ -21,13 +21,18 @@ resizeCircle = function(circle,layer){
         x: subjectX+subjectRadius+draggerOffset,
         y: subjectY,
         radius: draggerRadius,
-        fill: 'skyblue',
-        stroke: 'lightgray',
-        strokeWidth: 3,
+        stroke: '#666',
+        fill: '#ddd',
+        strokeWidth: 2,
+
         draggable:true,
         dragBoundFunc: function(pos) {
             return { x: pos.x, y: this.getAbsolutePosition().y }
         }
+
+
+
+       
     });
     dragCircle.on("dragmove",function(){
         var x1=this.getAbsolutePosition().x;
@@ -41,6 +46,20 @@ resizeCircle = function(circle,layer){
         r=Math.max(5,r);
         circle.resize(r);
       //  dragLine.setPoints([myGuageX,myGuageY, x1,y1]);
+    });
+
+
+    dragCircle.on('mouseover', function () {
+        var layer = this.getLayer();
+        document.body.style.cursor = 'pointer';
+        this.strokeWidth(4);
+        layer.draw();
+    });
+    dragCircle.on('mouseout', function () {
+        var layer = this.getLayer();
+        document.body.style.cursor = 'default';
+        this.strokeWidth(2);
+        layer.draw();
     });
     
 

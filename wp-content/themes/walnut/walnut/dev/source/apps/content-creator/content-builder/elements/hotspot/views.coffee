@@ -13,37 +13,31 @@ define ['app'],(App)->
 			template : '&nbsp;'
 
 			initialize:(opt = {})->
-
-
-
-			# events:
-			# 	'click'	: (e)->
-			# 				e.stopPropagation()
-			# 				@trigger "show:media:manager"
-
+				#give a unique name to every hotspot canvas
+				@stageName = "stage"+ new Date().getTime()
 
 			onRender:->
 
-				@$el.attr 'id','stage'
+				@$el.attr 'id', @stageName
 				
 
 			onShow:()->
 				# width = @$el.parent().width()
 				# @$el.width width	
-				
+				console.log "in canvas"
 
 
 				@stage = new Kinetic.Stage
-								container: 'stage'
+								container: @stageName
 								width: @$el.parent().width()-15
 								height: @$el.parent().height()+80
 
 
-				$('#stage.stage').resize ()=>
-					console.log $('#stage.stage').width()
+				$('#'+@stageName+'.stage').resize ()=>
+					console.log $('#'+@stageName+'.stage').width()
 					@stage.setSize
-						width: $('#stage.stage').width()
-						height: $('#stage.stage').height()-5
+						width: $('#'+@stageName+'.stage').width()
+						height: $('#'+@stageName+'.stage').height()-5
 							
 					
 
@@ -61,14 +55,14 @@ define ['app'],(App)->
 						@_addShapes type, elementPos
 
 
-				$('.stage .kineticjs-content').droppable
+				$('#'+@stageName+' .kineticjs-content').droppable
 						accept : '.hotspotable'
 						drop : (evt, ui)=>
 								if ui.draggable.prop("tagName") is 'LI'
 										type  = ui.draggable.attr 'data-element'
 										elementPos = 
-											left : evt.clientX-$('.stage .kineticjs-content').offset().left
-											top  : evt.clientY-$('.stage .kineticjs-content').offset().top + window.pageYOffset
+											left : evt.clientX-$('#'+@stageName+' .kineticjs-content').offset().left
+											top  : evt.clientY-$('#'+@stageName+' .kineticjs-content').offset().top + window.pageYOffset
 										@trigger "add:hotspot:element", type , elementPos
 
 

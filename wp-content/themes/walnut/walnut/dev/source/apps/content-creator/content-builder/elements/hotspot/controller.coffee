@@ -58,6 +58,7 @@ define ['app'
 
 					# remove the element model
 					deleteElement:(model)->
+						
 						if not @layout.elementRegion.currentView.$el.canBeDeleted()
 							alert "Please remove elements inside row and then delete."							
 						else

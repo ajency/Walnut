@@ -26,6 +26,12 @@
   min-height: 500px !important;
   padding: 15px 10px;
 }
+#myCanvas li.ui-sortable-placeholder {
+  list-style: none;
+  padding: 20px 0;
+  background: #d0d0d0;
+  border: none;
+}
 #toolbox {
   width: 240px;
   background: #fff;
@@ -42,6 +48,7 @@
 #toolbox .qstns ul li {
   float: left;
   border: 2px solid #e5e9ec;
+  background: #fff;
   width: 65px;
   height: 65px;
   margin: 4px;
@@ -80,6 +87,13 @@
   top: 0;
   width: 240px;
   height: 500px;
+}
+.dock .builder_actions {
+  background: #e5e9ec;
+  padding-bottom: 15px;
+}
+.dock .btn-cons2 {
+  width: 118px;
 }
 .docket .tile-footer.drag {
   cursor: move;
@@ -275,7 +289,8 @@
 }
 .element-wrapper.hover-class:hover > .element-controls .aj-imp-drag-handle,
 .element-wrapper.hover-class:hover > .element-controls .aj-imp-delete-btn,
-.element-wrapper.hover-class:hover > .element-controls .aj-imp-settings-btn {
+.element-wrapper.hover-class:hover > .element-controls .aj-imp-settings-btn,
+.element-wrapper.hover-class:hover > .element-controls .aj-imp-col-divider {
   display: block;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
@@ -350,6 +365,7 @@
 }
 .aj-imp-col-divider {
   position: absolute !important;
+  display: none;
   width: 1px;
   background: #dddddd;
   top: 1em;
@@ -408,9 +424,7 @@
 
 }
 .row {
-  margin: 0 0 1em;
   position: relative;
-  border: 1px solid transparent;
 }
 .row .column {
   background: transparent;
