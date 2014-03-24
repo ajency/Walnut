@@ -50,7 +50,9 @@ define ['marionette'], (Marionette)->
 					if(resp.success)
 						user = App.request "get:user:model"
 						user.set resp.data
-						App.vent.trigger "show:dashboard"
+						App.execute "show:headerapp", region:App.headerRegion
+						App.execute "show:leftnavapp", region:App.leftNavRegion
+						App.vent.trigger "show:dashboard"  unless @getCurrentRoute()
 					else 	
 						@rootRoute = 'login' 
 						# if not logged in change rootRoute to login		
@@ -61,8 +63,6 @@ define ['marionette'], (Marionette)->
 		
 			
 	App.vent.on "show:dashboard", ->
-		App.execute "show:headerapp", region:App.headerRegion
-		App.execute "show:leftnavapp", region:App.leftNavRegion
 		App.navigate('textbooks', trigger: true)
 			
 	App

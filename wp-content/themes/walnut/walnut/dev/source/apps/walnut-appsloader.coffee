@@ -3,4 +3,5 @@ define [
 		'apps/header/headerapp'
 		'apps/left-nav/leftnavapp'
 		'apps/textbooks/app'
+		'apps/textbook-single/app'
 		], ->

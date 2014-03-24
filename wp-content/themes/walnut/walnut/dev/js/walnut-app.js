@@ -34,7 +34,15 @@ define(['marionette'], function(Marionette) {
         if (resp.success) {
           user = App.request("get:user:model");
           user.set(resp.data);
-          return App.vent.trigger("show:dashboard");
+          App.execute("show:headerapp", {
+            region: App.headerRegion
+          });
+          App.execute("show:leftnavapp", {
+            region: App.leftNavRegion
+          });
+          if (!_this.getCurrentRoute()) {
+            return App.vent.trigger("show:dashboard");
+          }
         } else {
           _this.rootRoute = 'login';
           if (!_this.getCurrentRoute()) {
@@ -47,12 +55,6 @@ define(['marionette'], function(Marionette) {
     })(this), 'json');
   });
   App.vent.on("show:dashboard", function() {
-    App.execute("show:headerapp", {
-      region: App.headerRegion
-    });
-    App.execute("show:leftnavapp", {
-      region: App.leftNavRegion
-    });
     return App.navigate('textbooks', {
       trigger: true
     });

@@ -13,7 +13,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
 
       ListItemView.prototype.tagName = 'li';
 
-      ListItemView.prototype.className = 'mix northeast camping climbing fishing swimming mix_all';
+      ListItemView.prototype.className = 'mix';
 
       ListItemView.prototype.template = listitemTpl;
 
@@ -44,7 +44,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
           var _results;
           _results = [];
           while (num < 15) {
-            data.classes.push('Class ' + num);
+            data.classes.push(num);
             _results.push(num++);
           }
           return _results;
@@ -53,11 +53,11 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       };
 
       ListView.prototype.events = {
-        'click .btn-group': 'dropdown_popup'
-      };
-
-      ListView.prototype.initialize = function() {
-        return console.log('textbooks');
+        'click .btn-group': 'dropdown_popup',
+        'click .sort': 'sortTable',
+        'click .filter_class': function(e) {
+          return this.trigger("filter:textbooks:class", $(e.target).closest('li').attr('data-filter'));
+        }
       };
 
       ListView.prototype.dropdown_popup = function(e) {
@@ -66,6 +66,20 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
         } else {
           return $(e.target).closest('div').addClass('open');
         }
+      };
+
+      ListView.prototype.sortTable = function(e) {
+        var data_sort, options, sort_by;
+        options = {};
+        data_sort = $(e.target).attr('data-sort');
+        sort_by = data_sort.split('-');
+        options.orderby = sort_by[1];
+        options.order = $(e.target).attr('data-order');
+        return this.trigger("sort:textbooks", options);
+      };
+
+      ListView.prototype.onShow = function() {
+        return console.log(this.collection);
       };
 
       return ListView;
