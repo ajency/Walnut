@@ -17,7 +17,7 @@ define ['app'
 
 					onRender:->
 						@$el.find('input[type="checkbox"]').checkbox()
-						@$el.find('select').selectpicker()
+						# @$el.find('select').selectpicker()
 						@setFields()
 
 					# set fields for the form
@@ -25,7 +25,7 @@ define ['app'
 						if @eleModel.get('draggable') is true
 							@$el.find('input[name="draggable"]').checkbox('check')
 						
-						@$el.find('select[name="style"]').selectpicker 'val',@eleModel.get 'style'
+						# @$el.find('select[name="style"]').selectpicker 'val',@eleModel.get 'style'
 						
 
 					events:

@@ -31,3 +31,5 @@ define ['app'
 				App.commands.setHandler "show:element:box", (options)->
 								new ElementBoxController
 											region : options.region
+
+				# App.commands.setHandler

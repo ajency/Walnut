@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ElementBox", function(ElementBox, App, Backbone, Marionette, $, _) {
-    var API;
+    var API, elementboxCollection;
     ElementBox.ElementModel = (function(_super) {
       __extends(ElementModel, _super);
 
@@ -32,22 +32,32 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ElementCollection;
 
     })(Backbone.Collection);
+    elementboxCollection = new ElementBox.ElementCollection;
+    elementboxCollection.add([
+      {
+        element: "Hotspot"
+      }, {
+        element: "Row"
+      }
+    ]);
     API = {
       getElements: function(param) {
         if (param == null) {
           param = {};
         }
-        return new ElementBox.ElementCollection([
-          {
-            element: "Hotspot"
-          }, {
-            element: "Row"
-          }
-        ]);
+      },
+      getElementSettingOptions: function(ele) {
+        var element;
+        console.log(elementboxCollection.get(ele));
+        element = elementboxCollection.get(ele);
+        return element;
       }
     };
-    return App.reqres.setHandler("get:elementbox:elements", function() {
+    App.reqres.setHandler("get:elementbox:elements", function() {
       return API.getElements();
+    });
+    return App.reqres.setHandler("get:element:settings:options", function(ele) {
+      return API.getElementSettingOptions(ele);
     });
   });
 });
