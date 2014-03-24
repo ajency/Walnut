@@ -24,15 +24,13 @@ define(['app', 'text!apps/content-creator/content-builder/elements/row/settings/
 
       SettingsView.prototype.onRender = function() {
         this.$el.find('input[type="checkbox"]').checkbox();
-        this.$el.find('select').selectpicker();
         return this.setFields();
       };
 
       SettingsView.prototype.setFields = function() {
         if (this.eleModel.get('draggable') === true) {
-          this.$el.find('input[name="draggable"]').checkbox('check');
+          return this.$el.find('input[name="draggable"]').checkbox('check');
         }
-        return this.$el.find('select[name="style"]').selectpicker('val', this.eleModel.get('style'));
       };
 
       SettingsView.prototype.events = {

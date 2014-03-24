@@ -28,6 +28,7 @@ require.config
 		syphon				: 'plugins/backbone.syphon'
 		underscorestring	: 'plugins/underscorestring'
 		entitiesloader 		: 'entities/content-creator-entities-loader'
+		checkbox			: 'plugins/flatui-checkbox'
 		
 
 	shim:
@@ -47,6 +48,7 @@ require.config
 			deps : ['jquery']
 			exports : 'plupload'
 		bootstrap : ['jquery']
+		checkbox  : ['bootstrap']
 		jqueryvalidate: ['jquery']
 		underscorestring : ['underscore']
 		syphon		: ['backbone']

@@ -41,6 +41,9 @@ define(['app'], function(App) {
             });
           };
         })(this));
+        $('#' + this.stageName + '.stage').resizable({
+          handles: "s"
+        });
         this.imageLayer = new Kinetic.Layer;
         this.optionLayer = new Kinetic.Layer;
         this.stage.add(this.imageLayer);
