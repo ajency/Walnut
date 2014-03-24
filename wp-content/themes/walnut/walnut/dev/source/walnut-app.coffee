@@ -46,7 +46,7 @@ define ['marionette'], (Marionette)->
 
 		xhr = $.get "#{AJAXURL}?action=get-user-data", 
 				{}, 
-				(resp)->
+				(resp)=>
 					if(resp.success)
 						user = App.request "get:user:model"
 						user.set resp.data

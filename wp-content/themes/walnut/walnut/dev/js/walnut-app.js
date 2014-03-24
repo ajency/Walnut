@@ -28,21 +28,23 @@ define(['marionette'], function(Marionette) {
   App.on("initialize:after", function(options) {
     var xhr;
     App.startHistory();
-    return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, function(resp) {
-      var user;
-      if (resp.success) {
-        user = App.request("get:user:model");
-        user.set(resp.data);
-        return App.vent.trigger("show:dashboard");
-      } else {
-        this.rootRoute = 'login';
-        if (!this.getCurrentRoute()) {
-          return App.navigate(this.rootRoute, {
-            trigger: true
-          });
+    return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
+      return function(resp) {
+        var user;
+        if (resp.success) {
+          user = App.request("get:user:model");
+          user.set(resp.data);
+          return App.vent.trigger("show:dashboard");
+        } else {
+          _this.rootRoute = 'login';
+          if (!_this.getCurrentRoute()) {
+            return App.navigate(_this.rootRoute, {
+              trigger: true
+            });
+          }
         }
-      }
-    }, 'json');
+      };
+    })(this), 'json');
   });
   App.vent.on("show:dashboard", function() {
     App.execute("show:headerapp", {

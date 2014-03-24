@@ -1,4 +1,4 @@
-define ['app'],(App)->
+define ['app','text!apps/left-nav/templates/leftnav.html'],(App,navTpl)->
 
 	App.module "LeftNavApp.Controller.Views",(Views, App)->
 
@@ -6,21 +6,12 @@ define ['app'],(App)->
 
 			tagName : 'li'
 
-			template : '<a href="{{menu_item_link}}"><span class="title">{{post_title}}</span></a>'
+			template : '<a href="{{menu_item_link}}"><span>{{post_title}}</span></a>'
 
 
 		class Views.LeftNavView extends Marionette.CompositeView
 
-			template 	: '<div id="main-menu-wrapper" class="page-sidebar-wrapper">
-								<p class="menu-title">SCHOOL 1
-									<span class="pull-right">
-										<a href="javascript:;">
-											<i class="fa fa-refresh"></i>
-										</a>
-									</span>
-								</p>
-								<ul class="menu"></ul>
-							</div>'
+			template 	: navTpl
 			
 			id 			: 'main-menu' 
 
@@ -28,5 +19,5 @@ define ['app'],(App)->
 
 			itemView 	: MenuItemView
 
-			itemViewContainer : '> .page-sidebar-wrapper > ul.menu'
+			itemViewContainer : 'ul.sub-menu'
 

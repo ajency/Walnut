@@ -15,12 +15,9 @@ class TextBooksFunctionsTest extends WP_UnitTestCase {
     }
     
     public function testIfTextBookByClassIdIsProper() {
-        $args = array(
-            'parent' => 0,
-            'class' => 1
-        );
+        $classid=1;
         //$term_id = 15;
-        $textbooks = get_textbooks_for_class($args);
+        $textbooks = get_textbooks_for_class($classid);
         print_r($textbooks);
         $this->assertInternalType('array', $textbooks);
     }

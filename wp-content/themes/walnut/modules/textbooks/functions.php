@@ -189,7 +189,7 @@ function get_textbooks($args = array()) {
         'hide_empty' => false,
         'parent' => 0,
         'fetch_all' => false,
-        'orderby'   => 'term_order',
+        'orderby' => 'term_order',
         'user_id' => get_current_user_id(),
         'class_id' => ''
     );
@@ -201,11 +201,11 @@ function get_textbooks($args = array()) {
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all)
         $textbooks = get_terms('textbook', $args);
-    
+
     //if filtering for a particular class, get textbooks based on which class they belong to
     else if (is_numeric($class_id))
         $textbooks = get_textbooks_for_class($class_id);
-    
+
     //get textbooks for logged in user depending on the class the user belongs to
     //generally used for logged in students
     else
@@ -232,8 +232,12 @@ function get_book($book) {
     if (is_numeric($book->term_id))
         $book_id = $book->term_id;
 
-    else {
-        return;
+    else if (is_numeric($book)) {
+        $book_id = $book;
+        $book_dets=get_term($book, 'textbook');
+        
+    } else {
+        return false;
     }
 
     $book_dets = array();
@@ -247,11 +251,11 @@ function get_book($book) {
     foreach ($classes as $class) {
         $book_dets->classes[] = $class->class_id;
     }
-    
-    $args=array('hide_empty' => false,
+
+    $args = array('hide_empty' => false,
         'parent' => $book_id,
-        'fields' =>'count');
-    
+        'fields' => 'count');
+
     $book_dets->chapter_count = get_terms('textbook', $args);
 
     return $book_dets;
@@ -259,10 +263,18 @@ function get_book($book) {
 
 //fetching textbooks list based on the classid passed
 function get_textbooks_for_class($classid) {
-    global $wbpd;
-    $textbook_ids=$wpdb->get_results("select ");
+    global $wpdb;
+    $txtbook_qry = "select textbook_id from {$wpdb->prefix}textbook_relationships where class_id=" . $classid;
+    $textbook_ids = $wpdb->get_results($txtbook_qry);
+    
+    if (is_array($textbook_ids)) {
+        foreach ($textbook_ids as $book) {
+            $data[] = get_book($book->textbook_id);
+        }
+    }
+    return $data;
 }
 
-function get_textbooks_for_user(){
+function get_textbooks_for_user() {
     
 }

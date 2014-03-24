@@ -2,7 +2,7 @@
   baseUrl: './js',
   name: 'plugins/almond',
   include : 'content-creator-main',
-  //optimize: 'none',
+  optimize: 'none',
   wrap: false,
   out: '../production/content-creator-main.js',
   paths: {
