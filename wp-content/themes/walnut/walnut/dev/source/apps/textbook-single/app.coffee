@@ -7,11 +7,11 @@ define ['app'
 				class TextbookSingleRouter extends Marionette.AppRouter
 
 					appRoutes : 
-						'testSingleTestbook' : 'showSingleTextbook'
+						'textbook/:term_id' : 'showSingleTextbook'
 
 
 				Controller = 
-					showSingleTextbook : ->
+					showSingleTextbook :(term_id)->
 						new TextbookSingleApp.Controller.SingleTextbook
 											region : App.mainContentRegion
 

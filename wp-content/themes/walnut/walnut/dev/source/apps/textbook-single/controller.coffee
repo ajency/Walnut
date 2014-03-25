@@ -20,5 +20,9 @@ define ['app', 'controllers/region-controller', 'text!apps/textbook-single/templ
 
 			className : 'page-content'
 
+
+			onShow:->
+				console.log @collection
+
 	
 
