@@ -29,6 +29,7 @@ require.config
 		underscorestring	: 'plugins/underscorestring'
 		entitiesloader 		: 'entities/content-creator-entities-loader'
 		checkbox			: 'plugins/flatui-checkbox'
+		componentloader 	: 'components/builder-component-loader'
 		
 
 	shim:
@@ -61,6 +62,7 @@ require [	'plugins/content-creator-pluginloader'
 			'configs/content-creator-configloader'
 			'app'
 			'entitiesloader'
+			'componentloader'
 			'apps/content-creator-appsloader'
 			], (plugins, configs, App)->
 

@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app'], function(App) {
   return App.module('ContentCreator.ContentBuilder.AutoSave', function(AutoSave, App, Backbone, Marionette, $, _) {
-    return AutoSave.Controller = (function(_super) {
+    AutoSave.Controller = (function(_super) {
       __extends(Controller, _super);
 
       function Controller() {
@@ -71,5 +71,8 @@ define(['app'], function(App) {
       return Controller;
 
     })(Marionette.Controller);
+    return App.reqres.setHandler("autosave:question:layout", function() {
+      return new AutoSave.Controller;
+    });
   });
 });

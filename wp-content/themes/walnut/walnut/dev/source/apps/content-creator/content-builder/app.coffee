@@ -33,7 +33,7 @@ define ['app'
 
 					saveQuestion :->
 
-						autoSave = new ContentBuilder.AutoSave.Controller
+						autoSave = App.request "autosave:question:layout"
 						autoSave.autoSave()
 
 
