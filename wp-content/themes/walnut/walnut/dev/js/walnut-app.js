@@ -29,16 +29,11 @@ define(['marionette'], function(Marionette) {
     var xhr;
     App.startHistory();
     this.rootRoute = 'login';
-    if (!this.getCurrentRoute()) {
-      App.navigate(this.rootRoute, {
-        trigger: true
-      });
-    }
-    return;
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
         var user;
         if (resp.success) {
+          console.log(resp);
           user = App.request("get:user:model");
           user.set(resp.data);
           App.execute("show:headerapp", {
@@ -47,16 +42,15 @@ define(['marionette'], function(Marionette) {
           App.execute("show:leftnavapp", {
             region: App.leftNavRegion
           });
-          if (!_this.getCurrentRoute()) {
+          if (_this.getCurrentRoute() === 'login') {
             return App.vent.trigger("show:dashboard");
           }
         } else {
+          console.log('error');
           _this.rootRoute = 'login';
-          if (!_this.getCurrentRoute()) {
-            return App.navigate(_this.rootRoute, {
-              trigger: true
-            });
-          }
+          return App.navigate(_this.rootRoute, {
+            trigger: true
+          });
         }
       };
     })(this), 'json');

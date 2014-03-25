@@ -8,7 +8,8 @@ require.config
 	
 	urlArgs : "ver=#{(new Date()).getTime()}"
 
-	
+	AJAXURL : 'http://localhost/walnut/wp-admin/admin-ajax.php'
+
 	baseUrl : './wp-content/themes/walnut/walnut/dev/js'
 	
 	#Url for walnut app
