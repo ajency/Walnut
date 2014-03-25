@@ -20,7 +20,8 @@ require.config({
     syphon: 'plugins/backbone.syphon',
     underscorestring: 'plugins/underscorestring',
     entitiesloader: 'entities/content-creator-entities-loader',
-    checkbox: 'plugins/flatui-checkbox'
+    checkbox: 'plugins/flatui-checkbox',
+    componentloader: 'components/builder-component-loader'
   },
   shim: {
     underscore: {
@@ -51,6 +52,6 @@ require.config({
   }
 });
 
-require(['plugins/content-creator-pluginloader', 'configs/content-creator-configloader', 'app', 'entitiesloader', 'apps/content-creator-appsloader'], function(plugins, configs, App) {
+require(['plugins/content-creator-pluginloader', 'configs/content-creator-configloader', 'app', 'entitiesloader', 'componentloader', 'apps/content-creator-appsloader'], function(plugins, configs, App) {
   return App.start();
 });

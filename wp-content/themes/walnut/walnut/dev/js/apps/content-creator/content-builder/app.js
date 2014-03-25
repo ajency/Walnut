@@ -35,7 +35,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       },
       saveQuestion: function() {
         var autoSave;
-        autoSave = new ContentBuilder.AutoSave.Controller;
+        autoSave = App.request("autosave:question:layout");
         return autoSave.autoSave();
       }
     };
