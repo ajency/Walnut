@@ -13,4 +13,6 @@ define [
 			'mustache'
 			'spin'
 			'jqueryspin'
+			'mixitup'
+			'search_results'
 		], ->

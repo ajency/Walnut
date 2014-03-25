@@ -15,7 +15,7 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 				@listenTo view, 'close', ->
 					App.vent.trigger 'show:dashboard'
 
-				@show view
+				@show view, (loading: true)
 
 			_getLoginView : ->
 				new LoginView
