@@ -50,17 +50,15 @@ define(['plugins/detect', 'jquery', 'plugins/online'], function(detect, $) {
   return $.middle_layer = function(url, data, response) {
     if (checkPlatform() === "Desktop") {
       if (isOnline()) {
-        data.ntwkStatus = 'online';
         return $.post(url, data, response, 'json');
       } else {
-        data.ntwkStatus = 'offline';
-        return $.post(url, data, response, 'json');
+        return 'connection_error';
       }
     } else {
       if (checkConnection()) {
-        return alert("Online");
+        return $.post(url, data, response, 'json');
       } else {
-        return alert("Offline");
+        return 'connection_error';
       }
     }
   };
