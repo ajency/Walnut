@@ -17,6 +17,20 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
 
       ListItemView.prototype.template = listitemTpl;
 
+      ListItemView.prototype.onShow = function() {
+        var $filters, class_id, dimensions, _i, _len, _ref;
+        this.$el.attr('data-name', this.model.get('name'));
+        _ref = this.model.get('classes');
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          class_id = _ref[_i];
+          this.$el.addClass('Class_' + class_id);
+        }
+        return $filters = $('#Filters').find('li', dimensions = {
+          region: 'all',
+          recreation: 'all'
+        });
+      };
+
       return ListItemView;
 
     })(Marionette.ItemView);
@@ -68,7 +82,9 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
 
       ListView.prototype.events = {
         'click .btn-group': 'dropdown_popup',
-        'click .sort': 'sortTable',
+        'click .textbook_titles': function(e) {
+          return this.trigger("single:textbook:view", $(e.target).attr('data-id'));
+        },
         'click .filter_class': function(e) {
           return this.trigger("filter:textbooks:class", $(e.target).closest('li').attr('data-filter'));
         }
@@ -93,8 +109,13 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       };
 
       ListView.prototype.onShow = function() {
-        console.log('@collection');
-        return console.log(this.collection);
+        return $('#textbooks').mixitup({
+          layoutMode: 'list',
+          listClass: 'list',
+          gridClass: 'grid',
+          effects: ['fade', 'blur'],
+          listEffects: ['fade', 'rotateX']
+        });
       };
 
       return ListView;

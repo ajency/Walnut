@@ -35,6 +35,10 @@ define(['app', 'controllers/region-controller', 'text!apps/textbook-single/templ
 
       TextbookSingleView.prototype.className = 'page-content';
 
+      TextbookSingleView.prototype.onShow = function() {
+        return console.log(this.collection);
+      };
+
       return TextbookSingleView;
 
     })(Marionette.Layout);

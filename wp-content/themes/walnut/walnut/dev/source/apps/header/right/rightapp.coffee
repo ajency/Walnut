@@ -12,6 +12,16 @@ define ['app'
 
 				@show view
 
+				@listenTo @view, "user:logout" : ->
+					$.post AJAXURL + '?action=logout_user',
+						(response) =>
+							if response.error
+								console.log response
+							else
+								console.log 'logged out'
+								App.navigate('login', trigger: true)
+						
+
 			_getRightHeaderView : ->
 				new RightHeaderView
 
@@ -24,7 +34,7 @@ define ['app'
 
 			events: 
 				'click #user-options'	: 'user_options_popup'
-
+				'click #user_logout'	:-> @trigger "user:logout"
 
 			user_options_popup : (e)->
 				if $(e.target)

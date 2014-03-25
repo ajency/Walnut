@@ -1,6 +1,5 @@
 require.config({
   urlArgs: "ver=" + ((new Date()).getTime()),
-  AJAXURL: 'http://localhost/walnut/wp-admin/admin-ajax.php',
   baseUrl: './wp-content/themes/walnut/walnut/dev/js',
   paths: {
     jquery: 'plugins/jquery',
@@ -18,6 +17,8 @@ require.config({
     mustache: 'plugins/mustache',
     core: 'plugins/core',
     componentloader: 'components/component-loader',
+    mixitup: 'plugins/jquery.mixitup.min',
+    search_results: 'plugins/search_results',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin'
   },
@@ -39,6 +40,8 @@ require.config({
     slimroll: ['jquery'],
     core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
+    mixitup: ['jquery'],
+    search_results: ['jquery', 'mixitup'],
     jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],

@@ -27220,13 +27220,18 @@ resizeCircle = function(circle,layer){
         x: subjectX+subjectRadius+draggerOffset,
         y: subjectY,
         radius: draggerRadius,
-        fill: 'skyblue',
-        stroke: 'lightgray',
-        strokeWidth: 3,
+        stroke: '#666',
+        fill: '#ddd',
+        strokeWidth: 2,
+
         draggable:true,
         dragBoundFunc: function(pos) {
             return { x: pos.x, y: this.getAbsolutePosition().y }
         }
+
+
+
+       
     });
     dragCircle.on("dragmove",function(){
         var x1=this.getAbsolutePosition().x;
@@ -27240,6 +27245,20 @@ resizeCircle = function(circle,layer){
         r=Math.max(5,r);
         circle.resize(r);
       //  dragLine.setPoints([myGuageX,myGuageY, x1,y1]);
+    });
+
+
+    dragCircle.on('mouseover', function () {
+        var layer = this.getLayer();
+        document.body.style.cursor = 'pointer';
+        this.strokeWidth(4);
+        layer.draw();
+    });
+    dragCircle.on('mouseout', function () {
+        var layer = this.getLayer();
+        document.body.style.cursor = 'default';
+        this.strokeWidth(2);
+        layer.draw();
     });
     
 
@@ -33076,7 +33095,121 @@ define("jqueryvalidate", function(){});
 if(!jQuery)throw new Error("Bootstrap requires jQuery");+function(a){function b(){var a=document.createElement("bootstrap"),b={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"};for(var c in b)if(void 0!==a.style[c])return{end:b[c]}}a.fn.emulateTransitionEnd=function(b){var c=!1,d=this;a(this).one(a.support.transition.end,function(){c=!0});var e=function(){c||a(d).trigger(a.support.transition.end)};return setTimeout(e,b),this},a(function(){a.support.transition=b()})}(window.jQuery),+function(a){var b='[data-dismiss="alert"]',c=function(c){a(c).on("click",b,this.close)};c.prototype.close=function(b){function c(){f.trigger("closed.bs.alert").remove()}var d=a(this),e=d.attr("data-target");e||(e=d.attr("href"),e=e&&e.replace(/.*(?=#[^\s]*$)/,""));var f=a(e);b&&b.preventDefault(),f.length||(f=d.hasClass("alert")?d:d.parent()),f.trigger(b=a.Event("close.bs.alert")),b.isDefaultPrevented()||(f.removeClass("in"),a.support.transition&&f.hasClass("fade")?f.one(a.support.transition.end,c).emulateTransitionEnd(150):c())};var d=a.fn.alert;a.fn.alert=function(b){return this.each(function(){var d=a(this),e=d.data("bs.alert");e||d.data("bs.alert",e=new c(this)),"string"==typeof b&&e[b].call(d)})},a.fn.alert.Constructor=c,a.fn.alert.noConflict=function(){return a.fn.alert=d,this},a(document).on("click.bs.alert.data-api",b,c.prototype.close)}(window.jQuery),+function(a){var b=function(c,d){this.$element=a(c),this.options=a.extend({},b.DEFAULTS,d)};b.DEFAULTS={loadingText:"loading..."},b.prototype.setState=function(a){var b="disabled",c=this.$element,d=c.is("input")?"val":"html",e=c.data();a+="Text",e.resetText||c.data("resetText",c[d]()),c[d](e[a]||this.options[a]),setTimeout(function(){"loadingText"==a?c.addClass(b).attr(b,b):c.removeClass(b).removeAttr(b)},0)},b.prototype.toggle=function(){var a=this.$element.closest('[data-toggle="buttons"]');if(a.length){var b=this.$element.find("input").prop("checked",!this.$element.hasClass("active")).trigger("change");"radio"===b.prop("type")&&a.find(".active").removeClass("active")}this.$element.toggleClass("active")};var c=a.fn.button;a.fn.button=function(c){return this.each(function(){var d=a(this),e=d.data("bs.button"),f="object"==typeof c&&c;e||d.data("bs.button",e=new b(this,f)),"toggle"==c?e.toggle():c&&e.setState(c)})},a.fn.button.Constructor=b,a.fn.button.noConflict=function(){return a.fn.button=c,this},a(document).on("click.bs.button.data-api","[data-toggle^=button]",function(b){var c=a(b.target);c.hasClass("btn")||(c=c.closest(".btn")),c.button("toggle"),b.preventDefault()})}(window.jQuery),+function(a){var b=function(b,c){this.$element=a(b),this.$indicators=this.$element.find(".carousel-indicators"),this.options=c,this.paused=this.sliding=this.interval=this.$active=this.$items=null,"hover"==this.options.pause&&this.$element.on("mouseenter",a.proxy(this.pause,this)).on("mouseleave",a.proxy(this.cycle,this))};b.DEFAULTS={interval:5e3,pause:"hover",wrap:!0},b.prototype.cycle=function(b){return b||(this.paused=!1),this.interval&&clearInterval(this.interval),this.options.interval&&!this.paused&&(this.interval=setInterval(a.proxy(this.next,this),this.options.interval)),this},b.prototype.getActiveIndex=function(){return this.$active=this.$element.find(".item.active"),this.$items=this.$active.parent().children(),this.$items.index(this.$active)},b.prototype.to=function(b){var c=this,d=this.getActiveIndex();return b>this.$items.length-1||0>b?void 0:this.sliding?this.$element.one("slid",function(){c.to(b)}):d==b?this.pause().cycle():this.slide(b>d?"next":"prev",a(this.$items[b]))},b.prototype.pause=function(b){return b||(this.paused=!0),this.$element.find(".next, .prev").length&&a.support.transition.end&&(this.$element.trigger(a.support.transition.end),this.cycle(!0)),this.interval=clearInterval(this.interval),this},b.prototype.next=function(){return this.sliding?void 0:this.slide("next")},b.prototype.prev=function(){return this.sliding?void 0:this.slide("prev")},b.prototype.slide=function(b,c){var d=this.$element.find(".item.active"),e=c||d[b](),f=this.interval,g="next"==b?"left":"right",h="next"==b?"first":"last",i=this;if(!e.length){if(!this.options.wrap)return;e=this.$element.find(".item")[h]()}this.sliding=!0,f&&this.pause();var j=a.Event("slide.bs.carousel",{relatedTarget:e[0],direction:g});if(!e.hasClass("active")){if(this.$indicators.length&&(this.$indicators.find(".active").removeClass("active"),this.$element.one("slid",function(){var b=a(i.$indicators.children()[i.getActiveIndex()]);b&&b.addClass("active")})),a.support.transition&&this.$element.hasClass("slide")){if(this.$element.trigger(j),j.isDefaultPrevented())return;e.addClass(b),e[0].offsetWidth,d.addClass(g),e.addClass(g),d.one(a.support.transition.end,function(){e.removeClass([b,g].join(" ")).addClass("active"),d.removeClass(["active",g].join(" ")),i.sliding=!1,setTimeout(function(){i.$element.trigger("slid")},0)}).emulateTransitionEnd(600)}else{if(this.$element.trigger(j),j.isDefaultPrevented())return;d.removeClass("active"),e.addClass("active"),this.sliding=!1,this.$element.trigger("slid")}return f&&this.cycle(),this}};var c=a.fn.carousel;a.fn.carousel=function(c){return this.each(function(){var d=a(this),e=d.data("bs.carousel"),f=a.extend({},b.DEFAULTS,d.data(),"object"==typeof c&&c),g="string"==typeof c?c:f.slide;e||d.data("bs.carousel",e=new b(this,f)),"number"==typeof c?e.to(c):g?e[g]():f.interval&&e.pause().cycle()})},a.fn.carousel.Constructor=b,a.fn.carousel.noConflict=function(){return a.fn.carousel=c,this},a(document).on("click.bs.carousel.data-api","[data-slide], [data-slide-to]",function(b){var c,d=a(this),e=a(d.attr("data-target")||(c=d.attr("href"))&&c.replace(/.*(?=#[^\s]+$)/,"")),f=a.extend({},e.data(),d.data()),g=d.attr("data-slide-to");g&&(f.interval=!1),e.carousel(f),(g=d.attr("data-slide-to"))&&e.data("bs.carousel").to(g),b.preventDefault()}),a(window).on("load",function(){a('[data-ride="carousel"]').each(function(){var b=a(this);b.carousel(b.data())})})}(window.jQuery),+function(a){var b=function(c,d){this.$element=a(c),this.options=a.extend({},b.DEFAULTS,d),this.transitioning=null,this.options.parent&&(this.$parent=a(this.options.parent)),this.options.toggle&&this.toggle()};b.DEFAULTS={toggle:!0},b.prototype.dimension=function(){var a=this.$element.hasClass("width");return a?"width":"height"},b.prototype.show=function(){if(!this.transitioning&&!this.$element.hasClass("in")){var b=a.Event("show.bs.collapse");if(this.$element.trigger(b),!b.isDefaultPrevented()){var c=this.$parent&&this.$parent.find("> .panel > .in");if(c&&c.length){var d=c.data("bs.collapse");if(d&&d.transitioning)return;c.collapse("hide"),d||c.data("bs.collapse",null)}var e=this.dimension();this.$element.removeClass("collapse").addClass("collapsing")[e](0),this.transitioning=1;var f=function(){this.$element.removeClass("collapsing").addClass("in")[e]("auto"),this.transitioning=0,this.$element.trigger("shown.bs.collapse")};if(!a.support.transition)return f.call(this);var g=a.camelCase(["scroll",e].join("-"));this.$element.one(a.support.transition.end,a.proxy(f,this)).emulateTransitionEnd(350)[e](this.$element[0][g])}}},b.prototype.hide=function(){if(!this.transitioning&&this.$element.hasClass("in")){var b=a.Event("hide.bs.collapse");if(this.$element.trigger(b),!b.isDefaultPrevented()){var c=this.dimension();this.$element[c](this.$element[c]())[0].offsetHeight,this.$element.addClass("collapsing").removeClass("collapse").removeClass("in"),this.transitioning=1;var d=function(){this.transitioning=0,this.$element.trigger("hidden.bs.collapse").removeClass("collapsing").addClass("collapse")};return a.support.transition?(this.$element[c](0).one(a.support.transition.end,a.proxy(d,this)).emulateTransitionEnd(350),void 0):d.call(this)}}},b.prototype.toggle=function(){this[this.$element.hasClass("in")?"hide":"show"]()};var c=a.fn.collapse;a.fn.collapse=function(c){return this.each(function(){var d=a(this),e=d.data("bs.collapse"),f=a.extend({},b.DEFAULTS,d.data(),"object"==typeof c&&c);e||d.data("bs.collapse",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.collapse.Constructor=b,a.fn.collapse.noConflict=function(){return a.fn.collapse=c,this},a(document).on("click.bs.collapse.data-api","[data-toggle=collapse]",function(b){var c,d=a(this),e=d.attr("data-target")||b.preventDefault()||(c=d.attr("href"))&&c.replace(/.*(?=#[^\s]+$)/,""),f=a(e),g=f.data("bs.collapse"),h=g?"toggle":d.data(),i=d.attr("data-parent"),j=i&&a(i);g&&g.transitioning||(j&&j.find('[data-toggle=collapse][data-parent="'+i+'"]').not(d).addClass("collapsed"),d[f.hasClass("in")?"addClass":"removeClass"]("collapsed")),f.collapse(h)})}(window.jQuery),+function(a){function b(){a(d).remove(),a(e).each(function(b){var d=c(a(this));d.hasClass("open")&&(d.trigger(b=a.Event("hide.bs.dropdown")),b.isDefaultPrevented()||d.removeClass("open").trigger("hidden.bs.dropdown"))})}function c(b){var c=b.attr("data-target");c||(c=b.attr("href"),c=c&&/#/.test(c)&&c.replace(/.*(?=#[^\s]*$)/,""));var d=c&&a(c);return d&&d.length?d:b.parent()}var d=".dropdown-backdrop",e="[data-toggle=dropdown]",f=function(b){a(b).on("click.bs.dropdown",this.toggle)};f.prototype.toggle=function(d){var e=a(this);if(!e.is(".disabled, :disabled")){var f=c(e),g=f.hasClass("open");if(b(),!g){if("ontouchstart"in document.documentElement&&!f.closest(".navbar-nav").length&&a('<div class="dropdown-backdrop"/>').insertAfter(a(this)).on("click",b),f.trigger(d=a.Event("show.bs.dropdown")),d.isDefaultPrevented())return;f.toggleClass("open").trigger("shown.bs.dropdown"),e.focus()}return!1}},f.prototype.keydown=function(b){if(/(38|40|27)/.test(b.keyCode)){var d=a(this);if(b.preventDefault(),b.stopPropagation(),!d.is(".disabled, :disabled")){var f=c(d),g=f.hasClass("open");if(!g||g&&27==b.keyCode)return 27==b.which&&f.find(e).focus(),d.click();var h=a("[role=menu] li:not(.divider):visible a",f);if(h.length){var i=h.index(h.filter(":focus"));38==b.keyCode&&i>0&&i--,40==b.keyCode&&i<h.length-1&&i++,~i||(i=0),h.eq(i).focus()}}}};var g=a.fn.dropdown;a.fn.dropdown=function(b){return this.each(function(){var c=a(this),d=c.data("dropdown");d||c.data("dropdown",d=new f(this)),"string"==typeof b&&d[b].call(c)})},a.fn.dropdown.Constructor=f,a.fn.dropdown.noConflict=function(){return a.fn.dropdown=g,this},a(document).on("click.bs.dropdown.data-api",b).on("click.bs.dropdown.data-api",".dropdown form",function(a){a.stopPropagation()}).on("click.bs.dropdown.data-api",e,f.prototype.toggle).on("keydown.bs.dropdown.data-api",e+", [role=menu]",f.prototype.keydown)}(window.jQuery),+function(a){var b=function(b,c){this.options=c,this.$element=a(b),this.$backdrop=this.isShown=null,this.options.remote&&this.$element.load(this.options.remote)};b.DEFAULTS={backdrop:!0,keyboard:!0,show:!0},b.prototype.toggle=function(a){return this[this.isShown?"hide":"show"](a)},b.prototype.show=function(b){var c=this,d=a.Event("show.bs.modal",{relatedTarget:b});this.$element.trigger(d),this.isShown||d.isDefaultPrevented()||(this.isShown=!0,this.escape(),this.$element.on("click.dismiss.modal",'[data-dismiss="modal"]',a.proxy(this.hide,this)),this.backdrop(function(){var d=a.support.transition&&c.$element.hasClass("fade");c.$element.parent().length||c.$element.appendTo(document.body),c.$element.show(),d&&c.$element[0].offsetWidth,c.$element.addClass("in").attr("aria-hidden",!1),c.enforceFocus();var e=a.Event("shown.bs.modal",{relatedTarget:b});d?c.$element.find(".modal-dialog").one(a.support.transition.end,function(){c.$element.focus().trigger(e)}).emulateTransitionEnd(300):c.$element.focus().trigger(e)}))},b.prototype.hide=function(b){b&&b.preventDefault(),b=a.Event("hide.bs.modal"),this.$element.trigger(b),this.isShown&&!b.isDefaultPrevented()&&(this.isShown=!1,this.escape(),a(document).off("focusin.bs.modal"),this.$element.removeClass("in").attr("aria-hidden",!0).off("click.dismiss.modal"),a.support.transition&&this.$element.hasClass("fade")?this.$element.one(a.support.transition.end,a.proxy(this.hideModal,this)).emulateTransitionEnd(300):this.hideModal())},b.prototype.enforceFocus=function(){a(document).off("focusin.bs.modal").on("focusin.bs.modal",a.proxy(function(a){this.$element[0]===a.target||this.$element.has(a.target).length||this.$element.focus()},this))},b.prototype.escape=function(){this.isShown&&this.options.keyboard?this.$element.on("keyup.dismiss.bs.modal",a.proxy(function(a){27==a.which&&this.hide()},this)):this.isShown||this.$element.off("keyup.dismiss.bs.modal")},b.prototype.hideModal=function(){var a=this;this.$element.hide(),this.backdrop(function(){a.removeBackdrop(),a.$element.trigger("hidden.bs.modal")})},b.prototype.removeBackdrop=function(){this.$backdrop&&this.$backdrop.remove(),this.$backdrop=null},b.prototype.backdrop=function(b){var c=this.$element.hasClass("fade")?"fade":"";if(this.isShown&&this.options.backdrop){var d=a.support.transition&&c;if(this.$backdrop=a('<div class="modal-backdrop '+c+'" />').appendTo(document.body),this.$element.on("click.dismiss.modal",a.proxy(function(a){a.target===a.currentTarget&&("static"==this.options.backdrop?this.$element[0].focus.call(this.$element[0]):this.hide.call(this))},this)),d&&this.$backdrop[0].offsetWidth,this.$backdrop.addClass("in"),!b)return;d?this.$backdrop.one(a.support.transition.end,b).emulateTransitionEnd(150):b()}else!this.isShown&&this.$backdrop?(this.$backdrop.removeClass("in"),a.support.transition&&this.$element.hasClass("fade")?this.$backdrop.one(a.support.transition.end,b).emulateTransitionEnd(150):b()):b&&b()};var c=a.fn.modal;a.fn.modal=function(c,d){return this.each(function(){var e=a(this),f=e.data("bs.modal"),g=a.extend({},b.DEFAULTS,e.data(),"object"==typeof c&&c);f||e.data("bs.modal",f=new b(this,g)),"string"==typeof c?f[c](d):g.show&&f.show(d)})},a.fn.modal.Constructor=b,a.fn.modal.noConflict=function(){return a.fn.modal=c,this},a(document).on("click.bs.modal.data-api",'[data-toggle="modal"]',function(b){var c=a(this),d=c.attr("href"),e=a(c.attr("data-target")||d&&d.replace(/.*(?=#[^\s]+$)/,"")),f=e.data("modal")?"toggle":a.extend({remote:!/#/.test(d)&&d},e.data(),c.data());b.preventDefault(),e.modal(f,this).one("hide",function(){c.is(":visible")&&c.focus()})}),a(document).on("show.bs.modal",".modal",function(){a(document.body).addClass("modal-open")}).on("hidden.bs.modal",".modal",function(){a(document.body).removeClass("modal-open")})}(window.jQuery),+function(a){var b=function(a,b){this.type=this.options=this.enabled=this.timeout=this.hoverState=this.$element=null,this.init("tooltip",a,b)};b.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,container:!1},b.prototype.init=function(b,c,d){this.enabled=!0,this.type=b,this.$element=a(c),this.options=this.getOptions(d);for(var e=this.options.trigger.split(" "),f=e.length;f--;){var g=e[f];if("click"==g)this.$element.on("click."+this.type,this.options.selector,a.proxy(this.toggle,this));else if("manual"!=g){var h="hover"==g?"mouseenter":"focus",i="hover"==g?"mouseleave":"blur";this.$element.on(h+"."+this.type,this.options.selector,a.proxy(this.enter,this)),this.$element.on(i+"."+this.type,this.options.selector,a.proxy(this.leave,this))}}this.options.selector?this._options=a.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},b.prototype.getDefaults=function(){return b.DEFAULTS},b.prototype.getOptions=function(b){return b=a.extend({},this.getDefaults(),this.$element.data(),b),b.delay&&"number"==typeof b.delay&&(b.delay={show:b.delay,hide:b.delay}),b},b.prototype.getDelegateOptions=function(){var b={},c=this.getDefaults();return this._options&&a.each(this._options,function(a,d){c[a]!=d&&(b[a]=d)}),b},b.prototype.enter=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type);return clearTimeout(c.timeout),c.hoverState="in",c.options.delay&&c.options.delay.show?(c.timeout=setTimeout(function(){"in"==c.hoverState&&c.show()},c.options.delay.show),void 0):c.show()},b.prototype.leave=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type);return clearTimeout(c.timeout),c.hoverState="out",c.options.delay&&c.options.delay.hide?(c.timeout=setTimeout(function(){"out"==c.hoverState&&c.hide()},c.options.delay.hide),void 0):c.hide()},b.prototype.show=function(){var b=a.Event("show.bs."+this.type);if(this.hasContent()&&this.enabled){if(this.$element.trigger(b),b.isDefaultPrevented())return;var c=this.tip();this.setContent(),this.options.animation&&c.addClass("fade");var d="function"==typeof this.options.placement?this.options.placement.call(this,c[0],this.$element[0]):this.options.placement,e=/\s?auto?\s?/i,f=e.test(d);f&&(d=d.replace(e,"")||"top"),c.detach().css({top:0,left:0,display:"block"}).addClass(d),this.options.container?c.appendTo(this.options.container):c.insertAfter(this.$element);var g=this.getPosition(),h=c[0].offsetWidth,i=c[0].offsetHeight;if(f){var j=this.$element.parent(),k=d,l=document.documentElement.scrollTop||document.body.scrollTop,m="body"==this.options.container?window.innerWidth:j.outerWidth(),n="body"==this.options.container?window.innerHeight:j.outerHeight(),o="body"==this.options.container?0:j.offset().left;d="bottom"==d&&g.top+g.height+i-l>n?"top":"top"==d&&g.top-l-i<0?"bottom":"right"==d&&g.right+h>m?"left":"left"==d&&g.left-h<o?"right":d,c.removeClass(k).addClass(d)}var p=this.getCalculatedOffset(d,g,h,i);this.applyPlacement(p,d),this.$element.trigger("shown.bs."+this.type)}},b.prototype.applyPlacement=function(a,b){var c,d=this.tip(),e=d[0].offsetWidth,f=d[0].offsetHeight,g=parseInt(d.css("margin-top"),10),h=parseInt(d.css("margin-left"),10);isNaN(g)&&(g=0),isNaN(h)&&(h=0),a.top=a.top+g,a.left=a.left+h,d.offset(a).addClass("in");var i=d[0].offsetWidth,j=d[0].offsetHeight;if("top"==b&&j!=f&&(c=!0,a.top=a.top+f-j),/bottom|top/.test(b)){var k=0;a.left<0&&(k=-2*a.left,a.left=0,d.offset(a),i=d[0].offsetWidth,j=d[0].offsetHeight),this.replaceArrow(k-e+i,i,"left")}else this.replaceArrow(j-f,j,"top");c&&d.offset(a)},b.prototype.replaceArrow=function(a,b,c){this.arrow().css(c,a?50*(1-a/b)+"%":"")},b.prototype.setContent=function(){var a=this.tip(),b=this.getTitle();a.find(".tooltip-inner")[this.options.html?"html":"text"](b),a.removeClass("fade in top bottom left right")},b.prototype.hide=function(){function b(){"in"!=c.hoverState&&d.detach()}var c=this,d=this.tip(),e=a.Event("hide.bs."+this.type);return this.$element.trigger(e),e.isDefaultPrevented()?void 0:(d.removeClass("in"),a.support.transition&&this.$tip.hasClass("fade")?d.one(a.support.transition.end,b).emulateTransitionEnd(150):b(),this.$element.trigger("hidden.bs."+this.type),this)},b.prototype.fixTitle=function(){var a=this.$element;(a.attr("title")||"string"!=typeof a.attr("data-original-title"))&&a.attr("data-original-title",a.attr("title")||"").attr("title","")},b.prototype.hasContent=function(){return this.getTitle()},b.prototype.getPosition=function(){var b=this.$element[0];return a.extend({},"function"==typeof b.getBoundingClientRect?b.getBoundingClientRect():{width:b.offsetWidth,height:b.offsetHeight},this.$element.offset())},b.prototype.getCalculatedOffset=function(a,b,c,d){return"bottom"==a?{top:b.top+b.height,left:b.left+b.width/2-c/2}:"top"==a?{top:b.top-d,left:b.left+b.width/2-c/2}:"left"==a?{top:b.top+b.height/2-d/2,left:b.left-c}:{top:b.top+b.height/2-d/2,left:b.left+b.width}},b.prototype.getTitle=function(){var a,b=this.$element,c=this.options;return a=b.attr("data-original-title")||("function"==typeof c.title?c.title.call(b[0]):c.title)},b.prototype.tip=function(){return this.$tip=this.$tip||a(this.options.template)},b.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},b.prototype.validate=function(){this.$element[0].parentNode||(this.hide(),this.$element=null,this.options=null)},b.prototype.enable=function(){this.enabled=!0},b.prototype.disable=function(){this.enabled=!1},b.prototype.toggleEnabled=function(){this.enabled=!this.enabled},b.prototype.toggle=function(b){var c=b?a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type):this;c.tip().hasClass("in")?c.leave(c):c.enter(c)},b.prototype.destroy=function(){this.hide().$element.off("."+this.type).removeData("bs."+this.type)};var c=a.fn.tooltip;a.fn.tooltip=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tooltip"),f="object"==typeof c&&c;e||d.data("bs.tooltip",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.tooltip.Constructor=b,a.fn.tooltip.noConflict=function(){return a.fn.tooltip=c,this}}(window.jQuery),+function(a){var b=function(a,b){this.init("popover",a,b)};if(!a.fn.tooltip)throw new Error("Popover requires tooltip.js");b.DEFAULTS=a.extend({},a.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),b.prototype=a.extend({},a.fn.tooltip.Constructor.prototype),b.prototype.constructor=b,b.prototype.getDefaults=function(){return b.DEFAULTS},b.prototype.setContent=function(){var a=this.tip(),b=this.getTitle(),c=this.getContent();a.find(".popover-title")[this.options.html?"html":"text"](b),a.find(".popover-content")[this.options.html?"html":"text"](c),a.removeClass("fade top bottom left right in"),a.find(".popover-title").html()||a.find(".popover-title").hide()},b.prototype.hasContent=function(){return this.getTitle()||this.getContent()},b.prototype.getContent=function(){var a=this.$element,b=this.options;return a.attr("data-content")||("function"==typeof b.content?b.content.call(a[0]):b.content)},b.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")},b.prototype.tip=function(){return this.$tip||(this.$tip=a(this.options.template)),this.$tip};var c=a.fn.popover;a.fn.popover=function(c){return this.each(function(){var d=a(this),e=d.data("bs.popover"),f="object"==typeof c&&c;e||d.data("bs.popover",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.popover.Constructor=b,a.fn.popover.noConflict=function(){return a.fn.popover=c,this}}(window.jQuery),+function(a){function b(c,d){var e,f=a.proxy(this.process,this);this.$element=a(c).is("body")?a(window):a(c),this.$body=a("body"),this.$scrollElement=this.$element.on("scroll.bs.scroll-spy.data-api",f),this.options=a.extend({},b.DEFAULTS,d),this.selector=(this.options.target||(e=a(c).attr("href"))&&e.replace(/.*(?=#[^\s]+$)/,"")||"")+" .nav li > a",this.offsets=a([]),this.targets=a([]),this.activeTarget=null,this.refresh(),this.process()}b.DEFAULTS={offset:10},b.prototype.refresh=function(){var b=this.$element[0]==window?"offset":"position";this.offsets=a([]),this.targets=a([]);var c=this;this.$body.find(this.selector).map(function(){var d=a(this),e=d.data("target")||d.attr("href"),f=/^#\w/.test(e)&&a(e);return f&&f.length&&[[f[b]().top+(!a.isWindow(c.$scrollElement.get(0))&&c.$scrollElement.scrollTop()),e]]||null}).sort(function(a,b){return a[0]-b[0]}).each(function(){c.offsets.push(this[0]),c.targets.push(this[1])})},b.prototype.process=function(){var a,b=this.$scrollElement.scrollTop()+this.options.offset,c=this.$scrollElement[0].scrollHeight||this.$body[0].scrollHeight,d=c-this.$scrollElement.height(),e=this.offsets,f=this.targets,g=this.activeTarget;if(b>=d)return g!=(a=f.last()[0])&&this.activate(a);for(a=e.length;a--;)g!=f[a]&&b>=e[a]&&(!e[a+1]||b<=e[a+1])&&this.activate(f[a])},b.prototype.activate=function(b){this.activeTarget=b,a(this.selector).parents(".active").removeClass("active");var c=this.selector+'[data-target="'+b+'"],'+this.selector+'[href="'+b+'"]',d=a(c).parents("li").addClass("active");d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active")),d.trigger("activate")};var c=a.fn.scrollspy;a.fn.scrollspy=function(c){return this.each(function(){var d=a(this),e=d.data("bs.scrollspy"),f="object"==typeof c&&c;e||d.data("bs.scrollspy",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.scrollspy.Constructor=b,a.fn.scrollspy.noConflict=function(){return a.fn.scrollspy=c,this},a(window).on("load",function(){a('[data-spy="scroll"]').each(function(){var b=a(this);b.scrollspy(b.data())})})}(window.jQuery),+function(a){var b=function(b){this.element=a(b)};b.prototype.show=function(){var b=this.element,c=b.closest("ul:not(.dropdown-menu)"),d=b.attr("data-target");if(d||(d=b.attr("href"),d=d&&d.replace(/.*(?=#[^\s]*$)/,"")),!b.parent("li").hasClass("active")){var e=c.find(".active:last a")[0],f=a.Event("show.bs.tab",{relatedTarget:e});if(b.trigger(f),!f.isDefaultPrevented()){var g=a(d);this.activate(b.parent("li"),c),this.activate(g,g.parent(),function(){b.trigger({type:"shown.bs.tab",relatedTarget:e})})}}},b.prototype.activate=function(b,c,d){function e(){f.removeClass("active").find("> .dropdown-menu > .active").removeClass("active"),b.addClass("active"),g?(b[0].offsetWidth,b.addClass("in")):b.removeClass("fade"),b.parent(".dropdown-menu")&&b.closest("li.dropdown").addClass("active"),d&&d()}var f=c.find("> .active"),g=d&&a.support.transition&&f.hasClass("fade");g?f.one(a.support.transition.end,e).emulateTransitionEnd(150):e(),f.removeClass("in")};var c=a.fn.tab;a.fn.tab=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tab");e||d.data("bs.tab",e=new b(this)),"string"==typeof c&&e[c]()})},a.fn.tab.Constructor=b,a.fn.tab.noConflict=function(){return a.fn.tab=c,this},a(document).on("click.bs.tab.data-api",'[data-toggle="tab"], [data-toggle="pill"]',function(b){b.preventDefault(),a(this).tab("show")})}(window.jQuery),+function(a){var b=function(c,d){this.options=a.extend({},b.DEFAULTS,d),this.$window=a(window).on("scroll.bs.affix.data-api",a.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",a.proxy(this.checkPositionWithEventLoop,this)),this.$element=a(c),this.affixed=this.unpin=null,this.checkPosition()};b.RESET="affix affix-top affix-bottom",b.DEFAULTS={offset:0},b.prototype.checkPositionWithEventLoop=function(){setTimeout(a.proxy(this.checkPosition,this),1)},b.prototype.checkPosition=function(){if(this.$element.is(":visible")){var c=a(document).height(),d=this.$window.scrollTop(),e=this.$element.offset(),f=this.options.offset,g=f.top,h=f.bottom;"object"!=typeof f&&(h=g=f),"function"==typeof g&&(g=f.top()),"function"==typeof h&&(h=f.bottom());var i=null!=this.unpin&&d+this.unpin<=e.top?!1:null!=h&&e.top+this.$element.height()>=c-h?"bottom":null!=g&&g>=d?"top":!1;this.affixed!==i&&(this.unpin&&this.$element.css("top",""),this.affixed=i,this.unpin="bottom"==i?e.top-d:null,this.$element.removeClass(b.RESET).addClass("affix"+(i?"-"+i:"")),"bottom"==i&&this.$element.offset({top:document.body.offsetHeight-h-this.$element.height()}))}};var c=a.fn.affix;a.fn.affix=function(c){return this.each(function(){var d=a(this),e=d.data("bs.affix"),f="object"==typeof c&&c;e||d.data("bs.affix",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.affix.Constructor=b,a.fn.affix.noConflict=function(){return a.fn.affix=c,this},a(window).on("load",function(){a('[data-spy="affix"]').each(function(){var b=a(this),c=b.data();c.offset=c.offset||{},c.offsetBottom&&(c.offset.bottom=c.offsetBottom),c.offsetTop&&(c.offset.top=c.offsetTop),b.affix(c)})})}(window.jQuery);
 define("bootstrap", function(){});
 
-define('plugins/content-creator-pluginloader',['underscore', 'jquery', 'jqueryui', 'jqueryresize', 'underscorestring', 'kinetic', 'plupload', 'kineticresize', 'backbone', 'marionette', 'mustache', 'syphon', 'text', 'jqueryvalidate', 'bootstrap'], function() {});
+/* =============================================================
+ * flatui-checkbox.js v0.0.3
+ * ============================================================ */
+ 
+!function ($) {
+
+ /* CHECKBOX PUBLIC CLASS DEFINITION
+  * ============================== */
+
+  var Checkbox = function (element, options) {
+    this.init(element, options);
+  }
+
+  Checkbox.prototype = {
+    
+    constructor: Checkbox
+    
+  , init: function (element, options) {      
+    var $el = this.$element = $(element)
+    
+    this.options = $.extend({}, $.fn.checkbox.defaults, options);      
+    $el.before(this.options.template);    
+    this.setState(); 
+  }  
+   
+  , setState: function () {    
+      var $el = this.$element
+        , $parent = $el.closest('.checkbox');
+        
+        $el.prop('disabled') && $parent.addClass('disabled');   
+        $el.prop('checked') && $parent.addClass('checked');
+    }  
+    
+  , toggle: function () {    
+      var ch = 'checked'
+        , $el = this.$element
+        , $parent = $el.closest('.checkbox')
+        , checked = $el.prop(ch)
+        , e = $.Event('toggle')
+      
+      if ($el.prop('disabled') == false) {
+        $parent.toggleClass(ch) && checked ? $el.removeAttr(ch) : $el.prop(ch, ch);
+        $el.trigger(e).trigger('change'); 
+      }
+    }  
+    
+  , setCheck: function (option) {    
+      var d = 'disabled'
+        , ch = 'checked'
+        , $el = this.$element
+        , $parent = $el.closest('.checkbox')
+        , checkAction = option == 'check' ? true : false
+        , e = $.Event(option)
+      
+      $parent[checkAction ? 'addClass' : 'removeClass' ](ch) && checkAction ? $el.prop(ch, ch) : $el.removeAttr(ch);
+      $el.trigger(e).trigger('change');       
+    }  
+      
+  }
+
+
+ /* CHECKBOX PLUGIN DEFINITION
+  * ======================== */
+
+  var old = $.fn.checkbox
+
+  $.fn.checkbox = function (option) {
+    return this.each(function () {
+      var $this = $(this)
+        , data = $this.data('checkbox')
+        , options = $.extend({}, $.fn.checkbox.defaults, $this.data(), typeof option == 'object' && option);
+      if (!data) $this.data('checkbox', (data = new Checkbox(this, options)));
+      if (option == 'toggle') data.toggle()
+      if (option == 'check' || option == 'uncheck') data.setCheck(option)
+      else if (option) data.setState(); 
+    });
+  }
+  
+  $.fn.checkbox.defaults = {
+    template: '<span class="icons"><span class="first-icon fui-checkbox-unchecked"></span><span class="second-icon fui-checkbox-checked"></span></span>'
+  }
+
+
+ /* CHECKBOX NO CONFLICT
+  * ================== */
+
+  $.fn.checkbox.noConflict = function () {
+    $.fn.checkbox = old;
+    return this;
+  }
+
+
+ /* CHECKBOX DATA-API
+  * =============== */
+
+	$(document).on('click.checkbox.data-api', '[data-toggle^=checkbox], .checkbox', function (e) {
+	  var $checkbox = $(e.target);
+		if (e.target.tagName != "A") {			
+			e && e.preventDefault() && e.stopPropagation();
+			if (!$checkbox.hasClass('checkbox')) $checkbox = $checkbox.closest('.checkbox');
+			$checkbox.find(':checkbox').checkbox('toggle');
+		}
+	});
+	
+	$(function () {
+		$('[data-toggle="checkbox"]').each(function () {
+			var $checkbox = $(this);
+			$checkbox.checkbox();
+		});
+	});
+
+}(window.jQuery);
+define("checkbox", function(){});
+
+define('plugins/content-creator-pluginloader',['underscore', 'jquery', 'jqueryui', 'jqueryresize', 'underscorestring', 'kinetic', 'plupload', 'kineticresize', 'backbone', 'marionette', 'mustache', 'syphon', 'text', 'jqueryvalidate', 'bootstrap', 'checkbox'], function() {});
 
 define('configs/jquery',['jquery', 'underscore', 'jqueryvalidate'], function($, _) {
   var adjustPageDim;
@@ -33520,6 +33653,9 @@ define('app',['marionette'], function(Marionette) {
     dialogRegion: Marionette.Region.Dialog.extend({
       el: '#dialog-region'
     }),
+    settingsRegion: Marionette.Region.Settings.extend({
+      el: '#settings-region'
+    }),
     loginRegion: '#login-region'
   });
   App.rootRoute = "";
@@ -33668,7 +33804,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define('entities/content-creator/elementbox',["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ElementBox", function(ElementBox, App, Backbone, Marionette, $, _) {
-    var API;
+    var API, elementboxCollection;
     ElementBox.ElementModel = (function(_super) {
       __extends(ElementModel, _super);
 
@@ -33697,22 +33833,32 @@ define('entities/content-creator/elementbox',["app", 'backbone'], function(App, 
       return ElementCollection;
 
     })(Backbone.Collection);
+    elementboxCollection = new ElementBox.ElementCollection;
+    elementboxCollection.add([
+      {
+        element: "Hotspot"
+      }, {
+        element: "Row"
+      }
+    ]);
     API = {
       getElements: function(param) {
         if (param == null) {
           param = {};
         }
-        return new ElementBox.ElementCollection([
-          {
-            element: "Hotspot"
-          }, {
-            element: "Row"
-          }
-        ]);
+      },
+      getElementSettingOptions: function(ele) {
+        var element;
+        console.log(elementboxCollection.get(ele));
+        element = elementboxCollection.get(ele);
+        return element;
       }
     };
-    return App.reqres.setHandler("get:elementbox:elements", function() {
+    App.reqres.setHandler("get:elementbox:elements", function() {
       return API.getElements();
+    });
+    return App.reqres.setHandler("get:element:settings:options", function(ele) {
+      return API.getElementSettingOptions(ele);
     });
   });
 });
@@ -33898,7 +34044,63 @@ define('entities/content-creator/media',["app", 'backbone'], function(App, Backb
   });
 });
 
-define('entitiesloader',['entities/user', 'entities/menu', 'entities/base-entities', 'entities/content-creator/elementbox', 'entities/content-creator/element', 'entities/content-creator/media'], function() {});
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('entities/content-creator/hotspotelementbox',['app', 'backbone'], function(App, Backbone) {
+  return App.module("Entities.HotspotElementBox", function(HotspotElementBox, App, Backbone, Marionette, $, _) {
+    var API, hotspotelementCollection;
+    HotspotElementBox.ElementModel = (function(_super) {
+      __extends(ElementModel, _super);
+
+      function ElementModel() {
+        return ElementModel.__super__.constructor.apply(this, arguments);
+      }
+
+      ElementModel.prototype.idAttribute = 'element';
+
+      ElementModel.prototype.name = 'hotspotelementbox';
+
+      return ElementModel;
+
+    })(Backbone.Model);
+    HotspotElementBox.ElementCollection = (function(_super) {
+      __extends(ElementCollection, _super);
+
+      function ElementCollection() {
+        return ElementCollection.__super__.constructor.apply(this, arguments);
+      }
+
+      ElementCollection.prototype.model = HotspotElementBox.ElementModel;
+
+      return ElementCollection;
+
+    })(Backbone.Collection);
+    hotspotelementCollection = new HotspotElementBox.ElementCollection;
+    hotspotelementCollection.add([
+      {
+        element: 'Hotspot-Circle',
+        icon: 'fa-circle-o'
+      }, {
+        element: 'Hotspot-Rectangle',
+        icon: 'fa-square-o'
+      }, {
+        element: 'Hotspot-Image',
+        icon: 'fa-camera'
+      }
+    ]);
+    API = {
+      getElements: function() {
+        return hotspotelementCollection;
+      }
+    };
+    return App.reqres.setHandler("get:all:hotspot:elements", function() {
+      return API.getElements();
+    });
+  });
+});
+
+define('entitiesloader',['entities/user', 'entities/menu', 'entities/base-entities', 'entities/content-creator/elementbox', 'entities/content-creator/element', 'entities/content-creator/media', 'entities/content-creator/hotspotelementbox'], function() {});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -33960,6 +34162,137 @@ define('controllers/region-controller',["marionette", "app"], function(Marionett
 
   })(Marionette.Controller);
 });
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('components/loading/view',['marionette'], function(Marionette) {
+  var LoadingView;
+  return LoadingView = (function(_super) {
+    __extends(LoadingView, _super);
+
+    function LoadingView() {
+      return LoadingView.__super__.constructor.apply(this, arguments);
+    }
+
+    LoadingView.prototype.template = '<i></i>';
+
+    LoadingView.prototype.className = 'loading-container';
+
+    LoadingView.prototype.onShow = function() {
+      var opts;
+      opts = this._getOptions();
+      return this.$el.spin(opts);
+    };
+
+    LoadingView.prototype.onClose = function() {
+      return this.$el.spin(false);
+    };
+
+    LoadingView.prototype._getOptions = function() {
+      return {
+        lines: 10,
+        length: 6,
+        width: 2.5,
+        radius: 7,
+        corners: 1,
+        rotate: 9,
+        direction: 1,
+        color: '#000',
+        speed: 1,
+        trail: 60,
+        shadow: false,
+        hwaccel: true,
+        className: 'spinner',
+        zIndex: 2e9,
+        top: 'auto',
+        left: 'auto'
+      };
+    };
+
+    return LoadingView;
+
+  })(Marionette.ItemView);
+});
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('components/loading/controller',['app', 'controllers/region-controller', 'components/loading/view'], function(App, RegionController, LoadingView) {
+  var LoadingController;
+  LoadingController = (function(_super) {
+    __extends(LoadingController, _super);
+
+    function LoadingController() {
+      return LoadingController.__super__.constructor.apply(this, arguments);
+    }
+
+    LoadingController.prototype.initialize = function(options) {
+      var config, loadingView, view;
+      view = options.view, config = options.config;
+      config = _.isBoolean(config) ? {} : config;
+      _.defaults(config, {
+        loadingType: "spinner",
+        entities: this.getEntities(view),
+        debug: false
+      });
+      switch (config.loadingType) {
+        case "opacity":
+          this.region.currentView.$el.css("opacity", 0.5);
+          break;
+        case "spinner":
+          loadingView = this.getLoadingView();
+          this.show(loadingView);
+          break;
+        default:
+          throw new Error("Invalid loadingType");
+      }
+      return this.showRealView(view, loadingView, config);
+    };
+
+    LoadingController.prototype.showRealView = function(realView, loadingView, config) {
+      var callbackFn;
+      callbackFn = _.debounce((function(_this) {
+        return function() {
+          switch (config.loadingType) {
+            case "opacity":
+              _this.region.currentView.$el.removeAttr("style");
+              break;
+            case "spinner":
+              if (_this.region.currentView !== loadingView) {
+                return realView.close();
+              }
+          }
+          if (!config.debug) {
+            _this.show(realView);
+            return realView.triggerMethod("dependencies:fetched");
+          }
+        };
+      })(this), 10);
+      return App.commands.execute("when:fetched", config.entities, callbackFn);
+    };
+
+    LoadingController.prototype.getEntities = function(view) {
+      return _.chain(view).pick("model", "collection").toArray().compact().value();
+    };
+
+    LoadingController.prototype.getLoadingView = function() {
+      return new LoadingView;
+    };
+
+    return LoadingController;
+
+  })(RegionController);
+  return App.commands.setHandler("show:loading", function(view, options) {
+    return new LoadingController({
+      view: view,
+      region: options.region,
+      config: options.loading
+    });
+  });
+});
+
+define('componentloader',['components/loading/controller'], function() {});
 
 
 define('text!apps/header/left/templates/left.html',[],function () { return '<!-- BEGIN HEADER LEFT SIDE SECTION -->\n\t<!-- BEGIN SLIM NAVIGATION TOGGLE -->\n\t<ul class="nav quick-section">\n\t\t<li class="quicklinks">\n\t\t\t<a id="layout-condensed-toggle" class="" href="#">\n\t\t\t\t<div class="iconset top-menu-toggle-dark"></div>\n\t\t\t</a>\n\t\t</li>\n\t\t<li class="quicklinks"><span class="h-seperate"></span></li>\n\t\t<li class="quicklinks"><a class="" href="#"><div class="iconset top-reload"></div></a></li>\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t<ul class="nav quick-section">\n\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t\t\t\t\t\t\t\t\t\n\t\t\t<!-- END HEADER LEFT SIDE SECTION -->';});
@@ -34041,7 +34374,7 @@ define('apps/header/left/leftapp',['app', 'controllers/region-controller', 'text
 });
 
 
-define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\n<div class="chat-toggler">\t\n\t\t<!-- BEGIN PROFILE PICTURE -->\n\t\t<div class="profile-pic"> \n\t\t\t<img width="35" height="35" data-src-retina="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png" data-src="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png" alt="" src="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png"> \n\t\t</div>  \n\t\t<!-- END PROFILE PICTURE -->     \t\t\t\n\t</div>\n\t<!-- BEGIN HEADER NAV BUTTONS -->\n\t<ul class="nav quick-section2">\n\t\t<!-- BEGIN SETTINGS -->\n\t\t<li class="quicklinks"> \n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\n\t\t\t</a>\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\n\t\t\t\t<li><a href="#">My Account</a></li>\n\t\t\t\t<li class="divider"></li>                \n\t\t\t\t<li><a href="#"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<!-- END SETTINGS -->\n\t\t \n\t</ul>\n\t<!-- END HEADER NAV BUTTONS -->\n</div>\n<!-- END HEADER RIGHT SIDE SECTION -->';});
+define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\n<div class="chat-toggler">\t\n\t\t<!-- BEGIN PROFILE PICTURE -->\n\t\t<div class="profile-pic"> \n\t\t\t<img width="35" height="35" data-src-retina="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png" data-src="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png" alt="" src="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png"> \n\t\t</div>  \n\t\t<!-- END PROFILE PICTURE -->     \t\t\t\n\t</div>\n\t<!-- BEGIN HEADER NAV BUTTONS -->\n\t<ul class="nav quick-section2">\n\t\t<!-- BEGIN SETTINGS -->\n\t\t<li class="quicklinks"> \n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\n\t\t\t</a>\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\n\t\t\t\t<li><a href="#">My Account</a></li>\n\t\t\t\t<li class="divider"></li>                \n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<!-- END SETTINGS -->\n\t\t \n\t</ul>\n\t<!-- END HEADER NAV BUTTONS -->\n</div>\n<!-- END HEADER RIGHT SIDE SECTION -->';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -34059,7 +34392,23 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
       RightHeaderController.prototype.initialize = function() {
         var view;
         this.view = view = this._getRightHeaderView();
-        return this.show(view);
+        this.show(view);
+        return this.listenTo(this.view, {
+          "user:logout": function() {
+            return $.post(AJAXURL + '?action=logout_user', (function(_this) {
+              return function(response) {
+                if (response.error) {
+                  return console.log(response);
+                } else {
+                  console.log('logged out');
+                  return App.navigate('login', {
+                    trigger: true
+                  });
+                }
+              };
+            })(this));
+          }
+        });
       };
 
       RightHeaderController.prototype._getRightHeaderView = function() {
@@ -34081,7 +34430,10 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
       RightHeaderView.prototype.className = 'pull-right';
 
       RightHeaderView.prototype.events = {
-        'click #user-options': 'user_options_popup'
+        'click #user-options': 'user_options_popup',
+        'click #user_logout': function() {
+          return this.trigger("user:logout");
+        }
       };
 
       RightHeaderView.prototype.user_options_popup = function(e) {
@@ -34171,10 +34523,13 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
   });
 });
 
+
+define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\n\n<!-- BEGIN SIDEBAR MENU -->\t\n<p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>\n<ul>\t\n\n\t<!-- BEGIN ONE LEVEL MENU -->\n\t<li class="start active">\n\t\t<a href="javascript:;">\n\t\t\t<i class="icon-custom-ui"></i>\n\t\t\t<span class="title">Content Management</span>\n\t\t\t<span class="arrow"></span>\n\t\t</a>\n\t\t<ul class="sub-menu">\n\t\t</ul>\n\t</li>\n\t<!-- END ONE LEVEL MENU -->\n\n</ul>\n<!-- END SIDEBAR MENU -->\n<!-- BEGIN SIDEBAR WIDGETS -->\n<div class="side-bar-widgets">\n\n</div>\n<div class="clearfix"></div>\n<!-- END SIDEBAR WIDGETS --> \n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\n';});
+
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define('apps/left-nav/views',['app'], function(App) {
+define('apps/left-nav/views',['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTpl) {
   return App.module("LeftNavApp.Controller.Views", function(Views, App) {
     var MenuItemView;
     MenuItemView = (function(_super) {
@@ -34186,7 +34541,7 @@ define('apps/left-nav/views',['app'], function(App) {
 
       MenuItemView.prototype.tagName = 'li';
 
-      MenuItemView.prototype.template = '<a href="{{menu_item_link}}"><span class="title">{{post_title}}</span></a>';
+      MenuItemView.prototype.template = '<a href="{{menu_item_link}}"><span>{{post_title}}</span></a>';
 
       return MenuItemView;
 
@@ -34198,7 +34553,7 @@ define('apps/left-nav/views',['app'], function(App) {
         return LeftNavView.__super__.constructor.apply(this, arguments);
       }
 
-      LeftNavView.prototype.template = '<div id="main-menu-wrapper" class="page-sidebar-wrapper"> <p class="menu-title">SCHOOL 1 <span class="pull-right"> <a href="javascript:;"> <i class="fa fa-refresh"></i> </a> </span> </p> <ul class="menu"></ul> </div>';
+      LeftNavView.prototype.template = navTpl;
 
       LeftNavView.prototype.id = 'main-menu';
 
@@ -34206,7 +34561,7 @@ define('apps/left-nav/views',['app'], function(App) {
 
       LeftNavView.prototype.itemView = MenuItemView;
 
-      LeftNavView.prototype.itemViewContainer = '> .page-sidebar-wrapper > ul.menu';
+      LeftNavView.prototype.itemViewContainer = 'ul.sub-menu';
 
       return LeftNavView;
 
@@ -35115,42 +35470,56 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
 
       HotspotView.prototype.template = '&nbsp;';
 
+      HotspotView.prototype.events = {
+        'click': function() {
+          return this.trigger("show:hotspot:properties");
+        }
+      };
+
       HotspotView.prototype.initialize = function(opt) {
         if (opt == null) {
           opt = {};
         }
+        return this.stageName = "stage" + new Date().getTime();
       };
 
       HotspotView.prototype.onRender = function() {
-        return this.$el.attr('id', 'stage');
+        return this.$el.attr('id', this.stageName);
       };
 
       HotspotView.prototype.onShow = function() {
+        console.log("in canvas");
         this.stage = new Kinetic.Stage({
-          container: 'stage',
+          container: this.stageName,
           width: this.$el.parent().width() - 15,
           height: this.$el.parent().height() + 80
         });
-        $('#stage.stage').resize((function(_this) {
+        $('#' + this.stageName + '.stage').resize((function(_this) {
           return function() {
-            console.log($('#stage.stage').width());
+            console.log($('#' + _this.stageName + '.stage').width());
             return _this.stage.setSize({
-              width: $('#stage.stage').width(),
-              height: $('#stage.stage').height() - 5
+              width: $('#' + _this.stageName + '.stage').width(),
+              height: $('#' + _this.stageName + '.stage').height() - 5
             });
           };
         })(this));
+        $('#' + this.stageName + '.stage').resizable({
+          handles: "s"
+        });
         this.imageLayer = new Kinetic.Layer;
         this.optionLayer = new Kinetic.Layer;
         this.stage.add(this.imageLayer);
         this.stage.add(this.optionLayer);
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
-          if (type === "Image") {
+          if (type === "Hotspot-Image") {
             this.trigger("show:media:manager");
           }
           return this._addShapes(type, elementPos);
         });
-        return $('.stage .kineticjs-content').droppable({
+        $('button.btn.btn-success.btn-cons2').on('mouseover', (function(_this) {
+          return function() {};
+        })(this));
+        return $('#' + this.stageName + ' .kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
             return function(evt, ui) {
@@ -35158,8 +35527,8 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
               if (ui.draggable.prop("tagName") === 'LI') {
                 type = ui.draggable.attr('data-element');
                 elementPos = {
-                  left: evt.clientX - $('.stage .kineticjs-content').offset().left,
-                  top: evt.clientY - $('.stage .kineticjs-content').offset().top + window.pageYOffset
+                  left: evt.clientX - $('#' + _this.stageName + ' .kineticjs-content').offset().left,
+                  top: evt.clientY - $('#' + _this.stageName + ' .kineticjs-content').offset().top + window.pageYOffset
                 };
                 return _this.trigger("add:hotspot:element", type, elementPos);
               }
@@ -35195,6 +35564,15 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
         return this.optionLayer.draw();
       };
 
+      HotspotView.prototype.updateModel = function() {
+        this.layout.model.set('content', this._getHotspotData());
+        return console.log('updatedmodel             ' + this.layout.model);
+      };
+
+      HotspotView.prototype._getHotspotData = function() {
+        return this.stage.toJSON();
+      };
+
       return HotspotView;
 
     })(Marionette.ItemView);
@@ -35218,11 +35596,7 @@ define('apps/content-creator/content-builder/elements/hotspot/controller',['app'
       Controller.prototype.initialize = function(options) {
         _.defaults(options.modelData, {
           element: 'Hotspot',
-          image_id: 0,
-          elements: [],
-          meta_id: 1,
-          size: 'thumbnail',
-          align: 'left'
+          content: ''
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -35246,6 +35620,14 @@ define('apps/content-creator/content-builder/elements/hotspot/controller',['app'
               _this.layout.model.set('image_id', media.get('id'));
               _this.layout.model.save();
               return _this.stopListening(App.vent, "media:manager:choosed:media");
+            });
+          };
+        })(this));
+        this.listenTo(view, "show:hotspot:properties", (function(_this) {
+          return function() {
+            console.log("click hotspot");
+            return App.execute("show:question:elements", {
+              model: _this.layout.model
             });
           };
         })(this));
@@ -35442,7 +35824,7 @@ define('apps/content-creator/content-builder/elements/row/views',['app'], functi
         if (this.columnCount() === 1) {
           return;
         }
-        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="bicon bicon-uniF140"></span> </p> </div>';
+        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="fa fa-ellipsis-h"></span> </p> </div>';
         numberOfResizers = this.columnCount() - 1;
         return _.each(_.range(numberOfResizers), (function(_this) {
           return function(ele, index) {
@@ -35612,7 +35994,7 @@ define('apps/content-creator/content-builder/elements/row/views',['app'], functi
 });
 
 
-define('text!apps/content-creator/content-builder/elements/row/settings/templates/settings.html',[],function () { return '\n<header class="settings-header">\n  <div class="row">\n    <div class="col-sm-10">\n      <h5 class="title">{{config.element}} Settings</h5>\n    </div>\n    <div class="col-sm-2 close-btn"><a href="#" class="close-settings">&times;</a></div>\n  </div>\n</header>\n<div class="row">\n  <div class="col-sm-12">\n    <form action="" method="POST" role="form" class="form-horizontal">\n      <div class="form-group">\n        <label for="" class="col-sm-4 control-label">Choose Style</label>\n        <div class="col-sm-8">\n          <select name="style">\n            <option value="">None</option>{{#styles}}\n            <option value="{{name}}">{{name}}</option>{{/styles}}\n          </select>\n        </div>\n      </div>\n      <div class="form-group">\n        <label for="" class="col-sm-4 control-label">Draggable</label>\n        <div class="col-sm-8"><span class="checkbox">\n            <input type="checkbox" name="draggable"/></span></div>\n        <div class="clearfix"></div>\n      </div>\n      <div class="form-group">\n        <label for="" class="col-sm-4 control-label">No of columns</label>\n        <div class="col-sm-8">\n          <div class="set-column-count btn-group btn-group-xs"><a class="btn btn-default">1 </a><a class="btn btn-default">2 </a><a class="btn btn-default">3 </a><a class="btn btn-default">4 </a><a class="btn btn-default">6 </a></div>\n        </div>\n      </div>\n    </form>\n  </div>\n</div>';});
+define('text!apps/content-creator/content-builder/elements/row/settings/templates/settings.html',[],function () { return '\n<header class="settings-header">\n  <div class="row">\n    <div class="col-sm-10">\n      <h5 class="title">{{config.element}} Settings</h5>\n    </div>\n    <div class="col-sm-2 close-btn"><a href="#" class="close-settings">&times;</a></div>\n  </div>\n</header>\n<div class="row">\n  <div class="col-sm-12">\n    <form action="" method="POST" role="form" class="form-horizontal">\n    <!--   <div class="form-group">\n        <label for="" class="col-sm-4 control-label">Choose Style</label>\n        <div class="col-sm-8">\n          <select name="style">\n            <option value="">None</option>{{#styles}}\n            <option value="{{name}}">{{name}}</option>{{/styles}}\n          </select>\n        </div>\n      </div>\n      <div class="form-group">\n        <label for="" class="col-sm-4 control-label">Draggable</label>\n        <div class="col-sm-8"><span class="checkbox">\n            <input type="checkbox" name="draggable"/></span></div>\n        <div class="clearfix"></div>\n      </div> -->\n      <div class="form-group">\n        <label for="" class="col-sm-4 control-label">No of columns</label>\n        <div class="col-sm-8">\n          <div class="set-column-count btn-group btn-group-xs"><a class="btn btn-default">1 </a><a class="btn btn-default">2 </a><a class="btn btn-default">3 </a><a class="btn btn-default">4 </a><a class="btn btn-default">6 </a></div>\n        </div>\n      </div>\n    </form>\n  </div>\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35640,15 +36022,13 @@ define('apps/content-creator/content-builder/elements/row/settings/views',['app'
 
       SettingsView.prototype.onRender = function() {
         this.$el.find('input[type="checkbox"]').checkbox();
-        this.$el.find('select').selectpicker();
         return this.setFields();
       };
 
       SettingsView.prototype.setFields = function() {
         if (this.eleModel.get('draggable') === true) {
-          this.$el.find('input[name="draggable"]').checkbox('check');
+          return this.$el.find('input[name="draggable"]').checkbox('check');
         }
-        return this.$el.find('select[name="style"]').selectpicker('val', this.eleModel.get('style'));
       };
 
       SettingsView.prototype.events = {
@@ -35811,7 +36191,86 @@ define(['apps/content-creator/content-builder/elements/hotspot/controller', 'app
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define('apps/content-creator/content-builder/app',['app', 'controllers/region-controller', 'apps/content-creator/content-builder/view', 'apps/content-creator/content-builder/element/controller', 'apps/content-creator/content-builder/elements-loader'], function(App, RegionController) {
+define('apps/content-creator/content-builder/autosave/controller',['app'], function(App) {
+  return App.module('ContentCreator.ContentBuilder.AutoSave', function(AutoSave, App, Backbone, Marionette, $, _) {
+    AutoSave.Controller = (function(_super) {
+      __extends(Controller, _super);
+
+      function Controller() {
+        return Controller.__super__.constructor.apply(this, arguments);
+      }
+
+      Controller.prototype.initialize = function(opt) {
+        if (opt == null) {
+          opt = {};
+        }
+      };
+
+      Controller.prototype.autoSave = function() {
+        var siteRegion, _json;
+        siteRegion = App.mainContentRegion.$el;
+        _json = this._getPageJson(siteRegion);
+        if (!_.isObject(_json)) {
+          throw new Error("invalid json...");
+        }
+        return console.log(JSON.stringify(_json));
+      };
+
+      Controller.prototype._getPageJson = function($site) {
+        var json;
+        json = this._getJson($site.find('#myCanvas'));
+        return json;
+      };
+
+      Controller.prototype._getJson = function($element, arr) {
+        var elements;
+        if (arr == null) {
+          arr = [];
+        }
+        elements = $element.children('.element-wrapper');
+        _.each(elements, (function(_this) {
+          return function(element, index) {
+            var ele;
+            ele = {
+              element: $(element).find('form input[name="element"]').val(),
+              meta_id: parseInt($(element).find('form input[name="meta_id"]').val())
+            };
+            if (ele.element === 'Row') {
+              ele.draggable = $(element).children('form').find('input[name="draggable"]').val() === "true";
+              ele.style = $(element).children('form').find('input[name="style"]').val();
+              delete ele.meta_id;
+              ele.elements = [];
+              _.each($(element).children('.element-markup').children('.row').children('.column'), function(column, index) {
+                var className, col;
+                className = $(column).attr('data-class');
+                col = {
+                  position: index + 1,
+                  element: 'Column',
+                  className: className,
+                  elements: _this._getJson($(column))
+                };
+                ele.elements.push(col);
+              });
+            }
+            return arr.push(ele);
+          };
+        })(this));
+        return arr;
+      };
+
+      return Controller;
+
+    })(Marionette.Controller);
+    return App.reqres.setHandler("autosave:question:layout", function() {
+      return new AutoSave.Controller;
+    });
+  });
+});
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('apps/content-creator/content-builder/app',['app', 'controllers/region-controller', 'apps/content-creator/content-builder/view', 'apps/content-creator/content-builder/element/controller', 'apps/content-creator/content-builder/elements-loader', 'apps/content-creator/content-builder/autosave/controller'], function(App, RegionController) {
   return App.module("ContentCreator.ContentBuilder", function(ContentBuilder, App, Backbone, Marionette, $, _) {
     var API, ContentBuilderController;
     ContentBuilderController = (function(_super) {
@@ -35842,6 +36301,11 @@ define('apps/content-creator/content-builder/app',['app', 'controllers/region-co
           container: container,
           modelData: modelData
         });
+      },
+      saveQuestion: function() {
+        var autoSave;
+        autoSave = App.request("autosave:question:layout");
+        return autoSave.autoSave();
       }
     };
     App.commands.setHandler("show:content:builder", function(options) {
@@ -35849,11 +36313,14 @@ define('apps/content-creator/content-builder/app',['app', 'controllers/region-co
         region: options.region
       });
     });
-    return App.reqres.setHandler("add:new:element", function(container, type, modelData) {
+    App.reqres.setHandler("add:new:element", function(container, type, modelData) {
       if (modelData == null) {
         modelData = {};
       }
       return API.addNewElement(container, type, modelData);
+    });
+    return App.commands.setHandler("save:question", function() {
+      return API.saveQuestion();
     });
   });
 });
@@ -35870,7 +36337,15 @@ define('apps/content-creator/property-dock/views',['app'], function(App) {
         return Layout.__super__.constructor.apply(this, arguments);
       }
 
-      Layout.prototype.template = '<div class="tiles green"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4> </div> </div> <div id="question-property" class="docket"></div> <div id="question-elements" class="docket"></div>';
+      Layout.prototype.template = '<div class="builder_actions"> <button type="button" class="btn btn-success btn-cons2" id="save-question"> <i class="fa fa-check"></i> Save</button> <button type="button" class="btn btn-success btn-cons2"> <i class="fa fa-eye"></i> Preview</button> </div> <div class="tiles green"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4> </div> </div> <div id="question-property" class="docket"></div> <div id="question-elements" class="docket"></div>';
+
+      Layout.prototype.events = {
+        'click  #save-question': 'saveQuestion'
+      };
+
+      Layout.prototype.saveQuestion = function() {
+        return App.execute("save:question");
+      };
 
       Layout.prototype.regions = {
         questPropertyRegion: '#question-property',
@@ -35888,6 +36363,26 @@ var __hasProp = {}.hasOwnProperty,
 
 define('apps/content-creator/property-dock/hotspot-element-box/views',['app'], function(App) {
   return App.module("ContentCreator.PropertyDock.HotspotElementBox.Views", function(Views, App) {
+    Views.HotspotElementView = (function(_super) {
+      __extends(HotspotElementView, _super);
+
+      function HotspotElementView() {
+        return HotspotElementView.__super__.constructor.apply(this, arguments);
+      }
+
+      HotspotElementView.prototype.tagName = 'li';
+
+      HotspotElementView.prototype.className = 'hotspot-elements hotspotable';
+
+      HotspotElementView.prototype.template = '<a href="#" class="drag builder-element"> <i class="fa {{icon}}"></i> </a>';
+
+      HotspotElementView.prototype.onRender = function() {
+        return this.$el.attr('data-element', this.model.get('element'));
+      };
+
+      return HotspotElementView;
+
+    })(Marionette.ItemView);
     return Views.HotspotElementBoxView = (function(_super) {
       __extends(HotspotElementBoxView, _super);
 
@@ -35895,7 +36390,11 @@ define('apps/content-creator/property-dock/hotspot-element-box/views',['app'], f
         return HotspotElementBoxView.__super__.constructor.apply(this, arguments);
       }
 
-      HotspotElementBoxView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot Properties </div> <div class="docket-body"> <ul> <li class="hotspot-elements hotspotable" data-element="Hotspot-Circle"> <a href="#" class="drag builder-element"> <i class="fa fa-circle-o"></i> </a> </li> <li class="hotspot-elements hotspotable" data-element="Hotspot-Rectangle"> <a href="#" class="drag builder-element"> <i class="fa fa-square-o"></i> </a> </li> <li data-element="Image" class="hotspot-elements hotspotable"> <a href="#" class="drag builder-element" > <i class="fa fa-camera"></i> </a> </li> <div class="clearfix"></div> </ul> </div> </div> </div>';
+      HotspotElementBoxView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot Properties </div> <div class="docket-body"> <ul class="hotspot-elements-container"> </ul> <div class="clearfix"></div> </div> </div> </div>';
+
+      HotspotElementBoxView.prototype.itemView = Views.HotspotElementView;
+
+      HotspotElementBoxView.prototype.itemViewContainer = 'ul.hotspot-elements-container';
 
       HotspotElementBoxView.prototype.onShow = function() {
         return this.$el.find('.hotspot-elements').draggable({
@@ -35909,7 +36408,7 @@ define('apps/content-creator/property-dock/hotspot-element-box/views',['app'], f
 
       return HotspotElementBoxView;
 
-    })(Marionette.ItemView);
+    })(Marionette.CompositeView);
   });
 });
 
@@ -35932,7 +36431,9 @@ define('apps/content-creator/property-dock/hotspot-element-box/controller',['app
       };
 
       HotspotElementBoxController.prototype._getView = function() {
-        return new HotspotElementBox.Views.HotspotElementBoxView;
+        return new HotspotElementBox.Views.HotspotElementBoxView({
+          collection: App.request("get:all:hotspot:elements")
+        });
       };
 
       return HotspotElementBoxController;
@@ -35965,7 +36466,7 @@ define('apps/content-creator/property-dock/controller',['app', 'controllers/regi
         this.layout = this._getLayout();
         App.commands.setHandler("show:question:elements", (function(_this) {
           return function(options) {
-            return _this._getElementBox(options.model.get('element'));
+            return _this._getElementBox(options.model);
           };
         })(this));
         return this.show(this.layout);
@@ -35975,10 +36476,13 @@ define('apps/content-creator/property-dock/controller',['app', 'controllers/regi
         return new PropertyDock.Views.Layout;
       };
 
-      PropertyDockController.prototype._getElementBox = function(elementName) {
+      PropertyDockController.prototype._getElementBox = function(model) {
+        var elementName;
+        elementName = model.get('element');
         if (elementName === "Hotspot") {
           return App.execute("show:hotspot:elements", {
-            region: this.layout.questElementRegion
+            region: this.layout.questElementRegion,
+            model: model
           });
         }
       };
@@ -36611,7 +37115,9 @@ require.config({
     plupload: 'plugins/plupload.full',
     syphon: 'plugins/backbone.syphon',
     underscorestring: 'plugins/underscorestring',
-    entitiesloader: 'entities/content-creator-entities-loader'
+    entitiesloader: 'entities/content-creator-entities-loader',
+    checkbox: 'plugins/flatui-checkbox',
+    componentloader: 'components/builder-component-loader'
   },
   shim: {
     underscore: {
@@ -36634,6 +37140,7 @@ require.config({
       exports: 'plupload'
     },
     bootstrap: ['jquery'],
+    checkbox: ['bootstrap'],
     jqueryvalidate: ['jquery'],
     underscorestring: ['underscore'],
     syphon: ['backbone'],
@@ -36641,7 +37148,7 @@ require.config({
   }
 });
 
-require(['plugins/content-creator-pluginloader', 'configs/content-creator-configloader', 'app', 'entitiesloader', 'apps/content-creator-appsloader'], function(plugins, configs, App) {
+require(['plugins/content-creator-pluginloader', 'configs/content-creator-configloader', 'app', 'entitiesloader', 'componentloader', 'apps/content-creator-appsloader'], function(plugins, configs, App) {
   return App.start();
 });
 

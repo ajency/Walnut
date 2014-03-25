@@ -10,7 +10,7 @@ define(['marionette'], function(Marionette) {
       return LoadingView.__super__.constructor.apply(this, arguments);
     }
 
-    LoadingView.prototype.template = _.template('<i></i>', {});
+    LoadingView.prototype.template = '<i></i>';
 
     LoadingView.prototype.className = 'loading-container';
 

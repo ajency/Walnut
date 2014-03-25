@@ -42,12 +42,11 @@ define ['marionette'], (Marionette)->
 	App.on "initialize:after", (options) ->
 		App.startHistory()
 
-		# @rootRoute = 'login' 
+		#@rootRoute = 'login' 
 		# if not logged in change rootRoute to login		
-		# App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
-		# return
+		#App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
+		#return
 		# check app login status
-
 		xhr = $.get "#{AJAXURL}?action=get-user-data", 
 				{}, 
 				(resp)=>
@@ -70,5 +69,7 @@ define ['marionette'], (Marionette)->
 			
 	App.vent.on "show:dashboard", ->
 		App.navigate('textbooks', trigger: true)
+		App.execute "show:headerapp", region:App.headerRegion
+		App.execute "show:leftnavapp", region:App.leftNavRegion	
 			
 	App

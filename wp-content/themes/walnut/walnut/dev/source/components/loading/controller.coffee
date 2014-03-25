@@ -2,9 +2,10 @@ define [
 		'app'
 		'controllers/region-controller'
 		'components/loading/view'
-	], (App, AppController, LoadingView)->
 
-		class LoadingController extends AppController
+	], (App, RegionController, LoadingView)->
+
+		class LoadingController extends RegionController
 
 			initialize: (options) ->
 				{ view, config } = options

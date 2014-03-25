@@ -14,7 +14,23 @@ define(['app', 'controllers/region-controller', 'text!apps/header/right/template
       RightHeaderController.prototype.initialize = function() {
         var view;
         this.view = view = this._getRightHeaderView();
-        return this.show(view);
+        this.show(view);
+        return this.listenTo(this.view, {
+          "user:logout": function() {
+            return $.post(AJAXURL + '?action=logout_user', (function(_this) {
+              return function(response) {
+                if (response.error) {
+                  return console.log(response);
+                } else {
+                  console.log('logged out');
+                  return App.navigate('login', {
+                    trigger: true
+                  });
+                }
+              };
+            })(this));
+          }
+        });
       };
 
       RightHeaderController.prototype._getRightHeaderView = function() {
@@ -36,7 +52,10 @@ define(['app', 'controllers/region-controller', 'text!apps/header/right/template
       RightHeaderView.prototype.className = 'pull-right';
 
       RightHeaderView.prototype.events = {
-        'click #user-options': 'user_options_popup'
+        'click #user-options': 'user_options_popup',
+        'click #user_logout': function() {
+          return this.trigger("user:logout");
+        }
       };
 
       RightHeaderView.prototype.user_options_popup = function(e) {

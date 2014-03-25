@@ -12,6 +12,12 @@ define ['app'
 			className: 'mix'
 			template : listitemTpl
 
+			onShow:->
+				@$el.attr 'data-name', @model.get 'name'
+				@$el.addClass 'Class_'+class_id for class_id in @model.get 'classes'
+				$filters = $('#Filters').find 'li', dimensions = region: 'all', recreation: 'all'
+				
+
 		class EmptyView extends Marionette.ItemView
 			
 			template:	notextbooksTpl	
@@ -40,9 +46,9 @@ define ['app'
 				data
 
 			events: 
-				'click .btn-group'		: 'dropdown_popup'
-				'click .sort'			: 'sortTable'
-				'click .filter_class'	: (e)->  @trigger "filter:textbooks:class", $(e.target).closest('li').attr('data-filter')
+				'click .btn-group'			: 'dropdown_popup'
+				'click .textbook_titles'	: (e)->  @trigger "single:textbook:view", $(e.target).attr('data-id')
+				'click .filter_class'		: (e)->  @trigger "filter:textbooks:class", $(e.target).closest('li').attr('data-filter')
 
 
 			dropdown_popup : (e)->
@@ -65,7 +71,12 @@ define ['app'
 				@trigger "sort:textbooks", options
 				
 			onShow: ->
-				console.log '@collection'
-				console.log @collection
+				$('#textbooks').mixitup
+					layoutMode: 'list', # Start in list mode (display: block) by default
+					listClass: 'list', # Container class for when in list mode
+					gridClass: 'grid', # Container class for when in grid mode
+					effects: ['fade','blur'], # List of effects
+					listEffects: ['fade','rotateX'] # List of effects ONLY for list mode
+				
 				
 

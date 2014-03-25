@@ -35,6 +35,17 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
             });
           };
         })(this));
+        this.listenTo(this.view, "single:textbook:view", (function(_this) {
+          return function(term_id) {
+            var textbookModel;
+            textbookModel = textbooksCollection.get({
+              'id': term_id
+            });
+            return App.navigate('textbook/' + term_id, {
+              trigger: true
+            });
+          };
+        })(this));
         return this.show(view, {
           loading: true
         });
