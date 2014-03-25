@@ -1,9 +1,9 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbooks/list/templates/list_item.html'], function(App, textbooksTpl, listitemTpl) {
+define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbooks/list/templates/list_item.html', 'text!apps/textbooks/templates/no_textbooks.html'], function(App, textbooksTpl, listitemTpl, notextbooksTpl) {
   return App.module("TextbooksApp.List.Views", function(Views, App) {
-    var ListItemView;
+    var EmptyView, ListItemView;
     ListItemView = (function(_super) {
       __extends(ListItemView, _super);
 
@@ -20,6 +20,18 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       return ListItemView;
 
     })(Marionette.ItemView);
+    EmptyView = (function(_super) {
+      __extends(EmptyView, _super);
+
+      function EmptyView() {
+        return EmptyView.__super__.constructor.apply(this, arguments);
+      }
+
+      EmptyView.prototype.template = notextbooksTpl;
+
+      return EmptyView;
+
+    })(Marionette.ItemView);
     return Views.ListView = (function(_super) {
       __extends(ListView, _super);
 
@@ -32,6 +44,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       ListView.prototype.className = 'page-content';
 
       ListView.prototype.itemView = ListItemView;
+
+      ListView.prototype.emptyView = EmptyView;
 
       ListView.prototype.itemViewContainer = 'ul.textbooks_list';
 
@@ -79,6 +93,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       };
 
       ListView.prototype.onShow = function() {
+        console.log('@collection');
         return console.log(this.collection);
       };
 

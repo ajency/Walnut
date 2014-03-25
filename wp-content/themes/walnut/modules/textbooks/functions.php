@@ -190,7 +190,7 @@ function get_textbooks($args = array()) {
         'fetch_all' => false,
         'orderby' => 'name',
         'order' => 'asc',
-        'number'=>2,
+        //'number'=>2,
         'user_id' => get_current_user_id(),
         'class_id' => ''
     );

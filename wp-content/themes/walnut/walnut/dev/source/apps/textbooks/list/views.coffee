@@ -1,6 +1,8 @@
 define ['app'
 		'text!apps/textbooks/templates/textbooks.html'
-		'text!apps/textbooks/list/templates/list_item.html'],(App,textbooksTpl, listitemTpl)->
+		'text!apps/textbooks/list/templates/list_item.html'
+		'text!apps/textbooks/templates/no_textbooks.html'
+		],(App,textbooksTpl, listitemTpl,notextbooksTpl)->
 
 	App.module "TextbooksApp.List.Views",(Views, App)->
 
@@ -10,6 +12,10 @@ define ['app'
 			className: 'mix'
 			template : listitemTpl
 
+		class EmptyView extends Marionette.ItemView
+			
+			template:	notextbooksTpl	
+
 		class Views.ListView extends Marionette.CompositeView
 
 			template : textbooksTpl
@@ -17,6 +23,8 @@ define ['app'
 			className : 'page-content'
 
 			itemView 	: ListItemView
+
+			emptyView  : EmptyView
 
 			itemViewContainer : 'ul.textbooks_list'
 
@@ -57,6 +65,7 @@ define ['app'
 				@trigger "sort:textbooks", options
 				
 			onShow: ->
+				console.log '@collection'
 				console.log @collection
 				
 

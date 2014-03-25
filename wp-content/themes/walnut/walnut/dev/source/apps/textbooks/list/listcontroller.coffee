@@ -23,7 +23,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
 													
 
-				@show view
+				@show view,(loading : true)
 
 			_getTextbooksView :(collection)->
 				new List.Views.ListView

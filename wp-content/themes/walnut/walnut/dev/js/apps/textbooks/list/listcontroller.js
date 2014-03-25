@@ -35,7 +35,9 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
             });
           };
         })(this));
-        return this.show(view);
+        return this.show(view, {
+          loading: true
+        });
       };
 
       ListController.prototype._getTextbooksView = function(collection) {
