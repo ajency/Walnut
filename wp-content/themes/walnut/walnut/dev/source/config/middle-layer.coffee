@@ -51,23 +51,20 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
       onOffline = ->
         alert("Off")
         return
-        
+
 
       $.middle_layer = (url,data,response) ->
         if checkPlatform() is "Desktop"
           if isOnline()
-            data.ntwkStatus = 'online'
             $.post url, data, response, 'json'
-
           else
-            data.ntwkStatus = 'offline'
-            $.post url, data, response, 'json'
+            return 'connection_error'
 
         else
           if checkConnection()
-            alert("Online");
+            $.post url, data, response, 'json'
           else
-            alert("Offline");        
+            return 'connection_error'        
 
 
 

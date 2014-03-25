@@ -28,7 +28,6 @@ define(['marionette'], function(Marionette) {
   App.on("initialize:after", function(options) {
     var xhr;
     App.startHistory();
-    this.rootRoute = 'login';
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
         var user;
