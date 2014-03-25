@@ -42,6 +42,10 @@ define ['marionette'], (Marionette)->
 	App.on "initialize:after", (options) ->
 		App.startHistory()
 
+		@rootRoute = 'login' 
+		# if not logged in change rootRoute to login		
+		App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
+		return
 		# check app login status
 
 		xhr = $.get "#{AJAXURL}?action=get-user-data", 

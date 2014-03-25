@@ -4,11 +4,15 @@
 # <li>-load all JS files</li>
 # </ul>
 
-require.config 
+require.config
 	
 	urlArgs : "ver=#{(new Date()).getTime()}"
+
 	
 	baseUrl : './wp-content/themes/walnut/walnut/dev/js'
+	
+	#Url for walnut app
+	#baseUrl : '/dev/js'
 	
 	paths:
 		jquery 				: 'plugins/jquery'

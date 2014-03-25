@@ -1,5 +1,5 @@
 define(['plugins/detect', 'jquery', 'plugins/online'], function(detect, $) {
-  var checkPlatform, networkStatus;
+  var checkConnection, checkPlatform, networkStatus;
   networkStatus = 0;
   checkPlatform = function() {
     var ua;
@@ -25,6 +25,14 @@ define(['plugins/detect', 'jquery', 'plugins/online'], function(detect, $) {
       networkStatus = 0;
     }
   };
+  checkConnection = function() {
+    if (navigator.connection.type === Connection.NONE) {
+      networkStatus = 0;
+      return false;
+    } else {
+      networkStatus = 1;
+    }
+  };
   window.isOnline = function() {
     if (networkStatus === 1) {
       return true;
@@ -40,6 +48,12 @@ define(['plugins/detect', 'jquery', 'plugins/online'], function(detect, $) {
       } else {
         data.ntwkStatus = 'offline';
         return $.post(url, data, response, 'json');
+      }
+    } else {
+      if (isOnline()) {
+        return alert("Online");
+      } else {
+        return alert("Offline");
       }
     }
   };

@@ -9,6 +9,7 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
           "Mobile"
         else "Desktop"
 
+      #Implementation for browser
       #Check if connection exists when page is first loaded.    
       if window.navigator.onLine 
         networkStatus = 1
@@ -27,6 +28,17 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
         if checkPlatform() is "Desktop"
           networkStatus = 0
           return
+      
+      #Implementation for mobile
+      #Check network status using Cordova API
+      checkConnection = ->
+        if navigator.connection.type is Connection.NONE 
+          networkStatus = 0
+          return false;
+        else
+          networkStatus = 1
+          return
+
 
       window.isOnline = ->
         if networkStatus is 1
@@ -42,6 +54,12 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
           else
             data.ntwkStatus = 'offline'
             $.post url, data, response, 'json'
+
+        else
+          if isOnline()
+            alert("Online");
+          else
+            alert("Offline");        
 
 
 
