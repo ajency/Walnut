@@ -17,7 +17,9 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       HotspotElementBoxController.prototype._getView = function() {
-        return new HotspotElementBox.Views.HotspotElementBoxView;
+        return new HotspotElementBox.Views.HotspotElementBoxView({
+          collection: App.request("get:all:hotspot:elements")
+        });
       };
 
       return HotspotElementBoxController;

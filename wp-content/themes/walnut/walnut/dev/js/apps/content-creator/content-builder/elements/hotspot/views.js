@@ -14,6 +14,12 @@ define(['app'], function(App) {
 
       HotspotView.prototype.template = '&nbsp;';
 
+      HotspotView.prototype.events = {
+        'click': function() {
+          return this.trigger("show:hotspot:properties");
+        }
+      };
+
       HotspotView.prototype.initialize = function(opt) {
         if (opt == null) {
           opt = {};
@@ -49,11 +55,14 @@ define(['app'], function(App) {
         this.stage.add(this.imageLayer);
         this.stage.add(this.optionLayer);
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
-          if (type === "Image") {
+          if (type === "Hotspot-Image") {
             this.trigger("show:media:manager");
           }
           return this._addShapes(type, elementPos);
         });
+        $('button.btn.btn-success.btn-cons2').on('mouseover', (function(_this) {
+          return function() {};
+        })(this));
         return $('#' + this.stageName + ' .kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
@@ -97,6 +106,15 @@ define(['app'], function(App) {
           resizeRect(box, this.optionLayer);
         }
         return this.optionLayer.draw();
+      };
+
+      HotspotView.prototype.updateModel = function() {
+        this.layout.model.set('content', this._getHotspotData());
+        return console.log('updatedmodel             ' + this.layout.model);
+      };
+
+      HotspotView.prototype._getHotspotData = function() {
+        return this.stage.toJSON();
       };
 
       return HotspotView;

@@ -12,18 +12,19 @@ define ['app'
 						@layout = @_getLayout()
 
 						App.commands.setHandler "show:question:elements",(options)=>
-								@_getElementBox options.model.get('element')
+								@_getElementBox options.model
 
 						@show @layout
 
 					_getLayout: ->
 						new PropertyDock.Views.Layout
 
-					_getElementBox:(elementName)->
-
+					_getElementBox:(model)->
+						elementName = model.get('element')
 						if(elementName=="Hotspot")
 								App.execute "show:hotspot:elements",
 										region : @layout.questElementRegion
+										model : model
 
 
 				App.commands.setHandler "show:property:dock",(options)->

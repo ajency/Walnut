@@ -14,13 +14,11 @@ define ['app'
 
 						_.defaults options.modelData,
 											element  	: 'Hotspot'
-											image_id	: 0
-											elements 	: []
-											meta_id 	: 1
-											size 		: 'thumbnail'
-											align 		: 'left'
+											content 	: ''
 
 						super(options)
+
+
 						
 					# bindEvents:->
 					# 	# start listening to model events
@@ -29,8 +27,9 @@ define ['app'
 					# 	super()
 
 					_getHotspotView:()->
-						new Hotspot.Views.HotspotView
-										model : @layout.model
+							
+							new Hotspot.Views.HotspotView
+									model : @layout.model
 
 								
 					# setup templates for the element
@@ -46,15 +45,22 @@ define ['app'
 										@layout.model.save()
 										@stopListening App.vent,"media:manager:choosed:media"
 
+						#on click of any hotspot canvas show hotspot properties for that hotspot
+						@listenTo view, "show:hotspot:properties",=>
+								console.log "click hotspot"
+								App.execute "show:question:elements",
+						 				model : @layout.model
+
 
 						
 						@layout.elementRegion.show view
 
-						# console.log @layout.model
+						# show hotspot properties for this hotspot
 						App.execute "show:question:elements",
 						 			model : @layout.model
 								
-						
+					
+
 
 					# remove the element model
 					deleteElement:(model)->

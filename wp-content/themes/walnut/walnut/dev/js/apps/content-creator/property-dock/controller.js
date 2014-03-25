@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         this.layout = this._getLayout();
         App.commands.setHandler("show:question:elements", (function(_this) {
           return function(options) {
-            return _this._getElementBox(options.model.get('element'));
+            return _this._getElementBox(options.model);
           };
         })(this));
         return this.show(this.layout);
@@ -25,10 +25,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         return new PropertyDock.Views.Layout;
       };
 
-      PropertyDockController.prototype._getElementBox = function(elementName) {
+      PropertyDockController.prototype._getElementBox = function(model) {
+        var elementName;
+        elementName = model.get('element');
         if (elementName === "Hotspot") {
           return App.execute("show:hotspot:elements", {
-            region: this.layout.questElementRegion
+            region: this.layout.questElementRegion,
+            model: model
           });
         }
       };
