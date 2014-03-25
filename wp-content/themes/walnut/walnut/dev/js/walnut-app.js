@@ -56,8 +56,14 @@ define(['marionette'], function(Marionette) {
     })(this), 'json');
   });
   App.vent.on("show:dashboard", function() {
-    return App.navigate('textbooks', {
+    App.navigate('textbooks', {
       trigger: true
+    });
+    App.execute("show:headerapp", {
+      region: App.headerRegion
+    });
+    return App.execute("show:leftnavapp", {
+      region: App.leftNavRegion
     });
   });
   return App;

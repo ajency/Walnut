@@ -12,3 +12,11 @@ function get_user_data() {
             echo(wp_send_json(array("error"=>"User not logged in.")));
 	die;
 }
+
+add_action( 'wp_ajax_logout_user', 'logout_current_user' );
+
+function logout_current_user() {
+        wp_logout();
+        echo(wp_send_json(array("success"=>"User logged out.")));
+	die;
+}

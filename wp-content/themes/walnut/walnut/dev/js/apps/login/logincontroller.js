@@ -20,7 +20,9 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         this.listenTo(view, 'close', function() {
           return App.vent.trigger('show:dashboard');
         });
-        return this.show(view);
+        return this.show(view, {
+          loading: true
+        });
       };
 
       LoginController.prototype._getLoginView = function() {
