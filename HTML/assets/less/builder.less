@@ -2,13 +2,20 @@
 	position: relative;
 }
 
+#site-page-content-region{
+	//width: 59%;
+	margin-left: 260px;
+	margin-right: 260px;
+	overflow-x: auto;
+}
+
 #myCanvas{
 	//border: 1px solid #505458;
 	background: #fff;
-	position: absolute;
+	//position: absolute;
 	left: 260px;
 	top: 0;
-	width: 730px;
+	min-width: 730px;
 	min-height: 500px !important;
 	padding: 15px 10px;
 
@@ -23,6 +30,8 @@
 #toolbox{
 	width: 240px;
 	background: #fff;
+	position: absolute;
+	z-index: 2;
 	//padding: 15px 10px;
 	.tools, .qstns{
 		padding: 0 10px 20px;
