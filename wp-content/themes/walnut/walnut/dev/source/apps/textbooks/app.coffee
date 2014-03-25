@@ -1,6 +1,6 @@
 define ['app'
 		'apps/textbooks/list/listcontroller'
-		'plugins/search_results'], (App)->
+		], (App)->
 
 			App.module "TextbooksApp", (TextbooksApp, App)->
 
@@ -21,4 +21,4 @@ define ['app'
 					new TextbooksRouter
 							controller : Controller
 
-							
+	

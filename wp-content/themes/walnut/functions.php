@@ -34,7 +34,6 @@ function upload_attachment($file_handler, $post_id, $setthumb = 'false') {
 
 
 add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_login' );
-
 function authenticate_login() {
 	$login_data=$_POST['data'];
 	$status=$_POST['ntwkStatus'];
