@@ -38,6 +38,11 @@ define ['app'],(App)->
 					@stage.setSize
 						width: $('#'+@stageName+'.stage').width()
 						height: $('#'+@stageName+'.stage').height()-5
+
+				$('#'+@stageName+'.stage').resizable
+						 handles: "s" 
+						
+				
 							
 					
 

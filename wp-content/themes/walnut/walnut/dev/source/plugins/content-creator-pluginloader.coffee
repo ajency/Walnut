@@ -14,5 +14,5 @@ define [
 			'text'
 			'jqueryvalidate'
 			'bootstrap'
-
+			'checkbox'
 		], ->

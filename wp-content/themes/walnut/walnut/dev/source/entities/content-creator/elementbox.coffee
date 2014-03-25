@@ -15,17 +15,26 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				url : ''
 
-				
-
+			elementboxCollection = new ElementBox.ElementCollection
+			elementboxCollection.add [{element : "Hotspot"},{element : "Row"}]
+		
 				
 			# PUBLIC API FOR ENitity
 			API =
 				getElements: (param = {})->
-				   new ElementBox.ElementCollection [{element : "Hotspot"},{element : "Row"}]
+				   
 
+				getElementSettingOptions:(ele)->
+					console.log elementboxCollection.get ele
+					element = elementboxCollection.get ele
+
+					element
 
 			# REQUEST HANDLERS
 			App.reqres.setHandler "get:elementbox:elements", ->
 				API.getElements()
+
+			App.reqres.setHandler "get:element:settings:options",(ele)->
+                API.getElementSettingOptions ele
 
 

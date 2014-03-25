@@ -19,7 +19,8 @@ require.config({
     plupload: 'plugins/plupload.full',
     syphon: 'plugins/backbone.syphon',
     underscorestring: 'plugins/underscorestring',
-    entitiesloader: 'entities/content-creator-entities-loader'
+    entitiesloader: 'entities/content-creator-entities-loader',
+    checkbox: 'plugins/flatui-checkbox'
   },
   shim: {
     underscore: {
@@ -42,6 +43,7 @@ require.config({
       exports: 'plupload'
     },
     bootstrap: ['jquery'],
+    checkbox: ['bootstrap'],
     jqueryvalidate: ['jquery'],
     underscorestring: ['underscore'],
     syphon: ['backbone'],

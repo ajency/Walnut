@@ -30,6 +30,7 @@ define ['app', 'controllers/element-controller'
 						# listen to shoiw settings popup event from view
 						@listenTo @layout, "show:setting:popup", (model)->
 								ele = _.slugify model.get 'element'
+							
 								App.vent.trigger "show:#{ele}:settings:popup",model
 
 						# listen to delete element event
