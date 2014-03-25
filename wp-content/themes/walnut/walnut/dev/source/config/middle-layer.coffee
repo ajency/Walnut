@@ -8,14 +8,14 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
         if ua.os.family is "Android" or ua.os.family is "iOS" 
           "Mobile"
         else "Desktop"
-
-      #Implementation for browser
+      
       #Check if connection exists when page is first loaded.    
       if window.navigator.onLine 
         networkStatus = 1
       else
         networkStatus = 0
 
+      #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
       #When network is up.
       window.onLineHandler = ->
@@ -28,22 +28,30 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
         if checkPlatform() is "Desktop"
           networkStatus = 0
           return
+
+      window.isOnline = ->
+        if networkStatus is 1
+          true
+        else false     
       
       #Implementation for mobile
       #Check network status using Cordova API
       checkConnection = ->
         if navigator.connection.type is Connection.NONE 
-          networkStatus = 0
-          return false;
-        else
-          networkStatus = 1
-          return
+          false
+        else true
 
+      #Mobile events
+      document.addEventListener("online", onOnline, false);
+      onOnline = ->
+        alert("On")
+        return
 
-      window.isOnline = ->
-        if networkStatus is 1
-          true
-        else false  
+      document.addEventListener("offline", onOffline, false);
+      onOffline = ->
+        alert("Off")
+        return
+        
 
       $.middle_layer = (url,data,response) ->
         if checkPlatform() is "Desktop"
@@ -56,7 +64,7 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
             $.post url, data, response, 'json'
 
         else
-          if isOnline()
+          if checkConnection()
             alert("Online");
           else
             alert("Offline");        

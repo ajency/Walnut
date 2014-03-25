@@ -44,29 +44,31 @@ define ['marionette'], (Marionette)->
 
 		@rootRoute = 'login' 
 		# if not logged in change rootRoute to login		
-		App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
-		return
+		#App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
+		#return
 		# check app login status
 
 		xhr = $.get "#{AJAXURL}?action=get-user-data", 
 				{}, 
 				(resp)=>
 					if(resp.success)
+						console.log resp
 						user = App.request "get:user:model"
 						user.set resp.data
-						App.vent.trigger "show:dashboard"
+						App.execute "show:headerapp", region:App.headerRegion
+						App.execute "show:leftnavapp", region:App.leftNavRegion						
+						App.vent.trigger "show:dashboard"  if @getCurrentRoute() is 'login'
 					else 	
+						console.log 'error'
 						@rootRoute = 'login' 
 						# if not logged in change rootRoute to login		
-						App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
+						App.navigate(@rootRoute, trigger: true)
 
 
 				, 'json'
 		
 			
 	App.vent.on "show:dashboard", ->
-		App.execute "show:headerapp", region:App.headerRegion
-		App.execute "show:leftnavapp", region:App.leftNavRegion
 		App.navigate('textbooks', trigger: true)
 			
 	App

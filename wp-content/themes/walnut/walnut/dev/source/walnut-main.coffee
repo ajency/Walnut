@@ -8,7 +8,8 @@ require.config
 	
 	urlArgs : "ver=#{(new Date()).getTime()}"
 
-	
+	AJAXURL : 'http://localhost/walnut/wp-admin/admin-ajax.php'
+
 	baseUrl : './wp-content/themes/walnut/walnut/dev/js'
 	
 	#Url for walnut app
@@ -29,6 +30,9 @@ require.config
 		breakpoints			: 'plugins/breakpoints'
 		mustache			: 'plugins/mustache'
 		core				: 'plugins/core'
+		componentloader 	: 'components/component-loader'
+		spin 				: 'plugins/spin'
+		jqueryspin  		: 'plugins/jquery.spin'
 
 	shim:
 		underscore: 
@@ -45,6 +49,7 @@ require.config
 		slimroll 		: ['jquery']
 		core 		: ['sidr','jquery']
 		breakpoints 		: ['jquery']
+		jqueryspin 			: ['spin']
 		jqueryvalidate: ['jquery']
 		syphon		: ['backbone']
 		app 		: ['plugins/walnut-pluginloader','config/walnut-configloader']
@@ -57,6 +62,7 @@ require [	'plugins/walnut-pluginloader'
 			'app'
 			'apps/walnut-appsloader'
 			'entities/walnut-entities-loader'
+			'componentloader'
 			], (plugins, configs, App)->
 
 				App.start()

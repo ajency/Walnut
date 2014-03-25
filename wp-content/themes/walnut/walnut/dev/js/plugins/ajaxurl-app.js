@@ -1,0 +1,1 @@
+var AJAXURL = "http://localhost/walnut/wp-admin/admin-ajax.php"
