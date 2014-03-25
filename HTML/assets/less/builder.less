@@ -30,7 +30,7 @@
 			padding: 0;
 			li{
 				float: left;
-				border: 2px solid #e5e9ec;
+				border: 2px solid @body-bg;
 				background: #fff;
 				width: 65px;
 				height: 65px;
@@ -366,5 +366,56 @@
 	}
 	&:last-child {
 		margin: 0;
+	}
+}
+
+#settings-region {
+	position: absolute !important;
+	z-index: 1000;
+}
+
+.settings-box {
+	width: 400px;
+	background: #fff;
+	box-shadow: 0 0 3px 1px #aaaaaa;
+	padding: 0 0.5em 0.5em;
+	border-radius: 3px;
+	border: 2px solid @body-bg;
+
+	.settings-header {
+		border-bottom: 1px solid @body-bg;
+		margin: 0 -0.5em 0.8em;
+		padding: 0 0.5em;
+		background: @color-info;
+		cursor: move;
+		.row{
+			margin: 0 -15px;
+		}
+		h5.title{
+			color: #fff;
+			font-weight: bold;
+		}
+		.close-btn{
+			text-align: right;
+			a{
+				color: #fff;
+				font-weight: bold;
+				font-size: 18px;
+			}
+		}
+	}
+
+	.form-horizontal{
+		display: block;
+		margin: 0;
+	}
+
+	.set-column-count{
+		padding-top: 4px;
+		.btn-default{
+			padding: 4px 12px;
+			margin-right: 3px;
+			//color: #fff;
+		}
 	}
 }

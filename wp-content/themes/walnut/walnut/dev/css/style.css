@@ -7494,7 +7494,7 @@ ul.my-friends li .profile-pic{
 
 .fail_element{
 	position: absolute;
-	opacity: 0;
+	/*opacity: 0;*/
 	top: 100px;
 	text-align: center;
 	width: 50%;

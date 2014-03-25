@@ -183,29 +183,34 @@ add_action('textbook_edit_form_fields', 'extra_tax_fields', 10, 2);
 add_action('edited_textbook', 'save_extra_taxonomy_fields', 10, 2);
 
 function get_textbooks($args = array()) {
-
     // set defaults
     $defaults = array(
         'hide_empty' => false,
         'parent' => 0,
         'fetch_all' => false,
-        'orderby' => 'term_order',
+        'orderby' => 'name',
+        'order' => 'asc',
+        //'number'=>2,
         'user_id' => get_current_user_id(),
         'class_id' => ''
     );
 
     $args = wp_parse_args($args, $defaults);
-
     extract($args);
 
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
-    if ($fetch_all)
+    if ($fetch_all){
         $textbooks = get_terms('textbook', $args);
+        $count_args=$args;
+        $count_args['fields']='count';
+        $count_args['number']='';
+        $count_total = get_terms('textbook', $count_args);
+    }
 
     //if filtering for a particular class, get textbooks based on which class they belong to
-    else if (is_numeric($class_id))
+    else if (is_numeric($class_id) || $class_id=='0')
         $textbooks = get_textbooks_for_class($class_id);
-
+    
     //get textbooks for logged in user depending on the class the user belongs to
     //generally used for logged in students
     else
@@ -223,15 +228,17 @@ function get_textbooks($args = array()) {
             $data[] = get_book($book);
         }
     }
-
-    return $data;
+    $textbooks['data']=$data;
+    $textbooks['count']=$count_total;
+    return $textbooks;
 }
 
 function get_book($book) {
     global $wpdb;
-    if (is_numeric($book->term_id))
+    if (is_numeric($book->term_id)){
         $book_id = $book->term_id;
-
+        $book_dets = $book;
+    }
     else if (is_numeric($book)) {
         $book_id = $book;
         $book_dets=get_term($book, 'textbook');
@@ -240,14 +247,15 @@ function get_book($book) {
         return false;
     }
 
-    $book_dets = array();
-    $book_dets = $book;
+    //$book_dets = array();
+    
     $additional = get_option('taxonomy_' . $book_id);
     $book_dets->cover_pic = $additional['attachmenturl'];
     $book_dets->author = $additional['author'];
 
     $classes = $wpdb->get_results("select class_id from {$wpdb->prefix}textbook_relationships 
                 where textbook_id=" . $book_id);
+    $book_dets->classes=Array();
     foreach ($classes as $class) {
         $book_dets->classes[] = $class->class_id;
     }
@@ -269,7 +277,9 @@ function get_textbooks_for_class($classid) {
     
     if (is_array($textbook_ids)) {
         foreach ($textbook_ids as $book) {
-            $data[] = get_book($book->textbook_id);
+            $bookdets = get_book($book->textbook_id);
+            if($bookdets->parent == 0)
+                $data[]=$bookdets;
         }
     }
     return $data;
