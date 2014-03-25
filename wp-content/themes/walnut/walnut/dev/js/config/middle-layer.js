@@ -1,5 +1,5 @@
 define(['plugins/detect', 'jquery', 'plugins/online'], function(detect, $) {
-  var checkConnection, checkPlatform, networkStatus;
+  var checkConnection, checkPlatform, networkStatus, onOffline, onOnline;
   networkStatus = 0;
   checkPlatform = function() {
     var ua;
@@ -25,20 +25,27 @@ define(['plugins/detect', 'jquery', 'plugins/online'], function(detect, $) {
       networkStatus = 0;
     }
   };
-  checkConnection = function() {
-    if (navigator.connection.type === Connection.NONE) {
-      networkStatus = 0;
-      return false;
-    } else {
-      networkStatus = 1;
-    }
-  };
   window.isOnline = function() {
     if (networkStatus === 1) {
       return true;
     } else {
       return false;
     }
+  };
+  checkConnection = function() {
+    if (navigator.connection.type === Connection.NONE) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+  document.addEventListener("online", onOnline, false);
+  onOnline = function() {
+    alert("On");
+  };
+  document.addEventListener("offline", onOffline, false);
+  onOffline = function() {
+    alert("Off");
   };
   return $.middle_layer = function(url, data, response) {
     if (checkPlatform() === "Desktop") {
@@ -50,7 +57,7 @@ define(['plugins/detect', 'jquery', 'plugins/online'], function(detect, $) {
         return $.post(url, data, response, 'json');
       }
     } else {
-      if (isOnline()) {
+      if (checkConnection()) {
         return alert("Online");
       } else {
         return alert("Offline");
