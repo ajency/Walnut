@@ -1,11 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-<<<<<<< HEAD
 define(['app', 'controllers/region-controller', 'components/loading/view'], function(App, RegionController, LoadingView) {
-=======
-define(['app', 'controllers/region-controller', 'components/loading/view'], function(App, AppController, LoadingView) {
->>>>>>> cd34474c8a4331eb9afe39ae7505b4a172df48cd
   var LoadingController;
   LoadingController = (function(_super) {
     __extends(LoadingController, _super);
@@ -69,11 +65,7 @@ define(['app', 'controllers/region-controller', 'components/loading/view'], func
 
     return LoadingController;
 
-<<<<<<< HEAD
   })(RegionController);
-=======
-  })(AppController);
->>>>>>> cd34474c8a4331eb9afe39ae7505b4a172df48cd
   return App.commands.setHandler("show:loading", function(view, options) {
     return new LoadingController({
       view: view,
