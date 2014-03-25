@@ -2,7 +2,7 @@
   baseUrl: './js',
   name: 'plugins/almond',
   include : 'walnut-main',
-  optimize: 'none',
+  //optimize: 'none',
   wrap: false,
   out: '../production/walnut-main.js',
   paths: {
@@ -19,7 +19,12 @@
     slimroll: 'plugins/jquery.slimscroll.min',
     breakpoints: 'plugins/breakpoints',
     mustache: 'plugins/mustache',
-    core: 'plugins/core'
+    core: 'plugins/core',
+    mixitup       : 'plugins/jquery.mixitup.min',
+    search_results    : 'plugins/search_results',
+    spin        : 'plugins/spin',
+    jqueryspin      : 'plugins/jquery.spin',
+    componentloader   : 'components/component-loader'
   },
   shim: {
     underscore: {
@@ -41,6 +46,9 @@
     breakpoints: ['jquery'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
-    app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
+    mixitup     : ['jquery'],
+    search_results    : ['jquery','mixitup'],
+    jqueryspin      : ['spin'],
+    app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
   }
 })
