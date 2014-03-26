@@ -15,7 +15,4 @@ define [
 			'jqueryspin'
 			'mixitup'
 			'search_results'
-			'datatables'
-			'tabletools'
-			'jquery_datatables'
 		], ->

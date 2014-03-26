@@ -1,5 +1,8 @@
 define ['app','controllers/region-controller','apps/textbooks/textbook-single/single_views'
 		'apps/textbooks/textbook-single/chapters-list'
+		'datatables'
+		'tabletools'
+		'jquery_datatables'
 ], (App, RegionController)->
 
 	App.module "TextbooksApp.Single", (Single, App)->
