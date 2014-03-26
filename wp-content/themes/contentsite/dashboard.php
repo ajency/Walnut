@@ -44,6 +44,7 @@ Template Name: Dashboard
 	<link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
 	<link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
 	<link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
+	<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
 
 	<!-- END CSS TEMPLATE -->
 

@@ -69,6 +69,7 @@ define(["app", 'backbone'], function(App, Backbone) {
           textbook = new Textbooks.ItemModel({
             term_id: id
           });
+          console.log(textbook);
           textbook.fetch();
         }
         return textbook;

@@ -47,7 +47,6 @@ define ['app'
 
 			events: 
 				'click .btn-group'			: 'dropdown_popup'
-				'click .textbook_titles'	: (e)->  @trigger "single:textbook:view", $(e.target).attr('data-id')
 				'click .filter_class'		: (e)->  @trigger "filter:textbooks:class", $(e.target).closest('li').attr('data-filter')
 
 
