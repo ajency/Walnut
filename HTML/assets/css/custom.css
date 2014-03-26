@@ -88,6 +88,8 @@
   font-size: 16px;
 }
 .dock {
+  position: absolute;
+  right: 0;
   top: 0;
   width: 240px;
   height: 500px;
@@ -136,6 +138,13 @@
 }
 .docket-body select.marks {
   width: auto;
+}
+.textProp .slider.slider-horizontal {
+  display: inline-block;
+  margin-left: 15px;
+}
+.textarea {
+  width: 100%;
 }
 .element-wrapper {
   border: 2px solid #f3f3f3;
