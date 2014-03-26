@@ -1,8 +1,5 @@
 define ['app','controllers/region-controller','apps/textbooks/textbook-single/single_views'
 		'apps/textbooks/textbook-single/chapters-list'
-		'datatables'
-		'tabletools'
-		'jquery_datatables'
 ], (App, RegionController)->
 
 	App.module "TextbooksApp.Single", (Single, App)->
@@ -16,10 +13,10 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				@chapters = App.request "get:textbooks", ('parent': term_id) 
 
 				@layout= layout = @_getTextbookSingleLayout()
-				@listenTo layout, "show", @_showTextBookSingle, (loading: true) 
+				@listenTo layout, "show", @_showTextBookSingle
 				@listenTo layout, "show", @_showChaptersView
 
-				@show layout
+				@show layout, (loading: true)
 
 			_showTextBookSingle: =>
 				# get the single view 
