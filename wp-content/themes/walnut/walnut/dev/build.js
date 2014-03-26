@@ -19,7 +19,15 @@
     slimroll: 'plugins/jquery.slimscroll.min',
     breakpoints: 'plugins/breakpoints',
     mustache: 'plugins/mustache',
-    core: 'plugins/core'
+    core: 'plugins/core',
+    mixitup       : 'plugins/jquery.mixitup.min',
+    search_results    : 'plugins/search_results',
+    spin        : 'plugins/spin',
+    jqueryspin      : 'plugins/jquery.spin',
+    componentloader   : 'components/component-loader',
+    tabletools      : 'plugins/TableTools',
+    jquery_datatables     : 'plugins/jquery.dataTables',
+    datatables      : 'plugins/datatables'
   },
   shim: {
     underscore: {
@@ -41,6 +49,12 @@
     breakpoints: ['jquery'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
-    app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
+    mixitup     : ['jquery'],
+    search_results    : ['jquery','mixitup'],
+    jqueryspin      : ['spin'],
+    tabletools    : ['jquery','datatables'],
+    jquery_datatables     : ['jquery'],
+    datatables    : ['jquery','jquery_datatables'],
+    app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
   }
 })

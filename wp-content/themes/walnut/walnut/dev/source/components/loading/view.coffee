@@ -3,7 +3,7 @@ define ['marionette'], (Marionette) ->
 
     class LoadingView extends Marionette.ItemView
 
-        template : _.template('<i></i>',{})
+        template : '<i></i>'
 
         className : 'loading-container'
 

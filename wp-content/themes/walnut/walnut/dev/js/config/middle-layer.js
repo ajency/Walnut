@@ -48,18 +48,20 @@ define(['plugins/detect', 'jquery', 'plugins/online'], function(detect, $) {
     alert("Off");
   };
   return $.middle_layer = function(url, data, response) {
-    if (checkPlatform() === "Desktop") {
-      if (isOnline()) {
-        return $.post(url, data, response, 'json');
-      } else {
-        return 'connection_error';
-      }
-    } else {
-      if (checkConnection()) {
-        return $.post(url, data, response, 'json');
-      } else {
-        return 'connection_error';
-      }
+    switch (checkPlatform()) {
+      case 'Desktop':
+        if (isOnline()) {
+          return $.post(url, data, response, 'json');
+        } else {
+          return 'connection_error';
+        }
+        break;
+      case 'Mobile':
+        if (checkConnection()) {
+          return $.post(url, data, response, 'json');
+        } else {
+          return 'connection_error';
+        }
     }
   };
 });

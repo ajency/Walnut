@@ -46,9 +46,8 @@ define ['app'
 				data
 
 			events: 
-				'click .btn-group'		: 'dropdown_popup'
-				#'click .sort'			: 'sortTable'
-				'click .filter_class'	: (e)->  @trigger "filter:textbooks:class", $(e.target).closest('li').attr('data-filter')
+				'click .btn-group'			: 'dropdown_popup'
+				'click .filter_class'		: (e)->  @trigger "filter:textbooks:class", $(e.target).closest('li').attr('data-filter')
 
 
 			dropdown_popup : (e)->

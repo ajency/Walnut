@@ -19,8 +19,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 					textbooksCollection.fetch
 											reset :true 
 											data : 
-												class_id : class_id
-
+												class_id : class_id			
 													
 
 				@show view,(loading : true)

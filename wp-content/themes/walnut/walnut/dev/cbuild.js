@@ -23,7 +23,9 @@
     plupload: 'plugins/plupload.full',
     syphon: 'plugins/backbone.syphon',
     underscorestring: 'plugins/underscorestring',
-    entitiesloader: 'entities/content-creator-entities-loader'
+    entitiesloader: 'entities/content-creator-entities-loader',
+    componentloader   : 'components/builder-component-loader',
+    checkbox      : 'plugins/flatui-checkbox'
   },
   shim: {
     underscore: {
@@ -49,6 +51,7 @@
     jqueryvalidate: ['jquery'],
     underscorestring: ['underscore'],
     syphon: ['backbone'],
+    checkbox  : ['bootstrap'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 })

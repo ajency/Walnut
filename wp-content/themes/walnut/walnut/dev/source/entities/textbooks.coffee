@@ -40,6 +40,20 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					textbookCollection
 
+
+				getTextBookByID:(id)->
+					textbook = textbookCollection.get id
+
+					if not textbook 
+						textbook = new Textbooks.ItemModel term_id : id
+						console.log textbook
+						textbook.fetch()
+					textbook
+
+
 			# request handler to get all textbooks
 			App.reqres.setHandler "get:textbooks", (opt) ->
 				API.getTextbooks(opt)
+
+			App.reqres.setHandler "get:textbook:by:id", (id)->
+				API.getTextBookByID id

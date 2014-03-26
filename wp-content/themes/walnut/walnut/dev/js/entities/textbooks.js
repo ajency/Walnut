@@ -61,10 +61,25 @@ define(["app", 'backbone'], function(App, Backbone) {
           data: param
         });
         return textbookCollection;
+      },
+      getTextBookByID: function(id) {
+        var textbook;
+        textbook = textbookCollection.get(id);
+        if (!textbook) {
+          textbook = new Textbooks.ItemModel({
+            term_id: id
+          });
+          console.log(textbook);
+          textbook.fetch();
+        }
+        return textbook;
       }
     };
-    return App.reqres.setHandler("get:textbooks", function(opt) {
+    App.reqres.setHandler("get:textbooks", function(opt) {
       return API.getTextbooks(opt);
+    });
+    return App.reqres.setHandler("get:textbook:by:id", function(id) {
+      return API.getTextBookByID(id);
     });
   });
 });
