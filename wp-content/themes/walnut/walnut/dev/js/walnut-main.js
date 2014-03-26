@@ -20,7 +20,10 @@ require.config({
     mixitup: 'plugins/jquery.mixitup.min',
     search_results: 'plugins/search_results',
     spin: 'plugins/spin',
-    jqueryspin: 'plugins/jquery.spin'
+    jqueryspin: 'plugins/jquery.spin',
+    tabletools: 'plugins/TableTools',
+    jquery_datatables: 'plugins/jquery.dataTables',
+    datatables: 'plugins/datatables'
   },
   shim: {
     underscore: {
@@ -41,6 +44,9 @@ require.config({
     core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
     mixitup: ['jquery'],
+    tabletools: ['jquery', 'datatables'],
+    jquery_datatables: ['jquery'],
+    datatables: ['jquery', 'jquery_datatables'],
     search_results: ['jquery', 'mixitup'],
     jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],

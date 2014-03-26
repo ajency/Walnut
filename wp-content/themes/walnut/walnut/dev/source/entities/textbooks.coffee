@@ -46,8 +46,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					if not textbook 
 						textbook = new Textbooks.ItemModel term_id : id
+						console.log textbook
 						textbook.fetch()
-						
 					textbook
 
 

@@ -19,13 +19,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 					textbooksCollection.fetch
 											reset :true 
 											data : 
-												class_id : class_id
-
-				@listenTo @view, "single:textbook:view", (term_id)=>
-					textbookModel= textbooksCollection.get({'id':term_id})
-					App.navigate('textbook/'+term_id, trigger: true)
-
-				
+												class_id : class_id			
 													
 
 				@show view,(loading : true)
