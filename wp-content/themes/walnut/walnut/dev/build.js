@@ -24,7 +24,10 @@
     search_results    : 'plugins/search_results',
     spin        : 'plugins/spin',
     jqueryspin      : 'plugins/jquery.spin',
-    componentloader   : 'components/component-loader'
+    componentloader   : 'components/component-loader',
+    tabletools      : 'plugins/TableTools',
+    jquery_datatables     : 'plugins/jquery.dataTables',
+    datatables      : 'plugins/datatables'
   },
   shim: {
     underscore: {
@@ -49,6 +52,9 @@
     mixitup     : ['jquery'],
     search_results    : ['jquery','mixitup'],
     jqueryspin      : ['spin'],
+    tabletools    : ['jquery','datatables'],
+    jquery_datatables     : ['jquery'],
+    datatables    : ['jquery','jquery_datatables'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
   }
 })
