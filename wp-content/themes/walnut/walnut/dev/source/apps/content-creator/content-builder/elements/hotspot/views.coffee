@@ -12,8 +12,13 @@ define ['app'],(App)->
 
 			template : '&nbsp;'
 
+			events :
+				'click' : -> @trigger "show:hotspot:properties"
+				# 'focus'	: -> console.log "blur" #'updateModel'
+
 			initialize:(opt = {})->
 				#give a unique name to every hotspot canvas
+				# console.log "layout model  "+JSON.stringify @model
 				@stageName = "stage"+ new Date().getTime()
 
 			onRender:->
@@ -28,9 +33,9 @@ define ['app'],(App)->
 
 
 				@stage = new Kinetic.Stage
-								container: @stageName
-								width: @$el.parent().width()-15
-								height: @$el.parent().height()+80
+						container: @stageName
+						width: @$el.parent().width()-15
+						height: @$el.parent().height()+80
 
 
 				$('#'+@stageName+'.stage').resize ()=>
@@ -45,21 +50,25 @@ define ['app'],(App)->
 				
 							
 					
-
+				#create and add the canvas layers
 				@imageLayer = new Kinetic.Layer
 				@optionLayer = new Kinetic.Layer
 
 				@stage.add @imageLayer
 				@stage.add @optionLayer
 
+				#listen to drop event
 				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
-
-						if(type=="Image")
+						if(type=="Hotspot-Image")
 							@trigger "show:media:manager"
-
 						@_addShapes type, elementPos
 
 
+				$('button.btn.btn-success.btn-cons2').on 'mouseover',=>
+						# console.log
+
+
+				#make the hotspot canvas area dropable
 				$('#'+@stageName+' .kineticjs-content').droppable
 						accept : '.hotspotable'
 						drop : (evt, ui)=>
@@ -98,7 +107,18 @@ define ['app'],(App)->
 						resizeRect box,@optionLayer
 
 				@optionLayer.draw()
-					       
+
+
+			updateModel:->
+				@layout.model.set 'content', @_getHotspotData()
+				# @layout.model.save() if @layout.model.hasChanged()
+
+				console.log 'updatedmodel             '+@layout.model
+					 
+			_getHotspotData:->
+
+				@stage.toJSON()
+
 			      		
 
 

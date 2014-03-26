@@ -1,0 +1,3 @@
+define [
+	'components/loading/controller'
+	],->

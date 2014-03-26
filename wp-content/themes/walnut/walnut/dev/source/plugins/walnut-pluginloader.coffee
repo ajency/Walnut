@@ -11,4 +11,8 @@ define [
 			'core'
 			'breakpoints'
 			'mustache'
+			'spin'
+			'jqueryspin'
+			'mixitup'
+			'search_results'
 		], ->

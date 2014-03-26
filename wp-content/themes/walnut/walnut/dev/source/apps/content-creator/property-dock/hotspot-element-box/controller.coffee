@@ -19,6 +19,7 @@ define ['app'
 						_getView : ->
 
 							new HotspotElementBox.Views.HotspotElementBoxView
+								collection : App.request "get:all:hotspot:elements"
 
 
 					App.commands.setHandler "show:hotspot:elements",(options)->

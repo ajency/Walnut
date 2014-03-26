@@ -17,12 +17,16 @@
 .creator {
   position: relative;
 }
+#site-page-content-region {
+  margin-left: 260px;
+  margin-right: 260px;
+  overflow-x: auto;
+}
 #myCanvas {
   background: #fff;
-  position: absolute;
   left: 260px;
   top: 0;
-  width: 730px;
+  min-width: 730px;
   min-height: 500px !important;
   padding: 15px 10px;
 }
@@ -35,6 +39,8 @@
 #toolbox {
   width: 240px;
   background: #fff;
+  position: absolute;
+  z-index: 2;
 }
 #toolbox .tools,
 #toolbox .qstns {
@@ -449,6 +455,51 @@
 }
 .row:last-child {
   margin: 0;
+}
+#settings-region {
+  position: absolute !important;
+  z-index: 1000;
+}
+.settings-box {
+  width: 400px;
+  background: #fff;
+  box-shadow: 0 0 3px 1px #aaaaaa;
+  padding: 0 0.5em 0.5em;
+  border-radius: 3px;
+  border: 2px solid #e5e9ec;
+}
+.settings-box .settings-header {
+  border-bottom: 1px solid #e5e9ec;
+  margin: 0 -0.5em 0.8em;
+  padding: 0 0.5em;
+  background: #0090d9;
+  cursor: move;
+}
+.settings-box .settings-header .row {
+  margin: 0 -15px;
+}
+.settings-box .settings-header h5.title {
+  color: #fff;
+  font-weight: bold;
+}
+.settings-box .settings-header .close-btn {
+  text-align: right;
+}
+.settings-box .settings-header .close-btn a {
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+}
+.settings-box .form-horizontal {
+  display: block;
+  margin: 0;
+}
+.settings-box .set-column-count {
+  padding-top: 4px;
+}
+.settings-box .set-column-count .btn-default {
+  padding: 4px 12px;
+  margin-right: 3px;
 }
 .header .quick-section2 {
   margin-top: 16px;

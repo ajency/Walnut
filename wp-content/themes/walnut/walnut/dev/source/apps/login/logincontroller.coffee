@@ -15,14 +15,14 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 				@listenTo view, 'close', ->
 					App.vent.trigger 'show:dashboard'
 
-				@show view
+				@show view, (loading: true)
 
 			_getLoginView : ->
 				new LoginView
 
 
 			authenticateUser : (data)=>
-				$.middle_layer(AJAXURL + '?action=get-user-profile' 
+				connection_resp = $.middle_layer(AJAXURL + '?action=get-user-profile' 
 					data: data
 					(response) =>
 						if response.error
@@ -31,6 +31,8 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 							@view.close()
 					);
 
+				if(connection_resp is "connection_error")
+					@view.triggerMethod 'connection:fail'
 
 
 		class LoginView extends Marionette.ItemView
@@ -58,6 +60,14 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 				
 				@$el.find('#login-form')
 				.before '<span id="invalid_login" class="btn btn-danger btn-cons">'+resp.error+'</span>';
+
+
+			onConnectionFail: ->
+				error_msg = 'Connection could not be established. Please try again.'
+				@$el.find('#checking_login, #invalid_login').remove();
+				
+				@$el.find('#login-form')
+				.before '<span id="invalid_login" class="btn btn-danger btn-cons">'+error_msg+'</span>';
 
 
 

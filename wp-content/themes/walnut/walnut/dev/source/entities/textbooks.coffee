@@ -20,21 +20,40 @@ define ["app", 'backbone'], (App, Backbone) ->
 			class Textbooks.ItemCollection extends Backbone.Collection
 				model : Textbooks.ItemModel
 				comparator : 'term_order'
+				url :->
+					 AJAXURL + '?action=get-textbooks'
+				
+				parse:(resp)->
+					@total = resp.count	
+					resp.data
 
+			textbookCollection = new Textbooks.ItemCollection
 
 			# API 
 			API = 
 				# get all textbooks
 				getTextbooks:(param = {})->
-					textbookCollection = new Textbooks.ItemCollection
-
-					textbookCollection.url = AJAXURL + '?action=get-textbooks'
+					console.log param
 					textbookCollection.fetch
-							reset : true
-							data  : param
+										reset : true
+										data  : param
 
 					textbookCollection
 
+
+				getTextBookByID:(id)->
+					textbook = textbookCollection.get id
+
+					if not textbook 
+						textbook = new Textbooks.ItemModel term_id : id
+						textbook.fetch()
+						
+					textbook
+
+
 			# request handler to get all textbooks
-			App.reqres.setHandler "get:textbooks", ->
-				API.getTextbooks()
+			App.reqres.setHandler "get:textbooks", (opt) ->
+				API.getTextbooks(opt)
+
+			App.reqres.setHandler "get:textbook:by:id", (id)->
+				API.getTextBookByID id

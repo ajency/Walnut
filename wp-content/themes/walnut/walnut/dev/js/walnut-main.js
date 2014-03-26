@@ -15,7 +15,12 @@ require.config({
     slimroll: 'plugins/jquery.slimscroll.min',
     breakpoints: 'plugins/breakpoints',
     mustache: 'plugins/mustache',
-    core: 'plugins/core'
+    core: 'plugins/core',
+    componentloader: 'components/component-loader',
+    mixitup: 'plugins/jquery.mixitup.min',
+    search_results: 'plugins/search_results',
+    spin: 'plugins/spin',
+    jqueryspin: 'plugins/jquery.spin'
   },
   shim: {
     underscore: {
@@ -35,12 +40,15 @@ require.config({
     slimroll: ['jquery'],
     core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
+    mixitup: ['jquery'],
+    search_results: ['jquery', 'mixitup'],
+    jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });
 
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader'], function(plugins, configs, App) {
+require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
   return App.start();
 });

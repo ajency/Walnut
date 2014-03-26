@@ -4,11 +4,14 @@
 # <li>-load all JS files</li>
 # </ul>
 
-require.config 
+require.config
 	
 	urlArgs : "ver=#{(new Date()).getTime()}"
-	
+
 	baseUrl : './wp-content/themes/walnut/walnut/dev/js'
+	
+	#Url for walnut app
+	#baseUrl : '/dev/js'
 	
 	paths:
 		jquery 				: 'plugins/jquery'
@@ -25,6 +28,11 @@ require.config
 		breakpoints			: 'plugins/breakpoints'
 		mustache			: 'plugins/mustache'
 		core				: 'plugins/core'
+		componentloader 	: 'components/component-loader'
+		mixitup				: 'plugins/jquery.mixitup.min'
+		search_results		: 'plugins/search_results'
+		spin 				: 'plugins/spin'
+		jqueryspin  		: 'plugins/jquery.spin'
 
 	shim:
 		underscore: 
@@ -41,6 +49,9 @@ require.config
 		slimroll 		: ['jquery']
 		core 		: ['sidr','jquery']
 		breakpoints 		: ['jquery']
+		mixitup 		: ['jquery']
+		search_results 		: ['jquery','mixitup']
+		jqueryspin 			: ['spin']
 		jqueryvalidate: ['jquery']
 		syphon		: ['backbone']
 		app 		: ['plugins/walnut-pluginloader','config/walnut-configloader']
@@ -53,6 +64,7 @@ require [	'plugins/walnut-pluginloader'
 			'app'
 			'apps/walnut-appsloader'
 			'entities/walnut-entities-loader'
+			'componentloader'
 			], (plugins, configs, App)->
 
 				App.start()

@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Textbooks", function(Textbooks, App, Backbone, Marionette, $, _) {
-    var API;
+    var API, textbookCollection;
     Textbooks.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -37,26 +37,48 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.comparator = 'term_order';
 
+      ItemCollection.prototype.url = function() {
+        return AJAXURL + '?action=get-textbooks';
+      };
+
+      ItemCollection.prototype.parse = function(resp) {
+        this.total = resp.count;
+        return resp.data;
+      };
+
       return ItemCollection;
 
     })(Backbone.Collection);
+    textbookCollection = new Textbooks.ItemCollection;
     API = {
       getTextbooks: function(param) {
-        var textbookCollection;
         if (param == null) {
           param = {};
         }
-        textbookCollection = new Textbooks.ItemCollection;
-        textbookCollection.url = AJAXURL + '?action=get-textbooks';
+        console.log(param);
         textbookCollection.fetch({
           reset: true,
           data: param
         });
         return textbookCollection;
+      },
+      getTextBookByID: function(id) {
+        var textbook;
+        textbook = textbookCollection.get(id);
+        if (!textbook) {
+          textbook = new Textbooks.ItemModel({
+            term_id: id
+          });
+          textbook.fetch();
+        }
+        return textbook;
       }
     };
-    return App.reqres.setHandler("get:textbooks", function() {
-      return API.getTextbooks();
+    App.reqres.setHandler("get:textbooks", function(opt) {
+      return API.getTextbooks(opt);
+    });
+    return App.reqres.setHandler("get:textbook:by:id", function(id) {
+      return API.getTextBookByID(id);
     });
   });
 });

@@ -77,4 +77,8 @@ define ['app'], (App)->
 
 					arr.push ele
 					
-				arr	
+				arr
+
+		App.reqres.setHandler "autosave:question:layout", ->
+
+				new AutoSave.Controller

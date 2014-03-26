@@ -20,7 +20,9 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         this.listenTo(view, 'close', function() {
           return App.vent.trigger('show:dashboard');
         });
-        return this.show(view);
+        return this.show(view, {
+          loading: true
+        });
       };
 
       LoginController.prototype._getLoginView = function() {
@@ -28,7 +30,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginController.prototype.authenticateUser = function(data) {
-        return $.middle_layer(AJAXURL + '?action=get-user-profile', {
+        var connection_resp;
+        connection_resp = $.middle_layer(AJAXURL + '?action=get-user-profile', {
           data: data
         }, (function(_this) {
           return function(response) {
@@ -39,6 +42,9 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
             }
           };
         })(this));
+        if (connection_resp === "connection_error") {
+          return this.view.triggerMethod('connection:fail');
+        }
       };
 
       return LoginController;
@@ -73,6 +79,13 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginView.prototype.onLoginFail = function(resp) {
         this.$el.find('#checking_login, #invalid_login').remove();
         return this.$el.find('#login-form').before('<span id="invalid_login" class="btn btn-danger btn-cons">' + resp.error + '</span>');
+      };
+
+      LoginView.prototype.onConnectionFail = function() {
+        var error_msg;
+        error_msg = 'Connection could not be established. Please try again.';
+        this.$el.find('#checking_login, #invalid_login').remove();
+        return this.$el.find('#login-form').before('<span id="invalid_login" class="btn btn-danger btn-cons">' + error_msg + '</span>');
       };
 
       return LoginView;
