@@ -40,6 +40,7 @@ define ['app'],(App)->
 				#create and add the canvas layers
 				@imageLayer = new Kinetic.Layer
 				@optionLayer = new Kinetic.Layer
+				@textLayer = new Kinetic.Layer
 				@defaultLayer = new Kinetic.Layer
 
 				# set image to the default image layer
@@ -47,6 +48,7 @@ define ['app'],(App)->
 
 				@stage.add @defaultLayer
 				@stage.add @imageLayer
+				@stage.add @textLayer
 				@stage.add @optionLayer
 
 
@@ -177,85 +179,118 @@ define ['app'],(App)->
 
 					resizeRect box,@optionLayer
 
-			_addTextElement : (elementPos)->
-					@layer = new Kinetic.Layer
-							draggable : true
 
-					rec = new Kinetic.Rect
+			_addTextElement: (elementPos)->
+
+					tooltip = new Kinetic.Label
 						x: elementPos.left
 						y: elementPos.top
-						width:100
-						height:100
-						strokeWidth : 1
-						stroke: 'black'
+						width : 100
+						opacity: 0.75
+						draggable : true
 
-					newText = new Kinetic.EditableText
-							# find click position.
-							x: elementPos.left+5
-							y: elementPos.top+5
-							text: ''
-							 # following params can be modified, or left blank (defaults are in kinetic.editable.js)
-							# lineHeight: 1.3,
-							fontSize: 29
-							# focusRectColor: "black",
-							fontFamily: 'Courier'
-							fill: '#000000'
+					textBorder = new Kinetic.Tag
+						fill: 'black'
+						
+						width: 50
+						lineJoin: 'round'
+						
+					
+					canvasText = new Kinetic.Text
+						text: 'Tooltip pointing doccccccccccccccccccccccccccccccccccwn',
+						fontFamily: 'Calibri',
+						fontSize: 18,
+
+						padding: 5,
+						fill: 'white'
+
+					tooltip.add textBorder
+
+					tooltip.add canvasText
+
+					@textLayer.add tooltip
+
+					@textLayer.draw()
+
+			# _addTextElement : (elementPos)->
+			# 		@layer = new Kinetic.Layer
+			# 				draggable : true
+
+			# 		rec = new Kinetic.Rect
+			# 			x: elementPos.left
+			# 			y: elementPos.top
+			# 			width:100
+			# 			height:100
+			# 			strokeWidth : 1
+			# 			stroke: 'black'
+
+			# 		newText = new Kinetic.EditableText
+			# 				# find click position.
+			# 				x: elementPos.left+5
+			# 				y: elementPos.top+5
+			# 				text: ''
+			# 				 # following params can be modified, or left blank (defaults are in kinetic.editable.js)
+			# 				# lineHeight: 1.3,
+			# 				fontSize: 29
+			# 				# focusRectColor: "black",
+			# 				fontFamily: 'Courier'
+			# 				fill: '#000000'
 							
-							 # ALWAYS provide the focus layer and stage. pasteModal id to support ctrl+v paste.
-							focusLayer: @layer
-							stage: @stage
-							pasteModal: "pasteModalArea"
+			# 				 # ALWAYS provide the focus layer and stage. pasteModal id to support ctrl+v paste.
+			# 				focusLayer: @layer
+			# 				stage: @stage
+			# 				pasteModal: "pasteModalArea"
 							
 							
 							
-							# drawHitFunc: (canvaas)->
-							# 	context = canvaas.getContext()
-							# 	width = 100
-							# 	height = 20
+			# 				# drawHitFunc: (canvaas)->
+			# 				# 	context = canvaas.getContext()
+			# 				# 	width = 100
+			# 				# 	height = 20
 									
-							# 	if (this.tempText != undefined) 
-							# 		linesCount = this.tempText.length
+			# 				# 	if (this.tempText != undefined) 
+			# 				# 		linesCount = this.tempText.length
 									
-							# 		context.beginPath()
-							# 		context.rect(0, 0, this.maxWidth + 10, linesCount*height)
-							# 		context.closePath()
-							# 		canvaas.fillStroke(this)
+			# 				# 		context.beginPath()
+			# 				# 		context.rect(0, 0, this.maxWidth + 10, linesCount*height)
+			# 				# 		context.closePath()
+			# 				# 		canvaas.fillStroke(this)
 								
-							# 	else 
-							# 		context.beginPath()
-							# 		context.rect(0, 0, width, height)
-							# 		context.closePath()
-							# 		canvaas.fillStroke(this)
+			# 				# 	else 
+			# 				# 		context.beginPath()
+			# 				# 		context.rect(0, 0, width, height)
+			# 				# 		context.closePath()
+			# 				# 		canvaas.fillStroke(this)
 							
 								
 					
 						
-					newText.on 'change',->
-						console.log "change"
+			# 		newText.on 'change',->
+			# 			console.log "change"
 					
 					
-					@layer.add rec
-					@layer.add newText
-					@stage.add @layer
+			# 		@layer.add rec
+			# 		@layer.add newText
+			# 		@stage.add @layer
 
-					hoverontext = false;
+			# 		hoverontext = false;
 				
-					@layer.on 'click', ()=>
-						if not hoverontext
-							hoverontext = true
-							document.body.style.cursor = 'pointer';
-							console.log 'focus'
-							console.log @layer
-							newText.focus(@layer)
+			# 		@layer.on 'click', ()=>
+			# 			if not hoverontext
+			# 				hoverontext = true
+			# 				document.body.style.cursor = 'pointer';
+			# 				console.log 'focus'
+			# 				console.log @layer
+			# 				newText.focus(@layer)
 
-					@layer.on 'dblclick', (e)=>
-						if(hoverontext)
-						    hoverontext = false
-							document.body.style.cursor = 'default';
-							console.log 'unfocus'
-							console.log @layer
-							newText.unfocus(e)
-							@layer.draw()
+			# 		@layer.on 'dblclick', (e)=>
+			# 			if(hoverontext)
+			# 			    hoverontext = false
+			# 				document.body.style.cursor = 'default';
+			# 				console.log 'unfocus'
+			# 				console.log @layer
+			# 				newText.unfocus(e)
+			# 				@layer.draw()
 
 			
 					

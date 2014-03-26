@@ -40,10 +40,12 @@ define(['app'], function(App) {
         });
         this.imageLayer = new Kinetic.Layer;
         this.optionLayer = new Kinetic.Layer;
+        this.textLayer = new Kinetic.Layer;
         this.defaultLayer = new Kinetic.Layer;
         this._setDefaultImage();
         this.stage.add(this.defaultLayer);
         this.stage.add(this.imageLayer);
+        this.stage.add(this.textLayer);
         this.stage.add(this.optionLayer);
         $('#' + this.stageName + '.stage').resize((function(_this) {
           return function() {
@@ -174,59 +176,30 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var hoverontext, newText, rec;
-        this.layer = new Kinetic.Layer({
-          draggable: true
-        });
-        rec = new Kinetic.Rect({
+        var canvasText, textBorder, tooltip;
+        tooltip = new Kinetic.Label({
           x: elementPos.left,
           y: elementPos.top,
           width: 100,
-          height: 100,
-          strokeWidth: 1,
-          stroke: 'black'
+          opacity: 0.75,
+          draggable: true
         });
-        newText = new Kinetic.EditableText({
-          x: elementPos.left + 5,
-          y: elementPos.top + 5,
-          text: '',
-          fontSize: 29,
-          fontFamily: 'Courier',
-          fill: '#000000',
-          focusLayer: this.layer,
-          stage: this.stage,
-          pasteModal: "pasteModalArea"
+        textBorder = new Kinetic.Tag({
+          fill: 'black',
+          width: 50,
+          lineJoin: 'round'
         });
-        newText.on('change', function() {
-          return console.log("change");
+        canvasText = new Kinetic.Text({
+          text: 'Tooltip pointing doccccccccccccccccccccccccccccccccccwn',
+          fontFamily: 'Calibri',
+          fontSize: 18,
+          padding: 5,
+          fill: 'white'
         });
-        this.layer.add(rec);
-        this.layer.add(newText);
-        this.stage.add(this.layer);
-        hoverontext = false;
-        this.layer.on('click', (function(_this) {
-          return function() {
-            if (!hoverontext) {
-              hoverontext = true;
-              document.body.style.cursor = 'pointer';
-              console.log('focus');
-              console.log(_this.layer);
-              return newText.focus(_this.layer);
-            }
-          };
-        })(this));
-        return this.layer.on('dblclick', (function(_this) {
-          return function(e) {
-            if (hoverontext) {
-              hoverontext = false;
-            }
-            document.body.style.cursor = 'default';
-            console.log('unfocus');
-            console.log(_this.layer);
-            newText.unfocus(e);
-            return _this.layer.draw();
-          };
-        })(this));
+        tooltip.add(textBorder);
+        tooltip.add(canvasText);
+        this.textLayer.add(tooltip);
+        return this.textLayer.draw();
       };
 
       HotspotView.prototype.updateModel = function() {
