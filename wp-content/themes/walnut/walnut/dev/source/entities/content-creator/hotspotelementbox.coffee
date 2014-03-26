@@ -26,6 +26,9 @@ define ['app'
 						,
 							element : 'Hotspot-Image'
 							icon	: 'fa-camera'
+						,
+							element : 'Hotspot-Text'
+							icon : 'fa-font'
 				]
 
 				API =

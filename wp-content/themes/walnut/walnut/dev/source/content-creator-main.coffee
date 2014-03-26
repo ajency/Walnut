@@ -15,6 +15,7 @@ require.config
 		jqueryresize		: 'plugins/jquery.ba-resize.min'
 		kinetic				: 'plugins/kinetic'
 		kineticresize		: 'plugins/kinetic.plugin.resize'
+		kineticeditable		: 'plugins/kinetic.editable'
 		jqueryvalidate		: 'plugins/jquery.validate.min'
 		underscore			: 'plugins/underscore'
 		backbone    		: 'plugins/backbone'
