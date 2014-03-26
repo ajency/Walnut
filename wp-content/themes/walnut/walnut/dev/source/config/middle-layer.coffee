@@ -9,13 +9,14 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
           "Mobile"
         else "Desktop"
       
+
+      #Implementation for browser
       #Check if connection exists when page is first loaded.    
       if window.navigator.onLine 
         networkStatus = 1
       else
         networkStatus = 0
 
-      #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
       #When network is up.
       window.onLineHandler = ->
@@ -54,17 +55,20 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
 
 
       $.middle_layer = (url,data,response) ->
-        if checkPlatform() is "Desktop"
-          if isOnline()
-            $.post url, data, response, 'json'
-          else
-            return 'connection_error'
+        switch checkPlatform()
+          when 'Desktop'
+            if isOnline()
+              $.post url, data, response, 'json'
+            else
+              return 'connection_error'
 
-        else
-          if checkConnection()
-            $.post url, data, response, 'json'
-          else
-            return 'connection_error'        
+          when 'Mobile'  
+            if checkConnection()
+              $.post url, data, response, 'json'
+            else
+              return 'connection_error'  
+
+
 
 
 
