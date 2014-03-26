@@ -37,6 +37,18 @@ define ['app'],(App)->
 						width: @$el.parent().width()-15
 						height: @$el.parent().height()+80
 
+				#create and add the canvas layers
+				@imageLayer = new Kinetic.Layer
+				@optionLayer = new Kinetic.Layer
+				@defaultLayer = new Kinetic.Layer
+
+				# set image to the default image layer
+				@_setDefaultImage()
+
+				@stage.add @defaultLayer
+				@stage.add @imageLayer
+				@stage.add @optionLayer
+
 
 				# on resize
 				$('#'+@stageName+'.stage').resize ()=>
@@ -44,25 +56,13 @@ define ['app'],(App)->
 					@stage.setSize
 						width: $('#'+@stageName+'.stage').width()
 						height: $('#'+@stageName+'.stage').height()-5
-
+					# resize the default image 
+					console.log "Stage resized"
 					@_updateDefaultImageSize()
 
 				$('#'+@stageName+'.stage').resizable
 						 handles: "s" 
 						
-				
-							
-					
-				#create and add the canvas layers
-				@imageLayer = new Kinetic.Layer
-				@optionLayer = new Kinetic.Layer
-				@defaultLayer = new Kinetic.Layer
-
-				@stage.add @defaultLayer
-				@stage.add @imageLayer
-				@stage.add @optionLayer
-
-				@_setDefaultImage()
 
 				#listen to drop event
 				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
@@ -97,25 +97,44 @@ define ['app'],(App)->
 				defaultImage.onload = ()=>
 						console.log "in default image load"
 						@hotspotDefault = new Kinetic.Image
-								x		: @stage.width()/2-70
-								y		: @stage.height()/2-50
-								width 	: 140
-								height	: 100
+								# x		: @stage.width()/2-70
+								# y		: @stage.height()/2-50
+								# width 	: 210
+								# height	: 150
 								image 	: defaultImage
 
+						@_updateDefaultImageSize()
 						@defaultLayer.add @hotspotDefault
 						@defaultLayer.draw()
 
+
 				defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg"
 
+			# remove the default image from the layer if any hotspot elements are added
 			_updateDefaultLayer:->
 					if(@stage.getChildren()[2].getChildren().length || @stage.getChildren()[1].getChildren().length)
-						@defaultLayer.remove @hotspotDefault
+							@defaultLayer.remove @hotspotDefault
 
+			# update the size of default image on change of stage
 			_updateDefaultImageSize:->
+					width = @stage.width()
+					height = @stage.height()
+
+					console.log width+"  "+height
+
+					if(width<220)
+						@hotspotDefault.setSize
+							width : width-10
+							height : (width-10)/1.4
+
+					if(height<160)
+						@hotspotDefault.setSize
+							width : (height-10)*1.4
+							height : height-10
+
 					@hotspotDefault.position
-						x : @stage.width()/2-70
-						y : @stage.height()/2-50
+						x : @stage.width()/2-@hotspotDefault.width()/2
+						y : @stage.height()/2-@hotspotDefault.height()/2
 
 
 			_addElements: (type,elementPos)->

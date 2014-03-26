@@ -38,25 +38,26 @@ define(['app'], function(App) {
           width: this.$el.parent().width() - 15,
           height: this.$el.parent().height() + 80
         });
+        this.imageLayer = new Kinetic.Layer;
+        this.optionLayer = new Kinetic.Layer;
+        this.defaultLayer = new Kinetic.Layer;
+        this._setDefaultImage();
+        this.stage.add(this.defaultLayer);
+        this.stage.add(this.imageLayer);
+        this.stage.add(this.optionLayer);
         $('#' + this.stageName + '.stage').resize((function(_this) {
           return function() {
             _this.stage.setSize({
               width: $('#' + _this.stageName + '.stage').width(),
               height: $('#' + _this.stageName + '.stage').height() - 5
             });
+            console.log("Stage resized");
             return _this._updateDefaultImageSize();
           };
         })(this));
         $('#' + this.stageName + '.stage').resizable({
           handles: "s"
         });
-        this.imageLayer = new Kinetic.Layer;
-        this.optionLayer = new Kinetic.Layer;
-        this.defaultLayer = new Kinetic.Layer;
-        this.stage.add(this.defaultLayer);
-        this.stage.add(this.imageLayer);
-        this.stage.add(this.optionLayer);
-        this._setDefaultImage();
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
           if (type === "Hotspot-Image") {
             this.trigger("show:media:manager");
@@ -95,12 +96,9 @@ define(['app'], function(App) {
           return function() {
             console.log("in default image load");
             _this.hotspotDefault = new Kinetic.Image({
-              x: _this.stage.width() / 2 - 70,
-              y: _this.stage.height() / 2 - 50,
-              width: 140,
-              height: 100,
               image: defaultImage
             });
+            _this._updateDefaultImageSize();
             _this.defaultLayer.add(_this.hotspotDefault);
             return _this.defaultLayer.draw();
           };
@@ -115,9 +113,25 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._updateDefaultImageSize = function() {
+        var height, width;
+        width = this.stage.width();
+        height = this.stage.height();
+        console.log(width + "  " + height);
+        if (width < 220) {
+          this.hotspotDefault.setSize({
+            width: width - 10,
+            height: (width - 10) / 1.4
+          });
+        }
+        if (height < 160) {
+          this.hotspotDefault.setSize({
+            width: (height - 10) * 1.4,
+            height: height - 10
+          });
+        }
         return this.hotspotDefault.position({
-          x: this.stage.width() / 2 - 70,
-          y: this.stage.height() / 2 - 50
+          x: this.stage.width() / 2 - this.hotspotDefault.width() / 2,
+          y: this.stage.height() / 2 - this.hotspotDefault.height() / 2
         });
       };
 
