@@ -2,7 +2,7 @@
   baseUrl: './js',
   name: 'plugins/almond',
   include : 'walnut-main',
-  optimize: 'none',
+  //optimize: 'none',
   wrap: false,
   out: '../production/walnut-main.js',
   paths: {
