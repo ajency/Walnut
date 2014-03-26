@@ -82,6 +82,9 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
 
       ListView.prototype.events = {
         'click .btn-group': 'dropdown_popup',
+        'click .textbook_titles': function(e) {
+          return this.trigger("single:textbook:view", $(e.target).attr('data-id'));
+        },
         'click .filter_class': function(e) {
           return this.trigger("filter:textbooks:class", $(e.target).closest('li').attr('data-filter'));
         }

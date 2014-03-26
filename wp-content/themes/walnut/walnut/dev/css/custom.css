@@ -17,12 +17,16 @@
 .creator {
   position: relative;
 }
+#site-page-content-region {
+  margin-left: 260px;
+  margin-right: 260px;
+  overflow-x: auto;
+}
 #myCanvas {
   background: #fff;
-  position: absolute;
   left: 260px;
   top: 0;
-  width: 730px;
+  min-width: 730px;
   min-height: 500px !important;
   padding: 15px 10px;
 }
@@ -35,6 +39,8 @@
 #toolbox {
   width: 240px;
   background: #fff;
+  position: absolute;
+  z-index: 2;
 }
 #toolbox .tools,
 #toolbox .qstns {

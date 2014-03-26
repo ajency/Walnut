@@ -12,14 +12,14 @@ define(['app', 'apps/textbook-single/controller'], function(App) {
       }
 
       TextbookSingleRouter.prototype.appRoutes = {
-        'testSingleTestbook': 'showSingleTextbook'
+        'textbook/:term_id': 'showSingleTextbook'
       };
 
       return TextbookSingleRouter;
 
     })(Marionette.AppRouter);
     Controller = {
-      showSingleTextbook: function() {
+      showSingleTextbook: function(term_id) {
         return new TextbookSingleApp.Controller.SingleTextbook({
           region: App.mainContentRegion
         });
