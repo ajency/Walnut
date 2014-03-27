@@ -2,12 +2,13 @@
   baseUrl: './js',
   name: 'plugins/almond',
   include : 'walnut-main',
-  //optimize: 'none',
+  optimize: 'none',
   wrap: false,
   out: '../production/walnut-main.js',
   paths: {
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
+    bootstrap     : 'plugins/bootstrap',
     jqueryvalidate: 'plugins/jquery.validate.min',
     underscore: 'plugins/underscore',
     backbone: 'plugins/backbone',
@@ -25,9 +26,11 @@
     spin        : 'plugins/spin',
     jqueryspin      : 'plugins/jquery.spin',
     componentloader   : 'components/component-loader',
-    tabletools      : 'plugins/TableTools',
-    jquery_datatables     : 'plugins/jquery.dataTables',
-    datatables      : 'plugins/datatables'
+    jquery_datatables     : 'plugins/jquery.dataTables.min',
+    tabletools      : 'plugins/TableTools.min',
+    datatables_responsive: 'plugins/datatables.responsive',
+    datatables      : 'plugins/datatables',
+    unveil        : 'plugins/jquery.unveil.min'
   },
   shim: {
     underscore: {
@@ -35,6 +38,7 @@
     },
     jquery: ['underscore'],
     jqueryui: ['jquery'],
+    bootstrap: ['jquery'],
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
@@ -44,6 +48,7 @@
       exports: 'Marionette'
     },
     sidr: ['jquery'],
+    unveil: ['jquery'],
     slimroll: ['jquery'],
     core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
@@ -51,10 +56,10 @@
     syphon: ['backbone'],
     mixitup     : ['jquery'],
     search_results    : ['jquery','mixitup'],
-    jqueryspin      : ['spin'],
-    tabletools    : ['jquery','datatables'],
     jquery_datatables     : ['jquery'],
-    datatables    : ['jquery','jquery_datatables'],
+    tabletools    : ['jquery_datatables'],
+    datatables_responsive     : ['jquery_datatables'],
+    datatables    : ['jquery_datatables','bootstrap'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
   }
 })

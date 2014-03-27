@@ -263,8 +263,10 @@ function get_book($book) {
     $args = array('hide_empty' => false,
         'parent' => $book_id,
         'fields' => 'count');
-
-    $book_dets->chapter_count = get_terms('textbook', $args);
+    
+    $subsections=get_terms('textbook', $args);
+    
+    $book_dets->chapter_count = ($subsections)?$subsections:0;
 
     return $book_dets;
 }

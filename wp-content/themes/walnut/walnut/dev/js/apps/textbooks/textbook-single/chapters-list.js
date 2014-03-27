@@ -54,11 +54,14 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
       ChapterListView.prototype.itemViewContainer = '#list-chapters';
 
       ChapterListView.prototype.onShow = function() {
-        return $('#example2').dataTable({
-          "bPaginate": true
-        }, {
-          "bSort": true
-        }, console.log('collection'), console.log(this.collection));
+        if (this.collection && this.collection.length > 0) {
+          $('#example2').dataTable({
+            "bPaginate": true,
+            "bSort": true
+          });
+        }
+        console.log('collection');
+        return console.log(this.collection);
       };
 
       return ChapterListView;
