@@ -51,7 +51,7 @@ Template Name: Dashboard
 
 </head>
 <body class="">
-<div id="site_main_container" style="visibility:hidden">
+<div id="site_main_container">
     <div>
             <div id="header-region"></div>
             <div id="left-nav-region"></div>

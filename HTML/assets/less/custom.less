@@ -2,8 +2,23 @@
 @import "mixins.less";
 @import "builder.less";
 @import "class.less";
- 
- .header{
+
+body{
+	background-color: @body-bg;
+}
+
+#site_main_container{
+	opacity: 0;
+	&.show{
+		opacity:1;
+		-webkit-transition: opacity .5s ease-in-out;
+    -moz-transition: opacity .5s ease-in-out;
+    -ms-transition: opacity .5s ease-in-out;
+    -o-transition: opacity .5s ease-in-out;
+	}
+}
+
+.header{
 	.quick-section2{
 		
 		margin-top: 16px;
@@ -11,9 +26,9 @@
 		display: inline-block;
 		float: left;
 	}
- }
+}
  
- .logo {
+.logo {
 	margin: 18px 32px;
 }
 

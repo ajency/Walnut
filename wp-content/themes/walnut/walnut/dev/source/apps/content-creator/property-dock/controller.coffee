@@ -14,6 +14,9 @@ define ['app'
 						App.commands.setHandler "show:question:elements",(options)=>
 								@_getElementBox options.model
 
+						App.commands.setHandler "show:question:element:properties",(options)=>
+								@_getElementProperties options.model
+
 						@show @layout
 
 					_getLayout: ->
@@ -21,11 +24,16 @@ define ['app'
 
 					_getElementBox:(model)->
 						elementName = model.get('element')
-						if(elementName=="Hotspot")
-								App.execute "show:hotspot:elements",
-										region : @layout.questElementRegion
-										model : model
+						ele = _.slugify(elementName)
+						App.execute "show:#{ele}:elements",
+								region : @layout.questElementRegion
+								model : model
 
+					_getElementProperties:(model)->
+						elementFamily = model.get 'family'
+						App.execute "show:#{elementFamily}:properties:box",
+								region : @layout.questElementPropRegion
+								model : model
 
 				App.commands.setHandler "show:property:dock",(options)->
 

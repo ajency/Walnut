@@ -12,8 +12,8 @@ define ['app'],(App)->
 
 			template : '&nbsp;'
 
-			events :
-				'click' : -> @trigger "show:hotspot:properties"
+			# events :
+				# 'click' : -> @trigger "show:hotspot:properties"
 				# 'focus'	: -> console.log "blur" #'updateModel'
 
 			initialize:(opt = {})->
@@ -184,14 +184,18 @@ define ['app'],(App)->
 							height: 25
 							stroke: 'black'
 							strokeWidth: 4
+							
 
 					resizeRect box,@optionLayer
+
+					
 
 
 			_addTextElement: (elementPos)->
 
 					modelData =
-						text : ''
+						type : 'Text'
+						text : 'hey'
 						fontFamily : 'Arial'
 						fontSize : '12'
 						fontColor : 'black'
@@ -203,6 +207,7 @@ define ['app'],(App)->
 						y: elementPos.top
 						width : 100
 						opacity: 0.75
+
 						draggable : true
 
 					textBorder = new Kinetic.Tag
@@ -219,8 +224,18 @@ define ['app'],(App)->
 						fill: hotspotElement.get 'fontColor'
 						padding: 5
 
-					tooltip.on 'click',->
-						console.log "text box"
+					tooltip.on 'mousedown click',->
+							App.execute "show:question:element:properties",
+									model : hotspotElement
+
+					hotspotElement.on "change:text",=>
+							canvasText.setText hotspotElement.get 'text'
+							@textLayer.draw()
+
+					hotspotElement.on "change:fontSize",=>
+							canvasText.fontSize hotspotElement.get 'fontSize'
+							@textLayer.draw()
+
 						
 
 					tooltip.add textBorder
@@ -230,6 +245,8 @@ define ['app'],(App)->
 					@textLayer.add tooltip
 
 					@textLayer.draw()
+
+					
 
 			# _addTextElement : (elementPos)->
 			# 		@layer = new Kinetic.Layer

@@ -1,4 +1,4 @@
-define ['plugins/detect','jquery','plugins/online'], (detect,$)->
+define ['detect','jquery'], (detect,$)->
 
       networkStatus = 0
 
@@ -8,27 +8,21 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
         if ua.os.family is "Android" or ua.os.family is "iOS" 
           "Mobile"
         else "Desktop"
-      
+
+      #Load script 'online.js' only for browser  
+      $.getScript("wp-content/themes/walnut/walnut/dev/js/plugins/online.js") if checkPlatform() is "Desktop" 
 
       #Implementation for browser
-      #Check if connection exists when page is first loaded.    
-      if window.navigator.onLine 
-        networkStatus = 1
-      else
-        networkStatus = 0
-
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
       #When network is up.
-      window.onLineHandler = ->
-        if checkPlatform() is "Desktop"
-          networkStatus = 1
-          return
+      `window.onLineHandler = function(){
+        networkStatus = 1
+        }`    
 
       #When network is down.
-      window.offLineHandler = ->
-        if checkPlatform() is "Desktop"
-          networkStatus = 0
-          return
+      `window.offLineHandler = function(){
+        networkStatus = 0
+        }` 
 
       window.isOnline = ->
         if networkStatus is 1
@@ -44,15 +38,12 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
 
       #Mobile events
       document.addEventListener("online", onOnline, false);
-      onOnline = ->
-        alert("On")
-        return
+      `function onOnline(){
+      }`
 
       document.addEventListener("offline", onOffline, false);
-      onOffline = ->
-        alert("Off")
-        return
-
+      `function onOffline(){
+      }`
 
       $.middle_layer = (url,data,response) ->
         switch checkPlatform()
@@ -62,11 +53,14 @@ define ['plugins/detect','jquery','plugins/online'], (detect,$)->
             else
               return 'connection_error'
 
-          when 'Mobile'  
+          when 'Mobile'
             if checkConnection()
               $.post url, data, response, 'json'
             else
-              return 'connection_error'  
+              return 'connection_error' 
+       
+
+            
 
 
 

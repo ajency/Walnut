@@ -24,7 +24,14 @@ require.config({
     search_results: 'plugins/search_results',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
+<<<<<<< HEAD
+    jquery_datatables: 'plugins/jquery.dataTables',
+    datatables: 'plugins/datatables',
+    tabletools: 'plugins/TableTools',
+    detect: 'plugins/detect'
+=======
     unveil: 'plugins/jquery.unveil.min'
+>>>>>>> 8974b40874158e50b9fbeb96f886451e04b34c97
   },
   shim: {
     underscore: {
