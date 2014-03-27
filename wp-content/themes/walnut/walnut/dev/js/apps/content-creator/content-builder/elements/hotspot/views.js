@@ -38,30 +38,40 @@ define(['app'], function(App) {
           width: this.$el.parent().width() - 15,
           height: this.$el.parent().height() + 80
         });
+        this.imageLayer = new Kinetic.Layer;
+        this.optionLayer = new Kinetic.Layer;
+        this.textLayer = new Kinetic.Layer;
+        this.defaultLayer = new Kinetic.Layer;
+        this._setDefaultImage();
+        this.stage.add(this.defaultLayer);
+        this.stage.add(this.imageLayer);
+        this.stage.add(this.textLayer);
+        this.stage.add(this.optionLayer);
         $('#' + this.stageName + '.stage').resize((function(_this) {
           return function() {
-            console.log($('#' + _this.stageName + '.stage').width());
-            return _this.stage.setSize({
+            _this.stage.setSize({
               width: $('#' + _this.stageName + '.stage').width(),
               height: $('#' + _this.stageName + '.stage').height() - 5
             });
+            console.log("Stage resized");
+            return _this._updateDefaultImageSize();
           };
         })(this));
         $('#' + this.stageName + '.stage').resizable({
           handles: "s"
         });
-        this.imageLayer = new Kinetic.Layer;
-        this.optionLayer = new Kinetic.Layer;
-        this.stage.add(this.imageLayer);
-        this.stage.add(this.optionLayer);
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
           if (type === "Hotspot-Image") {
             this.trigger("show:media:manager");
+          } else {
+            this._addElements(type, elementPos);
           }
-          return this._addShapes(type, elementPos);
+          return this._updateDefaultLayer();
         });
         $('button.btn.btn-success.btn-cons2').on('mouseover', (function(_this) {
-          return function() {};
+          return function() {
+            return console.log(_this.stage.toJSON());
+          };
         })(this));
         return $('#' + this.stageName + ' .kineticjs-content').droppable({
           accept: '.hotspotable',
@@ -81,31 +91,115 @@ define(['app'], function(App) {
         });
       };
 
-      HotspotView.prototype._addShapes = function(type, elementPos) {
-        var box, circle;
+      HotspotView.prototype._setDefaultImage = function() {
+        var defaultImage;
+        defaultImage = new Image();
+        defaultImage.onload = (function(_this) {
+          return function() {
+            console.log("in default image load");
+            _this.hotspotDefault = new Kinetic.Image({
+              image: defaultImage
+            });
+            _this._updateDefaultImageSize();
+            _this.defaultLayer.add(_this.hotspotDefault);
+            return _this.defaultLayer.draw();
+          };
+        })(this);
+        return defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg";
+      };
+
+      HotspotView.prototype._updateDefaultLayer = function() {
+        if (this.stage.getChildren()[2].getChildren().length || this.stage.getChildren()[1].getChildren().length) {
+          return this.defaultLayer.remove(this.hotspotDefault);
+        }
+      };
+
+      HotspotView.prototype._updateDefaultImageSize = function() {
+        var height, width;
+        width = this.stage.width();
+        height = this.stage.height();
+        console.log(width + "  " + height);
+        if (width < 220) {
+          this.hotspotDefault.setSize({
+            width: width - 10,
+            height: (width - 10) / 1.4
+          });
+        }
+        if (height < 160) {
+          this.hotspotDefault.setSize({
+            width: (height - 10) * 1.4,
+            height: height - 10
+          });
+        }
+        return this.hotspotDefault.position({
+          x: this.stage.width() / 2 - this.hotspotDefault.width() / 2,
+          y: this.stage.height() / 2 - this.hotspotDefault.height() / 2
+        });
+      };
+
+      HotspotView.prototype._addElements = function(type, elementPos) {
         if (type === "Hotspot-Circle") {
-          circle = new Kinetic.Circle({
-            name: "rect1",
-            x: elementPos.left,
-            y: elementPos.top,
-            radius: 20,
-            stroke: 'black',
-            strokeWidth: 4
-          });
-          resizeCircle(circle, this.optionLayer);
+          this._addCircle(elementPos);
         } else if (type === "Hotspot-Rectangle") {
-          box = new Kinetic.Rect({
-            name: "rect2",
-            x: elementPos.left,
-            y: elementPos.top,
-            width: 25,
-            height: 25,
-            stroke: 'black',
-            strokeWidth: 4
-          });
-          resizeRect(box, this.optionLayer);
+          this._addRectangle(elementPos);
+        } else if (type === "Hotspot-Text") {
+          this._addTextElement(elementPos);
         }
         return this.optionLayer.draw();
+      };
+
+      HotspotView.prototype._addCircle = function(elementPos) {
+        var circle;
+        circle = new Kinetic.Circle({
+          name: "rect1",
+          x: elementPos.left,
+          y: elementPos.top,
+          radius: 20,
+          stroke: 'black',
+          strokeWidth: 4
+        });
+        return resizeCircle(circle, this.optionLayer);
+      };
+
+      HotspotView.prototype._addRectangle = function(elementPos) {
+        var box;
+        box = new Kinetic.Rect({
+          name: "rect2",
+          x: elementPos.left,
+          y: elementPos.top,
+          width: 25,
+          height: 25,
+          stroke: 'black',
+          strokeWidth: 4
+        });
+        return resizeRect(box, this.optionLayer);
+      };
+
+      HotspotView.prototype._addTextElement = function(elementPos) {
+        var canvasText, textBorder, tooltip;
+        tooltip = new Kinetic.Label({
+          x: elementPos.left,
+          y: elementPos.top,
+          width: 100,
+          opacity: 0.75,
+          draggable: true
+        });
+        textBorder = new Kinetic.Tag({
+          fill: 'black',
+          width: 50,
+          lineJoin: 'round'
+        });
+        canvasText = new Kinetic.Text({
+          text: 'Tooltip pointing doccccccccccccccccccccccccccccccccccwn',
+          fontFamily: 'Calibri',
+          fontSize: 18,
+          padding: 5,
+          fill: 'white'
+        });
+        tooltip.add(textBorder);
+        tooltip.add(canvasText);
+        this.textLayer.add(tooltip);
+        return this.textLayer.draw();
       };
 
       HotspotView.prototype.updateModel = function() {

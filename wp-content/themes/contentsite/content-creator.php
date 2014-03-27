@@ -51,6 +51,10 @@ Template Name: Content Creator
 </head>
 <body class="">
 
+<div id="initial-loader" style="position:fixed;width:30%;left:35%;top:50%;text-align:center">
+Loading Editor... Please Wait... <br />
+<img src="<?=get_site_url()?>/wp-content/themes/walnut/images/loader.gif" />
+</div>
 
 <div>
 	<div id="header-region"></div>

@@ -81,17 +81,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       };
 
       ListView.prototype.events = {
-        'click .btn-group': 'dropdown_popup',
         'click .filter_class': function(e) {
           return this.trigger("filter:textbooks:class", $(e.target).closest('li').attr('data-filter'));
-        }
-      };
-
-      ListView.prototype.dropdown_popup = function(e) {
-        if ($(e.target).closest('div').hasClass('open')) {
-          return $(e.target).closest('div').removeClass('open');
-        } else {
-          return $(e.target).closest('div').addClass('open');
         }
       };
 

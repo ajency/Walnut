@@ -35,22 +35,7 @@ define ['app'],(App)->
 							</div>
 						</div>'
 
-						# <li class="hotspot-elements hotspotable" data-element="Hotspot-Circle">
-						# 	<a href="#" class="drag builder-element">
-						# 						<i class="fa fa-circle-o"></i>
-						# 					</a>
-						# </li>
-						# <li class="hotspot-elements hotspotable" data-element="Hotspot-Rectangle">
-						# 	<a href="#" class="drag builder-element">
-						# 						<i class="fa fa-square-o"></i>
-						# 					</a>
-						# </li>
-						# <li data-element="Image" class="hotspot-elements hotspotable">
-						# 	<a href="#" class="drag builder-element" >
-						# 		<i class="fa fa-camera"></i>
-						# 	</a>
-						# </li>
-
+						
 			itemView : Views.HotspotElementView
 
 			itemViewContainer : 'ul.hotspot-elements-container'
