@@ -5,6 +5,8 @@ define ['app'
 
 				class HotspotElement.ElementModel extends Backbone.Model
 
+					defaults :->
+						family : 'hotspot'
 
 
 

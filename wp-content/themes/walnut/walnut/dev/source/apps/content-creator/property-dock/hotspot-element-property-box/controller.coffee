@@ -1,12 +1,27 @@
 define ['app'
-		'controllers/region-controller'],(App,RegionController)->
+		'controllers/region-controller'
+		'apps/content-creator/property-dock/hotspot-element-property-box/views'],(App,RegionController)->
 
 			App.module "ContentCreator.PropertyDock.HotspotElementPropertyBox",
 				(HotspotElementPropertyBox, App, Backbone, MArionette, $, _)->
 
 					class HotspotElementPropertyBoxController extends RegionController
 
-						initialize:->
+						initialize:(options)->
+
+							
+
+							@view = @_getView(options.model)
+
+							@show @view
+
+						_getView:(model)->
+							elementType = model.get 'type'
+							viewName = "#{elementType}View"
+							new HotspotElementPropertyBox.Views[viewName]
+									model : model
+
+
 
 
 
@@ -14,3 +29,5 @@ define ['app'
 					App.commands.setHandler "show:hotspot:properties:box",(options)->
 
 							new HotspotElementPropertyBoxController 
+									region : options.region
+									model : options.model
