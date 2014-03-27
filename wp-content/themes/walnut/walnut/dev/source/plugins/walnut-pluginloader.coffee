@@ -21,4 +21,5 @@ define [
 			'datatables_responsive'
 			'datatables'
 			'unveil'
+			'pace'
 		], ->

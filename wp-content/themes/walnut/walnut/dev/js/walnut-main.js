@@ -26,7 +26,8 @@ require.config({
     tabletools: 'plugins/TableTools.min',
     datatables_responsive: 'plugins/datatables.responsive',
     datatables: 'plugins/datatables',
-    unveil: 'plugins/jquery.unveil.min'
+    unveil: 'plugins/jquery.unveil.min',
+    pace: 'plugins/pace'
   },
   shim: {
     underscore: {

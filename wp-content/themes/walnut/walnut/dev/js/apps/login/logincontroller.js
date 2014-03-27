@@ -59,10 +59,14 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
 
       LoginView.prototype.template = loginTpl;
 
-      LoginView.prototype.className = 'error-body no-top  pace-done';
+      LoginView.prototype.className = '';
 
       LoginView.prototype.events = {
         'click #login-submit': 'submitLogin'
+      };
+
+      LoginView.prototype.onShow = function() {
+        return $('body').addClass('error-body no-top');
       };
 
       LoginView.prototype.submitLogin = function(e) {

@@ -39,11 +39,14 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 			template : loginTpl
 
-			className : 'error-body no-top  pace-done'
+			className : ''
 
 			events: 
 				'click #login-submit'	: 'submitLogin' 
 			
+			onShow:->
+				$('body').addClass 'error-body no-top'
+
 			submitLogin: (e)->
 				e.preventDefault()
 				if @$el.find('form').valid()
