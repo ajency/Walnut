@@ -34,10 +34,10 @@ require.config
 		search_results		: 'plugins/search_results'
 		spin 				: 'plugins/spin'
 		jqueryspin  		: 'plugins/jquery.spin'
-		jquery_datatables  	: 'plugins/jquery.dataTables.min'
-		tabletools 			: 'plugins/TableTools.min'
-		datatables_responsive: 'plugins/datatables.responsive'
-		datatables  		: 'plugins/datatables'
+		#jquery_datatables  	: 'plugins/jquery.dataTables.min'
+		#tabletools 			: 'plugins/TableTools.min'
+		#datatables_responsive: 'plugins/datatables.responsive'
+		#datatables  		: 'plugins/datatables'
 		unveil				: 'plugins/jquery.unveil.min'
 		pace 				: 'plugins/pace'
 
@@ -59,10 +59,10 @@ require.config
 		core 			: ['sidr','jquery']
 		breakpoints 		: ['jquery']
 		mixitup 		: ['jquery']
-		jquery_datatables 		: ['jquery']
-		tabletools 		: ['jquery_datatables']
-		datatables_responsive : ['jquery_datatables']
-		datatables 		: ['jquery_datatables','bootstrap']
+		#jquery_datatables 		: ['jquery']
+		#tabletools 		: ['jquery_datatables']
+		#datatables_responsive : ['jquery_datatables']
+		#datatables 		: ['jquery_datatables','bootstrap']
 		search_results 	: ['jquery','mixitup']
 		jqueryspin 		: ['spin']
 		jqueryvalidate	: ['jquery']
