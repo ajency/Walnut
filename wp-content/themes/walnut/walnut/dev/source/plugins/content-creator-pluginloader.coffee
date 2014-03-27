@@ -7,6 +7,7 @@ define [
 			'kinetic'
 			'plupload'
 			'kineticresize'
+			'kineticeditable'
 			'backbone'
 			'marionette'
 			'mustache'

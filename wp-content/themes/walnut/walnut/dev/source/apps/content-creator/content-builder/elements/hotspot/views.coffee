@@ -37,35 +37,47 @@ define ['app'],(App)->
 						width: @$el.parent().width()-15
 						height: @$el.parent().height()+80
 
+				#create and add the canvas layers
+				@imageLayer = new Kinetic.Layer
+				@optionLayer = new Kinetic.Layer
+				@textLayer = new Kinetic.Layer
+				@defaultLayer = new Kinetic.Layer
 
+				# set image to the default image layer
+				@_setDefaultImage()
+
+				@stage.add @defaultLayer
+				@stage.add @imageLayer
+				@stage.add @textLayer
+				@stage.add @optionLayer
+
+
+				# on resize
 				$('#'+@stageName+'.stage').resize ()=>
-					console.log $('#'+@stageName+'.stage').width()
+					# console.log $('#'+@stageName+'.stage').width()
 					@stage.setSize
 						width: $('#'+@stageName+'.stage').width()
 						height: $('#'+@stageName+'.stage').height()-5
+					# resize the default image 
+					console.log "Stage resized"
+					@_updateDefaultImageSize()
 
 				$('#'+@stageName+'.stage').resizable
 						 handles: "s" 
 						
-				
-							
-					
-				#create and add the canvas layers
-				@imageLayer = new Kinetic.Layer
-				@optionLayer = new Kinetic.Layer
-
-				@stage.add @imageLayer
-				@stage.add @optionLayer
 
 				#listen to drop event
 				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
 						if(type=="Hotspot-Image")
 							@trigger "show:media:manager"
-						@_addShapes type, elementPos
+						else
+							@_addElements type, elementPos
+
+						@_updateDefaultLayer()
 
 
 				$('button.btn.btn-success.btn-cons2').on 'mouseover',=>
-						# console.log
+						console.log  @stage.toJSON()
 
 
 				#make the hotspot canvas area dropable
@@ -80,10 +92,69 @@ define ['app'],(App)->
 										@trigger "add:hotspot:element", type , elementPos
 
 
-			_addShapes: (type,elementPos)->
+
+
+			_setDefaultImage:->
+				defaultImage = new Image()
+				defaultImage.onload = ()=>
+						console.log "in default image load"
+						@hotspotDefault = new Kinetic.Image
+								# x		: @stage.width()/2-70
+								# y		: @stage.height()/2-50
+								# width 	: 210
+								# height	: 150
+								image 	: defaultImage
+
+						@_updateDefaultImageSize()
+						@defaultLayer.add @hotspotDefault
+						@defaultLayer.draw()
+
+
+				defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg"
+
+			# remove the default image from the layer if any hotspot elements are added
+			_updateDefaultLayer:->
+					if(@stage.getChildren()[2].getChildren().length || @stage.getChildren()[1].getChildren().length)
+							@defaultLayer.remove @hotspotDefault
+
+			# update the size of default image on change of stage
+			_updateDefaultImageSize:->
+					width = @stage.width()
+					height = @stage.height()
+
+					console.log width+"  "+height
+
+					if(width<220)
+						@hotspotDefault.setSize
+							width : width-10
+							height : (width-10)/1.4
+
+					if(height<160)
+						@hotspotDefault.setSize
+							width : (height-10)*1.4
+							height : height-10
+
+					@hotspotDefault.position
+						x : @stage.width()/2-@hotspotDefault.width()/2
+						y : @stage.height()/2-@hotspotDefault.height()/2
+
+
+			_addElements: (type,elementPos)->
 
 				if(type=="Hotspot-Circle")
-						circle = new Kinetic.Circle
+						@_addCircle elementPos
+
+				else if(type=="Hotspot-Rectangle")
+						@_addRectangle elementPos
+
+				else if(type == "Hotspot-Text")
+						@_addTextElement elementPos
+
+				@optionLayer.draw()
+
+
+			_addCircle: (elementPos)->
+					circle = new Kinetic.Circle
 							name : "rect1"
 							x: elementPos.left
 							y:elementPos.top
@@ -92,10 +163,12 @@ define ['app'],(App)->
 							strokeWidth: 4
 							
 
-						resizeCircle circle,@optionLayer
+					resizeCircle circle,@optionLayer
 
-				else if(type=="Hotspot-Rectangle")
-						box = new Kinetic.Rect
+
+			_addRectangle : (elementPos)->
+
+					box = new Kinetic.Rect
 							name : "rect2"
 							x: elementPos.left
 							y:elementPos.top
@@ -104,9 +177,125 @@ define ['app'],(App)->
 							stroke: 'black'
 							strokeWidth: 4
 
-						resizeRect box,@optionLayer
+					resizeRect box,@optionLayer
 
-				@optionLayer.draw()
+
+			_addTextElement: (elementPos)->
+
+					tooltip = new Kinetic.Label
+						x: elementPos.left
+						y: elementPos.top
+						width : 100
+						opacity: 0.75
+						draggable : true
+
+					textBorder = new Kinetic.Tag
+						fill: 'black'
+						
+						width: 50
+						lineJoin: 'round'
+						
+					
+					canvasText = new Kinetic.Text
+						text: 'Tooltip pointing doccccccccccccccccccccccccccccccccccwn',
+						fontFamily: 'Calibri',
+						fontSize: 18,
+
+						padding: 5,
+						fill: 'white'
+
+					tooltip.add textBorder
+
+					tooltip.add canvasText
+
+					@textLayer.add tooltip
+
+					@textLayer.draw()
+
+			# _addTextElement : (elementPos)->
+			# 		@layer = new Kinetic.Layer
+			# 				draggable : true
+
+			# 		rec = new Kinetic.Rect
+			# 			x: elementPos.left
+			# 			y: elementPos.top
+			# 			width:100
+			# 			height:100
+			# 			strokeWidth : 1
+			# 			stroke: 'black'
+
+			# 		newText = new Kinetic.EditableText
+			# 				# find click position.
+			# 				x: elementPos.left+5
+			# 				y: elementPos.top+5
+			# 				text: ''
+			# 				 # following params can be modified, or left blank (defaults are in kinetic.editable.js)
+			# 				# lineHeight: 1.3,
+			# 				fontSize: 29
+			# 				# focusRectColor: "black",
+			# 				fontFamily: 'Courier'
+			# 				fill: '#000000'
+							
+			# 				 # ALWAYS provide the focus layer and stage. pasteModal id to support ctrl+v paste.
+			# 				focusLayer: @layer
+			# 				stage: @stage
+			# 				pasteModal: "pasteModalArea"
+							
+							
+							
+			# 				# drawHitFunc: (canvaas)->
+			# 				# 	context = canvaas.getContext()
+			# 				# 	width = 100
+			# 				# 	height = 20
+									
+			# 				# 	if (this.tempText != undefined) 
+			# 				# 		linesCount = this.tempText.length
+									
+			# 				# 		context.beginPath()
+			# 				# 		context.rect(0, 0, this.maxWidth + 10, linesCount*height)
+			# 				# 		context.closePath()
+			# 				# 		canvaas.fillStroke(this)
+								
+			# 				# 	else 
+			# 				# 		context.beginPath()
+			# 				# 		context.rect(0, 0, width, height)
+			# 				# 		context.closePath()
+			# 				# 		canvaas.fillStroke(this)
+							
+								
+					
+						
+			# 		newText.on 'change',->
+			# 			console.log "change"
+					
+					
+			# 		@layer.add rec
+			# 		@layer.add newText
+			# 		@stage.add @layer
+
+			# 		hoverontext = false;
+				
+			# 		@layer.on 'click', ()=>
+			# 			if not hoverontext
+			# 				hoverontext = true
+			# 				document.body.style.cursor = 'pointer';
+			# 				console.log 'focus'
+			# 				console.log @layer
+			# 				newText.focus(@layer)
+
+			# 		@layer.on 'dblclick', (e)=>
+			# 			if(hoverontext)
+			# 			    hoverontext = false
+			# 				document.body.style.cursor = 'default';
+			# 				console.log 'unfocus'
+			# 				console.log @layer
+			# 				newText.unfocus(e)
+			# 				@layer.draw()
+
+			
+					
+					
+
 
 
 			updateModel:->

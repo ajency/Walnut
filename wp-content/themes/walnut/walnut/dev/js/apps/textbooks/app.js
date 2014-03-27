@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'apps/textbooks/list/listcontroller'], function(App) {
+define(['app', 'apps/textbooks/list/listcontroller', 'apps/textbooks/textbook-single/textbookcontroller'], function(App) {
   return App.module("TextbooksApp", function(TextbooksApp, App) {
     var Controller, TextbooksRouter;
     TextbooksRouter = (function(_super) {
@@ -12,7 +12,8 @@ define(['app', 'apps/textbooks/list/listcontroller'], function(App) {
       }
 
       TextbooksRouter.prototype.appRoutes = {
-        'textbooks': 'showTextbooks'
+        'textbooks': 'showTextbooks',
+        'textbook/:term_id': 'showSingleTextbook'
       };
 
       return TextbooksRouter;
@@ -22,6 +23,12 @@ define(['app', 'apps/textbooks/list/listcontroller'], function(App) {
       showTextbooks: function() {
         return new TextbooksApp.List.ListController({
           region: App.mainContentRegion
+        });
+      },
+      showSingleTextbook: function(term_id) {
+        return new TextbooksApp.Single.SingleTextbook({
+          region: App.mainContentRegion,
+          model_id: term_id
         });
       }
     };

@@ -1,5 +1,6 @@
 define ['app'
 		'apps/textbooks/list/listcontroller'
+		'apps/textbooks/textbook-single/textbookcontroller'
 		], (App)->
 
 			App.module "TextbooksApp", (TextbooksApp, App)->
@@ -9,6 +10,7 @@ define ['app'
 
 					appRoutes : 
 						'textbooks' : 'showTextbooks'
+						'textbook/:term_id' : 'showSingleTextbook'
 
 
 				Controller = 
@@ -16,6 +18,10 @@ define ['app'
 						new TextbooksApp.List.ListController
 											region : App.mainContentRegion
 
+					showSingleTextbook :(term_id)->
+						new TextbooksApp.Single.SingleTextbook
+											region : App.mainContentRegion
+											model_id: term_id
 
 				TextbooksApp.on "start", ->
 					new TextbooksRouter

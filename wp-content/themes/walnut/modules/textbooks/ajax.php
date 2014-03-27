@@ -17,3 +17,14 @@ function fetch_textbooks() {
     die;
 }
 
+add_action( 'wp_ajax_read-textbook', 'read_textbook' );
+
+function read_textbook() {
+    if(!isset($_GET['term_id']))
+        return false;
+    
+    $textbooks=get_book($_GET['term_id']);
+    
+    echo(wp_send_json($textbooks));
+    die;
+}

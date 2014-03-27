@@ -33,6 +33,9 @@ require.config
 		search_results		: 'plugins/search_results'
 		spin 				: 'plugins/spin'
 		jqueryspin  		: 'plugins/jquery.spin'
+		jquery_datatables  	: 'plugins/jquery.dataTables'
+		datatables  		: 'plugins/datatables'
+		tabletools 			: 'plugins/TableTools'
 
 	shim:
 		underscore: 
@@ -50,6 +53,9 @@ require.config
 		core 		: ['sidr','jquery']
 		breakpoints 		: ['jquery']
 		mixitup 		: ['jquery']
+		tabletools 		: ['jquery','datatables']
+		jquery_datatables 		: ['jquery']
+		datatables 		: ['jquery','jquery_datatables']
 		search_results 		: ['jquery','mixitup']
 		jqueryspin 			: ['spin']
 		jqueryvalidate: ['jquery']
