@@ -8,8 +8,8 @@
   defaultOptions = {
     catchupTime: 500,
     initialRate: .03,
-    minTime: 500,
-    ghostTime: 0,
+    minTime: 2000,
+    ghostTime: 500,
     maxProgressPerFrame: 10,
     easeFactor: 1.25,
     startOnPageLoad: false,
