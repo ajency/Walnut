@@ -31,13 +31,11 @@ define ['app'
 			itemViewContainer : '#list-chapters'
 
 			onShow:->
-				$('#example2').dataTable
-					"bPaginate": true,
-		        	"bSort": true 
-		        console.log 'collection'
-		        console.log @collection
-		       
-		     
+				$('#example2').dataTable({"bPaginate": true,"bSort": true}) if @collection and @collection.length>0
+
+				console.log 'collection'
+				console.log @collection  
+
 		  #    onShow:->
 		  #    	responsiveHelper = undefined;
 				# breakpointDefinition = {

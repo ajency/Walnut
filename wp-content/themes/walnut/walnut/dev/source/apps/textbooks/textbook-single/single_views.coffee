@@ -12,7 +12,7 @@ define ['app'
 			className: 'tiles white col-md-12 no-padding'
 
 			onShow :->
-				console.log 'Show View'
+				console.log 'Show Model'
 				console.log @model 
 
 		class Views.TextbookSingleLayout extends Marionette.Layout

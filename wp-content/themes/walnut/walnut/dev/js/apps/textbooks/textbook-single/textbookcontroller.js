@@ -17,25 +17,25 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         var layout, term_id;
         term_id = opt.model_id;
         this.textbook = App.request("get:textbook:by:id", term_id);
-        this.chapters = App.request("get:textbooks", {
+        this.chapters = App.request("get:chapters", {
           'parent': term_id
         });
         this.layout = layout = this._getTextbookSingleLayout();
         this.listenTo(layout, "show", this._showTextBookSingle);
         this.listenTo(layout, "show", this._showChaptersView);
-        return this.show(layout, {
-          loading: true
-        });
+        return this.show(layout);
       };
 
       SingleTextbook.prototype._showTextBookSingle = function() {
-        var textbookDescView;
-        textbookDescView = new Single.Views.TextbookDescriptionView({
-          model: this.textbook
-        });
-        this.layout.textbookDescriptionRegion.show(textbookDescView);
-        console.log('after region');
-        return console.log(this.textbook);
+        return App.execute("when:fetched", this.textbook, (function(_this) {
+          return function() {
+            var textbookDescView;
+            textbookDescView = new Single.Views.TextbookDescriptionView({
+              model: _this.textbook
+            });
+            return _this.layout.textbookDescriptionRegion.show(textbookDescView);
+          };
+        })(this));
       };
 
       SingleTextbook.prototype._getTextbookSingleLayout = function() {
@@ -43,11 +43,15 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
       };
 
       SingleTextbook.prototype._showChaptersView = function() {
-        var chaptersListView;
-        chaptersListView = new Single.Views.ChapterListView({
-          collection: this.chapters
-        });
-        return this.layout.chaptersRegion.show(chaptersListView);
+        return App.execute("when:fetched", this.chapters, (function(_this) {
+          return function() {
+            var chaptersListView;
+            chaptersListView = new Single.Views.ChapterListView({
+              collection: _this.chapters
+            });
+            return _this.layout.chaptersRegion.show(chaptersListView);
+          };
+        })(this));
       };
 
       return SingleTextbook;
