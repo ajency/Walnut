@@ -51,16 +51,16 @@ Template Name: Dashboard
 
 </head>
 <body class="">
+<div id="site_main_container" style="visibility:hidden">
+    <div>
+            <div id="header-region"></div>
+            <div id="left-nav-region"></div>
+            <div id="main-content-region"></div>
+    </div>
 
-<div>
-	<div id="header-region"></div>
-	<div id="left-nav-region"></div>
-	<div id="main-content-region"></div>
+    <div id="dialog-region"></div>
+    <div id="login-region"></div>
 </div>
-
-<div id="dialog-region"></div>
-<div id="login-region"></div>
-
 <script>
     AJAXURL= '<?php echo admin_url("admin-ajax.php") ?>';
 </script>

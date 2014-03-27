@@ -1,6 +1,7 @@
 define [
 			'underscore'
 			'jquery'
+			'pace'
 			'backbone'
 			'marionette'
 			'syphon'
@@ -21,5 +22,4 @@ define [
 			#'datatables_responsive'
 			#'datatables'
 			'unveil'
-			'pace'
 		], ->

@@ -43,7 +43,10 @@ define ['marionette'], (Marionette)->
 		Pace.start()
 
 	App.on "initialize:after", (options) ->
-		Pace.stop()
+		Pace.on 'hide', ()->
+			$("#site_main_container").css('visibility','visible')
+
+		
 		App.startHistory()
 
 		#@rootRoute = 'login' 

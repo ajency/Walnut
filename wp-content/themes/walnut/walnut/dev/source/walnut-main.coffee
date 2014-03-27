@@ -17,6 +17,7 @@ require.config
 		jquery 				: 'plugins/jquery'
 		jqueryui 			: 'plugins/jquery.ui'
 		jqueryvalidate		: 'plugins/jquery.validate.min'
+		pace 				: 'plugins/pace'
 		bootstrap			: 'plugins/bootstrap.min'
 		underscore			: 'plugins/underscore'
 		backbone    		: 'plugins/backbone'
@@ -39,7 +40,6 @@ require.config
 		#datatables_responsive: 'plugins/datatables.responsive'
 		#datatables  		: 'plugins/datatables'
 		unveil				: 'plugins/jquery.unveil.min'
-		pace 				: 'plugins/pace'
 
 	shim:
 		underscore: 

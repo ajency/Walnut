@@ -30,7 +30,9 @@ define(['marionette'], function(Marionette) {
   });
   App.on("initialize:after", function(options) {
     var xhr;
-    Pace.stop();
+    Pace.on('hide', function() {
+      return $("#site_main_container").css('visibility', 'visible');
+    });
     App.startHistory();
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
