@@ -22,7 +22,7 @@ define ['app'
 
 			template : chapterslistTpl
 
-			className : 'page-content'
+			className : 'grid simple '
 
 			itemView 	: ChapterListItemView
 

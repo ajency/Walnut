@@ -21646,7 +21646,7 @@ define('text!apps/textbooks/textbook-single/templates/textbook-full.html',[],fun
 define('text!apps/textbooks/textbook-single/templates/textbook-description.html',[],function () { return '<!-- BEGIN PAGE TITLE -->\n<div class="page-title"><i class="icon-custom-left"></i>\n\t<h3>Textbook<span class="semi-bold"> {{name}}</span></h3>\t\t\n</div>\n<!-- END PAGE TITLE -->\n<div class="tiles green cover-pic-wrapper">\t\t\t\t\t\t\n\t<div class="overlayer bottom-right"></div>\n<img src="{{cover_pic}}" alt="">\n</div>\n<div class="tiles white">\n\n\t<div class="row">\n\t\t<div class="col-md-5 user-description-box  col-sm-5">\n\t\t\t<h4 class="semi-bold no-margin">{{name}}</h4>\n\t\t\t<h6 class="no-margin">By {{author}}</h6>\n\t\t\t<p>{{description}}</p>\n\t\t</div>\n\t\t<div class="col-md-3  col-sm-3">\n\t\t\t<h5 class="normal">Chapters ( <span class="text-success">{{chapter_count}}</span> )</h5>\n\t\t\t<h5 class="normal">Questions ( <span class="text-success">{{count}}</span> )</h5>\n\t\t\t\n\t\t\t<div class="clearfix"></div>\n\t\t</div>\t\t\t\t\n\t</div>\n\n</div>';});
 
 
-define('text!apps/textbooks/textbook-single/templates/chapters-list.html',[],function () { return '<div class="grid simple ">\n\t<div class="grid-title">\n\t  <h4>List of <span class="semi-bold">Chapters</span></h4>\n\t  <div class="tools">   <a href="javascript:;" class="reload"></a> </div>\n\t</div>\n\t<div class="grid-body ">\n\t  <table class="table table-striped" id="example2" >\n\t\t<thead>\n\t\t  <tr>\n\t\t\t<th>Name</th>\n\t\t\t<th>Sections</th>\n\t\t\t<th>Questions</th>\n\t\t\t<th>Quizzes</th>\n\t\t  </tr>\n\t\t</thead>\n\t\t\n\t  <tbody id="list-chapters" aria-relevant="all" aria-live="polite" role="alert" data-link="row" class="rowlink">\n\n\n\t  </tbody>\n\t</table>\n</div>';});
+define('text!apps/textbooks/textbook-single/templates/chapters-list.html',[],function () { return '<div class="grid-title">\n  <h4>List of <span class="semi-bold">Chapters</span></h4>\n  <div class="tools">   <a href="javascript:;" class="reload"></a> </div>\n</div>\n<div class="grid-body ">\n  <table class="table table-striped" id="example2" >\n\t<thead>\n\t  <tr>\n\t\t<th>Name</th>\n\t\t<th>Sections</th>\n\t\t<th>Questions</th>\n\t\t<th>Quizzes</th>\n\t  </tr>\n\t</thead>\n\t\n  <tbody id="list-chapters" aria-relevant="all" aria-live="polite" role="alert" data-link="row" class="rowlink">\n\n\n  </tbody>\n</table>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -21747,7 +21747,7 @@ define('apps/textbooks/textbook-single/chapters-list',['app', 'text!apps/textboo
 
       ChapterListView.prototype.template = chapterslistTpl;
 
-      ChapterListView.prototype.className = 'page-content';
+      ChapterListView.prototype.className = 'grid simple ';
 
       ChapterListView.prototype.itemView = ChapterListItemView;
 

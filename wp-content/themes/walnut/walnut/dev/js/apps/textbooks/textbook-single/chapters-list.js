@@ -45,7 +45,7 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
 
       ChapterListView.prototype.template = chapterslistTpl;
 
-      ChapterListView.prototype.className = 'page-content';
+      ChapterListView.prototype.className = 'grid simple ';
 
       ChapterListView.prototype.itemView = ChapterListItemView;
 
