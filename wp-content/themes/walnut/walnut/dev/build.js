@@ -32,7 +32,8 @@
     //datatables_responsive: 'plugins/datatables.responsive',
     //datatables      : 'plugins/datatables',
     unveil        : 'plugins/jquery.unveil.min',
-    pace        : 'plugins/pace'
+    pace        : 'plugins/pace',
+    detect: 'plugins/detect'
   },
   shim: {
     underscore: {
