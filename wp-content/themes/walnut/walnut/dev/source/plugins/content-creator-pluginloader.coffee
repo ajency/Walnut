@@ -15,4 +15,5 @@ define [
 			'jqueryvalidate'
 			'bootstrap'
 			'checkbox'
+			'bootstrapslider'
 		], ->

@@ -20,6 +20,7 @@ require.config
 		underscore			: 'plugins/underscore'
 		backbone    		: 'plugins/backbone'
 		bootstrap   		: 'plugins/bootstrap'
+		bootstrapslider		: 'plugins/bootstrap-slider'
 		marionette  		: 'plugins/backbone.marionette'
 		text				: 'plugins/text'
 		mustache			: 'plugins/mustache'
@@ -50,6 +51,7 @@ require.config
 			deps : ['jquery']
 			exports : 'plupload'
 		bootstrap : ['jquery']
+		bootstrapslider :['bootstrap']
 		checkbox  : ['bootstrap']
 		jqueryvalidate: ['jquery']
 		underscorestring : ['underscore']
