@@ -109,9 +109,20 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._updateDefaultLayer = function() {
-        if (this.stage.getChildren()[2].getChildren().length || this.stage.getChildren()[1].getChildren().length) {
-          return this.defaultLayer.remove(this.hotspotDefault);
+        var i, _results;
+        i = 1;
+        _results = [];
+        while (i < this.stage.getChildren().length) {
+          if (i) {
+            if (this.stage.getChildren()[i].getChildren().length) {
+              this.defaultLayer.remove(this.hotspotElement);
+              break;
+            }
+            console.log(this.stage.getChildren()[i]);
+          }
+          _results.push(i++);
         }
+        return _results;
       };
 
       HotspotView.prototype._updateDefaultImageSize = function() {

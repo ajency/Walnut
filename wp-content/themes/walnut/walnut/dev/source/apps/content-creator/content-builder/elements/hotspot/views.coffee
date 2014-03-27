@@ -114,11 +114,16 @@ define ['app'],(App)->
 
 			# remove the default image from the layer if any hotspot elements are added
 			_updateDefaultLayer:->
-					i
-					for (i= 1; i<@stage.getChildren().length; i++)
-							if(@stage.getChildren()[1].getChildren().length)
-									@defaultLayer.remove @hotspotDefault
-									return 
+				
+					i = 1
+					while i<@stage.getChildren().length
+						if i
+							if @stage.getChildren()[i].getChildren().length
+								@defaultLayer.remove @hotspotElement
+								break;
+							console.log @stage.getChildren()[i]
+
+						i++
 
 			# update the size of default image on change of stage
 			_updateDefaultImageSize:->
