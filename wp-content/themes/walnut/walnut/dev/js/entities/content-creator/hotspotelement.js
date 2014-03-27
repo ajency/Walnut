@@ -3,7 +3,8 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app', 'backbone'], function(App, Backbone) {
   return App.module("Entities.HotspotElement", function(HotspotElement, App, Backbone) {
-    return HotspotElement.ElementModel = (function(_super) {
+    var API;
+    HotspotElement.ElementModel = (function(_super) {
       __extends(ElementModel, _super);
 
       function ElementModel() {
@@ -12,6 +13,17 @@ define(['app', 'backbone'], function(App, Backbone) {
 
       return ElementModel;
 
-    })(Backbone);
+    })(Backbone.Model);
+    API = {
+      createHotspotElement: function(data) {
+        var hotspotElement;
+        hotspotElement = new HotspotElement.ElementModel;
+        hotspotElement.set(data);
+        return hotspotElement;
+      }
+    };
+    return App.reqres.setHandler("create:new:hotspot:element", function(data) {
+      return API.createHotspotElement(data);
+    });
   });
 });
