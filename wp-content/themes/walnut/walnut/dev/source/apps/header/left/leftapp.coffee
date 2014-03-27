@@ -25,7 +25,6 @@ define ['app'
 			events : 
 				'click #layout-condensed-toggle'	: 'toggleLeftSidebar'
 
-
 			toggleLeftSidebar: -> 
 				if($('#main-menu').attr('data-inner-menu')=='1')
 					console.log("Menu is already condensed");

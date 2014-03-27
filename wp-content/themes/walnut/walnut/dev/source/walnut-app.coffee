@@ -40,6 +40,7 @@ define ['marionette'], (Marionette)->
 		App.unregister instance, id
 
 	App.on "initialize:after", (options) ->
+		Pace.start()
 		App.startHistory()
 
 		#@rootRoute = 'login' 
