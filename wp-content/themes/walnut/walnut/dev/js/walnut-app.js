@@ -25,9 +25,12 @@ define(['marionette'], function(Marionette) {
   App.commands.setHandler("unregister:instance", function(instance, id) {
     return App.unregister(instance, id);
   });
+  App.on("initialize:before", function() {
+    return Pace.start();
+  });
   App.on("initialize:after", function(options) {
     var xhr;
-    Pace.start();
+    Pace.stop();
     App.startHistory();
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
