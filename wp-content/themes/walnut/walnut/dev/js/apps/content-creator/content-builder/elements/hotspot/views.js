@@ -109,9 +109,20 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._updateDefaultLayer = function() {
-        if (this.stage.getChildren()[2].getChildren().length || this.stage.getChildren()[1].getChildren().length) {
-          return this.defaultLayer.remove(this.hotspotDefault);
+        var i, _results;
+        i = 1;
+        _results = [];
+        while (i < this.stage.getChildren().length) {
+          if (i) {
+            if (this.stage.getChildren()[i].getChildren().length) {
+              this.defaultLayer.remove(this.hotspotElement);
+              break;
+            }
+            console.log(this.stage.getChildren()[i]);
+          }
+          _results.push(i++);
         }
+        return _results;
       };
 
       HotspotView.prototype._updateDefaultImageSize = function() {
@@ -176,7 +187,14 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var canvasText, textBorder, tooltip;
+        var canvasText, hotspotElement, modelData, textBorder, tooltip;
+        modelData = {
+          text: '',
+          fontFamily: 'Arial',
+          fontSize: '12',
+          fontColor: 'black'
+        };
+        hotspotElement = App.request("create:new:hotspot:element", modelData);
         tooltip = new Kinetic.Label({
           x: elementPos.left,
           y: elementPos.top,
@@ -185,16 +203,20 @@ define(['app'], function(App) {
           draggable: true
         });
         textBorder = new Kinetic.Tag({
-          fill: 'black',
+          fill: 'white',
+          stroke: 'black',
           width: 50,
           lineJoin: 'round'
         });
         canvasText = new Kinetic.Text({
-          text: 'Tooltip pointing doccccccccccccccccccccccccccccccccccwn',
-          fontFamily: 'Calibri',
-          fontSize: 18,
-          padding: 5,
-          fill: 'white'
+          text: hotspotElement.get('text'),
+          fontFamily: hotspotElement.get('fontFamily'),
+          fontSize: hotspotElement.get('fontSize'),
+          fill: hotspotElement.get('fontColor'),
+          padding: 5
+        });
+        tooltip.on('click', function() {
+          return console.log("text box");
         });
         tooltip.add(textBorder);
         tooltip.add(canvasText);
