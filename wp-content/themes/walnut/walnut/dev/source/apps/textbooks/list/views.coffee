@@ -46,19 +46,8 @@ define ['app'
 				data
 
 			events: 
-				'click .btn-group'			: 'dropdown_popup'
 				'click .filter_class'		: (e)->  @trigger "filter:textbooks:class", $(e.target).closest('li').attr('data-filter')
 
-
-			dropdown_popup : (e)->
-				if $(e.target)
-					.closest 'div'
-					.hasClass 'open'
-						$(e.target).closest 'div' 
-						.removeClass 'open'
-				else
-					$(e.target).closest 'div' 
-					.addClass 'open'
 
 			sortTable: (e)->
 				options= {}

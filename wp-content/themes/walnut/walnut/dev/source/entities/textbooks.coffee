@@ -13,6 +13,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 					description        	: ''
 					parent      	   	: 0
 					term_order 			: 0
+					count	 			: 0
+					chapter_count		: 0
 
 				name: 'textbook'
 
