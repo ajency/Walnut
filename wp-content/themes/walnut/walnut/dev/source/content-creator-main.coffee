@@ -32,6 +32,8 @@ require.config
 		entitiesloader 		: 'entities/content-creator-entities-loader'
 		checkbox			: 'plugins/flatui-checkbox'
 		componentloader 	: 'components/builder-component-loader'
+		spin 				: 'plugins/spin'
+		jqueryspin  		: 'plugins/jquery.spin'
 		
 
 	shim:

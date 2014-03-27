@@ -22,7 +22,9 @@ require.config({
     underscorestring: 'plugins/underscorestring',
     entitiesloader: 'entities/content-creator-entities-loader',
     checkbox: 'plugins/flatui-checkbox',
-    componentloader: 'components/builder-component-loader'
+    componentloader: 'components/builder-component-loader',
+    spin: 'plugins/spin',
+    jqueryspin: 'plugins/jquery.spin'
   },
   shim: {
     underscore: {
