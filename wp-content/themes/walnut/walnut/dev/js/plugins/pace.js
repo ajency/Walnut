@@ -8,11 +8,11 @@
   defaultOptions = {
     catchupTime: 500,
     initialRate: .03,
-    minTime: 500,
+    minTime: 2000,
     ghostTime: 500,
     maxProgressPerFrame: 10,
     easeFactor: 1.25,
-    startOnPageLoad: true,
+    startOnPageLoad: false,
     restartOnPushState: true,
     restartOnRequestAfter: 500,
     target: 'body',
@@ -25,11 +25,7 @@
       sampleCount: 3,
       lagThreshold: 3
     },
-    ajax: {
-      trackMethods: ['GET'],
-      trackWebSockets: true,
-      ignoreURLs: []
-    }
+    ajax: false
   };
 
   now = function() {

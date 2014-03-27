@@ -25,17 +25,23 @@ define(['marionette'], function(Marionette) {
   App.commands.setHandler("unregister:instance", function(instance, id) {
     return App.unregister(instance, id);
   });
+  App.on("initialize:before", function() {
+    return Pace.start();
+  });
   App.on("initialize:after", function(options) {
     var xhr;
-    Pace.start();
+    Pace.on('hide', function() {
+      return $("#site_main_container").css('visibility', 'visible');
+    });
     App.startHistory();
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
-        var user;
+        var school, user;
         if (resp.success) {
           console.log(resp);
           user = App.request("get:user:model");
           user.set(resp.data);
+          school = App.request("get:current:school");
           App.execute("show:headerapp", {
             region: App.headerRegion
           });

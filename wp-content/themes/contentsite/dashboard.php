@@ -30,7 +30,7 @@ Template Name: Dashboard
 	<meta content="" name="author" />
 
 	<!-- NEED TO WORK ON -->
-	<link href="./wp-content/themes/walnut/walnut/dev/css/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
 	<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
 	<link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
 	<!-- BEGIN CORE CSS FRAMEWORK -->
@@ -51,20 +51,20 @@ Template Name: Dashboard
 
 </head>
 <body class="">
+<div id="site_main_container" style="visibility:hidden">
+    <div>
+            <div id="header-region"></div>
+            <div id="left-nav-region"></div>
+            <div id="main-content-region"></div>
+    </div>
 
-<div>
-	<div id="header-region"></div>
-	<div id="left-nav-region"></div>
-	<div id="main-content-region"></div>
+    <div id="dialog-region"></div>
+    <div id="login-region"></div>
 </div>
-
-<div id="dialog-region"></div>
-<div id="login-region"></div>
-
 <script>
     AJAXURL= '<?php echo admin_url("admin-ajax.php") ?>';
 </script>
-<?php if(ENV!='dev') { ?>
+<?php if(ENV=='dev') { ?>
 <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php
 } else { ?>
