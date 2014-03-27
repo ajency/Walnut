@@ -51,7 +51,7 @@ function extra_tax_fields($tag) {
         <td>
 
             <?
-            for ($i = 0; $i < 15; $i++) {
+            for ($i = 1; $i <= 12; $i++) {
                 $selected = '';
 
                 if ($classes)

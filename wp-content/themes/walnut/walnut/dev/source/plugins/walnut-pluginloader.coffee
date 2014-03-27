@@ -1,7 +1,8 @@
 define [
-			'underscore'
-			'jquery'
 			'pace'
+			'underscore'
+			'underscorestring'
+			'jquery'
 			'backbone'
 			'marionette'
 			'syphon'
