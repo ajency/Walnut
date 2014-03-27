@@ -1,5 +1,5 @@
 .pace {
-  width: 140px;
+  width: 145px;
   height: 300px;
   position: fixed;
   top: 0;
@@ -29,7 +29,7 @@
 }
 
 .pace .pace-activity {
-  width: 140px;
+  width: 145px;
   height: 140px;
   border-radius: 70px;
   background: #29d;
