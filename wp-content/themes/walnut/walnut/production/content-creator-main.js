@@ -27397,154 +27397,7 @@ update=function (activeAnchor) {
 
 
 
-// // single dragger
-// resizeRect = function(rectangle){
-// 	var draggerOffset = 0;
-// 	var draggerRadius = 5;
-// 	var subjectX = rectangle.getAbsolutePosition().x;
-// 	var subjectY = rectangle.getAbsolutePosition().y;
-// 	var subjectWidth = rectangle.width();
-// 	var subjectHeight = rectangle.height();
-
-// 	var dragger = new Kinetic.Group({
-// 		draggable : true
-// 	});
-
-// 	var dragCircle=new Kinetic.Circle({
-//         x: subjectX+subjectWidth+draggerOffset,
-//         y: subjectY+subjectHeight+draggerOffset,
-//         radius: draggerRadius,
-//         fill: 'skyblue',
-//         stroke: 'lightgray',
-//         strokeWidth: 3,
-//         draggable:true,
-//         dragBoundFunc: function(pos) {
-//             return { x: (pos.x>rectangle.getAbsolutePosition().x+draggerOffset)?pos.x : rectangle.getAbsolutePosition().x+draggerOffset,
-//             		 y: (pos.y>rectangle.getAbsolutePosition().y+draggerOffset)?pos.y : rectangle.getAbsolutePosition().y+draggerOffset }
-//         }
-//     });
-
-//     dragCircle.on("dragmove", function () {
-    
-//         var pos = this.getAbsolutePosition();
-//         var x = pos.x;
-//         var y = pos.y;
-//         var rectX = rectangle.getAbsolutePosition().x;
-//         var rectY = rectangle.getAbsolutePosition().y;
-//         rectangle.resize(x - rectX, y - rectY);
-        
-    
-// 	});
-
-// 	rectangle.resize = function(width,height){
-// 		rectangle.width(width);
-// 		rectangle.height(height);
-// 	};
-
-
-// 	dragger.add(rectangle);
-// 	dragger.add(dragCircle);
-
-
-//     return dragger;
-
-// };
-
-
-
-
-// resizeRect = function(rectangle){
-// 	var draggerOffset = 5;
-// 	var draggerRadius = 5;
-// 	var subjectWidth = rectangle.width();
-// 	var subjectHeight = rectangle.height();
-// 	var subjectX = rectangle.getAbsolutePosition().x;
-// 	var subjectY = rectangle.getAbsolutePosition().y;
-
-// 	var dragger = new Kinetic.Group({
-// 		draggable : true
-// 	});
-
-// 	var dragRightCircle = new Kinetic.Circle({
-//         x: subjectX+subjectWidth+draggerOffset,
-//         y: subjectY+subjectHeight/2,
-//         radius: draggerRadius,
-//         fill: 'skyblue',
-//         stroke: 'lightgray',
-//         strokeWidth: 3,
-//         draggable:true,
-//         dragBoundFunc: function(pos) {
-//             return { x: (pos.x>rectangle.getAbsolutePosition().x+5+draggerOffset)?pos.x : rectangle.getAbsolutePosition().x+5+draggerOffset,
-//             		 y: this.getAbsolutePosition().y }
-//         }
-//     });
-
-//     dragRightCircle.on("dragmove",function(){
-//         var x1=this.getAbsolutePosition().x;
-//         //var y1=this.getAbsolutePosition().y;
-//         var x2=this.getAbsolutePosition().x>rectangle.getAbsolutePosition().x?rectangle.getAbsolutePosition().x:rectangle.getAbsolutePosition().x+rectangle.width();;
-//         //var y2=circle.getAbsolutePosition().y;
-//         console.log(rectangle.getAbsolutePosition().x +" ,  "+rectangle.getAbsolutePosition().y)
-//         var dx=x1-x2;
-//        // var dy=y1-y2;
-//         var r=Math.sqrt(dx*dx)-draggerOffset;
-//         r=Math.max(5,r);
-//         rectangle.resize(r,this);
-//       //  dragLine.setPoints([myGuageX,myGuageY, x1,y1]);
-//     });
-
-//     dragger.add(dragRightCircle);
-
-
-// 	var dragLeftCircle = new Kinetic.Circle({
-//         x: subjectX-draggerOffset,
-//         y: subjectY+subjectHeight/2,
-//         radius: draggerRadius,
-//         fill: 'skyblue',
-//         stroke: 'lightgray',
-//         strokeWidth: 3,
-//         draggable:true,
-//         dragBoundFunc: function(pos) {
-//             return { x: (pos.x<rectangle.getAbsolutePosition().x-draggerOffset+rectangle.width()-5)?pos.x : rectangle.getAbsolutePosition().x-draggerOffset,
-//             		 y: this.getAbsolutePosition().y }
-//         }
-//     });
-//     var ra=null;
-
-//     dragLeftCircle.on("dragmove",function(){
-//         var x1=this.getAbsolutePosition().x;
-//         //var y1=this.getAbsolutePosition().y;
-//         var x2=this.getAbsolutePosition().x>rectangle.getAbsolutePosition().x?rectangle.getAbsolutePosition().x:rectangle.getAbsolutePosition().x+(ra||rectangle.width());
-//         //var y2=circle.getAbsolutePosition().y;
-//         console.log(rectangle.getAbsolutePosition().x +" ,  "+rectangle.getAbsolutePosition().y)
-//         var dx=x1-x2;
-//        // var dy=y1-y2;
-//         r=Math.sqrt(dx*dx)-draggerOffset;
-//         r=Math.max(5,r);
-//         rectangle.resize(r,this);
-//       //  dragLine.setPoints([myGuageX,myGuageY, x1,y1]);
-//     });
-
-//     dragger.add(dragLeftCircle);
-
-
-
-//     rectangle.resize = function(newWidth,drag){
-//     	this.width(newWidth);
-//     	if(this.getAbsolutePosition().x+newWidth>drag.getAbsolutePosition().x && newWidth>5){
-//     		this.setAbsolutePosition({
-//     			x :  drag.getAbsolutePosition().x+draggerOffset,
-//     			y : this.getAbsolutePosition().y
-//     		})
-//     	}
-
-//     };
-
-//     dragger.add(rectangle);
-
-//     return dragger;
-
-// };
+;
 define("kineticresize", function(){});
 
 //     Backbone.js 1.1.0
@@ -33209,7 +33062,832 @@ define("bootstrap", function(){});
 }(window.jQuery);
 define("checkbox", function(){});
 
-define('plugins/content-creator-pluginloader',['underscore', 'jquery', 'jqueryui', 'jqueryresize', 'underscorestring', 'kinetic', 'plupload', 'kineticresize', 'backbone', 'marionette', 'mustache', 'syphon', 'text', 'jqueryvalidate', 'bootstrap', 'checkbox'], function() {});
+/* =========================================================
+ * bootstrap-slider.js v2.0.0
+ * http://www.eyecon.ro/bootstrap-slider
+ * =========================================================
+ * Copyright 2012 Stefan Petre
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================= */
+ 
+!function( $ ) {
+
+	var Slider = function(element, options) {
+		this.element = $(element);
+		this.picker = $('<div class="slider">'+
+							'<div class="slider-track">'+
+								'<div class="slider-selection"></div>'+
+								'<div class="slider-handle"></div>'+
+								'<div class="slider-handle"></div>'+
+							'</div>'+
+							'<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'+
+						'</div>')
+							.insertBefore(this.element)
+							.append(this.element);
+		this.id = this.element.data('slider-id')||options.id;
+		if (this.id) {
+			this.picker[0].id = this.id;
+		}
+
+		if (typeof Modernizr !== 'undefined' && Modernizr.touch) {
+			this.touchCapable = true;
+		}
+
+		var tooltip = this.element.data('slider-tooltip')||options.tooltip;
+
+		this.tooltip = this.picker.find('.tooltip');
+		this.tooltipInner = this.tooltip.find('div.tooltip-inner');
+
+		this.orientation = this.element.data('slider-orientation')||options.orientation;
+		switch(this.orientation) {
+			case 'vertical':
+				this.picker.addClass('slider-vertical');
+				this.stylePos = 'top';
+				this.mousePos = 'pageY';
+				this.sizePos = 'offsetHeight';
+				this.tooltip.addClass('right')[0].style.left = '100%';
+				break;
+			default:
+				this.picker
+					.addClass('slider-horizontal')
+					.css('width', this.element.outerWidth());
+				this.orientation = 'horizontal';
+				this.stylePos = 'left';
+				this.mousePos = 'pageX';
+				this.sizePos = 'offsetWidth';
+				this.tooltip.addClass('top')[0].style.top = -this.tooltip.outerHeight() - 14 + 'px';
+				break;
+		}
+
+		this.min = this.element.data('slider-min')||options.min;
+		this.max = this.element.data('slider-max')||options.max;
+		this.step = this.element.data('slider-step')||options.step;
+		this.value = this.element.data('slider-value')||options.value;
+		if (this.value[1]) {
+			this.range = true;
+		}
+
+		this.selection = this.element.data('slider-selection')||options.selection;
+		this.selectionEl = this.picker.find('.slider-selection');
+		if (this.selection === 'none') {
+			this.selectionEl.addClass('hide');
+		}
+		this.selectionElStyle = this.selectionEl[0].style;
+
+
+		this.handle1 = this.picker.find('.slider-handle:first');
+		this.handle1Stype = this.handle1[0].style;
+		this.handle2 = this.picker.find('.slider-handle:last');
+		this.handle2Stype = this.handle2[0].style;
+
+		var handle = this.element.data('slider-handle')||options.handle;
+		switch(handle) {
+			case 'round':
+				this.handle1.addClass('round');
+				this.handle2.addClass('round');
+				break
+			case 'triangle':
+				this.handle1.addClass('triangle');
+				this.handle2.addClass('triangle');
+				break
+		}
+
+		if (this.range) {
+			this.value[0] = Math.max(this.min, Math.min(this.max, this.value[0]));
+			this.value[1] = Math.max(this.min, Math.min(this.max, this.value[1]));
+		} else {
+			this.value = [ Math.max(this.min, Math.min(this.max, this.value))];
+			this.handle2.addClass('hide');
+			if (this.selection == 'after') {
+				this.value[1] = this.max;
+			} else {
+				this.value[1] = this.min;
+			}
+		}
+		this.diff = this.max - this.min;
+		this.percentage = [
+			(this.value[0]-this.min)*100/this.diff,
+			(this.value[1]-this.min)*100/this.diff,
+			this.step*100/this.diff
+		];
+
+		this.offset = this.picker.offset();
+		this.size = this.picker[0][this.sizePos];
+
+		this.formater = options.formater;
+
+		this.layout();
+
+		if (this.touchCapable) {
+			// Touch: Bind touch events:
+			this.picker.on({
+				touchstart: $.proxy(this.mousedown, this)
+			});
+		} else {
+			this.picker.on({
+				mousedown: $.proxy(this.mousedown, this)
+			});
+		}
+
+		if (tooltip === 'show') {
+			this.picker.on({
+				mouseenter: $.proxy(this.showTooltip, this),
+				mouseleave: $.proxy(this.hideTooltip, this)
+			});
+		} else {
+			this.tooltip.addClass('hide');
+		}
+	};
+
+	Slider.prototype = {
+		constructor: Slider,
+
+		over: false,
+		inDrag: false,
+		
+		showTooltip: function(){
+			this.tooltip.addClass('in');
+			//var left = Math.round(this.percent*this.width);
+			//this.tooltip.css('left', left - this.tooltip.outerWidth()/2);
+			this.over = true;
+		},
+		
+		hideTooltip: function(){
+			if (this.inDrag === false) {
+				this.tooltip.removeClass('in');
+			}
+			this.over = false;
+		},
+
+		layout: function(){
+			this.handle1Stype[this.stylePos] = this.percentage[0]+'%';
+			this.handle2Stype[this.stylePos] = this.percentage[1]+'%';
+			if (this.orientation == 'vertical') {
+				this.selectionElStyle.top = Math.min(this.percentage[0], this.percentage[1]) +'%';
+				this.selectionElStyle.height = Math.abs(this.percentage[0] - this.percentage[1]) +'%';
+			} else {
+				this.selectionElStyle.left = Math.min(this.percentage[0], this.percentage[1]) +'%';
+				this.selectionElStyle.width = Math.abs(this.percentage[0] - this.percentage[1]) +'%';
+			}
+			if (this.range) {
+				this.tooltipInner.text(
+					this.formater(this.value[0]) + 
+					' : ' + 
+					this.formater(this.value[1])
+				);
+				this.tooltip[0].style[this.stylePos] = this.size * (this.percentage[0] + (this.percentage[1] - this.percentage[0])/2)/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
+			} else {
+				this.tooltipInner.text(
+					this.formater(this.value[0])
+				);
+				this.tooltip[0].style[this.stylePos] = this.size * this.percentage[0]/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
+			}
+		},
+
+		mousedown: function(ev) {
+
+			// Touch: Get the original event:
+			if (this.touchCapable && ev.type === 'touchstart') {
+				ev = ev.originalEvent;
+			}
+
+			this.offset = this.picker.offset();
+			this.size = this.picker[0][this.sizePos];
+
+			var percentage = this.getPercentage(ev);
+
+			if (this.range) {
+				var diff1 = Math.abs(this.percentage[0] - percentage);
+				var diff2 = Math.abs(this.percentage[1] - percentage);
+				this.dragged = (diff1 < diff2) ? 0 : 1;
+			} else {
+				this.dragged = 0;
+			}
+
+			this.percentage[this.dragged] = percentage;
+			this.layout();
+
+			if (this.touchCapable) {
+				// Touch: Bind touch events:
+				$(document).on({
+					touchmove: $.proxy(this.mousemove, this),
+					touchend: $.proxy(this.mouseup, this)
+				});
+			} else {
+				$(document).on({
+					mousemove: $.proxy(this.mousemove, this),
+					mouseup: $.proxy(this.mouseup, this)
+				});
+			}
+
+			this.inDrag = true;
+			var val = this.calculateValue();
+			this.element.trigger({
+					type: 'slideStart',
+					value: val
+				}).trigger({
+					type: 'slide',
+					value: val
+				});
+			return false;
+		},
+
+		mousemove: function(ev) {
+			
+			// Touch: Get the original event:
+			if (this.touchCapable && ev.type === 'touchmove') {
+				ev = ev.originalEvent;
+			}
+
+			var percentage = this.getPercentage(ev);
+			if (this.range) {
+				if (this.dragged === 0 && this.percentage[1] < percentage) {
+					this.percentage[0] = this.percentage[1];
+					this.dragged = 1;
+				} else if (this.dragged === 1 && this.percentage[0] > percentage) {
+					this.percentage[1] = this.percentage[0];
+					this.dragged = 0;
+				}
+			}
+			this.percentage[this.dragged] = percentage;
+			this.layout();
+			var val = this.calculateValue();
+			this.element
+				.trigger({
+					type: 'slide',
+					value: val
+				})
+				.data('value', val)
+				.prop('value', val);
+			return false;
+		},
+
+		mouseup: function(ev) {
+			if (this.touchCapable) {
+				// Touch: Bind touch events:
+				$(document).off({
+					touchmove: this.mousemove,
+					touchend: this.mouseup
+				});
+			} else {
+				$(document).off({
+					mousemove: this.mousemove,
+					mouseup: this.mouseup
+				});
+			}
+
+			this.inDrag = false;
+			if (this.over == false) {
+				this.hideTooltip();
+			}
+			this.element;
+			var val = this.calculateValue();
+			this.element
+				.trigger({
+					type: 'slideStop',
+					value: val
+				})
+				.data('value', val)
+				.prop('value', val);
+			return false;
+		},
+
+		calculateValue: function() {
+			var val;
+			if (this.range) {
+				val = [
+					(this.min + Math.round((this.diff * this.percentage[0]/100)/this.step)*this.step),
+					(this.min + Math.round((this.diff * this.percentage[1]/100)/this.step)*this.step)
+				];
+				this.value = val;
+			} else {
+				val = (this.min + Math.round((this.diff * this.percentage[0]/100)/this.step)*this.step);
+				this.value = [val, this.value[1]];
+			}
+			return val;
+		},
+
+		getPercentage: function(ev) {
+			if (this.touchCapable) {
+				ev = ev.touches[0];
+			}
+			var percentage = (ev[this.mousePos] - this.offset[this.stylePos])*100/this.size;
+			percentage = Math.round(percentage/this.percentage[2])*this.percentage[2];
+			return Math.max(0, Math.min(100, percentage));
+		},
+
+		getValue: function() {
+			if (this.range) {
+				return this.value;
+			}
+			return this.value[0];
+		},
+
+		setValue: function(val) {
+			this.value = val;
+
+			if (this.range) {
+				this.value[0] = Math.max(this.min, Math.min(this.max, this.value[0]));
+				this.value[1] = Math.max(this.min, Math.min(this.max, this.value[1]));
+			} else {
+				this.value = [ Math.max(this.min, Math.min(this.max, this.value))];
+				this.handle2.addClass('hide');
+				if (this.selection == 'after') {
+					this.value[1] = this.max;
+				} else {
+					this.value[1] = this.min;
+				}
+			}
+			this.diff = this.max - this.min;
+			this.percentage = [
+				(this.value[0]-this.min)*100/this.diff,
+				(this.value[1]-this.min)*100/this.diff,
+				this.step*100/this.diff
+			];
+			this.layout();
+		}
+	};
+
+	$.fn.slider = function ( option, val ) {
+		return this.each(function () {
+			var $this = $(this),
+				data = $this.data('slider'),
+				options = typeof option === 'object' && option;
+			if (!data)  {
+				$this.data('slider', (data = new Slider(this, $.extend({}, $.fn.slider.defaults,options))));
+			}
+			if (typeof option == 'string') {
+				data[option](val);
+			}
+		})
+	};
+
+	$.fn.slider.defaults = {
+		min: 0,
+		max: 10,
+		step: 1,
+		orientation: 'horizontal',
+		value: 5,
+		selection: 'before',
+		tooltip: 'show',
+		handle: 'round',
+		formater: function(value) {
+			return value;
+		}
+	};
+
+	$.fn.slider.Constructor = Slider;
+
+}( window.jQuery );
+define("bootstrapslider", function(){});
+
+/**
+ * Copyright (c) 2011-2013 Felix Gnass
+ * Licensed under the MIT license
+ */
+(function(root, factory) {
+
+  /* CommonJS */
+  if (typeof exports == 'object')  module.exports = factory()
+
+  /* AMD module */
+  else if (typeof define == 'function' && define.amd) define('spin',factory)
+
+  /* Browser global */
+  else root.Spinner = factory()
+}
+(this, function() {
+  
+
+  var prefixes = ['webkit', 'Moz', 'ms', 'O'] /* Vendor prefixes */
+    , animations = {} /* Animation rules keyed by their name */
+    , useCssAnimations /* Whether to use CSS animations or setTimeout */
+
+  /**
+   * Utility function to create elements. If no tag name is given,
+   * a DIV is created. Optionally properties can be passed.
+   */
+  function createEl(tag, prop) {
+    var el = document.createElement(tag || 'div')
+      , n
+
+    for(n in prop) el[n] = prop[n]
+    return el
+  }
+
+  /**
+   * Appends children and returns the parent.
+   */
+  function ins(parent /* child1, child2, ...*/) {
+    for (var i=1, n=arguments.length; i<n; i++)
+      parent.appendChild(arguments[i])
+
+    return parent
+  }
+
+  /**
+   * Insert a new stylesheet to hold the @keyframe or VML rules.
+   */
+  var sheet = (function() {
+    var el = createEl('style', {type : 'text/css'})
+    ins(document.getElementsByTagName('head')[0], el)
+    return el.sheet || el.styleSheet
+  }())
+
+  /**
+   * Creates an opacity keyframe animation rule and returns its name.
+   * Since most mobile Webkits have timing issues with animation-delay,
+   * we create separate rules for each line/segment.
+   */
+  function addAnimation(alpha, trail, i, lines) {
+    var name = ['opacity', trail, ~~(alpha*100), i, lines].join('-')
+      , start = 0.01 + i/lines * 100
+      , z = Math.max(1 - (1-alpha) / trail * (100-start), alpha)
+      , prefix = useCssAnimations.substring(0, useCssAnimations.indexOf('Animation')).toLowerCase()
+      , pre = prefix && '-' + prefix + '-' || ''
+
+    if (!animations[name]) {
+      sheet.insertRule(
+        '@' + pre + 'keyframes ' + name + '{' +
+        '0%{opacity:' + z + '}' +
+        start + '%{opacity:' + alpha + '}' +
+        (start+0.01) + '%{opacity:1}' +
+        (start+trail) % 100 + '%{opacity:' + alpha + '}' +
+        '100%{opacity:' + z + '}' +
+        '}', sheet.cssRules.length)
+
+      animations[name] = 1
+    }
+
+    return name
+  }
+
+  /**
+   * Tries various vendor prefixes and returns the first supported property.
+   */
+  function vendor(el, prop) {
+    var s = el.style
+      , pp
+      , i
+
+    prop = prop.charAt(0).toUpperCase() + prop.slice(1)
+    for(i=0; i<prefixes.length; i++) {
+      pp = prefixes[i]+prop
+      if(s[pp] !== undefined) return pp
+    }
+    if(s[prop] !== undefined) return prop
+  }
+
+  /**
+   * Sets multiple style properties at once.
+   */
+  function css(el, prop) {
+    for (var n in prop)
+      el.style[vendor(el, n)||n] = prop[n]
+
+    return el
+  }
+
+  /**
+   * Fills in default values.
+   */
+  function merge(obj) {
+    for (var i=1; i < arguments.length; i++) {
+      var def = arguments[i]
+      for (var n in def)
+        if (obj[n] === undefined) obj[n] = def[n]
+    }
+    return obj
+  }
+
+  /**
+   * Returns the absolute page-offset of the given element.
+   */
+  function pos(el) {
+    var o = { x:el.offsetLeft, y:el.offsetTop }
+    while((el = el.offsetParent))
+      o.x+=el.offsetLeft, o.y+=el.offsetTop
+
+    return o
+  }
+
+  /**
+   * Returns the line color from the given string or array.
+   */
+  function getColor(color, idx) {
+    return typeof color == 'string' ? color : color[idx % color.length]
+  }
+
+  // Built-in defaults
+
+  var defaults = {
+    lines: 12,            // The number of lines to draw
+    length: 7,            // The length of each line
+    width: 5,             // The line thickness
+    radius: 10,           // The radius of the inner circle
+    rotate: 0,            // Rotation offset
+    corners: 1,           // Roundness (0..1)
+    color: '#000',        // #rgb or #rrggbb
+    direction: 1,         // 1: clockwise, -1: counterclockwise
+    speed: 1,             // Rounds per second
+    trail: 100,           // Afterglow percentage
+    opacity: 1/4,         // Opacity of the lines
+    fps: 20,              // Frames per second when using setTimeout()
+    zIndex: 2e9,          // Use a high z-index by default
+    className: 'spinner', // CSS class to assign to the element
+    top: 'auto',          // center vertically
+    left: 'auto',         // center horizontally
+    position: 'relative'  // element position
+  }
+
+  /** The constructor */
+  function Spinner(o) {
+    if (typeof this == 'undefined') return new Spinner(o)
+    this.opts = merge(o || {}, Spinner.defaults, defaults)
+  }
+
+  // Global defaults that override the built-ins:
+  Spinner.defaults = {}
+
+  merge(Spinner.prototype, {
+
+    /**
+     * Adds the spinner to the given target element. If this instance is already
+     * spinning, it is automatically removed from its previous target b calling
+     * stop() internally.
+     */
+    spin: function(target) {
+      this.stop()
+
+      var self = this
+        , o = self.opts
+        , el = self.el = css(createEl(0, {className: o.className}), {position: o.position, width: 0, zIndex: o.zIndex})
+        , mid = o.radius+o.length+o.width
+        , ep // element position
+        , tp // target position
+
+      if (target) {
+        target.insertBefore(el, target.firstChild||null)
+        tp = pos(target)
+        ep = pos(el)
+        css(el, {
+          left: (o.left == 'auto' ? tp.x-ep.x + (target.offsetWidth >> 1) : parseInt(o.left, 10) + mid) + 'px',
+          top: (o.top == 'auto' ? tp.y-ep.y + (target.offsetHeight >> 1) : parseInt(o.top, 10) + mid)  + 'px'
+        })
+      }
+
+      el.setAttribute('role', 'progressbar')
+      self.lines(el, self.opts)
+
+      if (!useCssAnimations) {
+        // No CSS animation support, use setTimeout() instead
+        var i = 0
+          , start = (o.lines - 1) * (1 - o.direction) / 2
+          , alpha
+          , fps = o.fps
+          , f = fps/o.speed
+          , ostep = (1-o.opacity) / (f*o.trail / 100)
+          , astep = f/o.lines
+
+        ;(function anim() {
+          i++;
+          for (var j = 0; j < o.lines; j++) {
+            alpha = Math.max(1 - (i + (o.lines - j) * astep) % f * ostep, o.opacity)
+
+            self.opacity(el, j * o.direction + start, alpha, o)
+          }
+          self.timeout = self.el && setTimeout(anim, ~~(1000/fps))
+        })()
+      }
+      return self
+    },
+
+    /**
+     * Stops and removes the Spinner.
+     */
+    stop: function() {
+      var el = this.el
+      if (el) {
+        clearTimeout(this.timeout)
+        if (el.parentNode) el.parentNode.removeChild(el)
+        this.el = undefined
+      }
+      return this
+    },
+
+    /**
+     * Internal method that draws the individual lines. Will be overwritten
+     * in VML fallback mode below.
+     */
+    lines: function(el, o) {
+      var i = 0
+        , start = (o.lines - 1) * (1 - o.direction) / 2
+        , seg
+
+      function fill(color, shadow) {
+        return css(createEl(), {
+          position: 'absolute',
+          width: (o.length+o.width) + 'px',
+          height: o.width + 'px',
+          background: color,
+          boxShadow: shadow,
+          transformOrigin: 'left',
+          transform: 'rotate(' + ~~(360/o.lines*i+o.rotate) + 'deg) translate(' + o.radius+'px' +',0)',
+          borderRadius: (o.corners * o.width>>1) + 'px'
+        })
+      }
+
+      for (; i < o.lines; i++) {
+        seg = css(createEl(), {
+          position: 'absolute',
+          top: 1+~(o.width/2) + 'px',
+          transform: o.hwaccel ? 'translate3d(0,0,0)' : '',
+          opacity: o.opacity,
+          animation: useCssAnimations && addAnimation(o.opacity, o.trail, start + i * o.direction, o.lines) + ' ' + 1/o.speed + 's linear infinite'
+        })
+
+        if (o.shadow) ins(seg, css(fill('#000', '0 0 4px ' + '#000'), {top: 2+'px'}))
+        ins(el, ins(seg, fill(getColor(o.color, i), '0 0 1px rgba(0,0,0,.1)')))
+      }
+      return el
+    },
+
+    /**
+     * Internal method that adjusts the opacity of a single line.
+     * Will be overwritten in VML fallback mode below.
+     */
+    opacity: function(el, i, val) {
+      if (i < el.childNodes.length) el.childNodes[i].style.opacity = val
+    }
+
+  })
+
+
+  function initVML() {
+
+    /* Utility function to create a VML tag */
+    function vml(tag, attr) {
+      return createEl('<' + tag + ' xmlns="urn:schemas-microsoft.com:vml" class="spin-vml">', attr)
+    }
+
+    // No CSS transforms but VML support, add a CSS rule for VML elements:
+    sheet.addRule('.spin-vml', 'behavior:url(#default#VML)')
+
+    Spinner.prototype.lines = function(el, o) {
+      var r = o.length+o.width
+        , s = 2*r
+
+      function grp() {
+        return css(
+          vml('group', {
+            coordsize: s + ' ' + s,
+            coordorigin: -r + ' ' + -r
+          }),
+          { width: s, height: s }
+        )
+      }
+
+      var margin = -(o.width+o.length)*2 + 'px'
+        , g = css(grp(), {position: 'absolute', top: margin, left: margin})
+        , i
+
+      function seg(i, dx, filter) {
+        ins(g,
+          ins(css(grp(), {rotation: 360 / o.lines * i + 'deg', left: ~~dx}),
+            ins(css(vml('roundrect', {arcsize: o.corners}), {
+                width: r,
+                height: o.width,
+                left: o.radius,
+                top: -o.width>>1,
+                filter: filter
+              }),
+              vml('fill', {color: getColor(o.color, i), opacity: o.opacity}),
+              vml('stroke', {opacity: 0}) // transparent stroke to fix color bleeding upon opacity change
+            )
+          )
+        )
+      }
+
+      if (o.shadow)
+        for (i = 1; i <= o.lines; i++)
+          seg(i, -2, 'progid:DXImageTransform.Microsoft.Blur(pixelradius=2,makeshadow=1,shadowopacity=.3)')
+
+      for (i = 1; i <= o.lines; i++) seg(i)
+      return ins(el, g)
+    }
+
+    Spinner.prototype.opacity = function(el, i, val, o) {
+      var c = el.firstChild
+      o = o.shadow && o.lines || 0
+      if (c && i+o < c.childNodes.length) {
+        c = c.childNodes[i+o]; c = c && c.firstChild; c = c && c.firstChild
+        if (c) c.opacity = val
+      }
+    }
+  }
+
+  var probe = css(createEl('group'), {behavior: 'url(#default#VML)'})
+
+  if (!vendor(probe, 'transform') && probe.adj) initVML()
+  else useCssAnimations = vendor(probe, 'animation')
+
+  return Spinner
+
+}));
+
+/**
+ * Copyright (c) 2011-2013 Felix Gnass
+ * Licensed under the MIT license
+ */
+
+/*
+
+Basic Usage:
+============
+
+$('#el').spin(); // Creates a default Spinner using the text color of #el.
+$('#el').spin({ ... }); // Creates a Spinner using the provided options.
+
+$('#el').spin(false); // Stops and removes the spinner.
+
+Using Presets:
+==============
+
+$('#el').spin('small'); // Creates a 'small' Spinner using the text color of #el.
+$('#el').spin('large', '#fff'); // Creates a 'large' white Spinner.
+
+Adding a custom preset:
+=======================
+
+$.fn.spin.presets.flower = {
+  lines: 9
+  length: 10
+  width: 20
+  radius: 0
+}
+
+$('#el').spin('flower', 'red');
+
+*/
+
+(function(factory) {
+
+  if (typeof exports == 'object') {
+    // CommonJS
+    factory(require('jquery'), require('spin'))
+  }
+  else if (typeof define == 'function' && define.amd) {
+    // AMD, register as anonymous module
+    define('jqueryspin',['jquery', 'spin'], factory)
+  }
+  else {
+    // Browser globals
+    if (!window.Spinner) throw new Error('Spin.js not present')
+    factory(window.jQuery, window.Spinner)
+  }
+
+}(function($, Spinner) {
+
+  $.fn.spin = function(opts, color) {
+
+    return this.each(function() {
+      var $this = $(this),
+        data = $this.data();
+
+      if (data.spinner) {
+        data.spinner.stop();
+        delete data.spinner;
+      }
+      if (opts !== false) {
+        opts = $.extend(
+          { color: color || $this.css('color') },
+          $.fn.spin.presets[opts] || opts
+        )
+        data.spinner = new Spinner(opts).spin(this)
+      }
+    })
+  }
+
+  $.fn.spin.presets = {
+    tiny: { lines: 8, length: 2, width: 2, radius: 3 },
+    small: { lines: 8, length: 4, width: 3, radius: 5 },
+    large: { lines: 10, length: 8, width: 4, radius: 8 }
+  }
+
+}));
+
+define('plugins/content-creator-pluginloader',['underscore', 'jquery', 'jqueryui', 'jqueryresize', 'underscorestring', 'kinetic', 'plupload', 'kineticresize', 'backbone', 'marionette', 'mustache', 'syphon', 'text', 'jqueryvalidate', 'bootstrap', 'checkbox', 'bootstrapslider', 'spin', 'jqueryspin'], function() {});
 
 define('configs/jquery',['jquery', 'underscore', 'jqueryvalidate'], function($, _) {
   var adjustPageDim;
@@ -34117,6 +34795,12 @@ define('entities/content-creator/hotspotelement',['app', 'backbone'], function(A
         return ElementModel.__super__.constructor.apply(this, arguments);
       }
 
+      ElementModel.prototype.defaults = function() {
+        return {
+          family: 'hotspot'
+        };
+      };
+
       return ElementModel;
 
     })(Backbone.Model);
@@ -34134,7 +34818,82 @@ define('entities/content-creator/hotspotelement',['app', 'backbone'], function(A
   });
 });
 
-define('entitiesloader',['entities/user', 'entities/menu', 'entities/base-entities', 'entities/content-creator/elementbox', 'entities/content-creator/element', 'entities/content-creator/media', 'entities/content-creator/hotspotelementbox', 'entities/content-creator/hotspotelement'], function() {});
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('entities/schools',["app", 'backbone'], function(App, Backbone) {
+  App.module("Entities.Schools", function(Schools, App, Backbone, Marionette, $, _) {
+    var API, school, schoolCollection;
+    Schools.SchoolModel = (function(_super) {
+      __extends(SchoolModel, _super);
+
+      function SchoolModel() {
+        return SchoolModel.__super__.constructor.apply(this, arguments);
+      }
+
+      SchoolModel.prototype.name = 'schools';
+
+      SchoolModel.prototype.defaults = function() {
+        return {
+          school_name: '',
+          school_logo: ''
+        };
+      };
+
+      return SchoolModel;
+
+    })(Backbone.Model);
+    school = new Schools.SchoolModel;
+    Schools.SchoolCollection = (function(_super) {
+      __extends(SchoolCollection, _super);
+
+      function SchoolCollection() {
+        return SchoolCollection.__super__.constructor.apply(this, arguments);
+      }
+
+      SchoolCollection.prototype.model = Schools.SchoolModel;
+
+      SchoolCollection.prototype.comparator = 'id';
+
+      SchoolCollection.prototype.url = function() {
+        return AJAXURL + '?action=get-schools';
+      };
+
+      return SchoolCollection;
+
+    })(Backbone.Collection);
+    schoolCollection = new Schools.SchoolCollection;
+    API = {
+      getSchools: function(param) {
+        if (param == null) {
+          param = {};
+        }
+        schoolCollection.fetch({
+          reset: true,
+          data: param
+        });
+        return schoolCollection;
+      },
+      getCurrentSchool: function() {
+        school = new Schools.SchoolModel;
+        school.fetch();
+        return school;
+      }
+    };
+    App.reqres.setHandler("get:all:schools", function() {
+      return API.getSchools();
+    });
+    App.reqres.setHandler("get:current:school", function() {
+      return API.getCurrentSchool();
+    });
+    return App.reqres.setHandler("get:school:logo", function() {
+      return API.getCurrentSchool();
+    });
+  });
+  return App.Entities.Schools;
+});
+
+define('entitiesloader',['entities/user', 'entities/menu', 'entities/base-entities', 'entities/content-creator/elementbox', 'entities/content-creator/element', 'entities/content-creator/media', 'entities/content-creator/hotspotelementbox', 'entities/content-creator/hotspotelement', 'entities/schools'], function() {});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -34329,7 +35088,7 @@ define('components/loading/controller',['app', 'controllers/region-controller', 
 define('componentloader',['components/loading/controller'], function() {});
 
 
-define('text!apps/header/left/templates/left.html',[],function () { return '<!-- BEGIN HEADER LEFT SIDE SECTION -->\r\n\t<!-- BEGIN SLIM NAVIGATION TOGGLE -->\r\n\t<ul class="nav quick-section">\r\n\t\t<li class="quicklinks">\r\n\t\t\t<a id="layout-condensed-toggle" class="" href="#">\r\n\t\t\t\t<div class="iconset top-menu-toggle-dark"></div>\r\n\t\t\t</a>\r\n\t\t</li>\r\n\t\t<li class="quicklinks"><span class="h-seperate"></span></li>\r\n\t\t<li class="quicklinks"><a class="" href="#"><div class="iconset top-reload"></div></a></li>\r\n\t</ul>\r\n\t<!-- BEGIN HEADER QUICK LINKS -->\r\n\t<ul class="nav quick-section">\r\n\r\n\t</ul>\r\n\t<!-- BEGIN HEADER QUICK LINKS -->\r\n\t\t\t\t\t\t\t\t\t\r\n\t\t\t<!-- END HEADER LEFT SIDE SECTION -->';});
+define('text!apps/header/left/templates/left.html',[],function () { return '<!-- BEGIN HEADER LEFT SIDE SECTION -->\r\n\t<!-- BEGIN SLIM NAVIGATION TOGGLE -->\r\n\t<ul class="nav quick-section">\r\n\t\t<li class="quicklinks">\r\n\t\t\t<a id="layout-condensed-toggle" class="" href="#">\r\n\t\t\t\t<div class="iconset top-menu-toggle-dark"></div>\r\n\t\t\t</a>\r\n\t\t</li>\r\n\t</ul>\r\n\t<!-- BEGIN HEADER QUICK LINKS -->\r\n\t<ul class="nav quick-section">\r\n\r\n\t</ul>\r\n\t<!-- BEGIN HEADER QUICK LINKS -->\r\n\t\t\t\t\t\t\t\t\t\r\n\t\t\t<!-- END HEADER LEFT SIDE SECTION -->';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -34408,7 +35167,7 @@ define('apps/header/left/leftapp',['app', 'controllers/region-controller', 'text
 });
 
 
-define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\r\n<div class="chat-toggler">\t\r\n\t\t<!-- BEGIN PROFILE PICTURE -->\r\n\t\t<div class="profile-pic"> \r\n\t\t\t<img width="35" height="35" data-src-retina="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png" data-src="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png" alt="" src="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png"> \r\n\t\t</div>  \r\n\t\t<!-- END PROFILE PICTURE -->     \t\t\t\r\n\t</div>\r\n\t<!-- BEGIN HEADER NAV BUTTONS -->\r\n\t<ul class="nav quick-section2">\r\n\t\t<!-- BEGIN SETTINGS -->\r\n\t\t<li class="quicklinks"> \r\n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\r\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\r\n\t\t\t</a>\r\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\r\n\t\t\t\t<li><a href="#">My Account</a></li>\r\n\t\t\t\t<li class="divider"></li>                \r\n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\r\n\t\t\t</ul>\r\n\t\t</li>\r\n\t\t<!-- END SETTINGS -->\r\n\t\t \r\n\t</ul>\r\n\t<!-- END HEADER NAV BUTTONS -->\r\n</div>\r\n<!-- END HEADER RIGHT SIDE SECTION -->';});
+define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\r\n\t<!-- BEGIN HEADER NAV BUTTONS -->\r\n\t<ul class="nav quick-section2">\r\n\t\t<!-- BEGIN SETTINGS -->\r\n\t\t<li class="quicklinks"> \r\n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\r\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\r\n\t\t\t</a>\r\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\r\n\t\t\t\t<li><a href="#">My Account</a></li>\r\n\t\t\t\t<li class="divider"></li>                \r\n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\r\n\t\t\t</ul>\r\n\t\t</li>\r\n\t\t<!-- END SETTINGS -->\r\n\t\t \r\n\t</ul>\r\n\t<!-- END HEADER NAV BUTTONS -->\r\n</div>\r\n<!-- END HEADER RIGHT SIDE SECTION -->';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -34464,17 +35223,8 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
       RightHeaderView.prototype.className = 'pull-right';
 
       RightHeaderView.prototype.events = {
-        'click #user-options': 'user_options_popup',
         'click #user_logout': function() {
           return this.trigger("user:logout");
-        }
-      };
-
-      RightHeaderView.prototype.user_options_popup = function(e) {
-        if ($(e.target).closest('li').hasClass('open')) {
-          return $(e.target).closest('li').removeClass('open');
-        } else {
-          return $(e.target).closest('li').addClass('open');
         }
       };
 
@@ -34491,9 +35241,10 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
 });
 
 
-define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \r\n\t<!-- BEGIN TOP NAVIGATION BAR -->\r\n\t<div class="navbar-inner">\r\n\t\t<!-- BEGIN NAVIGATION HEADER -->\r\n\t\t<div class="header-seperation"> \r\n\t\t\t<!-- BEGIN MOBILE HEADER -->\r\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\r\n\t\t\t\t<li class="dropdown">\r\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\r\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\r\n\t\t\t\t\t</a>\r\n\t\t\t\t</li>\t\t \r\n\t\t\t</ul>\r\n\t\t\t<!-- END MOBILE HEADER -->\r\n\t\t\t<!-- BEGIN LOGO -->\t\r\n\t\t\t<a href="#">\r\n\t\t\t\t<img width="106" height="21" data-src-retina="http://localhost/walnut/wp-content/html/assets/img/logo2x.png" data-src="http://localhost/walnut/wp-content/html/assets/img/walnutlearn.png" alt="" class="logo" src="http://localhost/walnut/wp-content/html/assets/img/walnutlearn.png">\r\n\t\t\t</a>\r\n\t\t\t<!-- END LOGO --> \r\n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\r\n\t\t\t<ul class="nav pull-right notifcation-center">\t\r\n\t\t\t\t\r\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\r\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\r\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\r\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\r\n\t\t\t\t\t</a>\r\n\t\t\t\t</li>\r\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \r\n\t\t\t</ul>\r\n\t\t\t<!-- END LOGO NAV BUTTONS -->\r\n\t\t</div>\r\n\t\t<!-- END NAVIGATION HEADER -->\r\n\t\t<!-- BEGIN CONTENT HEADER -->\r\n\t\t<div class="header-quick-nav"> \r\n\t\t\t<div id="header-left"></div>\r\n\t\t\t<div id="header-right"></div>\r\n\t\t\t\r\n\t\t</div> \r\n\t\t<!-- END CONTENT HEADER --> \r\n\t</div>\r\n\t<!-- END TOP NAVIGATION BAR --> \r\n</div>';});
+define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \r\n\t<!-- BEGIN TOP NAVIGATION BAR -->\r\n\t<div class="navbar-inner">\r\n\t\t<!-- BEGIN NAVIGATION HEADER -->\r\n\t\t<div class="header-seperation"> \r\n\t\t\t<!-- BEGIN MOBILE HEADER -->\r\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\r\n\t\t\t\t<li class="dropdown">\r\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\r\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\r\n\t\t\t\t\t</a>\r\n\t\t\t\t</li>\t\t \r\n\t\t\t</ul>\r\n\t\t\t<!-- END MOBILE HEADER -->\r\n\t\t\t<!-- BEGIN LOGO -->\t\r\n\t\t\t<a href="#">\r\n\t\t\t\t<img width="106" height="21" data-src-retina="./wp-content/themes/walnut/images/walnutlearn.png" data-src="./wp-content/themes/walnut/images/walnutlearn.png" alt="" class="logo" src="./wp-content/themes/walnut/images/walnutlearn.png">\r\n\t\t\t</a>\r\n\t\t\t<!-- END LOGO --> \r\n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\r\n\t\t\t<ul class="nav pull-right notifcation-center">\t\r\n\t\t\t\t\r\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\r\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\r\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\r\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\r\n\t\t\t\t\t</a>\r\n\t\t\t\t</li>\r\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \r\n\t\t\t</ul>\r\n\t\t\t<!-- END LOGO NAV BUTTONS -->\r\n\t\t</div>\r\n\t\t<!-- END NAVIGATION HEADER -->\r\n\t\t<!-- BEGIN CONTENT HEADER -->\r\n\t\t<div class="header-quick-nav"> \r\n\t\t\t<div id="header-left"></div>\r\n\t\t\t<div id="header-right"></div>\r\n\t\t\t\r\n\t\t</div> \r\n\t\t<!-- END CONTENT HEADER --> \r\n\t</div>\r\n\t<!-- END TOP NAVIGATION BAR --> \r\n</div>';});
 
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'apps/header/right/rightapp', 'text!apps/header/templates/header.html'], function(App, RegionController, LeftApp, RightApp, headerTpl) {
@@ -34503,14 +35254,21 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
       __extends(HeaderController, _super);
 
       function HeaderController() {
+        this._getHeaderView = __bind(this._getHeaderView, this);
+        this.showLeftRightViews = __bind(this.showLeftRightViews, this);
         return HeaderController.__super__.constructor.apply(this, arguments);
       }
 
       HeaderController.prototype.initialize = function() {
         var layout;
         this.layout = layout = this._getHeaderView();
+        this.school = App.request("get:current:school");
+        console.log('@school1');
+        console.log(this.school);
         this.listenTo(layout, 'show', this.showLeftRightViews);
-        return this.show(layout);
+        return this.show(layout, {
+          loading: true
+        });
       };
 
       HeaderController.prototype.showLeftRightViews = function() {
@@ -34523,7 +35281,11 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
       };
 
       HeaderController.prototype._getHeaderView = function() {
-        return new HeaderView;
+        console.log('@school2');
+        console.log(this.school);
+        return new HeaderView({
+          model: this.school
+        });
       };
 
       return HeaderController;
@@ -34558,7 +35320,7 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
 });
 
 
-define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\r\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\r\n\r\n<!-- BEGIN SIDEBAR MENU -->\t\r\n<p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>\r\n<ul>\t\r\n\r\n\t<!-- BEGIN ONE LEVEL MENU -->\r\n\t<li class="start active">\r\n\t\t<a href="javascript:;">\r\n\t\t\t<i class="icon-custom-ui"></i>\r\n\t\t\t<span class="title">Content Management</span>\r\n\t\t\t<span class="arrow"></span>\r\n\t\t</a>\r\n\t\t<ul class="sub-menu">\r\n\t\t</ul>\r\n\t</li>\r\n\t<!-- END ONE LEVEL MENU -->\r\n\r\n</ul>\r\n<!-- END SIDEBAR MENU -->\r\n<!-- BEGIN SIDEBAR WIDGETS -->\r\n<div class="side-bar-widgets">\r\n\r\n</div>\r\n<div class="clearfix"></div>\r\n<!-- END SIDEBAR WIDGETS --> \r\n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\r\n';});
+define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\r\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\r\n\r\n<ul>\t\r\n\r\n\t<!-- BEGIN ONE LEVEL MENU -->\r\n\t<li class="start active">\r\n\t\t<a href="javascript:;">\r\n\t\t\t<i class="icon-custom-ui"></i>\r\n\t\t\t<span class="title">Content Management</span>\r\n\t\t\t<span class="arrow"></span>\r\n\t\t</a>\r\n\t\t<ul class="sub-menu">\r\n\t\t</ul>\r\n\t</li>\r\n\t<!-- END ONE LEVEL MENU -->\r\n\r\n</ul>\r\n<!-- END SIDEBAR MENU -->\r\n<!-- BEGIN SIDEBAR WIDGETS -->\r\n<div class="side-bar-widgets">\r\n\r\n</div>\r\n<div class="clearfix"></div>\r\n<!-- END SIDEBAR WIDGETS --> \r\n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\r\n';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35504,12 +36266,6 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
 
       HotspotView.prototype.template = '&nbsp;';
 
-      HotspotView.prototype.events = {
-        'click': function() {
-          return this.trigger("show:hotspot:properties");
-        }
-      };
-
       HotspotView.prototype.initialize = function(opt) {
         if (opt == null) {
           opt = {};
@@ -35679,7 +36435,8 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
       HotspotView.prototype._addTextElement = function(elementPos) {
         var canvasText, hotspotElement, modelData, textBorder, tooltip;
         modelData = {
-          text: '',
+          type: 'Text',
+          text: 'hey',
           fontFamily: 'Arial',
           fontSize: '12',
           fontColor: 'black'
@@ -35705,9 +36462,23 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
           fill: hotspotElement.get('fontColor'),
           padding: 5
         });
-        tooltip.on('click', function() {
-          return console.log("text box");
+        tooltip.on('mousedown click', function() {
+          return App.execute("show:question:element:properties", {
+            model: hotspotElement
+          });
         });
+        hotspotElement.on("change:text", (function(_this) {
+          return function() {
+            canvasText.setText(hotspotElement.get('text'));
+            return _this.textLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:fontSize", (function(_this) {
+          return function() {
+            canvasText.fontSize(hotspotElement.get('fontSize'));
+            return _this.textLayer.draw();
+          };
+        })(this));
         tooltip.add(textBorder);
         tooltip.add(canvasText);
         this.textLayer.add(tooltip);
@@ -35974,7 +36745,7 @@ define('apps/content-creator/content-builder/elements/row/views',['app'], functi
         if (this.columnCount() === 1) {
           return;
         }
-        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="bicon bicon-uniF140"></span> </p> </div>';
+        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="fa fa-ellipsis-h"></span> </p> </div>';
         numberOfResizers = this.columnCount() - 1;
         return _.each(_.range(numberOfResizers), (function(_this) {
           return function(ele, index) {
@@ -36487,7 +37258,7 @@ define('apps/content-creator/property-dock/views',['app'], function(App) {
         return Layout.__super__.constructor.apply(this, arguments);
       }
 
-      Layout.prototype.template = '<div class="builder_actions"> <button type="button" class="btn btn-success btn-cons2" id="save-question"> <i class="fa fa-check"></i> Save</button> <button type="button" class="btn btn-success btn-cons2"> <i class="fa fa-eye"></i> Preview</button> </div> <div class="tiles green"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4> </div> </div> <div id="question-property" class="docket"></div> <div id="question-elements" class="docket"></div>';
+      Layout.prototype.template = '<div class="builder_actions"> <button type="button" class="btn btn-success btn-cons2" id="save-question"> <i class="fa fa-check"></i> Save</button> <button type="button" class="btn btn-success btn-cons2"> <i class="fa fa-eye"></i> Preview</button> </div> <div class="tiles green"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4> </div> </div> <div id="question-elements-property" class="docket"></div> <div id="question-property" class="docket"></div> <div id="question-elements" class="docket"></div>';
 
       Layout.prototype.events = {
         'click  #save-question': 'saveQuestion'
@@ -36498,6 +37269,7 @@ define('apps/content-creator/property-dock/views',['app'], function(App) {
       };
 
       Layout.prototype.regions = {
+        questElementPropRegion: '#question-elements-property',
         questPropertyRegion: '#question-property',
         questElementRegion: '#question-elements'
       };
@@ -36597,7 +37369,83 @@ define('apps/content-creator/property-dock/hotspot-element-box/controller',['app
   });
 });
 
-define('apps/content-creator/property-dock/question-element-box-loader',['apps/content-creator/property-dock/hotspot-element-box/controller'], function() {});
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('apps/content-creator/property-dock/hotspot-element-property-box/views',['app'], function(App) {
+  return App.module("ContentCreator.PropertyDock.HotspotElementPropertyBox.Views", function(Views, App, Backbone, Marionette, $, _) {
+    return Views.TextView = (function(_super) {
+      __extends(TextView, _super);
+
+      function TextView() {
+        return TextView.__super__.constructor.apply(this, arguments);
+      }
+
+      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="0">Select a Font</option> <option value="5">Arial</option> <option value="3">Calibri</option> <option value="11">Comic Sans MS</option> <option value="7">Courier</option> <option value="2">Georgia</option> <option value="4">Helvetica</option> <option value="8">Impact</option> <option value="9">Lucida Console</option> <option value="10">Lucida Sans Unicode</option> <option value="12">Tahoma</option> <option value="1">Times New Roman</option> <option value="13">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> </div> </div> </div>';
+
+      TextView.prototype.onShow = function() {
+        $('.fontSize').slider();
+        $('#hotspot-textelement-text').on('input', (function(_this) {
+          return function() {
+            return _this.model.set("text", $('#hotspot-textelement-text').val());
+          };
+        })(this));
+        return $('#hotspot-textelement-fontsize').slider().on('slide', (function(_this) {
+          return function() {
+            var size;
+            size = _this.model.get('fontSize');
+            _this.model.set('fontSize', $('.fontSize').slider('getValue').val() || size);
+            return console.log($('.fontSize').slider('getValue').val() || size);
+          };
+        })(this));
+      };
+
+      return TextView;
+
+    })(Marionette.ItemView);
+  });
+});
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('apps/content-creator/property-dock/hotspot-element-property-box/controller',['app', 'controllers/region-controller', 'apps/content-creator/property-dock/hotspot-element-property-box/views'], function(App, RegionController) {
+  return App.module("ContentCreator.PropertyDock.HotspotElementPropertyBox", function(HotspotElementPropertyBox, App, Backbone, MArionette, $, _) {
+    var HotspotElementPropertyBoxController;
+    HotspotElementPropertyBoxController = (function(_super) {
+      __extends(HotspotElementPropertyBoxController, _super);
+
+      function HotspotElementPropertyBoxController() {
+        return HotspotElementPropertyBoxController.__super__.constructor.apply(this, arguments);
+      }
+
+      HotspotElementPropertyBoxController.prototype.initialize = function(options) {
+        this.view = this._getView(options.model);
+        return this.show(this.view);
+      };
+
+      HotspotElementPropertyBoxController.prototype._getView = function(model) {
+        var elementType, viewName;
+        elementType = model.get('type');
+        viewName = "" + elementType + "View";
+        return new HotspotElementPropertyBox.Views[viewName]({
+          model: model
+        });
+      };
+
+      return HotspotElementPropertyBoxController;
+
+    })(RegionController);
+    return App.commands.setHandler("show:hotspot:properties:box", function(options) {
+      return new HotspotElementPropertyBoxController({
+        region: options.region,
+        model: options.model
+      });
+    });
+  });
+});
+
+define('apps/content-creator/property-dock/question-element-box-loader',['apps/content-creator/property-dock/hotspot-element-box/controller', 'apps/content-creator/property-dock/hotspot-element-property-box/controller'], function() {});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -36619,6 +37467,11 @@ define('apps/content-creator/property-dock/controller',['app', 'controllers/regi
             return _this._getElementBox(options.model);
           };
         })(this));
+        App.commands.setHandler("show:question:element:properties", (function(_this) {
+          return function(options) {
+            return _this._getElementProperties(options.model);
+          };
+        })(this));
         return this.show(this.layout);
       };
 
@@ -36627,14 +37480,22 @@ define('apps/content-creator/property-dock/controller',['app', 'controllers/regi
       };
 
       PropertyDockController.prototype._getElementBox = function(model) {
-        var elementName;
+        var ele, elementName;
         elementName = model.get('element');
-        if (elementName === "Hotspot") {
-          return App.execute("show:hotspot:elements", {
-            region: this.layout.questElementRegion,
-            model: model
-          });
-        }
+        ele = _.slugify(elementName);
+        return App.execute("show:" + ele + ":elements", {
+          region: this.layout.questElementRegion,
+          model: model
+        });
+      };
+
+      PropertyDockController.prototype._getElementProperties = function(model) {
+        var elementFamily;
+        elementFamily = model.get('family');
+        return App.execute("show:" + elementFamily + ":properties:box", {
+          region: this.layout.questElementPropRegion,
+          model: model
+        });
       };
 
       return PropertyDockController;
@@ -37257,6 +38118,7 @@ require.config({
     underscore: 'plugins/underscore',
     backbone: 'plugins/backbone',
     bootstrap: 'plugins/bootstrap',
+    bootstrapslider: 'plugins/bootstrap-slider',
     marionette: 'plugins/backbone.marionette',
     text: 'plugins/text',
     mustache: 'plugins/mustache',
@@ -37267,7 +38129,9 @@ require.config({
     underscorestring: 'plugins/underscorestring',
     entitiesloader: 'entities/content-creator-entities-loader',
     checkbox: 'plugins/flatui-checkbox',
-    componentloader: 'components/builder-component-loader'
+    componentloader: 'components/builder-component-loader',
+    spin: 'plugins/spin',
+    jqueryspin: 'plugins/jquery.spin'
   },
   shim: {
     underscore: {
@@ -37290,6 +38154,7 @@ require.config({
       exports: 'plupload'
     },
     bootstrap: ['jquery'],
+    bootstrapslider: ['bootstrap'],
     checkbox: ['bootstrap'],
     jqueryvalidate: ['jquery'],
     underscorestring: ['underscore'],

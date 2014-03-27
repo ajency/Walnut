@@ -17,10 +17,20 @@ define ['app'],(App)->
 								</div>
 								<div class="form-group">
 									 <select class="font" id="hotspot-textelement-fontfamily">
-								        <option value="0">Select a Font</option>
-								        <option value="1">Times New Roman</option>
-								        <option value="2">Georgia</option>
-								        <option value="2">Helvetica</option>
+										<option value="0">Select a Font</option>
+										<option value="5">Arial</option> 
+										<option value="3">Calibri</option>
+										<option value="11">Comic Sans MS</option>
+										<option value="7">Courier</option>
+										<option value="2">Georgia</option>
+										<option value="4">Helvetica</option>
+										<option value="8">Impact</option>
+										<option value="9">Lucida Console</option>
+										<option value="10">Lucida Sans Unicode</option>
+										<option value="12">Tahoma</option>
+										<option value="1">Times New Roman</option>
+										<option value="13">Trebuchet MS</option>
+										<option value="13">Verdana</option>
 								    </select>
 								</div>
 
@@ -48,5 +58,6 @@ define ['app'],(App)->
 						@model.set 'fontSize', $('.fontSize').slider('getValue').val()||size
 						console.log $('.fontSize').slider('getValue').val()||size
 						
+
 						
 

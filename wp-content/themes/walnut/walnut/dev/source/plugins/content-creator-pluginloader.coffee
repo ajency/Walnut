@@ -17,4 +17,6 @@ define [
 			'bootstrap'
 			'checkbox'
 			'bootstrapslider'
+			'spin'
+			'jqueryspin'
 		], ->
