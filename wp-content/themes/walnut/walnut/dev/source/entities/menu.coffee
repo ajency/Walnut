@@ -15,7 +15,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				name: 'menu-item'
 
-					
 
 			# menu item collection class
 			class Menus.MenuItemCollection extends Backbone.Collection

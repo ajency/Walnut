@@ -4,4 +4,5 @@ define [
 		'entities/menu'
 		'entities/textbooks'
 		'entities/chapters'
+		'entities/schools'
 		],->

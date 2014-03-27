@@ -1,1 +1,1 @@
-define(['entities/base-entities', 'entities/user', 'entities/menu', 'entities/textbooks', 'entities/chapters'], function() {});
+define(['entities/base-entities', 'entities/user', 'entities/menu', 'entities/textbooks', 'entities/chapters', 'entities/schools'], function() {});

@@ -31,11 +31,12 @@ define(['marionette'], function(Marionette) {
     App.startHistory();
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
-        var user;
+        var school, user;
         if (resp.success) {
           console.log(resp);
           user = App.request("get:user:model");
           user.set(resp.data);
+          school = App.request("get:current:school");
           App.execute("show:headerapp", {
             region: App.headerRegion
           });
