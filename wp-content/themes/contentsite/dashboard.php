@@ -30,7 +30,7 @@ Template Name: Dashboard
 	<meta content="" name="author" />
 
 	<!-- NEED TO WORK ON -->
-	<link href="./wp-content/themes/walnut/walnut/dev/css/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
 	<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
 	<link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
 	<!-- BEGIN CORE CSS FRAMEWORK -->
