@@ -5,4 +5,5 @@ define [
 		'entities/content-creator/elementbox'
 		'entities/content-creator/element'
 		'entities/content-creator/media'
-		'entities/content-creator/hotspotelementbox'],->
+		'entities/content-creator/hotspotelementbox'
+		'entities/content-creator/hotspotelement'],->

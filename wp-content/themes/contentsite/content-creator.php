@@ -51,16 +51,16 @@ Template Name: Content Creator
 </head>
 <body class="">
 
-<div id="initial-loader" style="position:fixed;width:30%;left:35%;top:50%;text-align:center">
-Loading Editor... Please Wait... <br />
-<img src="<?=get_site_url()?>/wp-content/themes/walnut/images/loader.gif" />
-</div>
+
 
 <div>
 	<div id="header-region"></div>
 	<div id="left-nav-region"></div>
 	<div id="main-content-region" class="page-content" data-height="1006">
-
+		<div id="initial-loader" style="position:fixed;width:30%;left:35%;top:50%;text-align:center">
+			Loading Content Creator... Please Wait... <br />
+			<img src="<?=get_site_url()?>/wp-content/themes/walnut/images/loader.gif" />
+		</div>
 	</div>
 </div>
 <div id="dialog-region"></div>
@@ -77,12 +77,12 @@ var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE = '8182442cce';
 
 </script>
-<?php //if(ENV!=='dev') { ?>
+<?php if(ENV!='dev') { ?>
 <script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php
-//} else { ?>
-<!--<script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/content-creator-main.js"></script>-->
-<?php //} ?>
+} else { ?>
+<script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js"></script>
+<?php } ?>
 
 
 </body>

@@ -3,4 +3,22 @@ define ['app'
 
 			App.module "Entities.HotspotElement" , (HotspotElement, App, Backbone)->
 
-				class HotspotElement.ElementModel extends Backbone
+				class HotspotElement.ElementModel extends Backbone.Model
+
+
+
+
+				API = 
+
+					createHotspotElement : (data)->
+							hotspotElement = new HotspotElement.ElementModel
+
+							hotspotElement.set data
+
+							hotspotElement
+
+
+
+				App.reqres.setHandler "create:new:hotspot:element",(data)->
+
+						API.createHotspotElement data

@@ -114,8 +114,11 @@ define ['app'],(App)->
 
 			# remove the default image from the layer if any hotspot elements are added
 			_updateDefaultLayer:->
-					if(@stage.getChildren()[2].getChildren().length || @stage.getChildren()[1].getChildren().length)
-							@defaultLayer.remove @hotspotDefault
+					i
+					for (i= 1; i<@stage.getChildren().length; i++)
+							if(@stage.getChildren()[1].getChildren().length)
+									@defaultLayer.remove @hotspotDefault
+									return 
 
 			# update the size of default image on change of stage
 			_updateDefaultImageSize:->
@@ -182,6 +185,14 @@ define ['app'],(App)->
 
 			_addTextElement: (elementPos)->
 
+					modelData =
+						text : ''
+						fontFamily : 'Arial'
+						fontSize : '12'
+						fontColor : 'black'
+
+					hotspotElement = App.request "create:new:hotspot:element", modelData
+
 					tooltip = new Kinetic.Label
 						x: elementPos.left
 						y: elementPos.top
@@ -190,19 +201,22 @@ define ['app'],(App)->
 						draggable : true
 
 					textBorder = new Kinetic.Tag
-						fill: 'black'
-						
+						fill: 'white'
+						stroke : 'black'
 						width: 50
 						lineJoin: 'round'
 						
 					
 					canvasText = new Kinetic.Text
-						text: 'Tooltip pointing doccccccccccccccccccccccccccccccccccwn',
-						fontFamily: 'Calibri',
-						fontSize: 18,
+						text: hotspotElement.get 'text'
+						fontFamily: hotspotElement.get 'fontFamily'
+						fontSize: hotspotElement.get 'fontSize'
+						fill: hotspotElement.get 'fontColor'
+						padding: 5
 
-						padding: 5,
-						fill: 'white'
+					tooltip.on 'click',->
+						console.log "text box"
+						
 
 					tooltip.add textBorder
 
