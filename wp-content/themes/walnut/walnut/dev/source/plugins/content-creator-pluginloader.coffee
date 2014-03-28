@@ -1,5 +1,4 @@
 define [
-			'pace'
 			'underscore'
 			'jquery'
 			'jqueryui'
