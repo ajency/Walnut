@@ -224,6 +224,7 @@ define ['app'],(App)->
 						fill: hotspotElement.get 'fontColor'
 						padding: 5
 
+					# on click of a text element show properties
 					tooltip.on 'mousedown click',->
 							App.execute "show:question:element:properties",
 									model : hotspotElement
