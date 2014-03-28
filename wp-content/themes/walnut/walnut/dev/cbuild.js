@@ -6,6 +6,7 @@
   wrap: false,
   out: '../production/content-creator-main.js',
   paths: {
+    pace: 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryresize: 'plugins/jquery.ba-resize.min',
