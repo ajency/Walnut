@@ -25,7 +25,11 @@
     underscorestring: 'plugins/underscorestring',
     entitiesloader: 'entities/content-creator-entities-loader',
     componentloader   : 'components/builder-component-loader',
-    checkbox      : 'plugins/flatui-checkbox'
+    checkbox      : 'plugins/flatui-checkbox',
+    spin        : 'plugins/spin',
+    jqueryspin      : 'plugins/jquery.spin',
+    bootstrapslider   : 'plugins/bootstrap-slider'
+    
   },
   shim: {
     underscore: {

@@ -10,6 +10,7 @@ require.config
 	baseUrl : '../wp-content/themes/walnut/walnut/dev/js'
 	
 	paths:
+    	pace: 'plugins/pace'
 		jquery 				: 'plugins/jquery'
 		jqueryui 			: 'plugins/jquery.ui'
 		jqueryresize		: 'plugins/jquery.ba-resize.min'
@@ -20,6 +21,7 @@ require.config
 		underscore			: 'plugins/underscore'
 		backbone    		: 'plugins/backbone'
 		bootstrap   		: 'plugins/bootstrap'
+		bootstrapslider		: 'plugins/bootstrap-slider'
 		marionette  		: 'plugins/backbone.marionette'
 		text				: 'plugins/text'
 		mustache			: 'plugins/mustache'
@@ -31,6 +33,8 @@ require.config
 		entitiesloader 		: 'entities/content-creator-entities-loader'
 		checkbox			: 'plugins/flatui-checkbox'
 		componentloader 	: 'components/builder-component-loader'
+		spin 				: 'plugins/spin'
+		jqueryspin  		: 'plugins/jquery.spin'
 		
 
 	shim:
@@ -50,6 +54,7 @@ require.config
 			deps : ['jquery']
 			exports : 'plupload'
 		bootstrap : ['jquery']
+		bootstrapslider :['bootstrap']
 		checkbox  : ['bootstrap']
 		jqueryvalidate: ['jquery']
 		underscorestring : ['underscore']

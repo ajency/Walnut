@@ -11,6 +11,12 @@ define(['app', 'backbone'], function(App, Backbone) {
         return ElementModel.__super__.constructor.apply(this, arguments);
       }
 
+      ElementModel.prototype.defaults = function() {
+        return {
+          family: 'hotspot'
+        };
+      };
+
       return ElementModel;
 
     })(Backbone.Model);

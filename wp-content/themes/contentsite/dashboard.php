@@ -51,7 +51,7 @@ Template Name: Dashboard
 
 </head>
 <body class="">
-<div id="site_main_container" style="visibility:hidden">
+<div id="site_main_container">
     <div>
             <div id="header-region"></div>
             <div id="left-nav-region"></div>
@@ -63,6 +63,7 @@ Template Name: Dashboard
 </div>
 <script>
     AJAXURL= '<?php echo admin_url("admin-ajax.php") ?>';
+    SITEURL= '<?php echo site_url() ?>';
 </script>
 <?php if(ENV=='dev') { ?>
 <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>

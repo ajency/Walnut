@@ -14,12 +14,6 @@ define(['app'], function(App) {
 
       HotspotView.prototype.template = '&nbsp;';
 
-      HotspotView.prototype.events = {
-        'click': function() {
-          return this.trigger("show:hotspot:properties");
-        }
-      };
-
       HotspotView.prototype.initialize = function(opt) {
         if (opt == null) {
           opt = {};
@@ -189,7 +183,8 @@ define(['app'], function(App) {
       HotspotView.prototype._addTextElement = function(elementPos) {
         var canvasText, hotspotElement, modelData, textBorder, tooltip;
         modelData = {
-          text: '',
+          type: 'Text',
+          text: 'hey',
           fontFamily: 'Arial',
           fontSize: '12',
           fontColor: 'black'
@@ -215,9 +210,23 @@ define(['app'], function(App) {
           fill: hotspotElement.get('fontColor'),
           padding: 5
         });
-        tooltip.on('click', function() {
-          return console.log("text box");
+        tooltip.on('mousedown click', function() {
+          return App.execute("show:question:element:properties", {
+            model: hotspotElement
+          });
         });
+        hotspotElement.on("change:text", (function(_this) {
+          return function() {
+            canvasText.setText(hotspotElement.get('text'));
+            return _this.textLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:fontSize", (function(_this) {
+          return function() {
+            canvasText.fontSize(hotspotElement.get('fontSize'));
+            return _this.textLayer.draw();
+          };
+        })(this));
         tooltip.add(textBorder);
         tooltip.add(canvasText);
         this.textLayer.add(tooltip);

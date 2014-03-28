@@ -31,7 +31,7 @@ define(['marionette'], function(Marionette) {
   App.on("initialize:after", function(options) {
     var xhr;
     Pace.on('hide', function() {
-      return $("#site_main_container").css('visibility', 'visible');
+      return $("#site_main_container").addClass("show");
     });
     App.startHistory();
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {

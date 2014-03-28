@@ -1,4 +1,5 @@
 define [
+			'pace'
 			'underscore'
 			'jquery'
 			'jqueryui'
@@ -15,4 +16,7 @@ define [
 			'jqueryvalidate'
 			'bootstrap'
 			'checkbox'
+			'bootstrapslider'
+			'spin'
+			'jqueryspin'
 		], ->

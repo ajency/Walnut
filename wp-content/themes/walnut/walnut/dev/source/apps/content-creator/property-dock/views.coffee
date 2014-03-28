@@ -15,6 +15,7 @@ define ['app'],(App)->
 								<h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4>
 							</div>
 						</div>
+						<div id="question-elements-property" class="docket"></div>
 						<div id="question-property" class="docket"></div>
 						<div id="question-elements" class="docket"></div>'
 
@@ -25,5 +26,6 @@ define ['app'],(App)->
 				App.execute "save:question"
 
 			regions : 
+				questElementPropRegion: '#question-elements-property'
 				questPropertyRegion	: '#question-property'
 				questElementRegion	: '#question-elements'

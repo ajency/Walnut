@@ -16,6 +16,18 @@ define ['app'
 				@$el.attr 'data-name', @model.get 'name'
 				@$el.addClass 'Class_'+class_id for class_id in @model.get 'classes'
 				$filters = $('#Filters').find 'li', dimensions = region: 'all', recreation: 'all'
+
+			serializeData : ->
+				data = super()
+				item_classes= _.sortBy(@model.get 'classes', (num)-> num)
+				class_string= ''
+				for class_id in item_classes
+					class_string += 'Class '+class_id
+					class_string += ', ' if _.last(item_classes)!=class_id
+
+				data.class_string= class_string;
+
+				data
 				
 
 		class EmptyView extends Marionette.ItemView
@@ -37,12 +49,9 @@ define ['app'
 			serializeData : ->
 
 				data = super()
-				data.classes = []
-				num = 0
-				num = while num < 15
-					data.classes.push num
-					num++
-
+				collection_classes= @collection.pluck 'classes'
+				data_classes=_.union _.flatten collection_classes
+				data.classes= _.sortBy(data_classes, (num)-> num)
 				data
 
 			events: 

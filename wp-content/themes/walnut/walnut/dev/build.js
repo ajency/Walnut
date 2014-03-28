@@ -11,6 +11,7 @@
     bootstrap     : 'plugins/bootstrap',
     jqueryvalidate: 'plugins/jquery.validate.min',
     underscore: 'plugins/underscore',
+    underscorestring: 'plugins/underscorestring',
     backbone: 'plugins/backbone',
     marionette: 'plugins/backbone.marionette',
     text: 'plugins/text',
@@ -31,7 +32,8 @@
     //datatables_responsive: 'plugins/datatables.responsive',
     //datatables      : 'plugins/datatables',
     unveil        : 'plugins/jquery.unveil.min',
-    pace        : 'plugins/pace'
+    pace        : 'plugins/pace',
+    detect: 'plugins/detect'
   },
   shim: {
     underscore: {
@@ -55,6 +57,7 @@
     breakpoints: ['jquery'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
+    underscorestring: ['underscore'],
     mixitup     : ['jquery'],
     search_results    : ['jquery','mixitup'],
    // jquery_datatables     : ['jquery'],
