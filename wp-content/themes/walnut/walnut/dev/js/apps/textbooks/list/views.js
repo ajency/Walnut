@@ -31,6 +31,24 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
         });
       };
 
+      ListItemView.prototype.serializeData = function() {
+        var class_id, class_string, data, item_classes, _i, _len;
+        data = ListItemView.__super__.serializeData.call(this);
+        item_classes = _.sortBy(this.model.get('classes', function(num) {
+          return num;
+        }));
+        class_string = '';
+        for (_i = 0, _len = item_classes.length; _i < _len; _i++) {
+          class_id = item_classes[_i];
+          class_string += 'Class ' + class_id;
+          if (_.last(item_classes) !== class_id) {
+            class_string += ', ';
+          }
+        }
+        data.class_string = class_string;
+        return data;
+      };
+
       return ListItemView;
 
     })(Marionette.ItemView);
@@ -64,19 +82,13 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       ListView.prototype.itemViewContainer = 'ul.textbooks_list';
 
       ListView.prototype.serializeData = function() {
-        var data, num;
+        var collection_classes, data, data_classes;
         data = ListView.__super__.serializeData.call(this);
-        data.classes = [];
-        num = 0;
-        num = (function() {
-          var _results;
-          _results = [];
-          while (num < 15) {
-            data.classes.push(num);
-            _results.push(num++);
-          }
-          return _results;
-        })();
+        collection_classes = this.collection.pluck('classes');
+        data_classes = _.union(_.flatten(collection_classes));
+        data.classes = _.sortBy(data_classes, function(num) {
+          return num;
+        });
         return data;
       };
 

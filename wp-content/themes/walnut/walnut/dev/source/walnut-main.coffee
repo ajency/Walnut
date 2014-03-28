@@ -35,12 +35,19 @@ require.config
 		search_results		: 'plugins/search_results'
 		spin 				: 'plugins/spin'
 		jqueryspin  		: 'plugins/jquery.spin'
+<<<<<<< HEAD
+=======
 		detect				: 'plugins/detect'
+>>>>>>> 877861fde745e966b10661f2169a67d4996e938b
 		#jquery_datatables  	: 'plugins/jquery.dataTables.min'
 		#tabletools 			: 'plugins/TableTools.min'
 		#datatables_responsive: 'plugins/datatables.responsive'
 		#datatables  		: 'plugins/datatables'
 		unveil				: 'plugins/jquery.unveil.min'
+<<<<<<< HEAD
+		detect				: 'plugins/detect'
+=======
+>>>>>>> 877861fde745e966b10661f2169a67d4996e938b
 
 	shim:
 		underscore: 
