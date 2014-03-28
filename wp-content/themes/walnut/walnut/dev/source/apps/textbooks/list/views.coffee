@@ -19,13 +19,14 @@ define ['app'
 
 			serializeData : ->
 				data = super()
-				item_classes= _.sortBy(@model.get 'classes', (num)-> num)
-				class_string= ''
-				for class_id in item_classes
-					class_string += 'Class '+class_id
-					class_string += ', ' if _.last(item_classes)!=class_id
+				if @model.get 'classes'
+					item_classes= _.sortBy(@model.get 'classes', (num)-> num)
+					class_string= ''
+					for class_id in item_classes
+						class_string += 'Class '+class_id
+						class_string += ', ' if _.last(item_classes)!=class_id
 
-				data.class_string= class_string;
+					data.class_string= class_string;
 
 				data
 				
