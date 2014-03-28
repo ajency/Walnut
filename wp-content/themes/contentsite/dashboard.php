@@ -65,7 +65,7 @@ Template Name: Dashboard
     AJAXURL= '<?php echo admin_url("admin-ajax.php") ?>';
     SITEURL= '<?php echo site_url() ?>';
 </script>
-<?php if(ENV=='dev') { ?>
+<?php if(ENV!='dev') { ?>
 <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php
 } else { ?>

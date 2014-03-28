@@ -21378,7 +21378,7 @@ define('app',['marionette'], function(Marionette) {
   App.on("initialize:after", function(options) {
     var xhr;
     Pace.on('hide', function() {
-      return $("#site_main_container").addClass("show");
+      return $("#site_main_container").addClass("showAll");
     });
     App.startHistory();
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
@@ -21775,7 +21775,7 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
 });
 
 
-define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \n\t<!-- BEGIN TOP NAVIGATION BAR -->\n\t<div class="navbar-inner">\n\t\t<!-- BEGIN NAVIGATION HEADER -->\n\t\t<div class="header-seperation"> \n\t\t\t<!-- BEGIN MOBILE HEADER -->\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\n\t\t\t\t<li class="dropdown">\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\t\t \n\t\t\t</ul>\n\t\t\t<!-- END MOBILE HEADER -->\n\t\t\t<!-- BEGIN LOGO -->\t\n\t\t\t<a href="#">\n\t\t\t\t<img width="106" height="21" data-src-retina="./wp-content/themes/walnut/images/walnutlearn.png" data-src="./wp-content/themes/walnut/images/walnutlearn.png" alt="" class="logo" src="./wp-content/themes/walnut/images/walnutlearn.png">\n\t\t\t</a>\n\t\t\t<!-- END LOGO --> \n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\n\t\t\t<ul class="nav pull-right notifcation-center">\t\n\t\t\t\t\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \n\t\t\t</ul>\n\t\t\t<!-- END LOGO NAV BUTTONS -->\n\t\t</div>\n\t\t<!-- END NAVIGATION HEADER -->\n\t\t<!-- BEGIN CONTENT HEADER -->\n\t\t<div class="header-quick-nav"> \n\t\t\t<div id="header-left"></div>\n\t\t\t<div id="header-right"></div>\n\t\t\t\n\t\t</div> \n\t\t<!-- END CONTENT HEADER --> \n\t</div>\n\t<!-- END TOP NAVIGATION BAR --> \n</div>';});
+define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \n\t<!-- BEGIN TOP NAVIGATION BAR -->\n\t<div class="navbar-inner">\n\t\t<!-- BEGIN NAVIGATION HEADER -->\n\t\t<div class="header-seperation"> \n\t\t\t<!-- BEGIN MOBILE HEADER -->\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\n\t\t\t\t<li class="dropdown">\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\t\t \n\t\t\t</ul>\n\t\t\t<!-- END MOBILE HEADER -->\n\t\t\t<!-- BEGIN LOGO -->\t\n\t\t\t<a href="#">\n\t\t\t\t<img width="106" height="21" data-src-retina="{{logourl}}" data-src="{{logourl}}" alt="" class="logo" src="{{logourl}}">\n\t\t\t</a>\n\t\t\t<!-- END LOGO --> \n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\n\t\t\t<ul class="nav pull-right notifcation-center">\t\n\t\t\t\t\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \n\t\t\t</ul>\n\t\t\t<!-- END LOGO NAV BUTTONS -->\n\t\t</div>\n\t\t<!-- END NAVIGATION HEADER -->\n\t\t<!-- BEGIN CONTENT HEADER -->\n\t\t<div class="header-quick-nav"> \n\t\t\t<div id="header-left"></div>\n\t\t\t<div id="header-right"></div>\n\t\t\t\n\t\t</div> \n\t\t<!-- END CONTENT HEADER --> \n\t</div>\n\t<!-- END TOP NAVIGATION BAR --> \n</div>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -21839,6 +21839,14 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
       HeaderView.prototype.regions = {
         leftRegion: '#header-left',
         rightRegion: '#header-right'
+      };
+
+      HeaderView.prototype.serializeData = function() {
+        var data;
+        data = HeaderView.__super__.serializeData.call(this);
+        data.logourl = SITEURL + '/wp-content/themes/walnut/images/walnutlearn.png';
+        console.log(SITEURL);
+        return data;
       };
 
       return HeaderView;
@@ -22856,7 +22864,7 @@ require.config({
     jqueryui: 'plugins/jquery.ui',
     jqueryvalidate: 'plugins/jquery.validate.min',
     bootstrap: 'plugins/bootstrap.min',
-    underscore: 'plugins/underscore',    
+    underscore: 'plugins/underscore',
     underscorestring: 'plugins/underscorestring',
     backbone: 'plugins/backbone',
     marionette: 'plugins/backbone.marionette',
@@ -22873,8 +22881,8 @@ require.config({
     search_results: 'plugins/search_results',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
-    detect: 'plugins/detect',
-    unveil: 'plugins/jquery.unveil.min'
+    unveil: 'plugins/jquery.unveil.min',
+    detect: 'plugins/detect'
   },
   shim: {
     underscore: {
@@ -22883,6 +22891,7 @@ require.config({
     jquery: ['underscore'],
     jqueryui: ['jquery'],
     bootstrap: ['jquery'],
+    underscorestring: ['underscore'],
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
@@ -22901,7 +22910,6 @@ require.config({
     jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
-    underscorestring: ['underscore'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

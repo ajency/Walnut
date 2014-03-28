@@ -41,6 +41,12 @@ define ['app'
 				leftRegion	: '#header-left'
 				rightRegion	: '#header-right'
 
+			serializeData : ->
+				data = super()
+				data.logourl= SITEURL+ '/wp-content/themes/walnut/images/walnutlearn.png'
+				console.log SITEURL
+				data
+
 		# set handlers
 		App.commands.setHandler "show:headerapp", (opt = {})->
 			new Controller.HeaderController opt		
