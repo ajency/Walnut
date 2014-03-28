@@ -11,10 +11,7 @@ body{
 	opacity: 0;
 	&.showAll{
 		opacity:1;
-		-webkit-transition: opacity .5s ease-in-out;
-    -moz-transition: opacity .5s ease-in-out;
-    -ms-transition: opacity .5s ease-in-out;
-    -o-transition: opacity .5s ease-in-out;
+		.fadein;
 	}
 }
 
@@ -30,6 +27,26 @@ body{
  
 .logo {
 	margin: 18px 32px;
+}
+
+.header-seperation{
+	background-color: darken(@color-primary, 10%)
+}
+
+.page-sidebar{
+	background-color: darken(@color-primary, 10%) !important;
+
+	.page-sidebar-wrapper > ul > li:hover >a{
+		background-color: @color-primary;
+	}
+
+	.page-sidebar-wrapper > ul > li > ul.sub-menu{
+		background-color: @color-primary;
+
+		&> li > a:hover{
+			background-color: darken(@color-primary, 5%) !important;
+		}
+	}
 }
 
 #textbooks.list{
@@ -130,5 +147,11 @@ tbody.rowlink{
 		.table-tools-actions {
 			margin: 0;
 			}
+	}
+}
+
+@media(max-width:767px){
+	.login-container{
+		margin-top: 20px !important; /*For mobile app testing*/
 	}
 }
