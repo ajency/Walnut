@@ -5,22 +5,39 @@ define ['app'
 
 			App.module "ContentCreator.PropertyDock" ,(PropertyDock, App, Backbone, Marionette, $, _)->
 
+				
+
 				class PropertyDockController extends RegionController
 
 					initialize: (options)->
 
 						@layout = @_getLayout()
 
+						
+
 						App.commands.setHandler "show:question:elements",(options)=>
+
 								@_getElementBox options.model
+
 
 						App.commands.setHandler "show:question:element:properties",(options)=>
 								@_getElementProperties options.model
 
+						App.commands.setHandler "close:question:element:properties",=>
+								@layout.questElementPropRegion.close()
+
+						App.commands.setHandler "close:question:elements",=>
+								@layout.questElementRegion.close()
+
 						@show @layout
+
+						
 
 					_getLayout: ->
 						new PropertyDock.Views.Layout
+
+					
+						
 
 					_getElementBox:(model)->
 						elementName = model.get('element')
@@ -35,6 +52,7 @@ define ['app'
 								region : @layout.questElementPropRegion
 								model : model
 
+				
 				App.commands.setHandler "show:property:dock",(options)->
 
 						new PropertyDockController

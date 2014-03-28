@@ -3,7 +3,9 @@ define ['app'],(App)->
 	# Row views
 	App.module 'ContentCreator.ContentBuilder.Element.Hotspot.Views', (Views, App, Backbone, Marionette, $, _)->
 
-		
+		closequestionelementproperty = true
+		closequestionelements = true
+
 			
 		# Menu item view
 		class Views.HotspotView extends Marionette.ItemView
@@ -12,8 +14,8 @@ define ['app'],(App)->
 
 			template : '&nbsp;'
 
-			# events :
-				# 'click' : -> @trigger "show:hotspot:properties"
+			events :
+				'click' : -> @trigger "show:hotspot:properties"
 				# 'focus'	: -> console.log "blur" #'updateModel'
 
 			initialize:(opt = {})->
@@ -63,7 +65,41 @@ define ['app'],(App)->
 					@_updateDefaultImageSize()
 
 				$('#'+@stageName+'.stage').resizable
-						 handles: "s" 
+						handles: "s" 
+
+				$('body').on 'click',->
+						if closequestionelementproperty
+							console.log 'stage'
+							App.execute "close:question:element:properties"
+						if closequestionelements and closequestionelementproperty
+							App.execute "close:question:elements"
+
+				$('#question-elements-property').on 'mouseover',->
+						closequestionelementproperty =  false
+				$('#question-elements-property').on 'mouseout',->
+						closequestionelementproperty = true
+
+
+				$('#'+@stageName+'.stage').on 'mouseenter', '.kineticjs-content', ->
+					console.log 'over stage'
+					closequestionelements = false
+				$('#'+@stageName+'.stage').on 'mouseleave', '.kineticjs-content', ->
+					console.log 'outofStage'
+					closequestionelements = true
+
+				$('#question-elements').on 'mouseover', ->
+					console.log "over question"
+					closequestionelements = false
+				$('#question-elements').on 'mouseout', ->
+					console.log "out of question"
+					closequestionelements = true
+
+				$('body').on 'click',=>
+					
+
+
+
+
 						
 
 				#listen to drop event
@@ -169,7 +205,6 @@ define ['app'],(App)->
 							radius :20
 							stroke: 'black'
 							strokeWidth: 4
-							
 
 					resizeCircle circle,@optionLayer
 
@@ -197,7 +232,7 @@ define ['app'],(App)->
 						type : 'Text'
 						text : ''
 						fontFamily : 'Arial'
-						fontSize : '12'
+						fontSize : '14'
 						fontColor : 'black'
 						fontBold : ''
 						fontItalics : ''
@@ -208,19 +243,10 @@ define ['app'],(App)->
 						x: elementPos.left
 						y: elementPos.top
 						width : 100
-						opacity: 0.75
-
 						draggable : true
 
-					textBorder = new Kinetic.Tag
-						fill: 'white'
-						stroke : 'black'
-						width: 50
-						lineJoin: 'round'
-						
-					
 					canvasText = new Kinetic.Text
-						text: hotspotElement.get 'text'
+						text: 'Enter Text'
 						fontFamily: hotspotElement.get 'fontFamily'
 						fontSize: hotspotElement.get 'fontSize'
 						fill: hotspotElement.get 'fontColor'
@@ -228,30 +254,44 @@ define ['app'],(App)->
 						padding: 5
 
 					# on click of a text element show properties
-					tooltip.on 'mousedown click',->
+					tooltip.on 'mousedown click',(e)->
+							e.stopPropagation()
 							App.execute "show:question:element:properties",
 									model : hotspotElement
 
+					# on change of text update the canvas
 					hotspotElement.on "change:text",=>
-							canvasText.setText hotspotElement.get 'text'
+							if hotspotElement.get('text')!=""
+								canvasText.setText hotspotElement.get 'text'
+							else
+								canvasText.setText 'Enter Text'
 							@textLayer.draw()
 
+					# on change of font Size update the canvas
 					hotspotElement.on "change:fontSize",=>
 							canvasText.fontSize hotspotElement.get 'fontSize'
 							@textLayer.draw()
 
+
+					# on change of font  update the canvas
 					hotspotElement.on "change:fontFamily",=>
 							canvasText.fontFamily hotspotElement.get 'fontFamily'
 							@textLayer.draw()
 
+
+					# on change of font Style update the canvas
 					hotspotElement.on "change:fontBold change:fontItalics",=>
 							canvasText.fontStyle  hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
 							@textLayer.draw()
 
 
-						
+					tooltip.on 'mouseover',->
+						closequestionelementproperty = false
 
-					tooltip.add textBorder
+					tooltip.on 'mouseout',->
+						closequestionelementproperty = true
+
+					
 
 					tooltip.add canvasText
 
@@ -261,89 +301,6 @@ define ['app'],(App)->
 
 					
 
-			# _addTextElement : (elementPos)->
-			# 		@layer = new Kinetic.Layer
-			# 				draggable : true
-
-			# 		rec = new Kinetic.Rect
-			# 			x: elementPos.left
-			# 			y: elementPos.top
-			# 			width:100
-			# 			height:100
-			# 			strokeWidth : 1
-			# 			stroke: 'black'
-
-			# 		newText = new Kinetic.EditableText
-			# 				# find click position.
-			# 				x: elementPos.left+5
-			# 				y: elementPos.top+5
-			# 				text: ''
-			# 				 # following params can be modified, or left blank (defaults are in kinetic.editable.js)
-			# 				# lineHeight: 1.3,
-			# 				fontSize: 29
-			# 				# focusRectColor: "black",
-			# 				fontFamily: 'Courier'
-			# 				fill: '#000000'
-							
-			# 				 # ALWAYS provide the focus layer and stage. pasteModal id to support ctrl+v paste.
-			# 				focusLayer: @layer
-			# 				stage: @stage
-			# 				pasteModal: "pasteModalArea"
-							
-							
-							
-			# 				# drawHitFunc: (canvaas)->
-			# 				# 	context = canvaas.getContext()
-			# 				# 	width = 100
-			# 				# 	height = 20
-									
-			# 				# 	if (this.tempText != undefined) 
-			# 				# 		linesCount = this.tempText.length
-									
-			# 				# 		context.beginPath()
-			# 				# 		context.rect(0, 0, this.maxWidth + 10, linesCount*height)
-			# 				# 		context.closePath()
-			# 				# 		canvaas.fillStroke(this)
-								
-			# 				# 	else 
-			# 				# 		context.beginPath()
-			# 				# 		context.rect(0, 0, width, height)
-			# 				# 		context.closePath()
-			# 				# 		canvaas.fillStroke(this)
-							
-								
-					
-						
-			# 		newText.on 'change',->
-			# 			console.log "change"
-					
-					
-			# 		@layer.add rec
-			# 		@layer.add newText
-			# 		@stage.add @layer
-
-			# 		hoverontext = false;
-				
-			# 		@layer.on 'click', ()=>
-			# 			if not hoverontext
-			# 				hoverontext = true
-			# 				document.body.style.cursor = 'pointer';
-			# 				console.log 'focus'
-			# 				console.log @layer
-			# 				newText.focus(@layer)
-
-			# 		@layer.on 'dblclick', (e)=>
-			# 			if(hoverontext)
-			# 			    hoverontext = false
-			# 				document.body.style.cursor = 'default';
-			# 				console.log 'unfocus'
-			# 				console.log @layer
-			# 				newText.unfocus(e)
-			# 				@layer.draw()
-
-			
-					
-					
 
 
 

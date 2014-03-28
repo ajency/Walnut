@@ -5,6 +5,7 @@ define ['app'
 
 			App.module 'ContentCreator.ContentBuilder.Element.Hotspot', (Hotspot, App, Backbone, Marionette, $, _)->
 
+
 				# menu controller
 				class Hotspot.Controller extends Element.Controller
 
@@ -34,7 +35,7 @@ define ['app'
 								
 					# setup templates for the element
 					renderElement:()=>
-						@removeSpinner()
+						# @removeSpinner()
 						# get menu 
 						view = @_getHotspotView()
 
@@ -50,6 +51,8 @@ define ['app'
 								console.log "click hotspot"
 								App.execute "show:question:elements",
 						 				model : @layout.model
+
+						
 
 
 						

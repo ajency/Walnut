@@ -3,6 +3,9 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app'], function(App) {
   return App.module('ContentCreator.ContentBuilder.Element.Hotspot.Views', function(Views, App, Backbone, Marionette, $, _) {
+    var closequestionelementproperty, closequestionelements;
+    closequestionelementproperty = true;
+    closequestionelements = true;
     return Views.HotspotView = (function(_super) {
       __extends(HotspotView, _super);
 
@@ -13,6 +16,12 @@ define(['app'], function(App) {
       HotspotView.prototype.className = 'stage';
 
       HotspotView.prototype.template = '&nbsp;';
+
+      HotspotView.prototype.events = {
+        'click': function() {
+          return this.trigger("show:hotspot:properties");
+        }
+      };
 
       HotspotView.prototype.initialize = function(opt) {
         if (opt == null) {
@@ -54,6 +63,40 @@ define(['app'], function(App) {
         $('#' + this.stageName + '.stage').resizable({
           handles: "s"
         });
+        $('body').on('click', function() {
+          if (closequestionelementproperty) {
+            console.log('stage');
+            App.execute("close:question:element:properties");
+          }
+          if (closequestionelements && closequestionelementproperty) {
+            return App.execute("close:question:elements");
+          }
+        });
+        $('#question-elements-property').on('mouseover', function() {
+          return closequestionelementproperty = false;
+        });
+        $('#question-elements-property').on('mouseout', function() {
+          return closequestionelementproperty = true;
+        });
+        $('#' + this.stageName + '.stage').on('mouseenter', '.kineticjs-content', function() {
+          console.log('over stage');
+          return closequestionelements = false;
+        });
+        $('#' + this.stageName + '.stage').on('mouseleave', '.kineticjs-content', function() {
+          console.log('outofStage');
+          return closequestionelements = true;
+        });
+        $('#question-elements').on('mouseover', function() {
+          console.log("over question");
+          return closequestionelements = false;
+        });
+        $('#question-elements').on('mouseout', function() {
+          console.log("out of question");
+          return closequestionelements = true;
+        });
+        $('body').on('click', (function(_this) {
+          return function() {};
+        })(this));
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
           if (type === "Hotspot-Image") {
             this.trigger("show:media:manager");
@@ -181,12 +224,12 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var canvasText, hotspotElement, modelData, textBorder, tooltip;
+        var canvasText, hotspotElement, modelData, tooltip;
         modelData = {
           type: 'Text',
           text: '',
           fontFamily: 'Arial',
-          fontSize: '12',
+          fontSize: '14',
           fontColor: 'black',
           fontBold: '',
           fontItalics: ''
@@ -196,31 +239,29 @@ define(['app'], function(App) {
           x: elementPos.left,
           y: elementPos.top,
           width: 100,
-          opacity: 0.75,
           draggable: true
         });
-        textBorder = new Kinetic.Tag({
-          fill: 'white',
-          stroke: 'black',
-          width: 50,
-          lineJoin: 'round'
-        });
         canvasText = new Kinetic.Text({
-          text: hotspotElement.get('text'),
+          text: 'Enter Text',
           fontFamily: hotspotElement.get('fontFamily'),
           fontSize: hotspotElement.get('fontSize'),
           fill: hotspotElement.get('fontColor'),
           fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'),
           padding: 5
         });
-        tooltip.on('mousedown click', function() {
+        tooltip.on('mousedown click', function(e) {
+          e.stopPropagation();
           return App.execute("show:question:element:properties", {
             model: hotspotElement
           });
         });
         hotspotElement.on("change:text", (function(_this) {
           return function() {
-            canvasText.setText(hotspotElement.get('text'));
+            if (hotspotElement.get('text') !== "") {
+              canvasText.setText(hotspotElement.get('text'));
+            } else {
+              canvasText.setText('Enter Text');
+            }
             return _this.textLayer.draw();
           };
         })(this));
@@ -242,7 +283,12 @@ define(['app'], function(App) {
             return _this.textLayer.draw();
           };
         })(this));
-        tooltip.add(textBorder);
+        tooltip.on('mouseover', function() {
+          return closequestionelementproperty = false;
+        });
+        tooltip.on('mouseout', function() {
+          return closequestionelementproperty = true;
+        });
         tooltip.add(canvasText);
         this.textLayer.add(tooltip);
         return this.textLayer.draw();
