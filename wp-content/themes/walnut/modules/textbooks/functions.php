@@ -6,8 +6,7 @@ function extra_tax_fields($tag) {
     $t_id = $tag->term_id;
     $term_meta = get_option("taxonomy_$t_id");
     $res = $wpdb->get_results("select class_id from {$wpdb->prefix}textbook_relationships where textbook_id=" . $t_id, ARRAY_A);
-    $class_ids= maybe_unserialize($res[0]['class_id']);
-    foreach ($class_ids as $r)
+    foreach ($res as $r)
         $classes[] = $r['class_id'];
     $textbook_fields = '';
     if ($tag->parent != 0)
@@ -147,9 +146,30 @@ function save_extra_taxonomy_fields($term_id) {
         }
         //save the option array
         update_option("taxonomy_$t_id", $term_meta);
-        $classes=  maybe_serialize($_POST['classes']);
-        $wpdb->query("update {$wpdb->prefix}textbook_relationships set class_id= '".$classes."'
+        if (sizeof($_POST['classes']) > 0) {
+            //echo "select id, class_id from {$wpdb->prefix}textbook_relationships 
+            //    where textbook_id=".$t_id;
+            $current_values = array();
+            $res_values = $wpdb->get_results("select class_id from {$wpdb->prefix}textbook_relationships 
+                where textbook_id=" . $t_id);
+            foreach ($res_values as $c)
+                $current_values[] = $c->class_id;
+            foreach ($current_values as $curr) {
+                if (!in_array($curr, $_POST['classes'])) {
+                    $wpdb->query("delete from {$wpdb->prefix}textbook_relationships 
+                        where class_id=" . $curr . " and textbook_id=" . $t_id);
+                }
+            }
+            foreach ($_POST['classes'] as $class) {
+                if (!in_array($class, $current_values)) {
+                    $wpdb->query("insert into {$wpdb->prefix}textbook_relationships 
+                    values('',$t_id,$class)");
+                }
+            }
+        } else {
+            $wpdb->query("delete from {$wpdb->prefix}textbook_relationships 
                         where textbook_id=" . $t_id);
+        }
     }
 }
 
@@ -234,12 +254,11 @@ function get_book($book) {
     $book_dets->author = $additional['author'];
 
     $classes = $wpdb->get_results("select class_id from {$wpdb->prefix}textbook_relationships 
-                where textbook_id=" . $book_id, ARRAY_A);
-    $book_dets->classes= maybe_unserialize($classes[0]['class_id']);
-//    $book_dets->classes=Array();
-//    foreach ($classes as $class) {
-//        $book_dets->classes[] = $class->class_id;
-//    }
+                where textbook_id=" . $book_id);
+    $book_dets->classes=Array();
+    foreach ($classes as $class) {
+        $book_dets->classes[] = $class->class_id;
+    }
 
     $args = array('hide_empty' => false,
         'parent' => $book_id,
