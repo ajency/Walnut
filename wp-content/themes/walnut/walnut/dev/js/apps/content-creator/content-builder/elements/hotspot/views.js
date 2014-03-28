@@ -184,7 +184,7 @@ define(['app'], function(App) {
         var canvasText, hotspotElement, modelData, textBorder, tooltip;
         modelData = {
           type: 'Text',
-          text: 'hey',
+          text: '',
           fontFamily: 'Arial',
           fontSize: '12',
           fontColor: 'black'
@@ -224,6 +224,12 @@ define(['app'], function(App) {
         hotspotElement.on("change:fontSize", (function(_this) {
           return function() {
             canvasText.fontSize(hotspotElement.get('fontSize'));
+            return _this.textLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:fontFamily", (function(_this) {
+          return function() {
+            canvasText.fontFamily(hotspotElement.get('fontFamily'));
             return _this.textLayer.draw();
           };
         })(this));

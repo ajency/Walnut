@@ -195,7 +195,7 @@ define ['app'],(App)->
 
 					modelData =
 						type : 'Text'
-						text : 'hey'
+						text : ''
 						fontFamily : 'Arial'
 						fontSize : '12'
 						fontColor : 'black'
@@ -234,6 +234,10 @@ define ['app'],(App)->
 
 					hotspotElement.on "change:fontSize",=>
 							canvasText.fontSize hotspotElement.get 'fontSize'
+							@textLayer.draw()
+
+					hotspotElement.on "change:fontFamily",=>
+							canvasText.fontFamily hotspotElement.get 'fontFamily'
 							@textLayer.draw()
 
 						
