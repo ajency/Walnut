@@ -526,6 +526,14 @@
   padding: 4px 12px;
   margin-right: 3px;
 }
+.listBox {
+  margin-top: 60px;
+}
+@media (max-width: 1199px) {
+  .listBox {
+    margin-top: 0;
+  }
+}
 body {
   background-color: #e5e9ec;
 }
@@ -553,6 +561,10 @@ body {
 }
 .page-sidebar {
   background-color: #07766d !important;
+}
+.page-sidebar .page-sidebar-wrapper > ul > li > a,
+.page-sidebar .page-sidebar-wrapper > ul > li > a i {
+  color: #fff;
 }
 .page-sidebar .page-sidebar-wrapper > ul > li:hover > a {
   background-color: #0aa699;
