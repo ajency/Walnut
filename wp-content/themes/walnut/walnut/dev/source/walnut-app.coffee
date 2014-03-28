@@ -46,13 +46,16 @@ define ['marionette'], (Marionette)->
 		Pace.on 'hide', ()->
 			$("#site_main_container").addClass( "showAll" );
 
-		
-		App.startHistory()
 
 		#@rootRoute = 'login' 
 		# if not logged in change rootRoute to login		
-		#App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
+		#App.navigate(@rootRoute, trigger: true)
 		#return
+		#console.log 'Login'
+
+		App.startHistory()
+
+        
 		# check app login status
 		xhr = $.get "#{AJAXURL}?action=get-user-data", 
 				{}, 
