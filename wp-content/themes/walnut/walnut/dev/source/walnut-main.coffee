@@ -10,9 +10,6 @@ require.config
 
 	baseUrl : './wp-content/themes/walnut/walnut/dev/js'
 	
-	#Url for walnut app
-	#baseUrl : '/dev/js'
-	
 	paths:
 		pace 				: 'plugins/pace'
 		jquery 				: 'plugins/jquery'
