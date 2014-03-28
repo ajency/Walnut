@@ -9,8 +9,9 @@ define ['detect','jquery'], (detect,$)->
           "Mobile"
         else "Desktop"
 
-      #Load script 'online.js' only for browser  
-      $.getScript("wp-content/themes/walnut/walnut/dev/js/plugins/online.js") if checkPlatform() is "Desktop" 
+      #Load script 'online.js' only for browser
+      #if checkPlatform() is "Desktop"
+        #define ['plugins/online'], ->
 
       #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.

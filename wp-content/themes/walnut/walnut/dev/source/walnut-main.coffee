@@ -10,9 +10,6 @@ require.config
 
 	baseUrl : './wp-content/themes/walnut/walnut/dev/js'
 	
-	#Url for walnut app
-	#baseUrl : '/dev/js'
-	
 	paths:
 		jquery 				: 'plugins/jquery'
 		jqueryui 			: 'plugins/jquery.ui'
@@ -35,19 +32,13 @@ require.config
 		search_results		: 'plugins/search_results'
 		spin 				: 'plugins/spin'
 		jqueryspin  		: 'plugins/jquery.spin'
-<<<<<<< HEAD
-=======
 		detect				: 'plugins/detect'
->>>>>>> 877861fde745e966b10661f2169a67d4996e938b
+		underscorestring    : 'plugins/underscorestring'
 		#jquery_datatables  	: 'plugins/jquery.dataTables.min'
 		#tabletools 			: 'plugins/TableTools.min'
 		#datatables_responsive: 'plugins/datatables.responsive'
 		#datatables  		: 'plugins/datatables'
 		unveil				: 'plugins/jquery.unveil.min'
-<<<<<<< HEAD
-		detect				: 'plugins/detect'
-=======
->>>>>>> 877861fde745e966b10661f2169a67d4996e938b
 
 	shim:
 		underscore: 
