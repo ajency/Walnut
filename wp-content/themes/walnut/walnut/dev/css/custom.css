@@ -14,6 +14,12 @@
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 
 }
+.fadein {
+  -webkit-transition: opacity 0.5s ease-in-out;
+  -moz-transition: opacity 0.5s ease-in-out;
+  -ms-transition: opacity 0.5s ease-in-out;
+  -o-transition: opacity 0.5s ease-in-out;
+}
 .creator {
   position: relative;
 }
@@ -542,6 +548,21 @@ body {
 .logo {
   margin: 18px 32px;
 }
+.header-seperation {
+  background-color: #07766d;
+}
+.page-sidebar {
+  background-color: #07766d !important;
+}
+.page-sidebar .page-sidebar-wrapper > ul > li:hover > a {
+  background-color: #0aa699;
+}
+.page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu {
+  background-color: #0aa699;
+}
+.page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu > li > a:hover {
+  background-color: #098e83 !important;
+}
 #textbooks.list .list_header .meta {
   margin-top: 0;
 }
@@ -637,4 +658,9 @@ tbody.rowlink td {
 }
 .mashmenu .filters .table-tools-actions {
   margin: 0;
+}
+@media (max-width: 767px) {
+  .login-container {
+    margin-top: 20px !important;
+  }
 }
