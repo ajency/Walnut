@@ -6,6 +6,7 @@
   wrap: false,
   out: '../production/walnut-main.js',
   paths: {
+    pace        : 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     bootstrap     : 'plugins/bootstrap',
@@ -32,7 +33,6 @@
     //datatables_responsive: 'plugins/datatables.responsive',
     //datatables      : 'plugins/datatables',
     unveil        : 'plugins/jquery.unveil.min',
-    pace        : 'plugins/pace',
     detect: 'plugins/detect'
   },
   shim: {

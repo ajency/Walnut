@@ -7,7 +7,7 @@ require.config({
     jqueryui: 'plugins/jquery.ui',
     jqueryvalidate: 'plugins/jquery.validate.min',
     bootstrap: 'plugins/bootstrap.min',
-    underscore: 'plugins/underscore',    
+    underscore: 'plugins/underscore',
     underscorestring: 'plugins/underscorestring',
     backbone: 'plugins/backbone',
     marionette: 'plugins/backbone.marionette',
@@ -24,13 +24,8 @@ require.config({
     search_results: 'plugins/search_results',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
-<<<<<<< HEAD
     unveil: 'plugins/jquery.unveil.min',
     detect: 'plugins/detect'
-=======
-    detect: 'plugins/detect',
-    unveil: 'plugins/jquery.unveil.min'
->>>>>>> 877861fde745e966b10661f2169a67d4996e938b
   },
   shim: {
     underscore: {
@@ -39,6 +34,7 @@ require.config({
     jquery: ['underscore'],
     jqueryui: ['jquery'],
     bootstrap: ['jquery'],
+    underscorestring: ['underscore'],
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
@@ -57,7 +53,6 @@ require.config({
     jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
-    underscorestring: ['underscore'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

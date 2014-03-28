@@ -38,7 +38,6 @@ define ['marionette'], (Marionette)->
 		App.unregister instance, id
 
 	App.on "initialize:after", (options) ->
-		jQuery('#initial-loader').remove()
 		App.startHistory()
 		App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
 

@@ -44,7 +44,7 @@ define ['marionette'], (Marionette)->
 
 	App.on "initialize:after", (options) ->
 		Pace.on 'hide', ()->
-			$("#site_main_container").addClass( "show" );
+			$("#site_main_container").addClass( "showAll" );
 
 		
 		App.startHistory()
