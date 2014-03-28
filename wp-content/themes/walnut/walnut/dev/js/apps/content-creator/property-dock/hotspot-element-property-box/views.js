@@ -10,14 +10,13 @@ define(['app'], function(App) {
         return TextView.__super__.constructor.apply(this, arguments);
       }
 
-      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1">Arial</option> <option value="2">Calibri</option> <option value="3">Comic Sans MS</option> <option value="4">Courier</option> <option value="5">Georgia</option> <option value="6">Helvetica</option> <option value="7">Impact</option> <option value="8">Lucida Console</option> <option value="9">Lucida Sans Unicode</option> <option value="10">Tahoma</option> <option value="11">Times New Roman</option> <option value="12">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group textFormat" data-toggle="buttons-checkbox"> <div class="btn-group"> <button class="btn"><i class="fa fa-bold"></i></button> <button class="btn"><i class="fa fa-italic"></i></button> </div> </div> </div> </div> </div>';
+      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1">Arial</option> <option value="2">Calibri</option> <option value="3">Comic Sans MS</option> <option value="4">Courier</option> <option value="5">Georgia</option> <option value="6">Helvetica</option> <option value="7">Impact</option> <option value="8">Lucida Console</option> <option value="9">Lucida Sans Unicode</option> <option value="10">Tahoma</option> <option value="11">Times New Roman</option> <option value="12">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group textFormat" data-toggle="buttons-checkbox"> <div id="font-style" class="btn-group"> <button id="bold-btn" class="btn"><i class="fa fa-bold"></i></button> <button id="italic-btn" class="btn"><i class="fa fa-italic"></i></button> </div> </div> </div> </div> </div>';
 
       TextView.prototype.onShow = function() {
         var self;
         self = this;
         $('.fontSize').slider();
         $('#hotspot-textelement-fontfamily').children('option').each(function() {
-          console.log($(this).text());
           if ($(this).text() === self.model.get('fontFamily')) {
             return this.selected = true;
           }
@@ -34,10 +33,24 @@ define(['app'], function(App) {
             return _this.model.set('fontSize', $('.fontSize').slider('getValue').val() || size);
           };
         })(this));
-        return $('#hotspot-textelement-fontfamily').on('change', function() {
+        $('#hotspot-textelement-fontfamily').on('change', function() {
           this.options[0].disabled = true;
-          self.model.set('fontFamily', $('#hotspot-textelement-fontfamily  option:selected').text());
-          return console.log(self.model);
+          return self.model.set('fontFamily', $('#hotspot-textelement-fontfamily  option:selected').text());
+        });
+        return $('#font-style.btn-group .btn').on('click', function() {
+          return setTimeout(function() {
+            console.log("timeout");
+            if ($('#font-style.btn-group #bold-btn.btn').hasClass('active')) {
+              self.model.set('fontBold', "bold");
+            } else {
+              self.model.set('fontBold', "");
+            }
+            if ($('#font-style.btn-group #italic-btn.btn').hasClass('active')) {
+              return self.model.set('fontItalics', "italic");
+            } else {
+              return self.model.set('fontItalics', "");
+            }
+          }, 200);
         });
       };
 

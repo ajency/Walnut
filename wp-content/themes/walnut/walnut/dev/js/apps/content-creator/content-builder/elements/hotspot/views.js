@@ -187,7 +187,9 @@ define(['app'], function(App) {
           text: '',
           fontFamily: 'Arial',
           fontSize: '12',
-          fontColor: 'black'
+          fontColor: 'black',
+          fontBold: '',
+          fontItalics: ''
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         tooltip = new Kinetic.Label({
@@ -208,6 +210,7 @@ define(['app'], function(App) {
           fontFamily: hotspotElement.get('fontFamily'),
           fontSize: hotspotElement.get('fontSize'),
           fill: hotspotElement.get('fontColor'),
+          fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'),
           padding: 5
         });
         tooltip.on('mousedown click', function() {
@@ -230,6 +233,12 @@ define(['app'], function(App) {
         hotspotElement.on("change:fontFamily", (function(_this) {
           return function() {
             canvasText.fontFamily(hotspotElement.get('fontFamily'));
+            return _this.textLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:fontBold change:fontItalics", (function(_this) {
+          return function() {
+            canvasText.fontStyle(hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'));
             return _this.textLayer.draw();
           };
         })(this));
