@@ -514,7 +514,7 @@ body {
 #site_main_container {
   opacity: 0;
 }
-#site_main_container.show {
+#site_main_container.showAll {
   opacity: 1;
   -webkit-transition: opacity 0.5s ease-in-out;
   -moz-transition: opacity 0.5s ease-in-out;
