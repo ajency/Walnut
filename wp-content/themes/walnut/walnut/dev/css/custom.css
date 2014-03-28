@@ -662,5 +662,7 @@ tbody.rowlink td {
 @media (max-width: 767px) {
   .login-container {
     margin-top: 20px !important;
+    /*For mobile app testing*/
+  
   }
 }

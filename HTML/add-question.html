@@ -19,6 +19,7 @@
 	<link href="assets/plugins/boostrap-slider/css/slider.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/jquery.minicolors.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
@@ -56,6 +57,7 @@
 		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
 		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
 		<script type="text/javascript" src="assets/js/datatables.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.minicolors.min.js"></script>
 
 		<script type="text/javascript" src="assets/js/row-link.js"></script>
 		<script src="assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js" type="text/javascript"></script>
@@ -672,6 +674,12 @@
 					                 </div>
 								</div>
 
+								<div class="form-group">
+
+									Color <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1">
+
+								</div>
+
 			               	</div>
 			              </div>
 			            </div>
@@ -859,5 +867,11 @@
 </body>
 <script>
 	$('.fontSize').slider();
+	$('.fontColor').minicolors({
+		animationSpeed: 200,
+		animationEasing: 'swing',
+		position: 'top left',
+		showSpeed: 200
+	});
 </script>
 </html>
