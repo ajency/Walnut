@@ -10,8 +10,8 @@ define ['detect','jquery'], (detect,$)->
         else "Desktop"
 
       #Load script 'online.js' only for browser
-      #if checkPlatform() is "Desktop"
-        #define ['plugins/online'], ->
+      if checkPlatform() is "Desktop"
+        define ['plugins/online'], ->
 
       #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.

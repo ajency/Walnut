@@ -10,6 +10,9 @@ define(['detect', 'jquery'], function(detect, $) {
       return "Desktop";
     }
   };
+  if (checkPlatform() === "Desktop") {
+    define(['plugins/online'], function() {});
+  }
   window.onLineHandler = function(){
         networkStatus = 1
         };
