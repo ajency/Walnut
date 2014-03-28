@@ -195,10 +195,12 @@ define ['app'],(App)->
 
 					modelData =
 						type : 'Text'
-						text : 'hey'
+						text : ''
 						fontFamily : 'Arial'
 						fontSize : '12'
 						fontColor : 'black'
+						fontBold : ''
+						fontItalics : ''
 
 					hotspotElement = App.request "create:new:hotspot:element", modelData
 
@@ -222,8 +224,10 @@ define ['app'],(App)->
 						fontFamily: hotspotElement.get 'fontFamily'
 						fontSize: hotspotElement.get 'fontSize'
 						fill: hotspotElement.get 'fontColor'
+						fontStyle : hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
 						padding: 5
 
+					# on click of a text element show properties
 					tooltip.on 'mousedown click',->
 							App.execute "show:question:element:properties",
 									model : hotspotElement
@@ -235,6 +239,15 @@ define ['app'],(App)->
 					hotspotElement.on "change:fontSize",=>
 							canvasText.fontSize hotspotElement.get 'fontSize'
 							@textLayer.draw()
+
+					hotspotElement.on "change:fontFamily",=>
+							canvasText.fontFamily hotspotElement.get 'fontFamily'
+							@textLayer.draw()
+
+					hotspotElement.on "change:fontBold change:fontItalics",=>
+							canvasText.fontStyle  hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
+							@textLayer.draw()
+
 
 						
 

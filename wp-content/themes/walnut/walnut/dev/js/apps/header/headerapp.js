@@ -62,6 +62,14 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         rightRegion: '#header-right'
       };
 
+      HeaderView.prototype.serializeData = function() {
+        var data;
+        data = HeaderView.__super__.serializeData.call(this);
+        data.logourl = SITEURL + '/wp-content/themes/walnut/images/walnutlearn.png';
+        console.log(SITEURL);
+        return data;
+      };
+
       return HeaderView;
 
     })(Marionette.Layout);

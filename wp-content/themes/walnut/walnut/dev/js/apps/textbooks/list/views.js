@@ -34,18 +34,20 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       ListItemView.prototype.serializeData = function() {
         var class_id, class_string, data, item_classes, _i, _len;
         data = ListItemView.__super__.serializeData.call(this);
-        item_classes = _.sortBy(this.model.get('classes', function(num) {
-          return num;
-        }));
-        class_string = '';
-        for (_i = 0, _len = item_classes.length; _i < _len; _i++) {
-          class_id = item_classes[_i];
-          class_string += 'Class ' + class_id;
-          if (_.last(item_classes) !== class_id) {
-            class_string += ', ';
+        if (this.model.get('classes')) {
+          item_classes = _.sortBy(this.model.get('classes', function(num) {
+            return num;
+          }));
+          class_string = '';
+          for (_i = 0, _len = item_classes.length; _i < _len; _i++) {
+            class_id = item_classes[_i];
+            class_string += 'Class ' + class_id;
+            if (_.last(item_classes) !== class_id) {
+              class_string += ', ';
+            }
           }
+          data.class_string = class_string;
         }
-        data.class_string = class_string;
         return data;
       };
 

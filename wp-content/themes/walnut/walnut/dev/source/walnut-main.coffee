@@ -10,13 +10,17 @@ require.config
 
 	baseUrl : './wp-content/themes/walnut/walnut/dev/js'
 	
+	#Url for walnut app
+	#baseUrl : '/dev/js'
+	
 	paths:
+		pace 				: 'plugins/pace'
 		jquery 				: 'plugins/jquery'
 		jqueryui 			: 'plugins/jquery.ui'
 		jqueryvalidate		: 'plugins/jquery.validate.min'
-		pace 				: 'plugins/pace'
 		bootstrap			: 'plugins/bootstrap.min'
 		underscore			: 'plugins/underscore'
+		underscorestring	: 'plugins/underscorestring'
 		backbone    		: 'plugins/backbone'
 		marionette  		: 'plugins/backbone.marionette'
 		text				: 'plugins/text'
@@ -32,13 +36,12 @@ require.config
 		search_results		: 'plugins/search_results'
 		spin 				: 'plugins/spin'
 		jqueryspin  		: 'plugins/jquery.spin'
-		detect				: 'plugins/detect'
-		underscorestring    : 'plugins/underscorestring'
 		#jquery_datatables  	: 'plugins/jquery.dataTables.min'
 		#tabletools 			: 'plugins/TableTools.min'
 		#datatables_responsive: 'plugins/datatables.responsive'
 		#datatables  		: 'plugins/datatables'
 		unveil				: 'plugins/jquery.unveil.min'
+		detect				: 'plugins/detect'
 
 	shim:
 		underscore: 
@@ -46,6 +49,7 @@ require.config
 		jquery 			: ['underscore']
 		jqueryui 		: ['jquery']
 		bootstrap 		: ['jquery']
+		underscorestring 	: ['underscore']
 		backbone: 
 			deps 	: ['jquery','underscore']
 			exports : 'Backbone'

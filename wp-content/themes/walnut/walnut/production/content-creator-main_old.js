@@ -34060,7 +34060,7 @@ define('configs/backbone',["backbone", "mustache"], function(Backbone, Mustache)
 });
 
 
-define('text!configs/marionette/templates/modal.html',[],function () { return '<div class="modal-dialog">\n  <div class="modal-content">\n    <div class="modal-header">\n      <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>\n      <h4 class="modal-title">{{modal_title}}</h4>\n    </div>\n    <div class="modal-body"></div>\n    <div class="modal-footer">\n      <!--button.btn.btn-default(type=\'button\', data-dismiss=\'modal\') Close-->\n      <!--button.btn.btn-primary(type=\'button\') Save changes-->\n    </div>\n  </div>\n</div>';});
+define('text!configs/marionette/templates/modal.html',[],function () { return '<div class="modal-dialog">\r\n  <div class="modal-content">\r\n    <div class="modal-header">\r\n      <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>\r\n      <h4 class="modal-title">{{modal_title}}</h4>\r\n    </div>\r\n    <div class="modal-body"></div>\r\n    <div class="modal-footer">\r\n      <!--button.btn.btn-default(type=\'button\', data-dismiss=\'modal\') Close-->\r\n      <!--button.btn.btn-primary(type=\'button\') Save changes-->\r\n    </div>\r\n  </div>\r\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -34355,6 +34355,7 @@ define('app',['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
+    jQuery('#initial-loader').remove();
     App.startHistory();
     if (!this.getCurrentRoute()) {
       return App.navigate(this.rootRoute, {
@@ -35087,7 +35088,7 @@ define('components/loading/controller',['app', 'controllers/region-controller', 
 define('componentloader',['components/loading/controller'], function() {});
 
 
-define('text!apps/header/left/templates/left.html',[],function () { return '<!-- BEGIN HEADER LEFT SIDE SECTION -->\n\t<!-- BEGIN SLIM NAVIGATION TOGGLE -->\n\t<ul class="nav quick-section">\n\t\t<li class="quicklinks">\n\t\t\t<a id="layout-condensed-toggle" class="" href="#">\n\t\t\t\t<div class="iconset top-menu-toggle-dark"></div>\n\t\t\t</a>\n\t\t</li>\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t<ul class="nav quick-section">\n\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t\t\t\t\t\t\t\t\t\n\t\t\t<!-- END HEADER LEFT SIDE SECTION -->';});
+define('text!apps/header/left/templates/left.html',[],function () { return '<!-- BEGIN HEADER LEFT SIDE SECTION -->\r\n\t<!-- BEGIN SLIM NAVIGATION TOGGLE -->\r\n\t<ul class="nav quick-section">\r\n\t\t<li class="quicklinks">\r\n\t\t\t<a id="layout-condensed-toggle" class="" href="#">\r\n\t\t\t\t<div class="iconset top-menu-toggle-dark"></div>\r\n\t\t\t</a>\r\n\t\t</li>\r\n\t</ul>\r\n\t<!-- BEGIN HEADER QUICK LINKS -->\r\n\t<ul class="nav quick-section">\r\n\r\n\t</ul>\r\n\t<!-- BEGIN HEADER QUICK LINKS -->\r\n\t\t\t\t\t\t\t\t\t\r\n\t\t\t<!-- END HEADER LEFT SIDE SECTION -->';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35166,7 +35167,7 @@ define('apps/header/left/leftapp',['app', 'controllers/region-controller', 'text
 });
 
 
-define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\n\t<!-- BEGIN HEADER NAV BUTTONS -->\n\t<ul class="nav quick-section2">\n\t\t<!-- BEGIN SETTINGS -->\n\t\t<li class="quicklinks"> \n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\n\t\t\t</a>\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\n\t\t\t\t<li><a href="#">My Account</a></li>\n\t\t\t\t<li class="divider"></li>                \n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<!-- END SETTINGS -->\n\t\t \n\t</ul>\n\t<!-- END HEADER NAV BUTTONS -->\n</div>\n<!-- END HEADER RIGHT SIDE SECTION -->';});
+define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\r\n\t<!-- BEGIN HEADER NAV BUTTONS -->\r\n\t<ul class="nav quick-section2">\r\n\t\t<!-- BEGIN SETTINGS -->\r\n\t\t<li class="quicklinks"> \r\n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\r\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\r\n\t\t\t</a>\r\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\r\n\t\t\t\t<li><a href="#">My Account</a></li>\r\n\t\t\t\t<li class="divider"></li>                \r\n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\r\n\t\t\t</ul>\r\n\t\t</li>\r\n\t\t<!-- END SETTINGS -->\r\n\t\t \r\n\t</ul>\r\n\t<!-- END HEADER NAV BUTTONS -->\r\n</div>\r\n<!-- END HEADER RIGHT SIDE SECTION -->';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35240,7 +35241,7 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
 });
 
 
-define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \n\t<!-- BEGIN TOP NAVIGATION BAR -->\n\t<div class="navbar-inner">\n\t\t<!-- BEGIN NAVIGATION HEADER -->\n\t\t<div class="header-seperation"> \n\t\t\t<!-- BEGIN MOBILE HEADER -->\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\n\t\t\t\t<li class="dropdown">\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\t\t \n\t\t\t</ul>\n\t\t\t<!-- END MOBILE HEADER -->\n\t\t\t<!-- BEGIN LOGO -->\t\n\t\t\t<a href="#">\n\t\t\t\t<img width="106" height="21" data-src-retina="{{logourl}}" data-src="{{logourl}}" alt="" class="logo" src="{{logourl}}">\n\t\t\t</a>\n\t\t\t<!-- END LOGO --> \n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\n\t\t\t<ul class="nav pull-right notifcation-center">\t\n\t\t\t\t\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \n\t\t\t</ul>\n\t\t\t<!-- END LOGO NAV BUTTONS -->\n\t\t</div>\n\t\t<!-- END NAVIGATION HEADER -->\n\t\t<!-- BEGIN CONTENT HEADER -->\n\t\t<div class="header-quick-nav"> \n\t\t\t<div id="header-left"></div>\n\t\t\t<div id="header-right"></div>\n\t\t\t\n\t\t</div> \n\t\t<!-- END CONTENT HEADER --> \n\t</div>\n\t<!-- END TOP NAVIGATION BAR --> \n</div>';});
+define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \r\n\t<!-- BEGIN TOP NAVIGATION BAR -->\r\n\t<div class="navbar-inner">\r\n\t\t<!-- BEGIN NAVIGATION HEADER -->\r\n\t\t<div class="header-seperation"> \r\n\t\t\t<!-- BEGIN MOBILE HEADER -->\r\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\r\n\t\t\t\t<li class="dropdown">\r\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\r\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\r\n\t\t\t\t\t</a>\r\n\t\t\t\t</li>\t\t \r\n\t\t\t</ul>\r\n\t\t\t<!-- END MOBILE HEADER -->\r\n\t\t\t<!-- BEGIN LOGO -->\t\r\n\t\t\t<a href="#">\r\n\t\t\t\t<img width="106" height="21" data-src-retina="./wp-content/themes/walnut/images/walnutlearn.png" data-src="./wp-content/themes/walnut/images/walnutlearn.png" alt="" class="logo" src="./wp-content/themes/walnut/images/walnutlearn.png">\r\n\t\t\t</a>\r\n\t\t\t<!-- END LOGO --> \r\n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\r\n\t\t\t<ul class="nav pull-right notifcation-center">\t\r\n\t\t\t\t\r\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\r\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\r\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\r\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\r\n\t\t\t\t\t</a>\r\n\t\t\t\t</li>\r\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \r\n\t\t\t</ul>\r\n\t\t\t<!-- END LOGO NAV BUTTONS -->\r\n\t\t</div>\r\n\t\t<!-- END NAVIGATION HEADER -->\r\n\t\t<!-- BEGIN CONTENT HEADER -->\r\n\t\t<div class="header-quick-nav"> \r\n\t\t\t<div id="header-left"></div>\r\n\t\t\t<div id="header-right"></div>\r\n\t\t\t\r\n\t\t</div> \r\n\t\t<!-- END CONTENT HEADER --> \r\n\t</div>\r\n\t<!-- END TOP NAVIGATION BAR --> \r\n</div>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -35306,14 +35307,6 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
         rightRegion: '#header-right'
       };
 
-      HeaderView.prototype.serializeData = function() {
-        var data;
-        data = HeaderView.__super__.serializeData.call(this);
-        data.logourl = SITEURL + '/wp-content/themes/walnut/images/walnutlearn.png';
-        console.log(SITEURL);
-        return data;
-      };
-
       return HeaderView;
 
     })(Marionette.Layout);
@@ -35327,7 +35320,7 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
 });
 
 
-define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\n\n<ul>\t\n\n\t<!-- BEGIN ONE LEVEL MENU -->\n\t<li class="start active">\n\t\t<a href="javascript:;">\n\t\t\t<i class="icon-custom-ui"></i>\n\t\t\t<span class="title">Content Management</span>\n\t\t\t<span class="arrow"></span>\n\t\t</a>\n\t\t<ul class="sub-menu">\n\t\t</ul>\n\t</li>\n\t<!-- END ONE LEVEL MENU -->\n\n</ul>\n<!-- END SIDEBAR MENU -->\n<!-- BEGIN SIDEBAR WIDGETS -->\n<div class="side-bar-widgets">\n\n</div>\n<div class="clearfix"></div>\n<!-- END SIDEBAR WIDGETS --> \n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\n';});
+define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\r\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\r\n\r\n<ul>\t\r\n\r\n\t<!-- BEGIN ONE LEVEL MENU -->\r\n\t<li class="start active">\r\n\t\t<a href="javascript:;">\r\n\t\t\t<i class="icon-custom-ui"></i>\r\n\t\t\t<span class="title">Content Management</span>\r\n\t\t\t<span class="arrow"></span>\r\n\t\t</a>\r\n\t\t<ul class="sub-menu">\r\n\t\t</ul>\r\n\t</li>\r\n\t<!-- END ONE LEVEL MENU -->\r\n\r\n</ul>\r\n<!-- END SIDEBAR MENU -->\r\n<!-- BEGIN SIDEBAR WIDGETS -->\r\n<div class="side-bar-widgets">\r\n\r\n</div>\r\n<div class="clearfix"></div>\r\n<!-- END SIDEBAR WIDGETS --> \r\n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\r\n';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35983,7 +35976,7 @@ if (typeof define === "function" && define.amd) {
 })(Holder, window);
 
 
-define('text!apps/content-creator/content-builder/element/templates/element.html',[],function () { return '\n<form>\n  <input type="hidden" name="meta_id"/>\n  <input type="hidden" name="element"/>\n</form>\n<div class="element-controls">\n  <div class="aj-imp-drag-handle">\n    <p title="Move"><span class="fa fa-ellipsis-h"></span></p>\n  </div>\n  <div class="aj-imp-delete-btn"><span title="Delete">&times;</span></div>\n  <div class="aj-imp-settings-btn"><span title="Settings" class="glyphicon glyphicon-cog"></span></div>\n</div>\n<div class="element-markup"><span></span></div>';});
+define('text!apps/content-creator/content-builder/element/templates/element.html',[],function () { return '\r\n<form>\r\n  <input type="hidden" name="meta_id"/>\r\n  <input type="hidden" name="element"/>\r\n</form>\r\n<div class="element-controls">\r\n  <div class="aj-imp-drag-handle">\r\n    <p title="Move"><span class="fa fa-ellipsis-h"></span></p>\r\n  </div>\r\n  <div class="aj-imp-delete-btn"><span title="Delete">&times;</span></div>\r\n  <div class="aj-imp-settings-btn"><span title="Settings" class="glyphicon glyphicon-cog"></span></div>\r\n</div>\r\n<div class="element-markup"><span></span></div>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -36443,7 +36436,7 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
         var canvasText, hotspotElement, modelData, textBorder, tooltip;
         modelData = {
           type: 'Text',
-          text: '',
+          text: 'hey',
           fontFamily: 'Arial',
           fontSize: '12',
           fontColor: 'black'
@@ -36483,12 +36476,6 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
         hotspotElement.on("change:fontSize", (function(_this) {
           return function() {
             canvasText.fontSize(hotspotElement.get('fontSize'));
-            return _this.textLayer.draw();
-          };
-        })(this));
-        hotspotElement.on("change:fontFamily", (function(_this) {
-          return function() {
-            canvasText.fontFamily(hotspotElement.get('fontFamily'));
             return _this.textLayer.draw();
           };
         })(this));
@@ -36758,7 +36745,7 @@ define('apps/content-creator/content-builder/elements/row/views',['app'], functi
         if (this.columnCount() === 1) {
           return;
         }
-        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="bicon bicon-uniF140"></span> </p> </div>';
+        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="fa fa-ellipsis-h"></span> </p> </div>';
         numberOfResizers = this.columnCount() - 1;
         return _.each(_.range(numberOfResizers), (function(_this) {
           return function(ele, index) {
@@ -36928,7 +36915,7 @@ define('apps/content-creator/content-builder/elements/row/views',['app'], functi
 });
 
 
-define('text!apps/content-creator/content-builder/elements/row/settings/templates/settings.html',[],function () { return '\n<header class="settings-header">\n  <div class="row">\n    <div class="col-sm-10">\n      <h5 class="title">{{config.element}} Settings</h5>\n    </div>\n    <div class="col-sm-2 close-btn"><a href="#" class="close-settings">&times;</a></div>\n  </div>\n</header>\n<div class="row">\n  <div class="col-sm-12">\n    <form action="" method="POST" role="form" class="form-horizontal">\n    <!--   <div class="form-group">\n        <label for="" class="col-sm-4 control-label">Choose Style</label>\n        <div class="col-sm-8">\n          <select name="style">\n            <option value="">None</option>{{#styles}}\n            <option value="{{name}}">{{name}}</option>{{/styles}}\n          </select>\n        </div>\n      </div>\n      <div class="form-group">\n        <label for="" class="col-sm-4 control-label">Draggable</label>\n        <div class="col-sm-8"><span class="checkbox">\n            <input type="checkbox" name="draggable"/></span></div>\n        <div class="clearfix"></div>\n      </div> -->\n      <div class="form-group">\n        <label for="" class="col-sm-4 control-label">No of columns</label>\n        <div class="col-sm-8">\n          <div class="set-column-count btn-group btn-group-xs"><a class="btn btn-default">1 </a><a class="btn btn-default">2 </a><a class="btn btn-default">3 </a><a class="btn btn-default">4 </a><a class="btn btn-default">6 </a></div>\n        </div>\n      </div>\n    </form>\n  </div>\n</div>';});
+define('text!apps/content-creator/content-builder/elements/row/settings/templates/settings.html',[],function () { return '\r\n<header class="settings-header">\r\n  <div class="row">\r\n    <div class="col-sm-10">\r\n      <h5 class="title">{{config.element}} Settings</h5>\r\n    </div>\r\n    <div class="col-sm-2 close-btn"><a href="#" class="close-settings">&times;</a></div>\r\n  </div>\r\n</header>\r\n<div class="row">\r\n  <div class="col-sm-12">\r\n    <form action="" method="POST" role="form" class="form-horizontal">\r\n    <!--   <div class="form-group">\r\n        <label for="" class="col-sm-4 control-label">Choose Style</label>\r\n        <div class="col-sm-8">\r\n          <select name="style">\r\n            <option value="">None</option>{{#styles}}\r\n            <option value="{{name}}">{{name}}</option>{{/styles}}\r\n          </select>\r\n        </div>\r\n      </div>\r\n      <div class="form-group">\r\n        <label for="" class="col-sm-4 control-label">Draggable</label>\r\n        <div class="col-sm-8"><span class="checkbox">\r\n            <input type="checkbox" name="draggable"/></span></div>\r\n        <div class="clearfix"></div>\r\n      </div> -->\r\n      <div class="form-group">\r\n        <label for="" class="col-sm-4 control-label">No of columns</label>\r\n        <div class="col-sm-8">\r\n          <div class="set-column-count btn-group btn-group-xs"><a class="btn btn-default">1 </a><a class="btn btn-default">2 </a><a class="btn btn-default">3 </a><a class="btn btn-default">4 </a><a class="btn btn-default">6 </a></div>\r\n        </div>\r\n      </div>\r\n    </form>\r\n  </div>\r\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -37394,35 +37381,23 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
         return TextView.__super__.constructor.apply(this, arguments);
       }
 
-      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1">Arial</option> <option value="2">Calibri</option> <option value="3">Comic Sans MS</option> <option value="4">Courier</option> <option value="5">Georgia</option> <option value="6">Helvetica</option> <option value="7">Impact</option> <option value="8">Lucida Console</option> <option value="9">Lucida Sans Unicode</option> <option value="10">Tahoma</option> <option value="11">Times New Roman</option> <option value="12">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group textFormat" data-toggle="buttons-checkbox"> <div class="btn-group"> <button class="btn"><i class="fa fa-bold"></i></button> <button class="btn"><i class="fa fa-italic"></i></button> </div> </div> </div> </div> </div>';
+      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="0">Select a Font</option> <option value="5">Arial</option> <option value="3">Calibri</option> <option value="11">Comic Sans MS</option> <option value="7">Courier</option> <option value="2">Georgia</option> <option value="4">Helvetica</option> <option value="8">Impact</option> <option value="9">Lucida Console</option> <option value="10">Lucida Sans Unicode</option> <option value="12">Tahoma</option> <option value="1">Times New Roman</option> <option value="13">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> </div> </div> </div>';
 
       TextView.prototype.onShow = function() {
-        var self;
-        self = this;
         $('.fontSize').slider();
-        $('#hotspot-textelement-fontfamily').children('option').each(function() {
-          console.log($(this).text());
-          if ($(this).text() === self.model.get('fontFamily')) {
-            return this.selected = true;
-          }
-        });
         $('#hotspot-textelement-text').on('input', (function(_this) {
           return function() {
             return _this.model.set("text", $('#hotspot-textelement-text').val());
           };
         })(this));
-        $('#hotspot-textelement-fontsize').slider().on('slide', (function(_this) {
+        return $('#hotspot-textelement-fontsize').slider().on('slide', (function(_this) {
           return function() {
             var size;
             size = _this.model.get('fontSize');
-            return _this.model.set('fontSize', $('.fontSize').slider('getValue').val() || size);
+            _this.model.set('fontSize', $('.fontSize').slider('getValue').val() || size);
+            return console.log($('.fontSize').slider('getValue').val() || size);
           };
         })(this));
-        return $('#hotspot-textelement-fontfamily').on('change', function() {
-          this.options[0].disabled = true;
-          self.model.set('fontFamily', $('#hotspot-textelement-fontfamily  option:selected').text());
-          return console.log(self.model);
-        });
       };
 
       return TextView;
@@ -37601,7 +37576,7 @@ define('apps/content-creator/contentcreatorapp',['app', 'controllers/region-cont
 });
 
 
-define('text!apps/media/upload/templates/upload.html',[],function () { return '\n<div class="aj-imp-upload-media"><span class="bicon icon-uniF10C"></span>\n  <div id="choosefiles" class="aj-imp-upload-message"><span class="glyphicon glyphicon-cloud-upload"></span>Upload Images from your Computer</div><span class="small-text">Upload Multiple Images by holding CTRL</span>\n  <div class="clear"></div><br/>\n  <div id="progress" style="width: 30%; margin: 0px auto; display: none;" class="progress progress-striped active">\n    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="progress-bar"></div><span class="sr-only">0% Complete </span>\n  </div>\n</div>';});
+define('text!apps/media/upload/templates/upload.html',[],function () { return '\r\n<div class="aj-imp-upload-media"><span class="bicon icon-uniF10C"></span>\r\n  <div id="choosefiles" class="aj-imp-upload-message"><span class="glyphicon glyphicon-cloud-upload"></span>Upload Images from your Computer</div><span class="small-text">Upload Multiple Images by holding CTRL</span>\r\n  <div class="clear"></div><br/>\r\n  <div id="progress" style="width: 30%; margin: 0px auto; display: none;" class="progress progress-striped active">\r\n    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="progress-bar"></div><span class="sr-only">0% Complete </span>\r\n  </div>\r\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -37716,7 +37691,7 @@ define('apps/media/upload/controller',['app', 'controllers/region-controller', '
 });
 
 
-define('text!apps/media/grid/templates/media.html',[],function () { return '<a href="#" class="thumbnail">\n  <div class="imgthumb"><img src="{{sizes.thumbnail.url}}" class="img-responsive"/></div>\n  <div class="ticker"><span class="glyphicon glyphicon-ok"></span><span class="glyphicon glyphicon-minus"></span></div></a>';});
+define('text!apps/media/grid/templates/media.html',[],function () { return '<a href="#" class="thumbnail">\r\n  <div class="imgthumb"><img src="{{sizes.thumbnail.url}}" class="img-responsive"/></div>\r\n  <div class="ticker"><span class="glyphicon glyphicon-ok"></span><span class="glyphicon glyphicon-minus"></span></div></a>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -37937,7 +37912,7 @@ define('apps/media/selected/controller',['app', 'controllers/region-controller']
 });
 
 
-define('text!apps/media/edit-media/templates/form.html',[],function () { return '\n<form action="" method="POST" role="form">\n  <h5>Edit Media</h5>\n  <div class="form-group">\n    <label for="">Title</label>\n    <input type="text" placeholder="" value="{{title}}" class="form-control"/>\n  </div>\n  <div class="form-group">\n    <label for="">Caption</label>\n    <input type="text" placeholder="" value="{{caption}}" class="form-control"/>\n  </div>\n  <div class="form-group">\n    <label for="">Alt Text</label>\n    <input type="text" placeholder="" value="{{alt}}" class="form-control"/>\n  </div>\n  <div class="form-group">\n    <label for="">Description</label>\n    <input type="text" placeholder="" value="{{description}}" class="form-control"/>\n  </div>\n  <button type="button" class="btn btn-primary">Save</button>\n</form>';});
+define('text!apps/media/edit-media/templates/form.html',[],function () { return '\r\n<form action="" method="POST" role="form">\r\n  <h5>Edit Media</h5>\r\n  <div class="form-group">\r\n    <label for="">Title</label>\r\n    <input type="text" placeholder="" value="{{title}}" class="form-control"/>\r\n  </div>\r\n  <div class="form-group">\r\n    <label for="">Caption</label>\r\n    <input type="text" placeholder="" value="{{caption}}" class="form-control"/>\r\n  </div>\r\n  <div class="form-group">\r\n    <label for="">Alt Text</label>\r\n    <input type="text" placeholder="" value="{{alt}}" class="form-control"/>\r\n  </div>\r\n  <div class="form-group">\r\n    <label for="">Description</label>\r\n    <input type="text" placeholder="" value="{{description}}" class="form-control"/>\r\n  </div>\r\n  <button type="button" class="btn btn-primary">Save</button>\r\n</form>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -38009,7 +37984,7 @@ define('apps/media/app',['app', 'controllers/region-controller', 'apps/media/upl
 });
 
 
-define('text!apps/media-manager/templates/outer.html',[],function () { return '\n<ul class="nav nav-tabs">\n  <li class="active"><a href="#upload-region" data-toggle="tab">Upload</a></li>\n  <li><a href="#all-media-region" data-toggle="tab">All Media</a></li>\n  <!--li: a(href="#gallery-region" data-toggle="tab") Gallery-->\n</ul>\n<div class="tab-content">\n  <div id="upload-region" class="tab-pane active"></div>\n  <div id="all-media-region" class="tab-pane">\n    <div id="grid-region" class="col-md-9"></div>\n    <div id="edit-media-region" class="col-md-3">\n      <div class="pick-image"><span class="glyphicon glyphicon-hand-left"></span>\n        <h4>Select an Image from the library</h4>\n      </div>\n    </div>\n  </div>\n  <div id="gallery-region" class="tab-pane"></div>\n</div>\n<div class="clearfix">\n  <button class="btn btn-primary media-manager-select">Select</button>\n</div>';});
+define('text!apps/media-manager/templates/outer.html',[],function () { return '\r\n<ul class="nav nav-tabs">\r\n  <li class="active"><a href="#upload-region" data-toggle="tab">Upload</a></li>\r\n  <li><a href="#all-media-region" data-toggle="tab">All Media</a></li>\r\n  <!--li: a(href="#gallery-region" data-toggle="tab") Gallery-->\r\n</ul>\r\n<div class="tab-content">\r\n  <div id="upload-region" class="tab-pane active"></div>\r\n  <div id="all-media-region" class="tab-pane">\r\n    <div id="grid-region" class="col-md-9"></div>\r\n    <div id="edit-media-region" class="col-md-3">\r\n      <div class="pick-image"><span class="glyphicon glyphicon-hand-left"></span>\r\n        <h4>Select an Image from the library</h4>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div id="gallery-region" class="tab-pane"></div>\r\n</div>\r\n<div class="clearfix">\r\n  <button class="btn btn-primary media-manager-select">Select</button>\r\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -38134,7 +38109,6 @@ require.config({
   urlArgs: "ver=1",
   baseUrl: '../wp-content/themes/walnut/walnut/dev/js',
   paths: {
-    pace: 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryresize: 'plugins/jquery.ba-resize.min',
