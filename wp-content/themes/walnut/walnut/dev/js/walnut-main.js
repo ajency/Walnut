@@ -24,8 +24,13 @@ require.config({
     search_results: 'plugins/search_results',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
+<<<<<<< HEAD
+    unveil: 'plugins/jquery.unveil.min',
+    detect: 'plugins/detect'
+=======
     detect: 'plugins/detect',
     unveil: 'plugins/jquery.unveil.min'
+>>>>>>> 877861fde745e966b10661f2169a67d4996e938b
   },
   shim: {
     underscore: {
