@@ -6,50 +6,56 @@ define ['app'],(App)->
 			class Views.TextView extends Marionette.ItemView
 
 				template : '<div class="tile-more-content no-padding">
-			              <div class="tiles green">
-			                <div class="tile-footer drag">
-			                  Text Properties 
-			                </div>
-			                <div class="docket-body">
-
-								<div class="form-group">
-									<textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea>
-								</div>
-								<div class="form-group">
-									 <select class="font" id="hotspot-textelement-fontfamily">
-										
-										<option value="1">Arial</option> 
-										<option value="2">Calibri</option>
-										<option value="3">Comic Sans MS</option>
-										<option value="4">Courier</option>
-										<option value="5">Georgia</option>
-										<option value="6">Helvetica</option>
-										<option value="7">Impact</option>
-										<option value="8">Lucida Console</option>
-										<option value="9">Lucida Sans Unicode</option>
-										<option value="10">Tahoma</option>
-										<option value="11">Times New Roman</option>
-										<option value="12">Trebuchet MS</option>
-										<option value="13">Verdana</option>
-								    </select>
-								</div>
-
-								<div class="form-group">
-									<div class="textProp slider success">
-								      Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before">
+								<div class="tiles green">
+									<div class="tile-footer drag">
+										Text Properties 
 									</div>
-								</div>
 
-								
+									<div class="docket-body">
 
-			               	</div>
-			              </div>
-			            </div>'
+										<div class="form-group">
+											<textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea>
+										</div>
+										<div class="form-group">
+											 <select class="font" id="hotspot-textelement-fontfamily">												
+												<option value="1">Arial</option> 
+												<option value="2">Calibri</option>
+												<option value="3">Comic Sans MS</option>
+												<option value="4">Courier</option>
+												<option value="5">Georgia</option>
+												<option value="6">Helvetica</option>
+												<option value="7">Impact</option>
+												<option value="8">Lucida Console</option>
+												<option value="9">Lucida Sans Unicode</option>
+												<option value="10">Tahoma</option>
+												<option value="11">Times New Roman</option>
+												<option value="12">Trebuchet MS</option>
+												<option value="13">Verdana</option>
+										    </select>
+										</div>
+
+										<div class="form-group">
+											<div class="textProp slider success">
+										      Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before">
+											</div>
+										</div>
+
+										<div class="form-group textFormat" data-toggle="buttons-checkbox">
+											<div class="btn-group">
+												<button class="btn"><i class="fa fa-bold"></i></button>
+												<button class="btn"><i class="fa fa-italic"></i></button>
+											</div>
+										</div>
+
+					               	</div>
+				              	</div>
+			            	</div>'
 
 				onShow:->
 					self = @	
 
-					$('.fontSize').slider();	
+					$('.fontSize').slider()
+
 					$('#hotspot-textelement-fontfamily').children('option').each ->
 						console.log $(@).text()
 						if $(@).text() is self.model.get 'fontFamily'
