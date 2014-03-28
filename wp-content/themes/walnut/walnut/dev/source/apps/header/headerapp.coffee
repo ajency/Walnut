@@ -12,17 +12,23 @@ define ['app'
 				
 				@layout = layout = @_getHeaderView()
 
+				@school = App.request "get:current:school"
+
+				console.log '@school1'
+				console.log @school
 				@listenTo layout, 'show', @showLeftRightViews
+				@show layout, (loading:true)
 
-				@show layout
-
-			showLeftRightViews:->
+			showLeftRightViews:=>
 				App.execute "show:leftheaderapp", region : @layout.leftRegion
 				App.execute "show:rightheaderapp", region : @layout.rightRegion
 
 
-			_getHeaderView : ->
+			_getHeaderView : =>
+				console.log '@school2'
+				console.log @school
 				new HeaderView
+					model: @school
 
 
 		class HeaderView extends Marionette.Layout

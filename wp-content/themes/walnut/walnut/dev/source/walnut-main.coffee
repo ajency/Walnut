@@ -17,6 +17,8 @@ require.config
 		jquery 				: 'plugins/jquery'
 		jqueryui 			: 'plugins/jquery.ui'
 		jqueryvalidate		: 'plugins/jquery.validate.min'
+		pace 				: 'plugins/pace'
+		bootstrap			: 'plugins/bootstrap.min'
 		underscore			: 'plugins/underscore'
 		backbone    		: 'plugins/backbone'
 		marionette  		: 'plugins/backbone.marionette'
@@ -33,35 +35,46 @@ require.config
 		search_results		: 'plugins/search_results'
 		spin 				: 'plugins/spin'
 		jqueryspin  		: 'plugins/jquery.spin'
+<<<<<<< HEAD
 		jquery_datatables  	: 'plugins/jquery.dataTables'
 		datatables  		: 'plugins/datatables'
 		tabletools 			: 'plugins/TableTools'
 		detect				: 'plugins/detect'
+=======
+		#jquery_datatables  	: 'plugins/jquery.dataTables.min'
+		#tabletools 			: 'plugins/TableTools.min'
+		#datatables_responsive: 'plugins/datatables.responsive'
+		#datatables  		: 'plugins/datatables'
+		unveil				: 'plugins/jquery.unveil.min'
+>>>>>>> 8974b40874158e50b9fbeb96f886451e04b34c97
 
 	shim:
 		underscore: 
 			exports : '_'
-		jquery 		: ['underscore']
-		jqueryui 	: ['jquery']
+		jquery 			: ['underscore']
+		jqueryui 		: ['jquery']
+		bootstrap 		: ['jquery']
 		backbone: 
 			deps 	: ['jquery','underscore']
 			exports : 'Backbone'
 		marionette : 
 			deps 	: ['backbone']
 			exports : 'Marionette'
-		sidr 		: ['jquery']
+		sidr 			: ['jquery']
+		unveil 			: ['jquery']
 		slimroll 		: ['jquery']
-		core 		: ['sidr','jquery']
+		core 			: ['sidr','jquery']
 		breakpoints 		: ['jquery']
 		mixitup 		: ['jquery']
-		tabletools 		: ['jquery','datatables']
-		jquery_datatables 		: ['jquery']
-		datatables 		: ['jquery','jquery_datatables']
-		search_results 		: ['jquery','mixitup']
-		jqueryspin 			: ['spin']
-		jqueryvalidate: ['jquery']
-		syphon		: ['backbone']
-		app 		: ['plugins/walnut-pluginloader','config/walnut-configloader']
+		#jquery_datatables 		: ['jquery']
+		#tabletools 		: ['jquery_datatables']
+		#datatables_responsive : ['jquery_datatables']
+		#datatables 		: ['jquery_datatables','bootstrap']
+		search_results 	: ['jquery','mixitup']
+		jqueryspin 		: ['spin']
+		jqueryvalidate	: ['jquery']
+		syphon			: ['backbone']
+		app 			: ['plugins/walnut-pluginloader','config/walnut-configloader']
 
 	
 

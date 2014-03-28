@@ -1,6 +1,7 @@
 define [
 			'underscore'
 			'jquery'
+			'pace'
 			'backbone'
 			'marionette'
 			'syphon'
@@ -15,4 +16,10 @@ define [
 			'jqueryspin'
 			'mixitup'
 			'search_results'
+			'bootstrap'
+			#'jquery_datatables'
+			#'tabletools'
+			#'datatables_responsive'
+			#'datatables'
+			'unveil'
 		], ->

@@ -2,6 +2,7 @@
 if ( ! isset( $content_width ) )
 	$content_width = 604;
 
+require_once 'modules/school/ajax.php';
 require_once 'modules/school/functions.php';
 require_once 'modules/questions/functions.php';
 require_once 'modules/textbooks/ajax.php';

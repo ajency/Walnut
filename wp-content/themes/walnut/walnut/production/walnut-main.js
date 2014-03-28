@@ -11496,6 +11496,918 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 })( window );
 
+(function() {
+  var AjaxMonitor, Bar, DocumentMonitor, ElementMonitor, ElementTracker, EventLagMonitor, Evented, Events, NoTargetError, RequestIntercept, SOURCE_KEYS, Scaler, SocketRequestTracker, XHRRequestTracker, animation, avgAmplitude, bar, cancelAnimation, cancelAnimationFrame, defaultOptions, extend, extendNative, getFromDOM, getIntercept, handlePushState, ignoreStack, init, now, options, requestAnimationFrame, result, runAnimation, scalers, shouldIgnoreURL, shouldTrack, source, sources, uniScaler, _WebSocket, _XDomainRequest, _XMLHttpRequest, _i, _intercept, _len, _pushState, _ref, _ref1, _replaceState,
+    __slice = [].slice,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  defaultOptions = {
+    catchupTime: 500,
+    initialRate: .03,
+    minTime: 2000,
+    ghostTime: 500,
+    maxProgressPerFrame: 10,
+    easeFactor: 1.25,
+    startOnPageLoad: false,
+    restartOnPushState: true,
+    restartOnRequestAfter: 500,
+    target: 'body',
+    elements: {
+      checkInterval: 100,
+      selectors: ['body']
+    },
+    eventLag: {
+      minSamples: 10,
+      sampleCount: 3,
+      lagThreshold: 3
+    },
+    ajax: false
+  };
+
+  now = function() {
+    var _ref;
+    return (_ref = typeof performance !== "undefined" && performance !== null ? typeof performance.now === "function" ? performance.now() : void 0 : void 0) != null ? _ref : +(new Date);
+  };
+
+  requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+  cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+
+  if (requestAnimationFrame == null) {
+    requestAnimationFrame = function(fn) {
+      return setTimeout(fn, 50);
+    };
+    cancelAnimationFrame = function(id) {
+      return clearTimeout(id);
+    };
+  }
+
+  runAnimation = function(fn) {
+    var last, tick;
+    last = now();
+    tick = function() {
+      var diff;
+      diff = now() - last;
+      if (diff >= 33) {
+        last = now();
+        return fn(diff, function() {
+          return requestAnimationFrame(tick);
+        });
+      } else {
+        return setTimeout(tick, 33 - diff);
+      }
+    };
+    return tick();
+  };
+
+  result = function() {
+    var args, key, obj;
+    obj = arguments[0], key = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
+    if (typeof obj[key] === 'function') {
+      return obj[key].apply(obj, args);
+    } else {
+      return obj[key];
+    }
+  };
+
+  extend = function() {
+    var key, out, source, sources, val, _i, _len;
+    out = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    for (_i = 0, _len = sources.length; _i < _len; _i++) {
+      source = sources[_i];
+      if (source) {
+        for (key in source) {
+          if (!__hasProp.call(source, key)) continue;
+          val = source[key];
+          if ((out[key] != null) && typeof out[key] === 'object' && (val != null) && typeof val === 'object') {
+            extend(out[key], val);
+          } else {
+            out[key] = val;
+          }
+        }
+      }
+    }
+    return out;
+  };
+
+  avgAmplitude = function(arr) {
+    var count, sum, v, _i, _len;
+    sum = count = 0;
+    for (_i = 0, _len = arr.length; _i < _len; _i++) {
+      v = arr[_i];
+      sum += Math.abs(v);
+      count++;
+    }
+    return sum / count;
+  };
+
+  getFromDOM = function(key, json) {
+    var data, e, el;
+    if (key == null) {
+      key = 'options';
+    }
+    if (json == null) {
+      json = true;
+    }
+    el = document.querySelector("[data-pace-" + key + "]");
+    if (!el) {
+      return;
+    }
+    data = el.getAttribute("data-pace-" + key);
+    if (!json) {
+      return data;
+    }
+    try {
+      return JSON.parse(data);
+    } catch (_error) {
+      e = _error;
+      return typeof console !== "undefined" && console !== null ? console.error("Error parsing inline pace options", e) : void 0;
+    }
+  };
+
+  Evented = (function() {
+    function Evented() {}
+
+    Evented.prototype.on = function(event, handler, ctx, once) {
+      var _base;
+      if (once == null) {
+        once = false;
+      }
+      if (this.bindings == null) {
+        this.bindings = {};
+      }
+      if ((_base = this.bindings)[event] == null) {
+        _base[event] = [];
+      }
+      return this.bindings[event].push({
+        handler: handler,
+        ctx: ctx,
+        once: once
+      });
+    };
+
+    Evented.prototype.once = function(event, handler, ctx) {
+      return this.on(event, handler, ctx, true);
+    };
+
+    Evented.prototype.off = function(event, handler) {
+      var i, _ref, _results;
+      if (((_ref = this.bindings) != null ? _ref[event] : void 0) == null) {
+        return;
+      }
+      if (handler == null) {
+        return delete this.bindings[event];
+      } else {
+        i = 0;
+        _results = [];
+        while (i < this.bindings[event].length) {
+          if (this.bindings[event][i].handler === handler) {
+            _results.push(this.bindings[event].splice(i, 1));
+          } else {
+            _results.push(i++);
+          }
+        }
+        return _results;
+      }
+    };
+
+    Evented.prototype.trigger = function() {
+      var args, ctx, event, handler, i, once, _ref, _ref1, _results;
+      event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      if ((_ref = this.bindings) != null ? _ref[event] : void 0) {
+        i = 0;
+        _results = [];
+        while (i < this.bindings[event].length) {
+          _ref1 = this.bindings[event][i], handler = _ref1.handler, ctx = _ref1.ctx, once = _ref1.once;
+          handler.apply(ctx != null ? ctx : this, args);
+          if (once) {
+            _results.push(this.bindings[event].splice(i, 1));
+          } else {
+            _results.push(i++);
+          }
+        }
+        return _results;
+      }
+    };
+
+    return Evented;
+
+  })();
+
+  if (window.Pace == null) {
+    window.Pace = {};
+  }
+
+  extend(Pace, Evented.prototype);
+
+  options = Pace.options = extend({}, defaultOptions, window.paceOptions, getFromDOM());
+
+  _ref = ['ajax', 'document', 'eventLag', 'elements'];
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    source = _ref[_i];
+    if (options[source] === true) {
+      options[source] = defaultOptions[source];
+    }
+  }
+
+  NoTargetError = (function(_super) {
+    __extends(NoTargetError, _super);
+
+    function NoTargetError() {
+      _ref1 = NoTargetError.__super__.constructor.apply(this, arguments);
+      return _ref1;
+    }
+
+    return NoTargetError;
+
+  })(Error);
+
+  Bar = (function() {
+    function Bar() {
+      this.progress = 0;
+    }
+
+    Bar.prototype.getElement = function() {
+      var targetElement;
+      if (this.el == null) {
+        targetElement = document.querySelector(options.target);
+        if (!targetElement) {
+          throw new NoTargetError;
+        }
+        this.el = document.createElement('div');
+        this.el.className = "pace pace-active";
+        document.body.className = document.body.className.replace(/pace-done/g, '');
+        document.body.className += ' pace-running';
+        this.el.innerHTML = '<div class="pace-progress">\n  <div class="pace-progress-inner"></div>\n</div>\n<div class="pace-activity"></div>';
+        if (targetElement.firstChild != null) {
+          targetElement.insertBefore(this.el, targetElement.firstChild);
+        } else {
+          targetElement.appendChild(this.el);
+        }
+      }
+      return this.el;
+    };
+
+    Bar.prototype.finish = function() {
+      var el;
+      el = this.getElement();
+      el.className = el.className.replace('pace-active', '');
+      el.className += ' pace-inactive';
+      document.body.className = document.body.className.replace('pace-running', '');
+      return document.body.className += ' pace-done';
+    };
+
+    Bar.prototype.update = function(prog) {
+      this.progress = prog;
+      return this.render();
+    };
+
+    Bar.prototype.destroy = function() {
+      try {
+        this.getElement().parentNode.removeChild(this.getElement());
+      } catch (_error) {
+        NoTargetError = _error;
+      }
+      return this.el = void 0;
+    };
+
+    Bar.prototype.render = function() {
+      var el, progressStr;
+      if (document.querySelector(options.target) == null) {
+        return false;
+      }
+      el = this.getElement();
+      el.children[0].style.width = "" + this.progress + "%";
+      if (!this.lastRenderedProgress || this.lastRenderedProgress | 0 !== this.progress | 0) {
+        el.children[0].setAttribute('data-progress-text', "" + (this.progress | 0) + "%");
+        if (this.progress >= 100) {
+          progressStr = '99';
+        } else {
+          progressStr = this.progress < 10 ? "0" : "";
+          progressStr += this.progress | 0;
+        }
+        el.children[0].setAttribute('data-progress', "" + progressStr);
+      }
+      return this.lastRenderedProgress = this.progress;
+    };
+
+    Bar.prototype.done = function() {
+      return this.progress >= 100;
+    };
+
+    return Bar;
+
+  })();
+
+  Events = (function() {
+    function Events() {
+      this.bindings = {};
+    }
+
+    Events.prototype.trigger = function(name, val) {
+      var binding, _j, _len1, _ref2, _results;
+      if (this.bindings[name] != null) {
+        _ref2 = this.bindings[name];
+        _results = [];
+        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+          binding = _ref2[_j];
+          _results.push(binding.call(this, val));
+        }
+        return _results;
+      }
+    };
+
+    Events.prototype.on = function(name, fn) {
+      var _base;
+      if ((_base = this.bindings)[name] == null) {
+        _base[name] = [];
+      }
+      return this.bindings[name].push(fn);
+    };
+
+    return Events;
+
+  })();
+
+  _XMLHttpRequest = window.XMLHttpRequest;
+
+  _XDomainRequest = window.XDomainRequest;
+
+  _WebSocket = window.WebSocket;
+
+  extendNative = function(to, from) {
+    var e, key, val, _results;
+    _results = [];
+    for (key in from.prototype) {
+      try {
+        val = from.prototype[key];
+        if ((to[key] == null) && typeof val !== 'function') {
+          _results.push(to[key] = val);
+        } else {
+          _results.push(void 0);
+        }
+      } catch (_error) {
+        e = _error;
+      }
+    }
+    return _results;
+  };
+
+  ignoreStack = [];
+
+  Pace.ignore = function() {
+    var args, fn, ret;
+    fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    ignoreStack.unshift('ignore');
+    ret = fn.apply(null, args);
+    ignoreStack.shift();
+    return ret;
+  };
+
+  Pace.track = function() {
+    var args, fn, ret;
+    fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    ignoreStack.unshift('track');
+    ret = fn.apply(null, args);
+    ignoreStack.shift();
+    return ret;
+  };
+
+  shouldTrack = function(method) {
+    var _ref2;
+    if (method == null) {
+      method = 'GET';
+    }
+    if (ignoreStack[0] === 'track') {
+      return 'force';
+    }
+    if (!ignoreStack.length && options.ajax) {
+      if (method === 'socket' && options.ajax.trackWebSockets) {
+        return true;
+      } else if (_ref2 = method.toUpperCase(), __indexOf.call(options.ajax.trackMethods, _ref2) >= 0) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  RequestIntercept = (function(_super) {
+    __extends(RequestIntercept, _super);
+
+    function RequestIntercept() {
+      var monitorXHR,
+        _this = this;
+      RequestIntercept.__super__.constructor.apply(this, arguments);
+      monitorXHR = function(req) {
+        var _open;
+        _open = req.open;
+        return req.open = function(type, url, async) {
+          if (shouldTrack(type)) {
+            _this.trigger('request', {
+              type: type,
+              url: url,
+              request: req
+            });
+          }
+          return _open.apply(req, arguments);
+        };
+      };
+      window.XMLHttpRequest = function(flags) {
+        var req;
+        req = new _XMLHttpRequest(flags);
+        monitorXHR(req);
+        return req;
+      };
+      extendNative(window.XMLHttpRequest, _XMLHttpRequest);
+      if (_XDomainRequest != null) {
+        window.XDomainRequest = function() {
+          var req;
+          req = new _XDomainRequest;
+          monitorXHR(req);
+          return req;
+        };
+        extendNative(window.XDomainRequest, _XDomainRequest);
+      }
+      if ((_WebSocket != null) && options.ajax.trackWebSockets) {
+        window.WebSocket = function(url, protocols) {
+          var req;
+          if (protocols != null) {
+            req = new _WebSocket(url, protocols);
+          } else {
+            req = new _WebSocket(url);
+          }
+          if (shouldTrack('socket')) {
+            _this.trigger('request', {
+              type: 'socket',
+              url: url,
+              protocols: protocols,
+              request: req
+            });
+          }
+          return req;
+        };
+        extendNative(window.WebSocket, _WebSocket);
+      }
+    }
+
+    return RequestIntercept;
+
+  })(Events);
+
+  _intercept = null;
+
+  getIntercept = function() {
+    if (_intercept == null) {
+      _intercept = new RequestIntercept;
+    }
+    return _intercept;
+  };
+
+  shouldIgnoreURL = function(url) {
+    var pattern, _j, _len1, _ref2;
+    _ref2 = options.ajax.ignoreURLs;
+    for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+      pattern = _ref2[_j];
+      if (typeof pattern === 'string') {
+        if (url.indexOf(pattern) !== -1) {
+          return true;
+        }
+      } else {
+        if (pattern.test(url)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  getIntercept().on('request', function(_arg) {
+    var after, args, request, type, url;
+    type = _arg.type, request = _arg.request, url = _arg.url;
+    if (shouldIgnoreURL(url)) {
+      return;
+    }
+    if (!Pace.running && (options.restartOnRequestAfter !== false || shouldTrack(type) === 'force')) {
+      args = arguments;
+      after = options.restartOnRequestAfter || 0;
+      if (typeof after === 'boolean') {
+        after = 0;
+      }
+      return setTimeout(function() {
+        var stillActive, _j, _len1, _ref2, _ref3, _results;
+        if (type === 'socket') {
+          stillActive = request.readyState < 2;
+        } else {
+          stillActive = (0 < (_ref2 = request.readyState) && _ref2 < 4);
+        }
+        if (stillActive) {
+          Pace.restart();
+          _ref3 = Pace.sources;
+          _results = [];
+          for (_j = 0, _len1 = _ref3.length; _j < _len1; _j++) {
+            source = _ref3[_j];
+            if (source instanceof AjaxMonitor) {
+              source.watch.apply(source, args);
+              break;
+            } else {
+              _results.push(void 0);
+            }
+          }
+          return _results;
+        }
+      }, after);
+    }
+  });
+
+  AjaxMonitor = (function() {
+    function AjaxMonitor() {
+      var _this = this;
+      this.elements = [];
+      getIntercept().on('request', function() {
+        return _this.watch.apply(_this, arguments);
+      });
+    }
+
+    AjaxMonitor.prototype.watch = function(_arg) {
+      var request, tracker, type, url;
+      type = _arg.type, request = _arg.request, url = _arg.url;
+      if (shouldIgnoreURL(url)) {
+        return;
+      }
+      if (type === 'socket') {
+        tracker = new SocketRequestTracker(request);
+      } else {
+        tracker = new XHRRequestTracker(request);
+      }
+      return this.elements.push(tracker);
+    };
+
+    return AjaxMonitor;
+
+  })();
+
+  XHRRequestTracker = (function() {
+    function XHRRequestTracker(request) {
+      var event, size, _j, _len1, _onreadystatechange, _ref2,
+        _this = this;
+      this.progress = 0;
+      if (window.ProgressEvent != null) {
+        size = null;
+        request.addEventListener('progress', function(evt) {
+          if (evt.lengthComputable) {
+            return _this.progress = 100 * evt.loaded / evt.total;
+          } else {
+            return _this.progress = _this.progress + (100 - _this.progress) / 2;
+          }
+        });
+        _ref2 = ['load', 'abort', 'timeout', 'error'];
+        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+          event = _ref2[_j];
+          request.addEventListener(event, function() {
+            return _this.progress = 100;
+          });
+        }
+      } else {
+        _onreadystatechange = request.onreadystatechange;
+        request.onreadystatechange = function() {
+          var _ref3;
+          if ((_ref3 = request.readyState) === 0 || _ref3 === 4) {
+            _this.progress = 100;
+          } else if (request.readyState === 3) {
+            _this.progress = 50;
+          }
+          return typeof _onreadystatechange === "function" ? _onreadystatechange.apply(null, arguments) : void 0;
+        };
+      }
+    }
+
+    return XHRRequestTracker;
+
+  })();
+
+  SocketRequestTracker = (function() {
+    function SocketRequestTracker(request) {
+      var event, _j, _len1, _ref2,
+        _this = this;
+      this.progress = 0;
+      _ref2 = ['error', 'open'];
+      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+        event = _ref2[_j];
+        request.addEventListener(event, function() {
+          return _this.progress = 100;
+        });
+      }
+    }
+
+    return SocketRequestTracker;
+
+  })();
+
+  ElementMonitor = (function() {
+    function ElementMonitor(options) {
+      var selector, _j, _len1, _ref2;
+      if (options == null) {
+        options = {};
+      }
+      this.elements = [];
+      if (options.selectors == null) {
+        options.selectors = [];
+      }
+      _ref2 = options.selectors;
+      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+        selector = _ref2[_j];
+        this.elements.push(new ElementTracker(selector));
+      }
+    }
+
+    return ElementMonitor;
+
+  })();
+
+  ElementTracker = (function() {
+    function ElementTracker(selector) {
+      this.selector = selector;
+      this.progress = 0;
+      this.check();
+    }
+
+    ElementTracker.prototype.check = function() {
+      var _this = this;
+      if (document.querySelector(this.selector)) {
+        return this.done();
+      } else {
+        return setTimeout((function() {
+          return _this.check();
+        }), options.elements.checkInterval);
+      }
+    };
+
+    ElementTracker.prototype.done = function() {
+      return this.progress = 100;
+    };
+
+    return ElementTracker;
+
+  })();
+
+  DocumentMonitor = (function() {
+    DocumentMonitor.prototype.states = {
+      loading: 0,
+      interactive: 50,
+      complete: 100
+    };
+
+    function DocumentMonitor() {
+      var _onreadystatechange, _ref2,
+        _this = this;
+      this.progress = (_ref2 = this.states[document.readyState]) != null ? _ref2 : 100;
+      _onreadystatechange = document.onreadystatechange;
+      document.onreadystatechange = function() {
+        if (_this.states[document.readyState] != null) {
+          _this.progress = _this.states[document.readyState];
+        }
+        return typeof _onreadystatechange === "function" ? _onreadystatechange.apply(null, arguments) : void 0;
+      };
+    }
+
+    return DocumentMonitor;
+
+  })();
+
+  EventLagMonitor = (function() {
+    function EventLagMonitor() {
+      var avg, interval, last, points, samples,
+        _this = this;
+      this.progress = 0;
+      avg = 0;
+      samples = [];
+      points = 0;
+      last = now();
+      interval = setInterval(function() {
+        var diff;
+        diff = now() - last - 50;
+        last = now();
+        samples.push(diff);
+        if (samples.length > options.eventLag.sampleCount) {
+          samples.shift();
+        }
+        avg = avgAmplitude(samples);
+        if (++points >= options.eventLag.minSamples && avg < options.eventLag.lagThreshold) {
+          _this.progress = 100;
+          return clearInterval(interval);
+        } else {
+          return _this.progress = 100 * (3 / (avg + 3));
+        }
+      }, 50);
+    }
+
+    return EventLagMonitor;
+
+  })();
+
+  Scaler = (function() {
+    function Scaler(source) {
+      this.source = source;
+      this.last = this.sinceLastUpdate = 0;
+      this.rate = options.initialRate;
+      this.catchup = 0;
+      this.progress = this.lastProgress = 0;
+      if (this.source != null) {
+        this.progress = result(this.source, 'progress');
+      }
+    }
+
+    Scaler.prototype.tick = function(frameTime, val) {
+      var scaling;
+      if (val == null) {
+        val = result(this.source, 'progress');
+      }
+      if (val >= 100) {
+        this.done = true;
+      }
+      if (val === this.last) {
+        this.sinceLastUpdate += frameTime;
+      } else {
+        if (this.sinceLastUpdate) {
+          this.rate = (val - this.last) / this.sinceLastUpdate;
+        }
+        this.catchup = (val - this.progress) / options.catchupTime;
+        this.sinceLastUpdate = 0;
+        this.last = val;
+      }
+      if (val > this.progress) {
+        this.progress += this.catchup * frameTime;
+      }
+      scaling = 1 - Math.pow(this.progress / 100, options.easeFactor);
+      this.progress += scaling * this.rate * frameTime;
+      this.progress = Math.min(this.lastProgress + options.maxProgressPerFrame, this.progress);
+      this.progress = Math.max(0, this.progress);
+      this.progress = Math.min(100, this.progress);
+      this.lastProgress = this.progress;
+      return this.progress;
+    };
+
+    return Scaler;
+
+  })();
+
+  sources = null;
+
+  scalers = null;
+
+  bar = null;
+
+  uniScaler = null;
+
+  animation = null;
+
+  cancelAnimation = null;
+
+  Pace.running = false;
+
+  handlePushState = function() {
+    if (options.restartOnPushState) {
+      return Pace.restart();
+    }
+  };
+
+  if (window.history.pushState != null) {
+    _pushState = window.history.pushState;
+    window.history.pushState = function() {
+      handlePushState();
+      return _pushState.apply(window.history, arguments);
+    };
+  }
+
+  if (window.history.replaceState != null) {
+    _replaceState = window.history.replaceState;
+    window.history.replaceState = function() {
+      handlePushState();
+      return _replaceState.apply(window.history, arguments);
+    };
+  }
+
+  SOURCE_KEYS = {
+    ajax: AjaxMonitor,
+    elements: ElementMonitor,
+    document: DocumentMonitor,
+    eventLag: EventLagMonitor
+  };
+
+  (init = function() {
+    var type, _j, _k, _len1, _len2, _ref2, _ref3, _ref4;
+    Pace.sources = sources = [];
+    _ref2 = ['ajax', 'elements', 'document', 'eventLag'];
+    for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+      type = _ref2[_j];
+      if (options[type] !== false) {
+        sources.push(new SOURCE_KEYS[type](options[type]));
+      }
+    }
+    _ref4 = (_ref3 = options.extraSources) != null ? _ref3 : [];
+    for (_k = 0, _len2 = _ref4.length; _k < _len2; _k++) {
+      source = _ref4[_k];
+      sources.push(new source(options));
+    }
+    Pace.bar = bar = new Bar;
+    scalers = [];
+    return uniScaler = new Scaler;
+  })();
+
+  Pace.stop = function() {
+    Pace.trigger('stop');
+    Pace.running = false;
+    bar.destroy();
+    cancelAnimation = true;
+    if (animation != null) {
+      if (typeof cancelAnimationFrame === "function") {
+        cancelAnimationFrame(animation);
+      }
+      animation = null;
+    }
+    return init();
+  };
+
+  Pace.restart = function() {
+    Pace.trigger('restart');
+    Pace.stop();
+    return Pace.start();
+  };
+
+  Pace.go = function() {
+    var start;
+    Pace.running = true;
+    bar.render();
+    start = now();
+    cancelAnimation = false;
+    return animation = runAnimation(function(frameTime, enqueueNextFrame) {
+      var avg, count, done, element, elements, i, j, remaining, scaler, scalerList, sum, _j, _k, _len1, _len2, _ref2;
+      remaining = 100 - bar.progress;
+      count = sum = 0;
+      done = true;
+      for (i = _j = 0, _len1 = sources.length; _j < _len1; i = ++_j) {
+        source = sources[i];
+        scalerList = scalers[i] != null ? scalers[i] : scalers[i] = [];
+        elements = (_ref2 = source.elements) != null ? _ref2 : [source];
+        for (j = _k = 0, _len2 = elements.length; _k < _len2; j = ++_k) {
+          element = elements[j];
+          scaler = scalerList[j] != null ? scalerList[j] : scalerList[j] = new Scaler(element);
+          done &= scaler.done;
+          if (scaler.done) {
+            continue;
+          }
+          count++;
+          sum += scaler.tick(frameTime);
+        }
+      }
+      avg = sum / count;
+      bar.update(uniScaler.tick(frameTime, avg));
+      if (bar.done() || done || cancelAnimation) {
+        bar.update(100);
+        Pace.trigger('done');
+        return setTimeout(function() {
+          bar.finish();
+          Pace.running = false;
+          return Pace.trigger('hide');
+        }, Math.max(options.ghostTime, Math.max(options.minTime - (now() - start), 0)));
+      } else {
+        return enqueueNextFrame();
+      }
+    });
+  };
+
+  Pace.start = function(_options) {
+    extend(options, _options);
+    Pace.running = true;
+    try {
+      bar.render();
+    } catch (_error) {
+      NoTargetError = _error;
+    }
+    if (!document.querySelector('.pace')) {
+      return setTimeout(Pace.start, 50);
+    } else {
+      Pace.trigger('start');
+      return Pace.go();
+    }
+  };
+
+  if (typeof define === 'function' && define.amd) {
+    define('pace',[],function() {
+      return Pace;
+    });
+  } else if (typeof exports === 'object') {
+    module.exports = Pace;
+  } else {
+    if (options.startOnPageLoad) {
+      Pace.start();
+    }
+  }
+
+}).call(this);
+
 //     Backbone.js 1.1.0
 
 //     (c) 2010-2011 Jeremy Ashkenas, DocumentCloud Inc.
@@ -18266,7 +19178,31 @@ define("mixitup", function(){});
 			});
 define("search_results", function(){});
 
-define('plugins/walnut-pluginloader',['underscore', 'jquery', 'backbone', 'marionette', 'syphon', 'text', 'jqueryvalidate', 'sidr', 'slimroll', 'core', 'breakpoints', 'mustache', 'spin', 'jqueryspin', 'mixitup', 'search_results'], function() {});
+/**
+* Bootstrap v3.0.0 by @fat and @mdo
+* Copyright 2013 Twitter Inc.
+* Licensed under http://www.apache.org/licenses/LICENSE-2.0.
+*
+* Designed and built with all the love in the world by @mdo and @fat.
+*/
+if(!jQuery)throw new Error("Bootstrap requires jQuery");+function(a){function b(){var a=document.createElement("bootstrap"),b={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"};for(var c in b)if(void 0!==a.style[c])return{end:b[c]}}a.fn.emulateTransitionEnd=function(b){var c=!1,d=this;a(this).one(a.support.transition.end,function(){c=!0});var e=function(){c||a(d).trigger(a.support.transition.end)};return setTimeout(e,b),this},a(function(){a.support.transition=b()})}(window.jQuery),+function(a){var b='[data-dismiss="alert"]',c=function(c){a(c).on("click",b,this.close)};c.prototype.close=function(b){function c(){f.trigger("closed.bs.alert").remove()}var d=a(this),e=d.attr("data-target");e||(e=d.attr("href"),e=e&&e.replace(/.*(?=#[^\s]*$)/,""));var f=a(e);b&&b.preventDefault(),f.length||(f=d.hasClass("alert")?d:d.parent()),f.trigger(b=a.Event("close.bs.alert")),b.isDefaultPrevented()||(f.removeClass("in"),a.support.transition&&f.hasClass("fade")?f.one(a.support.transition.end,c).emulateTransitionEnd(150):c())};var d=a.fn.alert;a.fn.alert=function(b){return this.each(function(){var d=a(this),e=d.data("bs.alert");e||d.data("bs.alert",e=new c(this)),"string"==typeof b&&e[b].call(d)})},a.fn.alert.Constructor=c,a.fn.alert.noConflict=function(){return a.fn.alert=d,this},a(document).on("click.bs.alert.data-api",b,c.prototype.close)}(window.jQuery),+function(a){var b=function(c,d){this.$element=a(c),this.options=a.extend({},b.DEFAULTS,d)};b.DEFAULTS={loadingText:"loading..."},b.prototype.setState=function(a){var b="disabled",c=this.$element,d=c.is("input")?"val":"html",e=c.data();a+="Text",e.resetText||c.data("resetText",c[d]()),c[d](e[a]||this.options[a]),setTimeout(function(){"loadingText"==a?c.addClass(b).attr(b,b):c.removeClass(b).removeAttr(b)},0)},b.prototype.toggle=function(){var a=this.$element.closest('[data-toggle="buttons"]');if(a.length){var b=this.$element.find("input").prop("checked",!this.$element.hasClass("active")).trigger("change");"radio"===b.prop("type")&&a.find(".active").removeClass("active")}this.$element.toggleClass("active")};var c=a.fn.button;a.fn.button=function(c){return this.each(function(){var d=a(this),e=d.data("bs.button"),f="object"==typeof c&&c;e||d.data("bs.button",e=new b(this,f)),"toggle"==c?e.toggle():c&&e.setState(c)})},a.fn.button.Constructor=b,a.fn.button.noConflict=function(){return a.fn.button=c,this},a(document).on("click.bs.button.data-api","[data-toggle^=button]",function(b){var c=a(b.target);c.hasClass("btn")||(c=c.closest(".btn")),c.button("toggle"),b.preventDefault()})}(window.jQuery),+function(a){var b=function(b,c){this.$element=a(b),this.$indicators=this.$element.find(".carousel-indicators"),this.options=c,this.paused=this.sliding=this.interval=this.$active=this.$items=null,"hover"==this.options.pause&&this.$element.on("mouseenter",a.proxy(this.pause,this)).on("mouseleave",a.proxy(this.cycle,this))};b.DEFAULTS={interval:5e3,pause:"hover",wrap:!0},b.prototype.cycle=function(b){return b||(this.paused=!1),this.interval&&clearInterval(this.interval),this.options.interval&&!this.paused&&(this.interval=setInterval(a.proxy(this.next,this),this.options.interval)),this},b.prototype.getActiveIndex=function(){return this.$active=this.$element.find(".item.active"),this.$items=this.$active.parent().children(),this.$items.index(this.$active)},b.prototype.to=function(b){var c=this,d=this.getActiveIndex();return b>this.$items.length-1||0>b?void 0:this.sliding?this.$element.one("slid",function(){c.to(b)}):d==b?this.pause().cycle():this.slide(b>d?"next":"prev",a(this.$items[b]))},b.prototype.pause=function(b){return b||(this.paused=!0),this.$element.find(".next, .prev").length&&a.support.transition.end&&(this.$element.trigger(a.support.transition.end),this.cycle(!0)),this.interval=clearInterval(this.interval),this},b.prototype.next=function(){return this.sliding?void 0:this.slide("next")},b.prototype.prev=function(){return this.sliding?void 0:this.slide("prev")},b.prototype.slide=function(b,c){var d=this.$element.find(".item.active"),e=c||d[b](),f=this.interval,g="next"==b?"left":"right",h="next"==b?"first":"last",i=this;if(!e.length){if(!this.options.wrap)return;e=this.$element.find(".item")[h]()}this.sliding=!0,f&&this.pause();var j=a.Event("slide.bs.carousel",{relatedTarget:e[0],direction:g});if(!e.hasClass("active")){if(this.$indicators.length&&(this.$indicators.find(".active").removeClass("active"),this.$element.one("slid",function(){var b=a(i.$indicators.children()[i.getActiveIndex()]);b&&b.addClass("active")})),a.support.transition&&this.$element.hasClass("slide")){if(this.$element.trigger(j),j.isDefaultPrevented())return;e.addClass(b),e[0].offsetWidth,d.addClass(g),e.addClass(g),d.one(a.support.transition.end,function(){e.removeClass([b,g].join(" ")).addClass("active"),d.removeClass(["active",g].join(" ")),i.sliding=!1,setTimeout(function(){i.$element.trigger("slid")},0)}).emulateTransitionEnd(600)}else{if(this.$element.trigger(j),j.isDefaultPrevented())return;d.removeClass("active"),e.addClass("active"),this.sliding=!1,this.$element.trigger("slid")}return f&&this.cycle(),this}};var c=a.fn.carousel;a.fn.carousel=function(c){return this.each(function(){var d=a(this),e=d.data("bs.carousel"),f=a.extend({},b.DEFAULTS,d.data(),"object"==typeof c&&c),g="string"==typeof c?c:f.slide;e||d.data("bs.carousel",e=new b(this,f)),"number"==typeof c?e.to(c):g?e[g]():f.interval&&e.pause().cycle()})},a.fn.carousel.Constructor=b,a.fn.carousel.noConflict=function(){return a.fn.carousel=c,this},a(document).on("click.bs.carousel.data-api","[data-slide], [data-slide-to]",function(b){var c,d=a(this),e=a(d.attr("data-target")||(c=d.attr("href"))&&c.replace(/.*(?=#[^\s]+$)/,"")),f=a.extend({},e.data(),d.data()),g=d.attr("data-slide-to");g&&(f.interval=!1),e.carousel(f),(g=d.attr("data-slide-to"))&&e.data("bs.carousel").to(g),b.preventDefault()}),a(window).on("load",function(){a('[data-ride="carousel"]').each(function(){var b=a(this);b.carousel(b.data())})})}(window.jQuery),+function(a){var b=function(c,d){this.$element=a(c),this.options=a.extend({},b.DEFAULTS,d),this.transitioning=null,this.options.parent&&(this.$parent=a(this.options.parent)),this.options.toggle&&this.toggle()};b.DEFAULTS={toggle:!0},b.prototype.dimension=function(){var a=this.$element.hasClass("width");return a?"width":"height"},b.prototype.show=function(){if(!this.transitioning&&!this.$element.hasClass("in")){var b=a.Event("show.bs.collapse");if(this.$element.trigger(b),!b.isDefaultPrevented()){var c=this.$parent&&this.$parent.find("> .panel > .in");if(c&&c.length){var d=c.data("bs.collapse");if(d&&d.transitioning)return;c.collapse("hide"),d||c.data("bs.collapse",null)}var e=this.dimension();this.$element.removeClass("collapse").addClass("collapsing")[e](0),this.transitioning=1;var f=function(){this.$element.removeClass("collapsing").addClass("in")[e]("auto"),this.transitioning=0,this.$element.trigger("shown.bs.collapse")};if(!a.support.transition)return f.call(this);var g=a.camelCase(["scroll",e].join("-"));this.$element.one(a.support.transition.end,a.proxy(f,this)).emulateTransitionEnd(350)[e](this.$element[0][g])}}},b.prototype.hide=function(){if(!this.transitioning&&this.$element.hasClass("in")){var b=a.Event("hide.bs.collapse");if(this.$element.trigger(b),!b.isDefaultPrevented()){var c=this.dimension();this.$element[c](this.$element[c]())[0].offsetHeight,this.$element.addClass("collapsing").removeClass("collapse").removeClass("in"),this.transitioning=1;var d=function(){this.transitioning=0,this.$element.trigger("hidden.bs.collapse").removeClass("collapsing").addClass("collapse")};return a.support.transition?(this.$element[c](0).one(a.support.transition.end,a.proxy(d,this)).emulateTransitionEnd(350),void 0):d.call(this)}}},b.prototype.toggle=function(){this[this.$element.hasClass("in")?"hide":"show"]()};var c=a.fn.collapse;a.fn.collapse=function(c){return this.each(function(){var d=a(this),e=d.data("bs.collapse"),f=a.extend({},b.DEFAULTS,d.data(),"object"==typeof c&&c);e||d.data("bs.collapse",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.collapse.Constructor=b,a.fn.collapse.noConflict=function(){return a.fn.collapse=c,this},a(document).on("click.bs.collapse.data-api","[data-toggle=collapse]",function(b){var c,d=a(this),e=d.attr("data-target")||b.preventDefault()||(c=d.attr("href"))&&c.replace(/.*(?=#[^\s]+$)/,""),f=a(e),g=f.data("bs.collapse"),h=g?"toggle":d.data(),i=d.attr("data-parent"),j=i&&a(i);g&&g.transitioning||(j&&j.find('[data-toggle=collapse][data-parent="'+i+'"]').not(d).addClass("collapsed"),d[f.hasClass("in")?"addClass":"removeClass"]("collapsed")),f.collapse(h)})}(window.jQuery),+function(a){function b(){a(d).remove(),a(e).each(function(b){var d=c(a(this));d.hasClass("open")&&(d.trigger(b=a.Event("hide.bs.dropdown")),b.isDefaultPrevented()||d.removeClass("open").trigger("hidden.bs.dropdown"))})}function c(b){var c=b.attr("data-target");c||(c=b.attr("href"),c=c&&/#/.test(c)&&c.replace(/.*(?=#[^\s]*$)/,""));var d=c&&a(c);return d&&d.length?d:b.parent()}var d=".dropdown-backdrop",e="[data-toggle=dropdown]",f=function(b){a(b).on("click.bs.dropdown",this.toggle)};f.prototype.toggle=function(d){var e=a(this);if(!e.is(".disabled, :disabled")){var f=c(e),g=f.hasClass("open");if(b(),!g){if("ontouchstart"in document.documentElement&&!f.closest(".navbar-nav").length&&a('<div class="dropdown-backdrop"/>').insertAfter(a(this)).on("click",b),f.trigger(d=a.Event("show.bs.dropdown")),d.isDefaultPrevented())return;f.toggleClass("open").trigger("shown.bs.dropdown"),e.focus()}return!1}},f.prototype.keydown=function(b){if(/(38|40|27)/.test(b.keyCode)){var d=a(this);if(b.preventDefault(),b.stopPropagation(),!d.is(".disabled, :disabled")){var f=c(d),g=f.hasClass("open");if(!g||g&&27==b.keyCode)return 27==b.which&&f.find(e).focus(),d.click();var h=a("[role=menu] li:not(.divider):visible a",f);if(h.length){var i=h.index(h.filter(":focus"));38==b.keyCode&&i>0&&i--,40==b.keyCode&&i<h.length-1&&i++,~i||(i=0),h.eq(i).focus()}}}};var g=a.fn.dropdown;a.fn.dropdown=function(b){return this.each(function(){var c=a(this),d=c.data("dropdown");d||c.data("dropdown",d=new f(this)),"string"==typeof b&&d[b].call(c)})},a.fn.dropdown.Constructor=f,a.fn.dropdown.noConflict=function(){return a.fn.dropdown=g,this},a(document).on("click.bs.dropdown.data-api",b).on("click.bs.dropdown.data-api",".dropdown form",function(a){a.stopPropagation()}).on("click.bs.dropdown.data-api",e,f.prototype.toggle).on("keydown.bs.dropdown.data-api",e+", [role=menu]",f.prototype.keydown)}(window.jQuery),+function(a){var b=function(b,c){this.options=c,this.$element=a(b),this.$backdrop=this.isShown=null,this.options.remote&&this.$element.load(this.options.remote)};b.DEFAULTS={backdrop:!0,keyboard:!0,show:!0},b.prototype.toggle=function(a){return this[this.isShown?"hide":"show"](a)},b.prototype.show=function(b){var c=this,d=a.Event("show.bs.modal",{relatedTarget:b});this.$element.trigger(d),this.isShown||d.isDefaultPrevented()||(this.isShown=!0,this.escape(),this.$element.on("click.dismiss.modal",'[data-dismiss="modal"]',a.proxy(this.hide,this)),this.backdrop(function(){var d=a.support.transition&&c.$element.hasClass("fade");c.$element.parent().length||c.$element.appendTo(document.body),c.$element.show(),d&&c.$element[0].offsetWidth,c.$element.addClass("in").attr("aria-hidden",!1),c.enforceFocus();var e=a.Event("shown.bs.modal",{relatedTarget:b});d?c.$element.find(".modal-dialog").one(a.support.transition.end,function(){c.$element.focus().trigger(e)}).emulateTransitionEnd(300):c.$element.focus().trigger(e)}))},b.prototype.hide=function(b){b&&b.preventDefault(),b=a.Event("hide.bs.modal"),this.$element.trigger(b),this.isShown&&!b.isDefaultPrevented()&&(this.isShown=!1,this.escape(),a(document).off("focusin.bs.modal"),this.$element.removeClass("in").attr("aria-hidden",!0).off("click.dismiss.modal"),a.support.transition&&this.$element.hasClass("fade")?this.$element.one(a.support.transition.end,a.proxy(this.hideModal,this)).emulateTransitionEnd(300):this.hideModal())},b.prototype.enforceFocus=function(){a(document).off("focusin.bs.modal").on("focusin.bs.modal",a.proxy(function(a){this.$element[0]===a.target||this.$element.has(a.target).length||this.$element.focus()},this))},b.prototype.escape=function(){this.isShown&&this.options.keyboard?this.$element.on("keyup.dismiss.bs.modal",a.proxy(function(a){27==a.which&&this.hide()},this)):this.isShown||this.$element.off("keyup.dismiss.bs.modal")},b.prototype.hideModal=function(){var a=this;this.$element.hide(),this.backdrop(function(){a.removeBackdrop(),a.$element.trigger("hidden.bs.modal")})},b.prototype.removeBackdrop=function(){this.$backdrop&&this.$backdrop.remove(),this.$backdrop=null},b.prototype.backdrop=function(b){var c=this.$element.hasClass("fade")?"fade":"";if(this.isShown&&this.options.backdrop){var d=a.support.transition&&c;if(this.$backdrop=a('<div class="modal-backdrop '+c+'" />').appendTo(document.body),this.$element.on("click.dismiss.modal",a.proxy(function(a){a.target===a.currentTarget&&("static"==this.options.backdrop?this.$element[0].focus.call(this.$element[0]):this.hide.call(this))},this)),d&&this.$backdrop[0].offsetWidth,this.$backdrop.addClass("in"),!b)return;d?this.$backdrop.one(a.support.transition.end,b).emulateTransitionEnd(150):b()}else!this.isShown&&this.$backdrop?(this.$backdrop.removeClass("in"),a.support.transition&&this.$element.hasClass("fade")?this.$backdrop.one(a.support.transition.end,b).emulateTransitionEnd(150):b()):b&&b()};var c=a.fn.modal;a.fn.modal=function(c,d){return this.each(function(){var e=a(this),f=e.data("bs.modal"),g=a.extend({},b.DEFAULTS,e.data(),"object"==typeof c&&c);f||e.data("bs.modal",f=new b(this,g)),"string"==typeof c?f[c](d):g.show&&f.show(d)})},a.fn.modal.Constructor=b,a.fn.modal.noConflict=function(){return a.fn.modal=c,this},a(document).on("click.bs.modal.data-api",'[data-toggle="modal"]',function(b){var c=a(this),d=c.attr("href"),e=a(c.attr("data-target")||d&&d.replace(/.*(?=#[^\s]+$)/,"")),f=e.data("modal")?"toggle":a.extend({remote:!/#/.test(d)&&d},e.data(),c.data());b.preventDefault(),e.modal(f,this).one("hide",function(){c.is(":visible")&&c.focus()})}),a(document).on("show.bs.modal",".modal",function(){a(document.body).addClass("modal-open")}).on("hidden.bs.modal",".modal",function(){a(document.body).removeClass("modal-open")})}(window.jQuery),+function(a){var b=function(a,b){this.type=this.options=this.enabled=this.timeout=this.hoverState=this.$element=null,this.init("tooltip",a,b)};b.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,container:!1},b.prototype.init=function(b,c,d){this.enabled=!0,this.type=b,this.$element=a(c),this.options=this.getOptions(d);for(var e=this.options.trigger.split(" "),f=e.length;f--;){var g=e[f];if("click"==g)this.$element.on("click."+this.type,this.options.selector,a.proxy(this.toggle,this));else if("manual"!=g){var h="hover"==g?"mouseenter":"focus",i="hover"==g?"mouseleave":"blur";this.$element.on(h+"."+this.type,this.options.selector,a.proxy(this.enter,this)),this.$element.on(i+"."+this.type,this.options.selector,a.proxy(this.leave,this))}}this.options.selector?this._options=a.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},b.prototype.getDefaults=function(){return b.DEFAULTS},b.prototype.getOptions=function(b){return b=a.extend({},this.getDefaults(),this.$element.data(),b),b.delay&&"number"==typeof b.delay&&(b.delay={show:b.delay,hide:b.delay}),b},b.prototype.getDelegateOptions=function(){var b={},c=this.getDefaults();return this._options&&a.each(this._options,function(a,d){c[a]!=d&&(b[a]=d)}),b},b.prototype.enter=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type);return clearTimeout(c.timeout),c.hoverState="in",c.options.delay&&c.options.delay.show?(c.timeout=setTimeout(function(){"in"==c.hoverState&&c.show()},c.options.delay.show),void 0):c.show()},b.prototype.leave=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type);return clearTimeout(c.timeout),c.hoverState="out",c.options.delay&&c.options.delay.hide?(c.timeout=setTimeout(function(){"out"==c.hoverState&&c.hide()},c.options.delay.hide),void 0):c.hide()},b.prototype.show=function(){var b=a.Event("show.bs."+this.type);if(this.hasContent()&&this.enabled){if(this.$element.trigger(b),b.isDefaultPrevented())return;var c=this.tip();this.setContent(),this.options.animation&&c.addClass("fade");var d="function"==typeof this.options.placement?this.options.placement.call(this,c[0],this.$element[0]):this.options.placement,e=/\s?auto?\s?/i,f=e.test(d);f&&(d=d.replace(e,"")||"top"),c.detach().css({top:0,left:0,display:"block"}).addClass(d),this.options.container?c.appendTo(this.options.container):c.insertAfter(this.$element);var g=this.getPosition(),h=c[0].offsetWidth,i=c[0].offsetHeight;if(f){var j=this.$element.parent(),k=d,l=document.documentElement.scrollTop||document.body.scrollTop,m="body"==this.options.container?window.innerWidth:j.outerWidth(),n="body"==this.options.container?window.innerHeight:j.outerHeight(),o="body"==this.options.container?0:j.offset().left;d="bottom"==d&&g.top+g.height+i-l>n?"top":"top"==d&&g.top-l-i<0?"bottom":"right"==d&&g.right+h>m?"left":"left"==d&&g.left-h<o?"right":d,c.removeClass(k).addClass(d)}var p=this.getCalculatedOffset(d,g,h,i);this.applyPlacement(p,d),this.$element.trigger("shown.bs."+this.type)}},b.prototype.applyPlacement=function(a,b){var c,d=this.tip(),e=d[0].offsetWidth,f=d[0].offsetHeight,g=parseInt(d.css("margin-top"),10),h=parseInt(d.css("margin-left"),10);isNaN(g)&&(g=0),isNaN(h)&&(h=0),a.top=a.top+g,a.left=a.left+h,d.offset(a).addClass("in");var i=d[0].offsetWidth,j=d[0].offsetHeight;if("top"==b&&j!=f&&(c=!0,a.top=a.top+f-j),/bottom|top/.test(b)){var k=0;a.left<0&&(k=-2*a.left,a.left=0,d.offset(a),i=d[0].offsetWidth,j=d[0].offsetHeight),this.replaceArrow(k-e+i,i,"left")}else this.replaceArrow(j-f,j,"top");c&&d.offset(a)},b.prototype.replaceArrow=function(a,b,c){this.arrow().css(c,a?50*(1-a/b)+"%":"")},b.prototype.setContent=function(){var a=this.tip(),b=this.getTitle();a.find(".tooltip-inner")[this.options.html?"html":"text"](b),a.removeClass("fade in top bottom left right")},b.prototype.hide=function(){function b(){"in"!=c.hoverState&&d.detach()}var c=this,d=this.tip(),e=a.Event("hide.bs."+this.type);return this.$element.trigger(e),e.isDefaultPrevented()?void 0:(d.removeClass("in"),a.support.transition&&this.$tip.hasClass("fade")?d.one(a.support.transition.end,b).emulateTransitionEnd(150):b(),this.$element.trigger("hidden.bs."+this.type),this)},b.prototype.fixTitle=function(){var a=this.$element;(a.attr("title")||"string"!=typeof a.attr("data-original-title"))&&a.attr("data-original-title",a.attr("title")||"").attr("title","")},b.prototype.hasContent=function(){return this.getTitle()},b.prototype.getPosition=function(){var b=this.$element[0];return a.extend({},"function"==typeof b.getBoundingClientRect?b.getBoundingClientRect():{width:b.offsetWidth,height:b.offsetHeight},this.$element.offset())},b.prototype.getCalculatedOffset=function(a,b,c,d){return"bottom"==a?{top:b.top+b.height,left:b.left+b.width/2-c/2}:"top"==a?{top:b.top-d,left:b.left+b.width/2-c/2}:"left"==a?{top:b.top+b.height/2-d/2,left:b.left-c}:{top:b.top+b.height/2-d/2,left:b.left+b.width}},b.prototype.getTitle=function(){var a,b=this.$element,c=this.options;return a=b.attr("data-original-title")||("function"==typeof c.title?c.title.call(b[0]):c.title)},b.prototype.tip=function(){return this.$tip=this.$tip||a(this.options.template)},b.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},b.prototype.validate=function(){this.$element[0].parentNode||(this.hide(),this.$element=null,this.options=null)},b.prototype.enable=function(){this.enabled=!0},b.prototype.disable=function(){this.enabled=!1},b.prototype.toggleEnabled=function(){this.enabled=!this.enabled},b.prototype.toggle=function(b){var c=b?a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type):this;c.tip().hasClass("in")?c.leave(c):c.enter(c)},b.prototype.destroy=function(){this.hide().$element.off("."+this.type).removeData("bs."+this.type)};var c=a.fn.tooltip;a.fn.tooltip=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tooltip"),f="object"==typeof c&&c;e||d.data("bs.tooltip",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.tooltip.Constructor=b,a.fn.tooltip.noConflict=function(){return a.fn.tooltip=c,this}}(window.jQuery),+function(a){var b=function(a,b){this.init("popover",a,b)};if(!a.fn.tooltip)throw new Error("Popover requires tooltip.js");b.DEFAULTS=a.extend({},a.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),b.prototype=a.extend({},a.fn.tooltip.Constructor.prototype),b.prototype.constructor=b,b.prototype.getDefaults=function(){return b.DEFAULTS},b.prototype.setContent=function(){var a=this.tip(),b=this.getTitle(),c=this.getContent();a.find(".popover-title")[this.options.html?"html":"text"](b),a.find(".popover-content")[this.options.html?"html":"text"](c),a.removeClass("fade top bottom left right in"),a.find(".popover-title").html()||a.find(".popover-title").hide()},b.prototype.hasContent=function(){return this.getTitle()||this.getContent()},b.prototype.getContent=function(){var a=this.$element,b=this.options;return a.attr("data-content")||("function"==typeof b.content?b.content.call(a[0]):b.content)},b.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")},b.prototype.tip=function(){return this.$tip||(this.$tip=a(this.options.template)),this.$tip};var c=a.fn.popover;a.fn.popover=function(c){return this.each(function(){var d=a(this),e=d.data("bs.popover"),f="object"==typeof c&&c;e||d.data("bs.popover",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.popover.Constructor=b,a.fn.popover.noConflict=function(){return a.fn.popover=c,this}}(window.jQuery),+function(a){function b(c,d){var e,f=a.proxy(this.process,this);this.$element=a(c).is("body")?a(window):a(c),this.$body=a("body"),this.$scrollElement=this.$element.on("scroll.bs.scroll-spy.data-api",f),this.options=a.extend({},b.DEFAULTS,d),this.selector=(this.options.target||(e=a(c).attr("href"))&&e.replace(/.*(?=#[^\s]+$)/,"")||"")+" .nav li > a",this.offsets=a([]),this.targets=a([]),this.activeTarget=null,this.refresh(),this.process()}b.DEFAULTS={offset:10},b.prototype.refresh=function(){var b=this.$element[0]==window?"offset":"position";this.offsets=a([]),this.targets=a([]);var c=this;this.$body.find(this.selector).map(function(){var d=a(this),e=d.data("target")||d.attr("href"),f=/^#\w/.test(e)&&a(e);return f&&f.length&&[[f[b]().top+(!a.isWindow(c.$scrollElement.get(0))&&c.$scrollElement.scrollTop()),e]]||null}).sort(function(a,b){return a[0]-b[0]}).each(function(){c.offsets.push(this[0]),c.targets.push(this[1])})},b.prototype.process=function(){var a,b=this.$scrollElement.scrollTop()+this.options.offset,c=this.$scrollElement[0].scrollHeight||this.$body[0].scrollHeight,d=c-this.$scrollElement.height(),e=this.offsets,f=this.targets,g=this.activeTarget;if(b>=d)return g!=(a=f.last()[0])&&this.activate(a);for(a=e.length;a--;)g!=f[a]&&b>=e[a]&&(!e[a+1]||b<=e[a+1])&&this.activate(f[a])},b.prototype.activate=function(b){this.activeTarget=b,a(this.selector).parents(".active").removeClass("active");var c=this.selector+'[data-target="'+b+'"],'+this.selector+'[href="'+b+'"]',d=a(c).parents("li").addClass("active");d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active")),d.trigger("activate")};var c=a.fn.scrollspy;a.fn.scrollspy=function(c){return this.each(function(){var d=a(this),e=d.data("bs.scrollspy"),f="object"==typeof c&&c;e||d.data("bs.scrollspy",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.scrollspy.Constructor=b,a.fn.scrollspy.noConflict=function(){return a.fn.scrollspy=c,this},a(window).on("load",function(){a('[data-spy="scroll"]').each(function(){var b=a(this);b.scrollspy(b.data())})})}(window.jQuery),+function(a){var b=function(b){this.element=a(b)};b.prototype.show=function(){var b=this.element,c=b.closest("ul:not(.dropdown-menu)"),d=b.attr("data-target");if(d||(d=b.attr("href"),d=d&&d.replace(/.*(?=#[^\s]*$)/,"")),!b.parent("li").hasClass("active")){var e=c.find(".active:last a")[0],f=a.Event("show.bs.tab",{relatedTarget:e});if(b.trigger(f),!f.isDefaultPrevented()){var g=a(d);this.activate(b.parent("li"),c),this.activate(g,g.parent(),function(){b.trigger({type:"shown.bs.tab",relatedTarget:e})})}}},b.prototype.activate=function(b,c,d){function e(){f.removeClass("active").find("> .dropdown-menu > .active").removeClass("active"),b.addClass("active"),g?(b[0].offsetWidth,b.addClass("in")):b.removeClass("fade"),b.parent(".dropdown-menu")&&b.closest("li.dropdown").addClass("active"),d&&d()}var f=c.find("> .active"),g=d&&a.support.transition&&f.hasClass("fade");g?f.one(a.support.transition.end,e).emulateTransitionEnd(150):e(),f.removeClass("in")};var c=a.fn.tab;a.fn.tab=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tab");e||d.data("bs.tab",e=new b(this)),"string"==typeof c&&e[c]()})},a.fn.tab.Constructor=b,a.fn.tab.noConflict=function(){return a.fn.tab=c,this},a(document).on("click.bs.tab.data-api",'[data-toggle="tab"], [data-toggle="pill"]',function(b){b.preventDefault(),a(this).tab("show")})}(window.jQuery),+function(a){var b=function(c,d){this.options=a.extend({},b.DEFAULTS,d),this.$window=a(window).on("scroll.bs.affix.data-api",a.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",a.proxy(this.checkPositionWithEventLoop,this)),this.$element=a(c),this.affixed=this.unpin=null,this.checkPosition()};b.RESET="affix affix-top affix-bottom",b.DEFAULTS={offset:0},b.prototype.checkPositionWithEventLoop=function(){setTimeout(a.proxy(this.checkPosition,this),1)},b.prototype.checkPosition=function(){if(this.$element.is(":visible")){var c=a(document).height(),d=this.$window.scrollTop(),e=this.$element.offset(),f=this.options.offset,g=f.top,h=f.bottom;"object"!=typeof f&&(h=g=f),"function"==typeof g&&(g=f.top()),"function"==typeof h&&(h=f.bottom());var i=null!=this.unpin&&d+this.unpin<=e.top?!1:null!=h&&e.top+this.$element.height()>=c-h?"bottom":null!=g&&g>=d?"top":!1;this.affixed!==i&&(this.unpin&&this.$element.css("top",""),this.affixed=i,this.unpin="bottom"==i?e.top-d:null,this.$element.removeClass(b.RESET).addClass("affix"+(i?"-"+i:"")),"bottom"==i&&this.$element.offset({top:document.body.offsetHeight-h-this.$element.height()}))}};var c=a.fn.affix;a.fn.affix=function(c){return this.each(function(){var d=a(this),e=d.data("bs.affix"),f="object"==typeof c&&c;e||d.data("bs.affix",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.affix.Constructor=b,a.fn.affix.noConflict=function(){return a.fn.affix=c,this},a(window).on("load",function(){a('[data-spy="affix"]').each(function(){var b=a(this),c=b.data();c.offset=c.offset||{},c.offsetBottom&&(c.offset.bottom=c.offsetBottom),c.offsetTop&&(c.offset.top=c.offsetTop),b.affix(c)})})}(window.jQuery);
+define("bootstrap", function(){});
+
+/**
+ * jQuery Unveil
+ * A very lightweight jQuery plugin to lazy load images
+ * http://luis-almeida.github.com/unveil
+ *
+ * Licensed under the MIT license.
+ * Copyright 2013 Luís Almeida
+ * https://github.com/luis-almeida
+ */
+
+;(function($){$.fn.unveil=function(threshold,callback){var $w=$(window),th=threshold||0,retina=window.devicePixelRatio>1,attrib=retina?"data-src-retina":"data-src",images=this,loaded;this.one("unveil",function(){var source=this.getAttribute(attrib);source=source||this.getAttribute("data-src");if(source){this.setAttribute("src",source);if(typeof callback==="function")callback.call(this);}});function unveil(){var inview=images.filter(function(){var $e=$(this),wt=$w.scrollTop(),wb=wt+$w.height(),et=$e.offset().top,eb=et+$e.height();return eb>=wt-th&&et<=wb+th;});loaded=inview.trigger("unveil");images=images.not(loaded);}$w.scroll(unveil);$w.resize(unveil);unveil();return this;};})(window.jQuery||window.Zepto);
+
+define("unveil", function(){});
+
+define('plugins/walnut-pluginloader',['underscore', 'jquery', 'pace', 'backbone', 'marionette', 'syphon', 'text', 'jqueryvalidate', 'sidr', 'slimroll', 'core', 'breakpoints', 'mustache', 'spin', 'jqueryspin', 'mixitup', 'search_results', 'bootstrap', 'unveil'], function() {});
 
 define('config/marionette',['marionette', 'mustache'], function(Marionette, Mustache) {
   _.extend(Marionette.Application.prototype, {
@@ -19962,16 +20898,23 @@ define('app',['marionette'], function(Marionette) {
   App.commands.setHandler("unregister:instance", function(instance, id) {
     return App.unregister(instance, id);
   });
+  App.on("initialize:before", function() {
+    return Pace.start();
+  });
   App.on("initialize:after", function(options) {
     var xhr;
+    Pace.on('hide', function() {
+      return $("#site_main_container").css('visibility', 'visible');
+    });
     App.startHistory();
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
-        var user;
+        var school, user;
         if (resp.success) {
           console.log(resp);
           user = App.request("get:user:model");
           user.set(resp.data);
+          school = App.request("get:current:school");
           App.execute("show:headerapp", {
             region: App.headerRegion
           });
@@ -20130,10 +21073,14 @@ define('apps/login/logincontroller',['app', 'controllers/region-controller', 'te
 
       LoginView.prototype.template = loginTpl;
 
-      LoginView.prototype.className = 'error-body no-top  pace-done';
+      LoginView.prototype.className = '';
 
       LoginView.prototype.events = {
         'click #login-submit': 'submitLogin'
+      };
+
+      LoginView.prototype.onShow = function() {
+        return $('body').addClass('error-body no-top');
       };
 
       LoginView.prototype.submitLogin = function(e) {
@@ -20201,7 +21148,7 @@ define('apps/login/loginapp',['app', 'apps/login/logincontroller'], function(App
 });
 
 
-define('text!apps/header/left/templates/left.html',[],function () { return '<!-- BEGIN HEADER LEFT SIDE SECTION -->\n\t<!-- BEGIN SLIM NAVIGATION TOGGLE -->\n\t<ul class="nav quick-section">\n\t\t<li class="quicklinks">\n\t\t\t<a id="layout-condensed-toggle" class="" href="#">\n\t\t\t\t<div class="iconset top-menu-toggle-dark"></div>\n\t\t\t</a>\n\t\t</li>\n\t\t<li class="quicklinks"><span class="h-seperate"></span></li>\n\t\t<li class="quicklinks"><a class="" href="#"><div class="iconset top-reload"></div></a></li>\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t<ul class="nav quick-section">\n\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t\t\t\t\t\t\t\t\t\n\t\t\t<!-- END HEADER LEFT SIDE SECTION -->';});
+define('text!apps/header/left/templates/left.html',[],function () { return '<!-- BEGIN HEADER LEFT SIDE SECTION -->\n\t<!-- BEGIN SLIM NAVIGATION TOGGLE -->\n\t<ul class="nav quick-section">\n\t\t<li class="quicklinks">\n\t\t\t<a id="layout-condensed-toggle" class="" href="#">\n\t\t\t\t<div class="iconset top-menu-toggle-dark"></div>\n\t\t\t</a>\n\t\t</li>\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t<ul class="nav quick-section">\n\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t\t\t\t\t\t\t\t\t\n\t\t\t<!-- END HEADER LEFT SIDE SECTION -->';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -20280,7 +21227,7 @@ define('apps/header/left/leftapp',['app', 'controllers/region-controller', 'text
 });
 
 
-define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\n<div class="chat-toggler">\t\n\t\t<!-- BEGIN PROFILE PICTURE -->\n\t\t<div class="profile-pic"> \n\t\t\t<img width="35" height="35" data-src-retina="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png" data-src="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png" alt="" src="http://localhost/walnut/wp-content/themes/walnut/images/avtar.png"> \n\t\t</div>  \n\t\t<!-- END PROFILE PICTURE -->     \t\t\t\n\t</div>\n\t<!-- BEGIN HEADER NAV BUTTONS -->\n\t<ul class="nav quick-section2">\n\t\t<!-- BEGIN SETTINGS -->\n\t\t<li class="quicklinks"> \n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\n\t\t\t</a>\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\n\t\t\t\t<li><a href="#">My Account</a></li>\n\t\t\t\t<li class="divider"></li>                \n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<!-- END SETTINGS -->\n\t\t \n\t</ul>\n\t<!-- END HEADER NAV BUTTONS -->\n</div>\n<!-- END HEADER RIGHT SIDE SECTION -->';});
+define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\n\t<!-- BEGIN HEADER NAV BUTTONS -->\n\t<ul class="nav quick-section2">\n\t\t<!-- BEGIN SETTINGS -->\n\t\t<li class="quicklinks"> \n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\n\t\t\t</a>\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\n\t\t\t\t<li><a href="#">My Account</a></li>\n\t\t\t\t<li class="divider"></li>                \n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<!-- END SETTINGS -->\n\t\t \n\t</ul>\n\t<!-- END HEADER NAV BUTTONS -->\n</div>\n<!-- END HEADER RIGHT SIDE SECTION -->';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -20336,17 +21283,8 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
       RightHeaderView.prototype.className = 'pull-right';
 
       RightHeaderView.prototype.events = {
-        'click #user-options': 'user_options_popup',
         'click #user_logout': function() {
           return this.trigger("user:logout");
-        }
-      };
-
-      RightHeaderView.prototype.user_options_popup = function(e) {
-        if ($(e.target).closest('li').hasClass('open')) {
-          return $(e.target).closest('li').removeClass('open');
-        } else {
-          return $(e.target).closest('li').addClass('open');
         }
       };
 
@@ -20363,9 +21301,10 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
 });
 
 
-define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \n\t<!-- BEGIN TOP NAVIGATION BAR -->\n\t<div class="navbar-inner">\n\t\t<!-- BEGIN NAVIGATION HEADER -->\n\t\t<div class="header-seperation"> \n\t\t\t<!-- BEGIN MOBILE HEADER -->\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\n\t\t\t\t<li class="dropdown">\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\t\t \n\t\t\t</ul>\n\t\t\t<!-- END MOBILE HEADER -->\n\t\t\t<!-- BEGIN LOGO -->\t\n\t\t\t<a href="#">\n\t\t\t\t<img width="106" height="21" data-src-retina="http://localhost/walnut/wp-content/html/assets/img/logo2x.png" data-src="http://localhost/walnut/wp-content/html/assets/img/walnutlearn.png" alt="" class="logo" src="http://localhost/walnut/wp-content/html/assets/img/walnutlearn.png">\n\t\t\t</a>\n\t\t\t<!-- END LOGO --> \n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\n\t\t\t<ul class="nav pull-right notifcation-center">\t\n\t\t\t\t\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \n\t\t\t</ul>\n\t\t\t<!-- END LOGO NAV BUTTONS -->\n\t\t</div>\n\t\t<!-- END NAVIGATION HEADER -->\n\t\t<!-- BEGIN CONTENT HEADER -->\n\t\t<div class="header-quick-nav"> \n\t\t\t<div id="header-left"></div>\n\t\t\t<div id="header-right"></div>\n\t\t\t\n\t\t</div> \n\t\t<!-- END CONTENT HEADER --> \n\t</div>\n\t<!-- END TOP NAVIGATION BAR --> \n</div>';});
+define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \n\t<!-- BEGIN TOP NAVIGATION BAR -->\n\t<div class="navbar-inner">\n\t\t<!-- BEGIN NAVIGATION HEADER -->\n\t\t<div class="header-seperation"> \n\t\t\t<!-- BEGIN MOBILE HEADER -->\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\n\t\t\t\t<li class="dropdown">\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\t\t \n\t\t\t</ul>\n\t\t\t<!-- END MOBILE HEADER -->\n\t\t\t<!-- BEGIN LOGO -->\t\n\t\t\t<a href="#">\n\t\t\t\t<img width="106" height="21" data-src-retina="./wp-content/themes/walnut/images/walnutlearn.png" data-src="./wp-content/themes/walnut/images/walnutlearn.png" alt="" class="logo" src="./wp-content/themes/walnut/images/walnutlearn.png">\n\t\t\t</a>\n\t\t\t<!-- END LOGO --> \n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\n\t\t\t<ul class="nav pull-right notifcation-center">\t\n\t\t\t\t\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \n\t\t\t</ul>\n\t\t\t<!-- END LOGO NAV BUTTONS -->\n\t\t</div>\n\t\t<!-- END NAVIGATION HEADER -->\n\t\t<!-- BEGIN CONTENT HEADER -->\n\t\t<div class="header-quick-nav"> \n\t\t\t<div id="header-left"></div>\n\t\t\t<div id="header-right"></div>\n\t\t\t\n\t\t</div> \n\t\t<!-- END CONTENT HEADER --> \n\t</div>\n\t<!-- END TOP NAVIGATION BAR --> \n</div>';});
 
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'apps/header/right/rightapp', 'text!apps/header/templates/header.html'], function(App, RegionController, LeftApp, RightApp, headerTpl) {
@@ -20375,14 +21314,21 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
       __extends(HeaderController, _super);
 
       function HeaderController() {
+        this._getHeaderView = __bind(this._getHeaderView, this);
+        this.showLeftRightViews = __bind(this.showLeftRightViews, this);
         return HeaderController.__super__.constructor.apply(this, arguments);
       }
 
       HeaderController.prototype.initialize = function() {
         var layout;
         this.layout = layout = this._getHeaderView();
+        this.school = App.request("get:current:school");
+        console.log('@school1');
+        console.log(this.school);
         this.listenTo(layout, 'show', this.showLeftRightViews);
-        return this.show(layout);
+        return this.show(layout, {
+          loading: true
+        });
       };
 
       HeaderController.prototype.showLeftRightViews = function() {
@@ -20395,7 +21341,11 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
       };
 
       HeaderController.prototype._getHeaderView = function() {
-        return new HeaderView;
+        console.log('@school2');
+        console.log(this.school);
+        return new HeaderView({
+          model: this.school
+        });
       };
 
       return HeaderController;
@@ -20430,7 +21380,7 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
 });
 
 
-define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\n\n<!-- BEGIN SIDEBAR MENU -->\t\n<p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>\n<ul>\t\n\n\t<!-- BEGIN ONE LEVEL MENU -->\n\t<li class="start active">\n\t\t<a href="javascript:;">\n\t\t\t<i class="icon-custom-ui"></i>\n\t\t\t<span class="title">Content Management</span>\n\t\t\t<span class="arrow"></span>\n\t\t</a>\n\t\t<ul class="sub-menu">\n\t\t</ul>\n\t</li>\n\t<!-- END ONE LEVEL MENU -->\n\n</ul>\n<!-- END SIDEBAR MENU -->\n<!-- BEGIN SIDEBAR WIDGETS -->\n<div class="side-bar-widgets">\n\n</div>\n<div class="clearfix"></div>\n<!-- END SIDEBAR WIDGETS --> \n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\n';});
+define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\n\n<ul>\t\n\n\t<!-- BEGIN ONE LEVEL MENU -->\n\t<li class="start active">\n\t\t<a href="javascript:;">\n\t\t\t<i class="icon-custom-ui"></i>\n\t\t\t<span class="title">Content Management</span>\n\t\t\t<span class="arrow"></span>\n\t\t</a>\n\t\t<ul class="sub-menu">\n\t\t</ul>\n\t</li>\n\t<!-- END ONE LEVEL MENU -->\n\n</ul>\n<!-- END SIDEBAR MENU -->\n<!-- BEGIN SIDEBAR WIDGETS -->\n<div class="side-bar-widgets">\n\n</div>\n<div class="clearfix"></div>\n<!-- END SIDEBAR WIDGETS --> \n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\n';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -20516,7 +21466,7 @@ define('apps/left-nav/leftnavapp',['app', 'controllers/region-controller', 'apps
 define('text!apps/textbooks/templates/textbooks.html',[],function () { return '<div class="content">\n  <ul class="breadcrumb">\n        <li>\n          <p>Dashboard</p>\n        </li>\n    <li>\n          <a href="#"> Content Management</a>\n        </li>\n        <li><a class="active" href="#">Textbooks</a> </li>\n      </ul>\n  <div class="page-title"> <i class="icon-custom-left"></i>\n      <h3>Text<span class="semi-bold">books</span></h3>\n    </div>\n    <div id="Filters" class="pull-left">\n          <div class="btn-group"> <a class="btn dropdown-toggle btn-demo-space" data-toggle="dropdown" href="javascript://"> <span class="anim150">Class</span> <span class="caret"></span> </a>\n            <ul class="dropdown-menu">\n              {{#classes}}\n              <li class="filter_class" data-dimension="region" data-filter="{{.}}"><a href="javascript://">Class {{.}}</a></li>\n              {{/classes}}\n          </div>\n      </div>\n        <div class="clearfix"></div>\n\n        <div class="just list" id="textbooks">\n          <!-- "TABLE" HEADER CONTAINING SORT BUTTONS (HIDDEN IN GRID MODE)-->\n          <div class="list_header">\n            <div id="SortByName" class="meta name active desc"> Name &nbsp; <span data-order="desc" data-sort="data-name" class="sort anim150 asc active"></span> <span data-order="asc" data-sort="data-name" class="sort anim150 desc"></span> </div>\n            <div class="meta class">Class</div>\n            <div class="meta rec">Chapters</div>\n            <div class="meta area"> Questions/Quizzes </div>\n          </div>\n          <!-- BEGIN LIST OF textbooks (MANY OF THESE ELEMENTS ARE VISIBLE ONLY IN LIST MODE)-->\n          <ul class="textbooks_list">\n          </ul>\n      </div>\n  </div>';});
 
 
-define('text!apps/textbooks/list/templates/list_item.html',[],function () { return '  <div class="meta name">\n    <div class="img_wrapper"> <img alt="" src="{{cover_pic}}"> </div>\n    <div class="titles">\n      <h2><a class="textbook_titles" data-id="{{term_id}}" href="#textbook/{{term_id}}">{{name}}</a></h2>\n      <p><em>{{author}}</em></p>\n    </div>\n  </div>\n  \n  <div class="meta class">\n    <p>{{#classes}}\n      Class: {{.}},\n      {{/classes}}</p>\n  </div>\n\n  <div class="meta rec">\n    {{chapter_count}}\n  </div>\n\n  <div class="meta area">\n    <p>{{count}}</p>\n  </div\n';});
+define('text!apps/textbooks/list/templates/list_item.html',[],function () { return '  <div class="meta name">\n    <div class="img_wrapper"> <img alt="" src="{{cover_pic}}"> </div>\n    <div class="titles">\n      <h2><a class="textbook_titles" data-id="{{term_id}}" href="#textbook/{{term_id}}">{{name}}</a></h2>\n      <p><em>{{author}}</em></p>\n    </div>\n  </div>\n  \n  <div class="meta class">\n    <p>{{#classes}}\n      Class {{.}},\n      {{/classes}}</p>\n  </div>\n\n  <div class="meta rec">\n    {{chapter_count}}\n  </div>\n\n  <div class="meta area">\n    <p>{{count}}</p>\n  </div\n';});
 
 
 define('text!apps/textbooks/templates/no_textbooks.html',[],function () { return '<div class="fail_element anim250">Sorry &mdash; we could not find any Textbooks matching matching these criteria</div>';});
@@ -20604,17 +21554,8 @@ define('apps/textbooks/list/views',['app', 'text!apps/textbooks/templates/textbo
       };
 
       ListView.prototype.events = {
-        'click .btn-group': 'dropdown_popup',
         'click .filter_class': function(e) {
           return this.trigger("filter:textbooks:class", $(e.target).closest('li').attr('data-filter'));
-        }
-      };
-
-      ListView.prototype.dropdown_popup = function(e) {
-        if ($(e.target).closest('div').hasClass('open')) {
-          return $(e.target).closest('div').removeClass('open');
-        } else {
-          return $(e.target).closest('div').addClass('open');
         }
       };
 
@@ -20705,7 +21646,7 @@ define('text!apps/textbooks/textbook-single/templates/textbook-full.html',[],fun
 define('text!apps/textbooks/textbook-single/templates/textbook-description.html',[],function () { return '<!-- BEGIN PAGE TITLE -->\n<div class="page-title"><i class="icon-custom-left"></i>\n\t<h3>Textbook<span class="semi-bold"> {{name}}</span></h3>\t\t\n</div>\n<!-- END PAGE TITLE -->\n<div class="tiles green cover-pic-wrapper">\t\t\t\t\t\t\n\t<div class="overlayer bottom-right"></div>\n<img src="{{cover_pic}}" alt="">\n</div>\n<div class="tiles white">\n\n\t<div class="row">\n\t\t<div class="col-md-5 user-description-box  col-sm-5">\n\t\t\t<h4 class="semi-bold no-margin">{{name}}</h4>\n\t\t\t<h6 class="no-margin">By {{author}}</h6>\n\t\t\t<p>{{description}}</p>\n\t\t</div>\n\t\t<div class="col-md-3  col-sm-3">\n\t\t\t<h5 class="normal">Chapters ( <span class="text-success">{{chapter_count}}</span> )</h5>\n\t\t\t<h5 class="normal">Questions ( <span class="text-success">{{count}}</span> )</h5>\n\t\t\t\n\t\t\t<div class="clearfix"></div>\n\t\t</div>\t\t\t\t\n\t</div>\n\n</div>';});
 
 
-define('text!apps/textbooks/textbook-single/templates/chapters-list.html',[],function () { return '<div class="grid simple ">\n\t<div class="grid-title">\n\t  <h4>List of <span class="semi-bold">Chapters</span></h4>\n\t  <div class="tools">   <a href="javascript:;" class="reload"></a> </div>\n\t</div>\n\t<div class="grid-body ">\n\t  <table class="table table-striped" id="example2" >\n\t\t<thead>\n\t\t  <tr>\n\t\t\t<th>Name</th>\n\t\t\t<th>Sections</th>\n\t\t\t<th>Questions</th>\n\t\t\t<th>Quizzes</th>\n\t\t\t<th>Creator</th>\n\t\t\t<th>Last Modified</th>\n\t\t  </tr>\n\t\t</thead>\n\t\t\n\t  <tbody id="list-chapters" aria-relevant="all" aria-live="polite" role="alert" data-link="row" class="rowlink">\n\n\n\t  </tbody>\n\t</table>\n</div>';});
+define('text!apps/textbooks/textbook-single/templates/chapters-list.html',[],function () { return '<div class="grid-title">\n  <h4>List of <span class="semi-bold">Chapters</span></h4>\n  <div class="tools">   <a href="javascript:;" class="reload"></a> </div>\n</div>\n<div class="grid-body ">\n  <table class="table table-striped" id="example2" >\n\t<thead>\n\t  <tr>\n\t\t<th>Name</th>\n\t\t<th>Sections</th>\n\t\t<th>Questions</th>\n\t\t<th>Quizzes</th>\n\t  </tr>\n\t</thead>\n\t\n  <tbody id="list-chapters" aria-relevant="all" aria-live="polite" role="alert" data-link="row" class="rowlink">\n\n\n  </tbody>\n</table>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -20724,7 +21665,7 @@ define('apps/textbooks/textbook-single/single_views',['app', 'text!apps/textbook
       TextbookDescriptionView.prototype.className = 'tiles white col-md-12 no-padding';
 
       TextbookDescriptionView.prototype.onShow = function() {
-        console.log('Show View');
+        console.log('Show Model');
         return console.log(this.model);
       };
 
@@ -20754,7 +21695,7 @@ define('apps/textbooks/textbook-single/single_views',['app', 'text!apps/textbook
 });
 
 
-define('text!apps/textbooks/textbook-single/templates/chapter-list-item.html',[],function () { return '<td class=" "><a href="#section">{{name}}</a></td>\n<td class=" ">{{chapter_count}}</td>\n<td class=" ">{{count}}</td>\n<td class="center "> 0</td>\n<td class="">-</td>\n<td class="">-</td>';});
+define('text!apps/textbooks/textbook-single/templates/chapter-list-item.html',[],function () { return '<td class=" "><a href="#section">{{name}}</a></td>\n<td class=" ">{{chapter_count}}</td>\n<td class=" ">{{count}}</td>\n<td class="center "> 0</td>';});
 
 
 define('text!apps/textbooks/textbook-single/templates/no-chapters.html',[],function () { return '<td colspan=7>Sorry &mdash; no Chapters found</td>';});
@@ -20806,7 +21747,7 @@ define('apps/textbooks/textbook-single/chapters-list',['app', 'text!apps/textboo
 
       ChapterListView.prototype.template = chapterslistTpl;
 
-      ChapterListView.prototype.className = 'page-content';
+      ChapterListView.prototype.className = 'grid simple ';
 
       ChapterListView.prototype.itemView = ChapterListItemView;
 
@@ -20815,11 +21756,14 @@ define('apps/textbooks/textbook-single/chapters-list',['app', 'text!apps/textboo
       ChapterListView.prototype.itemViewContainer = '#list-chapters';
 
       ChapterListView.prototype.onShow = function() {
-        return $('#example2').dataTable({
-          "bPaginate": true
-        }, {
-          "bSort": true
-        }, console.log('collection'), console.log(this.collection));
+        if (this.collection && this.collection.length > 0) {
+          $('#example2').dataTable({
+            "bPaginate": true,
+            "bSort": true
+          });
+        }
+        console.log('collection');
+        return console.log(this.collection);
       };
 
       return ChapterListView;
@@ -20847,25 +21791,25 @@ define('apps/textbooks/textbook-single/textbookcontroller',['app', 'controllers/
         var layout, term_id;
         term_id = opt.model_id;
         this.textbook = App.request("get:textbook:by:id", term_id);
-        this.chapters = App.request("get:textbooks", {
+        this.chapters = App.request("get:chapters", {
           'parent': term_id
         });
         this.layout = layout = this._getTextbookSingleLayout();
         this.listenTo(layout, "show", this._showTextBookSingle);
         this.listenTo(layout, "show", this._showChaptersView);
-        return this.show(layout, {
-          loading: true
-        });
+        return this.show(layout);
       };
 
       SingleTextbook.prototype._showTextBookSingle = function() {
-        var textbookDescView;
-        textbookDescView = new Single.Views.TextbookDescriptionView({
-          model: this.textbook
-        });
-        this.layout.textbookDescriptionRegion.show(textbookDescView);
-        console.log('after region');
-        return console.log(this.textbook);
+        return App.execute("when:fetched", this.textbook, (function(_this) {
+          return function() {
+            var textbookDescView;
+            textbookDescView = new Single.Views.TextbookDescriptionView({
+              model: _this.textbook
+            });
+            return _this.layout.textbookDescriptionRegion.show(textbookDescView);
+          };
+        })(this));
       };
 
       SingleTextbook.prototype._getTextbookSingleLayout = function() {
@@ -20873,11 +21817,15 @@ define('apps/textbooks/textbook-single/textbookcontroller',['app', 'controllers/
       };
 
       SingleTextbook.prototype._showChaptersView = function() {
-        var chaptersListView;
-        chaptersListView = new Single.Views.ChapterListView({
-          collection: this.chapters
-        });
-        return this.layout.chaptersRegion.show(chaptersListView);
+        return App.execute("when:fetched", this.chapters, (function(_this) {
+          return function() {
+            var chaptersListView;
+            chaptersListView = new Single.Views.ChapterListView({
+              collection: _this.chapters
+            });
+            return _this.layout.chaptersRegion.show(chaptersListView);
+          };
+        })(this));
       };
 
       return SingleTextbook;
@@ -21051,7 +21999,9 @@ define('entities/textbooks',["app", 'backbone'], function(App, Backbone) {
         slug: '',
         description: '',
         parent: 0,
-        term_order: 0
+        term_order: 0,
+        count: 0,
+        chapter_count: 0
       };
 
       ItemModel.prototype.name = 'textbook';
@@ -21117,7 +22067,168 @@ define('entities/textbooks',["app", 'backbone'], function(App, Backbone) {
   });
 });
 
-define('entities/walnut-entities-loader',['entities/base-entities', 'entities/user', 'entities/menu', 'entities/textbooks'], function() {});
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('entities/chapters',["app", 'backbone'], function(App, Backbone) {
+  return App.module("Entities.Chapters", function(Chapters, App, Backbone, Marionette, $, _) {
+    var API;
+    Chapters.ItemModel = (function(_super) {
+      __extends(ItemModel, _super);
+
+      function ItemModel() {
+        return ItemModel.__super__.constructor.apply(this, arguments);
+      }
+
+      ItemModel.prototype.idAttribute = 'chapter_id';
+
+      ItemModel.prototype.defaults = {
+        name: '',
+        slug: '',
+        description: '',
+        parent: 0,
+        term_order: 0
+      };
+
+      ItemModel.prototype.name = 'chapter';
+
+      return ItemModel;
+
+    })(Backbone.Model);
+    Chapters.ItemCollection = (function(_super) {
+      __extends(ItemCollection, _super);
+
+      function ItemCollection() {
+        return ItemCollection.__super__.constructor.apply(this, arguments);
+      }
+
+      ItemCollection.prototype.model = Chapters.ItemModel;
+
+      ItemCollection.prototype.comparator = 'term_order';
+
+      ItemCollection.prototype.url = function() {
+        return AJAXURL + '?action=get-chapters';
+      };
+
+      ItemCollection.prototype.parse = function(resp) {
+        this.total = resp.count;
+        return resp.data;
+      };
+
+      return ItemCollection;
+
+    })(Backbone.Collection);
+    API = {
+      getChapters: function(param) {
+        var chapterCollection;
+        if (param == null) {
+          param = {};
+        }
+        chapterCollection = new Chapters.ItemCollection;
+        chapterCollection.fetch({
+          reset: true,
+          data: param
+        });
+        return chapterCollection;
+      },
+      getChapterByID: function(id) {
+        var chapter;
+        chapter = chapterCollection.get(id);
+        if (!chapter) {
+          chapter = new Chapters.ItemModel({
+            term_id: id
+          });
+          console.log(chapter);
+          chapter.fetch();
+        }
+        return chapter;
+      }
+    };
+    App.reqres.setHandler("get:chapters", function(opt) {
+      return API.getChapters(opt);
+    });
+    return App.reqres.setHandler("get:chapter:by:id", function(id) {
+      return API.getChapterByID(id);
+    });
+  });
+});
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('entities/schools',["app", 'backbone'], function(App, Backbone) {
+  App.module("Entities.Schools", function(Schools, App, Backbone, Marionette, $, _) {
+    var API, school, schoolCollection;
+    Schools.SchoolModel = (function(_super) {
+      __extends(SchoolModel, _super);
+
+      function SchoolModel() {
+        return SchoolModel.__super__.constructor.apply(this, arguments);
+      }
+
+      SchoolModel.prototype.name = 'schools';
+
+      SchoolModel.prototype.defaults = function() {
+        return {
+          school_name: '',
+          school_logo: ''
+        };
+      };
+
+      return SchoolModel;
+
+    })(Backbone.Model);
+    school = new Schools.SchoolModel;
+    Schools.SchoolCollection = (function(_super) {
+      __extends(SchoolCollection, _super);
+
+      function SchoolCollection() {
+        return SchoolCollection.__super__.constructor.apply(this, arguments);
+      }
+
+      SchoolCollection.prototype.model = Schools.SchoolModel;
+
+      SchoolCollection.prototype.comparator = 'id';
+
+      SchoolCollection.prototype.url = function() {
+        return AJAXURL + '?action=get-schools';
+      };
+
+      return SchoolCollection;
+
+    })(Backbone.Collection);
+    schoolCollection = new Schools.SchoolCollection;
+    API = {
+      getSchools: function(param) {
+        if (param == null) {
+          param = {};
+        }
+        schoolCollection.fetch({
+          reset: true,
+          data: param
+        });
+        return schoolCollection;
+      },
+      getCurrentSchool: function() {
+        school = new Schools.SchoolModel;
+        school.fetch();
+        return school;
+      }
+    };
+    App.reqres.setHandler("get:all:schools", function() {
+      return API.getSchools();
+    });
+    App.reqres.setHandler("get:current:school", function() {
+      return API.getCurrentSchool();
+    });
+    return App.reqres.setHandler("get:school:logo", function() {
+      return API.getCurrentSchool();
+    });
+  });
+  return App.Entities.Schools;
+});
+
+define('entities/walnut-entities-loader',['entities/base-entities', 'entities/user', 'entities/menu', 'entities/textbooks', 'entities/chapters', 'entities/schools'], function() {});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -21257,6 +22368,8 @@ require.config({
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryvalidate: 'plugins/jquery.validate.min',
+    pace: 'plugins/pace',
+    bootstrap: 'plugins/bootstrap.min',
     underscore: 'plugins/underscore',
     backbone: 'plugins/backbone',
     marionette: 'plugins/backbone.marionette',
@@ -21273,9 +22386,7 @@ require.config({
     search_results: 'plugins/search_results',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
-    jquery_datatables: 'plugins/jquery.dataTables',
-    datatables: 'plugins/datatables',
-    tabletools: 'plugins/TableTools'
+    unveil: 'plugins/jquery.unveil.min'
   },
   shim: {
     underscore: {
@@ -21283,6 +22394,7 @@ require.config({
     },
     jquery: ['underscore'],
     jqueryui: ['jquery'],
+    bootstrap: ['jquery'],
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
@@ -21292,13 +22404,11 @@ require.config({
       exports: 'Marionette'
     },
     sidr: ['jquery'],
+    unveil: ['jquery'],
     slimroll: ['jquery'],
     core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
     mixitup: ['jquery'],
-    tabletools: ['jquery', 'datatables'],
-    jquery_datatables: ['jquery'],
-    datatables: ['jquery', 'jquery_datatables'],
     search_results: ['jquery', 'mixitup'],
     jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],

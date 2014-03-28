@@ -33,20 +33,8 @@ define ['app'
 			className 	: 'pull-right'
 
 			events: 
-				'click #user-options'	: 'user_options_popup'
 				'click #user_logout'	:-> @trigger "user:logout"
-
-			user_options_popup : (e)->
-				if $(e.target)
-					.closest 'li'
-					.hasClass 'open'
-						$(e.target).closest 'li' 
-						.removeClass 'open'
-				else
-					$(e.target).closest 'li' 
-					.addClass 'open'
-					
-
+				
 		# set handlers
 		App.commands.setHandler "show:rightheaderapp", (opt = {})->
 			new Controller.RightHeaderController opt		

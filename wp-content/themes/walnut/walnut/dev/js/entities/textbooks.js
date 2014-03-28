@@ -18,7 +18,9 @@ define(["app", 'backbone'], function(App, Backbone) {
         slug: '',
         description: '',
         parent: 0,
-        term_order: 0
+        term_order: 0,
+        count: 0,
+        chapter_count: 0
       };
 
       ItemModel.prototype.name = 'textbook';

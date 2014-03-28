@@ -52,17 +52,8 @@ define(['app', 'controllers/region-controller', 'text!apps/header/right/template
       RightHeaderView.prototype.className = 'pull-right';
 
       RightHeaderView.prototype.events = {
-        'click #user-options': 'user_options_popup',
         'click #user_logout': function() {
           return this.trigger("user:logout");
-        }
-      };
-
-      RightHeaderView.prototype.user_options_popup = function(e) {
-        if ($(e.target).closest('li').hasClass('open')) {
-          return $(e.target).closest('li').removeClass('open');
-        } else {
-          return $(e.target).closest('li').addClass('open');
         }
       };
 

@@ -5,6 +5,8 @@ require.config({
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryvalidate: 'plugins/jquery.validate.min',
+    pace: 'plugins/pace',
+    bootstrap: 'plugins/bootstrap.min',
     underscore: 'plugins/underscore',
     backbone: 'plugins/backbone',
     marionette: 'plugins/backbone.marionette',
@@ -21,10 +23,14 @@ require.config({
     search_results: 'plugins/search_results',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
+<<<<<<< HEAD
     jquery_datatables: 'plugins/jquery.dataTables',
     datatables: 'plugins/datatables',
     tabletools: 'plugins/TableTools',
     detect: 'plugins/detect'
+=======
+    unveil: 'plugins/jquery.unveil.min'
+>>>>>>> 8974b40874158e50b9fbeb96f886451e04b34c97
   },
   shim: {
     underscore: {
@@ -32,6 +38,7 @@ require.config({
     },
     jquery: ['underscore'],
     jqueryui: ['jquery'],
+    bootstrap: ['jquery'],
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
@@ -41,13 +48,11 @@ require.config({
       exports: 'Marionette'
     },
     sidr: ['jquery'],
+    unveil: ['jquery'],
     slimroll: ['jquery'],
     core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
     mixitup: ['jquery'],
-    tabletools: ['jquery', 'datatables'],
-    jquery_datatables: ['jquery'],
-    datatables: ['jquery', 'jquery_datatables'],
     search_results: ['jquery', 'mixitup'],
     jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],

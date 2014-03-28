@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'apps/header/right/rightapp', 'text!apps/header/templates/header.html'], function(App, RegionController, LeftApp, RightApp, headerTpl) {
@@ -8,14 +9,21 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       __extends(HeaderController, _super);
 
       function HeaderController() {
+        this._getHeaderView = __bind(this._getHeaderView, this);
+        this.showLeftRightViews = __bind(this.showLeftRightViews, this);
         return HeaderController.__super__.constructor.apply(this, arguments);
       }
 
       HeaderController.prototype.initialize = function() {
         var layout;
         this.layout = layout = this._getHeaderView();
+        this.school = App.request("get:current:school");
+        console.log('@school1');
+        console.log(this.school);
         this.listenTo(layout, 'show', this.showLeftRightViews);
-        return this.show(layout);
+        return this.show(layout, {
+          loading: true
+        });
       };
 
       HeaderController.prototype.showLeftRightViews = function() {
@@ -28,7 +36,11 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderController.prototype._getHeaderView = function() {
-        return new HeaderView;
+        console.log('@school2');
+        console.log(this.school);
+        return new HeaderView({
+          model: this.school
+        });
       };
 
       return HeaderController;

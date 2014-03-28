@@ -3,4 +3,6 @@ define [
 		'entities/user'
 		'entities/menu'
 		'entities/textbooks'
+		'entities/chapters'
+		'entities/schools'
 		],->
