@@ -36,6 +36,7 @@ require.config
 		jquery_datatables  	: 'plugins/jquery.dataTables'
 		datatables  		: 'plugins/datatables'
 		tabletools 			: 'plugins/TableTools'
+		detect				: 'plugins/detect'
 
 	shim:
 		underscore: 

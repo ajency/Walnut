@@ -23,7 +23,8 @@ require.config({
     jqueryspin: 'plugins/jquery.spin',
     jquery_datatables: 'plugins/jquery.dataTables',
     datatables: 'plugins/datatables',
-    tabletools: 'plugins/TableTools'
+    tabletools: 'plugins/TableTools',
+    detect: 'plugins/detect'
   },
   shim: {
     underscore: {
