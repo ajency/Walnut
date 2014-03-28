@@ -146,6 +146,18 @@
 .textarea {
   width: 100%;
 }
+.textFormat .btn,
+.textFormat .btn:focus {
+  background-color: #d1dade;
+}
+.textFormat .btn:hover,
+.textFormat .btn:active,
+.textFormat .btn.active,
+.textFormat .btn.disabled,
+.textFormat .btn[disabled] {
+  background-color: #0aa699;
+  color: #fff;
+}
 .element-wrapper {
   border: 2px solid #f3f3f3;
   padding-top: 7px;

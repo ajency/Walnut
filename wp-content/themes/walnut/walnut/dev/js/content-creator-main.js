@@ -1,6 +1,6 @@
 require.config({
   urlArgs: "ver=1",
-  baseUrl: './wp-content/themes/walnut/walnut/dev/js',
+  baseUrl: '../wp-content/themes/walnut/walnut/dev/js',
   paths: {
     pace: 'plugins/pace',
     jquery: 'plugins/jquery',

@@ -146,6 +146,18 @@
 .textarea {
   width: 100%;
 }
+.textFormat .btn,
+.textFormat .btn:focus {
+  background-color: #d1dade;
+}
+.textFormat .btn:hover,
+.textFormat .btn:active,
+.textFormat .btn.active,
+.textFormat .btn.disabled,
+.textFormat .btn[disabled] {
+  background-color: #0aa699;
+  color: #fff;
+}
 .element-wrapper {
   border: 2px solid #f3f3f3;
   padding-top: 7px;
@@ -507,6 +519,19 @@
 .settings-box .set-column-count .btn-default {
   padding: 4px 12px;
   margin-right: 3px;
+}
+body {
+  background-color: #e5e9ec;
+}
+#site_main_container {
+  opacity: 0;
+}
+#site_main_container.showAll {
+  opacity: 1;
+  -webkit-transition: opacity 0.5s ease-in-out;
+  -moz-transition: opacity 0.5s ease-in-out;
+  -ms-transition: opacity 0.5s ease-in-out;
+  -o-transition: opacity 0.5s ease-in-out;
 }
 .header .quick-section2 {
   margin-top: 16px;
