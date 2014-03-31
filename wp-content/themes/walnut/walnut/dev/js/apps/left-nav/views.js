@@ -19,6 +19,8 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
     })(Marionette.ItemView);
     return Views.LeftNavView = (function(_super) {
+      var handleSidenarAndContentHeight;
+
       __extends(LeftNavView, _super);
 
       function LeftNavView() {
@@ -34,6 +36,63 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
       LeftNavView.prototype.itemView = MenuItemView;
 
       LeftNavView.prototype.itemViewContainer = 'ul.sub-menu';
+
+      LeftNavView.prototype.events = {
+        'click li': 'clickMenu'
+      };
+
+      LeftNavView.prototype.onShow = function() {
+        var elem;
+        if ($('.page-sidebar').hasClass('mini')) {
+          elem = $('.page-sidebar ul');
+          elem.children('li.open').children('a').children('.arrow').removeClass('open');
+          elem.children('li.open').children('a').children('.arrow').removeClass('active');
+          elem.children('li.open').children('.sub-menu').slideUp(200);
+          return elem.children('li').removeClass('open');
+        }
+      };
+
+      LeftNavView.prototype.clickMenu = function(e) {
+        var li_target, parent, sub;
+        li_target = $(e.target).closest('li').find('a');
+        if (li_target.next().hasClass('sub-menu') === false) {
+          return;
+        }
+        parent = li_target.parent().parent();
+        parent.children('li.open').children('a').children('.arrow').removeClass('open');
+        parent.children('li.open').children('a').children('.arrow').removeClass('active');
+        parent.children('li.open').children('.sub-menu').slideUp(200);
+        parent.children('li').removeClass('open');
+        sub = li_target.next();
+        if (sub.is(":visible")) {
+          $('.arrow', li_target).removeClass("open");
+          li_target.parent().removeClass("active");
+          sub.slideUp(200, function() {
+            return handleSidenarAndContentHeight();
+          });
+        } else {
+          $('.arrow', li_target).addClass("open");
+          li_target.parent().addClass("open");
+          sub.slideDown(200, function() {
+            return handleSidenarAndContentHeight();
+          });
+        }
+        return e.preventDefault();
+      };
+
+      handleSidenarAndContentHeight = function() {
+        var content, sidebar;
+        content = $('.page-content');
+        sidebar = $('.page-sidebar');
+        if (!content.attr("data-height")) {
+          content.attr("data-height", content.height());
+        }
+        if (sidebar.height() > content.height()) {
+          return content.css("min-height", sidebar.height() + 120);
+        } else {
+          return content.css("min-height", content.attr("data-height"));
+        }
+      };
 
       return LeftNavView;
 

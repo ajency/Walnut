@@ -22,10 +22,7 @@ define(['app', 'controllers/region-controller', 'text!apps/header/right/template
                 if (response.error) {
                   return console.log(response);
                 } else {
-                  console.log('logged out');
-                  return App.navigate('login', {
-                    trigger: true
-                  });
+                  return App.vent.trigger("show:login");
                 }
               };
             })(this));

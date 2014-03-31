@@ -11,7 +11,7 @@ define(['detect', 'jquery'], function(detect, $) {
     }
   };
   if (checkPlatform() === "Desktop") {
-    define(['plugins/online'], function() {});
+    $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
   }
   window.onLineHandler = function(){
         networkStatus = 1
