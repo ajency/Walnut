@@ -50,6 +50,7 @@ define ['app'
 			serializeData : ->
 
 				data = super()
+				console.log @collection
 				collection_classes= @collection.pluck 'classes'
 				data_classes=_.union _.flatten collection_classes
 				data.classes= _.sortBy(data_classes, (num)-> num)

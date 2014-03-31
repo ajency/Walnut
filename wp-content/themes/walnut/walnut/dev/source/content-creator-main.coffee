@@ -53,7 +53,7 @@ require.config
 		plupload    : 
 			deps : ['jquery']
 			exports : 'plupload'
-		bootstrap : ['jquery']
+		bootstrap : ['jquery','jqueryui']
 		bootstrapslider :['bootstrap']
 		checkbox  : ['bootstrap']
 		jqueryvalidate: ['jquery']

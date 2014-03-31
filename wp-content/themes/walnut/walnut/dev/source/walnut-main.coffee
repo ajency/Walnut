@@ -79,5 +79,5 @@ require [	'plugins/walnut-pluginloader'
 			'entities/walnut-entities-loader'
 			'componentloader'
 			], (plugins, configs, App)->
-
+				
 				App.start()

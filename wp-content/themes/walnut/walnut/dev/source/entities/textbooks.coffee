@@ -1,6 +1,7 @@
 define ["app", 'backbone'], (App, Backbone) ->
 
 		App.module "Entities.Textbooks", (Textbooks, App, Backbone, Marionette, $, _)->
+			
 
 			# textbook model
 			class Textbooks.ItemModel extends Backbone.Model
