@@ -12,7 +12,7 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
 
       TextbookDescriptionView.prototype.template = textbookDescriptionTpl;
 
-      TextbookDescriptionView.prototype.className = 'tiles white col-md-12 no-padding';
+      TextbookDescriptionView.prototype.className = '';
 
       TextbookDescriptionView.prototype.onShow = function() {
         console.log('Show Model');

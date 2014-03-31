@@ -2,30 +2,11 @@
 				
 				// INSTANTIATE MIXITUP
 				
-				$('#textbooks').mixitup({
-					layoutMode: 'list', // Start in list mode (display: block) by default
-					listClass: 'list', // Container class for when in list mode
-					gridClass: 'grid', // Container class for when in grid mode
-					effects: ['fade','blur'], // List of effects 
-					listEffects: ['fade','rotateX'] // List of effects ONLY for list mode
-				});
-				
+
 				// HANDLE LAYOUT CHANGES
 				
 				// Bind layout buttons to toList and toGrid methods:
-				
-				$('#ToList').on('click',function(){
-					$('.button').removeClass('active');
-					$(this).addClass('active');
-					$('#textbooks').mixitup('toList');
-				});
 
-				$('#ToGrid').on('click',function(){
-					$('.button').removeClass('active');
-					$(this).addClass('active');
-					$('#textbooks').mixitup('toGrid');
-				});
-				
 				// HANDLE MULTI-DIMENSIONAL CHECKBOX FILTERING
 				
 				/* 	
@@ -35,16 +16,14 @@
 				*	for this demo to achieve the precise behaviour we need.
 				*/
 				
-				var $filters = $('#Filters').find('li'),
-					dimensions = {
-						region: 'all', // Create string for first dimension
-						recreation: 'all' // Create string for second dimension
-					};
+
 					
 				// Bind checkbox click handlers:
-				
+				$filters = $('#Filters').find('li')
+				console.log($filters);
 				$filters.on('click',function(){
-					var $t = $(this),
+					console.log('filters click?');
+					var $t = $(this.target).closest('li'),
 						dimension = $t.attr('data-dimension'),
 						filter = $t.attr('data-filter'),
 						filterString = dimensions[dimension];

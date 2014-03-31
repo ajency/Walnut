@@ -9,7 +9,7 @@ define ['app'
 		class Views.TextbookDescriptionView extends Marionette.ItemView
 
 			template : textbookDescriptionTpl
-			className: 'tiles white col-md-12 no-padding'
+			className: ''
 
 			onShow :->
 				console.log 'Show Model'

@@ -46,6 +46,12 @@ define ['app'
 				data.logourl= SITEURL+ '/wp-content/themes/walnut/images/walnutlearn.png'
 				console.log SITEURL
 				data
+				
+			onShow:->						
+				if ($('.creator').length > 0) 
+					$(".header-seperation").css("display","none");
+					$("#main-menu").addClass("mini");
+					$("#main-content-region").addClass("condensed");
 
 		# set handlers
 		App.commands.setHandler "show:headerapp", (opt = {})->
