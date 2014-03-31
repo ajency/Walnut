@@ -153,7 +153,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
             region: 'all',
             recreation: 'all'
           });
-        }, 500);
+        }, 1000);
         return this.dimensions = {
           region: 'all',
           recreation: 'all'

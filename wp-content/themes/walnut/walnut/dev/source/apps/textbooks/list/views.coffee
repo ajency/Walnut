@@ -105,7 +105,7 @@ define ['app'
 						listEffects: ['fade','rotateX'] # List of effects ONLY for list mode
 					
 					$filters = $('#Filters').find 'li', dimensions = region: 'all', recreation: 'all'
-				,500
+				,1000
 				
 				@dimensions = 
 					region: 'all'

@@ -50,10 +50,9 @@ function extra_tax_fields($tag) {
     </tr>
     <tr class="form-field textbook_fields" <?= $textbook_fields ?>>
         <th scope="row" valign="top"><label for="extra2"><?php _e('Classes Suitable For'); ?></label></th>
-        <td>
-
-            <?
-            for ($i = 1; $i <= 12; $i++) {
+        <td><?
+            global $class_ids;
+            for ($i = 0; $i < sizeof($class_ids); $i++) {
                 $selected = '';
 
                 if ($classes)
@@ -66,9 +65,22 @@ function extra_tax_fields($tag) {
         </td>
     </tr>
    <tr> 
-       <td>Current Tags: </td>
+       <td>Subject : </td>
        <td>
-           <div  id='tags_area'>
+           <?
+            global $all_subjects;
+            for ($i = 0; $i < sizeof($all_subjects); $i++) {
+                $selected = '';
+
+                if ($subjects)
+                    $selected = in_array($all_subjects[$i], $subjects) ? "checked" : '';
+                ?>
+                <input style="width:20px" type="checkbox" name="term_tags[]" value="<?=$all_subjects[$i] ?>" <?= $selected ?> /> <?=$all_subjects[$i] ?><br>
+            <? } ?>
+            <br>
+            <span class="description"><?php _e('classes for which this textbook is suitable for'); ?></span>
+            
+         <!--  <div  id='tags_area'>
                <? if($subjects) {
                    foreach($subjects as $sub){ 
                         echo '<div class="termtags">
@@ -80,10 +92,10 @@ function extra_tax_fields($tag) {
                ?>
                    
            </div>
-           
+           -->
        </td>
        
-   </tr>
+   </tr><!--
     <tr class="form-field">
     <th scope="row" valign="top"><label for="tags">Add <?php _e('Tags'); ?></label></th>
     <td>
@@ -103,7 +115,7 @@ function extra_tax_fields($tag) {
             });
         });
 
-    </script>
+    </script>-->
     <?php
 }
 
