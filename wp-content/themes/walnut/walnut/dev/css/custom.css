@@ -534,6 +534,9 @@
     margin-top: 0;
   }
 }
+.user-description-box {
+  min-height: 120px;
+}
 body {
   background-color: #e5e9ec;
 }
