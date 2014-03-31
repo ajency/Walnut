@@ -47,6 +47,10 @@ define ['app'],(App)->
 											</div>
 										</div>
 
+										<div class="form-group">
+											Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1">
+										</div>
+
 					               	</div>
 				              	</div>
 			            	</div>'
@@ -54,29 +58,52 @@ define ['app'],(App)->
 				onShow:->
 					self = @	
 
+					#FONT SIZE
+					# initialize font size slider
 					$('.fontSize').slider()
 
+					# on change of font size do
+					$('#hotspot-textelement-fontsize').slider().on 'slide',=>
+						size = @model.get 'fontSize'
+						@model.set 'fontSize', $('.fontSize').slider('getValue').val()||size
+						
+
+					# FONT COLOR
+					# initialize colorpicker and set the on change event
+					$('.fontColor').minicolors
+							animationSpeed: 200
+							animationEasing: 'swing'
+							control: 'hue'
+							position: 'top left'
+							showSpeed: 200
+
+							change :(hex,opacity)->
+								self.model.set 'fontColor', hex
+
+					# set the vale of color picker according to the current model
+					$('.fontColor').minicolors 'value', self.model.get 'fontColor'
+
+
+					# FONT FAMILY
+					# initialize font family accorging to the model
 					$('#hotspot-textelement-fontfamily').children('option').each ->
 					
 						if $(@).text() is self.model.get 'fontFamily'
 							@selected = true
 
-								
-
-					$('#hotspot-textelement-text').on 'input',=>
-						@model.set "text", $('#hotspot-textelement-text').val()
-
-					$('#hotspot-textelement-fontsize').slider().on 'slide',=>
-						size = @model.get 'fontSize'
-						@model.set 'fontSize', $('.fontSize').slider('getValue').val()||size
-						# console.log $('.fontSize').slider('getValue').val()||size
-
-
+					# on change of font family
 					$('#hotspot-textelement-fontfamily').on 'change',->
 						@.options[0].disabled = true
 						self.model.set 'fontFamily', $('#hotspot-textelement-fontfamily  option:selected').text()
 						
-						
+								
+					# TEXT
+					# on change of text
+					$('#hotspot-textelement-text').on 'input',=>
+						@model.set "text", $('#hotspot-textelement-text').val()
+
+					
+					# BOLD and ITALICS
 					$('#font-style.btn-group .btn').on 'click',->
 						setTimeout ->
 							console.log "timeout"

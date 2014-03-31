@@ -49,7 +49,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
           };
         })(this));
-        this.layout.elementRegion.show(view);
+        this.layout.elementRegion.show(view, {
+          loading: true
+        });
         return App.execute("show:question:elements", {
           model: this.layout.model
         });

@@ -25,7 +25,8 @@ require.config({
     checkbox: 'plugins/flatui-checkbox',
     componentloader: 'components/builder-component-loader',
     spin: 'plugins/spin',
-    jqueryspin: 'plugins/jquery.spin'
+    jqueryspin: 'plugins/jquery.spin',
+    jquerycolor: 'plugins/jquery.minicolors.min'
   },
   shim: {
     underscore: {
@@ -34,6 +35,7 @@ require.config({
     jquery: ['underscore'],
     jqueryui: ['jquery'],
     jqueryresize: ['jquery', 'jqueryui'],
+    jquerycolor: ['jquery'],
     kineticresize: ['kinetic'],
     backbone: {
       deps: ['jquery', 'underscore'],

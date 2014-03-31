@@ -27204,6 +27204,38 @@ define("plupload", ["jquery"], (function (global) {
 
 */
 
+dragBoundRect = function(pos,inner,outer){
+
+        var minX = outer.getX();
+        var maxX = outer.getX() + outer.getWidth() - inner.getWidth();
+        var minY = outer.getY();
+        var maxY = outer.getY() + outer.getHeight() - inner.getHeight();
+
+        var X = pos.x;
+        var Y = pos.y;
+       
+        if (X < minX - inner.getX()) {
+            X = minX - inner.getX();
+        }
+        if (X > maxX - inner.getX()) {
+            X = maxX - inner.getX();
+        }
+        if (Y < minY - inner.getY()) {
+            Y = minY - inner.getY();
+        }
+        if (Y > maxY - inner.getY()) {
+            Y = maxY - inner.getY();
+        }
+        return ({
+            x: X,
+            y: Y
+        });
+
+
+} 
+
+
+
 resizeCircle = function(circle,layer){
 	
 	var draggerOffset = 0;
@@ -27281,12 +27313,18 @@ resizeRect = function(rectangle,layer){
     var subjectPosition = rectangle.getAbsolutePosition();
     var subjectWidth = rectangle.width();
     var subjectHeight = rectangle.height();
+    var stage = layer.getStage()
+
 
     var myGroup = new Kinetic.Group({
                 x: subjectX,
                 y: subjectY,
-                draggable: true
+                draggable: true,
+                dragBoundFunc: function(pos){
+                    return dragBoundRect(pos,this.getChildren()[0],stage)
+                }
     });
+    
 
     layer.add(myGroup)
 
@@ -33887,7 +33925,17 @@ $('#el').spin('flower', 'red');
 
 }));
 
-define('plugins/content-creator-pluginloader',['underscore', 'jquery', 'jqueryui', 'jqueryresize', 'underscorestring', 'kinetic', 'plupload', 'kineticresize', 'backbone', 'marionette', 'mustache', 'syphon', 'text', 'jqueryvalidate', 'bootstrap', 'checkbox', 'bootstrapslider', 'spin', 'jqueryspin'], function() {});
+/*
+ * jQuery MiniColors: A tiny color picker built on jQuery
+ *
+ * Copyright Cory LaViska for A Beautiful Site, LLC. (http://www.abeautifulsite.net/)
+ *
+ * Licensed under the MIT license: http://opensource.org/licenses/MIT
+ *
+ */jQuery&&function(e){function t(t,n){var r=e('<div class="minicolors" />'),i=e.minicolors.defaults;if(t.data("minicolors-initialized"))return;n=e.extend(!0,{},i,n);r.addClass("minicolors-theme-"+n.theme).toggleClass("minicolors-with-opacity",n.opacity);n.position!==undefined&&e.each(n.position.split(" "),function(){r.addClass("minicolors-position-"+this)});t.addClass("minicolors-input").data("minicolors-initialized",!1).data("minicolors-settings",n).prop("size",7).wrap(r).after('<div class="minicolors-panel minicolors-slider-'+n.control+'">'+'<div class="minicolors-slider">'+'<div class="minicolors-picker"></div>'+"</div>"+'<div class="minicolors-opacity-slider">'+'<div class="minicolors-picker"></div>'+"</div>"+'<div class="minicolors-grid">'+'<div class="minicolors-grid-inner"></div>'+'<div class="minicolors-picker"><div></div></div>'+"</div>"+"</div>");if(!n.inline){t.after('<span class="minicolors-swatch"><span class="minicolors-swatch-color"></span></span>');t.next(".minicolors-swatch").on("click",function(e){e.preventDefault();t.focus()})}t.parent().find(".minicolors-panel").on("selectstart",function(){return!1}).end();n.inline&&t.parent().addClass("minicolors-inline");u(t,!1);t.data("minicolors-initialized",!0)}function n(e){var t=e.parent();e.removeData("minicolors-initialized").removeData("minicolors-settings").removeProp("size").removeClass("minicolors-input");t.before(e).remove()}function r(e){var t=e.parent(),n=t.find(".minicolors-panel"),r=e.data("minicolors-settings");if(!e.data("minicolors-initialized")||e.prop("disabled")||t.hasClass("minicolors-inline")||t.hasClass("minicolors-focus"))return;i();t.addClass("minicolors-focus");n.stop(!0,!0).fadeIn(r.showSpeed,function(){r.show&&r.show.call(e.get(0))})}function i(){e(".minicolors-focus").each(function(){var t=e(this),n=t.find(".minicolors-input"),r=t.find(".minicolors-panel"),i=n.data("minicolors-settings");r.fadeOut(i.hideSpeed,function(){i.hide&&i.hide.call(n.get(0));t.removeClass("minicolors-focus")})})}function s(e,t,n){var r=e.parents(".minicolors").find(".minicolors-input"),i=r.data("minicolors-settings"),s=e.find("[class$=-picker]"),u=e.offset().left,a=e.offset().top,f=Math.round(t.pageX-u),l=Math.round(t.pageY-a),c=n?i.animationSpeed:0,h,p,d,v;if(t.originalEvent.changedTouches){f=t.originalEvent.changedTouches[0].pageX-u;l=t.originalEvent.changedTouches[0].pageY-a}f<0&&(f=0);l<0&&(l=0);f>e.width()&&(f=e.width());l>e.height()&&(l=e.height());if(e.parent().is(".minicolors-slider-wheel")&&s.parent().is(".minicolors-grid")){h=75-f;p=75-l;d=Math.sqrt(h*h+p*p);v=Math.atan2(p,h);v<0&&(v+=Math.PI*2);if(d>75){d=75;f=75-75*Math.cos(v);l=75-75*Math.sin(v)}f=Math.round(f);l=Math.round(l)}e.is(".minicolors-grid")?s.stop(!0).animate({top:l+"px",left:f+"px"},c,i.animationEasing,function(){o(r,e)}):s.stop(!0).animate({top:l+"px"},c,i.animationEasing,function(){o(r,e)})}function o(e,t){function n(e,t){var n,r;if(!e.length||!t)return null;n=e.offset().left;r=e.offset().top;return{x:n-t.offset().left+e.outerWidth()/2,y:r-t.offset().top+e.outerHeight()/2}}var r,i,s,o,u,f,l,h=e.val(),d=e.attr("data-opacity"),v=e.parent(),g=e.data("minicolors-settings"),y=v.find(".minicolors-swatch"),b=v.find(".minicolors-grid"),w=v.find(".minicolors-slider"),E=v.find(".minicolors-opacity-slider"),S=b.find("[class$=-picker]"),x=w.find("[class$=-picker]"),T=E.find("[class$=-picker]"),N=n(S,b),C=n(x,w),k=n(T,E);if(t.is(".minicolors-grid, .minicolors-slider")){switch(g.control){case"wheel":o=b.width()/2-N.x;u=b.height()/2-N.y;f=Math.sqrt(o*o+u*u);l=Math.atan2(u,o);l<0&&(l+=Math.PI*2);if(f>75){f=75;N.x=69-75*Math.cos(l);N.y=69-75*Math.sin(l)}i=p(f/.75,0,100);r=p(l*180/Math.PI,0,360);s=p(100-Math.floor(C.y*(100/w.height())),0,100);h=m({h:r,s:i,b:s});w.css("backgroundColor",m({h:r,s:i,b:100}));break;case"saturation":r=p(parseInt(N.x*(360/b.width()),10),0,360);i=p(100-Math.floor(C.y*(100/w.height())),0,100);s=p(100-Math.floor(N.y*(100/b.height())),0,100);h=m({h:r,s:i,b:s});w.css("backgroundColor",m({h:r,s:100,b:s}));v.find(".minicolors-grid-inner").css("opacity",i/100);break;case"brightness":r=p(parseInt(N.x*(360/b.width()),10),0,360);i=p(100-Math.floor(N.y*(100/b.height())),0,100);s=p(100-Math.floor(C.y*(100/w.height())),0,100);h=m({h:r,s:i,b:s});w.css("backgroundColor",m({h:r,s:i,b:100}));v.find(".minicolors-grid-inner").css("opacity",1-s/100);break;default:r=p(360-parseInt(C.y*(360/w.height()),10),0,360);i=p(Math.floor(N.x*(100/b.width())),0,100);s=p(100-Math.floor(N.y*(100/b.height())),0,100);h=m({h:r,s:i,b:s});b.css("backgroundColor",m({h:r,s:100,b:100}))}e.val(c(h,g.letterCase))}if(t.is(".minicolors-opacity-slider")){g.opacity?d=parseFloat(1-k.y/E.height()).toFixed(2):d=1;g.opacity&&e.attr("data-opacity",d)}y.find("SPAN").css({backgroundColor:h,opacity:d});a(e,h,d)}function u(e,t){var n,r,i,s,o,u,f,l=e.parent(),d=e.data("minicolors-settings"),v=l.find(".minicolors-swatch"),y=l.find(".minicolors-grid"),b=l.find(".minicolors-slider"),w=l.find(".minicolors-opacity-slider"),E=y.find("[class$=-picker]"),S=b.find("[class$=-picker]"),x=w.find("[class$=-picker]");n=c(h(e.val(),!0),d.letterCase);n||(n=c(h(d.defaultValue,!0),d.letterCase));r=g(n);t||e.val(n);if(d.opacity){i=e.attr("data-opacity")===""?1:p(parseFloat(e.attr("data-opacity")).toFixed(2),0,1);isNaN(i)&&(i=1);e.attr("data-opacity",i);v.find("SPAN").css("opacity",i);o=p(w.height()-w.height()*i,0,w.height());x.css("top",o+"px")}v.find("SPAN").css("backgroundColor",n);switch(d.control){case"wheel":u=p(Math.ceil(r.s*.75),0,y.height()/2);f=r.h*Math.PI/180;s=p(75-Math.cos(f)*u,0,y.width());o=p(75-Math.sin(f)*u,0,y.height());E.css({top:o+"px",left:s+"px"});o=150-r.b/(100/y.height());n===""&&(o=0);S.css("top",o+"px");b.css("backgroundColor",m({h:r.h,s:r.s,b:100}));break;case"saturation":s=p(5*r.h/12,0,150);o=p(y.height()-Math.ceil(r.b/(100/y.height())),0,y.height());E.css({top:o+"px",left:s+"px"});o=p(b.height()-r.s*(b.height()/100),0,b.height());S.css("top",o+"px");b.css("backgroundColor",m({h:r.h,s:100,b:r.b}));l.find(".minicolors-grid-inner").css("opacity",r.s/100);break;case"brightness":s=p(5*r.h/12,0,150);o=p(y.height()-Math.ceil(r.s/(100/y.height())),0,y.height());E.css({top:o+"px",left:s+"px"});o=p(b.height()-r.b*(b.height()/100),0,b.height());S.css("top",o+"px");b.css("backgroundColor",m({h:r.h,s:r.s,b:100}));l.find(".minicolors-grid-inner").css("opacity",1-r.b/100);break;default:s=p(Math.ceil(r.s/(100/y.width())),0,y.width());o=p(y.height()-Math.ceil(r.b/(100/y.height())),0,y.height());E.css({top:o+"px",left:s+"px"});o=p(b.height()-r.h/(360/b.height()),0,b.height());S.css("top",o+"px");y.css("backgroundColor",m({h:r.h,s:100,b:100}))}e.data("minicolors-initialized")&&a(e,n,i)}function a(e,t,n){var r=e.data("minicolors-settings"),i=e.data("minicolors-lastChange");if(!i||i.hex!==t||i.opacity!==n){e.data("minicolors-lastChange",{hex:t,opacity:n});if(r.change)if(r.changeDelay){clearTimeout(e.data("minicolors-changeTimeout"));e.data("minicolors-changeTimeout",setTimeout(function(){r.change.call(e.get(0),t,n)},r.changeDelay))}else r.change.call(e.get(0),t,n);e.trigger("change").trigger("input")}}function f(t){var n=h(e(t).val(),!0),r=b(n),i=e(t).attr("data-opacity");if(!r)return null;i!==undefined&&e.extend(r,{a:parseFloat(i)});return r}function l(t,n){var r=h(e(t).val(),!0),i=b(r),s=e(t).attr("data-opacity");if(!i)return null;s===undefined&&(s=1);return n?"rgba("+i.r+", "+i.g+", "+i.b+", "+parseFloat(s)+")":"rgb("+i.r+", "+i.g+", "+i.b+")"}function c(e,t){return t==="uppercase"?e.toUpperCase():e.toLowerCase()}function h(e,t){e=e.replace(/[^A-F0-9]/ig,"");if(e.length!==3&&e.length!==6)return"";e.length===3&&t&&(e=e[0]+e[0]+e[1]+e[1]+e[2]+e[2]);return"#"+e}function p(e,t,n){e<t&&(e=t);e>n&&(e=n);return e}function d(e){var t={},n=Math.round(e.h),r=Math.round(e.s*255/100),i=Math.round(e.b*255/100);if(r===0)t.r=t.g=t.b=i;else{var s=i,o=(255-r)*i/255,u=(s-o)*(n%60)/60;n===360&&(n=0);if(n<60){t.r=s;t.b=o;t.g=o+u}else if(n<120){t.g=s;t.b=o;t.r=s-u}else if(n<180){t.g=s;t.r=o;t.b=o+u}else if(n<240){t.b=s;t.r=o;t.g=s-u}else if(n<300){t.b=s;t.g=o;t.r=o+u}else if(n<360){t.r=s;t.g=o;t.b=s-u}else{t.r=0;t.g=0;t.b=0}}return{r:Math.round(t.r),g:Math.round(t.g),b:Math.round(t.b)}}function v(t){var n=[t.r.toString(16),t.g.toString(16),t.b.toString(16)];e.each(n,function(e,t){t.length===1&&(n[e]="0"+t)});return"#"+n.join("")}function m(e){return v(d(e))}function g(e){var t=y(b(e));t.s===0&&(t.h=360);return t}function y(e){var t={h:0,s:0,b:0},n=Math.min(e.r,e.g,e.b),r=Math.max(e.r,e.g,e.b),i=r-n;t.b=r;t.s=r!==0?255*i/r:0;t.s!==0?e.r===r?t.h=(e.g-e.b)/i:e.g===r?t.h=2+(e.b-e.r)/i:t.h=4+(e.r-e.g)/i:t.h=-1;t.h*=60;t.h<0&&(t.h+=360);t.s*=100/255;t.b*=100/255;return t}function b(e){e=parseInt(e.indexOf("#")>-1?e.substring(1):e,16);return{r:e>>16,g:(e&65280)>>8,b:e&255}}e.minicolors={defaults:{animationSpeed:50,animationEasing:"swing",change:null,changeDelay:0,control:"hue",defaultValue:"",hide:null,hideSpeed:100,inline:!1,letterCase:"lowercase",opacity:!1,position:"bottom left",show:null,showSpeed:100,theme:"default"}};e.extend(e.fn,{minicolors:function(s,o){switch(s){case"destroy":e(this).each(function(){n(e(this))});return e(this);case"hide":i();return e(this);case"opacity":if(o===undefined)return e(this).attr("data-opacity");e(this).each(function(){u(e(this).attr("data-opacity",o))});return e(this);case"rgbObject":return f(e(this),s==="rgbaObject");case"rgbString":case"rgbaString":return l(e(this),s==="rgbaString");case"settings":if(o===undefined)return e(this).data("minicolors-settings");e(this).each(function(){var t=e(this).data("minicolors-settings")||{};n(e(this));e(this).minicolors(e.extend(!0,t,o))});return e(this);case"show":r(e(this).eq(0));return e(this);case"value":if(o===undefined)return e(this).val();e(this).each(function(){u(e(this).val(o))});return e(this);default:s!=="create"&&(o=s);e(this).each(function(){t(e(this),o)});return e(this)}}});e(document).on("mousedown.minicolors touchstart.minicolors",function(t){e(t.target).parents().add(t.target).hasClass("minicolors")||i()}).on("mousedown.minicolors touchstart.minicolors",".minicolors-grid, .minicolors-slider, .minicolors-opacity-slider",function(t){var n=e(this);t.preventDefault();e(document).data("minicolors-target",n);s(n,t,!0)}).on("mousemove.minicolors touchmove.minicolors",function(t){var n=e(document).data("minicolors-target");n&&s(n,t)}).on("mouseup.minicolors touchend.minicolors",function(){e(this).removeData("minicolors-target")}).on("mousedown.minicolors touchstart.minicolors",".minicolors-swatch",function(t){var n=e(this).parent().find(".minicolors-input");t.preventDefault();r(n)}).on("focus.minicolors",".minicolors-input",function(){var t=e(this);if(!t.data("minicolors-initialized"))return;r(t)}).on("blur.minicolors",".minicolors-input",function(){var t=e(this),n=t.data("minicolors-settings");if(!t.data("minicolors-initialized"))return;t.val(h(t.val(),!0));t.val()===""&&t.val(h(n.defaultValue,!0));t.val(c(t.val(),n.letterCase))}).on("keydown.minicolors",".minicolors-input",function(t){var n=e(this);if(!n.data("minicolors-initialized"))return;switch(t.keyCode){case 9:i();break;case 13:case 27:i();n.blur()}}).on("keyup.minicolors",".minicolors-input",function(){var t=e(this);if(!t.data("minicolors-initialized"))return;u(t,!0)}).on("paste.minicolors",".minicolors-input",function(){var t=e(this);if(!t.data("minicolors-initialized"))return;setTimeout(function(){u(t,!0)},1)})}(jQuery);
+define("jquerycolor", function(){});
+
+define('plugins/content-creator-pluginloader',['underscore', 'jquery', 'jqueryui', 'jqueryresize', 'underscorestring', 'kinetic', 'plupload', 'kineticresize', 'backbone', 'marionette', 'mustache', 'syphon', 'text', 'jqueryvalidate', 'bootstrap', 'checkbox', 'bootstrapslider', 'spin', 'jqueryspin', 'jquerycolor'], function() {});
 
 define('configs/jquery',['jquery', 'underscore', 'jqueryvalidate'], function($, _) {
   var adjustPageDim;
@@ -34060,7 +34108,7 @@ define('configs/backbone',["backbone", "mustache"], function(Backbone, Mustache)
 });
 
 
-define('text!configs/marionette/templates/modal.html',[],function () { return '<div class="modal-dialog">\n  <div class="modal-content">\n    <div class="modal-header">\n      <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>\n      <h4 class="modal-title">{{modal_title}}</h4>\n    </div>\n    <div class="modal-body"></div>\n    <div class="modal-footer">\n      <!--button.btn.btn-default(type=\'button\', data-dismiss=\'modal\') Close-->\n      <!--button.btn.btn-primary(type=\'button\') Save changes-->\n    </div>\n  </div>\n</div>';});
+define('text!configs/marionette/templates/modal.html',[],function () { return '<div class="modal-dialog">\r\n  <div class="modal-content">\r\n    <div class="modal-header">\r\n      <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>\r\n      <h4 class="modal-title">{{modal_title}}</h4>\r\n    </div>\r\n    <div class="modal-body"></div>\r\n    <div class="modal-footer">\r\n      <!--button.btn.btn-default(type=\'button\', data-dismiss=\'modal\') Close-->\r\n      <!--button.btn.btn-primary(type=\'button\') Save changes-->\r\n    </div>\r\n  </div>\r\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35087,7 +35135,7 @@ define('components/loading/controller',['app', 'controllers/region-controller', 
 define('componentloader',['components/loading/controller'], function() {});
 
 
-define('text!apps/header/left/templates/left.html',[],function () { return '<!-- BEGIN HEADER LEFT SIDE SECTION -->\n\t<!-- BEGIN SLIM NAVIGATION TOGGLE -->\n\t<ul class="nav quick-section">\n\t\t<li class="quicklinks">\n\t\t\t<a id="layout-condensed-toggle" class="" href="#">\n\t\t\t\t<div class="iconset top-menu-toggle-dark"></div>\n\t\t\t</a>\n\t\t</li>\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t<ul class="nav quick-section">\n\n\t</ul>\n\t<!-- BEGIN HEADER QUICK LINKS -->\n\t\t\t\t\t\t\t\t\t\n\t\t\t<!-- END HEADER LEFT SIDE SECTION -->';});
+define('text!apps/header/left/templates/left.html',[],function () { return '<!-- BEGIN HEADER LEFT SIDE SECTION -->\r\n\t<!-- BEGIN SLIM NAVIGATION TOGGLE -->\r\n\t<ul class="nav quick-section">\r\n\t\t<li class="quicklinks">\r\n\t\t\t<a id="layout-condensed-toggle" class="" href="#">\r\n\t\t\t\t<div class="iconset top-menu-toggle-dark"></div>\r\n\t\t\t</a>\r\n\t\t</li>\r\n\t</ul>\r\n\t<!-- BEGIN HEADER QUICK LINKS -->\r\n\t<ul class="nav quick-section">\r\n\r\n\t</ul>\r\n\t<!-- BEGIN HEADER QUICK LINKS -->\r\n\t\t\t\t\t\t\t\t\t\r\n\t\t\t<!-- END HEADER LEFT SIDE SECTION -->';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35166,7 +35214,7 @@ define('apps/header/left/leftapp',['app', 'controllers/region-controller', 'text
 });
 
 
-define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\n\t<!-- BEGIN HEADER NAV BUTTONS -->\n\t<ul class="nav quick-section2">\n\t\t<!-- BEGIN SETTINGS -->\n\t\t<li class="quicklinks"> \n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\n\t\t\t</a>\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\n\t\t\t\t<li><a href="#">My Account</a></li>\n\t\t\t\t<li class="divider"></li>                \n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<!-- END SETTINGS -->\n\t\t \n\t</ul>\n\t<!-- END HEADER NAV BUTTONS -->\n</div>\n<!-- END HEADER RIGHT SIDE SECTION -->';});
+define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\r\n\t<!-- BEGIN HEADER NAV BUTTONS -->\r\n\t<ul class="nav quick-section2">\r\n\t\t<!-- BEGIN SETTINGS -->\r\n\t\t<li class="quicklinks"> \r\n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\r\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\r\n\t\t\t</a>\r\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\r\n\t\t\t\t<li><a href="#">My Account</a></li>\r\n\t\t\t\t<li class="divider"></li>                \r\n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\r\n\t\t\t</ul>\r\n\t\t</li>\r\n\t\t<!-- END SETTINGS -->\r\n\t\t \r\n\t</ul>\r\n\t<!-- END HEADER NAV BUTTONS -->\r\n</div>\r\n<!-- END HEADER RIGHT SIDE SECTION -->';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35240,7 +35288,7 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
 });
 
 
-define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \n\t<!-- BEGIN TOP NAVIGATION BAR -->\n\t<div class="navbar-inner">\n\t\t<!-- BEGIN NAVIGATION HEADER -->\n\t\t<div class="header-seperation"> \n\t\t\t<!-- BEGIN MOBILE HEADER -->\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\n\t\t\t\t<li class="dropdown">\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\t\t \n\t\t\t</ul>\n\t\t\t<!-- END MOBILE HEADER -->\n\t\t\t<!-- BEGIN LOGO -->\t\n\t\t\t<a href="#">\n\t\t\t\t<img width="106" height="21" data-src-retina="{{logourl}}" data-src="{{logourl}}" alt="" class="logo" src="{{logourl}}">\n\t\t\t</a>\n\t\t\t<!-- END LOGO --> \n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\n\t\t\t<ul class="nav pull-right notifcation-center">\t\n\t\t\t\t\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \n\t\t\t</ul>\n\t\t\t<!-- END LOGO NAV BUTTONS -->\n\t\t</div>\n\t\t<!-- END NAVIGATION HEADER -->\n\t\t<!-- BEGIN CONTENT HEADER -->\n\t\t<div class="header-quick-nav"> \n\t\t\t<div id="header-left"></div>\n\t\t\t<div id="header-right"></div>\n\t\t\t\n\t\t</div> \n\t\t<!-- END CONTENT HEADER --> \n\t</div>\n\t<!-- END TOP NAVIGATION BAR --> \n</div>';});
+define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \r\n\t<!-- BEGIN TOP NAVIGATION BAR -->\r\n\t<div class="navbar-inner">\r\n\t\t<!-- BEGIN NAVIGATION HEADER -->\r\n\t\t<div class="header-seperation"> \r\n\t\t\t<!-- BEGIN MOBILE HEADER -->\r\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\r\n\t\t\t\t<li class="dropdown">\r\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\r\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\r\n\t\t\t\t\t</a>\r\n\t\t\t\t</li>\t\t \r\n\t\t\t</ul>\r\n\t\t\t<!-- END MOBILE HEADER -->\r\n\t\t\t<!-- BEGIN LOGO -->\t\r\n\t\t\t<a href="#">\r\n\t\t\t\t<img width="106" height="21" data-src-retina="{{logourl}}" data-src="{{logourl}}" alt="" class="logo" src="{{logourl}}">\r\n\t\t\t</a>\r\n\t\t\t<!-- END LOGO --> \r\n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\r\n\t\t\t<ul class="nav pull-right notifcation-center">\t\r\n\t\t\t\t\r\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\r\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\r\n\t\t\t\t\t<a class="chat-menu-toggle" href="#sidr">\r\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\r\n\t\t\t\t\t</a>\r\n\t\t\t\t</li>\r\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\t\t\t\t        \r\n\t\t\t</ul>\r\n\t\t\t<!-- END LOGO NAV BUTTONS -->\r\n\t\t</div>\r\n\t\t<!-- END NAVIGATION HEADER -->\r\n\t\t<!-- BEGIN CONTENT HEADER -->\r\n\t\t<div class="header-quick-nav"> \r\n\t\t\t<div id="header-left"></div>\r\n\t\t\t<div id="header-right"></div>\r\n\t\t\t\r\n\t\t</div> \r\n\t\t<!-- END CONTENT HEADER --> \r\n\t</div>\r\n\t<!-- END TOP NAVIGATION BAR --> \r\n</div>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -35314,6 +35362,14 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
         return data;
       };
 
+      HeaderView.prototype.onShow = function() {
+        if ($('.creator').length > 0) {
+          $(".header-seperation").css("display", "none");
+          $("#main-menu").addClass("mini");
+          return $("#main-content-region").addClass("condensed");
+        }
+      };
+
       return HeaderView;
 
     })(Marionette.Layout);
@@ -35327,7 +35383,7 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
 });
 
 
-define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\n\n<ul>\t\n\n\t<!-- BEGIN ONE LEVEL MENU -->\n\t<li class="start active">\n\t\t<a href="javascript:;">\n\t\t\t<i class="icon-custom-ui"></i>\n\t\t\t<span class="title">Content Management</span>\n\t\t\t<span class="arrow"></span>\n\t\t</a>\n\t\t<ul class="sub-menu">\n\t\t</ul>\n\t</li>\n\t<!-- END ONE LEVEL MENU -->\n\n</ul>\n<!-- END SIDEBAR MENU -->\n<!-- BEGIN SIDEBAR WIDGETS -->\n<div class="side-bar-widgets">\n\n</div>\n<div class="clearfix"></div>\n<!-- END SIDEBAR WIDGETS --> \n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\n';});
+define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\r\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\r\n\r\n<ul>\t\r\n\r\n\t<!-- BEGIN ONE LEVEL MENU -->\r\n\t<li class="start active">\r\n\t\t<a href="javascript:;">\r\n\t\t\t<i class="fa fa-book"></i>\r\n\t\t\t<span class="title">Content Management</span>\r\n\t\t\t<span class="arrow"></span>\r\n\t\t</a>\r\n\t\t<ul class="sub-menu">\r\n\t\t</ul>\r\n\t</li>\r\n\t<!-- END ONE LEVEL MENU -->\r\n\r\n</ul>\r\n<!-- END SIDEBAR MENU -->\r\n<!-- BEGIN SIDEBAR WIDGETS -->\r\n<div class="side-bar-widgets">\r\n\r\n</div>\r\n<div class="clearfix"></div>\r\n<!-- END SIDEBAR WIDGETS --> \r\n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\r\n';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35983,7 +36039,7 @@ if (typeof define === "function" && define.amd) {
 })(Holder, window);
 
 
-define('text!apps/content-creator/content-builder/element/templates/element.html',[],function () { return '\n<form>\n  <input type="hidden" name="meta_id"/>\n  <input type="hidden" name="element"/>\n</form>\n<div class="element-controls">\n  <div class="aj-imp-drag-handle">\n    <p title="Move"><span class="fa fa-ellipsis-h"></span></p>\n  </div>\n  <div class="aj-imp-delete-btn"><span title="Delete">&times;</span></div>\n  <div class="aj-imp-settings-btn"><span title="Settings" class="glyphicon glyphicon-cog"></span></div>\n</div>\n<div class="element-markup"><span></span></div>';});
+define('text!apps/content-creator/content-builder/element/templates/element.html',[],function () { return '\r\n<form>\r\n  <input type="hidden" name="meta_id"/>\r\n  <input type="hidden" name="element"/>\r\n</form>\r\n<div class="element-controls">\r\n  <div class="aj-imp-drag-handle">\r\n    <p title="Move"><span class="fa fa-ellipsis-h"></span></p>\r\n  </div>\r\n  <div class="aj-imp-delete-btn"><span title="Delete">&times;</span></div>\r\n  <div class="aj-imp-settings-btn"><span title="Settings" class="glyphicon glyphicon-cog"></span></div>\r\n</div>\r\n<div class="element-markup"><span></span></div>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -36262,6 +36318,9 @@ var __hasProp = {}.hasOwnProperty,
 
 define('apps/content-creator/content-builder/elements/hotspot/views',['app'], function(App) {
   return App.module('ContentCreator.ContentBuilder.Element.Hotspot.Views', function(Views, App, Backbone, Marionette, $, _) {
+    var closequestionelementproperty, closequestionelements;
+    closequestionelementproperty = true;
+    closequestionelements = true;
     return Views.HotspotView = (function(_super) {
       __extends(HotspotView, _super);
 
@@ -36273,11 +36332,29 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
 
       HotspotView.prototype.template = '&nbsp;';
 
+      HotspotView.prototype.events = {
+        'click': function() {
+          return this.trigger("show:hotspot:properties");
+        }
+      };
+
       HotspotView.prototype.initialize = function(opt) {
         if (opt == null) {
           opt = {};
         }
-        return this.stageName = "stage" + new Date().getTime();
+        this.stageName = "stage" + new Date().getTime();
+        this.imageLayer = new Kinetic.Layer({
+          name: 'imageLayer'
+        });
+        this.optionLayer = new Kinetic.Layer({
+          name: 'optionLayer'
+        });
+        this.textLayer = new Kinetic.Layer({
+          name: 'textLayer'
+        });
+        return this.defaultLayer = new Kinetic.Layer({
+          name: 'defaultLayer'
+        });
       };
 
       HotspotView.prototype.onRender = function() {
@@ -36288,13 +36365,9 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
         console.log("in canvas");
         this.stage = new Kinetic.Stage({
           container: this.stageName,
-          width: this.$el.parent().width() - 15,
+          width: this.$el.parent().width(),
           height: this.$el.parent().height() + 80
         });
-        this.imageLayer = new Kinetic.Layer;
-        this.optionLayer = new Kinetic.Layer;
-        this.textLayer = new Kinetic.Layer;
-        this.defaultLayer = new Kinetic.Layer;
         this._setDefaultImage();
         this.stage.add(this.defaultLayer);
         this.stage.add(this.imageLayer);
@@ -36313,6 +36386,7 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
         $('#' + this.stageName + '.stage').resizable({
           handles: "s"
         });
+        this._setPropertyBoxCloseHandlers();
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
           if (type === "Hotspot-Image") {
             this.trigger("show:media:manager");
@@ -36321,11 +36395,6 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
           }
           return this._updateDefaultLayer();
         });
-        $('button.btn.btn-success.btn-cons2').on('mouseover', (function(_this) {
-          return function() {
-            return console.log(_this.stage.toJSON());
-          };
-        })(this));
         return $('#' + this.stageName + ' .kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
@@ -36344,6 +36413,35 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
         });
       };
 
+      HotspotView.prototype._setPropertyBoxCloseHandlers = function() {
+        $('body').on('click', function() {
+          if (closequestionelementproperty) {
+            App.execute("close:question:element:properties");
+          }
+          if (closequestionelements && closequestionelementproperty) {
+            return App.execute("close:question:elements");
+          }
+        });
+        $('#question-elements-property').on('mouseover', function() {
+          return closequestionelementproperty = false;
+        });
+        $('#question-elements-property').on('mouseout', function() {
+          return closequestionelementproperty = true;
+        });
+        $('#' + this.stageName + '.stage').on('mouseenter', '.kineticjs-content', function() {
+          return closequestionelements = false;
+        });
+        $('#' + this.stageName + '.stage').on('mouseleave', '.kineticjs-content', function() {
+          return closequestionelements = true;
+        });
+        $('#question-elements').on('mouseover', function() {
+          return closequestionelements = false;
+        });
+        return $('#question-elements').on('mouseout', function() {
+          return closequestionelements = true;
+        });
+      };
+
       HotspotView.prototype._setDefaultImage = function() {
         var defaultImage;
         defaultImage = new Image();
@@ -36353,29 +36451,28 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
             _this.hotspotDefault = new Kinetic.Image({
               image: defaultImage
             });
-            _this._updateDefaultImageSize();
             _this.defaultLayer.add(_this.hotspotDefault);
-            return _this.defaultLayer.draw();
+            return _this._updateDefaultImageSize();
           };
         })(this);
         return defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg";
       };
 
       HotspotView.prototype._updateDefaultLayer = function() {
-        var i, _results;
+        var i;
+        console.log("default" + this.stage.getChildren().length);
         i = 1;
-        _results = [];
         while (i < this.stage.getChildren().length) {
           if (i) {
             if (this.stage.getChildren()[i].getChildren().length) {
-              this.defaultLayer.remove(this.hotspotElement);
+              this.defaultLayer.removeChildren();
               break;
             }
-            console.log(this.stage.getChildren()[i]);
+            console.log(this.stage.getChildren()[i].getName());
           }
-          _results.push(i++);
+          i++;
         }
-        return _results;
+        return this.defaultLayer.draw();
       };
 
       HotspotView.prototype._updateDefaultImageSize = function() {
@@ -36395,10 +36492,11 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
             height: height - 10
           });
         }
-        return this.hotspotDefault.position({
+        this.hotspotDefault.position({
           x: this.stage.width() / 2 - this.hotspotDefault.width() / 2,
           y: this.stage.height() / 2 - this.hotspotDefault.height() / 2
         });
+        return this.defaultLayer.draw();
       };
 
       HotspotView.prototype._addElements = function(type, elementPos) {
@@ -36440,43 +36538,48 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var canvasText, hotspotElement, modelData, textBorder, tooltip;
+        var canvasText, hotspotElement, modelData, self, tooltip;
         modelData = {
           type: 'Text',
           text: '',
           fontFamily: 'Arial',
-          fontSize: '12',
-          fontColor: 'black'
+          fontSize: '14',
+          fontColor: '#000000',
+          fontBold: '',
+          fontItalics: ''
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
+        self = this;
         tooltip = new Kinetic.Label({
           x: elementPos.left,
           y: elementPos.top,
           width: 100,
-          opacity: 0.75,
-          draggable: true
-        });
-        textBorder = new Kinetic.Tag({
-          fill: 'white',
-          stroke: 'black',
-          width: 50,
-          lineJoin: 'round'
+          draggable: true,
+          dragBoundFunc: function(pos) {
+            return self._setBoundRegion(pos, this, self.stage);
+          }
         });
         canvasText = new Kinetic.Text({
-          text: hotspotElement.get('text'),
+          text: 'Enter Text',
           fontFamily: hotspotElement.get('fontFamily'),
           fontSize: hotspotElement.get('fontSize'),
           fill: hotspotElement.get('fontColor'),
+          fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'),
           padding: 5
         });
-        tooltip.on('mousedown click', function() {
+        tooltip.on('mousedown click', function(e) {
+          e.stopPropagation();
           return App.execute("show:question:element:properties", {
             model: hotspotElement
           });
         });
         hotspotElement.on("change:text", (function(_this) {
           return function() {
-            canvasText.setText(hotspotElement.get('text'));
+            if (hotspotElement.get('text') !== "") {
+              canvasText.setText(hotspotElement.get('text'));
+            } else {
+              canvasText.setText('Enter Text');
+            }
             return _this.textLayer.draw();
           };
         })(this));
@@ -36492,10 +36595,54 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
             return _this.textLayer.draw();
           };
         })(this));
-        tooltip.add(textBorder);
+        hotspotElement.on("change:fontBold change:fontItalics", (function(_this) {
+          return function() {
+            canvasText.fontStyle(hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'));
+            return _this.textLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:fontColor", (function(_this) {
+          return function() {
+            canvasText.fill(hotspotElement.get('fontColor'));
+            return _this.textLayer.draw();
+          };
+        })(this));
+        tooltip.on('mouseover', function() {
+          return closequestionelementproperty = false;
+        });
+        tooltip.on('mouseout', function() {
+          return closequestionelementproperty = true;
+        });
         tooltip.add(canvasText);
         this.textLayer.add(tooltip);
         return this.textLayer.draw();
+      };
+
+      HotspotView.prototype._setBoundRegion = function(pos, inner, outer) {
+        var X, Y, height, maxX, maxY, minX, minY;
+        height = inner.getHeight();
+        minX = outer.getX();
+        maxX = outer.getX() + outer.getWidth() - inner.getWidth();
+        minY = outer.getY();
+        maxY = outer.getY() + outer.getHeight() - inner.getHeight();
+        X = pos.x;
+        Y = pos.y;
+        if (X < minX) {
+          X = minX;
+        }
+        if (X > maxX) {
+          X = maxX;
+        }
+        if (Y < minY) {
+          Y = minY;
+        }
+        if (Y > maxY) {
+          Y = maxY;
+        }
+        return {
+          x: X,
+          y: Y
+        };
       };
 
       HotspotView.prototype.updateModel = function() {
@@ -36543,7 +36690,6 @@ define('apps/content-creator/content-builder/elements/hotspot/controller',['app'
 
       Controller.prototype.renderElement = function() {
         var view;
-        this.removeSpinner();
         view = this._getHotspotView();
         this.listenTo(view, "show:media:manager", (function(_this) {
           return function() {
@@ -36565,7 +36711,9 @@ define('apps/content-creator/content-builder/elements/hotspot/controller',['app'
             });
           };
         })(this));
-        this.layout.elementRegion.show(view);
+        this.layout.elementRegion.show(view, {
+          loading: true
+        });
         return App.execute("show:question:elements", {
           model: this.layout.model
         });
@@ -36928,7 +37076,7 @@ define('apps/content-creator/content-builder/elements/row/views',['app'], functi
 });
 
 
-define('text!apps/content-creator/content-builder/elements/row/settings/templates/settings.html',[],function () { return '\n<header class="settings-header">\n  <div class="row">\n    <div class="col-sm-10">\n      <h5 class="title">{{config.element}} Settings</h5>\n    </div>\n    <div class="col-sm-2 close-btn"><a href="#" class="close-settings">&times;</a></div>\n  </div>\n</header>\n<div class="row">\n  <div class="col-sm-12">\n    <form action="" method="POST" role="form" class="form-horizontal">\n    <!--   <div class="form-group">\n        <label for="" class="col-sm-4 control-label">Choose Style</label>\n        <div class="col-sm-8">\n          <select name="style">\n            <option value="">None</option>{{#styles}}\n            <option value="{{name}}">{{name}}</option>{{/styles}}\n          </select>\n        </div>\n      </div>\n      <div class="form-group">\n        <label for="" class="col-sm-4 control-label">Draggable</label>\n        <div class="col-sm-8"><span class="checkbox">\n            <input type="checkbox" name="draggable"/></span></div>\n        <div class="clearfix"></div>\n      </div> -->\n      <div class="form-group">\n        <label for="" class="col-sm-4 control-label">No of columns</label>\n        <div class="col-sm-8">\n          <div class="set-column-count btn-group btn-group-xs"><a class="btn btn-default">1 </a><a class="btn btn-default">2 </a><a class="btn btn-default">3 </a><a class="btn btn-default">4 </a><a class="btn btn-default">6 </a></div>\n        </div>\n      </div>\n    </form>\n  </div>\n</div>';});
+define('text!apps/content-creator/content-builder/elements/row/settings/templates/settings.html',[],function () { return '\r\n<header class="settings-header">\r\n  <div class="row">\r\n    <div class="col-sm-10">\r\n      <h5 class="title">{{config.element}} Settings</h5>\r\n    </div>\r\n    <div class="col-sm-2 close-btn"><a href="#" class="close-settings">&times;</a></div>\r\n  </div>\r\n</header>\r\n<div class="row">\r\n  <div class="col-sm-12">\r\n    <form action="" method="POST" role="form" class="form-horizontal">\r\n    <!--   <div class="form-group">\r\n        <label for="" class="col-sm-4 control-label">Choose Style</label>\r\n        <div class="col-sm-8">\r\n          <select name="style">\r\n            <option value="">None</option>{{#styles}}\r\n            <option value="{{name}}">{{name}}</option>{{/styles}}\r\n          </select>\r\n        </div>\r\n      </div>\r\n      <div class="form-group">\r\n        <label for="" class="col-sm-4 control-label">Draggable</label>\r\n        <div class="col-sm-8"><span class="checkbox">\r\n            <input type="checkbox" name="draggable"/></span></div>\r\n        <div class="clearfix"></div>\r\n      </div> -->\r\n      <div class="form-group">\r\n        <label for="" class="col-sm-4 control-label">No of columns</label>\r\n        <div class="col-sm-8">\r\n          <div class="set-column-count btn-group btn-group-xs"><a class="btn btn-default">1 </a><a class="btn btn-default">2 </a><a class="btn btn-default">3 </a><a class="btn btn-default">4 </a><a class="btn btn-default">6 </a></div>\r\n        </div>\r\n      </div>\r\n    </form>\r\n  </div>\r\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -37394,23 +37542,12 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
         return TextView.__super__.constructor.apply(this, arguments);
       }
 
-      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1">Arial</option> <option value="2">Calibri</option> <option value="3">Comic Sans MS</option> <option value="4">Courier</option> <option value="5">Georgia</option> <option value="6">Helvetica</option> <option value="7">Impact</option> <option value="8">Lucida Console</option> <option value="9">Lucida Sans Unicode</option> <option value="10">Tahoma</option> <option value="11">Times New Roman</option> <option value="12">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group textFormat" data-toggle="buttons-checkbox"> <div class="btn-group"> <button class="btn"><i class="fa fa-bold"></i></button> <button class="btn"><i class="fa fa-italic"></i></button> </div> </div> </div> </div> </div>';
+      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1">Arial</option> <option value="2">Calibri</option> <option value="3">Comic Sans MS</option> <option value="4">Courier</option> <option value="5">Georgia</option> <option value="6">Helvetica</option> <option value="7">Impact</option> <option value="8">Lucida Console</option> <option value="9">Lucida Sans Unicode</option> <option value="10">Tahoma</option> <option value="11">Times New Roman</option> <option value="12">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group textFormat" data-toggle="buttons-checkbox"> <div id="font-style" class="btn-group"> <button id="bold-btn" class="btn"><i class="fa fa-bold"></i></button> <button id="italic-btn" class="btn"><i class="fa fa-italic"></i></button> </div> </div> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> </div> </div> </div>';
 
       TextView.prototype.onShow = function() {
         var self;
         self = this;
         $('.fontSize').slider();
-        $('#hotspot-textelement-fontfamily').children('option').each(function() {
-          console.log($(this).text());
-          if ($(this).text() === self.model.get('fontFamily')) {
-            return this.selected = true;
-          }
-        });
-        $('#hotspot-textelement-text').on('input', (function(_this) {
-          return function() {
-            return _this.model.set("text", $('#hotspot-textelement-text').val());
-          };
-        })(this));
         $('#hotspot-textelement-fontsize').slider().on('slide', (function(_this) {
           return function() {
             var size;
@@ -37418,10 +37555,45 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
             return _this.model.set('fontSize', $('.fontSize').slider('getValue').val() || size);
           };
         })(this));
-        return $('#hotspot-textelement-fontfamily').on('change', function() {
+        $('.fontColor').minicolors({
+          animationSpeed: 200,
+          animationEasing: 'swing',
+          control: 'hue',
+          position: 'top left',
+          showSpeed: 200,
+          change: function(hex, opacity) {
+            return self.model.set('fontColor', hex);
+          }
+        });
+        $('.fontColor').minicolors('value', self.model.get('fontColor'));
+        $('#hotspot-textelement-fontfamily').children('option').each(function() {
+          if ($(this).text() === self.model.get('fontFamily')) {
+            return this.selected = true;
+          }
+        });
+        $('#hotspot-textelement-fontfamily').on('change', function() {
           this.options[0].disabled = true;
-          self.model.set('fontFamily', $('#hotspot-textelement-fontfamily  option:selected').text());
-          return console.log(self.model);
+          return self.model.set('fontFamily', $('#hotspot-textelement-fontfamily  option:selected').text());
+        });
+        $('#hotspot-textelement-text').on('input', (function(_this) {
+          return function() {
+            return _this.model.set("text", $('#hotspot-textelement-text').val());
+          };
+        })(this));
+        return $('#font-style.btn-group .btn').on('click', function() {
+          return setTimeout(function() {
+            console.log("timeout");
+            if ($('#font-style.btn-group #bold-btn.btn').hasClass('active')) {
+              self.model.set('fontBold', "bold");
+            } else {
+              self.model.set('fontBold', "");
+            }
+            if ($('#font-style.btn-group #italic-btn.btn').hasClass('active')) {
+              return self.model.set('fontItalics', "italic");
+            } else {
+              return self.model.set('fontItalics', "");
+            }
+          }, 200);
         });
       };
 
@@ -37495,6 +37667,16 @@ define('apps/content-creator/property-dock/controller',['app', 'controllers/regi
         App.commands.setHandler("show:question:element:properties", (function(_this) {
           return function(options) {
             return _this._getElementProperties(options.model);
+          };
+        })(this));
+        App.commands.setHandler("close:question:element:properties", (function(_this) {
+          return function() {
+            return _this.layout.questElementPropRegion.close();
+          };
+        })(this));
+        App.commands.setHandler("close:question:elements", (function(_this) {
+          return function() {
+            return _this.layout.questElementRegion.close();
           };
         })(this));
         return this.show(this.layout);
@@ -37601,7 +37783,7 @@ define('apps/content-creator/contentcreatorapp',['app', 'controllers/region-cont
 });
 
 
-define('text!apps/media/upload/templates/upload.html',[],function () { return '\n<div class="aj-imp-upload-media"><span class="bicon icon-uniF10C"></span>\n  <div id="choosefiles" class="aj-imp-upload-message"><span class="glyphicon glyphicon-cloud-upload"></span>Upload Images from your Computer</div><span class="small-text">Upload Multiple Images by holding CTRL</span>\n  <div class="clear"></div><br/>\n  <div id="progress" style="width: 30%; margin: 0px auto; display: none;" class="progress progress-striped active">\n    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="progress-bar"></div><span class="sr-only">0% Complete </span>\n  </div>\n</div>';});
+define('text!apps/media/upload/templates/upload.html',[],function () { return '\r\n<div class="aj-imp-upload-media"><span class="bicon icon-uniF10C"></span>\r\n  <div id="choosefiles" class="aj-imp-upload-message"><span class="glyphicon glyphicon-cloud-upload"></span>Upload Images from your Computer</div><span class="small-text">Upload Multiple Images by holding CTRL</span>\r\n  <div class="clear"></div><br/>\r\n  <div id="progress" style="width: 30%; margin: 0px auto; display: none;" class="progress progress-striped active">\r\n    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="progress-bar"></div><span class="sr-only">0% Complete </span>\r\n  </div>\r\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -37716,7 +37898,7 @@ define('apps/media/upload/controller',['app', 'controllers/region-controller', '
 });
 
 
-define('text!apps/media/grid/templates/media.html',[],function () { return '<a href="#" class="thumbnail">\n  <div class="imgthumb"><img src="{{sizes.thumbnail.url}}" class="img-responsive"/></div>\n  <div class="ticker"><span class="glyphicon glyphicon-ok"></span><span class="glyphicon glyphicon-minus"></span></div></a>';});
+define('text!apps/media/grid/templates/media.html',[],function () { return '<a href="#" class="thumbnail">\r\n  <div class="imgthumb"><img src="{{sizes.thumbnail.url}}" class="img-responsive"/></div>\r\n  <div class="ticker"><span class="glyphicon glyphicon-ok"></span><span class="glyphicon glyphicon-minus"></span></div></a>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -37937,7 +38119,7 @@ define('apps/media/selected/controller',['app', 'controllers/region-controller']
 });
 
 
-define('text!apps/media/edit-media/templates/form.html',[],function () { return '\n<form action="" method="POST" role="form">\n  <h5>Edit Media</h5>\n  <div class="form-group">\n    <label for="">Title</label>\n    <input type="text" placeholder="" value="{{title}}" class="form-control"/>\n  </div>\n  <div class="form-group">\n    <label for="">Caption</label>\n    <input type="text" placeholder="" value="{{caption}}" class="form-control"/>\n  </div>\n  <div class="form-group">\n    <label for="">Alt Text</label>\n    <input type="text" placeholder="" value="{{alt}}" class="form-control"/>\n  </div>\n  <div class="form-group">\n    <label for="">Description</label>\n    <input type="text" placeholder="" value="{{description}}" class="form-control"/>\n  </div>\n  <button type="button" class="btn btn-primary">Save</button>\n</form>';});
+define('text!apps/media/edit-media/templates/form.html',[],function () { return '\r\n<form action="" method="POST" role="form">\r\n  <h5>Edit Media</h5>\r\n  <div class="form-group">\r\n    <label for="">Title</label>\r\n    <input type="text" placeholder="" value="{{title}}" class="form-control"/>\r\n  </div>\r\n  <div class="form-group">\r\n    <label for="">Caption</label>\r\n    <input type="text" placeholder="" value="{{caption}}" class="form-control"/>\r\n  </div>\r\n  <div class="form-group">\r\n    <label for="">Alt Text</label>\r\n    <input type="text" placeholder="" value="{{alt}}" class="form-control"/>\r\n  </div>\r\n  <div class="form-group">\r\n    <label for="">Description</label>\r\n    <input type="text" placeholder="" value="{{description}}" class="form-control"/>\r\n  </div>\r\n  <button type="button" class="btn btn-primary">Save</button>\r\n</form>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -38009,7 +38191,7 @@ define('apps/media/app',['app', 'controllers/region-controller', 'apps/media/upl
 });
 
 
-define('text!apps/media-manager/templates/outer.html',[],function () { return '\n<ul class="nav nav-tabs">\n  <li class="active"><a href="#upload-region" data-toggle="tab">Upload</a></li>\n  <li><a href="#all-media-region" data-toggle="tab">All Media</a></li>\n  <!--li: a(href="#gallery-region" data-toggle="tab") Gallery-->\n</ul>\n<div class="tab-content">\n  <div id="upload-region" class="tab-pane active"></div>\n  <div id="all-media-region" class="tab-pane">\n    <div id="grid-region" class="col-md-9"></div>\n    <div id="edit-media-region" class="col-md-3">\n      <div class="pick-image"><span class="glyphicon glyphicon-hand-left"></span>\n        <h4>Select an Image from the library</h4>\n      </div>\n    </div>\n  </div>\n  <div id="gallery-region" class="tab-pane"></div>\n</div>\n<div class="clearfix">\n  <button class="btn btn-primary media-manager-select">Select</button>\n</div>';});
+define('text!apps/media-manager/templates/outer.html',[],function () { return '\r\n<ul class="nav nav-tabs">\r\n  <li class="active"><a href="#upload-region" data-toggle="tab">Upload</a></li>\r\n  <li><a href="#all-media-region" data-toggle="tab">All Media</a></li>\r\n  <!--li: a(href="#gallery-region" data-toggle="tab") Gallery-->\r\n</ul>\r\n<div class="tab-content">\r\n  <div id="upload-region" class="tab-pane active"></div>\r\n  <div id="all-media-region" class="tab-pane">\r\n    <div id="grid-region" class="col-md-9"></div>\r\n    <div id="edit-media-region" class="col-md-3">\r\n      <div class="pick-image"><span class="glyphicon glyphicon-hand-left"></span>\r\n        <h4>Select an Image from the library</h4>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div id="gallery-region" class="tab-pane"></div>\r\n</div>\r\n<div class="clearfix">\r\n  <button class="btn btn-primary media-manager-select">Select</button>\r\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -38157,7 +38339,8 @@ require.config({
     checkbox: 'plugins/flatui-checkbox',
     componentloader: 'components/builder-component-loader',
     spin: 'plugins/spin',
-    jqueryspin: 'plugins/jquery.spin'
+    jqueryspin: 'plugins/jquery.spin',
+    jquerycolor: 'plugins/jquery.minicolors.min'
   },
   shim: {
     underscore: {
@@ -38166,6 +38349,7 @@ require.config({
     jquery: ['underscore'],
     jqueryui: ['jquery'],
     jqueryresize: ['jquery', 'jqueryui'],
+    jquerycolor: ['jquery'],
     kineticresize: ['kinetic'],
     backbone: {
       deps: ['jquery', 'underscore'],
@@ -38179,7 +38363,7 @@ require.config({
       deps: ['jquery'],
       exports: 'plupload'
     },
-    bootstrap: ['jquery'],
+    bootstrap: ['jquery', 'jqueryui'],
     bootstrapslider: ['bootstrap'],
     checkbox: ['bootstrap'],
     jqueryvalidate: ['jquery'],

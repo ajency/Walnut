@@ -29,7 +29,8 @@
     checkbox      : 'plugins/flatui-checkbox',
     spin        : 'plugins/spin',
     jqueryspin      : 'plugins/jquery.spin',
-    bootstrapslider   : 'plugins/bootstrap-slider'
+    bootstrapslider   : 'plugins/bootstrap-slider',
+    jquerycolor     : 'plugins/jquery.minicolors.min'
     
   },
   shim: {
@@ -39,6 +40,7 @@
     jquery: ['underscore'],
     jqueryui: ['jquery'],
     jqueryresize: ['jquery', 'jqueryui'],
+    jquerycolor :['jquery'],
     kineticresize: ['kinetic'],
     backbone: {
       deps: ['jquery', 'underscore'],
