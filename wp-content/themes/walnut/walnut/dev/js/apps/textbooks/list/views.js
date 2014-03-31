@@ -19,7 +19,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       ListItemView.prototype.template = listitemTpl;
 
       ListItemView.prototype.onShow = function() {
-        var class_id, class_ids, subject, subjects, _i, _j, _len, _len1, _results;
+        var class_id, class_ids, subject, subjects, _i, _j, _len, _len1;
+        console.log(this.model.get('name'));
         this.$el.attr('data-name', this.model.get('name'));
         class_ids = this.model.get('classes');
         if (class_ids) {
@@ -30,13 +31,18 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
         }
         subjects = this.model.get('subjects');
         if (subjects) {
-          _results = [];
           for (_j = 0, _len1 = subjects.length; _j < _len1; _j++) {
             subject = subjects[_j];
-            _results.push(this.$el.addClass(subject));
+            this.$el.addClass(subject);
           }
-          return _results;
         }
+        return $('#textbooks').mixitup({
+          layoutMode: 'list',
+          listClass: 'list',
+          gridClass: 'grid',
+          effects: ['fade', 'blur'],
+          listEffects: ['fade', 'rotateX']
+        });
       };
 
       ListItemView.prototype.serializeData = function() {
@@ -140,20 +146,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       };
 
       ListView.prototype.onShow = function() {
-        setTimeout(function() {
-          var $filters, dimensions;
-          $('#textbooks').mixitup({
-            layoutMode: 'list',
-            listClass: 'list',
-            gridClass: 'grid',
-            effects: ['fade', 'blur'],
-            listEffects: ['fade', 'rotateX']
-          });
-          return $filters = $('#Filters').find('li', dimensions = {
-            region: 'all',
-            recreation: 'all'
-          });
-        }, 1000);
+        console.log('onShow');
         return this.dimensions = {
           region: 'all',
           recreation: 'all'
