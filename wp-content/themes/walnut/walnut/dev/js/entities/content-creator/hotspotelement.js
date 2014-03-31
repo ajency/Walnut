@@ -13,7 +13,8 @@ define(['app', 'backbone'], function(App, Backbone) {
 
       ElementModel.prototype.defaults = function() {
         return {
-          family: 'hotspot'
+          family: 'hotspot',
+          toDelete: false
         };
       };
 

@@ -82,7 +82,7 @@ var _WPNONCE = '8182442cce';
 <?php if(ENV=='dev') { ?>
 <script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php } else { ?>
-<script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/content-creator-main.js"></script>
+<script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js"></script>
 <?php } ?>
 
 

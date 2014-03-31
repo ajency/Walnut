@@ -15,7 +15,7 @@ define ['app'],(App)->
 			template : '&nbsp;'
 
 			events :
-				'click' : -> @trigger "show:hotspot:properties"
+				'mousedown' : -> @trigger "show:hotspot:properties"
 				# 'focus'	: -> console.log "blur" #'updateModel'
 
 			initialize:(opt = {})->
@@ -104,7 +104,7 @@ define ['app'],(App)->
 
 
 			_setPropertyBoxCloseHandlers:->
-				$('body').on 'click',->
+				$('body').on 'mousedown',->
 						if closequestionelementproperty
 							# console.log 'stage'
 							App.execute "close:question:element:properties"
@@ -255,11 +255,22 @@ define ['app'],(App)->
 						fontStyle : hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
 						padding: 5
 
+
+					rotator = new Kinetic.Circle
+						x : canvasText.width()
+						y : 0 
+						stroke : 'black'
+						radius: 5
+						draggable : true
+					
+
+
 					# on click of a text element show properties
 					tooltip.on 'mousedown click',(e)->
 							e.stopPropagation()
 							App.execute "show:question:element:properties",
 									model : hotspotElement
+							console.log @
 
 					# on change of text update the canvas
 					hotspotElement.on "change:text",=>
@@ -267,28 +278,43 @@ define ['app'],(App)->
 								canvasText.setText hotspotElement.get 'text'
 							else
 								canvasText.setText 'Enter Text'
+							# tooltip.fire "moverotator"
+
 							@textLayer.draw()
 
 					# on change of font Size update the canvas
 					hotspotElement.on "change:fontSize",=>
 							canvasText.fontSize hotspotElement.get 'fontSize'
+							# tooltip.fire "moverotator"
 							@textLayer.draw()
 
 
 					# on change of font  update the canvas
 					hotspotElement.on "change:fontFamily",=>
 							canvasText.fontFamily hotspotElement.get 'fontFamily'
+							# tooltip.fire "moverotator"
 							@textLayer.draw()
 
 
 					# on change of font Style update the canvas
 					hotspotElement.on "change:fontBold change:fontItalics",=>
 							canvasText.fontStyle  hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
+							# tooltip.fire "moverotator"
 							@textLayer.draw()
 
 					hotspotElement.on "change:fontColor",=>
 							canvasText.fill hotspotElement.get 'fontColor'
+							# tooltip.fire "moverotator"
 							@textLayer.draw()
+
+					hotspotElement.on "change:toDelete",=>
+							tooltip.destroy()
+							hotspotElement.destroy()
+							@textLayer.draw()
+							console.log hotspotElement
+
+					# tooltip.on 'moverotator',(e)->
+					# 	rotator.x tooltip.width()
 
 
 					tooltip.on 'mouseover',->
@@ -297,9 +323,11 @@ define ['app'],(App)->
 					tooltip.on 'mouseout',->
 						closequestionelementproperty = true
 
-					
-
 					tooltip.add canvasText
+
+					# tooltip.add rotator
+
+					# rotateLabel tooltip,rotator,@textLayer
 
 					@textLayer.add tooltip
 
