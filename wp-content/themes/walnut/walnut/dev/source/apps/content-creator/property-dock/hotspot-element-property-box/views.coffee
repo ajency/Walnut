@@ -41,9 +41,9 @@ define ['app'],(App)->
 										</div>
 
 										<div class="form-group textFormat" data-toggle="buttons-checkbox">
-											<div class="btn-group">
-												<button class="btn"><i class="fa fa-bold"></i></button>
-												<button class="btn"><i class="fa fa-italic"></i></button>
+											<div id="font-style" class="btn-group">
+												<button id="bold-btn" class="btn"><i class="fa fa-bold"></i></button>
+												<button id="italic-btn" class="btn"><i class="fa fa-italic"></i></button>
 											</div>
 										</div>
 
@@ -57,7 +57,7 @@ define ['app'],(App)->
 					$('.fontSize').slider()
 
 					$('#hotspot-textelement-fontfamily').children('option').each ->
-						console.log $(@).text()
+					
 						if $(@).text() is self.model.get 'fontFamily'
 							@selected = true
 
@@ -75,8 +75,20 @@ define ['app'],(App)->
 					$('#hotspot-textelement-fontfamily').on 'change',->
 						@.options[0].disabled = true
 						self.model.set 'fontFamily', $('#hotspot-textelement-fontfamily  option:selected').text()
-						console.log self.model
 						
-
+						
+					$('#font-style.btn-group .btn').on 'click',->
+						setTimeout ->
+							console.log "timeout"
+							if $('#font-style.btn-group #bold-btn.btn').hasClass('active')
+							 	self.model.set 'fontBold', "bold"
+							else
+								self.model.set 'fontBold', ""
+							if $('#font-style.btn-group #italic-btn.btn').hasClass('active')
+								self.model.set 'fontItalics', "italic"
+							else
+								self.model.set 'fontItalics', ""
+						,200
+						
 						
 

@@ -1,6 +1,7 @@
 define ["backbone"], (Backbone) ->
 
 
+
 	_.extend Backbone.Model::,
 
 		# Extended implementation of Bacbone.Model.sync to work with wordpress ajax
