@@ -49,8 +49,9 @@ define(['marionette'], function(Marionette) {
             region: App.leftNavRegion
           });
           if (_this.getCurrentRoute() === 'login') {
-            return App.vent.trigger("show:dashboard");
+            App.vent.trigger("show:dashboard");
           }
+          return App.loginRegion.close();
         } else {
           return App.vent.trigger("show:login");
         }
