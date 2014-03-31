@@ -86,6 +86,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       ListView.prototype.serializeData = function() {
         var collection_classes, data, data_classes;
         data = ListView.__super__.serializeData.call(this);
+        console.log(this.collection);
         collection_classes = this.collection.pluck('classes');
         data_classes = _.union(_.flatten(collection_classes));
         data.classes = _.sortBy(data_classes, function(num) {
