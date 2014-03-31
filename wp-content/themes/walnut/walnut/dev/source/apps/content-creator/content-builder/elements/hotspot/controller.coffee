@@ -56,7 +56,8 @@ define ['app'
 
 
 						
-						@layout.elementRegion.show view
+						@layout.elementRegion.show view,
+							loading:true
 
 						# show hotspot properties for this hotspot
 						App.execute "show:question:elements",

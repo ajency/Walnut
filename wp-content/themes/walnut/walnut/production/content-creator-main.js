@@ -35362,6 +35362,14 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
         return data;
       };
 
+      HeaderView.prototype.onShow = function() {
+        if ($('.creator').length > 0) {
+          $(".header-seperation").css("display", "none");
+          $("#main-menu").addClass("mini");
+          return $("#main-content-region").addClass("condensed");
+        }
+      };
+
       return HeaderView;
 
     })(Marionette.Layout);
@@ -36703,7 +36711,9 @@ define('apps/content-creator/content-builder/elements/hotspot/controller',['app'
             });
           };
         })(this));
-        this.layout.elementRegion.show(view);
+        this.layout.elementRegion.show(view, {
+          loading: true
+        });
         return App.execute("show:question:elements", {
           model: this.layout.model
         });
