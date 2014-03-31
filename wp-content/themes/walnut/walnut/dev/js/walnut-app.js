@@ -52,11 +52,7 @@ define(['marionette'], function(Marionette) {
             return App.vent.trigger("show:dashboard");
           }
         } else {
-          console.log('error');
-          _this.rootRoute = 'login';
-          return App.navigate(_this.rootRoute, {
-            trigger: true
-          });
+          return App.vent.trigger("show:login");
         }
       };
     })(this), 'json');
@@ -70,6 +66,15 @@ define(['marionette'], function(Marionette) {
     });
     return App.execute("show:leftnavapp", {
       region: App.leftNavRegion
+    });
+  });
+  App.vent.on("show:login", function() {
+    App.leftNavRegion.close();
+    App.headerRegion.close();
+    App.mainContentRegion.close();
+    this.rootRoute = 'login';
+    return App.navigate(this.rootRoute, {
+      trigger: true
     });
   });
   return App;

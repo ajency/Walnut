@@ -18,8 +18,7 @@ define ['app'
 							if response.error
 								console.log response
 							else
-								console.log 'logged out'
-								App.navigate('login', trigger: true)
+								App.vent.trigger "show:login"
 						
 
 			_getRightHeaderView : ->
