@@ -1,4 +1,4 @@
-define ['detect','jquery'], (detect,$)->
+define ['detect','jquery', 'plugins/online'], (detect,$, online)->
 
       networkStatus = 0
 
@@ -11,7 +11,7 @@ define ['detect','jquery'], (detect,$)->
 
       #Load script 'online.js' only for browser
       if checkPlatform() is "Desktop"
-        define ['plugins/online'], ->
+        online
 
       #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
