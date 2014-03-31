@@ -1,5 +1,6 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbooks/list/templates/list_item.html', 'text!apps/textbooks/templates/no_textbooks.html'], function(App, textbooksTpl, listitemTpl, notextbooksTpl) {
   return App.module("TextbooksApp.List.Views", function(Views, App) {
@@ -13,31 +14,39 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
 
       ListItemView.prototype.tagName = 'li';
 
-      ListItemView.prototype.className = 'mix';
+      ListItemView.prototype.className = 'mix mix_all';
 
       ListItemView.prototype.template = listitemTpl;
 
       ListItemView.prototype.onShow = function() {
-        var $filters, class_id, dimensions, _i, _len, _ref;
+        var class_id, class_ids, subject, subjects, _i, _j, _len, _len1, _results;
         this.$el.attr('data-name', this.model.get('name'));
-        _ref = this.model.get('classes');
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          class_id = _ref[_i];
-          this.$el.addClass('Class_' + class_id);
+        class_ids = this.model.get('classes');
+        if (class_ids) {
+          for (_i = 0, _len = class_ids.length; _i < _len; _i++) {
+            class_id = class_ids[_i];
+            this.$el.addClass('class' + class_id);
+          }
         }
-        return $filters = $('#Filters').find('li', dimensions = {
-          region: 'all',
-          recreation: 'all'
-        });
+        subjects = this.model.get('subjects');
+        if (subjects) {
+          _results = [];
+          for (_j = 0, _len1 = subjects.length; _j < _len1; _j++) {
+            subject = subjects[_j];
+            _results.push(this.$el.addClass(subject));
+          }
+          return _results;
+        }
       };
 
       ListItemView.prototype.serializeData = function() {
-        var class_id, class_string, data, item_classes, _i, _len;
+        var class_id, class_ids, class_string, data, item_classes, item_subjects, subject, subject_string, subjects, _i, _j, _len, _len1;
         data = ListItemView.__super__.serializeData.call(this);
-        if (this.model.get('classes')) {
-          item_classes = _.sortBy(this.model.get('classes', function(num) {
+        class_ids = this.model.get('classes');
+        if (class_ids) {
+          item_classes = _.sortBy(class_ids, function(num) {
             return num;
-          }));
+          });
           class_string = '';
           for (_i = 0, _len = item_classes.length; _i < _len; _i++) {
             class_id = item_classes[_i];
@@ -47,6 +56,21 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
             }
           }
           data.class_string = class_string;
+        }
+        subjects = this.model.get('subjects');
+        if (subjects) {
+          item_subjects = _.sortBy(subjects, function(num) {
+            return num;
+          });
+          subject_string = '';
+          for (_j = 0, _len1 = item_subjects.length; _j < _len1; _j++) {
+            subject = item_subjects[_j];
+            subject_string += subject;
+            if (_.last(item_subjects) !== subject) {
+              subject_string += ', ';
+            }
+          }
+          data.subject_string = subject_string;
         }
         return data;
       };
@@ -70,6 +94,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       __extends(ListView, _super);
 
       function ListView() {
+        this.filterBooks = __bind(this.filterBooks, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
 
@@ -84,20 +109,23 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       ListView.prototype.itemViewContainer = 'ul.textbooks_list';
 
       ListView.prototype.serializeData = function() {
-        var collection_classes, data, data_classes;
+        var collection_classes, collection_subjects, data, data_classes, data_subjects;
         data = ListView.__super__.serializeData.call(this);
         collection_classes = this.collection.pluck('classes');
         data_classes = _.union(_.flatten(collection_classes));
-        data.classes = _.sortBy(data_classes, function(num) {
+        data.classes = _.compact(_.sortBy(data_classes, function(num) {
           return num;
-        });
+        }));
+        collection_subjects = this.collection.pluck('subjects');
+        data_subjects = _.union(_.flatten(collection_subjects));
+        data.subjects = _.compact(_.sortBy(data_subjects, function(num) {
+          return num;
+        }));
         return data;
       };
 
       ListView.prototype.events = {
-        'click .filter_class': function(e) {
-          return this.trigger("filter:textbooks:class", $(e.target).closest('li').attr('data-filter'));
-        }
+        'click #Filters li': 'filterBooks'
       };
 
       ListView.prototype.sortTable = function(e) {
@@ -111,13 +139,62 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       };
 
       ListView.prototype.onShow = function() {
-        return $('#textbooks').mixitup({
-          layoutMode: 'list',
-          listClass: 'list',
-          gridClass: 'grid',
-          effects: ['fade', 'blur'],
-          listEffects: ['fade', 'rotateX']
-        });
+        setTimeout(function() {
+          var $filters, dimensions;
+          $('#textbooks').mixitup({
+            layoutMode: 'list',
+            listClass: 'list',
+            gridClass: 'grid',
+            effects: ['fade', 'blur'],
+            listEffects: ['fade', 'rotateX']
+          });
+          return $filters = $('#Filters').find('li', dimensions = {
+            region: 'all',
+            recreation: 'all'
+          });
+        }, 500);
+        return this.dimensions = {
+          region: 'all',
+          recreation: 'all'
+        };
+      };
+
+      ListView.prototype.filterBooks = function(e) {
+        var $t, dimension, filter, filterString, re;
+        console.log('@dimensions');
+        console.log(this.dimensions);
+        $t = $(e.target).closest('li');
+        dimension = $t.attr('data-dimension');
+        filter = $t.attr('data-filter');
+        filterString = this.dimensions[dimension];
+        if (filter === 'all') {
+          if (!$t.hasClass('active')) {
+            $t.addClass('active').siblings().removeClass('active');
+            filterString = 'all';
+          } else {
+            $t.removeClass('active');
+            filterString = '';
+          }
+        } else {
+          $t.siblings('[data-filter="all"]').removeClass('active');
+          filterString = filterString.replace('all', '');
+          if (!$t.hasClass('active')) {
+            $t.addClass('active');
+            if (filterString === '') {
+              filterString = filter;
+            } else {
+              filterString = filterString + ' ' + filter;
+            }
+          } else {
+            $t.removeClass('active');
+            re = new RegExp('(\\s|^)' + filter);
+            filterString = filterString.replace(re, '');
+          }
+        }
+        this.dimensions[dimension] = filterString;
+        console.info('dimension 1: ' + this.dimensions.region);
+        console.info('dimension 2: ' + this.dimensions.recreation);
+        return $('#textbooks').mixitup('filter', [this.dimensions.region, this.dimensions.recreation]);
       };
 
       return ListView;

@@ -32,9 +32,9 @@ Template Name: Dashboard
 	<!-- NEED TO WORK ON -->
 	<link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
 	<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
-	<link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
 	<!-- BEGIN CORE CSS FRAMEWORK -->
 	<link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
 	<link href="./wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
 	<link href="./wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
 	<!-- END CORE CSS FRAMEWORK -->
@@ -44,8 +44,7 @@ Template Name: Dashboard
 	<link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
 	<link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
 	<link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
-	<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
-
+	
 	<!-- END CSS TEMPLATE -->
 
 

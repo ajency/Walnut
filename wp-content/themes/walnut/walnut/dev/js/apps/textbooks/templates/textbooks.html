@@ -12,12 +12,23 @@
       <h3>Text<span class="semi-bold">books</span></h3>
     </div>
     <div id="Filters" class="pull-left">
-          <div class="btn-group"> <a class="btn dropdown-toggle btn-demo-space" data-toggle="dropdown" href="javascript://"> <span class="anim150">Class</span> <span class="caret"></span> </a>
+          <div class="btn-group"> <a href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-demo-space"> <span class="anim150">Class</span> <span class="caret"></span> </a>
             <ul class="dropdown-menu">
+              <li class="active" data-filter="all" data-dimension="region"><a href="#">All</a></li>
               {{#classes}}
-              <li class="filter_class" data-dimension="region" data-filter="{{.}}"><a href="javascript://">Class {{.}}</a></li>
+              <li class="" data-dimension="region" data-filter="class{{.}}"><a href="javascript://">Class {{.}}</a></li>
               {{/classes}}
+            </ul>
           </div>
+          <div class="btn-group"> <a class="btn dropdown-toggle btn-demo-space" data-toggle="dropdown" href="javascript://"> <span class="anim150">Subject</span> <span class="caret"></span> </a>
+            <ul class="dropdown-menu">
+              <li class="active" data-filter="all" data-dimension="recreation"><a href="#">All</a></li>
+              {{#subjects}}
+              <li class="filter_subjects" data-dimension="recreation" data-filter="{{.}}"><a href="javascript://">{{.}}</a></li>
+              {{/subjects}}
+            </ul>
+          </div>
+
       </div>
         <div class="clearfix"></div>
 
@@ -26,9 +37,11 @@
           <div class="list_header">
             <div id="SortByName" class="meta name active desc"> Name &nbsp; <span data-order="desc" data-sort="data-name" class="sort anim150 asc active"></span> <span data-order="asc" data-sort="data-name" class="sort anim150 desc"></span> </div>
             <div class="meta class">Class</div>
-            <div class="meta rec">Chapters</div>
+            <div class="meta  rec">Subject</div>
+            <div class="meta area">Chapters</div>
             <div class="meta area"> Questions/Quizzes </div>
           </div>
+          <div class="fail_element anim250">Sorry &mdash; we could not find any Textbooks matching matching these criteria</div>
           <!-- BEGIN LIST OF textbooks (MANY OF THESE ELEMENTS ARE VISIBLE ONLY IN LIST MODE)-->
           <ul class="textbooks_list">
           </ul>

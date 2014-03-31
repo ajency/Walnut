@@ -7524,7 +7524,7 @@ ul.my-friends li .profile-pic{
 
 .fail_element{
 	position: absolute;
-	/*opacity: 0;*/
+	opacity: 0;
 	top: 100px;
 	text-align: center;
 	width: 50%;
@@ -7749,13 +7749,10 @@ ul.my-friends li .profile-pic{
 	font-weight: 300;
 	text-indent: -2px;
 }
+
 #textbooks ul{
 	padding-left:0;
 }
-#textbooks ul.textbooks_list li{
-	display: block !important;  opacity: 1 !important;
-}
-
 
 /** Global Profile pics **/
 .user-profile img{
@@ -7771,6 +7768,7 @@ ul.my-friends li .profile-pic{
 .cbp_tmtimeline  li{
 	position: relative;
 }
+
 /* The line */
 .cbp_tmtimeline:before {
 	content: '';

@@ -2,12 +2,14 @@
 
 function extra_tax_fields($tag) {
     //check for existing taxonomy meta for term ID
+    
     global $wpdb;
     $t_id = $tag->term_id;
     $term_meta = get_option("taxonomy_$t_id");
-    $res = $wpdb->get_results("select class_id from {$wpdb->prefix}textbook_relationships where textbook_id=" . $t_id, ARRAY_A);
-    foreach ($res as $r)
-        $classes[] = $r['class_id'];
+    $res = $wpdb->get_results("select class_id, tags from {$wpdb->prefix}textbook_relationships where textbook_id=" . $t_id, ARRAY_A);
+    $classes= maybe_unserialize($res[0]['class_id']);
+    $subjects= maybe_unserialize($res[0]['tags']);
+    
     $textbook_fields = '';
     if ($tag->parent != 0)
         $textbook_fields = 'style="display:none"';
@@ -63,15 +65,45 @@ function extra_tax_fields($tag) {
             <span class="description"><?php _e('classes for which this textbook is suitable for'); ?></span>
         </td>
     </tr>
-    <!--
+   <tr> 
+       <td>Current Tags: </td>
+       <td>
+           <div  id='tags_area'>
+               <? if($subjects) {
+                   foreach($subjects as $sub){ 
+                        echo '<div class="termtags">
+                             <input name=term_tags[] value="'.$sub.'">
+                             <a onclick="jQuery(this).closest(\'div\').remove();" class="remove_tag">delete</a>
+                        </div>';
+                   }
+               }
+               ?>
+                   
+           </div>
+           
+       </td>
+       
+   </tr>
     <tr class="form-field">
-    <th scope="row" valign="top"><label for="tags"><?php _e('Tags'); ?></label></th>
+    <th scope="row" valign="top"><label for="tags">Add <?php _e('Tags'); ?></label></th>
     <td>
-      <input type="text" name="term_meta[tags]" id="term_meta[tags]" size="25" style="width:60%;" value="<?php echo $term_meta['tags'] ? $term_meta['tags'] : ''; ?>"><br />
+      <input type="text" name="" id="term_meta_tags" size="10" style="width:20%;">
+      <a id="tags_add">Add</a><br>
     <br>   
     </td>
     </tr>
-    -->
+    <script language="javascript">
+        jQuery(document).ready(function($) {            
+            $('#tags_add').click(function(){
+                var term_val=$('#term_meta_tags').val();
+                $('#tags_area').append('<div class="termtags"> \
+                            <input name=term_tags[] value="'+term_val+'"> \
+                            <a onclick="jQuery(this).closest(\'div\').remove();" class="remove_tag">delete</a></div>')
+                $('#term_meta_tags').val('');
+            });
+        });
+
+    </script>
     <?php
 }
 
@@ -146,30 +178,17 @@ function save_extra_taxonomy_fields($term_id) {
         }
         //save the option array
         update_option("taxonomy_$t_id", $term_meta);
-        if (sizeof($_POST['classes']) > 0) {
-            //echo "select id, class_id from {$wpdb->prefix}textbook_relationships 
-            //    where textbook_id=".$t_id;
-            $current_values = array();
-            $res_values = $wpdb->get_results("select class_id from {$wpdb->prefix}textbook_relationships 
-                where textbook_id=" . $t_id);
-            foreach ($res_values as $c)
-                $current_values[] = $c->class_id;
-            foreach ($current_values as $curr) {
-                if (!in_array($curr, $_POST['classes'])) {
-                    $wpdb->query("delete from {$wpdb->prefix}textbook_relationships 
-                        where class_id=" . $curr . " and textbook_id=" . $t_id);
-                }
-            }
-            foreach ($_POST['classes'] as $class) {
-                if (!in_array($class, $current_values)) {
-                    $wpdb->query("insert into {$wpdb->prefix}textbook_relationships 
-                    values('',$t_id,$class)");
-                }
-            }
-        } else {
-            $wpdb->query("delete from {$wpdb->prefix}textbook_relationships 
-                        where textbook_id=" . $t_id);
-        }
+        $classes=  maybe_serialize($_POST['classes']);
+        $tags=  maybe_serialize($_POST['term_tags']);
+        
+        $check_exists=$wpdb->query("select id from {$wpdb->prefix}textbook_relationships where textbook_id=" . $t_id);
+        if($check_exists)
+            $textbooks_query="update {$wpdb->prefix}textbook_relationships set class_id= '".$classes."', tags='".$tags."'
+                        where textbook_id=" . $t_id;
+        else 
+            $textbooks_query="insert into {$wpdb->prefix}textbook_relationships values ('','".$t_id."', '".$classes."','".$tags."')";
+        //echo $textbooks_query; exit;
+        $wpdb->query($textbooks_query);
     }
 }
 
@@ -253,12 +272,10 @@ function get_book($book) {
     $book_dets->cover_pic = $additional['attachmenturl'];
     $book_dets->author = $additional['author'];
 
-    $classes = $wpdb->get_results("select class_id from {$wpdb->prefix}textbook_relationships 
-                where textbook_id=" . $book_id);
-    $book_dets->classes=Array();
-    foreach ($classes as $class) {
-        $book_dets->classes[] = $class->class_id;
-    }
+    $classes = $wpdb->get_results("select class_id, tags from {$wpdb->prefix}textbook_relationships 
+                where textbook_id=" . $book_id, ARRAY_A);
+    $book_dets->classes= maybe_unserialize($classes[0]['class_id']);
+    $book_dets->subjects= maybe_unserialize($classes[0]['tags']);
 
     $args = array('hide_empty' => false,
         'parent' => $book_id,
