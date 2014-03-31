@@ -39,9 +39,6 @@ define ['marionette'], (Marionette)->
 	App.commands.setHandler "unregister:instance", (instance, id) ->
 		App.unregister instance, id
 
-	App.on "initialize:before", () ->
-		Pace.start()
-
 	App.on "initialize:after", (options) ->
 		Pace.on 'hide', ()->
 			$("#site_main_container").addClass( "showAll" );
@@ -63,7 +60,7 @@ define ['marionette'], (Marionette)->
 						user.set resp.data
 						school = App.request "get:current:school"
 						App.execute "show:headerapp", region:App.headerRegion
-						App.execute "show:leftnavapp", region:App.leftNavRegion						
+						App.execute "show:leftnavapp", region:App.leftNavRegion	
 						App.vent.trigger "show:dashboard"  if @getCurrentRoute() is 'login'
 						App.loginRegion.close()
 					else 	

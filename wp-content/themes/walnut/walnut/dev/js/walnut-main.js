@@ -2,7 +2,6 @@ require.config({
   urlArgs: "ver=" + ((new Date()).getTime()),
   baseUrl: './wp-content/themes/walnut/walnut/dev/js',
   paths: {
-    pace: 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryvalidate: 'plugins/jquery.validate.min',

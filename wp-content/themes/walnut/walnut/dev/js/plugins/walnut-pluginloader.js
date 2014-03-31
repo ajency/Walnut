@@ -1,1 +1,1 @@
-define(['pace', 'underscore', 'underscorestring', 'jquery', 'backbone', 'marionette', 'syphon', 'text', 'jqueryvalidate', 'sidr', 'slimroll', 'core', 'breakpoints', 'mustache', 'spin', 'jqueryspin', 'bootstrap', 'mixitup', 'unveil'], function() {});
+define(['underscore', 'underscorestring', 'jquery', 'backbone', 'marionette', 'syphon', 'text', 'jqueryvalidate', 'sidr', 'slimroll', 'core', 'breakpoints', 'mustache', 'spin', 'jqueryspin', 'bootstrap', 'mixitup', 'unveil'], function() {});
