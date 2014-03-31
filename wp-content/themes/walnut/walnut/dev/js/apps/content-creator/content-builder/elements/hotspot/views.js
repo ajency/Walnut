@@ -71,6 +71,34 @@ define(['app'], function(App) {
         $('#' + this.stageName + '.stage').resizable({
           handles: "s"
         });
+        this._setPropertyBoxCloseHandlers();
+        this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
+          if (type === "Hotspot-Image") {
+            this.trigger("show:media:manager");
+          } else {
+            this._addElements(type, elementPos);
+          }
+          return this._updateDefaultLayer();
+        });
+        return $('#' + this.stageName + ' .kineticjs-content').droppable({
+          accept: '.hotspotable',
+          drop: (function(_this) {
+            return function(evt, ui) {
+              var elementPos, type;
+              if (ui.draggable.prop("tagName") === 'LI') {
+                type = ui.draggable.attr('data-element');
+                elementPos = {
+                  left: evt.clientX - $('#' + _this.stageName + ' .kineticjs-content').offset().left,
+                  top: evt.clientY - $('#' + _this.stageName + ' .kineticjs-content').offset().top + window.pageYOffset
+                };
+                return _this.trigger("add:hotspot:element", type, elementPos);
+              }
+            };
+          })(this)
+        });
+      };
+
+      HotspotView.prototype._setPropertyBoxCloseHandlers = function() {
         $('body').on('click', function() {
           if (closequestionelementproperty) {
             App.execute("close:question:element:properties");
@@ -94,40 +122,8 @@ define(['app'], function(App) {
         $('#question-elements').on('mouseover', function() {
           return closequestionelements = false;
         });
-        $('#question-elements').on('mouseout', function() {
+        return $('#question-elements').on('mouseout', function() {
           return closequestionelements = true;
-        });
-        $('body').on('click', (function(_this) {
-          return function() {};
-        })(this));
-        this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
-          if (type === "Hotspot-Image") {
-            this.trigger("show:media:manager");
-          } else {
-            this._addElements(type, elementPos);
-          }
-          return this._updateDefaultLayer();
-        });
-        $('button.btn.btn-success.btn-cons2').on('mouseover', (function(_this) {
-          return function() {
-            return console.log(_this.stage.toJSON());
-          };
-        })(this));
-        return $('#' + this.stageName + ' .kineticjs-content').droppable({
-          accept: '.hotspotable',
-          drop: (function(_this) {
-            return function(evt, ui) {
-              var elementPos, type;
-              if (ui.draggable.prop("tagName") === 'LI') {
-                type = ui.draggable.attr('data-element');
-                elementPos = {
-                  left: evt.clientX - $('#' + _this.stageName + ' .kineticjs-content').offset().left,
-                  top: evt.clientY - $('#' + _this.stageName + ' .kineticjs-content').offset().top + window.pageYOffset
-                };
-                return _this.trigger("add:hotspot:element", type, elementPos);
-              }
-            };
-          })(this)
         });
       };
 
@@ -140,8 +136,8 @@ define(['app'], function(App) {
             _this.hotspotDefault = new Kinetic.Image({
               image: defaultImage
             });
-            _this._updateDefaultImageSize();
-            return _this.defaultLayer.add(_this.hotspotDefault);
+            _this.defaultLayer.add(_this.hotspotDefault);
+            return _this._updateDefaultImageSize();
           };
         })(this);
         return defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg";
@@ -181,10 +177,11 @@ define(['app'], function(App) {
             height: height - 10
           });
         }
-        return this.hotspotDefault.position({
+        this.hotspotDefault.position({
           x: this.stage.width() / 2 - this.hotspotDefault.width() / 2,
           y: this.stage.height() / 2 - this.hotspotDefault.height() / 2
         });
+        return this.defaultLayer.draw();
       };
 
       HotspotView.prototype._addElements = function(type, elementPos) {
@@ -232,7 +229,7 @@ define(['app'], function(App) {
           text: '',
           fontFamily: 'Arial',
           fontSize: '14',
-          fontColor: 'black',
+          fontColor: '#000000',
           fontBold: '',
           fontItalics: ''
         };
@@ -286,6 +283,12 @@ define(['app'], function(App) {
         hotspotElement.on("change:fontBold change:fontItalics", (function(_this) {
           return function() {
             canvasText.fontStyle(hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'));
+            return _this.textLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:fontColor", (function(_this) {
+          return function() {
+            canvasText.fill(hotspotElement.get('fontColor'));
             return _this.textLayer.draw();
           };
         })(this));

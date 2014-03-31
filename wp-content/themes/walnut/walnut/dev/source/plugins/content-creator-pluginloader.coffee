@@ -18,4 +18,5 @@ define [
 			'bootstrapslider'
 			'spin'
 			'jqueryspin'
+			'jquerycolor'
 		], ->

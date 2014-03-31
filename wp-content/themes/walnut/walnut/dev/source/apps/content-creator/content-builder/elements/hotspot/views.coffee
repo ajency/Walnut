@@ -75,6 +75,35 @@ define ['app'],(App)->
 				$('#'+@stageName+'.stage').resizable
 						handles: "s" 
 
+				@_setPropertyBoxCloseHandlers()
+				
+				#listen to drop event
+				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
+						if(type=="Hotspot-Image")
+							@trigger "show:media:manager"
+						else
+							@_addElements type, elementPos
+
+						@_updateDefaultLayer()
+
+
+				# $('button.btn.btn-success.btn-cons2').on 'mouseover',=>
+				# 		console.log  @stage.toJSON()
+
+
+				#make the hotspot canvas area dropable
+				$('#'+@stageName+' .kineticjs-content').droppable
+						accept : '.hotspotable'
+						drop : (evt, ui)=>
+								if ui.draggable.prop("tagName") is 'LI'
+										type  = ui.draggable.attr 'data-element'
+										elementPos = 
+											left : evt.clientX-$('#'+@stageName+' .kineticjs-content').offset().left
+											top  : evt.clientY-$('#'+@stageName+' .kineticjs-content').offset().top + window.pageYOffset
+										@trigger "add:hotspot:element", type , elementPos
+
+
+			_setPropertyBoxCloseHandlers:->
 				$('body').on 'click',->
 						if closequestionelementproperty
 							# console.log 'stage'
@@ -102,40 +131,7 @@ define ['app'],(App)->
 					# console.log "out of question"
 					closequestionelements = true
 
-				$('body').on 'click',=>
-					
-
-
-
-
-						
-
-				#listen to drop event
-				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
-						if(type=="Hotspot-Image")
-							@trigger "show:media:manager"
-						else
-							@_addElements type, elementPos
-
-						@_updateDefaultLayer()
-
-
-				$('button.btn.btn-success.btn-cons2').on 'mouseover',=>
-						console.log  @stage.toJSON()
-
-
-				#make the hotspot canvas area dropable
-				$('#'+@stageName+' .kineticjs-content').droppable
-						accept : '.hotspotable'
-						drop : (evt, ui)=>
-								if ui.draggable.prop("tagName") is 'LI'
-										type  = ui.draggable.attr 'data-element'
-										elementPos = 
-											left : evt.clientX-$('#'+@stageName+' .kineticjs-content').offset().left
-											top  : evt.clientY-$('#'+@stageName+' .kineticjs-content').offset().top + window.pageYOffset
-										@trigger "add:hotspot:element", type , elementPos
-
-
+	
 
 
 			_setDefaultImage:->
@@ -143,16 +139,10 @@ define ['app'],(App)->
 				defaultImage.onload = ()=>
 						console.log "in default image load"
 						@hotspotDefault = new Kinetic.Image
-								# x		: @stage.width()/2-70
-								# y		: @stage.height()/2-50
-								# width 	: 210
-								# height	: 150
 								image 	: defaultImage
-
-						@_updateDefaultImageSize()
+						
 						@defaultLayer.add @hotspotDefault
-						# @defaultLayer.draw()
-
+						@_updateDefaultImageSize()
 
 				defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg"
 
@@ -189,6 +179,8 @@ define ['app'],(App)->
 					@hotspotDefault.position
 						x : @stage.width()/2-@hotspotDefault.width()/2
 						y : @stage.height()/2-@hotspotDefault.height()/2
+
+					@defaultLayer.draw()
 
 
 			_addElements: (type,elementPos)->
@@ -241,7 +233,7 @@ define ['app'],(App)->
 						text : ''
 						fontFamily : 'Arial'
 						fontSize : '14'
-						fontColor : 'black'
+						fontColor : '#000000'
 						fontBold : ''
 						fontItalics : ''
 
@@ -292,6 +284,10 @@ define ['app'],(App)->
 					# on change of font Style update the canvas
 					hotspotElement.on "change:fontBold change:fontItalics",=>
 							canvasText.fontStyle  hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
+							@textLayer.draw()
+
+					hotspotElement.on "change:fontColor",=>
+							canvasText.fill hotspotElement.get 'fontColor'
 							@textLayer.draw()
 
 
