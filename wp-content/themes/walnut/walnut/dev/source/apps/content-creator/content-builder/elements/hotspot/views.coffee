@@ -23,6 +23,16 @@ define ['app'],(App)->
 				# console.log "layout model  "+JSON.stringify @model
 				@stageName = "stage"+ new Date().getTime()
 
+				# create the canvas layers
+				@imageLayer = new Kinetic.Layer
+					name : 'imageLayer'
+				@optionLayer = new Kinetic.Layer
+					name : 'optionLayer'
+				@textLayer = new Kinetic.Layer
+					name : 'textLayer'
+				@defaultLayer = new Kinetic.Layer
+					name : 'defaultLayer'
+
 			onRender:->
 
 				@$el.attr 'id', @stageName
@@ -36,18 +46,16 @@ define ['app'],(App)->
 
 				@stage = new Kinetic.Stage
 						container: @stageName
-						width: @$el.parent().width()-15
+						width: @$el.parent().width()
 						height: @$el.parent().height()+80
 
-				#create and add the canvas layers
-				@imageLayer = new Kinetic.Layer
-				@optionLayer = new Kinetic.Layer
-				@textLayer = new Kinetic.Layer
-				@defaultLayer = new Kinetic.Layer
+				
+				
 
 				# set image to the default image layer
 				@_setDefaultImage()
 
+				# add the canvas layers
 				@stage.add @defaultLayer
 				@stage.add @imageLayer
 				@stage.add @textLayer
@@ -69,7 +77,7 @@ define ['app'],(App)->
 
 				$('body').on 'click',->
 						if closequestionelementproperty
-							console.log 'stage'
+							# console.log 'stage'
 							App.execute "close:question:element:properties"
 						if closequestionelements and closequestionelementproperty
 							App.execute "close:question:elements"
@@ -81,17 +89,17 @@ define ['app'],(App)->
 
 
 				$('#'+@stageName+'.stage').on 'mouseenter', '.kineticjs-content', ->
-					console.log 'over stage'
+					# console.log 'over stage'
 					closequestionelements = false
 				$('#'+@stageName+'.stage').on 'mouseleave', '.kineticjs-content', ->
-					console.log 'outofStage'
+					# console.log 'outofStage'
 					closequestionelements = true
 
 				$('#question-elements').on 'mouseover', ->
-					console.log "over question"
+					# console.log "over question"
 					closequestionelements = false
 				$('#question-elements').on 'mouseout', ->
-					console.log "out of question"
+					# console.log "out of question"
 					closequestionelements = true
 
 				$('body').on 'click',=>
@@ -143,23 +151,23 @@ define ['app'],(App)->
 
 						@_updateDefaultImageSize()
 						@defaultLayer.add @hotspotDefault
-						@defaultLayer.draw()
+						# @defaultLayer.draw()
 
 
 				defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg"
 
 			# remove the default image from the layer if any hotspot elements are added
 			_updateDefaultLayer:->
-				
+					console.log "default"+@stage.getChildren().length
 					i = 1
 					while i<@stage.getChildren().length
 						if i
 							if @stage.getChildren()[i].getChildren().length
-								@defaultLayer.remove @hotspotElement
+								@defaultLayer.removeChildren()
 								break;
-							console.log @stage.getChildren()[i]
-
+							console.log @stage.getChildren()[i].getName()
 						i++
+					@defaultLayer.draw()
 
 			# update the size of default image on change of stage
 			_updateDefaultImageSize:->
@@ -238,12 +246,14 @@ define ['app'],(App)->
 						fontItalics : ''
 
 					hotspotElement = App.request "create:new:hotspot:element", modelData
-
+					self = @
 					tooltip = new Kinetic.Label
 						x: elementPos.left
 						y: elementPos.top
 						width : 100
 						draggable : true
+						dragBoundFunc : (pos)->
+							self._setBoundRegion(pos,@,self.stage)
 
 					canvasText = new Kinetic.Text
 						text: 'Enter Text'
@@ -301,8 +311,28 @@ define ['app'],(App)->
 
 					
 
-
-
+			_setBoundRegion:(pos,inner,outer)->
+				height = inner.getHeight();
+				minX = outer.getX();
+				maxX = outer.getX() + outer.getWidth() - inner.getWidth();
+				minY = outer.getY();
+				maxY = outer.getY() + outer.getHeight() - inner.getHeight();
+				X = pos.x;
+				Y = pos.y;
+				if(X < minX) 
+					X = minX
+				
+				if(X > maxX)
+					X = maxX
+				
+				if(Y < minY)
+					Y = minY
+				
+				if(Y > maxY) 
+					Y = maxY				
+				
+				x: X
+				y: Y
 
 			updateModel:->
 				@layout.model.set 'content', @_getHotspotData()
@@ -314,9 +344,4 @@ define ['app'],(App)->
 
 				@stage.toJSON()
 
-			      		
-
-
-
-				
-		
+			 

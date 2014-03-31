@@ -27,7 +27,19 @@ define(['app'], function(App) {
         if (opt == null) {
           opt = {};
         }
-        return this.stageName = "stage" + new Date().getTime();
+        this.stageName = "stage" + new Date().getTime();
+        this.imageLayer = new Kinetic.Layer({
+          name: 'imageLayer'
+        });
+        this.optionLayer = new Kinetic.Layer({
+          name: 'optionLayer'
+        });
+        this.textLayer = new Kinetic.Layer({
+          name: 'textLayer'
+        });
+        return this.defaultLayer = new Kinetic.Layer({
+          name: 'defaultLayer'
+        });
       };
 
       HotspotView.prototype.onRender = function() {
@@ -38,13 +50,9 @@ define(['app'], function(App) {
         console.log("in canvas");
         this.stage = new Kinetic.Stage({
           container: this.stageName,
-          width: this.$el.parent().width() - 15,
+          width: this.$el.parent().width(),
           height: this.$el.parent().height() + 80
         });
-        this.imageLayer = new Kinetic.Layer;
-        this.optionLayer = new Kinetic.Layer;
-        this.textLayer = new Kinetic.Layer;
-        this.defaultLayer = new Kinetic.Layer;
         this._setDefaultImage();
         this.stage.add(this.defaultLayer);
         this.stage.add(this.imageLayer);
@@ -65,7 +73,6 @@ define(['app'], function(App) {
         });
         $('body').on('click', function() {
           if (closequestionelementproperty) {
-            console.log('stage');
             App.execute("close:question:element:properties");
           }
           if (closequestionelements && closequestionelementproperty) {
@@ -79,19 +86,15 @@ define(['app'], function(App) {
           return closequestionelementproperty = true;
         });
         $('#' + this.stageName + '.stage').on('mouseenter', '.kineticjs-content', function() {
-          console.log('over stage');
           return closequestionelements = false;
         });
         $('#' + this.stageName + '.stage').on('mouseleave', '.kineticjs-content', function() {
-          console.log('outofStage');
           return closequestionelements = true;
         });
         $('#question-elements').on('mouseover', function() {
-          console.log("over question");
           return closequestionelements = false;
         });
         $('#question-elements').on('mouseout', function() {
-          console.log("out of question");
           return closequestionelements = true;
         });
         $('body').on('click', (function(_this) {
@@ -138,28 +141,27 @@ define(['app'], function(App) {
               image: defaultImage
             });
             _this._updateDefaultImageSize();
-            _this.defaultLayer.add(_this.hotspotDefault);
-            return _this.defaultLayer.draw();
+            return _this.defaultLayer.add(_this.hotspotDefault);
           };
         })(this);
         return defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg";
       };
 
       HotspotView.prototype._updateDefaultLayer = function() {
-        var i, _results;
+        var i;
+        console.log("default" + this.stage.getChildren().length);
         i = 1;
-        _results = [];
         while (i < this.stage.getChildren().length) {
           if (i) {
             if (this.stage.getChildren()[i].getChildren().length) {
-              this.defaultLayer.remove(this.hotspotElement);
+              this.defaultLayer.removeChildren();
               break;
             }
-            console.log(this.stage.getChildren()[i]);
+            console.log(this.stage.getChildren()[i].getName());
           }
-          _results.push(i++);
+          i++;
         }
-        return _results;
+        return this.defaultLayer.draw();
       };
 
       HotspotView.prototype._updateDefaultImageSize = function() {
@@ -224,7 +226,7 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var canvasText, hotspotElement, modelData, tooltip;
+        var canvasText, hotspotElement, modelData, self, tooltip;
         modelData = {
           type: 'Text',
           text: '',
@@ -235,11 +237,15 @@ define(['app'], function(App) {
           fontItalics: ''
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
+        self = this;
         tooltip = new Kinetic.Label({
           x: elementPos.left,
           y: elementPos.top,
           width: 100,
-          draggable: true
+          draggable: true,
+          dragBoundFunc: function(pos) {
+            return self._setBoundRegion(pos, this, self.stage);
+          }
         });
         canvasText = new Kinetic.Text({
           text: 'Enter Text',
@@ -292,6 +298,33 @@ define(['app'], function(App) {
         tooltip.add(canvasText);
         this.textLayer.add(tooltip);
         return this.textLayer.draw();
+      };
+
+      HotspotView.prototype._setBoundRegion = function(pos, inner, outer) {
+        var X, Y, height, maxX, maxY, minX, minY;
+        height = inner.getHeight();
+        minX = outer.getX();
+        maxX = outer.getX() + outer.getWidth() - inner.getWidth();
+        minY = outer.getY();
+        maxY = outer.getY() + outer.getHeight() - inner.getHeight();
+        X = pos.x;
+        Y = pos.y;
+        if (X < minX) {
+          X = minX;
+        }
+        if (X > maxX) {
+          X = maxX;
+        }
+        if (Y < minY) {
+          Y = minY;
+        }
+        if (Y > maxY) {
+          Y = maxY;
+        }
+        return {
+          x: X,
+          y: Y
+        };
       };
 
       HotspotView.prototype.updateModel = function() {
