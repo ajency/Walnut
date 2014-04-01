@@ -18,7 +18,7 @@ define(['app'], function(App) {
       HotspotView.prototype.template = '&nbsp;';
 
       HotspotView.prototype.events = {
-        'click': function() {
+        'mousedown': function() {
           return this.trigger("show:hotspot:properties");
         }
       };
@@ -99,7 +99,7 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._setPropertyBoxCloseHandlers = function() {
-        $('body').on('click', function() {
+        $('body').on('mousedown', function() {
           if (closequestionelementproperty) {
             App.execute("close:question:element:properties");
           }
@@ -223,7 +223,7 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var canvasText, hotspotElement, modelData, self, tooltip;
+        var canvasText, hotspotElement, modelData, rotator, self, tooltip;
         modelData = {
           type: 'Text',
           text: '',
@@ -252,11 +252,19 @@ define(['app'], function(App) {
           fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'),
           padding: 5
         });
+        rotator = new Kinetic.Circle({
+          x: canvasText.width(),
+          y: 0,
+          stroke: 'black',
+          radius: 5,
+          draggable: true
+        });
         tooltip.on('mousedown click', function(e) {
           e.stopPropagation();
-          return App.execute("show:question:element:properties", {
+          App.execute("show:question:element:properties", {
             model: hotspotElement
           });
+          return console.log(this);
         });
         hotspotElement.on("change:text", (function(_this) {
           return function() {
@@ -290,6 +298,14 @@ define(['app'], function(App) {
           return function() {
             canvasText.fill(hotspotElement.get('fontColor'));
             return _this.textLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:toDelete", (function(_this) {
+          return function() {
+            tooltip.destroy();
+            hotspotElement.destroy();
+            _this.textLayer.draw();
+            return console.log(hotspotElement);
           };
         })(this));
         tooltip.on('mouseover', function() {

@@ -34844,7 +34844,8 @@ define('entities/content-creator/hotspotelement',['app', 'backbone'], function(A
 
       ElementModel.prototype.defaults = function() {
         return {
-          family: 'hotspot'
+          family: 'hotspot',
+          toDelete: false
         };
       };
 
@@ -36333,7 +36334,7 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
       HotspotView.prototype.template = '&nbsp;';
 
       HotspotView.prototype.events = {
-        'click': function() {
+        'mousedown': function() {
           return this.trigger("show:hotspot:properties");
         }
       };
@@ -36414,7 +36415,7 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
       };
 
       HotspotView.prototype._setPropertyBoxCloseHandlers = function() {
-        $('body').on('click', function() {
+        $('body').on('mousedown', function() {
           if (closequestionelementproperty) {
             App.execute("close:question:element:properties");
           }
@@ -36538,7 +36539,7 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var canvasText, hotspotElement, modelData, self, tooltip;
+        var canvasText, hotspotElement, modelData, rotator, self, tooltip;
         modelData = {
           type: 'Text',
           text: '',
@@ -36567,11 +36568,19 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
           fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'),
           padding: 5
         });
+        rotator = new Kinetic.Circle({
+          x: canvasText.width(),
+          y: 0,
+          stroke: 'black',
+          radius: 5,
+          draggable: true
+        });
         tooltip.on('mousedown click', function(e) {
           e.stopPropagation();
-          return App.execute("show:question:element:properties", {
+          App.execute("show:question:element:properties", {
             model: hotspotElement
           });
+          return console.log(this);
         });
         hotspotElement.on("change:text", (function(_this) {
           return function() {
@@ -36605,6 +36614,14 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
           return function() {
             canvasText.fill(hotspotElement.get('fontColor'));
             return _this.textLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:toDelete", (function(_this) {
+          return function() {
+            tooltip.destroy();
+            hotspotElement.destroy();
+            _this.textLayer.draw();
+            return console.log(hotspotElement);
           };
         })(this));
         tooltip.on('mouseover', function() {
@@ -37542,7 +37559,7 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
         return TextView.__super__.constructor.apply(this, arguments);
       }
 
-      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1">Arial</option> <option value="2">Calibri</option> <option value="3">Comic Sans MS</option> <option value="4">Courier</option> <option value="5">Georgia</option> <option value="6">Helvetica</option> <option value="7">Impact</option> <option value="8">Lucida Console</option> <option value="9">Lucida Sans Unicode</option> <option value="10">Tahoma</option> <option value="11">Times New Roman</option> <option value="12">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group textFormat" data-toggle="buttons-checkbox"> <div id="font-style" class="btn-group"> <button id="bold-btn" class="btn"><i class="fa fa-bold"></i></button> <button id="italic-btn" class="btn"><i class="fa fa-italic"></i></button> </div> </div> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> </div> </div> </div>';
+      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1">Arial</option> <option value="2">Calibri</option> <option value="3">Comic Sans MS</option> <option value="4">Courier</option> <option value="5">Georgia</option> <option value="6">Helvetica</option> <option value="7">Impact</option> <option value="8">Lucida Console</option> <option value="9">Lucida Sans Unicode</option> <option value="10">Tahoma</option> <option value="11">Times New Roman</option> <option value="12">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group textFormat" data-toggle="buttons-checkbox"> <div id="font-style" class="btn-group"> <button id="bold-btn" class="btn"><i class="fa fa-bold"></i></button> <button id="italic-btn" class="btn"><i class="fa fa-italic"></i></button> </div> </div> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <input type="button" id="delete" class="delete" value="Delete"> </div> </div> </div>';
 
       TextView.prototype.onShow = function() {
         var self;
@@ -37580,7 +37597,7 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
             return _this.model.set("text", $('#hotspot-textelement-text').val());
           };
         })(this));
-        return $('#font-style.btn-group .btn').on('click', function() {
+        $('#font-style.btn-group .btn').on('click', function() {
           return setTimeout(function() {
             console.log("timeout");
             if ($('#font-style.btn-group #bold-btn.btn').hasClass('active')) {
@@ -37595,6 +37612,11 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
             }
           }, 200);
         });
+        return $('#delete.delete').on('click', (function(_this) {
+          return function() {
+            return _this.model.set('toDelete', true);
+          };
+        })(this));
       };
 
       return TextView;

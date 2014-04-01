@@ -51,6 +51,8 @@ define ['app'],(App)->
 											Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1">
 										</div>
 
+										<input type="button" id="delete" class="delete" value="Delete">
+
 					               	</div>
 				              	</div>
 			            	</div>'
@@ -117,5 +119,8 @@ define ['app'],(App)->
 								self.model.set 'fontItalics', ""
 						,200
 						
+					#DELETE
+					$('#delete.delete').on 'click',=>
+							@model.set 'toDelete', true
 						
 
