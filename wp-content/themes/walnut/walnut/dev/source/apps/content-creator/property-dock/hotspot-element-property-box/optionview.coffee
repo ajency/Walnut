@@ -33,6 +33,13 @@ define ['app'],(App)->
 											<label for="checkbox3">Set Transparent</label>
 										</div>
 
+										<div id="knob" class="form-group">
+											Rotate <input type="text" class="dial" data-min="0" data-max="360"
+											 data-width="40" data-height="40" data-displayInput=false data-thickness=".5"
+											  data-fgColor="#0AA699" data-angleOffset="90" data-cursor=true>
+										</div>
+
+
 
 										<div class="form-group">
 											<button type="button" id="delete" class="btn btn-danger btn-small">Delete</button>
@@ -78,6 +85,20 @@ define ['app'],(App)->
 					#DELETE
 					$('#delete.btn-danger').on 'click',=>
 							@model.set 'toDelete', true
+
+
+					# Rect ROTATION
+					# initialize the knob
+					if @model.get('shape') is 'Rect'
+						$('.dial').val @model.get 'angle'
+						$(".dial").knob
+								change :(val)=>
+									@model.set "angle",val
+
+					else 
+						$('#knob').hide()
+
+									
 
 
 

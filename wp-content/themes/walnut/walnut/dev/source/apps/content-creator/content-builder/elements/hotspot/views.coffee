@@ -164,15 +164,21 @@ define ['app'],(App)->
 
 					console.log width+"  "+height
 
+					@hotspotDefault.setSize
+						width 	: 336
+						height 	: 200
+
 					if(width<220)
 						@hotspotDefault.setSize
 							width : width-10
-							height : (width-10)/1.4
+							height : (width-10)/1.68
 
 					if(height<160)
 						@hotspotDefault.setSize
-							width : (height-10)*1.4
+							width : (height-10)*1.68
 							height : height-10
+
+
 
 					@hotspotDefault.position
 						x : @stage.width()/2-@hotspotDefault.width()/2
@@ -261,6 +267,7 @@ define ['app'],(App)->
 						shape : 'Rect'
 						color : '#000000'
 						transparent : false
+						angle 	: 0
 						
 
 					hotspotElement = App.request "create:new:hotspot:element", modelData
@@ -293,6 +300,11 @@ define ['app'],(App)->
 						box.stroke hotspotElement.get 'color'
 						@optionLayer.draw()
 
+					# on change of model's angle rotate the element
+					hotspotElement.on "change:angle",=>
+						rectGrp.rotation hotspotElement.get 'angle'
+						@optionLayer.draw()
+
 					# delete element based on toDelete
 					hotspotElement.on "change:toDelete",=>
 							rectGrp.destroy()
@@ -317,6 +329,14 @@ define ['app'],(App)->
 
 
 			_addTextElement: (elementPos)->
+
+					defaultTextImage = new Image()
+					defaultTextImage.onload = ()=>
+							console.log "in default image load"
+							@hotspotTextDefault = new Kinetic.Image
+									image 	: defaultTextImage
+							console.log "defaultImage Text"
+					defaultTextImage.src = "../wp-content/themes/walnut/images/enter_text.jpg"
 
 					modelData =
 						type : 'Text'
@@ -343,10 +363,12 @@ define ['app'],(App)->
 							self._setBoundRegion(pos,@,self.stage)
 
 					canvasText = new Kinetic.Text
-						text: 'Enter Text'
+						text: 'CLICK TO ENTER TEXT'
+						opacity : 0.3
 						fontFamily: hotspotElement.get 'fontFamily'
 						fontSize: hotspotElement.get 'fontSize'
 						fill: hotspotElement.get 'fontColor'
+						fillPatternImage	: @hotspotTextDefault
 						fontStyle : hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
 						padding: 5
 
@@ -371,8 +393,12 @@ define ['app'],(App)->
 					hotspotElement.on "change:text",=>
 							if hotspotElement.get('text')!=""
 								canvasText.setText hotspotElement.get 'text'
+								canvasText.opacity 1
+								canvasText.fill hotspotElement.get 'fontColor'
 							else
-								canvasText.setText 'Enter Text'
+								canvasText.setText 'CLICK TO ENTER TEXT'
+								canvasText.opacity 0.3
+								canvasText.fill 'fontColor'
 							# tooltip.fire "moverotator"
 
 							@textLayer.draw()

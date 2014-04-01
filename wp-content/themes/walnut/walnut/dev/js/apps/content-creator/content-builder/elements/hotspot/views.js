@@ -163,15 +163,19 @@ define(['app'], function(App) {
         width = this.stage.width();
         height = this.stage.height();
         console.log(width + "  " + height);
+        this.hotspotDefault.setSize({
+          width: 336,
+          height: 200
+        });
         if (width < 220) {
           this.hotspotDefault.setSize({
             width: width - 10,
-            height: (width - 10) / 1.4
+            height: (width - 10) / 1.68
           });
         }
         if (height < 160) {
           this.hotspotDefault.setSize({
-            width: (height - 10) * 1.4,
+            width: (height - 10) * 1.68,
             height: height - 10
           });
         }
@@ -258,7 +262,8 @@ define(['app'], function(App) {
           type: 'Option',
           shape: 'Rect',
           color: '#000000',
-          transparent: false
+          transparent: false,
+          angle: 0
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         self = this;
@@ -289,6 +294,12 @@ define(['app'], function(App) {
             return _this.optionLayer.draw();
           };
         })(this));
+        hotspotElement.on("change:angle", (function(_this) {
+          return function() {
+            rectGrp.rotation(hotspotElement.get('angle'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             rectGrp.destroy();
@@ -312,7 +323,18 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var canvasText, hotspotElement, modelData, rotator, self, tooltip;
+        var canvasText, defaultTextImage, hotspotElement, modelData, rotator, self, tooltip;
+        defaultTextImage = new Image();
+        defaultTextImage.onload = (function(_this) {
+          return function() {
+            console.log("in default image load");
+            _this.hotspotTextDefault = new Kinetic.Image({
+              image: defaultTextImage
+            });
+            return console.log("defaultImage Text");
+          };
+        })(this);
+        defaultTextImage.src = "../wp-content/themes/walnut/images/enter_text.jpg";
         modelData = {
           type: 'Text',
           text: '',
@@ -338,10 +360,12 @@ define(['app'], function(App) {
           }
         });
         canvasText = new Kinetic.Text({
-          text: 'Enter Text',
+          text: 'CLICK TO ENTER TEXT',
+          opacity: 0.3,
           fontFamily: hotspotElement.get('fontFamily'),
           fontSize: hotspotElement.get('fontSize'),
           fill: hotspotElement.get('fontColor'),
+          fillPatternImage: this.hotspotTextDefault,
           fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'),
           padding: 5
         });
@@ -363,8 +387,12 @@ define(['app'], function(App) {
           return function() {
             if (hotspotElement.get('text') !== "") {
               canvasText.setText(hotspotElement.get('text'));
+              canvasText.opacity(1);
+              canvasText.fill(hotspotElement.get('fontColor'));
             } else {
-              canvasText.setText('Enter Text');
+              canvasText.setText('CLICK TO ENTER TEXT');
+              canvasText.opacity(0.3);
+              canvasText.fill('fontColor');
             }
             return _this.textLayer.draw();
           };
