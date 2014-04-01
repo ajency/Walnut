@@ -33935,7 +33935,799 @@ $('#el').spin('flower', 'red');
  */jQuery&&function(e){function t(t,n){var r=e('<div class="minicolors" />'),i=e.minicolors.defaults;if(t.data("minicolors-initialized"))return;n=e.extend(!0,{},i,n);r.addClass("minicolors-theme-"+n.theme).toggleClass("minicolors-with-opacity",n.opacity);n.position!==undefined&&e.each(n.position.split(" "),function(){r.addClass("minicolors-position-"+this)});t.addClass("minicolors-input").data("minicolors-initialized",!1).data("minicolors-settings",n).prop("size",7).wrap(r).after('<div class="minicolors-panel minicolors-slider-'+n.control+'">'+'<div class="minicolors-slider">'+'<div class="minicolors-picker"></div>'+"</div>"+'<div class="minicolors-opacity-slider">'+'<div class="minicolors-picker"></div>'+"</div>"+'<div class="minicolors-grid">'+'<div class="minicolors-grid-inner"></div>'+'<div class="minicolors-picker"><div></div></div>'+"</div>"+"</div>");if(!n.inline){t.after('<span class="minicolors-swatch"><span class="minicolors-swatch-color"></span></span>');t.next(".minicolors-swatch").on("click",function(e){e.preventDefault();t.focus()})}t.parent().find(".minicolors-panel").on("selectstart",function(){return!1}).end();n.inline&&t.parent().addClass("minicolors-inline");u(t,!1);t.data("minicolors-initialized",!0)}function n(e){var t=e.parent();e.removeData("minicolors-initialized").removeData("minicolors-settings").removeProp("size").removeClass("minicolors-input");t.before(e).remove()}function r(e){var t=e.parent(),n=t.find(".minicolors-panel"),r=e.data("minicolors-settings");if(!e.data("minicolors-initialized")||e.prop("disabled")||t.hasClass("minicolors-inline")||t.hasClass("minicolors-focus"))return;i();t.addClass("minicolors-focus");n.stop(!0,!0).fadeIn(r.showSpeed,function(){r.show&&r.show.call(e.get(0))})}function i(){e(".minicolors-focus").each(function(){var t=e(this),n=t.find(".minicolors-input"),r=t.find(".minicolors-panel"),i=n.data("minicolors-settings");r.fadeOut(i.hideSpeed,function(){i.hide&&i.hide.call(n.get(0));t.removeClass("minicolors-focus")})})}function s(e,t,n){var r=e.parents(".minicolors").find(".minicolors-input"),i=r.data("minicolors-settings"),s=e.find("[class$=-picker]"),u=e.offset().left,a=e.offset().top,f=Math.round(t.pageX-u),l=Math.round(t.pageY-a),c=n?i.animationSpeed:0,h,p,d,v;if(t.originalEvent.changedTouches){f=t.originalEvent.changedTouches[0].pageX-u;l=t.originalEvent.changedTouches[0].pageY-a}f<0&&(f=0);l<0&&(l=0);f>e.width()&&(f=e.width());l>e.height()&&(l=e.height());if(e.parent().is(".minicolors-slider-wheel")&&s.parent().is(".minicolors-grid")){h=75-f;p=75-l;d=Math.sqrt(h*h+p*p);v=Math.atan2(p,h);v<0&&(v+=Math.PI*2);if(d>75){d=75;f=75-75*Math.cos(v);l=75-75*Math.sin(v)}f=Math.round(f);l=Math.round(l)}e.is(".minicolors-grid")?s.stop(!0).animate({top:l+"px",left:f+"px"},c,i.animationEasing,function(){o(r,e)}):s.stop(!0).animate({top:l+"px"},c,i.animationEasing,function(){o(r,e)})}function o(e,t){function n(e,t){var n,r;if(!e.length||!t)return null;n=e.offset().left;r=e.offset().top;return{x:n-t.offset().left+e.outerWidth()/2,y:r-t.offset().top+e.outerHeight()/2}}var r,i,s,o,u,f,l,h=e.val(),d=e.attr("data-opacity"),v=e.parent(),g=e.data("minicolors-settings"),y=v.find(".minicolors-swatch"),b=v.find(".minicolors-grid"),w=v.find(".minicolors-slider"),E=v.find(".minicolors-opacity-slider"),S=b.find("[class$=-picker]"),x=w.find("[class$=-picker]"),T=E.find("[class$=-picker]"),N=n(S,b),C=n(x,w),k=n(T,E);if(t.is(".minicolors-grid, .minicolors-slider")){switch(g.control){case"wheel":o=b.width()/2-N.x;u=b.height()/2-N.y;f=Math.sqrt(o*o+u*u);l=Math.atan2(u,o);l<0&&(l+=Math.PI*2);if(f>75){f=75;N.x=69-75*Math.cos(l);N.y=69-75*Math.sin(l)}i=p(f/.75,0,100);r=p(l*180/Math.PI,0,360);s=p(100-Math.floor(C.y*(100/w.height())),0,100);h=m({h:r,s:i,b:s});w.css("backgroundColor",m({h:r,s:i,b:100}));break;case"saturation":r=p(parseInt(N.x*(360/b.width()),10),0,360);i=p(100-Math.floor(C.y*(100/w.height())),0,100);s=p(100-Math.floor(N.y*(100/b.height())),0,100);h=m({h:r,s:i,b:s});w.css("backgroundColor",m({h:r,s:100,b:s}));v.find(".minicolors-grid-inner").css("opacity",i/100);break;case"brightness":r=p(parseInt(N.x*(360/b.width()),10),0,360);i=p(100-Math.floor(N.y*(100/b.height())),0,100);s=p(100-Math.floor(C.y*(100/w.height())),0,100);h=m({h:r,s:i,b:s});w.css("backgroundColor",m({h:r,s:i,b:100}));v.find(".minicolors-grid-inner").css("opacity",1-s/100);break;default:r=p(360-parseInt(C.y*(360/w.height()),10),0,360);i=p(Math.floor(N.x*(100/b.width())),0,100);s=p(100-Math.floor(N.y*(100/b.height())),0,100);h=m({h:r,s:i,b:s});b.css("backgroundColor",m({h:r,s:100,b:100}))}e.val(c(h,g.letterCase))}if(t.is(".minicolors-opacity-slider")){g.opacity?d=parseFloat(1-k.y/E.height()).toFixed(2):d=1;g.opacity&&e.attr("data-opacity",d)}y.find("SPAN").css({backgroundColor:h,opacity:d});a(e,h,d)}function u(e,t){var n,r,i,s,o,u,f,l=e.parent(),d=e.data("minicolors-settings"),v=l.find(".minicolors-swatch"),y=l.find(".minicolors-grid"),b=l.find(".minicolors-slider"),w=l.find(".minicolors-opacity-slider"),E=y.find("[class$=-picker]"),S=b.find("[class$=-picker]"),x=w.find("[class$=-picker]");n=c(h(e.val(),!0),d.letterCase);n||(n=c(h(d.defaultValue,!0),d.letterCase));r=g(n);t||e.val(n);if(d.opacity){i=e.attr("data-opacity")===""?1:p(parseFloat(e.attr("data-opacity")).toFixed(2),0,1);isNaN(i)&&(i=1);e.attr("data-opacity",i);v.find("SPAN").css("opacity",i);o=p(w.height()-w.height()*i,0,w.height());x.css("top",o+"px")}v.find("SPAN").css("backgroundColor",n);switch(d.control){case"wheel":u=p(Math.ceil(r.s*.75),0,y.height()/2);f=r.h*Math.PI/180;s=p(75-Math.cos(f)*u,0,y.width());o=p(75-Math.sin(f)*u,0,y.height());E.css({top:o+"px",left:s+"px"});o=150-r.b/(100/y.height());n===""&&(o=0);S.css("top",o+"px");b.css("backgroundColor",m({h:r.h,s:r.s,b:100}));break;case"saturation":s=p(5*r.h/12,0,150);o=p(y.height()-Math.ceil(r.b/(100/y.height())),0,y.height());E.css({top:o+"px",left:s+"px"});o=p(b.height()-r.s*(b.height()/100),0,b.height());S.css("top",o+"px");b.css("backgroundColor",m({h:r.h,s:100,b:r.b}));l.find(".minicolors-grid-inner").css("opacity",r.s/100);break;case"brightness":s=p(5*r.h/12,0,150);o=p(y.height()-Math.ceil(r.s/(100/y.height())),0,y.height());E.css({top:o+"px",left:s+"px"});o=p(b.height()-r.b*(b.height()/100),0,b.height());S.css("top",o+"px");b.css("backgroundColor",m({h:r.h,s:r.s,b:100}));l.find(".minicolors-grid-inner").css("opacity",1-r.b/100);break;default:s=p(Math.ceil(r.s/(100/y.width())),0,y.width());o=p(y.height()-Math.ceil(r.b/(100/y.height())),0,y.height());E.css({top:o+"px",left:s+"px"});o=p(b.height()-r.h/(360/b.height()),0,b.height());S.css("top",o+"px");y.css("backgroundColor",m({h:r.h,s:100,b:100}))}e.data("minicolors-initialized")&&a(e,n,i)}function a(e,t,n){var r=e.data("minicolors-settings"),i=e.data("minicolors-lastChange");if(!i||i.hex!==t||i.opacity!==n){e.data("minicolors-lastChange",{hex:t,opacity:n});if(r.change)if(r.changeDelay){clearTimeout(e.data("minicolors-changeTimeout"));e.data("minicolors-changeTimeout",setTimeout(function(){r.change.call(e.get(0),t,n)},r.changeDelay))}else r.change.call(e.get(0),t,n);e.trigger("change").trigger("input")}}function f(t){var n=h(e(t).val(),!0),r=b(n),i=e(t).attr("data-opacity");if(!r)return null;i!==undefined&&e.extend(r,{a:parseFloat(i)});return r}function l(t,n){var r=h(e(t).val(),!0),i=b(r),s=e(t).attr("data-opacity");if(!i)return null;s===undefined&&(s=1);return n?"rgba("+i.r+", "+i.g+", "+i.b+", "+parseFloat(s)+")":"rgb("+i.r+", "+i.g+", "+i.b+")"}function c(e,t){return t==="uppercase"?e.toUpperCase():e.toLowerCase()}function h(e,t){e=e.replace(/[^A-F0-9]/ig,"");if(e.length!==3&&e.length!==6)return"";e.length===3&&t&&(e=e[0]+e[0]+e[1]+e[1]+e[2]+e[2]);return"#"+e}function p(e,t,n){e<t&&(e=t);e>n&&(e=n);return e}function d(e){var t={},n=Math.round(e.h),r=Math.round(e.s*255/100),i=Math.round(e.b*255/100);if(r===0)t.r=t.g=t.b=i;else{var s=i,o=(255-r)*i/255,u=(s-o)*(n%60)/60;n===360&&(n=0);if(n<60){t.r=s;t.b=o;t.g=o+u}else if(n<120){t.g=s;t.b=o;t.r=s-u}else if(n<180){t.g=s;t.r=o;t.b=o+u}else if(n<240){t.b=s;t.r=o;t.g=s-u}else if(n<300){t.b=s;t.g=o;t.r=o+u}else if(n<360){t.r=s;t.g=o;t.b=s-u}else{t.r=0;t.g=0;t.b=0}}return{r:Math.round(t.r),g:Math.round(t.g),b:Math.round(t.b)}}function v(t){var n=[t.r.toString(16),t.g.toString(16),t.b.toString(16)];e.each(n,function(e,t){t.length===1&&(n[e]="0"+t)});return"#"+n.join("")}function m(e){return v(d(e))}function g(e){var t=y(b(e));t.s===0&&(t.h=360);return t}function y(e){var t={h:0,s:0,b:0},n=Math.min(e.r,e.g,e.b),r=Math.max(e.r,e.g,e.b),i=r-n;t.b=r;t.s=r!==0?255*i/r:0;t.s!==0?e.r===r?t.h=(e.g-e.b)/i:e.g===r?t.h=2+(e.b-e.r)/i:t.h=4+(e.r-e.g)/i:t.h=-1;t.h*=60;t.h<0&&(t.h+=360);t.s*=100/255;t.b*=100/255;return t}function b(e){e=parseInt(e.indexOf("#")>-1?e.substring(1):e,16);return{r:e>>16,g:(e&65280)>>8,b:e&255}}e.minicolors={defaults:{animationSpeed:50,animationEasing:"swing",change:null,changeDelay:0,control:"hue",defaultValue:"",hide:null,hideSpeed:100,inline:!1,letterCase:"lowercase",opacity:!1,position:"bottom left",show:null,showSpeed:100,theme:"default"}};e.extend(e.fn,{minicolors:function(s,o){switch(s){case"destroy":e(this).each(function(){n(e(this))});return e(this);case"hide":i();return e(this);case"opacity":if(o===undefined)return e(this).attr("data-opacity");e(this).each(function(){u(e(this).attr("data-opacity",o))});return e(this);case"rgbObject":return f(e(this),s==="rgbaObject");case"rgbString":case"rgbaString":return l(e(this),s==="rgbaString");case"settings":if(o===undefined)return e(this).data("minicolors-settings");e(this).each(function(){var t=e(this).data("minicolors-settings")||{};n(e(this));e(this).minicolors(e.extend(!0,t,o))});return e(this);case"show":r(e(this).eq(0));return e(this);case"value":if(o===undefined)return e(this).val();e(this).each(function(){u(e(this).val(o))});return e(this);default:s!=="create"&&(o=s);e(this).each(function(){t(e(this),o)});return e(this)}}});e(document).on("mousedown.minicolors touchstart.minicolors",function(t){e(t.target).parents().add(t.target).hasClass("minicolors")||i()}).on("mousedown.minicolors touchstart.minicolors",".minicolors-grid, .minicolors-slider, .minicolors-opacity-slider",function(t){var n=e(this);t.preventDefault();e(document).data("minicolors-target",n);s(n,t,!0)}).on("mousemove.minicolors touchmove.minicolors",function(t){var n=e(document).data("minicolors-target");n&&s(n,t)}).on("mouseup.minicolors touchend.minicolors",function(){e(this).removeData("minicolors-target")}).on("mousedown.minicolors touchstart.minicolors",".minicolors-swatch",function(t){var n=e(this).parent().find(".minicolors-input");t.preventDefault();r(n)}).on("focus.minicolors",".minicolors-input",function(){var t=e(this);if(!t.data("minicolors-initialized"))return;r(t)}).on("blur.minicolors",".minicolors-input",function(){var t=e(this),n=t.data("minicolors-settings");if(!t.data("minicolors-initialized"))return;t.val(h(t.val(),!0));t.val()===""&&t.val(h(n.defaultValue,!0));t.val(c(t.val(),n.letterCase))}).on("keydown.minicolors",".minicolors-input",function(t){var n=e(this);if(!n.data("minicolors-initialized"))return;switch(t.keyCode){case 9:i();break;case 13:case 27:i();n.blur()}}).on("keyup.minicolors",".minicolors-input",function(){var t=e(this);if(!t.data("minicolors-initialized"))return;u(t,!0)}).on("paste.minicolors",".minicolors-input",function(){var t=e(this);if(!t.data("minicolors-initialized"))return;setTimeout(function(){u(t,!0)},1)})}(jQuery);
 define("jquerycolor", function(){});
 
-define('plugins/content-creator-pluginloader',['underscore', 'jquery', 'jqueryui', 'jqueryresize', 'underscorestring', 'kinetic', 'plupload', 'kineticresize', 'backbone', 'marionette', 'mustache', 'syphon', 'text', 'jqueryvalidate', 'bootstrap', 'checkbox', 'bootstrapslider', 'spin', 'jqueryspin', 'jquerycolor'], function() {});
+/*!jQuery Knob*/
+/**
+ * Downward compatible, touchable dial
+ *
+ * Version: 1.2.8
+ * Requires: jQuery v1.7+
+ *
+ * Copyright (c) 2012 Anthony Terrien
+ * Under MIT License (http://www.opensource.org/licenses/mit-license.php)
+ *
+ * Thanks to vor, eskimoblood, spiffistan, FabrizioC
+ */
+(function($) {
+
+    /**
+     * Kontrol library
+     */
+    
+
+    /**
+     * Definition of globals and core
+     */
+    var k = {}, // kontrol
+        max = Math.max,
+        min = Math.min;
+
+    k.c = {};
+    k.c.d = $(document);
+    k.c.t = function (e) {
+        return e.originalEvent.touches.length - 1;
+    };
+
+    /**
+     * Kontrol Object
+     *
+     * Definition of an abstract UI control
+     *
+     * Each concrete component must call this one.
+     * <code>
+     * k.o.call(this);
+     * </code>
+     */
+    k.o = function () {
+        var s = this;
+
+        this.o = null; // array of options
+        this.$ = null; // jQuery wrapped element
+        this.i = null; // mixed HTMLInputElement or array of HTMLInputElement
+        this.g = null; // deprecated 2D graphics context for 'pre-rendering'
+        this.v = null; // value ; mixed array or integer
+        this.cv = null; // change value ; not commited value
+        this.x = 0; // canvas x position
+        this.y = 0; // canvas y position
+        this.w = 0; // canvas width
+        this.h = 0; // canvas height
+        this.$c = null; // jQuery canvas element
+        this.c = null; // rendered canvas context
+        this.t = 0; // touches index
+        this.isInit = false;
+        this.fgColor = null; // main color
+        this.pColor = null; // previous color
+        this.dH = null; // draw hook
+        this.cH = null; // change hook
+        this.eH = null; // cancel hook
+        this.rH = null; // release hook
+        this.scale = 1; // scale factor
+        this.relative = false;
+        this.relativeWidth = false;
+        this.relativeHeight = false;
+        this.$div = null; // component div
+
+        this.run = function () {
+            var cf = function (e, conf) {
+                var k;
+                for (k in conf) {
+                    s.o[k] = conf[k];
+                }
+                s._carve().init();
+                s._configure()
+                 ._draw();
+            };
+
+            if(this.$.data('kontroled')) return;
+            this.$.data('kontroled', true);
+
+            this.extend();
+            this.o = $.extend(
+                {
+                    // Config
+                    min : this.$.data('min') !== undefined ? this.$.data('min') : 0,
+                    max : this.$.data('max') !== undefined ? this.$.data('max') : 100,
+                    stopper : true,
+                    readOnly : this.$.data('readonly') || (this.$.attr('readonly') === 'readonly'),
+
+                    // UI
+                    cursor : (this.$.data('cursor') === true && 30) ||
+                                this.$.data('cursor') || 0,
+                    thickness : (
+                                    this.$.data('thickness') &&
+                                    Math.max(Math.min(this.$.data('thickness'), 1), 0.01)
+                                ) || 0.35,
+                    lineCap : this.$.data('linecap') || 'butt',
+                    width : this.$.data('width') || 200,
+                    height : this.$.data('height') || 200,
+                    displayInput : this.$.data('displayinput') == null || this.$.data('displayinput'),
+                    displayPrevious : this.$.data('displayprevious'),
+                    fgColor : this.$.data('fgcolor') || '#87CEEB',
+                    inputColor: this.$.data('inputcolor'),
+                    font: this.$.data('font') || 'Arial',
+                    fontWeight: this.$.data('font-weight') || 'bold',
+                    inline : false,
+                    step : this.$.data('step') || 1,
+                    rotation: this.$.data('rotation'),
+
+                    // Hooks
+                    draw : null, // function () {}
+                    change : null, // function (value) {}
+                    cancel : null, // function () {}
+                    release : null, // function (value) {}
+
+                    // Output formatting, allows to add unit: %, ms ...
+                    format: function(v) {
+                        return v;
+                    },
+                    parse: function (v) {
+                        return parseFloat(v);
+                    }
+                }, this.o
+            );
+
+            // finalize options
+            this.o.flip = this.o.rotation === 'anticlockwise' || this.o.rotation === 'acw';
+            if(!this.o.inputColor) {
+                this.o.inputColor = this.o.fgColor;
+            }
+
+            // routing value
+            if(this.$.is('fieldset')) {
+
+                // fieldset = array of integer
+                this.v = {};
+                this.i = this.$.find('input');
+                this.i.each(function(k) {
+                    var $this = $(this);
+                    s.i[k] = $this;
+                    s.v[k] = s.o.parse($this.val());
+
+                    $this.bind(
+                        'change blur'
+                        , function () {
+                            var val = {};
+                            val[k] = $this.val();
+                            s.val(val);
+                        }
+                    );
+                });
+                this.$.find('legend').remove();
+
+            } else {
+
+                // input = integer
+                this.i = this.$;
+                this.v = this.o.parse(this.$.val());
+                (this.v === '') && (this.v = this.o.min);
+
+                this.$.bind(
+                    'change blur'
+                    , function () {
+                        s.val(s._validate(s.o.parse(s.$.val())));
+                    }
+                );
+
+            }
+
+            (!this.o.displayInput) && this.$.hide();
+
+            // adds needed DOM elements (canvas, div)
+            this.$c = $(document.createElement('canvas')).attr({
+                width: this.o.width,
+                height: this.o.height
+            });
+
+            // wraps all elements in a div
+            // add to DOM before Canvas init is triggered
+            this.$div = $('<div style="'
+                + (this.o.inline ? 'display:inline;' : '')
+                + 'width:' + this.o.width + 'px;height:' + this.o.height + 'px;'
+                + '"></div>');
+
+            this.$.wrap(this.$div).before(this.$c);
+            this.$div = this.$.parent();
+
+            if (typeof G_vmlCanvasManager !== 'undefined') {
+              G_vmlCanvasManager.initElement(this.$c[0]);
+            }
+
+            this.c = this.$c[0].getContext ? this.$c[0].getContext('2d') : null;
+
+            if (!this.c) {
+                throw {
+                    name:        "CanvasNotSupportedException",
+                    message:     "Canvas not supported. Please use excanvas on IE8.0.",
+                    toString:    function(){return this.name + ": " + this.message}
+                }
+            }
+
+            // hdpi support
+            this.scale = (window.devicePixelRatio || 1) /
+                        (
+                            this.c.webkitBackingStorePixelRatio ||
+                            this.c.mozBackingStorePixelRatio ||
+                            this.c.msBackingStorePixelRatio ||
+                            this.c.oBackingStorePixelRatio ||
+                            this.c.backingStorePixelRatio || 1
+                        );
+
+            // detects relative width / height
+            this.relativeWidth = ((this.o.width % 1 !== 0) &&
+                this.o.width.indexOf('%'));
+            this.relativeHeight = ((this.o.height % 1 !== 0) &&
+                this.o.height.indexOf('%'));
+            this.relative = (this.relativeWidth || this.relativeHeight);
+
+            // computes size and carves the component
+            this._carve();
+
+            // prepares props for transaction
+            if (this.v instanceof Object) {
+                this.cv = {};
+                this.copy(this.v, this.cv);
+            } else {
+                this.cv = this.v;
+            }
+
+            // binds configure event
+            this.$
+                .bind("configure", cf)
+                .parent()
+                .bind("configure", cf);
+
+            // finalize init
+            this._listen()
+                ._configure()
+                ._xy()
+                .init();
+
+            this.isInit = true;
+
+            this.$.val(this.o.format(this.v));
+            this._draw();
+
+            return this;
+        };
+
+        this._carve = function() {
+            if(this.relative) {
+                var w = this.relativeWidth ?
+                            this.$div.parent().width() *
+                            parseInt(this.o.width) / 100 :
+                            this.$div.parent().width(),
+                    h = this.relativeHeight ?
+                            this.$div.parent().height() *
+                            parseInt(this.o.height) / 100 :
+                            this.$div.parent().height();
+
+                // apply relative
+                this.w = this.h = Math.min(w, h);
+            } else {
+                this.w = this.o.width;
+                this.h = this.o.height;
+            }
+
+            // finalize div
+            this.$div.css({
+                'width': this.w + 'px',
+                'height': this.h + 'px'
+            });
+
+            // finalize canvas with computed width
+            this.$c.attr({
+                width: this.w,
+                height: this.h
+            });
+
+            // scaling
+            if (this.scale !== 1) {
+                this.$c[0].width = this.$c[0].width * this.scale;
+                this.$c[0].height = this.$c[0].height * this.scale;
+                this.$c.width(this.w);
+                this.$c.height(this.h);
+            }
+
+            return this;
+        }
+
+        this._draw = function () {
+
+            // canvas pre-rendering
+            var d = true;
+
+            s.g = s.c;
+
+            s.clear();
+
+            s.dH
+            && (d = s.dH());
+
+            (d !== false) && s.draw();
+
+        };
+
+        this._touch = function (e) {
+
+            var touchMove = function (e) {
+
+                var v = s.xy2val(
+                            e.originalEvent.touches[s.t].pageX,
+                            e.originalEvent.touches[s.t].pageY
+                            );
+
+                if (v == s.cv) return;
+
+                if (s.cH && (s.cH(v) === false)) return;
+
+                s.change(s._validate(v));
+                s._draw();
+            };
+
+            // get touches index
+            this.t = k.c.t(e);
+
+            // First touch
+            touchMove(e);
+
+            // Touch events listeners
+            k.c.d
+                .bind("touchmove.k", touchMove)
+                .bind(
+                    "touchend.k"
+                    , function () {
+                        k.c.d.unbind('touchmove.k touchend.k');
+                        s.val(s.cv);
+                    }
+                );
+
+            return this;
+        };
+
+        this._mouse = function (e) {
+
+            var mouseMove = function (e) {
+                var v = s.xy2val(e.pageX, e.pageY);
+
+                if (v == s.cv) return;
+
+                if (s.cH && (s.cH(v) === false)) return;
+
+                s.change(s._validate(v));
+                s._draw();
+            };
+
+            // First click
+            mouseMove(e);
+
+            // Mouse events listeners
+            k.c.d
+                .bind("mousemove.k", mouseMove)
+                .bind(
+                    // Escape key cancel current change
+                    "keyup.k"
+                    , function (e) {
+                        if (e.keyCode === 27) {
+                            k.c.d.unbind("mouseup.k mousemove.k keyup.k");
+
+                            if (
+                                s.eH
+                                && (s.eH() === false)
+                            ) return;
+
+                            s.cancel();
+                        }
+                    }
+                )
+                .bind(
+                    "mouseup.k"
+                    , function (e) {
+                        k.c.d.unbind('mousemove.k mouseup.k keyup.k');
+                        s.val(s.cv);
+                    }
+                );
+
+            return this;
+        };
+
+        this._xy = function () {
+            var o = this.$c.offset();
+            this.x = o.left;
+            this.y = o.top;
+            return this;
+        };
+
+        this._listen = function () {
+
+            if (!this.o.readOnly) {
+                this.$c
+                    .bind(
+                        "mousedown"
+                        , function (e) {
+                            e.preventDefault();
+                            s._xy()._mouse(e);
+                         }
+                    )
+                    .bind(
+                        "touchstart"
+                        , function (e) {
+                            e.preventDefault();
+                            s._xy()._touch(e);
+                         }
+                    );
+
+                this.listen();
+            } else {
+                this.$.attr('readonly', 'readonly');
+            }
+
+            if(this.relative) {
+                $(window).resize(function() {
+                    s._carve()
+                     .init();
+                    s._draw();
+                });
+            }
+
+            return this;
+        };
+
+        this._configure = function () {
+
+            // Hooks
+            if (this.o.draw) this.dH = this.o.draw;
+            if (this.o.change) this.cH = this.o.change;
+            if (this.o.cancel) this.eH = this.o.cancel;
+            if (this.o.release) this.rH = this.o.release;
+
+            if (this.o.displayPrevious) {
+                this.pColor = this.h2rgba(this.o.fgColor, "0.4");
+                this.fgColor = this.h2rgba(this.o.fgColor, "0.6");
+            } else {
+                this.fgColor = this.o.fgColor;
+            }
+
+            return this;
+        };
+
+        this._clear = function () {
+            this.$c[0].width = this.$c[0].width;
+        };
+
+        this._validate = function(v) {
+            return (~~ (((v < 0) ? -0.5 : 0.5) + (v/this.o.step))) * this.o.step;
+        };
+
+        // Abstract methods
+        this.listen = function () {}; // on start, one time
+        this.extend = function () {}; // each time configure triggered
+        this.init = function () {}; // each time configure triggered
+        this.change = function (v) {}; // on change
+        this.val = function (v) {}; // on release
+        this.xy2val = function (x, y) {}; //
+        this.draw = function () {}; // on change / on release
+        this.clear = function () { this._clear(); };
+
+        // Utils
+        this.h2rgba = function (h, a) {
+            var rgb;
+            h = h.substring(1,7)
+            rgb = [parseInt(h.substring(0,2),16)
+                   ,parseInt(h.substring(2,4),16)
+                   ,parseInt(h.substring(4,6),16)];
+            return "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + a + ")";
+        };
+
+        this.copy = function (f, t) {
+            for (var i in f) { t[i] = f[i]; }
+        };
+    };
+
+
+    /**
+     * k.Dial
+     */
+    k.Dial = function () {
+        k.o.call(this);
+
+        this.startAngle = null;
+        this.xy = null;
+        this.radius = null;
+        this.lineWidth = null;
+        this.cursorExt = null;
+        this.w2 = null;
+        this.PI2 = 2*Math.PI;
+
+        this.extend = function () {
+            this.o = $.extend(
+                {
+                    bgColor : this.$.data('bgcolor') || '#EEEEEE',
+                    angleOffset : this.$.data('angleoffset') || 0,
+                    angleArc : this.$.data('anglearc') || 360,
+                    inline : true
+                }, this.o
+            );
+        };
+
+        this.val = function (v, triggerRelease) {
+            if (null != v) {
+
+                // reverse format
+                v = this.o.parse(v);
+
+                if (
+                    triggerRelease !== false && (v != this.v) && this.rH &&
+                        (this.rH(v) === false)
+                ) return;
+
+                this.cv = this.o.stopper ? max(min(v, this.o.max), this.o.min) : v;
+                this.v = this.cv;
+                this.$.val(this.o.format(this.v));
+                this._draw();
+            } else {
+                return this.v;
+            }
+        };
+
+        this.xy2val = function (x, y) {
+            var a, ret;
+
+            a = Math.atan2(
+                        x - (this.x + this.w2)
+                        , - (y - this.y - this.w2)
+                    ) - this.angleOffset;
+
+            if (this.o.flip) {
+                a = this.angleArc - a - this.PI2;
+            }
+
+            if(this.angleArc != this.PI2 && (a < 0) && (a > -0.5)) {
+                // if isset angleArc option, set to min if .5 under min
+                a = 0;
+            } else if (a < 0) {
+                a += this.PI2;
+            }
+
+            ret = ~~ (0.5 + (a * (this.o.max - this.o.min) / this.angleArc))
+                    + this.o.min;
+
+            this.o.stopper && (ret = max(min(ret, this.o.max), this.o.min));
+
+            return ret;
+        };
+
+        this.listen = function () {
+            // bind MouseWheel
+            var s = this, mwTimerStop, mwTimerRelease,
+                mw = function (e) {
+                    e.preventDefault();
+
+                    var ori = e.originalEvent
+                        ,deltaX = ori.detail || ori.wheelDeltaX
+                        ,deltaY = ori.detail || ori.wheelDeltaY
+                        ,v = s._validate(s.o.parse(s.$.val()))
+                            + (deltaX>0 || deltaY>0 ? s.o.step : deltaX<0 || deltaY<0 ? -s.o.step : 0);
+
+                    v = max(min(v, s.o.max), s.o.min);
+
+                    s.val(v, false);
+
+                    if(s.rH) {
+                        // Handle mousewheel stop
+                        clearTimeout(mwTimerStop);
+                        mwTimerStop = setTimeout(function() {
+                            s.rH(v);
+                            mwTimerStop = null;
+                        }, 100);
+
+                        // Handle mousewheel releases
+                        if(!mwTimerRelease) {
+                            mwTimerRelease = setTimeout(function() {
+                                if(mwTimerStop) s.rH(v);
+                                mwTimerRelease = null;
+                            }, 200);
+                        }
+                    }
+                }
+                , kval, to, m = 1, kv = {37:-s.o.step, 38:s.o.step, 39:s.o.step, 40:-s.o.step};
+
+            this.$
+                .bind(
+                    "keydown"
+                    ,function (e) {
+                        var kc = e.keyCode;
+
+                        // numpad support
+                        if(kc >= 96 && kc <= 105) {
+                            kc = e.keyCode = kc - 48;
+                        }
+
+                        kval = parseInt(String.fromCharCode(kc));
+
+                        if (isNaN(kval)) {
+
+                            (kc !== 13)         // enter
+                            && (kc !== 8)       // bs
+                            && (kc !== 9)       // tab
+                            && (kc !== 189)     // -
+                            && (kc !== 190 || s.$.val().match(/\./))     // . only allowed once
+                            && e.preventDefault();
+
+                            // arrows
+                            if ($.inArray(kc,[37,38,39,40]) > -1) {
+                                e.preventDefault();
+
+                                var v = s.o.parse(s.$.val()) + kv[kc] * m;
+                                s.o.stopper && (v = max(min(v, s.o.max), s.o.min));
+
+                                s.change(v);
+                                s._draw();
+
+                                // long time keydown speed-up
+                                to = window.setTimeout(
+                                    function () { m *= 2; }, 30
+                                );
+                            }
+                        }
+                    }
+                )
+                .bind(
+                    "keyup"
+                    ,function (e) {
+                        if (isNaN(kval)) {
+                            if (to) {
+                                window.clearTimeout(to);
+                                to = null;
+                                m = 1;
+                                s.val(s.$.val());
+                            }
+                        } else {
+                            // kval postcond
+                            (s.$.val() > s.o.max && s.$.val(s.o.max))
+                            || (s.$.val() < s.o.min && s.$.val(s.o.min));
+                        }
+
+                    }
+                );
+
+            this.$c.bind("mousewheel DOMMouseScroll", mw);
+            this.$.bind("mousewheel DOMMouseScroll", mw)
+        };
+
+        this.init = function () {
+
+            if (
+                this.v < this.o.min
+                || this.v > this.o.max
+            ) this.v = this.o.min;
+
+            this.$.val(this.v);
+            this.w2 = this.w / 2;
+            this.cursorExt = this.o.cursor / 100;
+            this.xy = this.w2 * this.scale;
+            this.lineWidth = this.xy * this.o.thickness;
+            this.lineCap = this.o.lineCap;
+            this.radius = this.xy - this.lineWidth / 2;
+
+            this.o.angleOffset
+            && (this.o.angleOffset = isNaN(this.o.angleOffset) ? 0 : this.o.angleOffset);
+
+            this.o.angleArc
+            && (this.o.angleArc = isNaN(this.o.angleArc) ? this.PI2 : this.o.angleArc);
+
+            // deg to rad
+            this.angleOffset = this.o.angleOffset * Math.PI / 180;
+            this.angleArc = this.o.angleArc * Math.PI / 180;
+
+            // compute start and end angles
+            this.startAngle = 1.5 * Math.PI + this.angleOffset;
+            this.endAngle = 1.5 * Math.PI + this.angleOffset + this.angleArc;
+
+            var s = max(
+                            String(Math.abs(this.o.max)).length
+                            , String(Math.abs(this.o.min)).length
+                            , 2
+                            ) + 2;
+
+            this.o.displayInput
+                && this.i.css({
+                        'width' : ((this.w / 2 + 4) >> 0) + 'px'
+                        ,'height' : ((this.w / 3) >> 0) + 'px'
+                        ,'position' : 'absolute'
+                        ,'vertical-align' : 'middle'
+                        ,'margin-top' : ((this.w / 3) >> 0) + 'px'
+                        ,'margin-left' : '-' + ((this.w * 3 / 4 + 2) >> 0) + 'px'
+                        ,'border' : 0
+                        ,'background' : 'none'
+                        ,'font' : this.o.fontWeight + ' ' + ((this.w / s) >> 0) + 'px ' + this.o.font
+                        ,'text-align' : 'center'
+                        ,'color' : this.o.inputColor || this.o.fgColor
+                        ,'padding' : '0px'
+                        ,'-webkit-appearance': 'none'
+                        })
+                || this.i.css({
+                        'width' : '0px'
+                        ,'visibility' : 'hidden'
+                        });
+        };
+
+        this.change = function (v) {
+            this.cv = v;
+            this.$.val(this.o.format(v));
+        };
+
+        this.angle = function (v) {
+            return (v - this.o.min) * this.angleArc / (this.o.max - this.o.min);
+        };
+
+        this.arc = function (v) {
+          var sa, ea;
+          v = this.angle(v);
+          if (this.o.flip) {
+              sa = this.endAngle + 0.00001;
+              ea = sa - v - 0.00001;
+          } else {
+              sa = this.startAngle - 0.00001;
+              ea = sa + v + 0.00001;
+          }
+          this.o.cursor
+              && (sa = ea - this.cursorExt)
+              && (ea = ea + this.cursorExt);
+          return {
+              s: sa,
+              e: ea,
+              d: this.o.flip && !this.o.cursor
+          };
+        };
+
+        this.draw = function () {
+
+            var c = this.g,                 // context
+                a = this.arc(this.cv)       // Arc
+                , pa                        // Previous arc
+                , r = 1;
+
+            c.lineWidth = this.lineWidth;
+            c.lineCap = this.lineCap;
+            c.strokeStyle = this.o.bgColor;
+            c.arc(this.xy, this.xy, this.radius, this.endAngle - 0.00001, this.startAngle + 0.00001, true);
+            c.stroke();
+
+            if (this.o.displayPrevious) {
+                pa = this.arc(this.v);
+                c.beginPath();
+                    c.strokeStyle = this.pColor;
+                    c.arc(this.xy, this.xy, this.radius, pa.s, pa.e, pa.d);
+                c.stroke();
+                r = (this.cv == this.v);
+            }
+
+            c.beginPath();
+                c.strokeStyle = r ? this.o.fgColor : this.fgColor ;
+                c.arc(this.xy, this.xy, this.radius, a.s, a.e, a.d);
+            c.stroke();
+        };
+
+        this.cancel = function () {
+            this.val(this.v);
+        };
+    };
+
+    $.fn.dial = $.fn.knob = function (o) {
+        return this.each(
+            function () {
+                var d = new k.Dial();
+                d.o = o;
+                d.$ = $(this);
+                d.run();
+            }
+        ).parent();
+    };
+
+})(jQuery);
+
+define("jqueryknob", function(){});
+
+define('plugins/content-creator-pluginloader',['underscore', 'jquery', 'jqueryui', 'jqueryresize', 'underscorestring', 'kinetic', 'plupload', 'kineticresize', 'backbone', 'marionette', 'mustache', 'syphon', 'text', 'jqueryvalidate', 'bootstrap', 'checkbox', 'bootstrapslider', 'spin', 'jqueryspin', 'jquerycolor', 'jqueryknob'], function() {});
 
 define('configs/jquery',['jquery', 'underscore', 'jqueryvalidate'], function($, _) {
   var adjustPageDim;
@@ -34403,6 +35195,9 @@ define('app',['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
+    Pace.on('hide', function() {
+      return $("#site_main_container").addClass("showAll");
+    });
     App.startHistory();
     if (!this.getCurrentRoute()) {
       return App.navigate(this.rootRoute, {
@@ -35241,10 +36036,7 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
                 if (response.error) {
                   return console.log(response);
                 } else {
-                  console.log('logged out');
-                  return App.navigate('login', {
-                    trigger: true
-                  });
+                  return App.vent.trigger("show:login");
                 }
               };
             })(this));
@@ -35367,7 +36159,9 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
         if ($('.creator').length > 0) {
           $(".header-seperation").css("display", "none");
           $("#main-menu").addClass("mini");
-          return $("#main-content-region").addClass("condensed");
+          $("#main-content-region").addClass("condensed");
+          $(".start").removeClass("active open");
+          return $(".arrow").removeClass("open");
         }
       };
 
@@ -35384,7 +36178,7 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
 });
 
 
-define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\r\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\r\n\r\n<ul>\t\r\n\r\n\t<!-- BEGIN ONE LEVEL MENU -->\r\n\t<li class="start active">\r\n\t\t<a href="javascript:;">\r\n\t\t\t<i class="fa fa-book"></i>\r\n\t\t\t<span class="title">Content Management</span>\r\n\t\t\t<span class="arrow"></span>\r\n\t\t</a>\r\n\t\t<ul class="sub-menu">\r\n\t\t</ul>\r\n\t</li>\r\n\t<!-- END ONE LEVEL MENU -->\r\n\r\n</ul>\r\n<!-- END SIDEBAR MENU -->\r\n<!-- BEGIN SIDEBAR WIDGETS -->\r\n<div class="side-bar-widgets">\r\n\r\n</div>\r\n<div class="clearfix"></div>\r\n<!-- END SIDEBAR WIDGETS --> \r\n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\r\n';});
+define('text!apps/left-nav/templates/leftnav.html',[],function () { return '\r\n  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;"><div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">\r\n\r\n<ul>\t\r\n\r\n\t<!-- BEGIN ONE LEVEL MENU -->\r\n\t<li class="start active open">\r\n\t\t<a href="javascript://;">\r\n\t\t\t<i class="fa fa-book"></i>\r\n\t\t\t<span class="title">Content Management</span>\r\n\t\t\t<span class="arrow open"></span>\r\n\t\t</a>\r\n\t\t<ul class="sub-menu">\r\n\t\t</ul>\r\n\t</li>\r\n\t<!-- END ONE LEVEL MENU -->\r\n\r\n</ul>\r\n<!-- END SIDEBAR MENU -->\r\n<!-- BEGIN SIDEBAR WIDGETS -->\r\n<div class="side-bar-widgets">\r\n\r\n</div>\r\n<div class="clearfix"></div>\r\n<!-- END SIDEBAR WIDGETS --> \r\n</div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>\r\n';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35407,6 +36201,8 @@ define('apps/left-nav/views',['app', 'text!apps/left-nav/templates/leftnav.html'
 
     })(Marionette.ItemView);
     return Views.LeftNavView = (function(_super) {
+      var handleSidenarAndContentHeight;
+
       __extends(LeftNavView, _super);
 
       function LeftNavView() {
@@ -35422,6 +36218,63 @@ define('apps/left-nav/views',['app', 'text!apps/left-nav/templates/leftnav.html'
       LeftNavView.prototype.itemView = MenuItemView;
 
       LeftNavView.prototype.itemViewContainer = 'ul.sub-menu';
+
+      LeftNavView.prototype.events = {
+        'click li': 'clickMenu'
+      };
+
+      LeftNavView.prototype.onShow = function() {
+        var elem;
+        if ($('.page-sidebar').hasClass('mini')) {
+          elem = $('.page-sidebar ul');
+          elem.children('li.open').children('a').children('.arrow').removeClass('open');
+          elem.children('li.open').children('a').children('.arrow').removeClass('active');
+          elem.children('li.open').children('.sub-menu').slideUp(200);
+          return elem.children('li').removeClass('open');
+        }
+      };
+
+      LeftNavView.prototype.clickMenu = function(e) {
+        var li_target, parent, sub;
+        li_target = $(e.target).closest('li').find('a');
+        if (li_target.next().hasClass('sub-menu') === false) {
+          return;
+        }
+        parent = li_target.parent().parent();
+        parent.children('li.open').children('a').children('.arrow').removeClass('open');
+        parent.children('li.open').children('a').children('.arrow').removeClass('active');
+        parent.children('li.open').children('.sub-menu').slideUp(200);
+        parent.children('li').removeClass('open');
+        sub = li_target.next();
+        if (sub.is(":visible")) {
+          $('.arrow', li_target).removeClass("open");
+          li_target.parent().removeClass("active");
+          sub.slideUp(200, function() {
+            return handleSidenarAndContentHeight();
+          });
+        } else {
+          $('.arrow', li_target).addClass("open");
+          li_target.parent().addClass("open");
+          sub.slideDown(200, function() {
+            return handleSidenarAndContentHeight();
+          });
+        }
+        return e.preventDefault();
+      };
+
+      handleSidenarAndContentHeight = function() {
+        var content, sidebar;
+        content = $('.page-content');
+        sidebar = $('.page-sidebar');
+        if (!content.attr("data-height")) {
+          content.attr("data-height", content.height());
+        }
+        if (sidebar.height() > content.height()) {
+          return content.css("min-height", sidebar.height() + 120);
+        } else {
+          return content.css("min-height", content.attr("data-height"));
+        }
+      };
 
       return LeftNavView;
 
@@ -36547,7 +37400,8 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
           fontSize: '14',
           fontColor: '#000000',
           fontBold: '',
-          fontItalics: ''
+          fontItalics: '',
+          textAngle: 0
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         self = this;
@@ -36619,9 +37473,15 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             tooltip.destroy();
-            hotspotElement.destroy();
-            _this.textLayer.draw();
-            return console.log(hotspotElement);
+            App.execute("close:question:element:properties");
+            return _this.textLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:textAngle", (function(_this) {
+          return function() {
+            tooltip.rotation(hotspotElement.get('textAngle'));
+            console.log(tooltip.rotation());
+            return _this.textLayer.draw();
           };
         })(this));
         tooltip.on('mouseover', function() {
@@ -36740,7 +37600,8 @@ define('apps/content-creator/content-builder/elements/hotspot/controller',['app'
         if (!this.layout.elementRegion.currentView.$el.canBeDeleted()) {
           return alert("Please remove elements inside row and then delete.");
         } else {
-          return model.destroy();
+          model.destroy();
+          return App.execute("close:question:elements");
         }
       };
 
@@ -37559,7 +38420,7 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
         return TextView.__super__.constructor.apply(this, arguments);
       }
 
-      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1">Arial</option> <option value="2">Calibri</option> <option value="3">Comic Sans MS</option> <option value="4">Courier</option> <option value="5">Georgia</option> <option value="6">Helvetica</option> <option value="7">Impact</option> <option value="8">Lucida Console</option> <option value="9">Lucida Sans Unicode</option> <option value="10">Tahoma</option> <option value="11">Times New Roman</option> <option value="12">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group textFormat" data-toggle="buttons-checkbox"> <div id="font-style" class="btn-group"> <button id="bold-btn" class="btn"><i class="fa fa-bold"></i></button> <button id="italic-btn" class="btn"><i class="fa fa-italic"></i></button> </div> </div> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <input type="button" id="delete" class="delete" value="Delete"> </div> </div> </div>';
+      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Text Properties </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" >{{text}}</textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1">Arial</option> <option value="2">Calibri</option> <option value="3">Comic Sans MS</option> <option value="4">Courier</option> <option value="5">Georgia</option> <option value="6">Helvetica</option> <option value="7">Impact</option> <option value="8">Lucida Console</option> <option value="9">Lucida Sans Unicode</option> <option value="10">Tahoma</option> <option value="11">Times New Roman</option> <option value="12">Trebuchet MS</option> <option value="13">Verdana</option> </select> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group textFormat" data-toggle="buttons-checkbox"> <div id="font-style" class="btn-group"> <button id="bold-btn" class="btn"><i class="fa fa-bold"></i></button> <button id="italic-btn" class="btn"><i class="fa fa-italic"></i></button> </div> </div> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <div class="form-group"> <button type="button" id="delete" class="btn btn-danger btn-small">Delete</button> </div> <div class="form-group"> Rotate <input type="text" class="dial" data-min="0" data-max="360" data-width="40" data-height="40" data-displayInput=false data-thickness=".5" data-fgColor="#0AA699" data-angleOffset="90" data-cursor=true> </div> </div> </div> </div>';
 
       TextView.prototype.onShow = function() {
         var self;
@@ -37572,6 +38433,12 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
             return _this.model.set('fontSize', $('.fontSize').slider('getValue').val() || size);
           };
         })(this));
+        $('.dial').val(self.model.get('textAngle'));
+        $(".dial").knob({
+          change: function(val) {
+            return self.model.set("textAngle", val);
+          }
+        });
         $('.fontColor').minicolors({
           animationSpeed: 200,
           animationEasing: 'swing',
@@ -37612,7 +38479,7 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
             }
           }, 200);
         });
-        return $('#delete.delete').on('click', (function(_this) {
+        return $('#delete.btn-danger').on('click', (function(_this) {
           return function() {
             return _this.model.set('toDelete', true);
           };
@@ -38338,7 +39205,6 @@ require.config({
   urlArgs: "ver=1",
   baseUrl: '../wp-content/themes/walnut/walnut/dev/js',
   paths: {
-    pace: 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryresize: 'plugins/jquery.ba-resize.min',
@@ -38362,7 +39228,8 @@ require.config({
     componentloader: 'components/builder-component-loader',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
-    jquerycolor: 'plugins/jquery.minicolors.min'
+    jquerycolor: 'plugins/jquery.minicolors.min',
+    jqueryknob: 'plugins/jquery.knob'
   },
   shim: {
     underscore: {
@@ -38372,6 +39239,7 @@ require.config({
     jqueryui: ['jquery'],
     jqueryresize: ['jquery', 'jqueryui'],
     jquerycolor: ['jquery'],
+    jqueryknob: ['jquery'],
     kineticresize: ['kinetic'],
     backbone: {
       deps: ['jquery', 'underscore'],
