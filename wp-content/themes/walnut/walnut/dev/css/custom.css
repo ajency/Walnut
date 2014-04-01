@@ -565,9 +565,17 @@ body {
 .page-sidebar {
   background-color: #07766d !important;
 }
+.page-sidebar.mini {
+  background-color: #07766d !important;
+}
 .page-sidebar .page-sidebar-wrapper > ul > li > a,
-.page-sidebar .page-sidebar-wrapper > ul > li > a i {
-  color: #fff;
+.page-sidebar .page-sidebar-wrapper > ul > li > a i,
+.page-sidebar .page-sidebar-wrapper > ul > li > a .arrow,
+.page-sidebar .page-sidebar-wrapper > ul > li > a .arrow.open:before {
+  color: #fff !important;
+}
+.page-sidebar .page-sidebar-wrapper > ul > li.open > a {
+  background-color: #0aa699 !important;
 }
 .page-sidebar .page-sidebar-wrapper > ul > li:hover > a {
   background-color: #0aa699;
