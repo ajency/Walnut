@@ -2,11 +2,10 @@
   baseUrl: './js',
   name: 'plugins/almond',
   include : 'content-creator-main',
-  optimize: 'none',
+  //optimize: 'none',
   wrap: false,
   out: '../production/content-creator-main.js',
   paths: {
-    pace: 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryresize: 'plugins/jquery.ba-resize.min',
@@ -30,7 +29,8 @@
     spin        : 'plugins/spin',
     jqueryspin      : 'plugins/jquery.spin',
     bootstrapslider   : 'plugins/bootstrap-slider',
-    jquerycolor     : 'plugins/jquery.minicolors.min'
+    jquerycolor     : 'plugins/jquery.minicolors.min',
+    jqueryknob      : 'plugins/jquery.knob'
     
   },
   shim: {
@@ -41,6 +41,7 @@
     jqueryui: ['jquery'],
     jqueryresize: ['jquery', 'jqueryui'],
     jquerycolor :['jquery'],
+    jqueryknob  :['jquery'],
     kineticresize: ['kinetic'],
     backbone: {
       deps: ['jquery', 'underscore'],

@@ -53,12 +53,20 @@ Template Name: Dashboard
 <div id="site_main_container">
     <div>
             <div id="header-region"></div>
-            <div id="left-nav-region"></div>
-            <div id="main-content-region"></div>
+            <div class="page-container row-fluid">
+	            <div id="left-nav-region"></div>
+	            <a href="#" class="scrollup">Scroll</a>
+	            <div class="page-content">
+	            	<div class="content">
+   						<div id="login-region"></div>
+	            		<div id="breadcrumb-region"></div>
+			            <div id="main-content-region"></div>
+			        </div>
+		        </div>
+		    </div>
     </div>
 
     <div id="dialog-region"></div>
-    <div id="login-region"></div>
 </div>
 <script>
     AJAXURL= '<?php echo admin_url("admin-ajax.php") ?>';

@@ -51,7 +51,16 @@ define ['app'],(App)->
 											Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1">
 										</div>
 
-										<input type="button" id="delete" class="delete" value="Delete">
+										
+										<div class="form-group">
+											<button type="button" id="delete" class="btn btn-danger btn-small">Delete</button>
+										</div>
+
+										<div class="form-group">
+											Rotate <input type="text" class="dial" data-min="0" data-max="360"
+											 data-width="40" data-height="40" data-displayInput=false data-thickness=".5"
+											  data-fgColor="#0AA699" data-angleOffset="90" data-cursor=true>
+										</div>
 
 					               	</div>
 				              	</div>
@@ -68,6 +77,17 @@ define ['app'],(App)->
 					$('#hotspot-textelement-fontsize').slider().on 'slide',=>
 						size = @model.get 'fontSize'
 						@model.set 'fontSize', $('.fontSize').slider('getValue').val()||size
+
+
+					# TEXT ROTATION
+					# initialize the knob
+					$('.dial').val self.model.get 'textAngle'
+					$(".dial").knob
+							change :(val)->
+								self.model.set "textAngle",val
+								
+
+
 						
 
 					# FONT COLOR
@@ -120,7 +140,7 @@ define ['app'],(App)->
 						,200
 						
 					#DELETE
-					$('#delete.delete').on 'click',=>
+					$('#delete.btn-danger').on 'click',=>
 							@model.set 'toDelete', true
 						
 

@@ -5,7 +5,8 @@ define(['marionette'], function(Marionette) {
     headerRegion: '#header-region',
     mainContentRegion: '#main-content-region',
     dialogRegion: '#dialog-region',
-    loginRegion: '#login-region'
+    loginRegion: '#login-region',
+    breadcrumbRegion: '#breadcrumb-region'
   });
   App.rootRoute = "";
   App.loginRoute = "login";
@@ -45,6 +46,9 @@ define(['marionette'], function(Marionette) {
           App.execute("show:leftnavapp", {
             region: App.leftNavRegion
           });
+          App.execute("show:breadcrumbapp", {
+            region: App.breadcrumbRegion
+          });
           if (_this.getCurrentRoute() === 'login') {
             App.vent.trigger("show:dashboard");
           }
@@ -56,14 +60,22 @@ define(['marionette'], function(Marionette) {
     })(this), 'json');
   });
   App.vent.on("show:dashboard", function() {
+    Pace.restart();
+    $("#site_main_container").removeClass("showAll");
     App.navigate('textbooks', {
       trigger: true
+    });
+    App.execute("show:breadcrumbapp", {
+      region: App.breadcrumbRegion
     });
     App.execute("show:headerapp", {
       region: App.headerRegion
     });
-    return App.execute("show:leftnavapp", {
+    App.execute("show:leftnavapp", {
       region: App.leftNavRegion
+    });
+    return Pace.on('hide', function() {
+      return $("#site_main_container").addClass("showAll");
     });
   });
   App.vent.on("show:login", function() {

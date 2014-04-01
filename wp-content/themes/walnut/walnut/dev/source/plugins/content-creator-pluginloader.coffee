@@ -19,4 +19,5 @@ define [
 			'spin'
 			'jqueryspin'
 			'jquerycolor'
+			'jqueryknob'
 		], ->
