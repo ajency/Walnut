@@ -208,12 +208,13 @@ define ['app'],(App)->
 						shape : 'Circle'
 						color : '#000000'
 						transparent : false
+						correct : false
 						
 					hotspotElement = App.request "create:new:hotspot:element", modelData
 					self = @
 
 					App.execute "show:question:element:properties",
-									model : hotspotElement
+								model : hotspotElement
 
 
 					circle = new Kinetic.Circle
@@ -239,6 +240,16 @@ define ['app'],(App)->
 						circle.stroke hotspotElement.get 'color'
 						@optionLayer.draw()
 
+					# on change of model correct shade the option
+					hotspotElement.on "change:correct",=>
+						if hotspotElement.get 'correct'
+							circle.fill 'rgba(12, 199, 55, 0.28)'
+							
+						else
+							circle.fill ''
+							# console.log hotspotElement.get 'correct'
+						@optionLayer.draw()
+
 					# delete element based on toDelete
 					hotspotElement.on "change:toDelete",=>
 							circleGrp.destroy()
@@ -262,12 +273,15 @@ define ['app'],(App)->
 
 			_addRectangle : (elementPos)->
 
+					
+
 					modelData =
 						type : 'Option'
 						shape : 'Rect'
 						color : '#000000'
 						transparent : false
 						angle 	: 0
+						correct : false
 						
 
 					hotspotElement = App.request "create:new:hotspot:element", modelData
@@ -281,7 +295,7 @@ define ['app'],(App)->
 							x: elementPos.left
 							y:elementPos.top
 							width: 25
-							height: 25
+							height: 25							
 							stroke: hotspotElement.get 'color'
 							strokeWidth: 2
 							dash : [6,4 ]
@@ -303,6 +317,16 @@ define ['app'],(App)->
 					# on change of model's angle rotate the element
 					hotspotElement.on "change:angle",=>
 						rectGrp.rotation hotspotElement.get 'angle'
+						@optionLayer.draw()
+
+					# on change of model correct shade the option
+					hotspotElement.on "change:correct",=>
+						if hotspotElement.get 'correct'
+							box.fill 'rgba(12, 199, 55, 0.28)'
+							console.log hotspotElement.get 'correct'
+						else
+							box.fill ''
+							# console.log hotspotElement.get 'correct'
 						@optionLayer.draw()
 
 					# delete element based on toDelete
@@ -330,13 +354,7 @@ define ['app'],(App)->
 
 			_addTextElement: (elementPos)->
 
-					defaultTextImage = new Image()
-					defaultTextImage.onload = ()=>
-							console.log "in default image load"
-							@hotspotTextDefault = new Kinetic.Image
-									image 	: defaultTextImage
-							console.log "defaultImage Text"
-					defaultTextImage.src = "../wp-content/themes/walnut/images/enter_text.jpg"
+					
 
 					modelData =
 						type : 'Text'
@@ -368,7 +386,6 @@ define ['app'],(App)->
 						fontFamily: hotspotElement.get 'fontFamily'
 						fontSize: hotspotElement.get 'fontSize'
 						fill: hotspotElement.get 'fontColor'
-						fillPatternImage	: @hotspotTextDefault
 						fontStyle : hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
 						padding: 5
 

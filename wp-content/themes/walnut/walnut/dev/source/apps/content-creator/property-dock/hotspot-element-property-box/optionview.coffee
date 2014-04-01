@@ -8,11 +8,11 @@ define ['app'],(App)->
 				template : '<div class="tile-more-content no-padding">
 								<div class="tiles green">
 									<div class="tile-footer drag">
-										Question Properties 
+										Hotspot Option Properties 
 									</div>
 									<div class="docket-body">
 
-										<div class="radio radio-success">Is this correct?
+										<div id="correct-answer" class="radio radio-success">Is this correct?
 											<input id="yes" type="radio" name="optionyes" value="yes">
 											<label for="yes">Yes</label>
 											<input id="no" type="radio" name="optionyes" value="no" checked="checked">
@@ -97,6 +97,17 @@ define ['app'],(App)->
 
 					else 
 						$('#knob').hide()
+
+
+					# CORRECT ANSWER
+					if @model.get 'correct'
+						$("#correct-answer.radio input#yes").prop 'checked',true
+					else
+						$("#correct-answer.radio input#no").prop 'checked',true
+
+					$('#correct-answer.radio input').on 'change',=>
+
+							@model.set 'correct', $('#correct-answer.radio input:checked').val()=="yes" ? true : false
 
 									
 

@@ -10,7 +10,7 @@ define(['app'], function(App) {
         return OptionView.__super__.constructor.apply(this, arguments);
       }
 
-      OptionView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Question Properties </div> <div class="docket-body"> <div class="radio radio-success">Is this correct? <input id="yes" type="radio" name="optionyes" value="yes"> <label for="yes">Yes</label> <input id="no" type="radio" name="optionyes" value="no" checked="checked"> <label for="no">No</label> </div> Marks 	<select class="marks"> <option value="1">1</option> <option value="2">2</option> </select> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <div id="transparency" class="checkbox check-success"> <input id="checkbox3" type="checkbox" value="1"> <label for="checkbox3">Set Transparent</label> </div> <div id="knob" class="form-group"> Rotate <input type="text" class="dial" data-min="0" data-max="360" data-width="40" data-height="40" data-displayInput=false data-thickness=".5" data-fgColor="#0AA699" data-angleOffset="90" data-cursor=true> </div> <div class="form-group"> <button type="button" id="delete" class="btn btn-danger btn-small">Delete</button> </div> </div> </div> </div>';
+      OptionView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot Option Properties </div> <div class="docket-body"> <div id="correct-answer" class="radio radio-success">Is this correct? <input id="yes" type="radio" name="optionyes" value="yes"> <label for="yes">Yes</label> <input id="no" type="radio" name="optionyes" value="no" checked="checked"> <label for="no">No</label> </div> Marks 	<select class="marks"> <option value="1">1</option> <option value="2">2</option> </select> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <div id="transparency" class="checkbox check-success"> <input id="checkbox3" type="checkbox" value="1"> <label for="checkbox3">Set Transparent</label> </div> <div id="knob" class="form-group"> Rotate <input type="text" class="dial" data-min="0" data-max="360" data-width="40" data-height="40" data-displayInput=false data-thickness=".5" data-fgColor="#0AA699" data-angleOffset="90" data-cursor=true> </div> <div class="form-group"> <button type="button" id="delete" class="btn btn-danger btn-small">Delete</button> </div> </div> </div> </div>';
 
       OptionView.prototype.onShow = function() {
         if (this.model.get('transparent')) {
@@ -46,7 +46,7 @@ define(['app'], function(App) {
         })(this));
         if (this.model.get('shape') === 'Rect') {
           $('.dial').val(this.model.get('angle'));
-          return $(".dial").knob({
+          $(".dial").knob({
             change: (function(_this) {
               return function(val) {
                 return _this.model.set("angle", val);
@@ -54,8 +54,21 @@ define(['app'], function(App) {
             })(this)
           });
         } else {
-          return $('#knob').hide();
+          $('#knob').hide();
         }
+        if (this.model.get('correct')) {
+          $("#correct-answer.radio input#yes").prop('checked', true);
+        } else {
+          $("#correct-answer.radio input#no").prop('checked', true);
+        }
+        return $('#correct-answer.radio input').on('change', (function(_this) {
+          return function() {
+            var _ref;
+            return _this.model.set('correct', (_ref = $('#correct-answer.radio input:checked').val() === "yes") != null ? _ref : {
+              "true": false
+            });
+          };
+        })(this));
       };
 
       return OptionView;
