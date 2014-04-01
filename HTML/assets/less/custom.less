@@ -36,10 +36,16 @@ body{
 
 .page-sidebar{
 	background-color: darken(@color-primary, 10%) !important;
+	&.mini{
+		background-color: darken(@color-primary, 10%) !important;
+	}
 
 	.page-sidebar-wrapper > ul > li{
-		&>a, &> a i{
-			color: #fff;
+		&>a, &> a i, &> a .arrow, &> a .arrow.open:before{
+			color: #fff !important;
+		}
+		&.open > a{
+			background-color: @color-primary !important;
 		}
 	}
 
