@@ -2,7 +2,7 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbooks/list/templates/list_item.html', 'text!apps/textbooks/templates/no_textbooks.html'], function(App, textbooksTpl, listitemTpl, notextbooksTpl) {
+define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/textbooks/list/templates/list_item.html', 'text!apps/textbooks/templates/no_textbooks.html'], function(App, textbooksListTpl, listitemTpl, notextbooksTpl) {
   return App.module("TextbooksApp.List.Views", function(Views, App) {
     var EmptyView, ListItemView;
     ListItemView = (function(_super) {
@@ -19,7 +19,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       ListItemView.prototype.template = listitemTpl;
 
       ListItemView.prototype.onShow = function() {
-        var class_id, class_ids, subject, subjects, _i, _j, _len, _len1, _results;
+        var class_id, class_ids, subject, subjects, _i, _j, _len, _len1;
+        console.log(this.model.get('name'));
         this.$el.attr('data-name', this.model.get('name'));
         class_ids = this.model.get('classes');
         if (class_ids) {
@@ -30,13 +31,18 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
         }
         subjects = this.model.get('subjects');
         if (subjects) {
-          _results = [];
           for (_j = 0, _len1 = subjects.length; _j < _len1; _j++) {
             subject = subjects[_j];
-            _results.push(this.$el.addClass(subject));
+            this.$el.addClass(subject);
           }
-          return _results;
         }
+        return $('#textbooks').mixitup({
+          layoutMode: 'list',
+          listClass: 'list',
+          gridClass: 'grid',
+          effects: ['fade', 'blur'],
+          listEffects: ['fade', 'rotateX']
+        });
       };
 
       ListItemView.prototype.serializeData = function() {
@@ -98,9 +104,9 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
         return ListView.__super__.constructor.apply(this, arguments);
       }
 
-      ListView.prototype.template = textbooksTpl;
+      ListView.prototype.template = textbooksListTpl;
 
-      ListView.prototype.className = 'page-content';
+      ListView.prototype.className = '';
 
       ListView.prototype.itemView = ListItemView;
 
@@ -140,20 +146,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
       };
 
       ListView.prototype.onShow = function() {
-        setTimeout(function() {
-          var $filters, dimensions;
-          $('#textbooks').mixitup({
-            layoutMode: 'list',
-            listClass: 'list',
-            gridClass: 'grid',
-            effects: ['fade', 'blur'],
-            listEffects: ['fade', 'rotateX']
-          });
-          return $filters = $('#Filters').find('li', dimensions = {
-            region: 'all',
-            recreation: 'all'
-          });
-        }, 1000);
+        console.log('onShow');
         return this.dimensions = {
           region: 'all',
           recreation: 'all'

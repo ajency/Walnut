@@ -1,8 +1,8 @@
 define ['app'
-		'text!apps/textbooks/templates/textbooks.html'
+		'text!apps/textbooks/templates/textbooks-list.html'
 		'text!apps/textbooks/list/templates/list_item.html'
 		'text!apps/textbooks/templates/no_textbooks.html'
-		],(App,textbooksTpl, listitemTpl,notextbooksTpl)->
+		],(App,textbooksListTpl, listitemTpl,notextbooksTpl)->
 
 	App.module "TextbooksApp.List.Views",(Views, App)->
 
@@ -13,6 +13,7 @@ define ['app'
 			template : listitemTpl
 
 			onShow:->
+				console.log @model.get 'name'
 				@$el.attr 'data-name', @model.get 'name'
 				class_ids =@model.get 'classes'
 				if class_ids
@@ -23,6 +24,13 @@ define ['app'
 					@$el.addClass subject for subject in subjects
 
 				
+				$('#textbooks').mixitup
+					layoutMode: 'list', # Start in list mode (display: block) by default
+					listClass: 'list', # Container class for when in list mode
+					gridClass: 'grid', # Container class for when in grid mode
+					effects: ['fade','blur'], # List of effects
+					listEffects: ['fade','rotateX'] # List of effects ONLY for list mode
+
 
 			serializeData : ->
 				data = super()
@@ -56,9 +64,9 @@ define ['app'
 
 		class Views.ListView extends Marionette.CompositeView
 
-			template : textbooksTpl
+			template : textbooksListTpl
 
-			className : 'page-content'
+			className : ''
 
 			itemView 	: ListItemView
 
@@ -96,21 +104,12 @@ define ['app'
 				
 
 			onShow: ->
-				setTimeout ()->
-					$('#textbooks').mixitup
-						layoutMode: 'list', # Start in list mode (display: block) by default
-						listClass: 'list', # Container class for when in list mode
-						gridClass: 'grid', # Container class for when in grid mode
-						effects: ['fade','blur'], # List of effects
-						listEffects: ['fade','rotateX'] # List of effects ONLY for list mode
-					
-					$filters = $('#Filters').find 'li', dimensions = region: 'all', recreation: 'all'
-				,1000
-				
+				console.log 'onShow'
 				@dimensions = 
 					region: 'all'
 					recreation: 'all'
 				#console.log @dimensions
+
 
 			filterBooks: (e)=>
 				console.log '@dimensions'

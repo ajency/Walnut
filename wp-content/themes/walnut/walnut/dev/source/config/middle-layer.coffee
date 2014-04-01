@@ -1,4 +1,4 @@
-define ['detect','jquery', 'plugins/online'], (detect,$, online)->
+define ['detect','jquery'], (detect,$)->
 
       networkStatus = 0
 
@@ -11,8 +11,9 @@ define ['detect','jquery', 'plugins/online'], (detect,$, online)->
 
       #Load script 'online.js' only for browser
       if checkPlatform() is "Desktop"
-        online
-
+        #define ['plugins/online'], ->
+        $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
+      
       #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
       #When network is up.

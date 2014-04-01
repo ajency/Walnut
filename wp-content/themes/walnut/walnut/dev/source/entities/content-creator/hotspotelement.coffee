@@ -7,6 +7,7 @@ define ['app'
 
 					defaults :->
 						family : 'hotspot'
+						toDelete : false
 
 
 

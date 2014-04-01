@@ -25,9 +25,6 @@ define(['marionette'], function(Marionette) {
   App.commands.setHandler("unregister:instance", function(instance, id) {
     return App.unregister(instance, id);
   });
-  App.on("initialize:before", function() {
-    return Pace.start();
-  });
   App.on("initialize:after", function(options) {
     var xhr;
     Pace.on('hide', function() {
@@ -49,14 +46,11 @@ define(['marionette'], function(Marionette) {
             region: App.leftNavRegion
           });
           if (_this.getCurrentRoute() === 'login') {
-            return App.vent.trigger("show:dashboard");
+            App.vent.trigger("show:dashboard");
           }
+          return App.loginRegion.close();
         } else {
-          console.log('error');
-          _this.rootRoute = 'login';
-          return App.navigate(_this.rootRoute, {
-            trigger: true
-          });
+          return App.vent.trigger("show:login");
         }
       };
     })(this), 'json');
@@ -70,6 +64,15 @@ define(['marionette'], function(Marionette) {
     });
     return App.execute("show:leftnavapp", {
       region: App.leftNavRegion
+    });
+  });
+  App.vent.on("show:login", function() {
+    App.leftNavRegion.close();
+    App.headerRegion.close();
+    App.mainContentRegion.close();
+    this.rootRoute = 'login';
+    return App.navigate(this.rootRoute, {
+      trigger: true
     });
   });
   return App;

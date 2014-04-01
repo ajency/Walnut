@@ -1,4 +1,4 @@
-define(['detect', 'jquery', 'plugins/online'], function(detect, $, online) {
+define(['detect', 'jquery'], function(detect, $) {
   var checkConnection, checkPlatform, networkStatus;
   networkStatus = 0;
   checkPlatform = function() {
@@ -11,7 +11,7 @@ define(['detect', 'jquery', 'plugins/online'], function(detect, $, online) {
     }
   };
   if (checkPlatform() === "Desktop") {
-    online;
+    $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
   }
   window.onLineHandler = function(){
         networkStatus = 1
