@@ -110,6 +110,12 @@
 .docket .tile-footer.drag {
   cursor: move;
 }
+.docket .tile-footer.drag .semi-bold {
+  font-weight: 700;
+}
+.docket .tile-footer.drag i {
+  font-size: 10px;
+}
 .docket ul {
   padding: 0;
 }
