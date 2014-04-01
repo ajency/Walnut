@@ -2,7 +2,7 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbooks/list/templates/list_item.html', 'text!apps/textbooks/templates/no_textbooks.html'], function(App, textbooksTpl, listitemTpl, notextbooksTpl) {
+define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/textbooks/list/templates/list_item.html', 'text!apps/textbooks/templates/no_textbooks.html'], function(App, textbooksListTpl, listitemTpl, notextbooksTpl) {
   return App.module("TextbooksApp.List.Views", function(Views, App) {
     var EmptyView, ListItemView;
     ListItemView = (function(_super) {
@@ -104,9 +104,9 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html', 'text!apps/textbo
         return ListView.__super__.constructor.apply(this, arguments);
       }
 
-      ListView.prototype.template = textbooksTpl;
+      ListView.prototype.template = textbooksListTpl;
 
-      ListView.prototype.className = 'page-content';
+      ListView.prototype.className = '';
 
       ListView.prototype.itemView = ListItemView;
 
