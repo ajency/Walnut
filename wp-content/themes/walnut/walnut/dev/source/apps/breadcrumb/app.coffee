@@ -6,30 +6,27 @@ define ['app'
 		class Controller.BreadcrumbController extends RegionController
 
 			initialize : ->
-				console.log 'whats happening?????'
-				@view= view = @_getBreadcrumbView
+				breadcrumbItems= App.request "get:breadcrumb:model"
+
+				@listenTo breadcrumbItems, "change:items", @renderbreadcrumb
+
+				@renderbreadcrumb()
+
+			renderbreadcrumb:=>
+				breadcrumbItems= App.request "get:breadcrumb:model"
+				@view= view = @_getBreadcrumbView breadcrumbItems
 				@show view
 
-			_getBreadcrumbView : ->
+			_getBreadcrumbView : (items)->
+				console.log 'new breadcrumb view'
 				new BreadcrumbView
-				console.log 'whats happening@@@@@'
-
+					model: items
 
 		class BreadcrumbView extends Marionette.ItemView
-
-			template : '<li>Dashboard</li>
-						<li>
-							<a href="javascript://">Content Management</a>
-						</li>
-						<li>
-							<a class="active" href="javascript://">Textbooks</a>
-						</li>'
-
+			template 	: '{{#items}}<li><a href="{{link}}" class="{{active}}">{{label}}</a></li>{{/items}}'
 			tagName	 : 'ul'
 			className: 'breadcrumb'
 
-
 		# set handlers
-		App.commands.setHandler "show:breadcrumbapp" :->
-			console.log 'whats happening!!!!!!'
-			new Controller.BreadcrumbController		
+		App.commands.setHandler "show:breadcrumbapp", (opt = {})->
+			new Controller.BreadcrumbController opt

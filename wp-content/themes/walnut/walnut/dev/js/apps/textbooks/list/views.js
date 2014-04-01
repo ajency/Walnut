@@ -20,7 +20,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
 
       ListItemView.prototype.onShow = function() {
         var class_id, class_ids, subject, subjects, _i, _j, _len, _len1;
-        console.log(this.model.get('name'));
         this.$el.attr('data-name', this.model.get('name'));
         class_ids = this.model.get('classes');
         if (class_ids) {

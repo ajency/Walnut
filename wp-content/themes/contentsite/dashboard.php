@@ -14,71 +14,71 @@
  * @since Walnut 1.0
  */
 /*
-Template Name: Dashboard
-*/
+  Template Name: Dashboard
+ */
 ?>
 
 <!DOCTYPE html>
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Walnut Learn</title>
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<meta content="" name="description" />
-	<meta content="" name="author" />
+    <head>
+        <title>Walnut Learn</title>
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
 
-	<!-- NEED TO WORK ON -->
-	<link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
-	<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
-	<!-- BEGIN CORE CSS FRAMEWORK -->
-	<link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
-	<link href="./wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
-	<link href="./wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
-	<!-- END CORE CSS FRAMEWORK -->
+        <!-- NEED TO WORK ON -->
+        <link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
+        <link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
+        <!-- BEGIN CORE CSS FRAMEWORK -->
+        <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+        <link href="./wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
+        <!-- END CORE CSS FRAMEWORK -->
 
-	<!-- BEGIN CSS TEMPLATE -->
-	<link href="./wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
-	<link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
-	<link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
-	<link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
-	
-	<!-- END CSS TEMPLATE -->
+        <!-- BEGIN CSS TEMPLATE -->
+        <link href="./wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
+
+        <!-- END CSS TEMPLATE -->
 
 
-</head>
-<body class="">
-<div id="site_main_container">
-    <div>
-            <div id="header-region"></div>
-            <div class="page-container row-fluid">
-	            <div id="left-nav-region"></div>
-	            <a href="#" class="scrollup">Scroll</a>
-	            <div class="page-content">
-	            	<div class="content">
-   						<div id="login-region"></div>
-	            		<div id="breadcrumb-region"></div>
-			            <div id="main-content-region"></div>
-			        </div>
-		        </div>
-		    </div>
-    </div>
+    </head>
+    <body class="">
+        <div id="site_main_container">
+            <div>
+                <div id="header-region"></div>
+                <div class="page-container row-fluid">
+                    <div id="left-nav-region"></div>
+                    <a href="#" class="scrollup">Scroll</a>
+                    <div class="page-content">
+                        <div class="content">
+                            <div id="login-region"></div>
+                            <div id="breadcrumb-region"></div>
+                            <div id="main-content-region"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div id="dialog-region"></div>
-</div>
-<script>
-    AJAXURL= '<?php echo admin_url("admin-ajax.php") ?>';
-    SITEURL= '<?php echo site_url() ?>';
-</script>
-<script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
-<?php if(ENV=='dev') { ?>
-<script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
-<?php
-} else { ?>
-<script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/walnut-main.js"></script>
-<?php } ?>
+            <div id="dialog-region"></div>
+        </div>
+        <script>
+            AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
+            SITEURL = '<?php echo site_url() ?>';
+        </script>
+        <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+        <?php if (ENV == 'dev') { ?>
+            <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+            <?php } else {
+            ?>
+            <script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/walnut-main.js"></script>
+        <?php } ?>
 
-</body>
+    </body>
 </html>

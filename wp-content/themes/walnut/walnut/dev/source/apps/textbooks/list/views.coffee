@@ -13,7 +13,6 @@ define ['app'
 			template : listitemTpl
 
 			onShow:->
-				console.log @model.get 'name'
 				@$el.attr 'data-name', @model.get 'name'
 				class_ids =@model.get 'classes'
 				if class_ids

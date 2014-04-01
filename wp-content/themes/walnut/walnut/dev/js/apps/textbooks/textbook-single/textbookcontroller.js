@@ -29,7 +29,27 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
       SingleTextbook.prototype._showTextBookSingle = function() {
         return App.execute("when:fetched", this.textbook, (function(_this) {
           return function() {
-            var textbookDescView;
+            var breadcrumb_items, textbookDescView;
+            breadcrumb_items = {
+              'items': [
+                {
+                  'label': 'Dashboard',
+                  'link': 'javascript://'
+                }, {
+                  'label': 'Content Management',
+                  'link': 'javascript://'
+                }, {
+                  'label': 'Textbooks',
+                  'link': 'javascript://'
+                }, {
+                  'label': _this.textbook.get('name', {
+                    'link': 'javascript://',
+                    'active': 'active'
+                  })
+                }
+              ]
+            };
+            App.execute("update:breadcrumb:model", breadcrumb_items);
             textbookDescView = new Single.Views.TextbookDescriptionView({
               model: _this.textbook
             });
