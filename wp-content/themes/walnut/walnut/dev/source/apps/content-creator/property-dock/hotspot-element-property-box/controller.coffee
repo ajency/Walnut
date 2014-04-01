@@ -1,8 +1,9 @@
 define ['app'
 		'controllers/region-controller'
-		'apps/content-creator/property-dock/hotspot-element-property-box/views'],(App,RegionController)->
+		'apps/content-creator/property-dock/hotspot-element-property-box/hotspot-element-property-view-loader'],
+			(App,RegionController)->
 
-			App.module "ContentCreator.PropertyDock.HotspotElementPropertyBox",
+				App.module "ContentCreator.PropertyDock.HotspotElementPropertyBox",
 				(HotspotElementPropertyBox, App, Backbone, MArionette, $, _)->
 
 					class HotspotElementPropertyBoxController extends RegionController
