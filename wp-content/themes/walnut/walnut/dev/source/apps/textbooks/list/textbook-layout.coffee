@@ -10,11 +10,12 @@ define ['app'
 							<p>Dashboard</p>
 						</li>
 						<li>
-							<p>Content Management</p>
+							<p><a href="javascript://">Content Management</a></p>
 						</li>
 						<li>
-							<p>Textbooks</p>
+							<p><a class="active" href="javascript://">Textbooks</a></p>
 						</li>'
+
 			tagName	 : 'ul'
 			className: 'breadcrumb'
 

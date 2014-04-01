@@ -10,7 +10,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks.html'], function(App, te
         return TextbookBreadcrumbView.__super__.constructor.apply(this, arguments);
       }
 
-      TextbookBreadcrumbView.prototype.template = '<li> <p>Dashboard</p> </li> <li> <p>Content Management</p> </li> <li> <p>Textbooks</p> </li>';
+      TextbookBreadcrumbView.prototype.template = '<li> <p>Dashboard</p> </li> <li> <p><a href="javascript://">Content Management</a></p> </li> <li> <p><a class="active" href="javascript://">Textbooks</a></p> </li>';
 
       TextbookBreadcrumbView.prototype.tagName = 'ul';
 
