@@ -3,7 +3,8 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Textbooks", function(Textbooks, App, Backbone, Marionette, $, _) {
-    var API, textbookCollection;
+    var API, db, textbookCollection;
+    db = Backbone.db;
     Textbooks.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -75,13 +76,65 @@ define(["app", 'backbone'], function(App, Backbone) {
           textbook.fetch();
         }
         return textbook;
+      },
+      getTextbooksFromLocal: function() {
+        var data;
+        console.log('Database');
+        var fetchData = db.transaction(function(tx){
+			 			
+						},
+						function(tx,err){
+							console.log("Error processing SQL: "+err);
+						},
+						function(tx){
+							
+						}
+					);
+        return data = [
+          {
+            "term_id": 32,
+            "name": "Art",
+            "slug": "art",
+            "term_group": "0",
+            "term_order": "0",
+            "term_taxonomy_id": "32",
+            "taxonomy": "textbook",
+            "description": "",
+            "parent": "0",
+            "count": "0",
+            "cover_pic": "",
+            "author": "",
+            "classes": null,
+            "subjects": null,
+            "chapter_count": 0
+          }, {
+            "term_id": 33,
+            "name": "English",
+            "slug": "english",
+            "term_group": "0",
+            "term_order": "0",
+            "term_taxonomy_id": "32",
+            "taxonomy": "textbook",
+            "description": "",
+            "parent": "0",
+            "count": "0",
+            "cover_pic": "",
+            "author": "",
+            "classes": null,
+            "subjects": null,
+            "chapter_count": 0
+          }
+        ];
       }
     };
     App.reqres.setHandler("get:textbooks", function(opt) {
       return API.getTextbooks(opt);
     });
-    return App.reqres.setHandler("get:textbook:by:id", function(id) {
+    App.reqres.setHandler("get:textbook:by:id", function(id) {
       return API.getTextBookByID(id);
+    });
+    return App.reqres.setHandler("get:textbookslocal", function() {
+      return API.getTextbooksFromLocal();
     });
   });
 });

@@ -10,9 +10,6 @@ define(['detect', 'jquery'], function(detect, $) {
       return "Desktop";
     }
   };
-  if (checkPlatform() === "Desktop") {
-    define(['plugins/online'], function() {});
-  }
   window.onLineHandler = function(){
         networkStatus = 1
         };
@@ -49,11 +46,7 @@ define(['detect', 'jquery'], function(detect, $) {
         }
         break;
       case 'Mobile':
-        if (checkConnection()) {
-          return $.post(url, data, response, 'json');
-        } else {
-          return 'connection_error';
-        }
+        return 'connection_error';
     }
   };
 });

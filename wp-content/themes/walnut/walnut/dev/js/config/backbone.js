@@ -1,5 +1,18 @@
 define(["backbone"], function(Backbone) {
   var _sync;
+  Backbone.local = function(options, name) {
+    var jsonData;
+    jsonData = App.request("get:" + name + ":collection");
+    return jsonData;
+  };
+  _.extend(Backbone.Collection.prototype, {
+    sync: function(method, collection, options) {
+      var data;
+      data = App.reqres.request("get:textbookslocal");
+      collection.set(data);
+      return true;
+    }
+  });
   _.extend(Backbone.Model.prototype, {
     sync: function(method, model, options) {
       var allData, idAttr, onlyChanged, params, xhr, _action, _ref, _ref1;

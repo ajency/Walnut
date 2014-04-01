@@ -1,7 +1,9 @@
 define ["app", 'backbone'], (App, Backbone) ->
 
 		App.module "Entities.Textbooks", (Textbooks, App, Backbone, Marionette, $, _)->
-			
+
+			#local database object
+			db = Backbone.db
 
 			# textbook model
 			class Textbooks.ItemModel extends Backbone.Model
@@ -54,9 +56,30 @@ define ["app", 'backbone'], (App, Backbone) ->
 					textbook
 
 
+				getTextbooksFromLocal:->
+					console.log 'Database'
+					`var fetchData = db.transaction(function(tx){
+			 			
+						},
+						function(tx,err){
+							console.log("Error processing SQL: "+err);
+						},
+						function(tx){
+							
+						}
+					)`
+					data = [{"term_id":32,"name":"Art","slug":"art","term_group":"0","term_order":"0","term_taxonomy_id":"32","taxonomy":"textbook","description":"","parent":"0","count":"0","cover_pic":"","author":"","classes":null,"subjects":null,"chapter_count":0}
+			 				{"term_id":33,"name":"English","slug":"english","term_group":"0","term_order":"0","term_taxonomy_id":"32","taxonomy":"textbook","description":"","parent":"0","count":"0","cover_pic":"","author":"","classes":null,"subjects":null,"chapter_count":0}]
+				
+
+
 			# request handler to get all textbooks
 			App.reqres.setHandler "get:textbooks", (opt) ->
 				API.getTextbooks(opt)
 
 			App.reqres.setHandler "get:textbook:by:id", (id)->
 				API.getTextBookByID id
+
+			App.reqres.setHandler "get:textbookslocal", ->
+				API.getTextbooksFromLocal()	
+				

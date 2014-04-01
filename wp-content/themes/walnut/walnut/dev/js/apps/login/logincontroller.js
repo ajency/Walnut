@@ -43,7 +43,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
           };
         })(this));
         if (connection_resp === "connection_error") {
-          return this.view.triggerMethod('connection:fail');
+          return this.view.close();
         }
       };
 
