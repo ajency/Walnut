@@ -203,7 +203,6 @@ define ['app'],(App)->
 						color : '#000000'
 						transparent : false
 						
-
 					hotspotElement = App.request "create:new:hotspot:element", modelData
 					self = @
 
@@ -233,6 +232,13 @@ define ['app'],(App)->
 					hotspotElement.on "change:color",=>
 						circle.stroke hotspotElement.get 'color'
 						@optionLayer.draw()
+
+					# delete element based on toDelete
+					hotspotElement.on "change:toDelete",=>
+							circleGrp.destroy()
+							closequestionelementproperty = true
+							App.execute "close:question:element:properties"
+							@optionLayer.draw()
 
 					# on click of a circle element show properties
 					circleGrp.on 'mousedown click',(e)->
@@ -286,6 +292,13 @@ define ['app'],(App)->
 					hotspotElement.on "change:color",=>
 						box.stroke hotspotElement.get 'color'
 						@optionLayer.draw()
+
+					# delete element based on toDelete
+					hotspotElement.on "change:toDelete",=>
+							rectGrp.destroy()
+							closequestionelementproperty = true
+							App.execute "close:question:element:properties"
+							@optionLayer.draw()
 
 					# on click of a circle element show properties
 					rectGrp.on 'mousedown click',(e)->
@@ -393,6 +406,7 @@ define ['app'],(App)->
 					# on change of toDelete property remove the text element from the canvas
 					hotspotElement.on "change:toDelete",=>
 							tooltip.destroy()
+							closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@textLayer.draw()
 

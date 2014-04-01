@@ -10,7 +10,7 @@ define(['app'], function(App) {
         return OptionView.__super__.constructor.apply(this, arguments);
       }
 
-      OptionView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Question Properties </div> <div class="docket-body"> <div class="radio radio-success">Is this correct? <input id="yes" type="radio" name="optionyes" value="yes"> <label for="yes">Yes</label> <input id="no" type="radio" name="optionyes" value="no" checked="checked"> <label for="no">No</label> </div> Marks 	<select class="marks"> <option value="1">1</option> <option value="2">2</option> </select> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <div id="transparency" class="checkbox check-success"> <input id="checkbox3" type="checkbox" value="1"> <label for="checkbox3">Set Transparent</label> </div> </div> </div> </div>';
+      OptionView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Question Properties </div> <div class="docket-body"> <div class="radio radio-success">Is this correct? <input id="yes" type="radio" name="optionyes" value="yes"> <label for="yes">Yes</label> <input id="no" type="radio" name="optionyes" value="no" checked="checked"> <label for="no">No</label> </div> Marks 	<select class="marks"> <option value="1">1</option> <option value="2">2</option> </select> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <div id="transparency" class="checkbox check-success"> <input id="checkbox3" type="checkbox" value="1"> <label for="checkbox3">Set Transparent</label> </div> <div class="form-group"> <button type="button" id="delete" class="btn btn-danger btn-small">Delete</button> </div> </div> </div> </div>';
 
       OptionView.prototype.onShow = function() {
         if (this.model.get('transparent')) {
@@ -38,7 +38,12 @@ define(['app'], function(App) {
             };
           })(this)
         });
-        return $('.fontColor').minicolors('value', this.model.get('color'));
+        $('.fontColor').minicolors('value', this.model.get('color'));
+        return $('#delete.btn-danger').on('click', (function(_this) {
+          return function() {
+            return _this.model.set('toDelete', true);
+          };
+        })(this));
       };
 
       return OptionView;

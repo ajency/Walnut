@@ -230,6 +230,14 @@ define(['app'], function(App) {
             return _this.optionLayer.draw();
           };
         })(this));
+        hotspotElement.on("change:toDelete", (function(_this) {
+          return function() {
+            circleGrp.destroy();
+            closequestionelementproperty = true;
+            App.execute("close:question:element:properties");
+            return _this.optionLayer.draw();
+          };
+        })(this));
         circleGrp.on('mousedown click', function(e) {
           e.stopPropagation();
           return App.execute("show:question:element:properties", {
@@ -278,6 +286,14 @@ define(['app'], function(App) {
         hotspotElement.on("change:color", (function(_this) {
           return function() {
             box.stroke(hotspotElement.get('color'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:toDelete", (function(_this) {
+          return function() {
+            rectGrp.destroy();
+            closequestionelementproperty = true;
+            App.execute("close:question:element:properties");
             return _this.optionLayer.draw();
           };
         })(this));
@@ -380,6 +396,7 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             tooltip.destroy();
+            closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.textLayer.draw();
           };

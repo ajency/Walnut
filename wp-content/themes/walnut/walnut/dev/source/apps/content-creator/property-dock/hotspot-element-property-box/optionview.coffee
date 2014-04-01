@@ -33,6 +33,11 @@ define ['app'],(App)->
 											<label for="checkbox3">Set Transparent</label>
 										</div>
 
+
+										<div class="form-group">
+											<button type="button" id="delete" class="btn btn-danger btn-small">Delete</button>
+										</div>
+
 									</div>
 								</div>
 							</div>'
@@ -68,6 +73,11 @@ define ['app'],(App)->
 
 					# set the vale of color picker according to the current model
 					$('.fontColor').minicolors 'value', @model.get 'color'
+
+
+					#DELETE
+					$('#delete.btn-danger').on 'click',=>
+							@model.set 'toDelete', true
 
 
 
