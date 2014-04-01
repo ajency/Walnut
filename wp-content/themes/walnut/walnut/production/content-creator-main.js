@@ -37314,7 +37314,6 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
 
       HotspotView.prototype._updateDefaultLayer = function() {
         var i;
-        console.log("default" + this.stage.getChildren().length);
         i = 1;
         while (i < this.stage.getChildren().length) {
           if (i) {
@@ -37322,7 +37321,6 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
               this.defaultLayer.removeChildren();
               break;
             }
-            console.log(this.stage.getChildren()[i].getName());
           }
           i++;
         }
@@ -37365,30 +37363,105 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
       };
 
       HotspotView.prototype._addCircle = function(elementPos) {
-        var circle;
+        var circle, circleGrp, hotspotElement, modelData, self;
+        modelData = {
+          type: 'Option',
+          shape: 'Circle',
+          color: '#000000',
+          transparent: false
+        };
+        hotspotElement = App.request("create:new:hotspot:element", modelData);
+        self = this;
+        App.execute("show:question:element:properties", {
+          model: hotspotElement
+        });
         circle = new Kinetic.Circle({
           name: "rect1",
           x: elementPos.left,
           y: elementPos.top,
           radius: 20,
-          stroke: 'black',
-          strokeWidth: 4
+          stroke: hotspotElement.get('color'),
+          strokeWidth: 2,
+          dash: [6, 4],
+          dashEnabled: hotspotElement.get('transparent')
         });
-        return resizeCircle(circle, this.optionLayer);
+        circleGrp = resizeCircle(circle, this.optionLayer);
+        hotspotElement.on("change:transparent", (function(_this) {
+          return function() {
+            console.log('transparent');
+            circle.dashEnabled(hotspotElement.get('transparent'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:color", (function(_this) {
+          return function() {
+            circle.stroke(hotspotElement.get('color'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        circleGrp.on('mousedown click', function(e) {
+          e.stopPropagation();
+          return App.execute("show:question:element:properties", {
+            model: hotspotElement
+          });
+        });
+        circleGrp.on('mouseover', function() {
+          return closequestionelementproperty = false;
+        });
+        return circleGrp.on('mouseout', function() {
+          return closequestionelementproperty = true;
+        });
       };
 
       HotspotView.prototype._addRectangle = function(elementPos) {
-        var box;
+        var box, hotspotElement, modelData, rectGrp, self;
+        modelData = {
+          type: 'Option',
+          shape: 'Rect',
+          color: '#000000',
+          transparent: false
+        };
+        hotspotElement = App.request("create:new:hotspot:element", modelData);
+        self = this;
+        App.execute("show:question:element:properties", {
+          model: hotspotElement
+        });
         box = new Kinetic.Rect({
           name: "rect2",
           x: elementPos.left,
           y: elementPos.top,
           width: 25,
           height: 25,
-          stroke: 'black',
-          strokeWidth: 4
+          stroke: hotspotElement.get('color'),
+          strokeWidth: 2,
+          dash: [6, 4],
+          dashEnabled: hotspotElement.get('transparent')
         });
-        return resizeRect(box, this.optionLayer);
+        rectGrp = resizeRect(box, this.optionLayer);
+        hotspotElement.on("change:transparent", (function(_this) {
+          return function() {
+            box.dashEnabled(hotspotElement.get('transparent'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:color", (function(_this) {
+          return function() {
+            box.stroke(hotspotElement.get('color'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        rectGrp.on('mousedown click', function(e) {
+          e.stopPropagation();
+          return App.execute("show:question:element:properties", {
+            model: hotspotElement
+          });
+        });
+        rectGrp.on('mouseover', function() {
+          return closequestionelementproperty = false;
+        });
+        return rectGrp.on('mouseout', function() {
+          return closequestionelementproperty = true;
+        });
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
@@ -37405,6 +37478,9 @@ define('apps/content-creator/content-builder/elements/hotspot/views',['app'], fu
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         self = this;
+        App.execute("show:question:element:properties", {
+          model: hotspotElement
+        });
         tooltip = new Kinetic.Label({
           x: elementPos.left,
           y: elementPos.top,
@@ -38411,7 +38487,7 @@ define('apps/content-creator/property-dock/hotspot-element-box/controller',['app
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define('apps/content-creator/property-dock/hotspot-element-property-box/views',['app'], function(App) {
+define('apps/content-creator/property-dock/hotspot-element-property-box/textview',['app'], function(App) {
   return App.module("ContentCreator.PropertyDock.HotspotElementPropertyBox.Views", function(Views, App, Backbone, Marionette, $, _) {
     return Views.TextView = (function(_super) {
       __extends(TextView, _super);
@@ -38495,7 +38571,58 @@ define('apps/content-creator/property-dock/hotspot-element-property-box/views',[
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define('apps/content-creator/property-dock/hotspot-element-property-box/controller',['app', 'controllers/region-controller', 'apps/content-creator/property-dock/hotspot-element-property-box/views'], function(App, RegionController) {
+define('apps/content-creator/property-dock/hotspot-element-property-box/optionview',['app'], function(App) {
+  return App.module("ContentCreator.PropertyDock.HotspotElementPropertyBox.Views", function(Views, App, Backbone, Marionette, $, _) {
+    return Views.OptionView = (function(_super) {
+      __extends(OptionView, _super);
+
+      function OptionView() {
+        return OptionView.__super__.constructor.apply(this, arguments);
+      }
+
+      OptionView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Question Properties </div> <div class="docket-body"> <div class="radio radio-success">Is this correct? <input id="yes" type="radio" name="optionyes" value="yes"> <label for="yes">Yes</label> <input id="no" type="radio" name="optionyes" value="no" checked="checked"> <label for="no">No</label> </div> Marks 	<select class="marks"> <option value="1">1</option> <option value="2">2</option> </select> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <div id="transparency" class="checkbox check-success"> <input id="checkbox3" type="checkbox" value="1"> <label for="checkbox3">Set Transparent</label> </div> </div> </div> </div>';
+
+      OptionView.prototype.onShow = function() {
+        if (this.model.get('transparent')) {
+          console.log('yes');
+          $('#transparency.checkbox #checkbox3').prop('checked', true);
+        }
+        $('#transparency.checkbox').on('change', (function(_this) {
+          return function() {
+            if ($('#transparency.checkbox').hasClass('checked')) {
+              return _this.model.set('transparent', true);
+            } else {
+              return _this.model.set('transparent', false);
+            }
+          };
+        })(this));
+        $('.fontColor').minicolors({
+          animationSpeed: 200,
+          animationEasing: 'swing',
+          control: 'hue',
+          position: 'top left',
+          showSpeed: 200,
+          change: (function(_this) {
+            return function(hex, opacity) {
+              return _this.model.set('color', hex);
+            };
+          })(this)
+        });
+        return $('.fontColor').minicolors('value', this.model.get('color'));
+      };
+
+      return OptionView;
+
+    })(Marionette.ItemView);
+  });
+});
+
+define('apps/content-creator/property-dock/hotspot-element-property-box/hotspot-element-property-view-loader',['apps/content-creator/property-dock/hotspot-element-property-box/textview', 'apps/content-creator/property-dock/hotspot-element-property-box/optionview'], function() {});
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('apps/content-creator/property-dock/hotspot-element-property-box/controller',['app', 'controllers/region-controller', 'apps/content-creator/property-dock/hotspot-element-property-box/hotspot-element-property-view-loader'], function(App, RegionController) {
   return App.module("ContentCreator.PropertyDock.HotspotElementPropertyBox", function(HotspotElementPropertyBox, App, Backbone, MArionette, $, _) {
     var HotspotElementPropertyBoxController;
     HotspotElementPropertyBoxController = (function(_super) {
