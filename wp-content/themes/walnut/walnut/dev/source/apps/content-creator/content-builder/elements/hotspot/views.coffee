@@ -148,14 +148,12 @@ define ['app'],(App)->
 
 			# remove the default image from the layer if any hotspot elements are added
 			_updateDefaultLayer:->
-					console.log "default"+@stage.getChildren().length
 					i = 1
 					while i<@stage.getChildren().length
 						if i
 							if @stage.getChildren()[i].getChildren().length
 								@defaultLayer.removeChildren()
 								break;
-							console.log @stage.getChildren()[i].getName()
 						i++
 					@defaultLayer.draw()
 
@@ -198,18 +196,78 @@ define ['app'],(App)->
 
 
 			_addCircle: (elementPos)->
+
+					modelData =
+						type : 'Option'
+						shape : 'Circle'
+						color : '#000000'
+						transparent : false
+						
+					hotspotElement = App.request "create:new:hotspot:element", modelData
+					self = @
+
+					App.execute "show:question:element:properties",
+									model : hotspotElement
+
+
 					circle = new Kinetic.Circle
 							name : "rect1"
 							x: elementPos.left
 							y:elementPos.top
 							radius :20
-							stroke: 'black'
-							strokeWidth: 4
+							stroke: hotspotElement.get 'color'
+							strokeWidth: 2
+							dash : [6,4 ]
+							dashEnabled : hotspotElement.get 'transparent'
 
-					resizeCircle circle,@optionLayer
+					circleGrp = resizeCircle circle,@optionLayer
+
+					# on change of transparency redraw
+					hotspotElement.on "change:transparent",=>
+						console.log 'transparent'
+						circle.dashEnabled hotspotElement.get 'transparent'
+						@optionLayer.draw()
+
+					# on change of color redraw
+					hotspotElement.on "change:color",=>
+						circle.stroke hotspotElement.get 'color'
+						@optionLayer.draw()
+
+					# delete element based on toDelete
+					hotspotElement.on "change:toDelete",=>
+							circleGrp.destroy()
+							closequestionelementproperty = true
+							App.execute "close:question:element:properties"
+							@optionLayer.draw()
+
+					# on click of a circle element show properties
+					circleGrp.on 'mousedown click',(e)->
+							e.stopPropagation()
+							App.execute "show:question:element:properties",
+									model : hotspotElement
+							# console.log @
+
+					circleGrp.on 'mouseover',->
+						closequestionelementproperty = false
+
+					circleGrp.on 'mouseout',->
+						closequestionelementproperty = true
 
 
 			_addRectangle : (elementPos)->
+
+					modelData =
+						type : 'Option'
+						shape : 'Rect'
+						color : '#000000'
+						transparent : false
+						
+
+					hotspotElement = App.request "create:new:hotspot:element", modelData
+					self = @
+
+					App.execute "show:question:element:properties",
+									model : hotspotElement
 
 					box = new Kinetic.Rect
 							name : "rect2"
@@ -217,11 +275,43 @@ define ['app'],(App)->
 							y:elementPos.top
 							width: 25
 							height: 25
-							stroke: 'black'
-							strokeWidth: 4
+							stroke: hotspotElement.get 'color'
+							strokeWidth: 2
+							dash : [6,4 ]
+							dashEnabled : hotspotElement.get 'transparent'
 							
 
-					resizeRect box,@optionLayer
+					rectGrp = resizeRect box,@optionLayer
+
+					# on change of transparency redraw
+					hotspotElement.on "change:transparent",=>
+						box.dashEnabled hotspotElement.get 'transparent'
+						@optionLayer.draw()
+
+					# on change of color redraw
+					hotspotElement.on "change:color",=>
+						box.stroke hotspotElement.get 'color'
+						@optionLayer.draw()
+
+					# delete element based on toDelete
+					hotspotElement.on "change:toDelete",=>
+							rectGrp.destroy()
+							closequestionelementproperty = true
+							App.execute "close:question:element:properties"
+							@optionLayer.draw()
+
+					# on click of a circle element show properties
+					rectGrp.on 'mousedown click',(e)->
+							e.stopPropagation()
+							App.execute "show:question:element:properties",
+									model : hotspotElement
+							# console.log @
+
+					rectGrp.on 'mouseover',->
+						closequestionelementproperty = false
+
+					rectGrp.on 'mouseout',->
+						closequestionelementproperty = true
 
 					
 
@@ -240,6 +330,10 @@ define ['app'],(App)->
 
 					hotspotElement = App.request "create:new:hotspot:element", modelData
 					self = @
+
+					App.execute "show:question:element:properties",
+									model : hotspotElement
+
 					tooltip = new Kinetic.Label
 						x: elementPos.left
 						y: elementPos.top
@@ -312,6 +406,7 @@ define ['app'],(App)->
 					# on change of toDelete property remove the text element from the canvas
 					hotspotElement.on "change:toDelete",=>
 							tooltip.destroy()
+							closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@textLayer.draw()
 

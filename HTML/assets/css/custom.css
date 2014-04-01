@@ -110,6 +110,12 @@
 .docket .tile-footer.drag {
   cursor: move;
 }
+.docket .tile-footer.drag .semi-bold {
+  font-weight: 700;
+}
+.docket .tile-footer.drag i {
+  font-size: 10px;
+}
 .docket ul {
   padding: 0;
 }
@@ -526,6 +532,17 @@
   padding: 4px 12px;
   margin-right: 3px;
 }
+.listBox {
+  margin-top: 60px;
+}
+@media (max-width: 1199px) {
+  .listBox {
+    margin-top: 0;
+  }
+}
+.user-description-box {
+  min-height: 120px;
+}
 body {
   background-color: #e5e9ec;
 }
@@ -553,6 +570,18 @@ body {
 }
 .page-sidebar {
   background-color: #07766d !important;
+}
+.page-sidebar.mini {
+  background-color: #07766d !important;
+}
+.page-sidebar .page-sidebar-wrapper > ul > li > a,
+.page-sidebar .page-sidebar-wrapper > ul > li > a i,
+.page-sidebar .page-sidebar-wrapper > ul > li > a .arrow,
+.page-sidebar .page-sidebar-wrapper > ul > li > a .arrow.open:before {
+  color: #fff !important;
+}
+.page-sidebar .page-sidebar-wrapper > ul > li.open > a {
+  background-color: #0aa699 !important;
 }
 .page-sidebar .page-sidebar-wrapper > ul > li:hover > a {
   background-color: #0aa699;

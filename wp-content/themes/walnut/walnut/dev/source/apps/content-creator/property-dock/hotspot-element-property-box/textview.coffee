@@ -52,14 +52,16 @@ define ['app'],(App)->
 										</div>
 
 										
-										<div class="form-group">
-											<button type="button" id="delete" class="btn btn-danger btn-small">Delete</button>
-										</div>
+										
 
 										<div class="form-group">
 											Rotate <input type="text" class="dial" data-min="0" data-max="360"
 											 data-width="40" data-height="40" data-displayInput=false data-thickness=".5"
 											  data-fgColor="#0AA699" data-angleOffset="90" data-cursor=true>
+										</div>
+
+										<div class="form-group">
+											<button type="button" id="delete" class="btn btn-danger btn-small">Delete</button>
 										</div>
 
 					               	</div>

@@ -145,7 +145,6 @@ define(['app'], function(App) {
 
       HotspotView.prototype._updateDefaultLayer = function() {
         var i;
-        console.log("default" + this.stage.getChildren().length);
         i = 1;
         while (i < this.stage.getChildren().length) {
           if (i) {
@@ -153,7 +152,6 @@ define(['app'], function(App) {
               this.defaultLayer.removeChildren();
               break;
             }
-            console.log(this.stage.getChildren()[i].getName());
           }
           i++;
         }
@@ -196,30 +194,121 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addCircle = function(elementPos) {
-        var circle;
+        var circle, circleGrp, hotspotElement, modelData, self;
+        modelData = {
+          type: 'Option',
+          shape: 'Circle',
+          color: '#000000',
+          transparent: false
+        };
+        hotspotElement = App.request("create:new:hotspot:element", modelData);
+        self = this;
+        App.execute("show:question:element:properties", {
+          model: hotspotElement
+        });
         circle = new Kinetic.Circle({
           name: "rect1",
           x: elementPos.left,
           y: elementPos.top,
           radius: 20,
-          stroke: 'black',
-          strokeWidth: 4
+          stroke: hotspotElement.get('color'),
+          strokeWidth: 2,
+          dash: [6, 4],
+          dashEnabled: hotspotElement.get('transparent')
         });
-        return resizeCircle(circle, this.optionLayer);
+        circleGrp = resizeCircle(circle, this.optionLayer);
+        hotspotElement.on("change:transparent", (function(_this) {
+          return function() {
+            console.log('transparent');
+            circle.dashEnabled(hotspotElement.get('transparent'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:color", (function(_this) {
+          return function() {
+            circle.stroke(hotspotElement.get('color'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:toDelete", (function(_this) {
+          return function() {
+            circleGrp.destroy();
+            closequestionelementproperty = true;
+            App.execute("close:question:element:properties");
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        circleGrp.on('mousedown click', function(e) {
+          e.stopPropagation();
+          return App.execute("show:question:element:properties", {
+            model: hotspotElement
+          });
+        });
+        circleGrp.on('mouseover', function() {
+          return closequestionelementproperty = false;
+        });
+        return circleGrp.on('mouseout', function() {
+          return closequestionelementproperty = true;
+        });
       };
 
       HotspotView.prototype._addRectangle = function(elementPos) {
-        var box;
+        var box, hotspotElement, modelData, rectGrp, self;
+        modelData = {
+          type: 'Option',
+          shape: 'Rect',
+          color: '#000000',
+          transparent: false
+        };
+        hotspotElement = App.request("create:new:hotspot:element", modelData);
+        self = this;
+        App.execute("show:question:element:properties", {
+          model: hotspotElement
+        });
         box = new Kinetic.Rect({
           name: "rect2",
           x: elementPos.left,
           y: elementPos.top,
           width: 25,
           height: 25,
-          stroke: 'black',
-          strokeWidth: 4
+          stroke: hotspotElement.get('color'),
+          strokeWidth: 2,
+          dash: [6, 4],
+          dashEnabled: hotspotElement.get('transparent')
         });
-        return resizeRect(box, this.optionLayer);
+        rectGrp = resizeRect(box, this.optionLayer);
+        hotspotElement.on("change:transparent", (function(_this) {
+          return function() {
+            box.dashEnabled(hotspotElement.get('transparent'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:color", (function(_this) {
+          return function() {
+            box.stroke(hotspotElement.get('color'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:toDelete", (function(_this) {
+          return function() {
+            rectGrp.destroy();
+            closequestionelementproperty = true;
+            App.execute("close:question:element:properties");
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        rectGrp.on('mousedown click', function(e) {
+          e.stopPropagation();
+          return App.execute("show:question:element:properties", {
+            model: hotspotElement
+          });
+        });
+        rectGrp.on('mouseover', function() {
+          return closequestionelementproperty = false;
+        });
+        return rectGrp.on('mouseout', function() {
+          return closequestionelementproperty = true;
+        });
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
@@ -236,6 +325,9 @@ define(['app'], function(App) {
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         self = this;
+        App.execute("show:question:element:properties", {
+          model: hotspotElement
+        });
         tooltip = new Kinetic.Label({
           x: elementPos.left,
           y: elementPos.top,
@@ -304,6 +396,7 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             tooltip.destroy();
+            closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.textLayer.draw();
           };
