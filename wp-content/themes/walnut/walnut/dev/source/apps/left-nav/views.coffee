@@ -33,6 +33,7 @@ define ['app','text!apps/left-nav/templates/leftnav.html'],(App,navTpl)->
 					elem.children('li.open').children('a').children('.arrow').removeClass('active');
 					elem.children('li.open').children('.sub-menu').slideUp(200);
 					elem.children('li').removeClass('open');
+					
 			
 			clickMenu:(e)->
 				li_target=$(e.target).closest('li').find('a');

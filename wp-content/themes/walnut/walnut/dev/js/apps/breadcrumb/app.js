@@ -13,12 +13,14 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       BreadcrumbController.prototype.initialize = function() {
         var view;
+        console.log('whats happening?????');
         this.view = view = this._getBreadcrumbView;
         return this.show(view);
       };
 
       BreadcrumbController.prototype._getBreadcrumbView = function() {
-        return new BreadcrumbView;
+        new BreadcrumbView;
+        return console.log('whats happening@@@@@');
       };
 
       return BreadcrumbController;
@@ -31,18 +33,20 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return BreadcrumbView.__super__.constructor.apply(this, arguments);
       }
 
-      BreadcrumbView.prototype.template = '<a href="#">Dashboard</a>';
+      BreadcrumbView.prototype.template = '<li>Dashboard</li> <li> <a href="javascript://">Content Management</a> </li> <li> <a class="active" href="javascript://">Textbooks</a> </li>';
 
-      BreadcrumbView.prototype.className = '';
+      BreadcrumbView.prototype.tagName = 'ul';
+
+      BreadcrumbView.prototype.className = 'breadcrumb';
 
       return BreadcrumbView;
 
     })(Marionette.ItemView);
-    return App.commands.setHandler("show:breadcrumbapp", function(opt) {
-      if (opt == null) {
-        opt = {};
+    return App.commands.setHandler({
+      "show:breadcrumbapp": function() {
+        console.log('whats happening!!!!!!');
+        return new Controller.BreadcrumbController;
       }
-      return new Controller.BreadcrumbController(opt);
     });
   });
 });

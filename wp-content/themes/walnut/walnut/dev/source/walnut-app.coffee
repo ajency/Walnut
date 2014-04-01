@@ -12,6 +12,7 @@ define ['marionette'], (Marionette)->
 		mainContentRegion 	: '#main-content-region'
 		dialogRegion 		: '#dialog-region'
 		loginRegion 		: '#login-region' 
+		breadcrumbRegion	: '#breadcrumb-region'
 
 	# The default route for app
 	App.rootRoute = ""
@@ -61,6 +62,7 @@ define ['marionette'], (Marionette)->
 						school = App.request "get:current:school"
 						App.execute "show:headerapp", region:App.headerRegion
 						App.execute "show:leftnavapp", region:App.leftNavRegion	
+						App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
 						App.vent.trigger "show:dashboard"  if @getCurrentRoute() is 'login'
 						App.loginRegion.close()
 					else 	
@@ -72,9 +74,10 @@ define ['marionette'], (Marionette)->
 		Pace.restart();
 		$("#site_main_container").removeClass( "showAll" );
 		App.navigate('textbooks', trigger: true)
+		App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion	
-		
+
 		Pace.on 'hide', ()->
 			$("#site_main_container").addClass( "showAll" );
 

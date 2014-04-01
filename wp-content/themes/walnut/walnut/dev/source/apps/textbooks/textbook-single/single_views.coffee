@@ -19,7 +19,7 @@ define ['app'
 
 			template : textbookSingleTpl
 
-			className : 'page-content'
+			className : 'row'
 
 			regions: 
 				textbookDescriptionRegion 	: '#textbook-description-region'
