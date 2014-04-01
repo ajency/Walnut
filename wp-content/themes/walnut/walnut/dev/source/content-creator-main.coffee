@@ -34,6 +34,7 @@ require.config
 		spin 				: 'plugins/spin'
 		jqueryspin  		: 'plugins/jquery.spin'
 		jquerycolor			: 'plugins/jquery.minicolors.min'
+		jqueryknob			: 'plugins/jquery.knob'
 
 	shim:
 		underscore: 
@@ -42,6 +43,7 @@ require.config
 		jqueryui 	: ['jquery']
 		jqueryresize : ['jquery','jqueryui']
 		jquerycolor : ['jquery']
+		jqueryknob	: ['jquery']
 		kineticresize : ['kinetic']
 		backbone: 
 			deps 	: ['jquery','underscore']

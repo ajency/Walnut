@@ -73,3 +73,4 @@ define ['app'
 							alert "Please remove elements inside row and then delete."							
 						else
 							model.destroy()
+							App.execute "close:question:elements"

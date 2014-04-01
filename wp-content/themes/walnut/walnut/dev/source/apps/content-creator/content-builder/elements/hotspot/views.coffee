@@ -236,6 +236,7 @@ define ['app'],(App)->
 						fontColor : '#000000'
 						fontBold : ''
 						fontItalics : ''
+						textAngle : 0
 
 					hotspotElement = App.request "create:new:hotspot:element", modelData
 					self = @
@@ -302,16 +303,23 @@ define ['app'],(App)->
 							# tooltip.fire "moverotator"
 							@textLayer.draw()
 
+					# on change of font color update the canvas
 					hotspotElement.on "change:fontColor",=>
 							canvasText.fill hotspotElement.get 'fontColor'
 							# tooltip.fire "moverotator"
 							@textLayer.draw()
 
+					# on change of toDelete property remove the text element from the canvas
 					hotspotElement.on "change:toDelete",=>
 							tooltip.destroy()
-							hotspotElement.destroy()
+							App.execute "close:question:element:properties"
 							@textLayer.draw()
-							console.log hotspotElement
+
+					# on change of the textAngle prop rotate the text
+					hotspotElement.on "change:textAngle",=>
+							tooltip.rotation hotspotElement.get 'textAngle'
+							console.log tooltip.rotation()
+							@textLayer.draw()
 
 					# tooltip.on 'moverotator',(e)->
 					# 	rotator.x tooltip.width()
