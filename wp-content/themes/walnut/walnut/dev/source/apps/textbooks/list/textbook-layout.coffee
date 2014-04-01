@@ -6,14 +6,12 @@ define ['app'
 
 		class Views.TextbookBreadcrumbView extends Marionette.ItemView
 
-			template : '<li>
-							<p>Dashboard</p>
+			template : '<li>Dashboard</li>
+						<li>
+							<a href="javascript://">Content Management</a>
 						</li>
 						<li>
-							<p><a href="javascript://">Content Management</a></p>
-						</li>
-						<li>
-							<p><a class="active" href="javascript://">Textbooks</a></p>
+							<a class="active" href="javascript://">Textbooks</a>
 						</li>'
 
 			tagName	 : 'ul'

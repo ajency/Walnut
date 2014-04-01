@@ -31,7 +31,7 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
 
       TextbookSingleLayout.prototype.template = textbookSingleTpl;
 
-      TextbookSingleLayout.prototype.className = 'page-content';
+      TextbookSingleLayout.prototype.className = 'row';
 
       TextbookSingleLayout.prototype.regions = {
         textbookDescriptionRegion: '#textbook-description-region',

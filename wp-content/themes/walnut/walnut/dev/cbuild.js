@@ -2,11 +2,10 @@
   baseUrl: './js',
   name: 'plugins/almond',
   include : 'content-creator-main',
-  optimize: 'none',
+  //optimize: 'none',
   wrap: false,
   out: '../production/content-creator-main.js',
   paths: {
-    pace: 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryresize: 'plugins/jquery.ba-resize.min',
