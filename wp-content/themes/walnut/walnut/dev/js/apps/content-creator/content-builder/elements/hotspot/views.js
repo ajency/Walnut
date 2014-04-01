@@ -231,7 +231,8 @@ define(['app'], function(App) {
           fontSize: '14',
           fontColor: '#000000',
           fontBold: '',
-          fontItalics: ''
+          fontItalics: '',
+          textAngle: 0
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         self = this;
@@ -306,6 +307,12 @@ define(['app'], function(App) {
             hotspotElement.destroy();
             _this.textLayer.draw();
             return console.log(hotspotElement);
+          };
+        })(this));
+        hotspotElement.on("change:textAngle", (function(_this) {
+          return function() {
+            tooltip.rotation(hotspotElement.get('textAngle'));
+            return _this.textLayer.draw();
           };
         })(this));
         tooltip.on('mouseover', function() {

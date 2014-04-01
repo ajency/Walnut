@@ -30,7 +30,8 @@
     spin        : 'plugins/spin',
     jqueryspin      : 'plugins/jquery.spin',
     bootstrapslider   : 'plugins/bootstrap-slider',
-    jquerycolor     : 'plugins/jquery.minicolors.min'
+    jquerycolor     : 'plugins/jquery.minicolors.min',
+    jqueryknob      : 'plugins/jquery.knob'
     
   },
   shim: {
@@ -41,6 +42,7 @@
     jqueryui: ['jquery'],
     jqueryresize: ['jquery', 'jqueryui'],
     jquerycolor :['jquery'],
+    jqueryknob  :['jquery'],
     kineticresize: ['kinetic'],
     backbone: {
       deps: ['jquery', 'underscore'],
