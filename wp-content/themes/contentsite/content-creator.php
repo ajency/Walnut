@@ -31,6 +31,7 @@ Template Name: Content Creator
 	<!-- NEED TO WORK ON -->
 
 	<!-- BEGIN CORE CSS FRAMEWORK -->
+	<link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
@@ -53,22 +54,16 @@ Template Name: Content Creator
 <body class="">
 
 
-
-<div>
-	<div id="header-region"></div>
-	<div id="left-nav-region"></div>
-	<div id="main-content-region" class="page-content" data-height="1006">
-		<div id="initial-loader" style="position:fixed;width:30%;left:35%;top:50%;text-align:center">
-			Loading Content Creator... Please Wait... <br />
-			<img src="<?=get_site_url()?>/wp-content/themes/walnut/images/loader.gif" />
-		</div>
-	</div>
-</div>
-<div id="dialog-region"></div>
-<div id="settings-region"></div>
-<div id="login-region">
-	
-</div>
+<div id="site_main_container">
+    <div>
+            <div id="header-region"></div>
+            <div id="left-nav-region"></div>
+            <div id="main-content-region" class="page-content" data-height="1006">
+            </div>
+    </div>
+    <div id="dialog-region"></div>
+    <div id="settings-region"></div>
+    <div id="login-region"></div>
 </div>
 <script type="text/javascript">
 var THEMEURL = 'http://localhost/impruw/testsite93/wp-content/themes/impruwclientparent';
@@ -78,7 +73,7 @@ var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE = '8182442cce';
 
 </script>
-
+<script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
 <?php if(ENV=='dev') { ?>
 <script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php } else { ?>

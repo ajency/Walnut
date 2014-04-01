@@ -10,7 +10,6 @@ require.config
 	baseUrl : '../wp-content/themes/walnut/walnut/dev/js'
 	
 	paths:
-		pace 				: 'plugins/pace'
 		jquery 				: 'plugins/jquery'
 		jqueryui 			: 'plugins/jquery.ui'
 		jqueryresize		: 'plugins/jquery.ba-resize.min'

@@ -52,6 +52,8 @@ define ['app'
 					$(".header-seperation").css("display","none");
 					$("#main-menu").addClass("mini");
 					$("#main-content-region").addClass("condensed");
+					$(".start").removeClass("active open");
+					$(".arrow").removeClass("open");
 
 		# set handlers
 		App.commands.setHandler "show:headerapp", (opt = {})->

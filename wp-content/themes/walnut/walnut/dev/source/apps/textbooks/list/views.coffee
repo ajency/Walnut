@@ -1,8 +1,8 @@
 define ['app'
-		'text!apps/textbooks/templates/textbooks.html'
+		'text!apps/textbooks/templates/textbooks-list.html'
 		'text!apps/textbooks/list/templates/list_item.html'
 		'text!apps/textbooks/templates/no_textbooks.html'
-		],(App,textbooksTpl, listitemTpl,notextbooksTpl)->
+		],(App,textbooksListTpl, listitemTpl,notextbooksTpl)->
 
 	App.module "TextbooksApp.List.Views",(Views, App)->
 
@@ -64,9 +64,9 @@ define ['app'
 
 		class Views.ListView extends Marionette.CompositeView
 
-			template : textbooksTpl
+			template : textbooksListTpl
 
-			className : 'page-content'
+			className : ''
 
 			itemView 	: ListItemView
 

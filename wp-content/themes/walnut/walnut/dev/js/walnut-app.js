@@ -56,14 +56,19 @@ define(['marionette'], function(Marionette) {
     })(this), 'json');
   });
   App.vent.on("show:dashboard", function() {
+    Pace.restart();
+    $("#site_main_container").removeClass("showAll");
     App.navigate('textbooks', {
       trigger: true
     });
     App.execute("show:headerapp", {
       region: App.headerRegion
     });
-    return App.execute("show:leftnavapp", {
+    App.execute("show:leftnavapp", {
       region: App.leftNavRegion
+    });
+    return Pace.on('hide', function() {
+      return $("#site_main_container").addClass("showAll");
     });
   });
   App.vent.on("show:login", function() {

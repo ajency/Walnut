@@ -69,9 +69,15 @@ define ['marionette'], (Marionette)->
 		
 			
 	App.vent.on "show:dashboard", ->
+		Pace.restart();
+		$("#site_main_container").removeClass( "showAll" );
 		App.navigate('textbooks', trigger: true)
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion	
+		
+		Pace.on 'hide', ()->
+			$("#site_main_container").addClass( "showAll" );
+
 			
 	App.vent.on "show:login", ->
 		App.leftNavRegion.close()
