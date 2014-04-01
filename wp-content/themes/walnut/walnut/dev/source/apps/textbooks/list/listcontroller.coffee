@@ -6,20 +6,19 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
 			initialize : ->
 				textbooksCollection = App.request "get:textbooks"
+				console.log 'initialize listcontroller'
+				breadcrumb_items = 'items':[
+						{'label':'Dashboard','link':'javascript://'},
+						{'label':'Content Management','link':'javascript://'},
+						{'label':'Textbooks','link':'javascript://'}
+					]
+
+				App.execute "update:breadcrumb:model", breadcrumb_items
+
 				@view= view = @_getTextbooksView textbooksCollection
 
-				@listenTo @view, "sort:textbooks", (sort)=>
-					textbooksCollection.fetch
-											reset :true 
-											data : 
-												order : sort.order
-												orderby : sort.orderby
-
-				@listenTo @view, "filter:textbooks:class", (class_id)=>
-					textbooksCollection.fetch
-											reset :true 
-											data : 
-												class_id : class_id			
+				@listenTo @view, "show", ()->
+		
 													
 
 				@show view,(loading : true)
