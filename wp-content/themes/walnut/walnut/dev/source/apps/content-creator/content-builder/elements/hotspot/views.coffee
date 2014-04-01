@@ -312,13 +312,13 @@ define ['app'],(App)->
 					# on change of toDelete property remove the text element from the canvas
 					hotspotElement.on "change:toDelete",=>
 							tooltip.destroy()
-							hotspotElement.destroy()
+							App.execute "close:question:element:properties"
 							@textLayer.draw()
-							console.log hotspotElement
 
 					# on change of the textAngle prop rotate the text
 					hotspotElement.on "change:textAngle",=>
 							tooltip.rotation hotspotElement.get 'textAngle'
+							console.log tooltip.rotation()
 							@textLayer.draw()
 
 					# tooltip.on 'moverotator',(e)->

@@ -304,14 +304,14 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             tooltip.destroy();
-            hotspotElement.destroy();
-            _this.textLayer.draw();
-            return console.log(hotspotElement);
+            App.execute("close:question:element:properties");
+            return _this.textLayer.draw();
           };
         })(this));
         hotspotElement.on("change:textAngle", (function(_this) {
           return function() {
             tooltip.rotation(hotspotElement.get('textAngle'));
+            console.log(tooltip.rotation());
             return _this.textLayer.draw();
           };
         })(this));

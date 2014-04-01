@@ -51,7 +51,10 @@ define ['app'],(App)->
 											Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1">
 										</div>
 
-										<input type="button" id="delete" class="delete" value="Delete">
+										
+										<div class="form-group">
+											<button type="button" id="delete" class="btn btn-danger btn-small">Delete</button>
+										</div>
 
 										<div class="form-group">
 											Rotate <input type="text" class="dial" data-min="0" data-max="360"
@@ -80,9 +83,7 @@ define ['app'],(App)->
 					# initialize the knob
 					$('.dial').val self.model.get 'textAngle'
 					$(".dial").knob
-
 							change :(val)->
-								console.log val
 								self.model.set "textAngle",val
 								
 
@@ -139,7 +140,7 @@ define ['app'],(App)->
 						,200
 						
 					#DELETE
-					$('#delete.delete').on 'click',=>
+					$('#delete.btn-danger').on 'click',=>
 							@model.set 'toDelete', true
 						
 
