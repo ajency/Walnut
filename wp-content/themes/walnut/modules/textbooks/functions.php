@@ -1,4 +1,3 @@
-
 <?php
 
 function extra_tax_fields($tag) {

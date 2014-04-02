@@ -8,7 +8,7 @@ define ['app'],(App)->
 				template : '<div class="tile-more-content no-padding">
 								<div class="tiles green">
 									<div class="tile-footer drag">
-										Text Properties 
+										 Hotspot <i class="fa fa-chevron-right"></i> <span class="semi-bold">Text Element</span>
 									</div>
 
 									<div class="docket-body">

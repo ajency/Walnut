@@ -39,17 +39,17 @@ define ['app'
 						# get menu 
 						view = @_getHotspotView()
 
-						@listenTo view, "show:media:manager", =>
-									App.navigate "media-manager", trigger : true
-									@listenTo App.vent,"media:manager:choosed:media",(media)=>
-										@layout.model.set 'image_id', media.get 'id'
-										console.log media.toJSON().url
-										@layout.model.save()
-										@stopListening App.vent,"media:manager:choosed:media"
+						# @listenTo view, "show:media:manager", =>
+						# 			App.navigate "media-manager", trigger : true
+						# 			@listenTo App.vent,"media:manager:choosed:media",(media)=>
+						# 				@layout.model.set 'image_id', media.get 'id'
+						# 				console.log media.toJSON().url
+						# 				@layout.model.save()
+						# 				@stopListening App.vent,"media:manager:choosed:media"
 
 						#on click of any hotspot canvas show hotspot properties for that hotspot
 						@listenTo view, "show:hotspot:properties",=>
-								console.log "click hotspot"
+							
 								App.execute "show:question:elements",
 						 				model : @layout.model
 

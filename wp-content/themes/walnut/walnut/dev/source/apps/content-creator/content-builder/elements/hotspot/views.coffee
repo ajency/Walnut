@@ -39,10 +39,6 @@ define ['app'],(App)->
 				
 
 			onShow:()->
-				# width = @$el.parent().width()
-				# @$el.width width	
-				console.log "in canvas"
-
 
 				@stage = new Kinetic.Stage
 						container: @stageName
@@ -69,7 +65,6 @@ define ['app'],(App)->
 						width: $('#'+@stageName+'.stage').width()
 						height: $('#'+@stageName+'.stage').height()-5
 					# resize the default image 
-					console.log "Stage resized"
 					@_updateDefaultImageSize()
 
 				$('#'+@stageName+'.stage').resizable
@@ -124,10 +119,10 @@ define ['app'],(App)->
 
 				$('#question-elements').on 'mouseover', ->
 					# console.log "over question"
-					closequestionelements = false
+					closequestionelements = closequestionelementproperty = false
 				$('#question-elements').on 'mouseout', ->
 					# console.log "out of question"
-					closequestionelements = true
+					closequestionelements = closequestionelementproperty = true
 
 	
 
@@ -135,7 +130,7 @@ define ['app'],(App)->
 			_setDefaultImage:->
 				defaultImage = new Image()
 				defaultImage.onload = ()=>
-						console.log "in default image load"
+						
 						@hotspotDefault = new Kinetic.Image
 								image 	: defaultImage
 						
@@ -160,7 +155,7 @@ define ['app'],(App)->
 					width = @stage.width()
 					height = @stage.height()
 
-					console.log width+"  "+height
+					
 
 					@hotspotDefault.setSize
 						width 	: 336
@@ -238,7 +233,7 @@ define ['app'],(App)->
 
 					# on change of transparency redraw
 					hotspotElement.on "change:transparent",=>
-						console.log 'transparent'
+						
 						circle.dashEnabled hotspotElement.get 'transparent'
 						@optionLayer.draw()
 
@@ -279,8 +274,6 @@ define ['app'],(App)->
 
 
 			_addRectangle : (elementPos)->
-
-					alert SITEURL
 
 					modelData =
 						type : 'Option'
@@ -330,7 +323,7 @@ define ['app'],(App)->
 					hotspotElement.on "change:correct",=>
 						if hotspotElement.get 'correct'
 							box.fill 'rgba(12, 199, 55, 0.28)'
-							console.log hotspotElement.get 'correct'
+							
 						else
 							box.fill ''
 							# console.log hotspotElement.get 'correct'
@@ -396,22 +389,12 @@ define ['app'],(App)->
 						fontStyle : hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
 						padding: 5
 
-
-					rotator = new Kinetic.Circle
-						x : canvasText.width()
-						y : 0 
-						stroke : 'black'
-						radius: 5
-						draggable : true
-					
-
-
 					# on click of a text element show properties
 					tooltip.on 'mousedown click',(e)->
 							e.stopPropagation()
 							App.execute "show:question:element:properties",
 									model : hotspotElement
-							console.log @
+							
 
 					# on change of text update the canvas
 					hotspotElement.on "change:text",=>
@@ -463,12 +446,9 @@ define ['app'],(App)->
 					# on change of the textAngle prop rotate the text
 					hotspotElement.on "change:textAngle",=>
 							tooltip.rotation hotspotElement.get 'textAngle'
-							console.log tooltip.rotation()
 							@textLayer.draw()
 
-					# tooltip.on 'moverotator',(e)->
-					# 	rotator.x tooltip.width()
-
+				
 
 					tooltip.on 'mouseover',->
 						closequestionelementproperty = false
@@ -478,33 +458,71 @@ define ['app'],(App)->
 
 					tooltip.add canvasText
 
-					# tooltip.add rotator
-
-					# rotateLabel tooltip,rotator,@textLayer
+					
 
 					@textLayer.add tooltip
 
 					@textLayer.draw()
 
 			_addImageElement:(elementPos,url)->
+
+					modelData =
+						type : 'Image'						
+						angle : 0
+
+					hotspotElement = App.request "create:new:hotspot:element", modelData
+
+					imageGrp = null
+
 					imageObject = new Image()
+					imageObject.src = url
 					imageObject.onload = ()=>
-							console.log "in default image load"
+							App.execute "show:question:element:properties",
+									model : hotspotElement
+
 							imageElement = new Kinetic.Image
 									image 	: imageObject
 									x : elementPos.left
 									y : elementPos.top
 									width: 150
 									height :150
-									
 
-							imageGrp = resizeRect imageElement,@imageLayer
-							
 							# @imageLayer.add imageGrp
-							@imageLayer.draw()
+							
+							imageGrp = resizeRect imageElement,@imageLayer
 							@_updateDefaultLayer()
+							@imageLayer.draw()
 
-					imageObject.src = url
+							# on click of a text element show properties
+							imageGrp.on 'mousedown click',(e)->
+									e.stopPropagation()
+									App.execute "show:question:element:properties",
+											model : hotspotElement
+									console.log @
+
+							imageGrp.on 'mouseover',->
+								closequestionelementproperty = false
+
+							imageGrp.on 'mouseout',->
+								closequestionelementproperty = true
+							
+					
+
+
+					# on change of model's angle rotate the element
+					hotspotElement.on "change:angle",=>
+						imageGrp.rotation hotspotElement.get 'angle'
+						@imageLayer.draw()
+
+					# on change of toDelete property remove the image element from the canvas
+					hotspotElement.on "change:toDelete",=>
+							imageGrp.destroy()
+							closequestionelementproperty = true
+							App.execute "close:question:element:properties"
+							@imageLayer.draw()
+
+
+					
 
 
 
