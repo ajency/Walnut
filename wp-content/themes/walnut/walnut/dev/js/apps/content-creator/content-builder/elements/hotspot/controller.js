@@ -36,6 +36,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
             return _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
               _this.layout.model.set('image_id', media.get('id'));
+              console.log(media.toJSON().url);
               _this.layout.model.save();
               return _this.stopListening(App.vent, "media:manager:choosed:media");
             });

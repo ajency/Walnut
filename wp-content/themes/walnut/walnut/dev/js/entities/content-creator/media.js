@@ -106,8 +106,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       createNewMedia: function(data) {
         var media;
         media = new Media.MediaModel(data);
-        mediaCollection = App.request("get:collection", 'mediacollection');
-        return mediaCollection.add(media);
+        mediaCollection.add(media);
+        return media;
       }
     };
     App.reqres.setHandler("get:empty:media:collection", function() {

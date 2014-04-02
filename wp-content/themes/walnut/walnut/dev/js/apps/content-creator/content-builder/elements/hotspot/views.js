@@ -73,11 +73,7 @@ define(['app'], function(App) {
         });
         this._setPropertyBoxCloseHandlers();
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
-          if (type === "Hotspot-Image") {
-            this.trigger("show:media:manager");
-          } else {
-            this._addElements(type, elementPos);
-          }
+          this._addElements(type, elementPos);
           return this._updateDefaultLayer();
         });
         return $('#' + this.stageName + ' .kineticjs-content').droppable({
@@ -193,6 +189,16 @@ define(['app'], function(App) {
           this._addRectangle(elementPos);
         } else if (type === "Hotspot-Text") {
           this._addTextElement(elementPos);
+        } else if (type === "Hotspot-Image") {
+          App.navigate("media-manager", {
+            trigger: true
+          });
+          this.listenTo(App.vent, "media:manager:choosed:media", (function(_this) {
+            return function(media) {
+              _this._addImageElement(elementPos, media.toJSON().url);
+              return _this.stopListening(App.vent, "media:manager:choosed:media");
+            };
+          })(this));
         }
         return this.optionLayer.draw();
       };
@@ -269,6 +275,7 @@ define(['app'], function(App) {
 
       HotspotView.prototype._addRectangle = function(elementPos) {
         var box, hotspotElement, modelData, rectGrp, self;
+        alert(SITEURL);
         modelData = {
           type: 'Option',
           shape: 'Rect',
@@ -456,6 +463,28 @@ define(['app'], function(App) {
         tooltip.add(canvasText);
         this.textLayer.add(tooltip);
         return this.textLayer.draw();
+      };
+
+      HotspotView.prototype._addImageElement = function(elementPos, url) {
+        var imageObject;
+        imageObject = new Image();
+        imageObject.onload = (function(_this) {
+          return function() {
+            var imageElement, imageGrp;
+            console.log("in default image load");
+            imageElement = new Kinetic.Image({
+              image: imageObject,
+              x: elementPos.left,
+              y: elementPos.top,
+              width: 150,
+              height: 150
+            });
+            imageGrp = resizeRect(imageElement, _this.imageLayer);
+            _this.imageLayer.draw();
+            return _this._updateDefaultLayer();
+          };
+        })(this);
+        return imageObject.src = url;
       };
 
       HotspotView.prototype._setBoundRegion = function(pos, inner, outer) {
