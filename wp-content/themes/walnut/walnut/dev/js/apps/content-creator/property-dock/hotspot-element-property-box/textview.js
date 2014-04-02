@@ -54,6 +54,12 @@ define(['app'], function(App) {
             return _this.model.set("text", $('#hotspot-textelement-text').val());
           };
         })(this));
+        if (this.model.get('fontBold') === 'bold') {
+          $('#font-style.btn-group #bold-btn.btn').addClass('active');
+        }
+        if (this.model.get('fontItalics') === 'italic') {
+          $('#font-style.btn-group #italic-btn.btn').addClass('active');
+        }
         $('#font-style.btn-group .btn').on('click', function() {
           return setTimeout(function() {
             console.log("timeout");

@@ -128,14 +128,19 @@ define ['app'],(App)->
 
 					
 					# BOLD and ITALICS
+					if @model.get('fontBold') is 'bold'
+						$('#font-style.btn-group #bold-btn.btn').addClass 'active'
+					if @model.get('fontItalics') is 'italic'
+						$('#font-style.btn-group #italic-btn.btn').addClass 'active'
+
 					$('#font-style.btn-group .btn').on 'click',->
 						setTimeout ->
 							console.log "timeout"
-							if $('#font-style.btn-group #bold-btn.btn').hasClass('active')
+							if $('#font-style.btn-group #bold-btn.btn').hasClass 'active'
 							 	self.model.set 'fontBold', "bold"
 							else
 								self.model.set 'fontBold', ""
-							if $('#font-style.btn-group #italic-btn.btn').hasClass('active')
+							if $('#font-style.btn-group #italic-btn.btn').hasClass 'active'
 								self.model.set 'fontItalics', "italic"
 							else
 								self.model.set 'fontItalics', ""
