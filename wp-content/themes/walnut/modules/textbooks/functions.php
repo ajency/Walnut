@@ -19,16 +19,14 @@ function extra_tax_fields($tag) {
         <td>
             <div class="row form-input">
                 <div class="col-md-12 labels">
-                    <input id="image-upload" type="file" name="files" class="inline image-upload"/>
+                    <input id="image-upload" type="file" name="files" class="inline image-upload"/><div id="progress" class="progress" style="display:none">
+                           <img src="<?=site_url()?>/wp-content/themes/walnut/images/loader.gif">
+                    </div>
                     <div id="image-container" class="success_container">
                         <?php echo $term_meta['attachmenturl'] ? '<img src="' . $term_meta['attachmenturl'] . '" height=100px>' : ''; ?>
 
                     </div>
-                    <div id="progress"
-                         class="progress progress-success progress-striped"
-                         style="width: 200px; display: none">
-                        <div class="bar"></div>
-                    </div>
+                    
                     <input type="hidden" class="attachment_id" value="<?php echo $term_meta['attachmentid'] ? $term_meta['attachmentid'] : ''; ?>" name="term_meta[attachmentid]" placeholder="" class="col-md-3">
                     <input type="hidden" class="attachment_url" value="<?php echo $term_meta['attachmenturl'] ? $term_meta['attachmenturl'] : ''; ?>" name="term_meta[attachmenturl]" placeholder="" class="col-md-3">
                 </div>
@@ -281,7 +279,9 @@ function get_book($book) {
     //$book_dets = array();
     
     $additional = get_option('taxonomy_' . $book_id);
-    $book_dets->cover_pic = $additional['attachmenturl'];
+    $coverid= $additional['attachmentid'];
+    $book_dets->thumbnail=wp_get_attachment_image($coverid, 'thumbnail' );
+    $book_dets->cover_pic = wp_get_attachment_image($coverid, 'large' );
     $book_dets->author = $additional['author'];
 
     $classes = $wpdb->get_results("select class_id, tags from {$wpdb->prefix}textbook_relationships 

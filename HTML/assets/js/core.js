@@ -467,7 +467,7 @@ $(document).ready(function() {
         $(".sortable").sortable({
             connectWith: '.sortable',
             iframeFix: false,
-            items: 'div.grid',
+            items: '.contentPiece',
             opacity: 0.8,
             helper: 'original',
             revert: true,
