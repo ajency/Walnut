@@ -10,6 +10,13 @@ define ['app'
 				class ContentCreatorController extends RegionController
 
 					initialize : (options)->
+						breadcrumb_items = 'items':[
+							{'label':'Dashboard','link':'javascript://'},
+							{'label':'Content Management','link':'javascript:;'},
+							{'label':'Content Creator','link':'javascript:;','active':'active'}
+						]
+							
+						App.execute "update:breadcrumb:model", breadcrumb_items
 
 						# get the main layout for the content creator
 						@layout = @_getContentCreatorLayout()
@@ -34,7 +41,7 @@ define ['app'
 
 				class ContentCreator.ContentCreatorLayout extends Marionette.Layout 
 
-					className : 'content'
+					className : ''
 
 					template : '<div class="page-title"> 
 									<h3>Add <span class="semi-bold">Question</span></h3>
