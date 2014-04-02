@@ -83,8 +83,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				createNewMedia:(data)->
 					media = new Media.MediaModel data
-					mediaCollection = App.request "get:collection", 'mediacollection'
 					mediaCollection.add media
+					media
 
 
 			#REQUEST HANDLERS

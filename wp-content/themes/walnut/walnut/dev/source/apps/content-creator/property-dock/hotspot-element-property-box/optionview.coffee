@@ -8,7 +8,7 @@ define ['app'],(App)->
 				template : '<div class="tile-more-content no-padding">
 								<div class="tiles green">
 									<div class="tile-footer drag">
-										Hotspot Option Properties 
+										Hotspot <i class="fa fa-chevron-right"></i> <span class="semi-bold">{{shape}} Element</span>
 									</div>
 									<div class="docket-body">
 
@@ -55,7 +55,6 @@ define ['app'],(App)->
 					# TRANSPARENCY
 					# check model for Transparency and initialize checkbox
 					if @model.get 'transparent'
-						console.log 'yes'
 						$('#transparency.checkbox #checkbox3').prop('checked',true)
 
 					#on click of checkbox set model transparent to true

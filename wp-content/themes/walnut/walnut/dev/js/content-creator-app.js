@@ -43,6 +43,23 @@ define(['marionette'], function(Marionette) {
     }
   });
   App.on('start', function() {
+    var xhr;
+    return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
+      return function(resp) {
+        var school, user;
+        if (resp.success) {
+          user = App.request("get:user:model");
+          user.set(resp.data);
+          school = App.request("get:current:school");
+          App.vent.trigger("show:content:builder");
+          return App.loginRegion.close();
+        } else {
+          return App.vent.trigger("show:login");
+        }
+      };
+    })(this), 'json');
+  });
+  App.vent.on("show:content:builder", function() {
     App.execute("show:content:creator", {
       region: App.mainContentRegion
     });
@@ -55,6 +72,9 @@ define(['marionette'], function(Marionette) {
     return App.execute("show:breadcrumbapp", {
       region: App.breadcrumbRegion
     });
+  });
+  App.vent.on("show:login", function() {
+    return window.location = SITEURL + '#login';
   });
   return App;
 });
