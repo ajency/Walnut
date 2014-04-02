@@ -11,7 +11,6 @@ define ['detect','jquery'], (detect,$)->
 
       #Load script 'online.js' only for browser
       if checkPlatform() is "Desktop"
-        #define ['plugins/online'], ->
         $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
       
       #Implementation for browser
