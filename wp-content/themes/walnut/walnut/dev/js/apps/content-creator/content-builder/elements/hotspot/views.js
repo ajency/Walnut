@@ -47,7 +47,6 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype.onShow = function() {
-        console.log("in canvas");
         this.stage = new Kinetic.Stage({
           container: this.stageName,
           width: this.$el.parent().width(),
@@ -64,7 +63,6 @@ define(['app'], function(App) {
               width: $('#' + _this.stageName + '.stage').width(),
               height: $('#' + _this.stageName + '.stage').height() - 5
             });
-            console.log("Stage resized");
             return _this._updateDefaultImageSize();
           };
         })(this));
@@ -116,10 +114,10 @@ define(['app'], function(App) {
           return closequestionelements = true;
         });
         $('#question-elements').on('mouseover', function() {
-          return closequestionelements = false;
+          return closequestionelements = closequestionelementproperty = false;
         });
         return $('#question-elements').on('mouseout', function() {
-          return closequestionelements = true;
+          return closequestionelements = closequestionelementproperty = true;
         });
       };
 
@@ -128,7 +126,6 @@ define(['app'], function(App) {
         defaultImage = new Image();
         defaultImage.onload = (function(_this) {
           return function() {
-            console.log("in default image load");
             _this.hotspotDefault = new Kinetic.Image({
               image: defaultImage
             });
@@ -158,7 +155,6 @@ define(['app'], function(App) {
         var height, width;
         width = this.stage.width();
         height = this.stage.height();
-        console.log(width + "  " + height);
         this.hotspotDefault.setSize({
           width: 336,
           height: 200
@@ -230,7 +226,6 @@ define(['app'], function(App) {
         circleGrp = resizeCircle(circle, this.optionLayer);
         hotspotElement.on("change:transparent", (function(_this) {
           return function() {
-            console.log('transparent');
             circle.dashEnabled(hotspotElement.get('transparent'));
             return _this.optionLayer.draw();
           };
@@ -275,7 +270,6 @@ define(['app'], function(App) {
 
       HotspotView.prototype._addRectangle = function(elementPos) {
         var box, hotspotElement, modelData, rectGrp, self;
-        alert(SITEURL);
         modelData = {
           type: 'Option',
           shape: 'Rect',
@@ -323,7 +317,6 @@ define(['app'], function(App) {
           return function() {
             if (hotspotElement.get('correct')) {
               box.fill('rgba(12, 199, 55, 0.28)');
-              console.log(hotspotElement.get('correct'));
             } else {
               box.fill('');
             }
@@ -353,7 +346,7 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var canvasText, hotspotElement, modelData, rotator, self, tooltip;
+        var canvasText, hotspotElement, modelData, self, tooltip;
         modelData = {
           type: 'Text',
           text: '',
@@ -387,19 +380,11 @@ define(['app'], function(App) {
           fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'),
           padding: 5
         });
-        rotator = new Kinetic.Circle({
-          x: canvasText.width(),
-          y: 0,
-          stroke: 'black',
-          radius: 5,
-          draggable: true
-        });
         tooltip.on('mousedown click', function(e) {
           e.stopPropagation();
-          App.execute("show:question:element:properties", {
+          return App.execute("show:question:element:properties", {
             model: hotspotElement
           });
-          return console.log(this);
         });
         hotspotElement.on("change:text", (function(_this) {
           return function() {
@@ -450,7 +435,6 @@ define(['app'], function(App) {
         hotspotElement.on("change:textAngle", (function(_this) {
           return function() {
             tooltip.rotation(hotspotElement.get('textAngle'));
-            console.log(tooltip.rotation());
             return _this.textLayer.draw();
           };
         })(this));
@@ -466,12 +450,21 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addImageElement = function(elementPos, url) {
-        var imageObject;
+        var hotspotElement, imageGrp, imageObject, modelData;
+        modelData = {
+          type: 'Image',
+          angle: 0
+        };
+        hotspotElement = App.request("create:new:hotspot:element", modelData);
+        imageGrp = null;
         imageObject = new Image();
+        imageObject.src = url;
         imageObject.onload = (function(_this) {
           return function() {
-            var imageElement, imageGrp;
-            console.log("in default image load");
+            var imageElement;
+            App.execute("show:question:element:properties", {
+              model: hotspotElement
+            });
             imageElement = new Kinetic.Image({
               image: imageObject,
               x: elementPos.left,
@@ -480,11 +473,37 @@ define(['app'], function(App) {
               height: 150
             });
             imageGrp = resizeRect(imageElement, _this.imageLayer);
+            _this._updateDefaultLayer();
             _this.imageLayer.draw();
-            return _this._updateDefaultLayer();
+            imageGrp.on('mousedown click', function(e) {
+              e.stopPropagation();
+              App.execute("show:question:element:properties", {
+                model: hotspotElement
+              });
+              return console.log(this);
+            });
+            imageGrp.on('mouseover', function() {
+              return closequestionelementproperty = false;
+            });
+            return imageGrp.on('mouseout', function() {
+              return closequestionelementproperty = true;
+            });
           };
         })(this);
-        return imageObject.src = url;
+        hotspotElement.on("change:angle", (function(_this) {
+          return function() {
+            imageGrp.rotation(hotspotElement.get('angle'));
+            return _this.imageLayer.draw();
+          };
+        })(this));
+        return hotspotElement.on("change:toDelete", (function(_this) {
+          return function() {
+            imageGrp.destroy();
+            closequestionelementproperty = true;
+            App.execute("close:question:element:properties");
+            return _this.imageLayer.draw();
+          };
+        })(this));
       };
 
       HotspotView.prototype._setBoundRegion = function(pos, inner, outer) {

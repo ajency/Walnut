@@ -29,22 +29,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.renderElement = function() {
         var view;
         view = this._getHotspotView();
-        this.listenTo(view, "show:media:manager", (function(_this) {
-          return function() {
-            App.navigate("media-manager", {
-              trigger: true
-            });
-            return _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
-              _this.layout.model.set('image_id', media.get('id'));
-              console.log(media.toJSON().url);
-              _this.layout.model.save();
-              return _this.stopListening(App.vent, "media:manager:choosed:media");
-            });
-          };
-        })(this));
         this.listenTo(view, "show:hotspot:properties", (function(_this) {
           return function() {
-            console.log("click hotspot");
             return App.execute("show:question:elements", {
               model: _this.layout.model
             });
