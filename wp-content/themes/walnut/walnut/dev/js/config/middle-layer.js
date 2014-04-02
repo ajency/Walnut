@@ -10,6 +10,9 @@ define(['detect', 'jquery'], function(detect, $) {
       return "Desktop";
     }
   };
+  if (checkPlatform() === "Desktop") {
+    $.getScript('./wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
+  }
   window.onLineHandler = function(){
         networkStatus = 1
         };
@@ -46,7 +49,11 @@ define(['detect', 'jquery'], function(detect, $) {
         }
         break;
       case 'Mobile':
-        return 'connection_error';
+        if (checkConnection()) {
+          return $.post(url, data, response, 'json');
+        } else {
+          return 'connection_error';
+        }
     }
   };
 });

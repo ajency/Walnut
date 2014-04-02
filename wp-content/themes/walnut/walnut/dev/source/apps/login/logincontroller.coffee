@@ -32,8 +32,7 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 					);
 
 				if(connection_resp is "connection_error")
-					#@view.triggerMethod 'connection:fail'
-					@view.close()
+					@view.triggerMethod 'connection:fail'
 
 
 		class LoginView extends Marionette.ItemView

@@ -34,11 +34,6 @@ define(['marionette'], function(Marionette) {
       return $("#site_main_container").addClass("showAll");
     });
     App.startHistory();
-    this.rootRoute = 'login';
-    App.navigate(this.rootRoute, {
-      trigger: true
-    });
-    return;
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
         var school, user;

@@ -48,10 +48,10 @@ define ['marionette'], (Marionette)->
 
 		App.startHistory()
 
-		@rootRoute = 'login' 
-		# if not logged in change rootRoute to login		
-		App.navigate(@rootRoute, trigger: true)
-		return
+		#Changes needed to build walnut-app
+		#@rootRoute = 'login'		
+		#App.navigate(@rootRoute, trigger: true)
+		#return
         
 		# check app login status
 		xhr = $.get "#{AJAXURL}?action=get-user-data", 

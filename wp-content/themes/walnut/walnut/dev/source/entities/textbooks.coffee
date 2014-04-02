@@ -57,20 +57,33 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
 				getTextbooksFromLocal:->
-					console.log 'Database'
-					`var fetchData = db.transaction(function(tx){
-			 			
-						},
-						function(tx,err){
-							console.log("Error processing SQL: "+err);
-						},
-						function(tx){
-							
-						}
-					)`
-					data = [{"term_id":32,"name":"Art","slug":"art","term_group":"0","term_order":"0","term_taxonomy_id":"32","taxonomy":"textbook","description":"","parent":"0","count":"0","cover_pic":"","author":"","classes":null,"subjects":null,"chapter_count":0}
-			 				{"term_id":33,"name":"English","slug":"english","term_group":"0","term_order":"0","term_taxonomy_id":"32","taxonomy":"textbook","description":"","parent":"0","count":"0","cover_pic":"","author":"","classes":null,"subjects":null,"chapter_count":0}]
-				
+					runQuery = ->
+						$.Deferred (d)->
+							db.transaction (tx)->
+								tx.executeSql("select * from TEXTBOOK", [], onSuccess(d), onError(d));
+
+					onSuccess =(d)->
+						(tx,data)->
+							console.log 'onSuccess!'
+							`var result = []
+							for(var i=0; i<data.rows.length; i++){
+								var row = data.rows.item(i);
+								result[i]={"term_id":row['term_id'], "name":row['name'], "slug":row['slug'], "term_group":row['term_group'],
+									"term_order":row['term_order'], "term_taxonomy_id":row['term_taxonomy_id'], "taxonomy":row['taxonomy'],
+									"description":row['description'], "parent":row['parent'], "count":row['count'], "cover_pic":row['cover_pic'],
+									"author":row['author'], "classes":row['classes'], "subjects":row['subjects'], "chapter_count":row['chapter_count']}
+							}`
+							d.resolve(result)
+
+					onError =(d)->
+						(tx,error)->
+							d.reject('Error!: '+error)
+
+					$.when(runQuery()).done (dta)->
+						console.log 'Database transaction completed'
+						
+					.fail (err)->
+						console.log('Error: '+err);
 
 
 			# request handler to get all textbooks

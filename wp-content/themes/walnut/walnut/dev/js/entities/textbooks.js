@@ -78,53 +78,38 @@ define(["app", 'backbone'], function(App, Backbone) {
         return textbook;
       },
       getTextbooksFromLocal: function() {
-        var data;
-        console.log('Database');
-        var fetchData = db.transaction(function(tx){
-			 			
-						},
-						function(tx,err){
-							console.log("Error processing SQL: "+err);
-						},
-						function(tx){
-							
-						}
-					);
-        return data = [
-          {
-            "term_id": 32,
-            "name": "Art",
-            "slug": "art",
-            "term_group": "0",
-            "term_order": "0",
-            "term_taxonomy_id": "32",
-            "taxonomy": "textbook",
-            "description": "",
-            "parent": "0",
-            "count": "0",
-            "cover_pic": "",
-            "author": "",
-            "classes": null,
-            "subjects": null,
-            "chapter_count": 0
-          }, {
-            "term_id": 33,
-            "name": "English",
-            "slug": "english",
-            "term_group": "0",
-            "term_order": "0",
-            "term_taxonomy_id": "32",
-            "taxonomy": "textbook",
-            "description": "",
-            "parent": "0",
-            "count": "0",
-            "cover_pic": "",
-            "author": "",
-            "classes": null,
-            "subjects": null,
-            "chapter_count": 0
-          }
-        ];
+        var onError, onSuccess, runQuery;
+        runQuery = function() {
+          return $.Deferred(function(d) {
+            return db.transaction(function(tx) {
+              return tx.executeSql("select * from TEXTBOOK", [], onSuccess(d), onError(d));
+            });
+          });
+        };
+        onSuccess = function(d) {
+          return function(tx, data) {
+            console.log('onSuccess!');
+            var result = []
+							for(var i=0; i<data.rows.length; i++){
+								var row = data.rows.item(i);
+								result[i]={"term_id":row['term_id'], "name":row['name'], "slug":row['slug'], "term_group":row['term_group'],
+									"term_order":row['term_order'], "term_taxonomy_id":row['term_taxonomy_id'], "taxonomy":row['taxonomy'],
+									"description":row['description'], "parent":row['parent'], "count":row['count'], "cover_pic":row['cover_pic'],
+									"author":row['author'], "classes":row['classes'], "subjects":row['subjects'], "chapter_count":row['chapter_count']}
+							};
+            return d.resolve(result);
+          };
+        };
+        onError = function(d) {
+          return function(tx, error) {
+            return d.reject('Error!: ' + error);
+          };
+        };
+        return $.when(runQuery()).done(function(dta) {
+          return console.log('Database transaction completed');
+        }).fail(function(err) {
+          return console.log('Error: ' + err);
+        });
       }
     };
     App.reqres.setHandler("get:textbooks", function(opt) {

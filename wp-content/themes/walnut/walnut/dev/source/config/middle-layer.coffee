@@ -10,8 +10,8 @@ define ['detect','jquery'], (detect,$)->
         else "Desktop"
 
       #Load script 'online.js' only for browser
-      #if checkPlatform() is "Desktop"
-        #define ['plugins/online'], ->
+      if checkPlatform() is "Desktop"
+        $.getScript('./wp-content/themes/walnut/walnut/dev/js/plugins/online.js')
 
       #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
@@ -55,9 +55,9 @@ define ['detect','jquery'], (detect,$)->
               return 'connection_error'
 
           when 'Mobile'
-            #if checkConnection()
-              #$.post url, data, response, 'json'
-            #else
+            if checkConnection()
+              $.post url, data, response, 'json'
+            else
               return 'connection_error' 
        
 

@@ -1,24 +1,23 @@
 define ["backbone"], (Backbone) ->
 
-	Backbone.local =(options, name)->
+	#Changes needed for offline data retrieval
+	# Backbone.local =(options, name)->
 
-		jsonData = App.request "get:#{name}:collection"
+	# 	jsonData = App.request "get:#{name}:collection"
 
-		jsonData
+	# 	jsonData
 
 
 
-	_.extend Backbone.Collection::,
+	# _.extend Backbone.Collection::,
 
-		sync :(method, collection, options)->
-			
-			data = App.reqres.request "get:textbookslocal"
-			collection.set data
+	# 	sync :(method, collection, options)->
 
-			#collection.set [{"term_id":32,"name":"Art","slug":"art","term_group":"0","term_order":"0","term_taxonomy_id":"32","taxonomy":"textbook","description":"","parent":"0","count":"0","cover_pic":"","author":"","classes":null,"subjects":null,"chapter_count":0}
-			 #				{"term_id":33,"name":"English","slug":"english","term_group":"0","term_order":"0","term_taxonomy_id":"32","taxonomy":"textbook","description":"","parent":"0","count":"0","cover_pic":"","author":"","classes":null,"subjects":null,"chapter_count":0}]
+	# 		data = App.reqres.request "get:textbookslocal"
+	# 		data.done (d)->
+	# 			collection.set d
 
-			return true
+	# 		return true
 
 
 
