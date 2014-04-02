@@ -1,0 +1,52 @@
+header.settings-header
+	.row
+		.col-sm-10
+			h5.title {{element}} Settings
+		.col-sm-2.close-btn
+			a(class='close-settings', href='#') &times;
+.row
+	.col-sm-12
+		form.form-horizontal(action='', method='POST', role='form')
+			.form-group
+				label.col-sm-4.control-label(for='') Draggable
+				.col-sm-8
+					span.checkbox
+						input(type='checkbox' name="draggable")
+			.form-group
+				label.col-sm-4.control-label(for='') Align
+				.col-sm-8
+					select(name="align")
+						option(value="left") Left
+						option(value="right") Right
+			.form-group
+				label.col-sm-4.control-label(for='') Top Margin
+				.col-sm-8
+					select.spacing(name="top_margin")
+						option(value="") None
+						option(value="top-margin-small") Small
+						option(value="top-margin-medium") Medium
+						option(value="top-margin-large") Large
+			.form-group
+				label.col-sm-4.control-label(for='') Bottom Margin
+				.col-sm-8
+					select.spacing(name="bottom_margin")
+						option(value="") None
+						option(value="bottom-margin-small") Small
+						option(value="bottom-margin-medium") Medium
+						option(value="bottom-margin-large") Large
+			.form-group
+				label.col-sm-4.control-label(for='') Left Margin
+				.col-sm-8
+					select.spacing(name="left_margin")
+						option(value="") None
+						option(value="left-margin-small") Small
+						option(value="left-margin-medium") Medium
+						option(value="left-margin-large") Large
+			.form-group
+				label.col-sm-4.control-label(for='') Right Margin
+				.col-sm-8
+					select.spacing(name="right_margin")
+						option(value="") None
+						option(value="right-margin-small") Small
+						option(value="right-margin-medium") Medium
+						option(value="right-margin-large") Large

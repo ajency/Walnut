@@ -1,9 +1,9 @@
 define ['app'
 		'controllers/region-controller'
-		'apps/content-creator/content-builder/elements/row/settings/views'],
+		'apps/content-creator/content-builder/elements/text/settings/views'],
 		(App, AppController)->
 
-			App.module 'ContentCreator.ContentBuilder.Element.Row.Settings', (Settings, App, Backbone, Marionette, $, _)->
+			App.module 'ContentCreator.ContentBuilder.Element.Text.Settings', (Settings, App, Backbone, Marionette, $, _)->
 
 				# menu controller
 				class Settings.Controller extends AppController
@@ -12,7 +12,7 @@ define ['app'
 					initialize:(opt ={})->
 						{ @model } = opt
 						@region = App.settingsRegion
-						model  = App.request "get:element:settings:options", 'Row'
+						model  = App.request "get:element:settings:options", 'Text'
 						view = @_getSettingView model,@model
 
 						@listenTo view, 'render', =>
@@ -25,9 +25,6 @@ define ['app'
 						@listenTo view, "element:draggable:changed", (draggable)=>
 														@model.set "draggable", draggable	
 
-						@listenTo view, "element:column:count:changed",(newCount)=>
-														@model.set "columncount", newCount
-
 						@show view
 
 
@@ -38,10 +35,6 @@ define ['app'
 												model 	 : model
 
 
-				App.vent.on "show:row:settings:popup", (model)->
-					new Settings.Controller
-									model : model
-
-
-						
-
+				App.vent.on "show:text:settings:popup", (model)->
+												new Settings.Controller
+																model : model

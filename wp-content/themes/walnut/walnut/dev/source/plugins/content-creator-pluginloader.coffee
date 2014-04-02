@@ -20,4 +20,5 @@ define [
 			'jqueryspin'
 			'jquerycolor'
 			'jqueryknob'
+			'ckeditor'
 		], ->
