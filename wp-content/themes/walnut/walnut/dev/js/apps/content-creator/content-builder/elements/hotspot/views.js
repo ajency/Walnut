@@ -203,7 +203,8 @@ define(['app'], function(App) {
           type: 'Option',
           shape: 'Circle',
           color: '#000000',
-          transparent: false
+          transparent: false,
+          correct: false
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         self = this;
@@ -231,6 +232,16 @@ define(['app'], function(App) {
         hotspotElement.on("change:color", (function(_this) {
           return function() {
             circle.stroke(hotspotElement.get('color'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:correct", (function(_this) {
+          return function() {
+            if (hotspotElement.get('correct')) {
+              circle.fill('rgba(12, 199, 55, 0.28)');
+            } else {
+              circle.fill('');
+            }
             return _this.optionLayer.draw();
           };
         })(this));
@@ -263,7 +274,8 @@ define(['app'], function(App) {
           shape: 'Rect',
           color: '#000000',
           transparent: false,
-          angle: 0
+          angle: 0,
+          correct: false
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         self = this;
@@ -300,6 +312,17 @@ define(['app'], function(App) {
             return _this.optionLayer.draw();
           };
         })(this));
+        hotspotElement.on("change:correct", (function(_this) {
+          return function() {
+            if (hotspotElement.get('correct')) {
+              box.fill('rgba(12, 199, 55, 0.28)');
+              console.log(hotspotElement.get('correct'));
+            } else {
+              box.fill('');
+            }
+            return _this.optionLayer.draw();
+          };
+        })(this));
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             rectGrp.destroy();
@@ -323,18 +346,7 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._addTextElement = function(elementPos) {
-        var canvasText, defaultTextImage, hotspotElement, modelData, rotator, self, tooltip;
-        defaultTextImage = new Image();
-        defaultTextImage.onload = (function(_this) {
-          return function() {
-            console.log("in default image load");
-            _this.hotspotTextDefault = new Kinetic.Image({
-              image: defaultTextImage
-            });
-            return console.log("defaultImage Text");
-          };
-        })(this);
-        defaultTextImage.src = "../wp-content/themes/walnut/images/enter_text.jpg";
+        var canvasText, hotspotElement, modelData, rotator, self, tooltip;
         modelData = {
           type: 'Text',
           text: '',
@@ -365,7 +377,6 @@ define(['app'], function(App) {
           fontFamily: hotspotElement.get('fontFamily'),
           fontSize: hotspotElement.get('fontSize'),
           fill: hotspotElement.get('fontColor'),
-          fillPatternImage: this.hotspotTextDefault,
           fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'),
           padding: 5
         });
