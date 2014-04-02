@@ -10,6 +10,7 @@ define ['marionette'], (Marionette)->
 		dialogRegion 		: Marionette.Region.Dialog.extend el : '#dialog-region'
 		settingsRegion 	  	: Marionette.Region.Settings.extend el : '#settings-region'
 		loginRegion 		: '#login-region' 
+		breadcrumbRegion	: '#breadcrumb-region'
 
 	# The default route for app
 	App.rootRoute = ""
@@ -51,6 +52,7 @@ define ['marionette'], (Marionette)->
 		
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion
+		App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
 		# start header app
 
 		# start left nav app

@@ -10,7 +10,8 @@ define(['marionette'], function(Marionette) {
     settingsRegion: Marionette.Region.Settings.extend({
       el: '#settings-region'
     }),
-    loginRegion: '#login-region'
+    loginRegion: '#login-region',
+    breadcrumbRegion: '#breadcrumb-region'
   });
   App.rootRoute = "";
   App.loginRoute = "login";
@@ -48,8 +49,11 @@ define(['marionette'], function(Marionette) {
     App.execute("show:headerapp", {
       region: App.headerRegion
     });
-    return App.execute("show:leftnavapp", {
+    App.execute("show:leftnavapp", {
       region: App.leftNavRegion
+    });
+    return App.execute("show:breadcrumbapp", {
+      region: App.breadcrumbRegion
     });
   });
   return App;

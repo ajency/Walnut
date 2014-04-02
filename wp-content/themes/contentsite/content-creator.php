@@ -58,6 +58,7 @@ Template Name: Content Creator
     <div>
             <div id="header-region"></div>
             <div id="left-nav-region"></div>
+            <div id="breadcrumb-region"></div>
             <div id="main-content-region" class="page-content" data-height="1006">
             </div>
     </div>
