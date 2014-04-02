@@ -11,6 +11,7 @@ require_once 'modules/menus/ajax.php';
 require_once 'modules/menus/functions.php';
 require_once 'modules/user/ajax.php';
 require_once 'modules/user/functions.php';
+require_once 'modules/media/ajax.php';
 require_once 'custom_configs.php';
 
 add_theme_support('menus');

@@ -79,10 +79,8 @@ define ['app'],(App)->
 				
 				#listen to drop event
 				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
-						if(type=="Hotspot-Image")
-							@trigger "show:media:manager"
-						else
-							@_addElements type, elementPos
+
+						@_addElements type, elementPos
 
 						@_updateDefaultLayer()
 
@@ -197,6 +195,15 @@ define ['app'],(App)->
 
 				else if(type == "Hotspot-Text")
 						@_addTextElement elementPos
+				else if(type=="Hotspot-Image")
+					# @trigger "show:media:manager"
+					App.navigate "media-manager", trigger : true
+					@listenTo App.vent,"media:manager:choosed:media",(media)=>
+						# @layout.model.set 'image_id', media.get 'id'
+						@_addImageElement elementPos, media.toJSON().url
+						# @layout.model.save()
+						@stopListening App.vent,"media:manager:choosed:media"
+
 
 				@optionLayer.draw()
 
@@ -273,7 +280,7 @@ define ['app'],(App)->
 
 			_addRectangle : (elementPos)->
 
-					
+					alert SITEURL
 
 					modelData =
 						type : 'Option'
@@ -478,6 +485,28 @@ define ['app'],(App)->
 					@textLayer.add tooltip
 
 					@textLayer.draw()
+
+			_addImageElement:(elementPos,url)->
+					imageObject = new Image()
+					imageObject.onload = ()=>
+							console.log "in default image load"
+							imageElement = new Kinetic.Image
+									image 	: imageObject
+									x : elementPos.left
+									y : elementPos.top
+									width: 150
+									height :150
+									
+
+							imageGrp = resizeRect imageElement,@imageLayer
+							
+							# @imageLayer.add imageGrp
+							@imageLayer.draw()
+							@_updateDefaultLayer()
+
+					imageObject.src = url
+
+
 
 					
 

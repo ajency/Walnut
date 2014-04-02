@@ -43,6 +43,7 @@ define ['app'
 									App.navigate "media-manager", trigger : true
 									@listenTo App.vent,"media:manager:choosed:media",(media)=>
 										@layout.model.set 'image_id', media.get 'id'
+										console.log media.toJSON().url
 										@layout.model.save()
 										@stopListening App.vent,"media:manager:choosed:media"
 
