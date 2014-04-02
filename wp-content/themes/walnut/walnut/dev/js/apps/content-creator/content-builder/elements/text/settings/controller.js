@@ -1,8 +1,8 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/content-builder/elements/row/settings/views'], function(App, AppController) {
-  return App.module('ContentCreator.ContentBuilder.Element.Row.Settings', function(Settings, App, Backbone, Marionette, $, _) {
+define(['app', 'controllers/region-controller', 'apps/content-creator/content-builder/elements/text/settings/views'], function(App, AppController) {
+  return App.module('ContentCreator.ContentBuilder.Element.Text.Settings', function(Settings, App, Backbone, Marionette, $, _) {
     Settings.Controller = (function(_super) {
       __extends(Controller, _super);
 
@@ -17,7 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         }
         this.model = opt.model;
         this.region = App.settingsRegion;
-        model = App.request("get:element:settings:options", 'Row');
+        model = App.request("get:element:settings:options", 'Text');
         view = this._getSettingView(model, this.model);
         this.listenTo(view, 'render', (function(_this) {
           return function() {
@@ -35,11 +35,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
             return _this.model.set("draggable", draggable);
           };
         })(this));
-        this.listenTo(view, "element:column:count:changed", (function(_this) {
-          return function(newCount) {
-            return _this.model.set("columncount", newCount);
-          };
-        })(this));
         return this.show(view);
       };
 
@@ -53,7 +48,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       return Controller;
 
     })(AppController);
-    return App.vent.on("show:row:settings:popup", function(model) {
+    return App.vent.on("show:text:settings:popup", function(model) {
       return new Settings.Controller({
         model: model
       });

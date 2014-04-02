@@ -80,8 +80,8 @@ define ['app'],(App)->
 						@_updateDefaultLayer()
 
 
-				# $('button.btn.btn-success.btn-cons2').on 'mouseover',=>
-				# 		console.log  @stage.toJSON()
+				$('button.btn.btn-success.btn-cons2').on 'click',=>
+						console.log  @stage.toJSON()
 
 
 				#make the hotspot canvas area dropable

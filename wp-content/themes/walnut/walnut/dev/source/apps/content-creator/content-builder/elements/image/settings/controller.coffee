@@ -1,9 +1,9 @@
 define ['app'
 		'controllers/region-controller'
-		'apps/content-creator/content-builder/elements/row/settings/views'],
+		'apps/content-creator/content-builder/elements/image/settings/views'],
 		(App, AppController)->
 
-			App.module 'ContentCreator.ContentBuilder.Element.Row.Settings', (Settings, App, Backbone, Marionette, $, _)->
+			App.module 'ContentCreator.ContentBuilder.Element.Image.Settings', (Settings, App, Backbone, Marionette, $, _)->
 
 				# menu controller
 				class Settings.Controller extends AppController
@@ -12,7 +12,7 @@ define ['app'
 					initialize:(opt ={})->
 						{ @model } = opt
 						@region = App.settingsRegion
-						model  = App.request "get:element:settings:options", 'Row'
+						model  = App.request "get:element:settings:options", 'Image'
 						view = @_getSettingView model,@model
 
 						@listenTo view, 'render', =>
@@ -25,10 +25,20 @@ define ['app'
 						@listenTo view, "element:draggable:changed", (draggable)=>
 														@model.set "draggable", draggable	
 
-						@listenTo view, "element:column:count:changed",(newCount)=>
-														@model.set "columncount", newCount
+						@listenTo view, "element:alignment:changed", (alignment)=>
+														@model.set "align", alignment	
+						@listenTo view, "element:spacing:changed",(spacing, value)=>
+																@model.set spacing, value
 
 						@show view
+
+					# time to save model to server
+					onClose:->
+						return if not @model.hasChanged()
+						
+						@model.save null,
+								wait : true
+
 
 
 					# get settigns view
@@ -38,9 +48,9 @@ define ['app'
 												model 	 : model
 
 
-				App.vent.on "show:row:settings:popup", (model)->
-					new Settings.Controller
-									model : model
+				App.vent.on "show:image:settings:popup", (model)->
+										new Settings.Controller
+														model : model
 
 
 						
