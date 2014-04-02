@@ -279,7 +279,9 @@ function get_book($book) {
     //$book_dets = array();
     
     $additional = get_option('taxonomy_' . $book_id);
-    $book_dets->cover_pic = $additional['attachmenturl'];
+    $coverid= $additional['attachmentid'];
+    $book_dets->thumbnail=wp_get_attachment_image($coverid, 'thumbnail' );
+    $book_dets->cover_pic = wp_get_attachment_image($coverid, 'large' );
     $book_dets->author = $additional['author'];
 
     $classes = $wpdb->get_results("select class_id, tags from {$wpdb->prefix}textbook_relationships 
