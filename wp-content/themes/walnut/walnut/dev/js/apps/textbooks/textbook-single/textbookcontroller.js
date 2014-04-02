@@ -37,15 +37,14 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
                   'link': 'javascript://'
                 }, {
                   'label': 'Content Management',
-                  'link': 'javascript://'
+                  'link': 'javascript:;'
                 }, {
                   'label': 'Textbooks',
-                  'link': 'javascript://'
+                  'link': '#textbooks'
                 }, {
-                  'label': _this.textbook.get('name', {
-                    'link': 'javascript://',
-                    'active': 'active'
-                  })
+                  'label': _this.textbook.get('name'),
+                  'link': 'javascript:;',
+                  'active': 'active'
                 }
               ]
             };

@@ -10,7 +10,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 				breadcrumb_items = 'items':[
 						{'label':'Dashboard','link':'javascript://'},
 						{'label':'Content Management','link':'javascript://'},
-						{'label':'Textbooks','link':'javascript://'}
+						{'label':'Textbooks','link':'javascript://', 'active':'active'}
 					]
 
 				App.execute "update:breadcrumb:model", breadcrumb_items
