@@ -23,6 +23,16 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
             return _this._getElementProperties(options.model);
           };
         })(this));
+        App.commands.setHandler("close:question:element:properties", (function(_this) {
+          return function() {
+            return _this.layout.questElementPropRegion.close();
+          };
+        })(this));
+        App.commands.setHandler("close:question:elements", (function(_this) {
+          return function() {
+            return _this.layout.questElementRegion.close();
+          };
+        })(this));
         return this.show(this.layout);
       };
 

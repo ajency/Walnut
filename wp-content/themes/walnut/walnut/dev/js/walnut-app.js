@@ -5,7 +5,8 @@ define(['marionette'], function(Marionette) {
     headerRegion: '#header-region',
     mainContentRegion: '#main-content-region',
     dialogRegion: '#dialog-region',
-    loginRegion: '#login-region'
+    loginRegion: '#login-region',
+    breadcrumbRegion: '#breadcrumb-region'
   });
   App.rootRoute = "";
   App.loginRoute = "login";
@@ -24,9 +25,6 @@ define(['marionette'], function(Marionette) {
   });
   App.commands.setHandler("unregister:instance", function(instance, id) {
     return App.unregister(instance, id);
-  });
-  App.on("initialize:before", function() {
-    return Pace.start();
   });
   App.on("initialize:after", function(options) {
     var xhr;
@@ -48,28 +46,45 @@ define(['marionette'], function(Marionette) {
           App.execute("show:leftnavapp", {
             region: App.leftNavRegion
           });
-          if (_this.getCurrentRoute() === 'login') {
-            return App.vent.trigger("show:dashboard");
-          }
-        } else {
-          console.log('error');
-          _this.rootRoute = 'login';
-          return App.navigate(_this.rootRoute, {
-            trigger: true
+          App.execute("show:breadcrumbapp", {
+            region: App.breadcrumbRegion
           });
+          if (_this.getCurrentRoute() === 'login') {
+            App.vent.trigger("show:dashboard");
+          }
+          return App.loginRegion.close();
+        } else {
+          return App.vent.trigger("show:login");
         }
       };
     })(this), 'json');
   });
   App.vent.on("show:dashboard", function() {
+    Pace.restart();
+    $("#site_main_container").removeClass("showAll");
     App.navigate('textbooks', {
       trigger: true
+    });
+    App.execute("show:breadcrumbapp", {
+      region: App.breadcrumbRegion
     });
     App.execute("show:headerapp", {
       region: App.headerRegion
     });
-    return App.execute("show:leftnavapp", {
+    App.execute("show:leftnavapp", {
       region: App.leftNavRegion
+    });
+    return Pace.on('hide', function() {
+      return $("#site_main_container").addClass("showAll");
+    });
+  });
+  App.vent.on("show:login", function() {
+    App.leftNavRegion.close();
+    App.headerRegion.close();
+    App.mainContentRegion.close();
+    this.rootRoute = 'login';
+    return App.navigate(this.rootRoute, {
+      trigger: true
     });
   });
   return App;

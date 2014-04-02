@@ -1,6 +1,7 @@
 @import "variables.less";
 @import "mixins.less";
 @import "builder.less";
+@import "chapters.less";
 @import "class.less";
 
 body{
@@ -35,6 +36,18 @@ body{
 
 .page-sidebar{
 	background-color: darken(@color-primary, 10%) !important;
+	&.mini{
+		background-color: darken(@color-primary, 10%) !important;
+	}
+
+	.page-sidebar-wrapper > ul > li{
+		&>a, &> a i, &> a .arrow, &> a .arrow.open:before{
+			color: #fff !important;
+		}
+		&.open > a{
+			background-color: @color-primary !important;
+		}
+	}
 
 	.page-sidebar-wrapper > ul > li:hover >a{
 		background-color: @color-primary;

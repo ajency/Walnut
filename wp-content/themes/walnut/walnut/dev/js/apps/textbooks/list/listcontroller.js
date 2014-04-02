@@ -11,30 +11,26 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
       }
 
       ListController.prototype.initialize = function() {
-        var textbooksCollection, view;
+        var breadcrumb_items, textbooksCollection, view;
         textbooksCollection = App.request("get:textbooks");
+        console.log('initialize listcontroller');
+        breadcrumb_items = {
+          'items': [
+            {
+              'label': 'Dashboard',
+              'link': 'javascript://'
+            }, {
+              'label': 'Content Management',
+              'link': 'javascript://'
+            }, {
+              'label': 'Textbooks',
+              'link': 'javascript://'
+            }
+          ]
+        };
+        App.execute("update:breadcrumb:model", breadcrumb_items);
         this.view = view = this._getTextbooksView(textbooksCollection);
-        this.listenTo(this.view, "sort:textbooks", (function(_this) {
-          return function(sort) {
-            return textbooksCollection.fetch({
-              reset: true,
-              data: {
-                order: sort.order,
-                orderby: sort.orderby
-              }
-            });
-          };
-        })(this));
-        this.listenTo(this.view, "filter:textbooks:class", (function(_this) {
-          return function(class_id) {
-            return textbooksCollection.fetch({
-              reset: true,
-              data: {
-                class_id: class_id
-              }
-            });
-          };
-        })(this));
+        this.listenTo(this.view, "show", function() {});
         return this.show(view, {
           loading: true
         });

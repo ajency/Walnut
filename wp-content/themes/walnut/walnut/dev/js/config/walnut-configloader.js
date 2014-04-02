@@ -1,1 +1,1 @@
-define(['config/marionette', 'config/backbone', 'config/jquery-validate', 'config/middle-layer', 'config/app-storage'], function() {});
+define(['config/marionette', 'config/backbone', 'config/jquery-validate', 'config/middle-layer', 'config/jquery'], function() {});

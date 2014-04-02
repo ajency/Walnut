@@ -9,6 +9,8 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 			initialize : (opt) ->
 				term_id = opt.model_id
 				@textbook = App.request "get:textbook:by:id", term_id
+
+
 				@chapters = App.request "get:chapters", ('parent': term_id)
 
 				@layout= layout = @_getTextbookSingleLayout()
@@ -21,6 +23,15 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 			_showTextBookSingle: =>
 
 				App.execute "when:fetched", @textbook, =>
+					breadcrumb_items = 'items':[
+						{'label':'Dashboard','link':'javascript://'},
+						{'label':'Content Management','link':'javascript://'},
+						{'label':'Textbooks','link':'javascript://'},
+						{'label':@textbook.get 'name','link':'javascript://','active':'active'}
+					]
+						
+					App.execute "update:breadcrumb:model", breadcrumb_items
+				
 					# get the single view 
 					textbookDescView= new Single.Views.TextbookDescriptionView 
 																model: @textbook

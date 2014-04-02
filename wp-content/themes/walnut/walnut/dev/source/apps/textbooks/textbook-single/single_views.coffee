@@ -9,7 +9,7 @@ define ['app'
 		class Views.TextbookDescriptionView extends Marionette.ItemView
 
 			template : textbookDescriptionTpl
-			className: 'tiles white col-md-12 no-padding'
+			className: ''
 
 			onShow :->
 				console.log 'Show Model'
@@ -19,7 +19,7 @@ define ['app'
 
 			template : textbookSingleTpl
 
-			className : 'page-content'
+			className : 'row'
 
 			regions: 
 				textbookDescriptionRegion 	: '#textbook-description-region'

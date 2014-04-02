@@ -2,7 +2,6 @@ require.config({
   urlArgs: "ver=" + ((new Date()).getTime()),
   baseUrl: './wp-content/themes/walnut/walnut/dev/js',
   paths: {
-    pace: 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryvalidate: 'plugins/jquery.validate.min',
@@ -21,7 +20,6 @@ require.config({
     core: 'plugins/core',
     componentloader: 'components/component-loader',
     mixitup: 'plugins/jquery.mixitup.min',
-    search_results: 'plugins/search_results',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
     unveil: 'plugins/jquery.unveil.min',
@@ -49,7 +47,6 @@ require.config({
     core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
     mixitup: ['jquery'],
-    search_results: ['jquery', 'mixitup'],
     jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],

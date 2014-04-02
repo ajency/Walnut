@@ -70,6 +70,16 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         return data;
       };
 
+      HeaderView.prototype.onShow = function() {
+        if ($('.creator').length > 0) {
+          $(".header-seperation").css("display", "none");
+          $("#main-menu").addClass("mini");
+          $("#main-content-region").addClass("condensed");
+          $(".start").removeClass("active open");
+          return $(".arrow").removeClass("open");
+        }
+      };
+
       return HeaderView;
 
     })(Marionette.Layout);

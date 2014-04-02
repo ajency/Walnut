@@ -3,7 +3,9 @@ define ['app'],(App)->
 	# Row views
 	App.module 'ContentCreator.ContentBuilder.Element.Hotspot.Views', (Views, App, Backbone, Marionette, $, _)->
 
-		
+		closequestionelementproperty = true
+		closequestionelements = true
+
 			
 		# Menu item view
 		class Views.HotspotView extends Marionette.ItemView
@@ -12,14 +14,24 @@ define ['app'],(App)->
 
 			template : '&nbsp;'
 
-			# events :
-				# 'click' : -> @trigger "show:hotspot:properties"
+			events :
+				'mousedown' : -> @trigger "show:hotspot:properties"
 				# 'focus'	: -> console.log "blur" #'updateModel'
 
 			initialize:(opt = {})->
 				#give a unique name to every hotspot canvas
 				# console.log "layout model  "+JSON.stringify @model
 				@stageName = "stage"+ new Date().getTime()
+
+				# create the canvas layers
+				@imageLayer = new Kinetic.Layer
+					name : 'imageLayer'
+				@optionLayer = new Kinetic.Layer
+					name : 'optionLayer'
+				@textLayer = new Kinetic.Layer
+					name : 'textLayer'
+				@defaultLayer = new Kinetic.Layer
+					name : 'defaultLayer'
 
 			onRender:->
 
@@ -34,18 +46,16 @@ define ['app'],(App)->
 
 				@stage = new Kinetic.Stage
 						container: @stageName
-						width: @$el.parent().width()-15
+						width: @$el.parent().width()
 						height: @$el.parent().height()+80
 
-				#create and add the canvas layers
-				@imageLayer = new Kinetic.Layer
-				@optionLayer = new Kinetic.Layer
-				@textLayer = new Kinetic.Layer
-				@defaultLayer = new Kinetic.Layer
+				
+				
 
 				# set image to the default image layer
 				@_setDefaultImage()
 
+				# add the canvas layers
 				@stage.add @defaultLayer
 				@stage.add @imageLayer
 				@stage.add @textLayer
@@ -63,9 +73,10 @@ define ['app'],(App)->
 					@_updateDefaultImageSize()
 
 				$('#'+@stageName+'.stage').resizable
-						 handles: "s" 
-						
+						handles: "s" 
 
+				@_setPropertyBoxCloseHandlers()
+				
 				#listen to drop event
 				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
 						if(type=="Hotspot-Image")
@@ -76,8 +87,8 @@ define ['app'],(App)->
 						@_updateDefaultLayer()
 
 
-				$('button.btn.btn-success.btn-cons2').on 'mouseover',=>
-						console.log  @stage.toJSON()
+				# $('button.btn.btn-success.btn-cons2').on 'mouseover',=>
+				# 		console.log  @stage.toJSON()
 
 
 				#make the hotspot canvas area dropable
@@ -92,6 +103,35 @@ define ['app'],(App)->
 										@trigger "add:hotspot:element", type , elementPos
 
 
+			_setPropertyBoxCloseHandlers:->
+				$('body').on 'mousedown',->
+						if closequestionelementproperty
+							# console.log 'stage'
+							App.execute "close:question:element:properties"
+						if closequestionelements and closequestionelementproperty
+							App.execute "close:question:elements"
+
+				$('#question-elements-property').on 'mouseover',->
+						closequestionelementproperty =  false
+				$('#question-elements-property').on 'mouseout',->
+						closequestionelementproperty = true
+
+
+				$('#'+@stageName+'.stage').on 'mouseenter', '.kineticjs-content', ->
+					# console.log 'over stage'
+					closequestionelements = false
+				$('#'+@stageName+'.stage').on 'mouseleave', '.kineticjs-content', ->
+					# console.log 'outofStage'
+					closequestionelements = true
+
+				$('#question-elements').on 'mouseover', ->
+					# console.log "over question"
+					closequestionelements = false
+				$('#question-elements').on 'mouseout', ->
+					# console.log "out of question"
+					closequestionelements = true
+
+	
 
 
 			_setDefaultImage:->
@@ -99,31 +139,23 @@ define ['app'],(App)->
 				defaultImage.onload = ()=>
 						console.log "in default image load"
 						@hotspotDefault = new Kinetic.Image
-								# x		: @stage.width()/2-70
-								# y		: @stage.height()/2-50
-								# width 	: 210
-								# height	: 150
 								image 	: defaultImage
-
-						@_updateDefaultImageSize()
+						
 						@defaultLayer.add @hotspotDefault
-						@defaultLayer.draw()
-
+						@_updateDefaultImageSize()
 
 				defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg"
 
 			# remove the default image from the layer if any hotspot elements are added
 			_updateDefaultLayer:->
-				
 					i = 1
 					while i<@stage.getChildren().length
 						if i
 							if @stage.getChildren()[i].getChildren().length
-								@defaultLayer.remove @hotspotElement
+								@defaultLayer.removeChildren()
 								break;
-							console.log @stage.getChildren()[i]
-
 						i++
+					@defaultLayer.draw()
 
 			# update the size of default image on change of stage
 			_updateDefaultImageSize:->
@@ -132,19 +164,27 @@ define ['app'],(App)->
 
 					console.log width+"  "+height
 
+					@hotspotDefault.setSize
+						width 	: 336
+						height 	: 200
+
 					if(width<220)
 						@hotspotDefault.setSize
 							width : width-10
-							height : (width-10)/1.4
+							height : (width-10)/1.68
 
 					if(height<160)
 						@hotspotDefault.setSize
-							width : (height-10)*1.4
+							width : (height-10)*1.68
 							height : height-10
+
+
 
 					@hotspotDefault.position
 						x : @stage.width()/2-@hotspotDefault.width()/2
 						y : @stage.height()/2-@hotspotDefault.height()/2
+
+					@defaultLayer.draw()
 
 
 			_addElements: (type,elementPos)->
@@ -162,19 +202,79 @@ define ['app'],(App)->
 
 
 			_addCircle: (elementPos)->
+
+					modelData =
+						type : 'Option'
+						shape : 'Circle'
+						color : '#000000'
+						transparent : false
+						
+					hotspotElement = App.request "create:new:hotspot:element", modelData
+					self = @
+
+					App.execute "show:question:element:properties",
+									model : hotspotElement
+
+
 					circle = new Kinetic.Circle
 							name : "rect1"
 							x: elementPos.left
 							y:elementPos.top
 							radius :20
-							stroke: 'black'
-							strokeWidth: 4
-							
+							stroke: hotspotElement.get 'color'
+							strokeWidth: 2
+							dash : [6,4 ]
+							dashEnabled : hotspotElement.get 'transparent'
 
-					resizeCircle circle,@optionLayer
+					circleGrp = resizeCircle circle,@optionLayer
+
+					# on change of transparency redraw
+					hotspotElement.on "change:transparent",=>
+						console.log 'transparent'
+						circle.dashEnabled hotspotElement.get 'transparent'
+						@optionLayer.draw()
+
+					# on change of color redraw
+					hotspotElement.on "change:color",=>
+						circle.stroke hotspotElement.get 'color'
+						@optionLayer.draw()
+
+					# delete element based on toDelete
+					hotspotElement.on "change:toDelete",=>
+							circleGrp.destroy()
+							closequestionelementproperty = true
+							App.execute "close:question:element:properties"
+							@optionLayer.draw()
+
+					# on click of a circle element show properties
+					circleGrp.on 'mousedown click',(e)->
+							e.stopPropagation()
+							App.execute "show:question:element:properties",
+									model : hotspotElement
+							# console.log @
+
+					circleGrp.on 'mouseover',->
+						closequestionelementproperty = false
+
+					circleGrp.on 'mouseout',->
+						closequestionelementproperty = true
 
 
 			_addRectangle : (elementPos)->
+
+					modelData =
+						type : 'Option'
+						shape : 'Rect'
+						color : '#000000'
+						transparent : false
+						angle 	: 0
+						
+
+					hotspotElement = App.request "create:new:hotspot:element", modelData
+					self = @
+
+					App.execute "show:question:element:properties",
+									model : hotspotElement
 
 					box = new Kinetic.Rect
 							name : "rect2"
@@ -182,78 +282,181 @@ define ['app'],(App)->
 							y:elementPos.top
 							width: 25
 							height: 25
-							stroke: 'black'
-							strokeWidth: 4
+							stroke: hotspotElement.get 'color'
+							strokeWidth: 2
+							dash : [6,4 ]
+							dashEnabled : hotspotElement.get 'transparent'
 							
 
-					resizeRect box,@optionLayer
+					rectGrp = resizeRect box,@optionLayer
+
+					# on change of transparency redraw
+					hotspotElement.on "change:transparent",=>
+						box.dashEnabled hotspotElement.get 'transparent'
+						@optionLayer.draw()
+
+					# on change of color redraw
+					hotspotElement.on "change:color",=>
+						box.stroke hotspotElement.get 'color'
+						@optionLayer.draw()
+
+					# on change of model's angle rotate the element
+					hotspotElement.on "change:angle",=>
+						rectGrp.rotation hotspotElement.get 'angle'
+						@optionLayer.draw()
+
+					# delete element based on toDelete
+					hotspotElement.on "change:toDelete",=>
+							rectGrp.destroy()
+							closequestionelementproperty = true
+							App.execute "close:question:element:properties"
+							@optionLayer.draw()
+
+					# on click of a circle element show properties
+					rectGrp.on 'mousedown click',(e)->
+							e.stopPropagation()
+							App.execute "show:question:element:properties",
+									model : hotspotElement
+							# console.log @
+
+					rectGrp.on 'mouseover',->
+						closequestionelementproperty = false
+
+					rectGrp.on 'mouseout',->
+						closequestionelementproperty = true
 
 					
 
 
 			_addTextElement: (elementPos)->
 
+					defaultTextImage = new Image()
+					defaultTextImage.onload = ()=>
+							console.log "in default image load"
+							@hotspotTextDefault = new Kinetic.Image
+									image 	: defaultTextImage
+							console.log "defaultImage Text"
+					defaultTextImage.src = "../wp-content/themes/walnut/images/enter_text.jpg"
+
 					modelData =
 						type : 'Text'
 						text : ''
 						fontFamily : 'Arial'
-						fontSize : '12'
-						fontColor : 'black'
+						fontSize : '14'
+						fontColor : '#000000'
 						fontBold : ''
 						fontItalics : ''
+						textAngle : 0
 
 					hotspotElement = App.request "create:new:hotspot:element", modelData
+					self = @
+
+					App.execute "show:question:element:properties",
+									model : hotspotElement
 
 					tooltip = new Kinetic.Label
 						x: elementPos.left
 						y: elementPos.top
 						width : 100
-						opacity: 0.75
-
 						draggable : true
+						dragBoundFunc : (pos)->
+							self._setBoundRegion(pos,@,self.stage)
 
-					textBorder = new Kinetic.Tag
-						fill: 'white'
-						stroke : 'black'
-						width: 50
-						lineJoin: 'round'
-						
-					
 					canvasText = new Kinetic.Text
-						text: hotspotElement.get 'text'
+						text: 'CLICK TO ENTER TEXT'
+						opacity : 0.3
 						fontFamily: hotspotElement.get 'fontFamily'
 						fontSize: hotspotElement.get 'fontSize'
 						fill: hotspotElement.get 'fontColor'
+						fillPatternImage	: @hotspotTextDefault
 						fontStyle : hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
 						padding: 5
 
+
+					rotator = new Kinetic.Circle
+						x : canvasText.width()
+						y : 0 
+						stroke : 'black'
+						radius: 5
+						draggable : true
+					
+
+
 					# on click of a text element show properties
-					tooltip.on 'mousedown click',->
+					tooltip.on 'mousedown click',(e)->
+							e.stopPropagation()
 							App.execute "show:question:element:properties",
 									model : hotspotElement
+							console.log @
 
+					# on change of text update the canvas
 					hotspotElement.on "change:text",=>
-							canvasText.setText hotspotElement.get 'text'
+							if hotspotElement.get('text')!=""
+								canvasText.setText hotspotElement.get 'text'
+								canvasText.opacity 1
+								canvasText.fill hotspotElement.get 'fontColor'
+							else
+								canvasText.setText 'CLICK TO ENTER TEXT'
+								canvasText.opacity 0.3
+								canvasText.fill 'fontColor'
+							# tooltip.fire "moverotator"
+
 							@textLayer.draw()
 
+					# on change of font Size update the canvas
 					hotspotElement.on "change:fontSize",=>
 							canvasText.fontSize hotspotElement.get 'fontSize'
+							# tooltip.fire "moverotator"
 							@textLayer.draw()
 
+
+					# on change of font  update the canvas
 					hotspotElement.on "change:fontFamily",=>
 							canvasText.fontFamily hotspotElement.get 'fontFamily'
+							# tooltip.fire "moverotator"
 							@textLayer.draw()
 
+
+					# on change of font Style update the canvas
 					hotspotElement.on "change:fontBold change:fontItalics",=>
 							canvasText.fontStyle  hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
+							# tooltip.fire "moverotator"
 							@textLayer.draw()
 
+					# on change of font color update the canvas
+					hotspotElement.on "change:fontColor",=>
+							canvasText.fill hotspotElement.get 'fontColor'
+							# tooltip.fire "moverotator"
+							@textLayer.draw()
 
-						
+					# on change of toDelete property remove the text element from the canvas
+					hotspotElement.on "change:toDelete",=>
+							tooltip.destroy()
+							closequestionelementproperty = true
+							App.execute "close:question:element:properties"
+							@textLayer.draw()
 
-					tooltip.add textBorder
+					# on change of the textAngle prop rotate the text
+					hotspotElement.on "change:textAngle",=>
+							tooltip.rotation hotspotElement.get 'textAngle'
+							console.log tooltip.rotation()
+							@textLayer.draw()
+
+					# tooltip.on 'moverotator',(e)->
+					# 	rotator.x tooltip.width()
+
+
+					tooltip.on 'mouseover',->
+						closequestionelementproperty = false
+
+					tooltip.on 'mouseout',->
+						closequestionelementproperty = true
 
 					tooltip.add canvasText
+
+					# tooltip.add rotator
+
+					# rotateLabel tooltip,rotator,@textLayer
 
 					@textLayer.add tooltip
 
@@ -261,91 +464,28 @@ define ['app'],(App)->
 
 					
 
-			# _addTextElement : (elementPos)->
-			# 		@layer = new Kinetic.Layer
-			# 				draggable : true
-
-			# 		rec = new Kinetic.Rect
-			# 			x: elementPos.left
-			# 			y: elementPos.top
-			# 			width:100
-			# 			height:100
-			# 			strokeWidth : 1
-			# 			stroke: 'black'
-
-			# 		newText = new Kinetic.EditableText
-			# 				# find click position.
-			# 				x: elementPos.left+5
-			# 				y: elementPos.top+5
-			# 				text: ''
-			# 				 # following params can be modified, or left blank (defaults are in kinetic.editable.js)
-			# 				# lineHeight: 1.3,
-			# 				fontSize: 29
-			# 				# focusRectColor: "black",
-			# 				fontFamily: 'Courier'
-			# 				fill: '#000000'
-							
-			# 				 # ALWAYS provide the focus layer and stage. pasteModal id to support ctrl+v paste.
-			# 				focusLayer: @layer
-			# 				stage: @stage
-			# 				pasteModal: "pasteModalArea"
-							
-							
-							
-			# 				# drawHitFunc: (canvaas)->
-			# 				# 	context = canvaas.getContext()
-			# 				# 	width = 100
-			# 				# 	height = 20
-									
-			# 				# 	if (this.tempText != undefined) 
-			# 				# 		linesCount = this.tempText.length
-									
-			# 				# 		context.beginPath()
-			# 				# 		context.rect(0, 0, this.maxWidth + 10, linesCount*height)
-			# 				# 		context.closePath()
-			# 				# 		canvaas.fillStroke(this)
-								
-			# 				# 	else 
-			# 				# 		context.beginPath()
-			# 				# 		context.rect(0, 0, width, height)
-			# 				# 		context.closePath()
-			# 				# 		canvaas.fillStroke(this)
-							
-								
-					
-						
-			# 		newText.on 'change',->
-			# 			console.log "change"
-					
-					
-			# 		@layer.add rec
-			# 		@layer.add newText
-			# 		@stage.add @layer
-
-			# 		hoverontext = false;
+			_setBoundRegion:(pos,inner,outer)->
+				height = inner.getHeight();
+				minX = outer.getX();
+				maxX = outer.getX() + outer.getWidth() - inner.getWidth();
+				minY = outer.getY();
+				maxY = outer.getY() + outer.getHeight() - inner.getHeight();
+				X = pos.x;
+				Y = pos.y;
+				if(X < minX) 
+					X = minX
 				
-			# 		@layer.on 'click', ()=>
-			# 			if not hoverontext
-			# 				hoverontext = true
-			# 				document.body.style.cursor = 'pointer';
-			# 				console.log 'focus'
-			# 				console.log @layer
-			# 				newText.focus(@layer)
-
-			# 		@layer.on 'dblclick', (e)=>
-			# 			if(hoverontext)
-			# 			    hoverontext = false
-			# 				document.body.style.cursor = 'default';
-			# 				console.log 'unfocus'
-			# 				console.log @layer
-			# 				newText.unfocus(e)
-			# 				@layer.draw()
-
-			
-					
-					
-
-
+				if(X > maxX)
+					X = maxX
+				
+				if(Y < minY)
+					Y = minY
+				
+				if(Y > maxY) 
+					Y = maxY				
+				
+				x: X
+				y: Y
 
 			updateModel:->
 				@layout.model.set 'content', @_getHotspotData()
@@ -357,9 +497,4 @@ define ['app'],(App)->
 
 				@stage.toJSON()
 
-			      		
-
-
-
-				
-		
+			 

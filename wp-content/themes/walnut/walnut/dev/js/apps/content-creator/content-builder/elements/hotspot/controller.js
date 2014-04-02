@@ -28,7 +28,6 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
 
       Controller.prototype.renderElement = function() {
         var view;
-        this.removeSpinner();
         view = this._getHotspotView();
         this.listenTo(view, "show:media:manager", (function(_this) {
           return function() {
@@ -50,7 +49,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
           };
         })(this));
-        this.layout.elementRegion.show(view);
+        this.layout.elementRegion.show(view, {
+          loading: true
+        });
         return App.execute("show:question:elements", {
           model: this.layout.model
         });
@@ -60,7 +61,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         if (!this.layout.elementRegion.currentView.$el.canBeDeleted()) {
           return alert("Please remove elements inside row and then delete.");
         } else {
-          return model.destroy();
+          model.destroy();
+          return App.execute("close:question:elements");
         }
       };
 

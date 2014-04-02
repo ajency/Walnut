@@ -11,7 +11,6 @@ require.config
 	baseUrl : './wp-content/themes/walnut/walnut/dev/js'
 	
 	paths:
-		pace 				: 'plugins/pace'
 		jquery 				: 'plugins/jquery'
 		jqueryui 			: 'plugins/jquery.ui'
 		jqueryvalidate		: 'plugins/jquery.validate.min'
@@ -30,7 +29,6 @@ require.config
 		core				: 'plugins/core'
 		componentloader 	: 'components/component-loader'
 		mixitup				: 'plugins/jquery.mixitup.min'
-		search_results		: 'plugins/search_results'
 		spin 				: 'plugins/spin'
 		jqueryspin  		: 'plugins/jquery.spin'
 		#jquery_datatables  	: 'plugins/jquery.dataTables.min'
@@ -63,7 +61,6 @@ require.config
 		#tabletools 		: ['jquery_datatables']
 		#datatables_responsive : ['jquery_datatables']
 		#datatables 		: ['jquery_datatables','bootstrap']
-		search_results 	: ['jquery','mixitup']
 		jqueryspin 		: ['spin']
 		jqueryvalidate	: ['jquery']
 		syphon			: ['backbone']

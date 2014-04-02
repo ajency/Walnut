@@ -5,6 +5,38 @@
 
 */
 
+dragBoundRect = function(pos,inner,outer){
+
+        var minX = outer.getX();
+        var maxX = outer.getX() + outer.getWidth() - inner.getWidth();
+        var minY = outer.getY();
+        var maxY = outer.getY() + outer.getHeight() - inner.getHeight();
+
+        var X = pos.x;
+        var Y = pos.y;
+       
+        if (X < minX - inner.getX()) {
+            X = minX - inner.getX();
+        }
+        if (X > maxX - inner.getX()) {
+            X = maxX - inner.getX();
+        }
+        if (Y < minY - inner.getY()) {
+            Y = minY - inner.getY();
+        }
+        if (Y > maxY - inner.getY()) {
+            Y = maxY - inner.getY();
+        }
+        return ({
+            x: X,
+            y: Y
+        });
+
+
+} 
+
+
+
 resizeCircle = function(circle,layer){
 	
 	var draggerOffset = 0;
@@ -82,12 +114,18 @@ resizeRect = function(rectangle,layer){
     var subjectPosition = rectangle.getAbsolutePosition();
     var subjectWidth = rectangle.width();
     var subjectHeight = rectangle.height();
+    var stage = layer.getStage()
+
 
     var myGroup = new Kinetic.Group({
                 x: subjectX,
                 y: subjectY,
-                draggable: true
+                draggable: true,
+                dragBoundFunc: function(pos){
+                    return dragBoundRect(pos,this.getChildren()[0],stage)
+                }
     });
+    
 
     layer.add(myGroup)
 

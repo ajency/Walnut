@@ -1,5 +1,4 @@
 define [
-			'pace'
 			'underscore'
 			'underscorestring'
 			'jquery'
@@ -15,9 +14,8 @@ define [
 			'mustache'
 			'spin'
 			'jqueryspin'
-			'mixitup'
-			'search_results'
 			'bootstrap'
+			'mixitup'
 			#'jquery_datatables'
 			#'tabletools'
 			#'datatables_responsive'

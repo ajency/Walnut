@@ -5,6 +5,7 @@ define ['app'
 
 			App.module 'ContentCreator.ContentBuilder.Element.Hotspot', (Hotspot, App, Backbone, Marionette, $, _)->
 
+
 				# menu controller
 				class Hotspot.Controller extends Element.Controller
 
@@ -34,7 +35,7 @@ define ['app'
 								
 					# setup templates for the element
 					renderElement:()=>
-						@removeSpinner()
+						# @removeSpinner()
 						# get menu 
 						view = @_getHotspotView()
 
@@ -51,9 +52,12 @@ define ['app'
 								App.execute "show:question:elements",
 						 				model : @layout.model
 
+						
+
 
 						
-						@layout.elementRegion.show view
+						@layout.elementRegion.show view,
+							loading:true
 
 						# show hotspot properties for this hotspot
 						App.execute "show:question:elements",
@@ -69,3 +73,4 @@ define ['app'
 							alert "Please remove elements inside row and then delete."							
 						else
 							model.destroy()
+							App.execute "close:question:elements"

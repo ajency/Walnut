@@ -2,7 +2,6 @@ require.config({
   urlArgs: "ver=1",
   baseUrl: '../wp-content/themes/walnut/walnut/dev/js',
   paths: {
-    pace: 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
     jqueryresize: 'plugins/jquery.ba-resize.min',
@@ -25,7 +24,9 @@ require.config({
     checkbox: 'plugins/flatui-checkbox',
     componentloader: 'components/builder-component-loader',
     spin: 'plugins/spin',
-    jqueryspin: 'plugins/jquery.spin'
+    jqueryspin: 'plugins/jquery.spin',
+    jquerycolor: 'plugins/jquery.minicolors.min',
+    jqueryknob: 'plugins/jquery.knob'
   },
   shim: {
     underscore: {
@@ -34,6 +35,8 @@ require.config({
     jquery: ['underscore'],
     jqueryui: ['jquery'],
     jqueryresize: ['jquery', 'jqueryui'],
+    jquerycolor: ['jquery'],
+    jqueryknob: ['jquery'],
     kineticresize: ['kinetic'],
     backbone: {
       deps: ['jquery', 'underscore'],
@@ -47,7 +50,7 @@ require.config({
       deps: ['jquery'],
       exports: 'plupload'
     },
-    bootstrap: ['jquery'],
+    bootstrap: ['jquery', 'jqueryui'],
     bootstrapslider: ['bootstrap'],
     checkbox: ['bootstrap'],
     jqueryvalidate: ['jquery'],
