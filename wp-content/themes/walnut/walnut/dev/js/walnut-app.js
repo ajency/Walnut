@@ -82,6 +82,7 @@ define(['marionette'], function(Marionette) {
     App.leftNavRegion.close();
     App.headerRegion.close();
     App.mainContentRegion.close();
+    App.breadcrumbRegion.close();
     this.rootRoute = 'login';
     return App.navigate(this.rootRoute, {
       trigger: true
