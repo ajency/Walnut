@@ -56,14 +56,22 @@ Template Name: Content Creator
 
 <div id="site_main_container">
     <div>
-            <div id="header-region"></div>
-            <div id="left-nav-region"></div>
-            <div id="main-content-region" class="page-content" data-height="1006">
+        <div id="header-region"></div>
+        <div class="page-container row-fluid">
+                <div id="left-nav-region"></div>
+                <a href="#" class="scrollup">Scroll</a>
+                <div class="page-content condensed">
+                    <div class="content">
+                        <div id="login-region"></div>
+                        <div id="breadcrumb-region"></div>
+                        <div id="main-content-region" data-height="1006"></div>
+                    </div>
+                </div>
             </div>
+        </div>
     </div>
     <div id="dialog-region"></div>
     <div id="settings-region"></div>
-    <div id="login-region"></div>
 </div>
 <script type="text/javascript">
 var THEMEURL = 'http://localhost/impruw/testsite93/wp-content/themes/impruwclientparent';

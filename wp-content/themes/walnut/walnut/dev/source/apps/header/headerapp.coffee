@@ -51,7 +51,6 @@ define ['app'
 				if ($('.creator').length > 0) 
 					$(".header-seperation").css("display","none");
 					$("#main-menu").addClass("mini");
-					$("#main-content-region").addClass("condensed");
 					$(".start").removeClass("active open");
 					$(".arrow").removeClass("open");
 

@@ -60,6 +60,9 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
             "bSort": true
           });
         }
+        $("html, body").animate({
+          scrollTop: 0
+        }, 700);
         console.log('collection');
         return console.log(this.collection);
       };

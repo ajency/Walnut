@@ -163,15 +163,19 @@ define(['app'], function(App) {
         width = this.stage.width();
         height = this.stage.height();
         console.log(width + "  " + height);
+        this.hotspotDefault.setSize({
+          width: 336,
+          height: 200
+        });
         if (width < 220) {
           this.hotspotDefault.setSize({
             width: width - 10,
-            height: (width - 10) / 1.4
+            height: (width - 10) / 1.68
           });
         }
         if (height < 160) {
           this.hotspotDefault.setSize({
-            width: (height - 10) * 1.4,
+            width: (height - 10) * 1.68,
             height: height - 10
           });
         }
@@ -199,7 +203,8 @@ define(['app'], function(App) {
           type: 'Option',
           shape: 'Circle',
           color: '#000000',
-          transparent: false
+          transparent: false,
+          correct: false
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         self = this;
@@ -230,6 +235,24 @@ define(['app'], function(App) {
             return _this.optionLayer.draw();
           };
         })(this));
+        hotspotElement.on("change:correct", (function(_this) {
+          return function() {
+            if (hotspotElement.get('correct')) {
+              circle.fill('rgba(12, 199, 55, 0.28)');
+            } else {
+              circle.fill('');
+            }
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:toDelete", (function(_this) {
+          return function() {
+            circleGrp.destroy();
+            closequestionelementproperty = true;
+            App.execute("close:question:element:properties");
+            return _this.optionLayer.draw();
+          };
+        })(this));
         circleGrp.on('mousedown click', function(e) {
           e.stopPropagation();
           return App.execute("show:question:element:properties", {
@@ -250,7 +273,9 @@ define(['app'], function(App) {
           type: 'Option',
           shape: 'Rect',
           color: '#000000',
-          transparent: false
+          transparent: false,
+          angle: 0,
+          correct: false
         };
         hotspotElement = App.request("create:new:hotspot:element", modelData);
         self = this;
@@ -278,6 +303,31 @@ define(['app'], function(App) {
         hotspotElement.on("change:color", (function(_this) {
           return function() {
             box.stroke(hotspotElement.get('color'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:angle", (function(_this) {
+          return function() {
+            rectGrp.rotation(hotspotElement.get('angle'));
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:correct", (function(_this) {
+          return function() {
+            if (hotspotElement.get('correct')) {
+              box.fill('rgba(12, 199, 55, 0.28)');
+              console.log(hotspotElement.get('correct'));
+            } else {
+              box.fill('');
+            }
+            return _this.optionLayer.draw();
+          };
+        })(this));
+        hotspotElement.on("change:toDelete", (function(_this) {
+          return function() {
+            rectGrp.destroy();
+            closequestionelementproperty = true;
+            App.execute("close:question:element:properties");
             return _this.optionLayer.draw();
           };
         })(this));
@@ -322,7 +372,8 @@ define(['app'], function(App) {
           }
         });
         canvasText = new Kinetic.Text({
-          text: 'Enter Text',
+          text: 'CLICK TO ENTER TEXT',
+          opacity: 0.3,
           fontFamily: hotspotElement.get('fontFamily'),
           fontSize: hotspotElement.get('fontSize'),
           fill: hotspotElement.get('fontColor'),
@@ -347,8 +398,12 @@ define(['app'], function(App) {
           return function() {
             if (hotspotElement.get('text') !== "") {
               canvasText.setText(hotspotElement.get('text'));
+              canvasText.opacity(1);
+              canvasText.fill(hotspotElement.get('fontColor'));
             } else {
-              canvasText.setText('Enter Text');
+              canvasText.setText('CLICK TO ENTER TEXT');
+              canvasText.opacity(0.3);
+              canvasText.fill('fontColor');
             }
             return _this.textLayer.draw();
           };
@@ -380,6 +435,7 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             tooltip.destroy();
+            closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.textLayer.draw();
           };

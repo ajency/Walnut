@@ -8,11 +8,11 @@ define ['app'],(App)->
 				template : '<div class="tile-more-content no-padding">
 								<div class="tiles green">
 									<div class="tile-footer drag">
-										Question Properties 
+										Hotspot Option Properties 
 									</div>
 									<div class="docket-body">
 
-										<div class="radio radio-success">Is this correct?
+										<div id="correct-answer" class="radio radio-success">Is this correct?
 											<input id="yes" type="radio" name="optionyes" value="yes">
 											<label for="yes">Yes</label>
 											<input id="no" type="radio" name="optionyes" value="no" checked="checked">
@@ -31,6 +31,18 @@ define ['app'],(App)->
 										<div id="transparency" class="checkbox check-success">
 											<input id="checkbox3" type="checkbox" value="1">
 											<label for="checkbox3">Set Transparent</label>
+										</div>
+
+										<div id="knob" class="form-group">
+											Rotate <input type="text" class="dial" data-min="0" data-max="360"
+											 data-width="40" data-height="40" data-displayInput=false data-thickness=".5"
+											  data-fgColor="#0AA699" data-angleOffset="90" data-cursor=true>
+										</div>
+
+
+
+										<div class="form-group">
+											<button type="button" id="delete" class="btn btn-danger btn-small">Delete</button>
 										</div>
 
 									</div>
@@ -68,6 +80,36 @@ define ['app'],(App)->
 
 					# set the vale of color picker according to the current model
 					$('.fontColor').minicolors 'value', @model.get 'color'
+
+
+					#DELETE
+					$('#delete.btn-danger').on 'click',=>
+							@model.set 'toDelete', true
+
+
+					# Rect ROTATION
+					# initialize the knob
+					if @model.get('shape') is 'Rect'
+						$('.dial').val @model.get 'angle'
+						$(".dial").knob
+								change :(val)=>
+									@model.set "angle",val
+
+					else 
+						$('#knob').hide()
+
+
+					# CORRECT ANSWER
+					if @model.get 'correct'
+						$("#correct-answer.radio input#yes").prop 'checked',true
+					else
+						$("#correct-answer.radio input#no").prop 'checked',true
+
+					$('#correct-answer.radio input').on 'change',=>
+
+							@model.set 'correct', $('#correct-answer.radio input:checked').val()=="yes" ? true : false
+
+									
 
 
 

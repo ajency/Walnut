@@ -32,6 +32,8 @@ define ['app'
 
 			onShow:->
 				$('#example2').dataTable({"bPaginate": true,"bSort": true}) if @collection and @collection.length>0
+				
+				$("html, body").animate({ scrollTop: 0 }, 700);
 
 				console.log 'collection'
 				console.log @collection  

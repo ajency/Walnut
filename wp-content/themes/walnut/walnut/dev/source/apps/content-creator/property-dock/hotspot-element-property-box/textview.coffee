@@ -52,14 +52,16 @@ define ['app'],(App)->
 										</div>
 
 										
-										<div class="form-group">
-											<button type="button" id="delete" class="btn btn-danger btn-small">Delete</button>
-										</div>
+										
 
 										<div class="form-group">
 											Rotate <input type="text" class="dial" data-min="0" data-max="360"
 											 data-width="40" data-height="40" data-displayInput=false data-thickness=".5"
 											  data-fgColor="#0AA699" data-angleOffset="90" data-cursor=true>
+										</div>
+
+										<div class="form-group">
+											<button type="button" id="delete" class="btn btn-danger btn-small">Delete</button>
 										</div>
 
 					               	</div>
@@ -126,14 +128,19 @@ define ['app'],(App)->
 
 					
 					# BOLD and ITALICS
+					if @model.get('fontBold') is 'bold'
+						$('#font-style.btn-group #bold-btn.btn').addClass 'active'
+					if @model.get('fontItalics') is 'italic'
+						$('#font-style.btn-group #italic-btn.btn').addClass 'active'
+
 					$('#font-style.btn-group .btn').on 'click',->
 						setTimeout ->
 							console.log "timeout"
-							if $('#font-style.btn-group #bold-btn.btn').hasClass('active')
+							if $('#font-style.btn-group #bold-btn.btn').hasClass 'active'
 							 	self.model.set 'fontBold', "bold"
 							else
 								self.model.set 'fontBold', ""
-							if $('#font-style.btn-group #italic-btn.btn').hasClass('active')
+							if $('#font-style.btn-group #italic-btn.btn').hasClass 'active'
 								self.model.set 'fontItalics', "italic"
 							else
 								self.model.set 'fontItalics', ""
