@@ -47,6 +47,20 @@ define ['marionette'], (Marionette)->
 
 	App.on 'start', ->
 		# start the content creator app
+		xhr = $.get "#{AJAXURL}?action=get-user-data", 
+		{}, 
+		(resp)=>
+			if(resp.success)
+				user = App.request "get:user:model"
+				user.set resp.data
+				school = App.request "get:current:school"
+				App.vent.trigger "show:content:builder"
+				App.loginRegion.close()
+			else 	
+				App.vent.trigger "show:login"
+		, 'json'
+
+	App.vent.on "show:content:builder",->
 		App.execute "show:content:creator", 
 						region : App.mainContentRegion
 		
@@ -56,5 +70,10 @@ define ['marionette'], (Marionette)->
 		# start header app
 
 		# start left nav app
+	
 			
+	App.vent.on "show:login", ->
+		window.location = SITEURL+'#login'
+
+
 	App

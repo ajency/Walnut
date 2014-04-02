@@ -1,5 +1,35 @@
 .creator{
 	position: relative;
+
+	.row {
+		//margin: 0 0 1em;
+		position: relative;
+		//border: 1px solid transparent;
+		.column {
+			background: transparent;
+			height: 100%;
+			position: relative;
+			background-clip: content-box;
+			background: #fff;
+			&.empty-column {
+				background: url(../../../images/empty-drag-bg.svg) no-repeat center center #fff;
+				background-clip: content-box;
+				background-size: contain;
+				min-height:100px !important;
+				padding: 0.5em;
+			}
+			.container {
+				padding: 0;
+			}
+			.row {
+				margin: 0.5em;
+				border: 1px solid transparent;
+			}
+		}
+		&:last-child {
+			margin: 0;
+		}
+	}
 }
 
 #site-page-content-region{
@@ -372,36 +402,6 @@
 	}
 	&:hover{
 		//background: transparent;
-	}
-}
-
-.row {
-	//margin: 0 0 1em;
-	position: relative;
-	//border: 1px solid transparent;
-	.column {
-		background: transparent;
-		height: 100%;
-		position: relative;
-		background-clip: content-box;
-		background: #fff;
-		&.empty-column {
-			background: url(../../../images/empty-drag-bg.svg) no-repeat center center #fff;
-			background-clip: content-box;
-			background-size: contain;
-			min-height:100px !important;
-			padding: 0.5em;
-		}
-		.container {
-			padding: 0;
-		}
-		.row {
-			margin: 0.5em;
-			border: 1px solid transparent;
-		}
-	}
-	&:last-child {
-		margin: 0;
 	}
 }
 

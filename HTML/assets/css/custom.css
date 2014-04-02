@@ -23,6 +23,33 @@
 .creator {
   position: relative;
 }
+.creator .row {
+  position: relative;
+}
+.creator .row .column {
+  background: transparent;
+  height: 100%;
+  position: relative;
+  background-clip: content-box;
+  background: #fff;
+}
+.creator .row .column.empty-column {
+  background: url(../../../images/empty-drag-bg.svg) no-repeat center center #ffffff;
+  background-clip: content-box;
+  background-size: contain;
+  min-height: 100px !important;
+  padding: 0.5em;
+}
+.creator .row .column .container {
+  padding: 0;
+}
+.creator .row .column .row {
+  margin: 0.5em;
+  border: 1px solid transparent;
+}
+.creator .row:last-child {
+  margin: 0;
+}
 #site-page-content-region {
   margin-left: 260px;
   margin-right: 260px;
@@ -460,33 +487,6 @@
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 
 }
-.row {
-  position: relative;
-}
-.row .column {
-  background: transparent;
-  height: 100%;
-  position: relative;
-  background-clip: content-box;
-  background: #fff;
-}
-.row .column.empty-column {
-  background: url(../../../images/empty-drag-bg.svg) no-repeat center center #ffffff;
-  background-clip: content-box;
-  background-size: contain;
-  min-height: 100px !important;
-  padding: 0.5em;
-}
-.row .column .container {
-  padding: 0;
-}
-.row .column .row {
-  margin: 0.5em;
-  border: 1px solid transparent;
-}
-.row:last-child {
-  margin: 0;
-}
 #settings-region {
   position: absolute !important;
   z-index: 1000;
@@ -694,4 +694,10 @@ tbody.rowlink td {
     /*For mobile app testing*/
   
   }
+}
+#myCanvas-miki .cbp_tmlabel {
+  cursor: pointer;
+}
+#myCanvas-miki .cbp_tmlabel a {
+  color: #0aa699;
 }

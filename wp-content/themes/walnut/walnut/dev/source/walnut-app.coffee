@@ -86,6 +86,7 @@ define ['marionette'], (Marionette)->
 		App.leftNavRegion.close()
 		App.headerRegion.close()
 		App.mainContentRegion.close()
+		App.breadcrumbRegion.close()
 		@rootRoute = 'login' 
 		# if not logged in change rootRoute to login		
 		App.navigate(@rootRoute, trigger: true)
