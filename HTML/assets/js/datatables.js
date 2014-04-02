@@ -271,7 +271,7 @@ var tableElement = $('#students');
 	var tableElement = $('#questionsAll');
 
     tableElement.dataTable( {
-		"sDom": "<'row'<'col-xs-6'<'filters'> ><'col-xs-6'f>r<'clearfix'><'col-sm-12' >>t<'row'<'col-md-12'p i>>",
+		"sDom": "<'row'<'col-xs-11'<'filters'> ><'col-xs-1'>r<'clearfix'><'col-sm-12' >>t<'row'<'col-md-12'p i>>",
 		"sPaginationType": "bootstrap",
 		 "aoColumnDefs": [
           { 'bSortable': false, 'aTargets': [ 0 ] }
@@ -303,7 +303,7 @@ var tableElement = $('#students');
 	var tableElement = $('#questionsMY');
 
     tableElement.dataTable( {
-		"sDom": "<'row'<'col-xs-6' <'filters'>><'col-xs-6'f>r<'clearfix'><'col-sm-12' >>t<'row'<'col-md-12'p i>>",
+		"sDom": "<'row'<'col-xs-11' <'filters'>><'col-xs-1'>r<'clearfix'><'col-sm-12' >>t<'row'<'col-md-12'p i>>",
 		"sPaginationType": "bootstrap",
 		 "aoColumnDefs": [
           { 'bSortable': false, 'aTargets': [ 0 ] }
@@ -394,7 +394,7 @@ var tableElement = $('#students');
 		},
     });
 	$("div.toolbar").html('<div class="table-tools-actions"><button class="btn btn-primary" style="margin-left:12px" id="test2">Add</button></div>');
-	$("div.filters").html('<div class="table-tools-actions"><select><option value="one">Textbook</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select><select><option value="one">Chapter</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select><select><option value="one">Section</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select></div>');
+	$("div.filters").html('<div class="table-tools-actions"><select><option value="one">Textbook</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select><select><option value="one">Chapter</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select><select><option value="one">Section</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select><select><option value="one">Sub-Section</option><option value="two">Two</option><option value="three">Three</option><option value="four">Four</option></select></div>');
 	
 	$('#test2').on( "click",function() {
 		$("#quick-access").css("bottom","0px");

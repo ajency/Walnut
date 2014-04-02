@@ -170,10 +170,59 @@ tbody.rowlink{
 }
 
 #myCanvas-miki{
+
 	.cbp_tmlabel{
 		cursor: pointer;
 		a{
 			color: @color-primary;
 		}
+		.tools{
+			display: inline-block;
+			padding: 0;
+			margin: 0;
+			position: relative;
+			float: right;
+			&> a{
+				position: relative;
+				display: inline-block;
+				margin-left: 5px;
+				font-size: 16px;
+				width: 15px;
+				height: 15px;
+				color: darken(@body-bg, 20%);
+				&.remove{
+					&:before{
+						content: "\f00d";
+						font-family: FontAwesome;
+					}
+				}
+				&.config{
+					&:before{
+						content: "\f013";
+						font-family: FontAwesome;
+					}
+				}
+			}
+		} 
+	}
+
+	.cbp_tmtimeline > li{
+		.contentPiece, .cbp_tmlabel{
+			cursor: move;
+			.cbp_tmicon{
+				top:auto;
+			}
+		}
 	}
 }
+
+.contentSelect{
+	select{
+		width: 24%;
+		margin-right: 5px;
+	}
+}
+
+
+
+

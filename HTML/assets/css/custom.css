@@ -20,6 +20,9 @@
   -ms-transition: opacity 0.5s ease-in-out;
   -o-transition: opacity 0.5s ease-in-out;
 }
+.right {
+  float: right;
+}
 .creator {
   position: relative;
 }
@@ -700,4 +703,40 @@ tbody.rowlink td {
 }
 #myCanvas-miki .cbp_tmlabel a {
   color: #0aa699;
+}
+#myCanvas-miki .cbp_tmlabel .tools {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  float: right;
+}
+#myCanvas-miki .cbp_tmlabel .tools > a {
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 16px;
+  width: 15px;
+  height: 15px;
+  color: #aab7c1;
+}
+#myCanvas-miki .cbp_tmlabel .tools > a.remove:before {
+  content: "\f00d";
+  font-family: FontAwesome;
+}
+#myCanvas-miki .cbp_tmlabel .tools > a.config:before {
+  content: "\f013";
+  font-family: FontAwesome;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece,
+#myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel {
+  cursor: move;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmicon,
+#myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel .cbp_tmicon {
+  top: auto;
+}
+.contentSelect select {
+  width: 24%;
+  margin-right: 5px;
 }

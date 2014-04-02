@@ -56,6 +56,7 @@
 		<script type="text/javascript" src="assets/js/datatables.js"></script>
 
 		<script type="text/javascript" src="assets/js/row-link.js"></script>
+		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
 
 	<!-- END NEED TO WORK ON -->
 
@@ -272,6 +273,27 @@
 	<!-- END SIDEBAR --> 
 	<!-- BEGIN PAGE CONTAINER-->
 	<div class="page-content condensed"> 
+
+		<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="content-piece-config">
+	      <div class="modal-dialog">
+	        <div class="modal-content">
+	          <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	            <h4 class="modal-title">Content Piece Settings</h4>
+	          </div>
+	          <div class="modal-body">
+	            <label class="form-label">Some Text</label>
+	            <input name="" id="" type="text" class="form-control" placeholder="Enter some text">
+	          </div>
+	          <div class="modal-footer">
+	            <button type="button" class="btn btn-success">Save</button>
+	          </div>
+	        </div>
+	        <!-- /.modal-content -->
+	      </div>
+	      <!-- /.modal-dialog -->
+	    </div>
+
 		<div class="content">  
 			<ul class="breadcrumb">
 				<li>
@@ -303,19 +325,19 @@
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
 									<label class="form-label">Objective</label>
-									Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+									<input name="" id="" type="text" class="form-control" placeholder="Enter Objective">
 									</div>
 							</div>
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
 									<label class="form-label">Physical Requirements</label>
-									Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+									<textarea class="form-control" placeholder="Enter Physical Requirements"></textarea>
 								</div>
 							</div>
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
 									<label class="form-label">Subject</label>
-									Science
+									<input name="" id="" type="text" class="form-control" placeholder="Enter Subject">
 								</div>
 							</div>												 
 						</div>
@@ -323,36 +345,312 @@
 								<div class="col-md-4">
 								   <div class="margin-bottom-20 ">
 									<label class="form-label">Description</label>
-									Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur
+									<textarea class="form-control" placeholder="Enter Description"></textarea>
 								</div>
 							</div>
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
 									<label class="form-label">Electronic Requirements</label>
-								Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of 
+									<textarea class="form-control" placeholder="Enter Electronic Requirements"></textarea>
 								</div>
 							</div>
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
 									<label class="form-label">Chapter</label>
-									Lorem Ipsum is simply dummy
+									<input name="" id="" type="text" class="form-control" placeholder="Enter Chapter">
 								</div>
 							</div>											 
 						</div>
+						<button type="button" class="btn btn-success btn-cons2 right" id="save-question"> <i class="fa fa-check"></i> Save</button>
 					</div>
+				</div>
+
+				<div class="tiles white grid simple vertical blue">
+					<div class="grid-title no-border">
+						<h4 class="">Content <span class="semi-bold">Selection</span></h4>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+						</div>
+					</div>
+					<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
+						<div class="row">
+							<div class="col-lg-6">
+										<h4><span class="semi-bold">All</span> Questions</h4>
+								              <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="questionsAll">
+					                <thead>
+					                  <tr>
+					                  	<th style="width:8%"><div class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
+					                        <input type="checkbox" value="1" id="checkbox1">
+					                        <label for="checkbox1"></label>
+					                      </div>
+					                  	</th>
+					                    <th style="width:52%">Question</th>
+					                    <th style="width:20%" data-hide="phone,tablet">Creator</th>
+					                    <th style="width:20%">Last Modified</th>
+					                  </tr>
+					                </thead>
+					                <tbody>
+					                  <tr >
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="2" id="checkbox2">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td class="v-align-middle"><a href="#"></a>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</td>
+					                    <td class="v-align-middle"><span class="muted">Admin</span></td>
+					                    <td><span class="muted">12th Dec 13</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox3">
+					                        <label for="checkbox3"></label>
+					                      </div>
+					                  	</td>
+					                    <td class="v-align-middle">es, but also the leap into electronic typesetting, remaining essentially unchanged. It was popul</td>
+					                    <td><span class="muted">Tom</span></td>
+					                    <td><span class="muted">4th Jan 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="4" id="checkbox4">
+					                        <label for="checkbox4"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock,</td>
+					                    <td class="v-align-middle"><span class="muted">Bob</span></td>
+					                    <td><span class="muted">9th May 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="5" id="checkbox5">
+					                        <label for="checkbox5"></label>
+					                      </div>
+					                  	</td>
+					                    <td>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it </td>
+					                    <td class="v-align-middle"><span class="muted">Tom</span></td>
+					                    <td><span class="muted">13th Apr 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox6">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up </td>
+					                    <td class="v-align-middle"><span class="muted">Author Name</span></td>
+					                    <td><span class="muted">25th Jan 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox7">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</td>
+					                    <td class="v-align-middle"><span class="muted">Robert</span></td>
+					                    <td><span class="muted">14th Feb 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox8">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus</td>
+					                    <td class="v-align-middle"><span class="muted">Mary</span></td>
+					                    <td><span class="muted">6th Mar 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox9">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
+					                    <td class="v-align-middle"><span class="muted">Peter</span></td>
+					                    <td><span class="muted">28th Apr 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox10">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
+					                    <td class="v-align-middle"><span class="muted">Zack</span></td>
+					                    <td><span class="muted">4th Jan 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox11">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
+					                    <td class="v-align-middle"><span class="muted">Chris</span></td>
+					                    <td><span class="muted">6th Jul 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox12">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
+					                    <td class="v-align-middle"><span class="muted">Jim</span></td>
+					                    <td><span class="muted">14th Feb 14</span></td>
+					                  </tr>
+					                </tbody>
+					              </table>
+							</div>
+							<div class="col-lg-6">
+								<h4><span class="semi-bold">My</span> Questions</h4>
+								               <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="questionsMY">
+					                <thead>
+					                  <tr>
+					                  	<th style="width:8%"><div class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
+					                        <input type="checkbox" value="1" id="checkbox1">
+					                        <label for="checkbox1"></label>
+					                      </div>
+					                  	</th>
+					                    <th style="width:52%">Question</th>
+					                    <th style="width:20%" data-hide="phone,tablet">Creator</th>
+					                    <th style="width:20%">Last Modified</th>
+					                  </tr>
+					                </thead>
+					                <tbody>
+					                  <tr >
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="2" id="checkbox2">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td class="v-align-middle"><a href="#"></a>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</td>
+					                    <td class="v-align-middle"><span class="muted">Admin</span></td>
+					                    <td><span class="muted">12th Dec 13</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox3">
+					                        <label for="checkbox3"></label>
+					                      </div>
+					                  	</td>
+					                    <td class="v-align-middle">es, but also the leap into electronic typesetting, remaining essentially unchanged. It was popul</td>
+					                    <td><span class="muted">Tom</span></td>
+					                    <td><span class="muted">4th Jan 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="4" id="checkbox4">
+					                        <label for="checkbox4"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock,</td>
+					                    <td class="v-align-middle"><span class="muted">Bob</span></td>
+					                    <td><span class="muted">9th May 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="5" id="checkbox5">
+					                        <label for="checkbox5"></label>
+					                      </div>
+					                  	</td>
+					                    <td>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it </td>
+					                    <td class="v-align-middle"><span class="muted">Tom</span></td>
+					                    <td><span class="muted">13th Apr 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox6">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up </td>
+					                    <td class="v-align-middle"><span class="muted">Author Name</span></td>
+					                    <td><span class="muted">25th Jan 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox7">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</td>
+					                    <td class="v-align-middle"><span class="muted">Robert</span></td>
+					                    <td><span class="muted">14th Feb 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox8">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus</td>
+					                    <td class="v-align-middle"><span class="muted">Mary</span></td>
+					                    <td><span class="muted">6th Mar 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox9">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
+					                    <td class="v-align-middle"><span class="muted">Peter</span></td>
+					                    <td><span class="muted">28th Apr 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox10">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
+					                    <td class="v-align-middle"><span class="muted">Zack</span></td>
+					                    <td><span class="muted">4th Jan 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox11">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
+					                    <td class="v-align-middle"><span class="muted">Chris</span></td>
+					                    <td><span class="muted">6th Jul 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox12">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
+					                    <td class="v-align-middle"><span class="muted">Jim</span></td>
+					                    <td><span class="muted">14th Feb 14</span></td>
+					                  </tr>
+					                </tbody>
+					              </table>
+							</div>
+						</div>
+						<button type="button" class="btn btn-success btn-cons2 right m-t-20" id="save-question"> <i class="fa fa-plus"></i> Add</button>
+					</div>
+				</div>
 				</div>
 				
 				<div id="myCanvas-miki" class="col-md-10">
 
 					<ul class="cbp_tmtimeline">
-				        <li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
 				            <time class="cbp_tmtime" datetime="">
 				        	    <span class="time">15 <span class="semi-bold">mins</span></span>
 				            </time>
 				            <div class="cbp_tmicon primary animated bounceIn"> <i class="fa fa-question"></i> </div>
 				              <div class="cbp_tmlabel">
-				                <div class="p-t-10 p-l-30 p-r-20 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
-				                  <h4 class="inline m-b-5"><span class="text-success semi-bold"><a href="#">What is the name of the biggest part of the human brain?</a></span> </h4>
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold"><a href="#">What is the name of the biggest part of the human brain?</a></span> </h4>
 				                </div>
 				                <div class="clearfix"></div>
 				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
@@ -360,33 +658,38 @@
 				                  <div class="clearfix"></div>
 				                </div>
 				              </div>
+				            </div>
 				        </li>
-				        <li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
 				              <time class="cbp_tmtime" datetime="">
 				                <span class="time">4.5 <span class="semi-bold">mins</span></span>
 				              </time>
 				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-youtube-play"></i> </div>
 				              <div class="cbp_tmlabel">
-				                <div class="p-t-10 p-l-30 p-r-20 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 togglelink" >
-				                  <h4 class="inline m-b-5"><span class="text-success semi-bold ">Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 " >
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold ">Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
 				           
 				                </div>
-				                <iframe class="toggle" style="display: block;" width="100%" height="315" src="//www.youtube.com/embed/dYDGqmxMZFI" frameborder="0" allowfullscreen></iframe>
 				                <div class="clearfix"></div>
 				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
 				                  <div class="muted">Abc, 123, xyz</div>
 				                  <div class="clearfix"></div>
 				                </div>
 				              </div>
+				            </div>
 				        </li>
-				        <li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
 				              <time class="cbp_tmtime" datetime="">
 				                <span class="time">12 <span class="semi-bold">mins</span></span>
 				              </time>
 				              <div class="cbp_tmicon primary animated bounceIn"> <i class="fa fa-question"></i> </div>
 				              <div class="cbp_tmlabel">
-				                <div class="p-t-10 p-l-30 p-r-20 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
-				                  <h4 class="inline m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
 				                </div>
 				                <div class="clearfix"></div>
 				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
@@ -394,24 +697,27 @@
 				                  <div class="clearfix"></div>
 				                </div>
 				              </div>
+				            </div>
 				        </li>
-				        <li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
 				              <time class="cbp_tmtime" datetime="">
 				                <span class="time">23 <span class="semi-bold">mins</span></span>
 				              </time>
 				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-youtube-play"></i> </div>
 				              <div class="cbp_tmlabel">
-				                <div class="p-t-10 p-l-30 p-r-20 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 togglelink">
-				                  <h4 class="inline m-b-5"><span class="text-success semi-bold " >Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 ">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold " >Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
 				           
 				                </div>
-				                <iframe class="toggle" style="display: block;" width="100%" height="315" src="//www.youtube.com/embed/dYDGqmxMZFI" frameborder="0" allowfullscreen></iframe>
 				                <div class="clearfix"></div>
 				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
 				                  <div class="muted">Tag one, Tag two</div>
 				                  <div class="clearfix"></div>
 				                </div>
 				              </div>
+				            </div>
 				        </li>
 				    </ul>
 		    		<div class="clearfix"></div>
@@ -595,11 +901,5 @@
 	</div>
 </div>
 <!-- END CHAT --> 
-<script>
-	$(".cbp_tmlabel").click(function(){
-	     window.location=$(this).find("a").attr("href"); 
-	     return false;
-	});
-</script>
 </body>
 </html>
