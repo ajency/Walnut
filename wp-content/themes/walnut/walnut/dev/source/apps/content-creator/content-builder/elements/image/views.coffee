@@ -18,14 +18,21 @@ define ['app'],(App)->
 
 			# override serializeData to set holder property for the view
 			mixinTemplateHelpers:(data)->
+				console.log 'data  '
+				console.log JSON.stringify(data)
 				data = super data
+				console.log ' super data  '
+				console.log data
+
+				console.log @model
 
 				if @model.isNew()
 					data.placeholder = true
 				else
 					data.image = true
 					data.imageurl = ->
-						if @sizes['thumbnail'] then @sizes['thumbnail'].url else @sizes['full'].url
+						# if @sizes['thumbnail'] then @sizes['thumbnail'].url else @sizes['full'].url
+						@sizes['full'].url
 
 					data.alignclass = ->
 						switch @alignment
