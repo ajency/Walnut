@@ -9,12 +9,17 @@ define ['app'],(App)->
 			className : 'image'
 
 			template : '{{#image}}
+							<div id="image-holder" class="resize">
 							<img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive"/>
 							<div class="clearfix"></div>
+							</div>
 						{{/image}}
 						{{#placeholder}}
 							<div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Image</div>
 						{{/placeholder}}'
+
+			ui :
+				imageResize : '#image-holder.resize'
 
 			# override serializeData to set holder property for the view
 			mixinTemplateHelpers:(data)->
@@ -31,8 +36,8 @@ define ['app'],(App)->
 				else
 					data.image = true
 					data.imageurl = ->
-						# if @sizes['thumbnail'] then @sizes['thumbnail'].url else @sizes['full'].url
-						@sizes['full'].url
+						if @sizes['thumbnail'] then @sizes['thumbnail'].url else @sizes['full'].url
+						# @sizes['full'].url
 
 					data.alignclass = ->
 						switch @alignment
@@ -57,7 +62,23 @@ define ['app'],(App)->
 				return if @model.isNew()
 
 				# set the URL of the image depending on the available size
-				width 	= @$el.width()
-				height 	= @$el.height()
-				src = @model.getBestFit width,height
+				# width 	= @$el.width()
+				# height 	= @$el.height()
+				# src = @model.getBestFit width,height
+				src = @model.toJSON().sizes['full'].url
 				@$el.find('img').attr 'src',src
+
+				img = new Image()
+				img.src = @$el.find('img').attr 'src'
+
+				width = img.width
+				height= img.height
+				console.log @ui.imageResize.width()
+
+
+				@ui.imageResize.resizable
+						handles: "s" 
+						maxHeight: height*@ui.imageResize.width()/width
+						resize:(event, ui)->
+							$(@).resizable "option", "maxHeight", height*$(@).width()/width 
+							$(@).find('img').css "height",ui.size.height
