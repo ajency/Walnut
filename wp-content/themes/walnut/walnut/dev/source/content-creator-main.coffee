@@ -35,7 +35,7 @@ require.config
 		jqueryspin  		: 'plugins/jquery.spin'
 		jquerycolor			: 'plugins/jquery.minicolors.min'
 		jqueryknob			: 'plugins/jquery.knob'
-		ckeditor			: 'plugins/ckeditor'
+		ckeditor			: 'plugins/ckeditor/ckeditor'
 
 	shim:
 		underscore: 

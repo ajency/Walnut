@@ -218,7 +218,7 @@ define ['app'],(App)->
 						,200
 						
 					#DELETE
-					$('#delete.btn-danger').on 'click',=>
+					$('#delete.text-danger').on 'click',=>
 							@model.set 'toDelete', true
 						
 

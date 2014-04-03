@@ -76,6 +76,7 @@ define ['app'],(App)->
 				width = img.width
 				height= img.height
 				# console.log @ui.imageResize.width()
+			
 
 
 				@ui.imageResize.resizable
