@@ -67,13 +67,15 @@ define ['app'],(App)->
 				# src = @model.getBestFit width,height
 				src = @model.toJSON().sizes['full'].url
 				@$el.find('img').attr 'src',src
+				el = @$el
+				imageResize= @ui.imageResize
 
 				img = new Image()
 				img.src = @$el.find('img').attr 'src'
 
 				width = img.width
 				height= img.height
-				console.log @ui.imageResize.width()
+				# console.log @ui.imageResize.width()
 
 
 				@ui.imageResize.resizable
@@ -82,3 +84,16 @@ define ['app'],(App)->
 						resize:(event, ui)->
 							$(@).resizable "option", "maxHeight", height*$(@).width()/width 
 							$(@).find('img').css "height",ui.size.height
+
+
+				@ui.imageResize.resize ->
+						setTimeout ->
+
+							if imageResize.height()>height*imageResize.width()/width and imageResize.width()>0
+								console.log imageResize.width()
+							# 	console.log height*imageResize.width()/width
+								imageResize.find('img').height height*imageResize.find('img').width()/width
+								imageResize.height height*imageResize.find('img').width()/width
+						,100
+							# console.log el.width()
+							# $(@).height height*$(@).find('img').width()/width

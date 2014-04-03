@@ -56,24 +56,34 @@ define(['app'], function(App) {
       };
 
       ImageView.prototype.onShow = function() {
-        var height, img, src, width;
+        var el, height, imageResize, img, src, width;
         if (this.model.isNew()) {
           return;
         }
         src = this.model.toJSON().sizes['full'].url;
         this.$el.find('img').attr('src', src);
+        el = this.$el;
+        imageResize = this.ui.imageResize;
         img = new Image();
         img.src = this.$el.find('img').attr('src');
         width = img.width;
         height = img.height;
-        console.log(this.ui.imageResize.width());
-        return this.ui.imageResize.resizable({
+        this.ui.imageResize.resizable({
           handles: "s",
           maxHeight: height * this.ui.imageResize.width() / width,
           resize: function(event, ui) {
             $(this).resizable("option", "maxHeight", height * $(this).width() / width);
             return $(this).find('img').css("height", ui.size.height);
           }
+        });
+        return this.ui.imageResize.resize(function() {
+          return setTimeout(function() {
+            if (imageResize.height() > height * imageResize.width() / width && imageResize.width() > 0) {
+              console.log(imageResize.width());
+              imageResize.find('img').height(height * imageResize.find('img').width() / width);
+              return imageResize.height(height * imageResize.find('img').width() / width);
+            }
+          }, 100);
         });
       };
 
