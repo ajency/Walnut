@@ -532,6 +532,23 @@
   padding: 4px 12px;
   margin-right: 3px;
 }
+.wide-modal .modal-dialog {
+  width: 75%;
+}
+.modal-content .modal-header {
+  background-color: #0090d9;
+}
+.modal-content .modal-header .modal-title {
+  color: #fff;
+  text-align: left;
+  font-weight: 600;
+}
+.modal-content .modal-header .close {
+  color: #fff;
+}
+.modal-content .modal-body .media-manager-select {
+  background-color: #0090d9;
+}
 .listBox {
   margin-top: 60px;
 }
