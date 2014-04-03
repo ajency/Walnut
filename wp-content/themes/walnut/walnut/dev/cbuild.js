@@ -31,7 +31,7 @@
     bootstrapslider   : 'plugins/bootstrap-slider',
     jquerycolor     : 'plugins/jquery.minicolors.min',
     jqueryknob      : 'plugins/jquery.knob',
-    ckeditor      : 'plugins/ckeditor'
+    ckeditor      : 'plugins/ckeditor/ckeditor'
     
   },
   shim: {
