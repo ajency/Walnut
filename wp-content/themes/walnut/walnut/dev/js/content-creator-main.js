@@ -26,7 +26,8 @@ require.config({
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
     jquerycolor: 'plugins/jquery.minicolors.min',
-    jqueryknob: 'plugins/jquery.knob'
+    jqueryknob: 'plugins/jquery.knob',
+    ckeditor: 'plugins/ckeditor/ckeditor'
   },
   shim: {
     underscore: {

@@ -70,7 +70,7 @@ Template Name: Content Creator
             </div>
         </div>
     </div>
-    <div id="dialog-region"></div>
+    <div id="dialog-region" class="modal"></div>
     <div id="settings-region"></div>
 </div>
 <script type="text/javascript">
@@ -82,10 +82,11 @@ var _WPNONCE    = '<?php echo wp_create_nonce('media-form');?>';
 
 </script>
 <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
-<?php if(ENV=='dev') { ?>
+<?php if(ENV!='dev') { ?>
 <script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php } else { ?>
-<script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js"></script>
+ <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/ckeditor/ckeditor.js"></script> 
+ <script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js"></script>
 <?php } ?>
 
 

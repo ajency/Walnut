@@ -74,6 +74,11 @@ define(['app'], function(App) {
           this._addElements(type, elementPos);
           return this._updateDefaultLayer();
         });
+        $('button.btn.btn-success.btn-cons2').on('click', (function(_this) {
+          return function() {
+            return console.log(_this.stage.toJSON());
+          };
+        })(this));
         return $('#' + this.stageName + ' .kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {

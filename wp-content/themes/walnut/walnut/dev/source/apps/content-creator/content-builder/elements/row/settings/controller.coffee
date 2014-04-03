@@ -1,7 +1,9 @@
-define ['app','controllers/region-controller','apps/content-creator/content-builder/elements/row/settings/views'],
+define ['app'
+		'controllers/region-controller'
+		'apps/content-creator/content-builder/elements/row/settings/views'],
 		(App, AppController)->
 
-			App.module 'ContentBuilder.Element.Row.Settings', (Settings, App, Backbone, Marionette, $, _)->
+			App.module 'ContentCreator.ContentBuilder.Element.Row.Settings', (Settings, App, Backbone, Marionette, $, _)->
 
 				# menu controller
 				class Settings.Controller extends AppController

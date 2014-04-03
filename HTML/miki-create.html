@@ -17,6 +17,7 @@
 	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen">
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
@@ -57,6 +58,7 @@
 
 		<script type="text/javascript" src="assets/js/row-link.js"></script>
 		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
 
 	<!-- END NEED TO WORK ON -->
 
@@ -246,6 +248,17 @@
 					<li><a href="#">Add Question</a></li>
 				</ul>
 			</li>
+			<li>
+				<a href="javascript:;">
+					<i class="fa fa-pencil-square-o"></i>
+					<span class="title">Training Module</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Teacher Training</a></li>
+					<li><a href="#">Student Training</a></li>
+				</ul>
+			</li>
 			<!-- END ONE LEVEL MENU -->
 		
 		</ul>
@@ -325,7 +338,7 @@
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
 									<label class="form-label">Objective</label>
-									<input name="" id="" type="text" class="form-control" placeholder="Enter Objective">
+									<textarea class="form-control" placeholder="Enter Objective"></textarea>
 									</div>
 							</div>
 							<div class="col-md-4">
@@ -337,7 +350,11 @@
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
 									<label class="form-label">Subject</label>
-									<input name="" id="" type="text" class="form-control" placeholder="Enter Subject">
+									<select id="subs" class="form-control select2" >
+					                    <option value="Jim">Jim</option>
+					                    <option value="John">John</option>
+					                    <option value="Lucy">Lucy</option>
+					                </select>
 								</div>
 							</div>												 
 						</div>
@@ -345,7 +362,7 @@
 								<div class="col-md-4">
 								   <div class="margin-bottom-20 ">
 									<label class="form-label">Description</label>
-									<textarea class="form-control" placeholder="Enter Description"></textarea>
+									<textarea rows="4" class="form-control" placeholder="Enter Description"></textarea>
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -356,12 +373,42 @@
 							</div>
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
-									<label class="form-label">Chapter</label>
-									<input name="" id="" type="text" class="form-control" placeholder="Enter Chapter">
+									<label class="form-label">Chapter <span class="muted small pull-right"> Select a Subject first</span></label>
+									<select id="chaps" class="form-control select2" >
+					                    <option value="Jim">Jim</option>
+					                    <option value="John">John</option>
+					                    <option value="Lucy">Lucy</option>
+					                </select>
 								</div>
 							</div>											 
 						</div>
-						<button type="button" class="btn btn-success btn-cons2 right" id="save-question"> <i class="fa fa-check"></i> Save</button>
+						<div class="row ">
+								<div class="col-md-4">
+								   <div class="margin-bottom-20 ">
+									<label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>
+									<select id="secs" class="form-control select2" multiple="">
+					                    <option value="Jim">Jim</option>
+					                    <option value="John">John</option>
+					                    <option value="Lucy">Lucy</option>
+					                </select>
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Sub-Sections <span class="muted small pull-right"> Select a Chapter first</span></label>
+									<select id="subsecs" class="form-control select2" multiple="">
+					                    <option value="Jim">Jim</option>
+					                    <option value="John">John</option>
+					                    <option value="Lucy">Lucy</option>
+					                </select>
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="p-t-30 ">
+									<button type="button" class="btn btn-success btn-cons2 right" id="save-question"> <i class="fa fa-check"></i> Save</button>
+								</div>
+							</div>											 
+						</div>
 					</div>
 				</div>
 
@@ -650,7 +697,7 @@
 				              <div class="cbp_tmlabel">
 				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
 				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold"><a href="#">What is the name of the biggest part of the human brain?</a></span> </h4>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
 				                </div>
 				                <div class="clearfix"></div>
 				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
@@ -901,5 +948,12 @@
 	</div>
 </div>
 <!-- END CHAT --> 
+<script>
+	$("#subs").select2();
+	$("#chaps").select2();
+//Multi Select
+ 	$("#secs").val([]).select2();
+ 	$("#subsecs").val([]).select2();
+ </script>
 </body>
 </html>

@@ -185,6 +185,12 @@
 .textarea {
   width: 100%;
 }
+.font {
+  width: 68%;
+}
+.textFormat {
+  display: inline-block;
+}
 .textFormat .btn,
 .textFormat .btn:focus {
   background-color: #d1dade;
@@ -196,6 +202,18 @@
 .textFormat .btn[disabled] {
   background-color: #0aa699;
   color: #fff;
+}
+.minicolors-theme-default.minicolors {
+  width: 60px;
+  height: 25px;
+  margin-right: 20px;
+}
+.minicolors-swatch-color {
+  border-radius: 5px;
+}
+.rotateCtrl > div {
+  position: relative;
+  top: 15px;
 }
 .element-wrapper {
   border: 2px solid #f3f3f3;
@@ -531,6 +549,33 @@
 .settings-box .set-column-count .btn-default {
   padding: 4px 12px;
   margin-right: 3px;
+}
+.wide-modal .modal-dialog {
+  width: 80%;
+}
+.modal-content .modal-header {
+  background-color: #0090d9;
+}
+.modal-content .modal-header .modal-title {
+  color: #fff;
+  text-align: left;
+  font-weight: 600;
+}
+.modal-content .modal-header .close {
+  color: #fff;
+  opacity: 1;
+}
+.modal-content .modal-body .media-manager-select {
+  background-color: #0090d9;
+}
+.modal-content .modal-body #edit-media-region {
+  padding-bottom: 20px;
+}
+.modal-content .modal-body button {
+  float: right;
+}
+.modal-content .modal-footer {
+  display: none;
 }
 .listBox {
   margin-top: 60px;
