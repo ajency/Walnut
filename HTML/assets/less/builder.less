@@ -188,8 +188,12 @@
 	width: 100%;
 }
 
+.font{
+	width: 68%;
+}
 
 .textFormat{
+	display: inline-block;
 	.btn, .btn:focus{
 		background-color: #d1dade;
 	}
@@ -199,6 +203,22 @@
 	}
 
 }
+
+.minicolors-theme-default.minicolors{
+	width: 60px;
+	height: 25px;
+	margin-right: 20px;
+}
+
+.minicolors-swatch-color{
+	border-radius: 5px;
+}
+
+.rotateCtrl > div{
+	position: relative;
+	top: 15px;
+}
+
 .element-wrapper {
 	border: 2px solid @preview-grey;
 	padding-top: 7px;
@@ -458,7 +478,7 @@
 
 .wide-modal{
 	.modal-dialog{
-		width: 75%;
+		width: 80%;
 	}
 }
 
@@ -472,12 +492,22 @@
 		}
 		.close{
 			color: #fff;
+			opacity: 1;
 		}
 	}
 	.modal-body{
 		.media-manager-select{
 			background-color: @color-info;
 		}
+		#edit-media-region{
+			padding-bottom: 20px;
+		}
+		button{
+			float: right;
+		}
+	}
+	.modal-footer{
+		display: none;
 	}
 }
 
