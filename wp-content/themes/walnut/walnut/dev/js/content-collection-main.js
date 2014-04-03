@@ -11,7 +11,7 @@ require.config({
     backbone: 'plugins/backbone',
     marionette: 'plugins/backbone.marionette',
     text: 'plugins/text',
-    app: 'walnut-app',
+    app: 'content-collection-app',
     syphon: 'plugins/backbone.syphon',
     sidr: 'plugins/jquery.sidr.min',
     slimroll: 'plugins/jquery.slimscroll.min',
@@ -44,13 +44,13 @@ require.config({
       exports: 'Marionette'
     },
     sidr: ['jquery'],
-    tablesorter: ['jquery'],
-    tablesorter_pager: ['jquery', 'tablesorter'],
     unveil: ['jquery'],
     slimroll: ['jquery'],
     core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
     mixitup: ['jquery'],
+    tablesorter: ['jquery'],
+    tablesorter_pager: ['jquery', 'tablesorter'],
     jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
@@ -58,6 +58,6 @@ require.config({
   }
 });
 
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
+require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/content-collection-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
   return App.start();
 });

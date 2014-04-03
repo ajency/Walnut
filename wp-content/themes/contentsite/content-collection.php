@@ -14,7 +14,7 @@
  * @since Walnut 1.0
  */
 /*
-  Template Name: Dashboard
+  Template Name: Content Collection Template
  */
 ?>
 
@@ -82,11 +82,11 @@
             SITEURL = '<?php echo site_url() ?>';
         </script>
         <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
-        <?php if (ENV = 'dev') { ?>
-            <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+        <?php if (ENV == 'dev') { ?>
+            <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/content-collection-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
             <?php } else {
             ?>
-                <script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $ver?>"></script>
+                <script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/content-collection-main.js?ver=<?php echo $ver?>"></script>
         <?php } ?>
 
     </body>

@@ -27,12 +27,10 @@
     spin        : 'plugins/spin',
     jqueryspin      : 'plugins/jquery.spin',
     componentloader   : 'components/component-loader',
-   // jquery_datatables     : 'plugins/jquery.dataTables.min',
-    //tabletools      : 'plugins/TableTools.min',
-    //datatables_responsive: 'plugins/datatables.responsive',
-    //datatables      : 'plugins/datatables',
     unveil        : 'plugins/jquery.unveil.min',
-    detect: 'plugins/detect'
+    detect: 'plugins/detect',
+    tablesorter     : 'plugins/jquery.tablesorter',
+    tablesorter_pager : 'plugins/jquery.tablesorter.pager'
   },
   shim: {
     underscore: {
@@ -49,6 +47,8 @@
       deps: ['backbone'],
       exports: 'Marionette'
     },
+    tablesorter: ['jquery'],
+    tablesorter_pager: ['jquery','tablesorter'],
     sidr: ['jquery'],
     unveil: ['jquery'],
     slimroll: ['jquery'],
@@ -58,10 +58,6 @@
     syphon: ['backbone'],
     underscorestring: ['underscore'],
     mixitup     : ['jquery'],
-   // jquery_datatables     : ['jquery'],
-   // tabletools    : ['jquery_datatables'],
-   // datatables_responsive     : ['jquery_datatables'],
-   // datatables    : ['jquery_datatables','bootstrap'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
   }
 })
