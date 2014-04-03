@@ -70,7 +70,7 @@ Template Name: Content Creator
             </div>
         </div>
     </div>
-    <div id="dialog-region"></div>
+    <div id="dialog-region" class="modal"></div>
     <div id="settings-region"></div>
 </div>
 <script type="text/javascript">

@@ -15,17 +15,18 @@ define(['app'], function(App) {
       ImageView.prototype.template = '{{#image}} <img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive"/> <div class="clearfix"></div> {{/image}} {{#placeholder}} <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Image</div> {{/placeholder}}';
 
       ImageView.prototype.mixinTemplateHelpers = function(data) {
+        console.log('data  ');
+        console.log(JSON.stringify(data));
         data = ImageView.__super__.mixinTemplateHelpers.call(this, data);
+        console.log(' super data  ');
+        console.log(data);
+        console.log(this.model);
         if (this.model.isNew()) {
           data.placeholder = true;
         } else {
           data.image = true;
           data.imageurl = function() {
-            if (this.sizes['thumbnail']) {
-              return this.sizes['thumbnail'].url;
-            } else {
-              return this.sizes['full'].url;
-            }
+            return this.sizes['full'].url;
           };
           data.alignclass = function() {
             switch (this.alignment) {
