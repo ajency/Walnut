@@ -31,10 +31,8 @@ require.config
 		mixitup				: 'plugins/jquery.mixitup.min'
 		spin 				: 'plugins/spin'
 		jqueryspin  		: 'plugins/jquery.spin'
-		#jquery_datatables  	: 'plugins/jquery.dataTables.min'
-		#tabletools 			: 'plugins/TableTools.min'
-		#datatables_responsive: 'plugins/datatables.responsive'
-		#datatables  		: 'plugins/datatables'
+		tablesorter			: 'plugins/jquery.tablesorter'
+		tablesorter_pager	: 'plugins/jquery.tablesorter.pager'
 		unveil				: 'plugins/jquery.unveil.min'
 		detect				: 'plugins/detect'
 
@@ -52,15 +50,13 @@ require.config
 			deps 	: ['backbone']
 			exports : 'Marionette'
 		sidr 			: ['jquery']
+		tablesorter 		: ['jquery']
+		tablesorter_pager 		: ['jquery','tablesorter']
 		unveil 			: ['jquery']
 		slimroll 		: ['jquery']
 		core 			: ['sidr','jquery']
 		breakpoints 		: ['jquery']
 		mixitup 		: ['jquery']
-		#jquery_datatables 		: ['jquery']
-		#tabletools 		: ['jquery_datatables']
-		#datatables_responsive : ['jquery_datatables']
-		#datatables 		: ['jquery_datatables','bootstrap']
 		jqueryspin 		: ['spin']
 		jqueryvalidate	: ['jquery']
 		syphon			: ['backbone']

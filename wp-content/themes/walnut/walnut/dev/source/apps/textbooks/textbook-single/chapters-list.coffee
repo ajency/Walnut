@@ -31,7 +31,9 @@ define ['app'
 			itemViewContainer : '#list-chapters'
 
 			onShow:->
-				$('#example2').dataTable({"bPaginate": true,"bSort": true}) if @collection and @collection.length>0
+				$('#example2').tablesorter()
+				$('#example2').tablesorterPager({container: $("#pager")}); 
+				#$('#example2').dataTable({"bPaginate": true,"bSort": true}) if @collection and @collection.length>0
 				
 				$("html, body").animate({ scrollTop: 0 }, 700);
 

@@ -22,6 +22,8 @@ require.config({
     mixitup: 'plugins/jquery.mixitup.min',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
+    tablesorter: 'plugins/jquery.tablesorter',
+    tablesorter_pager: 'plugins/jquery.tablesorter.pager',
     unveil: 'plugins/jquery.unveil.min',
     detect: 'plugins/detect'
   },
@@ -42,6 +44,8 @@ require.config({
       exports: 'Marionette'
     },
     sidr: ['jquery'],
+    tablesorter: ['jquery'],
+    tablesorter_pager: ['jquery', 'tablesorter'],
     unveil: ['jquery'],
     slimroll: ['jquery'],
     core: ['sidr', 'jquery'],

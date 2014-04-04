@@ -75,7 +75,7 @@ define(['app'], function(App) {
             }
           }, 200);
         });
-        return $('#delete.btn-danger').on('click', (function(_this) {
+        return $('#delete.text-danger').on('click', (function(_this) {
           return function() {
             return _this.model.set('toDelete', true);
           };

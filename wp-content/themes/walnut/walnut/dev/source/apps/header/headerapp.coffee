@@ -14,8 +14,6 @@ define ['app'
 
 				@school = App.request "get:current:school"
 
-				console.log '@school1'
-				console.log @school
 				@listenTo layout, 'show', @showLeftRightViews
 				@show layout, (loading:true)
 

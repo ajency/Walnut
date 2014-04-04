@@ -28,8 +28,28 @@ define ['app'],(App)->
 			# we can destroy it on close of element
 			onShow:->
 				@$el.attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
+				# CKEDITOR.on 'instanceCreated', @configureEditor
 				@editor = CKEDITOR.inline document.getElementById @$el.attr 'id'
 				@editor.setData _.stripslashes @model.get 'content'
+
+
+			# set configuration for the Ckeditor
+			configureEditor: (event) =>
+				editor = event.editor
+				element = editor.element
+				# Customize the editor configurations on "configLoaded" event,
+				# which is fired after the configuration file loading and
+				# execution. This makes it possible to change the
+				# configurations before the editor initialization takes place.
+				editor.on "configLoaded", ->
+
+					# Rearrange the layout of the toolbar.
+					editor.config.toolbarGroups = [
+													  name: "paragraph"
+													  groups: [ "list", "indent", "blocks", "align", "bidi" ]
+													,
+													  name: 'colors' 
+												]
 
 			# destroy the Ckeditor instance to avoiid memory leaks on close of element
 			# this.editor will hold the reference to the editor instance

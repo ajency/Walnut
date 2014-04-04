@@ -16,9 +16,7 @@ define [
 			'jqueryspin'
 			'bootstrap'
 			'mixitup'
-			#'jquery_datatables'
-			#'tabletools'
-			#'datatables_responsive'
-			#'datatables'
+			'tablesorter'
+			'tablesorter_pager'
 			'unveil'
 		], ->

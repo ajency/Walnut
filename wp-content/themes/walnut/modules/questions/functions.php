@@ -1,16 +1,16 @@
 <?php
-function create_question_post_type() {
-	register_post_type('question', array(
+function create_content_piece_post_type() {
+	register_post_type('content-piece', array(
 	'labels' => array(
-	'name' => __('Question'),
-	'singular_name' => __('Question'),
-	'add_new_item' => 'Add New Question',
-	'edit_item' => 'Edit Question',
-	'new item' => 'New Question',
-	'view_item' => 'View Question',
-	'not_found' => 'No Questions found',
-	'not_found_in_trash' => 'No Questions found in the trash',
-	'search_items' => 'Search Questions'
+	'name' => __('Content Piece'),
+	'singular_name' => __('Content Piece'),
+	'add_new_item' => 'Add New Content Piece',
+	'edit_item' => 'Edit Content Piece',
+	'new item' => 'New Content Piece',
+	'view_item' => 'View Content Pieces',
+	'not_found' => 'No Content Piece found',
+	'not_found_in_trash' => 'No Content Pieces found in the trash',
+	'search_items' => 'Search Content Pieces'
 			),
 			'public' => true,
 			'has_archive' => true,
@@ -18,7 +18,7 @@ function create_question_post_type() {
 	)
 	);
 
-	register_taxonomy('textbook', 'question', array('labels' => array(
+	register_taxonomy('textbook', 'content-piece', array('labels' => array(
 	'name' => 'Textbook',
 	'singular_name' => 'Textbook',
 	'add_new_item' => 'Add New Textbook',
@@ -33,20 +33,20 @@ function create_question_post_type() {
         'show_ui' => true,
 	'query_var' => true));
 
-	register_taxonomy('question-tags', 'question', array('labels' => array(
-	'name' => 'Question Tags',
-	'singular_name' => 'Question Tag',
+	register_taxonomy('content-piece-tags', 'content-piece', array('labels' => array(
+	'name' => 'Content Piece Tags',
+	'singular_name' => 'Content Piece Tag',
 	'add_new_item' => 'Add New Tag',
 	'edit_item' => 'Edit Tag',
 	'new item' => 'New Tag',
 	'view_item' => 'View Tag',
 	'not_found' => 'No Tag found',
 	'not_found_in_trash' => 'No Tag found in the trash',
-	'search_items' => 'Search Question Tag'
+	'search_items' => 'Search Content Piece Tag'
 			), 'public' => true,
         'show_ui' => true,
 	'query_var' => true));
 }
 
-add_action('init', 'create_question_post_type');
+add_action('init', 'create_content_piece_post_type');
 ?>
