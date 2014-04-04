@@ -1,31 +1,36 @@
-require.config({
-  urlArgs: "ver=" + ((new Date()).getTime()),
-  baseUrl: './wp-content/themes/walnut/walnut/dev/js',
+({
+  baseUrl: './js',
+  name: 'plugins/almond',
+  include : 'content-collection-main',
+  //optimize: 'none',
+  wrap: false,
+  out: '../production/content-collection-main.js',
   paths: {
+    pace        : 'plugins/pace',
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
+    bootstrap     : 'plugins/bootstrap',
     jqueryvalidate: 'plugins/jquery.validate.min',
-    bootstrap: 'plugins/bootstrap.min',
     underscore: 'plugins/underscore',
     underscorestring: 'plugins/underscorestring',
     backbone: 'plugins/backbone',
     marionette: 'plugins/backbone.marionette',
     text: 'plugins/text',
-    app: 'walnut-app',
+    app: 'content-collection-app',
     syphon: 'plugins/backbone.syphon',
     sidr: 'plugins/jquery.sidr.min',
     slimroll: 'plugins/jquery.slimscroll.min',
     breakpoints: 'plugins/breakpoints',
     mustache: 'plugins/mustache',
     core: 'plugins/core',
-    componentloader: 'components/component-loader',
-    mixitup: 'plugins/jquery.mixitup.min',
-    spin: 'plugins/spin',
-    jqueryspin: 'plugins/jquery.spin',
-    tablesorter: 'plugins/jquery.tablesorter',
-    tablesorter_pager: 'plugins/jquery.tablesorter.pager',
-    unveil: 'plugins/jquery.unveil.min',
-    detect: 'plugins/detect'
+    mixitup       : 'plugins/jquery.mixitup.min',
+    spin        : 'plugins/spin',
+    jqueryspin      : 'plugins/jquery.spin',
+    componentloader   : 'components/component-loader',
+    unveil        : 'plugins/jquery.unveil.min',
+    detect: 'plugins/detect',
+    tablesorter     : 'plugins/jquery.tablesorter',
+    tablesorter_pager : 'plugins/jquery.tablesorter.pager'
   },
   shim: {
     underscore: {
@@ -34,7 +39,6 @@ require.config({
     jquery: ['underscore'],
     jqueryui: ['jquery'],
     bootstrap: ['jquery'],
-    underscorestring: ['underscore'],
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
@@ -43,21 +47,17 @@ require.config({
       deps: ['backbone'],
       exports: 'Marionette'
     },
-    sidr: ['jquery'],
     tablesorter: ['jquery'],
-    tablesorter_pager: ['jquery', 'tablesorter'],
+    tablesorter_pager: ['jquery','tablesorter'],
+    sidr: ['jquery'],
     unveil: ['jquery'],
     slimroll: ['jquery'],
     core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
-    mixitup: ['jquery'],
-    jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
-    app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
+    underscorestring: ['underscore'],
+    mixitup     : ['jquery'],
+    app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
   }
-});
-
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
-  return App.start();
-});
+})

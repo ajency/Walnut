@@ -14,7 +14,7 @@
  * @since Walnut 1.0
  */
 /*
-  Template Name: Dashboard
+  Template Name: Content Collection Template
  */
 ?>
 
@@ -36,7 +36,7 @@
         ?>
         
         <link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
-        <!--<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>-->
+        <link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
         <!-- BEGIN CORE CSS FRAMEWORK -->
         <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
@@ -83,10 +83,10 @@
         </script>
         <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
         <?php if (ENV == 'dev') { ?>
-            <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+            <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/content-collection-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
             <?php } else {
             ?>
-                <script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $ver?>"></script>
+                <script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/content-collection-main.js?ver=<?php echo $ver?>"></script>
         <?php } ?>
 
     </body>
