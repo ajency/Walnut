@@ -20,8 +20,54 @@
   -ms-transition: opacity 0.5s ease-in-out;
   -o-transition: opacity 0.5s ease-in-out;
 }
+.overlap-left-15 {
+  position: absolute;
+  left: -15px;
+  bottom: 40%;
+}
+.overlap-left-15 i {
+  color: #fff;
+}
+.overlap-right-15 {
+  position: absolute;
+  right: -15px;
+  bottom: 40%;
+}
+.overlap-right-15 i {
+  color: #fff;
+}
+.m-r-0 {
+  margin-right: 0;
+}
 .creator {
   position: relative;
+}
+.creator .row {
+  position: relative;
+}
+.creator .row .column {
+  background: transparent;
+  height: 100%;
+  position: relative;
+  background-clip: content-box;
+  background: #fff;
+}
+.creator .row .column.empty-column {
+  background: url(../../../images/empty-drag-bg.svg) no-repeat center center #ffffff;
+  background-clip: content-box;
+  background-size: contain;
+  min-height: 100px !important;
+  padding: 0.5em;
+}
+.creator .row .column .container {
+  padding: 0;
+}
+.creator .row .column .row {
+  margin: 0.5em;
+  border: 1px solid transparent;
+}
+.creator .row:last-child {
+  margin: 0;
 }
 #site-page-content-region {
   margin-left: 260px;
@@ -158,6 +204,12 @@
 .textarea {
   width: 100%;
 }
+.font {
+  width: 68%;
+}
+.textFormat {
+  display: inline-block;
+}
 .textFormat .btn,
 .textFormat .btn:focus {
   background-color: #d1dade;
@@ -169,6 +221,18 @@
 .textFormat .btn[disabled] {
   background-color: #0aa699;
   color: #fff;
+}
+.minicolors-theme-default.minicolors {
+  width: 60px;
+  height: 25px;
+  margin-right: 20px;
+}
+.minicolors-swatch-color {
+  border-radius: 5px;
+}
+.rotateCtrl > div {
+  position: relative;
+  top: 15px;
 }
 .element-wrapper {
   border: 2px solid #f3f3f3;
@@ -460,33 +524,6 @@
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 
 }
-.row {
-  position: relative;
-}
-.row .column {
-  background: transparent;
-  height: 100%;
-  position: relative;
-  background-clip: content-box;
-  background: #fff;
-}
-.row .column.empty-column {
-  background: url(../../../images/empty-drag-bg.svg) no-repeat center center #ffffff;
-  background-clip: content-box;
-  background-size: contain;
-  min-height: 100px !important;
-  padding: 0.5em;
-}
-.row .column .container {
-  padding: 0;
-}
-.row .column .row {
-  margin: 0.5em;
-  border: 1px solid transparent;
-}
-.row:last-child {
-  margin: 0;
-}
 #settings-region {
   position: absolute !important;
   z-index: 1000;
@@ -532,6 +569,33 @@
   padding: 4px 12px;
   margin-right: 3px;
 }
+.wide-modal .modal-dialog {
+  width: 80%;
+}
+.modal-content .modal-header {
+  background-color: #0090d9;
+}
+.modal-content .modal-header .modal-title {
+  color: #fff;
+  text-align: left;
+  font-weight: 600;
+}
+.modal-content .modal-header .close {
+  color: #fff;
+  opacity: 1;
+}
+.modal-content .modal-body .media-manager-select {
+  background-color: #0090d9;
+}
+.modal-content .modal-body #edit-media-region {
+  padding-bottom: 20px;
+}
+.modal-content .modal-body button {
+  float: right;
+}
+.modal-content .modal-footer {
+  display: none;
+}
 .listBox {
   margin-top: 60px;
 }
@@ -542,6 +606,11 @@
 }
 .user-description-box {
   min-height: 120px;
+}
+.teacherCanvas {
+  background-color: #fff;
+  position: relative;
+  min-height: 200px;
 }
 body {
   background-color: #e5e9ec;
@@ -694,4 +763,46 @@ tbody.rowlink td {
     /*For mobile app testing*/
   
   }
+}
+#myCanvas-miki .cbp_tmlabel {
+  cursor: pointer;
+}
+#myCanvas-miki .cbp_tmlabel a {
+  color: #0aa699;
+}
+#myCanvas-miki .cbp_tmlabel .tools {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  float: right;
+}
+#myCanvas-miki .cbp_tmlabel .tools > a {
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 16px;
+  width: 15px;
+  height: 15px;
+  color: #aab7c1;
+}
+#myCanvas-miki .cbp_tmlabel .tools > a.remove:before {
+  content: "\f00d";
+  font-family: FontAwesome;
+}
+#myCanvas-miki .cbp_tmlabel .tools > a.config:before {
+  content: "\f013";
+  font-family: FontAwesome;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece,
+#myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel {
+  cursor: move;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmicon,
+#myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel .cbp_tmicon {
+  top: auto;
+}
+.contentSelect select {
+  width: 24%;
+  margin-right: 5px;
 }

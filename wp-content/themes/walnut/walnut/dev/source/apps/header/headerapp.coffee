@@ -14,8 +14,6 @@ define ['app'
 
 				@school = App.request "get:current:school"
 
-				console.log '@school1'
-				console.log @school
 				@listenTo layout, 'show', @showLeftRightViews
 				@show layout, (loading:true)
 
@@ -51,7 +49,6 @@ define ['app'
 				if ($('.creator').length > 0) 
 					$(".header-seperation").css("display","none");
 					$("#main-menu").addClass("mini");
-					$("#main-content-region").addClass("condensed");
 					$(".start").removeClass("active open");
 					$(".arrow").removeClass("open");
 

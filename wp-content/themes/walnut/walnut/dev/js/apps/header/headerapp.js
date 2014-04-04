@@ -18,8 +18,6 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         var layout;
         this.layout = layout = this._getHeaderView();
         this.school = App.request("get:current:school");
-        console.log('@school1');
-        console.log(this.school);
         this.listenTo(layout, 'show', this.showLeftRightViews);
         return this.show(layout, {
           loading: true
@@ -74,7 +72,6 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         if ($('.creator').length > 0) {
           $(".header-seperation").css("display", "none");
           $("#main-menu").addClass("mini");
-          $("#main-content-region").addClass("condensed");
           $(".start").removeClass("active open");
           return $(".arrow").removeClass("open");
         }

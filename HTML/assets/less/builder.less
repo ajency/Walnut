@@ -1,5 +1,35 @@
 .creator{
 	position: relative;
+
+	.row {
+		//margin: 0 0 1em;
+		position: relative;
+		//border: 1px solid transparent;
+		.column {
+			background: transparent;
+			height: 100%;
+			position: relative;
+			background-clip: content-box;
+			background: #fff;
+			&.empty-column {
+				background: url(../../../images/empty-drag-bg.svg) no-repeat center center #fff;
+				background-clip: content-box;
+				background-size: contain;
+				min-height:100px !important;
+				padding: 0.5em;
+			}
+			.container {
+				padding: 0;
+			}
+			.row {
+				margin: 0.5em;
+				border: 1px solid transparent;
+			}
+		}
+		&:last-child {
+			margin: 0;
+		}
+	}
 }
 
 #site-page-content-region{
@@ -158,8 +188,12 @@
 	width: 100%;
 }
 
+.font{
+	width: 68%;
+}
 
 .textFormat{
+	display: inline-block;
 	.btn, .btn:focus{
 		background-color: #d1dade;
 	}
@@ -169,6 +203,22 @@
 	}
 
 }
+
+.minicolors-theme-default.minicolors{
+	width: 60px;
+	height: 25px;
+	margin-right: 20px;
+}
+
+.minicolors-swatch-color{
+	border-radius: 5px;
+}
+
+.rotateCtrl > div{
+	position: relative;
+	top: 15px;
+}
+
 .element-wrapper {
 	border: 2px solid @preview-grey;
 	padding-top: 7px;
@@ -375,36 +425,6 @@
 	}
 }
 
-.row {
-	//margin: 0 0 1em;
-	position: relative;
-	//border: 1px solid transparent;
-	.column {
-		background: transparent;
-		height: 100%;
-		position: relative;
-		background-clip: content-box;
-		background: #fff;
-		&.empty-column {
-			background: url(../../../images/empty-drag-bg.svg) no-repeat center center #fff;
-			background-clip: content-box;
-			background-size: contain;
-			min-height:100px !important;
-			padding: 0.5em;
-		}
-		.container {
-			padding: 0;
-		}
-		.row {
-			margin: 0.5em;
-			border: 1px solid transparent;
-		}
-	}
-	&:last-child {
-		margin: 0;
-	}
-}
-
 #settings-region {
 	position: absolute !important;
 	z-index: 1000;
@@ -453,6 +473,41 @@
 			margin-right: 3px;
 			//color: #fff;
 		}
+	}
+}
+
+.wide-modal{
+	.modal-dialog{
+		width: 80%;
+	}
+}
+
+.modal-content{
+	.modal-header{
+		background-color: @color-info;
+		.modal-title{
+			color: #fff;
+			text-align: left;
+			font-weight: 600;
+		}
+		.close{
+			color: #fff;
+			opacity: 1;
+		}
+	}
+	.modal-body{
+		.media-manager-select{
+			background-color: @color-info;
+		}
+		#edit-media-region{
+			padding-bottom: 20px;
+		}
+		button{
+			float: right;
+		}
+	}
+	.modal-footer{
+		display: none;
 	}
 }
 

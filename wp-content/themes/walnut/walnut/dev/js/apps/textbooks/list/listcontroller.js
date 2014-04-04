@@ -24,7 +24,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
               'link': 'javascript://'
             }, {
               'label': 'Textbooks',
-              'link': 'javascript://'
+              'link': 'javascript://',
+              'active': 'active'
             }
           ]
         };

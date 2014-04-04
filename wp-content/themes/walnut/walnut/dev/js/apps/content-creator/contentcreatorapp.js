@@ -12,6 +12,23 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       }
 
       ContentCreatorController.prototype.initialize = function(options) {
+        var breadcrumb_items;
+        breadcrumb_items = {
+          'items': [
+            {
+              'label': 'Dashboard',
+              'link': 'javascript://'
+            }, {
+              'label': 'Content Management',
+              'link': 'javascript:;'
+            }, {
+              'label': 'Content Creator',
+              'link': 'javascript:;',
+              'active': 'active'
+            }
+          ]
+        };
+        App.execute("update:breadcrumb:model", breadcrumb_items);
         this.layout = this._getContentCreatorLayout();
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
@@ -43,7 +60,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         return ContentCreatorLayout.__super__.constructor.apply(this, arguments);
       }
 
-      ContentCreatorLayout.prototype.className = 'content';
+      ContentCreatorLayout.prototype.className = '';
 
       ContentCreatorLayout.prototype.template = '<div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div class="dock tiles" id="property-dock"></div> </div>';
 

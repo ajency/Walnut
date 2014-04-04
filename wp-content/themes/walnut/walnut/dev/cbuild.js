@@ -2,6 +2,7 @@
   baseUrl: './js',
   name: 'plugins/almond',
   include : 'content-creator-main',
+  exclude: ['plugins/ckeditor/ckeditor'],
   //optimize: 'none',
   wrap: false,
   out: '../production/content-creator-main.js',
@@ -30,7 +31,8 @@
     jqueryspin      : 'plugins/jquery.spin',
     bootstrapslider   : 'plugins/bootstrap-slider',
     jquerycolor     : 'plugins/jquery.minicolors.min',
-    jqueryknob      : 'plugins/jquery.knob'
+    jqueryknob      : 'plugins/jquery.knob',
+    ckeditor      : 'plugins/ckeditor/ckeditor'
     
   },
   shim: {

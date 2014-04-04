@@ -2,7 +2,7 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-creator/content-builder/elements/row/settings/templates/settings.html'], function(App, settingsTpl) {
-  return App.module('ContentBuilder.Element.Row.Settings.Views', function(Views, App, Backbone, Marionette, $, _) {
+  return App.module('ContentCreator.ContentBuilder.Element.Row.Settings.Views', function(Views, App, Backbone, Marionette, $, _) {
     return Views.SettingsView = (function(_super) {
       __extends(SettingsView, _super);
 

@@ -10,6 +10,7 @@ define ['marionette'], (Marionette)->
 		dialogRegion 		: Marionette.Region.Dialog.extend el : '#dialog-region'
 		settingsRegion 	  	: Marionette.Region.Settings.extend el : '#settings-region'
 		loginRegion 		: '#login-region' 
+		breadcrumbRegion	: '#breadcrumb-region'
 
 	# The default route for app
 	App.rootRoute = ""
@@ -46,13 +47,33 @@ define ['marionette'], (Marionette)->
 
 	App.on 'start', ->
 		# start the content creator app
+		xhr = $.get "#{AJAXURL}?action=get-user-data", 
+		{}, 
+		(resp)=>
+			if(resp.success)
+				user = App.request "get:user:model"
+				user.set resp.data
+				school = App.request "get:current:school"
+				App.vent.trigger "show:content:builder"
+				App.loginRegion.close()
+			else 	
+				App.vent.trigger "show:login"
+		, 'json'
+
+	App.vent.on "show:content:builder",->
 		App.execute "show:content:creator", 
 						region : App.mainContentRegion
 		
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion
+		App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
 		# start header app
 
 		# start left nav app
+	
 			
+	App.vent.on "show:login", ->
+		window.location = SITEURL+'#login'
+
+
 	App

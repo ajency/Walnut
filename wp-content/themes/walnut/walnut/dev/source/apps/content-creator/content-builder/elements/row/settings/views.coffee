@@ -3,7 +3,7 @@ define ['app'
 		(App, settingsTpl)->
 
 			# Headerapp views
-			App.module 'ContentBuilder.Element.Row.Settings.Views', (Views, App, Backbone, Marionette, $, _)->
+			App.module 'ContentCreator.ContentBuilder.Element.Row.Settings.Views', (Views, App, Backbone, Marionette, $, _)->
 
 				class Views.SettingsView extends Marionette.ItemView
 
