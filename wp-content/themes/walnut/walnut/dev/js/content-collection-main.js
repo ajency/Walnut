@@ -25,7 +25,9 @@ require.config({
     tablesorter: 'plugins/jquery.tablesorter',
     tablesorter_pager: 'plugins/jquery.tablesorter.pager',
     unveil: 'plugins/jquery.unveil.min',
-    detect: 'plugins/detect'
+    detect: 'plugins/detect',
+    moment: 'plugins/moment.min',
+    select2: 'plugins/select2.min'
   },
   shim: {
     underscore: {
@@ -54,6 +56,8 @@ require.config({
     jqueryspin: ['spin'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
+    moment: ['jquery'],
+    select2: ['jquery', 'bootstrap'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

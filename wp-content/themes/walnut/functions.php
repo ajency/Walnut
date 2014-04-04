@@ -4,7 +4,8 @@ if ( ! isset( $content_width ) )
 
 require_once 'modules/school/ajax.php';
 require_once 'modules/school/functions.php';
-require_once 'modules/questions/functions.php';
+require_once 'modules/content-pieces/ajax.php';
+require_once 'modules/content-pieces/functions.php';
 require_once 'modules/textbooks/ajax.php';
 require_once 'modules/textbooks/functions.php';
 require_once 'modules/menus/ajax.php';

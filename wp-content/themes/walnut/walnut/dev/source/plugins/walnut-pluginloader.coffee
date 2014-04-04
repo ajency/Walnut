@@ -19,4 +19,6 @@ define [
 			'tablesorter'
 			'tablesorter_pager'
 			'unveil'
+			'moment'
+			'select2'
 		], ->
