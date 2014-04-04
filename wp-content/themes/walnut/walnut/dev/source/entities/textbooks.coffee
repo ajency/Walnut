@@ -1,4 +1,4 @@
-define ["app", 'backbone'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 		App.module "Entities.Textbooks", (Textbooks, App, Backbone, Marionette, $, _)->
 
@@ -35,7 +35,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			textbookCollection = new Textbooks.ItemCollection
 
 			# API 
-			API = 
+			API =
 				# get all textbooks
 				getTextbooks:(param = {})->
 					console.log param
@@ -60,7 +60,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 					runQuery = ->
 						$.Deferred (d)->
 							db.transaction (tx)->
-								tx.executeSql("select * from TEXTBOOK", [], onSuccess(d), onError(d));
+								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt left outer join wp_textbook_relationships wtr on t.term_id=wtr.textbook_id  WHERE t.term_id=tt.term_id and tt.taxonomy='textbook' and tt.parent=0", [], onSuccess(d), onFailure(d));
+								
 
 					onSuccess =(d)->
 						(tx,data)->
@@ -68,14 +69,20 @@ define ["app", 'backbone'], (App, Backbone) ->
 							`var result = []
 							for(var i=0; i<data.rows.length; i++){
 								var row = data.rows.item(i);
+
+								var classes = unserialize(row['class_id']);
+								var subjects = unserialize(row['tags']);	
+
 								result[i]={"term_id":row['term_id'], "name":row['name'], "slug":row['slug'], "term_group":row['term_group'],
-									"term_order":row['term_order'], "term_taxonomy_id":row['term_taxonomy_id'], "taxonomy":row['taxonomy'],
-									"description":row['description'], "parent":row['parent'], "count":row['count'], "cover_pic":row['cover_pic'],
-									"author":row['author'], "classes":row['classes'], "subjects":row['subjects'], "chapter_count":row['chapter_count']}
+											"term_order":row['term_order'], "term_taxonomy_id":row['term_taxonomy_id'], "taxonomy":row['taxonomy'],
+											"description":row['description'], "parent":row['parent'], "count":row['count'], 
+											"classes":classes, "subjects":subjects};
+								
 							}`
 							d.resolve(result)
 
-					onError =(d)->
+
+					onFailure =(d)->
 						(tx,error)->
 							d.reject('Error!: '+error)
 
@@ -95,4 +102,3 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:textbookslocal", ->
 				API.getTextbooksFromLocal()	
-				

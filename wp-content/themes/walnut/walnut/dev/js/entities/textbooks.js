@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone'], function(App, Backbone) {
+define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
   return App.module("Entities.Textbooks", function(Textbooks, App, Backbone, Marionette, $, _) {
     var API, db, textbookCollection;
     db = Backbone.db;
@@ -78,11 +78,11 @@ define(["app", 'backbone'], function(App, Backbone) {
         return textbook;
       },
       getTextbooksFromLocal: function() {
-        var onError, onSuccess, runQuery;
+        var onFailure, onSuccess, runQuery;
         runQuery = function() {
           return $.Deferred(function(d) {
             return db.transaction(function(tx) {
-              return tx.executeSql("select * from TEXTBOOK", [], onSuccess(d), onError(d));
+              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt left outer join wp_textbook_relationships wtr on t.term_id=wtr.textbook_id  WHERE t.term_id=tt.term_id and tt.taxonomy='textbook' and tt.parent=0", [], onSuccess(d), onFailure(d));
             });
           });
         };
@@ -92,15 +92,20 @@ define(["app", 'backbone'], function(App, Backbone) {
             var result = []
 							for(var i=0; i<data.rows.length; i++){
 								var row = data.rows.item(i);
+
+								var classes = unserialize(row['class_id']);
+								var subjects = unserialize(row['tags']);	
+
 								result[i]={"term_id":row['term_id'], "name":row['name'], "slug":row['slug'], "term_group":row['term_group'],
-									"term_order":row['term_order'], "term_taxonomy_id":row['term_taxonomy_id'], "taxonomy":row['taxonomy'],
-									"description":row['description'], "parent":row['parent'], "count":row['count'], "cover_pic":row['cover_pic'],
-									"author":row['author'], "classes":row['classes'], "subjects":row['subjects'], "chapter_count":row['chapter_count']}
+											"term_order":row['term_order'], "term_taxonomy_id":row['term_taxonomy_id'], "taxonomy":row['taxonomy'],
+											"description":row['description'], "parent":row['parent'], "count":row['count'], 
+											"classes":classes, "subjects":subjects};
+								
 							};
             return d.resolve(result);
           };
         };
-        onError = function(d) {
+        onFailure = function(d) {
           return function(tx, error) {
             return d.reject('Error!: ' + error);
           };

@@ -23,7 +23,8 @@ require.config({
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
     unveil: 'plugins/jquery.unveil.min',
-    detect: 'plugins/detect'
+    detect: 'plugins/detect',
+    unserialize: 'plugins/unserialize'
   },
   shim: {
     underscore: {

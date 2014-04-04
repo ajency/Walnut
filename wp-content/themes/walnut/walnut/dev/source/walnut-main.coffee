@@ -37,6 +37,7 @@ require.config
 		#datatables  		: 'plugins/datatables'
 		unveil				: 'plugins/jquery.unveil.min'
 		detect				: 'plugins/detect'
+		unserialize			: 'plugins/unserialize'
 
 	shim:
 		underscore: 
