@@ -28,7 +28,7 @@ define ['app'],(App)->
 			# we can destroy it on close of element
 			onShow:->
 				@$el.attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
-				# CKEDITOR.on 'instanceCreated', @configureEditor
+				CKEDITOR.on 'instanceCreated', @configureEditor
 				@editor = CKEDITOR.inline document.getElementById @$el.attr 'id'
 				@editor.setData _.stripslashes @model.get 'content'
 
@@ -43,13 +43,46 @@ define ['app'],(App)->
 				# configurations before the editor initialization takes place.
 				editor.on "configLoaded", ->
 
-					# Rearrange the layout of the toolbar.
-					editor.config.toolbarGroups = [
-													  name: "paragraph"
-													  groups: [ "list", "indent", "blocks", "align", "bidi" ]
-													,
-													  name: 'colors' 
-												]
+
+
+					editor.config.toolbar = [
+					# 			# { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
+								name: 'clipboard'
+								groups: [ 'clipboard', 'undo' ]
+								items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ]
+							,
+								name: 'editing'
+								groups: [ 'find', 'selection', 'spellchecker' ]
+								items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] 
+							,
+					# 			# { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+								'/'
+							,
+								name: 'basicstyles'
+								groups: [ 'basicstyles', 'cleanup' ]
+								items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ]
+							,
+								name: 'paragraph'
+								groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ]
+								items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ]
+							,	
+					# 			# { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+								name: 'insert'
+								items: [ 'SpecialChar', 'EqnEditor' ]
+							,
+								'/'
+							,
+								name: 'styles'
+								items: [ 'Styles', 'Format', 'Font', 'FontSize' ] 
+							,
+								name: 'colors'
+								items: [ 'TextColor', 'BGColor' ] 
+					# 			# { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
+					# 			# { name: 'others', items: [ '-' ] },
+					# 			# { name: 'about', items: [ 'About' ] }
+							]
+
+
 
 			# destroy the Ckeditor instance to avoiid memory leaks on close of element
 			# this.editor will hold the reference to the editor instance

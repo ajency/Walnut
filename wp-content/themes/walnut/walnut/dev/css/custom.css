@@ -588,6 +588,9 @@
 .user-description-box {
   min-height: 120px;
 }
+.teacherCanvas {
+  background-color: #fff;
+}
 body {
   background-color: #e5e9ec;
 }
