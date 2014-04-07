@@ -38,7 +38,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           return function(html) {
             _this.layout.model.set('content', "" + html);
             if (_this.layout.model.hasChanged()) {
-              return _this.layout.model.save();
+              console.log("saving them");
+              return localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
             }
           };
         })(this));

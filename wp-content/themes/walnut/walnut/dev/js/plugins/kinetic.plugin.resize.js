@@ -152,7 +152,7 @@ addAnchor=function(group, x, y, name) {
                 stroke: '#666',
                 fill: '#ddd',
                 strokeWidth: 2,
-                radius: 8,
+                radius: 5,
                 name: name,
                 draggable: true,
                 dragOnTop: false
