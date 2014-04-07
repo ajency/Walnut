@@ -1,13 +1,15 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'text!apps/content-collection/collection-details/templates/collection-details.html'], function(App, RegionController, collectionDetailsTpl) {
   return App.module("CollecionDetailsApp.Controller", function(Controller, App) {
-    var collectionDetailsView;
+    var CollectionDetailsView;
     Controller.CollecionDetailsController = (function(_super) {
       __extends(CollecionDetailsController, _super);
 
       function CollecionDetailsController() {
+        this.successFn = __bind(this.successFn, this);
         return CollecionDetailsController.__super__.constructor.apply(this, arguments);
       }
 
@@ -54,14 +56,31 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
           }
         });
         return this.listenTo(this.view, {
-          "save:content:collection:details": function(data) {
-            return console.log('gotto add entity');
-          }
+          "save:content:collection:details": (function(_this) {
+            return function(data) {
+              if (!_this.contentGroupModel) {
+                _this.contentGroupModel = App.request("save:content:group:details", data);
+              }
+              return _this.contentGroupModel.save(data, {
+                wait: true,
+                success: _this.successFn,
+                error: _this.errorFn
+              });
+            };
+          })(this)
         });
       };
 
+      CollecionDetailsController.prototype.successFn = function(resp) {
+        return this.view.triggerMethod('saved:content:group', resp);
+      };
+
+      CollecionDetailsController.prototype.errorFn = function() {
+        return console.log('error');
+      };
+
       CollecionDetailsController.prototype._getCollectionDetailsView = function(collection) {
-        return new collectionDetailsView({
+        return new CollectionDetailsView({
           collection: collection
         });
       };
@@ -69,18 +88,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
       return CollecionDetailsController;
 
     })(RegionController);
-    collectionDetailsView = (function(_super) {
-      __extends(collectionDetailsView, _super);
+    CollectionDetailsView = (function(_super) {
+      __extends(CollectionDetailsView, _super);
 
-      function collectionDetailsView() {
-        return collectionDetailsView.__super__.constructor.apply(this, arguments);
+      function CollectionDetailsView() {
+        return CollectionDetailsView.__super__.constructor.apply(this, arguments);
       }
 
-      collectionDetailsView.prototype.template = collectionDetailsTpl;
+      CollectionDetailsView.prototype.template = collectionDetailsTpl;
 
-      collectionDetailsView.prototype.className = 'tiles white grid simple vertical green';
+      CollectionDetailsView.prototype.className = 'tiles white grid simple vertical green';
 
-      collectionDetailsView.prototype.events = {
+      CollectionDetailsView.prototype.events = {
         'change #textbooks': function(e) {
           this.$el.find('#secs, #subsecs').select2('data', null);
           this.$el.find('#chapters, #secs, #subsecs').html('');
@@ -92,14 +111,14 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
         'click #save-content-collection': 'save_content'
       };
 
-      collectionDetailsView.prototype.onShow = function() {
+      CollectionDetailsView.prototype.onShow = function() {
         $("#textbooks").select2();
         $("#chapters").select2();
         $("#secs").val([]).select2();
         return $("#subsecs").val([]).select2();
       };
 
-      collectionDetailsView.prototype.onFetchChaptersComplete = function(chapters) {
+      CollectionDetailsView.prototype.onFetchChaptersComplete = function(chapters) {
         if (_.size(chapters) > 0) {
           this.$el.find('#chapters').html('');
           return _.each(chapters.models, (function(_this) {
@@ -112,7 +131,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
         }
       };
 
-      collectionDetailsView.prototype.onFetchSubsectionsComplete = function(allsections) {
+      CollectionDetailsView.prototype.onFetchSubsectionsComplete = function(allsections) {
         if (_.size(allsections) > 0) {
           if (_.size(allsections.sections) > 0) {
             this.$el.find('#secs').html('');
@@ -140,7 +159,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
         }
       };
 
-      collectionDetailsView.prototype.save_content = function(e) {
+      CollectionDetailsView.prototype.save_content = function(e) {
         var data;
         e.preventDefault();
         if (this.$el.find('form').valid()) {
@@ -149,7 +168,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
         }
       };
 
-      return collectionDetailsView;
+      CollectionDetailsView.prototype.onSavedContentGroup = function(model) {
+        return console.log(model);
+      };
+
+      return CollectionDetailsView;
 
     })(Marionette.ItemView);
     return App.commands.setHandler("show:collections:detailsapp", function(opt) {

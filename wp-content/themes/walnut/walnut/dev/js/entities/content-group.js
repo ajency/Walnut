@@ -11,10 +11,9 @@ define(["app", 'backbone'], function(App, Backbone) {
         return ItemModel.__super__.constructor.apply(this, arguments);
       }
 
-      ItemModel.prototype.idAttribute = 'id';
-
       ItemModel.prototype.defaults = {
         name: '',
+        description: '',
         created_on: '',
         created_by: '',
         last_modified_on: '',
@@ -40,15 +39,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.model = ContentGroup.ItemModel;
 
-      ItemCollection.prototype.comparator = 'id';
-
       ItemCollection.prototype.url = function() {
         return AJAXURL + '?action=get-content-groups';
-      };
-
-      ItemCollection.prototype.parse = function(resp) {
-        this.total = resp.count;
-        return resp.data;
       };
 
       return ItemCollection;
@@ -71,10 +63,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         var contentGroup;
         contentGroup = contentGroupCollection.get(id);
         if (!contentGroup) {
-          contentGroup = new ContentGroup.ItemModel({
-            term_id: id
-          });
-          console.log(contentGroup);
+          contentGroup = new ContentGroup.ItemModel(id);
           contentGroup.fetch();
         }
         return contentGroup;
@@ -82,9 +71,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       saveContentGroupDetails: function(data) {
         var contentGroupItem;
         contentGroupItem = new ContentGroup.ItemModel(data);
-        contentGroupItem.save(null, {
-          wait: true
-        });
         return contentGroupItem;
       }
     };
