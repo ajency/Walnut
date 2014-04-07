@@ -29,6 +29,7 @@ define(['app'], function(App) {
 
       TextView.prototype.onShow = function() {
         this.$el.attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
+        CKEDITOR.on('instanceCreated', this.configureEditor);
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.attr('id')));
         return this.editor.setData(_.stripslashes(this.model.get('content')));
       };
@@ -38,12 +39,32 @@ define(['app'], function(App) {
         editor = event.editor;
         element = editor.element;
         return editor.on("configLoaded", function() {
-          return editor.config.toolbarGroups = [
+          return editor.config.toolbar = [
             {
-              name: "paragraph",
-              groups: ["list", "indent", "blocks", "align", "bidi"]
+              name: 'clipboard',
+              groups: ['clipboard', 'undo'],
+              items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
             }, {
-              name: 'colors'
+              name: 'editing',
+              groups: ['find', 'selection', 'spellchecker'],
+              items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt']
+            }, '/', {
+              name: 'basicstyles',
+              groups: ['basicstyles', 'cleanup'],
+              items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+            }, {
+              name: 'paragraph',
+              groups: ['list', 'indent', 'blocks', 'align', 'bidi'],
+              items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language']
+            }, {
+              name: 'insert',
+              items: ['SpecialChar', 'EqnEditor']
+            }, '/', {
+              name: 'styles',
+              items: ['Styles', 'Format', 'Font', 'FontSize']
+            }, {
+              name: 'colors',
+              items: ['TextColor', 'BGColor']
             }
           ];
         });

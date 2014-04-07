@@ -7,98 +7,32 @@ define ['app'
 		class Controller.ContentSelectionController extends RegionController
 
 			initialize : ->
-				questionsCollection = new Backbone.Collection [
-						{
-							'id'			:'1'
-							'title'			:'test1'
-							'creator'		:'Bob'
-							'published_by'	: 'Admin'
-							'created_on'	:'4/10/2013'
-							'last_modified'	: '2/02/2014'
-						}
-						{
-							'id'			:'2'
-							'title'			:'Question Test'
-							'creator'		:'John'
-							'published_by'	: 'Admin'
-							'created_on'	:'4/10/2013'
-							'last_modified'	: '2/02/2014'
-						}
-						{
-							'id'			:'3'
-							'title'			:'test34'
-							'creator'		:'Bob'
-							'published_by'	: 'Admin'
-							'created_on'	:'4/10/2013'
-							'last_modified'	: '2/02/2014'
-						}
-						{
-							'id'			:'4'
-							'title'			:'Trial 4324'
-							'creator'		:'Jane'
-							'published_by'	: 'Admin'
-							'created_on'	:'4/10/2013'
-							'last_modified'	: '2/02/2014'
-						}
-						{
-							'id'			:'5'
-							'title'			:'Test Stuff'
-							'creator'		:'Bob'
-							'published_by'	: 'Admin'
-							'created_on'	:'4/10/2013'
-							'last_modified'	: '2/02/2014'
-						}
-						{
-							'id'			:'6'
-							'title'			:'New Trials'
-							'creator'		:'Bessie'
-							'published_by'	: 'Admin'
-							'created_on'	:'4/10/2013'
-							'last_modified'	: '2/02/2014'
-						}
-						{
-							'id'			:'7'
-							'title'			:'Blast'
-							'creator'		:'Shawn'
-							'published_by'	: 'Admin'
-							'created_on'	:'4/10/2013'
-							'last_modified'	: '2/02/2014'
-						}
-						{
-							'id'			:'8'
-							'title'			:'Do test'
-							'creator'		:'Mike'
-							'published_by'	: 'Admin'
-							'created_on'	:'4/10/2013'
-							'last_modified'	: '2/02/2014'
-						}
-				]
-
+				@questionsCollection = App.request "get:content:pieces"
 				tableConfig = 
 					'data': [
 						{
 							'label':'Question'
-							'value':'title'
+							'value':'post_title'
 						}
 						{
 							'label':'Creator'
-							'value':'creator'
 						}
 						{
-							'label':'Last Modified'
-							'value':'last_modified'
+							'label'		:'Last Modified'
+							'value'		:'post_modified'
+							'dateField' : true
 						}
 					]
-					'id_attribute': 'id' # id attribute of the model
+					'idAttribute': 'ID' # id attribute of the model # default = 'id'
 					'selectbox': true
 					'pagination': true
 				
 					
-				@view= view = @_getContentSelectionView(questionsCollection, tableConfig)
+				@view= view = @_getContentSelectionView(@questionsCollection, tableConfig)
 
 				@show view, (loading:true)
 
-			_getContentSelectionView : (collection, tableConfig)->
+			_getContentSelectionView : (collection, tableConfig)=>
 				new dataContentTableView
 					collection: collection
 					tableConfig: tableConfig
@@ -124,18 +58,44 @@ define ['app'
 
 
 			onShow:=>
+				#DEFAULTS
+				td_ID= 'id';
+
+				#makes slug with underscore instead of hyphen
+				make_slug = (str)->
+				    $slug = '';
+				    trimmed = $.trim(str);
+				    $slug = trimmed.replace(/[^a-z0-9-]/gi, '_').
+				    replace(/_+/g, '_').
+				    replace(/^_|_$/g, '');
+				    $slug.toLowerCase();
+
+				if @tableData.idAttribute
+					td_ID=@tableData.idAttribute
+
 				_.each(@collection.models , (item, index)=>
 					row = '<tr>'
 
 					if @tableData.selectbox 
 						row += '<td class="v-align-middle"><div class="checkbox check-default">
-								<input class="tab_checkbox" type="checkbox" value="'+item.get(@tableData.id_attribute)+'" id="checkbox'+index+'">
+								<input class="tab_checkbox" type="checkbox" value="'+item.get(td_ID)+'" id="checkbox'+index+'">
 								<label for="checkbox'+index+'"></label>
 							  </div>
 							</td>'
 
 					_.each @tableData.data, (el,ind)->
-							row += '<td> '+ item.get(el.value) + ' </td>'
+						if el.value
+							el_value = item.get el.value
+
+						else
+							slug= make_slug(el.label)
+							el_value =  item.get slug
+
+
+						if el.dateField
+							el_value= moment(el_value).format("Do MMM YYYY")
+
+						row += '<td> '+ el_value + ' </td>'
 						
 
 					row +='</tr>'
@@ -154,10 +114,8 @@ define ['app'
 
 			check_all:->
 				if @$el.find('#check_all').is(':checked')
-					console.log 'checked'
 					@$el.find('#dataContentTable .tab_checkbox').trigger('click').prop('checked', true);
 				else 
-					console.log 'not checked'
 					@$el.find('#dataContentTable .tab_checkbox').removeAttr('checked')
 
 		# set handlers

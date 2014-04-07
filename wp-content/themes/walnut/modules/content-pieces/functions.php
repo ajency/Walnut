@@ -49,4 +49,21 @@ function create_content_piece_post_type() {
 }
 
 add_action('init', 'create_content_piece_post_type');
+
+
+function get_content_pieces($args=array()){
+    
+    $content_items=get_posts($args);
+    
+    foreach($content_items as $key=>$val){
+       $content_pieces[$key]= $val;
+       $content_pieces[$key]->subjects =  get_the_terms($val->ID, 'textbook');
+       
+       $authordata=get_userdata($val->post_author);
+       $content_pieces[$key]->creator =  $authordata->display_name;
+    }
+    
+    return $content_pieces;
+}
+
 ?>

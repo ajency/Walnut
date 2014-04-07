@@ -40,6 +40,12 @@ define ['app'
 						# save the new markup if the model is changed
 						@listenTo view, "text:element:blur",(html) =>
 								@layout.model.set 'content', "#{html}"
-								@layout.model.save() if @layout.model.hasChanged()
+								# server side
+								# @layout.model.save() if @layout.model.hasChanged()
+
+								# local...........TO BE DELETED
+								if @layout.model.hasChanged()
+									console.log "saving them"
+									localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
 
 						@layout.elementRegion.show view

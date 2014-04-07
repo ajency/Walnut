@@ -54,7 +54,7 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 					@$el.find '#login-submit' 
 					.append '<i id="checking_login" class="fa fa-spinner fa fa-1x fa-spin"></i>'
-
+						
 					data = Backbone.Syphon.serialize (@)
 					@trigger "authenticate:user",data
 

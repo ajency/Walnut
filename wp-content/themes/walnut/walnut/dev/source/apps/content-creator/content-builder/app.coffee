@@ -11,22 +11,65 @@ define ['app'
 
 					initialize : (options)->
 
-						@view = @_getContentBuilderView()
+						elements = App.request "get:page:json"
+
+
+
+						@view = @_getContentBuilderView elements
 
 						@listenTo @view, "add:new:element", (container, type)->
 									App.request "add:new:element", container, type
 									# console.log "new element of type "+type
 
-						@show @view
+						@listenTo @view, "dependencies:fetched", =>
+								_.delay =>
+									@startFillingElements()
+								, 400
 
-					_getContentBuilderView : ()->
+						@show @view,
+							loading : true
+
+					_getContentBuilderView : (elements)->
 
 						new ContentBuilder.Views.ContentBuilderView
+								model : elements
+
+					_getContainer :(section)->
+						
+							$('#myCanvas')
+						
+
+
+					# start filling elements
+					startFillingElements: ()->
+						section = @view.model.toJSON()
+
+						container = $('#myCanvas')
+						_.each section, (element, i)=>
+							if element.element is 'Row'
+								@addNestedElements container,element
+							else
+								App.request "add:new:element",container,element.element, element
+
+					
+					addNestedElements:(container,element)->
+						controller = App.request "add:new:element",container,element.element, element
+						_.each element.elements, (column, index)=>
+							return if column.elements.length is 0
+							container = controller.layout.elementRegion.currentView.$el.children().eq(index)
+							_.each column.elements,(ele, i)=>
+								if element.element is 'Row'
+									@addNestedElements $(container),ele
+								else
+									App.request "add:new:element",container,ele.element, ele
+
+
+
 
 				API = 
 					# add a new element to the builder region
 					addNewElement : (container , type, modelData)->
-
+						console.log type
 						new ContentBuilder.Element[type].Controller
 										container : container
 										modelData : modelData
