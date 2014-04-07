@@ -5,7 +5,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['app', 'controllers/region-controller', 'components/data-content-table/content-table-view', 'text!apps/content-collection/content-selection/templates/content-selection.html'], function(App, RegionController, contentDataView, contentSelectionTpl) {});
 
 App.module("ContentSelectionApp.Controller", function(Controller, App) {
-  var contentSelectionLayout;
+  var ContentSelectionLayout;
   Controller.ContentSelectionController = (function(_super) {
     __extends(ContentSelectionController, _super);
 
@@ -108,28 +108,28 @@ App.module("ContentSelectionApp.Controller", function(Controller, App) {
     };
 
     ContentSelectionController.prototype._getContentSelectionLayout = function() {
-      return new contentSelectionLayout;
+      return new ContentSelectionLayout;
     };
 
     return ContentSelectionController;
 
   })(RegionController);
-  contentSelectionLayout = (function(_super) {
-    __extends(contentSelectionLayout, _super);
+  ContentSelectionLayout = (function(_super) {
+    __extends(ContentSelectionLayout, _super);
 
-    function contentSelectionLayout() {
-      return contentSelectionLayout.__super__.constructor.apply(this, arguments);
+    function ContentSelectionLayout() {
+      return ContentSelectionLayout.__super__.constructor.apply(this, arguments);
     }
 
-    contentSelectionLayout.prototype.template = contentSelectionTpl;
+    ContentSelectionLayout.prototype.template = contentSelectionTpl;
 
-    contentSelectionLayout.prototype.className = 'tiles white grid simple vertical green';
+    ContentSelectionLayout.prototype.className = 'tiles white grid simple vertical green';
 
-    contentSelectionLayout.prototype.regions = {
+    ContentSelectionLayout.prototype.regions = {
       contentTableRegion: 'content-data-table-region'
     };
 
-    return contentSelectionLayout;
+    return ContentSelectionLayout;
 
   })(Marionette.Layout);
   return App.commands.setHandler("show:content:selectionapp", function(opt) {

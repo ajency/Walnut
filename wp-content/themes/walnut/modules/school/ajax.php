@@ -1,4 +1,6 @@
 <?php
+require_once 'functions.php';
+
 add_action( 'wp_ajax_read-schools', 'fetch_school' );
 
 function fetch_school(){

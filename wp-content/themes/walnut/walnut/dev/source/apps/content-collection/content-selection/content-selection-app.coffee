@@ -108,9 +108,9 @@ define ['app'
 
 
 			_getContentSelectionLayout : =>
-				new contentSelectionLayout
+				new ContentSelectionLayout
 
-		class contentSelectionLayout extends Marionette.Layout
+		class ContentSelectionLayout extends Marionette.Layout
 
 			template 	: contentSelectionTpl
 

@@ -13,10 +13,10 @@ define ['app'
 				@show view
 
 			_getCollectionContentDisplayView : ->
-				new contentDisplayView
+				new ContentDisplayView
 
 
-		class contentDisplayView extends Marionette.ItemView
+		class ContentDisplayView extends Marionette.ItemView
 
 			template 	: contentDisplayTpl
 

@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app', 'controllers/region-controller', 'text!apps/content-collection/content-display/templates/content-display.html'], function(App, RegionController, contentDisplayTpl) {
   return App.module("CollectionContentDisplayApp.Controller", function(Controller, App) {
-    var contentDisplayView;
+    var ContentDisplayView;
     Controller.CollectionContentDisplayController = (function(_super) {
       __extends(CollectionContentDisplayController, _super);
 
@@ -18,26 +18,26 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
       };
 
       CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function() {
-        return new contentDisplayView;
+        return new ContentDisplayView;
       };
 
       return CollectionContentDisplayController;
 
     })(RegionController);
-    contentDisplayView = (function(_super) {
-      __extends(contentDisplayView, _super);
+    ContentDisplayView = (function(_super) {
+      __extends(ContentDisplayView, _super);
 
-      function contentDisplayView() {
-        return contentDisplayView.__super__.constructor.apply(this, arguments);
+      function ContentDisplayView() {
+        return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
 
-      contentDisplayView.prototype.template = contentDisplayTpl;
+      ContentDisplayView.prototype.template = contentDisplayTpl;
 
-      contentDisplayView.prototype.className = 'col-md-10';
+      ContentDisplayView.prototype.className = 'col-md-10';
 
-      contentDisplayView.prototype.id = 'myCanvas-miki';
+      ContentDisplayView.prototype.id = 'myCanvas-miki';
 
-      return contentDisplayView;
+      return ContentDisplayView;
 
     })(Marionette.ItemView);
     return App.commands.setHandler("show:content:displayapp", function(opt) {

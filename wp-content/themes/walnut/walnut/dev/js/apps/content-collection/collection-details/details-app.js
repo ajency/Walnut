@@ -72,7 +72,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
       };
 
       CollecionDetailsController.prototype.successFn = function(resp) {
-        return this.view.triggerMethod('saved:content:group', resp);
+        this.view.triggerMethod('saved:content:group', resp);
+        return App.execute("show:content:selectionapp", {
+          region: this.layout.contentSelectionRegion
+        });
       };
 
       CollecionDetailsController.prototype.errorFn = function() {
@@ -161,11 +164,15 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
 
       CollectionDetailsView.prototype.save_content = function(e) {
         var data;
+        e.preventDefault();
         $('#s2id_textbooks .select2-choice').removeClass('error');
+        $('#s2id_chapters .select2-choice').removeClass('error');
         if (this.$el.find('#textbooks').val() === '') {
           $('#s2id_textbooks .select2-choice').addClass('error');
         }
-        e.preventDefault();
+        if (this.$el.find('#chapters').val() === '') {
+          $('#s2id_chapters .select2-choice').addClass('error');
+        }
         if (this.$el.find('form').valid()) {
           data = Backbone.Syphon.serialize(this);
           return this.trigger("save:content:collection:details", data);

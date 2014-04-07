@@ -38,6 +38,7 @@ define ['app'
 
 			successFn :(resp)=>
 				@view.triggerMethod 'saved:content:group', resp 
+				App.execute "show:content:selectionapp", region : @layout.contentSelectionRegion
 
 			errorFn :->
 				console.log 'error'
@@ -100,10 +101,16 @@ define ['app'
 
 
 			save_content:(e)->
+				e.preventDefault()
+
 				$('#s2id_textbooks .select2-choice').removeClass('error');
+				$('#s2id_chapters .select2-choice').removeClass('error');
+
 				if(@$el.find('#textbooks').val()=='')
 					$('#s2id_textbooks .select2-choice').addClass('error');
-				e.preventDefault()
+
+				if(@$el.find('#chapters').val()=='')
+					$('#s2id_chapters .select2-choice').addClass('error');
 
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)

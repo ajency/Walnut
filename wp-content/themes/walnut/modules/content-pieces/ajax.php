@@ -1,5 +1,5 @@
 <?php
-
+require_once 'functions.php';
 add_action( 'wp_ajax_get-content-pieces', 'fetch_content_pieces' );
 
 function fetch_content_pieces() {

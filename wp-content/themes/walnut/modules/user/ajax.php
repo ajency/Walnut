@@ -1,6 +1,6 @@
 <?php
 
-
+require_once 'functions.php';
 add_action( 'wp_ajax_get-user-data', 'get_user_data' );
 
 function get_user_data() {
