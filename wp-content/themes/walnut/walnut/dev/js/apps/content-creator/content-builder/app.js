@@ -12,15 +12,67 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       }
 
       ContentBuilderController.prototype.initialize = function(options) {
-        this.view = this._getContentBuilderView();
+        var elements;
+        elements = App.request("get:page:json");
+        this.view = this._getContentBuilderView(elements);
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
         });
-        return this.show(this.view);
+        this.listenTo(this.view, "dependencies:fetched", (function(_this) {
+          return function() {
+            return _.delay(function() {
+              return _this.startFillingElements();
+            }, 400);
+          };
+        })(this));
+        return this.show(this.view, {
+          loading: true
+        });
       };
 
-      ContentBuilderController.prototype._getContentBuilderView = function() {
-        return new ContentBuilder.Views.ContentBuilderView;
+      ContentBuilderController.prototype._getContentBuilderView = function(elements) {
+        return new ContentBuilder.Views.ContentBuilderView({
+          model: elements
+        });
+      };
+
+      ContentBuilderController.prototype._getContainer = function(section) {
+        return $('#myCanvas');
+      };
+
+      ContentBuilderController.prototype.startFillingElements = function() {
+        var container, section;
+        section = this.view.model.toJSON();
+        container = $('#myCanvas');
+        return _.each(section, (function(_this) {
+          return function(element, i) {
+            if (element.element === 'Row') {
+              return _this.addNestedElements(container, element);
+            } else {
+              return App.request("add:new:element", container, element.element, element);
+            }
+          };
+        })(this));
+      };
+
+      ContentBuilderController.prototype.addNestedElements = function(container, element) {
+        var controller;
+        controller = App.request("add:new:element", container, element.element, element);
+        return _.each(element.elements, (function(_this) {
+          return function(column, index) {
+            if (column.elements.length === 0) {
+              return;
+            }
+            container = controller.layout.elementRegion.currentView.$el.children().eq(index);
+            return _.each(column.elements, function(ele, i) {
+              if (element.element === 'Row') {
+                return _this.addNestedElements($(container), ele);
+              } else {
+                return App.request("add:new:element", container, ele.element, ele);
+              }
+            });
+          };
+        })(this));
       };
 
       return ContentBuilderController;
@@ -28,6 +80,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
     })(RegionController);
     API = {
       addNewElement: function(container, type, modelData) {
+        console.log(type);
         return new ContentBuilder.Element[type].Controller({
           container: container,
           modelData: modelData

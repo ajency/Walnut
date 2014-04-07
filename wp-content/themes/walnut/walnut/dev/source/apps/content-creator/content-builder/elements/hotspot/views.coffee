@@ -19,6 +19,14 @@ define ['app'],(App)->
 				# 'focus'	: -> console.log "blur" #'updateModel'
 
 			initialize:(opt = {})->
+				if @model.get('content')!=''
+					@contentObject = JSON.parse @model.get 'content'
+				else 
+					@contentObject = new Object()
+				# @model.get('content')
+				@textCollection = App.request "create:new:hotspot:element:collection", @contentObject.textData
+				@optionCollection = App.request "create:new:hotspot:element:collection", @contentObject.optionData
+				@imageCollection = App.request "create:new:hotspot:element:collection", @contentObject.imageData
 				#give a unique name to every hotspot canvas
 				# console.log "layout model  "+JSON.stringify @model
 				@stageName = "stage"+ new Date().getTime()
@@ -45,6 +53,9 @@ define ['app'],(App)->
 						width: @$el.parent().width()
 						height: @$el.parent().height()+80
 
+				if @contentObject.height!=undefined
+					@stage.height @contentObject.height
+
 				
 				
 
@@ -64,6 +75,8 @@ define ['app'],(App)->
 					@stage.setSize
 						width: $('#'+@stageName+'.stage').width()
 						height: $('#'+@stageName+'.stage').height()-5
+
+					@contentObject.height = @stage.height()
 					# resize the default image 
 					@_updateDefaultImageSize()
 
@@ -71,13 +84,12 @@ define ['app'],(App)->
 						handles: "s" 
 
 				@_setPropertyBoxCloseHandlers()
+				@_drawExistingElements()
 				
 				#listen to drop event
 				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
 
 						@_addElements type, elementPos
-
-						@_updateDefaultLayer()
 
 
 				$('button.btn.btn-success.btn-cons2').on 'click',=>
@@ -97,12 +109,22 @@ define ['app'],(App)->
 
 
 			_setPropertyBoxCloseHandlers:->
-				$('body').on 'mousedown',->
+				$('body').on 'mousedown',=>
 						if closequestionelementproperty
 							# console.log 'stage'
 							App.execute "close:question:element:properties"
 						if closequestionelements and closequestionelementproperty
 							App.execute "close:question:elements"
+							@contentObject.textData = @textCollection.toJSON()
+							@contentObject.optionData = @optionCollection.toJSON()
+							@contentObject.imageData = @imageCollection.toJSON()
+							console.log JSON.stringify @contentObject
+							@model.set 'content', JSON.stringify @contentObject
+							# console.log JSON.stringify @model.toJSON()
+							if @model.hasChanged()
+								console.log "saving them"
+								localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
+								console.log JSON.stringify @model.toJSON()
 
 				$('#question-elements-property').on 'mouseover',->
 						closequestionelementproperty =  false
@@ -125,6 +147,40 @@ define ['app'],(App)->
 					closequestionelements = closequestionelementproperty = true
 
 	
+			_drawExistingElements:->
+				console.log @textCollection
+				@textCollection.each (model,i)=>
+					@_addTextElement
+							left: model.get 'x'
+							top : model.get 'y'
+						,	
+							model
+				@optionCollection.each (model,i)=>
+					if model.get('shape') is 'Rect'
+						@_addRectangle
+								left : model.get 'x'
+								top : model.get 'y'
+							,
+								model
+					if model.get('shape') is 'Circle'
+						@_addCircle
+								left : model.get 'x'
+								top : model.get 'y'
+							,
+								model
+
+				@imageCollection.each (model,i)=>
+					@_addImageElement
+							left : model.get 'x'
+							top : model.get 'y'
+						,
+							model.get 'url'
+						,
+							model
+
+				@_updateDefaultLayer()
+
+
 
 
 			_setDefaultImage:->
@@ -135,6 +191,7 @@ define ['app'],(App)->
 								image 	: defaultImage
 						
 						@defaultLayer.add @hotspotDefault
+						@_updateDefaultLayer()
 						@_updateDefaultImageSize()
 
 				defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg"
@@ -146,9 +203,11 @@ define ['app'],(App)->
 						if i
 							if @stage.getChildren()[i].getChildren().length
 								@defaultLayer.removeChildren()
+								console.log "remove default"
 								break;
 						i++
 					@defaultLayer.draw()
+					
 
 			# update the size of default image on change of stage
 			_updateDefaultImageSize:->
@@ -200,19 +259,30 @@ define ['app'],(App)->
 						@stopListening App.vent,"media:manager:choosed:media"
 
 
+				@_updateDefaultLayer()
+
 				@optionLayer.draw()
 
 
-			_addCircle: (elementPos)->
+			_addCircle: (elementPos,model)->
 
-					modelData =
-						type : 'Option'
-						shape : 'Circle'
-						color : '#000000'
-						transparent : false
-						correct : false
-						
-					hotspotElement = App.request "create:new:hotspot:element", modelData
+					if model
+						hotspotElement = model
+
+					else
+						modelData =
+							type : 'Option'
+							shape : 'Circle'
+							x : elementPos.left
+							y: elementPos.top
+							radius : 20
+							color : '#000000'
+							transparent : false
+							correct : false
+							
+						hotspotElement = App.request "create:new:hotspot:element", modelData
+						@optionCollection.add hotspotElement
+
 					self = @
 
 					App.execute "show:question:element:properties",
@@ -220,16 +290,20 @@ define ['app'],(App)->
 
 
 					circle = new Kinetic.Circle
-							name : "rect1"
-							x: elementPos.left
-							y:elementPos.top
-							radius :20
-							stroke: hotspotElement.get 'color'
-							strokeWidth: 2
-							dash : [6,4 ]
+							x 			: hotspotElement.get 'x'
+							y 			: hotspotElement.get 'y'
+							radius 		: hotspotElement.get 'radius'
+							stroke 		: hotspotElement.get 'color'
+							strokeWidth : 2
+							dash 		: [6,4 ]
 							dashEnabled : hotspotElement.get 'transparent'
 
 					circleGrp = resizeCircle circle,@optionLayer
+
+					circleGrp.on 'dragend',(e)->
+							hotspotElement.set 'x',circle.getAbsolutePosition().x
+							hotspotElement.set 'y',circle.getAbsolutePosition().y
+							hotspotElement.set 'radius',circle.radius()
 
 					# on change of transparency redraw
 					hotspotElement.on "change:transparent",=>
@@ -255,6 +329,7 @@ define ['app'],(App)->
 					# delete element based on toDelete
 					hotspotElement.on "change:toDelete",=>
 							circleGrp.destroy()
+							@optionCollection.remove hotspotElement
 							closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@optionLayer.draw()
@@ -272,19 +347,32 @@ define ['app'],(App)->
 					circleGrp.on 'mouseout',->
 						closequestionelementproperty = true
 
+					@optionLayer.draw()
 
-			_addRectangle : (elementPos)->
 
-					modelData =
-						type : 'Option'
-						shape : 'Rect'
-						color : '#000000'
-						transparent : false
-						angle 	: 0
-						correct : false
-						
+			_addRectangle : (elementPos,model)->
 
-					hotspotElement = App.request "create:new:hotspot:element", modelData
+					if model 
+						hotspotElement = model
+
+					else
+						modelData =
+							type : 'Option'
+							shape : 'Rect'
+							x : elementPos.left
+							y: elementPos.top
+							width: 30
+							height: 30	
+							color : '#000000'
+							transparent : false
+							angle 	: 0
+							correct : false
+							
+
+						hotspotElement = App.request "create:new:hotspot:element", modelData
+						@optionCollection.add hotspotElement
+
+
 					self = @
 
 					App.execute "show:question:element:properties",
@@ -292,20 +380,28 @@ define ['app'],(App)->
 
 					box = new Kinetic.Rect
 							name : "rect2"
-							x: elementPos.left
-							y:elementPos.top
-							width: 25
-							height: 25							
+							x: hotspotElement.get 'x'
+							y: hotspotElement.get 'y'
+							width: hotspotElement.get 'width'
+							height: hotspotElement.get 'height'	
 							stroke: hotspotElement.get 'color'
 							strokeWidth: 2
 							dash : [6,4 ]
 							dashEnabled : hotspotElement.get 'transparent'
-							
 
 					rectGrp = resizeRect box,@optionLayer
 
+					rectGrp.rotation hotspotElement.get 'angle'
+
+					rectGrp.on 'dragend',(e)->
+							hotspotElement.set 'x',box.getAbsolutePosition().x
+							hotspotElement.set 'y',box.getAbsolutePosition().y
+							hotspotElement.set 'width',box.width()
+							hotspotElement.set 'height',box.height()
+
 					# on change of transparency redraw
 					hotspotElement.on "change:transparent",=>
+						console.log rectGrp
 						box.dashEnabled hotspotElement.get 'transparent'
 						@optionLayer.draw()
 
@@ -332,6 +428,7 @@ define ['app'],(App)->
 					# delete element based on toDelete
 					hotspotElement.on "change:toDelete",=>
 							rectGrp.destroy()
+							@optionCollection.remove hotspotElement
 							closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@optionLayer.draw()
@@ -349,32 +446,43 @@ define ['app'],(App)->
 					rectGrp.on 'mouseout',->
 						closequestionelementproperty = true
 
-					
-
-
-			_addTextElement: (elementPos)->
+					@optionLayer.draw()
 
 					
 
-					modelData =
-						type : 'Text'
-						text : ''
-						fontFamily : 'Arial'
-						fontSize : '14'
-						fontColor : '#000000'
-						fontBold : ''
-						fontItalics : ''
-						textAngle : 0
 
-					hotspotElement = App.request "create:new:hotspot:element", modelData
+			_addTextElement: (elementPos,model)->
+
+					if model
+						hotspotElement = model
+
+					else
+						modelData =
+							x: elementPos.left
+							y: elementPos.top
+							type : 'Text'
+							text : ''
+							fontFamily : 'Arial'
+							fontSize : '14'
+							fontColor : '#000000'
+							fontBold : ''
+							fontItalics : ''
+							textAngle : 0
+
+						hotspotElement = App.request "create:new:hotspot:element", modelData
+						@textCollection.add hotspotElement
+
+					
+
+
 					self = @
 
 					App.execute "show:question:element:properties",
 									model : hotspotElement
 
 					tooltip = new Kinetic.Label
-						x: elementPos.left
-						y: elementPos.top
+						x: hotspotElement.get 'x'
+						y: hotspotElement.get 'y'
 						width : 100
 						draggable : true
 						dragBoundFunc : (pos)->
@@ -388,12 +496,27 @@ define ['app'],(App)->
 						fill: hotspotElement.get 'fontColor'
 						fontStyle : hotspotElement.get('fontBold')+" "+hotspotElement.get('fontItalics')
 						padding: 5
+						rotation : hotspotElement.get 'textAngle'
+
+					tooltip.on 'dragend',(e)->
+							hotspotElement.set 'x',tooltip.getAbsolutePosition().x
+							hotspotElement.set 'y',tooltip.getAbsolutePosition().y
+
+
+
 
 					# on click of a text element show properties
 					tooltip.on 'mousedown click',(e)->
 							e.stopPropagation()
 							App.execute "show:question:element:properties",
 									model : hotspotElement
+
+					# if model text is not empty then change the hotspot text
+					if hotspotElement.get('text') != ''
+						canvasText.setText hotspotElement.get 'text'
+						canvasText.opacity 1
+						canvasText.fill hotspotElement.get 'fontColor'
+
 							
 
 					# on change of text update the canvas
@@ -439,6 +562,7 @@ define ['app'],(App)->
 					# on change of toDelete property remove the text element from the canvas
 					hotspotElement.on "change:toDelete",=>
 							tooltip.destroy()
+							@textCollection.remove hotspotElement
 							closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@textLayer.draw()
@@ -464,34 +588,56 @@ define ['app'],(App)->
 
 					@textLayer.draw()
 
-			_addImageElement:(elementPos,url)->
+			_addImageElement:(elementPos,url,model)->
 
-					modelData =
-						type : 'Image'						
-						angle : 0
+					if model 
+						hotspotElement = model
 
-					hotspotElement = App.request "create:new:hotspot:element", modelData
+					else
+						modelData =
+							type 	: 'Image'						
+							x 		: elementPos.left
+							y 		: elementPos.top
+							width 	: 150
+							height 	: 150
+							angle 	: 0
+							url 	: url
+
+						hotspotElement = App.request "create:new:hotspot:element", modelData
+						@imageCollection.add hotspotElement
 
 					imageGrp = null
 
 					imageObject = new Image()
-					imageObject.src = url
+					imageObject.src = hotspotElement.get 'url'
 					imageObject.onload = ()=>
 							App.execute "show:question:element:properties",
 									model : hotspotElement
 
 							imageElement = new Kinetic.Image
 									image 	: imageObject
-									x : elementPos.left
-									y : elementPos.top
-									width: 150
-									height :150
+									x 		: hotspotElement.get 'x'
+									y 		: hotspotElement.get 'y'
+									width 	: hotspotElement.get 'width'
+									height 	: hotspotElement.get 'height'
 
 							# @imageLayer.add imageGrp
 							
 							imageGrp = resizeRect imageElement,@imageLayer
 							@_updateDefaultLayer()
+							
+
+							imageGrp.rotation hotspotElement.get 'angle'
+
 							@imageLayer.draw()
+
+
+							imageGrp.on 'dragend',(e)->
+								hotspotElement.set 'x',imageElement.getAbsolutePosition().x
+								hotspotElement.set 'y',imageElement.getAbsolutePosition().y
+								hotspotElement.set 'width',imageElement.width()
+								hotspotElement.set 'height',imageElement.height()
+
 
 							# on click of a text element show properties
 							imageGrp.on 'mousedown click',(e)->
@@ -517,6 +663,7 @@ define ['app'],(App)->
 					# on change of toDelete property remove the image element from the canvas
 					hotspotElement.on "change:toDelete",=>
 							imageGrp.destroy()
+							@imageCollection.remove hotspotElement
 							closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@imageLayer.draw()

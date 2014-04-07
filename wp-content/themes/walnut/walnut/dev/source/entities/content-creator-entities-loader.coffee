@@ -7,5 +7,6 @@ define [
 		'entities/content-creator/media'
 		'entities/content-creator/hotspotelementbox'
 		'entities/content-creator/hotspotelement'
+		'entities/content-creator/json'
 		'entities/schools'
 		'entities/breadcrumb'],->
