@@ -612,6 +612,15 @@
   position: relative;
   min-height: 200px;
 }
+.studntBtn {
+  position: absolute;
+  right: 0;
+  top: 8%;
+}
+.infoBar {
+  width: 100%;
+  background-color: #f3f3f3;
+}
 body {
   background-color: #e5e9ec;
 }
