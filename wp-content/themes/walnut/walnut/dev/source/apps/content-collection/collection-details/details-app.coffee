@@ -100,13 +100,18 @@ define ['app'
 
 
 			save_content:(e)->
+				$('#s2id_textbooks .select2-choice').removeClass('error');
+				if(@$el.find('#textbooks').val()=='')
+					$('#s2id_textbooks .select2-choice').addClass('error');
 				e.preventDefault()
+
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
 					@trigger "save:content:collection:details",data
 
 			onSavedContentGroup:(model) ->
 				console.log model
+				@$el.find('#save-content-collection').after('<span class="success">Saved Successfully</span>');
 
 		# set handlers
 		App.commands.setHandler "show:collections:detailsapp", (opt = {})->

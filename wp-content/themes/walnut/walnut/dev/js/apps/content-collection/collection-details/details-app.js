@@ -161,6 +161,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
 
       CollectionDetailsView.prototype.save_content = function(e) {
         var data;
+        $('#s2id_textbooks .select2-choice').removeClass('error');
+        if (this.$el.find('#textbooks').val() === '') {
+          $('#s2id_textbooks .select2-choice').addClass('error');
+        }
         e.preventDefault();
         if (this.$el.find('form').valid()) {
           data = Backbone.Syphon.serialize(this);
@@ -169,7 +173,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
       };
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {
-        return console.log(model);
+        console.log(model);
+        return this.$el.find('#save-content-collection').after('<span class="success">Saved Successfully</span>');
       };
 
       return CollectionDetailsView;
