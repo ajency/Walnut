@@ -4,3 +4,6 @@ define ['jquery'], ($)->
 			$('.scrollup').fadeIn();
 		else 
 			$('.scrollup').fadeOut();
+
+	
+	

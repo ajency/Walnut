@@ -6,7 +6,6 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
 			initialize : ->
 				textbooksCollection = App.request "get:textbooks"
-				console.log 'initialize listcontroller'
 				breadcrumb_items = 'items':[
 						{'label':'Dashboard','link':'javascript://'},
 						{'label':'Content Management','link':'javascript://'},

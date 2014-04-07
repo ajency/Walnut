@@ -33,12 +33,10 @@ require.config
 		jqueryspin  		: 'plugins/jquery.spin'
 		tablesorter			: 'plugins/jquery.tablesorter'
 		tablesorter_pager	: 'plugins/jquery.tablesorter.pager'
-		#jquery_datatables  	: 'plugins/jquery.dataTables.min'
-		#tabletools 			: 'plugins/TableTools.min'
-		#datatables_responsive: 'plugins/datatables.responsive'
-		#datatables  		: 'plugins/datatables'
 		unveil				: 'plugins/jquery.unveil.min'
 		detect				: 'plugins/detect'
+		moment				: 'plugins/moment.min'
+		select2				: 'plugins/select2.min'
 
 	shim:
 		underscore: 
@@ -61,13 +59,11 @@ require.config
 		mixitup 		: ['jquery']
 		tablesorter 		: ['jquery']
 		tablesorter_pager 		: ['jquery','tablesorter']
-		#jquery_datatables 		: ['jquery']
-		#tabletools 		: ['jquery_datatables']
-		#datatables_responsive : ['jquery_datatables']
-		#datatables 		: ['jquery_datatables','bootstrap']
 		jqueryspin 		: ['spin']
 		jqueryvalidate	: ['jquery']
 		syphon			: ['backbone']
+		moment			: ['jquery']
+		select2			: ['jquery', 'bootstrap']
 		app 			: ['plugins/walnut-pluginloader','config/walnut-configloader']
 
 	

@@ -226,7 +226,6 @@ function get_textbooks($args = array()) {
 
     $args = wp_parse_args($args, $defaults);
     extract($args);
-
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all){
         $textbooks = get_terms('textbook', $args);
@@ -257,9 +256,9 @@ function get_textbooks($args = array()) {
             $data[] = get_book($book);
         }
     }
-    $textbooks['data']=$data;
-    $textbooks['count']=$count_total;
-    return $textbooks;
+    $textbooks_data['data']=$data;
+    $textbooks_data['count']=$count_total;
+    return $textbooks_data;
 }
 
 function get_book($book) {
@@ -318,4 +317,34 @@ function get_textbooks_for_class($classid) {
 
 function get_textbooks_for_user() {
     
+}
+
+function get_chapter_subsections($args = array()){
+     // set defaults
+    
+    
+    $defaults = array(
+        'hide_empty' => false,
+        'child_of' => 0,
+        'orderby' => 'name',
+        'order' => 'asc',
+        //'number'=>2,
+        'user_id' => get_current_user_id(),
+        'class_id' => ''
+    );
+
+    $args = wp_parse_args($args, $defaults);
+    extract($args);
+    
+    $sections_full = get_terms('textbook', $args);
+    
+    $count_args=$args;
+    $count_args['fields']='count';
+    $count_args['number']='';
+    $count_total = get_terms('textbook', $count_args);
+    
+    $sections['data']=$sections_full;
+    $sections['count']=$count_total;
+    
+    return $sections;
 }

@@ -49,6 +49,29 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemCollection;
 
     })(Backbone.Collection);
+    Chapters.SubSectionCollection = (function(_super) {
+      __extends(SubSectionCollection, _super);
+
+      function SubSectionCollection() {
+        return SubSectionCollection.__super__.constructor.apply(this, arguments);
+      }
+
+      SubSectionCollection.prototype.model = Chapters.ItemModel;
+
+      SubSectionCollection.prototype.comparator = 'term_order';
+
+      SubSectionCollection.prototype.url = function() {
+        return AJAXURL + '?action=get-chapter-subsections';
+      };
+
+      SubSectionCollection.prototype.parse = function(resp) {
+        this.total = resp.count;
+        return resp.data;
+      };
+
+      return SubSectionCollection;
+
+    })(Backbone.Collection);
     API = {
       getChapters: function(param) {
         var chapterCollection;
@@ -73,13 +96,28 @@ define(["app", 'backbone'], function(App, Backbone) {
           chapter.fetch();
         }
         return chapter;
+      },
+      getSubsectionByChapterID: function(param) {
+        var subSectionsCollection;
+        if (param == null) {
+          param = {};
+        }
+        subSectionsCollection = new Chapters.SubSectionCollection;
+        subSectionsCollection.fetch({
+          reset: true,
+          data: param
+        });
+        return subSectionsCollection;
       }
     };
     App.reqres.setHandler("get:chapters", function(opt) {
       return API.getChapters(opt);
     });
-    return App.reqres.setHandler("get:chapter:by:id", function(id) {
+    App.reqres.setHandler("get:chapter:by:id", function(id) {
       return API.getChapterByID(id);
+    });
+    return App.reqres.setHandler("get:subsections:by:chapter:id", function(id) {
+      return API.getSubsectionByChapterID(id);
     });
   });
 });

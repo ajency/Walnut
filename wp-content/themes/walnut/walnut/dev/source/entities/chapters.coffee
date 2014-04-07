@@ -28,6 +28,16 @@ define ["app", 'backbone'], (App, Backbone) ->
 					resp.data
 
 			
+			# subsections collection class
+			class Chapters.SubSectionCollection extends Backbone.Collection
+				model : Chapters.ItemModel
+				comparator : 'term_order'
+				url :->
+					 AJAXURL + '?action=get-chapter-subsections'
+				
+				parse:(resp)->
+					@total = resp.count	
+					resp.data
 
 			# API 
 			API = 
@@ -51,9 +61,22 @@ define ["app", 'backbone'], (App, Backbone) ->
 					chapter
 
 
+				getSubsectionByChapterID:(param = {})->
+					subSectionsCollection = new Chapters.SubSectionCollection
+					subSectionsCollection.fetch
+										reset : true
+										data  : param
+
+					subSectionsCollection
+
+
 			# request handler to get all Chapters
 			App.reqres.setHandler "get:chapters", (opt) ->
 				API.getChapters(opt)
 
 			App.reqres.setHandler "get:chapter:by:id", (id)->
 				API.getChapterByID id
+
+			App.reqres.setHandler "get:subsections:by:chapter:id", (id)->
+				API.getSubsectionByChapterID id
+

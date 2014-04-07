@@ -3,47 +3,77 @@
 	<div class="tools">
 		<a href="javascript:;" class="collapse"></a>
 	</div>
-	</div>
-	<div class="grid-body no-border" style="overflow: hidden; display: block;">
-	<div class="row ">
-		<div class="col-md-4">
-		    <div class="margin-bottom-20 ">
-				<label class="form-label">Objective</label>
-				<input name="" id="" type="text" class="form-control" placeholder="Enter Objective">
-				</div>
-		</div>
-		<div class="col-md-4">
-		    <div class="margin-bottom-20 ">
-				<label class="form-label">Physical Requirements</label>
-				<textarea class="form-control" placeholder="Enter Physical Requirements"></textarea>
-			</div>
-		</div>
-		<div class="col-md-4">
-		    <div class="margin-bottom-20 ">
-				<label class="form-label">Subject</label>
-				<input name="" id="" type="text" class="form-control" placeholder="Enter Subject">
-			</div>
-		</div>												 
-	</div>
-	<div class="row ">
+</div>
+<div class="grid-body no-border" style="overflow: hidden; display: block;">
+	<form name="content-collection-form" id="content-collection-form">
+		Module Name: <input name="title" type="text" value="" />
+		<div class="row ">
 			<div class="col-md-4">
-			   <div class="margin-bottom-20 ">
-				<label class="form-label">Description</label>
-				<textarea class="form-control" placeholder="Enter Description"></textarea>
+			    <div class="margin-bottom-20 ">
+					<label class="form-label">Objective</label>
+					<textarea name="description[objective]" class="form-control" placeholder="Enter Objective"></textarea>
+					</div>
 			</div>
+			<div class="col-md-4">
+			    <div class="margin-bottom-20 ">
+					<label class="form-label">Physical Requirements</label>
+					<textarea name="description[physical_requirements]" class="form-control" placeholder="Enter Physical Requirements"></textarea>
+				</div>
+			</div>
+			<div class="col-md-4">
+			    <div class="margin-bottom-20 ">
+					<label class="form-label">Textbook</label>
+					<select name="terms[]" id="textbooks" class="form-control select2" >
+						<option value="">--select textbook--</option>
+		                {{#items}}
+		                	<option value="{{term_id}}">{{name}}</option>
+		                {{/items}}
+		            </select>
+				</div>
+			</div>												 
 		</div>
-		<div class="col-md-4">
-		    <div class="margin-bottom-20 ">
-				<label class="form-label">Electronic Requirements</label>
-				<textarea class="form-control" placeholder="Enter Electronic Requirements"></textarea>
+		<div class="row ">
+				<div class="col-md-4">
+				   <div class="margin-bottom-20 ">
+					<label class="form-label">Description</label>
+					<textarea name="description[description]" rows="4" class="form-control" placeholder="Enter Description"></textarea>
+				</div>
 			</div>
+			<div class="col-md-4">
+			    <div class="margin-bottom-20 ">
+					<label class="form-label">Electronic Requirements</label>
+					<textarea name="description[electionic_requirements]" class="form-control" placeholder="Enter Electronic Requirements"></textarea>
+				</div>
+			</div>
+			<div class="col-md-4">
+			    <div class="margin-bottom-20 ">
+					<label class="form-label">Chapter <span class="muted small pull-right"> Select a Textbook first</span></label>
+					<select name="terms[]" id="chapters" class="form-control select2" >
+						<option value="">--select chapters--</option>
+		            </select>
+				</div>
+			</div>											 
 		</div>
-		<div class="col-md-4">
-		    <div class="margin-bottom-20 ">
-				<label class="form-label">Chapter</label>
-				<input name="" id="" type="text" class="form-control" placeholder="Enter Chapter">
+		<div class="row ">
+				<div class="col-md-4">
+				   <div class="margin-bottom-20 ">
+					<label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>
+					<select name="terms[]" id="secs" class="form-control select2" multiple="">
+		            </select>
+				</div>
 			</div>
-		</div>											 
-	</div>
-	<button type="button" class="btn btn-success btn-cons2 right" id="save-question"> <i class="fa fa-check"></i> Save</button>
+			<div class="col-md-4">
+			    <div class="margin-bottom-20 ">
+					<label class="form-label">Sub-Sections <span class="muted small pull-right"> Select a Chapter first</span></label>
+					<select name="terms[]" id="subsecs" class="form-control select2" multiple="">
+		            </select>
+				</div>
+			</div>
+			<div class="col-md-4">
+			    <div class="p-t-30 ">
+					<button type="submit" class="btn btn-success btn-cons2 right" id="save-content-collection"> <i class="fa fa-check"></i> Save</button>
+				</div>
+			</div>											 
+		</div>
+	</form>
 </div>
