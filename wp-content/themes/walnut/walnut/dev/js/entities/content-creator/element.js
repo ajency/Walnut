@@ -3,8 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Elements", function(Elements, App, Backbone, Marionette, $, _) {
-    var API, i;
-    i = 1;
+    var API;
     Elements.ElementModel = (function(_super) {
       __extends(ElementModel, _super);
 
@@ -28,7 +27,7 @@ define(["app", 'backbone'], function(App, Backbone) {
     })(Backbone.Model);
     API = {
       createElement: function(data) {
-        var ele, element;
+        var ele, element, i;
         if (data == null) {
           data = {};
         }
@@ -36,6 +35,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         element.set(data);
         if (element.get('element') !== 'Row' && element.get('element') !== 'Column') {
           if (element.isNew()) {
+            i = new Date().getTime();
             element.set('meta_id', i);
             localStorage.setItem('ele' + element.get('meta_id'), JSON.stringify(element.toJSON()));
             i++;

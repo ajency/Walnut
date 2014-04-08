@@ -92,8 +92,8 @@ define ['app'],(App)->
 						@_addElements type, elementPos
 
 
-				$('button.btn.btn-success.btn-cons2').on 'click',=>
-						console.log  @stage.toJSON()
+				# $('button.btn.btn-success.btn-cons2').on 'click',=>
+				# 		console.log  @stage.toJSON()
 
 
 				#make the hotspot canvas area dropable
@@ -179,6 +179,10 @@ define ['app'],(App)->
 							model
 
 				@_updateDefaultLayer()
+
+				setTimeout ->
+					$('body').trigger('mousedown')
+				,	1000
 
 
 
@@ -297,6 +301,7 @@ define ['app'],(App)->
 							strokeWidth : 2
 							dash 		: [6,4 ]
 							dashEnabled : hotspotElement.get 'transparent'
+							fill : if hotspotElement.get("correct") then "rgba(12, 199, 55, 0.28)" else ""
 
 					circleGrp = resizeCircle circle,@optionLayer
 
@@ -387,7 +392,8 @@ define ['app'],(App)->
 							stroke: hotspotElement.get 'color'
 							strokeWidth: 2
 							dash : [6,4 ]
-							dashEnabled : hotspotElement.get 'transparent'
+							dashEnabled : hotspotElement.get 'transparent'	
+							fill : if hotspotElement.get("correct") then "rgba(12, 199, 55, 0.28)" else ""
 
 					rectGrp = resizeRect box,@optionLayer
 

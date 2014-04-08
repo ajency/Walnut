@@ -1,5 +1,7 @@
 <?php
 
+require_once 'functions.php';
+
 add_action( 'wp_ajax_get-textbooks', 'fetch_textbooks' );
 add_action( 'wp_ajax_get-chapters', 'fetch_textbooks' );
 

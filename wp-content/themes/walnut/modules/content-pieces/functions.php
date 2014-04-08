@@ -61,6 +61,7 @@ function get_content_pieces($args=array()){
        
        $authordata=get_userdata($val->post_author);
        $content_pieces[$key]->creator =  $authordata->display_name;
+       $content_pieces[$key]->content_type = get_post_meta($val->ID, 'content_type');
     }
     
     return $content_pieces;

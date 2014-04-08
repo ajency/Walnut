@@ -9,19 +9,38 @@ define ["app", 'backbone'], (App, Backbone) ->
 				name : 'media'
 
 				# function to calculate the best fit for the given size
-				getBestFit:(width, height)->
-					mode = 'landscape'
-					mode = 'portrait' if height > width
-					url = 'http://dsdsdsd.com'
-					switch mode 
-						when 'landscape'
-							url = 'landscape'
-						when 'portrait'
-							url = 'portrait'
+				getBestFit:(width)->
 
 					sizes = @get 'sizes'
 
-					if sizes['thumbnail'] then sizes['thumbnail'].url else sizes['full'].url
+					closest = null
+					# get closest size
+					smallest = 99999
+					_.each sizes, (size, key)->
+						val = size.width - width
+						val = if val < 0 then (-1 * val) else val
+						if val <= smallest
+							closest = 
+								url : size.url
+								size : key
+							smallest = val
+
+					closest = sizes['full'] if _.isNull closest
+					console.log closest
+
+					closest 
+					# mode = 'landscape'
+					# mode = 'portrait' if height > width
+					# url = 'http://dsdsdsd.com'
+					# switch mode 
+					# 	when 'landscape'
+					# 		url = 'landscape'
+					# 	when 'portrait'
+					# 		url = 'portrait'
+
+					# sizes = @get 'sizes'
+
+					# if sizes['thumbnail'] then sizes['thumbnail'].url else sizes['full'].url
 
 
 			#Media collection

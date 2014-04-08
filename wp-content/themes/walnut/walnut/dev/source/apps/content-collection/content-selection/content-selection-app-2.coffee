@@ -7,7 +7,10 @@ define ['app'
 		class Controller.ContentSelectionController extends RegionController
 
 			initialize : ->
+				@textbooksCollection = App.request "get:textbooks"
+
 				@questionsCollection = App.request "get:content:pieces"
+
 				tableConfig = 
 					'data': [
 						{
@@ -22,29 +25,50 @@ define ['app'
 							'value'		:'post_modified'
 							'dateField' : true
 						}
+						{
+							'label'		:'Content Type'
+						}
+					]
+					'filters':[
+						{
+							'label' : 'textbooks'
+							'values': ['History','Geography']
+						}
+						{
+							'label' : 'chapters'
+							'values': ['Chapter1', 'Chapter2']
+						}
 					]
 					'idAttribute': 'ID' # id attribute of the model # default = 'id'
 					'selectbox': true
 					'pagination': true
-				
-					
+
 				@view= view = @_getContentSelectionView(@questionsCollection, tableConfig)
 
-				@show view, (loading:true)
+				@show view, (loading:true, entities : [@textbooksCollection])
 
 			_getContentSelectionView : (collection, tableConfig)=>
-				new dataContentTableView
+				new DataContentTableView
 					collection: collection
 					tableConfig: tableConfig
+					templateHelpers: 
+						textbooksFilter:()=>
+							textbooks= []
+							_.each(@textbooksCollection.models, (el,ind)->
+								textbooks.push('name':el.get('name'), 'id': el.get('term_id'))
+							)
+							textbooks
+						
 
-		class dataContentTableView extends Marionette.ItemView
+		class DataContentTableView extends Marionette.ItemView
 
 			template 			: contentSelectionTpl
 
 			className 			: 'tiles white grid simple vertical green'
 
 			events: 
-				'change #check_all_div'	: 'check_all'
+				'change #check_all_div'		: 'check_all'
+				'change #textbooks-filter'	: 'filter_textbooks'
 
 
 
@@ -74,6 +98,7 @@ define ['app'
 					td_ID=@tableData.idAttribute
 
 				_.each(@collection.models , (item, index)=>
+					console.log item
 					row = '<tr>'
 
 					if @tableData.selectbox 
@@ -117,6 +142,26 @@ define ['app'
 					@$el.find('#dataContentTable .tab_checkbox').trigger('click').prop('checked', true);
 				else 
 					@$el.find('#dataContentTable .tab_checkbox').removeAttr('checked')
+
+			filter_textbooks:(e)->
+				filter_id= parseInt($(e.target).val());
+				console.log filter_id
+				filtered_data= _.filter(@collection.models, (item)=>
+						subjects= _.pluck(item.get('subjects'), 'term_id')
+						console.log subjects
+						if (_.contains(subjects, filter_id))
+							@$el.find('#dataContentTable tbody tr').hide()
+							pagerOptions = 
+								container: $(".pager"),				
+								output: '{startRow} to {endRow} of {totalRows}'
+
+							$('#dataContentTable').tablesorterPager pagerOptions
+
+							console.log 'contains'
+						else 
+							console.log 'doesnt'
+							console.log filter_id
+					)
 
 		# set handlers
 		App.commands.setHandler "show:content:selectionapp", (opt = {})->

@@ -50,6 +50,12 @@ define ['app'],(App)->
 										<div class="aj-imp-builder-title">Text</div>
 									</a>
 								</li>
+								<li data-element="ImageWithText" class="hotspotable">
+									<a href="#" class="drag builder-element" >
+										<i class="fa fa-camera"></i>
+										<div class="aj-imp-builder-title">Image With Text</div>
+									</a>
+								</li>
 								<div class="clearfix"></div>
 							</ul>
 						</div>
