@@ -20,6 +20,25 @@
   -ms-transition: opacity 0.5s ease-in-out;
   -o-transition: opacity 0.5s ease-in-out;
 }
+.overlap-left-15 {
+  position: absolute;
+  left: -15px;
+  bottom: 40%;
+}
+.overlap-left-15 i {
+  color: #fff;
+}
+.overlap-right-15 {
+  position: absolute;
+  right: -15px;
+  bottom: 40%;
+}
+.overlap-right-15 i {
+  color: #fff;
+}
+.m-r-0 {
+  margin-right: 0;
+}
 .creator {
   position: relative;
 }
@@ -590,6 +609,17 @@
 }
 .teacherCanvas {
   background-color: #fff;
+  position: relative;
+  min-height: 200px;
+}
+.studntBtn {
+  position: absolute;
+  right: 0;
+  top: 8%;
+}
+.infoBar {
+  width: 100%;
+  background-color: #f3f3f3;
 }
 body {
   background-color: #e5e9ec;
@@ -784,4 +814,8 @@ tbody.rowlink td {
 .contentSelect select {
   width: 24%;
   margin-right: 5px;
+}
+textarea.error,
+.select2-choice.error {
+  border: 1px solid #f35958 !important;
 }

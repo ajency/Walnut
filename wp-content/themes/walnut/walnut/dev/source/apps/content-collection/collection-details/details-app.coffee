@@ -31,16 +31,25 @@ define ['app'
 						@view.triggerMethod 'fetch:subsections:complete', allSections
 
 
-				@listenTo @view, "save:content:collection:details" :(data) ->
-					console.log 'gotto add entity'
-					#saveDetails = App.request "save:content:group:details", data
+				@listenTo @view, "save:content:collection:details" :(data) =>
+					if not @contentGroupModel
+						@contentGroupModel = App.request "save:content:group:details", data
+					@contentGroupModel.save(data,{wait : true, success: @successFn, error: @errorFn})
+
+			successFn :(resp)=>
+				@view.triggerMethod 'saved:content:group', resp 
+				App.execute "show:content:selectionapp", region : @layout.contentSelectionRegion
+
+			errorFn :->
+				console.log 'error'
+								
 				
 			_getCollectionDetailsView : (collection)->
-				new collectionDetailsView
+				new CollectionDetailsView
 					collection: collection
 
 
-		class collectionDetailsView extends Marionette.ItemView
+		class CollectionDetailsView extends Marionette.ItemView
 
 			template 	: collectionDetailsTpl
 
@@ -93,9 +102,23 @@ define ['app'
 
 			save_content:(e)->
 				e.preventDefault()
+
+				$('#s2id_textbooks .select2-choice').removeClass('error');
+				$('#s2id_chapters .select2-choice').removeClass('error');
+
+				if(@$el.find('#textbooks').val()=='')
+					$('#s2id_textbooks .select2-choice').addClass('error');
+
+				if(@$el.find('#chapters').val()=='')
+					$('#s2id_chapters .select2-choice').addClass('error');
+
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
 					@trigger "save:content:collection:details",data
+
+			onSavedContentGroup:(model) ->
+				console.log model
+				@$el.find('#save-content-collection').after('<span class="success">Saved Successfully</span>');
 
 		# set handlers
 		App.commands.setHandler "show:collections:detailsapp", (opt = {})->

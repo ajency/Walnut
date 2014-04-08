@@ -61,9 +61,53 @@ function get_content_pieces($args=array()){
        
        $authordata=get_userdata($val->post_author);
        $content_pieces[$key]->creator =  $authordata->display_name;
+       $content_pieces[$key]->content_type = get_post_meta($val->ID, 'content_type');
     }
     
     return $content_pieces;
+}
+
+function save_content_group($data=array()){
+    global $wpdb;
+    
+    $content_data = array(
+        'name'              =>$data['name'],
+        'term_ids'          =>$data['term_ids'],
+        'last_modified_on'  => date('y-m-d H:i:s'),
+        'last_modified_by'  => get_current_user_id()
+    );
+    
+    if(isset($data['id'])){
+        $content_group=$wpdb->update($wpdb->prefix.'content_collection', $content_data, array('id'=>$data['id']));
+        $group_id=$data['id'];
+    }
+    else{
+        $content_data['created_on'] = date('y-m-d H:i:s');
+        $content_data['created_by'] = get_current_user_id();
+        $content_group=$wpdb->insert($wpdb->prefix.'content_collection', $content_data);  
+        $group_id=$wpdb->insert_id;
+    }
+    if($content_group){
+        
+        $meta_data=array(
+          'collection_id'   => $group_id,
+          'meta_key'        => 'description',
+          'meta_value'      => $data['description']
+        );
+        
+        if(isset($data['id']))
+            $content_meta=$wpdb->update($wpdb->prefix.'collection_meta', $meta_data, array('id'=>$data['id']));
+        
+        else
+            $content_meta=$wpdb->insert($wpdb->prefix.'collection_meta', $meta_data);
+        
+    }
+    
+    $group_data=$content_data;
+    $group_data['id']=$group_id;
+    
+    return $group_data;
+    
 }
 
 ?>

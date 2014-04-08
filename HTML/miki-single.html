@@ -58,6 +58,7 @@
 		<script type="text/javascript" src="assets/js/row-link.js"></script>
 		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
 		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="assets/js/jquery.knob.js"></script>
 
 	<!-- END NEED TO WORK ON -->
 
@@ -167,7 +168,7 @@
           </div>-->
 		  
 		 <div class="user-details">
-            <div class="username"><img src="assets/img/offline.gif" /> <span class="bold"> Offline </span>&nbsp;&nbsp;&nbsp;  
+            <div class="username"> <span class="bold"> Offline </span>&nbsp;&nbsp;&nbsp;  
 			</div>
           </div>
 			<!-- <div class="user-details">
@@ -299,18 +300,45 @@
 			<!-- BEGIN PlACE PAGE CONTENT HERE -->
 		
 				<div class="pieceWrapper">
+
+					<h4 class="bold pull-left"><i class="fa fa-chevron-left"></i> <a href="#">Module Name</a></h4>
+
+					<p class="bold small-text pull-right">Progress</p>
+			        <div class="progress pull-right">
+			            <div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+			        </div>
+
+					<div class="infoBar">
+						  <div class="row b-b b-grey p-b-10 p-t-10 p-l-10 p-r-10 text-center">
+			                <div class="col-md-3 col-sm-3 col-xs-3">
+			                  
+			                </div>
+			                <div class="col-md-3 col-sm-3 col-xs-3">
+			                  <p class="bold small-text">Some text</p>
+			                  
+			                </div>
+			                <div class="col-md-3 col-sm-3 col-xs-3">
+			                	
+			                </div>
+			                <div class="col-md-3 col-sm-3 col-xs-3">
+			                  <p class="bold small-text">Time Left</p>
+			                  <h4 class="bold ">4m 30s</h4>
+			                </div>
+			              </div>
+					</div>
+
 					<div class="teacherCanvas">
 						<div class="p-t-20 p-b-15">
 			                <div class="post overlap-left-15">
 			                  <div class="user-profile-pic-wrapper animated bounceIn">
-			                    <div class="user-profile-pic-2x tiles blue white-border">
+			                    <div class="user-profile-pic-2x tiles white-border">
 			                      <div class="text-white inherit-size p-t-10 p-l-10"> <a href="#"><i class="fa fa-arrow-left fa-lg"></i></a> </div>
 			                    </div>
 			                  </div>
 			                </div>
 			                <div class="post overlap-right-15">
 			                  <div class="pull-right m-r-0 animated bounceIn">
-			                    <div class="user-profile-pic-2x tiles blue white-border">
+			                    <div class="user-profile-pic-2x tiles white-border">
 			                      <div class="text-white inherit-size p-t-10 p-l-15"> <a href="#"><i class="fa fa-arrow-right fa-lg"></i></a> </div>
 			                    </div>
 			                  </div>
@@ -319,6 +347,8 @@
 			            </div>
 					</div>
 				</div>
+
+				<button type="button" class="btn btn-success btn-mini studntBtn" id=""> <i class="fa fa-plus"></i> Students</button>
 			<!-- END PLACE PAGE CONTENT HERE -->
 		</div>
 	</div>

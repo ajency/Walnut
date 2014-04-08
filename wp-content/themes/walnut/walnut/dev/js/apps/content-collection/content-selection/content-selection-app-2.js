@@ -4,7 +4,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'text!apps/content-collection/content-selection/templates/content-selection.html'], function(App, RegionController, contentSelectionTpl) {
   return App.module("ContentSelectionApp.Controller", function(Controller, App) {
-    var dataContentTableView;
+    var DataContentTableView;
     Controller.ContentSelectionController = (function(_super) {
       __extends(ContentSelectionController, _super);
 
@@ -15,6 +15,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
 
       ContentSelectionController.prototype.initialize = function() {
         var tableConfig, view;
+        this.textbooksCollection = App.request("get:textbooks");
         this.questionsCollection = App.request("get:content:pieces");
         tableConfig = {
           'data': [
@@ -27,6 +28,17 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
               'label': 'Last Modified',
               'value': 'post_modified',
               'dateField': true
+            }, {
+              'label': 'Content Type'
+            }
+          ],
+          'filters': [
+            {
+              'label': 'textbooks',
+              'values': ['History', 'Geography']
+            }, {
+              'label': 'chapters',
+              'values': ['Chapter1', 'Chapter2']
             }
           ],
           'idAttribute': 'ID',
@@ -35,48 +47,65 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
         };
         this.view = view = this._getContentSelectionView(this.questionsCollection, tableConfig);
         return this.show(view, {
-          loading: true
+          loading: true,
+          entities: [this.textbooksCollection]
         });
       };
 
       ContentSelectionController.prototype._getContentSelectionView = function(collection, tableConfig) {
-        return new dataContentTableView({
+        return new DataContentTableView({
           collection: collection,
-          tableConfig: tableConfig
+          tableConfig: tableConfig,
+          templateHelpers: {
+            textbooksFilter: (function(_this) {
+              return function() {
+                var textbooks;
+                textbooks = [];
+                _.each(_this.textbooksCollection.models, function(el, ind) {
+                  return textbooks.push({
+                    'name': el.get('name'),
+                    'id': el.get('term_id')
+                  });
+                });
+                return textbooks;
+              };
+            })(this)
+          }
         });
       };
 
       return ContentSelectionController;
 
     })(RegionController);
-    dataContentTableView = (function(_super) {
-      __extends(dataContentTableView, _super);
+    DataContentTableView = (function(_super) {
+      __extends(DataContentTableView, _super);
 
-      function dataContentTableView() {
+      function DataContentTableView() {
         this.onShow = __bind(this.onShow, this);
-        return dataContentTableView.__super__.constructor.apply(this, arguments);
+        return DataContentTableView.__super__.constructor.apply(this, arguments);
       }
 
-      dataContentTableView.prototype.template = contentSelectionTpl;
+      DataContentTableView.prototype.template = contentSelectionTpl;
 
-      dataContentTableView.prototype.className = 'tiles white grid simple vertical green';
+      DataContentTableView.prototype.className = 'tiles white grid simple vertical green';
 
-      dataContentTableView.prototype.events = {
-        'change #check_all_div': 'check_all'
+      DataContentTableView.prototype.events = {
+        'change #check_all_div': 'check_all',
+        'change #textbooks-filter': 'filter_textbooks'
       };
 
-      dataContentTableView.prototype.initialize = function(opts) {
+      DataContentTableView.prototype.initialize = function(opts) {
         return this.tableData = opts.tableConfig;
       };
 
-      dataContentTableView.prototype.serializeData = function() {
+      DataContentTableView.prototype.serializeData = function() {
         var data;
-        data = dataContentTableView.__super__.serializeData.call(this);
+        data = DataContentTableView.__super__.serializeData.call(this);
         data.tableData = this.tableData;
         return data;
       };
 
-      dataContentTableView.prototype.onShow = function() {
+      DataContentTableView.prototype.onShow = function() {
         var make_slug, pagerOptions, td_ID;
         td_ID = 'id';
         make_slug = function(str) {
@@ -92,6 +121,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
         _.each(this.collection.models, (function(_this) {
           return function(item, index) {
             var row;
+            console.log(item);
             row = '<tr>';
             if (_this.tableData.selectbox) {
               row += '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="' + item.get(td_ID) + '" id="checkbox' + index + '"> <label for="checkbox' + index + '"></label> </div> </td>';
@@ -124,7 +154,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
         }
       };
 
-      dataContentTableView.prototype.check_all = function() {
+      DataContentTableView.prototype.check_all = function() {
         if (this.$el.find('#check_all').is(':checked')) {
           return this.$el.find('#dataContentTable .tab_checkbox').trigger('click').prop('checked', true);
         } else {
@@ -132,7 +162,32 @@ define(['app', 'controllers/region-controller', 'text!apps/content-collection/co
         }
       };
 
-      return dataContentTableView;
+      DataContentTableView.prototype.filter_textbooks = function(e) {
+        var filter_id, filtered_data;
+        filter_id = parseInt($(e.target).val());
+        console.log(filter_id);
+        return filtered_data = _.filter(this.collection.models, (function(_this) {
+          return function(item) {
+            var pagerOptions, subjects;
+            subjects = _.pluck(item.get('subjects'), 'term_id');
+            console.log(subjects);
+            if (_.contains(subjects, filter_id)) {
+              _this.$el.find('#dataContentTable tbody tr').hide();
+              pagerOptions = {
+                container: $(".pager"),
+                output: '{startRow} to {endRow} of {totalRows}'
+              };
+              $('#dataContentTable').tablesorterPager(pagerOptions);
+              return console.log('contains');
+            } else {
+              console.log('doesnt');
+              return console.log(filter_id);
+            }
+          };
+        })(this));
+      };
+
+      return DataContentTableView;
 
     })(Marionette.ItemView);
     return App.commands.setHandler("show:content:selectionapp", function(opt) {
