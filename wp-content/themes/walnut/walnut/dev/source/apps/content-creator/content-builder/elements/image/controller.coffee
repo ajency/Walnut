@@ -47,6 +47,9 @@ define ['app'
 						@removeSpinner()
 						# get logo attachment
 						imageModel = App.request "get:media:by:id",@layout.model.get 'image_id'
+
+						console.log "imageModel " 
+						console.log imageModel
 						
 						App.execute "when:fetched", imageModel, =>
 							
@@ -64,6 +67,7 @@ define ['app'
 								@layout.model.set 'size', size
 								@layout.model.save()
 								localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+								console.log localStorage.getItem 'ele'+@layout.model.get('meta_id')
 
 
 							@layout.elementRegion.show view

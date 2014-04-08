@@ -53,6 +53,7 @@ define ['app'],(App)->
 
 					# set the URL of the image depending on the available size
 				width 	= @$el.width()
+				
 				#height 	= @$el.height()
 				image = @model.getBestFit width
 				@$el.find('img').attr 'src',image.url

@@ -67,11 +67,17 @@ define ['app'
 										@layout.model.set 'image_id', media.get 'id'
 										@layout.model.set 'size',size
 										@layout.model.save()
+										#local storage
+										localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
 										#stop listening to event
 										@stopListening App.vent, "media:manager:choosed:media"
 
 							@listenTo view, "text:element:blur",(html) =>
 								@layout.model.set 'content', "#{html}"
 								@layout.model.save() if @layout.model.hasChanged()
+								# local store
+								if @layout.model.hasChanged()
+									localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+
 
 							@layout.elementRegion.show view

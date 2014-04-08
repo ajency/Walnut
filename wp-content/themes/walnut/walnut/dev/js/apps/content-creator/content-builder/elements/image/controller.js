@@ -47,6 +47,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         var imageModel;
         this.removeSpinner();
         imageModel = App.request("get:media:by:id", this.layout.model.get('image_id'));
+        console.log("imageModel ");
+        console.log(imageModel);
         return App.execute("when:fetched", imageModel, (function(_this) {
           return function() {
             var view;
@@ -63,7 +65,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             _this.listenTo(view, "image:size:selected", function(size) {
               _this.layout.model.set('size', size);
               _this.layout.model.save();
-              return localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
+              localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
+              return console.log(localStorage.getItem('ele' + _this.layout.model.get('meta_id')));
             });
             return _this.layout.elementRegion.show(view);
           };

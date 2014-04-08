@@ -19,3 +19,14 @@ function query_attachments() {
 }
 add_action ( 'wp_ajax_query_attachments', 'query_attachments' );
 add_action ( 'wp_ajax_nopriv_query_attachments', 'query_attachments' );
+
+
+function get_media() {
+	$id = $_GET ['id'];
+	$media = wp_prepare_attachment_for_js ( $id );
+	wp_send_json ( array (
+			'code' => 'OK',
+			'data' => $media 
+	) );
+}
+add_action ( 'wp_ajax_read-media', 'get_media' );

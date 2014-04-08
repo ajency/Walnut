@@ -71,13 +71,17 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
                 _this.layout.model.set('image_id', media.get('id'));
                 _this.layout.model.set('size', size);
                 _this.layout.model.save();
+                localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
                 return _this.stopListening(App.vent, "media:manager:choosed:media");
               });
             });
             _this.listenTo(view, "text:element:blur", function(html) {
               _this.layout.model.set('content', "" + html);
               if (_this.layout.model.hasChanged()) {
-                return _this.layout.model.save();
+                _this.layout.model.save();
+              }
+              if (_this.layout.model.hasChanged()) {
+                return localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
               }
             });
             return _this.layout.elementRegion.show(view);
