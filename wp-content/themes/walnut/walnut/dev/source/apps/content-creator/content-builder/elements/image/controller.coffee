@@ -4,7 +4,8 @@ define ['app'
 		'apps/content-creator/content-builder/elements/image/settings/controller'],
 		(App,Element)->
 
-			App.module 'ContentCreator.ContentBuilder.Element.Image', (Image, App, Backbone, Marionette, $, _)->
+			App.module 'ContentCreator.ContentBuilder.Element.Image',
+			(Image, App, Backbone, Marionette, $, _)->
 
 				# menu controller
 				class Image.Controller extends Element.Controller
@@ -56,8 +57,14 @@ define ['app'
 									App.navigate "media-manager", trigger : true
 									@listenTo App.vent,"media:manager:choosed:media",(media)=>
 										@layout.model.set 'image_id', media.get 'id'
-										@layout.model.save()
+										# @layout.model.save()
 										@stopListening App.vent,"media:manager:choosed:media"
+
+							@listenTo view, "image:size:selected", (size)=>
+								@layout.model.set 'size', size
+								@layout.model.save()
+								localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+
 
 							@layout.elementRegion.show view
 							

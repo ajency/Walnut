@@ -92,8 +92,8 @@ define ['app'],(App)->
 						@_addElements type, elementPos
 
 
-				$('button.btn.btn-success.btn-cons2').on 'click',=>
-						console.log  @stage.toJSON()
+				# $('button.btn.btn-success.btn-cons2').on 'click',=>
+				# 		console.log  @stage.toJSON()
 
 
 				#make the hotspot canvas area dropable

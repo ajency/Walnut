@@ -1,8 +1,8 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/content-builder/elements/image/settings/views'], function(App, AppController) {
-  return App.module('ContentCreator.ContentBuilder.Element.Image.Settings', function(Settings, App, Backbone, Marionette, $, _) {
+define(['app', 'controllers/region-controller', 'apps/content-creator/content-builder/elements/imagewithtext/settings/views'], function(App, AppController) {
+  return App.module('ContentCreator.ContentBuilder.Element.ImageWithText.Settings', function(Settings, App, Backbone, Marionette, $, _) {
     Settings.Controller = (function(_super) {
       __extends(Controller, _super);
 
@@ -17,14 +17,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         }
         this.model = opt.model;
         this.region = App.settingsRegion;
-        model = App.request("get:element:settings:options", 'Image');
+        model = App.request("get:element:settings:options", 'ImageWithText');
         view = this._getSettingView(model, this.model);
-        this.listenTo(view, 'render', (function(_this) {
-          return function() {
-            _this.region.$el.css('top', 200);
-            return _this.region.$el.css('left', 400);
-          };
-        })(this));
         this.listenTo(view, "element:style:changed", (function(_this) {
           return function(style) {
             return _this.model.set("style", style);
@@ -38,12 +32,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         this.listenTo(view, "element:alignment:changed", (function(_this) {
           return function(alignment) {
             return _this.model.set("align", alignment);
-          };
-        })(this));
-        this.listenTo(view, "element:spacing:changed", (function(_this) {
-          return function(spacing, value) {
-            _this.model.set(spacing, value);
-            return console.log(_this.model);
           };
         })(this));
         return this.show(view);
@@ -68,7 +56,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       return Controller;
 
     })(AppController);
-    return App.vent.on("show:image:settings:popup", function(model) {
+    return App.vent.on("show:imagewithtext:settings:popup", function(model) {
       return new Settings.Controller({
         model: model
       });

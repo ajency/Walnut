@@ -86,11 +86,6 @@ define(['app'], function(App) {
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
           return this._addElements(type, elementPos);
         });
-        $('button.btn.btn-success.btn-cons2').on('click', (function(_this) {
-          return function() {
-            return console.log(_this.stage.toJSON());
-          };
-        })(this));
         return $('#' + this.stageName + ' .kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
