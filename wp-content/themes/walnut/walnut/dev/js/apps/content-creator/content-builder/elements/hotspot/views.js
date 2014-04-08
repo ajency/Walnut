@@ -179,7 +179,10 @@ define(['app'], function(App) {
             }, model.get('url'), model);
           };
         })(this));
-        return this._updateDefaultLayer();
+        this._updateDefaultLayer();
+        return setTimeout(function() {
+          return $('body').trigger('mousedown');
+        }, 1000);
       };
 
       HotspotView.prototype._setDefaultImage = function() {
@@ -292,7 +295,8 @@ define(['app'], function(App) {
           stroke: hotspotElement.get('color'),
           strokeWidth: 2,
           dash: [6, 4],
-          dashEnabled: hotspotElement.get('transparent')
+          dashEnabled: hotspotElement.get('transparent'),
+          fill: hotspotElement.get("correct") ? "rgba(12, 199, 55, 0.28)" : ""
         });
         circleGrp = resizeCircle(circle, this.optionLayer);
         circleGrp.on('dragend', function(e) {
@@ -379,7 +383,8 @@ define(['app'], function(App) {
           stroke: hotspotElement.get('color'),
           strokeWidth: 2,
           dash: [6, 4],
-          dashEnabled: hotspotElement.get('transparent')
+          dashEnabled: hotspotElement.get('transparent'),
+          fill: hotspotElement.get("correct") ? "rgba(12, 199, 55, 0.28)" : ""
         });
         rectGrp = resizeRect(box, this.optionLayer);
         rectGrp.rotation(hotspotElement.get('angle'));
