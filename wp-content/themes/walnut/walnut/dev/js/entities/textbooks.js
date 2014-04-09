@@ -88,26 +88,36 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
+            var classes, i, result, row, subjects;
             console.log('onSuccess!');
-            var result = []
-							for(var i=0; i<data.rows.length; i++){
-								var row = data.rows.item(i);
-
-								var classes = unserialize(row['class_id']);
-								var subjects = unserialize(row['tags']);	
-
-								result[i]={"term_id":row['term_id'], "name":row['name'], "slug":row['slug'], "term_group":row['term_group'],
-											"term_order":row['term_order'], "term_taxonomy_id":row['term_taxonomy_id'], "taxonomy":row['taxonomy'],
-											"description":row['description'], "parent":row['parent'], "count":row['count'], 
-											"classes":classes, "subjects":subjects};
-								
-							};
+            result = [];
+            i = 0;
+            while (i < data.rows.length) {
+              row = data.rows.item(i);
+              classes = unserialize(row["class_id"]);
+              subjects = unserialize(row["tags"]);
+              result[i] = {
+                term_id: row["term_id"],
+                name: row["name"],
+                slug: row["slug"],
+                term_group: row["term_group"],
+                term_order: row["term_order"],
+                term_taxonomy_id: row["term_taxonomy_id"],
+                taxonomy: row["taxonomy"],
+                description: row["description"],
+                parent: row["parent"],
+                count: row["count"],
+                classes: classes,
+                subjects: subjects
+              };
+              i++;
+            }
             return d.resolve(result);
           };
         };
         onFailure = function(d) {
           return function(tx, error) {
-            return d.reject('Error!: ' + error);
+            return d.reject('OnFailure!: ' + error);
           };
         };
         return $.when(runQuery()).done(function(dta) {

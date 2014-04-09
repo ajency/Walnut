@@ -13,12 +13,12 @@ define(['detect', 'jquery'], function(detect, $) {
   if (checkPlatform() === "Desktop") {
     $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
   }
-  window.onLineHandler = function(){
-        networkStatus = 1
-        };
-  window.offLineHandler = function(){
-        networkStatus = 0
-        };
+  window.onLineHandler = function() {
+    return networkStatus = 1;
+  };
+  window.offLineHandler = function() {
+    return networkStatus = 0;
+  };
   window.isOnline = function() {
     if (networkStatus === 1) {
       return true;
@@ -33,12 +33,12 @@ define(['detect', 'jquery'], function(detect, $) {
       return true;
     }
   };
-  document.addEventListener("online", onOnline, false);
-  function onOnline(){
-      };
-  document.addEventListener("offline", onOffline, false);
-  function onOffline(){
-      };
+  document.addEventListener("online", function() {
+    return console.log('Online');
+  }, false);
+  document.addEventListener("offline", function() {
+    return console.log('Offline');
+  }, false);
   return $.middle_layer = function(url, data, response) {
     switch (checkPlatform()) {
       case 'Desktop':

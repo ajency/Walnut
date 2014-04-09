@@ -16,14 +16,12 @@ define ['detect','jquery'], (detect,$)->
       #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
       #When network is up.
-      `window.onLineHandler = function(){
-        networkStatus = 1
-        }`    
+      window.onLineHandler = ->
+        networkStatus = 1    
 
       #When network is down.
-      `window.offLineHandler = function(){
+      window.offLineHandler = ->
         networkStatus = 0
-        }` 
 
       window.isOnline = ->
         if networkStatus is 1
@@ -38,13 +36,17 @@ define ['detect','jquery'], (detect,$)->
         else true
 
       #Mobile events
-      document.addEventListener("online", onOnline, false);
-      `function onOnline(){
-      }`
+      document.addEventListener("online"
+      ,()->
+        console.log 'Online'
+      ,false)
 
-      document.addEventListener("offline", onOffline, false);
-      `function onOffline(){
-      }`
+      document.addEventListener("offline"
+      ,()->
+        console.log 'Offline'
+      ,false)
+
+
 
       $.middle_layer = (url,data,response) ->
         switch checkPlatform()
@@ -58,7 +60,8 @@ define ['detect','jquery'], (detect,$)->
             if checkConnection()
               $.post url, data, response, 'json'
             else
-              return 'connection_error' 
+              return 'connection_error'
+
        
 
             

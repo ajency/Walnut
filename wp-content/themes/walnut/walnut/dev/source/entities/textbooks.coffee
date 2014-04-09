@@ -66,25 +66,34 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					onSuccess =(d)->
 						(tx,data)->
 							console.log 'onSuccess!'
-							`var result = []
-							for(var i=0; i<data.rows.length; i++){
-								var row = data.rows.item(i);
+							result = []
+							i = 0
+							while i< data.rows.length
+								row = data.rows.item(i)
+								classes = unserialize(row["class_id"])
+								subjects = unserialize(row["tags"])
+								result[i] = 
+									term_id: row["term_id"]
+									name: row["name"]
+									slug: row["slug"]
+									term_group: row["term_group"]
+									term_order: row["term_order"]
+									term_taxonomy_id: row["term_taxonomy_id"]
+									taxonomy: row["taxonomy"]
+									description: row["description"]
+									parent: row["parent"]
+									count: row["count"]
+									classes: classes
+									subjects: subjects
 
-								var classes = unserialize(row['class_id']);
-								var subjects = unserialize(row['tags']);	
+								i++	
 
-								result[i]={"term_id":row['term_id'], "name":row['name'], "slug":row['slug'], "term_group":row['term_group'],
-											"term_order":row['term_order'], "term_taxonomy_id":row['term_taxonomy_id'], "taxonomy":row['taxonomy'],
-											"description":row['description'], "parent":row['parent'], "count":row['count'], 
-											"classes":classes, "subjects":subjects};
-								
-							}`
 							d.resolve(result)
 
 
 					onFailure =(d)->
 						(tx,error)->
-							d.reject('Error!: '+error)
+							d.reject('OnFailure!: '+error)
 
 					$.when(runQuery()).done (dta)->
 						console.log 'Database transaction completed'

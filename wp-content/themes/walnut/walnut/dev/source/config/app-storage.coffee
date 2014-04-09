@@ -1,9 +1,8 @@
-define ['underscore', 'marionette', 'backbone','jquery', 'plugins/SQLitePlugin'], (_, Marionette, Backbone, $, sqlitePlugin)->
+define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbone, $)->
     #Access data from local storage using a pre-populated db file
 
-    db = window.openDatabase("walnutapp", "1.0", "WalnutApp DB", 200000)
-    #db = window.sqlitePlugin.openDatabase("1", "1.0", "WalnutApp DB", -1);
-    console.log 'DB Object: '+db
+    db = window.sqlitePlugin.openDatabase({name: "walnutapp"});
+    console.log 'Prepopulated DB Object: '+db
 
     db.transaction((tx)->
         console.log 'Pre-populated database'
@@ -16,9 +15,25 @@ define ['underscore', 'marionette', 'backbone','jquery', 'plugins/SQLitePlugin']
         console.log("Error processing SQL: "+err);
 
     ,()->
-        console.log("Success!");
-    )
-           
+         console.log("Success!");
+    )    
     
 
-    Backbone.db = db  
+    Backbone.db = db
+
+
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
+        , (fileSystem)->
+            entry = fileSystem.root
+            console.log 'Entry: '+entry
+            console.log 'Root: '+entry.fullPath
+            entry.getDirectory("TestApp", {create: true, exclusive: false}
+                ,(dir)->
+                    console.log 'Created directory: '+dir.name
+                ,onFailure )
+        
+        ,onFailure)
+
+    onFailure = (error)->
+        console.log 'Error: '+error.code
+
