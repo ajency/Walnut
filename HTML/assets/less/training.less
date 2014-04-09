@@ -1,7 +1,90 @@
 .teacherCanvas{
-	background-color: #fff;
+	background-color: @color-white !important;
 	position: relative;
 	min-height: 200px;
 
 }
 
+h4.modName{
+	a{
+		color: @color-info;
+	}
+}
+
+.modProgress{
+	width: 200px;
+	.progress{
+		width: 100%;
+	}
+}
+
+h3.time{
+	line-height: 20px
+}
+
+.studentList{
+	h4{
+		span{
+			display: block;
+		}
+	}
+
+	.listNavShow{
+		display: block;
+	}
+
+	.students .tiles{
+		cursor: pointer;
+	}
+
+	.students{
+		.tiles{
+			&.red, &.default, &.green{
+				-webkit-transition: all .2s ease-in-out;
+				   -moz-transition: all .2s ease-in-out;
+				   		transition: all .2s ease-in-out;
+				&:active{
+					-webkit-transform: scale(1.15);
+					   -moz-transform: scale(1.15);
+					   		transform: scale(1.15);
+				}
+
+			}
+			&.single.selected{
+				.active{
+					background-color: @color-info;
+					-webkit-transform: scale(1.15);
+					   -moz-transform: scale(1.15);
+					   		transform: scale(1.15);
+				}
+			}
+		}
+		i{
+			font-size: 20px;
+		}
+	} 
+
+	.ln-letters a{
+		padding: 5px 11px;
+	}
+
+	.box2{
+		position: relative;
+	}
+
+	.user-profile-pic{
+		position: static;
+		width: auto;
+		img{
+			height: 50px;
+			width: 50px;
+			margin: auto;
+			display: block;
+			-webkit-border-radius: 100px 100px 100px 100px;
+			-moz-border-radius: 100px 100px 100px 100px;
+		}
+	}
+
+	
+
+}

@@ -27,6 +27,14 @@ define(['app'], function(App) {
         if (opt == null) {
           opt = {};
         }
+        if (this.model.get('content') !== '') {
+          this.contentObject = JSON.parse(this.model.get('content'));
+        } else {
+          this.contentObject = new Object();
+        }
+        this.textCollection = App.request("create:new:hotspot:element:collection", this.contentObject.textData);
+        this.optionCollection = App.request("create:new:hotspot:element:collection", this.contentObject.optionData);
+        this.imageCollection = App.request("create:new:hotspot:element:collection", this.contentObject.imageData);
         this.stageName = "stage" + new Date().getTime();
         this.imageLayer = new Kinetic.Layer({
           name: 'imageLayer'
@@ -52,6 +60,9 @@ define(['app'], function(App) {
           width: this.$el.parent().width(),
           height: this.$el.parent().height() + 80
         });
+        if (this.contentObject.height !== void 0) {
+          this.stage.height(this.contentObject.height);
+        }
         this._setDefaultImage();
         this.stage.add(this.defaultLayer);
         this.stage.add(this.imageLayer);
@@ -63,6 +74,7 @@ define(['app'], function(App) {
               width: $('#' + _this.stageName + '.stage').width(),
               height: $('#' + _this.stageName + '.stage').height() - 5
             });
+            _this.contentObject.height = _this.stage.height();
             return _this._updateDefaultImageSize();
           };
         })(this));
@@ -70,15 +82,10 @@ define(['app'], function(App) {
           handles: "s"
         });
         this._setPropertyBoxCloseHandlers();
+        this._drawExistingElements();
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
-          this._addElements(type, elementPos);
-          return this._updateDefaultLayer();
+          return this._addElements(type, elementPos);
         });
-        $('button.btn.btn-success.btn-cons2').on('click', (function(_this) {
-          return function() {
-            return console.log(_this.stage.toJSON());
-          };
-        })(this));
         return $('#' + this.stageName + ' .kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
@@ -98,14 +105,26 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._setPropertyBoxCloseHandlers = function() {
-        $('body').on('mousedown', function() {
-          if (closequestionelementproperty) {
-            App.execute("close:question:element:properties");
-          }
-          if (closequestionelements && closequestionelementproperty) {
-            return App.execute("close:question:elements");
-          }
-        });
+        $('body').on('mousedown', (function(_this) {
+          return function() {
+            if (closequestionelementproperty) {
+              App.execute("close:question:element:properties");
+            }
+            if (closequestionelements && closequestionelementproperty) {
+              App.execute("close:question:elements");
+              _this.contentObject.textData = _this.textCollection.toJSON();
+              _this.contentObject.optionData = _this.optionCollection.toJSON();
+              _this.contentObject.imageData = _this.imageCollection.toJSON();
+              console.log(JSON.stringify(_this.contentObject));
+              _this.model.set('content', JSON.stringify(_this.contentObject));
+              if (_this.model.hasChanged()) {
+                console.log("saving them");
+                localStorage.setItem('ele' + _this.model.get('meta_id'), JSON.stringify(_this.model.toJSON()));
+                return console.log(JSON.stringify(_this.model.toJSON()));
+              }
+            }
+          };
+        })(this));
         $('#question-elements-property').on('mouseover', function() {
           return closequestionelementproperty = false;
         });
@@ -126,6 +145,46 @@ define(['app'], function(App) {
         });
       };
 
+      HotspotView.prototype._drawExistingElements = function() {
+        console.log(this.textCollection);
+        this.textCollection.each((function(_this) {
+          return function(model, i) {
+            return _this._addTextElement({
+              left: model.get('x'),
+              top: model.get('y')
+            }, model);
+          };
+        })(this));
+        this.optionCollection.each((function(_this) {
+          return function(model, i) {
+            if (model.get('shape') === 'Rect') {
+              _this._addRectangle({
+                left: model.get('x'),
+                top: model.get('y')
+              }, model);
+            }
+            if (model.get('shape') === 'Circle') {
+              return _this._addCircle({
+                left: model.get('x'),
+                top: model.get('y')
+              }, model);
+            }
+          };
+        })(this));
+        this.imageCollection.each((function(_this) {
+          return function(model, i) {
+            return _this._addImageElement({
+              left: model.get('x'),
+              top: model.get('y')
+            }, model.get('url'), model);
+          };
+        })(this));
+        this._updateDefaultLayer();
+        return setTimeout(function() {
+          return $('body').trigger('mousedown');
+        }, 1000);
+      };
+
       HotspotView.prototype._setDefaultImage = function() {
         var defaultImage;
         defaultImage = new Image();
@@ -135,6 +194,7 @@ define(['app'], function(App) {
               image: defaultImage
             });
             _this.defaultLayer.add(_this.hotspotDefault);
+            _this._updateDefaultLayer();
             return _this._updateDefaultImageSize();
           };
         })(this);
@@ -148,6 +208,7 @@ define(['app'], function(App) {
           if (i) {
             if (this.stage.getChildren()[i].getChildren().length) {
               this.defaultLayer.removeChildren();
+              console.log("remove default");
               break;
             }
           }
@@ -201,34 +262,48 @@ define(['app'], function(App) {
             };
           })(this));
         }
+        this._updateDefaultLayer();
         return this.optionLayer.draw();
       };
 
-      HotspotView.prototype._addCircle = function(elementPos) {
+      HotspotView.prototype._addCircle = function(elementPos, model) {
         var circle, circleGrp, hotspotElement, modelData, self;
-        modelData = {
-          type: 'Option',
-          shape: 'Circle',
-          color: '#000000',
-          transparent: false,
-          correct: false
-        };
-        hotspotElement = App.request("create:new:hotspot:element", modelData);
+        if (model) {
+          hotspotElement = model;
+        } else {
+          modelData = {
+            type: 'Option',
+            shape: 'Circle',
+            x: elementPos.left,
+            y: elementPos.top,
+            radius: 20,
+            color: '#000000',
+            transparent: false,
+            correct: false
+          };
+          hotspotElement = App.request("create:new:hotspot:element", modelData);
+          this.optionCollection.add(hotspotElement);
+        }
         self = this;
         App.execute("show:question:element:properties", {
           model: hotspotElement
         });
         circle = new Kinetic.Circle({
-          name: "rect1",
-          x: elementPos.left,
-          y: elementPos.top,
-          radius: 20,
+          x: hotspotElement.get('x'),
+          y: hotspotElement.get('y'),
+          radius: hotspotElement.get('radius'),
           stroke: hotspotElement.get('color'),
           strokeWidth: 2,
           dash: [6, 4],
-          dashEnabled: hotspotElement.get('transparent')
+          dashEnabled: hotspotElement.get('transparent'),
+          fill: hotspotElement.get("correct") ? "rgba(12, 199, 55, 0.28)" : ""
         });
         circleGrp = resizeCircle(circle, this.optionLayer);
+        circleGrp.on('dragend', function(e) {
+          hotspotElement.set('x', circle.getAbsolutePosition().x);
+          hotspotElement.set('y', circle.getAbsolutePosition().y);
+          return hotspotElement.set('radius', circle.radius());
+        });
         hotspotElement.on("change:transparent", (function(_this) {
           return function() {
             circle.dashEnabled(hotspotElement.get('transparent'));
@@ -254,6 +329,7 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             circleGrp.destroy();
+            _this.optionCollection.remove(hotspotElement);
             closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.optionLayer.draw();
@@ -268,40 +344,59 @@ define(['app'], function(App) {
         circleGrp.on('mouseover', function() {
           return closequestionelementproperty = false;
         });
-        return circleGrp.on('mouseout', function() {
+        circleGrp.on('mouseout', function() {
           return closequestionelementproperty = true;
         });
+        return this.optionLayer.draw();
       };
 
-      HotspotView.prototype._addRectangle = function(elementPos) {
+      HotspotView.prototype._addRectangle = function(elementPos, model) {
         var box, hotspotElement, modelData, rectGrp, self;
-        modelData = {
-          type: 'Option',
-          shape: 'Rect',
-          color: '#000000',
-          transparent: false,
-          angle: 0,
-          correct: false
-        };
-        hotspotElement = App.request("create:new:hotspot:element", modelData);
+        if (model) {
+          hotspotElement = model;
+        } else {
+          modelData = {
+            type: 'Option',
+            shape: 'Rect',
+            x: elementPos.left,
+            y: elementPos.top,
+            width: 30,
+            height: 30,
+            color: '#000000',
+            transparent: false,
+            angle: 0,
+            correct: false
+          };
+          hotspotElement = App.request("create:new:hotspot:element", modelData);
+          this.optionCollection.add(hotspotElement);
+        }
         self = this;
         App.execute("show:question:element:properties", {
           model: hotspotElement
         });
         box = new Kinetic.Rect({
           name: "rect2",
-          x: elementPos.left,
-          y: elementPos.top,
-          width: 25,
-          height: 25,
+          x: hotspotElement.get('x'),
+          y: hotspotElement.get('y'),
+          width: hotspotElement.get('width'),
+          height: hotspotElement.get('height'),
           stroke: hotspotElement.get('color'),
           strokeWidth: 2,
           dash: [6, 4],
-          dashEnabled: hotspotElement.get('transparent')
+          dashEnabled: hotspotElement.get('transparent'),
+          fill: hotspotElement.get("correct") ? "rgba(12, 199, 55, 0.28)" : ""
         });
         rectGrp = resizeRect(box, this.optionLayer);
+        rectGrp.rotation(hotspotElement.get('angle'));
+        rectGrp.on('dragend', function(e) {
+          hotspotElement.set('x', box.getAbsolutePosition().x);
+          hotspotElement.set('y', box.getAbsolutePosition().y);
+          hotspotElement.set('width', box.width());
+          return hotspotElement.set('height', box.height());
+        });
         hotspotElement.on("change:transparent", (function(_this) {
           return function() {
+            console.log(rectGrp);
             box.dashEnabled(hotspotElement.get('transparent'));
             return _this.optionLayer.draw();
           };
@@ -331,6 +426,7 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             rectGrp.destroy();
+            _this.optionCollection.remove(hotspotElement);
             closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.optionLayer.draw();
@@ -345,31 +441,39 @@ define(['app'], function(App) {
         rectGrp.on('mouseover', function() {
           return closequestionelementproperty = false;
         });
-        return rectGrp.on('mouseout', function() {
+        rectGrp.on('mouseout', function() {
           return closequestionelementproperty = true;
         });
+        return this.optionLayer.draw();
       };
 
-      HotspotView.prototype._addTextElement = function(elementPos) {
+      HotspotView.prototype._addTextElement = function(elementPos, model) {
         var canvasText, hotspotElement, modelData, self, tooltip;
-        modelData = {
-          type: 'Text',
-          text: '',
-          fontFamily: 'Arial',
-          fontSize: '14',
-          fontColor: '#000000',
-          fontBold: '',
-          fontItalics: '',
-          textAngle: 0
-        };
-        hotspotElement = App.request("create:new:hotspot:element", modelData);
+        if (model) {
+          hotspotElement = model;
+        } else {
+          modelData = {
+            x: elementPos.left,
+            y: elementPos.top,
+            type: 'Text',
+            text: '',
+            fontFamily: 'Arial',
+            fontSize: '14',
+            fontColor: '#000000',
+            fontBold: '',
+            fontItalics: '',
+            textAngle: 0
+          };
+          hotspotElement = App.request("create:new:hotspot:element", modelData);
+          this.textCollection.add(hotspotElement);
+        }
         self = this;
         App.execute("show:question:element:properties", {
           model: hotspotElement
         });
         tooltip = new Kinetic.Label({
-          x: elementPos.left,
-          y: elementPos.top,
+          x: hotspotElement.get('x'),
+          y: hotspotElement.get('y'),
           width: 100,
           draggable: true,
           dragBoundFunc: function(pos) {
@@ -383,7 +487,12 @@ define(['app'], function(App) {
           fontSize: hotspotElement.get('fontSize'),
           fill: hotspotElement.get('fontColor'),
           fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics'),
-          padding: 5
+          padding: 5,
+          rotation: hotspotElement.get('textAngle')
+        });
+        tooltip.on('dragend', function(e) {
+          hotspotElement.set('x', tooltip.getAbsolutePosition().x);
+          return hotspotElement.set('y', tooltip.getAbsolutePosition().y);
         });
         tooltip.on('mousedown click', function(e) {
           e.stopPropagation();
@@ -391,6 +500,11 @@ define(['app'], function(App) {
             model: hotspotElement
           });
         });
+        if (hotspotElement.get('text') !== '') {
+          canvasText.setText(hotspotElement.get('text'));
+          canvasText.opacity(1);
+          canvasText.fill(hotspotElement.get('fontColor'));
+        }
         hotspotElement.on("change:text", (function(_this) {
           return function() {
             if (hotspotElement.get('text') !== "") {
@@ -432,6 +546,7 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             tooltip.destroy();
+            _this.textCollection.remove(hotspotElement);
             closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.textLayer.draw();
@@ -454,16 +569,26 @@ define(['app'], function(App) {
         return this.textLayer.draw();
       };
 
-      HotspotView.prototype._addImageElement = function(elementPos, url) {
+      HotspotView.prototype._addImageElement = function(elementPos, url, model) {
         var hotspotElement, imageGrp, imageObject, modelData;
-        modelData = {
-          type: 'Image',
-          angle: 0
-        };
-        hotspotElement = App.request("create:new:hotspot:element", modelData);
+        if (model) {
+          hotspotElement = model;
+        } else {
+          modelData = {
+            type: 'Image',
+            x: elementPos.left,
+            y: elementPos.top,
+            width: 150,
+            height: 150,
+            angle: 0,
+            url: url
+          };
+          hotspotElement = App.request("create:new:hotspot:element", modelData);
+          this.imageCollection.add(hotspotElement);
+        }
         imageGrp = null;
         imageObject = new Image();
-        imageObject.src = url;
+        imageObject.src = hotspotElement.get('url');
         imageObject.onload = (function(_this) {
           return function() {
             var imageElement;
@@ -472,14 +597,21 @@ define(['app'], function(App) {
             });
             imageElement = new Kinetic.Image({
               image: imageObject,
-              x: elementPos.left,
-              y: elementPos.top,
-              width: 150,
-              height: 150
+              x: hotspotElement.get('x'),
+              y: hotspotElement.get('y'),
+              width: hotspotElement.get('width'),
+              height: hotspotElement.get('height')
             });
             imageGrp = resizeRect(imageElement, _this.imageLayer);
             _this._updateDefaultLayer();
+            imageGrp.rotation(hotspotElement.get('angle'));
             _this.imageLayer.draw();
+            imageGrp.on('dragend', function(e) {
+              hotspotElement.set('x', imageElement.getAbsolutePosition().x);
+              hotspotElement.set('y', imageElement.getAbsolutePosition().y);
+              hotspotElement.set('width', imageElement.width());
+              return hotspotElement.set('height', imageElement.height());
+            });
             imageGrp.on('mousedown click', function(e) {
               e.stopPropagation();
               App.execute("show:question:element:properties", {
@@ -504,6 +636,7 @@ define(['app'], function(App) {
         return hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             imageGrp.destroy();
+            _this.imageCollection.remove(hotspotElement);
             closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.imageLayer.draw();

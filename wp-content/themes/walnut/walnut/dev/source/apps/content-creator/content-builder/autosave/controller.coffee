@@ -20,6 +20,7 @@ define ['app'], (App)->
 					throw new Error "invalid json..."
 
 				console.log JSON.stringify _json
+				localStorage.setItem 'layout',JSON.stringify _json
 
 				# _page_id = App.request "get:current:editable:page"
 

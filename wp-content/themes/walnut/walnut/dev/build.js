@@ -30,7 +30,9 @@
     unveil        : 'plugins/jquery.unveil.min',
     detect: 'plugins/detect',
     tablesorter     : 'plugins/jquery.tablesorter',
-    tablesorter_pager : 'plugins/jquery.tablesorter.pager'
+    tablesorter_pager : 'plugins/jquery.tablesorter.pager',
+    moment            :'plugins/moment.min',
+    select2       : 'plugins/select2.min'
   },
   shim: {
     underscore: {
@@ -58,6 +60,8 @@
     syphon: ['backbone'],
     underscorestring: ['underscore'],
     mixitup     : ['jquery'],
+    moment      : ['jquery'],
+    select2      : ['jquery','bootstrap'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
   }
 })

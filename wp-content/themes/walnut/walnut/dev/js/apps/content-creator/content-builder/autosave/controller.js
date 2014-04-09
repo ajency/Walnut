@@ -23,7 +23,8 @@ define(['app'], function(App) {
         if (!_.isObject(_json)) {
           throw new Error("invalid json...");
         }
-        return console.log(JSON.stringify(_json));
+        console.log(JSON.stringify(_json));
+        return localStorage.setItem('layout', JSON.stringify(_json));
       };
 
       Controller.prototype._getPageJson = function($site) {
