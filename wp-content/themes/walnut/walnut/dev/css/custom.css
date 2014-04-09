@@ -621,6 +621,9 @@
   width: 100%;
   background-color: #f3f3f3;
 }
+.lecProgress {
+  width: 200px;
+}
 body {
   background-color: #e5e9ec;
 }

@@ -17,6 +17,7 @@
 	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen">
+	<link href="assets/css/listnav.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
@@ -59,6 +60,7 @@
 		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
 		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="assets/js/jquery.knob.js"></script>
+		<script type="text/javascript" src="assets/js/jquery-listnav.js"></script>
 
 	<!-- END NEED TO WORK ON -->
 
@@ -301,61 +303,285 @@
 		
 				<div class="pieceWrapper">
 
-					<h4 class="bold pull-left"><i class="fa fa-chevron-left"></i> <a href="#">Module Name</a></h4>
+					<div class="tiles white m-b-20">
+						<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
+							<h4 class="bold pull-left text-info modName"><i class="fa fa-chevron-left"></i> <a href="#">Back to Module Name</a></h4>
 
-					<p class="bold small-text pull-right">Progress</p>
-			        <div class="progress pull-right">
-			            <div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-			        </div>
+							<div class="modProgress pull-right">
+								<p class="bold small-text m-t-10 m-b-5">Progress</p>
+						        <div class="progress">
+						            <div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+						        </div>
+					        </div>
+					        <div class="clearfix"></div>
+				    	</div>
+				    	<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
+				    		<p class="bold small-text">Module Info: </p>
+				    		<p class="">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+				    	</div>
+			    	</div>
 
-					<div class="infoBar">
-						  <div class="row b-b b-grey p-b-10 p-t-10 p-l-10 p-r-10 text-center">
-			                <div class="col-md-3 col-sm-3 col-xs-3">
-			                  
-			                </div>
-			                <div class="col-md-3 col-sm-3 col-xs-3">
-			                  <p class="bold small-text">Some text</p>
-			                  
-			                </div>
-			                <div class="col-md-3 col-sm-3 col-xs-3">
-			                	
-			                </div>
-			                <div class="col-md-3 col-sm-3 col-xs-3">
-			                  <p class="bold small-text">Time Left</p>
-			                  <h4 class="bold ">4m 30s</h4>
-			                </div>
-			              </div>
+					<div class="tiles white grid simple vertical blue m-b-0">
+						<div class="grid-body no-border">
+							<div class="p-t-10">
+							  <div class="row m-b-10">
+				                <div class="col-md-4 col-sm-4 b-grey b-r">
+				                  <label class="form-label bold small-text">Class</label>
+									4
+				                </div>
+				                <div class="col-md-4 col-sm-4 b-grey b-r">
+				                  <label class="form-label bold small-text">Subject</label>
+									Science			                  
+				                </div>
+				                <div class="col-md-4 col-sm-4">
+				                  <label class="form-label bold small-text">Chapter</label>
+									Internal Organs of the Body
+				                </div>
+				              </div>
+				              <div class="row">
+				                <div class="col-md-4 col-sm-4 b-grey b-r">
+				                  <label class="form-label bold small-text">Section</label>
+									Internal & External
+				                </div>
+				                <div class="col-md-4 col-sm-4 b-grey b-r">
+				                  <label class="form-label bold small-text">Sub-Section</label>
+									-			                  
+				                </div>
+				                <div class="col-md-4 col-sm-4">
+				                  <label class="form-label bold small-text">Type</label>
+									Difficult
+				                </div>
+				              </div>
+				          </div>
+				        </div>
+					</div>
+					<div class="tiles blue p-l-15 p-r-15">
+						<div class="tiles-body no-border">
+							<div class="row">
+				                <div class="col-md-3 col-sm-3">
+				                	<h3 class="text-white m-t-0 m-b-0 semi-bold time"> <i class="fa fa-clock-o"></i> 3m 15s</h3>
+				                </div>
+				                <div class="col-md-3 col-sm-3 text-center">
+				                  <a href="#" class="hashtags transparent"> <i class="fa fa-question"></i> View Info </a>		                  
+				                </div>
+				                <div class="col-md-3 col-sm-3 text-center">
+				                  <a href="#" class="hashtags transparent"> <i class="fa fa-eye"></i> View Answer </a>	                  
+				                </div>
+				                <div class="col-md-3 col-sm-3 text-right">
+				                  <a href="#" class="hashtags transparent"> <i class="fa fa-check"></i> Done </a>
+				                </div>
+				              </div>
+				          </div>
+				        </div>
 					</div>
 
-					<div class="teacherCanvas">
-						<div class="p-t-20 p-b-15">
-			                <div class="post overlap-left-15">
-			                  <div class="user-profile-pic-wrapper animated bounceIn">
-			                    <div class="user-profile-pic-2x tiles white-border">
-			                      <div class="text-white inherit-size p-t-10 p-l-10"> <a href="#"><i class="fa fa-arrow-left fa-lg"></i></a> </div>
-			                    </div>
-			                  </div>
-			                </div>
-			                <div class="post overlap-right-15">
-			                  <div class="pull-right m-r-0 animated bounceIn">
-			                    <div class="user-profile-pic-2x tiles white-border">
-			                      <div class="text-white inherit-size p-t-10 p-l-15"> <a href="#"><i class="fa fa-arrow-right fa-lg"></i></a> </div>
-			                    </div>
-			                  </div>
-			                  <div class="clearfix"></div>
-			                </div>
+					<div class="teacherCanvas ">
+						<div class="grid-body p-t-20 p-b-15 no-border">
+
+
 			            </div>
 					</div>
+
+					<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
+				    	<p class="bold small-text">Question Info: </p>
+				    	<p class="">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+				    </div>
+
+				    <div class="studentList m-t-35">
+						<div class="m-b-15 semi-bold pull-left row">
+							<div class="col-md-6">
+								<label class="form-label bold">Class</label>
+								<select id="class" class="form-control select2" >
+						            <option value="1">1</option>
+						            <option value="2">2</option>
+						            <option value="3">3</option>
+						        </select>
+						    </div>
+						    <div class="col-md-6">
+						        <label class="form-label bold">Div</label>
+								<select id="div" class="form-control select2" >
+						            <option value="A">A</option>
+						            <option value="B">B</option>
+						            <option value="C">C</option>
+						        </select>
+						    </div>
+					    </div>
+
+						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"><button type="button" class="btn btn-primary btn-xs btn-sm"><i class="fa fa-check"></i> Done </button></div>
+
+						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20"><button type="button" class="btn btn-primary btn-xs btn-sm m-r-10"><i class="fa fa-check-circle"></i> Right Answer</button> <button type="button" class="btn btn-danger btn-xs btn-sm"><i class="fa fa-times-circle"></i> Wrong Answer</button></div>
+
+						<div class="clearfix"></div>
+						<div class="row students m-t-20">
+							<div class="col-sm-3 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-8 col-xs-8 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-15 p-l-5 p-r-5"><span class="semi-bold">Richmond</span> Watkins</h4>
+					                    <h5 class="muted text-center no-margin p-t-5 p-b-10">1536</h5>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-4 col-xs-4 no-padding">
+					                  <div class="tiles red active">
+					                  	<div class="user-profile-pic text-left m-t-0 p-t-10"> 
+										<img data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="assets/img/profiles/avatar.jpg" alt="">
+									  </div>
+					                    <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-times-circle"></i></div>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-3 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-8 col-xs-8 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">Clint</span> Watkins</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-4 col-xs-4 no-padding">
+					                  <div class="tiles green active">
+					                  	<div class="user-profile-pic text-left m-t-0 p-t-10"> 
+										<img data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="assets/img/profiles/avatar.jpg" alt="">
+									  </div>
+					                    <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-check-circle"></i></div>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-3 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-8 col-xs-8 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">Mark</span> Roberts</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-4 col-xs-4 no-padding">
+					                  <div class="tiles default active">
+					                  	<div class="user-profile-pic text-left m-t-0 p-t-10"> 
+										<img data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="assets/img/profiles/avatar.jpg" alt="">
+									  </div>
+					                    <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-minus-circle"></i></div>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-3 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-8 col-xs-8 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">Jim</span> Smith</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-4 col-xs-4 no-padding">
+					                  <div class="tiles default active">
+					                  	<div class="user-profile-pic text-left m-t-0 p-t-10"> 
+										<img data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="assets/img/profiles/avatar.jpg" alt="">
+									  </div>
+					                    <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-minus-circle"></i></div>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-3 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-8 col-xs-8 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">John</span> Doe</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-4 col-xs-4 no-padding">
+					                  <div class="tiles green active">
+					                  	<div class="user-profile-pic text-left m-t-0 p-t-10"> 
+										<img data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="assets/img/profiles/avatar.jpg" alt="">
+									  </div>
+					                    <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-check-circle"></i></div>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-3 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-8 col-xs-8 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">Robert</span> Clark</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-4 col-xs-4 no-padding">
+					                  <div class="tiles default active">
+					                  	<div class="user-profile-pic text-left m-t-0 p-t-10"> 
+										<img data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="assets/img/profiles/avatar.jpg" alt="">
+									  </div>
+					                    <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-minus-circle"></i></div>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-3 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-8 col-xs-8 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">Mathew</span> Ross</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-4 col-xs-4 no-padding">
+					                  <div class="tiles red active">
+					                  	<div class="user-profile-pic text-left m-t-0 p-t-10"> 
+										<img data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="assets/img/profiles/avatar.jpg" alt="">
+									  </div>
+					                    <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-times-circle"></i></div>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-3 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-8 col-xs-8 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">Emily</span>  Rose</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-4 col-xs-4 no-padding">
+					                  <div class="tiles green active">
+					                  	<div class="user-profile-pic text-left m-t-0 p-t-10"> 
+										<img data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="assets/img/profiles/avatar.jpg" alt="">
+									  </div>
+					                    <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-check-circle"></i></div>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+						</div>
+					</div>
+
 				</div>
 
-				<button type="button" class="btn btn-success btn-mini studntBtn" id=""> <i class="fa fa-plus"></i> Students</button>
 			<!-- END PLACE PAGE CONTENT HERE -->
 		</div>
 	</div>
 	<!-- END PAGE CONTAINER -->
 </div>
 <!-- END CONTENT --> 
+<script>
+	$("#class").select2();
+	$("#div").select2();
 
+    $(".students").listnav({
+	    //filterSelector: '.last-name',
+	    includeNums: false,
+	    //removeDisabled: true
+	});
 
+	$( ".tiles.single" ).click(function() {
+	  $( this ).toggleClass( "selected" );
+	});
+</script>
 </body>
 </html>
