@@ -388,9 +388,28 @@
 				    </div>
 
 				    <div class="studentList m-t-35">
-						<h4 class="m-b-15 semi-bold pull-left">Class: 5 Div: A</h4>
+						<div class="m-b-15 semi-bold pull-left row">
+							<div class="col-md-6">
+								<label class="form-label bold">Class</label>
+								<select id="class" class="form-control select2" >
+						            <option value="1">1</option>
+						            <option value="2">2</option>
+						            <option value="3">3</option>
+						        </select>
+						    </div>
+						    <div class="col-md-6">
+						        <label class="form-label bold">Div</label>
+								<select id="div" class="form-control select2" >
+						            <option value="A">A</option>
+						            <option value="B">B</option>
+						            <option value="C">C</option>
+						        </select>
+						    </div>
+					    </div>
 
-						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"><button type="button" class="btn btn-primary btn-xs btn-sm m-r-10"><i class="fa fa-check"></i> Right Answer</button> <button type="button" class="btn btn-danger btn-xs btn-sm"><i class="fa fa-times"></i> <span class="bold">Wrong Answer</span></button></div>
+						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"><button type="button" class="btn btn-primary btn-xs btn-sm"><i class="fa fa-check"></i> Done </button></div>
+
+						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20"><button type="button" class="btn btn-primary btn-xs btn-sm m-r-10"><i class="fa fa-check-circle"></i> Right Answer</button> <button type="button" class="btn btn-danger btn-xs btn-sm"><i class="fa fa-times-circle"></i> Wrong Answer</button></div>
 
 						<div class="clearfix"></div>
 						<div class="row students m-t-20">
@@ -551,6 +570,9 @@
 </div>
 <!-- END CONTENT --> 
 <script>
+	$("#class").select2();
+	$("#div").select2();
+
     $(".students").listnav({
 	    //filterSelector: '.last-name',
 	    includeNums: false,
