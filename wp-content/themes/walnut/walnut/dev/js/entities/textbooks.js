@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
+define(["app", 'backbone', 'unserialize'], function(App, Backbone, unserialize) {
   return App.module("Entities.Textbooks", function(Textbooks, App, Backbone, Marionette, $, _) {
     var API, db, textbookCollection;
     db = Backbone.db;
@@ -92,9 +92,11 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             console.log('onSuccess!');
             result = [];
             i = 0;
+            console.log('Length: ' + data.rows.length);
             while (i < data.rows.length) {
               row = data.rows.item(i);
               classes = unserialize(row["class_id"]);
+              console.log('Class: ' + classes);
               subjects = unserialize(row["tags"]);
               result[i] = {
                 term_id: row["term_id"],
@@ -112,6 +114,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
               };
               i++;
             }
+            console.log('Result: ' + result);
             return d.resolve(result);
           };
         };

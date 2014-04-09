@@ -37,6 +37,7 @@ require.config
 		detect				: 'plugins/detect'
 		moment				: 'plugins/moment.min'
 		select2				: 'plugins/select2.min'
+		unserialize			: 'plugins/unserialize'
 
 	shim:
 		underscore: 

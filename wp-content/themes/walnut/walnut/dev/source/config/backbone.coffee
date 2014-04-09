@@ -15,6 +15,7 @@ define ["backbone"], (Backbone) ->
 
 	# 		data = App.reqres.request "get:textbookslocal"
 	# 		data.done (d)->
+	# 			console.log 'Collection set: '+d
 	# 			collection.set d
 
 	# 		return true
