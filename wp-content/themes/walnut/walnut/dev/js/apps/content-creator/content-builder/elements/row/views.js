@@ -189,10 +189,27 @@ define(['app'], function(App) {
       };
 
       RowView.prototype.makeResizer = function(resizer) {
-        var row, snap;
+        var dragResizer, row, self, snap;
         row = resizer.parent();
         snap = row.width();
         snap = snap / 12;
+        self = this;
+        dragResizer = _.throttle((function(_this) {
+          return function(event, ui) {
+            var p, position, s;
+            p = Math.round(ui.position.left);
+            s = Math.round(ui.helper.start.left);
+            if (p > s) {
+              ui.helper.start = ui.position;
+              position = $(event.target).attr("data-position");
+              return self.resizeColumns("right", parseInt(position));
+            } else if (p < s) {
+              ui.helper.start = ui.position;
+              position = $(event.target).attr("data-position");
+              return self.resizeColumns("left", parseInt(position));
+            }
+          };
+        })(this), 0);
         return resizer.draggable({
           axis: "x",
           containment: row,
@@ -210,27 +227,12 @@ define(['app'], function(App) {
               return _this.setColumnResizerContainment();
             };
           })(this),
-          drag: (function(_this) {
-            return function(event, ui) {
-              var p, position, s;
-              p = Math.round(ui.position.left);
-              s = Math.round(ui.helper.start.left);
-              if (p > s) {
-                ui.helper.start = ui.position;
-                position = $(event.target).attr("data-position");
-                return _this.resizeColumns("right", parseInt(position));
-              } else if (p < s) {
-                ui.helper.start = ui.position;
-                position = $(event.target).attr("data-position");
-                return _this.resizeColumns("left", parseInt(position));
-              }
-            };
-          })(this)
+          drag: dragResizer
         });
       };
 
       RowView.prototype.resizeColumns = function(direction, position) {
-        var columns, currentClassOne, currentClassZero;
+        var columns, currentClassOne, currentClassZero, newClassOne, newClassZero;
         columns = [];
         columns.push(this.getColumnAt(position - 1));
         columns.push(this.getColumnAt(position));
@@ -239,19 +241,22 @@ define(['app'], function(App) {
         if (currentClassZero === 0 || currentClassOne === 0) {
           return;
         }
-        $(columns[0]).removeClass("col-md-" + currentClassZero);
-        $(columns[1]).removeClass("col-md-" + currentClassOne);
         switch (direction) {
           case "right":
-            currentClassZero++;
-            currentClassOne--;
+            newClassZero = currentClassZero + 1;
+            newClassOne = currentClassOne - 1;
             break;
           case "left":
-            currentClassZero--;
-            currentClassOne++;
+            newClassZero = currentClassZero - 1;
+            newClassOne = currentClassOne + 1;
         }
-        $(columns[0]).attr('data-class', currentClassZero).addClass("col-md-" + currentClassZero);
-        return $(columns[1]).attr('data-class', currentClassOne).addClass("col-md-" + currentClassOne);
+        if (newClassZero === 0 || newClassOne === 0) {
+          return;
+        }
+        $(columns[0]).removeClass("col-md-" + currentClassZero);
+        $(columns[1]).removeClass("col-md-" + currentClassOne);
+        $(columns[0]).attr('data-class', newClassZero).addClass("col-md-" + newClassZero);
+        return $(columns[1]).attr('data-class', newClassOne).addClass("col-md-" + newClassOne);
       };
 
       RowView.prototype.setColumnResizerContainment = function() {
