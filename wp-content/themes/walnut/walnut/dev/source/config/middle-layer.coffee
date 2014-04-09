@@ -15,11 +15,9 @@ define ['detect','jquery'], (detect,$)->
       
       #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
-      #When network is up.
       window.onLineHandler = ->
-        networkStatus = 1    
-
-      #When network is down.
+        networkStatus = 1   
+      
       window.offLineHandler = ->
         networkStatus = 0
 
@@ -47,7 +45,6 @@ define ['detect','jquery'], (detect,$)->
       ,false)
 
 
-
       $.middle_layer = (url,data,response) ->
         switch checkPlatform()
           when 'Desktop'
@@ -58,8 +55,10 @@ define ['detect','jquery'], (detect,$)->
 
           when 'Mobile'
             if checkConnection()
-              $.post url, data, response, 'json'
-            else
+            #  $.post url, data, response, 'json'
+            #else
+              window.localStorage.setItem("key", "loggedin");
+              console.log 'After: '+window.localStorage.getItem("key")
               return 'connection_error'
 
        

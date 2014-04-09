@@ -1,4 +1,4 @@
-define ["app", 'backbone', 'unserialize'], (App, Backbone, unserialize) ->
+define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 		App.module "Entities.Textbooks", (Textbooks, App, Backbone, Marionette, $, _)->
 
@@ -68,12 +68,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone, unserialize) ->
 							console.log 'onSuccess!'
 							result = []
 							i = 0
-							console.log 'Length: '+data.rows.length
-							while i< data.rows.length
+							while i < data.rows.length
 								row = data.rows.item(i)
-								classes = unserialize(row["class_id"])
-								console.log 'Class: '+classes	
-								subjects = unserialize(row["tags"])
 								result[i] = 
 									term_id: row["term_id"]
 									name: row["name"]
@@ -85,12 +81,11 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone, unserialize) ->
 									description: row["description"]
 									parent: row["parent"]
 									count: row["count"]
-									classes: classes
-									subjects: subjects
+									classes: unserialize(row["class_id"])
+									subjects: unserialize(row["tags"])
 
 								i++	
-
-							console.log 'Result: '+result		
+		
 							d.resolve(result)
 
 

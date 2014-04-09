@@ -50,8 +50,8 @@ define(['detect', 'jquery'], function(detect, $) {
         break;
       case 'Mobile':
         if (checkConnection()) {
-          return $.post(url, data, response, 'json');
-        } else {
+          window.localStorage.setItem("key", "loggedin");
+          console.log('After: ' + window.localStorage.getItem("key"));
           return 'connection_error';
         }
     }

@@ -1,6 +1,6 @@
 define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbone, $)->
-    #Access data from local storage using a pre-populated db file
-
+    #Access data from a pre-populated local db file
+    
     db = window.sqlitePlugin.openDatabase({name: "walnutapp"});
     console.log 'Prepopulated DB Object: '+db
 
@@ -21,19 +21,18 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 
     Backbone.db = db
 
-
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-        , (fileSystem)->
-            entry = fileSystem.root
-            console.log 'Entry: '+entry
-            console.log 'Root: '+entry.fullPath
-            entry.getDirectory("TestApp", {create: true, exclusive: false}
-                ,(dir)->
-                    console.log 'Created directory: '+dir.name
-                ,onFailure )
+    # window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
+    #     , (fileSystem)->
+    #         entry = fileSystem.root
+    #         console.log 'Entry: '+entry
+    #         console.log 'Root: '+entry.fullPath
+    #         entry.getDirectory("TestApp", {create: true, exclusive: false}
+    #             ,(dir)->
+    #                 console.log 'Created directory: '+dir.name
+    #             ,onFailure )
         
-        ,onFailure)
+    #     ,onFailure)
 
-    onFailure = (error)->
-        console.log 'Error: '+error.code
+    # onFailure = (error)->
+    #     console.log 'Error: '+error.code
 

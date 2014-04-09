@@ -41,15 +41,22 @@ define ['marionette'], (Marionette)->
 		App.unregister instance, id
 
 	App.on "initialize:after", (options) ->
-		Pace.on 'hide', ()->
-			$("#site_main_container").addClass( "showAll" );
+		if typeof Pace is undefined
+			Pace.on 'hide', ()->
+				$("#site_main_container").addClass( "showAll" );
 
 		App.startHistory()
 
+		
 		#Changes needed to build walnut-app
-		#@rootRoute = 'login'		
-		#App.navigate(@rootRoute, trigger: true)
-		#return
+		# loginStatus = window.localStorage.getItem("key")
+		# if loginStatus is null or loginStatus is 'loggedout'
+		# 	@rootRoute = 'login'
+		# 	App.navigate(@rootRoute, trigger: true)
+		# else
+		# 	App.vent.trigger "show:dashboard"
+		# return
+
         
 		# check app login status
 		xhr = $.get "#{AJAXURL}?action=get-user-data", 
@@ -71,15 +78,17 @@ define ['marionette'], (Marionette)->
 		
 			
 	App.vent.on "show:dashboard", ->
-		Pace.restart();
-		$("#site_main_container").removeClass( "showAll" );
+		if typeof Pace is undefined
+			Pace.restart();
+			$("#site_main_container").removeClass( "showAll" );
 		App.navigate('textbooks', trigger: true)
 		App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion	
 
-		Pace.on 'hide', ()->
-			$("#site_main_container").addClass( "showAll" );
+		if typeof Pace is undefined
+			Pace.on 'hide', ()->
+				$("#site_main_container").addClass( "showAll" );
 
 			
 	App.vent.on "show:login", ->
