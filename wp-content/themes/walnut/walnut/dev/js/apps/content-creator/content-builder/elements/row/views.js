@@ -173,7 +173,7 @@ define(['app'], function(App) {
         }
         template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="bicon bicon-uniF140"></span> </p> </div>';
         numberOfResizers = this.columnCount() - 1;
-        return _.each(_.range(numberOfResizers), (function(_this) {
+        _.each(_.range(numberOfResizers), (function(_this) {
           return function(ele, index) {
             var column, left, resizer;
             column = _this.getColumnAt(index + 1);
@@ -185,13 +185,31 @@ define(['app'], function(App) {
             return _this.makeResizer(resizer);
           };
         })(this));
+        return this.setColumnResizerContainment();
       };
 
       RowView.prototype.makeResizer = function(resizer) {
-        var row, snap;
+        var dragResizer, row, self, snap;
         row = resizer.parent();
         snap = row.width();
         snap = snap / 12;
+        self = this;
+        dragResizer = _.throttle((function(_this) {
+          return function(event, ui) {
+            var p, position, s;
+            p = Math.round(ui.position.left);
+            s = Math.round(ui.helper.start.left);
+            if (p > s) {
+              ui.helper.start = ui.position;
+              position = $(event.target).attr("data-position");
+              return self.resizeColumns("right", parseInt(position));
+            } else if (p < s) {
+              ui.helper.start = ui.position;
+              position = $(event.target).attr("data-position");
+              return self.resizeColumns("left", parseInt(position));
+            }
+          };
+        })(this), 0);
         return resizer.draggable({
           axis: "x",
           containment: row,
@@ -205,51 +223,60 @@ define(['app'], function(App) {
           })(this),
           stop: (function(_this) {
             return function(event, ui) {
-              return ui.helper.start = ui.position;
+              ui.helper.start = ui.position;
+              return _this.setColumnResizerContainment();
             };
           })(this),
-          drag: (function(_this) {
-            return function(event, ui) {
-              var p, position, s;
-              p = Math.round(ui.position.left);
-              s = Math.round(ui.helper.start.left);
-              if (p > s) {
-                ui.helper.start = ui.position;
-                position = $(event.target).attr("data-position");
-                return _this.resizeColumns("right", parseInt(position));
-              } else if (p < s) {
-                ui.helper.start = ui.position;
-                position = $(event.target).attr("data-position");
-                return _this.resizeColumns("left", parseInt(position));
-              }
-            };
-          })(this)
+          drag: dragResizer
         });
       };
 
       RowView.prototype.resizeColumns = function(direction, position) {
-        var columns, currentClassOne, currentClassZero;
+        var columns, currentClassOne, currentClassZero, newClassOne, newClassZero;
         columns = [];
         columns.push(this.getColumnAt(position - 1));
         columns.push(this.getColumnAt(position));
         currentClassZero = parseInt($(columns[0]).attr('data-class'));
         currentClassOne = parseInt($(columns[1]).attr('data-class'));
-        if (currentClassZero - 1 === 0 || currentClassOne - 1 === 0) {
+        if (currentClassZero === 0 || currentClassOne === 0) {
+          return;
+        }
+        switch (direction) {
+          case "right":
+            newClassZero = currentClassZero + 1;
+            newClassOne = currentClassOne - 1;
+            break;
+          case "left":
+            newClassZero = currentClassZero - 1;
+            newClassOne = currentClassOne + 1;
+        }
+        if (newClassZero === 0 || newClassOne === 0) {
           return;
         }
         $(columns[0]).removeClass("col-md-" + currentClassZero);
         $(columns[1]).removeClass("col-md-" + currentClassOne);
-        switch (direction) {
-          case "right":
-            currentClassZero++;
-            currentClassOne--;
-            break;
-          case "left":
-            currentClassZero--;
-            currentClassOne++;
-        }
-        $(columns[0]).attr('data-class', currentClassZero).addClass("col-md-" + currentClassZero);
-        return $(columns[1]).attr('data-class', currentClassOne).addClass("col-md-" + currentClassOne);
+        $(columns[0]).attr('data-class', newClassZero).addClass("col-md-" + newClassZero);
+        return $(columns[1]).attr('data-class', newClassOne).addClass("col-md-" + newClassOne);
+      };
+
+      RowView.prototype.setColumnResizerContainment = function() {
+        var resizers;
+        resizers = this.$el.closest('.element-wrapper').children('.element-controls').find('.aj-imp-col-divider');
+        return _.each(resizers, (function(_this) {
+          return function(resizer) {
+            var left, right, width;
+            width = _this.$el.width();
+            left = _this.$el.offset().left + 50;
+            if (typeof $(resizer).prev('.aj-imp-col-divider').position() !== 'undefined') {
+              left = _this.$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + 50;
+            }
+            right = _this.$el.offset().left + width - 50;
+            if (typeof $(resizer).next('.aj-imp-col-divider').position() !== 'undefined') {
+              right = _this.$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - 50;
+            }
+            return $(resizer).draggable("option", "containment", [left, 0, right, 0]);
+          };
+        })(this));
       };
 
       RowView.prototype.addNewColumn = function(colClass, position) {
