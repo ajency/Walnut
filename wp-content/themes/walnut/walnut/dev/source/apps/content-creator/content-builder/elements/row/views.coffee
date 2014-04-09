@@ -127,19 +127,26 @@ define ['app'],(App)->
 					@$el.closest('.element-wrapper').children('.element-controls').append resizer
 					@makeResizer resizer 
 
+				@setColumnResizerContainment()
 
+		
 			makeResizer:(resizer) ->
 				row = resizer.parent()
 				snap = row.width()
 				snap = snap / 12
+				# console.log $(resizer).prev('.aj-imp-col-divider').attr("style")
+				# i = $(resizer).attr("data-position")
+				# console.log $(row).offset().top
 				resizer.draggable
 					axis: "x"
 					containment: row
+					# snap : true
 					grid: [ snap, 0 ]
 					start: (event, ui)=>
 						ui.helper.start = ui.originalPosition  if _.isUndefined(ui.helper.start)
 					stop: (event, ui)=>
 						ui.helper.start = ui.position
+						@setColumnResizerContainment()
 					drag: (event, ui)=>
 						p = Math.round(ui.position.left)
 						s = Math.round(ui.helper.start.left)
@@ -163,7 +170,7 @@ define ['app'],(App)->
 				currentClassOne  = parseInt $(columns[1]).attr 'data-class'
 
 				#return if one column class is set to zero
-				return  if currentClassZero - 1 is 0 or currentClassOne - 1 is 0
+				return  if currentClassZero  is 0 or currentClassOne is 0
 
 				#remove class
 				$(columns[0]).removeClass "col-md-#{currentClassZero}"
@@ -179,6 +186,25 @@ define ['app'],(App)->
 						
 				$(columns[0]).attr('data-class',currentClassZero).addClass "col-md-#{currentClassZero}"
 				$(columns[1]).attr('data-class',currentClassOne).addClass "col-md-#{currentClassOne}"
+
+
+			# setting the containment for resizer
+			setColumnResizerContainment: ->
+				resizers= @$el.closest('.element-wrapper').children('.element-controls').find('.aj-imp-col-divider')
+				
+				_.each resizers,(resizer)=>
+					width = @$el.width()
+					left = @$el.offset().left + 50
+					
+					if typeof $(resizer).prev('.aj-imp-col-divider').position() isnt 'undefined'
+						left = @$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + 50
+
+					right = @$el.offset().left + width - 50
+
+					if typeof $(resizer).next('.aj-imp-col-divider').position() isnt 'undefined'
+						right = @$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - 50
+
+					$(resizer).draggable  "option", "containment", [left, 0 , right , 0]
 
 			# add new columns
 			addNewColumn:(colClass, position)->
