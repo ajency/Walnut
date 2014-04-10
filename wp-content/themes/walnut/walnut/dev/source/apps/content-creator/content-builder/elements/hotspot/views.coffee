@@ -289,7 +289,7 @@ define ['app'],(App)->
 
 					self = @
 
-					App.execute "show:question:element:properties",
+					App.execute "show:hotspot:element:properties",
 								model : hotspotElement
 
 
@@ -342,7 +342,7 @@ define ['app'],(App)->
 					# on click of a circle element show properties
 					circleGrp.on 'mousedown click',(e)->
 							e.stopPropagation()
-							App.execute "show:question:element:properties",
+							App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 							# console.log @
 
@@ -380,7 +380,7 @@ define ['app'],(App)->
 
 					self = @
 
-					App.execute "show:question:element:properties",
+					App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 
 					box = new Kinetic.Rect
@@ -442,7 +442,7 @@ define ['app'],(App)->
 					# on click of a circle element show properties
 					rectGrp.on 'mousedown click',(e)->
 							e.stopPropagation()
-							App.execute "show:question:element:properties",
+							App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 							# console.log @
 
@@ -483,7 +483,7 @@ define ['app'],(App)->
 
 					self = @
 
-					App.execute "show:question:element:properties",
+					App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 
 					tooltip = new Kinetic.Label
@@ -514,7 +514,7 @@ define ['app'],(App)->
 					# on click of a text element show properties
 					tooltip.on 'mousedown click',(e)->
 							e.stopPropagation()
-							App.execute "show:question:element:properties",
+							App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 
 					# if model text is not empty then change the hotspot text
@@ -617,7 +617,7 @@ define ['app'],(App)->
 					imageObject = new Image()
 					imageObject.src = hotspotElement.get 'url'
 					imageObject.onload = ()=>
-							App.execute "show:question:element:properties",
+							App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 
 							imageElement = new Kinetic.Image
@@ -648,7 +648,7 @@ define ['app'],(App)->
 							# on click of a text element show properties
 							imageGrp.on 'mousedown click',(e)->
 									e.stopPropagation()
-									App.execute "show:question:element:properties",
+									App.execute "show:hotspot:element:properties",
 											model : hotspotElement
 									console.log @
 

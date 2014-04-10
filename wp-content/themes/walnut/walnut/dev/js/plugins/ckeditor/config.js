@@ -8,4 +8,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
 	config.format_tags = 'p;h1;h2;h3;h4;h5;h6;pre;address;div';
+
+	config.extraPlugins = 'confighelper';
+
+	config.placeholder = 'Type here...'
 };

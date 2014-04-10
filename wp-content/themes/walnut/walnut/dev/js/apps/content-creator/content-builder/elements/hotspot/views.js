@@ -285,7 +285,7 @@ define(['app'], function(App) {
           this.optionCollection.add(hotspotElement);
         }
         self = this;
-        App.execute("show:question:element:properties", {
+        App.execute("show:hotspot:element:properties", {
           model: hotspotElement
         });
         circle = new Kinetic.Circle({
@@ -337,7 +337,7 @@ define(['app'], function(App) {
         })(this));
         circleGrp.on('mousedown click', function(e) {
           e.stopPropagation();
-          return App.execute("show:question:element:properties", {
+          return App.execute("show:hotspot:element:properties", {
             model: hotspotElement
           });
         });
@@ -371,7 +371,7 @@ define(['app'], function(App) {
           this.optionCollection.add(hotspotElement);
         }
         self = this;
-        App.execute("show:question:element:properties", {
+        App.execute("show:hotspot:element:properties", {
           model: hotspotElement
         });
         box = new Kinetic.Rect({
@@ -434,7 +434,7 @@ define(['app'], function(App) {
         })(this));
         rectGrp.on('mousedown click', function(e) {
           e.stopPropagation();
-          return App.execute("show:question:element:properties", {
+          return App.execute("show:hotspot:element:properties", {
             model: hotspotElement
           });
         });
@@ -468,7 +468,7 @@ define(['app'], function(App) {
           this.textCollection.add(hotspotElement);
         }
         self = this;
-        App.execute("show:question:element:properties", {
+        App.execute("show:hotspot:element:properties", {
           model: hotspotElement
         });
         tooltip = new Kinetic.Label({
@@ -496,7 +496,7 @@ define(['app'], function(App) {
         });
         tooltip.on('mousedown click', function(e) {
           e.stopPropagation();
-          return App.execute("show:question:element:properties", {
+          return App.execute("show:hotspot:element:properties", {
             model: hotspotElement
           });
         });
@@ -592,7 +592,7 @@ define(['app'], function(App) {
         imageObject.onload = (function(_this) {
           return function() {
             var imageElement;
-            App.execute("show:question:element:properties", {
+            App.execute("show:hotspot:element:properties", {
               model: hotspotElement
             });
             imageElement = new Kinetic.Image({
@@ -614,7 +614,7 @@ define(['app'], function(App) {
             });
             imageGrp.on('mousedown click', function(e) {
               e.stopPropagation();
-              App.execute("show:question:element:properties", {
+              App.execute("show:hotspot:element:properties", {
                 model: hotspotElement
               });
               return console.log(this);

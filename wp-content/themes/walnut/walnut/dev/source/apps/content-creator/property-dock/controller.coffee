@@ -19,9 +19,12 @@ define ['app'
 
 								@_getElementBox options.model
 
-
-						App.commands.setHandler "show:question:element:properties",(options)=>
+						App.commands.setHandler "show:question:properties",(options)=>
 								@_getElementProperties options.model
+
+						# show hotspot element properties
+						App.commands.setHandler "show:hotspot:element:properties",(options)=>
+								@_getHotspotElementProperties options.model
 
 						App.commands.setHandler "close:question:element:properties",=>
 								@layout.questElementPropRegion.close()
@@ -46,10 +49,17 @@ define ['app'
 								region : @layout.questElementRegion
 								model : model
 
-					_getElementProperties:(model)->
-						elementFamily = model.get 'family'
-						App.execute "show:#{elementFamily}:properties:box",
+					_getHotspotElementProperties:(model)->
+						
+						App.execute "show:hotspot:element:properties:box",
 								region : @layout.questElementPropRegion
+								model : model
+
+					_getElementProperties:(model)->
+						elementName = model.get 'element'
+						ele = _.slugify elementName
+						App.execute "show:#{ele}:properties",
+								region : @layout.questPropertyRegion
 								model : model
 
 				

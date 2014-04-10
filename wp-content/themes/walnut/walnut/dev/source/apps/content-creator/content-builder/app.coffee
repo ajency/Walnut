@@ -70,6 +70,7 @@ define ['app'
 					# add a new element to the builder region
 					addNewElement : (container , type, modelData)->
 						console.log type
+						
 						new ContentBuilder.Element[type].Controller
 										container : container
 										modelData : modelData
