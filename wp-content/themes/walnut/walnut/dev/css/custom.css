@@ -103,7 +103,7 @@
 }
 #toolbox {
   width: 220px;
-  background: #ffffff;
+  background: #f3f3f3;
   position: absolute;
   z-index: 2;
 }
@@ -253,7 +253,7 @@
 }
 .element-wrapper {
   border: 2px solid #f3f3f3;
-  padding: 6px;
+  padding: 7px;
   margin: 4px 0 11px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
@@ -643,6 +643,25 @@
 .image .image-placeholder .bicon {
   font-size: 40px;
   display: block;
+}
+.aj-imp-upload-media {
+  text-align: center;
+}
+.aj-imp-upload-media .aj-imp-upload-message {
+  cursor: pointer;
+  background: #e4e4e4;
+  border-radius: 5px;
+  padding: 10px;
+  width: 40%;
+  margin: 10px auto;
+  font-weight: bold;
+}
+.aj-imp-upload-media .aj-imp-upload-message .glyphicon {
+  width: 25px;
+}
+.aj-imp-upload-media .bicon {
+  font-size: 50px;
+  color: #e5e9ec;
 }
 .listBox {
   margin-top: 60px;
