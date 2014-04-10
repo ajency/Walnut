@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Walnut Learn - Add Question</title>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+
+	<!-- NEED TO WORK ON -->
+
+	<link href="assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
+
+	<link href="assets/plugins/jquery-datatable/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+	<link href="assets/plugins/datatables-responsive/css/datatables.responsive.css" rel="stylesheet" type="text/css" media="screen">
+
+
+	<!-- BEGIN CORE JS FRAMEWORK--> 
+	<script src="assets/plugins/jquery-1.8.3.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/boostrapv3/js/bootstrap.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/breakpoints.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript"></script> 
+	<!-- END CORE JS FRAMEWORK --> 
+	<!-- BEGIN PAGE LEVEL JS --> 	
+	<script src="assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript"></script> 	
+	<script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/pace/pace.min.js" type="text/javascript"></script>  
+	<script src="assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
+	<!-- END PAGE LEVEL PLUGINS -->
+	
+
+
+	<!-- BEGIN CORE TEMPLATE JS --> 
+	<script src="assets/js/core.js" type="text/javascript"></script> 
+	<script src="assets/js/chat.js" type="text/javascript"></script> 
+	<script src="assets/js/demo.js" type="text/javascript"></script> 
+	<!-- END CORE TEMPLATE JS --> 
+
+		<script src="assets/plugins/jquery-datatable/js/jquery.dataTables.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/jquery-datatable/extra/js/TableTools.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
+		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
+		<script type="text/javascript" src="assets/js/datatables.js"></script>
+
+		<script type="text/javascript" src="assets/js/row-link.js"></script>
+
+	<!-- END NEED TO WORK ON -->
+
+</head>
+<body class="">
+<!-- BEGIN HEADER -->
+<div class="header navbar navbar-inverse"> 
+	<!-- BEGIN TOP NAVIGATION BAR -->
+	<div class="navbar-inner">
+		<!-- BEGIN NAVIGATION HEADER -->
+		<div class="header-seperation" style="display:none"> 
+			<!-- BEGIN MOBILE HEADER -->
+			<ul class="nav pull-left notifcation-center" id="main-menu-toggle-wrapper" style="display:none">	
+				<li class="dropdown">
+					<a id="main-menu-toggle" href="#main-menu" class="">
+						<div class="iconset top-menu-toggle-white"></div>
+					</a>
+				</li>		 
+			</ul>
+			<!-- END MOBILE HEADER -->
+			<!-- BEGIN LOGO -->	
+			<a href="#">
+				<img src="assets/img/logo.png" class="logo" alt="" data-src="assets/img/walnutlearn.png" data-src-retina="assets/img/logo2x.png" width="106" height="21"/>
+			</a>
+			<!-- END LOGO --> 
+			<!-- BEGIN LOGO NAV BUTTONS -->
+			<ul class="nav pull-right notifcation-center">	
+				
+				<!-- BEGIN MOBILE CHAT TOGGLER -->
+				<li class="dropdown" id="portrait-chat-toggler" style="display:none">
+					<a href="#sidr" class="chat-menu-toggle">
+						<div class="iconset top-chat-white"></div>
+					</a>
+				</li>
+				<!-- END MOBILE CHAT TOGGLER -->				        
+			</ul>
+			<!-- END LOGO NAV BUTTONS -->
+		</div>
+		<!-- END NAVIGATION HEADER -->
+		<!-- BEGIN CONTENT HEADER -->
+		<div class="header-quick-nav"> 
+			<!-- BEGIN HEADER LEFT SIDE SECTION -->
+			<div class="pull-left"> 
+				<!-- BEGIN SLIM NAVIGATION TOGGLE -->
+				<ul class="nav quick-section">
+					<li class="quicklinks">
+						<a href="#" class="" id="layout-condensed-toggle">
+							<div class="iconset top-menu-toggle-dark"></div>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks"><a href="#" class=""><div class="iconset top-reload"></div></a></li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks dropdown">
+						<a href="#" class="dropdown-toggle">
+							<div class="iconset top-messages"></div>
+							<span class="badge" id="msgs-badge">2</span>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+				</ul>
+				<!-- END SLIM NAVIGATION TOGGLE -->
+				<div class="chat-toggler">	
+					<!-- BEGIN NOTIFICATION CENTER -->
+					<a href="#" class="dropdown-toggle" id="my-task-list" data-placement="bottom" data-content="" data-toggle="dropdown" data-original-title="Notifications">
+						<div class="user-details"> 
+							<div class="username">
+								Notifications	<span class="badge badge-important">3</span>								
+							</div>						
+						</div> 
+						<div class="iconset top-down-arrow"></div>
+					</a>	
+					<div id="notification-list" style="display:none">
+						<div style="width:300px">
+							<!-- BEGIN NOTIFICATION MESSAGE -->
+							<div class="notification-messages info">
+								<div class="user-profile">
+									<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+								</div>
+								<div class="message-wrapper">
+									<div class="heading">Title of Notification</div>
+									<div class="description">Description...</div>
+									<div class="date pull-left">A min ago</div>										
+								</div>
+								<div class="clearfix"></div>									
+							</div>
+							<!-- END NOTIFICATION MESSAGE -->	
+						</div>				
+					</div>
+					<!-- END NOTIFICATION CENTER -->
+				</div>
+				<!-- BEGIN HEADER QUICK LINKS -->
+				<ul class="nav quick-section">
+
+				</ul>
+				<!-- BEGIN HEADER QUICK LINKS -->
+									
+			</div>
+			<!-- END HEADER LEFT SIDE SECTION -->
+			<!-- BEGIN HEADER RIGHT SIDE SECTION -->
+			<div class="pull-right"> 
+			
+			<div class="chat-toggler">	
+	<!--	<div class="user-details">
+            <div class="username"><img src="assets/img/running.gif" alt=""  /> <span class="bold"> Online </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>-->
+		  
+		 <div class="user-details">
+            <div class="username"><img src="assets/img/offline.gif" /> <span class="bold"> Offline </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>
+			<!-- <div class="user-details">
+            <div class="username"><img src="assets/img/connecting.gif" /> <span class="bold"> Connecting </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>-->
+					<!-- BEGIN PROFILE PICTURE -->
+					<div class="profile-pic"> 
+						<img src="assets/img/profiles/avatar_small.jpg" alt="" data-src="assets/img/profiles/avatar_small.jpg" data-src-retina="assets/img/profiles/avatar_small2x.jpg" width="35" height="35" /> 
+					</div>  
+					<!-- END PROFILE PICTURE -->     			
+				</div>
+				<!-- BEGIN HEADER NAV BUTTONS -->
+				<ul class="nav quick-section2">
+					<!-- BEGIN SETTINGS -->
+					<li class="quicklinks"> 
+						<a data-toggle="dropdown" class="dropdown-toggle pull-right" href="#" id="user-options">						
+							<div class="iconset top-settings-dark"></div> 	
+						</a>
+						<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="user-options">
+							<li><a href="#">My Account</a></li>
+							<li class="divider"></li>                
+							<li><a href="#"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+						</ul>
+					</li>
+					<!-- END SETTINGS -->
+					<li class="quicklinks"><span class="h-seperate"></span></li> 
+					<!-- BEGIN CHAT SIDEBAR TOGGLE -->
+					<li class="quicklinks"> 	
+						<a id="chat-menu-toggle" href="#sidr" class="chat-menu-toggle">
+							<div class="iconset top-chat-dark"><span class="badge badge-important hide" id="chat-message-count">1</span></div>
+						</a> 
+						<!-- BEGIN OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+						<div class="simple-chat-popup chat-menu-toggle hide">
+							<div class="simple-chat-popup-arrow"></div>
+							<div class="simple-chat-popup-inner">
+								<div style="width:100px">
+									<div class="semi-bold">Name</div>
+									<div class="message">Message...</div>
+								</div>
+							</div>
+						</div>
+						<!-- END OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+					</li>
+					<!-- END CHAT SIDEBAR TOGGLE --> 
+				</ul>
+				<!-- END HEADER NAV BUTTONS -->
+			</div>
+			<!-- END HEADER RIGHT SIDE SECTION -->
+		</div> 
+		<!-- END CONTENT HEADER --> 
+	</div>
+	<!-- END TOP NAVIGATION BAR --> 
+</div>
+<!-- END HEADER -->
+	
+<!-- BEGIN CONTENT -->
+<div class="page-container row-fluid">
+	<!-- BEGIN SIDEBAR -->
+	<!-- BEGIN MENU -->
+	<div class="page-sidebar mini" id="main-menu">
+		  <div class="page-sidebar-wrapper" id="main-menu-wrapper">
+		
+		<!-- BEGIN SIDEBAR MENU -->	
+		<p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
+		<ul>	
+   
+			<!-- BEGIN ONE LEVEL MENU -->
+			<li class="start">
+				<a href="javascript:;">
+					<i class="icon-custom-ui"></i>
+					<span class="title">Content Management</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Textbooks</a></li>
+					<li><a href="#">Add Question</a></li>
+				</ul>
+			</li>
+			<!-- END ONE LEVEL MENU -->
+		
+		</ul>
+		<!-- END SIDEBAR MENU -->
+		<!-- BEGIN SIDEBAR WIDGETS -->
+		<div class="side-bar-widgets">
+
+		</div>
+		<div class="clearfix"></div>
+		<!-- END SIDEBAR WIDGETS --> 
+	</div>
+	</div>
+	<!-- BEGIN SCROLL UP HOVER -->
+	<a href="#" class="scrollup">Scroll</a>
+	<!-- END SCROLL UP HOVER -->
+	<!-- END MENU -->
+	<!-- BEGIN SIDEBAR FOOTER WIDGET -->
+	<!--<div class="footer-widget">		
+
+		<div class="pull-right">
+			<a href="#">Logout <i class="fa fa-power-off"></i></a>
+		</div>
+	</div>-->
+	<!-- END SIDEBAR FOOTER WIDGET -->
+	<!-- END SIDEBAR --> 
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="page-content condensed"> 
+		<div class="content">  
+			<ul class="breadcrumb">
+				<li>
+				  <p><a href="#" class="active">Dashboard</a></p>
+				</li>
+			 </ul>
+			<!-- BEGIN PAGE TITLE -->
+			<!--<div class="page-title"> 
+				<h3>Add <span class="semi-bold">Question</span></h3>
+			</div>-->
+			<!-- END PAGE TITLE -->
+
+			<!-- BEGIN PlACE PAGE CONTENT HERE -->
+			<div class="teacher-app">
+				<div class="row">  
+			        <div class="col-md-3">
+			        </div>
+			        <div class="col-md-6">
+
+				          <ul class="nav nav-pills" id="teacherOptns">
+				            <li class="active"><a href="#takeClass">Take a Class</a></li>
+				            <li class=""><a href="#training">Start Training</a></li>
+				            <li class=""><a href="#tab4Inspire">Class Progress</a></li>
+				          </ul>
+
+				          <div class="tab-content">
+				            <div class="tab-pane active" id="takeClass">
+				              <div class="row column-seperation">
+				                <div class="col-md-6">
+				                  <h3><span class="semi-bold">Sometimes</span> Small 
+				                    things in life means 
+				                    the most</h3>
+				                </div>
+				                <div class="col-md-6">
+				                  <h3 class="semi-bold">great tabs</h3>
+				                  <p class="light">default, the textarea element comes with a vertical scrollbar (and maybe even a horizontal scrollbar). This vertical scrollbar enables the user to continue entering and reviewing their text (by scrolling up and down).</p>
+				                </div>
+				              </div>
+				            </div>
+				            <div class="tab-pane" id="training">
+				              <div class="row">
+				                <div class="col-md-12">
+				                  <h3>“ Nothing is<span class="semi-bold"> impossible</span>, the word itself says 'I'm <span class="semi-bold">possible</span>'! ”</h3>
+				                  <p>A style represents visual customizations on top of a layout. By editing a style, you can use Squarespace's visual interface to customize your...</p>
+				                  <br>
+				                  <p>
+				                    <button type="button" class="btn btn-white btn-cons">White</button>
+				                    <button type="button" class="btn btn-success btn-cons">Success</button>
+				                  </p>
+				                </div>
+				              </div>
+				            </div>
+				            <div class="tab-pane" id="tab4Inspire">
+				              <div class="row">
+				                <div class="col-md-12">
+				                  <h3>Follow us &amp; get updated!</h3>
+				                  <p>Instantly connect to what's most important to you. Follow your friends, experts, favorite celebrities, and breaking news.</p>
+				                  <br>
+				                  <p><a href="#" class="btn-social"><i class="icon-facebook"></i></a> <a href="#" class="btn-social"><i class="icon-twitter"></i> </a> <a href="#" class="btn-social"><i class="icon-dribbble"></i></a> <a href="#" class="btn-social"><i class="icon-pinterest-sign"></i></a> <a href="#" class="btn-social"><i class="icon-tumblr"></i> </a> <a href="#" class="btn-social"><i class="icon-linkedin-sign"></i> </a> </p>
+				                </div>
+				              </div>
+				            </div>
+				          </div>
+			        </div>
+			        <div class="col-md-3">
+			        </div>
+			     
+			    
+			  </div>
+			</div>
+			<!-- END PLACE PAGE CONTENT HERE -->
+		</div>
+	</div>
+	<!-- END PAGE CONTAINER -->
+</div>
+<!-- END CONTENT --> 
+
+<script>
+	$('#teacherOptns a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+	});
+</script>
+</body>
+</html>

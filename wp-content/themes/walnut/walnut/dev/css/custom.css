@@ -26,7 +26,7 @@
   bottom: 40%;
 }
 .overlap-left-15 i {
-  color: #fff;
+  color: #ffffff;
 }
 .overlap-right-15 {
   position: absolute;
@@ -34,10 +34,22 @@
   bottom: 40%;
 }
 .overlap-right-15 i {
-  color: #fff;
+  color: #ffffff;
 }
 .m-r-0 {
   margin-right: 0;
+}
+.m-l-0 {
+  margin-left: 0;
+}
+.m-b-0 {
+  margin-bottom: 0;
+}
+.m-t-0 {
+  margin-top: 0;
+}
+.p-t-60 {
+  padding-top: 60px;
 }
 .creator {
   position: relative;
@@ -50,7 +62,7 @@
   height: 100%;
   position: relative;
   background-clip: content-box;
-  background: #fff;
+  background: #ffffff;
 }
 .creator .row .column.empty-column {
   background: url(../../../images/empty-drag-bg.svg) no-repeat center center #ffffff;
@@ -75,7 +87,7 @@
   overflow-x: auto;
 }
 #myCanvas {
-  background: #fff;
+  background: #ffffff;
   left: 260px;
   top: 0;
   min-width: 730px;
@@ -90,7 +102,7 @@
 }
 #toolbox {
   width: 240px;
-  background: #fff;
+  background: #ffffff;
   position: absolute;
   z-index: 2;
 }
@@ -106,7 +118,7 @@
 #toolbox .qstns ul li {
   float: left;
   border: 2px solid #e5e9ec;
-  background: #fff;
+  background: #ffffff;
   width: 65px;
   height: 65px;
   margin: 4px;
@@ -124,7 +136,7 @@
 }
 #toolbox .tools ul li:hover a,
 #toolbox .qstns ul li:hover a {
-  color: #fff;
+  color: #ffffff;
   cursor: move;
 }
 #toolbox .tools ul li i,
@@ -187,7 +199,7 @@
   font-size: 42px;
 }
 .docket-body {
-  background: #fff;
+  background: #ffffff;
   padding: 15px 10px;
   color: #000;
 }
@@ -220,7 +232,7 @@
 .textFormat .btn.disabled,
 .textFormat .btn[disabled] {
   background-color: #0aa699;
-  color: #fff;
+  color: #ffffff;
 }
 .minicolors-theme-default.minicolors {
   width: 60px;
@@ -277,7 +289,7 @@
   color: #00acec;
   font-size: 20px;
   line-height: 20px;
-  background: #fff;
+  background: #ffffff;
   border: 2px solid #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
@@ -294,7 +306,7 @@
 }
 .element-wrapper .element-controls .aj-imp-drag-handle p:hover {
   background: #00acec;
-  color: #fff;
+  color: #ffffff;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
 
@@ -312,7 +324,7 @@
   right: -10px;
   width: 20px;
   height: 20px;
-  background: #fff;
+  background: #ffffff;
   text-align: center;
   cursor: pointer;
 }
@@ -338,13 +350,13 @@
 
 }
 .element-wrapper .element-controls .aj-imp-delete-btn:hover span {
-  color: #fff;
+  color: #ffffff;
 }
 .element-wrapper .element-controls .aj-imp-settings-btn {
   right: 20px;
   width: 20px;
   height: 20px;
-  background: #fff;
+  background: #ffffff;
   text-align: center;
   cursor: pointer;
 }
@@ -371,7 +383,7 @@
 
 }
 .element-wrapper .element-controls .aj-imp-settings-btn:hover span {
-  color: #fff;
+  color: #ffffff;
 }
 .element-wrapper.hover-class:hover {
   border-color: #00acec;
@@ -442,7 +454,7 @@
 }
 .aj-imp-col-sel .tooltip-inner ul li a {
   padding: 0.3em 0.5em;
-  color: #fff;
+  color: #ffffff;
   border-radius: 3px;
   font-weight: 700;
 }
@@ -484,7 +496,7 @@
   line-height: 6px;
   width: 40px;
   height: 20px;
-  background: #fff;
+  background: #ffffff;
   border: 2px solid #dddddd;
   position: absolute;
   top: 1.5em;
@@ -509,7 +521,7 @@
 .aj-imp-col-divider p:hover,
 .aj-imp-col-divider p:active {
   background: #00acec;
-  color: #fff;
+  color: #ffffff;
   border-color: #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
@@ -530,7 +542,7 @@
 }
 .settings-box {
   width: 400px;
-  background: #fff;
+  background: #ffffff;
   box-shadow: 0 0 3px 1px #aaaaaa;
   padding: 0 0.5em 0.5em;
   border-radius: 3px;
@@ -547,14 +559,14 @@
   margin: 0 -15px;
 }
 .settings-box .settings-header h5.title {
-  color: #fff;
+  color: #ffffff;
   font-weight: bold;
 }
 .settings-box .settings-header .close-btn {
   text-align: right;
 }
 .settings-box .settings-header .close-btn a {
-  color: #fff;
+  color: #ffffff;
   font-weight: bold;
   font-size: 18px;
 }
@@ -576,12 +588,12 @@
   background-color: #0090d9;
 }
 .modal-content .modal-header .modal-title {
-  color: #fff;
+  color: #ffffff;
   text-align: left;
   font-weight: 600;
 }
 .modal-content .modal-header .close {
-  color: #fff;
+  color: #ffffff;
   opacity: 1;
 }
 .modal-content .modal-body .media-manager-select {
@@ -608,21 +620,71 @@
   min-height: 120px;
 }
 .teacherCanvas {
-  background-color: #fff;
+  background-color: #ffffff !important;
   position: relative;
   min-height: 200px;
 }
-.studntBtn {
-  position: absolute;
-  right: 0;
-  top: 8%;
+h4.modName a {
+  color: #0090d9;
 }
-.infoBar {
-  width: 100%;
-  background-color: #f3f3f3;
-}
-.lecProgress {
+.modProgress {
   width: 200px;
+}
+.modProgress .progress {
+  width: 100%;
+}
+h3.time {
+  line-height: 20px;
+}
+.studentList h4 span {
+  display: block;
+}
+.studentList .listNavShow {
+  display: block;
+}
+.studentList .students .tiles {
+  cursor: pointer;
+}
+.studentList .students .tiles.red,
+.studentList .students .tiles.default,
+.studentList .students .tiles.green {
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.studentList .students .tiles.red:active,
+.studentList .students .tiles.default:active,
+.studentList .students .tiles.green:active {
+  -webkit-transform: scale(1.15);
+  -moz-transform: scale(1.15);
+  transform: scale(1.15);
+}
+.studentList .students .tiles.single.selected .active {
+  background-color: #0090d9;
+  -webkit-transform: scale(1.15);
+  -moz-transform: scale(1.15);
+  transform: scale(1.15);
+}
+.studentList .students i {
+  font-size: 20px;
+}
+.studentList .ln-letters a {
+  padding: 5px 11px;
+}
+.studentList .box2 {
+  position: relative;
+}
+.studentList .user-profile-pic {
+  position: static;
+  width: auto;
+}
+.studentList .user-profile-pic img {
+  height: 50px;
+  width: 50px;
+  margin: auto;
+  display: block;
+  -webkit-border-radius: 100px 100px 100px 100px;
+  -moz-border-radius: 100px 100px 100px 100px;
 }
 body {
   background-color: #e5e9ec;
@@ -659,7 +721,7 @@ body {
 .page-sidebar .page-sidebar-wrapper > ul > li > a i,
 .page-sidebar .page-sidebar-wrapper > ul > li > a .arrow,
 .page-sidebar .page-sidebar-wrapper > ul > li > a .arrow.open:before {
-  color: #fff !important;
+  color: #ffffff !important;
 }
 .page-sidebar .page-sidebar-wrapper > ul > li.open > a {
   background-color: #0aa699 !important;
@@ -755,7 +817,7 @@ tbody.rowlink td {
   margin-left: 10px;
 }
 .mashmenu .menu .sub-content {
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 20px;
 }
 .mashmenu .wrapper {
