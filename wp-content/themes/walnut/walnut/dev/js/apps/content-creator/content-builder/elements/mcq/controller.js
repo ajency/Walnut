@@ -56,8 +56,14 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype._showView = function() {
-        var optionCollection, view;
-        optionCollection = this.layout.model.get('elements');
+        var optionCollection, optionsObj, view;
+        optionsObj = this.layout.model.get('elements');
+        if (optionsObj instanceof Backbone.Collection) {
+          optionCollection = optionsObj;
+        } else {
+          optionCollection = App.request("create:new:mcq:option:collection", optionsObj);
+          this.layout.model.set('elements', optionCollection);
+        }
         view = this._getMcqView(optionCollection);
         this.listenTo(view, 'show', (function(_this) {
           return function() {

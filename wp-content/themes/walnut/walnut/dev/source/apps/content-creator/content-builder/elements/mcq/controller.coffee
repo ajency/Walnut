@@ -27,17 +27,7 @@ define ['app'
 
 
 							@layout.model.on 'change:optioncount', @_changeOptionCount
-						# 	@layout.model.on 'change:multiple', @_chageMultiple
-
-
-						# _chageMultiple:(model,multiple)->
-
-						# 		if multiple
-						# 			console.log 'yes'
-						# 		else
-						# 			console.log 'no'
-								
-
+					
 
 			
 						_changeOptionCount:(model,num)->
@@ -58,7 +48,14 @@ define ['app'
 									console.log model
 
 						_showView:->
-							optionCollection = @layout.model.get 'elements'
+							optionsObj = @layout.model.get 'elements'
+
+							if optionsObj instanceof Backbone.Collection
+								optionCollection = optionsObj
+
+							else
+								optionCollection = App.request "create:new:mcq:option:collection" , optionsObj
+								@layout.model.set 'elements',optionCollection
 
 							view = @_getMcqView optionCollection
 

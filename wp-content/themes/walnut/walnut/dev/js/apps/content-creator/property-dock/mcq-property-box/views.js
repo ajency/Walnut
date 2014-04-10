@@ -35,7 +35,7 @@ define(['app'], function(App) {
         'change select#options-num': function(evt) {
           return this.trigger("change:option:number", $(evt.target).val());
         },
-        'change input#check-ind-marks': PropertyView._enableIndividualMarks
+        'change input#check-ind-marks': '_enableIndividualMarks'
       };
 
       PropertyView.prototype.modelEvents = {
@@ -45,7 +45,11 @@ define(['app'], function(App) {
       PropertyView.prototype._changeMultipleAllowed = function(model, multiple) {
         var meta;
         meta = this.model.get('meta_id');
-        return console.log($('.mcq#mcq-' + meta + ' .mcq-option input.mcq-option-select').attr('type', 'checkbox'));
+        if (multiple) {
+          return $('.mcq#mcq-' + meta + ' .mcq-option input.mcq-option-select').attr('type', 'checkbox');
+        } else {
+          return $('.mcq#mcq-' + meta + ' .mcq-option input.mcq-option-select').attr('type', 'radio');
+        }
       };
 
       PropertyView.prototype._multipleCorrectAnswers = function() {
@@ -57,8 +61,10 @@ define(['app'], function(App) {
 
       PropertyView.prototype._enableIndividualMarks = function(evt) {
         if ($(evt.target).prop('checked')) {
+          console.log('marksview');
           return this.trigger("show:individual:marks:table");
         } else {
+          console.log("close");
           return this.trigger("hide:individual:marks:table");
         }
       };

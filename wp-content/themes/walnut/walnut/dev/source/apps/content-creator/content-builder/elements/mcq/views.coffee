@@ -22,7 +22,7 @@ define ['app'],(App)->
 			# current markupup as argument
 			events:
 				'click a'	: (e)-> e.preventDefault()
-				'blur'		: -> @trigger "text:element:blur", @$el.find('p').html()
+				'blur'		: -> @trigger "text:element:blur", @model, @$el.find('p').html()
 
 			# initialize the CKEditor for the text element on show
 			# used setData instead of showing in template. this works well
@@ -32,7 +32,6 @@ define ['app'],(App)->
 			onShow:->
 				@$el.attr 'id', 'mcq-option-'+@model.get 'optionNo'
 				@$el.find('p').attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
-				# CKEDITOR.on 'instanceCreated', @configureEditor
 				@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
 				@editor.setData _.stripslashes @model.get 'text'
 
