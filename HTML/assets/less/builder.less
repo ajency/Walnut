@@ -34,8 +34,8 @@
 
 #site-page-content-region{
 	//width: 59%;
-	margin-left: 260px;
-	margin-right: 260px;
+	margin-left: 240px;
+	margin-right: 240px;
 	overflow-x: auto;
 }
 
@@ -45,7 +45,7 @@
 	//position: absolute;
 	left: 260px;
 	top: 0;
-	min-width: 730px;
+	min-width: 760px;
 	min-height: 500px !important;
 	padding: 15px 10px;
 
@@ -58,7 +58,7 @@
 }
 
 #toolbox{
-	width: 240px;
+	width: 220px;
 	background: @color-white;
 	position: absolute;
 	z-index: 2;
@@ -71,15 +71,16 @@
 				float: left;
 				border: 2px solid @body-bg;
 				background: @color-white;
-				width: 65px;
-				height: 65px;
-				margin: 4px;
+				width: 96px;
+				height: 60px;
+				margin: 2px;
 				list-style-type: none;
 				cursor: move;
 				text-align: center;
 				padding: 0;
 				padding-top: 5%;
 				font-size: 12px;
+				line-height: 14px;
 				&:hover{
 					background: @color-info;
 					transition: all 0.2s linear;
@@ -91,7 +92,7 @@
 				}
 				
 				i{
-					font-size: 20px;
+					font-size: 25px;
 				}
 			}
 		}
@@ -114,7 +115,7 @@
 	position: absolute;
 	right: 0;
 	top: 0;
-	width: 240px;
+	width: 220px;
 	height: 500px;
 	//padding: 15px 10px;
 
@@ -124,7 +125,7 @@
 	}
 
 	.btn-cons2{
-		width: 118px;
+		width: 108px;
 		//border-radius: 0;
 	}
 }
@@ -152,7 +153,7 @@
 			cursor: move;
 			text-align: center;
 			padding: 0;
-			padding-top: 5%;
+			padding-top: 3%;
 			a{
 				cursor: move;
 				&:hover{
@@ -176,12 +177,15 @@
 	select.marks{
 		width: auto;
 	}
+	.radio label{
+		margin-right: 6px;
+	}
 }
 
 .textProp{
 	.slider.slider-horizontal{
 		display: inline-block;
-		margin-left: 15px;
+		margin-left: 14px;
 	}
 }
 .textarea{
@@ -189,7 +193,7 @@
 }
 
 .font{
-	width: 68%;
+	width: 65%;
 }
 
 .textFormat{
@@ -221,7 +225,7 @@
 
 .element-wrapper {
 	border: 2px solid @preview-grey;
-	padding-top: 7px;
+	padding: 6px;
 	margin: 4px 0 11px;
 	.ease;
 	//border-radius: 4px;
@@ -305,7 +309,7 @@
 		}
 	}
 	&.hover-class:hover {
-		border-color: @color-blue;
+		border: 2px solid @color-blue;
 		.ease;
 		>.element-controls {
 			.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-settings-btn, .aj-imp-col-divider {
@@ -511,4 +515,42 @@
 	}
 }
 
+.imagewithtext{
+	.image-placeholder{
+		float: left;
+		width: 30%;
+		padding: 2% 0;
+		text-align: center;
+		border: 3px dashed @preview-grey;
+		margin-right: 10px;
+		cursor: pointer;
+		position: relative;
+		z-index: 2;
+		color: @dash-grey;
+		.bicon{
+			font-size: 40px;
+			display: block;
+		}
+
+	}
+	p{
+		margin: 0;
+	}
+}
+
+.image{
+	.image-placeholder{
+		padding: 2% 0;
+		text-align: center;
+		//border: 3px dashed @preview-grey;
+		cursor: pointer;
+		position: relative;
+		z-index: 2;
+		color: @dash-grey;
+		.bicon{
+			font-size: 40px;
+			display: block;
+		}
+	}
+}
 

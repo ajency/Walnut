@@ -1,3 +1,4 @@
+@import "icomoon.css";
 /*Custom Colors*/
 /*Custom Mixins*/
 .ease {
@@ -82,15 +83,15 @@
   margin: 0;
 }
 #site-page-content-region {
-  margin-left: 260px;
-  margin-right: 260px;
+  margin-left: 240px;
+  margin-right: 240px;
   overflow-x: auto;
 }
 #myCanvas {
   background: #ffffff;
   left: 260px;
   top: 0;
-  min-width: 730px;
+  min-width: 760px;
   min-height: 500px !important;
   padding: 15px 10px;
 }
@@ -101,7 +102,7 @@
   border: none;
 }
 #toolbox {
-  width: 240px;
+  width: 220px;
   background: #ffffff;
   position: absolute;
   z-index: 2;
@@ -119,15 +120,16 @@
   float: left;
   border: 2px solid #e5e9ec;
   background: #ffffff;
-  width: 65px;
-  height: 65px;
-  margin: 4px;
+  width: 96px;
+  height: 60px;
+  margin: 2px;
   list-style-type: none;
   cursor: move;
   text-align: center;
   padding: 0;
   padding-top: 5%;
   font-size: 12px;
+  line-height: 14px;
 }
 #toolbox .tools ul li:hover,
 #toolbox .qstns ul li:hover {
@@ -141,7 +143,7 @@
 }
 #toolbox .tools ul li i,
 #toolbox .qstns ul li i {
-  font-size: 20px;
+  font-size: 25px;
 }
 #toolbox .qstns ul li {
   width: 102px;
@@ -155,7 +157,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  width: 240px;
+  width: 220px;
   height: 500px;
 }
 .dock .builder_actions {
@@ -163,7 +165,7 @@
   padding-bottom: 15px;
 }
 .dock .btn-cons2 {
-  width: 118px;
+  width: 108px;
 }
 .docket .tile-footer.drag {
   cursor: move;
@@ -187,7 +189,7 @@
   cursor: move;
   text-align: center;
   padding: 0;
-  padding-top: 5%;
+  padding-top: 3%;
 }
 .docket ul li a {
   cursor: move;
@@ -209,15 +211,18 @@
 .docket-body select.marks {
   width: auto;
 }
+.docket-body .radio label {
+  margin-right: 6px;
+}
 .textProp .slider.slider-horizontal {
   display: inline-block;
-  margin-left: 15px;
+  margin-left: 14px;
 }
 .textarea {
   width: 100%;
 }
 .font {
-  width: 68%;
+  width: 65%;
 }
 .textFormat {
   display: inline-block;
@@ -248,7 +253,7 @@
 }
 .element-wrapper {
   border: 2px solid #f3f3f3;
-  padding-top: 7px;
+  padding: 6px;
   margin: 4px 0 11px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
@@ -386,7 +391,7 @@
   color: #ffffff;
 }
 .element-wrapper.hover-class:hover {
-  border-color: #00acec;
+  border: 2px solid #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
 
@@ -607,6 +612,37 @@
 }
 .modal-content .modal-footer {
   display: none;
+}
+.imagewithtext .image-placeholder {
+  float: left;
+  width: 30%;
+  padding: 2% 0;
+  text-align: center;
+  border: 3px dashed #f3f3f3;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  color: #aaaaaa;
+}
+.imagewithtext .image-placeholder .bicon {
+  font-size: 40px;
+  display: block;
+}
+.imagewithtext p {
+  margin: 0;
+}
+.image .image-placeholder {
+  padding: 2% 0;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  color: #aaaaaa;
+}
+.image .image-placeholder .bicon {
+  font-size: 40px;
+  display: block;
 }
 .listBox {
   margin-top: 60px;
