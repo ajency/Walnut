@@ -28,59 +28,59 @@ define ['app'],(App)->
 			# we can destroy it on close of element
 			onShow:->
 				@$el.attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
-				CKEDITOR.on 'instanceCreated', @configureEditor
+				# CKEDITOR.on 'instanceCreated', @configureEditor
 				@editor = CKEDITOR.inline document.getElementById @$el.attr 'id'
 				@editor.setData _.stripslashes @model.get 'content'
 
 
-			# set configuration for the Ckeditor
-			configureEditor: (event) =>
-				editor = event.editor
-				element = editor.element
-				# Customize the editor configurations on "configLoaded" event,
-				# which is fired after the configuration file loading and
-				# execution. This makes it possible to change the
-				# configurations before the editor initialization takes place.
-				editor.on "configLoaded", ->
+			# # set configuration for the Ckeditor
+			# configureEditor: (event) =>
+			# 	editor = event.editor
+			# 	element = editor.element
+			# 	# Customize the editor configurations on "configLoaded" event,
+			# 	# which is fired after the configuration file loading and
+			# 	# execution. This makes it possible to change the
+			# 	# configurations before the editor initialization takes place.
+			# 	editor.on "configLoaded", ->
 
 
 
-					editor.config.toolbar = [
-					# 			# { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
-								name: 'clipboard'
-								groups: [ 'clipboard', 'undo' ]
-								items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ]
-							,
-								name: 'editing'
-								groups: [ 'find', 'selection', 'spellchecker' ]
-								items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] 
-							,
-					# 			# { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
-								'/'
-							,
-								name: 'basicstyles'
-								groups: [ 'basicstyles', 'cleanup' ]
-								items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ]
-							,
-								name: 'paragraph'
-								groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ]
-								items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ]
-							,	
-					# 			# { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
-								name: 'insert'
-								items: [ 'SpecialChar', 'EqnEditor' ]
-							,
-								'/'
-							,
-								name: 'styles'
-								items: [ 'Styles', 'Format', 'Font', 'FontSize' ] 
-							,
-								name: 'colors'
-								items: [ 'TextColor', 'BGColor' ] 
-					# 			# { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
-					# 			# { name: 'others', items: [ '-' ] },
-					# 			# { name: 'about', items: [ 'About' ] }
-							]
+			# 		editor.config.toolbar = [
+			# 		# 			# { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
+			# 					name: 'clipboard'
+			# 					groups: [ 'clipboard', 'undo' ]
+			# 					items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ]
+			# 				,
+			# 					name: 'editing'
+			# 					groups: [ 'find', 'selection', 'spellchecker' ]
+			# 					items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] 
+			# 				,
+			# 		# 			# { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+			# 					'/'
+			# 				,
+			# 					name: 'basicstyles'
+			# 					groups: [ 'basicstyles', 'cleanup' ]
+			# 					items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ]
+			# 				,
+			# 					name: 'paragraph'
+			# 					groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ]
+			# 					items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ]
+			# 				,	
+			# 		# 			# { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+			# 					name: 'insert'
+			# 					items: [ 'SpecialChar', 'EqnEditor' ]
+			# 				,
+			# 					'/'
+			# 				,
+			# 					name: 'styles'
+			# 					items: [ 'Styles', 'Format', 'Font', 'FontSize' ] 
+			# 				,
+			# 					name: 'colors'
+			# 					items: [ 'TextColor', 'BGColor' ] 
+			# 		# 			# { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
+			# 		# 			# { name: 'others', items: [ '-' ] },
+			# 		# 			# { name: 'about', items: [ 'About' ] }
+			# 				]
 
 
 

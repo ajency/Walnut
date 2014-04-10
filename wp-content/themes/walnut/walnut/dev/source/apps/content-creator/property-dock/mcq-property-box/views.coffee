@@ -70,24 +70,22 @@ define ['app'],(App)->
 
 				$('#multiple-answer.radio input').on 'change',@_multipleCorrectAnswers
 
-				# @listenTo @model, 'change:multiple', @_changeMultipleAllowed #(model,multiple)=>
-						# meta = @model.get 'meta_id'
-						# console.log $('.mcq#mcq-'+meta+' .mcq-option input.mcq-option-select').attr 'type','checkbox'
-
-
-				# individual marks
 
 
 			events :
 				'change select#options-num':(evt)->@trigger "change:option:number",$(evt.target).val()
-				'change input#check-ind-marks': @_enableIndividualMarks
+				'change input#check-ind-marks': '_enableIndividualMarks'
 
 			modelEvents : 
 				'change:multiple' : '_changeMultipleAllowed'
 
 			_changeMultipleAllowed:(model,multiple)->
 					meta = @model.get 'meta_id'
-					console.log $('.mcq#mcq-'+meta+' .mcq-option input.mcq-option-select').attr 'type','checkbox'
+					if multiple
+						$('.mcq#mcq-'+meta+' .mcq-option input.mcq-option-select').attr 'type','checkbox'
+
+					else
+						$('.mcq#mcq-'+meta+' .mcq-option input.mcq-option-select').attr 'type','radio'
 
 
 			_multipleCorrectAnswers:=>
@@ -98,9 +96,12 @@ define ['app'],(App)->
 
 				if $(evt.target).prop 'checked'
 
+					console.log 'marksview'
 					@trigger "show:individual:marks:table"
+					
 
 				else
+					console.log "close"
 					@trigger "hide:individual:marks:table"
 
 

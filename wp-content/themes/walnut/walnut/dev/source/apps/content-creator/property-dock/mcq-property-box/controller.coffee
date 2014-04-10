@@ -1,7 +1,8 @@
 define ['app'
 		'controllers/region-controller'
 		'apps/content-creator/property-dock/mcq-property-box/views'
-		],(App,RegionController)->
+		'apps/content-creator/property-dock/mcq-property-box/marksview']
+		,(App,RegionController)->
 
 			App.module "ContentCreator.PropertyDock.McqPropertyBox",
 			(McqPropertyBox, App, Backbone, Marionette, $, _)->
@@ -19,12 +20,24 @@ define ['app'
 							@model.set 'optioncount',parseInt number
 							console.log @model
 
+						@listenTo @layout,"show:individual:marks:table", =>
+								marksView = @_getMarksView @model
+								@layout.individualMarksRegion.show marksView
+
+						@listenTo @layout, "hide:individual:marks:table",=>
+								@layout.individualMarksRegion.close()
+
 						@show @layout
 
 					_getView:(model)->
 
 						new McqPropertyBox.Views.PropertyView
 								model : model
+
+					_getMarksView:(model)->
+
+						new McqPropertyBox.Views.MarksView
+							collection : model.get 'elements'
 
 
 

@@ -62,47 +62,9 @@ define ['app'],(App)->
 			onShow:->
 				#run ckeditor
 				@$el.children('p.editor').attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
-				CKEDITOR.on 'instanceCreated', @configureEditor
 				@editor = CKEDITOR.inline document.getElementById @$el.children('p.editor').attr 'id'
 				content = Marionette.getOption(this, 'templateHelpers').content
 				@editor.setData _.stripslashes content
 
 
-			# set configuration for the Ckeditor
-			configureEditor: (event) =>
-				editor = event.editor
-				element = editor.element
-				
-				editor.on "configLoaded", ->
-
-					editor.config.toolbar = [
-								name: 'clipboard'
-								groups: [ 'clipboard', 'undo' ]
-								items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ]
-							,
-								name: 'editing'
-								groups: [ 'find', 'selection', 'spellchecker' ]
-								items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] 
-							,
-								'/'
-							,
-								name: 'basicstyles'
-								groups: [ 'basicstyles', 'cleanup' ]
-								items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ]
-							,
-								name: 'paragraph'
-								groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ]
-								items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ]
-							,	
-								name: 'insert'
-								items: [ 'SpecialChar', 'EqnEditor' ]
-							,
-								'/'
-							,
-								name: 'styles'
-								items: [ 'Styles', 'Format', 'Font', 'FontSize' ] 
-							,
-								name: 'colors'
-								items: [ 'TextColor', 'BGColor' ] 
-							]
-
+		

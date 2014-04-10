@@ -23,7 +23,7 @@ define(['app'], function(App) {
           return e.preventDefault();
         },
         'blur': function() {
-          return this.trigger("text:element:blur", this.$el.find('p').html());
+          return this.trigger("text:element:blur", this.model, this.$el.find('p').html());
         }
       };
 
