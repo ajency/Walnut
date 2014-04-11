@@ -34,55 +34,55 @@ define ['app'],(App)->
 							        
 							        <select class="font" id="hotspot-textelement-fontfamily">
 							          
-							          <option value="1">
+							          <option value="Arial">
 							            Arial
 							          </option>
 							          
-							          <option value="2">
+							          <option value="Calibri">
 							            Calibri
 							          </option>
 							          
-							          <option value="3">
+							          <option value="Comic Sans MS">
 							            Comic Sans MS
 							          </option>
 							          
-							          <option value="4">
+							          <option value="Courier">
 							            Courier
 							          </option>
 							          
-							          <option value="5">
+							          <option value="Georgia">
 							            Georgia
 							          </option>
 							          
-							          <option value="6">
+							          <option value="Helvetica">
 							            Helvetica
 							          </option>
 							          
-							          <option value="7">
+							          <option value="Impact">
 							            Impact
 							          </option>
 							          
-							          <option value="8">
+							          <option value="Lucida Console">
 							            Lucida Console
 							          </option>
 							          
-							          <option value="9">
+							          <option value="Lucida Sans Unicode">
 							            Lucida Sans Unicode
 							          </option>
 							          
-							          <option value="10">
+							          <option value="Tahoma">
 							            Tahoma
 							          </option>
 							          
-							          <option value="11">
+							          <option value="Times New Roman">
 							            Times New Roman
 							          </option>
 							          
-							          <option value="12">
+							          <option value="Trebuchet MS">
 							            Trebuchet MS
 							          </option>
 							          
-							          <option value="13">
+							          <option value="Verdana">
 							            Verdana
 							          </option>
 							          
@@ -181,15 +181,15 @@ define ['app'],(App)->
 
 					# FONT FAMILY
 					# initialize font family accorging to the model
-					$('#hotspot-textelement-fontfamily').children('option').each ->
-					
-						if $(@).text() is self.model.get 'fontFamily'
-							@selected = true
+					$('#hotspot-textelement-fontfamily').select2
+							minimumResultsForSearch: -1
+
+					$('#hotspot-textelement-fontfamily').select2 'val',self.model.get 'fontFamily'
 
 					# on change of font family
-					$('#hotspot-textelement-fontfamily').on 'change',->
+					$('#hotspot-textelement-fontfamily').on 'change',(e)->
 						@.options[0].disabled = true
-						self.model.set 'fontFamily', $('#hotspot-textelement-fontfamily  option:selected').text()
+						self.model.set 'fontFamily', $(e.target).val()
 						
 								
 					# TEXT

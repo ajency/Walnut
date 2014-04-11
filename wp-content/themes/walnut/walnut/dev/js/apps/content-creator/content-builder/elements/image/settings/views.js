@@ -24,7 +24,9 @@ define(['app', 'text!apps/content-creator/content-builder/elements/image/setting
 
       SettingsView.prototype.onRender = function() {
         this.$el.find('input[type="checkbox"]').checkbox();
-        this.$el.find('select').selectpicker();
+        this.$el.find('select').select2({
+          minimumResultsForSearch: -1
+        });
         return this.setFields();
       };
 
@@ -32,11 +34,11 @@ define(['app', 'text!apps/content-creator/content-builder/elements/image/setting
         if (this.eleModel.get('draggable') === true) {
           this.$el.find('input[name="draggable"]').checkbox('check');
         }
-        this.$el.find('select[name="align"]').selectpicker('val', this.eleModel.get('align'));
-        this.$el.find('select[name="top_margin"]').selectpicker('val', this.eleModel.get('top_margin'));
-        this.$el.find('select[name="left_margin"]').selectpicker('val', this.eleModel.get('left_margin'));
-        this.$el.find('select[name="bottom_margin"]').selectpicker('val', this.eleModel.get('bottom_margin'));
-        return this.$el.find('select[name="right_margin"]').selectpicker('val', this.eleModel.get('right_margin'));
+        this.$el.find('select[name="align"]').select2('val', this.eleModel.get('align'));
+        this.$el.find('select[name="top_margin"]').select2('val', this.eleModel.get('top_margin'));
+        this.$el.find('select[name="left_margin"]').select2('val', this.eleModel.get('left_margin'));
+        this.$el.find('select[name="bottom_margin"]').select2('val', this.eleModel.get('bottom_margin'));
+        return this.$el.find('select[name="right_margin"]').select2('val', this.eleModel.get('right_margin'));
       };
 
       SettingsView.prototype.events = {
