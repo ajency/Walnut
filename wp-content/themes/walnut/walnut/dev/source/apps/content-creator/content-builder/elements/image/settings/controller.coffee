@@ -29,6 +29,7 @@ define ['app'
 														@model.set "align", alignment	
 						@listenTo view, "element:spacing:changed",(spacing, value)=>
 																@model.set spacing, value
+																console.log @model
 
 						@show view
 
@@ -43,6 +44,7 @@ define ['app'
 
 					# get settigns view
 					_getSettingView:(model,eleModel)->
+
 						new Settings.Views.SettingsView
 												eleModel : eleModel
 												model 	 : model

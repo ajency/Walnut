@@ -29,7 +29,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.renderElement = function() {
         var view;
         view = this._getHotspotView();
-        this.listenTo(view, "show:hotspot:properties", (function(_this) {
+        this.listenTo(view, "show:hotspot:elements", (function(_this) {
           return function() {
             return App.execute("show:question:elements", {
               model: _this.layout.model

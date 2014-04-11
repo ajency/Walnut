@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
@@ -8,7 +7,6 @@ define(['app'], function(App) {
       __extends(TextView, _super);
 
       function TextView() {
-        this.configureEditor = __bind(this.configureEditor, this);
         return TextView.__super__.constructor.apply(this, arguments);
       }
 
@@ -29,45 +27,8 @@ define(['app'], function(App) {
 
       TextView.prototype.onShow = function() {
         this.$el.attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
-        CKEDITOR.on('instanceCreated', this.configureEditor);
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.attr('id')));
         return this.editor.setData(_.stripslashes(this.model.get('content')));
-      };
-
-      TextView.prototype.configureEditor = function(event) {
-        var editor, element;
-        editor = event.editor;
-        element = editor.element;
-        return editor.on("configLoaded", function() {
-          return editor.config.toolbar = [
-            {
-              name: 'clipboard',
-              groups: ['clipboard', 'undo'],
-              items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
-            }, {
-              name: 'editing',
-              groups: ['find', 'selection', 'spellchecker'],
-              items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt']
-            }, '/', {
-              name: 'basicstyles',
-              groups: ['basicstyles', 'cleanup'],
-              items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
-            }, {
-              name: 'paragraph',
-              groups: ['list', 'indent', 'blocks', 'align', 'bidi'],
-              items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language']
-            }, {
-              name: 'insert',
-              items: ['SpecialChar', 'EqnEditor']
-            }, '/', {
-              name: 'styles',
-              items: ['Styles', 'Format', 'Font', 'FontSize']
-            }, {
-              name: 'colors',
-              items: ['TextColor', 'BGColor']
-            }
-          ];
-        });
       };
 
       TextView.prototype.onClose = function() {

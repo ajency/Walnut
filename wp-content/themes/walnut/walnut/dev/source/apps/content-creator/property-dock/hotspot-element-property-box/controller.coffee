@@ -23,11 +23,7 @@ define ['app'
 									model : model
 
 
-
-
-
-
-					App.commands.setHandler "show:hotspot:properties:box",(options)->
+					App.commands.setHandler "show:hotspot:element:properties:box",(options)->
 
 							new HotspotElementPropertyBoxController 
 									region : options.region

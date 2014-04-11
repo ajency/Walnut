@@ -1,9 +1,11 @@
+@import "icomoon.css";
 @import "variables.less";
 @import "mixins.less";
 @import "builder.less";
 @import "chapters.less";
 @import "class.less";
 @import "training.less";
+@import "teacher.less";
 
 body{
 	background-color: @body-bg;
@@ -43,7 +45,7 @@ body{
 
 	.page-sidebar-wrapper > ul > li{
 		&>a, &> a i, &> a .arrow, &> a .arrow.open:before{
-			color: #fff !important;
+			color: @color-white !important;
 		}
 		&.open > a{
 			background-color: @color-primary !important;
@@ -125,7 +127,7 @@ tbody.rowlink{
 
 .mashmenu .mod .mod-content,.mashmenu .menu .sub-content{border-bottom-color:@color-info}
 .mashmenu .mod:hover a,.mashmenu .menu li.level0:hover>a,.mashmenu .menu .sub-channel li a,.mashmenu .menu li.level0:hover .sub-channel li.hover a .fa-chevron-right,.mashmenu .columns .list a{color:#2AA4CF}
-.mashmenu .mod .mod-content,.mashmenu .mod:hover,.mashmenu .menu li.level0:hover>a,.mashmenu .menu li.level0:hover .sub-channel li.hover a{background-color:#fff}
+.mashmenu .mod .mod-content,.mashmenu .mod:hover,.mashmenu .menu li.level0:hover>a,.mashmenu .menu li.level0:hover .sub-channel li.hover a{background-color:@color-white}
 .mashmenu .mlogo:hover{background:none}
 .mashmenu .sub-channel{background-color:#C7E6F5}
 
@@ -142,7 +144,7 @@ tbody.rowlink{
 
 	.menu{
 		.sub-content{
-			background-color: #fff;
+			background-color: @color-white;
 			padding: 20px;
 
 		}

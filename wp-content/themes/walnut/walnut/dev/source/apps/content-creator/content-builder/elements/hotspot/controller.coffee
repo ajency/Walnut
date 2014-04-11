@@ -48,7 +48,7 @@ define ['app'
 						# 				@stopListening App.vent,"media:manager:choosed:media"
 
 						#on click of any hotspot canvas show hotspot properties for that hotspot
-						@listenTo view, "show:hotspot:properties",=>
+						@listenTo view, "show:hotspot:elements",=>
 							
 								App.execute "show:question:elements",
 						 				model : @layout.model

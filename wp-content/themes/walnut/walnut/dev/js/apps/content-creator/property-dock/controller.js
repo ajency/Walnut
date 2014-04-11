@@ -18,9 +18,14 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
             return _this._getElementBox(options.model);
           };
         })(this));
-        App.commands.setHandler("show:question:element:properties", (function(_this) {
+        App.commands.setHandler("show:question:properties", (function(_this) {
           return function(options) {
             return _this._getElementProperties(options.model);
+          };
+        })(this));
+        App.commands.setHandler("show:hotspot:element:properties", (function(_this) {
+          return function(options) {
+            return _this._getHotspotElementProperties(options.model);
           };
         })(this));
         App.commands.setHandler("close:question:element:properties", (function(_this) {
@@ -31,6 +36,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         App.commands.setHandler("close:question:elements", (function(_this) {
           return function() {
             return _this.layout.questElementRegion.close();
+          };
+        })(this));
+        App.commands.setHandler("close:question:properties", (function(_this) {
+          return function() {
+            return _this.layout.questPropertyRegion.close();
           };
         })(this));
         return this.show(this.layout);
@@ -50,11 +60,19 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         });
       };
 
-      PropertyDockController.prototype._getElementProperties = function(model) {
-        var elementFamily;
-        elementFamily = model.get('family');
-        return App.execute("show:" + elementFamily + ":properties:box", {
+      PropertyDockController.prototype._getHotspotElementProperties = function(model) {
+        return App.execute("show:hotspot:element:properties:box", {
           region: this.layout.questElementPropRegion,
+          model: model
+        });
+      };
+
+      PropertyDockController.prototype._getElementProperties = function(model) {
+        var ele, elementName;
+        elementName = model.get('element');
+        ele = _.slugify(elementName);
+        return App.execute("show:" + ele + ":properties", {
+          region: this.layout.questPropertyRegion,
           model: model
         });
       };

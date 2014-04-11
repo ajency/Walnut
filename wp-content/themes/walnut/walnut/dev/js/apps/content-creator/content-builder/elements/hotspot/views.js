@@ -3,9 +3,6 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app'], function(App) {
   return App.module('ContentCreator.ContentBuilder.Element.Hotspot.Views', function(Views, App, Backbone, Marionette, $, _) {
-    var closequestionelementproperty, closequestionelements;
-    closequestionelementproperty = true;
-    closequestionelements = true;
     return Views.HotspotView = (function(_super) {
       __extends(HotspotView, _super);
 
@@ -19,7 +16,7 @@ define(['app'], function(App) {
 
       HotspotView.prototype.events = {
         'mousedown': function() {
-          return this.trigger("show:hotspot:properties");
+          return this.trigger("show:hotspot:elements");
         }
       };
 
@@ -86,11 +83,6 @@ define(['app'], function(App) {
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
           return this._addElements(type, elementPos);
         });
-        $('button.btn.btn-success.btn-cons2').on('click', (function(_this) {
-          return function() {
-            return console.log(_this.stage.toJSON());
-          };
-        })(this));
         return $('#' + this.stageName + ' .kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
@@ -112,10 +104,11 @@ define(['app'], function(App) {
       HotspotView.prototype._setPropertyBoxCloseHandlers = function() {
         $('body').on('mousedown', (function(_this) {
           return function() {
-            if (closequestionelementproperty) {
+            console.log(App.ContentCreator.closequestionelementproperty);
+            if (App.ContentCreator.closequestionelementproperty) {
               App.execute("close:question:element:properties");
             }
-            if (closequestionelements && closequestionelementproperty) {
+            if (App.ContentCreator.closequestionelements && App.ContentCreator.closequestionelementproperty) {
               App.execute("close:question:elements");
               _this.contentObject.textData = _this.textCollection.toJSON();
               _this.contentObject.optionData = _this.optionCollection.toJSON();
@@ -131,22 +124,22 @@ define(['app'], function(App) {
           };
         })(this));
         $('#question-elements-property').on('mouseover', function() {
-          return closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelementproperty = false;
         });
         $('#question-elements-property').on('mouseout', function() {
-          return closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelementproperty = true;
         });
         $('#' + this.stageName + '.stage').on('mouseenter', '.kineticjs-content', function() {
-          return closequestionelements = false;
+          return App.ContentCreator.closequestionelements = false;
         });
         $('#' + this.stageName + '.stage').on('mouseleave', '.kineticjs-content', function() {
-          return closequestionelements = true;
+          return App.ContentCreator.closequestionelements = true;
         });
         $('#question-elements').on('mouseover', function() {
-          return closequestionelements = closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = false;
         });
         return $('#question-elements').on('mouseout', function() {
-          return closequestionelements = closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = true;
         });
       };
 
@@ -184,7 +177,10 @@ define(['app'], function(App) {
             }, model.get('url'), model);
           };
         })(this));
-        return this._updateDefaultLayer();
+        this._updateDefaultLayer();
+        return setTimeout(function() {
+          return $('body').trigger('mousedown');
+        }, 1000);
       };
 
       HotspotView.prototype._setDefaultImage = function() {
@@ -287,7 +283,7 @@ define(['app'], function(App) {
           this.optionCollection.add(hotspotElement);
         }
         self = this;
-        App.execute("show:question:element:properties", {
+        App.execute("show:hotspot:element:properties", {
           model: hotspotElement
         });
         circle = new Kinetic.Circle({
@@ -297,7 +293,8 @@ define(['app'], function(App) {
           stroke: hotspotElement.get('color'),
           strokeWidth: 2,
           dash: [6, 4],
-          dashEnabled: hotspotElement.get('transparent')
+          dashEnabled: hotspotElement.get('transparent'),
+          fill: hotspotElement.get("correct") ? "rgba(12, 199, 55, 0.28)" : ""
         });
         circleGrp = resizeCircle(circle, this.optionLayer);
         circleGrp.on('dragend', function(e) {
@@ -331,22 +328,22 @@ define(['app'], function(App) {
           return function() {
             circleGrp.destroy();
             _this.optionCollection.remove(hotspotElement);
-            closequestionelementproperty = true;
+            App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.optionLayer.draw();
           };
         })(this));
         circleGrp.on('mousedown click', function(e) {
           e.stopPropagation();
-          return App.execute("show:question:element:properties", {
+          return App.execute("show:hotspot:element:properties", {
             model: hotspotElement
           });
         });
         circleGrp.on('mouseover', function() {
-          return closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelementproperty = false;
         });
         circleGrp.on('mouseout', function() {
-          return closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelementproperty = true;
         });
         return this.optionLayer.draw();
       };
@@ -372,7 +369,7 @@ define(['app'], function(App) {
           this.optionCollection.add(hotspotElement);
         }
         self = this;
-        App.execute("show:question:element:properties", {
+        App.execute("show:hotspot:element:properties", {
           model: hotspotElement
         });
         box = new Kinetic.Rect({
@@ -384,7 +381,8 @@ define(['app'], function(App) {
           stroke: hotspotElement.get('color'),
           strokeWidth: 2,
           dash: [6, 4],
-          dashEnabled: hotspotElement.get('transparent')
+          dashEnabled: hotspotElement.get('transparent'),
+          fill: hotspotElement.get("correct") ? "rgba(12, 199, 55, 0.28)" : ""
         });
         rectGrp = resizeRect(box, this.optionLayer);
         rectGrp.rotation(hotspotElement.get('angle'));
@@ -427,22 +425,22 @@ define(['app'], function(App) {
           return function() {
             rectGrp.destroy();
             _this.optionCollection.remove(hotspotElement);
-            closequestionelementproperty = true;
+            App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.optionLayer.draw();
           };
         })(this));
         rectGrp.on('mousedown click', function(e) {
           e.stopPropagation();
-          return App.execute("show:question:element:properties", {
+          return App.execute("show:hotspot:element:properties", {
             model: hotspotElement
           });
         });
         rectGrp.on('mouseover', function() {
-          return closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelementproperty = false;
         });
         rectGrp.on('mouseout', function() {
-          return closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelementproperty = true;
         });
         return this.optionLayer.draw();
       };
@@ -468,7 +466,7 @@ define(['app'], function(App) {
           this.textCollection.add(hotspotElement);
         }
         self = this;
-        App.execute("show:question:element:properties", {
+        App.execute("show:hotspot:element:properties", {
           model: hotspotElement
         });
         tooltip = new Kinetic.Label({
@@ -496,7 +494,7 @@ define(['app'], function(App) {
         });
         tooltip.on('mousedown click', function(e) {
           e.stopPropagation();
-          return App.execute("show:question:element:properties", {
+          return App.execute("show:hotspot:element:properties", {
             model: hotspotElement
           });
         });
@@ -547,7 +545,7 @@ define(['app'], function(App) {
           return function() {
             tooltip.destroy();
             _this.textCollection.remove(hotspotElement);
-            closequestionelementproperty = true;
+            App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.textLayer.draw();
           };
@@ -559,10 +557,10 @@ define(['app'], function(App) {
           };
         })(this));
         tooltip.on('mouseover', function() {
-          return closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelementproperty = false;
         });
         tooltip.on('mouseout', function() {
-          return closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelementproperty = true;
         });
         tooltip.add(canvasText);
         this.textLayer.add(tooltip);
@@ -592,7 +590,7 @@ define(['app'], function(App) {
         imageObject.onload = (function(_this) {
           return function() {
             var imageElement;
-            App.execute("show:question:element:properties", {
+            App.execute("show:hotspot:element:properties", {
               model: hotspotElement
             });
             imageElement = new Kinetic.Image({
@@ -614,16 +612,16 @@ define(['app'], function(App) {
             });
             imageGrp.on('mousedown click', function(e) {
               e.stopPropagation();
-              App.execute("show:question:element:properties", {
+              App.execute("show:hotspot:element:properties", {
                 model: hotspotElement
               });
               return console.log(this);
             });
             imageGrp.on('mouseover', function() {
-              return closequestionelementproperty = false;
+              return App.ContentCreator.closequestionelementproperty = false;
             });
             return imageGrp.on('mouseout', function() {
-              return closequestionelementproperty = true;
+              return App.ContentCreator.closequestionelementproperty = true;
             });
           };
         })(this);
@@ -637,7 +635,7 @@ define(['app'], function(App) {
           return function() {
             imageGrp.destroy();
             _this.imageCollection.remove(hotspotElement);
-            closequestionelementproperty = true;
+            App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.imageLayer.draw();
           };

@@ -42,7 +42,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         })(this));
         this.listenTo(view, "element:spacing:changed", (function(_this) {
           return function(spacing, value) {
-            return _this.model.set(spacing, value);
+            _this.model.set(spacing, value);
+            return console.log(_this.model);
           };
         })(this));
         return this.show(view);

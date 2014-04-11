@@ -2,7 +2,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.module "Entities.Elements", (Elements, App, Backbone, Marionette, $, _)->
 
-            i = 1
+    
             # Generic element model
             class Elements.ElementModel extends Backbone.Model
 
@@ -30,6 +30,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                             #          wait : true
 
                             # save to local storage...........TO BE DELETED
+                            i = new Date().getTime()
                             element.set 'meta_id',i
                             localStorage.setItem 'ele'+element.get('meta_id'), JSON.stringify(element.toJSON())
                             i++

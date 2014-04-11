@@ -12,30 +12,15 @@ define(['app'], function(App) {
 
       ImageView.prototype.className = 'image';
 
-      ImageView.prototype.template = '{{#image}} <div id="image-holder" class="resize"> <img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive"/> <div class="clearfix"></div> </div> {{/image}} {{#placeholder}} <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Image</div> {{/placeholder}}';
-
-      ImageView.prototype.ui = {
-        imageResize: '#image-holder.resize'
-      };
+      ImageView.prototype.template = '{{#image}} <img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive" width="100%"/> <div class="clearfix"></div> {{/image}} {{#placeholder}} <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Image</div> {{/placeholder}}';
 
       ImageView.prototype.mixinTemplateHelpers = function(data) {
-        console.log('data  ');
-        console.log(JSON.stringify(data));
         data = ImageView.__super__.mixinTemplateHelpers.call(this, data);
-        console.log(' super data  ');
-        console.log(data);
-        console.log(this.model);
         if (this.model.isNew()) {
           data.placeholder = true;
         } else {
           data.image = true;
-          data.imageurl = function() {
-            if (this.sizes['thumbnail']) {
-              return this.sizes['thumbnail'].url;
-            } else {
-              return this.sizes['full'].url;
-            }
-          };
+          data.imageurl = '';
           data.alignclass = function() {
             switch (this.alignment) {
               case 'left':
@@ -56,35 +41,14 @@ define(['app'], function(App) {
       };
 
       ImageView.prototype.onShow = function() {
-        var el, height, imageResize, img, src, width;
+        var image, width;
         if (this.model.isNew()) {
           return;
         }
-        src = this.model.toJSON().sizes['full'].url;
-        this.$el.find('img').attr('src', src);
-        el = this.$el;
-        imageResize = this.ui.imageResize;
-        img = new Image();
-        img.src = this.$el.find('img').attr('src');
-        width = img.width;
-        height = img.height;
-        this.ui.imageResize.resizable({
-          handles: "s",
-          maxHeight: height * this.ui.imageResize.width() / width,
-          resize: function(event, ui) {
-            $(this).resizable("option", "maxHeight", height * $(this).width() / width);
-            return $(this).find('img').css("height", ui.size.height);
-          }
-        });
-        return this.ui.imageResize.resize(function() {
-          return setTimeout(function() {
-            if (imageResize.height() > height * imageResize.width() / width && imageResize.width() > 0) {
-              console.log(imageResize.width());
-              imageResize.find('img').height(height * imageResize.find('img').width() / width);
-              return imageResize.height(height * imageResize.find('img').width() / width);
-            }
-          }, 100);
-        });
+        width = this.$el.width();
+        image = this.model.getBestFit(width);
+        this.$el.find('img').attr('src', image.url);
+        return this.trigger("image:size:selected", image.size);
       };
 
       return ImageView;
