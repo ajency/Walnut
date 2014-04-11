@@ -669,6 +669,17 @@
   max-width: 200px;
   margin-right: 10px;
   float: left;
+  word-wrap: break-word;
+  border: 2px dashed #f3f3f3;
+  padding: 5px;
+}
+.mcq-option p {
+  margin: 0;
+}
+.mcq-option p.placeholder {
+  color: #dfe4e8;
+  font-size: 15px;
+  font-weight: bold;
 }
 .listBox {
   margin-top: 60px;
