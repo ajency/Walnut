@@ -11,9 +11,11 @@ define(["app", 'backbone'], function(App, Backbone) {
         return ItemModel.__super__.constructor.apply(this, arguments);
       }
 
+      ItemModel.prototype.idAttribute = 'id';
+
       ItemModel.prototype.defaults = {
         name: '',
-        description: '',
+        description: [],
         created_on: '',
         created_by: '',
         last_modified_on: '',
@@ -22,10 +24,11 @@ define(["app", 'backbone'], function(App, Backbone) {
         published_by: '',
         status: '',
         type: '',
-        term_ids: ''
+        term_ids: [],
+        content_pieces: []
       };
 
-      ItemModel.prototype.name = 'contentGroup';
+      ItemModel.prototype.name = 'content-group';
 
       return ItemModel;
 
@@ -43,6 +46,10 @@ define(["app", 'backbone'], function(App, Backbone) {
         return AJAXURL + '?action=get-content-groups';
       };
 
+      ItemCollection.prototype.parse = function(resp) {
+        return resp.data;
+      };
+
       return ItemCollection;
 
     })(Backbone.Collection);
@@ -52,7 +59,6 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (param == null) {
           param = {};
         }
-        console.log(param);
         contentGroupCollection.fetch({
           reset: true,
           data: param
@@ -63,7 +69,9 @@ define(["app", 'backbone'], function(App, Backbone) {
         var contentGroup;
         contentGroup = contentGroupCollection.get(id);
         if (!contentGroup) {
-          contentGroup = new ContentGroup.ItemModel(id);
+          contentGroup = new ContentGroup.ItemModel({
+            'id': id
+          });
           contentGroup.fetch();
         }
         return contentGroup;

@@ -28,9 +28,11 @@ define(['marionette'], function(Marionette) {
   });
   App.on("initialize:after", function(options) {
     var xhr;
-    Pace.on('hide', function() {
-      return $("#site_main_container").addClass("showAll");
-    });
+    if (typeof Pace !== 'undefined') {
+      Pace.on('hide', function() {
+        return $("#site_main_container").addClass("showAll");
+      });
+    }
     App.startHistory();
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
@@ -60,8 +62,10 @@ define(['marionette'], function(Marionette) {
     })(this), 'json');
   });
   App.vent.on("show:dashboard", function() {
-    Pace.restart();
-    $("#site_main_container").removeClass("showAll");
+    if (typeof Pace !== 'undefined') {
+      Pace.restart();
+      $("#site_main_container").removeClass("showAll");
+    }
     App.navigate('textbooks', {
       trigger: true
     });
