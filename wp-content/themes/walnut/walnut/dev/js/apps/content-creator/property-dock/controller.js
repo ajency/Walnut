@@ -38,6 +38,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
             return _this.layout.questElementRegion.close();
           };
         })(this));
+        App.commands.setHandler("close:question:properties", (function(_this) {
+          return function() {
+            return _this.layout.questPropertyRegion.close();
+          };
+        })(this));
         return this.show(this.layout);
       };
 

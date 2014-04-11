@@ -7,6 +7,7 @@ define ['app'
 
 			App.module "ContentCreator.ContentBuilder", (ContentBuilder, App, Backbone, Marionette, $, _)->
 
+				
 				class ContentBuilderController extends RegionController
 
 					initialize : (options)->

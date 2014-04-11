@@ -26,6 +26,15 @@ define(['app'], function(App) {
         questElementRegion: '#question-elements'
       };
 
+      Layout.prototype.onShow = function() {
+        $('#question-property').on('mouseenter', function() {
+          return App.ContentCreator.closequestioneproperty = false;
+        });
+        return $('#question-property').parent().parent().on('mouseleave', function() {
+          return App.ContentCreator.closequestioneproperty = true;
+        });
+      };
+
       return Layout;
 
     })(Marionette.Layout);

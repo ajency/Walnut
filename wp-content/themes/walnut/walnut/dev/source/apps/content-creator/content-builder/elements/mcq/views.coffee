@@ -22,7 +22,10 @@ define ['app'],(App)->
 			# current markupup as argument
 			events:
 				'click a'	: (e)-> e.preventDefault()
-				'blur'		: -> @trigger "text:element:blur", @model, @$el.find('p').html()
+				'blur p'		: -> @model.set 'text', @$el.find('p').html()
+							# @trigger "text:element:blur"
+
+
 
 			# initialize the CKEditor for the text element on show
 			# used setData instead of showing in template. this works well
@@ -34,9 +37,6 @@ define ['app'],(App)->
 				@$el.find('p').attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
 				@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
 				@editor.setData _.stripslashes @model.get 'text'
-
-				
-
 
 			# destroy the Ckeditor instance to avoiid memory leaks on close of element
 			# this.editor will hold the reference to the editor instance
@@ -55,10 +55,46 @@ define ['app'],(App)->
 				mcqID = options.meta
 				console.log mcqID
 
+			
+
+			onAfterItemAdded:->
+				@$el.find('input').attr 'name','mcq-'+mcqID
+				@trigger "change:radio:to:checkbox"
+			
+				
+
 			onShow:->
+				console.log mcqID
 				@$el.attr 'id', 'mcq-'+mcqID
 				@$el.find('input').attr 'name','mcq-'+mcqID
-				@on "after:item:added",=>
-					 @$el.find('input').attr 'name','mcq-'+mcqID
+
+				@trigger "change:radio:to:checkbox"
+
+				@_setActiveHandler()
+
+			_setActiveHandler:->
+
+				showMcqPropertyFlag = false
+
+				@$el.parent().parent().on 'mouseenter',->
+					showMcqPropertyFlag = true
+
+				@$el.parent().parent().on 'mouseleave',->
+					showMcqPropertyFlag = false
+
+				$('.mcq').parent().parent().on 'mouseenter',->
+					App.ContentCreator.closequestioneproperty = false
+
+				$('.mcq').parent().parent().on 'mouseleave',->
+					App.ContentCreator.closequestioneproperty = true
+
+				$('body').on 'click',=>
+					if showMcqPropertyFlag
+						@trigger "show:this:mcq:properties"
+
+					if App.ContentCreator.closequestioneproperty
+						console.log App.ContentCreator.closequestioneproperty
+						@trigger "hide:this:mcq:properties"
+
 
 

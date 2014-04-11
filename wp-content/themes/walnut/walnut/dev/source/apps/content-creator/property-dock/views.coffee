@@ -29,3 +29,11 @@ define ['app'],(App)->
 				questElementPropRegion: '#question-elements-property'
 				questPropertyRegion	: '#question-property'
 				questElementRegion	: '#question-elements'
+
+			onShow:->
+
+					$('#question-property').on 'mouseenter',->
+						App.ContentCreator.closequestioneproperty = false
+
+					$('#question-property').parent().parent().on 'mouseleave',->
+						App.ContentCreator.closequestioneproperty = true

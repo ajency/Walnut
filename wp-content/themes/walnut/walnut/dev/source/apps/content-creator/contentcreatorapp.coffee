@@ -7,6 +7,10 @@ define ['app'
 			
 			App.module "ContentCreator", (ContentCreator,App)->	
 
+				ContentCreator.closequestionelementproperty = true
+				ContentCreator.closequestionelements = true
+				ContentCreator.closequestioneproperty = true
+
 				class ContentCreatorController extends RegionController
 
 					initialize : (options)->
