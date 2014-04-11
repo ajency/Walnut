@@ -32,6 +32,10 @@ define ['app'
 						App.commands.setHandler "close:question:elements",=>
 								@layout.questElementRegion.close()
 
+						App.commands.setHandler "close:question:properties",=>
+								@layout.questPropertyRegion.close()
+
+
 						@show @layout
 
 						

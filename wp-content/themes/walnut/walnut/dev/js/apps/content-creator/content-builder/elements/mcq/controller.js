@@ -30,6 +30,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         });
         Controller.__super__.initialize.call(this, options);
         this._showView();
+        $('button#save-question').on('click', (function(_this) {
+          return function() {
+            console.log('saving');
+            return localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
+          };
+        })(this));
         return this.layout.model.on('change:optioncount', this._changeOptionCount);
       };
 
@@ -70,6 +76,25 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             return App.execute("show:question:properties", {
               model: _this.layout.model
             });
+          };
+        })(this));
+        this.listenTo(view, "change:radio:to:checkbox", (function(_this) {
+          return function() {
+            if (_this.layout.model.get('multiple')) {
+              return $('.mcq#mcq-' + _this.layout.model.get('meta_id') + ' .mcq-option input.mcq-option-select').attr('type', 'checkbox');
+            }
+          };
+        })(this));
+        this.listenTo(view, "show:this:mcq:properties", (function(_this) {
+          return function(options) {
+            return App.execute("show:question:properties", {
+              model: _this.layout.model
+            });
+          };
+        })(this));
+        this.listenTo(view, "hide:this:mcq:properties", (function(_this) {
+          return function(options) {
+            return App.execute("close:question:properties");
           };
         })(this));
         return this.layout.elementRegion.show(view);

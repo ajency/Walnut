@@ -57,10 +57,13 @@ define ['app'],(App)->
 			onShow:->
 				#initialize dropdowns
 				@$el.find('select#options-num, select#marks').selectpicker()
-				@$el.find('select#options-num').selectpicker @model.get 'optioncount'
-				@$el.find('select#marks').selectpicker @model.get 'marks'
+				@$el.find('select#options-num').selectpicker 'val', @model.get 'optioncount'
+				console.log @model.get 'optioncount'
+				@$el.find('select#marks').selectpicker 'val', @model.get 'marks'
 
-				console.log @model
+				if @model.get 'individual_marks'
+					@$el.find('#check-ind-marks').prop 'checked',true
+					@trigger "show:individual:marks:table"
 
 				# Multiple ANSWER
 				if @model.get 'multiple'
@@ -96,12 +99,12 @@ define ['app'],(App)->
 
 				if $(evt.target).prop 'checked'
 
-					console.log 'marksview'
+					@model.set 'individual_marks', true
 					@trigger "show:individual:marks:table"
 					
 
 				else
-					console.log "close"
+					@model.set 'individual_marks',false
 					@trigger "hide:individual:marks:table"
 
 

@@ -1,7 +1,7 @@
 define ['app'
 		'backbone'],(App,Backbone)->
 
-			App.module "Entities.McqOption" ,(McqOption, App, Backbone, Marionette, _, $)->
+			App.module "Entities.McqOption" ,(McqOption, App, Backbone, Marionette, $, _)->
 
 				class McqOption.McqModel extends Backbone.Model
 

@@ -22,8 +22,8 @@ define(['app'], function(App) {
         'click a': function(e) {
           return e.preventDefault();
         },
-        'blur': function() {
-          return this.trigger("text:element:blur", this.model, this.$el.find('p').html());
+        'blur p': function() {
+          return this.model.set('text', this.$el.find('p').html());
         }
       };
 
@@ -31,7 +31,15 @@ define(['app'], function(App) {
         this.$el.attr('id', 'mcq-option-' + this.model.get('optionNo'));
         this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
-        return this.editor.setData(_.stripslashes(this.model.get('text')));
+        this.editor.setData(_.stripslashes(this.model.get('text')));
+        return setTimeout(function() {
+          $('div.cke').on('mouseenter', function() {
+            return App.ContentCreator.closequestioneproperty = false;
+          });
+          return $('div.cke').on('mouseleave', function() {
+            return App.ContentCreator.closequestioneproperty = true;
+          });
+        }, 2000);
       };
 
       OptionView.prototype.onClose = function() {
@@ -57,12 +65,42 @@ define(['app'], function(App) {
         return console.log(mcqID);
       };
 
+      McqView.prototype.onAfterItemAdded = function() {
+        this.$el.find('input').attr('name', 'mcq-' + mcqID);
+        return this.trigger("change:radio:to:checkbox");
+      };
+
       McqView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-' + mcqID);
         this.$el.find('input').attr('name', 'mcq-' + mcqID);
-        return this.on("after:item:added", (function(_this) {
+        this.trigger("change:radio:to:checkbox");
+        return this._setActiveHandler();
+      };
+
+      McqView.prototype._setActiveHandler = function() {
+        var showMcqPropertyFlag;
+        showMcqPropertyFlag = false;
+        this.$el.parent().parent().on('mouseenter', function() {
+          return showMcqPropertyFlag = true;
+        });
+        this.$el.parent().parent().on('mouseleave', function() {
+          return showMcqPropertyFlag = false;
+        });
+        this.$el.parent().parent().on('mouseenter', function() {
+          return App.ContentCreator.closequestioneproperty = false;
+        });
+        this.$el.parent().parent().on('mouseleave', function() {
+          return App.ContentCreator.closequestioneproperty = true;
+        });
+        return $('body').on('click', (function(_this) {
           return function() {
-            return _this.$el.find('input').attr('name', 'mcq-' + mcqID);
+            if (showMcqPropertyFlag) {
+              _this.trigger("show:this:mcq:properties");
+            }
+            if (App.ContentCreator.closequestioneproperty) {
+              console.log(App.ContentCreator.closequestioneproperty);
+              return _this.trigger("hide:this:mcq:properties");
+            }
           };
         })(this));
       };

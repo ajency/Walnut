@@ -20,9 +20,13 @@ define(['app'], function(App) {
 
       PropertyView.prototype.onShow = function() {
         this.$el.find('select#options-num, select#marks').selectpicker();
-        this.$el.find('select#options-num').selectpicker(this.model.get('optioncount'));
-        this.$el.find('select#marks').selectpicker(this.model.get('marks'));
-        console.log(this.model);
+        this.$el.find('select#options-num').selectpicker('val', this.model.get('optioncount'));
+        console.log(this.model.get('optioncount'));
+        this.$el.find('select#marks').selectpicker('val', this.model.get('marks'));
+        if (this.model.get('individual_marks')) {
+          this.$el.find('#check-ind-marks').prop('checked', true);
+          this.trigger("show:individual:marks:table");
+        }
         if (this.model.get('multiple')) {
           $("#multiple-answer.radio input#yes").prop('checked', true);
         } else {
@@ -61,10 +65,10 @@ define(['app'], function(App) {
 
       PropertyView.prototype._enableIndividualMarks = function(evt) {
         if ($(evt.target).prop('checked')) {
-          console.log('marksview');
+          this.model.set('individual_marks', true);
           return this.trigger("show:individual:marks:table");
         } else {
-          console.log("close");
+          this.model.set('individual_marks', false);
           return this.trigger("hide:individual:marks:table");
         }
       };

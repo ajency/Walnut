@@ -3,9 +3,6 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app'], function(App) {
   return App.module('ContentCreator.ContentBuilder.Element.Hotspot.Views', function(Views, App, Backbone, Marionette, $, _) {
-    var closequestionelementproperty, closequestionelements;
-    closequestionelementproperty = true;
-    closequestionelements = true;
     return Views.HotspotView = (function(_super) {
       __extends(HotspotView, _super);
 
@@ -19,7 +16,7 @@ define(['app'], function(App) {
 
       HotspotView.prototype.events = {
         'mousedown': function() {
-          return this.trigger("show:hotspot:properties");
+          return this.trigger("show:hotspot:elements");
         }
       };
 
@@ -107,10 +104,11 @@ define(['app'], function(App) {
       HotspotView.prototype._setPropertyBoxCloseHandlers = function() {
         $('body').on('mousedown', (function(_this) {
           return function() {
-            if (closequestionelementproperty) {
+            console.log(App.ContentCreator.closequestionelementproperty);
+            if (App.ContentCreator.closequestionelementproperty) {
               App.execute("close:question:element:properties");
             }
-            if (closequestionelements && closequestionelementproperty) {
+            if (App.ContentCreator.closequestionelements && App.ContentCreator.closequestionelementproperty) {
               App.execute("close:question:elements");
               _this.contentObject.textData = _this.textCollection.toJSON();
               _this.contentObject.optionData = _this.optionCollection.toJSON();
@@ -126,22 +124,22 @@ define(['app'], function(App) {
           };
         })(this));
         $('#question-elements-property').on('mouseover', function() {
-          return closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelementproperty = false;
         });
         $('#question-elements-property').on('mouseout', function() {
-          return closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelementproperty = true;
         });
         $('#' + this.stageName + '.stage').on('mouseenter', '.kineticjs-content', function() {
-          return closequestionelements = false;
+          return App.ContentCreator.closequestionelements = false;
         });
         $('#' + this.stageName + '.stage').on('mouseleave', '.kineticjs-content', function() {
-          return closequestionelements = true;
+          return App.ContentCreator.closequestionelements = true;
         });
         $('#question-elements').on('mouseover', function() {
-          return closequestionelements = closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = false;
         });
         return $('#question-elements').on('mouseout', function() {
-          return closequestionelements = closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = true;
         });
       };
 
@@ -330,7 +328,7 @@ define(['app'], function(App) {
           return function() {
             circleGrp.destroy();
             _this.optionCollection.remove(hotspotElement);
-            closequestionelementproperty = true;
+            App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.optionLayer.draw();
           };
@@ -342,10 +340,10 @@ define(['app'], function(App) {
           });
         });
         circleGrp.on('mouseover', function() {
-          return closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelementproperty = false;
         });
         circleGrp.on('mouseout', function() {
-          return closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelementproperty = true;
         });
         return this.optionLayer.draw();
       };
@@ -427,7 +425,7 @@ define(['app'], function(App) {
           return function() {
             rectGrp.destroy();
             _this.optionCollection.remove(hotspotElement);
-            closequestionelementproperty = true;
+            App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.optionLayer.draw();
           };
@@ -439,10 +437,10 @@ define(['app'], function(App) {
           });
         });
         rectGrp.on('mouseover', function() {
-          return closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelementproperty = false;
         });
         rectGrp.on('mouseout', function() {
-          return closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelementproperty = true;
         });
         return this.optionLayer.draw();
       };
@@ -547,7 +545,7 @@ define(['app'], function(App) {
           return function() {
             tooltip.destroy();
             _this.textCollection.remove(hotspotElement);
-            closequestionelementproperty = true;
+            App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.textLayer.draw();
           };
@@ -559,10 +557,10 @@ define(['app'], function(App) {
           };
         })(this));
         tooltip.on('mouseover', function() {
-          return closequestionelementproperty = false;
+          return App.ContentCreator.closequestionelementproperty = false;
         });
         tooltip.on('mouseout', function() {
-          return closequestionelementproperty = true;
+          return App.ContentCreator.closequestionelementproperty = true;
         });
         tooltip.add(canvasText);
         this.textLayer.add(tooltip);
@@ -620,10 +618,10 @@ define(['app'], function(App) {
               return console.log(this);
             });
             imageGrp.on('mouseover', function() {
-              return closequestionelementproperty = false;
+              return App.ContentCreator.closequestionelementproperty = false;
             });
             return imageGrp.on('mouseout', function() {
-              return closequestionelementproperty = true;
+              return App.ContentCreator.closequestionelementproperty = true;
             });
           };
         })(this);
@@ -637,7 +635,7 @@ define(['app'], function(App) {
           return function() {
             imageGrp.destroy();
             _this.imageCollection.remove(hotspotElement);
-            closequestionelementproperty = true;
+            App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
             return _this.imageLayer.draw();
           };

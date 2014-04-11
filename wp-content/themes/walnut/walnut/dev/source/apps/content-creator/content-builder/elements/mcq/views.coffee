@@ -4,6 +4,7 @@ define ['app'],(App)->
 	(Views, App, Backbone, Marionette,$, _)->
 
 		mcqID = 0
+		
 
 		class OptionView extends Marionette.ItemView
 
@@ -22,7 +23,10 @@ define ['app'],(App)->
 			# current markupup as argument
 			events:
 				'click a'	: (e)-> e.preventDefault()
-				'blur'		: -> @trigger "text:element:blur", @model, @$el.find('p').html()
+				'blur p'		: -> @model.set 'text', @$el.find('p').html()
+							# @trigger "text:element:blur"
+
+
 
 			# initialize the CKEditor for the text element on show
 			# used setData instead of showing in template. this works well
@@ -35,7 +39,14 @@ define ['app'],(App)->
 				@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
 				@editor.setData _.stripslashes @model.get 'text'
 
-				
+				setTimeout ->
+					$('div.cke').on 'mouseenter',->
+						App.ContentCreator.closequestioneproperty = false
+
+					$('div.cke').on 'mouseleave',->
+						App.ContentCreator.closequestioneproperty = true
+				,2000
+
 
 
 			# destroy the Ckeditor instance to avoiid memory leaks on close of element
@@ -55,10 +66,43 @@ define ['app'],(App)->
 				mcqID = options.meta
 				console.log mcqID
 
+			# trigger whrn the no of options has been changed
+			# change the default radio to checkbox if multple 
+			onAfterItemAdded:->
+				@$el.find('input').attr 'name','mcq-'+mcqID
+				@trigger "change:radio:to:checkbox"
+			
 			onShow:->
 				@$el.attr 'id', 'mcq-'+mcqID
 				@$el.find('input').attr 'name','mcq-'+mcqID
-				@on "after:item:added",=>
-					 @$el.find('input').attr 'name','mcq-'+mcqID
+
+				@trigger "change:radio:to:checkbox"
+
+				@_setActiveHandler()
+
+			_setActiveHandler:->
+
+				showMcqPropertyFlag = false
+
+				@$el.parent().parent().on 'mouseenter',->
+					showMcqPropertyFlag = true
+
+				@$el.parent().parent().on 'mouseleave',->
+					showMcqPropertyFlag = false
+
+				@$el.parent().parent().on 'mouseenter',->
+					App.ContentCreator.closequestioneproperty = false
+
+				@$el.parent().parent().on 'mouseleave',->
+					App.ContentCreator.closequestioneproperty = true
+
+				$('body').on 'click',=>
+					if showMcqPropertyFlag
+						@trigger "show:this:mcq:properties"
+
+					if App.ContentCreator.closequestioneproperty
+						console.log App.ContentCreator.closequestioneproperty
+						@trigger "hide:this:mcq:properties"
+
 
 
