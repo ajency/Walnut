@@ -146,7 +146,7 @@
   font-size: 25px;
 }
 #toolbox .qstns ul li {
-  width: 102px;
+  width: 96px;
   height: 40px;
   font-weight: bold;
 }
@@ -163,6 +163,7 @@
 .dock .builder_actions {
   background: #e5e9ec;
   padding-bottom: 15px;
+  margin-top: -48px;
 }
 .dock .btn-cons2 {
   width: 108px;
@@ -663,6 +664,12 @@
   font-size: 50px;
   color: #e5e9ec;
 }
+/*MCQ*/
+.mcq-option {
+  max-width: 200px;
+  margin-right: 10px;
+  float: left;
+}
 .listBox {
   margin-top: 60px;
 }
@@ -740,6 +747,15 @@ h3.time {
   display: block;
   -webkit-border-radius: 100px 100px 100px 100px;
   -moz-border-radius: 100px 100px 100px 100px;
+}
+/*Take Class*/
+#textbooks.list.takeClass .meta.name {
+  width: 50%;
+}
+#textbooks.list.takeClass .txtbook {
+  cursor: pointer;
+  z-index: 2;
+  position: relative;
 }
 body {
   background-color: #e5e9ec;

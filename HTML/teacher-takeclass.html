@@ -250,51 +250,65 @@
         <li>
           <p>Dashboard</p>
         </li>
-		<li>
-          <a href="#"> Content Management</a>
-        </li>
-        <li><a href="#" class="active">Textbooks</a> </li>
+        <li><a href="#" class="active">Take a Class</a> </li>
       </ul>
-      <div class="page-title"> <i class="icon-custom-left"></i>
-        <h3>Text<span class="semi-bold">books</span></h3>
-      </div>
+      <div class="tiles white grid simple vertical green">
+					<div class="grid-title no-border">
+						<h4 class="">5 <span class="semi-bold">A</span></h4>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+						</div>
+						</div>
+						<div class="grid-body no-border" style="overflow: hidden; display: block;">
+						<div class="row ">
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Number of Students</label>
+									18
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Subjects</label>
+									Chemistry, Biology
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<!-- <label class="form-label">Physical Requirements</label>
+									Lorem Ipsum is simply dummy text of the printing and typesetting industry. -->
+								</div>
+							</div>												 
+						</div>
+					</div>
+				</div>
       <div class="pull-left" id="Filters">
-        <div class="btn-group"> <a href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-demo-space"> <span class="anim150">Class</span> <span class="caret"></span> </a>
-          <ul class="dropdown-menu">
-            <li class="active" data-filter="all" data-dimension="region"><a href="#">All</a></li>
-            <li data-filter="alaska" data-dimension="region"><a href="#">Alaska</a></li>
-            <li data-filter="intermountain" data-dimension="region"><a href="#">Intermountain</a></li>
-            <li data-filter="northeast" data-dimension="region"><a href="#">Northeast</a></li>
-            <li data-filter="pacific_west" data-dimension="region"><a href="#">Pacific</a> </li>
-            <li data-filter="southeast" data-dimension="region"><a href="#">Southeast</a></li>
-          </ul>
-        </div>
-        <div class="btn-group"> <a href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-demo-space"> <span class="anim150">Subject</span> <span class="caret"></span> </a>
+        <div class="btn-group"> <a href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-demo-space"> <span class="anim150">Status</span> <span class="caret"></span> </a>
           <ul class="dropdown-menu">
             <li class="active" data-filter="all" data-dimension="recreation"><a href="#">All</a></li>
-            <li data-filter="camping" data-dimension="recreation"><a href="#">Camping</a></li>
-            <li data-filter="climbing" data-dimension="recreation"><a href="#">Climbing</a></li>
-            <li data-filter="fishing" data-dimension="recreation"><a href="#">Fishing</a></li>
-            <li data-filter="swimming" data-dimension="recreation"><a href="#">Swimming</a></li>
+            <li data-filter="completed" data-dimension="recreation"><a href="#">Completed</a></li>
+            <li data-filter="progress" data-dimension="recreation"><a href="#">In Progress</a></li>
+            <li data-filter="notstarted" data-dimension="recreation"><a href="#">Not yet Started</a></li>
           </ul>
         </div>
       </div>
 
       <div class="clearfix"></div>
-      <div id="textbooks" class="just">
+      <div id="textbooks" class="takeClass">
         <!-- "TABLE" HEADER CONTAINING SORT BUTTONS (HIDDEN IN GRID MODE)-->
         <div class="list_header">
+
           <div class="meta name active desc" id="SortByName"> Name &nbsp; <span class="sort anim150 asc active" data-sort="data-name" data-order="desc"></span> <span class="sort anim150 desc" data-sort="data-name" data-order="asc"></span> </div>
-          <div class="meta class">Class <span class="sort anim150 asc" data-sort="data-class" data-order="desc"></span> <span class="sort anim150 desc" data-sort="data-class" data-order="asc"></span></div>
-          <div class="meta rec">Subjects</div>
-          <div class="meta area"> Chapters/Sections </div>
-          <div class="meta area"> Questions/Quizzes </div>
+
+          <div class="meta modules">Modules <span class="sort anim150 asc" data-sort="data-class" data-order="desc"></span> <span class="sort anim150 desc" data-sort="data-class" data-order="asc"></span></div>
+
+          <div class="meta rec">Status</div>
         </div>
         <!-- FAIL ELEMENT -->
         <div class="fail_element anim250">Sorry &mdash; we could not find any Textbooks matching matching these criteria</div>
         <!-- BEGIN LIST OF textbooks (MANY OF THESE ELEMENTS ARE VISIBLE ONLY IN LIST MODE)-->
         <ul>
-		<li class="mix northeast camping climbing fishing swimming" data-name="Acadia" data-class="10" data-area="47452.80">
+		<li class="txtbook mix" data-name="Acadia" data-class="10" data-area="47452.80">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/acadia.jpg" alt="" /> </div>
             <div class="titles">
@@ -302,25 +316,14 @@
               <p><em>Maine</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>10</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Climbing</li>
-              <li>Fishing</li>
-              <li>Swimming</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>47,452.80</p>
-          </div>
-		  <div class="meta area">
-            <p>47,452.80</p>
+            <p>In Progress</p>
           </div>
         </li>
-        <li class="mix intermountain camping climbing" data-name="Arches" data-class="5" data-area="76678.98">
+        <li class="mix txtbook" data-name="Arches" data-class="5" data-area="76678.98">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/arches.jpg" onload="" alt="" /> </div>
             <div class="titles">
@@ -328,20 +331,14 @@
               <p><em>Utah</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>5</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Climbing</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>76,678.98</p>
+            <p>Completed</p>
           </div>
         </li>
-        <li class="mix pacific_west camping fishing" data-name="Crater Lake" data-class="2" data-area="183224.05">
+        <li class="mix txtbook" data-name="Crater Lake" data-class="2" data-area="183224.05">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/crater.jpg" onload="" alt=""/> </div>
             <div class="titles">
@@ -349,20 +346,14 @@
               <p><em>Oregon</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>2</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Fishing</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>183,224.05</p>
+            <p>Completed</p>
           </div>
         </li>
-        <li class="mix alaska camping climbing fishing" data-name="Denali" data-class="6" data-area="4740911.37">
+        <li class="mix txtbook" data-name="Denali" data-class="6" data-area="4740911.37">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/denali.jpg" onload="" alt=""/> </div>
             <div class="titles">
@@ -370,21 +361,14 @@
               <p><em>Alaska</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>6</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Climbing</li>
-              <li>Fishing</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>4,740,911.37</p>
+            <p>Completed</p>
           </div>
         </li>
-        <li class="mix alaska camping fishing" data-name="Glacier Bay" data-class="5" data-area="3223383.66">
+        <li class="mix txtbook" data-name="Glacier Bay" data-class="5" data-area="3223383.66">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/glacier.jpg" onload="" alt=""/> </div>
             <div class="titles">
@@ -392,20 +376,14 @@
               <p><em>Alaska</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>5</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Fishing</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>3,223,383.66</p>
+            <p>Completed</p>
           </div>
         </li>
-        <li class="mix intermountain camping fishing" data-name="Grand Canyon" data-class="8" data-area="1217261.75">
+        <li class="mix txtbook" data-name="Grand Canyon" data-class="8" data-area="1217261.75">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/grand.jpg" onload="" alt=""/> </div>
             <div class="titles">
@@ -413,20 +391,14 @@
               <p><em>Arizona</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>8</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Fishing</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>1,217,261.75</p>
+            <p>In Progress</p>
           </div>
         </li>
-        <li class="mix southeast camping fishing" data-name="Great Smoky Mountains" data-class="4" data-area="522418.90">
+        <li class="mix txtbook" data-name="Great Smoky Mountains" data-class="4" data-area="522418.90">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/great.jpg" onload="" alt=""/> </div>
             <div class="titles">
@@ -434,20 +406,14 @@
               <p><em>Tennessee, North Carolina</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>4</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Fishing</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>522,418.90</p>
+            <p>In Progress</p>
           </div>
         </li>
-        <li class="mix pacific_West camping swimming" data-name="Haleakala" data-class="10" data-area="33264.62">
+        <li class="mix txtbook" data-name="Haleakala" data-class="10" data-area="33264.62">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/haleakala.jpg" onload="" alt=""/> </div>
             <div class="titles">
@@ -455,20 +421,14 @@
               <p><em>Hawaii</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>10</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Swimming</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>33,264.62</p>
+            <p>Not Started</p>
           </div>
         </li>
-        <li class="mix intermountain camping climbing fishing swimming" data-name="Yellowstone" data-class="3" data-area="2219790.71">
+        <li class="mix txtbook" data-name="Yellowstone" data-class="3" data-area="2219790.71">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/yellowstone.jpg" onload="" alt=""/> </div>
             <div class="titles">
@@ -476,22 +436,14 @@
               <p><em>Wyoming, Montana, Idaho</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>3</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Climbing</li>
-              <li>Fishing</li>
-              <li>Swimming</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>2,219,790.71</p>
+            <p>Completed</p>
           </div>
         </li>
-        <li class="mix intermountain camping climbing fishing" data-name="Intermountain" data-class="9" data-area="146597.40">
+        <li class="mix txtbook" data-name="Intermountain" data-class="9" data-area="146597.40">
           <div class="meta name">
             <div class="img_wrapper"> <img src="assets/img/others/zion.jpg" onload="" alt=""/> </div>
             <div class="titles">
@@ -499,18 +451,11 @@
               <p><em>Utah</em></p>
             </div>
           </div>
-          <div class="meta class">
+          <div class="meta modules">
             <p>9</p>
           </div>
           <div class="meta rec">
-            <ul>
-              <li>Camping</li>
-              <li>Climbing</li>
-              <li>Fishing</li>
-            </ul>
-          </div>
-          <div class="meta area">
-            <p>146,597.40</p>
+            <p>Completed</p>
           </div>
         </li>
         <!-- END LIST OF textbooks -->
@@ -701,7 +646,12 @@
 		gridClass: 'grid', // Container class for when in grid mode
 		effects: ['fade','blur'], // List of effects 
 		listEffects: ['fade','rotateX'] // List of effects ONLY for list mode
-	});	
+	});
+
+	$(".txtbook").click(function(){
+	     window.location=$(this).find("a").attr("href"); 
+	     return false;
+	});
 </script>
 </body>
 </html>
