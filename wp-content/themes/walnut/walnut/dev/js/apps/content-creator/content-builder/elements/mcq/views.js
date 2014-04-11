@@ -31,7 +31,15 @@ define(['app'], function(App) {
         this.$el.attr('id', 'mcq-option-' + this.model.get('optionNo'));
         this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
-        return this.editor.setData(_.stripslashes(this.model.get('text')));
+        this.editor.setData(_.stripslashes(this.model.get('text')));
+        return setTimeout(function() {
+          $('div.cke').on('mouseenter', function() {
+            return App.ContentCreator.closequestioneproperty = false;
+          });
+          return $('div.cke').on('mouseleave', function() {
+            return App.ContentCreator.closequestioneproperty = true;
+          });
+        }, 2000);
       };
 
       OptionView.prototype.onClose = function() {
@@ -63,7 +71,6 @@ define(['app'], function(App) {
       };
 
       McqView.prototype.onShow = function() {
-        console.log(mcqID);
         this.$el.attr('id', 'mcq-' + mcqID);
         this.$el.find('input').attr('name', 'mcq-' + mcqID);
         this.trigger("change:radio:to:checkbox");
@@ -79,10 +86,10 @@ define(['app'], function(App) {
         this.$el.parent().parent().on('mouseleave', function() {
           return showMcqPropertyFlag = false;
         });
-        $('.mcq').parent().parent().on('mouseenter', function() {
+        this.$el.parent().parent().on('mouseenter', function() {
           return App.ContentCreator.closequestioneproperty = false;
         });
-        $('.mcq').parent().parent().on('mouseleave', function() {
+        this.$el.parent().parent().on('mouseleave', function() {
           return App.ContentCreator.closequestioneproperty = true;
         });
         return $('body').on('click', (function(_this) {

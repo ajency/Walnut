@@ -4,6 +4,7 @@ define ['app'],(App)->
 	(Views, App, Backbone, Marionette,$, _)->
 
 		mcqID = 0
+		
 
 		class OptionView extends Marionette.ItemView
 
@@ -38,6 +39,16 @@ define ['app'],(App)->
 				@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
 				@editor.setData _.stripslashes @model.get 'text'
 
+				setTimeout ->
+					$('div.cke').on 'mouseenter',->
+						App.ContentCreator.closequestioneproperty = false
+
+					$('div.cke').on 'mouseleave',->
+						App.ContentCreator.closequestioneproperty = true
+				,2000
+
+
+
 			# destroy the Ckeditor instance to avoiid memory leaks on close of element
 			# this.editor will hold the reference to the editor instance
 			# Ckeditor has a destroy method to remove a editor instance
@@ -55,16 +66,13 @@ define ['app'],(App)->
 				mcqID = options.meta
 				console.log mcqID
 
-			
-
+			# trigger whrn the no of options has been changed
+			# change the default radio to checkbox if multple 
 			onAfterItemAdded:->
 				@$el.find('input').attr 'name','mcq-'+mcqID
 				@trigger "change:radio:to:checkbox"
 			
-				
-
 			onShow:->
-				console.log mcqID
 				@$el.attr 'id', 'mcq-'+mcqID
 				@$el.find('input').attr 'name','mcq-'+mcqID
 
@@ -82,10 +90,10 @@ define ['app'],(App)->
 				@$el.parent().parent().on 'mouseleave',->
 					showMcqPropertyFlag = false
 
-				$('.mcq').parent().parent().on 'mouseenter',->
+				@$el.parent().parent().on 'mouseenter',->
 					App.ContentCreator.closequestioneproperty = false
 
-				$('.mcq').parent().parent().on 'mouseleave',->
+				@$el.parent().parent().on 'mouseleave',->
 					App.ContentCreator.closequestioneproperty = true
 
 				$('body').on 'click',=>
