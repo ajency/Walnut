@@ -27,7 +27,7 @@
 			}
 		}
 		&:last-child {
-			margin: 0;
+			//margin: 0;
 		}
 	}
 }
@@ -579,12 +579,22 @@
 
 /*MCQ*/
 .mcq-option {
-	max-width: 200px;
+	width: 145px;
 	margin-right: 10px;
 	float: left;
 	word-wrap: break-word;
 	border: 2px dashed @preview-grey;
 	padding: 5px;
+	margin-bottom: 5px;
+	span{
+		float: left;
+	}
+	.mcq-option-select{
+		float: left;
+		position: relative;
+		z-index: 2;
+		margin: 4px 5px 0;
+	}
 	p{
 		margin: 0;
 	}
@@ -592,5 +602,18 @@
 		color: darken(@body-bg, 2%);
 		font-size: 15px;
 		font-weight: bold;
+	}
+}
+
+#multiple-answer{
+	label{
+		margin-bottom: 10px;
+		margin-top: 5px;
+	}
+}
+
+#individual-marks-region{
+	input{
+		margin-bottom: 4px;
 	}
 }

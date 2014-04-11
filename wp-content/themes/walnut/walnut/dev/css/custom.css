@@ -79,9 +79,6 @@
   margin: 0.5em;
   border: 1px solid transparent;
 }
-.creator .row:last-child {
-  margin: 0;
-}
 #site-page-content-region {
   margin-left: 240px;
   margin-right: 240px;
@@ -666,12 +663,22 @@
 }
 /*MCQ*/
 .mcq-option {
-  max-width: 200px;
+  width: 145px;
   margin-right: 10px;
   float: left;
   word-wrap: break-word;
   border: 2px dashed #f3f3f3;
   padding: 5px;
+  margin-bottom: 5px;
+}
+.mcq-option span {
+  float: left;
+}
+.mcq-option .mcq-option-select {
+  float: left;
+  position: relative;
+  z-index: 2;
+  margin: 4px 5px 0;
 }
 .mcq-option p {
   margin: 0;
@@ -680,6 +687,13 @@
   color: #dfe4e8;
   font-size: 15px;
   font-weight: bold;
+}
+#multiple-answer label {
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+#individual-marks-region input {
+  margin-bottom: 4px;
 }
 .listBox {
   margin-top: 60px;
