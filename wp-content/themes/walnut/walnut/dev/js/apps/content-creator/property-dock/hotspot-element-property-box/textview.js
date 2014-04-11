@@ -10,7 +10,7 @@ define(['app'], function(App) {
         return TextView.__super__.constructor.apply(this, arguments);
       }
 
-      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot <i class="fa fa-chevron-right"> </i> <span class="semi-bold"> Text Element </span> </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" > {{text}} </textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="1"> Arial </option> <option value="2"> Calibri </option> <option value="3"> Comic Sans MS </option> <option value="4"> Courier </option> <option value="5"> Georgia </option> <option value="6"> Helvetica </option> <option value="7"> Impact </option> <option value="8"> Lucida Console </option> <option value="9"> Lucida Sans Unicode </option> <option value="10"> Tahoma </option> <option value="11"> Times New Roman </option> <option value="12"> Trebuchet MS </option> <option value="13"> Verdana </option> </select> <div class="textFormat" data-toggle="buttons-checkbox"> <div id="font-style" class="btn-group"> <button id="bold-btn" class="btn"> <i class="fa fa-bold"> </i> </button> <button id="italic-btn" class="btn"> <i class="fa fa-italic"> </i> </button> </div> </div> </div> <div class=""> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group inline"> Color <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <div class="form-group inline rotateCtrl"> Rotate <input type="text" class="dial" data-min="0" data-max="360" data-width="40" data-height="40" data-displayInput=false data-thickness=".7" data-fgColor="#0AA699" data-bgColor="#d1dade" data-angleOffset="90" data-cursor=true> </div> <div class="text-right"> <a id="delete" class="text-danger small" href="javascript:void(0)"><i class="fa fa-trash-o"></i> Delete</a> </div> </div> </div> </div>';
+      TextView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot <i class="fa fa-chevron-right"> </i> <span class="semi-bold"> Text Element </span> </div> <div class="docket-body"> <div class="form-group"> <textarea id="hotspot-textelement-text" class="textarea" placeholder="Enter Text here" > {{text}} </textarea> </div> <div class="form-group"> <select class="font" id="hotspot-textelement-fontfamily"> <option value="Arial"> Arial </option> <option value="Calibri"> Calibri </option> <option value="Comic Sans MS"> Comic Sans MS </option> <option value="Courier"> Courier </option> <option value="Georgia"> Georgia </option> <option value="Helvetica"> Helvetica </option> <option value="Impact"> Impact </option> <option value="Lucida Console"> Lucida Console </option> <option value="Lucida Sans Unicode"> Lucida Sans Unicode </option> <option value="Tahoma"> Tahoma </option> <option value="Times New Roman"> Times New Roman </option> <option value="Trebuchet MS"> Trebuchet MS </option> <option value="Verdana"> Verdana </option> </select> <div class="textFormat" data-toggle="buttons-checkbox"> <div id="font-style" class="btn-group"> <button id="bold-btn" class="btn"> <i class="fa fa-bold"> </i> </button> <button id="italic-btn" class="btn"> <i class="fa fa-italic"> </i> </button> </div> </div> </div> <div class=""> <div class="textProp slider success"> Size <input type="text" id="hotspot-textelement-fontsize" class="fontSize" data-slider-max="80" data-slider-step="1" data-slider-value="{{fontSize}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="form-group inline"> Color <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <div class="form-group inline rotateCtrl"> Rotate <input type="text" class="dial" data-min="0" data-max="360" data-width="40" data-height="40" data-displayInput=false data-thickness=".7" data-fgColor="#0AA699" data-bgColor="#d1dade" data-angleOffset="90" data-cursor=true> </div> <div class="text-right"> <a id="delete" class="text-danger small" href="javascript:void(0)"><i class="fa fa-trash-o"></i> Delete</a> </div> </div> </div> </div>';
 
       TextView.prototype.onShow = function() {
         var self;
@@ -40,14 +40,13 @@ define(['app'], function(App) {
           }
         });
         $('.fontColor').minicolors('value', self.model.get('fontColor'));
-        $('#hotspot-textelement-fontfamily').children('option').each(function() {
-          if ($(this).text() === self.model.get('fontFamily')) {
-            return this.selected = true;
-          }
+        $('#hotspot-textelement-fontfamily').select2({
+          minimumResultsForSearch: -1
         });
-        $('#hotspot-textelement-fontfamily').on('change', function() {
+        $('#hotspot-textelement-fontfamily').select2('val', self.model.get('fontFamily'));
+        $('#hotspot-textelement-fontfamily').on('change', function(e) {
           this.options[0].disabled = true;
-          return self.model.set('fontFamily', $('#hotspot-textelement-fontfamily  option:selected').text());
+          return self.model.set('fontFamily', $(e.target).val());
         });
         $('#hotspot-textelement-text').on('input', (function(_this) {
           return function() {

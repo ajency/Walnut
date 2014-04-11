@@ -33,7 +33,8 @@
     jquerycolor     : 'plugins/jquery.minicolors.min',
     jqueryknob      : 'plugins/jquery.knob',
     ckeditor      : 'plugins/ckeditor/ckeditor',
-    bootstrapselect   : 'plugins/bootstrapselect'
+    // bootstrapselect   : 'plugins/bootstrapselect',
+    select2       : 'plugins/select2.min'
     
   },
   shim: {
@@ -59,11 +60,12 @@
       exports: 'plupload'
     },
     bootstrap: ['jquery'],
-    bootstrapselect : ['bootstrap'],
+    // bootstrapselect : ['bootstrap'],
     jqueryvalidate: ['jquery'],
     underscorestring: ['underscore'],
     syphon: ['backbone'],
     checkbox  : ['bootstrap'],
+    select2      : ['jquery','bootstrap'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 })

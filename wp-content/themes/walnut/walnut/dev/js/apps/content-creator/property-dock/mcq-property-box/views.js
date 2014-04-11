@@ -19,10 +19,11 @@ define(['app'], function(App) {
       };
 
       PropertyView.prototype.onShow = function() {
-        this.$el.find('select#options-num, select#marks').selectpicker();
-        this.$el.find('select#options-num').selectpicker('val', this.model.get('optioncount'));
-        console.log(this.model.get('optioncount'));
-        this.$el.find('select#marks').selectpicker('val', this.model.get('marks'));
+        this.$el.find('select#options-num, select#marks').select2({
+          minimumResultsForSearch: -1
+        });
+        this.$el.find('select#options-num').select2('val', this.model.get('optioncount'));
+        this.$el.find('select#marks').select2('val', this.model.get('marks'));
         if (this.model.get('individual_marks')) {
           this.$el.find('#check-ind-marks').prop('checked', true);
           this.trigger("show:individual:marks:table");

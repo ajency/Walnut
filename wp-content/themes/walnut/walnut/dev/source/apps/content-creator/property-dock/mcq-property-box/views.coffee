@@ -56,10 +56,10 @@ define ['app'],(App)->
 
 			onShow:->
 				#initialize dropdowns
-				@$el.find('select#options-num, select#marks').selectpicker()
-				@$el.find('select#options-num').selectpicker 'val', @model.get 'optioncount'
-				console.log @model.get 'optioncount'
-				@$el.find('select#marks').selectpicker 'val', @model.get 'marks'
+				@$el.find('select#options-num, select#marks').select2
+							minimumResultsForSearch: -1
+				@$el.find('select#options-num').select2 'val', @model.get 'optioncount'
+				@$el.find('select#marks').select2 'val', @model.get 'marks'
 
 				if @model.get 'individual_marks'
 					@$el.find('#check-ind-marks').prop 'checked',true

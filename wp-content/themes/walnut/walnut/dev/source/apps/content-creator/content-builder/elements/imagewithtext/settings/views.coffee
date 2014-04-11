@@ -18,7 +18,8 @@ define ['app'
 
 					onRender:->
 						@$el.find('input[type="checkbox"]').checkbox()
-						@$el.find('select').selectpicker()
+						@$el.find('select').select2
+								minimumResultsForSearch: -1
 						@setFields()
 
 					# set fields for the form
@@ -26,7 +27,7 @@ define ['app'
 						if @eleModel.get('draggable') is true
 							@$el.find('input[name="draggable"]').checkbox('check')
 						
-						@$el.find('select[name="align"]').selectpicker 'val',@eleModel.get 'align'
+						@$el.find('select[name="align"]').select2 'val',@eleModel.get 'align'
 						
 
 					events:

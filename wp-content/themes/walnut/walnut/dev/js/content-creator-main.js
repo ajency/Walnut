@@ -28,7 +28,7 @@ require.config({
     jquerycolor: 'plugins/jquery.minicolors.min',
     jqueryknob: 'plugins/jquery.knob',
     ckeditor: 'plugins/ckeditor/ckeditor',
-    bootstrapselect: 'plugins/bootstrapselect'
+    select2: 'plugins/select2.min'
   },
   shim: {
     underscore: {
@@ -54,11 +54,11 @@ require.config({
     },
     bootstrap: ['jquery', 'jqueryui'],
     bootstrapslider: ['bootstrap'],
-    bootstrapselect: ['bootstrap'],
     checkbox: ['bootstrap'],
     jqueryvalidate: ['jquery'],
     underscorestring: ['underscore'],
     syphon: ['backbone'],
+    select2: ['jquery', 'bootstrap'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 });
