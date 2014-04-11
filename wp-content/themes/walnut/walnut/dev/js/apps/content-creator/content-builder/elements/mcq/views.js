@@ -58,7 +58,11 @@ define(['app'], function(App) {
 
       McqView.prototype.className = 'mcq';
 
+      McqView.prototype.template = '<div class="options"></div> <div class="clearfix"></div>';
+
       McqView.prototype.itemView = OptionView;
+
+      McqView.prototype.itemViewContainer = 'div.options';
 
       McqView.prototype.initialize = function(options) {
         mcqID = options.meta;
@@ -107,6 +111,6 @@ define(['app'], function(App) {
 
       return McqView;
 
-    })(Marionette.CollectionView);
+    })(Marionette.CompositeView);
   });
 });

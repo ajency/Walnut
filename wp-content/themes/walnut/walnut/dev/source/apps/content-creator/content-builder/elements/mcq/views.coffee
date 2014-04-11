@@ -56,11 +56,18 @@ define ['app'],(App)->
 				@editor.destroy()
 
 
-		class Views.McqView extends Marionette.CollectionView
+		class Views.McqView extends Marionette.CompositeView
 
 			className : 'mcq'
 
+			template : '<div class="options"></div>
+						<div class="clearfix"></div>'
+
+
+
 			itemView : OptionView
+
+			itemViewContainer : 'div.options'
 
 			initialize:(options)->
 				mcqID = options.meta
