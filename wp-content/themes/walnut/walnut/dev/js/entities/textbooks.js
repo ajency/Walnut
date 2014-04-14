@@ -3,8 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
   return App.module("Entities.Textbooks", function(Textbooks, App, Backbone, Marionette, $, _) {
-    var API, db, textbookCollection;
-    db = Backbone.db;
+    var API, textbookCollection;
     Textbooks.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -81,7 +80,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         var onFailure, onSuccess, runQuery;
         runQuery = function() {
           return $.Deferred(function(d) {
-            return db.transaction(function(tx) {
+            return _.db.transaction(function(tx) {
               return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt left outer join wp_textbook_relationships wtr on t.term_id=wtr.textbook_id  WHERE t.term_id=tt.term_id and tt.taxonomy='textbook' and tt.parent=0", [], onSuccess(d), onFailure(d));
             });
           });
@@ -118,7 +117,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return d.reject('OnFailure!: ' + error);
           };
         };
-        return $.when(runQuery()).done(function(dta) {
+        return $.when(runQuery()).done(function(data) {
           return console.log('Database transaction completed');
         }).fail(function(err) {
           return console.log('Error: ' + err);

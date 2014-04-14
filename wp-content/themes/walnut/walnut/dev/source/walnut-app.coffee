@@ -41,7 +41,7 @@ define ['marionette'], (Marionette)->
 		App.unregister instance, id
 
 	App.on "initialize:after", (options) ->
-		if typeof Pace is undefined
+		if typeof Pace isnt 'undefined'
 			Pace.on 'hide', ()->
 				$("#site_main_container").addClass( "showAll" );
 
@@ -55,6 +55,8 @@ define ['marionette'], (Marionette)->
 		# 	App.navigate(@rootRoute, trigger: true)
 		# else
 		# 	App.vent.trigger "show:dashboard"
+		# @rootRoute = 'login'
+		# App.navigate(@rootRoute, trigger: true)	
 		# return
 
         
@@ -78,7 +80,7 @@ define ['marionette'], (Marionette)->
 		
 			
 	App.vent.on "show:dashboard", ->
-		if typeof Pace is undefined
+		if typeof Pace isnt 'undefined'
 			Pace.restart();
 			$("#site_main_container").removeClass( "showAll" );
 		App.navigate('textbooks', trigger: true)
@@ -86,7 +88,7 @@ define ['marionette'], (Marionette)->
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion	
 
-		if typeof Pace is undefined
+		if typeof Pace isnt 'undefined'
 			Pace.on 'hide', ()->
 				$("#site_main_container").addClass( "showAll" );
 

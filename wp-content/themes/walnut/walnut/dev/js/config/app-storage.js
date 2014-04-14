@@ -1,15 +1,14 @@
 define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionette, Backbone, $) {
-  var db;
-  db = window.sqlitePlugin.openDatabase({
+  _.db = window.sqlitePlugin.openDatabase({
     name: "walnutapp"
   });
-  console.log('Prepopulated DB Object: ' + db);
-  db.transaction(function(tx) {
-    return console.log('Pre-populated database');
+  console.log('Prepopulated DB Object: ' + _.db);
+  _.userDb = window.openDatabase("UserDetails", "1.0", "User Details", 200000);
+  return _.userDb.transaction(function(tx) {
+    return tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, username, password, last_loggedin)');
   }, function(tx, err) {
-    return console.log("Error processing SQL: " + err);
-  }, function() {
-    return console.log("Success!");
+    return console.log('Error: ' + err);
+  }, function(tx) {
+    return console.log('Success: UserDetails transaction completed');
   });
-  return Backbone.db = db;
 });

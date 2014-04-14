@@ -34,10 +34,10 @@ function upload_attachment($file_handler, $post_id, $setthumb = 'false') {
 
 add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_login' );
 function authenticate_login() {
-	$login_data=$_POST['data'];
+	$login_data=$_POST;
 	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
 	if(is_wp_error($login_check))
-		echo(json_encode(array("error"=>"Invalid Username or Password")));
+		echo(json_encode(array("error"=>"Invalid Username or Password.")));
 	else{
 		wp_set_auth_cookie( $login_check->ID );
 		echo(json_encode($login_check));

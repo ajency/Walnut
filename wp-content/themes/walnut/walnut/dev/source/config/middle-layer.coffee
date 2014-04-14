@@ -1,17 +1,19 @@
-define ['detect','jquery'], (detect,$)->
+define ['detect','jquery', 'underscore'], (detect, $, _)->
 
       networkStatus = 0
 
       #Function to detect the platform
-      checkPlatform = ->
+      _.checkPlatform = ->
         ua = detect.parse(navigator.userAgent)
         if ua.os.family is "Android" or ua.os.family is "iOS" 
           "Mobile"
         else "Desktop"
 
+
       #Load script 'online.js' only for browser
-      if checkPlatform() is "Desktop"
+      if _.checkPlatform() is "Desktop"
         $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
+
       
       #Implementation for browser
       #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
@@ -21,18 +23,8 @@ define ['detect','jquery'], (detect,$)->
       window.offLineHandler = ->
         networkStatus = 0
 
-      window.isOnline = ->
-        if networkStatus is 1
-          true
-        else false     
-      
-      #Implementation for mobile
-      #Check network status using Cordova API
-      checkConnection = ->
-        if navigator.connection.type is Connection.NONE 
-          false
-        else true
 
+      #Implementation for mobile
       #Mobile events
       document.addEventListener("online"
       ,()->
@@ -45,21 +37,24 @@ define ['detect','jquery'], (detect,$)->
       ,false)
 
 
-      $.middle_layer = (url,data,response) ->
-        switch checkPlatform()
+      _.isOnline = ->
+        switch _.checkPlatform()
           when 'Desktop'
-            if isOnline()
-              $.post url, data, response, 'json'
-            else
-              return 'connection_error'
-
+            if networkStatus is 1
+              true
+            else false
+            
           when 'Mobile'
-            if checkConnection()
-            #  $.post url, data, response, 'json'
-            #else
-              window.localStorage.setItem("key", "loggedin");
-              console.log 'After: '+window.localStorage.getItem("key")
-              return 'connection_error'
+            if navigator.connection.type is Connection.NONE
+              false
+            else true 
+
+
+      #Get device current date and time
+      _.getDateTime = ->
+          d = new Date()
+          datetime =  d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes()
+          datetime    
 
        
 

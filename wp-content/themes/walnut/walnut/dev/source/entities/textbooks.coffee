@@ -2,9 +2,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 		App.module "Entities.Textbooks", (Textbooks, App, Backbone, Marionette, $, _)->
 
-			#local database object
-			db = Backbone.db
-
 			# textbook model
 			class Textbooks.ItemModel extends Backbone.Model
 
@@ -59,7 +56,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				getTextbooksFromLocal:->
 					runQuery = ->
 						$.Deferred (d)->
-							db.transaction (tx)->
+							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt left outer join wp_textbook_relationships wtr on t.term_id=wtr.textbook_id  WHERE t.term_id=tt.term_id and tt.taxonomy='textbook' and tt.parent=0", [], onSuccess(d), onFailure(d));
 								
 
@@ -93,7 +90,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						(tx,error)->
 							d.reject('OnFailure!: '+error)
 
-					$.when(runQuery()).done (dta)->
+					$.when(runQuery()).done (data)->
 						console.log 'Database transaction completed'
 						
 					.fail (err)->

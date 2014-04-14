@@ -73,6 +73,7 @@ require.config
 require [	'plugins/walnut-pluginloader'
 			'config/walnut-configloader'
 			'app'
+			'controllers/authenticationcontroller'
 			'apps/walnut-appsloader'
 			'entities/walnut-entities-loader'
 			'componentloader'

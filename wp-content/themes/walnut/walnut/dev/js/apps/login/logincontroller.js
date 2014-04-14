@@ -30,21 +30,21 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginController.prototype.authenticateUser = function(data) {
-        var connection_resp;
-        connection_resp = $.middle_layer(AJAXURL + '?action=get-user-profile', {
-          data: data
-        }, (function(_this) {
-          return function(response) {
-            if (response.error) {
-              return _this.view.triggerMethod('login:fail', response);
-            } else {
-              return _this.view.close();
-            }
-          };
-        })(this));
-        if (connection_resp === "connection_error") {
-          return this.view.triggerMethod('connection:fail');
-        }
+        var authController, authOptions;
+        authOptions = {
+          data: data,
+          success: (function(_this) {
+            return function(resp) {
+              if (resp.error) {
+                return _this.view.triggerMethod('login:fail', resp);
+              } else {
+                return _this.view.close();
+              }
+            };
+          })(this)
+        };
+        authController = App.request("get:auth:controller", authOptions);
+        return authController.authenticate();
       };
 
       return LoginController;
@@ -83,13 +83,6 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginView.prototype.onLoginFail = function(resp) {
         this.$el.find('#checking_login, #invalid_login').remove();
         return this.$el.find('#login-form').before('<span id="invalid_login" class="btn btn-danger btn-cons">' + resp.error + '</span>');
-      };
-
-      LoginView.prototype.onConnectionFail = function() {
-        var error_msg;
-        error_msg = 'Connection could not be established. Please try again.';
-        this.$el.find('#checking_login, #invalid_login').remove();
-        return this.$el.find('#login-form').before('<span id="invalid_login" class="btn btn-danger btn-cons">' + error_msg + '</span>');
       };
 
       return LoginView;

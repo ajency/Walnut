@@ -63,6 +63,6 @@ require.config({
   }
 });
 
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
+require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'controllers/authenticationcontroller', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
   return App.start();
 });

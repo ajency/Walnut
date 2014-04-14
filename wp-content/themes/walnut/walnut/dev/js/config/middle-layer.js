@@ -1,7 +1,7 @@
-define(['detect', 'jquery'], function(detect, $) {
-  var checkConnection, checkPlatform, networkStatus;
+define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
+  var networkStatus;
   networkStatus = 0;
-  checkPlatform = function() {
+  _.checkPlatform = function() {
     var ua;
     ua = detect.parse(navigator.userAgent);
     if (ua.os.family === "Android" || ua.os.family === "iOS") {
@@ -10,7 +10,7 @@ define(['detect', 'jquery'], function(detect, $) {
       return "Desktop";
     }
   };
-  if (checkPlatform() === "Desktop") {
+  if (_.checkPlatform() === "Desktop") {
     $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
   }
   window.onLineHandler = function() {
@@ -19,41 +19,33 @@ define(['detect', 'jquery'], function(detect, $) {
   window.offLineHandler = function() {
     return networkStatus = 0;
   };
-  window.isOnline = function() {
-    if (networkStatus === 1) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  checkConnection = function() {
-    if (navigator.connection.type === Connection.NONE) {
-      return false;
-    } else {
-      return true;
-    }
-  };
   document.addEventListener("online", function() {
     return console.log('Online');
   }, false);
   document.addEventListener("offline", function() {
     return console.log('Offline');
   }, false);
-  return $.middle_layer = function(url, data, response) {
-    switch (checkPlatform()) {
+  _.isOnline = function() {
+    switch (_.checkPlatform()) {
       case 'Desktop':
-        if (isOnline()) {
-          return $.post(url, data, response, 'json');
+        if (networkStatus === 1) {
+          return true;
         } else {
-          return 'connection_error';
+          return false;
         }
         break;
       case 'Mobile':
-        if (checkConnection()) {
-          window.localStorage.setItem("key", "loggedin");
-          console.log('After: ' + window.localStorage.getItem("key"));
-          return 'connection_error';
+        if (navigator.connection.type === Connection.NONE) {
+          return false;
+        } else {
+          return true;
         }
     }
+  };
+  return _.getDateTime = function() {
+    var d, datetime;
+    d = new Date();
+    datetime = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes();
+    return datetime;
   };
 });

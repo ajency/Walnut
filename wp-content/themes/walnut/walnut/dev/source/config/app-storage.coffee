@@ -1,30 +1,29 @@
 define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbone, $)->
+    
     #Access data from a pre-populated local db file
-    
-    db = window.sqlitePlugin.openDatabase({name: "walnutapp"});
-    console.log 'Prepopulated DB Object: '+db
+    _.db = window.sqlitePlugin.openDatabase({name: "walnutapp"});
+    console.log 'Prepopulated DB Object: '+_.db
 
-    db.transaction((tx)->
-        console.log 'Pre-populated database'
-        # tx.executeSql('DROP TABLE IF EXISTS TEXTBOOK');
-        # tx.executeSql('CREATE TABLE IF NOT EXISTS TEXTBOOK (term_id unique, name, slug, term_group, term_order, term_taxonomy_id, taxonomy, description, parent, count, cover_pic, author, classes, subjects, chapter_count)');
-        # tx.executeSql('INSERT INTO TEXTBOOK (term_id, name, slug, term_group, term_order, term_taxonomy_id, taxonomy, description, parent, count, cover_pic, author, classes, subjects, chapter_count) VALUES (32, "Art", "art", "0", "0", "32", "textbook", "", "0", "0", "", "", null, null, 0)');
-        # tx.executeSql('INSERT INTO TEXTBOOK (term_id, name, slug, term_group, term_order, term_taxonomy_id, taxonomy, description, parent, count, cover_pic, author, classes, subjects, chapter_count) VALUES (33, "English", "english", "0", "0", "32", "textbook", "", "0", "0", "", "", null, null, 0)');
-    
+    #User database object
+    _.userDb = window.openDatabase("UserDetails", "1.0", "User Details", 200000)
+
+    _.userDb.transaction((tx)->
+        tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, username, password, last_loggedin)')
+        #tx.executeSql('INSERT INTO USERS (username, password, last_loggedin) VALUES ("deepak", "deepak",?)',[_.getDateTime()])
+        #tx.executeSql('INSERT INTO USERS (username, password, last_loggedin) VALUES ("admin", "admin",?)',[_.getDateTime()])
+        #tx.executeSql("UPDATE USERS SET last_loggedin=? where id=?",[getDateTime(), r['id']])
+
     ,(tx,err)->
-        console.log("Error processing SQL: "+err);
-
-    ,()->
-         console.log("Success!");
-    )    
+        console.log 'Error: '+err
     
+    ,(tx)->
+        console.log 'Success: UserDetails transaction completed'
+    )
 
-    Backbone.db = db
 
     # window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
     #     , (fileSystem)->
     #         entry = fileSystem.root
-    #         console.log 'Entry: '+entry
     #         console.log 'Root: '+entry.fullPath
     #         entry.getDirectory("TestApp", {create: true, exclusive: false}
     #             ,(dir)->
@@ -33,6 +32,6 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
         
     #     ,onFailure)
 
-    # onFailure = (error)->
-    #     console.log 'Error: '+error.code
+    # onFailure = (err)->
+    #     console.log 'Error: '+err.code
 

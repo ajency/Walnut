@@ -28,7 +28,7 @@ define(['marionette'], function(Marionette) {
   });
   App.on("initialize:after", function(options) {
     var xhr;
-    if (typeof Pace === void 0) {
+    if (typeof Pace !== 'undefined') {
       Pace.on('hide', function() {
         return $("#site_main_container").addClass("showAll");
       });
@@ -62,7 +62,7 @@ define(['marionette'], function(Marionette) {
     })(this), 'json');
   });
   App.vent.on("show:dashboard", function() {
-    if (typeof Pace === void 0) {
+    if (typeof Pace !== 'undefined') {
       Pace.restart();
       $("#site_main_container").removeClass("showAll");
     }
@@ -78,7 +78,7 @@ define(['marionette'], function(Marionette) {
     App.execute("show:leftnavapp", {
       region: App.leftNavRegion
     });
-    if (typeof Pace === void 0) {
+    if (typeof Pace !== 'undefined') {
       return Pace.on('hide', function() {
         return $("#site_main_container").addClass("showAll");
       });
