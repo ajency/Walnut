@@ -36,7 +36,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 			API = 
 				# get all textbooks
 				getTextbooks:(param = {})->
-					console.log param
 					textbookCollection.fetch
 										reset : true
 										data  : param

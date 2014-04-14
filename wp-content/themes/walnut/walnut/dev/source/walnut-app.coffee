@@ -41,8 +41,9 @@ define ['marionette'], (Marionette)->
 		App.unregister instance, id
 
 	App.on "initialize:after", (options) ->
-		Pace.on 'hide', ()->
-			$("#site_main_container").addClass( "showAll" );
+		if typeof Pace isnt 'undefined'
+			Pace.on 'hide', ()->
+				$("#site_main_container").addClass( "showAll" );
 
 		App.startHistory()
 
@@ -71,8 +72,9 @@ define ['marionette'], (Marionette)->
 		
 			
 	App.vent.on "show:dashboard", ->
-		Pace.restart();
-		$("#site_main_container").removeClass( "showAll" );
+		if typeof Pace isnt 'undefined'
+			Pace.restart();
+			$("#site_main_container").removeClass( "showAll" );
 		App.navigate('textbooks', trigger: true)
 		App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
 		App.execute "show:headerapp", region:App.headerRegion
