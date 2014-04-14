@@ -61,6 +61,12 @@ define ['app'],(App)->
 				@$el.find('select#options-num').select2 'val', @model.get 'optioncount'
 				@$el.find('select#marks').select2 'val', @model.get 'marks'
 
+				$('.select2-drop').on 'mouseover',->
+					App.ContentCreator.closequestioneproperty = false
+
+				# $('.select2-drop').on 'mouseleave',->
+				# 	App.ContentCreator.closequestioneproperty = true
+
 				if @model.get 'individual_marks'
 					@$el.find('#check-ind-marks').prop 'checked',true
 					@trigger "show:individual:marks:table"

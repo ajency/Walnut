@@ -32,7 +32,7 @@ define ['app'],(App)->
 
 			onShow:->
 
-					$('#question-property').on 'mouseenter',->
+					$('#question-property').on 'mouseover mouseenter',->
 						App.ContentCreator.closequestioneproperty = false
 
 					$('#question-property').parent().parent().on 'mouseleave',->

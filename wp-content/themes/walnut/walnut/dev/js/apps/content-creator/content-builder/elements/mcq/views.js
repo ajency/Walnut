@@ -32,14 +32,14 @@ define(['app'], function(App) {
         this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
-        return setTimeout(function() {
+        return _.delay(function() {
           $('div.cke').on('mouseenter', function() {
             return App.ContentCreator.closequestioneproperty = false;
           });
           return $('div.cke').on('mouseleave', function() {
             return App.ContentCreator.closequestioneproperty = true;
           });
-        }, 2000);
+        }, 3000);
       };
 
       OptionView.prototype.onClose = function() {
