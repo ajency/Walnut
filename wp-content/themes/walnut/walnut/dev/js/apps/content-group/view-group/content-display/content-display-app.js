@@ -16,9 +16,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionContentDisplayController.prototype.initialize = function(opts) {
         this.model = opts.model;
-        console.log(this.model.get('id'));
-        console.log(this.model.get('content_pieces'));
-        console.log(this.model);
         this.groupContentCollection = App.request("get:content:pieces:by:ids", this.model.get('content_pieces'));
         return App.execute("when:fetched", this.groupContentCollection, this.showView);
       };
