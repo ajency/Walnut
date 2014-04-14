@@ -50,7 +50,7 @@ function extra_tax_fields($tag) {
         <th scope="row" valign="top"><label for="extra2"><?php _e('Classes Suitable For'); ?></label></th>
         <td><?
             global $class_ids;
-            for ($i = 0; $i < sizeof($class_ids); $i++) {
+            for ($i = 1; $i <= sizeof($class_ids); $i++) {
                 $selected = '';
 
                 if ($classes)
@@ -76,7 +76,7 @@ function extra_tax_fields($tag) {
                 <input style="width:20px" type="checkbox" name="term_tags[]" value="<?=$all_subjects[$i] ?>" <?= $selected ?> /> <?=$all_subjects[$i] ?><br>
             <? } ?>
             <br>
-            <span class="description"><?php _e('classes for which this textbook is suitable for'); ?></span>
+            <span class="description"><?php _e('subjects which this textbook belongs to'); ?></span>
             
          <!--  <div  id='tags_area'>
                <? if($subjects) {
