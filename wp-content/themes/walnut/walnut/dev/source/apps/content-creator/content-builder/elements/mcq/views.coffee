@@ -73,8 +73,8 @@ define ['app'],(App)->
 				mcqID = options.meta
 				console.log mcqID
 
-			# trigger whrn the no of options has been changed
-			# change the default radio to checkbox if multple 
+			# # trigger whrn the no of options has been changed
+			# # change the default radio to checkbox if multple 
 			onAfterItemAdded:->
 				@$el.find('input').attr 'name','mcq-'+mcqID
 				@trigger "change:radio:to:checkbox"

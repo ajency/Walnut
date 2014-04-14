@@ -22,16 +22,7 @@ define ['app'
 							super(options)
 
 
-							@_showView()
-
-							$('button#save-question').on 'click',=>
-								console.log 'saving'
-								localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
-
-
-
-							@layout.model.on 'change:optioncount', @_changeOptionCount
-					
+							
 
 			
 						_changeOptionCount:(model,num)->
@@ -47,8 +38,7 @@ define ['app'
 										until oldval is newval
 											model.get('elements').pop()
 											oldval--
-
-									# _showView()
+							
 									console.log model
 
 						_showView:->
@@ -97,6 +87,23 @@ define ['app'
 
 
 						renderElement:()=>
+
+							@_showView()
+
+							$('button#save-question').on 'click',=>
+								console.log 'saving'
+								localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+
+
+
+							@layout.model.on 'change:optioncount', @_changeOptionCount
+
+						deleteElement:(model)->
+							model.set('elements','')
+							delete model.get 'elements'
+							model.destroy()
+
+					
 
 
 

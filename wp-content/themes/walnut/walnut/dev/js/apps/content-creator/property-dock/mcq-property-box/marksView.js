@@ -11,9 +11,9 @@ define(['app'], function(App) {
         return GridRow.__super__.constructor.apply(this, arguments);
       }
 
-      GridRow.prototype.tagName = 'tr';
+      GridRow.prototype.className = 'row';
 
-      GridRow.prototype.template = '<td>{{optionNo}}</td> <td><input type="text" value="{{marks}}"></td>';
+      GridRow.prototype.template = '<div class="col-sm-4"><label>{{optionNo}}</label></div> <div class="col-sm-8"> <input type="text" value="{{marks}}" class="form-control"> </div>';
 
       GridRow.prototype.events = {
         'blur input': function(evt) {
@@ -31,13 +31,11 @@ define(['app'], function(App) {
         return MarksView.__super__.constructor.apply(this, arguments);
       }
 
-      MarksView.prototype.tagName = 'table';
-
-      MarksView.prototype.template = '<thead> <tr> <th>Option</th> <th>Marks</th> </tr> </thead> <tbody> </tbody>';
+      MarksView.prototype.template = '<div class="row"> <div class="col-sm-4"><h5>Option</h5></div> <div class="col-sm-8"><h5>Marks</h5></div> </div> <div class="items"> </div>';
 
       MarksView.prototype.itemView = GridRow;
 
-      MarksView.prototype.itemViewContainer = 'tbody';
+      MarksView.prototype.itemViewContainer = 'div.items';
 
       MarksView.prototype.onRender = function() {
         return console.log(this.collection);

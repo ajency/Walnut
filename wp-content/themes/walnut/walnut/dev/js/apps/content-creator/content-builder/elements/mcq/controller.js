@@ -28,15 +28,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           individual_marks: false,
           multiple: false
         });
-        Controller.__super__.initialize.call(this, options);
-        this._showView();
-        $('button#save-question').on('click', (function(_this) {
-          return function() {
-            console.log('saving');
-            return localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
-          };
-        })(this));
-        return this.layout.model.on('change:optioncount', this._changeOptionCount);
+        return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype._changeOptionCount = function(model, num) {
@@ -111,7 +103,22 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         });
       };
 
-      Controller.prototype.renderElement = function() {};
+      Controller.prototype.renderElement = function() {
+        this._showView();
+        $('button#save-question').on('click', (function(_this) {
+          return function() {
+            console.log('saving');
+            return localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
+          };
+        })(this));
+        return this.layout.model.on('change:optioncount', this._changeOptionCount);
+      };
+
+      Controller.prototype.deleteElement = function(model) {
+        model.set('elements', '');
+        delete model.get('elements');
+        return model.destroy();
+      };
 
       return Controller;
 
