@@ -10,11 +10,6 @@ define ['app'
 
 				{@model} = opts
 
-				console.log @model.get 'id'
-				console.log @model.get 'content_pieces'
-
-				console.log @model
-
 				#@groupContentCollection= App.request "get:content:pieces:of:group", @model.get 'id'
 				
 				@groupContentCollection= App.request "get:content:pieces:by:ids", @model.get 'content_pieces'
