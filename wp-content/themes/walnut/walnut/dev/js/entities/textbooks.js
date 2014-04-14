@@ -57,7 +57,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         if (param == null) {
           param = {};
         }
-        console.log(param);
         textbookCollection.fetch({
           reset: true,
           data: param

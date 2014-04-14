@@ -2,6 +2,7 @@ define [
 			'underscore'
 			'underscorestring'
 			'jquery'
+			'jqueryui'
 			'backbone'
 			'marionette'
 			'syphon'

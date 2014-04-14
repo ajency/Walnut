@@ -28,7 +28,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       return HotspotElementPropertyBoxController;
 
     })(RegionController);
-    return App.commands.setHandler("show:hotspot:properties:box", function(options) {
+    return App.commands.setHandler("show:hotspot:element:properties:box", function(options) {
       return new HotspotElementPropertyBoxController({
         region: options.region,
         model: options.model

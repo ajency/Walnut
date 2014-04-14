@@ -4,6 +4,9 @@ var __hasProp = {}.hasOwnProperty,
 define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app', 'apps/content-creator/property-dock/controller'], function(App, RegionController) {
   return App.module("ContentCreator", function(ContentCreator, App) {
     var ContentCreatorController;
+    ContentCreator.closequestionelementproperty = true;
+    ContentCreator.closequestionelements = true;
+    ContentCreator.closequestioneproperty = true;
     ContentCreatorController = (function(_super) {
       __extends(ContentCreatorController, _super);
 

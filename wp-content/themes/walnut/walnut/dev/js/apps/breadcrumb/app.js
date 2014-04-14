@@ -50,6 +50,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       BreadcrumbView.prototype.className = 'breadcrumb';
 
+      BreadcrumbView.prototype.onShow = function() {
+        return this.$el.append('<p></p>');
+      };
+
       return BreadcrumbView;
 
     })(Marionette.ItemView);

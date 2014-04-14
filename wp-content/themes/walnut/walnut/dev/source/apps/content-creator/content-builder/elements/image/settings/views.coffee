@@ -17,7 +17,8 @@ define ['app'
 
 					onRender:->
 						@$el.find('input[type="checkbox"]').checkbox()
-						@$el.find('select').selectpicker()
+						@$el.find('select').select2
+								minimumResultsForSearch: -1
 						@setFields()
 
 					# set fields for the form
@@ -25,11 +26,11 @@ define ['app'
 						if @eleModel.get('draggable') is true
 							@$el.find('input[name="draggable"]').checkbox('check')
 						
-						@$el.find('select[name="align"]').selectpicker 'val',@eleModel.get 'align'
-						@$el.find('select[name="top_margin"]').selectpicker 'val',@eleModel.get 'top_margin'
-						@$el.find('select[name="left_margin"]').selectpicker 'val',@eleModel.get 'left_margin'
-						@$el.find('select[name="bottom_margin"]').selectpicker 'val',@eleModel.get 'bottom_margin'
-						@$el.find('select[name="right_margin"]').selectpicker 'val',@eleModel.get 'right_margin'
+						@$el.find('select[name="align"]').select2 'val',@eleModel.get 'align'
+						@$el.find('select[name="top_margin"]').select2 'val',@eleModel.get 'top_margin'
+						@$el.find('select[name="left_margin"]').select2 'val',@eleModel.get 'left_margin'
+						@$el.find('select[name="bottom_margin"]').select2 'val',@eleModel.get 'bottom_margin'
+						@$el.find('select[name="right_margin"]').select2 'val',@eleModel.get 'right_margin'
 
 					events:
 						'click .close-settings' : (evt)-> 

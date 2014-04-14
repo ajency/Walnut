@@ -6,10 +6,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 			# content group model
 			class ContentGroup.ItemModel extends Backbone.Model
 
-
+				idAttribute : 'id'
+				
 				defaults:
 					name       		   	: ''
-					description			: ''
+					description			: []
 					created_on			: ''
 					created_by			: ''
 					last_modified_on	: ''
@@ -18,16 +19,23 @@ define ["app", 'backbone'], (App, Backbone) ->
 					published_by	    : ''
 					status	   			: ''
 					type	   			: ''
-					term_ids			: ''
+					term_ids			: []
+					content_pieces		: []
 
-				name: 'contentGroup'
+				name: 'content-group'
+
+				
 
 			# collection of group of content pieces eg. quizzes, teacher training modules etc.
 			class ContentGroup.ItemCollection extends Backbone.Collection
 				model : ContentGroup.ItemModel
+
 				url :->
 					 AJAXURL + '?action=get-content-groups'
-				
+
+				parse:(resp)->
+					resp.data
+
 
 			contentGroupCollection = new ContentGroup.ItemCollection
 
@@ -35,7 +43,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 			API = 
 				# get all content groups
 				getContentGroups:(param = {})->
-					console.log param
 					contentGroupCollection.fetch
 										reset : true
 										data  : param
@@ -47,14 +54,14 @@ define ["app", 'backbone'], (App, Backbone) ->
 					contentGroup = contentGroupCollection.get id
 
 					if not contentGroup 
-						contentGroup = new ContentGroup.ItemModel id
+						contentGroup = new ContentGroup.ItemModel 'id': id
 						contentGroup.fetch()
 					contentGroup
 
 
 				saveContentGroupDetails: (data)->
 					contentGroupItem = new ContentGroup.ItemModel data
-					contentGroupItem
+					contentGroupItem	
 
 
 			# request handler to get all content groups

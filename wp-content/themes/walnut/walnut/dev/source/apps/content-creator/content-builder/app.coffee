@@ -7,6 +7,7 @@ define ['app'
 
 			App.module "ContentCreator.ContentBuilder", (ContentBuilder, App, Backbone, Marionette, $, _)->
 
+				
 				class ContentBuilderController extends RegionController
 
 					initialize : (options)->
@@ -70,6 +71,7 @@ define ['app'
 					# add a new element to the builder region
 					addNewElement : (container , type, modelData)->
 						console.log type
+						
 						new ContentBuilder.Element[type].Controller
 										container : container
 										modelData : modelData

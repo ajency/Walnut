@@ -108,6 +108,7 @@ define ["backbone"], (Backbone) ->
 							_.each model.changed, (property, index)->
 								params.data.changes[ property ] = this.get property
 							, @
+
 					else
 						# put all model data in params data attribute
 						params.data = _.defaults model.toJSON(), params.data

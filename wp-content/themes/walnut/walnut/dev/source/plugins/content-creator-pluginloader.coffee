@@ -20,5 +20,6 @@ define [
 			'jqueryspin'
 			'jquerycolor'
 			'jqueryknob'
-			'bootstrapselect'
+			# 'bootstrapselect'
+			'select2'
 		], ->

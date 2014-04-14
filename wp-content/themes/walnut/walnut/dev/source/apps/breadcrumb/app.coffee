@@ -27,6 +27,9 @@ define ['app'
 			tagName	 : 'ul'
 			className: 'breadcrumb'
 
+			onShow:->
+				@$el.append('<p></p>');
+
 		# set handlers
 		App.commands.setHandler "show:breadcrumbapp", (opt = {})->
 			new Controller.BreadcrumbController opt

@@ -37,7 +37,7 @@ require.config({
     jquery: ['underscore'],
     jqueryui: ['jquery'],
     bootstrap: ['jquery'],
-    underscorestring: ['underscore'],
+    underscorestring: ['jquery', 'underscore'],
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'

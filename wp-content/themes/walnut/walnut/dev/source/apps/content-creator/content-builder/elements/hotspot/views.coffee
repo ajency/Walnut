@@ -3,10 +3,6 @@ define ['app'],(App)->
 	# Row views
 	App.module 'ContentCreator.ContentBuilder.Element.Hotspot.Views', (Views, App, Backbone, Marionette, $, _)->
 
-		closequestionelementproperty = true
-		closequestionelements = true
-
-			
 		# Menu item view
 		class Views.HotspotView extends Marionette.ItemView
 
@@ -15,7 +11,7 @@ define ['app'],(App)->
 			template : '&nbsp;'
 
 			events :
-				'mousedown' : -> @trigger "show:hotspot:properties"
+				'mousedown' : -> @trigger "show:hotspot:elements"
 				# 'focus'	: -> console.log "blur" #'updateModel'
 
 			initialize:(opt = {})->
@@ -110,10 +106,11 @@ define ['app'],(App)->
 
 			_setPropertyBoxCloseHandlers:->
 				$('body').on 'mousedown',=>
-						if closequestionelementproperty
+						console.log App.ContentCreator.closequestionelementproperty
+						if App.ContentCreator.closequestionelementproperty
 							# console.log 'stage'
 							App.execute "close:question:element:properties"
-						if closequestionelements and closequestionelementproperty
+						if App.ContentCreator.closequestionelements and App.ContentCreator.closequestionelementproperty
 							App.execute "close:question:elements"
 							@contentObject.textData = @textCollection.toJSON()
 							@contentObject.optionData = @optionCollection.toJSON()
@@ -127,24 +124,24 @@ define ['app'],(App)->
 								console.log JSON.stringify @model.toJSON()
 
 				$('#question-elements-property').on 'mouseover',->
-						closequestionelementproperty =  false
+						App.ContentCreator.closequestionelementproperty =  false
 				$('#question-elements-property').on 'mouseout',->
-						closequestionelementproperty = true
+						App.ContentCreator.closequestionelementproperty = true
 
 
 				$('#'+@stageName+'.stage').on 'mouseenter', '.kineticjs-content', ->
 					# console.log 'over stage'
-					closequestionelements = false
+					App.ContentCreator.closequestionelements = false
 				$('#'+@stageName+'.stage').on 'mouseleave', '.kineticjs-content', ->
 					# console.log 'outofStage'
-					closequestionelements = true
+					App.ContentCreator.closequestionelements = true
 
 				$('#question-elements').on 'mouseover', ->
 					# console.log "over question"
-					closequestionelements = closequestionelementproperty = false
+					App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = false
 				$('#question-elements').on 'mouseout', ->
 					# console.log "out of question"
-					closequestionelements = closequestionelementproperty = true
+					App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = true
 
 	
 			_drawExistingElements:->
@@ -289,7 +286,7 @@ define ['app'],(App)->
 
 					self = @
 
-					App.execute "show:question:element:properties",
+					App.execute "show:hotspot:element:properties",
 								model : hotspotElement
 
 
@@ -335,22 +332,22 @@ define ['app'],(App)->
 					hotspotElement.on "change:toDelete",=>
 							circleGrp.destroy()
 							@optionCollection.remove hotspotElement
-							closequestionelementproperty = true
+							App.ContentCreator.closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@optionLayer.draw()
 
 					# on click of a circle element show properties
 					circleGrp.on 'mousedown click',(e)->
 							e.stopPropagation()
-							App.execute "show:question:element:properties",
+							App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 							# console.log @
 
 					circleGrp.on 'mouseover',->
-						closequestionelementproperty = false
+						App.ContentCreator.closequestionelementproperty = false
 
 					circleGrp.on 'mouseout',->
-						closequestionelementproperty = true
+						App.ContentCreator.closequestionelementproperty = true
 
 					@optionLayer.draw()
 
@@ -380,7 +377,7 @@ define ['app'],(App)->
 
 					self = @
 
-					App.execute "show:question:element:properties",
+					App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 
 					box = new Kinetic.Rect
@@ -435,22 +432,22 @@ define ['app'],(App)->
 					hotspotElement.on "change:toDelete",=>
 							rectGrp.destroy()
 							@optionCollection.remove hotspotElement
-							closequestionelementproperty = true
+							App.ContentCreator.closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@optionLayer.draw()
 
 					# on click of a circle element show properties
 					rectGrp.on 'mousedown click',(e)->
 							e.stopPropagation()
-							App.execute "show:question:element:properties",
+							App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 							# console.log @
 
 					rectGrp.on 'mouseover',->
-						closequestionelementproperty = false
+						App.ContentCreator.closequestionelementproperty = false
 
 					rectGrp.on 'mouseout',->
-						closequestionelementproperty = true
+						App.ContentCreator.closequestionelementproperty = true
 
 					@optionLayer.draw()
 
@@ -483,7 +480,7 @@ define ['app'],(App)->
 
 					self = @
 
-					App.execute "show:question:element:properties",
+					App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 
 					tooltip = new Kinetic.Label
@@ -514,7 +511,7 @@ define ['app'],(App)->
 					# on click of a text element show properties
 					tooltip.on 'mousedown click',(e)->
 							e.stopPropagation()
-							App.execute "show:question:element:properties",
+							App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 
 					# if model text is not empty then change the hotspot text
@@ -569,7 +566,7 @@ define ['app'],(App)->
 					hotspotElement.on "change:toDelete",=>
 							tooltip.destroy()
 							@textCollection.remove hotspotElement
-							closequestionelementproperty = true
+							App.ContentCreator.closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@textLayer.draw()
 
@@ -581,10 +578,10 @@ define ['app'],(App)->
 				
 
 					tooltip.on 'mouseover',->
-						closequestionelementproperty = false
+						App.ContentCreator.closequestionelementproperty = false
 
 					tooltip.on 'mouseout',->
-						closequestionelementproperty = true
+						App.ContentCreator.closequestionelementproperty = true
 
 					tooltip.add canvasText
 
@@ -617,7 +614,7 @@ define ['app'],(App)->
 					imageObject = new Image()
 					imageObject.src = hotspotElement.get 'url'
 					imageObject.onload = ()=>
-							App.execute "show:question:element:properties",
+							App.execute "show:hotspot:element:properties",
 									model : hotspotElement
 
 							imageElement = new Kinetic.Image
@@ -648,15 +645,15 @@ define ['app'],(App)->
 							# on click of a text element show properties
 							imageGrp.on 'mousedown click',(e)->
 									e.stopPropagation()
-									App.execute "show:question:element:properties",
+									App.execute "show:hotspot:element:properties",
 											model : hotspotElement
 									console.log @
 
 							imageGrp.on 'mouseover',->
-								closequestionelementproperty = false
+								App.ContentCreator.closequestionelementproperty = false
 
 							imageGrp.on 'mouseout',->
-								closequestionelementproperty = true
+								App.ContentCreator.closequestionelementproperty = true
 							
 					
 
@@ -670,7 +667,7 @@ define ['app'],(App)->
 					hotspotElement.on "change:toDelete",=>
 							imageGrp.destroy()
 							@imageCollection.remove hotspotElement
-							closequestionelementproperty = true
+							App.ContentCreator.closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@imageLayer.draw()
 
