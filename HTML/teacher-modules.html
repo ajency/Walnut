@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Walnut Learn - Add Question</title>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+
+	<!-- NEED TO WORK ON -->
+
+	<link href="assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen">
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
+
+	<link href="assets/plugins/jquery-datatable/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+	<link href="assets/plugins/datatables-responsive/css/datatables.responsive.css" rel="stylesheet" type="text/css" media="screen">
+
+
+	<!-- BEGIN CORE JS FRAMEWORK--> 
+	<script src="assets/plugins/jquery-1.8.3.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/boostrapv3/js/bootstrap.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/breakpoints.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript"></script> 
+	<!-- END CORE JS FRAMEWORK --> 
+	<!-- BEGIN PAGE LEVEL JS --> 	
+	<script src="assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript"></script> 	
+	<script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/pace/pace.min.js" type="text/javascript"></script>  
+	<script src="assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
+	<!-- END PAGE LEVEL PLUGINS -->
+	
+
+
+	<!-- BEGIN CORE TEMPLATE JS --> 
+	<script src="assets/js/core.js" type="text/javascript"></script> 
+	<script src="assets/js/chat.js" type="text/javascript"></script> 
+	<script src="assets/js/demo.js" type="text/javascript"></script> 
+	<!-- END CORE TEMPLATE JS --> 
+
+		<script src="assets/plugins/jquery-datatable/js/jquery.dataTables.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/jquery-datatable/extra/js/TableTools.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
+		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
+		<script type="text/javascript" src="assets/js/datatables.js"></script>
+
+		<script type="text/javascript" src="assets/js/row-link.js"></script>
+		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
+
+	<!-- END NEED TO WORK ON -->
+
+</head>
+<body class="">
+<!-- BEGIN HEADER -->
+<div class="header navbar navbar-inverse"> 
+	<!-- BEGIN TOP NAVIGATION BAR -->
+	<div class="navbar-inner">
+		<!-- BEGIN NAVIGATION HEADER -->
+		<div class="header-seperation" style="display:none"> 
+			<!-- BEGIN MOBILE HEADER -->
+			<ul class="nav pull-left notifcation-center" id="main-menu-toggle-wrapper" style="display:none">	
+				<li class="dropdown">
+					<a id="main-menu-toggle" href="#main-menu" class="">
+						<div class="iconset top-menu-toggle-white"></div>
+					</a>
+				</li>		 
+			</ul>
+			<!-- END MOBILE HEADER -->
+			<!-- BEGIN LOGO -->	
+			<a href="#">
+				<img src="assets/img/logo.png" class="logo" alt="" data-src="assets/img/walnutlearn.png" data-src-retina="assets/img/logo2x.png" width="106" height="21"/>
+			</a>
+			<!-- END LOGO --> 
+			<!-- BEGIN LOGO NAV BUTTONS -->
+			<ul class="nav pull-right notifcation-center">	
+				
+				<!-- BEGIN MOBILE CHAT TOGGLER -->
+				<li class="dropdown" id="portrait-chat-toggler" style="display:none">
+					<a href="#sidr" class="chat-menu-toggle">
+						<div class="iconset top-chat-white"></div>
+					</a>
+				</li>
+				<!-- END MOBILE CHAT TOGGLER -->				        
+			</ul>
+			<!-- END LOGO NAV BUTTONS -->
+		</div>
+		<!-- END NAVIGATION HEADER -->
+		<!-- BEGIN CONTENT HEADER -->
+		<div class="header-quick-nav"> 
+			<!-- BEGIN HEADER LEFT SIDE SECTION -->
+			<div class="pull-left"> 
+				<!-- BEGIN SLIM NAVIGATION TOGGLE -->
+				<ul class="nav quick-section">
+					<li class="quicklinks">
+						<a href="#" class="" id="layout-condensed-toggle">
+							<div class="iconset top-menu-toggle-dark"></div>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks"><a href="#" class=""><div class="iconset top-reload"></div></a></li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks dropdown">
+						<a href="#" class="dropdown-toggle">
+							<div class="iconset top-messages"></div>
+							<span class="badge" id="msgs-badge">2</span>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+				</ul>
+				<!-- END SLIM NAVIGATION TOGGLE -->
+				<div class="chat-toggler">	
+					<!-- BEGIN NOTIFICATION CENTER -->
+					<a href="#" class="dropdown-toggle" id="my-task-list" data-placement="bottom" data-content="" data-toggle="dropdown" data-original-title="Notifications">
+						<div class="user-details"> 
+							<div class="username">
+								Notifications	<span class="badge badge-important">3</span>								
+							</div>						
+						</div> 
+						<div class="iconset top-down-arrow"></div>
+					</a>	
+					<div id="notification-list" style="display:none">
+						<div style="width:300px">
+							<!-- BEGIN NOTIFICATION MESSAGE -->
+							<div class="notification-messages info">
+								<div class="user-profile">
+									<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+								</div>
+								<div class="message-wrapper">
+									<div class="heading">Title of Notification</div>
+									<div class="description">Description...</div>
+									<div class="date pull-left">A min ago</div>										
+								</div>
+								<div class="clearfix"></div>									
+							</div>
+							<!-- END NOTIFICATION MESSAGE -->	
+						</div>				
+					</div>
+					<!-- END NOTIFICATION CENTER -->
+				</div>
+				<!-- BEGIN HEADER QUICK LINKS -->
+				<ul class="nav quick-section">
+
+				</ul>
+				<!-- BEGIN HEADER QUICK LINKS -->
+									
+			</div>
+			<!-- END HEADER LEFT SIDE SECTION -->
+			<!-- BEGIN HEADER RIGHT SIDE SECTION -->
+			<div class="pull-right"> 
+			
+			<div class="chat-toggler">	
+	<!--	<div class="user-details">
+            <div class="username"><img src="assets/img/running.gif" alt=""  /> <span class="bold"> Online </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>-->
+		  
+			<!-- <div class="user-details">
+            <div class="username"><img src="assets/img/connecting.gif" /> <span class="bold"> Connecting </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>-->
+					<!-- BEGIN PROFILE PICTURE -->
+					<div class="profile-pic"> 
+						<img src="assets/img/profiles/avatar_small.jpg" alt="" data-src="assets/img/profiles/avatar_small.jpg" data-src-retina="assets/img/profiles/avatar_small2x.jpg" width="35" height="35" /> 
+					</div>  
+					<!-- END PROFILE PICTURE -->     			
+				</div>
+				<!-- BEGIN HEADER NAV BUTTONS -->
+				<ul class="nav quick-section2">
+					<!-- BEGIN SETTINGS -->
+					<li class="quicklinks"> 
+						<a data-toggle="dropdown" class="dropdown-toggle pull-right" href="#" id="user-options">						
+							<div class="iconset top-settings-dark"></div> 	
+						</a>
+						<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="user-options">
+							<li><a href="#">My Account</a></li>
+							<li class="divider"></li>                
+							<li><a href="#"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+						</ul>
+					</li>
+					<!-- END SETTINGS -->
+					<li class="quicklinks"><span class="h-seperate"></span></li> 
+					<!-- BEGIN CHAT SIDEBAR TOGGLE -->
+					<li class="quicklinks"> 	
+						<a id="chat-menu-toggle" href="#sidr" class="chat-menu-toggle">
+							<div class="iconset top-chat-dark"><span class="badge badge-important hide" id="chat-message-count">1</span></div>
+						</a> 
+						<!-- BEGIN OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+						<div class="simple-chat-popup chat-menu-toggle hide">
+							<div class="simple-chat-popup-arrow"></div>
+							<div class="simple-chat-popup-inner">
+								<div style="width:100px">
+									<div class="semi-bold">Name</div>
+									<div class="message">Message...</div>
+								</div>
+							</div>
+						</div>
+						<!-- END OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+					</li>
+					<!-- END CHAT SIDEBAR TOGGLE --> 
+				</ul>
+				<!-- END HEADER NAV BUTTONS -->
+			</div>
+			<!-- END HEADER RIGHT SIDE SECTION -->
+		</div> 
+		<!-- END CONTENT HEADER --> 
+	</div>
+	<!-- END TOP NAVIGATION BAR --> 
+</div>
+<!-- END HEADER -->
+	
+<!-- BEGIN CONTENT -->
+<div class="page-container row-fluid">
+	<!-- BEGIN SIDEBAR -->
+	<!-- BEGIN MENU -->
+	<div class="page-sidebar mini" id="main-menu">
+		  <div class="page-sidebar-wrapper" id="main-menu-wrapper">
+		
+		<!-- BEGIN SIDEBAR MENU -->	
+		<p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
+		<ul>	
+   
+			<!-- BEGIN ONE LEVEL MENU -->
+			<li class="start">
+				<a href="javascript:;">
+					<i class="icon-custom-ui"></i>
+					<span class="title">Content Management</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Textbooks</a></li>
+					<li><a href="#">Add Question</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="javascript:;">
+					<i class="fa fa-pencil-square-o"></i>
+					<span class="title">Training Module</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Teacher Training</a></li>
+					<li><a href="#">Student Training</a></li>
+				</ul>
+			</li>
+			<!-- END ONE LEVEL MENU -->
+		
+		</ul>
+		<!-- END SIDEBAR MENU -->
+		<!-- BEGIN SIDEBAR WIDGETS -->
+		<div class="side-bar-widgets">
+
+		</div>
+		<div class="clearfix"></div>
+		<!-- END SIDEBAR WIDGETS --> 
+	</div>
+	</div>
+	<!-- BEGIN SCROLL UP HOVER -->
+	<a href="#" class="scrollup">Scroll</a>
+	<!-- END SCROLL UP HOVER -->
+	<!-- END MENU -->
+	<!-- BEGIN SIDEBAR FOOTER WIDGET -->
+	<!--<div class="footer-widget">		
+
+		<div class="pull-right">
+			<a href="#">Logout <i class="fa fa-power-off"></i></a>
+		</div>
+	</div>-->
+	<!-- END SIDEBAR FOOTER WIDGET -->
+	<!-- END SIDEBAR --> 
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="page-content condensed"> 
+
+		<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="content-piece-config">
+	      <div class="modal-dialog">
+	        <div class="modal-content">
+	          <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	            <h4 class="modal-title">Content Piece Settings</h4>
+	          </div>
+	          <div class="modal-body">
+	            <label class="form-label">Some Text</label>
+	            <input name="" id="" type="text" class="form-control" placeholder="Enter some text">
+	          </div>
+	          <div class="modal-footer">
+	            <button type="button" class="btn btn-success">Save</button>
+	          </div>
+	        </div>
+	        <!-- /.modal-content -->
+	      </div>
+	      <!-- /.modal-dialog -->
+	    </div>
+
+		<div class="content">  
+			<ul class="breadcrumb">
+				<li>
+				  <p>Dashboard</p>
+				</li>
+				<li>
+				  <a href="#"> Content Management</a>
+				</li>
+				<li><a href="#" class="active">Add Question</a> </li>
+			 </ul>
+			<!-- BEGIN PAGE TITLE -->
+			<!--<div class="page-title"> 
+				<h3>Add <span class="semi-bold">Question</span></h3>
+			</div>-->
+			<!-- END PAGE TITLE -->
+
+			<!-- BEGIN PlACE PAGE CONTENT HERE -->
+			<div class="teacher-app">
+
+				<div class="tiles white grid simple vertical blue">
+					<div class="grid-title no-border">
+						<h4 class="">Textbook <span class="semi-bold">Abc</span></h4>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+						</div>
+					</div>
+					<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
+						<div class="row">
+							<div class="col-lg-12">
+										<h4><span class="semi-bold">All</span> Modules</h4>
+								              <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="questionsAll">
+					                <thead>
+					                  <tr>
+					                  	<th style="width:8%"><div class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
+					                        <input type="checkbox" value="1" id="checkbox1">
+					                        <label for="checkbox1"></label>
+					                      </div>
+					                  	</th>
+					                    <th style="width:52%">Question</th>
+					                    <th style="width:20%" data-hide="phone,tablet">Creator</th>
+					                    <th style="width:20%">Last Modified</th>
+					                  </tr>
+					                </thead>
+					                <tbody>
+					                  <tr >
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="2" id="checkbox2">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td class="v-align-middle"><a href="#"></a>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</td>
+					                    <td class="v-align-middle"><span class="muted">Admin</span></td>
+					                    <td><span class="muted">12th Dec 13</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox3">
+					                        <label for="checkbox3"></label>
+					                      </div>
+					                  	</td>
+					                    <td class="v-align-middle">es, but also the leap into electronic typesetting, remaining essentially unchanged. It was popul</td>
+					                    <td><span class="muted">Tom</span></td>
+					                    <td><span class="muted">4th Jan 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="4" id="checkbox4">
+					                        <label for="checkbox4"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock,</td>
+					                    <td class="v-align-middle"><span class="muted">Bob</span></td>
+					                    <td><span class="muted">9th May 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="5" id="checkbox5">
+					                        <label for="checkbox5"></label>
+					                      </div>
+					                  	</td>
+					                    <td>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it </td>
+					                    <td class="v-align-middle"><span class="muted">Tom</span></td>
+					                    <td><span class="muted">13th Apr 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox6">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up </td>
+					                    <td class="v-align-middle"><span class="muted">Author Name</span></td>
+					                    <td><span class="muted">25th Jan 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox7">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</td>
+					                    <td class="v-align-middle"><span class="muted">Robert</span></td>
+					                    <td><span class="muted">14th Feb 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox8">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus</td>
+					                    <td class="v-align-middle"><span class="muted">Mary</span></td>
+					                    <td><span class="muted">6th Mar 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox9">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
+					                    <td class="v-align-middle"><span class="muted">Peter</span></td>
+					                    <td><span class="muted">28th Apr 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox10">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
+					                    <td class="v-align-middle"><span class="muted">Zack</span></td>
+					                    <td><span class="muted">4th Jan 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox11">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
+					                    <td class="v-align-middle"><span class="muted">Chris</span></td>
+					                    <td><span class="muted">6th Jul 14</span></td>
+					                  </tr>
+					                  <tr>
+					                  	<td class="v-align-middle"><div class="checkbox check-default">
+					                        <input type="checkbox" value="3" id="checkbox12">
+					                        <label for="checkbox2"></label>
+					                      </div>
+					                  	</td>
+					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
+					                    <td class="v-align-middle"><span class="muted">Jim</span></td>
+					                    <td><span class="muted">14th Feb 14</span></td>
+					                  </tr>
+					                </tbody>
+					              </table>
+							</div>
+						</div>
+						<button type="button" class="btn btn-success btn-cons2 pull-right m-t-20" id="save-question"> <i class="fa fa-plus"></i> Add</button>
+					</div>
+				</div>
+				</div>
+				
+				<div id="myCanvas-miki" class="col-md-10">
+
+					<ul class="cbp_tmtimeline">
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				            <time class="cbp_tmtime" datetime="">
+				        	    <span class="time">15 <span class="semi-bold">mins</span></span>
+				            </time>
+				            <div class="cbp_tmicon primary animated bounceIn"> <i class="fa fa-question"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
+				                </div>
+				                <div class="clearfix"></div>
+				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                   <div class="muted">Tag one, Tag two, Tag three</div>
+				                  <div class="clearfix"></div>
+				                </div>
+				              </div>
+				            </div>
+				        </li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				              <time class="cbp_tmtime" datetime="">
+				                <span class="time">4.5 <span class="semi-bold">mins</span></span>
+				              </time>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-youtube-play"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 " >
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold ">Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
+				           
+				                </div>
+				                <div class="clearfix"></div>
+				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                  <div class="muted">Abc, 123, xyz</div>
+				                  <div class="clearfix"></div>
+				                </div>
+				              </div>
+				            </div>
+				        </li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				              <time class="cbp_tmtime" datetime="">
+				                <span class="time">12 <span class="semi-bold">mins</span></span>
+				              </time>
+				              <div class="cbp_tmicon primary animated bounceIn"> <i class="fa fa-question"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
+				                </div>
+				                <div class="clearfix"></div>
+				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                   <div class="muted">Abc, xyz</div>
+				                  <div class="clearfix"></div>
+				                </div>
+				              </div>
+				            </div>
+				        </li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				              <time class="cbp_tmtime" datetime="">
+				                <span class="time">23 <span class="semi-bold">mins</span></span>
+				              </time>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-youtube-play"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 ">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold " >Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
+				           
+				                </div>
+				                <div class="clearfix"></div>
+				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                  <div class="muted">Tag one, Tag two</div>
+				                  <div class="clearfix"></div>
+				                </div>
+				              </div>
+				            </div>
+				        </li>
+				    </ul>
+		    		<div class="clearfix"></div>
+				</div>
+
+			</div>
+			<!-- END PLACE PAGE CONTENT HERE -->
+		</div>
+	</div>
+	<!-- END PAGE CONTAINER -->
+</div>
+<!-- END CONTENT --> 
+
+<!-- BEGIN CHAT --> 
+<div id="sidr" class="chat-window-wrapper">
+	<div id="main-chat-wrapper">
+		<div class="chat-window-wrapper fadeIn" id="chat-users">
+			<!-- BEGIN CHAT HEADER -->
+			<div class="chat-header">	
+				<!-- BEGIN CHAT SEARCH BAR -->
+				<div class="pull-left">
+					<input type="text" placeholder="search">
+				</div>
+				<!-- END CHAT SEARCH BAR -->
+				<!-- BEGIN CHAT QUICKLINKS -->		
+				<div class="pull-right">
+					<a href="#" class=""><div class="iconset top-settings-dark"></div></a>
+				</div>
+				<!-- END CHAT QUICKLINKS -->			
+			</div>
+			<!-- END CHAT HEADER -->	
+			<!-- BEGIN GROUP WIDGET -->
+			<div class="side-widget">
+				<div class="side-widget-title">group chats</div>
+				<div class="side-widget-content">
+					<div id="groups-list">
+						<ul class="groups">
+							<li><a href="#"><div class="status-icon green"></div>Group Chat 1</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END GROUP WIDGET -->
+			<!-- BEGIN FAVORITES WIDGET -->
+			<div class="side-widget fadeIn">
+				<div class="side-widget-title">favorites</div>
+				<div class="side-widget-content">
+					<!-- BEGIN SAMPLE CHAT -->
+					<div class="user-details-wrapper active" data-chat-status="online" data-chat-user-pic="assets/img/profiles/d.jpg" data-chat-user-pic-retina="assets/img/profiles/d2x.jpg" data-user-name="Jane Smith">
+						<!-- BEGIN PROFILE PIC -->
+						<div class="user-profile">
+								<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+							</div>
+						<!-- END PROFILE PIC -->
+						<!-- BEGIN MESSAGE -->
+						<div class="user-details">
+								<div class="user-name">Jane Smith</div>
+								<div class="user-more">Message...</div>
+							</div>
+						<!-- END MESSAGE -->
+						<!-- BEGIN MESSAGES BADGE -->
+						<div class="user-details-status-wrapper">
+								<span class="badge badge-important">3</span>
+							</div>
+						<!-- END MESSAGES BADGE -->
+						<!-- BEGIN STATUS -->
+						<div class="user-details-count-wrapper">
+								<div class="status-icon green"></div>
+							</div>
+						<!-- END STATUS -->
+						<div class="clearfix"></div>
+					</div>
+					<!-- END SAMPLE CHAT -->	
+				</div>
+			</div>
+			<!-- END FAVORITES WIDGET -->
+			<!-- BEGIN MORE FRIENDS WIDGET -->
+			<div class="side-widget">
+				<div class="side-widget-title">more friends</div>
+				<div class="side-widget-content" id="friends-list">
+					<!-- BEGIN SAMPLE CHAT -->
+					<div class="user-details-wrapper" data-chat-status="online" data-chat-user-pic="assets/img/profiles/d.jpg" data-chat-user-pic-retina="assets/img/profiles/d2x.jpg" data-user-name="Jane Smith">
+						<!-- BEGIN PROFILE PIC -->
+						<div class="user-profile">
+							<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+						</div>
+						<!-- END PROFILE PIC -->
+						<!-- BEGIN MESSAGE -->
+						<div class="user-details">
+							<div class="user-name">Jane Smith</div>
+							<div class="user-more">Message...</div>
+						</div>
+						<!-- END MESSAGE -->
+						<!-- BEGIN MESSAGES BADGE -->
+						<div class="user-details-status-wrapper">
+							<span class="badge badge-important">3</span>
+						</div>
+						<!-- END MESSAGES BADGE -->
+						<!-- BEGIN STATUS -->
+						<div class="user-details-count-wrapper">
+							<div class="status-icon green"></div>
+						</div>
+						<!-- END STATUS -->
+						<div class="clearfix"></div>
+					</div>
+					<!-- END SAMPLE CHAT -->
+				</div>		
+			</div>
+			<!-- END MORE FRIENDS WIDGET -->
+		</div>		
+		<!-- BEGIN DUMMY CHAT CONVERSATION -->
+		<div class="chat-window-wrapper fadeIn" id="messages-wrapper" style="display:none">
+			<!-- BEGIN CHAT HEADER BAR -->
+			<div class="chat-header">	
+				<!-- BEGIN SEARCH BAR -->
+				<div class="pull-left">
+					<input type="text" placeholder="search">
+				</div>		
+				<!-- END SEARCH BAR -->
+				<!-- BEGIN CLOSE TOGGLE -->
+				<div class="pull-right">
+					<a href="#" class=""><div class="iconset top-settings-dark"></div></a>
+				</div>	
+				<!-- END CLOSE TOGGLE -->				
+			</div>
+			<div class="clearfix"></div>
+			<!-- END CHAT HEADER BAR -->
+			<!-- BEGIN CHAT BODY -->
+			<div class="chat-messages-header">
+				<div class="status online"></div>
+				<span class="semi-bold">Jane Smith(Typing..)</span>
+				<a href="#" class="chat-back"><i class="icon-custom-cross"></i></a>
+			</div>
+			<!-- BEGIN CHAT MESSAGES CONTAINER -->
+			<div class="chat-messages">
+				<!-- BEGIN TIME STAMP EXAMPLE -->
+				<div class="sent_time">Yesterday 11:25pm</div>
+				<!-- END TIME STAMP EXAMPLE -->
+				<!-- BEGIN EXAMPLE CHAT MESSAGE -->
+				<div class="user-details-wrapper">
+					<!-- BEGIN MESSENGER PROFILE -->
+					<div class="user-profile">
+						<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+					</div>
+					<!-- END MESSENGER PROFILE -->
+					<!-- BEGIN MESSENGER MESSAGE -->
+					<div class="user-details">
+						<div class="bubble">Hello, You there?</div>
+					</div>
+					<!-- END MESSENGER MESSAGE -->					
+					<div class="clearfix"></div>
+					<!-- BEGIN TIMESTAMP ON CLICK TOGGLE -->
+					<div class="sent_time off">Yesterday 11:25pm</div>
+					<!-- END TIMESTAMP ON CLICK TOGGLE -->
+				</div>
+				<!-- END EXAMPLE CHAT MESSAGE -->
+				<!-- BEGIN TIME STAMP EXAMPLE -->
+				<div class="sent_time">Today 11:25pm</div>
+				<!-- BEGIN TIME STAMP EXAMPLE -->				
+				<!-- BEGIN EXAMPLE CHAT MESSAGE (FROM SELF) -->
+				<div class="user-details-wrapper pull-right">
+					<!-- BEGIN MESSENGER MESSAGE -->
+					<div class="user-details">
+						<div class="bubble sender">Let me know when you free</div>
+					</div>					
+					<!-- END MESSENGER MESSAGE -->
+					<div class="clearfix"></div>
+					<!-- BEGIN TIMESTAMP ON CLICK TOGGLE -->
+					<div class="sent_time off">Sent On Tue, 2:45pm</div>
+					<!-- END TIMESTAMP ON CLICK TOGGLE -->
+				</div>	
+				<!-- END EXAMPLE CHAT MESSAGE (FROM SELF) -->	
+			</div>
+			<!-- END CHAT MESSAGES CONTAINER -->
+		</div>
+		<div class="chat-input-wrapper" style="display:none">
+			<textarea id="chat-message-input" rows="1" placeholder="Type your message"></textarea>
+		</div>
+		<div class="clearfix"></div>
+		<!-- END DUMMY CHAT CONVERSATION -->
+	</div>
+</div>
+<!-- END CHAT --> 
+<script>
+	$("#subs").select2();
+	$("#chaps").select2();
+//Multi Select
+ 	$("#secs").val([]).select2();
+ 	$("#subsecs").val([]).select2();
+ </script>
+</body>
+</html>
