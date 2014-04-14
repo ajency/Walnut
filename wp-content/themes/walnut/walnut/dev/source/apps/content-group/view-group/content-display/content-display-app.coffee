@@ -22,10 +22,8 @@ define ['app'
 				App.execute "when:fetched", @groupContentCollection, @showView
 
 			showView:=>
-				setTimeout ()=>
-					@view= view = @_getCollectionContentDisplayView @model
-					@show view, (loading:true, entities: [@groupContentCollection])
-				,3000
+				@view= view = @_getCollectionContentDisplayView @model
+				@show view, (loading:true, entities: [@groupContentCollection])
 
 			_getCollectionContentDisplayView :(model) =>
 				new ContentDisplayView 

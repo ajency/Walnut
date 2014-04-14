@@ -24,16 +24,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       };
 
       CollectionContentDisplayController.prototype.showView = function() {
-        return setTimeout((function(_this) {
-          return function() {
-            var view;
-            _this.view = view = _this._getCollectionContentDisplayView(_this.model);
-            return _this.show(view, {
-              loading: true,
-              entities: [_this.groupContentCollection]
-            });
-          };
-        })(this), 3000);
+        var view;
+        this.view = view = this._getCollectionContentDisplayView(this.model);
+        return this.show(view, {
+          loading: true,
+          entities: [this.groupContentCollection]
+        });
       };
 
       CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model) {
