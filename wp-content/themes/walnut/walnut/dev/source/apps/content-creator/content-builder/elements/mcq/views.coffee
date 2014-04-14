@@ -39,13 +39,13 @@ define ['app'],(App)->
 				@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
 				@editor.setData _.stripslashes @model.get 'text'
 
-				setTimeout ->
+				_.delay ->
 					$('div.cke').on 'mouseenter',->
 						App.ContentCreator.closequestioneproperty = false
 
 					$('div.cke').on 'mouseleave',->
 						App.ContentCreator.closequestioneproperty = true
-				,2000
+				,3000
 
 
 
