@@ -27,7 +27,7 @@ define(['app'], function(App) {
       };
 
       Layout.prototype.onShow = function() {
-        $('#question-property').on('mouseenter', function() {
+        $('#question-property').on('mouseover mouseenter', function() {
           return App.ContentCreator.closequestioneproperty = false;
         });
         return $('#question-property').parent().parent().on('mouseleave', function() {

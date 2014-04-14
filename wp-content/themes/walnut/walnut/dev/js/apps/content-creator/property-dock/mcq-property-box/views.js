@@ -24,6 +24,9 @@ define(['app'], function(App) {
         });
         this.$el.find('select#options-num').select2('val', this.model.get('optioncount'));
         this.$el.find('select#marks').select2('val', this.model.get('marks'));
+        $('.select2-drop').on('mouseover', function() {
+          return App.ContentCreator.closequestioneproperty = false;
+        });
         if (this.model.get('individual_marks')) {
           this.$el.find('#check-ind-marks').prop('checked', true);
           this.trigger("show:individual:marks:table");
