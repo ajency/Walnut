@@ -23,7 +23,7 @@
 			<div class="col-md-4">
 			    <div class="margin-bottom-20 ">
 					<label required="required" class="form-label">Textbook</label>
-					<select name="term_ids[]" id="textbooks" class="form-control select2" >
+					<select name="term_ids[textbook]" id="textbooks" class="form-control select2" >
 						<option value="">--select textbook--</option>
 		                {{#textbooksFilter}}
 		                	<option value="{{id}}">{{name}}</option>
@@ -48,7 +48,7 @@
 			<div class="col-md-4">
 			    <div class="margin-bottom-20 ">
 					<label class="form-label">Chapter <span class="muted small pull-right"> Select a Textbook first</span></label>
-					<select name="term_ids[]" id="chapters" class="form-control select2" >
+					<select name="term_ids[chapter]" id="chapters" class="form-control select2" >
 						<option value="">--select chapters--</option>
 		            </select>
 				</div>
@@ -58,14 +58,14 @@
 				<div class="col-md-4">
 				   <div class="margin-bottom-20 ">
 					<label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>
-					<select name="term_ids[]" id="secs" class="form-control select2" multiple="">
+					<select name="term_ids[sections][]" id="secs" class="form-control select2" multiple="">
 		            </select>
 				</div>
 			</div>
 			<div class="col-md-4">
 			    <div class="margin-bottom-20 ">
 					<label class="form-label">Sub-Sections <span class="muted small pull-right"> Select a Chapter first</span></label>
-					<select name="term_ids[]" id="subsecs" class="form-control select2" multiple="">
+					<select name="term_ids[subsections][]" id="subsecs" class="form-control select2" multiple="">
 		            </select>
 				</div>
 			</div>

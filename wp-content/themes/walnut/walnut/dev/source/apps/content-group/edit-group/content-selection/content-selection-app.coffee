@@ -59,10 +59,12 @@ define ['app'
 				@listenTo @view, "add:content:pieces" :(contentIDs) =>
 
 					groupContent = App.request "get:content:pieces:of:group", model.get 'id'
+					console.log groupContent
+					console.log contentIDs
 
 					_.each contentIDs, (ele,index)=>
 						groupContent.add @contentPiecesCollection.get ele
-				
+						console.log @contentPiecesCollection.get ele
 
 				@listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPieceRemoved
 				

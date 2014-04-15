@@ -226,6 +226,7 @@ function get_textbooks($args = array()) {
 
     $args = wp_parse_args($args, $defaults);
     extract($args);
+    
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all){
         $textbooks = get_terms('textbook', $args);
@@ -287,6 +288,9 @@ function get_book($book) {
                 where textbook_id=" . $book_id, ARRAY_A);
     $book_dets->classes= maybe_unserialize($classes[0]['class_id']);
     $book_dets->subjects= maybe_unserialize($classes[0]['tags']);
+    
+    $modules_count = $wpdb->get_results("SELECT count(id) as count FROM `wp_content_collection` where term_ids like '%\"".$book_id."\";%'");
+    $book_dets->modules_count = $modules_count[0]->count;
 
     $args = array('hide_empty' => false,
         'parent' => $book_id,
@@ -302,7 +306,10 @@ function get_book($book) {
 //fetching textbooks list based on the classid passed
 function get_textbooks_for_class($classid) {
     global $wpdb;
-    $txtbook_qry = "select textbook_id from {$wpdb->prefix}textbook_relationships where class_id=" . $classid;
+    //$class= '"$classid";';
+    
+    //get the class_id from serialized array in db in the format "2";
+    $txtbook_qry = 'select textbook_id from '.$wpdb->prefix.'textbook_relationships where class_id like \'%"'.$classid.'";%\'';
     $textbook_ids = $wpdb->get_results($txtbook_qry);
     
     if (is_array($textbook_ids)) {
@@ -312,6 +319,7 @@ function get_textbooks_for_class($classid) {
                 $data[]=$bookdets;
         }
     }
+    
     return $data;
 }
 

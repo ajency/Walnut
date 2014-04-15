@@ -8,6 +8,7 @@ require_once 'modules/textbooks/ajax.php';
 require_once 'modules/menus/ajax.php';
 require_once 'modules/user/ajax.php';
 require_once 'modules/media/ajax.php';
+require_once 'modules/divisions/ajax.php';
 require_once 'custom_configs.php';
 
 add_theme_support('menus');
