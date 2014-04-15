@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>group-edit-controller.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../doc-style.css" />
+  <script src="../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../", thisFile = "source\\apps\\content-group\\edit-group\\group-edit-controller.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>group-edit-controller.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;controllers/region-controller&#39;</span>
+    <span class="s">&#39;text!apps/content-group/edit-group/templates/content-group.html&#39;</span>
+    <span class="s">&#39;apps/content-group/edit-group/group-details/details-app&#39;</span>
+    <span class="s">&#39;apps/content-group/edit-group/content-selection/content-selection-app&#39;</span>
+    <span class="s">&#39;apps/content-group/edit-group/content-display/content-display-app&#39;</span><span class="p">],</span> <span class="nf">(App, RegionController, contentGroupTpl)-&gt;</span>
+
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentGroupApp.Edit&quot;</span><span class="p">,</span> <span class="nf">(Edit, App)-&gt;</span>
+
+    <span class="k">class</span> <span class="nx">Edit</span><span class="p">.</span><span class="nx">GroupController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+      <span class="nv">initialize : </span><span class="nf">-&gt;</span>
+        <span class="nv">contentGroupCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:content:groups&quot;</span>
+
+        <span class="nv">breadcrumb_items = </span><span class="s">&#39;items&#39;</span><span class="o">:</span><span class="p">[</span>
+            <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Dashboard&#39;</span><span class="p">,</span><span class="s">&#39;link&#39;</span><span class="o">:</span><span class="s">&#39;javascript://&#39;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Content Management&#39;</span><span class="p">,</span><span class="s">&#39;link&#39;</span><span class="o">:</span><span class="s">&#39;javascript:;&#39;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Create Content Group&#39;</span><span class="p">,</span><span class="s">&#39;link&#39;</span><span class="o">:</span><span class="s">&#39;javascript:;&#39;</span><span class="p">,</span><span class="s">&#39;active&#39;</span><span class="o">:</span><span class="s">&#39;active&#39;</span><span class="p">}</span>
+          <span class="p">]</span>
+            
+        <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;update:breadcrumb:model&quot;</span><span class="p">,</span> <span class="nx">breadcrumb_items</span>
+
+
+        <span class="vi">@layout = </span><span class="nv">layout = </span><span class="nx">@_getContentGroupEditLayout</span><span class="p">()</span>
+
+        <span class="nx">@listenTo</span> <span class="nx">layout</span><span class="p">,</span> <span class="s">&#39;show&#39;</span><span class="p">,</span> <span class="nx">@showContentGroupViews</span>
+
+        <span class="nx">@show</span> <span class="nx">layout</span><span class="p">,</span> <span class="p">(</span><span class="nx">loading</span><span class="o">:</span><span class="kc">true</span><span class="p">)</span>
+
+        <span class="nx">@listenTo</span> <span class="nx">contentGroupCollection</span><span class="p">,</span> <span class="s">&#39;add&#39;</span><span class="p">,</span> <span class="nx">@newModelAdded</span><span class="p">,</span><span class="nx">@</span>
+
+
+      <span class="nx">showContentGroupViews</span><span class="o">:=&gt;</span>
+        <span class="nv">contentGroupModel = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;save:content:group:details&quot;</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:editgroup:content:group:detailsapp&quot;</span><span class="p">,</span> 
+          <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">collectionDetailsRegion</span>
+          <span class="nv">model  : </span><span class="nx">contentGroupModel</span>
+
+      <span class="nv">_getContentGroupEditLayout : </span><span class="o">=&gt;</span>
+        <span class="k">new</span> <span class="nx">ContentGroupEditLayout</span>
+
+      <span class="nx">newModelAdded</span> <span class="o">:</span><span class="nf">(model)=&gt;</span>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:content:selectionapp&quot;</span><span class="p">,</span> <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">contentSelectionRegion</span><span class="p">,</span> <span class="nv">model : </span><span class="nx">model</span>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:editgroup:content:displayapp&quot;</span><span class="p">,</span> <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">contentDisplayRegion</span><span class="p">,</span> <span class="nv">model: </span><span class="nx">model</span>
+
+
+    <span class="k">class</span> <span class="nx">ContentGroupEditLayout</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Layout</span>
+
+      <span class="nv">template  : </span><span class="nx">contentGroupTpl</span>
+
+      <span class="nv">className   : </span><span class="s">&#39;&#39;</span>
+
+      <span class="nv">regions:</span>
+        <span class="nv">collectionDetailsRegion : </span><span class="s">&#39;#collection-details-region&#39;</span>
+        <span class="nv">contentSelectionRegion  : </span><span class="s">&#39;#content-selection-region&#39;</span>
+        <span class="nv">contentDisplayRegion  : </span><span class="s">&#39;#content-display-region&#39;</span> 
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

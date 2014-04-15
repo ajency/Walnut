@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>controller.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../doc-style.css" />
+  <script src="../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../", thisFile = "source\\apps\\content-creator\\property-dock\\controller.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>controller.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;controllers/region-controller&#39;</span>
+    <span class="s">&#39;apps/content-creator/property-dock/views&#39;</span>
+    <span class="s">&#39;apps/content-creator/property-dock/question-element-box-loader&#39;</span><span class="p">],</span><span class="nf">(App,RegionController)-&gt;</span>
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.PropertyDock&quot;</span> <span class="p">,</span><span class="nf">(PropertyDock, App, Backbone, Marionette, $, _)-&gt;</span>
+
+        
+
+        <span class="k">class</span> <span class="nx">PropertyDockController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+          <span class="nv">initialize: </span><span class="nf">(options)-&gt;</span>
+
+            <span class="vi">@layout = </span><span class="nx">@_getLayout</span><span class="p">()</span>
+
+            
+
+            <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:question:elements&quot;</span><span class="p">,</span><span class="nf">(options)=&gt;</span>
+
+                <span class="nx">@_getElementBox</span> <span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+
+            <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:question:properties&quot;</span><span class="p">,</span><span class="nf">(options)=&gt;</span>
+                <span class="nx">@_getElementProperties</span> <span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>show hotspot element properties</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span><span class="nf">(options)=&gt;</span>
+                <span class="nx">@_getHotspotElementProperties</span> <span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+
+            <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;close:question:element:properties&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+                <span class="nx">@layout</span><span class="p">.</span><span class="nx">questElementPropRegion</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+
+            <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;close:question:elements&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+                <span class="nx">@layout</span><span class="p">.</span><span class="nx">questElementRegion</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+
+            <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;close:question:properties&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+                <span class="nx">@layout</span><span class="p">.</span><span class="nx">questPropertyRegion</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+
+
+            <span class="nx">@show</span> <span class="nx">@layout</span>
+
+            
+
+          <span class="nv">_getLayout: </span><span class="nf">-&gt;</span>
+            <span class="k">new</span> <span class="nx">PropertyDock</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">Layout</span>
+
+          
+            
+
+          <span class="nx">_getElementBox</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
+            <span class="nv">elementName = </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;element&#39;</span><span class="p">)</span>
+            <span class="nv">ele = </span><span class="nx">_</span><span class="p">.</span><span class="nx">slugify</span><span class="p">(</span><span class="nx">elementName</span><span class="p">)</span>
+            <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:</span><span class="si">#{</span><span class="nx">ele</span><span class="si">}</span><span class="s">:elements&quot;</span><span class="p">,</span>
+                <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">questElementRegion</span>
+                <span class="nv">model : </span><span class="nx">model</span>
+
+          <span class="nx">_getHotspotElementProperties</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
+            
+            <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties:box&quot;</span><span class="p">,</span>
+                <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">questElementPropRegion</span>
+                <span class="nv">model : </span><span class="nx">model</span>
+
+          <span class="nx">_getElementProperties</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
+            <span class="nv">elementName = </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;element&#39;</span>
+            <span class="nv">ele = </span><span class="nx">_</span><span class="p">.</span><span class="nx">slugify</span> <span class="nx">elementName</span>
+            <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:</span><span class="si">#{</span><span class="nx">ele</span><span class="si">}</span><span class="s">:properties&quot;</span><span class="p">,</span>
+                <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">questPropertyRegion</span>
+                <span class="nv">model : </span><span class="nx">model</span>
+
+        
+        <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:property:dock&quot;</span><span class="p">,</span><span class="nf">(options)-&gt;</span>
+
+            <span class="k">new</span> <span class="nx">PropertyDockController</span>
+                <span class="nv">region : </span><span class="nx">options</span><span class="p">.</span><span class="nx">region</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

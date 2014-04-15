@@ -13,7 +13,6 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       }
 
       Controller.prototype.initialize = function(options) {
-        console.log(options);
         _.defaults(options.modelData, {
           element: 'Mcq',
           optioncount: 2,
@@ -84,11 +83,6 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
           };
         })(this));
-        this.listenTo(view, "hide:this:mcq:properties", (function(_this) {
-          return function(options) {
-            return App.execute("close:question:properties");
-          };
-        })(this));
         return this.layout.elementRegion.show(view);
       };
 
@@ -105,19 +99,14 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
 
       Controller.prototype.renderElement = function() {
         this._showView();
-        $('button#save-question').on('click', (function(_this) {
-          return function() {
-            console.log('saving');
-            return localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
-          };
-        })(this));
         return this.layout.model.on('change:optioncount', this._changeOptionCount);
       };
 
       Controller.prototype.deleteElement = function(model) {
         model.set('elements', '');
         delete model.get('elements');
-        return model.destroy();
+        model.destroy();
+        return App.execute("close:question:properties");
       };
 
       return Controller;

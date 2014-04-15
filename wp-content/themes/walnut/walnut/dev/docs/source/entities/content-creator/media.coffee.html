@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>media.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "source\\entities\\content-creator\\media.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h1">
+        <a href="#public%20api%20for%20enitity">PUBLIC API FOR ENitity</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>media.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&quot;app&quot;</span><span class="p">,</span> <span class="s">&#39;backbone&#39;</span><span class="p">],</span> <span class="nf">(App, Backbone) -&gt;</span>
+
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;Entities.Media&quot;</span><span class="p">,</span> <span class="nf">(Media, App, Backbone, Marionette, $, _)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Media Model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">class</span> <span class="nx">Media</span><span class="p">.</span><span class="nx">MediaModel</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span>
+        <span class="nv">idAttribute : </span><span class="s">&#39;id&#39;</span>
+
+        <span class="nv">name : </span><span class="s">&#39;media&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>function to calculate the best fit for the given size</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getBestFit</span><span class="o">:</span><span class="nf">(width)-&gt;</span>
+
+          <span class="nv">sizes = </span><span class="nx">@get</span> <span class="s">&#39;sizes&#39;</span>
+
+          <span class="nv">closest = </span><span class="kc">null</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>get closest size</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nv">smallest = </span><span class="mi">99999</span>
+          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">sizes</span><span class="p">,</span> <span class="nf">(size, key)-&gt;</span>
+            <span class="nv">val = </span><span class="nx">size</span><span class="p">.</span><span class="nx">width</span> <span class="o">-</span> <span class="nx">width</span>
+            <span class="nv">val = </span><span class="k">if</span> <span class="nx">val</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">then</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="nx">val</span><span class="p">)</span> <span class="k">else</span> <span class="nx">val</span>
+            <span class="k">if</span> <span class="nx">val</span> <span class="o">&lt;=</span> <span class="nx">smallest</span>
+              <span class="nv">closest = </span>
+                <span class="nv">url : </span><span class="nx">size</span><span class="p">.</span><span class="nx">url</span>
+                <span class="nv">size : </span><span class="nx">key</span>
+              <span class="nv">smallest = </span><span class="nx">val</span>
+
+          <span class="nv">closest = </span><span class="nx">sizes</span><span class="p">[</span><span class="s">&#39;full&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNull</span> <span class="nx">closest</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">closest</span>
+
+          <span class="nx">closest</span> 
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>mode = 'landscape'
+mode = 'portrait' if height > width
+url = '<a href='http://dsdsdsd.com'>http://dsdsdsd.com</a>'
+switch mode 
+    when 'landscape'
+        url = 'landscape'
+    when 'portrait'
+        url = 'portrait'</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>sizes = @get 'sizes'</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>if sizes['thumbnail'] then sizes['thumbnail'].url else sizes['full'].url</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>Media collection</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">class</span> <span class="nx">Media</span><span class="p">.</span><span class="nx">MediaCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+
+        <span class="nv">filters: </span>
+          <span class="nv">order           : </span><span class="s">&#39;DESC&#39;</span>
+          <span class="nv">orderby         : </span><span class="s">&#39;date&#39;</span>
+          <span class="nv">paged           : </span><span class="mi">1</span>
+          <span class="nv">posts_per_page  : </span><span class="mi">40</span>
+        
+        <span class="nv">model : </span><span class="nx">Media</span><span class="p">.</span><span class="nx">MediaModel</span>
+
+        <span class="nx">parse</span><span class="o">:</span><span class="nf">(resp)-&gt;</span>
+          <span class="k">return</span> <span class="nx">resp</span><span class="p">.</span><span class="nx">data</span> <span class="k">if</span> <span class="nx">resp</span><span class="p">.</span><span class="nx">code</span> <span class="o">is</span> <span class="s">&#39;OK&#39;</span>
+          <span class="nx">resp</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>initialize a blank media collection</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nv">mediaCollection = </span><span class="k">new</span> <span class="nx">Media</span><span class="p">.</span><span class="nx">MediaCollection</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="public%20api%20for%20enitity">
+  <h1>
+    <a href="#public%20api%20for%20enitity" name="public%20api%20for%20enitity" class="pilcrow">&#182;</a>
+    PUBLIC API FOR ENitity
+  </h1>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nv">API =</span>
+        <span class="nv">fetchMedia: </span><span class="nf">(params ={}, reset)-&gt;</span>
+          
+          <span class="nv">mediaCollection.url = </span><span class="s">&quot;</span><span class="si">#{</span><span class="nx">AJAXURL</span><span class="si">}</span><span class="s">?action=query_attachments&quot;</span>
+          
+          <span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">params</span><span class="p">,</span><span class="nx">mediaCollection</span><span class="p">.</span><span class="nx">filters</span> 
+
+          <span class="nx">mediaCollection</span><span class="p">.</span><span class="nx">fetch</span>
+                  <span class="nv">reset : </span><span class="nx">reset</span>
+                  <span class="nv">data  : </span><span class="nx">params</span>
+               
+          <span class="nx">mediaCollection</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>get a media </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getMediaById</span><span class="o">:</span><span class="nf">(mediaId)-&gt;</span>
+
+          <span class="k">return</span> <span class="nx">API</span><span class="p">.</span><span class="nx">getPlaceHolderMedia</span><span class="p">()</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">is</span> <span class="nb">parseInt</span> <span class="nx">mediaId</span> 
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+<p>check if present</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nv">media = </span><span class="nx">mediaCollection</span><span class="p">.</span><span class="nx">get</span> <span class="nb">parseInt</span> <span class="nx">mediaId</span>
+
+          <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isUndefined</span> <span class="nx">media</span>
+            <span class="nv">media = </span><span class="k">new</span> <span class="nx">Media</span><span class="p">.</span><span class="nx">MediaModel</span> <span class="nv">id : </span><span class="nx">mediaId</span>
+            <span class="nx">mediaCollection</span><span class="p">.</span><span class="nx">add</span> <span class="nx">media</span>
+            <span class="nx">media</span><span class="p">.</span><span class="nx">fetch</span><span class="p">()</span>
+
+          <span class="nx">media</span>
+
+        <span class="nx">getEmptyMediaCollection</span><span class="o">:</span><span class="nf">-&gt;</span>
+          <span class="k">new</span> <span class="nx">Media</span><span class="p">.</span><span class="nx">MediaCollection</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+<p>this fucntion will return a placeholder media for the requesting element
+this will be special purpose media model.</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getPlaceHolderMedia</span><span class="o">:</span><span class="nf">-&gt;</span>
+          <span class="nv">media = </span><span class="k">new</span> <span class="nx">Media</span><span class="p">.</span><span class="nx">MediaModel</span>
+          <span class="nx">media</span>
+
+        <span class="nx">createNewMedia</span><span class="o">:</span><span class="nf">(data)-&gt;</span>
+          <span class="nv">media = </span><span class="k">new</span> <span class="nx">Media</span><span class="p">.</span><span class="nx">MediaModel</span> <span class="nx">data</span>
+          <span class="nx">mediaCollection</span><span class="p">.</span><span class="nx">add</span> <span class="nx">media</span>
+          <span class="nx">media</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+</div>
+<p>REQUEST HANDLERS</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:empty:media:collection&quot;</span><span class="p">,</span><span class="nf">-&gt;</span>
+        <span class="nx">API</span><span class="p">.</span><span class="nx">getEmptyMediaCollection</span><span class="p">()</span>
+      
+      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;fetch:media&quot;</span><span class="p">,</span><span class="nf">(shouldReset = true) -&gt;</span>
+        <span class="nx">API</span><span class="p">.</span><span class="nx">fetchMedia</span> <span class="nx">shouldReset</span>
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:media:by:id&quot;</span><span class="p">,</span><span class="nf">(mediaId)-&gt;</span>
+        <span class="nx">API</span><span class="p">.</span><span class="nx">getMediaById</span> <span class="nx">mediaId</span>
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;new:media:added&quot;</span><span class="p">,</span><span class="nf">(modelData)-&gt;</span>
+        <span class="nx">API</span><span class="p">.</span><span class="nx">createNewMedia</span> <span class="nx">modelData</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

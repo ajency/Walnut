@@ -65,25 +65,31 @@ define(['app'], function(App) {
         this.stage.add(this.imageLayer);
         this.stage.add(this.textLayer);
         this.stage.add(this.optionLayer);
-        $('#' + this.stageName + '.stage').resize((function(_this) {
+        this.$el.resize((function(_this) {
           return function() {
             _this.stage.setSize({
-              width: $('#' + _this.stageName + '.stage').width(),
-              height: $('#' + _this.stageName + '.stage').height() - 5
+              width: _this.$el.width(),
+              height: _this.$el.height() - 5
             });
             _this.contentObject.height = _this.stage.height();
             return _this._updateDefaultImageSize();
           };
         })(this));
-        $('#' + this.stageName + '.stage').resizable({
+        this.$el.resizable({
           handles: "s"
         });
+        this.$el.parent().parent().on('click', (function(_this) {
+          return function(evt) {
+            _this.trigger('show:hotspot:elements');
+            return evt.stopPropagation();
+          };
+        })(this));
         this._setPropertyBoxCloseHandlers();
         this._drawExistingElements();
         this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
           return this._addElements(type, elementPos);
         });
-        return $('#' + this.stageName + ' .kineticjs-content').droppable({
+        return this.$el.find('.kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
             return function(evt, ui) {
@@ -91,8 +97,8 @@ define(['app'], function(App) {
               if (ui.draggable.prop("tagName") === 'LI') {
                 type = ui.draggable.attr('data-element');
                 elementPos = {
-                  left: evt.clientX - $('#' + _this.stageName + ' .kineticjs-content').offset().left,
-                  top: evt.clientY - $('#' + _this.stageName + ' .kineticjs-content').offset().top + window.pageYOffset
+                  left: evt.clientX - _this.$el.find('.kineticjs-content').offset().left,
+                  top: evt.clientY - _this.$el.find('.kineticjs-content').offset().top + window.pageYOffset
                 };
                 return _this.trigger("add:hotspot:element", type, elementPos);
               }
@@ -102,45 +108,15 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._setPropertyBoxCloseHandlers = function() {
-        $('body').on('mousedown', (function(_this) {
+        return $('body').on('click', (function(_this) {
           return function() {
-            console.log(App.ContentCreator.closequestionelementproperty);
-            if (App.ContentCreator.closequestionelementproperty) {
-              App.execute("close:question:element:properties");
-            }
-            if (App.ContentCreator.closequestionelements && App.ContentCreator.closequestionelementproperty) {
-              App.execute("close:question:elements");
-              _this.contentObject.textData = _this.textCollection.toJSON();
-              _this.contentObject.optionData = _this.optionCollection.toJSON();
-              _this.contentObject.imageData = _this.imageCollection.toJSON();
-              console.log(JSON.stringify(_this.contentObject));
-              _this.model.set('content', JSON.stringify(_this.contentObject));
-              if (_this.model.hasChanged()) {
-                console.log("saving them");
-                localStorage.setItem('ele' + _this.model.get('meta_id'), JSON.stringify(_this.model.toJSON()));
-                return console.log(JSON.stringify(_this.model.toJSON()));
-              }
-            }
+            _this.contentObject.textData = _this.textCollection.toJSON();
+            _this.contentObject.optionData = _this.optionCollection.toJSON();
+            _this.contentObject.imageData = _this.imageCollection.toJSON();
+            console.log(JSON.stringify(_this.contentObject));
+            return _this.trigger("close:hotspot:elements", _this.contentObject);
           };
         })(this));
-        $('#question-elements-property').on('mouseover', function() {
-          return App.ContentCreator.closequestionelementproperty = false;
-        });
-        $('#question-elements-property').on('mouseout', function() {
-          return App.ContentCreator.closequestionelementproperty = true;
-        });
-        $('#' + this.stageName + '.stage').on('mouseenter', '.kineticjs-content', function() {
-          return App.ContentCreator.closequestionelements = false;
-        });
-        $('#' + this.stageName + '.stage').on('mouseleave', '.kineticjs-content', function() {
-          return App.ContentCreator.closequestionelements = true;
-        });
-        $('#question-elements').on('mouseover', function() {
-          return App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = false;
-        });
-        return $('#question-elements').on('mouseout', function() {
-          return App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = true;
-        });
       };
 
       HotspotView.prototype._drawExistingElements = function() {

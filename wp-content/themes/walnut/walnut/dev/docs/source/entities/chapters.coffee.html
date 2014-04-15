@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>chapters.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../", thisFile = "source\\entities\\chapters.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>chapters.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&quot;app&quot;</span><span class="p">,</span> <span class="s">&#39;backbone&#39;</span><span class="p">],</span> <span class="nf">(App, Backbone) -&gt;</span>
+
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;Entities.Chapters&quot;</span><span class="p">,</span> <span class="nf">(Chapters, App, Backbone, Marionette, $, _)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>chapter model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">class</span> <span class="nx">Chapters</span><span class="p">.</span><span class="nx">ItemModel</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span>
+
+        <span class="nv">idAttribute : </span><span class="s">&#39;chapter_id&#39;</span>
+
+        <span class="nv">defaults:</span>
+          <span class="nv">name              : </span><span class="s">&#39;&#39;</span>
+          <span class="nv">slug          : </span><span class="s">&#39;&#39;</span>
+          <span class="nv">description         : </span><span class="s">&#39;&#39;</span>
+          <span class="nv">parent            : </span><span class="mi">0</span>
+          <span class="nv">term_order      : </span><span class="mi">0</span>
+
+        <span class="nv">name: </span><span class="s">&#39;chapter&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>chapters collection class</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">class</span> <span class="nx">Chapters</span><span class="p">.</span><span class="nx">ItemCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+        <span class="nv">model : </span><span class="nx">Chapters</span><span class="p">.</span><span class="nx">ItemModel</span>
+        <span class="nv">comparator : </span><span class="s">&#39;term_order&#39;</span>
+        <span class="nx">url</span> <span class="o">:</span><span class="nf">-&gt;</span>
+           <span class="nx">AJAXURL</span> <span class="o">+</span> <span class="s">&#39;?action=get-chapters&#39;</span>
+        
+        <span class="nx">parse</span><span class="o">:</span><span class="nf">(resp)-&gt;</span>
+          <span class="vi">@total = </span><span class="nx">resp</span><span class="p">.</span><span class="nx">count</span> 
+          <span class="nx">resp</span><span class="p">.</span><span class="nx">data</span>
+
+      
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>subsections collection class</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">class</span> <span class="nx">Chapters</span><span class="p">.</span><span class="nx">SubSectionCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+        <span class="nv">model : </span><span class="nx">Chapters</span><span class="p">.</span><span class="nx">ItemModel</span>
+        <span class="nv">comparator : </span><span class="s">&#39;term_order&#39;</span>
+        <span class="nx">url</span> <span class="o">:</span><span class="nf">-&gt;</span>
+           <span class="nx">AJAXURL</span> <span class="o">+</span> <span class="s">&#39;?action=get-chapter-subsections&#39;</span>
+        
+        <span class="nx">parse</span><span class="o">:</span><span class="nf">(resp)-&gt;</span>
+          <span class="vi">@total = </span><span class="nx">resp</span><span class="p">.</span><span class="nx">count</span> 
+          <span class="nx">resp</span><span class="p">.</span><span class="nx">data</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>API </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nv">API = </span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>get all chapters</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getChapters</span><span class="o">:</span><span class="nf">(param = {})-&gt;</span>
+          <span class="nv">chapterCollection = </span><span class="k">new</span> <span class="nx">Chapters</span><span class="p">.</span><span class="nx">ItemCollection</span>
+          <span class="nx">chapterCollection</span><span class="p">.</span><span class="nx">fetch</span>
+                    <span class="nv">reset : </span><span class="kc">true</span>
+                    <span class="nv">data  : </span><span class="nx">param</span>
+
+          <span class="nx">chapterCollection</span>
+
+
+        <span class="nx">getChapterByID</span><span class="o">:</span><span class="nf">(id)-&gt;</span>
+          <span class="nv">chapter = </span><span class="nx">chapterCollection</span><span class="p">.</span><span class="nx">get</span> <span class="nx">id</span>
+
+          <span class="k">if</span> <span class="o">not</span> <span class="nx">chapter</span> 
+            <span class="nv">chapter = </span><span class="k">new</span> <span class="nx">Chapters</span><span class="p">.</span><span class="nx">ItemModel</span> <span class="nv">term_id : </span><span class="nx">id</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">chapter</span>
+            <span class="nx">chapter</span><span class="p">.</span><span class="nx">fetch</span><span class="p">()</span>
+          <span class="nx">chapter</span>
+
+
+        <span class="nx">getSubsectionByChapterID</span><span class="o">:</span><span class="nf">(param = {})-&gt;</span>
+          <span class="nv">subSectionsCollection = </span><span class="k">new</span> <span class="nx">Chapters</span><span class="p">.</span><span class="nx">SubSectionCollection</span>
+          <span class="nx">subSectionsCollection</span><span class="p">.</span><span class="nx">fetch</span>
+                    <span class="nv">reset : </span><span class="kc">true</span>
+                    <span class="nv">data  : </span><span class="nx">param</span>
+
+          <span class="nx">subSectionsCollection</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>request handler to get all Chapters</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:chapters&quot;</span><span class="p">,</span> <span class="nf">(opt) -&gt;</span>
+        <span class="nx">API</span><span class="p">.</span><span class="nx">getChapters</span><span class="p">(</span><span class="nx">opt</span><span class="p">)</span>
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:chapter:by:id&quot;</span><span class="p">,</span> <span class="nf">(id)-&gt;</span>
+        <span class="nx">API</span><span class="p">.</span><span class="nx">getChapterByID</span> <span class="nx">id</span>
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:subsections:by:chapter:id&quot;</span><span class="p">,</span> <span class="nf">(id)-&gt;</span>
+        <span class="nx">API</span><span class="p">.</span><span class="nx">getSubsectionByChapterID</span> <span class="nx">id</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

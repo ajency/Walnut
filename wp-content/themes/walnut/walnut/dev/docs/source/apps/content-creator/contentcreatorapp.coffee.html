@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>contentcreatorapp.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "source\\apps\\content-creator\\contentcreatorapp.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>contentcreatorapp.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;controllers/region-controller&#39;</span>
+    <span class="s">&#39;apps/content-creator/element-box/elementboxapp&#39;</span>
+    <span class="s">&#39;apps/content-creator/content-builder/app&#39;</span>
+    <span class="s">&#39;apps/content-creator/property-dock/controller&#39;</span><span class="p">],</span><span class="nf">(App,RegionController)-&gt;</span>
+
+      
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator&quot;</span><span class="p">,</span> <span class="nf">(ContentCreator,App)-&gt;</span> 
+
+        <span class="nv">ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
+        <span class="nv">ContentCreator.closequestionelements = </span><span class="kc">true</span>
+        <span class="nv">ContentCreator.closequestioneproperty = </span><span class="kc">true</span>
+
+        <span class="k">class</span> <span class="nx">ContentCreatorController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+          <span class="nv">initialize : </span><span class="nf">(options)-&gt;</span>
+            <span class="nv">breadcrumb_items = </span><span class="s">&#39;items&#39;</span><span class="o">:</span><span class="p">[</span>
+              <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Dashboard&#39;</span><span class="p">,</span><span class="s">&#39;link&#39;</span><span class="o">:</span><span class="s">&#39;javascript://&#39;</span><span class="p">},</span>
+              <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Content Management&#39;</span><span class="p">,</span><span class="s">&#39;link&#39;</span><span class="o">:</span><span class="s">&#39;javascript:;&#39;</span><span class="p">},</span>
+              <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Content Creator&#39;</span><span class="p">,</span><span class="s">&#39;link&#39;</span><span class="o">:</span><span class="s">&#39;javascript:;&#39;</span><span class="p">,</span><span class="s">&#39;active&#39;</span><span class="o">:</span><span class="s">&#39;active&#39;</span><span class="p">}</span>
+            <span class="p">]</span>
+              
+            <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;update:breadcrumb:model&quot;</span><span class="p">,</span> <span class="nx">breadcrumb_items</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>get the main layout for the content creator</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="vi">@layout = </span><span class="nx">@_getContentCreatorLayout</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>listen to "show" event of the layout and start the 
+elementboxapp passing the region </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">@listenTo</span> <span class="nx">@layout</span><span class="p">,</span><span class="s">&#39;show&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:element:box&quot;</span><span class="p">,</span> 
+                    <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">elementBoxRegion</span>
+
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:content:builder&quot;</span><span class="p">,</span>
+                    <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">contentBuilderRegion</span>
+
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:property:dock&quot;</span><span class="p">,</span>
+                    <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">PropertyRegion</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>show the layout</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">@show</span> <span class="nx">@layout</span>
+
+          <span class="nx">_getContentCreatorLayout</span><span class="o">:</span><span class="nf">-&gt;</span>
+            <span class="k">new</span> <span class="nx">ContentCreator</span><span class="p">.</span><span class="nx">ContentCreatorLayout</span>
+
+
+        <span class="k">class</span> <span class="nx">ContentCreator</span><span class="p">.</span><span class="nx">ContentCreatorLayout</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Layout</span> 
+
+          <span class="nv">className : </span><span class="s">&#39;&#39;</span>
+
+          <span class="nv">template : </span><span class="s">&#39;&lt;div class=&quot;page-title&quot;&gt; </span>
+<span class="s">                  &lt;h3&gt;Add &lt;span class=&quot;semi-bold&quot;&gt;Question&lt;/span&gt;&lt;/h3&gt;</span>
+<span class="s">                &lt;/div&gt;</span>
+<span class="s">                &lt;div class=&quot;creator&quot;&gt;</span>
+<span class="s">                  &lt;div class=&quot;tiles&quot; id=&quot;toolbox&quot;&gt;&lt;/div&gt;</span>
+<span class="s">                  &lt;div class=&quot;&quot; id=&quot;content-builder&quot;&gt;&lt;/div&gt;</span>
+<span class="s">                  &lt;div class=&quot;dock tiles&quot; id=&quot;property-dock&quot;&gt;&lt;/div&gt;</span>
+<span class="s">                &lt;/div&gt;</span>
+<span class="s">                &#39;</span>
+
+          <span class="nv">regions : </span>
+            <span class="nv">elementBoxRegion : </span><span class="s">&#39;#toolbox&#39;</span>
+            <span class="nv">contentBuilderRegion : </span><span class="s">&#39;#content-builder&#39;</span> 
+            <span class="nv">PropertyRegion : </span><span class="s">&#39;#property-dock&#39;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>create a command handler to start the content creator controller</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:content:creator&quot;</span><span class="p">,</span> <span class="nf">(options)-&gt;</span>
+                <span class="k">new</span> <span class="nx">ContentCreatorController</span>
+                      <span class="nv">region : </span><span class="nx">options</span><span class="p">.</span><span class="nx">region</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

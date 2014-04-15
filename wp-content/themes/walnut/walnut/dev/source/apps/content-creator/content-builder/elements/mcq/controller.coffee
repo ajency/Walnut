@@ -8,8 +8,6 @@ define ['app'
 					class Mcq.Controller extends Element.Controller
 
 						initialize:(options)->
-							console.log options
-
 
 							_.defaults options.modelData,
 										element  	: 'Mcq'
@@ -67,8 +65,10 @@ define ['app'
 									App.execute "show:question:properties", 
 										model : @layout.model
 
-							@listenTo view, "hide:this:mcq:properties",(options)=>									
-									App.execute "close:question:properties"
+							# @listenTo view, "hide:this:mcq:properties",(options)=>									
+							# 		App.execute "close:question:properties"
+							# 		localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+
 
 							@layout.elementRegion.show view
 							
@@ -90,18 +90,13 @@ define ['app'
 
 							@_showView()
 
-							$('button#save-question').on 'click',=>
-								console.log 'saving'
-								localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
-
-
-
 							@layout.model.on 'change:optioncount', @_changeOptionCount
 
 						deleteElement:(model)->
 							model.set('elements','')
 							delete model.get 'elements'
 							model.destroy()
+							App.execute "close:question:properties"
 
 					
 

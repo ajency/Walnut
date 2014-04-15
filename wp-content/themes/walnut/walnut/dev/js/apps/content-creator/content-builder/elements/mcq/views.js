@@ -82,29 +82,10 @@ define(['app'], function(App) {
       };
 
       McqView.prototype._setActiveHandler = function() {
-        var showMcqPropertyFlag;
-        showMcqPropertyFlag = false;
-        this.$el.parent().parent().on('mouseenter', function() {
-          return showMcqPropertyFlag = true;
-        });
-        this.$el.parent().parent().on('mouseleave', function() {
-          return showMcqPropertyFlag = false;
-        });
-        this.$el.parent().parent().on('mouseenter', function() {
-          return App.ContentCreator.closequestioneproperty = false;
-        });
-        this.$el.parent().parent().on('mouseleave', function() {
-          return App.ContentCreator.closequestioneproperty = true;
-        });
-        return $('body').on('click', (function(_this) {
-          return function() {
-            if (showMcqPropertyFlag) {
-              _this.trigger("show:this:mcq:properties");
-            }
-            if (App.ContentCreator.closequestioneproperty) {
-              console.log(App.ContentCreator.closequestioneproperty);
-              return _this.trigger("hide:this:mcq:properties");
-            }
+        return this.$el.parent().parent().on('click', (function(_this) {
+          return function(evt) {
+            _this.trigger("show:this:mcq:properties");
+            return evt.stopPropagation();
           };
         })(this));
       };
