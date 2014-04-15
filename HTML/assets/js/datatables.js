@@ -331,6 +331,38 @@ var tableElement = $('#students');
 	$('#example_wrapper .dataTables_filter input').addClass("input-medium "); // modify table search input
     $('#example_wrapper .dataTables_length select').addClass("select2-wrapper span12"); // modify table per page dropdown
 
+    var tableElement = $('#modules');
+
+    tableElement.dataTable( {
+		"sDom": "<'row'<'col-xs-11'><'col-xs-1'>r<'clearfix'><'col-sm-12' >>t<'row'<'col-md-12'p i>>",
+		"sPaginationType": "bootstrap",
+		 "aoColumnDefs": [
+          { 'bSortable': false, 'aTargets': [ 0 ] }
+		],
+		"aaSorting": [[ 1, "asc" ]],
+		"oLanguage": {
+			"sLengthMenu": "_MENU_ ",
+			"sInfo": "Showing <b>_START_ to _END_</b> of _TOTAL_ entries"
+		},
+		 bAutoWidth     : false,
+        fnPreDrawCallback: function () {
+            // Initialize the responsive datatables helper once.
+            if (!responsiveHelper) {
+                responsiveHelper = new ResponsiveDatatablesHelper(tableElement, breakpointDefinition);
+            }
+        },
+        fnRowCallback  : function (nRow) {
+            responsiveHelper.createExpandIcon(nRow);
+        },
+        fnDrawCallback : function (oSettings) {
+            responsiveHelper.respond();
+        }
+	});
+
+	$('#example_wrapper .dataTables_filter input').addClass("input-medium "); // modify table search input
+    $('#example_wrapper .dataTables_length select').addClass("select2-wrapper span12"); // modify table per page dropdown
+
+
 	
 	
 	$('#example input').click( function() {

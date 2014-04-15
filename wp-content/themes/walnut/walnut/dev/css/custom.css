@@ -777,6 +777,9 @@ h3.time {
 #textbooks.list.takeClass .meta.name {
   width: 50%;
 }
+#textbooks.list.takeClass .meta.rec {
+  width: 30%;
+}
 #textbooks.list.takeClass .txtbook {
   cursor: pointer;
   z-index: 2;

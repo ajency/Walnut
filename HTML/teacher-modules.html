@@ -21,6 +21,8 @@
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" type="text/css">
+	<link href="assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
 
 	<link href="assets/plugins/jquery-datatable/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
@@ -55,8 +57,12 @@
 		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
 		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
 		<script type="text/javascript" src="assets/js/datatables.js"></script>
-		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
+
 		<script type="text/javascript" src="assets/js/row-link.js"></script>
+		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+		<script src="assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
 
 	<!-- END NEED TO WORK ON -->
 
@@ -165,10 +171,6 @@
 			</div>
           </div>-->
 		  
-		 <div class="user-details">
-            <div class="username"><img src="assets/img/offline.gif" /> <span class="bold"> Offline </span>&nbsp;&nbsp;&nbsp;  
-			</div>
-          </div>
 			<!-- <div class="user-details">
             <div class="username"><img src="assets/img/connecting.gif" /> <span class="bold"> Connecting </span>&nbsp;&nbsp;&nbsp;  
 			</div>
@@ -246,6 +248,17 @@
 					<li><a href="#">Add Question</a></li>
 				</ul>
 			</li>
+			<li>
+				<a href="javascript:;">
+					<i class="fa fa-pencil-square-o"></i>
+					<span class="title">Training Module</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Teacher Training</a></li>
+					<li><a href="#">Student Training</a></li>
+				</ul>
+			</li>
 			<!-- END ONE LEVEL MENU -->
 		
 		</ul>
@@ -273,11 +286,36 @@
 	<!-- END SIDEBAR --> 
 	<!-- BEGIN PAGE CONTAINER-->
 	<div class="page-content condensed"> 
+
+		<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="content-piece-config">
+	      <div class="modal-dialog">
+	        <div class="modal-content">
+	          <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	            <h4 class="modal-title">Content Piece Settings</h4>
+	          </div>
+	          <div class="modal-body">
+	            <label class="form-label">Some Text</label>
+	            <input name="" id="" type="text" class="form-control" placeholder="Enter some text">
+	          </div>
+	          <div class="modal-footer">
+	            <button type="button" class="btn btn-success">Save</button>
+	          </div>
+	        </div>
+	        <!-- /.modal-content -->
+	      </div>
+	      <!-- /.modal-dialog -->
+	    </div>
+
 		<div class="content">  
 			<ul class="breadcrumb">
 				<li>
-				  <p><a href="#" class="active">Dashboard</a></p>
+				  <p>Dashboard</p>
 				</li>
+				<li>
+				  <a href="#"> Content Management</a>
+				</li>
+				<li><a href="#" class="active">Add Question</a> </li>
 			 </ul>
 			<!-- BEGIN PAGE TITLE -->
 			<!--<div class="page-title"> 
@@ -287,68 +325,97 @@
 
 			<!-- BEGIN PlACE PAGE CONTENT HERE -->
 			<div class="teacher-app">
-				<div class="row">  
-			        <div class="col-md-3">
-			        </div>
-			        <div class="col-md-6">
 
-				          <ul class="nav nav-tabs" id="teacherOptns">
-				            <li class="active"><a href="#takeClass">Take a Class</a></li>
-				            <li class=""><a href="#training">Start Training</a></li>
-				            <li class=""><a href="#progress">Class Progress</a></li>
-				          </ul>
-
-				          <div class="tab-content">
-				            <div class="tab-pane active" id="takeClass">
-				              <div class="m-b-15 semi-bold row">
-									<div class="col-md-6">
-										<label class="form-label bold">Class</label>
-										<select id="class" class="form-control select2" >
-								            <option value="1">1</option>
-								            <option value="2">2</option>
-								            <option value="3">3</option>
-								        </select>
-								    </div>
-								    <div class="col-md-6">
-								        <label class="form-label bold">Div</label>
-										<select id="div" class="form-control select2" >
-								            <option value="A">A</option>
-								            <option value="B">B</option>
-								            <option value="C">C</option>
-								        </select>
-								    </div>
-							    </div>
-							    <button type="button" class="btn btn-primary btn-xs btn-sm pull-right"> Go </button>
-							    <div class="clearfix"></div>
-				            </div>
-				            <div class="tab-pane" id="training">
-				              <div class="m-b-15 semi-bold row">
-									<div class="col-md-12">
-										<label class="form-label bold">Class</label>
-										<select id="class-training" class="form-control select2" >
-								            <option value="1">1</option>
-								            <option value="2">2</option>
-								            <option value="3">3</option>
-								        </select>
-								    </div>
-							    </div>
-							    <button type="button" class="btn btn-primary btn-xs btn-sm pull-right"> Go </button>
-							    <div class="clearfix"></div>
-				            </div>
-				            <div class="tab-pane" id="progress">
-				              <div class="row">
-				                <div class="col-md-12">
-				                  <h3>Coming Soon...</h3>
-				                </div>
-				              </div>
-				            </div>
-				          </div>
-			        </div>
-			        <div class="col-md-3">
-			        </div>
-			     
-			    
-			  </div>
+				<div class="tiles white grid simple vertical blue">
+					<div class="grid-title no-border">
+						<h4 class="">Textbook <span class="semi-bold">Abc</span></h4>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+						</div>
+					</div>
+					<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
+						<div class="row">
+							<div class="col-lg-12">
+								<h4><span class="semi-bold">All</span> Modules</h4>
+								<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="modules">
+					                <thead>
+					                  <tr>
+					                    <th style="width:50%">Name</th>
+					                    <th style="width:10%" >Duration</th>
+					                    <th style="width:40%">Status</th>
+					                  </tr>
+					                </thead>
+					                <tbody>
+					                  <tr >
+					                    <td class="v-align-middle"><a href="#"></a>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</td>
+					                    <td class="v-align-middle"><span class="muted">20 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span> <button type="button" class="btn btn-white btn-small pull-right">Replay</button></td>
+					                  </tr>
+					                  <tr>
+					                    <td class="v-align-middle">es, but also the leap into electronic typesetting, remaining essentially unchanged. It was popul</td>
+					                    <td><span class="muted">35 mins</span></td>
+					                    <td><span class="muted"><span class="label label-info">In Progress</span></span><button type="button" class="btn btn-white btn-small pull-right "><i class="fa fa-pause"></i> Resume</button><button type="button" class="btn btn-white btn-small pull-right m-r-10" data-toggle="modal" data-target="#schedule"><i class="fa fa-calendar"></i> Schedule</button>
+					                    <div class="popover-markup">
+										  <div class="head hide">
+										    Schedule
+										   </div>
+										  <div class="content hide">
+										    
+										  </div>
+										</div></td>
+					                  </tr>
+					                  <tr>
+					                    <td>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock,</td>
+					                    <td class="v-align-middle"><span class="muted">15 mins</span></td>
+					                    <td><span class="muted"><span class="label label-important">Not Started</span></span></td>
+					                  </tr>
+					                  <tr>
+					                    <td>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it </td>
+					                    <td class="v-align-middle"><span class="muted">35 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span><button type="button" class="btn btn-white btn-small pull-right"><i class="fa fa-repeat"></i>&nbsp;Replay</button></td>
+					                  </tr>
+					                  <tr>
+					                    <td>Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up </td>
+					                    <td class="v-align-middle"><span class="muted">23 mins</span></td>
+					                    <td><span class="muted"><span class="label label-important">Not Started</span></span></td>
+					                  </tr>
+					                  <tr>
+					                    <td>The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</td>
+					                    <td class="v-align-middle"><span class="muted">16 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span><button type="button" class="btn btn-white btn-small pull-right"><i class="fa fa-repeat"></i>&nbsp;Replay</button></td>
+					                  </tr>
+					                  <tr>
+					                    <td>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus</td>
+					                    <td class="v-align-middle"><span class="muted">14 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span><button type="button" class="btn btn-white btn-small pull-right"><i class="fa fa-repeat"></i>&nbsp;Replay</button></td>
+					                  </tr>
+					                  <tr>
+					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
+					                    <td class="v-align-middle"><span class="muted">45mins</span></td>
+					                    <td><span class="muted"><span class="label label-info">In Progress</span></span></td>
+					                  </tr>
+					                  <tr>
+					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
+					                    <td class="v-align-middle"><span class="muted">18 mins</span></td>
+					                    <td><span class="muted"><span class="label label-important">Not Started</span></span></td>
+					                  </tr>
+					                  <tr>
+					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
+					                    <td class="v-align-middle"><span class="muted">15 mins</span></td>
+					                    <td><span class="muted"><span class="label label-info">In Progress</span></span></td>
+					                  </tr>
+					                  <tr>
+					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
+					                    <td class="v-align-middle"><span class="muted">12 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span><button type="button" class="btn btn-white btn-small pull-right"><i class="fa fa-repeat"></i>&nbsp;Replay</button></td>
+					                  </tr>
+					                </tbody>
+					              </table>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
 			</div>
 			<!-- END PLACE PAGE CONTENT HERE -->
 		</div>
@@ -357,15 +424,55 @@
 </div>
 <!-- END CONTENT --> 
 
+<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
+      </div>
+      <div class="modal-body">
+        <div class="input-append success date">
+			<input type="text" placeholder="Select Date" class="span12">
+			<span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> 
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-	$('#teacherOptns a').click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
+	$("#subs").select2();
+	$("#chaps").select2();
+//Multi Select
+ 	$("#secs").val([]).select2();
+ 	$("#subsecs").val([]).select2();
+
+//Schedule Popover
+ 	$('.schedule').popover({
+	    html : true,
+	    title: function() {
+	      return $(this).parent().find('.head').html();
+	    },
+	    content: function() {
+	      return $(this).parent().find('.content').html();
+	    },
+	    placement: 'left'
 	});
 
-	$('#class').select2();
-	$('#div').select2();
-	$('#class-training').select2();
-</script>
+//Date Pickers
+	$('.input-append.date').datepicker({
+		autoclose: true,
+		todayHighlight: true
+	});
+
+//Time pickers
+	$('.timepicker-default').timepicker();
+  	 	$('.timepicker-24').timepicker({
+            minuteStep: 1,
+            showSeconds: true,
+            showMeridian: false
+    });
+ </script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 # </ul>
 require.config 
 	
-	urlArgs : "ver=1"
+	urlArgs : "ver=#{(new Date()).getTime()}"
 	
 	baseUrl : '../wp-content/themes/walnut/walnut/dev/js'
 	
