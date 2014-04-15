@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>views.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../../doc-style.css" />
+  <script src="../../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../../", thisFile = "source\\apps\\content-creator\\content-builder\\elements\\imagewithtext\\views.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>views.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Row views</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.ImageWithText.Views&#39;</span><span class="p">,</span>
+  <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>Menu item view</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">ImageWithTextView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+      <span class="nv">className : </span><span class="s">&#39;imagewithtext&#39;</span>
+
+      <span class="nv">template : </span><span class="s">&#39;{{#image}}</span>
+<span class="s">              &lt;img src=&quot;{{imageurl}}&quot; alt=&quot;{{title}}&quot; class=&quot;{{alignclass}} img-responsive&quot;/&gt;</span>
+<span class="s">            {{/image}}</span>
+<span class="s">            {{#placeholder}}</span>
+<span class="s">              &lt;div class=&quot;image-placeholder&quot;&gt;&lt;span class=&quot;bicon icon-uniF10E&quot;&gt;&lt;/span&gt;Upload Image&lt;/div&gt;</span>
+<span class="s">            {{/placeholder}}</span>
+<span class="s">            &lt;p class=&quot;editor&quot;&gt;&lt;/p&gt;</span>
+<span class="s">            &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt;&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>override serializeData to set holder property for the view</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">mixinTemplateHelpers</span><span class="o">:</span><span class="nf">(data)-&gt;</span>
+        <span class="nv">data = </span><span class="k">super</span> <span class="nx">data</span>
+        <span class="nv">data.holder = </span><span class="s">&#39;&#39;</span>
+        <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">isNew</span><span class="p">()</span>
+          <span class="nv">data.placeholder = </span><span class="kc">true</span>
+        <span class="k">else</span>
+          <span class="nv">data.image = </span><span class="kc">true</span>
+          <span class="nv">data.imageurl = </span><span class="nf">-&gt;</span>
+            <span class="k">if</span> <span class="nx">@sizes</span><span class="p">[</span><span class="s">&#39;thumbnail&#39;</span><span class="p">]</span> <span class="k">then</span> <span class="nx">@sizes</span><span class="p">[</span><span class="s">&#39;thumbnail&#39;</span><span class="p">].</span><span class="nx">url</span> <span class="k">else</span> <span class="nx">@sizes</span><span class="p">[</span><span class="s">&#39;full&#39;</span><span class="p">].</span><span class="nx">url</span>
+
+        <span class="nv">data.alignclass = </span><span class="nf">-&gt;</span>
+          <span class="k">switch</span> <span class="nx">@align</span>
+            <span class="k">when</span> <span class="s">&#39;left&#39;</span> 
+              <span class="k">return</span> <span class="s">&#39;pull-left&#39;</span>
+            <span class="k">when</span> <span class="s">&#39;right&#39;</span>
+              <span class="k">return</span> <span class="s">&#39;pull-right&#39;</span>
+
+        <span class="nx">data</span>
+
+      <span class="nv">events:</span>
+        <span class="s">&#39;click img,.image-placeholder&#39;</span><span class="o">:</span> <span class="nf">(e)-&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>e.stopPropagation()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nx">@trigger</span> <span class="s">&quot;show:media:manager&quot;</span>
+
+        <span class="s">&#39;blur p.editor&#39;</span> <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">@trigger</span> <span class="s">&quot;text:element:blur&quot;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;p.editor&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span>
+
+      <span class="nx">onStyleUpadted</span><span class="o">:</span><span class="nf">(newStyle, prevStyle)-&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">removeClass</span> <span class="nx">prevStyle</span>
+          <span class="p">.</span><span class="nx">addClass</span> <span class="nx">newStyle</span>
+
+      <span class="nx">onRender</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nv">style = </span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span> <span class="k">this</span><span class="p">,</span> <span class="s">&#39;style&#39;</span>
+        <span class="nx">@onStyleUpadted</span> <span class="nx">_</span><span class="p">.</span><span class="nx">slugify</span><span class="p">(</span><span class="nx">style</span><span class="p">),</span> <span class="s">&#39;&#39;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>set the height of the parent of img in case float value is set
+check if a valid image_id is set for the element
+if present ignore else run the Holder.js to show a placeholder
+after run remove the data-src attribute of the image to avoid
+reloading placeholder image again</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>run ckeditor</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;p.editor&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span><span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
+        <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;p.editor&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
+        <span class="nv">content = </span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s">&#39;templateHelpers&#39;</span><span class="p">).</span><span class="nx">content</span>
+        <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">content</span>
+
+
+    
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

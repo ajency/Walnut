@@ -32,8 +32,20 @@ define ['app'],(App)->
 
 			onShow:->
 
-					$('#question-property').on 'mouseover mouseenter',->
-						App.ContentCreator.closequestioneproperty = false
+					# $('#question-property').on 'mouseover mouseenter',->
+					# 	App.ContentCreator.closequestioneproperty = false
 
-					$('#question-property').parent().parent().on 'mouseleave',->
-						App.ContentCreator.closequestioneproperty = true
+					# $('#question-property').parent().parent().on 'mouseleave',->
+					# 	App.ContentCreator.closequestioneproperty = true
+
+					$('#question-property, #question-elements-property, #question-elements').parent().on 'click',(evt)->
+						evt.stopPropagation()
+
+
+					$('html').on 'click',=>
+						@questPropertyRegion.close()
+
+					$('html ,.element-wrapper').on 'mousedown click',=>
+						@questElementPropRegion.close()
+
+					

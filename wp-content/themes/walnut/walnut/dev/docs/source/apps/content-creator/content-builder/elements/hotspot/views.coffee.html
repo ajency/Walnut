@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>views.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../../doc-style.css" />
+  <script src="../../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../../", thisFile = "source\\apps\\content-creator\\content-builder\\elements\\hotspot\\views.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h1">
+        <a href="#console.log%20json.stringify%20%40model.tojson()">console.log JSON.stringify @model.toJSON()</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>views.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Row views</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.Hotspot.Views&#39;</span><span class="p">,</span> <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>Menu item view</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">HotspotView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+      <span class="nv">className : </span><span class="s">&#39;stage&#39;</span>
+
+      <span class="nv">template : </span><span class="s">&#39;&amp;nbsp;&#39;</span>
+
+      <span class="nv">events :</span>
+        <span class="s">&#39;mousedown&#39;</span> <span class="o">:</span> <span class="nf">-&gt;</span> <span class="nx">@trigger</span> <span class="s">&quot;show:hotspot:elements&quot;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>'focus'    : -> console.log "blur" #'updateModel'</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+      <span class="nx">initialize</span><span class="o">:</span><span class="nf">(opt = {})-&gt;</span>
+        <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;content&#39;</span><span class="p">)</span><span class="o">!=</span><span class="s">&#39;&#39;</span>
+          <span class="vi">@contentObject = </span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;content&#39;</span>
+        <span class="k">else</span> 
+          <span class="vi">@contentObject = </span><span class="k">new</span> <span class="nb">Object</span><span class="p">()</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>@model.get('content')</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="vi">@textCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element:collection&quot;</span><span class="p">,</span> <span class="nx">@contentObject</span><span class="p">.</span><span class="nx">textData</span>
+        <span class="vi">@optionCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element:collection&quot;</span><span class="p">,</span> <span class="nx">@contentObject</span><span class="p">.</span><span class="nx">optionData</span>
+        <span class="vi">@imageCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element:collection&quot;</span><span class="p">,</span> <span class="nx">@contentObject</span><span class="p">.</span><span class="nx">imageData</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>give a unique name to every hotspot canvas
+console.log "layout model  "+JSON.stringify @model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="vi">@stageName = </span><span class="s">&quot;stage&quot;</span><span class="o">+</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>create the canvas layers</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="vi">@imageLayer = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Layer</span>
+          <span class="nv">name : </span><span class="s">&#39;imageLayer&#39;</span>
+        <span class="vi">@optionLayer = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Layer</span>
+          <span class="nv">name : </span><span class="s">&#39;optionLayer&#39;</span>
+        <span class="vi">@textLayer = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Layer</span>
+          <span class="nv">name : </span><span class="s">&#39;textLayer&#39;</span>
+        <span class="vi">@defaultLayer = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Layer</span>
+          <span class="nv">name : </span><span class="s">&#39;defaultLayer&#39;</span>
+
+      <span class="nx">onRender</span><span class="o">:</span><span class="nf">-&gt;</span>
+
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">@stageName</span>
+        
+
+      <span class="nx">onShow</span><span class="o">:</span><span class="p">()</span><span class="nf">-&gt;</span>
+
+        <span class="vi">@stage = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Stage</span>
+            <span class="nv">container: </span><span class="nx">@stageName</span>
+            <span class="nv">width: </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">width</span><span class="p">()</span>
+            <span class="nv">height: </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">height</span><span class="p">()</span><span class="o">+</span><span class="mi">80</span>
+
+        <span class="k">if</span> <span class="nx">@contentObject</span><span class="p">.</span><span class="nx">height</span><span class="o">!=</span><span class="kc">undefined</span>
+          <span class="nx">@stage</span><span class="p">.</span><span class="nx">height</span> <span class="nx">@contentObject</span><span class="p">.</span><span class="nx">height</span>
+
+        
+        
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>set image to the default image layer</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@_setDefaultImage</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>add the canvas layers</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@stage</span><span class="p">.</span><span class="nx">add</span> <span class="nx">@defaultLayer</span>
+        <span class="nx">@stage</span><span class="p">.</span><span class="nx">add</span> <span class="nx">@imageLayer</span>
+        <span class="nx">@stage</span><span class="p">.</span><span class="nx">add</span> <span class="nx">@textLayer</span>
+        <span class="nx">@stage</span><span class="p">.</span><span class="nx">add</span> <span class="nx">@optionLayer</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>on resize</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">resize</span> <span class="p">()</span><span class="o">=&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>console.log $('#'+@stageName+'.stage').width()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@stage</span><span class="p">.</span><span class="nx">setSize</span>
+            <span class="nv">width: </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">width</span><span class="p">()</span>
+            <span class="nv">height: </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">height</span><span class="p">()</span><span class="o">-</span><span class="mi">5</span>
+
+          <span class="vi">@contentObject.height = </span><span class="nx">@stage</span><span class="p">.</span><span class="nx">height</span><span class="p">()</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+<p>resize the default image </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@_updateDefaultImageSize</span><span class="p">()</span>
+
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">resizable</span>
+            <span class="nv">handles: </span><span class="s">&quot;s&quot;</span> 
+
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">parent</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)=&gt;</span>
+          <span class="nx">@trigger</span> <span class="s">&#39;show:hotspot:elements&#39;</span>
+          <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+
+        <span class="nx">@_setPropertyBoxCloseHandlers</span><span class="p">()</span>
+        <span class="nx">@_drawExistingElements</span><span class="p">()</span>
+        
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+<p>listen to drop event</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@listenTo</span> <span class="nx">@</span><span class="p">,</span> <span class="s">&#39;add:hotspot:element&#39;</span> <span class="p">,</span><span class="nf">(type,elementPos)-&gt;</span>
+
+            <span class="nx">@_addElements</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">elementPos</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+</div>
+<p>$('button.btn.btn-success.btn-cons2').on 'click',=>
+        console.log  @stage.toJSON()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+</div>
+<p>make the hotspot canvas area dropable</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.kineticjs-content&#39;</span><span class="p">).</span><span class="nx">droppable</span>
+            <span class="nv">accept : </span><span class="s">&#39;.hotspotable&#39;</span>
+            <span class="nv">drop : </span><span class="nf">(evt, ui)=&gt;</span>
+                <span class="k">if</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">draggable</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s">&quot;tagName&quot;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;LI&#39;</span>
+                    <span class="nv">type  = </span><span class="nx">ui</span><span class="p">.</span><span class="nx">draggable</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-element&#39;</span>
+                    <span class="nv">elementPos = </span>
+                      <span class="nv">left : </span><span class="nx">evt</span><span class="p">.</span><span class="nx">clientX</span><span class="o">-</span><span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.kineticjs-content&#39;</span><span class="p">).</span><span class="nx">offset</span><span class="p">().</span><span class="nx">left</span>
+                      <span class="nv">top  : </span><span class="nx">evt</span><span class="p">.</span><span class="nx">clientY</span><span class="o">-</span><span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.kineticjs-content&#39;</span><span class="p">).</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span> <span class="o">+</span> <span class="nb">window</span><span class="p">.</span><span class="nx">pageYOffset</span>
+                    <span class="nx">@trigger</span> <span class="s">&quot;add:hotspot:element&quot;</span><span class="p">,</span> <span class="nx">type</span> <span class="p">,</span> <span class="nx">elementPos</span>
+
+
+      <span class="nx">_setPropertyBoxCloseHandlers</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;body&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+</div>
+<p>console.log App.ContentCreator.closequestionelementproperty
+if App.ContentCreator.closequestionelementproperty
+    # console.log 'stage'
+    App.execute "close:question:element:properties"
+if App.ContentCreator.closequestionelements and App.ContentCreator.closequestionelementproperty</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+</div>
+<p>App.execute "close:question:elements"</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="vi">@contentObject.textData = </span><span class="nx">@textCollection</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+              <span class="vi">@contentObject.optionData = </span><span class="nx">@optionCollection</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+              <span class="vi">@contentObject.imageData = </span><span class="nx">@imageCollection</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">@contentObject</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><p>@model.set 'content', JSON.stringify @contentObject</p>
+
+
+<div class="pilwrap" id="console.log%20json.stringify%20%40model.tojson()">
+  <h1>
+    <a href="#console.log%20json.stringify%20%40model.tojson()" name="console.log%20json.stringify%20%40model.tojson()" class="pilcrow">&#182;</a>
+    console.log JSON.stringify @model.toJSON()
+  </h1>
+</div>
+
+
+<p>if @model.hasChanged()
+    console.log "saving them"
+    localStorage.setItem 'ele'<a href='mailto:+@model.get'>+@model.get</a>('meta_id'), JSON.stringify(@model.toJSON())
+    console.log JSON.stringify @model.toJSON()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+              <span class="nx">@trigger</span> <span class="s">&quot;close:hotspot:elements&quot;</span><span class="p">,</span><span class="nx">@contentObject</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+</div>
+<p>$('#question-elements-property').on 'mouseover',->
+        App.ContentCreator.closequestionelementproperty =  false
+$('#question-elements-property').on 'mouseout',->
+        App.ContentCreator.closequestionelementproperty = true</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+</div>
+<p>@$el.on 'mouseenter', '.kineticjs-content', ->
+    # console.log 'over stage'
+    App.ContentCreator.closequestionelements = false
+@$el.on 'mouseleave', '.kineticjs-content', ->
+    # console.log 'outofStage'
+    App.ContentCreator.closequestionelements = true</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
+</div>
+<p>$('#question-elements').on 'mouseover', ->
+    # console.log "over question"
+    App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = false
+$('#question-elements').on 'mouseout', ->
+    # console.log "out of question"
+    App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = true</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+  
+      <span class="nx">_drawExistingElements</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@textCollection</span>
+        <span class="nx">@textCollection</span><span class="p">.</span><span class="nx">each</span> <span class="nf">(model,i)=&gt;</span>
+          <span class="nx">@_addTextElement</span>
+              <span class="nv">left: </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;x&#39;</span>
+              <span class="nv">top : </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;y&#39;</span>
+            <span class="p">,</span> 
+              <span class="nx">model</span>
+        <span class="nx">@optionCollection</span><span class="p">.</span><span class="nx">each</span> <span class="nf">(model,i)=&gt;</span>
+          <span class="k">if</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;shape&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;Rect&#39;</span>
+            <span class="nx">@_addRectangle</span>
+                <span class="nv">left : </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;x&#39;</span>
+                <span class="nv">top : </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;y&#39;</span>
+              <span class="p">,</span>
+                <span class="nx">model</span>
+          <span class="k">if</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;shape&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;Circle&#39;</span>
+            <span class="nx">@_addCircle</span>
+                <span class="nv">left : </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;x&#39;</span>
+                <span class="nv">top : </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;y&#39;</span>
+              <span class="p">,</span>
+                <span class="nx">model</span>
+
+        <span class="nx">@imageCollection</span><span class="p">.</span><span class="nx">each</span> <span class="nf">(model,i)=&gt;</span>
+          <span class="nx">@_addImageElement</span>
+              <span class="nv">left : </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;x&#39;</span>
+              <span class="nv">top : </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;y&#39;</span>
+            <span class="p">,</span>
+              <span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;url&#39;</span>
+            <span class="p">,</span>
+              <span class="nx">model</span>
+
+        <span class="nx">@_updateDefaultLayer</span><span class="p">()</span>
+
+        <span class="nx">setTimeout</span> <span class="nf">-&gt;</span>
+          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;body&#39;</span><span class="p">).</span><span class="nx">trigger</span><span class="p">(</span><span class="s">&#39;mousedown&#39;</span><span class="p">)</span>
+        <span class="p">,</span> <span class="mi">1000</span>
+
+
+
+
+      <span class="nx">_setDefaultImage</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nv">defaultImage = </span><span class="k">new</span> <span class="nx">Image</span><span class="p">()</span>
+        <span class="nv">defaultImage.onload = </span><span class="p">()</span><span class="o">=&gt;</span>
+            
+            <span class="vi">@hotspotDefault = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Image</span>
+                <span class="nv">image   : </span><span class="nx">defaultImage</span>
+            
+            <span class="nx">@defaultLayer</span><span class="p">.</span><span class="nx">add</span> <span class="nx">@hotspotDefault</span>
+            <span class="nx">@_updateDefaultLayer</span><span class="p">()</span>
+            <span class="nx">@_updateDefaultImageSize</span><span class="p">()</span>
+
+        <span class="nv">defaultImage.src = </span><span class="s">&quot;../wp-content/themes/walnut/images/empty-hotspot.svg&quot;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+</div>
+<p>remove the default image from the layer if any hotspot elements are added</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_updateDefaultLayer</span><span class="o">:</span><span class="nf">-&gt;</span>
+          <span class="nv">i = </span><span class="mi">1</span>
+          <span class="k">while</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">@stage</span><span class="p">.</span><span class="nx">getChildren</span><span class="p">().</span><span class="nx">length</span>
+            <span class="k">if</span> <span class="nx">i</span>
+              <span class="k">if</span> <span class="nx">@stage</span><span class="p">.</span><span class="nx">getChildren</span><span class="p">()[</span><span class="nx">i</span><span class="p">].</span><span class="nx">getChildren</span><span class="p">().</span><span class="nx">length</span>
+                <span class="nx">@defaultLayer</span><span class="p">.</span><span class="nx">removeChildren</span><span class="p">()</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;remove default&quot;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="nx">i</span><span class="o">++</span>
+          <span class="nx">@defaultLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+          
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+</div>
+<p>update the size of default image on change of stage</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_updateDefaultImageSize</span><span class="o">:</span><span class="nf">-&gt;</span>
+          <span class="nv">width = </span><span class="nx">@stage</span><span class="p">.</span><span class="nx">width</span><span class="p">()</span>
+          <span class="nv">height = </span><span class="nx">@stage</span><span class="p">.</span><span class="nx">height</span><span class="p">()</span>
+
+          
+
+          <span class="nx">@hotspotDefault</span><span class="p">.</span><span class="nx">setSize</span>
+            <span class="nv">width   : </span><span class="mi">336</span>
+            <span class="nv">height  : </span><span class="mi">200</span>
+
+          <span class="k">if</span><span class="p">(</span><span class="nx">width</span><span class="o">&lt;</span><span class="mi">220</span><span class="p">)</span>
+            <span class="nx">@hotspotDefault</span><span class="p">.</span><span class="nx">setSize</span>
+              <span class="nv">width : </span><span class="nx">width</span><span class="o">-</span><span class="mi">10</span>
+              <span class="nv">height : </span><span class="p">(</span><span class="nx">width</span><span class="o">-</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="mf">1.68</span>
+
+          <span class="k">if</span><span class="p">(</span><span class="nx">height</span><span class="o">&lt;</span><span class="mi">160</span><span class="p">)</span>
+            <span class="nx">@hotspotDefault</span><span class="p">.</span><span class="nx">setSize</span>
+              <span class="nv">width : </span><span class="p">(</span><span class="nx">height</span><span class="o">-</span><span class="mi">10</span><span class="p">)</span><span class="o">*</span><span class="mf">1.68</span>
+              <span class="nv">height : </span><span class="nx">height</span><span class="o">-</span><span class="mi">10</span>
+
+
+
+          <span class="nx">@hotspotDefault</span><span class="p">.</span><span class="nx">position</span>
+            <span class="nv">x : </span><span class="nx">@stage</span><span class="p">.</span><span class="nx">width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="nx">@hotspotDefault</span><span class="p">.</span><span class="nx">width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span>
+            <span class="nv">y : </span><span class="nx">@stage</span><span class="p">.</span><span class="nx">height</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="nx">@hotspotDefault</span><span class="p">.</span><span class="nx">height</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span>
+
+          <span class="nx">@defaultLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+      <span class="nv">_addElements: </span><span class="nf">(type,elementPos)-&gt;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">type</span><span class="o">==</span><span class="s">&quot;Hotspot-Circle&quot;</span><span class="p">)</span>
+            <span class="nx">@_addCircle</span> <span class="nx">elementPos</span>
+
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">type</span><span class="o">==</span><span class="s">&quot;Hotspot-Rectangle&quot;</span><span class="p">)</span>
+            <span class="nx">@_addRectangle</span> <span class="nx">elementPos</span>
+
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;Hotspot-Text&quot;</span><span class="p">)</span>
+            <span class="nx">@_addTextElement</span> <span class="nx">elementPos</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">type</span><span class="o">==</span><span class="s">&quot;Hotspot-Image&quot;</span><span class="p">)</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
+</div>
+<p>@trigger "show:media:manager"</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">App</span><span class="p">.</span><span class="nx">navigate</span> <span class="s">&quot;media-manager&quot;</span><span class="p">,</span> <span class="nv">trigger : </span><span class="kc">true</span>
+          <span class="nx">@listenTo</span> <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">,</span><span class="s">&quot;media:manager:choosed:media&quot;</span><span class="p">,</span><span class="nf">(media)=&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
+</div>
+<p>@layout.model.set 'image_id', media.get 'id'</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">@_addImageElement</span> <span class="nx">elementPos</span><span class="p">,</span> <span class="nx">media</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">().</span><span class="nx">url</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
+</div>
+<p>@layout.model.save()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">@stopListening</span> <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">,</span><span class="s">&quot;media:manager:choosed:media&quot;</span>
+
+
+        <span class="nx">@_updateDefaultLayer</span><span class="p">()</span>
+
+        <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+      <span class="nv">_addCircle: </span><span class="nf">(elementPos,model)-&gt;</span>
+
+          <span class="k">if</span> <span class="nx">model</span>
+            <span class="nv">hotspotElement = </span><span class="nx">model</span>
+
+          <span class="k">else</span>
+            <span class="nv">modelData =</span>
+              <span class="nv">type : </span><span class="s">&#39;Option&#39;</span>
+              <span class="nv">shape : </span><span class="s">&#39;Circle&#39;</span>
+              <span class="nv">x : </span><span class="nx">elementPos</span><span class="p">.</span><span class="nx">left</span>
+              <span class="nv">y: </span><span class="nx">elementPos</span><span class="p">.</span><span class="nx">top</span>
+              <span class="nv">radius : </span><span class="mi">20</span>
+              <span class="nv">color : </span><span class="s">&#39;#000000&#39;</span>
+              <span class="nv">transparent : </span><span class="kc">false</span>
+              <span class="nv">correct : </span><span class="kc">false</span>
+              
+            <span class="nv">hotspotElement = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element&quot;</span><span class="p">,</span> <span class="nx">modelData</span>
+            <span class="nx">@optionCollection</span><span class="p">.</span><span class="nx">add</span> <span class="nx">hotspotElement</span>
+
+          <span class="nv">self = </span><span class="nx">@</span>
+
+          <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span>
+                <span class="nv">model : </span><span class="nx">hotspotElement</span>
+
+
+          <span class="nv">circle = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Circle</span>
+              <span class="nv">x       : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;x&#39;</span>
+              <span class="nv">y       : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;y&#39;</span>
+              <span class="nv">radius    : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;radius&#39;</span>
+              <span class="nv">stroke    : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;color&#39;</span>
+              <span class="nv">strokeWidth : </span><span class="mi">2</span>
+              <span class="nv">dash    : </span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span> <span class="p">]</span>
+              <span class="nv">dashEnabled : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;transparent&#39;</span>
+              <span class="nv">fill : </span><span class="k">if</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&quot;correct&quot;</span><span class="p">)</span> <span class="k">then</span> <span class="s">&quot;rgba(12, 199, 55, 0.28)&quot;</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+
+          <span class="nv">circleGrp = </span><span class="nx">resizeCircle</span> <span class="nx">circle</span><span class="p">,</span><span class="nx">@optionLayer</span>
+
+          <span class="nx">circleGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;dragend&#39;</span><span class="p">,</span><span class="nf">(e)-&gt;</span>
+              <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;x&#39;</span><span class="p">,</span><span class="nx">circle</span><span class="p">.</span><span class="nx">getAbsolutePosition</span><span class="p">().</span><span class="nx">x</span>
+              <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;y&#39;</span><span class="p">,</span><span class="nx">circle</span><span class="p">.</span><span class="nx">getAbsolutePosition</span><span class="p">().</span><span class="nx">y</span>
+              <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;radius&#39;</span><span class="p">,</span><span class="nx">circle</span><span class="p">.</span><span class="nx">radius</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
+</div>
+<p>on change of transparency redraw</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:transparent&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+            
+            <span class="nx">circle</span><span class="p">.</span><span class="nx">dashEnabled</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;transparent&#39;</span>
+            <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
+</div>
+<p>on change of color redraw</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:color&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+            <span class="nx">circle</span><span class="p">.</span><span class="nx">stroke</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;color&#39;</span>
+            <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
+</div>
+<p>on change of model correct shade the option</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:correct&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+            <span class="k">if</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;correct&#39;</span>
+              <span class="nx">circle</span><span class="p">.</span><span class="nx">fill</span> <span class="s">&#39;rgba(12, 199, 55, 0.28)&#39;</span>
+              
+            <span class="k">else</span>
+              <span class="nx">circle</span><span class="p">.</span><span class="nx">fill</span> <span class="s">&#39;&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-30" id="section-30">&#182;</a>
+</div>
+<p>console.log hotspotElement.get 'correct'</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-31" id="section-31">&#182;</a>
+</div>
+<p>delete element based on toDelete</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:toDelete&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">circleGrp</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
+              <span class="nx">@optionCollection</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">hotspotElement</span>
+              <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;close:question:element:properties&quot;</span>
+              <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-32" id="section-32">&#182;</a>
+</div>
+<p>on click of a circle element show properties</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">circleGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mousedown click&#39;</span><span class="p">,</span><span class="nf">(e)-&gt;</span>
+              <span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span>
+                  <span class="nv">model : </span><span class="nx">hotspotElement</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-33" id="section-33">&#182;</a>
+</div>
+<p>console.log @</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+          <span class="nx">circleGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mouseover&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
+            <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">false</span>
+
+          <span class="nx">circleGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mouseout&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
+            <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
+
+          <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+      <span class="nv">_addRectangle : </span><span class="nf">(elementPos,model)-&gt;</span>
+
+          <span class="k">if</span> <span class="nx">model</span> 
+            <span class="nv">hotspotElement = </span><span class="nx">model</span>
+
+          <span class="k">else</span>
+            <span class="nv">modelData =</span>
+              <span class="nv">type : </span><span class="s">&#39;Option&#39;</span>
+              <span class="nv">shape : </span><span class="s">&#39;Rect&#39;</span>
+              <span class="nv">x : </span><span class="nx">elementPos</span><span class="p">.</span><span class="nx">left</span>
+              <span class="nv">y: </span><span class="nx">elementPos</span><span class="p">.</span><span class="nx">top</span>
+              <span class="nv">width: </span><span class="mi">30</span>
+              <span class="nv">height: </span><span class="mi">30</span>  
+              <span class="nv">color : </span><span class="s">&#39;#000000&#39;</span>
+              <span class="nv">transparent : </span><span class="kc">false</span>
+              <span class="nv">angle   : </span><span class="mi">0</span>
+              <span class="nv">correct : </span><span class="kc">false</span>
+              
+
+            <span class="nv">hotspotElement = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element&quot;</span><span class="p">,</span> <span class="nx">modelData</span>
+            <span class="nx">@optionCollection</span><span class="p">.</span><span class="nx">add</span> <span class="nx">hotspotElement</span>
+
+
+          <span class="nv">self = </span><span class="nx">@</span>
+
+          <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span>
+                  <span class="nv">model : </span><span class="nx">hotspotElement</span>
+
+          <span class="nv">box = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Rect</span>
+              <span class="nv">name : </span><span class="s">&quot;rect2&quot;</span>
+              <span class="nv">x: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;x&#39;</span>
+              <span class="nv">y: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;y&#39;</span>
+              <span class="nv">width: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;width&#39;</span>
+              <span class="nv">height: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;height&#39;</span> 
+              <span class="nv">stroke: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;color&#39;</span>
+              <span class="nv">strokeWidth: </span><span class="mi">2</span>
+              <span class="nv">dash : </span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span> <span class="p">]</span>
+              <span class="nv">dashEnabled : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;transparent&#39;</span>  
+              <span class="nv">fill : </span><span class="k">if</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&quot;correct&quot;</span><span class="p">)</span> <span class="k">then</span> <span class="s">&quot;rgba(12, 199, 55, 0.28)&quot;</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+
+          <span class="nv">rectGrp = </span><span class="nx">resizeRect</span> <span class="nx">box</span><span class="p">,</span><span class="nx">@optionLayer</span>
+
+          <span class="nx">rectGrp</span><span class="p">.</span><span class="nx">rotation</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;angle&#39;</span>
+
+          <span class="nx">rectGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;dragend&#39;</span><span class="p">,</span><span class="nf">(e)-&gt;</span>
+              <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;x&#39;</span><span class="p">,</span><span class="nx">box</span><span class="p">.</span><span class="nx">getAbsolutePosition</span><span class="p">().</span><span class="nx">x</span>
+              <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;y&#39;</span><span class="p">,</span><span class="nx">box</span><span class="p">.</span><span class="nx">getAbsolutePosition</span><span class="p">().</span><span class="nx">y</span>
+              <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;width&#39;</span><span class="p">,</span><span class="nx">box</span><span class="p">.</span><span class="nx">width</span><span class="p">()</span>
+              <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;height&#39;</span><span class="p">,</span><span class="nx">box</span><span class="p">.</span><span class="nx">height</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-34" id="section-34">&#182;</a>
+</div>
+<p>on change of transparency redraw</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:transparent&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">rectGrp</span>
+            <span class="nx">box</span><span class="p">.</span><span class="nx">dashEnabled</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;transparent&#39;</span>
+            <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-35" id="section-35">&#182;</a>
+</div>
+<p>on change of color redraw</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:color&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+            <span class="nx">box</span><span class="p">.</span><span class="nx">stroke</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;color&#39;</span>
+            <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-36" id="section-36">&#182;</a>
+</div>
+<p>on change of model's angle rotate the element</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:angle&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+            <span class="nx">rectGrp</span><span class="p">.</span><span class="nx">rotation</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;angle&#39;</span>
+            <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-37" id="section-37">&#182;</a>
+</div>
+<p>on change of model correct shade the option</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:correct&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+            <span class="k">if</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;correct&#39;</span>
+              <span class="nx">box</span><span class="p">.</span><span class="nx">fill</span> <span class="s">&#39;rgba(12, 199, 55, 0.28)&#39;</span>
+              
+            <span class="k">else</span>
+              <span class="nx">box</span><span class="p">.</span><span class="nx">fill</span> <span class="s">&#39;&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-38" id="section-38">&#182;</a>
+</div>
+<p>console.log hotspotElement.get 'correct'</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-39" id="section-39">&#182;</a>
+</div>
+<p>delete element based on toDelete</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:toDelete&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">rectGrp</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
+              <span class="nx">@optionCollection</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">hotspotElement</span>
+              <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;close:question:element:properties&quot;</span>
+              <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-40" id="section-40">&#182;</a>
+</div>
+<p>on click of a circle element show properties</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">rectGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mousedown click&#39;</span><span class="p">,</span><span class="nf">(e)-&gt;</span>
+              <span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span>
+                  <span class="nv">model : </span><span class="nx">hotspotElement</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-41" id="section-41">&#182;</a>
+</div>
+<p>console.log @</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+          <span class="nx">rectGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mouseover&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
+            <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">false</span>
+
+          <span class="nx">rectGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mouseout&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
+            <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
+
+          <span class="nx">@optionLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+          
+
+
+      <span class="nv">_addTextElement: </span><span class="nf">(elementPos,model)-&gt;</span>
+
+          <span class="k">if</span> <span class="nx">model</span>
+            <span class="nv">hotspotElement = </span><span class="nx">model</span>
+
+          <span class="k">else</span>
+            <span class="nv">modelData =</span>
+              <span class="nv">x: </span><span class="nx">elementPos</span><span class="p">.</span><span class="nx">left</span>
+              <span class="nv">y: </span><span class="nx">elementPos</span><span class="p">.</span><span class="nx">top</span>
+              <span class="nv">type : </span><span class="s">&#39;Text&#39;</span>
+              <span class="nv">text : </span><span class="s">&#39;&#39;</span>
+              <span class="nv">fontFamily : </span><span class="s">&#39;Arial&#39;</span>
+              <span class="nv">fontSize : </span><span class="s">&#39;14&#39;</span>
+              <span class="nv">fontColor : </span><span class="s">&#39;#000000&#39;</span>
+              <span class="nv">fontBold : </span><span class="s">&#39;&#39;</span>
+              <span class="nv">fontItalics : </span><span class="s">&#39;&#39;</span>
+              <span class="nv">textAngle : </span><span class="mi">0</span>
+
+            <span class="nv">hotspotElement = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element&quot;</span><span class="p">,</span> <span class="nx">modelData</span>
+            <span class="nx">@textCollection</span><span class="p">.</span><span class="nx">add</span> <span class="nx">hotspotElement</span>
+
+          
+
+
+          <span class="nv">self = </span><span class="nx">@</span>
+
+          <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span>
+                  <span class="nv">model : </span><span class="nx">hotspotElement</span>
+
+          <span class="nv">tooltip = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Label</span>
+            <span class="nv">x: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;x&#39;</span>
+            <span class="nv">y: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;y&#39;</span>
+            <span class="nv">width : </span><span class="mi">100</span>
+            <span class="nv">draggable : </span><span class="kc">true</span>
+            <span class="nv">dragBoundFunc : </span><span class="nf">(pos)-&gt;</span>
+              <span class="nx">self</span><span class="p">.</span><span class="nx">_setBoundRegion</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span><span class="nx">@</span><span class="p">,</span><span class="nx">self</span><span class="p">.</span><span class="nx">stage</span><span class="p">)</span>
+
+          <span class="nv">canvasText = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Text</span>
+            <span class="nv">text: </span><span class="s">&#39;CLICK TO ENTER TEXT&#39;</span>
+            <span class="nv">opacity : </span><span class="mf">0.3</span>
+            <span class="nv">fontFamily: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;fontFamily&#39;</span>
+            <span class="nv">fontSize: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;fontSize&#39;</span>
+            <span class="nv">fill: </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;fontColor&#39;</span>
+            <span class="nv">fontStyle : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;fontBold&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;fontItalics&#39;</span><span class="p">)</span>
+            <span class="nv">padding: </span><span class="mi">5</span>
+            <span class="nv">rotation : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;textAngle&#39;</span>
+
+          <span class="nx">tooltip</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;dragend&#39;</span><span class="p">,</span><span class="nf">(e)-&gt;</span>
+              <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;x&#39;</span><span class="p">,</span><span class="nx">tooltip</span><span class="p">.</span><span class="nx">getAbsolutePosition</span><span class="p">().</span><span class="nx">x</span>
+              <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;y&#39;</span><span class="p">,</span><span class="nx">tooltip</span><span class="p">.</span><span class="nx">getAbsolutePosition</span><span class="p">().</span><span class="nx">y</span>
+
+
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-42" id="section-42">&#182;</a>
+</div>
+<p>on click of a text element show properties</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">tooltip</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mousedown click&#39;</span><span class="p">,</span><span class="nf">(e)-&gt;</span>
+              <span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span>
+                  <span class="nv">model : </span><span class="nx">hotspotElement</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-43" id="section-43">&#182;</a>
+</div>
+<p>if model text is not empty then change the hotspot text</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="k">if</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;text&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span>
+            <span class="nx">canvasText</span><span class="p">.</span><span class="nx">setText</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;text&#39;</span>
+            <span class="nx">canvasText</span><span class="p">.</span><span class="nx">opacity</span> <span class="mi">1</span>
+            <span class="nx">canvasText</span><span class="p">.</span><span class="nx">fill</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;fontColor&#39;</span>
+
+              
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-44" id="section-44">&#182;</a>
+</div>
+<p>on change of text update the canvas</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:text&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="k">if</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;text&#39;</span><span class="p">)</span><span class="o">!=</span><span class="s">&quot;&quot;</span>
+                <span class="nx">canvasText</span><span class="p">.</span><span class="nx">setText</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;text&#39;</span>
+                <span class="nx">canvasText</span><span class="p">.</span><span class="nx">opacity</span> <span class="mi">1</span>
+                <span class="nx">canvasText</span><span class="p">.</span><span class="nx">fill</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;fontColor&#39;</span>
+              <span class="k">else</span>
+                <span class="nx">canvasText</span><span class="p">.</span><span class="nx">setText</span> <span class="s">&#39;CLICK TO ENTER TEXT&#39;</span>
+                <span class="nx">canvasText</span><span class="p">.</span><span class="nx">opacity</span> <span class="mf">0.3</span>
+                <span class="nx">canvasText</span><span class="p">.</span><span class="nx">fill</span> <span class="s">&#39;fontColor&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-45" id="section-45">&#182;</a>
+</div>
+<p>tooltip.fire "moverotator"</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+              <span class="nx">@textLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-46" id="section-46">&#182;</a>
+</div>
+<p>on change of font Size update the canvas</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:fontSize&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">canvasText</span><span class="p">.</span><span class="nx">fontSize</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;fontSize&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-47" id="section-47">&#182;</a>
+</div>
+<p>tooltip.fire "moverotator"</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nx">@textLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-48" id="section-48">&#182;</a>
+</div>
+<p>on change of font  update the canvas</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:fontFamily&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">canvasText</span><span class="p">.</span><span class="nx">fontFamily</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;fontFamily&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-49" id="section-49">&#182;</a>
+</div>
+<p>tooltip.fire "moverotator"</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nx">@textLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-50" id="section-50">&#182;</a>
+</div>
+<p>on change of font Style update the canvas</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:fontBold change:fontItalics&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">canvasText</span><span class="p">.</span><span class="nx">fontStyle</span>  <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;fontBold&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;fontItalics&#39;</span><span class="p">)</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-51" id="section-51">&#182;</a>
+</div>
+<p>tooltip.fire "moverotator"</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nx">@textLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-52" id="section-52">&#182;</a>
+</div>
+<p>on change of font color update the canvas</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:fontColor&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">canvasText</span><span class="p">.</span><span class="nx">fill</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;fontColor&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-53" id="section-53">&#182;</a>
+</div>
+<p>tooltip.fire "moverotator"</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nx">@textLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-54" id="section-54">&#182;</a>
+</div>
+<p>on change of toDelete property remove the text element from the canvas</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:toDelete&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">tooltip</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
+              <span class="nx">@textCollection</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">hotspotElement</span>
+              <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;close:question:element:properties&quot;</span>
+              <span class="nx">@textLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-55" id="section-55">&#182;</a>
+</div>
+<p>on change of the textAngle prop rotate the text</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:textAngle&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">tooltip</span><span class="p">.</span><span class="nx">rotation</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;textAngle&#39;</span>
+              <span class="nx">@textLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+        
+
+          <span class="nx">tooltip</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mouseover&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
+            <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">false</span>
+
+          <span class="nx">tooltip</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mouseout&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
+            <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
+
+          <span class="nx">tooltip</span><span class="p">.</span><span class="nx">add</span> <span class="nx">canvasText</span>
+
+          
+
+          <span class="nx">@textLayer</span><span class="p">.</span><span class="nx">add</span> <span class="nx">tooltip</span>
+
+          <span class="nx">@textLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+      <span class="nx">_addImageElement</span><span class="o">:</span><span class="nf">(elementPos,url,model)-&gt;</span>
+
+          <span class="k">if</span> <span class="nx">model</span> 
+            <span class="nv">hotspotElement = </span><span class="nx">model</span>
+
+          <span class="k">else</span>
+            <span class="nv">modelData =</span>
+              <span class="nv">type  : </span><span class="s">&#39;Image&#39;</span>           
+              <span class="nv">x     : </span><span class="nx">elementPos</span><span class="p">.</span><span class="nx">left</span>
+              <span class="nv">y     : </span><span class="nx">elementPos</span><span class="p">.</span><span class="nx">top</span>
+              <span class="nv">width   : </span><span class="mi">150</span>
+              <span class="nv">height  : </span><span class="mi">150</span>
+              <span class="nv">angle   : </span><span class="mi">0</span>
+              <span class="nv">url   : </span><span class="nx">url</span>
+
+            <span class="nv">hotspotElement = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element&quot;</span><span class="p">,</span> <span class="nx">modelData</span>
+            <span class="nx">@imageCollection</span><span class="p">.</span><span class="nx">add</span> <span class="nx">hotspotElement</span>
+
+          <span class="nv">imageGrp = </span><span class="kc">null</span>
+
+          <span class="nv">imageObject = </span><span class="k">new</span> <span class="nx">Image</span><span class="p">()</span>
+          <span class="nv">imageObject.src = </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;url&#39;</span>
+          <span class="nv">imageObject.onload = </span><span class="p">()</span><span class="o">=&gt;</span>
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span>
+                  <span class="nv">model : </span><span class="nx">hotspotElement</span>
+
+              <span class="nv">imageElement = </span><span class="k">new</span> <span class="nx">Kinetic</span><span class="p">.</span><span class="nx">Image</span>
+                  <span class="nv">image   : </span><span class="nx">imageObject</span>
+                  <span class="nv">x     : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;x&#39;</span>
+                  <span class="nv">y     : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;y&#39;</span>
+                  <span class="nv">width   : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;width&#39;</span>
+                  <span class="nv">height  : </span><span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;height&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-56" id="section-56">&#182;</a>
+</div>
+<p>@imageLayer.add imageGrp</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              
+              <span class="nv">imageGrp = </span><span class="nx">resizeRect</span> <span class="nx">imageElement</span><span class="p">,</span><span class="nx">@imageLayer</span>
+              <span class="nx">@_updateDefaultLayer</span><span class="p">()</span>
+              
+
+              <span class="nx">imageGrp</span><span class="p">.</span><span class="nx">rotation</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;angle&#39;</span>
+
+              <span class="nx">@imageLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+              <span class="nx">imageGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;dragend&#39;</span><span class="p">,</span><span class="nf">(e)-&gt;</span>
+                <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;x&#39;</span><span class="p">,</span><span class="nx">imageElement</span><span class="p">.</span><span class="nx">getAbsolutePosition</span><span class="p">().</span><span class="nx">x</span>
+                <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;y&#39;</span><span class="p">,</span><span class="nx">imageElement</span><span class="p">.</span><span class="nx">getAbsolutePosition</span><span class="p">().</span><span class="nx">y</span>
+                <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;width&#39;</span><span class="p">,</span><span class="nx">imageElement</span><span class="p">.</span><span class="nx">width</span><span class="p">()</span>
+                <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;height&#39;</span><span class="p">,</span><span class="nx">imageElement</span><span class="p">.</span><span class="nx">height</span><span class="p">()</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-57" id="section-57">&#182;</a>
+</div>
+<p>on click of a text element show properties</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nx">imageGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mousedown click&#39;</span><span class="p">,</span><span class="nf">(e)-&gt;</span>
+                  <span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+                  <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span>
+                      <span class="nv">model : </span><span class="nx">hotspotElement</span>
+                  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@</span>
+
+              <span class="nx">imageGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mouseover&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
+                <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">false</span>
+
+              <span class="nx">imageGrp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;mouseout&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
+                <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
+              
+          
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-58" id="section-58">&#182;</a>
+</div>
+<p>on change of model's angle rotate the element</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:angle&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+            <span class="nx">imageGrp</span><span class="p">.</span><span class="nx">rotation</span> <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;angle&#39;</span>
+            <span class="nx">@imageLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-59" id="section-59">&#182;</a>
+</div>
+<p>on change of toDelete property remove the image element from the canvas</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">hotspotElement</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;change:toDelete&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">imageGrp</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
+              <span class="nx">@imageCollection</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">hotspotElement</span>
+              <span class="nv">App.ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
+              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;close:question:element:properties&quot;</span>
+              <span class="nx">@imageLayer</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span>
+
+
+          
+
+
+
+          
+
+      <span class="nx">_setBoundRegion</span><span class="o">:</span><span class="nf">(pos,inner,outer)-&gt;</span>
+        <span class="nv">height = </span><span class="nx">inner</span><span class="p">.</span><span class="nx">getHeight</span><span class="p">();</span>
+        <span class="nv">minX = </span><span class="nx">outer</span><span class="p">.</span><span class="nx">getX</span><span class="p">();</span>
+        <span class="nv">maxX = </span><span class="nx">outer</span><span class="p">.</span><span class="nx">getX</span><span class="p">()</span> <span class="o">+</span> <span class="nx">outer</span><span class="p">.</span><span class="nx">getWidth</span><span class="p">()</span> <span class="o">-</span> <span class="nx">inner</span><span class="p">.</span><span class="nx">getWidth</span><span class="p">();</span>
+        <span class="nv">minY = </span><span class="nx">outer</span><span class="p">.</span><span class="nx">getY</span><span class="p">();</span>
+        <span class="nv">maxY = </span><span class="nx">outer</span><span class="p">.</span><span class="nx">getY</span><span class="p">()</span> <span class="o">+</span> <span class="nx">outer</span><span class="p">.</span><span class="nx">getHeight</span><span class="p">()</span> <span class="o">-</span> <span class="nx">inner</span><span class="p">.</span><span class="nx">getHeight</span><span class="p">();</span>
+        <span class="nv">X = </span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+        <span class="nv">Y = </span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">X</span> <span class="o">&lt;</span> <span class="nx">minX</span><span class="p">)</span> 
+          <span class="nv">X = </span><span class="nx">minX</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">X</span> <span class="o">&gt;</span> <span class="nx">maxX</span><span class="p">)</span>
+          <span class="nv">X = </span><span class="nx">maxX</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">Y</span> <span class="o">&lt;</span> <span class="nx">minY</span><span class="p">)</span>
+          <span class="nv">Y = </span><span class="nx">minY</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">Y</span> <span class="o">&gt;</span> <span class="nx">maxY</span><span class="p">)</span> 
+          <span class="nv">Y = </span><span class="nx">maxY</span>        
+        
+        <span class="nv">x: </span><span class="nx">X</span>
+        <span class="nv">y: </span><span class="nx">Y</span>
+
+      <span class="nx">updateModel</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="nx">@_getHotspotData</span><span class="p">()</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-60" id="section-60">&#182;</a>
+</div>
+<p>@layout.model.save() if @layout.model.hasChanged()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;updatedmodel             &#39;</span><span class="o">+</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
+           
+      <span class="nx">_getHotspotData</span><span class="o">:</span><span class="nf">-&gt;</span>
+
+        <span class="nx">@stage</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+
+       
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

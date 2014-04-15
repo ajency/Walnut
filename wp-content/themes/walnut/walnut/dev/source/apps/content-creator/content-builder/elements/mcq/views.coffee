@@ -89,27 +89,31 @@ define ['app'],(App)->
 
 			_setActiveHandler:->
 
-				showMcqPropertyFlag = false
+				@$el.parent().parent().on 'click',(evt)=>
+					@trigger "show:this:mcq:properties"
+					evt.stopPropagation()
 
-				@$el.parent().parent().on 'mouseenter',->
-					showMcqPropertyFlag = true
+				# showMcqPropertyFlag = false
 
-				@$el.parent().parent().on 'mouseleave',->
-					showMcqPropertyFlag = false
+				# @$el.parent().parent().on 'mouseenter',->
+				# 	showMcqPropertyFlag = true
 
-				@$el.parent().parent().on 'mouseenter',->
-					App.ContentCreator.closequestioneproperty = false
+				# @$el.parent().parent().on 'mouseleave',->
+				# 	showMcqPropertyFlag = false
 
-				@$el.parent().parent().on 'mouseleave',->
-					App.ContentCreator.closequestioneproperty = true
+				# @$el.parent().parent().on 'mouseenter',->
+				# 	App.ContentCreator.closequestioneproperty = false
 
-				$('body').on 'click',=>
-					if showMcqPropertyFlag
-						@trigger "show:this:mcq:properties"
+				# @$el.parent().parent().on 'mouseleave',->
+				# 	App.ContentCreator.closequestioneproperty = true
 
-					if App.ContentCreator.closequestioneproperty
-						console.log App.ContentCreator.closequestioneproperty
-						@trigger "hide:this:mcq:properties"
+				# $('body').on 'click',=>
+				# 	# if showMcqPropertyFlag
+				# 		# @trigger "show:this:mcq:properties"
+
+				# 	if App.ContentCreator.closequestioneproperty
+				# 		console.log App.ContentCreator.closequestioneproperty
+				# 		@trigger "hide:this:mcq:properties"
 
 
 

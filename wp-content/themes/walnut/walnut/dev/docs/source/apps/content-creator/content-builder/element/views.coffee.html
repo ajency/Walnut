@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>views.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../doc-style.css" />
+  <script src="../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../", thisFile = "source\\apps\\content-creator\\content-builder\\element\\views.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>views.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;holder&#39;</span>
+    <span class="s">&#39;text!apps/content-creator/content-builder/element/templates/element.html&#39;</span><span class="p">],</span>
+    <span class="nf">(App, Holder, elementTpl)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Headerapp views</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.Views&#39;</span><span class="p">,</span> <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>Pages single view</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">ElementView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Layout</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>basic template</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nv">template : </span><span class="nx">elementTpl</span>
+
+          <span class="nv">tagName : </span><span class="s">&#39;div&#39;</span>
+
+          <span class="nv">regions: </span>
+            <span class="nv">elementRegion : </span><span class="s">&#39;&gt; .element-markup&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>class name</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nv">className : </span><span class="s">&#39;element-wrapper&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>element events</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nv">events : </span>
+            <span class="s">&#39;click .aj-imp-settings-btn&#39;</span> <span class="o">:</span> <span class="nf">(evt)-&gt;</span>
+              <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span> 
+              <span class="nx">@trigger</span> <span class="s">&quot;show:setting:popup&quot;</span><span class="p">,</span> <span class="nx">@model</span>
+
+            <span class="s">&#39;click .aj-imp-delete-btn&#39;</span><span class="o">:</span> <span class="nf">(evt)-&gt;</span>
+              <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+              <span class="nx">@trigger</span> <span class="s">&quot;delete:element&quot;</span><span class="p">,</span> <span class="nx">@model</span>
+          
+          <span class="nx">initialize</span><span class="o">:=&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>bind event only once</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">@once</span> <span class="s">&#39;before:render:element&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">@trigger</span> <span class="s">&quot;bind:element:events&quot;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>set the data-element attribute for element </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">onRender</span><span class="o">:</span><span class="nf">-&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>@$el.find('.element-markup > span').spin @_getOptions()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>set mouse hover for element</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">onShow</span><span class="o">:</span><span class="p">()</span><span class="o">=&gt;</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">mouseover</span> <span class="nf">(evt)=&gt;</span>
+              <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+              <span class="k">return</span> <span class="k">if</span> <span class="nb">window</span><span class="p">.</span><span class="nx">dragging</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;hover-class&#39;</span>
+            <span class="p">.</span><span class="nx">mouseout</span> <span class="p">()</span><span class="o">=&gt;</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;hover-class&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>set the hidden fields before rendering the element</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">onBeforeRenderElement</span><span class="o">:</span><span class="nf">-&gt;</span>
+            <span class="k">for</span> <span class="nx">field</span> <span class="k">in</span> <span class="p">[</span><span class="s">&#39;meta_id&#39;</span><span class="p">,</span> <span class="s">&#39;style&#39;</span><span class="p">,</span> <span class="s">&#39;element&#39;</span><span class="p">]</span>
+              <span class="nx">@setHiddenField</span> <span class="nx">field</span><span class="p">,</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="nx">field</span>
+
+            <span class="nx">@setDraggable</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;draggable&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+<p>special hidden fields for row element</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">addHiddenFields</span><span class="o">:</span><span class="p">()</span><span class="nf">-&gt;</span>
+            <span class="k">for</span> <span class="nx">field</span> <span class="k">in</span> <span class="p">[</span><span class="s">&#39;draggable&#39;</span><span class="p">,</span> <span class="s">&#39;style&#39;</span><span class="p">]</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;form&#39;</span><span class="p">).</span><span class="nx">append</span> <span class="s">&quot;&lt;input type=&#39;hidden&#39; name=&#39;</span><span class="si">#{</span><span class="nx">field</span><span class="si">}</span><span class="s">&#39; value=&#39;&#39;/&gt;&quot;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+<p>on set draggable</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">setDraggable</span><span class="o">:</span><span class="nf">(draggable)-&gt;</span>
+            <span class="k">if</span> <span class="nx">draggable</span> <span class="o">is</span> <span class="kc">false</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.aj-imp-drag-handle&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;non-visible&#39;</span><span class="p">)</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="nx">draggable</span> <span class="o">is</span> <span class="kc">true</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.aj-imp-drag-handle&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;non-visible&#39;</span><span class="p">)</span>
+
+            <span class="nx">@setHiddenField</span> <span class="s">&#39;draggable&#39;</span><span class="p">,</span> <span class="nx">draggable</span>
+
+          <span class="nx">setMargin</span><span class="o">:</span><span class="nf">(newMargin, prevMargin = &#39;&#39;)-&gt;</span>
+            <span class="nv">element = </span><span class="nx">@elementRegion</span><span class="p">.</span><span class="nx">currentView</span>
+            <span class="nx">element</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">removeClass</span> <span class="nx">prevMargin</span>
+            <span class="nx">element</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">addClass</span> <span class="nx">newMargin</span>
+
+          <span class="nx">setStyle</span><span class="o">:</span><span class="nf">(newStyle, prevStyle = &#39;&#39;)-&gt;</span>
+            <span class="nv">element = </span><span class="nx">@elementRegion</span><span class="p">.</span><span class="nx">currentView</span>
+            <span class="nx">element</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">removeClass</span> <span class="nx">prevStyle</span>
+            <span class="nx">element</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">addClass</span> <span class="nx">newStyle</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+</div>
+<p>set the meta id for element</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">setHiddenField</span> <span class="o">:</span><span class="nf">(name, value)-&gt;</span>
+            <span class="k">if</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;form&#39;</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;input[name=&#39;</span><span class="si">#{</span><span class="nx">name</span><span class="si">}</span><span class="s">&#39;]&quot;</span><span class="p">).</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;form&#39;</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;input[name=&#39;</span><span class="si">#{</span><span class="nx">name</span><span class="si">}</span><span class="s">&#39;]&quot;</span><span class="p">).</span><span class="nx">val</span> <span class="nx">value</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+</div>
+<p>rerender markup </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">onElementModelCreated</span><span class="o">:</span><span class="nf">-&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+</div>
+<p>close the spinner</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.element-markup &gt; span&#39;</span><span class="p">).</span><span class="nx">spin</span> <span class="kc">false</span>
+            
+          
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+</div>
+<p>spinner options</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nv">_getOptions : </span><span class="nf">-&gt;</span>
+                  <span class="nv">lines     : </span><span class="mi">10</span>
+                  <span class="nv">length    : </span><span class="mi">6</span>
+                  <span class="nv">width     : </span><span class="mf">2.5</span>
+                  <span class="nv">radius    : </span><span class="mi">7</span>
+                  <span class="nv">corners   : </span><span class="mi">1</span>
+                  <span class="nv">rotate    : </span><span class="mi">9</span>
+                  <span class="nv">direction   : </span><span class="mi">1</span>
+                  <span class="nv">color     : </span><span class="s">&#39;#000&#39;</span>
+                  <span class="nv">speed     : </span><span class="mi">1</span>
+                  <span class="nv">trail     : </span><span class="mi">60</span>
+                  <span class="nv">shadow    : </span><span class="kc">false</span>
+                  <span class="nv">hwaccel   : </span><span class="kc">true</span>
+                  <span class="nv">className   : </span><span class="s">&#39;spinner&#39;</span>
+                  <span class="nv">zIndex    : </span><span class="mi">2</span><span class="nx">e9</span>
+                  <span class="nv">top     : </span><span class="s">&#39;0px&#39;</span>
+                  <span class="nv">left    : </span><span class="s">&#39;40px&#39;</span>
+
+        
+    
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

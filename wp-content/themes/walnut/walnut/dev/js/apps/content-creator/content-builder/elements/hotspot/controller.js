@@ -36,6 +36,18 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
           };
         })(this));
+        this.listenTo(view, "close:hotspot:elements", (function(_this) {
+          return function(contentObject) {
+            console.log(JSON.stringify(contentObject));
+            _this.layout.model.set('content', JSON.stringify(contentObject));
+            if (_this.layout.model.hasChanged()) {
+              console.log("saving them");
+              localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
+              console.log(JSON.stringify(_this.layout.model.toJSON()));
+            }
+            return App.execute("close:question:elements");
+          };
+        })(this));
         this.layout.elementRegion.show(view, {
           loading: true
         });

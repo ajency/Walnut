@@ -51,12 +51,19 @@ define ['app'
 						@listenTo view, "show:hotspot:elements",=>
 							
 								App.execute "show:question:elements",
-						 				model : @layout.model
-
-						
+										model : @layout.model
 
 
-						
+						@listenTo view, "close:hotspot:elements", (contentObject)=>
+								console.log JSON.stringify contentObject
+								@layout.model.set 'content', JSON.stringify contentObject
+								# console.log JSON.stringify @model.toJSON()
+								if @layout.model.hasChanged()
+										console.log "saving them"
+										localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+										console.log JSON.stringify @layout.model.toJSON()
+								App.execute "close:question:elements"
+		
 						@layout.elementRegion.show view,
 							loading:true
 
@@ -73,5 +80,6 @@ define ['app'
 						if not @layout.elementRegion.currentView.$el.canBeDeleted()
 							alert "Please remove elements inside row and then delete."							
 						else
+							
 							model.destroy()
 							App.execute "close:question:elements"

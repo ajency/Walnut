@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>marionette.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../", thisFile = "source\\config\\marionette.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h1">
+        <a href="#set%20backbone%20overrites%20or%20mixins">Set backbone overrites or mixins</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs"><p>#</p>
+
+
+<div class="pilwrap" id="set%20backbone%20overrites%20or%20mixins">
+  <h1>
+    <a href="#set%20backbone%20overrites%20or%20mixins" name="set%20backbone%20overrites%20or%20mixins" class="pilcrow">&#182;</a>
+    Set backbone overrites or mixins
+  </h1>
+</div>
+
+
+<p>#</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;marionette&#39;</span><span class="p">,</span><span class="s">&#39;mustache&#39;</span><span class="p">],</span> <span class="nf">(Marionette, Mustache)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Extends the Marionette.Application to add some additional functions </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Application</span><span class="o">::</span><span class="p">,</span>
+    
+    <span class="nv">navigate: </span><span class="nf">(route, options = {}) -&gt;</span>
+      <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">navigate</span> <span class="nx">route</span><span class="p">,</span> <span class="nx">options</span>
+  
+    <span class="nv">getCurrentRoute: </span><span class="nf">-&gt;</span>
+      <span class="nv">frag = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">fragment</span>
+      <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">(</span><span class="nx">frag</span><span class="p">)</span> <span class="k">then</span> <span class="kc">null</span> <span class="k">else</span> <span class="nx">frag</span>
+    
+    <span class="nv">startHistory: </span><span class="nf">-&gt;</span>
+      <span class="k">if</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span>
+        <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span>
+    
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>register a controller instance</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nv">register: </span><span class="nf">(instance, id) -&gt;</span>
+      <span class="nx">@_registry</span> <span class="o">?=</span> <span class="p">{}</span>
+      <span class="nx">@_registry</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">instance</span>
+    
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>unregister a controller instance</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nv">unregister: </span><span class="nf">(instance, id) -&gt;</span>
+      <span class="k">delete</span> <span class="nx">@_registry</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span>
+    
+    <span class="nv">resetRegistry: </span><span class="nf">-&gt;</span>
+      <span class="nv">oldCount = </span><span class="nx">@getRegistrySize</span><span class="p">()</span>
+      <span class="k">for</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">controller</span> <span class="k">of</span> <span class="nx">@_registry</span>
+        <span class="nx">controller</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+      <span class="nv">msg = </span><span class="s">&quot;There were </span><span class="si">#{</span><span class="nx">oldCount</span><span class="si">}</span><span class="s"> controllers in the registry, there are now </span><span class="si">#{</span><span class="nx">@getRegistrySize</span><span class="p">()</span><span class="si">}</span><span class="s">&quot;</span>
+      <span class="k">if</span> <span class="nx">@getRegistrySize</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">then</span> <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="nx">msg</span><span class="p">,</span> <span class="nx">@_registry</span><span class="p">)</span> <span class="k">else</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span>
+    
+    <span class="nv">getRegistrySize: </span><span class="nf">-&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="nx">@_registry</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>register a controller instance</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nv">registerElement: </span><span class="nf">(instance, id) -&gt;</span>
+      <span class="nx">@_elementRegistry</span> <span class="o">?=</span> <span class="p">{}</span>
+      <span class="nx">@_elementRegistry</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">instance</span>
+    
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>unregister a controller instance</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nv">unregisterElement: </span><span class="nf">(instance, id) -&gt;</span>
+      <span class="k">delete</span> <span class="nx">@_elementRegistry</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span>
+    
+    <span class="nv">resetElementRegistry: </span><span class="nf">-&gt;</span>
+      <span class="nv">oldCount = </span><span class="nx">@getElementRegistrySize</span><span class="p">()</span>
+      <span class="k">for</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">controller</span> <span class="k">of</span> <span class="nx">@_elementRegistry</span>
+        <span class="nx">controller</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+      <span class="nv">msg = </span><span class="s">&quot;There were </span><span class="si">#{</span><span class="nx">oldCount</span><span class="si">}</span><span class="s"> controllers in the registry, there are now </span><span class="si">#{</span><span class="nx">@getElementRegistrySize</span><span class="p">()</span><span class="si">}</span><span class="s">&quot;</span>
+      <span class="k">if</span> <span class="nx">@getElementRegistrySize</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">then</span> <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="nx">msg</span><span class="p">,</span> <span class="nx">@_elementRegistry</span><span class="p">)</span> <span class="k">else</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span>
+    
+    <span class="nv">getElementRegistrySize: </span><span class="nf">-&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="nx">@_elementRegistry</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>add hide /unhide functionality to a region</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Region</span><span class="o">::</span><span class="p">,</span>
+
+    <span class="nv">hide : </span><span class="nf">-&gt;</span>
+      <span class="nx">@$el</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span>
+
+    <span class="nx">unhide</span><span class="o">:</span><span class="nf">-&gt;</span>
+      <span class="nx">@$el</span><span class="p">.</span><span class="nx">show</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>overwrite the default rendering engine to mustache</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nv">Marionette.Renderer.render = </span><span class="nf">(template, data)-&gt;</span>
+    
+    <span class="k">if</span> <span class="o">not</span> <span class="nx">template</span>
+      <span class="nv">template = </span><span class="s">&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="k">typeof</span> <span class="nx">template</span> <span class="o">is</span> <span class="s">&quot;function&quot;</span>
+      <span class="nv">template = </span><span class="nx">template</span><span class="p">()</span>
+    
+    <span class="nx">Mustache</span><span class="p">.</span><span class="nx">to_html</span> <span class="nx">template</span><span class="p">,</span><span class="nx">data</span>
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>override the serialize data function
+Marionette.View serializeData:</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>Override the loadTemplate function as we are using requirejs
+Marionette expects "templateId" to be the ID of a DOM element.
+But with RequireJS, templateId is actually the full text of the template.</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nv">Marionette.TemplateCache::loadTemplate = </span><span class="nf">(templateId) -&gt;</span>
+    
+    <span class="nv">template = </span><span class="nx">templateId</span>
+    
+    <span class="k">if</span> <span class="o">not</span> <span class="nx">template</span> <span class="o">or</span> <span class="nx">template</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
+      <span class="nv">msg = </span><span class="s">&quot;Could not find template: &#39;&quot;</span> <span class="o">+</span> <span class="nx">templateId</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span>
+      <span class="nv">err = </span><span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span>
+      <span class="nv">err.name = </span><span class="s">&quot;NoTemplateError&quot;</span>
+      <span class="k">throw</span> <span class="nx">err</span>
+    
+    <span class="nx">template</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

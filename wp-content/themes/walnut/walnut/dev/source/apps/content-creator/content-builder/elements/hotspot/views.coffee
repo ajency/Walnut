@@ -66,18 +66,22 @@ define ['app'],(App)->
 
 
 				# on resize
-				$('#'+@stageName+'.stage').resize ()=>
+				@$el.resize ()=>
 					# console.log $('#'+@stageName+'.stage').width()
 					@stage.setSize
-						width: $('#'+@stageName+'.stage').width()
-						height: $('#'+@stageName+'.stage').height()-5
+						width: @$el.width()
+						height: @$el.height()-5
 
 					@contentObject.height = @stage.height()
 					# resize the default image 
 					@_updateDefaultImageSize()
 
-				$('#'+@stageName+'.stage').resizable
+				@$el.resizable
 						handles: "s" 
+
+				@$el.parent().parent().on 'click',(evt)=>
+					@trigger 'show:hotspot:elements'
+					evt.stopPropagation()
 
 				@_setPropertyBoxCloseHandlers()
 				@_drawExistingElements()
@@ -93,55 +97,59 @@ define ['app'],(App)->
 
 
 				#make the hotspot canvas area dropable
-				$('#'+@stageName+' .kineticjs-content').droppable
+				@$el.find('.kineticjs-content').droppable
 						accept : '.hotspotable'
 						drop : (evt, ui)=>
 								if ui.draggable.prop("tagName") is 'LI'
 										type  = ui.draggable.attr 'data-element'
 										elementPos = 
-											left : evt.clientX-$('#'+@stageName+' .kineticjs-content').offset().left
-											top  : evt.clientY-$('#'+@stageName+' .kineticjs-content').offset().top + window.pageYOffset
+											left : evt.clientX-@$el.find('.kineticjs-content').offset().left
+											top  : evt.clientY-@$el.find('.kineticjs-content').offset().top + window.pageYOffset
 										@trigger "add:hotspot:element", type , elementPos
 
 
 			_setPropertyBoxCloseHandlers:->
-				$('body').on 'mousedown',=>
-						console.log App.ContentCreator.closequestionelementproperty
-						if App.ContentCreator.closequestionelementproperty
-							# console.log 'stage'
-							App.execute "close:question:element:properties"
-						if App.ContentCreator.closequestionelements and App.ContentCreator.closequestionelementproperty
-							App.execute "close:question:elements"
+				$('body').on 'click',=>
+						# console.log App.ContentCreator.closequestionelementproperty
+						# if App.ContentCreator.closequestionelementproperty
+						# 	# console.log 'stage'
+						# 	App.execute "close:question:element:properties"
+						# if App.ContentCreator.closequestionelements and App.ContentCreator.closequestionelementproperty
+							
+
+							# App.execute "close:question:elements"
 							@contentObject.textData = @textCollection.toJSON()
 							@contentObject.optionData = @optionCollection.toJSON()
 							@contentObject.imageData = @imageCollection.toJSON()
 							console.log JSON.stringify @contentObject
-							@model.set 'content', JSON.stringify @contentObject
-							# console.log JSON.stringify @model.toJSON()
-							if @model.hasChanged()
-								console.log "saving them"
-								localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
-								console.log JSON.stringify @model.toJSON()
+							# @model.set 'content', JSON.stringify @contentObject
+							# # console.log JSON.stringify @model.toJSON()
+							# if @model.hasChanged()
+							# 	console.log "saving them"
+							# 	localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
+							# 	console.log JSON.stringify @model.toJSON()
 
-				$('#question-elements-property').on 'mouseover',->
-						App.ContentCreator.closequestionelementproperty =  false
-				$('#question-elements-property').on 'mouseout',->
-						App.ContentCreator.closequestionelementproperty = true
+							@trigger "close:hotspot:elements",@contentObject
+
+				# $('#question-elements-property').on 'mouseover',->
+				# 		App.ContentCreator.closequestionelementproperty =  false
+				# $('#question-elements-property').on 'mouseout',->
+				# 		App.ContentCreator.closequestionelementproperty = true
 
 
-				$('#'+@stageName+'.stage').on 'mouseenter', '.kineticjs-content', ->
-					# console.log 'over stage'
-					App.ContentCreator.closequestionelements = false
-				$('#'+@stageName+'.stage').on 'mouseleave', '.kineticjs-content', ->
-					# console.log 'outofStage'
-					App.ContentCreator.closequestionelements = true
+				# @$el.on 'mouseenter', '.kineticjs-content', ->
+				# 	# console.log 'over stage'
+				# 	App.ContentCreator.closequestionelements = false
+				# @$el.on 'mouseleave', '.kineticjs-content', ->
+				# 	# console.log 'outofStage'
+				# 	App.ContentCreator.closequestionelements = true
 
-				$('#question-elements').on 'mouseover', ->
-					# console.log "over question"
-					App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = false
-				$('#question-elements').on 'mouseout', ->
-					# console.log "out of question"
-					App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = true
+				# $('#question-elements').on 'mouseover', ->
+				# 	# console.log "over question"
+				# 	App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = false
+				# $('#question-elements').on 'mouseout', ->
+				# 	# console.log "out of question"
+				# 	App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = true
 
 	
 			_drawExistingElements:->

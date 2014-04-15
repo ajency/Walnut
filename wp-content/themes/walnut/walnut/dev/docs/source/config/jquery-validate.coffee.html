@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jquery-validate.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../", thisFile = "source\\config\\jquery-validate.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>jquery-validate.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;jquery&#39;</span><span class="p">,</span> <span class="s">&#39;jqueryvalidate&#39;</span><span class="p">],</span> <span class="nf">($)-&gt;</span>
+
+  <span class="nx">$</span><span class="p">.</span><span class="nx">validator</span><span class="p">.</span><span class="nx">setDefaults</span>
+      <span class="nv">errorElement: </span><span class="s">&#39;span&#39;</span>
+      <span class="nv">errorClass: </span><span class="s">&#39;error&#39;</span>
+      <span class="nv">focusInvalid: </span><span class="kc">false</span>
+      <span class="nv">ignore: </span><span class="p">[]</span>
+      <span class="nv">errorPlacement: </span> <span class="nf">(error, element) -&gt;</span> <span class="c1"># // render error placement for each input type</span>
+        <span class="nv">icon = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">)</span>
+        <span class="nv">parent = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">)</span>
+        <span class="nx">icon</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;icon-ok&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;icon-exclamation&#39;</span><span class="p">)</span>  
+        <span class="nx">parent</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;success-control&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;error-control&#39;</span><span class="p">)</span>  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>$('<span class="error"></span>').insertAfter(element).append(error)</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+      <span class="nv">success: </span><span class="nf">(label, element) -&gt;</span>
+        <span class="nv">icon = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">)</span>
+        <span class="nv">parent = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">)</span>
+        <span class="nx">icon</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;icon-exclamation&quot;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;icon-ok&#39;</span><span class="p">)</span>
+        <span class="nx">parent</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;error-control&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;success-control&#39;</span><span class="p">)</span>
+       
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

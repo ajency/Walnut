@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>headerapp.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "source\\apps\\header\\headerapp.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>headerapp.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;controllers/region-controller&#39;</span>
+    <span class="s">&#39;apps/header/left/leftapp&#39;</span>
+    <span class="s">&#39;apps/header/right/rightapp&#39;</span>
+    <span class="s">&#39;text!apps/header/templates/header.html&#39;</span><span class="p">],</span> <span class="nf">(App, RegionController, LeftApp, RightApp,  headerTpl)-&gt;</span>
+
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;HeaderApp.Controller&quot;</span><span class="p">,</span> <span class="nf">(Controller, App)-&gt;</span>
+
+    <span class="k">class</span> <span class="nx">Controller</span><span class="p">.</span><span class="nx">HeaderController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+      <span class="nv">initialize : </span><span class="nf">-&gt;</span>
+        
+        <span class="vi">@layout = </span><span class="nv">layout = </span><span class="nx">@_getHeaderView</span><span class="p">()</span>
+
+        <span class="vi">@school = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:current:school&quot;</span>
+
+        <span class="nx">@listenTo</span> <span class="nx">layout</span><span class="p">,</span> <span class="s">&#39;show&#39;</span><span class="p">,</span> <span class="nx">@showLeftRightViews</span>
+        <span class="nx">@show</span> <span class="nx">layout</span><span class="p">,</span> <span class="p">(</span><span class="nx">loading</span><span class="o">:</span><span class="kc">true</span><span class="p">)</span>
+
+      <span class="nx">showLeftRightViews</span><span class="o">:=&gt;</span>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:leftheaderapp&quot;</span><span class="p">,</span> <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">leftRegion</span>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:rightheaderapp&quot;</span><span class="p">,</span> <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">rightRegion</span>
+
+
+      <span class="nv">_getHeaderView : </span><span class="o">=&gt;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;@school2&#39;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@school</span>
+        <span class="k">new</span> <span class="nx">HeaderView</span>
+          <span class="nv">model: </span><span class="nx">@school</span>
+
+
+    <span class="k">class</span> <span class="nx">HeaderView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Layout</span>
+
+      <span class="nv">template  : </span><span class="nx">headerTpl</span>
+
+      <span class="nv">className   : </span><span class="s">&#39;header navbar navbar-inverse&#39;</span>
+
+      <span class="nv">regions:</span>
+        <span class="nv">leftRegion  : </span><span class="s">&#39;#header-left&#39;</span>
+        <span class="nv">rightRegion : </span><span class="s">&#39;#header-right&#39;</span>
+
+      <span class="nv">serializeData : </span><span class="nf">-&gt;</span>
+        <span class="nv">data = </span><span class="k">super</span><span class="p">()</span>
+        <span class="nv">data.logourl= </span><span class="nx">SITEURL</span><span class="o">+</span> <span class="s">&#39;/wp-content/themes/walnut/images/walnutlearn.png&#39;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">SITEURL</span>
+        <span class="nx">data</span>
+        
+      <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>           
+        <span class="k">if</span> <span class="p">((</span><span class="nx">$</span><span class="p">(</span><span class="s">&#39;.creator&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s">&#39;.teacher-app&#39;</span><span class="p">).</span><span class="nx">length</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">))</span> 
+            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.page-content&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;condensed&#39;</span><span class="p">);</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s">&quot;.header-seperation&quot;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s">&quot;display&quot;</span><span class="p">,</span><span class="s">&quot;none&quot;</span><span class="p">);</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">main-menu&quot;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&quot;mini&quot;</span><span class="p">);</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s">&quot;.start&quot;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;active open&quot;</span><span class="p">);</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s">&quot;.arrow&quot;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;open&quot;</span><span class="p">);</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>set handlers</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:headerapp&quot;</span><span class="p">,</span> <span class="nf">(opt = {})-&gt;</span>
+      <span class="k">new</span> <span class="nx">Controller</span><span class="p">.</span><span class="nx">HeaderController</span> <span class="nx">opt</span>   
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>
