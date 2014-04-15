@@ -21,6 +21,8 @@
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" type="text/css">
+	<link href="assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
 
 	<link href="assets/plugins/jquery-datatable/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
@@ -59,6 +61,8 @@
 		<script type="text/javascript" src="assets/js/row-link.js"></script>
 		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
 		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+		<script src="assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
 
 	<!-- END NEED TO WORK ON -->
 
@@ -332,225 +336,86 @@
 					<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
 						<div class="row">
 							<div class="col-lg-12">
-										<h4><span class="semi-bold">All</span> Modules</h4>
-								              <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="modules">
+								<h4><span class="semi-bold">All</span> Modules</h4>
+								<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="modules">
 					                <thead>
 					                  <tr>
-					                  	<th style="width:8%"><div class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
-					                        <input type="checkbox" value="1" id="checkbox1">
-					                        <label for="checkbox1"></label>
-					                      </div>
-					                  	</th>
-					                    <th style="width:52%">Question</th>
-					                    <th style="width:20%" data-hide="phone,tablet">Creator</th>
-					                    <th style="width:20%">Last Modified</th>
+					                    <th style="width:50%">Name</th>
+					                    <th style="width:10%" >Duration</th>
+					                    <th style="width:40%">Status</th>
 					                  </tr>
 					                </thead>
 					                <tbody>
 					                  <tr >
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="2" id="checkbox2">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
 					                    <td class="v-align-middle"><a href="#"></a>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</td>
-					                    <td class="v-align-middle"><span class="muted">Admin</span></td>
-					                    <td><span class="muted">12th Dec 13</span></td>
+					                    <td class="v-align-middle"><span class="muted">20 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span> <button type="button" class="btn btn-white btn-small pull-right">Replay</button></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox3">
-					                        <label for="checkbox3"></label>
-					                      </div>
-					                  	</td>
 					                    <td class="v-align-middle">es, but also the leap into electronic typesetting, remaining essentially unchanged. It was popul</td>
-					                    <td><span class="muted">Tom</span></td>
-					                    <td><span class="muted">4th Jan 14</span></td>
+					                    <td><span class="muted">35 mins</span></td>
+					                    <td><span class="muted"><span class="label label-info">In Progress</span></span><button type="button" class="btn btn-white btn-small pull-right "><i class="fa fa-pause"></i> Resume</button><button type="button" class="btn btn-white btn-small pull-right m-r-10" data-toggle="modal" data-target="#schedule"><i class="fa fa-calendar"></i> Schedule</button>
+					                    <div class="popover-markup">
+										  <div class="head hide">
+										    Schedule
+										   </div>
+										  <div class="content hide">
+										    
+										  </div>
+										</div></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="4" id="checkbox4">
-					                        <label for="checkbox4"></label>
-					                      </div>
-					                  	</td>
 					                    <td>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock,</td>
-					                    <td class="v-align-middle"><span class="muted">Bob</span></td>
-					                    <td><span class="muted">9th May 14</span></td>
+					                    <td class="v-align-middle"><span class="muted">15 mins</span></td>
+					                    <td><span class="muted"><span class="label label-important">Not Started</span></span></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="5" id="checkbox5">
-					                        <label for="checkbox5"></label>
-					                      </div>
-					                  	</td>
 					                    <td>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it </td>
-					                    <td class="v-align-middle"><span class="muted">Tom</span></td>
-					                    <td><span class="muted">13th Apr 14</span></td>
+					                    <td class="v-align-middle"><span class="muted">35 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span><button type="button" class="btn btn-white btn-small pull-right"><i class="fa fa-repeat"></i>&nbsp;Replay</button></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox6">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
 					                    <td>Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up </td>
-					                    <td class="v-align-middle"><span class="muted">Author Name</span></td>
-					                    <td><span class="muted">25th Jan 14</span></td>
+					                    <td class="v-align-middle"><span class="muted">23 mins</span></td>
+					                    <td><span class="muted"><span class="label label-important">Not Started</span></span></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox7">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
 					                    <td>The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</td>
-					                    <td class="v-align-middle"><span class="muted">Robert</span></td>
-					                    <td><span class="muted">14th Feb 14</span></td>
+					                    <td class="v-align-middle"><span class="muted">16 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span><button type="button" class="btn btn-white btn-small pull-right"><i class="fa fa-repeat"></i>&nbsp;Replay</button></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox8">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
 					                    <td>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus</td>
-					                    <td class="v-align-middle"><span class="muted">Mary</span></td>
-					                    <td><span class="muted">6th Mar 14</span></td>
+					                    <td class="v-align-middle"><span class="muted">14 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span><button type="button" class="btn btn-white btn-small pull-right"><i class="fa fa-repeat"></i>&nbsp;Replay</button></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox9">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
 					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
-					                    <td class="v-align-middle"><span class="muted">Peter</span></td>
-					                    <td><span class="muted">28th Apr 14</span></td>
+					                    <td class="v-align-middle"><span class="muted">45mins</span></td>
+					                    <td><span class="muted"><span class="label label-info">In Progress</span></span></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox10">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
 					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
-					                    <td class="v-align-middle"><span class="muted">Zack</span></td>
-					                    <td><span class="muted">4th Jan 14</span></td>
+					                    <td class="v-align-middle"><span class="muted">18 mins</span></td>
+					                    <td><span class="muted"><span class="label label-important">Not Started</span></span></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox11">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
 					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
-					                    <td class="v-align-middle"><span class="muted">Chris</span></td>
-					                    <td><span class="muted">6th Jul 14</span></td>
+					                    <td class="v-align-middle"><span class="muted">15 mins</span></td>
+					                    <td><span class="muted"><span class="label label-info">In Progress</span></span></td>
 					                  </tr>
 					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox12">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
 					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
-					                    <td class="v-align-middle"><span class="muted">Jim</span></td>
-					                    <td><span class="muted">14th Feb 14</span></td>
+					                    <td class="v-align-middle"><span class="muted">12 mins</span></td>
+					                    <td><span class="muted"><span class="label label-success">Completed</span></span><button type="button" class="btn btn-white btn-small pull-right"><i class="fa fa-repeat"></i>&nbsp;Replay</button></td>
 					                  </tr>
 					                </tbody>
 					              </table>
 							</div>
 						</div>
-						<button type="button" class="btn btn-success btn-cons2 pull-right m-t-20" id="save-question"> <i class="fa fa-plus"></i> Add</button>
 					</div>
 				</div>
 				</div>
-				
-				<div id="myCanvas-miki" class="col-md-10">
-
-					<ul class="cbp_tmtimeline">
-				        <li class="sortable">
-				        	<div class="contentPiece">
-				            <time class="cbp_tmtime" datetime="">
-				        	    <span class="time">15 <span class="semi-bold">mins</span></span>
-				            </time>
-				            <div class="cbp_tmicon primary animated bounceIn"> <i class="fa fa-question"></i> </div>
-				              <div class="cbp_tmlabel">
-				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
-				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
-				                </div>
-				                <div class="clearfix"></div>
-				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
-				                   <div class="muted">Tag one, Tag two, Tag three</div>
-				                  <div class="clearfix"></div>
-				                </div>
-				              </div>
-				            </div>
-				        </li>
-				        <li class="sortable">
-				        	<div class="contentPiece">
-				              <time class="cbp_tmtime" datetime="">
-				                <span class="time">4.5 <span class="semi-bold">mins</span></span>
-				              </time>
-				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-youtube-play"></i> </div>
-				              <div class="cbp_tmlabel">
-				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 " >
-				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold ">Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
-				           
-				                </div>
-				                <div class="clearfix"></div>
-				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
-				                  <div class="muted">Abc, 123, xyz</div>
-				                  <div class="clearfix"></div>
-				                </div>
-				              </div>
-				            </div>
-				        </li>
-				        <li class="sortable">
-				        	<div class="contentPiece">
-				              <time class="cbp_tmtime" datetime="">
-				                <span class="time">12 <span class="semi-bold">mins</span></span>
-				              </time>
-				              <div class="cbp_tmicon primary animated bounceIn"> <i class="fa fa-question"></i> </div>
-				              <div class="cbp_tmlabel">
-				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
-				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
-				                </div>
-				                <div class="clearfix"></div>
-				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
-				                   <div class="muted">Abc, xyz</div>
-				                  <div class="clearfix"></div>
-				                </div>
-				              </div>
-				            </div>
-				        </li>
-				        <li class="sortable">
-				        	<div class="contentPiece">
-				              <time class="cbp_tmtime" datetime="">
-				                <span class="time">23 <span class="semi-bold">mins</span></span>
-				              </time>
-				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-youtube-play"></i> </div>
-				              <div class="cbp_tmlabel">
-				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 ">
-				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold " >Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
-				           
-				                </div>
-				                <div class="clearfix"></div>
-				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
-				                  <div class="muted">Tag one, Tag two</div>
-				                  <div class="clearfix"></div>
-				                </div>
-				              </div>
-				            </div>
-				        </li>
-				    </ul>
-		    		<div class="clearfix"></div>
-				</div>
-
 			</div>
 			<!-- END PLACE PAGE CONTENT HERE -->
 		</div>
@@ -559,182 +424,55 @@
 </div>
 <!-- END CONTENT --> 
 
-<!-- BEGIN CHAT --> 
-<div id="sidr" class="chat-window-wrapper">
-	<div id="main-chat-wrapper">
-		<div class="chat-window-wrapper fadeIn" id="chat-users">
-			<!-- BEGIN CHAT HEADER -->
-			<div class="chat-header">	
-				<!-- BEGIN CHAT SEARCH BAR -->
-				<div class="pull-left">
-					<input type="text" placeholder="search">
-				</div>
-				<!-- END CHAT SEARCH BAR -->
-				<!-- BEGIN CHAT QUICKLINKS -->		
-				<div class="pull-right">
-					<a href="#" class=""><div class="iconset top-settings-dark"></div></a>
-				</div>
-				<!-- END CHAT QUICKLINKS -->			
-			</div>
-			<!-- END CHAT HEADER -->	
-			<!-- BEGIN GROUP WIDGET -->
-			<div class="side-widget">
-				<div class="side-widget-title">group chats</div>
-				<div class="side-widget-content">
-					<div id="groups-list">
-						<ul class="groups">
-							<li><a href="#"><div class="status-icon green"></div>Group Chat 1</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- END GROUP WIDGET -->
-			<!-- BEGIN FAVORITES WIDGET -->
-			<div class="side-widget fadeIn">
-				<div class="side-widget-title">favorites</div>
-				<div class="side-widget-content">
-					<!-- BEGIN SAMPLE CHAT -->
-					<div class="user-details-wrapper active" data-chat-status="online" data-chat-user-pic="assets/img/profiles/d.jpg" data-chat-user-pic-retina="assets/img/profiles/d2x.jpg" data-user-name="Jane Smith">
-						<!-- BEGIN PROFILE PIC -->
-						<div class="user-profile">
-								<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
-							</div>
-						<!-- END PROFILE PIC -->
-						<!-- BEGIN MESSAGE -->
-						<div class="user-details">
-								<div class="user-name">Jane Smith</div>
-								<div class="user-more">Message...</div>
-							</div>
-						<!-- END MESSAGE -->
-						<!-- BEGIN MESSAGES BADGE -->
-						<div class="user-details-status-wrapper">
-								<span class="badge badge-important">3</span>
-							</div>
-						<!-- END MESSAGES BADGE -->
-						<!-- BEGIN STATUS -->
-						<div class="user-details-count-wrapper">
-								<div class="status-icon green"></div>
-							</div>
-						<!-- END STATUS -->
-						<div class="clearfix"></div>
-					</div>
-					<!-- END SAMPLE CHAT -->	
-				</div>
-			</div>
-			<!-- END FAVORITES WIDGET -->
-			<!-- BEGIN MORE FRIENDS WIDGET -->
-			<div class="side-widget">
-				<div class="side-widget-title">more friends</div>
-				<div class="side-widget-content" id="friends-list">
-					<!-- BEGIN SAMPLE CHAT -->
-					<div class="user-details-wrapper" data-chat-status="online" data-chat-user-pic="assets/img/profiles/d.jpg" data-chat-user-pic-retina="assets/img/profiles/d2x.jpg" data-user-name="Jane Smith">
-						<!-- BEGIN PROFILE PIC -->
-						<div class="user-profile">
-							<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
-						</div>
-						<!-- END PROFILE PIC -->
-						<!-- BEGIN MESSAGE -->
-						<div class="user-details">
-							<div class="user-name">Jane Smith</div>
-							<div class="user-more">Message...</div>
-						</div>
-						<!-- END MESSAGE -->
-						<!-- BEGIN MESSAGES BADGE -->
-						<div class="user-details-status-wrapper">
-							<span class="badge badge-important">3</span>
-						</div>
-						<!-- END MESSAGES BADGE -->
-						<!-- BEGIN STATUS -->
-						<div class="user-details-count-wrapper">
-							<div class="status-icon green"></div>
-						</div>
-						<!-- END STATUS -->
-						<div class="clearfix"></div>
-					</div>
-					<!-- END SAMPLE CHAT -->
-				</div>		
-			</div>
-			<!-- END MORE FRIENDS WIDGET -->
-		</div>		
-		<!-- BEGIN DUMMY CHAT CONVERSATION -->
-		<div class="chat-window-wrapper fadeIn" id="messages-wrapper" style="display:none">
-			<!-- BEGIN CHAT HEADER BAR -->
-			<div class="chat-header">	
-				<!-- BEGIN SEARCH BAR -->
-				<div class="pull-left">
-					<input type="text" placeholder="search">
-				</div>		
-				<!-- END SEARCH BAR -->
-				<!-- BEGIN CLOSE TOGGLE -->
-				<div class="pull-right">
-					<a href="#" class=""><div class="iconset top-settings-dark"></div></a>
-				</div>	
-				<!-- END CLOSE TOGGLE -->				
-			</div>
-			<div class="clearfix"></div>
-			<!-- END CHAT HEADER BAR -->
-			<!-- BEGIN CHAT BODY -->
-			<div class="chat-messages-header">
-				<div class="status online"></div>
-				<span class="semi-bold">Jane Smith(Typing..)</span>
-				<a href="#" class="chat-back"><i class="icon-custom-cross"></i></a>
-			</div>
-			<!-- BEGIN CHAT MESSAGES CONTAINER -->
-			<div class="chat-messages">
-				<!-- BEGIN TIME STAMP EXAMPLE -->
-				<div class="sent_time">Yesterday 11:25pm</div>
-				<!-- END TIME STAMP EXAMPLE -->
-				<!-- BEGIN EXAMPLE CHAT MESSAGE -->
-				<div class="user-details-wrapper">
-					<!-- BEGIN MESSENGER PROFILE -->
-					<div class="user-profile">
-						<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
-					</div>
-					<!-- END MESSENGER PROFILE -->
-					<!-- BEGIN MESSENGER MESSAGE -->
-					<div class="user-details">
-						<div class="bubble">Hello, You there?</div>
-					</div>
-					<!-- END MESSENGER MESSAGE -->					
-					<div class="clearfix"></div>
-					<!-- BEGIN TIMESTAMP ON CLICK TOGGLE -->
-					<div class="sent_time off">Yesterday 11:25pm</div>
-					<!-- END TIMESTAMP ON CLICK TOGGLE -->
-				</div>
-				<!-- END EXAMPLE CHAT MESSAGE -->
-				<!-- BEGIN TIME STAMP EXAMPLE -->
-				<div class="sent_time">Today 11:25pm</div>
-				<!-- BEGIN TIME STAMP EXAMPLE -->				
-				<!-- BEGIN EXAMPLE CHAT MESSAGE (FROM SELF) -->
-				<div class="user-details-wrapper pull-right">
-					<!-- BEGIN MESSENGER MESSAGE -->
-					<div class="user-details">
-						<div class="bubble sender">Let me know when you free</div>
-					</div>					
-					<!-- END MESSENGER MESSAGE -->
-					<div class="clearfix"></div>
-					<!-- BEGIN TIMESTAMP ON CLICK TOGGLE -->
-					<div class="sent_time off">Sent On Tue, 2:45pm</div>
-					<!-- END TIMESTAMP ON CLICK TOGGLE -->
-				</div>	
-				<!-- END EXAMPLE CHAT MESSAGE (FROM SELF) -->	
-			</div>
-			<!-- END CHAT MESSAGES CONTAINER -->
+<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
+      </div>
+      <div class="modal-body">
+        <div class="input-append success date">
+			<input type="text" placeholder="Select Date" class="span12">
+			<span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> 
 		</div>
-		<div class="chat-input-wrapper" style="display:none">
-			<textarea id="chat-message-input" rows="1" placeholder="Type your message"></textarea>
-		</div>
-		<div class="clearfix"></div>
-		<!-- END DUMMY CHAT CONVERSATION -->
-	</div>
+      </div>
+    </div>
+  </div>
 </div>
-<!-- END CHAT --> 
+
 <script>
 	$("#subs").select2();
 	$("#chaps").select2();
 //Multi Select
  	$("#secs").val([]).select2();
  	$("#subsecs").val([]).select2();
+
+//Schedule Popover
+ 	$('.schedule').popover({
+	    html : true,
+	    title: function() {
+	      return $(this).parent().find('.head').html();
+	    },
+	    content: function() {
+	      return $(this).parent().find('.content').html();
+	    },
+	    placement: 'left'
+	});
+
+//Date Pickers
+	$('.input-append.date').datepicker({
+		autoclose: true,
+		todayHighlight: true
+	});
+
+//Time pickers
+	$('.timepicker-default').timepicker();
+  	 	$('.timepicker-24').timepicker({
+            minuteStep: 1,
+            showSeconds: true,
+            showMeridian: false
+    });
  </script>
 </body>
 </html>
