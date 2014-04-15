@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>views.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../../doc-style.css" />
+  <script src="../../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../../", thisFile = "source\\apps\\content-creator\\content-builder\\elements\\fib\\views.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>views.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.ContentBuilder.Element.Fib.Views&quot;</span><span class="p">,</span>
+  <span class="nf">(Views, App, Backbone, Marionette,$, _)-&gt;</span>
+
+    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">FibView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+      <span class="nv">template : </span><span class="s">&#39;&lt;input height=&quot;50&quot; type=&quot;text&quot; maxlength=&quot;{{maxlength}}&quot; placeholder=&quot;Answer&quot; style=&quot;</span>
+<span class="s">              font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; </span>
+<span class="s">               width:100%; height: 100%; line-height : inherit; padding:15px 2px;&quot;&gt;&#39;</span>
+
+      <span class="nv">onShow : </span><span class="nf">-&gt;</span>
+
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">parent</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)=&gt;</span>
+          <span class="nx">@trigger</span> <span class="s">&quot;show:this:fib:properties&quot;</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;show&#39;</span>
+          <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">@_convertHex</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>listen to the model events </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nv">modelEvents : </span>
+          <span class="s">&#39;change:maxlength&#39;</span>  <span class="o">:</span> <span class="s">&#39;_changeMaxLength&#39;</span>
+          <span class="s">&#39;change:font&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeFont&#39;</span>
+          <span class="s">&#39;change:font_size&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeSize&#39;</span>
+          <span class="s">&#39;change:color&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeColor&#39;</span>
+          <span class="s">&#39;change:bg_color&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeBGColor&#39;</span>
+          <span class="s">&#39;change:bg_opacity&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeBGColor&#39;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>on change of maxlength property</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeMaxLength</span><span class="o">:</span><span class="nf">(model,maxlength)-&gt;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;maxLength&#39;</span><span class="p">,</span><span class="nb">parseInt</span> <span class="nx">maxlength</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>on change of font property</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeFont</span><span class="o">:</span><span class="nf">(model,font)-&gt;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-family&#39;</span><span class="p">,</span><span class="nx">font</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>on change of font_size property</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeSize</span><span class="o">:</span><span class="nf">(model,size)-&gt;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-size&#39;</span><span class="p">,</span><span class="nx">size</span><span class="o">+</span><span class="s">&quot;px&quot;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>on change of color property</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeColor</span><span class="o">:</span><span class="nf">(model,color)-&gt;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;color&#39;</span><span class="p">,</span> <span class="nx">color</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>on change of bg_color property</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeBGColor</span><span class="o">:</span><span class="nf">(model,bgColor)-&gt;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">@_convertHex</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>convert hex and opacity to rgba format for css</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_convertHex</span><span class="o">:</span><span class="nf">(hex,opacity)-&gt;</span>
+          <span class="nv">hex = </span><span class="nx">hex</span><span class="p">.</span><span class="nx">replace</span> <span class="s">&#39;#&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span>
+          <span class="nv">r = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span>
+          <span class="nv">g = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="mi">16</span>
+          <span class="nv">b = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="mi">16</span>
+
+          <span class="nv">result = </span><span class="s">&#39;rgba(&#39;</span><span class="o">+</span><span class="nx">r</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">+</span><span class="nx">g</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">+</span><span class="nx">b</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">+</span><span class="nx">opacity</span><span class="o">+</span><span class="s">&#39;)&#39;</span>
+          
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

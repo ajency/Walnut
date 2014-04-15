@@ -41,7 +41,7 @@ define ['app'],(App)->
 										</div>
 
 										<div>
-											<input id="check-ind-marks" type="checkbox" name="check-ind-marks"> set marks to individula options
+											<input id="check-ind-marks" type="checkbox" name="check-ind-marks"> set marks to individual options
 										</div>
 
 										<div id="individual-marks-region"></div>
@@ -104,7 +104,6 @@ define ['app'],(App)->
 			_enableIndividualMarks:(evt)->
 
 				if $(evt.target).prop 'checked'
-
 					@model.set 'individual_marks', true
 					@trigger "show:individual:marks:table"
 					

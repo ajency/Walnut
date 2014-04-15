@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>views.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../../doc-style.css" />
+  <script src="../../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../../", thisFile = "source\\apps\\content-creator\\content-builder\\elements\\text\\views.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h1">
+        <a href="#set%20configuration%20for%20the%20ckeditor">set configuration for the Ckeditor</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>views.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Row views</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.Text.Views&#39;</span><span class="p">,</span> <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>Menu item view</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">TextView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+      <span class="nv">tagName : </span><span class="s">&#39;p&#39;</span>
+
+      <span class="nv">template : </span><span class="s">&#39;&#39;</span>
+
+      <span class="nv">className: </span><span class="s">&#39;text&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>avoid and anchor tag click events
+listen to blur event for the text element so that we can save the new edited markup
+to server. The element will triggger a text:element:blur event on blur and pass the 
+current markupup as argument</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nv">events:</span>
+        <span class="s">&#39;click a&#39;</span> <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+        <span class="s">&#39;blur&#39;</span>    <span class="o">:</span> <span class="nf">-&gt;</span> <span class="nx">@trigger</span> <span class="s">&quot;text:element:blur&quot;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">html</span><span class="p">()</span>
+            
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>initialize the CKEditor for the text element on show
+used setData instead of showing in template. this works well
+using template to load content add the html tags in content
+hold the editor instance as the element property so that
+we can destroy it on close of element</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span><span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>CKEDITOR.on 'instanceCreated', @configureEditor</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
+        <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;content&#39;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="set%20configuration%20for%20the%20ckeditor">
+  <h1>
+    <a href="#set%20configuration%20for%20the%20ckeditor" name="set%20configuration%20for%20the%20ckeditor" class="pilcrow">&#182;</a>
+    set configuration for the Ckeditor
+  </h1>
+</div>
+
+
+<p>configureEditor: (event) =>
+    editor = event.editor
+    element = editor.element
+    # Customize the editor configurations on "configLoaded" event,
+    # which is fired after the configuration file loading and
+    # execution. This makes it possible to change the
+    # configurations before the editor initialization takes place.
+    editor.on "configLoaded", -></p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code>    <span class="nx">editor</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">toolbar</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="err">#</span>           <span class="err">#</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;document&#39;</span><span class="p">,</span> <span class="nx">groups</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="s1">&#39;document&#39;</span><span class="p">,</span> <span class="s1">&#39;doctools&#39;</span> <span class="p">],</span> <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;Source&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;Save&#39;</span><span class="p">,</span> <span class="s1">&#39;NewPage&#39;</span><span class="p">,</span> <span class="s1">&#39;Preview&#39;</span><span class="p">,</span> <span class="s1">&#39;Print&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;Templates&#39;</span> <span class="p">]</span> <span class="p">},</span>
+                <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;clipboard&#39;</span>
+                <span class="nx">groups</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;clipboard&#39;</span><span class="p">,</span> <span class="s1">&#39;undo&#39;</span> <span class="p">]</span>
+                <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;Cut&#39;</span><span class="p">,</span> <span class="s1">&#39;Copy&#39;</span><span class="p">,</span> <span class="s1">&#39;Paste&#39;</span><span class="p">,</span> <span class="s1">&#39;PasteText&#39;</span><span class="p">,</span> <span class="s1">&#39;PasteFromWord&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;Undo&#39;</span><span class="p">,</span> <span class="s1">&#39;Redo&#39;</span> <span class="p">]</span>
+            <span class="p">,</span>
+                <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;editing&#39;</span>
+                <span class="nx">groups</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;find&#39;</span><span class="p">,</span> <span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;spellchecker&#39;</span> <span class="p">]</span>
+                <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;Find&#39;</span><span class="p">,</span> <span class="s1">&#39;Replace&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;SelectAll&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;Scayt&#39;</span> <span class="p">]</span> 
+            <span class="p">,</span>
+    <span class="err">#</span>           <span class="err">#</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;forms&#39;</span><span class="p">,</span> <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;Form&#39;</span><span class="p">,</span> <span class="s1">&#39;Checkbox&#39;</span><span class="p">,</span> <span class="s1">&#39;Radio&#39;</span><span class="p">,</span> <span class="s1">&#39;TextField&#39;</span><span class="p">,</span> <span class="s1">&#39;Textarea&#39;</span><span class="p">,</span> <span class="s1">&#39;Select&#39;</span><span class="p">,</span> <span class="s1">&#39;Button&#39;</span><span class="p">,</span> <span class="s1">&#39;ImageButton&#39;</span><span class="p">,</span> <span class="s1">&#39;HiddenField&#39;</span> <span class="p">]</span> <span class="p">},</span>
+                <span class="s1">&#39;/&#39;</span>
+            <span class="p">,</span>
+                <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;basicstyles&#39;</span>
+                <span class="nx">groups</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;basicstyles&#39;</span><span class="p">,</span> <span class="s1">&#39;cleanup&#39;</span> <span class="p">]</span>
+                <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;Bold&#39;</span><span class="p">,</span> <span class="s1">&#39;Italic&#39;</span><span class="p">,</span> <span class="s1">&#39;Underline&#39;</span><span class="p">,</span> <span class="s1">&#39;Strike&#39;</span><span class="p">,</span> <span class="s1">&#39;Subscript&#39;</span><span class="p">,</span> <span class="s1">&#39;Superscript&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;RemoveFormat&#39;</span> <span class="p">]</span>
+            <span class="p">,</span>
+                <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;paragraph&#39;</span>
+                <span class="nx">groups</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="s1">&#39;indent&#39;</span><span class="p">,</span> <span class="s1">&#39;blocks&#39;</span><span class="p">,</span> <span class="s1">&#39;align&#39;</span><span class="p">,</span> <span class="s1">&#39;bidi&#39;</span> <span class="p">]</span>
+                <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;NumberedList&#39;</span><span class="p">,</span> <span class="s1">&#39;BulletedList&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;Outdent&#39;</span><span class="p">,</span> <span class="s1">&#39;Indent&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;Blockquote&#39;</span><span class="p">,</span> <span class="s1">&#39;CreateDiv&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;JustifyLeft&#39;</span><span class="p">,</span> <span class="s1">&#39;JustifyCenter&#39;</span><span class="p">,</span> <span class="s1">&#39;JustifyRight&#39;</span><span class="p">,</span> <span class="s1">&#39;JustifyBlock&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;BidiLtr&#39;</span><span class="p">,</span> <span class="s1">&#39;BidiRtl&#39;</span><span class="p">,</span> <span class="s1">&#39;Language&#39;</span> <span class="p">]</span>
+            <span class="p">,</span>   
+    <span class="err">#</span>           <span class="err">#</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;links&#39;</span><span class="p">,</span> <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;Link&#39;</span><span class="p">,</span> <span class="s1">&#39;Unlink&#39;</span><span class="p">,</span> <span class="s1">&#39;Anchor&#39;</span> <span class="p">]</span> <span class="p">},</span>
+                <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;insert&#39;</span>
+                <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;SpecialChar&#39;</span><span class="p">,</span> <span class="s1">&#39;EqnEditor&#39;</span> <span class="p">]</span>
+            <span class="p">,</span>
+                <span class="s1">&#39;/&#39;</span>
+            <span class="p">,</span>
+                <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;styles&#39;</span>
+                <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;Styles&#39;</span><span class="p">,</span> <span class="s1">&#39;Format&#39;</span><span class="p">,</span> <span class="s1">&#39;Font&#39;</span><span class="p">,</span> <span class="s1">&#39;FontSize&#39;</span> <span class="p">]</span> 
+            <span class="p">,</span>
+                <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;colors&#39;</span>
+                <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;TextColor&#39;</span><span class="p">,</span> <span class="s1">&#39;BGColor&#39;</span> <span class="p">]</span> 
+    <span class="err">#</span>           <span class="err">#</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;tools&#39;</span><span class="p">,</span> <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;Maximize&#39;</span><span class="p">,</span> <span class="s1">&#39;ShowBlocks&#39;</span> <span class="p">]</span> <span class="p">},</span>
+    <span class="err">#</span>           <span class="err">#</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;others&#39;</span><span class="p">,</span> <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;-&#39;</span> <span class="p">]</span> <span class="p">},</span>
+    <span class="err">#</span>           <span class="err">#</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;about&#39;</span><span class="p">,</span> <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;About&#39;</span> <span class="p">]</span> <span class="p">}</span>
+            <span class="p">]</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>destroy the Ckeditor instance to avoiid memory leaks on close of element
+this.editor will hold the reference to the editor instance
+Ckeditor has a destroy method to remove a editor instance</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nx">@editor</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

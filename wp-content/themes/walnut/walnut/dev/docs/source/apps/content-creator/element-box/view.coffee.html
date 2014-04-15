@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>view.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../doc-style.css" />
+  <script src="../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../", thisFile = "source\\apps\\content-creator\\element-box\\view.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>view.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.ElementBox.Views&quot;</span><span class="p">,</span><span class="nf">(Views, App)-&gt;</span>
+
+
+    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">ElementBoxView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+      <span class="nv">template :</span>
+            <span class="s">&#39;&lt;div class=&quot;tiles green&quot;&gt; </span>
+<span class="s">              &lt;div class=&quot;tiles-head&quot;&gt; </span>
+<span class="s">                &lt;h4 class=&quot;text-white&quot;&gt; </span>
+<span class="s">                  &lt;span class=&quot;semi-bold&quot;&gt;Tool&lt;/span&gt;box </span>
+<span class="s">                &lt;/h4&gt; </span>
+<span class="s">              &lt;/div&gt; </span>
+<span class="s">            &lt;/div&gt; </span>
+<span class="s">            &lt;h5 class=&quot;semi-bold text-center b-b b-grey p-b-10&quot;&gt;Components&lt;/h5&gt; </span>
+<span class="s">            &lt;div class=&quot;tools&quot;&gt; </span>
+<span class="s">              &lt;ul&gt; </span>
+<span class="s">                &lt;li data-element=&quot;Row&quot;&gt; </span>
+<span class="s">                  &lt;a href=&quot;#&quot; class=&quot;drag builder-element&quot; &gt; </span>
+<span class="s">                    &lt;i class=&quot;bicon icon-uniF160&quot;&gt;&lt;/i&gt; </span>
+<span class="s">                    &lt;div class=&quot;aj-imp-builder-title&quot;&gt;Row&lt;/div&gt; </span>
+<span class="s">                  &lt;/a&gt; </span>
+<span class="s">                &lt;/li&gt; </span>
+<span class="s">                &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt; </span>
+<span class="s">              &lt;/ul&gt; </span>
+<span class="s">            &lt;/div&gt; </span>
+<span class="s">            &lt;h5 class=&quot;semi-bold text-center b-b b-grey p-b-10&quot;&gt;Questions&lt;/h5&gt; </span>
+<span class="s">              &lt;div class=&quot;qstns&quot;&gt; </span>
+<span class="s">                &lt;ul class=&quot;elements&quot;&gt; </span>
+<span class="s">                  &lt;li data-element=&quot;Hotspot&quot; &gt; </span>
+<span class="s">                    &lt;a href=&quot;#&quot; class=&quot;drag builder-element&quot; &gt; </span>
+<span class="s">                      &lt;div class=&quot;aj-imp-builder-title&quot;&gt;</span>
+<span class="s">                        &lt;i class=&quot;fa fa-bullseye&quot;&gt;&lt;/i&gt; Hotspot</span>
+<span class="s">                      &lt;/div&gt; </span>
+<span class="s">                    &lt;/a&gt;</span>
+<span class="s">                  &lt;/li&gt; </span>
+<span class="s">                  &lt;li data-element=&quot;Mcq&quot; &gt; </span>
+<span class="s">                    &lt;a href=&quot;#&quot; class=&quot;drag builder-element&quot; &gt; </span>
+<span class="s">                      &lt;div class=&quot;aj-imp-builder-title&quot;&gt;</span>
+<span class="s">                        &lt;i class=&quot;fa fa-list-ol&quot;&gt;&lt;/i&gt; MCQ</span>
+<span class="s">                      &lt;/div&gt; </span>
+<span class="s">                    &lt;/a&gt; </span>
+<span class="s">                  &lt;/li&gt;</span>
+<span class="s">                  &lt;li data-element=&quot;Fib&quot; &gt; </span>
+<span class="s">                    &lt;a href=&quot;#&quot; class=&quot;drag builder-element&quot; &gt; </span>
+<span class="s">                      &lt;div class=&quot;aj-imp-builder-title&quot;&gt;</span>
+<span class="s">                        &lt;i class=&quot;fa fa-list-ol&quot;&gt;&lt;/i&gt; Fill in the Blanks</span>
+<span class="s">                      &lt;/div&gt; </span>
+<span class="s">                    &lt;/a&gt; </span>
+<span class="s">                  &lt;/li&gt;  </span>
+<span class="s">                &lt;/ul&gt; </span>
+<span class="s">                &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt; </span>
+<span class="s">            &lt;/div&gt; </span>
+<span class="s">            &lt;h5 class=&quot;semi-bold text-center b-b b-grey p-b-10&quot;&gt;Elements&lt;/h5&gt; </span>
+<span class="s">            &lt;div class=&quot;tools&quot;&gt;</span>
+<span class="s">              &lt;ul&gt; </span>
+<span class="s">                &lt;li data-element=&quot;Image&quot; class=&quot;hotspotable&quot;&gt; </span>
+<span class="s">                  &lt;a href=&quot;#&quot; class=&quot;drag builder-element&quot; &gt; </span>
+<span class="s">                    &lt;i class=&quot;bicon icon-uniF10E&quot;&gt;&lt;/i&gt; </span>
+<span class="s">                    &lt;div class=&quot;aj-imp-builder-title&quot;&gt;Image&lt;/div&gt; </span>
+<span class="s">                  &lt;/a&gt; </span>
+<span class="s">                &lt;/li&gt; </span>
+<span class="s">                &lt;li data-element=&quot;Text&quot; class=&quot;hotspotable&quot;&gt; </span>
+<span class="s">                  &lt;a href=&quot;#&quot; class=&quot;drag builder-element&quot; &gt; </span>
+<span class="s">                    &lt;i class=&quot;bicon icon-uniF11C&quot;&gt;&lt;/i&gt; </span>
+<span class="s">                    &lt;div class=&quot;aj-imp-builder-title&quot;&gt;Text&lt;/div&gt; </span>
+<span class="s">                  &lt;/a&gt; </span>
+<span class="s">                &lt;/li&gt; </span>
+<span class="s">                &lt;li data-element=&quot;ImageWithText&quot; class=&quot;hotspotable&quot;&gt; </span>
+<span class="s">                  &lt;a href=&quot;#&quot; class=&quot;drag builder-element&quot; &gt; </span>
+<span class="s">                    &lt;i class=&quot;bicon icon-uniF112&quot;&gt;&lt;/i&gt; </span>
+<span class="s">                    &lt;div class=&quot;aj-imp-builder-title&quot;&gt;Image With Text&lt;/div&gt; </span>
+<span class="s">                  &lt;/a&gt; </span>
+<span class="s">                &lt;/li&gt; </span>
+<span class="s">                &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt; </span>
+<span class="s">              &lt;/ul&gt; </span>
+<span class="s">            &lt;/div&gt;&#39;</span>
+
+
+
+      <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
+        
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;*[data-element]&#39;</span><span class="p">).</span><span class="nx">draggable</span>
+                <span class="nv">connectToSortable : </span><span class="s">&#39;.droppable-column&#39;</span>
+                <span class="nv">helper        : </span><span class="s">&#39;clone&#39;</span>
+                <span class="nv">delay         : </span><span class="mi">5</span>
+                <span class="nv">addClasses      : </span><span class="kc">false</span>
+                <span class="nv">distance      : </span><span class="mi">5</span>
+                <span class="nv">revert        : </span><span class="s">&#39;invalid&#39;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>class ElementView extends Marionette.ItemView</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code><span class="nx">tagName</span> <span class="o">:</span> <span class="s1">&#39;li&#39;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code><span class="nx">template</span> <span class="o">:</span> <span class="err">&#39;</span><span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;#&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;drag builder-element&quot;</span> <span class="o">&gt;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code>                <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;aj-imp-builder-title&quot;</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">element</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+            <span class="o">&lt;</span><span class="err">/a&gt;&#39;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code><span class="nx">onRender</span> <span class="o">:-&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="err">@</span><span class="nx">model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+    <span class="err">@</span><span class="nx">$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s1">&#39;data-element&#39;</span><span class="p">,</span> <span class="err">@</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s1">&#39;element&#39;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>class Views.ElementBoxView extends Marionette.CompositeView</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code><span class="err">#</span> <span class="nx">template</span> <span class="o">:</span> <span class="err">&#39;</span><span class="o">&lt;</span><span class="nx">h4</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;text-white b-b b-grey p-b-10&quot;</span><span class="o">&gt;</span>
+<span class="err">#</span>               <span class="o">&lt;</span><span class="nx">span</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;semi-bold&quot;</span><span class="o">&gt;</span><span class="nx">Tool</span><span class="o">&lt;</span><span class="err">/span&gt;box</span>
+<span class="err">#</span>           <span class="o">&lt;</span><span class="err">/h4&gt;</span>
+<span class="err">#</span>           <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">&gt;</span>
+<span class="err">#</span>               <span class="o">&lt;</span><span class="nx">ul</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;elements&quot;</span><span class="o">&gt;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code><span class="err">#</span>               <span class="o">&lt;</span><span class="err">/ul&gt;</span>
+<span class="err">#</span>               <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;clearfix&quot;</span><span class="o">&gt;&lt;</span><span class="err">/div&gt;</span>
+<span class="err">#</span>           <span class="o">&lt;</span><span class="err">/div&gt;&#39;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code><span class="nx">template</span> <span class="o">:</span> <span class="s1">&#39;&lt;div class=&quot;tiles green&quot;&gt;</span>
+<span class="s1">                &lt;div class=&quot;tiles-head&quot;&gt;</span>
+<span class="s1">                    &lt;h4 class=&quot;text-white&quot;&gt;&lt;span class=&quot;semi-bold&quot;&gt;Tool&lt;/span&gt;box&lt;/h4&gt;</span>
+<span class="s1">                &lt;/div&gt;</span>
+<span class="s1">            &lt;/div&gt;</span>
+<span class="s1">            &lt;h5 class=&quot;semi-bold text-center b-b b-grey p-b-10&quot;&gt;Questions&lt;/h5&gt;</span>
+<span class="s1">            &lt;div class=&quot;qstns&quot;&gt;</span>
+<span class="s1">                &lt;ul class=&quot;elements&quot;&gt;&lt;/ul&gt;</span>
+<span class="s1">                &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt;</span>
+<span class="s1">            &lt;/div&gt;</span>
+<span class="s1">            &#39;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code><span class="nx">itemView</span> <span class="o">:</span> <span class="nx">ElementView</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code><span class="nx">itemViewContainer</span> <span class="o">:</span> <span class="s1">&#39;ul.elements&#39;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code><span class="nx">onShow</span><span class="o">:-&gt;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code>    <span class="err">@</span><span class="nx">$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;*[data-element]&#39;</span><span class="p">).</span><span class="nx">draggable</span>
+                                    <span class="nx">connectToSortable</span>   <span class="o">:</span> <span class="s1">&#39;.droppable-column&#39;</span>
+                                    <span class="nx">helper</span>              <span class="o">:</span> <span class="s1">&#39;clone&#39;</span>
+                                    <span class="nx">delay</span>               <span class="o">:</span> <span class="mi">5</span>
+                                    <span class="nx">addClasses</span>          <span class="o">:</span> <span class="kc">false</span>
+                                    <span class="nx">distance</span>            <span class="o">:</span> <span class="mi">5</span>
+                                    <span class="nx">revert</span>              <span class="o">:</span> <span class="s1">&#39;invalid&#39;</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      
+        
+ 
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

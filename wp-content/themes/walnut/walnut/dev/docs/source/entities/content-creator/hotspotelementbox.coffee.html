@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>hotspotelementbox.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "source\\entities\\content-creator\\hotspotelementbox.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>hotspotelementbox.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;backbone&#39;</span><span class="p">],</span><span class="nf">(App,Backbone)-&gt;</span>
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;Entities.HotspotElementBox&quot;</span><span class="p">,</span> <span class="nf">(HotspotElementBox, App, Backbone, Marionette, $, _)-&gt;</span>
+
+
+        <span class="k">class</span> <span class="nx">HotspotElementBox</span><span class="p">.</span><span class="nx">ElementModel</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span>
+
+          <span class="nv">idAttribute : </span><span class="s">&#39;element&#39;</span>
+
+          <span class="nv">name : </span><span class="s">&#39;hotspotelementbox&#39;</span>
+
+        <span class="k">class</span> <span class="nx">HotspotElementBox</span><span class="p">.</span><span class="nx">ElementCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+
+          <span class="nv">model : </span><span class="nx">HotspotElementBox</span><span class="p">.</span><span class="nx">ElementModel</span>
+
+
+        <span class="nv">hotspotelementCollection = </span><span class="k">new</span> <span class="nx">HotspotElementBox</span><span class="p">.</span><span class="nx">ElementCollection</span>
+
+        <span class="nx">hotspotelementCollection</span><span class="p">.</span><span class="nx">add</span> <span class="p">[</span>
+              <span class="nv">element : </span><span class="s">&#39;Hotspot-Circle&#39;</span>
+              <span class="nv">icon  : </span><span class="s">&#39;fa-circle-o&#39;</span>
+            <span class="p">,</span>
+              <span class="nv">element : </span><span class="s">&#39;Hotspot-Rectangle&#39;</span>
+              <span class="nv">icon  : </span><span class="s">&#39;fa-square-o&#39;</span>
+            <span class="p">,</span>
+              <span class="nv">element : </span><span class="s">&#39;Hotspot-Image&#39;</span>
+              <span class="nv">icon  : </span><span class="s">&#39;fa-camera&#39;</span>
+            <span class="p">,</span>
+              <span class="nv">element : </span><span class="s">&#39;Hotspot-Text&#39;</span>
+              <span class="nv">icon : </span><span class="s">&#39;fa-font&#39;</span>
+        <span class="p">]</span>
+
+        <span class="nv">API =</span>
+
+          <span class="nx">getElements</span> <span class="o">:</span><span class="nf">-&gt;</span>
+            <span class="nx">hotspotelementCollection</span>
+
+
+
+        <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:all:hotspot:elements&quot;</span><span class="p">,</span> <span class="nf">-&gt;</span>
+            <span class="nx">API</span><span class="p">.</span><span class="nx">getElements</span><span class="p">()</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>menu.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../", thisFile = "source\\entities\\menu.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>menu.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&quot;app&quot;</span><span class="p">,</span> <span class="s">&#39;backbone&#39;</span><span class="p">],</span> <span class="nf">(App, Backbone) -&gt;</span>
+
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;Entities.Menus&quot;</span><span class="p">,</span> <span class="nf">(Menus, App, Backbone, Marionette, $, _)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>menu item model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">class</span> <span class="nx">Menus</span><span class="p">.</span><span class="nx">MenuItemModel</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span>
+
+        <span class="nv">idAttribute : </span><span class="s">&#39;id&#39;</span>
+
+        <span class="nv">defaults:</span>
+          <span class="nv">post_title          : </span><span class="s">&#39;&#39;</span>
+          <span class="nv">menu_item_link      : </span><span class="s">&#39;&#39;</span>
+          <span class="nv">menu_item_parent    : </span><span class="mi">0</span>
+          <span class="nv">order         : </span><span class="mi">0</span>
+
+        <span class="nv">name: </span><span class="s">&#39;menu-item&#39;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>menu item collection class</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">class</span> <span class="nx">Menus</span><span class="p">.</span><span class="nx">MenuItemCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+        <span class="nv">model : </span><span class="nx">Menus</span><span class="p">.</span><span class="nx">MenuItemModel</span>
+        <span class="nv">comparator : </span><span class="s">&#39;order&#39;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>API </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nv">API = </span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>get all site menus</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getMenus</span><span class="o">:</span><span class="nf">(param = {})-&gt;</span>
+          <span class="nv">menuCollection = </span><span class="k">new</span> <span class="nx">Menus</span><span class="p">.</span><span class="nx">MenuItemCollection</span>
+
+          <span class="nv">menuCollection.url = </span><span class="nx">AJAXURL</span> <span class="o">+</span> <span class="s">&#39;?action=get-menus&#39;</span>
+          <span class="nx">menuCollection</span><span class="p">.</span><span class="nx">fetch</span>
+              <span class="nv">reset : </span><span class="kc">true</span>
+              <span class="nv">data  : </span><span class="nx">param</span>
+
+          <span class="nx">menuCollection</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>request handler to get all site menus</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:site:menus&quot;</span><span class="p">,</span> <span class="nf">-&gt;</span>
+        <span class="nx">API</span><span class="p">.</span><span class="nx">getMenus</span><span class="p">()</span>
+
+
+    <span class="nx">App</span><span class="p">.</span><span class="nx">Entities</span><span class="p">.</span><span class="nx">Menus</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

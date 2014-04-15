@@ -27,12 +27,19 @@ define(['app'], function(App) {
       };
 
       Layout.prototype.onShow = function() {
-        $('#question-property').on('mouseover mouseenter', function() {
-          return App.ContentCreator.closequestioneproperty = false;
+        $('#question-property, #question-elements-property, #question-elements').parent().on('click', function(evt) {
+          return evt.stopPropagation();
         });
-        return $('#question-property').parent().parent().on('mouseleave', function() {
-          return App.ContentCreator.closequestioneproperty = true;
-        });
+        $('html').on('click', (function(_this) {
+          return function() {
+            return _this.questPropertyRegion.close();
+          };
+        })(this));
+        return $('html ,.element-wrapper').on('mousedown click', (function(_this) {
+          return function() {
+            return _this.questElementPropRegion.close();
+          };
+        })(this));
       };
 
       return Layout;

@@ -39,6 +39,9 @@ define ['app'
 						new McqPropertyBox.Views.MarksView
 							collection : model.get 'elements'
 
+					onClose:->
+						localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
+
 
 
 
