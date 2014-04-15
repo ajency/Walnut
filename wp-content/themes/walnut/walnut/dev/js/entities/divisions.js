@@ -54,10 +54,25 @@ define(["app", 'backbone'], function(App, Backbone) {
           data: param
         });
         return divisionCollection;
+      },
+      getDivisionByID: function(id) {
+        var division;
+        division = divisionCollection.get(id);
+        if (!division) {
+          division = new DivisionModel({
+            'id': id
+          });
+          division.fetch();
+          console.log(division);
+        }
+        return division;
       }
     };
-    return App.reqres.setHandler("get:divisions", function(opt) {
+    App.reqres.setHandler("get:divisions", function(opt) {
       return API.getDivisions(opt);
+    });
+    return App.reqres.setHandler("get:division:by:id", function(id) {
+      return API.getDivisionByID(id);
     });
   });
 });

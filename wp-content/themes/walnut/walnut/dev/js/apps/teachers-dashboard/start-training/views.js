@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'text!apps/teachers-dashboard/list-textbooks/templates/textbooks-list.html', 'text!apps/teachers-dashboard/list-textbooks/templates/list-item.html'], function(App, textbooksListTpl, listitemTpl) {
+define(['app', 'text!apps/teachers-dashboard/start-training/templates/textbooks-list.html', 'text!apps/teachers-dashboard/start-training/templates/list-item.html'], function(App, textbooksListTpl, listitemTpl) {
   return App.module("TeachersDashboardApp.View.List", function(List, App) {
     var EmptyView, TextbooksItemView;
     TextbooksItemView = (function(_super) {

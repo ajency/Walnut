@@ -9,7 +9,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				idAttribute : 'id'
 				
 				defaults:
-					division   		   	: ''
+					division 		   	: ''
 					class_id			: ''
 
 				name: 'division'
@@ -40,7 +40,19 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					divisionCollection
 
+				getDivisionByID:(id)->
+					division = divisionCollection.get id
+
+					if not division 
+						division = new DivisionModel ('id':id)
+						division.fetch()
+						console.log division
+					division
 
 			# request handler to get all divisions
 			App.reqres.setHandler "get:divisions", (opt) ->
 				API.getDivisions(opt)
+
+			# request handler to get single division
+			App.reqres.setHandler "get:division:by:id", (id) ->
+				API.getDivisionByID(id)

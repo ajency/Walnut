@@ -18,6 +18,29 @@ function new_school_setup( $blog_id ){
     update_blog_option($blog_id, 'blog_meta',$blog_details);
     update_blog_option($blog_id, 'template','schoolsite');
     update_blog_option($blog_id, 'stylesheet','schoolsite');
+    
+    $current_blog= get_current_blog_id();
+    switch_to_blog($blog_id);
+    
+    global $wp_roles;
+    if(get_role('subscriber')!=NULL)remove_role( 'subscriber' );//removes the subscriber role
+    if(get_role('contributor')!=NULL)remove_role( 'contributor' );//removes the contributor role
+    if(get_role('author')!=NULL)remove_role( 'author' );//removes the author role
+    if(get_role('editor')!=NULL)remove_role( 'editor' );//removes the editor role
+
+       if(get_role('school-admin')==NULL)
+         {
+            $role_clone='administrator';
+            $role_cloned = $wp_roles->get_role($role_clone);
+            $role='school-admin';
+            $role_name='School Admin';
+            $wp_roles->add_role($role, $role_name, $role_cloned->capabilities);
+         }
+    add_role( 'student','Student');
+    add_role( 'parent','Parent');
+    
+    switch_to_blog($current_blog);
+    
 }
 add_action('wpmu_new_blog', 'new_school_setup');
 

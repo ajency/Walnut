@@ -1,6 +1,7 @@
 define ['app'
 		'apps/teachers-dashboard/dashboard/dashboard-controller'
-		'apps/teachers-dashboard/list-textbooks/list-textbooks-controller'
+		'apps/teachers-dashboard/start-training/start-training-controller'
+		'apps/teachers-dashboard/take-class/take-class-controller'
 		], (App)->
 
 			App.module "TeachersDashboardApp", (TeachersDashboardApp, App)->
@@ -19,17 +20,16 @@ define ['app'
 						new TeachersDashboardApp.View.DashboardController
 											region : App.mainContentRegion
 
-					takeClass :(class_id) ->
-						@chooseTextbooks 'take-class', class_id
-
-					startTraining :(class_id,div) ->
-						@chooseTextbooks 'start-training', class_id, div
-
-					chooseTextbooks:(str,class_id,div)->
-						new TeachersDashboardApp.View.TextbooksListController
+					takeClass :(class_id,div) ->
+						new TeachersDashboardApp.View.TakeClassController
 							region 		: App.mainContentRegion
 							classID 	: class_id
 							division	: div
+
+					startTraining :(class_id) ->
+						new TeachersDashboardApp.View.StartTrainingController
+							region 		: App.mainContentRegion
+							classID 	: class_id
 
 	
 				TeachersDashboardApp.on "start", ->

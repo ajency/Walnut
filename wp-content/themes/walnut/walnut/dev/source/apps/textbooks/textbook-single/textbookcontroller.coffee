@@ -48,3 +48,5 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 						collection: @chapters
 
 					@layout.chaptersRegion.show(chaptersListView)
+
+					

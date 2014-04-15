@@ -25,3 +25,22 @@ function fetch_divisions() {
 }
 
 add_action('wp_ajax_get-divisions', 'fetch_divisions');
+
+function fetch_single_division() {
+    
+    global $wpdb;
+    
+    $divisions_qry="select * from {$wpdb->prefix}class_divisions where id=".$_GET['id'];
+        
+    $division_data = $wpdb->get_results($divisions_qry);
+    
+    foreach($division_data as $division){
+        $data['id']         = $division->id;
+        $data['division']   = $division->division;
+        $data['class_id']   = $division->class_id;
+    }
+    
+    wp_send_json($data);
+}
+
+add_action('wp_ajax_read-division', 'fetch_single_division');
