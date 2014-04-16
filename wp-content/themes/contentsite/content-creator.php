@@ -50,8 +50,6 @@ Template Name: Content Creator
 	<!-- END CSS TEMPLATE -->
 
 
-
-
 </head>
 <body class="">
 

@@ -61,6 +61,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController,
 
       return ContentGroupsListingView;
 
-    })(Marionette.Layout);
+    })(Marionette.ItemView);
   });
 });

@@ -25,7 +25,7 @@ define ['app'
 				new ContentGroupsListingView
 
 
-		class ContentGroupsListingView extends Marionette.Layout
+		class ContentGroupsListingView extends Marionette.ItemView
 
 			template 	: '<div class="grid-title no-border">
 							<div class="row">

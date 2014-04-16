@@ -84,8 +84,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             return function(contentIDs) {
               var groupContent;
               groupContent = App.request("get:content:pieces:of:group", model.get('id'));
+              console.log(groupContent);
+              console.log(contentIDs);
               return _.each(contentIDs, function(ele, index) {
-                return groupContent.add(_this.contentPiecesCollection.get(ele));
+                groupContent.add(_this.contentPiecesCollection.get(ele));
+                return console.log(_this.contentPiecesCollection.get(ele));
               });
             };
           })(this)

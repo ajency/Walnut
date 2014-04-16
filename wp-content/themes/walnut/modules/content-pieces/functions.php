@@ -80,19 +80,15 @@ function get_single_content_piece($id){
     $subject_ids = array();
     
     $subjects = get_the_terms($id, 'textbook');
+    
     //FETCHING LIST OF TEXTBOOKS RELATED TO THE CONTENT PIECE
     foreach ($subjects as $sub) {
+        
         $subject_ids[] = $sub->term_id;
-        if ($sub->parent > 0) {
-            //IF PARENT IS NOT 0 MEANS SEARCH AND ADD ITS PARENT ALSO
-            $sub_parent = get_term($sub->parent, 'textbook');
-            $subject_ids[] = $sub_parent->term_id;
-            if ($sub_parent->parent > 0) {
-                $sub_parent2 = get_term($sub_parent->parent, 'textbook');
-                $subject_ids[] = $sub_parent2->term_id;
-                if ($sub_parent2->parent > 0)
-                    $subject_ids[] = $sub_parent2->parent;
-            }
+        
+        while ($sub->parent >0){
+            $sub = get_term($sub->parent, 'textbook');
+            $subject_ids[] = $sub->term_id;
         }
     }
     //print_r($subject_ids);
@@ -186,10 +182,7 @@ function get_single_content_group($id){
     
     foreach ($data as $item){
         $data=$item;
-        foreach($item as $key=>$value)
-            if($key=='term_ids' || $key=='content_pieces'){
-                $data->$key= maybe_unserialize ($value);
-            }         
+        $data->term_ids= maybe_unserialize ($data->term_ids);        
     }
     
     $description= $wpdb->get_results("select * from 

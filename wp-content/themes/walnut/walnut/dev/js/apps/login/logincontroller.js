@@ -35,9 +35,12 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
           data: data
         }, (function(_this) {
           return function(response) {
+            var user;
             if (response.error) {
               return _this.view.triggerMethod('login:fail', response);
             } else {
+              user = App.request("get:user:model");
+              user.set(response);
               return _this.view.close();
             }
           };

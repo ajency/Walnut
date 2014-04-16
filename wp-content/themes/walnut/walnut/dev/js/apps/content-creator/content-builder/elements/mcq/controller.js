@@ -16,7 +16,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         _.defaults(options.modelData, {
           element: 'Mcq',
           optioncount: 2,
-          elements: App.request("create:new:mcq:option:collection", [
+          elements: App.request("create:new:option:collection", [
             {
               optionNo: 1
             }, {
@@ -27,7 +27,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           individual_marks: false,
           multiple: false
         });
-        return Controller.__super__.initialize.call(this, options);
+        Controller.__super__.initialize.call(this, options);
+        return this.layout.model.on('change:optioncount', this._changeOptionCount);
       };
 
       Controller.prototype.renderElement = function() {
@@ -36,7 +37,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         if (optionsObj instanceof Backbone.Collection) {
           optionCollection = optionsObj;
         } else {
-          optionCollection = App.request("create:new:mcq:option:collection", optionsObj);
+          optionCollection = App.request("create:new:option:collection", optionsObj);
           this.layout.model.set('elements', optionCollection);
         }
         view = this._getMcqView(optionCollection);
@@ -59,6 +60,28 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           collection: optionCollection,
           mcq_model: this.layout.model
         });
+      };
+
+      Controller.prototype._changeOptionCount = function(model, num) {
+        var newval, oldval, _results;
+        oldval = model.previous('optioncount');
+        newval = num;
+        if (oldval < newval) {
+          while (oldval !== newval) {
+            oldval++;
+            model.get('elements').push({
+              optionNo: oldval
+            });
+          }
+        }
+        if (oldval > newval) {
+          _results = [];
+          while (oldval !== newval) {
+            model.get('elements').pop();
+            _results.push(oldval--);
+          }
+          return _results;
+        }
       };
 
       Controller.prototype.deleteElement = function(model) {

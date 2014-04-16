@@ -49,6 +49,13 @@ define ['app'],(App)->
 											</div> 
 										</a> 
 									</li>  
+									<li data-element="Sort" > 
+										<a href="#" class="drag builder-element" > 
+											<div class="aj-imp-builder-title">
+												<i class="fa fa-list-ol"></i> Sort
+											</div> 
+										</a> 
+									</li>  
 								</ul> 
 								<div class="clearfix"></div> 
 						</div> 
