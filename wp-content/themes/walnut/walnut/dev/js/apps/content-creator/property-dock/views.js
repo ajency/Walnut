@@ -27,7 +27,7 @@ define(['app'], function(App) {
       };
 
       Layout.prototype.onShow = function() {
-        $('#question-property, #question-elements-property, #question-elements').parent().on('click', function(evt) {
+        this.$el.find('#question-property, #question-elements-property, #question-elements').on('click', function(evt) {
           return evt.stopPropagation();
         });
         $('html').on('click', (function(_this) {
@@ -35,7 +35,7 @@ define(['app'], function(App) {
             return _this.questPropertyRegion.close();
           };
         })(this));
-        return $('html ,.element-wrapper').on('mousedown click', (function(_this) {
+        return $('html').on('click', (function(_this) {
           return function() {
             return _this.questElementPropRegion.close();
           };

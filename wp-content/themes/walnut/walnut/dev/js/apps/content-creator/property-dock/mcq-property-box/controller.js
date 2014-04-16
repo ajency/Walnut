@@ -15,8 +15,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         this.layout = this._getView(this.model);
         this.listenTo(this.layout, "change:option:number", (function(_this) {
           return function(number) {
-            _this.model.set('optioncount', parseInt(number));
-            return console.log(_this.model);
+            return _this.model.set('optioncount', parseInt(number));
           };
         })(this));
         this.listenTo(this.layout, "show:individual:marks:table", (function(_this) {

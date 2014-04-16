@@ -12,6 +12,12 @@ define ['app'],(App)->
 									</div>
 									<div class="docket-body">
 
+										<div class="form-group">
+											<div class="bootstrap-tagsinput"> 
+												<input id="correct-answers" value="{{correct_answers}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
+											</div>
+										</div>
+
 										<div >Max Characters
 											<input id="answer-max-length" type="type"  value="{{maxlength}}">											
 										</div>
@@ -19,7 +25,7 @@ define ['app'],(App)->
 										<div>
 											<input id="check-case-sensitive" type="checkbox" name="check-ind-marks"> Case Sensitive
 										</div>
-
+										
 										<div>
 											Font
 											<select class="font" id="fib-font">
@@ -82,7 +88,7 @@ define ['app'],(App)->
 							        
 											<div class="textProp slider success">
 												Size 
-												<input type="text" id="fib-fontsize" class="fontSize" data-slider-max="80" data-slider-max="12" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before">
+												<input type="text" id="fib-fontsize" class="fontSize" data-slider-max="80" data-slider-min="12" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before">
 
 											</div>
 
@@ -105,6 +111,15 @@ define ['app'],(App)->
 											Background-Color
 											<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
 										</div>
+
+										<div>
+											Style
+											<select id="fib-style">
+												<option value="uline">Underline</option>
+												<option value="box">Box</option>
+												<option value="blank">Blank</option>		
+											</select>
+										</div>
 									
 									</div>
 								</div>
@@ -116,32 +131,51 @@ define ['app'],(App)->
 				'blur #answer-max-length' : '_changeMaxLength'
 				'change input#check-case-sensitive': '_checkCaseSensitive'
 				'change select#fib-font' : '_changeFont'
+				'change select#marks' : '_changeMarks'
+				'change select#fib-style' : '_changeStyle'
+				'change input#correct-answers' : '_changeCorrectAnswers'
 
 			onShow:(options)->
+					@$el.find('input#correct-answers').tagsinput('refresh');
+					# @$el.find('input#correct-answers').tagsinput('input').val @model.get('correct_answers')
+					
+					console.log JSON.stringify @model.toJSON()
+
 
 					#initialize Case Sensitive Checkbox based on model
 					if @model.get 'case_sensitive'
 							@$el.find('#check-case-sensitive').prop 'checked',true
 
 					# initialize the dropdown to use select2 plugin
-					$('#fib-font').select2
+					@$el.find('#fib-font').select2
 							minimumResultsForSearch: -1
 					# initialize font dropdown based on model
-					$('#fib-font').select2 'val',@.model.get 'font'
+					@$el.find('#fib-font').select2 'val',@.model.get 'font'
+
+					# initialize the dropdown to use select2 plugin
+					@$el.find('#marks').select2
+							minimumResultsForSearch: -1
+					# initialize font dropdown based on model
+					@$el.find('#marks').select2 'val',@model.get 'marks'
+
+					# initialize the dropdown to use select2 plugin
+					@$el.find('#fib-style').select2
+							minimumResultsForSearch: -1
+					# initialize font dropdown based on model
+					@$el.find('#fib-style').select2 'val',@model.get 'style'
 				
 					# initialize font size to use slider plugin
-					$('.fontSize').slider()
-
+					@$el.find('.fontSize').slider()
 					# listen to slide event of slider
 					# on slide change the model
-					$('#fib-fontsize').slider().on 'slide',=>
+					@$el.find('#fib-fontsize').slider().on 'slide',=>
 							# on click of slider , value set to null
 							# resolved with this
 							size = @model.get 'font_size'
-							@model.set 'font_size', $('.fontSize').slider('getValue').val()||size
+							@model.set 'font_size', @$el.find('.fontSize').slider('getValue').val()||size
 
 					# initialize colorpicker for font color and set the on change event
-					$('#font-color.color-picker').minicolors
+					@$el.find('#font-color.color-picker').minicolors
 							animationSpeed: 200
 							animationEasing: 'swing'
 							control: 'hue'
@@ -152,7 +186,7 @@ define ['app'],(App)->
 									@model.set 'color', hex
 
 					# initialize colorpicker for background color and set the on change event
-					$('#bg-color.color-picker').minicolors
+					@$el.find('#bg-color.color-picker').minicolors
 							animationSpeed: 200
 							animationEasing: 'swing'
 							control: 'hue'
@@ -163,7 +197,10 @@ define ['app'],(App)->
 									@model.set 'bg_color', hex
 									@model.set 'bg_opacity', opacity
 
-
+			# function for changing the correct answer array						
+			_changeCorrectAnswers:(evt)->
+					@model.set 'correct_answers',$(evt.target).val()
+					
 			# function for changing model on change of 
 			# case sensitive checkbox
 			_checkCaseSensitive:(evt)->
@@ -178,6 +215,10 @@ define ['app'],(App)->
 			_changeFont:(evt)-> 
 					@model.set 'font', $(evt.target).val()
 
+			# function for changing model on change of marks dropbox
+			_changeMarks:(evt)->
+					@model.set 'marks', $(evt.target).val()
+
 
 			# function for changing model on change of maxlength textbox
 			_changeMaxLength:(evt)-> 
@@ -186,6 +227,9 @@ define ['app'],(App)->
 							console.log @model
 							@model.set 'maxlength',$(evt.target).val()
 							console.log @model
+
+			_changeStyle:(evt)->
+					@model.set 'style',$(evt.target).val()
 
 
 

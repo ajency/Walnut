@@ -77,6 +77,7 @@
             <span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">.</span><span class="nx">modelData</span><span class="p">,</span>
                       <span class="nv">element   : </span><span class="s">&#39;Hotspot&#39;</span>
                       <span class="nv">content   : </span><span class="s">&#39;&#39;</span>
+                      <span class="nv">marks : </span><span class="mi">1</span>
 
             <span class="k">super</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
 
@@ -190,6 +191,9 @@ get menu </p>
                     <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span> <span class="s">&#39;ele&#39;</span><span class="o">+</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;meta_id&#39;</span><span class="p">),</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">())</span>
                     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
                 <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;close:question:elements&quot;</span>
+
+            <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;close:hotspot:element:properties&quot;</span><span class="p">,</span><span class="nf">-&gt;</span>
+                <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;close:question:element:properties&quot;</span>
     
             <span class="nx">@layout</span><span class="p">.</span><span class="nx">elementRegion</span><span class="p">.</span><span class="nx">show</span> <span class="nx">view</span><span class="p">,</span>
               <span class="nx">loading</span><span class="o">:</span><span class="kc">true</span>

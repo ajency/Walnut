@@ -79,9 +79,36 @@
         <td class="code highlight"><div class="highlight"><pre>
             <span class="nx">@show</span> <span class="nx">@layout</span>
 
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>function to get the property view</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
           <span class="nx">_getView</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
             <span class="k">new</span> <span class="nx">FibPropertyBox</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">PropertyView</span>
                 <span class="nv">model : </span><span class="nx">model</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>on close of property box save the model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
+            <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span> <span class="s">&#39;ele&#39;</span><span class="o">+</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;meta_id&#39;</span><span class="p">),</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">@model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">())</span>
 
         <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:fib:properties&quot;</span><span class="p">,</span><span class="nf">(options)-&gt;</span>
             <span class="k">new</span> <span class="nx">FibPropertyBox</span><span class="p">.</span><span class="nx">Controller</span>

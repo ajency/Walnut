@@ -57,7 +57,6 @@
 
             <span class="nx">@listenTo</span> <span class="nx">@layout</span><span class="p">,</span><span class="s">&quot;change:option:number&quot;</span><span class="p">,</span><span class="nf">(number)=&gt;</span>
               <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;optioncount&#39;</span><span class="p">,</span><span class="nb">parseInt</span> <span class="nx">number</span>
-              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span>
 
             <span class="nx">@listenTo</span> <span class="nx">@layout</span><span class="p">,</span><span class="s">&quot;show:individual:marks:table&quot;</span><span class="p">,</span> <span class="o">=&gt;</span>
                 <span class="nv">marksView = </span><span class="nx">@_getMarksView</span> <span class="nx">@model</span>

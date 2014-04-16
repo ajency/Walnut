@@ -5,18 +5,22 @@ define ['app'],(App)->
 
 		class Views.FibView extends Marionette.ItemView
 
-			template : '<input height="50" type="text" maxlength="{{maxlength}}" placeholder="Answer" style="
+			template : '<input  type="text" maxlength="{{maxlength}}" placeholder="Answer" style="
 					    font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; 
-					     width:100%; height: 100%; line-height : inherit; padding:15px 2px;">'
+					     width:100%; height: 100%; line-height : inherit; border-width : 5px;
+					     border-style: none;">'
 
 			onShow : ->
 
+				# setting of on click handler for showing of the property box for fib element
 				@$el.parent().parent().on 'click',(evt)=>
 					@trigger "show:this:fib:properties"
-					console.log 'show'
+					# stop propogation of click event
 					evt.stopPropagation()
 
-				@$el.find('input').css 'background-color', @_convertHex @model.get('bg_color'),@model.get('bg_opacity')
+				# initialiaze the styles property on first show
+				@_changeBGColor()
+				@_changeFibStyle @model,@model.get 'style'
 
 			# listen to the model events 
 			modelEvents : 
@@ -26,6 +30,7 @@ define ['app'],(App)->
 					'change:color' : '_changeColor'
 					'change:bg_color' : '_changeBGColor'
 					'change:bg_opacity' : '_changeBGColor'
+					'change:style' : '_changeFibStyle'
 
 
 			# on change of maxlength property
@@ -48,7 +53,19 @@ define ['app'],(App)->
 
 			# on change of bg_color property
 			_changeBGColor:(model,bgColor)->
-					@$el.find('input').css 'background-color', @_convertHex model.get('bg_color'),model.get('bg_opacity')
+					@$el.find('input').css 'background-color', @_convertHex @model.get('bg_color'),@model.get('bg_opacity')
+
+			# on change of style property
+			_changeFibStyle:(model,style)->
+					# if underline
+					if style is 'uline'
+						@$el.find('input').css 'border-style', 'none none groove none'
+					# if box
+					else if style is 'box'
+						@$el.find('input').css 'border-style', 'groove'
+					# if blank
+					else 
+						 @$el.find('input').css 'border-style', 'none'
 
 			# convert hex and opacity to rgba format for css
 			_convertHex:(hex,opacity)->

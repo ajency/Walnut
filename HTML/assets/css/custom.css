@@ -789,6 +789,10 @@ h3.time {
 .moduleList .btn.action {
   width: 88px;
 }
+.dateInfo {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
 body {
   background-color: #e5e9ec;
 }

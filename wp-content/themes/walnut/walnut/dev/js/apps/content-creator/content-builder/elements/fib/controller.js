@@ -19,7 +19,10 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           bg_color: '#c5ebd2',
           bg_opacity: '0.42',
           font_size: '12',
-          case_sensitive: false
+          case_sensitive: false,
+          marks: 1,
+          style: 'blank',
+          correct_answers: []
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -27,10 +30,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.renderElement = function() {
         var view;
         view = this._getFibView(this.layout.model);
-        this.listenTo(view, 'show', function() {
-          return view.trigger("show:this:fib:properties");
-        });
-        this.listenTo(view, 'show:this:fib:properties', (function(_this) {
+        this.listenTo(view, 'show show:this:fib:properties', (function(_this) {
           return function() {
             return App.execute("show:question:properties", {
               model: _this.layout.model
@@ -44,6 +44,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         return new Fib.Views.FibView({
           model: model
         });
+      };
+
+      Controller.prototype.deleteElement = function(model) {
+        model.destroy();
+        return App.execute("close:question:properties");
       };
 
       return Controller;

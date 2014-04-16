@@ -14,12 +14,6 @@ define(['app'], function(App) {
 
       HotspotView.prototype.template = '&nbsp;';
 
-      HotspotView.prototype.events = {
-        'mousedown': function() {
-          return this.trigger("show:hotspot:elements");
-        }
-      };
-
       HotspotView.prototype.initialize = function(opt) {
         if (opt == null) {
           opt = {};
@@ -81,6 +75,12 @@ define(['app'], function(App) {
         this.$el.parent().parent().on('click', (function(_this) {
           return function(evt) {
             _this.trigger('show:hotspot:elements');
+            return evt.stopPropagation();
+          };
+        })(this));
+        this.$el.parent().parent().on('mousedown', (function(_this) {
+          return function(evt) {
+            _this.trigger('close:hotspot:element:properties');
             return evt.stopPropagation();
           };
         })(this));

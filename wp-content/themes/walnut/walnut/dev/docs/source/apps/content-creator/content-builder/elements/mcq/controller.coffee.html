@@ -48,39 +48,6 @@
 
             <span class="nx">initialize</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
 
-              <span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">.</span><span class="nx">modelData</span><span class="p">,</span>
-                    <span class="nv">element   : </span><span class="s">&#39;Mcq&#39;</span>
-                    <span class="nv">optioncount : </span><span class="mi">2</span>
-                    <span class="nv">elements  : </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:mcq:option:collection&quot;</span><span class="p">,</span> <span class="p">[{</span><span class="nx">optionNo</span><span class="o">:</span><span class="mi">1</span><span class="p">},{</span><span class="nx">optionNo</span><span class="o">:</span><span class="mi">2</span><span class="p">}]</span>
-                    <span class="nv">marks : </span><span class="mi">1</span>
-                    <span class="nx">individual_marks</span> <span class="o">:</span><span class="kc">false</span>
-                    <span class="nv">multiple : </span><span class="kc">false</span>
-
-              <span class="k">super</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
-
-
-              
-
-      
-            <span class="nx">_changeOptionCount</span><span class="o">:</span><span class="nf">(model,num)-&gt;</span>
-                  <span class="nv">oldval = </span><span class="nx">model</span><span class="p">.</span><span class="nx">previous</span><span class="p">(</span><span class="s">&#39;optioncount&#39;</span><span class="p">)</span>
-                  <span class="nv">newval = </span><span class="nx">num</span>
-                  <span class="k">if</span> <span class="nx">oldval</span><span class="o">&lt;</span><span class="nx">newval</span>
-                    <span class="k">until</span> <span class="nx">oldval</span> <span class="o">is</span> <span class="nx">newval</span>
-
-                      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">oldval</span>
-                      <span class="nx">oldval</span><span class="o">++</span>
-                      <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">push</span><span class="p">({</span><span class="nx">optionNo</span><span class="o">:</span><span class="nx">oldval</span><span class="p">})</span>
-                  <span class="k">if</span> <span class="nx">oldval</span><span class="o">&gt;</span><span class="nx">newval</span>
-                    <span class="k">until</span> <span class="nx">oldval</span> <span class="o">is</span> <span class="nx">newval</span>
-                      <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">pop</span><span class="p">()</span>
-                      <span class="nx">oldval</span><span class="o">--</span>
-              
-                  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">model</span>
-
-            <span class="nx">_showView</span><span class="o">:</span><span class="nf">-&gt;</span>
-              <span class="nv">optionsObj = </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;elements&#39;</span>
-
 
 </pre></div>
         </td>
@@ -90,11 +57,21 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
 </div>
-<p>if the object is a collection then keep as it is </p>
+<p>set default values for model</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-              <span class="k">if</span> <span class="nx">optionsObj</span> <span class="k">instanceof</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
-                <span class="nv">optionCollection = </span><span class="nx">optionsObj</span>
+              <span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">.</span><span class="nx">modelData</span><span class="p">,</span>
+                    <span class="nv">element   : </span><span class="s">&#39;Mcq&#39;</span>
+                    <span class="nv">optioncount : </span><span class="mi">2</span>
+                    <span class="nv">elements  : </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:option:collection&quot;</span><span class="p">,</span> <span class="p">[{</span><span class="nx">optionNo</span><span class="o">:</span><span class="mi">1</span><span class="p">},{</span><span class="nx">optionNo</span><span class="o">:</span><span class="mi">2</span><span class="p">}]</span>
+                    <span class="nv">marks : </span><span class="mi">1</span>
+                    <span class="nx">individual_marks</span> <span class="o">:</span><span class="kc">false</span>
+                    <span class="nv">multiple : </span><span class="kc">false</span>
+
+              <span class="k">super</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+
+              <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;change:optioncount&#39;</span><span class="p">,</span> <span class="nx">@_changeOptionCount</span>
+
 
 
 </pre></div>
@@ -105,24 +82,70 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
+<p>overiding the function</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">renderElement</span><span class="o">:</span><span class="p">()</span><span class="o">=&gt;</span>
+
+              <span class="nv">optionsObj = </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;elements&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>if the object is a collection then keep as it is </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="k">if</span> <span class="nx">optionsObj</span> <span class="k">instanceof</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+                <span class="nv">optionCollection = </span><span class="nx">optionsObj</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
 <p>else convert it to collection and set it to mcq model</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
               <span class="k">else</span>
-                <span class="nv">optionCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:mcq:option:collection&quot;</span> <span class="p">,</span> <span class="nx">optionsObj</span>
+                <span class="nv">optionCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:option:collection&quot;</span> <span class="p">,</span> <span class="nx">optionsObj</span>
                 <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;elements&#39;</span><span class="p">,</span><span class="nx">optionCollection</span>
 
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>get the view</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
               <span class="nv">view = </span><span class="nx">@_getMcqView</span> <span class="nx">optionCollection</span>
 
-              <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&#39;show&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
-                <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:question:properties&quot;</span><span class="p">,</span> 
-                    <span class="nv">model : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
 
-              <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;change:radio:to:checkbox&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
-                <span class="k">if</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;multiple&#39;</span>
-                  <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.mcq#mcq-&#39;</span><span class="o">+</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;meta_id&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39; .mcq-option input.mcq-option-select&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;type&#39;</span><span class="p">,</span><span class="s">&#39;checkbox&#39;</span>
-
-              <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;show:this:mcq:properties&quot;</span><span class="p">,</span><span class="nf">(options)=&gt;</span>                  
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>on show of the view 
+and on the view event show the property box</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;show show:this:mcq:properties&quot;</span><span class="p">,</span><span class="nf">(options)=&gt;</span>                 
                   <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:question:properties&quot;</span><span class="p">,</span> 
                     <span class="nv">model : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
 
@@ -133,32 +156,14 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
-<p>@listenTo view, "hide:this:mcq:properties",(options)=> <br />
-        App.execute "close:question:properties"
-        localStorage.setItem 'ele'<a href='mailto:+@layout.model.get'>+@layout.model.get</a>('meta_id'), JSON.stringify(@layout.model.toJSON())</p>
+<p>show the view</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-
-
               <span class="nx">@layout</span><span class="p">.</span><span class="nx">elementRegion</span><span class="p">.</span><span class="nx">show</span> <span class="nx">view</span>
               
             <span class="nx">bindEvents</span><span class="o">:</span><span class="nf">-&gt;</span>
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
-</div>
-<p>start listening to model events
-@listenTo @layout.model, "change:style", @changeStyle
-@listenTo @layout.model, "change:columncount", @columnCountChanged</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
               <span class="k">super</span><span class="p">()</span>
 
 
@@ -166,22 +171,65 @@
 
                 <span class="k">new</span> <span class="nx">Mcq</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">McqView</span>
                   <span class="nv">collection : </span><span class="nx">optionCollection</span>
-                  <span class="nv">meta : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;meta_id&#39;</span>
+                  <span class="nv">mcq_model : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
 
 
-            <span class="nx">renderElement</span><span class="o">:</span><span class="p">()</span><span class="o">=&gt;</span>
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>on change of optionNo attribute in the model 
+change the number of options</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">_changeOptionCount</span><span class="o">:</span><span class="nf">(model,num)-&gt;</span>
+                <span class="nv">oldval = </span><span class="nx">model</span><span class="p">.</span><span class="nx">previous</span><span class="p">(</span><span class="s">&#39;optioncount&#39;</span><span class="p">)</span>
+                <span class="nv">newval = </span><span class="nx">num</span>
 
-              <span class="nx">@_showView</span><span class="p">()</span>
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>if greater then previous then add option</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="k">if</span> <span class="nx">oldval</span><span class="o">&lt;</span><span class="nx">newval</span>
+                  <span class="k">until</span> <span class="nx">oldval</span> <span class="o">is</span> <span class="nx">newval</span>
+                    <span class="nx">oldval</span><span class="o">++</span>
+                    <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">push</span><span class="p">({</span><span class="nx">optionNo</span><span class="o">:</span><span class="nx">oldval</span><span class="p">})</span>
 
-              <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;change:optioncount&#39;</span><span class="p">,</span> <span class="nx">@_changeOptionCount</span>
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>else remove options</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="k">if</span> <span class="nx">oldval</span><span class="o">&gt;</span><span class="nx">newval</span>
+                  <span class="k">until</span> <span class="nx">oldval</span> <span class="o">is</span> <span class="nx">newval</span>
+                    <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">pop</span><span class="p">()</span>
+                    <span class="nx">oldval</span><span class="o">--</span>
+
+
+          
 
             <span class="nx">deleteElement</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
               <span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">)</span>
               <span class="k">delete</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;elements&#39;</span>
               <span class="nx">model</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
               <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;close:question:properties&quot;</span>
-
-          
 </pre></div>
         </td>
       </tr>
