@@ -44,18 +44,12 @@
 
     <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">FibView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
 
-      <span class="nv">template : </span><span class="s">&#39;&lt;input height=&quot;50&quot; type=&quot;text&quot; maxlength=&quot;{{maxlength}}&quot; placeholder=&quot;Answer&quot; style=&quot;</span>
+      <span class="nv">template : </span><span class="s">&#39;&lt;input  type=&quot;text&quot; maxlength=&quot;{{maxlength}}&quot; placeholder=&quot;Answer&quot; style=&quot;</span>
 <span class="s">              font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; </span>
-<span class="s">               width:100%; height: 100%; line-height : inherit; padding:15px 2px;&quot;&gt;&#39;</span>
+<span class="s">               width:100%; height: 100%; line-height : inherit; border-width : 5px;</span>
+<span class="s">               border-style: none;&quot;&gt;&#39;</span>
 
       <span class="nv">onShow : </span><span class="nf">-&gt;</span>
-
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">parent</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)=&gt;</span>
-          <span class="nx">@trigger</span> <span class="s">&quot;show:this:fib:properties&quot;</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;show&#39;</span>
-          <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
-
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">@_convertHex</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
 
 
 </pre></div>
@@ -65,6 +59,49 @@
         <td class="docs">
 <div class="pilwrap">
   <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>setting of on click handler for showing of the property box for fib element</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">parent</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)=&gt;</span>
+          <span class="nx">@trigger</span> <span class="s">&quot;show:this:fib:properties&quot;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>stop propogation of click event</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>initialiaze the styles property on first show</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@_changeBGColor</span><span class="p">()</span>
+        <span class="nx">@_changeFibStyle</span> <span class="nx">@model</span><span class="p">,</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;style&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
 <p>listen to the model events </p>
         </td>
@@ -76,6 +113,7 @@
           <span class="s">&#39;change:color&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeColor&#39;</span>
           <span class="s">&#39;change:bg_color&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeBGColor&#39;</span>
           <span class="s">&#39;change:bg_opacity&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeBGColor&#39;</span>
+          <span class="s">&#39;change:style&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeFibStyle&#39;</span>
 
 
 
@@ -85,7 +123,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
 <p>on change of maxlength property</p>
         </td>
@@ -101,7 +139,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
 </div>
 <p>on change of font property</p>
         </td>
@@ -117,7 +155,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
 <p>on change of font_size property</p>
         </td>
@@ -132,7 +170,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <p>on change of color property</p>
         </td>
@@ -147,13 +185,13 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
 </div>
 <p>on change of bg_color property</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="nx">_changeBGColor</span><span class="o">:</span><span class="nf">(model,bgColor)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">@_convertHex</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">@_convertHex</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
 
 
 </pre></div>
@@ -162,7 +200,63 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>on change of style property</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeFibStyle</span><span class="o">:</span><span class="nf">(model,style)-&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+<p>if underline</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="k">if</span> <span class="nx">style</span> <span class="o">is</span> <span class="s">&#39;uline&#39;</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;border-style&#39;</span><span class="p">,</span> <span class="s">&#39;none none groove none&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+<p>if box</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="k">else</span> <span class="k">if</span> <span class="nx">style</span> <span class="o">is</span> <span class="s">&#39;box&#39;</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;border-style&#39;</span><span class="p">,</span> <span class="s">&#39;groove&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+</div>
+<p>if blank</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="k">else</span> 
+             <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;border-style&#39;</span><span class="p">,</span> <span class="s">&#39;none&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
 </div>
 <p>convert hex and opacity to rgba format for css</p>
         </td>

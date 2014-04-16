@@ -30,29 +30,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         return Controller.__super__.initialize.call(this, options);
       };
 
-      Controller.prototype._changeOptionCount = function(model, num) {
-        var newval, oldval;
-        oldval = model.previous('optioncount');
-        newval = num;
-        if (oldval < newval) {
-          while (oldval !== newval) {
-            console.log(oldval);
-            oldval++;
-            model.get('elements').push({
-              optionNo: oldval
-            });
-          }
-        }
-        if (oldval > newval) {
-          while (oldval !== newval) {
-            model.get('elements').pop();
-            oldval--;
-          }
-        }
-        return console.log(model);
-      };
-
-      Controller.prototype._showView = function() {
+      Controller.prototype.renderElement = function() {
         var optionCollection, optionsObj, view;
         optionsObj = this.layout.model.get('elements');
         if (optionsObj instanceof Backbone.Collection) {
@@ -62,21 +40,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           this.layout.model.set('elements', optionCollection);
         }
         view = this._getMcqView(optionCollection);
-        this.listenTo(view, 'show', (function(_this) {
-          return function() {
-            return App.execute("show:question:properties", {
-              model: _this.layout.model
-            });
-          };
-        })(this));
-        this.listenTo(view, "change:radio:to:checkbox", (function(_this) {
-          return function() {
-            if (_this.layout.model.get('multiple')) {
-              return $('.mcq#mcq-' + _this.layout.model.get('meta_id') + ' .mcq-option input.mcq-option-select').attr('type', 'checkbox');
-            }
-          };
-        })(this));
-        this.listenTo(view, "show:this:mcq:properties", (function(_this) {
+        this.listenTo(view, "show show:this:mcq:properties", (function(_this) {
           return function(options) {
             return App.execute("show:question:properties", {
               model: _this.layout.model
@@ -93,13 +57,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype._getMcqView = function(optionCollection) {
         return new Mcq.Views.McqView({
           collection: optionCollection,
-          meta: this.layout.model.get('meta_id')
+          mcq_model: this.layout.model
         });
-      };
-
-      Controller.prototype.renderElement = function() {
-        this._showView();
-        return this.layout.model.on('change:optioncount', this._changeOptionCount);
       };
 
       Controller.prototype.deleteElement = function(model) {

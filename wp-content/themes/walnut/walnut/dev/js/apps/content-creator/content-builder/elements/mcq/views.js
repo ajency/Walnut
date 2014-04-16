@@ -1,10 +1,10 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app'], function(App) {
   return App.module("ContentCreator.ContentBuilder.Element.Mcq.Views", function(Views, App, Backbone, Marionette, $, _) {
-    var OptionView, mcqID;
-    mcqID = 0;
+    var OptionView;
     OptionView = (function(_super) {
       __extends(OptionView, _super);
 
@@ -33,11 +33,8 @@ define(['app'], function(App) {
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
         return _.delay(function() {
-          $('div.cke').on('mouseenter', function() {
-            return App.ContentCreator.closequestioneproperty = false;
-          });
-          return $('div.cke').on('mouseleave', function() {
-            return App.ContentCreator.closequestioneproperty = true;
+          return $('div.cke').on('click', function(evt) {
+            return evt.stopPropagation();
           });
         }, 3000);
       };
@@ -53,6 +50,7 @@ define(['app'], function(App) {
       __extends(McqView, _super);
 
       function McqView() {
+        this._changeMultipleAnswers = __bind(this._changeMultipleAnswers, this);
         return McqView.__super__.constructor.apply(this, arguments);
       }
 
@@ -65,29 +63,57 @@ define(['app'], function(App) {
       McqView.prototype.itemViewContainer = 'div.options';
 
       McqView.prototype.initialize = function(options) {
-        mcqID = options.meta;
-        return console.log(mcqID);
+        return this.mcq_model = options.mcq_model;
       };
 
       McqView.prototype.onAfterItemAdded = function() {
-        this.$el.find('input').attr('name', 'mcq-' + mcqID);
-        return this.trigger("change:radio:to:checkbox");
+        if (this.mcq_model.get('multiple')) {
+          return this.$el.find('.mcq-option input.mcq-option-select').attr('type', 'checkbox');
+        }
       };
 
       McqView.prototype.onShow = function() {
-        this.$el.attr('id', 'mcq-' + mcqID);
-        this.$el.find('input').attr('name', 'mcq-' + mcqID);
-        this.trigger("change:radio:to:checkbox");
-        return this._setActiveHandler();
-      };
-
-      McqView.prototype._setActiveHandler = function() {
-        return this.$el.parent().parent().on('click', (function(_this) {
+        if (this.mcq_model.get('multiple')) {
+          this.$el.find('.mcq-option input.mcq-option-select').attr('type', 'checkbox');
+        }
+        this.$el.parent().parent().on('click', (function(_this) {
           return function(evt) {
             _this.trigger("show:this:mcq:properties");
             return evt.stopPropagation();
           };
         })(this));
+        this.mcq_model.on('change:optioncount', this._changeOptionCount);
+        return this.mcq_model.on('change:multiple', this._changeMultipleAnswers);
+      };
+
+      McqView.prototype._changeMultipleAnswers = function(model, multiple) {
+        if (multiple) {
+          return this.$el.find('.mcq-option input.mcq-option-select').attr('type', 'checkbox');
+        } else {
+          return this.$el.find('.mcq-option input.mcq-option-select').attr('type', 'radio');
+        }
+      };
+
+      McqView.prototype._changeOptionCount = function(model, num) {
+        var newval, oldval, _results;
+        oldval = model.previous('optioncount');
+        newval = num;
+        if (oldval < newval) {
+          while (oldval !== newval) {
+            oldval++;
+            model.get('elements').push({
+              optionNo: oldval
+            });
+          }
+        }
+        if (oldval > newval) {
+          _results = [];
+          while (oldval !== newval) {
+            model.get('elements').pop();
+            _results.push(oldval--);
+          }
+          return _results;
+        }
       };
 
       return McqView;

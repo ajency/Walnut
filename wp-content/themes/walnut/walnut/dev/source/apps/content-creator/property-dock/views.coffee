@@ -38,14 +38,14 @@ define ['app'],(App)->
 					# $('#question-property').parent().parent().on 'mouseleave',->
 					# 	App.ContentCreator.closequestioneproperty = true
 
-					$('#question-property, #question-elements-property, #question-elements').parent().on 'click',(evt)->
+					@$el.find('#question-property, #question-elements-property, #question-elements').on 'click',(evt)->
 						evt.stopPropagation()
 
 
 					$('html').on 'click',=>
 						@questPropertyRegion.close()
 
-					$('html ,.element-wrapper').on 'mousedown click',=>
+					$('html').on 'click',=>
 						@questElementPropRegion.close()
 
 					

@@ -10,8 +10,8 @@ define ['app'],(App)->
 
 			template : '&nbsp;'
 
-			events :
-				'mousedown' : -> @trigger "show:hotspot:elements"
+			# events :
+				# 'mousedown' : -> @trigger "show:hotspot:elements"
 				# 'focus'	: -> console.log "blur" #'updateModel'
 
 			initialize:(opt = {})->
@@ -52,8 +52,7 @@ define ['app'],(App)->
 				if @contentObject.height!=undefined
 					@stage.height @contentObject.height
 
-				
-				
+					
 
 				# set image to the default image layer
 				@_setDefaultImage()
@@ -81,6 +80,10 @@ define ['app'],(App)->
 
 				@$el.parent().parent().on 'click',(evt)=>
 					@trigger 'show:hotspot:elements'
+					evt.stopPropagation()
+
+				@$el.parent().parent().on 'mousedown',(evt)=>
+					@trigger 'close:hotspot:element:properties'
 					evt.stopPropagation()
 
 				@_setPropertyBoxCloseHandlers()

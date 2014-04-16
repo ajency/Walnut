@@ -18,9 +18,14 @@ define ['app'
 						# show view
 						@show @layout
 
+					# function to get the property view
 					_getView:(model)->
 						new FibPropertyBox.Views.PropertyView
 								model : model
+
+					# on close of property box save the model
+					onClose:->
+						localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
 
 				App.commands.setHandler "show:fib:properties",(options)->
 						new FibPropertyBox.Controller

@@ -50,9 +50,21 @@ define ['app'],(App)->
 								</div>
 							</div>' 
 
+			# defining regions of the layout view
 			regions : 
 				'individualMarksRegion' : '#individual-marks-region'
 
+
+			# view events
+			events :
+				'change select#options-num': '_changeOptionNumber'
+				'change input#check-ind-marks': '_enableIndividualMarks'
+				'change select#marks' : '_changeMarks'
+				'change #multiple-answer.radio'  : '_multipleCorrectAnswers'
+
+			# # events of the views model
+			# modelEvents : 
+			# 	'change:multiple' : '_changeMultipleAllowed'
 
 			onShow:->
 				#initialize dropdowns
@@ -61,11 +73,12 @@ define ['app'],(App)->
 				@$el.find('select#options-num').select2 'val', @model.get 'optioncount'
 				@$el.find('select#marks').select2 'val', @model.get 'marks'
 
-				$('.select2-drop').on 'mouseover',->
-					App.ContentCreator.closequestioneproperty = false
-
-				# $('.select2-drop').on 'mouseleave',->
-				# 	App.ContentCreator.closequestioneproperty = true
+				# initialize the dropdown to use select2 plugin for marks
+				@$el.find('#marks').select2
+						minimumResultsForSearch: -1
+				# initialize font dropdown based on model
+				@$el.find('#marks').select2 'val',@model.get 'marks'
+			
 
 				if @model.get 'individual_marks'
 					@$el.find('#check-ind-marks').prop 'checked',true
@@ -73,20 +86,13 @@ define ['app'],(App)->
 
 				# Multiple ANSWER
 				if @model.get 'multiple'
-					$("#multiple-answer.radio input#yes").prop 'checked',true
+					@$el.find("#multiple-answer.radio input#yes").prop 'checked',true
 				else
-					$("#multiple-answer.radio input#no").prop 'checked',true
-
-				$('#multiple-answer.radio input').on 'change',@_multipleCorrectAnswers
+					@$el.find("#multiple-answer.radio input#no").prop 'checked',true
 
 
 
-			events :
-				'change select#options-num':(evt)->@trigger "change:option:number",$(evt.target).val()
-				'change input#check-ind-marks': '_enableIndividualMarks'
 
-			modelEvents : 
-				'change:multiple' : '_changeMultipleAllowed'
 
 			_changeMultipleAllowed:(model,multiple)->
 					meta = @model.get 'meta_id'
@@ -98,19 +104,24 @@ define ['app'],(App)->
 
 
 			_multipleCorrectAnswers:=>
-				@model.set 'multiple', $('#multiple-answer.radio input:checked').val()=="yes" ? true : false
+				@model.set 'multiple', @$el.find('#multiple-answer.radio input:checked').val()=="yes" ? true : false
 
 
 			_enableIndividualMarks:(evt)->
-
 				if $(evt.target).prop 'checked'
 					@model.set 'individual_marks', true
 					@trigger "show:individual:marks:table"
-					
 
 				else
 					@model.set 'individual_marks',false
 					@trigger "hide:individual:marks:table"
+
+			# function for changing model on change of marks dropbox
+			_changeMarks:(evt)->
+					@model.set 'marks', $(evt.target).val()
+
+			_changeOptionNumber:(evt)->
+					@model.set 'optioncount',parseInt $(evt.target).val()
 
 
 

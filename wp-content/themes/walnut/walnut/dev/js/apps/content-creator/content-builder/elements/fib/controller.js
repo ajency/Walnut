@@ -19,7 +19,10 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           bg_color: '#c5ebd2',
           bg_opacity: '0.42',
           font_size: '12',
-          case_sensitive: false
+          case_sensitive: false,
+          marks: 1,
+          style: 'blank',
+          correct_answers: []
         });
         return Controller.__super__.initialize.call(this, options);
       };

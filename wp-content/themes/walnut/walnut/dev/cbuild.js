@@ -34,7 +34,8 @@
     jqueryknob      : 'plugins/jquery.knob',
     ckeditor      : 'plugins/ckeditor/ckeditor',
     // bootstrapselect   : 'plugins/bootstrapselect',
-    select2       : 'plugins/select2.min'
+    select2       : 'plugins/select2.min',
+    tagsinput : 'plugins/bootstrap-tagsinput.min'
     
   },
   shim: {
@@ -66,6 +67,7 @@
     syphon: ['backbone'],
     checkbox  : ['bootstrap'],
     select2      : ['jquery','bootstrap'],
+    tagsinput : ['jquery','bootstrap'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 })

@@ -74,8 +74,6 @@
 
       <span class="nv">template : </span><span class="s">&#39;&amp;nbsp;&#39;</span>
 
-      <span class="nv">events :</span>
-        <span class="s">&#39;mousedown&#39;</span> <span class="o">:</span> <span class="nf">-&gt;</span> <span class="nx">@trigger</span> <span class="s">&quot;show:hotspot:elements&quot;</span>
 
 </pre></div>
         </td>
@@ -85,7 +83,9 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
-<p>'focus'    : -> console.log "blur" #'updateModel'</p>
+<p>events :
+'mousedown' : -> @trigger "show:hotspot:elements"
+'focus'    : -> console.log "blur" #'updateModel'</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
@@ -160,8 +160,7 @@ console.log "layout model  "+JSON.stringify @model</p>
         <span class="k">if</span> <span class="nx">@contentObject</span><span class="p">.</span><span class="nx">height</span><span class="o">!=</span><span class="kc">undefined</span>
           <span class="nx">@stage</span><span class="p">.</span><span class="nx">height</span> <span class="nx">@contentObject</span><span class="p">.</span><span class="nx">height</span>
 
-        
-        
+          
 
 
 </pre></div>
@@ -244,6 +243,10 @@ console.log "layout model  "+JSON.stringify @model</p>
 
         <span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">parent</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)=&gt;</span>
           <span class="nx">@trigger</span> <span class="s">&#39;show:hotspot:elements&#39;</span>
+          <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">parent</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;mousedown&#39;</span><span class="p">,</span><span class="nf">(evt)=&gt;</span>
+          <span class="nx">@trigger</span> <span class="s">&#39;close:hotspot:element:properties&#39;</span>
           <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
 
         <span class="nx">@_setPropertyBoxCloseHandlers</span><span class="p">()</span>
