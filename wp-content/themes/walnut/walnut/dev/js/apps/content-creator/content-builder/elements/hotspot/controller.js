@@ -15,7 +15,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.initialize = function(options) {
         _.defaults(options.modelData, {
           element: 'Hotspot',
-          content: ''
+          content: '',
+          marks: 1
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -48,6 +49,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             return App.execute("close:question:elements");
           };
         })(this));
+        this.listenTo(view, "close:hotspot:element:properties", function() {
+          return App.execute("close:question:element:properties");
+        });
         this.layout.elementRegion.show(view, {
           loading: true
         });

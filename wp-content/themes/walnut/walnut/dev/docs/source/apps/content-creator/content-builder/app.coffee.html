@@ -60,18 +60,6 @@
             <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span> <span class="nf">(container, type)-&gt;</span>
                   <span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span> <span class="nx">container</span><span class="p">,</span> <span class="nx">type</span>
 
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
-</div>
-<p>console.log "new element of type "+type</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-
             <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;dependencies:fetched&quot;</span><span class="p">,</span> <span class="o">=&gt;</span>
                 <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
                   <span class="nx">@startFillingElements</span><span class="p">()</span>
@@ -98,7 +86,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
 </div>
 <p>start filling elements</p>
         </td>
@@ -116,11 +104,13 @@
           
           <span class="nx">addNestedElements</span><span class="o">:</span><span class="nf">(container,element)-&gt;</span>
             <span class="nv">controller = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span><span class="nx">container</span><span class="p">,</span><span class="nx">element</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span> <span class="nx">element</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">element</span><span class="p">.</span><span class="nx">elements</span>
             <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">element</span><span class="p">.</span><span class="nx">elements</span><span class="p">,</span> <span class="nf">(column, index)=&gt;</span>
+              
               <span class="k">return</span> <span class="k">if</span> <span class="nx">column</span><span class="p">.</span><span class="nx">elements</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
               <span class="nv">container = </span><span class="nx">controller</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">elementRegion</span><span class="p">.</span><span class="nx">currentView</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">children</span><span class="p">().</span><span class="nx">eq</span><span class="p">(</span><span class="nx">index</span><span class="p">)</span>
               <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">column</span><span class="p">.</span><span class="nx">elements</span><span class="p">,</span><span class="nf">(ele, i)=&gt;</span>
-                <span class="k">if</span> <span class="nx">element</span><span class="p">.</span><span class="nx">element</span> <span class="o">is</span> <span class="s">&#39;Row&#39;</span>
+                <span class="k">if</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">element</span> <span class="o">is</span> <span class="s">&#39;Row&#39;</span>
                   <span class="nx">@addNestedElements</span> <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">),</span><span class="nx">ele</span>
                 <span class="k">else</span>
                   <span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span><span class="nx">container</span><span class="p">,</span><span class="nx">ele</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span> <span class="nx">ele</span>
@@ -136,7 +126,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
 <p>add a new element to the builder region</p>
         </td>
@@ -161,7 +151,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
 <p>create a command handler to start the content builder controller</p>
         </td>
@@ -177,7 +167,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
 <p>Request handler for new element</p>
         </td>

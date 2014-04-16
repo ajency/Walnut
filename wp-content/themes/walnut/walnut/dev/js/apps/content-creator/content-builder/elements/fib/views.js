@@ -10,17 +10,17 @@ define(['app'], function(App) {
         return FibView.__super__.constructor.apply(this, arguments);
       }
 
-      FibView.prototype.template = '<input height="50" type="text" maxlength="{{maxlength}}" placeholder="Answer" style=" font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; width:100%; height: 100%; line-height : inherit; padding:15px 2px;">';
+      FibView.prototype.template = '<input  type="text" maxlength="{{maxlength}}" placeholder="Answer" style=" font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; width:100%; height: 100%; line-height : inherit; border-width : 5px; border-style: none;">';
 
       FibView.prototype.onShow = function() {
         this.$el.parent().parent().on('click', (function(_this) {
           return function(evt) {
             _this.trigger("show:this:fib:properties");
-            console.log('show');
             return evt.stopPropagation();
           };
         })(this));
-        return this.$el.find('input').css('background-color', this._convertHex(this.model.get('bg_color'), this.model.get('bg_opacity')));
+        this._changeBGColor();
+        return this._changeFibStyle(this.model, this.model.get('style'));
       };
 
       FibView.prototype.modelEvents = {
@@ -29,7 +29,8 @@ define(['app'], function(App) {
         'change:font_size': '_changeSize',
         'change:color': '_changeColor',
         'change:bg_color': '_changeBGColor',
-        'change:bg_opacity': '_changeBGColor'
+        'change:bg_opacity': '_changeBGColor',
+        'change:style': '_changeFibStyle'
       };
 
       FibView.prototype._changeMaxLength = function(model, maxlength) {
@@ -49,7 +50,17 @@ define(['app'], function(App) {
       };
 
       FibView.prototype._changeBGColor = function(model, bgColor) {
-        return this.$el.find('input').css('background-color', this._convertHex(model.get('bg_color'), model.get('bg_opacity')));
+        return this.$el.find('input').css('background-color', this._convertHex(this.model.get('bg_color'), this.model.get('bg_opacity')));
+      };
+
+      FibView.prototype._changeFibStyle = function(model, style) {
+        if (style === 'uline') {
+          return this.$el.find('input').css('border-style', 'none none groove none');
+        } else if (style === 'box') {
+          return this.$el.find('input').css('border-style', 'groove');
+        } else {
+          return this.$el.find('input').css('border-style', 'none');
+        }
       };
 
       FibView.prototype._convertHex = function(hex, opacity) {

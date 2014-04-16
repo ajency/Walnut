@@ -99,14 +99,14 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#question-property, #question-elements-property, #question-elements&#39;</span><span class="p">).</span><span class="nx">parent</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)-&gt;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#question-property, #question-elements-property, #question-elements&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)-&gt;</span>
             <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
 
 
           <span class="nx">$</span><span class="p">(</span><span class="s">&#39;html&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
             <span class="nx">@questPropertyRegion</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
 
-          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;html ,.element-wrapper&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;mousedown click&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
+          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;html&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
             <span class="nx">@questElementPropRegion</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
 
           

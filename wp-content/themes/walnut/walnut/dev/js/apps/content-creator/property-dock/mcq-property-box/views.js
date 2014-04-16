@@ -18,36 +18,32 @@ define(['app'], function(App) {
         'individualMarksRegion': '#individual-marks-region'
       };
 
+      PropertyView.prototype.events = {
+        'change select#options-num': '_changeOptionNumber',
+        'change input#check-ind-marks': '_enableIndividualMarks',
+        'change select#marks': '_changeMarks',
+        'change #multiple-answer.radio': '_multipleCorrectAnswers'
+      };
+
       PropertyView.prototype.onShow = function() {
         this.$el.find('select#options-num, select#marks').select2({
           minimumResultsForSearch: -1
         });
         this.$el.find('select#options-num').select2('val', this.model.get('optioncount'));
         this.$el.find('select#marks').select2('val', this.model.get('marks'));
-        $('.select2-drop').on('mouseover', function() {
-          return App.ContentCreator.closequestioneproperty = false;
+        this.$el.find('#marks').select2({
+          minimumResultsForSearch: -1
         });
+        this.$el.find('#marks').select2('val', this.model.get('marks'));
         if (this.model.get('individual_marks')) {
           this.$el.find('#check-ind-marks').prop('checked', true);
           this.trigger("show:individual:marks:table");
         }
         if (this.model.get('multiple')) {
-          $("#multiple-answer.radio input#yes").prop('checked', true);
+          return this.$el.find("#multiple-answer.radio input#yes").prop('checked', true);
         } else {
-          $("#multiple-answer.radio input#no").prop('checked', true);
+          return this.$el.find("#multiple-answer.radio input#no").prop('checked', true);
         }
-        return $('#multiple-answer.radio input').on('change', this._multipleCorrectAnswers);
-      };
-
-      PropertyView.prototype.events = {
-        'change select#options-num': function(evt) {
-          return this.trigger("change:option:number", $(evt.target).val());
-        },
-        'change input#check-ind-marks': '_enableIndividualMarks'
-      };
-
-      PropertyView.prototype.modelEvents = {
-        'change:multiple': '_changeMultipleAllowed'
       };
 
       PropertyView.prototype._changeMultipleAllowed = function(model, multiple) {
@@ -62,7 +58,7 @@ define(['app'], function(App) {
 
       PropertyView.prototype._multipleCorrectAnswers = function() {
         var _ref;
-        return this.model.set('multiple', (_ref = $('#multiple-answer.radio input:checked').val() === "yes") != null ? _ref : {
+        return this.model.set('multiple', (_ref = this.$el.find('#multiple-answer.radio input:checked').val() === "yes") != null ? _ref : {
           "true": false
         });
       };
@@ -75,6 +71,14 @@ define(['app'], function(App) {
           this.model.set('individual_marks', false);
           return this.trigger("hide:individual:marks:table");
         }
+      };
+
+      PropertyView.prototype._changeMarks = function(evt) {
+        return this.model.set('marks', $(evt.target).val());
+      };
+
+      PropertyView.prototype._changeOptionNumber = function(evt) {
+        return this.model.set('optioncount', parseInt($(evt.target).val()));
       };
 
       return PropertyView;

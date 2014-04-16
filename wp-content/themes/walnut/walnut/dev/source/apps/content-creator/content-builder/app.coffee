@@ -20,7 +20,6 @@ define ['app'
 
 						@listenTo @view, "add:new:element", (container, type)->
 									App.request "add:new:element", container, type
-									# console.log "new element of type "+type
 
 						@listenTo @view, "dependencies:fetched", =>
 								_.delay =>
@@ -55,11 +54,13 @@ define ['app'
 					
 					addNestedElements:(container,element)->
 						controller = App.request "add:new:element",container,element.element, element
+						console.log element.elements
 						_.each element.elements, (column, index)=>
+							
 							return if column.elements.length is 0
 							container = controller.layout.elementRegion.currentView.$el.children().eq(index)
 							_.each column.elements,(ele, i)=>
-								if element.element is 'Row'
+								if ele.element is 'Row'
 									@addNestedElements $(container),ele
 								else
 									App.request "add:new:element",container,ele.element, ele

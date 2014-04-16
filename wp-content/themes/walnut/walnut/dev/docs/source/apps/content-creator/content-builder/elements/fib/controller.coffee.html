@@ -68,6 +68,9 @@
                 <span class="nv">bg_opacity : </span><span class="s">&#39;0.42&#39;</span>
                 <span class="nv">font_size : </span><span class="s">&#39;12&#39;</span>
                 <span class="nv">case_sensitive : </span><span class="kc">false</span>
+                <span class="nv">marks: </span><span class="mi">1</span>
+                <span class="nv">style : </span><span class="s">&#39;blank&#39;</span>
+                <span class="nv">correct_answers : </span><span class="p">[]</span>
 
               <span class="k">super</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
 
@@ -86,6 +89,7 @@
         <td class="code highlight"><div class="highlight"><pre>
               <span class="nv">view = </span><span class="nx">@_getFibView</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
 
+
 </pre></div>
         </td>
       </tr>
@@ -99,6 +103,7 @@
         <td class="code highlight"><div class="highlight"><pre>
               <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&#39;show&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
                 <span class="nx">view</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;show:this:fib:properties&quot;</span>
+
 
 </pre></div>
         </td>
@@ -114,6 +119,7 @@
               <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&#39;show:this:fib:properties&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
                 <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:question:properties&quot;</span><span class="p">,</span> 
                       <span class="nv">model : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
+
 
 </pre></div>
         </td>

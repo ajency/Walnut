@@ -18,7 +18,6 @@ define ['app'
 
 						@listenTo @layout,"change:option:number",(number)=>
 							@model.set 'optioncount',parseInt number
-							console.log @model
 
 						@listenTo @layout,"show:individual:marks:table", =>
 								marksView = @_getMarksView @model

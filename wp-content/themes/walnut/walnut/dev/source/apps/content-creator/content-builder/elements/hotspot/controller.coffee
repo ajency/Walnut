@@ -16,6 +16,7 @@ define ['app'
 						_.defaults options.modelData,
 											element  	: 'Hotspot'
 											content 	: ''
+											marks : 1
 
 						super(options)
 
@@ -63,6 +64,9 @@ define ['app'
 										localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
 										console.log JSON.stringify @layout.model.toJSON()
 								App.execute "close:question:elements"
+
+						@listenTo view, "close:hotspot:element:properties",->
+								App.execute "close:question:element:properties"
 		
 						@layout.elementRegion.show view,
 							loading:true
