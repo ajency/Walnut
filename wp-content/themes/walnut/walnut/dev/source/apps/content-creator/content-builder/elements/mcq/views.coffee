@@ -88,7 +88,6 @@ define ['app'],(App)->
 							evt.stopPropagation()
 
 					# events handlers for change of model attributes
-					@mcq_model.on 'change:optioncount', @_changeOptionCount
 					@mcq_model.on 'change:multiple', @_changeMultipleAnswers
 
 			# on change of multiple attribute in the model 
@@ -99,21 +98,7 @@ define ['app'],(App)->
 				else
 					@$el.find('.mcq-option input.mcq-option-select').attr 'type','radio'
 
-			# on change of optionNo attribute in the model 
-			# change the number of options
-			_changeOptionCount:(model,num)->
-					oldval = model.previous('optioncount')
-					newval = num
-					# if greater then previous then add option
-					if oldval<newval
-						until oldval is newval
-							oldval++
-							model.get('elements').push({optionNo:oldval})
-					# else remove options
-					if oldval>newval
-						until oldval is newval
-							model.get('elements').pop()
-							oldval--
+			
 
 				
 

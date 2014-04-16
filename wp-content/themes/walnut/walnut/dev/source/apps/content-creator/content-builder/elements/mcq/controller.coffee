@@ -13,12 +13,14 @@ define ['app'
 							_.defaults options.modelData,
 										element  	: 'Mcq'
 										optioncount : 2
-										elements 	: App.request "create:new:mcq:option:collection", [{optionNo:1},{optionNo:2}]
+										elements 	: App.request "create:new:option:collection", [{optionNo:1},{optionNo:2}]
 										marks : 1
 										individual_marks :false
 										multiple : false
 
 							super(options)
+
+							@layout.model.on 'change:optioncount', @_changeOptionCount
 
 
 						# overiding the function
@@ -30,7 +32,7 @@ define ['app'
 								optionCollection = optionsObj
 							# else convert it to collection and set it to mcq model
 							else
-								optionCollection = App.request "create:new:mcq:option:collection" , optionsObj
+								optionCollection = App.request "create:new:option:collection" , optionsObj
 								@layout.model.set 'elements',optionCollection
 
 							# get the view
@@ -54,6 +56,22 @@ define ['app'
 								new Mcq.Views.McqView
 									collection : optionCollection
 									mcq_model : @layout.model
+
+						# on change of optionNo attribute in the model 
+						# change the number of options
+						_changeOptionCount:(model,num)->
+								oldval = model.previous('optioncount')
+								newval = num
+								# if greater then previous then add option
+								if oldval<newval
+									until oldval is newval
+										oldval++
+										model.get('elements').push({optionNo:oldval})
+								# else remove options
+								if oldval>newval
+									until oldval is newval
+										model.get('elements').pop()
+										oldval--
 
 
 					

@@ -22,18 +22,15 @@ define ['app'
 								style : 'blank'
 								correct_answers : []
 
-							super(options)
+							super options
 
 					renderElement : ->
 							# get the view 
 							view = @_getFibView @layout.model
 
 							# listen to show event, and trigger show property box event
-							@listenTo view, 'show',->
-								view.trigger "show:this:fib:properties"
-
 							# listen to show property box event and show the property by passing the current model
-							@listenTo view, 'show:this:fib:properties',=>
+							@listenTo view, 'show show:this:fib:properties',=>
 								App.execute "show:question:properties", 
 											model : @layout.model
 
@@ -43,3 +40,7 @@ define ['app'
 					_getFibView : (model)->		
 							new Fib.Views.FibView
 									model : model
+
+					deleteElement:(model)->
+							model.destroy()
+							App.execute "close:question:properties"

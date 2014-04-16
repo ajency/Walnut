@@ -82,7 +82,6 @@ define(['app'], function(App) {
             return evt.stopPropagation();
           };
         })(this));
-        this.mcq_model.on('change:optioncount', this._changeOptionCount);
         return this.mcq_model.on('change:multiple', this._changeMultipleAnswers);
       };
 
@@ -91,28 +90,6 @@ define(['app'], function(App) {
           return this.$el.find('.mcq-option input.mcq-option-select').attr('type', 'checkbox');
         } else {
           return this.$el.find('.mcq-option input.mcq-option-select').attr('type', 'radio');
-        }
-      };
-
-      McqView.prototype._changeOptionCount = function(model, num) {
-        var newval, oldval, _results;
-        oldval = model.previous('optioncount');
-        newval = num;
-        if (oldval < newval) {
-          while (oldval !== newval) {
-            oldval++;
-            model.get('elements').push({
-              optionNo: oldval
-            });
-          }
-        }
-        if (oldval > newval) {
-          _results = [];
-          while (oldval !== newval) {
-            model.get('elements').pop();
-            _results.push(oldval--);
-          }
-          return _results;
         }
       };
 

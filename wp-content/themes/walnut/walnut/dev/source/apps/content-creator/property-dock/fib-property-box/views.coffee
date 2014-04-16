@@ -88,7 +88,7 @@ define ['app'],(App)->
 							        
 											<div class="textProp slider success">
 												Size 
-												<input type="text" id="fib-fontsize" class="fontSize" data-slider-max="80" data-slider-max="12" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before">
+												<input type="text" id="fib-fontsize" class="fontSize" data-slider-max="80" data-slider-min="12" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before">
 
 											</div>
 
