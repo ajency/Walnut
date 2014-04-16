@@ -11,7 +11,6 @@ function get_menus() {
     
     //FETCH MENU
     $menu=get_site_menu($user_role);
-    echo(wp_send_json($menu));
-    die;
+    wp_send_json($menu);
 }
 

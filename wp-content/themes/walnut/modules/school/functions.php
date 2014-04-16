@@ -39,10 +39,55 @@ function new_school_setup( $blog_id ){
     add_role( 'student','Student');
     add_role( 'parent','Parent');
     
+    
+    if (!get_page_by_title('Dashboard')) {
+        $post = array();
+        $post['post_type'] = 'page'; //could be 'page' for example
+        $post['post_author'] = get_current_user_id();
+        $post['post_status'] = 'publish'; //draft
+        $post['post_title'] = 'Dashboard';
+        $postid = wp_insert_post($post);
+                            
+    }
+    update_post_meta($postid, '_wp_page_template', 'dashboard.php');
+    
+    switch_to_blog($current_blog);
+    
+    
+    $parent_menus = wp_get_nav_menus();
+
+    foreach($parent_menus as $p_menu){
+        
+        switch_to_blog($current_blog);
+        $parent_menu_items = wp_get_nav_menu_items($p_menu->term_id);
+
+        switch_to_blog($blog_id);
+        $new_menu = wp_create_nav_menu($p_menu->name);
+        
+        foreach($parent_menu_items as $p_item){
+           $p_item->post_status='publish';
+           $post_id= wp_insert_post($p_item);
+           $menu_data=array(
+                'menu-item-db-id' => $post_id,
+                'menu-item-object-id' => $p_item->object_id,
+                'menu-item-object' => $p_item->object,
+                'menu-item-parent-id' => $p_item->menu_item_parent,
+                'menu-item-type' => $p_item->type,
+                'menu-item-title' => $p_item->title,
+                'menu-item-url' => $p_item->url,
+                'menu-item-status' => 'publish'
+
+           );
+           wp_update_nav_menu_item( $new_menu,0, $menu_data);
+        }
+    }
+    
     switch_to_blog($current_blog);
     
 }
 add_action('wpmu_new_blog', 'new_school_setup');
+
+
 
 
 /*

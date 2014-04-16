@@ -70,12 +70,22 @@ define ['marionette'], (Marionette)->
 						App.vent.trigger "show:login"
 				, 'json'
 		
-			
-	App.vent.on "show:dashboard", ->
+
+	App.vent.on "show:dashboard", (user_role) =>
 		if typeof Pace isnt 'undefined'
 			Pace.restart();
 			$("#site_main_container").removeClass( "showAll" );
-		App.navigate('textbooks', trigger: true)
+
+		user = App.request "get:user:model"
+		
+		user_role= user.get "roles"
+		
+		if user_role[0]=='administrator'
+			App.navigate('textbooks', trigger: true)
+
+		else 
+			App.navigate('teachers/dashboard', trigger: true)
+
 		App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion	

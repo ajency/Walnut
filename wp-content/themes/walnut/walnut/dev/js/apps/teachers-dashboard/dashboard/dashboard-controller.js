@@ -59,13 +59,21 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
       };
 
       TeachersDashboardView.prototype.onShow = function() {
-        var class_id, class_ids, classes_dropdown, _i, _len;
+        var c, c_id, class_ids, classes_dropdown, unique_classes, _i, _j, _len, _len1;
+        console.log(this.collection);
         class_ids = this.collection.pluck('class_id');
         class_ids = _.uniq(class_ids);
-        classes_dropdown = '';
+        unique_classes = [];
         for (_i = 0, _len = class_ids.length; _i < _len; _i++) {
-          class_id = class_ids[_i];
-          classes_dropdown += '<option value="' + class_id + '">' + class_id + '</option>';
+          c_id = class_ids[_i];
+          unique_classes.push(this.collection.findWhere({
+            'class_id': c_id
+          }));
+        }
+        classes_dropdown = '';
+        for (_j = 0, _len1 = unique_classes.length; _j < _len1; _j++) {
+          c = unique_classes[_j];
+          classes_dropdown += '<option value="' + c.get('class_id') + '">' + c.get('class_label') + '</option>';
         }
         this.$el.find('#class, #class-training').append(classes_dropdown);
         this.loadDivisions(class_ids[0]);

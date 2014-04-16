@@ -28,6 +28,8 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 						if response.error
 							@view.triggerMethod 'login:fail', response
 						else
+							user = App.request "get:user:model"
+							user.set response
 							@view.close()
 					);
 

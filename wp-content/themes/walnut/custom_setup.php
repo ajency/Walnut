@@ -52,3 +52,29 @@ function add_new_roles_main_site()
 }
 add_new_roles_main_site();
 
+function add_pages_to_main_site()
+{
+    if (!get_page_by_title('Dashboard')) {
+        $post = array();
+        $post['post_type'] = 'page'; //could be 'page' for example
+        $post['post_author'] = get_current_user_id();
+        $post['post_status'] = 'publish'; //draft
+        $post['post_title'] = 'Dashboard';
+        $postid = wp_insert_post($post);
+                            
+    }
+    update_post_meta($postid, '_wp_page_template', 'dashboard.php');
+    
+    if (!get_page_by_title('Content Creator')) {
+        $post = array();
+        $post['post_type'] = 'page'; //could be 'page' for example
+        $post['post_author'] = get_current_user_id();
+        $post['post_status'] = 'publish'; //draft
+        $post['post_title'] = 'Content Creator';
+        $postid = wp_insert_post($post);
+                            
+    }
+    update_post_meta($postid, '_wp_page_template', 'content-creator.php');
+}
+
+add_pages_to_main_site();

@@ -42,14 +42,20 @@ define ['app'
 
 			onShow:->
 
+				console.log @collection
 				class_ids = @collection.pluck 'class_id'
 
 				class_ids = _.uniq class_ids
 
+				unique_classes = []
+
+				for c_id in class_ids
+					unique_classes.push @collection.findWhere({'class_id': c_id})
+
 				classes_dropdown = ''
 
-				for class_id in class_ids
-					classes_dropdown += '<option value="'+class_id+'">'+class_id+'</option>'
+				for c in unique_classes
+					classes_dropdown += '<option value="'+c.get('class_id')+'">'+c.get('class_label')+'</option>'
 
 				@$el.find '#class, #class-training'
 				.append classes_dropdown
