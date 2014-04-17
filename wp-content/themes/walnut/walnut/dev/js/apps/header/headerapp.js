@@ -63,7 +63,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       HeaderView.prototype.serializeData = function() {
         var data;
         data = HeaderView.__super__.serializeData.call(this);
-        data.logourl = SITEURL + '/wp-content/themes/walnut/images/walnutlearn.png';
+        data.logourl = SITEURL + '/images/walnutlearn.png';
         console.log(SITEURL);
         return data;
       };

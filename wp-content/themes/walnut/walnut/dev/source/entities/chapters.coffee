@@ -20,6 +20,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 			class Chapters.ItemCollection extends Backbone.Collection
 				model : Chapters.ItemModel
 				comparator : 'term_order'
+				name : 'chapter'
+
 				url :->
 					 AJAXURL + '?action=get-chapters'
 				
@@ -45,7 +47,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				getChapters:(param = {})->
 					chapterCollection = new Chapters.ItemCollection
 					chapterCollection.fetch
-										reset : true
+										reset : true 
 										data  : param
 
 					chapterCollection
@@ -69,6 +71,53 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					subSectionsCollection
 
+				getChaptersFromLocal:(parent)->
+					runQuery = ->
+						$.Deferred (d)->
+							_.db.transaction (tx)->
+								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
+									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=?", [parent], onSuccess(d), onFailure(d))
+
+					onSuccess =(d)->
+						(tx,data)->
+							console.log 'Chapter success'
+							result = []
+							i=0
+							while i < data.rows.length
+								r = data.rows.item(i)
+								result[i] = 
+									term_id: r['term_id']
+									name: r['name']
+									slug: r['slug']
+									term_group: r['term_group']
+									term_order: r['term_order']
+									term_taxonomy_id: r['term_taxonomy_id']
+									taxonomy: r['taxonomy']
+									description: r['description']
+									parent: r['parent']
+									count: r['count']
+									thumbnail: ''
+									cover_pic: ''
+									author: ''
+									classes: null
+									subjects: null
+									modules_count: ''
+									chapter_count: ''
+
+								i++
+							
+							d.resolve(result)
+
+					onFailure =(d)->
+						(tx,error)->
+							d.reject('OnFailure: '+error)	
+
+					$.when(runQuery()).done (d)->
+						console.log 'Chapters transaction completed'
+
+					.fail (err)->
+						console.log 'Error: '+err
+
 
 			# request handler to get all Chapters
 			App.reqres.setHandler "get:chapters", (opt) ->
@@ -79,4 +128,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:subsections:by:chapter:id", (id)->
 				API.getSubsectionByChapterID id
+
+			# request handler to get all chapters from local database
+			App.reqres.setHandler "get:chapter:local", (parent)->
+				API.getChaptersFromLocal parent		
+				
 

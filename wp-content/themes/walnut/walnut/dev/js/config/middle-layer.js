@@ -25,7 +25,7 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
   document.addEventListener("offline", function() {
     return console.log('Offline');
   }, false);
-  _.isOnline = function() {
+  return _.isOnline = function() {
     switch (_.checkPlatform()) {
       case 'Desktop':
         if (networkStatus === 1) {
@@ -41,11 +41,5 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
           return true;
         }
     }
-  };
-  return _.getDateTime = function() {
-    var d, datetime;
-    d = new Date();
-    datetime = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes();
-    return datetime;
   };
 });

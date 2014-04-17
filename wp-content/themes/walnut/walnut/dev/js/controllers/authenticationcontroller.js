@@ -31,10 +31,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           break;
         case 'Mobile':
           if (this.isOfflineLoginEnabled()) {
-            return this.offlineMobileAuth(this.success, this.data);
+            return this.offlineMobileAuth();
           } else {
             if (this.isOnline) {
-              return this.onlineMobileAuth(this.success, this.inputNewUser, this.updateExistingUserPassword);
+              return this.onlineMobileAuth();
             } else {
               response = {
                 error: 'Connection could not be established. Please try again.'
@@ -46,7 +46,9 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.onlineAuth = function() {
-      return $.post(AJAXURL + '?action=get-user-profile', this.data, this.success, 'json');
+      return $.post(AJAXURL + '?action=get-user-profile', {
+        data: this.data
+      }, this.success, 'json');
     };
 
     AuthenticationController.prototype.isOfflineLoginEnabled = function() {
@@ -57,59 +59,61 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       }
     };
 
-    AuthenticationController.prototype.onlineMobileAuth = function(successFn, inputNewUser, updateExistingUserPassword) {
-      return $.post(AJAXURL + '?action=get-user-profile', this.data, {
-        success: (function(_this) {
-          return function(resp) {
-            var response, user;
-            if (resp.error) {
-              response = {
-                error: resp.error
-              };
-              return successFn(response);
-            } else {
-              response = {
-                success: true
-              };
-              successFn(response);
-              user = _this.isExistingUser(_this.data.txtusername);
-              return user.done(function(d) {
-                if (d.exists === true) {
-                  return updateExistingUserPassword();
-                } else {
-                  return inputNewUser();
-                }
-              });
-            }
-          };
-        })(this)
-      }, 'json');
-    };
-
-    AuthenticationController.prototype.offlineMobileAuth = function(successFn, data) {
-      var user;
-      user = this.isExistingUser(data.txtusername);
-      return user.done(function(d) {
-        var response;
-        if (d.exists === true) {
-          if (d.password === data.txtpassword) {
+    AuthenticationController.prototype.onlineMobileAuth = function() {
+      return $.post(AJAXURL + '?action=get-user-app-profile', {
+        data: this.data
+      }, (function(_this) {
+        return function(resp) {
+          var response, user;
+          if (resp.error) {
+            response = {
+              error: resp.error
+            };
+            return _this.success(response);
+          } else {
             response = {
               success: true
             };
-            return successFn(response);
+            user = _this.isExistingUser(_this.data.txtusername);
+            return user.done(function(d) {
+              if (d.exists === true) {
+                _this.updateExistingUserPassword();
+              } else {
+                _this.inputNewUser();
+              }
+              return _this.success(response);
+            });
+          }
+        };
+      })(this), 'json');
+    };
+
+    AuthenticationController.prototype.offlineMobileAuth = function() {
+      var user;
+      user = this.isExistingUser(this.data.txtusername);
+      return user.done((function(_this) {
+        return function(d) {
+          var response;
+          if (d.exists === true) {
+            if (d.password === _this.data.txtpassword) {
+              response = {
+                success: true
+              };
+              return _this.success(response);
+            } else {
+              response = {
+                error: 'Invalid Password'
+              };
+              return _this.success(response);
+            }
           } else {
             response = {
-              error: 'Invalid Password'
+              error: 'No such user has previously logged in'
             };
-            return successFn(response);
+            return _this.success(response);
           }
-        } else {
-          response = {
-            error: 'No such user has previously logged in.'
-          };
-          return successFn(response);
-        }
-      });
+        };
+      })(this));
     };
 
     AuthenticationController.prototype.isExistingUser = function(username) {
@@ -153,9 +157,11 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.inputNewUser = function() {
-      return _.userDb.transaction(function(tx) {
-        return tx.executeSql('INSERT INTO USERS (username, password, last_loggedin) VALUES (?, ? ,?)', [this.data.txtusername, this.data.txtpassword, _.getDateTime()]);
-      }, function(tx, err) {
+      return _.userDb.transaction((function(_this) {
+        return function(tx) {
+          return tx.executeSql('INSERT INTO USERS (username, password) VALUES (?, ?)', [_this.data.txtusername, _this.data.txtpassword]);
+        };
+      })(this), function(tx, err) {
         return console.log('Error: ' + err);
       }, function(tx) {
         return console.log('Success: Inserted new user');
@@ -163,9 +169,11 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.updateExistingUserPassword = function() {
-      return _.userDb.transaction(function(tx) {
-        return tx.executeSql("UPDATE USERS SET password=? where username=?", [this.data.txtpassword, this.data.txtusername]);
-      }, function(tx, err) {
+      return _.userDb.transaction((function(_this) {
+        return function(tx) {
+          return tx.executeSql("UPDATE USERS SET password=? where username=?", [_this.data.txtpassword, _this.data.txtusername]);
+        };
+      })(this), function(tx, err) {
         return console.log('Error: ' + err);
       }, function(tx) {
         return console.log('Success: Updated user password');

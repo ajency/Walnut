@@ -51,10 +51,10 @@ define ['detect','jquery', 'underscore'], (detect, $, _)->
 
 
       #Get device current date and time
-      _.getDateTime = ->
-          d = new Date()
-          datetime =  d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes()
-          datetime    
+      # _.getDateTime = ->
+      #     d = new Date()
+      #     datetime =  d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes()
+      #     datetime    
 
        
 

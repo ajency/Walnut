@@ -1,23 +1,42 @@
 define ["backbone"], (Backbone) ->
 
 	#Changes needed for offline data retrieval
-	# Backbone.local =(options, name)->
+	Backbone.local =(options, name)->
 
-	# 	jsonData = App.request "get:#{name}:collection"
+		jsonData = App.request "get:#{name}:collection"
 
-	# 	jsonData
+		jsonData
 
 
 
-	# _.extend Backbone.Collection::,
+	_.extend Backbone.Collection::,
 
-	# 	sync :(method, collection, options)->
+		sync :(method, collection, options)->
 
-	# 		data = App.reqres.request "get:textbookslocal"
-	# 		data.done (d)->
-	# 			collection.set d
+			collection_name = collection.name
+			console.log 'Collection name: '+collection_name
 
-	# 		return true
+			if collection_name is 'textbooks'
+				data = App.reqres.request "get:#{collection_name}:local"
+				data.done (d)->
+					collection.set d
+
+			if collection_name is 'menu-item'
+				console.log 'Menu items local'
+
+			if collection_name is 'chapter'
+				data = App.reqres.request "get:#{collection_name}:local", options.data.parent 
+				data.done (d)->
+					collection.set d
+
+			if collection_name is 'content-piece'
+				data = App.reqres.request "get:#{collection_name}:local", options.data.ids 
+				data.done (d)->
+					console.log 'Data'
+					console.log d
+					collection.set d
+
+			return true
 
 
 
@@ -129,8 +148,25 @@ define ["backbone"], (Backbone) ->
 			# Don't process data on a non-GET request.
 			# params.processData = false  if params.type isnt "GET" and not options.emulateJSON						
 			
+
 			# Make the request, allowing the user to override any Ajax options.
-			xhr = options.xhr = Backbone.ajax(_.extend(params, options))
+			if _.checkPlatform() is 'Desktop'
+				xhr = options.xhr = Backbone.ajax(_.extend(params, options))
+
+			else
+				modelname = model.name
+				console.log 'Model name: '+modelname
+
+				if modelname is 'content-group'
+					data = App.reqres.request "get:#{modelname}:local"
+					data.done (d)->
+						console.log 'Model data'
+						console.log d
+						model.set d.data
+
+				if modelname is 'schools' #Not yet implemented
+					console.log 'Schools local'
+
 			
 			# trigger the request event of the model
 			model.trigger "request", model, xhr, options
@@ -140,6 +176,9 @@ define ["backbone"], (Backbone) ->
 
 			# return the xhr object. this is a jquery deffered object
 			xhr
+
+			
+
 		
 		# model parse function
 		parse:(resp)->
@@ -151,7 +190,6 @@ define ["backbone"], (Backbone) ->
 
 
 	_.extend Backbone.Collection::,
-
 		parse:(resp)->
 			return resp.data if resp.code is 'OK'
 			resp

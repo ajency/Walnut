@@ -55,9 +55,9 @@ define ['marionette'], (Marionette)->
 		# 	App.navigate(@rootRoute, trigger: true)
 		# else
 		# 	App.vent.trigger "show:dashboard"
-		# @rootRoute = 'login'
-		# App.navigate(@rootRoute, trigger: true)	
-		# return
+		@rootRoute = 'login'
+		App.navigate(@rootRoute, trigger: true)	
+		return
 
         
 		# check app login status

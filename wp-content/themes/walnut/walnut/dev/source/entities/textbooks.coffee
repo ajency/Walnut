@@ -21,6 +21,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			# textbooks collection class
 			class Textbooks.ItemCollection extends Backbone.Collection
 				model : Textbooks.ItemModel
+				name : 'textbooks'
 				comparator : 'term_order'
 				url :->
 					 AJAXURL + '?action=get-textbooks'
@@ -56,16 +57,22 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
-								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt left outer join wp_textbook_relationships wtr on t.term_id=wtr.textbook_id  WHERE t.term_id=tt.term_id and tt.taxonomy='textbook' and tt.parent=0", [], onSuccess(d), onFailure(d));
+								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
+									left outer join wp_textbook_relationships wtr on t.term_id=wtr.textbook_id  
+									WHERE t.term_id=tt.term_id and tt.taxonomy='textbook' and tt.parent=0", [], onSuccess(d), onFailure(d));
 								
 
 					onSuccess =(d)->
 						(tx,data)->
-							console.log 'onSuccess!'
+							console.log 'Textbook success'
 							result = []
 							i = 0
 							while i < data.rows.length
 								row = data.rows.item(i)
+								classes = subjects = ''
+								classes = unserialize(row["class_id"])	if row['class_id'] isnt ''
+								subjects = unserialize(row["tags"]) if row["tags"] isnt ''
+
 								result[i] = 
 									term_id: row["term_id"]
 									name: row["name"]
@@ -77,8 +84,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 									description: row["description"]
 									parent: row["parent"]
 									count: row["count"]
-									classes: unserialize(row["class_id"])
-									subjects: unserialize(row["tags"])
+									classes: classes
+									subjects: subjects
 
 								i++	
 		
@@ -90,7 +97,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							d.reject('OnFailure!: '+error)
 
 					$.when(runQuery()).done (data)->
-						console.log 'Database transaction completed'
+						console.log 'Textbooks transaction completed'
 						
 					.fail (err)->
 						console.log('Error: '+err);
@@ -103,5 +110,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			App.reqres.setHandler "get:textbook:by:id", (id)->
 				API.getTextBookByID id
 
-			App.reqres.setHandler "get:textbookslocal", ->
-				API.getTextbooksFromLocal()	
+			# request handler to get all textbooks from local database
+			App.reqres.setHandler "get:textbooks:local", ->
+				API.getTextbooksFromLocal()		
+
+

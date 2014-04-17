@@ -39,6 +39,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.comparator = 'ID';
 
+      ItemCollection.prototype.name = 'content-piece';
+
       ItemCollection.prototype.url = function() {
         return AJAXURL + '?action=get-content-pieces';
       };
@@ -132,8 +134,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (ids == null) {
           ids = [];
         }
+        contentPieces = new ContentPiece.ItemCollection;
         if (_.size(ids) > 0) {
-          contentPieces = new ContentPiece.ItemCollection;
           contentPieces.fetch({
             data: {
               ids: ids
@@ -141,6 +143,69 @@ define(["app", 'backbone'], function(App, Backbone) {
           });
           return contentPieces;
         }
+      },
+      getContentPieceFromLocal: function(ids) {
+        var onFailure, onSuccess, runQuery;
+        console.log('Ids: ' + ids);
+        runQuery = function() {
+          return $.Deferred(function(d) {
+            return _.db.transaction(function(tx) {
+              return tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' AND post_status = 'publish' AND ID in (" + ids + ")", [], onSuccess(d), onFailure(d));
+            });
+          });
+        };
+        onSuccess = function(d) {
+          return function(tx, data) {
+            var i, r, result;
+            console.log('Content piece success');
+            result = [];
+            i = 0;
+            while (i < data.rows.length) {
+              r = data.rows.item(i);
+              result[i] = {
+                ID: r['ID'],
+                post_author: r['post_author'],
+                post_date: r['post_date'],
+                post_date_gmt: r['post_date_gmt'],
+                post_content: r['post_content'],
+                post_title: r['post_title'],
+                post_excerpt: r['post_excerpt'],
+                post_status: r['post_status'],
+                comment_status: r['comment_status'],
+                ping_status: r['ping_status'],
+                post_password: r['post_password'],
+                post_name: r['post_name'],
+                to_ping: r['to_ping'],
+                pinged: r['pinged'],
+                post_modified: r['post_modified'],
+                post_modified_gmt: r['post_modified_gmt'],
+                post_content_filtered: r['post_content_filtered'],
+                post_parent: r['post_parent'],
+                guid: r['guid'],
+                menu_order: r['menu_order'],
+                post_type: r['post_type'],
+                post_mime_type: r['post_mime_type'],
+                comment_count: r['comment_count'],
+                filter: 'raw',
+                subjects: '',
+                creator: 'admin',
+                content_type: ''
+              };
+              i++;
+            }
+            return d.resolve(result);
+          };
+        };
+        onFailure = function(d) {
+          return function(tx, error) {
+            return d.reject('OnFailure!: ' + error);
+          };
+        };
+        return $.when(runQuery()).done(function(d) {
+          return console.log('Content piece transaction completed');
+        }).fail(function(err) {
+          return console.log('Error: ' + err);
+        });
       }
     };
     App.reqres.setHandler("get:content:pieces", function(opt) {
@@ -152,8 +217,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:content:piece:by:id", function(id) {
       return API.getContentPieceByID(id);
     });
-    return App.reqres.setHandler("get:content:pieces:by:ids", function(ids) {
+    App.reqres.setHandler("get:content:pieces:by:ids", function(ids) {
       return API.getContentPiecesByIDs(ids);
+    });
+    return App.reqres.setHandler("get:content-piece:local", function(ids) {
+      return API.getContentPieceFromLocal(ids);
     });
   });
 });

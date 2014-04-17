@@ -9,7 +9,7 @@ define ['app'
 			initialize :(opts)->
 
 				{@model}= opts
-
+ 
 				@view= view = @_getCollectionDetailsView @model
 
 				@show view, (loading:true)

@@ -11,6 +11,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			@isOnline = _.isOnline()
 
+
 		authenticate:->
 
 			switch @platform
@@ -25,19 +26,21 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 				when 'Mobile'
 					if @isOfflineLoginEnabled()
-						@offlineMobileAuth(@success, @data)	
+						@offlineMobileAuth()
 					
 					else
 						if @isOnline
-							@onlineMobileAuth(@success, @inputNewUser, @updateExistingUserPassword)
+							@onlineMobileAuth()
 						else
 							response = 
 								error : 'Connection could not be established. Please try again.'
 							@success response	
 
 
+
 		onlineAuth:->
-			$.post AJAXURL + '?action=get-user-profile', @data, @success, 'json'
+			$.post AJAXURL + '?action=get-user-profile', data: @data, @success, 'json'
+
 
 
 		isOfflineLoginEnabled:->
@@ -46,50 +49,51 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			else false
 
 
-		onlineMobileAuth:(successFn, inputNewUser, updateExistingUserPassword)->
-			$.post AJAXURL + '?action=get-user-profile', @data,
 
-				   success: (resp)=>
+		onlineMobileAuth:->
+			$.post AJAXURL + '?action=get-user-app-profile', 
+				   data: @data,
+				   (resp)=>
 				   		if resp.error
 				   			response = 
 				   				error : resp.error
-				   			successFn response	
-				   	
+				   			@success response	
+
 				   		else
 				   			response = 
 				   				success : true
-				   			successFn response
 
 				   			user = @isExistingUser(@data.txtusername)
-				   			user.done (d)->
+				   			user.done (d)=>
 				   				if d.exists is true
-				   					updateExistingUserPassword()
-				   				else 
-				   					inputNewUser()
-				   	 
-				   'json'
+				   					@updateExistingUserPassword()
+				   				else
+				   					@inputNewUser()
+
+				   				@success response	
+				   	,
+				   	'json'	
 
 
-
-
-		offlineMobileAuth:(successFn, data)->
-			user = @isExistingUser(data.txtusername)
-			user.done (d)->
+		offlineMobileAuth:->
+			user = @isExistingUser(@data.txtusername)
+			user.done (d)=>
 				if d.exists is true
-					if d.password is data.txtpassword
+					if d.password is @data.txtpassword
 						response = 
 							success : true
-						successFn response
+						@success response
 
 					else
 						response = 
 							error : 'Invalid Password'
-						successFn response		
+						@success response		
 
 				else
 					response = 
-						error : 'No such user has previously logged in.'
-					successFn response
+						error : 'No such user has previously logged in'
+					@success response
+
 						
 
 
@@ -125,11 +129,12 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				console.log 'Error: '+err	
 
 
+
 		
 		inputNewUser:->
-			_.userDb.transaction((tx)->
+			_.userDb.transaction((tx)=>
 
-				tx.executeSql('INSERT INTO USERS (username, password, last_loggedin) VALUES (?, ? ,?)',[@data.txtusername, @data.txtpassword, _.getDateTime()])
+				tx.executeSql('INSERT INTO USERS (username, password) VALUES (?, ?)', [@data.txtusername, @data.txtpassword])
 
 			,(tx,err)->
 				console.log 'Error: '+err 
@@ -138,16 +143,19 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			)
 
 
-		updateExistingUserPassword:->
-			_.userDb.transaction((tx)->
 
-				tx.executeSql("UPDATE USERS SET password=? where username=?",[ @data.txtpassword, @data.txtusername])
+		updateExistingUserPassword:->
+			_.userDb.transaction((tx)=>
+
+				tx.executeSql("UPDATE USERS SET password=? where username=?", [@data.txtpassword, @data.txtusername])
 
 			,(tx,err)->
 				console.log 'Error: '+err 
 			,(tx)->
 				console.log 'Success: Updated user password'
 			)	
+
+
 
 
 

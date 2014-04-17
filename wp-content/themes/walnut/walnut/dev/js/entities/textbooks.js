@@ -37,6 +37,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
 
       ItemCollection.prototype.model = Textbooks.ItemModel;
 
+      ItemCollection.prototype.name = 'textbooks';
+
       ItemCollection.prototype.comparator = 'term_order';
 
       ItemCollection.prototype.url = function() {
@@ -80,18 +82,25 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         runQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt left outer join wp_textbook_relationships wtr on t.term_id=wtr.textbook_id  WHERE t.term_id=tt.term_id and tt.taxonomy='textbook' and tt.parent=0", [], onSuccess(d), onFailure(d));
+              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt left outer join wp_textbook_relationships wtr on t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id and tt.taxonomy='textbook' and tt.parent=0", [], onSuccess(d), onFailure(d));
             });
           });
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, result, row;
-            console.log('onSuccess!');
+            var classes, i, result, row, subjects;
+            console.log('Textbook success');
             result = [];
             i = 0;
             while (i < data.rows.length) {
               row = data.rows.item(i);
+              classes = subjects = '';
+              if (row['class_id'] !== '') {
+                classes = unserialize(row["class_id"]);
+              }
+              if (row["tags"] !== '') {
+                subjects = unserialize(row["tags"]);
+              }
               result[i] = {
                 term_id: row["term_id"],
                 name: row["name"],
@@ -103,8 +112,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                 description: row["description"],
                 parent: row["parent"],
                 count: row["count"],
-                classes: unserialize(row["class_id"]),
-                subjects: unserialize(row["tags"])
+                classes: classes,
+                subjects: subjects
               };
               i++;
             }
@@ -117,7 +126,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           };
         };
         return $.when(runQuery()).done(function(data) {
-          return console.log('Database transaction completed');
+          return console.log('Textbooks transaction completed');
         }).fail(function(err) {
           return console.log('Error: ' + err);
         });
@@ -129,7 +138,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     App.reqres.setHandler("get:textbook:by:id", function(id) {
       return API.getTextBookByID(id);
     });
-    return App.reqres.setHandler("get:textbookslocal", function() {
+    return App.reqres.setHandler("get:textbooks:local", function() {
       return API.getTextbooksFromLocal();
     });
   });

@@ -36,6 +36,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       MenuItemCollection.prototype.comparator = 'order';
 
+      MenuItemCollection.prototype.name = 'menu-item';
+
       return MenuItemCollection;
 
     })(Backbone.Collection);

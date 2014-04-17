@@ -34,6 +34,11 @@ define(['marionette'], function(Marionette) {
       });
     }
     App.startHistory();
+    this.rootRoute = 'login';
+    App.navigate(this.rootRoute, {
+      trigger: true
+    });
+    return;
     return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
       return function(resp) {
         var school, user;

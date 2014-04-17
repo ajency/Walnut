@@ -35,6 +35,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       SchoolCollection.prototype.comparator = 'id';
 
+      SchoolCollection.prototype.name = 'schools';
+
       SchoolCollection.prototype.url = function() {
         return AJAXURL + '?action=get-schools';
       };

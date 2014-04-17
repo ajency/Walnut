@@ -20,6 +20,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			class Menus.MenuItemCollection extends Backbone.Collection
 				model : Menus.MenuItemModel
 				comparator : 'order'
+				name : 'menu-item'
 
 
 			# API 

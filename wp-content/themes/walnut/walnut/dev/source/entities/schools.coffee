@@ -17,6 +17,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 			class Schools.SchoolCollection extends Backbone.Collection
 				model : Schools.SchoolModel
 				comparator : 'id'
+				name : 'schools'
+				
 				url :->
 					 AJAXURL + '?action=get-schools'
 

@@ -18,7 +18,7 @@ define ['app'
 				#@groupContentCollection= App.request "get:content:pieces:of:group", @model.get 'id'
 				
 				@groupContentCollection= App.request "get:content:pieces:by:ids", @model.get 'content_pieces'
-
+				
 				App.execute "when:fetched", @groupContentCollection, @showView
 
 			showView:=>

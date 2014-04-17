@@ -37,6 +37,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.comparator = 'term_order';
 
+      ItemCollection.prototype.name = 'chapter';
+
       ItemCollection.prototype.url = function() {
         return AJAXURL + '?action=get-chapters';
       };
@@ -108,6 +110,58 @@ define(["app", 'backbone'], function(App, Backbone) {
           data: param
         });
         return subSectionsCollection;
+      },
+      getChaptersFromLocal: function(parent) {
+        var onFailure, onSuccess, runQuery;
+        runQuery = function() {
+          return $.Deferred(function(d) {
+            return _.db.transaction(function(tx) {
+              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=?", [parent], onSuccess(d), onFailure(d));
+            });
+          });
+        };
+        onSuccess = function(d) {
+          return function(tx, data) {
+            var i, r, result;
+            console.log('Chapter success');
+            result = [];
+            i = 0;
+            while (i < data.rows.length) {
+              r = data.rows.item(i);
+              result[i] = {
+                term_id: r['term_id'],
+                name: r['name'],
+                slug: r['slug'],
+                term_group: r['term_group'],
+                term_order: r['term_order'],
+                term_taxonomy_id: r['term_taxonomy_id'],
+                taxonomy: r['taxonomy'],
+                description: r['description'],
+                parent: r['parent'],
+                count: r['count'],
+                thumbnail: '',
+                cover_pic: '',
+                author: '',
+                classes: null,
+                subjects: null,
+                modules_count: '',
+                chapter_count: ''
+              };
+              i++;
+            }
+            return d.resolve(result);
+          };
+        };
+        onFailure = function(d) {
+          return function(tx, error) {
+            return d.reject('OnFailure: ' + error);
+          };
+        };
+        return $.when(runQuery()).done(function(d) {
+          return console.log('Chapters transaction completed');
+        }).fail(function(err) {
+          return console.log('Error: ' + err);
+        });
       }
     };
     App.reqres.setHandler("get:chapters", function(opt) {
@@ -116,8 +170,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:chapter:by:id", function(id) {
       return API.getChapterByID(id);
     });
-    return App.reqres.setHandler("get:subsections:by:chapter:id", function(id) {
+    App.reqres.setHandler("get:subsections:by:chapter:id", function(id) {
       return API.getSubsectionByChapterID(id);
+    });
+    return App.reqres.setHandler("get:chapter:local", function(parent) {
+      return API.getChaptersFromLocal(parent);
     });
   });
 });

@@ -32,15 +32,28 @@ function upload_attachment($file_handler, $post_id, $setthumb = 'false') {
 }
 
 
-add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_login' );
-function authenticate_login() {
+add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_web_login' );
+
+add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
+
+function authenticate_web_login() {
 	$login_data=$_POST;
 	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
 	if(is_wp_error($login_check))
-		echo(json_encode(array("error"=>"Invalid Username or Password.")));
+		json_encode(array("error"=>"Invalid Username or Password."));
 	else{
 		wp_set_auth_cookie( $login_check->ID );
-		echo(json_encode($login_check));
+		json_encode($login_check);
 	}
 	die;
+}
+
+function authenticate_app_login() {
+	$login_data=$_POST;
+	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
+	if(is_wp_error($login_check))
+		json_encode(array("error"=>"Invalid Username or Password."));
+	else{
+		json_encode($login_check);
+	}
 }

@@ -1,8 +1,44 @@
 define(["backbone"], function(Backbone) {
   var _sync;
+  Backbone.local = function(options, name) {
+    var jsonData;
+    jsonData = App.request("get:" + name + ":collection");
+    return jsonData;
+  };
+  _.extend(Backbone.Collection.prototype, {
+    sync: function(method, collection, options) {
+      var collection_name, data;
+      collection_name = collection.name;
+      console.log('Collection name: ' + collection_name);
+      if (collection_name === 'textbooks') {
+        data = App.reqres.request("get:" + collection_name + ":local");
+        data.done(function(d) {
+          return collection.set(d);
+        });
+      }
+      if (collection_name === 'menu-item') {
+        console.log('Menu items local');
+      }
+      if (collection_name === 'chapter') {
+        data = App.reqres.request("get:" + collection_name + ":local", options.data.parent);
+        data.done(function(d) {
+          return collection.set(d);
+        });
+      }
+      if (collection_name === 'content-piece') {
+        data = App.reqres.request("get:" + collection_name + ":local", options.data.ids);
+        data.done(function(d) {
+          console.log('Data');
+          console.log(d);
+          return collection.set(d);
+        });
+      }
+      return true;
+    }
+  });
   _.extend(Backbone.Model.prototype, {
     sync: function(method, model, options) {
-      var allData, idAttr, onlyChanged, params, xhr, _action, _ref, _ref1;
+      var allData, data, idAttr, modelname, onlyChanged, params, xhr, _action, _ref, _ref1;
       if (!this.name) {
         throw new Error("'name' property not set for the model");
       }
@@ -45,7 +81,23 @@ define(["backbone"], function(Backbone) {
             params.data[idAttr] = model.get(idAttr);
           }
       }
-      xhr = options.xhr = Backbone.ajax(_.extend(params, options));
+      if (_.checkPlatform() === 'Desktop') {
+        xhr = options.xhr = Backbone.ajax(_.extend(params, options));
+      } else {
+        modelname = model.name;
+        console.log('Model name: ' + modelname);
+        if (modelname === 'content-group') {
+          data = App.reqres.request("get:" + modelname + ":local");
+          data.done(function(d) {
+            console.log('Model data');
+            console.log(d);
+            return model.set(d.data);
+          });
+        }
+        if (modelname === 'schools') {
+          console.log('Schools local');
+        }
+      }
       model.trigger("request", model, xhr, options);
       if (method === 'read' || method === 'create') {
         model._fetch = xhr;
