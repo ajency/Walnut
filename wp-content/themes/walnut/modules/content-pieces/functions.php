@@ -103,13 +103,20 @@ function get_single_content_piece($id){
 
 function save_content_group($data = array()) {
     global $wpdb;
-
+    
+    $duration= (int) $data['duration'];
+    
+    if($data['minshours']=='hrs')
+        $duration = $duration * 60;
+    
     $content_data = array(
-        'name' => $data['name'],
-        'term_ids' => $data['term_ids'],
-        'last_modified_on' => date('y-m-d H:i:s'),
-        'last_modified_by' => get_current_user_id()
+        'name'              => $data['name'],
+        'term_ids'          => $data['term_ids'],
+        'last_modified_on'  => date('y-m-d H:i:s'),
+        'last_modified_by'  => get_current_user_id(),
+        'duration'          => $duration
     );
+    
 
     if (isset($data['id'])) {
         $content_group = $wpdb->update($wpdb->prefix . 'content_collection', $content_data, array('id' => $data['id']));
@@ -182,7 +189,13 @@ function get_single_content_group($id){
     
     foreach ($data as $item){
         $data=$item;
-        $data->term_ids= maybe_unserialize ($data->term_ids);        
+        $data->term_ids= maybe_unserialize ($data->term_ids);    
+        $duration = $item->duration;
+        $data->minshours ='mins';
+        if($duration >= 60){
+            $data->duration= $duration/60;
+            $data->minshours ='hrs';
+        }
     }
     
     $description= $wpdb->get_results("select * from 

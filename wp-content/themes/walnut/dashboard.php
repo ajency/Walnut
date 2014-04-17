@@ -28,7 +28,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta content="" name="description" />
         <meta content="" name="author" />
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css"/>
+        <link href="./wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css"/>
         
         <!-- NEED TO WORK ON -->
         <?php 
@@ -36,21 +36,21 @@
         if(ENV == 'dev'){
         ?>
         
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
+        <link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
         <!--<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>-->
         <!-- BEGIN CORE CSS FRAMEWORK -->
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+        <link href="./wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
         
         <!-- END CORE CSS FRAMEWORK -->
 
         <!-- BEGIN CSS TEMPLATE -->
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
-        <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
+        <link href="./wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
         
 
         <!-- END CSS TEMPLATE -->
@@ -58,7 +58,7 @@
         <?php }
         else {
         ?>
-            <link href="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/production/css/walnut.min.css?ver=<?php echo $ver?>" rel="stylesheet" type="text/css"/>
+            <link href="./wp-content/themes/walnut/walnut/production/css/walnut.min.css?ver=<?php echo $ver?>" rel="stylesheet" type="text/css"/>
         <?php }?>
     </head>
     <body class="">
@@ -84,13 +84,13 @@
             AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
             SITEURL = '<?php echo site_url() ?>';
         </script>
-        <script type="text/javascript" src="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+        <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
         <?php if (ENV == 'dev') { ?>
-            <script type="text/javascript" data-main="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/js/walnut-main" src="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+            <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
             <?php } else {
             
             ?>
-                <script type="text/javascript"  src="http://<?php echo DOMAIN_CURRENT_SITE?>/wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $ver?>"></script>
+                <script type="text/javascript"  src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $ver?>"></script>
         <?php } ?>
 
     </body>

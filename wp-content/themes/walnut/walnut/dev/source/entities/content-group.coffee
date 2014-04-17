@@ -19,6 +19,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					published_by	    : ''
 					status	   			: ''
 					type	   			: ''
+					duration   			: 0
+					minshrs				: 'mins'
 					term_ids			: []
 					content_pieces		: []
 
