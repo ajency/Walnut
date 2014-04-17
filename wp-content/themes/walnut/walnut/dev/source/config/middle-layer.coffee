@@ -11,8 +11,7 @@ define ['detect','jquery', 'underscore'], (detect, $, _)->
 
 
       #Load script 'online.js' only for browser
-      if _.checkPlatform() is "Desktop"
-        $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
+      $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js') if _.checkPlatform() is 'Desktop'
 
       
       #Implementation for browser

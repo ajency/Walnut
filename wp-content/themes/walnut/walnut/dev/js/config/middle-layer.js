@@ -10,7 +10,7 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
       return "Desktop";
     }
   };
-  if (_.checkPlatform() === "Desktop") {
+  if (_.checkPlatform() === 'Desktop') {
     $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
   }
   window.onLineHandler = function() {

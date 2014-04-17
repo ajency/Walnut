@@ -828,8 +828,7 @@ and (orientation : portrait) {
 		}
 		
 		.scrollup{
-			/*background: url('../images/pullup2x.png'); */
-			background: url('/images/pullup2x.png'); 
+			background: url('../images/pullup2x.png');
 			background-size: 57px 27px;
 		}
 		

@@ -148,12 +148,12 @@ define ["backbone"], (Backbone) ->
 			# Don't process data on a non-GET request.
 			# params.processData = false  if params.type isnt "GET" and not options.emulateJSON						
 			
-
 			# Make the request, allowing the user to override any Ajax options.
 			if _.checkPlatform() is 'Desktop'
 				xhr = options.xhr = Backbone.ajax(_.extend(params, options))
 
 			else
+				#Changes needed for offline data retrieval
 				modelname = model.name
 				console.log 'Model name: '+modelname
 

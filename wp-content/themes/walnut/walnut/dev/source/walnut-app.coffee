@@ -47,36 +47,37 @@ define ['marionette'], (Marionette)->
 
 		App.startHistory()
 
-		
-		#Changes needed to build walnut-app
-		# loginStatus = window.localStorage.getItem("key")
-		# if loginStatus is null or loginStatus is 'loggedout'
-		# 	@rootRoute = 'login'
-		# 	App.navigate(@rootRoute, trigger: true)
-		# else
-		# 	App.vent.trigger "show:dashboard"
-		@rootRoute = 'login'
-		App.navigate(@rootRoute, trigger: true)	
-		return
+		if _.checkPlatform() is 'Mobile'
+			#Changes needed to build walnut-app
+			# loginStatus = window.localStorage.getItem("key")
+			# if loginStatus is null or loginStatus is 'loggedout'
+			# 	@rootRoute = 'login'
+			# 	App.navigate(@rootRoute, trigger: true)
+			# else
+			# 	App.vent.trigger "show:dashboard"
+			@rootRoute = 'login'
+			App.navigate(@rootRoute, trigger: true)	
+			return
 
-        
-		# check app login status
-		xhr = $.get "#{AJAXURL}?action=get-user-data", 
-				{}, 
-				(resp)=>
-					if(resp.success)
-						console.log resp
-						user = App.request "get:user:model"
-						user.set resp.data
-						school = App.request "get:current:school"
-						App.execute "show:headerapp", region:App.headerRegion
-						App.execute "show:leftnavapp", region:App.leftNavRegion	
-						App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
-						App.vent.trigger "show:dashboard"  if @getCurrentRoute() is 'login'
-						App.loginRegion.close()
-					else 	
-						App.vent.trigger "show:login"
-				, 'json'
+		else
+			# check app login status
+			xhr = $.get "#{AJAXURL}?action=get-user-data", 
+					{}, 
+					(resp)=>
+						if(resp.success)
+							console.log resp
+							user = App.request "get:user:model"
+							user.set resp.data
+							school = App.request "get:current:school"
+							App.execute "show:headerapp", region:App.headerRegion
+							App.execute "show:leftnavapp", region:App.leftNavRegion	
+							App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
+							App.vent.trigger "show:dashboard"  if @getCurrentRoute() is 'login'
+							App.loginRegion.close()
+						else 	
+							App.vent.trigger "show:login"
+					, 'json'
+
 		
 
 	App.vent.on "show:dashboard", (user_role) =>
@@ -88,11 +89,14 @@ define ['marionette'], (Marionette)->
 		
 		user_role= user.get "roles"
 		
-		if user_role[0]=='administrator'
+		if _.checkPlatform() is 'Mobile'
 			App.navigate('textbooks', trigger: true)
+		else
+			if user_role[0]=='administrator'
+				App.navigate('textbooks', trigger: true)
 
-		else 
-			App.navigate('teachers/dashboard', trigger: true)
+			else 
+				App.navigate('teachers/dashboard', trigger: true)
 
 		App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
 		App.execute "show:headerapp", region:App.headerRegion
@@ -101,6 +105,7 @@ define ['marionette'], (Marionette)->
 		if typeof Pace isnt 'undefined'
 			Pace.on 'hide', ()->
 				$("#site_main_container").addClass( "showAll" );
+
 
 			
 	App.vent.on "show:login", ->
