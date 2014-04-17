@@ -16,7 +16,7 @@ function new_school_setup( $blog_id ){
     global $wpdb;   
     $blog_details=  maybe_serialize($_POST['blog_additional']);
     update_blog_option($blog_id, 'blog_meta',$blog_details);
-    update_blog_option($blog_id, 'template','schoolsite');
+    update_blog_option($blog_id, 'template','walnut');
     update_blog_option($blog_id, 'stylesheet','schoolsite');
     
     $current_blog= get_current_blog_id();
@@ -46,10 +46,13 @@ function new_school_setup( $blog_id ){
         $post['post_author'] = get_current_user_id();
         $post['post_status'] = 'publish'; //draft
         $post['post_title'] = 'Dashboard';
-        $postid = wp_insert_post($post);
-                            
+        $dashboard_id = wp_insert_post($post);
+                           
     }
-    update_post_meta($postid, '_wp_page_template', 'dashboard.php');
+    update_post_meta($dashboard_id, '_wp_page_template', 'dashboard.php');
+   
+    update_option( 'page_on_front', $dashboard_id );
+    update_option( 'show_on_front', 'page' );
     
     switch_to_blog($current_blog);
     
