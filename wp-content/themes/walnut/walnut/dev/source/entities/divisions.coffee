@@ -11,6 +11,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				defaults:
 					division 		   	: ''
 					class_id			: ''
+					students_count		: 0
 
 				name: 'division'
 

@@ -238,7 +238,6 @@ define ['app'
 					@trigger "add:content:pieces", content_pieces
 
 					for content_id in content_pieces
-						@collection.remove content_id
 
 						@$el.find("#dataContentTable tr#row_"+content_id).remove()
 

@@ -302,7 +302,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           _results = [];
           for (_i = 0, _len = content_pieces.length; _i < _len; _i++) {
             content_id = content_pieces[_i];
-            this.collection.remove(content_id);
             this.$el.find("#dataContentTable tr#row_" + content_id).remove();
             tableData = Marionette.getOption(this, 'tableConfig');
             if (_.size(this.$el.find("#dataContentTable tbody tr")) === 0) {
