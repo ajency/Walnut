@@ -136,10 +136,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       CollectionDetailsView.prototype.onShow = function() {
-        $("#textbooks").select2();
-        $("#chapters").select2();
-        $("#secs").val([]).select2();
-        return $("#subsecs").val([]).select2();
+        $("#textbooks, #chapters, #minshours").select2();
+        return $("#secs,#subsecs").val([]).select2();
       };
 
       CollectionDetailsView.prototype.onFetchChaptersComplete = function(chapters) {

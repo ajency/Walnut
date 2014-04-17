@@ -35,7 +35,8 @@ define ['app'
 						region : @layout.collectionDetailsRegion
 						model  : @contentGroupModel
 
-					App.execute "show:viewgroup:content:displayapp", region : @layout.contentDisplayRegion, model: @contentGroupModel
+					if _.size(@contentGroupModel.get('content_pieces'))>0
+						App.execute "show:viewgroup:content:displayapp", region : @layout.contentDisplayRegion, model: @contentGroupModel
 
 			_getContentGroupViewLayout : =>
 				new ContentGroupViewLayout

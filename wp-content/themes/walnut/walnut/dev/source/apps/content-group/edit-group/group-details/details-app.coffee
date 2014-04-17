@@ -88,11 +88,10 @@ define ['app'
 				'click #save-content-collection'	: 'save_content'
 
 			onShow:->
-				$("#textbooks").select2()
-				$("#chapters").select2()
+				$("#textbooks, #chapters, #minshours").select2()
+
 				#Multi Select
-				$("#secs").val([]).select2()
-				$("#subsecs").val([]).select2()
+				$("#secs,#subsecs").val([]).select2()
 
 			onFetchChaptersComplete:(chapters)->
 				if _.size(chapters)>0

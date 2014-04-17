@@ -33,7 +33,9 @@ function create_content_group() {
     $data = array(
         'name' => $_POST['name'],
         'description' => maybe_serialize($_POST['description']),
-        'term_ids' => maybe_serialize($_POST['term_ids'])
+        'term_ids' => maybe_serialize($_POST['term_ids']),
+        'duration' => $_POST['duration'],
+        'minshours' => $_POST['minshours']
     );
 
     $id = save_content_group($data);
