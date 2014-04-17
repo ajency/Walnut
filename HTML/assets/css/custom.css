@@ -819,6 +819,7 @@ h3.time {
 }
 body {
   background-color: #e5e9ec;
+  overflow-y: scroll;
 }
 #site_main_container {
   opacity: 0;
