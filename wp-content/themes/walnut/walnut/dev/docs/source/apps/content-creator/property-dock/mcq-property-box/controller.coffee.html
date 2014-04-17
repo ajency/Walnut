@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>controller.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../doc-style.css" />
+  <script src="../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../", thisFile = "source\\apps\\content-creator\\property-dock\\mcq-property-box\\controller.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>controller.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;controllers/region-controller&#39;</span>
+    <span class="s">&#39;apps/content-creator/property-dock/mcq-property-box/views&#39;</span>
+    <span class="s">&#39;apps/content-creator/property-dock/mcq-property-box/marksview&#39;</span><span class="p">]</span>
+    <span class="p">,</span><span class="nf">(App,RegionController)-&gt;</span>
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.PropertyDock.McqPropertyBox&quot;</span><span class="p">,</span>
+      <span class="nf">(McqPropertyBox, App, Backbone, Marionette, $, _)-&gt;</span>
+
+        <span class="k">class</span> <span class="nx">McqPropertyBox</span><span class="p">.</span><span class="nx">Controller</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+          <span class="nv">initialize : </span><span class="nf">(options)-&gt;</span>
+
+            <span class="vi">@model = </span><span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+            
+
+            <span class="vi">@layout = </span><span class="nx">@_getView</span> <span class="nx">@model</span>
+
+            <span class="nx">@listenTo</span> <span class="nx">@layout</span><span class="p">,</span><span class="s">&quot;change:option:number&quot;</span><span class="p">,</span><span class="nf">(number)=&gt;</span>
+              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;optioncount&#39;</span><span class="p">,</span><span class="nb">parseInt</span> <span class="nx">number</span>
+
+            <span class="nx">@listenTo</span> <span class="nx">@layout</span><span class="p">,</span><span class="s">&quot;show:individual:marks:table&quot;</span><span class="p">,</span> <span class="o">=&gt;</span>
+                <span class="nv">marksView = </span><span class="nx">@_getMarksView</span> <span class="nx">@model</span>
+                <span class="nx">@layout</span><span class="p">.</span><span class="nx">individualMarksRegion</span><span class="p">.</span><span class="nx">show</span> <span class="nx">marksView</span>
+
+            <span class="nx">@listenTo</span> <span class="nx">@layout</span><span class="p">,</span> <span class="s">&quot;hide:individual:marks:table&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+                <span class="nx">@layout</span><span class="p">.</span><span class="nx">individualMarksRegion</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+
+            <span class="nx">@show</span> <span class="nx">@layout</span>
+
+          <span class="nx">_getView</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
+
+            <span class="k">new</span> <span class="nx">McqPropertyBox</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">PropertyView</span>
+                <span class="nv">model : </span><span class="nx">model</span>
+
+          <span class="nx">_getMarksView</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
+
+            <span class="k">new</span> <span class="nx">McqPropertyBox</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">MarksView</span>
+              <span class="nv">collection : </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;elements&#39;</span>
+
+          <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
+            <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span> <span class="s">&#39;ele&#39;</span><span class="o">+</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;meta_id&#39;</span><span class="p">),</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">@model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">())</span>
+
+
+
+
+
+        <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:mcq:properties&quot;</span><span class="p">,</span><span class="nf">(options)-&gt;</span>
+          <span class="k">new</span> <span class="nx">McqPropertyBox</span><span class="p">.</span><span class="nx">Controller</span>
+              <span class="nv">region : </span><span class="nx">options</span><span class="p">.</span><span class="nx">region</span>
+              <span class="nv">model : </span><span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

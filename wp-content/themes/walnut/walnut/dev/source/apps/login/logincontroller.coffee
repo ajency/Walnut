@@ -29,6 +29,8 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 						if resp.error
 							@view.triggerMethod 'login:fail', resp
 						else
+							user = App.request "get:user:model"
+							user.set response
 							@view.close()
 
 				authController = App.request "get:auth:controller", authOptions

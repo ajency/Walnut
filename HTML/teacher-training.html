@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Walnut Learn - Textbooks</title>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+
+	<!-- NEED TO WORK ON -->
+
+	<link href="assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
+
+	<!-- BEGIN CORE JS FRAMEWORK--> 
+	<script src="assets/plugins/jquery-1.8.3.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/boostrapv3/js/bootstrap.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/breakpoints.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript"></script> 
+	<!-- END CORE JS FRAMEWORK --> 
+	<!-- BEGIN PAGE LEVEL JS --> 	
+	<script src="assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript"></script> 	
+	<script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/pace/pace.min.js" type="text/javascript"></script>  
+	<script src="assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
+	<!-- END PAGE LEVEL PLUGINS --> 	
+	
+	<!-- BEGIN CORE TEMPLATE JS --> 
+	<script src="assets/js/core.js" type="text/javascript"></script> 
+	<script src="assets/js/chat.js" type="text/javascript"></script> 
+	<script src="assets/js/demo.js" type="text/javascript"></script> 
+	<!-- END CORE TEMPLATE JS -->
+	
+	<script src="assets/js/search_results.js" type="text/javascript"></script><!--Search js-->
+	<script src="assets/plugins/jquery-mixitup/jquery.mixitup.min.js" type="text/javascript"></script><!--Search js-->
+
+	<!-- END NEED TO WORK ON -->
+
+</head>
+<body class="">
+<!-- BEGIN HEADER -->
+<div class="header navbar navbar-inverse"> 
+	<!-- BEGIN TOP NAVIGATION BAR -->
+	<div class="navbar-inner">
+		<!-- BEGIN NAVIGATION HEADER -->
+		<div class="header-seperation"> 
+			<!-- BEGIN MOBILE HEADER -->
+			<ul class="nav pull-left notifcation-center" id="main-menu-toggle-wrapper" style="display:none">	
+				<li class="dropdown">
+					<a id="main-menu-toggle" href="#main-menu" class="">
+						<div class="iconset top-menu-toggle-white"></div>
+					</a>
+				</li>		 
+			</ul>
+			<!-- END MOBILE HEADER -->
+			<!-- BEGIN LOGO -->	
+			<a href="#">
+				<img src="assets/img/logo.png" class="logo" alt="" data-src="assets/img/walnutlearn.png" data-src-retina="assets/img/logo2x.png" width="106" height="21"/>
+			</a>
+			<!-- END LOGO --> 
+			<!-- BEGIN LOGO NAV BUTTONS -->
+			<ul class="nav pull-right notifcation-center">	
+				
+				<!-- BEGIN MOBILE CHAT TOGGLER -->
+				<li class="dropdown" id="portrait-chat-toggler" style="display:none">
+					<a href="#sidr" class="chat-menu-toggle">
+						<div class="iconset top-chat-white"></div>
+					</a>
+				</li>
+				<!-- END MOBILE CHAT TOGGLER -->				        
+			</ul>
+			<!-- END LOGO NAV BUTTONS -->
+		</div>
+		<!-- END NAVIGATION HEADER -->
+		<!-- BEGIN CONTENT HEADER -->
+		<div class="header-quick-nav"> 
+			<!-- BEGIN HEADER LEFT SIDE SECTION -->
+			<div class="pull-left"> 
+				<!-- BEGIN SLIM NAVIGATION TOGGLE -->
+				<ul class="nav quick-section">
+					<li class="quicklinks">
+						<a href="#" class="" id="layout-condensed-toggle">
+							<div class="iconset top-menu-toggle-dark"></div>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks"><a href="#" class=""><div class="iconset top-reload"></div></a></li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks dropdown">
+						<a href="#" class="dropdown-toggle">
+							<div class="iconset top-messages"></div>
+							<span class="badge" id="msgs-badge">2</span>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+				</ul>
+				<!-- END SLIM NAVIGATION TOGGLE -->
+				<div class="chat-toggler">	
+					<!-- BEGIN NOTIFICATION CENTER -->
+					<a href="#" class="dropdown-toggle" id="my-task-list" data-placement="bottom" data-content="" data-toggle="dropdown" data-original-title="Notifications">
+						<div class="user-details"> 
+							<div class="username">
+								Notifications	<span class="badge badge-important">3</span>								
+							</div>						
+						</div> 
+						<div class="iconset top-down-arrow"></div>
+					</a>	
+					<div id="notification-list" style="display:none">
+						<div style="width:300px">
+							<!-- BEGIN NOTIFICATION MESSAGE -->
+							<div class="notification-messages info">
+								<div class="user-profile">
+									<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+								</div>
+								<div class="message-wrapper">
+									<div class="heading">Title of Notification</div>
+									<div class="description">Description...</div>
+									<div class="date pull-left">A min ago</div>										
+								</div>
+								<div class="clearfix"></div>									
+							</div>
+							<!-- END NOTIFICATION MESSAGE -->	
+						</div>				
+					</div>
+					<!-- END NOTIFICATION CENTER -->
+				</div>
+				<!-- BEGIN HEADER QUICK LINKS -->
+				<ul class="nav quick-section">
+
+				</ul>
+				<!-- BEGIN HEADER QUICK LINKS -->
+									
+			</div>
+			<!-- END HEADER LEFT SIDE SECTION -->
+			<!-- BEGIN HEADER RIGHT SIDE SECTION -->
+			<div class="pull-right"> 
+			<div class="chat-toggler">	
+					<!-- BEGIN PROFILE PICTURE -->
+					<div class="profile-pic"> 
+						<img src="assets/img/profiles/avatar_small.jpg" alt="" data-src="assets/img/profiles/avatar_small.jpg" data-src-retina="assets/img/profiles/avatar_small2x.jpg" width="35" height="35" /> 
+					</div>  
+					<!-- END PROFILE PICTURE -->     			
+				</div>
+				<!-- BEGIN HEADER NAV BUTTONS -->
+				<ul class="nav quick-section2">
+					<!-- BEGIN SETTINGS -->
+					<li class="quicklinks"> 
+						<a data-toggle="dropdown" class="dropdown-toggle pull-right" href="#" id="user-options">						
+							<div class="iconset top-settings-dark"></div> 	
+						</a>
+						<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="user-options">
+							<li><a href="#">My Account</a></li>
+							<li class="divider"></li>                
+							<li><a href="#"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+						</ul>
+					</li>
+					<!-- END SETTINGS -->
+					<li class="quicklinks"><span class="h-seperate"></span></li> 
+					<!-- BEGIN CHAT SIDEBAR TOGGLE -->
+					<li class="quicklinks"> 	
+						<a id="chat-menu-toggle" href="#sidr" class="chat-menu-toggle">
+							<div class="iconset top-chat-dark"><span class="badge badge-important hide" id="chat-message-count">1</span></div>
+						</a> 
+						<!-- BEGIN OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+						<div class="simple-chat-popup chat-menu-toggle hide">
+							<div class="simple-chat-popup-arrow"></div>
+							<div class="simple-chat-popup-inner">
+								<div style="width:100px">
+									<div class="semi-bold">Name</div>
+									<div class="message">Message...</div>
+								</div>
+							</div>
+						</div>
+						<!-- END OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+					</li>
+					<!-- END CHAT SIDEBAR TOGGLE --> 
+				</ul>
+				<!-- END HEADER NAV BUTTONS -->
+			</div>
+			<!-- END HEADER RIGHT SIDE SECTION -->
+		</div> 
+		<!-- END CONTENT HEADER --> 
+	</div>
+	<!-- END TOP NAVIGATION BAR --> 
+</div>
+<!-- END HEADER -->
+	
+<!-- BEGIN CONTENT -->
+<div class="page-container row-fluid">
+	<!-- BEGIN SIDEBAR -->
+	<!-- BEGIN MENU -->
+	<div class="page-sidebar" id="main-menu"> 
+		  <div class="page-sidebar-wrapper" id="main-menu-wrapper">
+		
+		<!-- BEGIN SIDEBAR MENU -->	
+		<p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
+		<ul>	
+   
+			<!-- BEGIN ONE LEVEL MENU -->
+			<li class="start active">
+				<a href="javascript:;">
+					<i class="icon-custom-ui"></i>
+					<span class="title">Content Management</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Textbooks</a></li>
+				</ul>
+			</li>
+			<!-- END ONE LEVEL MENU -->
+		
+		</ul>
+		<!-- END SIDEBAR MENU -->
+		<!-- BEGIN SIDEBAR WIDGETS -->
+		<div class="side-bar-widgets">
+
+		</div>
+		<div class="clearfix"></div>
+		<!-- END SIDEBAR WIDGETS --> 
+	</div>
+	</div>
+	<!-- BEGIN SCROLL UP HOVER -->
+	<a href="#" class="scrollup">Scroll</a>
+	<!-- END SCROLL UP HOVER -->
+	<!-- END MENU -->
+	<!-- BEGIN SIDEBAR FOOTER WIDGET -->
+	<div class="footer-widget">		
+
+		<div class="pull-right">
+			<a href="#">Logout <i class="fa fa-power-off"></i></a>
+		</div>
+	</div>
+	<!-- END SIDEBAR FOOTER WIDGET -->
+	<!-- END SIDEBAR --> 
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="page-content"> 
+		    <div class="content">
+      <ul class="breadcrumb">
+        <li>
+          <p>Dashboard</p>
+        </li>
+        <li><a href="#" class="active">Training</a> </li>
+      </ul>
+      <div class="tiles white grid simple vertical green">
+					<div class="grid-title no-border">
+						<h4 class="">5 <span class="semi-bold"></span></h4>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+						</div>
+						</div>
+						<div class="grid-body no-border" style="overflow: hidden; display: block;">
+						<div class="row ">
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Number of Students</label>
+									N/A
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Subjects</label>
+									Chemistry, Biology
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<!-- <label class="form-label">Physical Requirements</label>
+									Lorem Ipsum is simply dummy text of the printing and typesetting industry. -->
+								</div>
+							</div>												 
+						</div>
+					</div>
+				</div>
+      <!--<div class="pull-left" id="Filters">
+        <div class="btn-group"> <a href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-demo-space"> <span class="anim150">Status</span> <span class="caret"></span> </a>
+          <ul class="dropdown-menu">
+            <li class="active" data-filter="all" data-dimension="recreation"><a href="#">All</a></li>
+            <li data-filter="completed" data-dimension="recreation"><a href="#">Completed</a></li>
+            <li data-filter="progress" data-dimension="recreation"><a href="#">In Progress</a></li>
+            <li data-filter="notstarted" data-dimension="recreation"><a href="#">Not yet Started</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="clearfix"></div>-->
+      <div id="textbooks" class="takeClass">
+        <!-- "TABLE" HEADER CONTAINING SORT BUTTONS (HIDDEN IN GRID MODE)-->
+        <div class="list_header">
+
+          <div class="meta name active desc" id="SortByName"> Name &nbsp; <span class="sort anim150 asc active" data-sort="data-name" data-order="desc"></span> <span class="sort anim150 desc" data-sort="data-name" data-order="asc"></span> </div>
+
+          <div class="meta modules">Subjects <span class="sort anim150 asc" data-sort="data-class" data-order="desc"></span> <span class="sort anim150 desc" data-sort="data-class" data-order="asc"></span></div>
+
+          <div class="meta rec">Modules</div>
+        </div>
+        <!-- FAIL ELEMENT -->
+        <div class="fail_element anim250">Sorry &mdash; we could not find any Textbooks matching matching these criteria</div>
+        <!-- BEGIN LIST OF textbooks (MANY OF THESE ELEMENTS ARE VISIBLE ONLY IN LIST MODE)-->
+        <ul>
+		<li class="txtbook mix" data-name="Acadia" data-class="10" data-area="47452.80">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/acadia.jpg" alt="" /> </div>
+            <div class="titles">
+              <h2><a href="#">Acadia</a></h2>
+              <p><em>Maine</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Chemistry</p>
+          </div>
+          <div class="meta rec">
+            <p>8</p>
+          </div>
+        </li>
+        <li class="mix txtbook" data-name="Arches" data-class="5" data-area="76678.98">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/arches.jpg" onload="" alt="" /> </div>
+            <div class="titles">
+              <h2>Arches</h2>
+              <p><em>Utah</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Biology</p>
+          </div>
+          <div class="meta rec">
+            <p>10</p>
+          </div>
+        </li>
+        <li class="mix txtbook" data-name="Crater Lake" data-class="2" data-area="183224.05">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/crater.jpg" onload="" alt=""/> </div>
+            <div class="titles">
+              <h2>Crater Lake</h2>
+              <p><em>Oregon</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Biology</p>
+          </div>
+          <div class="meta rec">
+            <p>10</p>
+          </div>
+        </li>
+        <li class="mix txtbook" data-name="Denali" data-class="6" data-area="4740911.37">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/denali.jpg" onload="" alt=""/> </div>
+            <div class="titles">
+              <h2>Denali</h2>
+              <p><em>Alaska</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Chemistry</p>
+          </div>
+          <div class="meta rec">
+            <p>4</p>
+          </div>
+        </li>
+        <li class="mix txtbook" data-name="Glacier Bay" data-class="5" data-area="3223383.66">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/glacier.jpg" onload="" alt=""/> </div>
+            <div class="titles">
+              <h2>Glacier Bay</h2>
+              <p><em>Alaska</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Biology</p>
+          </div>
+          <div class="meta rec">
+            <p>6</p>
+          </div>
+        </li>
+        <li class="mix txtbook" data-name="Grand Canyon" data-class="8" data-area="1217261.75">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/grand.jpg" onload="" alt=""/> </div>
+            <div class="titles">
+              <h2>Grand Canyon</h2>
+              <p><em>Arizona</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Chemistry</p>
+          </div>
+          <div class="meta rec">
+            <p>5</p>
+          </div>
+        </li>
+        <li class="mix txtbook" data-name="Great Smoky Mountains" data-class="4" data-area="522418.90">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/great.jpg" onload="" alt=""/> </div>
+            <div class="titles">
+              <h2>Great Smoky Mountains</h2>
+              <p><em>Tennessee, North Carolina</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Biology</p>
+          </div>
+          <div class="meta rec">
+            <p>12</p>
+          </div>
+        </li>
+        <li class="mix txtbook" data-name="Haleakala" data-class="10" data-area="33264.62">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/haleakala.jpg" onload="" alt=""/> </div>
+            <div class="titles">
+              <h2>Haleakala</h2>
+              <p><em>Hawaii</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Chemistry</p>
+          </div>
+          <div class="meta rec">
+            <p>6</p>
+          </div>
+        </li>
+        <li class="mix txtbook" data-name="Yellowstone" data-class="3" data-area="2219790.71">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/yellowstone.jpg" onload="" alt=""/> </div>
+            <div class="titles">
+              <h2>Yellowstone</h2>
+              <p><em>Wyoming, Montana, Idaho</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Chemistry</p>
+          </div>
+          <div class="meta rec">
+            <p>2</p>
+          </div>
+        </li>
+        <li class="mix txtbook" data-name="Intermountain" data-class="9" data-area="146597.40">
+          <div class="meta name">
+            <div class="img_wrapper"> <img src="assets/img/others/zion.jpg" onload="" alt=""/> </div>
+            <div class="titles">
+              <h2>Zion</h2>
+              <p><em>Utah</em></p>
+            </div>
+          </div>
+          <div class="meta modules">
+            <p>Chemistry</p>
+          </div>
+          <div class="meta rec">
+            <p>8</p>
+          </div>
+        </li>
+        <!-- END LIST OF textbooks -->
+		</ul>
+      </div>
+    </div>
+    <!-- END PAGE -->
+	</div>
+	<!-- END PAGE CONTAINER -->
+</div>
+<!-- END CONTENT --> 
+
+<!-- BEGIN CHAT --> 
+<div id="sidr" class="chat-window-wrapper">
+	<div id="main-chat-wrapper">
+		<div class="chat-window-wrapper fadeIn" id="chat-users">
+			<!-- BEGIN CHAT HEADER -->
+			<div class="chat-header">	
+				<!-- BEGIN CHAT SEARCH BAR -->
+				<div class="pull-left">
+					<input type="text" placeholder="search">
+				</div>
+				<!-- END CHAT SEARCH BAR -->
+				<!-- BEGIN CHAT QUICKLINKS -->		
+				<div class="pull-right">
+					<a href="#" class=""><div class="iconset top-settings-dark"></div></a>
+				</div>
+				<!-- END CHAT QUICKLINKS -->			
+			</div>
+			<!-- END CHAT HEADER -->	
+			<!-- BEGIN GROUP WIDGET -->
+			<div class="side-widget">
+				<div class="side-widget-title">group chats</div>
+				<div class="side-widget-content">
+					<div id="groups-list">
+						<ul class="groups">
+							<li><a href="#"><div class="status-icon green"></div>Group Chat 1</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END GROUP WIDGET -->
+			<!-- BEGIN FAVORITES WIDGET -->
+			<div class="side-widget fadeIn">
+				<div class="side-widget-title">favorites</div>
+				<div class="side-widget-content">
+					<!-- BEGIN SAMPLE CHAT -->
+					<div class="user-details-wrapper active" data-chat-status="online" data-chat-user-pic="assets/img/profiles/d.jpg" data-chat-user-pic-retina="assets/img/profiles/d2x.jpg" data-user-name="Jane Smith">
+						<!-- BEGIN PROFILE PIC -->
+						<div class="user-profile">
+								<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+							</div>
+						<!-- END PROFILE PIC -->
+						<!-- BEGIN MESSAGE -->
+						<div class="user-details">
+								<div class="user-name">Jane Smith</div>
+								<div class="user-more">Message...</div>
+							</div>
+						<!-- END MESSAGE -->
+						<!-- BEGIN MESSAGES BADGE -->
+						<div class="user-details-status-wrapper">
+								<span class="badge badge-important">3</span>
+							</div>
+						<!-- END MESSAGES BADGE -->
+						<!-- BEGIN STATUS -->
+						<div class="user-details-count-wrapper">
+								<div class="status-icon green"></div>
+							</div>
+						<!-- END STATUS -->
+						<div class="clearfix"></div>
+					</div>
+					<!-- END SAMPLE CHAT -->	
+				</div>
+			</div>
+			<!-- END FAVORITES WIDGET -->
+			<!-- BEGIN MORE FRIENDS WIDGET -->
+			<div class="side-widget">
+				<div class="side-widget-title">more friends</div>
+				<div class="side-widget-content" id="friends-list">
+					<!-- BEGIN SAMPLE CHAT -->
+					<div class="user-details-wrapper" data-chat-status="online" data-chat-user-pic="assets/img/profiles/d.jpg" data-chat-user-pic-retina="assets/img/profiles/d2x.jpg" data-user-name="Jane Smith">
+						<!-- BEGIN PROFILE PIC -->
+						<div class="user-profile">
+							<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+						</div>
+						<!-- END PROFILE PIC -->
+						<!-- BEGIN MESSAGE -->
+						<div class="user-details">
+							<div class="user-name">Jane Smith</div>
+							<div class="user-more">Message...</div>
+						</div>
+						<!-- END MESSAGE -->
+						<!-- BEGIN MESSAGES BADGE -->
+						<div class="user-details-status-wrapper">
+							<span class="badge badge-important">3</span>
+						</div>
+						<!-- END MESSAGES BADGE -->
+						<!-- BEGIN STATUS -->
+						<div class="user-details-count-wrapper">
+							<div class="status-icon green"></div>
+						</div>
+						<!-- END STATUS -->
+						<div class="clearfix"></div>
+					</div>
+					<!-- END SAMPLE CHAT -->
+				</div>		
+			</div>
+			<!-- END MORE FRIENDS WIDGET -->
+		</div>		
+		<!-- BEGIN DUMMY CHAT CONVERSATION -->
+		<div class="chat-window-wrapper fadeIn" id="messages-wrapper" style="display:none">
+			<!-- BEGIN CHAT HEADER BAR -->
+			<div class="chat-header">	
+				<!-- BEGIN SEARCH BAR -->
+				<div class="pull-left">
+					<input type="text" placeholder="search">
+				</div>		
+				<!-- END SEARCH BAR -->
+				<!-- BEGIN CLOSE TOGGLE -->
+				<div class="pull-right">
+					<a href="#" class=""><div class="iconset top-settings-dark"></div></a>
+				</div>	
+				<!-- END CLOSE TOGGLE -->				
+			</div>
+			<div class="clearfix"></div>
+			<!-- END CHAT HEADER BAR -->
+			<!-- BEGIN CHAT BODY -->
+			<div class="chat-messages-header">
+				<div class="status online"></div>
+				<span class="semi-bold">Jane Smith(Typing..)</span>
+				<a href="#" class="chat-back"><i class="icon-custom-cross"></i></a>
+			</div>
+			<!-- BEGIN CHAT MESSAGES CONTAINER -->
+			<div class="chat-messages">
+				<!-- BEGIN TIME STAMP EXAMPLE -->
+				<div class="sent_time">Yesterday 11:25pm</div>
+				<!-- END TIME STAMP EXAMPLE -->
+				<!-- BEGIN EXAMPLE CHAT MESSAGE -->
+				<div class="user-details-wrapper">
+					<!-- BEGIN MESSENGER PROFILE -->
+					<div class="user-profile">
+						<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+					</div>
+					<!-- END MESSENGER PROFILE -->
+					<!-- BEGIN MESSENGER MESSAGE -->
+					<div class="user-details">
+						<div class="bubble">Hello, You there?</div>
+					</div>
+					<!-- END MESSENGER MESSAGE -->					
+					<div class="clearfix"></div>
+					<!-- BEGIN TIMESTAMP ON CLICK TOGGLE -->
+					<div class="sent_time off">Yesterday 11:25pm</div>
+					<!-- END TIMESTAMP ON CLICK TOGGLE -->
+				</div>
+				<!-- END EXAMPLE CHAT MESSAGE -->
+				<!-- BEGIN TIME STAMP EXAMPLE -->
+				<div class="sent_time">Today 11:25pm</div>
+				<!-- BEGIN TIME STAMP EXAMPLE -->				
+				<!-- BEGIN EXAMPLE CHAT MESSAGE (FROM SELF) -->
+				<div class="user-details-wrapper pull-right">
+					<!-- BEGIN MESSENGER MESSAGE -->
+					<div class="user-details">
+						<div class="bubble sender">Let me know when you free</div>
+					</div>					
+					<!-- END MESSENGER MESSAGE -->
+					<div class="clearfix"></div>
+					<!-- BEGIN TIMESTAMP ON CLICK TOGGLE -->
+					<div class="sent_time off">Sent On Tue, 2:45pm</div>
+					<!-- END TIMESTAMP ON CLICK TOGGLE -->
+				</div>	
+				<!-- END EXAMPLE CHAT MESSAGE (FROM SELF) -->	
+			</div>
+			<!-- END CHAT MESSAGES CONTAINER -->
+		</div>
+		<div class="chat-input-wrapper" style="display:none">
+			<textarea id="chat-message-input" rows="1" placeholder="Type your message"></textarea>
+		</div>
+		<div class="clearfix"></div>
+		<!-- END DUMMY CHAT CONVERSATION -->
+	</div>
+</div>
+<!-- END CHAT --> 
+
+<script>
+	$('#textbooks').mixitup({
+		layoutMode: 'list', // Start in list mode (display: block) by default
+		listClass: 'list', // Container class for when in list mode
+		gridClass: 'grid', // Container class for when in grid mode
+		effects: ['fade','blur'], // List of effects 
+		listEffects: ['fade','rotateX'] // List of effects ONLY for list mode
+	});
+
+	$(".txtbook").click(function(){
+	     window.location=$(this).find("a").attr("href"); 
+	     return false;
+	});
+</script>
+</body>
+</html>

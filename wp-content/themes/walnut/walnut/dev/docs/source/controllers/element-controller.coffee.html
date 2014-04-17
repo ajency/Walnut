@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>element-controller.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../", thisFile = "source\\controllers\\element-controller.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>element-controller.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&quot;marionette&quot;</span>
+    <span class="s">&quot;app&quot;</span><span class="p">],</span> <span class="nf">(Marionette, App) -&gt;</span>
+
+  <span class="k">class</span> <span class="nx">AppController</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Controller</span>
+    
+    <span class="nv">constructor: </span><span class="nf">(options = {}) -&gt;</span>
+      <span class="vi">@_instance_id = </span><span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&quot;elementcontroller&quot;</span> 
+      <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;register:instance&quot;</span><span class="p">,</span> <span class="nx">@</span><span class="p">,</span> <span class="nx">@_instance_id</span>
+      <span class="k">super</span> <span class="nx">options</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>close the controller. 
+unregister the controller instance from application object</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nv">close: </span><span class="nf">(args...) -&gt;</span>
+      <span class="k">delete</span> <span class="nx">@layout</span>
+      <span class="k">delete</span> <span class="nx">@options</span>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;unregister:instance&quot;</span><span class="p">,</span> <span class="nx">@</span><span class="p">,</span> <span class="nx">@_instance_id</span>
+      <span class="k">super</span> <span class="nx">args</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>add new element to the section</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nx">add</span><span class="o">:</span><span class="nf">(layout, section)-&gt;</span>
+      <span class="nx">@listenTo</span> <span class="nx">layout</span><span class="p">,</span><span class="s">&#39;close&#39;</span><span class="p">,</span><span class="nx">@close</span>
+      <span class="nv">type = </span><span class="nx">layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&quot;element&quot;</span>
+      <span class="k">if</span> <span class="nx">section</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;li[data-element=&#39;</span><span class="si">#{</span><span class="nx">type</span><span class="si">}</span><span class="s">&#39;]&quot;</span><span class="p">).</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
+        <span class="nx">section</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;li[data-element=&#39;</span><span class="si">#{</span><span class="nx">type</span><span class="si">}</span><span class="s">&#39;]&quot;</span><span class="p">).</span><span class="nx">replaceWith</span> <span class="nx">layout</span><span class="p">.</span><span class="nx">$el</span>
+      <span class="k">else</span>
+        <span class="nx">section</span><span class="p">.</span><span class="nx">append</span> <span class="nx">layout</span><span class="p">.</span><span class="nx">$el</span>
+        
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>remove empty-column class if found</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">section</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;empty-column&#39;</span>
+
+      <span class="nx">layout</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span>
+      <span class="nx">layout</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&#39;show&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>for row add hidden fields</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">@layout</span><span class="p">.</span><span class="nx">addHiddenFields</span><span class="p">()</span> <span class="k">if</span> <span class="nx">layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;element&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;Row&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>check if element need save </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">if</span> <span class="o">not</span> <span class="nx">layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">isNew</span><span class="p">()</span> <span class="o">or</span> <span class="nx">layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;element&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;Row&#39;</span>
+        <span class="nx">layout</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&quot;before:render:element&quot;</span>
+        <span class="nx">@renderElement</span><span class="p">()</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>content-selection-app.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../doc-style.css" />
+  <script src="../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../", thisFile = "source\\apps\\content-group\\edit-group\\content-selection\\content-selection-app.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>content-selection-app.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;controllers/region-controller&#39;</span>
+    <span class="s">&#39;text!apps/content-group/edit-group/content-selection/templates/content-selection.html&#39;</span><span class="p">],</span> <span class="nf">(App, RegionController, contentSelectionTpl)-&gt;</span>
+
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentSelectionApp.Controller&quot;</span><span class="p">,</span> <span class="nf">(Controller, App)-&gt;</span>
+
+    <span class="k">class</span> <span class="nx">Controller</span><span class="p">.</span><span class="nx">ContentSelectionController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+      <span class="nx">initialize</span> <span class="o">:</span><span class="nf">(opts) -&gt;</span>
+        <span class="vi">@textbooksCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:textbooks&quot;</span>
+        <span class="vi">@contentPiecesCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:content:pieces&quot;</span>
+        <span class="p">{</span><span class="nx">model</span><span class="p">}</span><span class="o">=</span> <span class="nx">opts</span>
+
+        <span class="vi">@contentGroupCollection= </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:content:pieces:of:group&quot;</span><span class="p">,</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;id&#39;</span>
+
+        <span class="nv">tableConfig = </span>
+          <span class="s">&#39;data&#39;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+              <span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Question&#39;</span>
+              <span class="s">&#39;value&#39;</span><span class="o">:</span><span class="s">&#39;post_title&#39;</span>
+            <span class="p">}</span>
+            <span class="p">{</span>
+              <span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Creator&#39;</span>
+            <span class="p">}</span>
+            <span class="p">{</span>
+              <span class="s">&#39;label&#39;</span>   <span class="o">:</span><span class="s">&#39;Last Modified&#39;</span>
+              <span class="s">&#39;value&#39;</span>   <span class="o">:</span><span class="s">&#39;post_modified&#39;</span>
+              <span class="s">&#39;dateField&#39;</span> <span class="o">:</span> <span class="kc">true</span>
+            <span class="p">}</span>
+            <span class="p">{</span>
+              <span class="s">&#39;label&#39;</span>   <span class="o">:</span><span class="s">&#39;Content Type&#39;</span>
+            <span class="p">}</span>
+          <span class="p">]</span>
+          <span class="s">&#39;idAttribute&#39;</span><span class="o">:</span> <span class="s">&#39;ID&#39;</span> <span class="c1"># id attribute of the model # default = &#39;id&#39;</span>
+          <span class="s">&#39;selectbox&#39;</span><span class="o">:</span> <span class="kc">true</span>
+          <span class="s">&#39;pagination&#39;</span><span class="o">:</span> <span class="kc">true</span>
+
+        <span class="vi">@view= </span><span class="nv">view = </span><span class="nx">@_getContentSelectionView</span><span class="p">(</span><span class="nx">@contentPiecesCollection</span><span class="p">,</span> <span class="nx">tableConfig</span><span class="p">)</span>
+
+        <span class="nx">@show</span> <span class="nx">view</span><span class="p">,</span> <span class="p">(</span><span class="nx">loading</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span> <span class="nv">entities : </span><span class="p">[</span><span class="nx">@textbooksCollection</span><span class="p">])</span>
+
+        <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;fetch:chapters&quot;</span> <span class="o">:</span><span class="nf">(term_id) =&gt;</span>
+          <span class="nv">chaptersCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:chapters&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;parent&#39;</span><span class="o">:</span> <span class="nx">term_id</span><span class="p">)</span>
+          <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;when:fetched&quot;</span><span class="p">,</span> <span class="nx">chaptersCollection</span><span class="p">,</span> <span class="o">=&gt;</span>
+            <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&#39;fetch:chapters:complete&#39;</span><span class="p">,</span> <span class="nx">chaptersCollection</span>
+
+        <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;fetch:sections:subsections&quot;</span> <span class="o">:</span><span class="nf">(term_id) -&gt;</span>
+          <span class="nv">allSectionsCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:subsections:by:chapter:id&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;child_of&#39;</span><span class="o">:</span> <span class="nx">term_id</span><span class="p">)</span>
+          <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;when:fetched&quot;</span><span class="p">,</span> <span class="nx">allSectionsCollection</span><span class="p">,</span> <span class="o">=&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>make list of sections directly belonging to chapter ie. parent=term_id</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nv">sectionsList= </span><span class="nx">allSectionsCollection</span><span class="p">.</span><span class="nx">where</span> <span class="s">&#39;parent&#39;</span><span class="o">:</span> <span class="nx">term_id</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>all the other sections are listed as subsections</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nv">subsectionsList= </span><span class="nx">_</span><span class="p">.</span><span class="nx">difference</span><span class="p">(</span><span class="nx">allSectionsCollection</span><span class="p">.</span><span class="nx">models</span><span class="p">,</span> <span class="nx">sectionsList</span><span class="p">);</span>
+            <span class="nv">allSections= </span><span class="s">&#39;sections&#39;</span><span class="o">:</span> <span class="nx">sectionsList</span><span class="p">,</span> <span class="s">&#39;subsections&#39;</span><span class="o">:</span> <span class="nx">subsectionsList</span>
+
+            <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&#39;fetch:subsections:complete&#39;</span><span class="p">,</span> <span class="nx">allSections</span>
+
+        <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;add:content:pieces&quot;</span> <span class="o">:</span><span class="nf">(contentIDs) =&gt;</span>
+
+          <span class="nv">groupContent = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:content:pieces:of:group&quot;</span><span class="p">,</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;id&#39;</span>
+
+          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">contentIDs</span><span class="p">,</span> <span class="nf">(ele,index)=&gt;</span>
+            <span class="nx">groupContent</span><span class="p">.</span><span class="nx">add</span> <span class="nx">@contentPiecesCollection</span><span class="p">.</span><span class="nx">get</span> <span class="nx">ele</span>
+        
+
+        <span class="nx">@listenTo</span> <span class="nx">@contentGroupCollection</span><span class="p">,</span> <span class="s">&#39;content:pieces:of:group:removed&#39;</span><span class="p">,</span> <span class="nx">@contentPieceRemoved</span>
+        
+      <span class="nx">contentPieceRemoved</span><span class="o">:</span><span class="nf">(model)=&gt;</span>
+        <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&quot;content:piece:removed&quot;</span><span class="p">,</span> <span class="nx">model</span>
+
+      <span class="nv">_getContentSelectionView : </span><span class="nf">(collection, tableConfig)=&gt;</span>
+        <span class="k">new</span> <span class="nx">DataContentTableView</span>
+          <span class="nv">collection: </span><span class="nx">collection</span>
+          <span class="nv">tableConfig: </span><span class="nx">tableConfig</span>
+          <span class="nv">templateHelpers: </span>
+            <span class="nx">textbooksFilter</span><span class="o">:</span><span class="p">()</span><span class="o">=&gt;</span>
+              <span class="nv">textbooks= </span><span class="p">[]</span>
+              <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">@textbooksCollection</span><span class="p">.</span><span class="nx">models</span><span class="p">,</span> <span class="nf">(el,ind)-&gt;</span>
+                <span class="nx">textbooks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="o">:</span><span class="nx">el</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">),</span> <span class="s">&#39;id&#39;</span><span class="o">:</span> <span class="nx">el</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;term_id&#39;</span><span class="p">))</span>
+              <span class="p">)</span>
+              <span class="nx">textbooks</span>
+
+    <span class="k">class</span> <span class="nx">DataContentTableView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+      <span class="nv">template      : </span><span class="nx">contentSelectionTpl</span>
+
+      <span class="nv">className       : </span><span class="s">&#39;tiles white grid simple vertical green&#39;</span>
+
+      <span class="nv">events: </span>
+        <span class="s">&#39;change #check_all_div&#39;</span>   <span class="o">:</span> <span class="s">&#39;checkAll&#39;</span>
+        <span class="s">&#39;change .filters&#39;</span>     <span class="o">:</span> <span class="s">&#39;filterTableData&#39;</span> 
+        <span class="s">&#39;change #textbooks-filter&#39;</span>  <span class="o">:</span> <span class="s">&#39;changeTextbooks&#39;</span>       
+        <span class="s">&#39;change #chapters-filter&#39;</span>   <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">@trigger</span> <span class="s">&quot;fetch:sections:subsections&quot;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+        <span class="s">&#39;click #add-content-pieces&#39;</span> <span class="o">:</span> <span class="s">&#39;addContentPieces&#39;</span>
+
+
+      
+      <span class="nv">serializeData: </span><span class="nf">-&gt;</span>
+        <span class="nv">data= </span><span class="k">super</span><span class="p">()</span>
+        <span class="nv">data.tableData= </span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span> <span class="nx">@</span><span class="p">,</span><span class="s">&#39;tableConfig&#39;</span>
+        <span class="nx">data</span>
+
+
+      <span class="nx">onShow</span><span class="o">:=&gt;</span>
+        <span class="nx">@makeDataTable</span><span class="p">(</span><span class="nx">@collection</span><span class="p">.</span><span class="nx">models</span><span class="p">,</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span> <span class="nx">@</span><span class="p">,</span><span class="s">&#39;tableConfig&#39;</span><span class="p">)</span>
+
+
+      <span class="nx">makeRow</span><span class="o">:</span><span class="nf">(item,index,tableData)-&gt;</span>
+
+        <span class="nv">td_ID= </span><span class="s">&#39;id&#39;</span><span class="p">;</span>
+        
+        <span class="k">if</span> <span class="nx">tableData</span><span class="p">.</span><span class="nx">idAttribute</span>
+          <span class="nv">td_ID= </span><span class="nx">tableData</span><span class="p">.</span><span class="nx">idAttribute</span>
+
+        <span class="nv">row = </span><span class="s">&#39;&lt;tr id=&quot;row_&#39;</span><span class="o">+</span><span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">td_ID</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&quot;&gt;&#39;</span>
+
+        <span class="k">if</span> <span class="nx">tableData</span><span class="p">.</span><span class="nx">selectbox</span> 
+          <span class="nx">row</span> <span class="o">+=</span> <span class="s">&#39;&lt;td class=&quot;v-align-middle&quot;&gt;&lt;div class=&quot;checkbox check-default&quot;&gt;</span>
+<span class="s">              &lt;input class=&quot;tab_checkbox&quot; type=&quot;checkbox&quot; value=&quot;&#39;</span><span class="o">+</span><span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">td_ID</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&quot; id=&quot;checkbox&#39;</span><span class="o">+</span><span class="nx">index</span><span class="o">+</span><span class="s">&#39;&quot;&gt;</span>
+<span class="s">              &lt;label for=&quot;checkbox&#39;</span><span class="o">+</span><span class="nx">index</span><span class="o">+</span><span class="s">&#39;&quot;&gt;&lt;/label&gt;</span>
+<span class="s">              &lt;/div&gt;</span>
+<span class="s">            &lt;/td&gt;&#39;</span>
+
+        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">tableData</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="nf">(el,ind)-&gt;</span>
+          <span class="k">if</span> <span class="nx">el</span><span class="p">.</span><span class="nx">value</span>
+            <span class="nv">el_value = </span><span class="nx">item</span><span class="p">.</span><span class="nx">get</span> <span class="nx">el</span><span class="p">.</span><span class="nx">value</span>
+
+          <span class="k">else</span>
+            <span class="nv">slug= </span><span class="nx">_</span><span class="p">.</span><span class="nx">str</span><span class="p">.</span><span class="nx">underscored</span><span class="p">(</span><span class="nx">el</span><span class="p">.</span><span class="nx">label</span><span class="p">)</span>
+            <span class="nv">el_value = </span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span> <span class="nx">slug</span>
+
+
+          <span class="k">if</span> <span class="nx">el</span><span class="p">.</span><span class="nx">dateField</span>
+            <span class="nv">el_value= </span><span class="nx">moment</span><span class="p">(</span><span class="nx">el_value</span><span class="p">).</span><span class="nx">format</span><span class="p">(</span><span class="s">&quot;Do MMM YYYY&quot;</span><span class="p">)</span>
+
+          <span class="nx">row</span> <span class="o">+=</span> <span class="s">&#39;&lt;td&gt; &#39;</span><span class="o">+</span> <span class="nx">el_value</span> <span class="o">+</span> <span class="s">&#39; &lt;/td&gt;&#39;</span>
+          
+
+        <span class="nx">row</span> <span class="o">+=</span><span class="s">&#39;&lt;/tr&gt;&#39;</span>
+
+        <span class="nx">row</span>
+        
+
+      <span class="nx">makeDataTable</span><span class="o">:</span><span class="nf">(dataCollection, tableData)-&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable tbody&#39;</span><span class="p">).</span><span class="nx">empty</span><span class="p">()</span>
+        
+        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">dataCollection</span> <span class="p">,</span> <span class="nf">(item, index)=&gt;</span>
+          <span class="nv">row= </span><span class="nx">@makeRow</span> <span class="nx">item</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">tableData</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable tbody&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">row</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">dataCollection</span><span class="p">)</span> <span class="o">is</span> <span class="mi">0</span>
+          <span class="nv">colspan= </span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="nx">tableData</span><span class="p">.</span><span class="nx">data</span>
+          <span class="k">if</span> <span class="nx">tableData</span><span class="p">.</span><span class="nx">selectbox</span>
+            <span class="nx">colspan</span><span class="o">++</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable tbody&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s">&#39;&lt;td id=&quot;empty_row&quot; colspan=&quot;&#39;</span><span class="o">+</span><span class="nx">colspan</span><span class="o">+</span><span class="s">&#39;&quot;&gt;No Data found&lt;/td&gt;&#39;</span><span class="p">)</span>
+
+        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#dataContentTable&#39;</span><span class="p">).</span><span class="nx">tablesorter</span><span class="p">();</span>
+
+        <span class="k">if</span> <span class="nx">tableData</span><span class="p">.</span><span class="nx">pagination</span>
+          <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">dataContentTable&quot;</span><span class="p">).</span><span class="nx">trigger</span><span class="p">(</span><span class="s">&quot;updateCache&quot;</span><span class="p">);</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#pager&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+          <span class="nv">pagerDiv = </span><span class="s">&#39;&lt;div id=&quot;pager&quot; class=&quot;pager&quot;&gt;</span>
+<span class="s">                &lt;i class=&quot;fa fa-chevron-left prev&quot;&gt;&lt;/i&gt;</span>
+<span class="s">                &lt;span style=&quot;padding:0 15px&quot;  class=&quot;pagedisplay&quot;&gt;&lt;/span&gt; </span>
+<span class="s">                &lt;i class=&quot;fa fa-chevron-right next&quot;&gt;&lt;/i&gt;          </span>
+<span class="s">                &lt;select class=&quot;pagesize&quot;&gt;</span>
+<span class="s">                    &lt;option selected=&quot;selected&quot; value=&quot;5&quot;&gt;5&lt;/option&gt;</span>
+<span class="s">                    &lt;option value=&quot;10&quot;&gt;10&lt;/option&gt;</span>
+<span class="s">                    &lt;option value=&quot;20&quot;&gt;20&lt;/option&gt;</span>
+<span class="s">                    &lt;option value=&quot;30&quot;&gt;30&lt;/option&gt;</span>
+<span class="s">                    &lt;option value=&quot;40&quot;&gt;40&lt;/option&gt;</span>
+<span class="s">                &lt;/select&gt;</span>
+<span class="s">              &lt;/div&gt;&#39;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable&#39;</span><span class="p">).</span><span class="nx">after</span><span class="p">(</span><span class="nx">pagerDiv</span><span class="p">)</span>
+          <span class="nv">pagerOptions = </span>
+            <span class="nv">totalRows : </span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">dataCollection</span><span class="p">)</span>
+            <span class="nv">container: </span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;.pager&quot;</span><span class="p">),</span>       
+            <span class="nv">output: </span><span class="s">&#39;{startRow} to {endRow} of {totalRows}&#39;</span>
+          
+          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#dataContentTable&#39;</span><span class="p">).</span><span class="nx">tablesorterPager</span> <span class="nx">pagerOptions</span>
+
+      <span class="nx">checkAll</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="k">if</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#check_all&#39;</span><span class="p">).</span><span class="o">is</span><span class="p">(</span><span class="s">&#39;:checked&#39;</span><span class="p">)</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable .tab_checkbox&#39;</span><span class="p">).</span><span class="nx">trigger</span><span class="p">(</span><span class="s">&#39;click&#39;</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s">&#39;checked&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+        <span class="k">else</span> 
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable .tab_checkbox&#39;</span><span class="p">).</span><span class="nx">removeAttr</span><span class="p">(</span><span class="s">&#39;checked&#39;</span><span class="p">)</span>
+
+      <span class="nx">filterTableData</span><span class="o">:</span><span class="nf">(e)=&gt;</span>
+        <span class="nv">filter_id= </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">());</span>
+        <span class="k">if</span> <span class="nx">filter_id</span> 
+          <span class="nv">filtered_data= </span><span class="nx">_</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">@collection</span><span class="p">.</span><span class="nx">models</span><span class="p">,</span> <span class="nf">(item)=&gt;</span>
+              <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;subjects&#39;</span><span class="p">),</span> <span class="nx">filter_id</span><span class="p">))</span>
+                <span class="nx">item</span>
+            <span class="p">)</span>
+        <span class="k">else</span> 
+          <span class="nv">filtered_data= </span><span class="nx">@collection</span><span class="p">.</span><span class="nx">models</span>
+        <span class="nx">@makeDataTable</span><span class="p">(</span><span class="nx">filtered_data</span><span class="p">,</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span> <span class="nx">@</span><span class="p">,</span><span class="s">&#39;tableConfig&#39;</span><span class="p">)</span>
+
+      <span class="nx">changeTextbooks</span><span class="o">:</span><span class="nf">(e)=&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#chapters-filter, #sections-filter, #subsections-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;select chapter first&lt;/option&gt;&#39;</span><span class="p">)</span>
+        <span class="nx">@trigger</span> <span class="s">&quot;fetch:chapters&quot;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+
+      <span class="nx">onFetchChaptersComplete</span><span class="o">:</span><span class="nf">(chapters)-&gt;</span>
+        <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">chapters</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#chapters-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;--select chapter--&lt;/option&gt;&#39;</span><span class="p">);</span>
+          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">chapters</span><span class="p">.</span><span class="nx">models</span><span class="p">,</span> <span class="nf">(chap,index)=&gt;</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#chapters-filter&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s">&#39;&lt;option value=&quot;&#39;</span><span class="o">+</span><span class="nx">chap</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;term_id&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">chap</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&lt;/option&gt;&#39;</span><span class="p">);</span>
+        <span class="k">else</span> 
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#chapters-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No Chapters available&lt;/option&gt;&#39;</span><span class="p">);</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#sections-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#subsections-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No SubSections available&lt;/option&gt;&#39;</span><span class="p">);</span>
+
+      <span class="nx">onFetchSubsectionsComplete</span><span class="o">:</span><span class="nf">(allsections)-&gt;</span>
+        <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">allsections</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span>
+          <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">allsections</span><span class="p">.</span><span class="nx">sections</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#sections-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;--select--&lt;/option&gt;&#39;</span><span class="p">);</span>
+            <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">allsections</span><span class="p">.</span><span class="nx">sections</span><span class="p">,</span> <span class="nf">(section,index)=&gt;</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#sections-filter&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s">&#39;&lt;option value=&quot;&#39;</span><span class="o">+</span><span class="nx">section</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;term_id&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">section</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&lt;/option&gt;&#39;</span><span class="p">);</span>
+          <span class="k">else</span> 
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#sections-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
+
+          <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">allsections</span><span class="p">.</span><span class="nx">subsections</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#subsections-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;--select--&lt;/option&gt;&#39;</span><span class="p">);</span>
+            <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">allsections</span><span class="p">.</span><span class="nx">subsections</span><span class="p">,</span> <span class="nf">(section,index)=&gt;</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#subsections-filter&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s">&#39;&lt;option value=&quot;&#39;</span><span class="o">+</span><span class="nx">section</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;term_id&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">section</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&lt;/option&gt;&#39;</span><span class="p">);</span>
+          <span class="k">else</span> 
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#subsections-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No Sub Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
+        <span class="k">else</span> 
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#sections-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#subsections-filter&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No Sub Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
+
+      <span class="nx">addContentPieces</span><span class="o">:=&gt;</span>
+        <span class="nx">content_pieces</span><span class="o">=</span><span class="nx">_</span><span class="p">.</span><span class="nx">pluck</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s">&#39;#dataContentTable .tab_checkbox:checked&#39;</span><span class="p">),</span> <span class="s">&#39;value&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">content_pieces</span>
+          <span class="nx">@trigger</span> <span class="s">&quot;add:content:pieces&quot;</span><span class="p">,</span> <span class="nx">content_pieces</span>
+
+          <span class="k">for</span> <span class="nx">content_id</span> <span class="k">in</span> <span class="nx">content_pieces</span>
+            <span class="nx">@collection</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">content_id</span>
+
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">dataContentTable tr</span><span class="err">#</span><span class="s">row_&quot;</span><span class="o">+</span><span class="nx">content_id</span><span class="p">).</span><span class="nx">remove</span><span class="p">()</span>
+
+            <span class="nv">tableData= </span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span> <span class="nx">@</span><span class="p">,</span><span class="s">&#39;tableConfig&#39;</span>
+            <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">dataContentTable tbody tr&quot;</span><span class="p">))</span> <span class="o">is</span> <span class="mi">0</span>
+              <span class="nv">colspan= </span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="nx">tableData</span><span class="p">.</span><span class="nx">data</span>
+              <span class="k">if</span> <span class="nx">tableData</span><span class="p">.</span><span class="nx">selectbox</span>
+                <span class="nx">colspan</span><span class="o">++</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable tbody&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s">&#39;&lt;td id=&quot;empty_row&quot; colspan=&quot;&#39;</span><span class="o">+</span><span class="nx">colspan</span><span class="o">+</span><span class="s">&#39;&quot;&gt;No Data found&lt;/td&gt;&#39;</span><span class="p">)</span>
+
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&quot;</span><span class="err">#</span><span class="s">dataContentTable&quot;</span>
+            <span class="p">.</span><span class="nx">trigger</span> <span class="s">&#39;update&#39;</span>
+            <span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;updateCache&quot;</span> 
+
+      <span class="nx">onContentPieceRemoved</span><span class="o">:</span><span class="nf">(model)=&gt;</span>
+        
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;#empty_row&#39;</span>
+        <span class="p">.</span><span class="nx">remove</span><span class="p">()</span>
+
+        <span class="nv">tableData= </span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span> <span class="nx">@</span><span class="p">,</span><span class="s">&#39;tableConfig&#39;</span>
+        <span class="nv">row_index= </span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">dataContentTable tbody tr&quot;</span><span class="p">)</span>
+
+        
+        <span class="nv">row= </span><span class="nx">@makeRow</span> <span class="nx">model</span><span class="p">,</span><span class="nx">row_index</span><span class="p">,</span> <span class="nx">tableData</span>
+        <span class="nv">$row= </span><span class="nx">$</span><span class="p">(</span><span class="nx">row</span><span class="p">)</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable tbody&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">$row</span><span class="p">)</span>
+
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">dataContentTable&quot;</span><span class="p">).</span><span class="nx">trigger</span> <span class="s">&#39;addRows&#39;</span><span class="p">,</span> <span class="p">[</span><span class="nx">$row</span><span class="p">,</span> <span class="kc">true</span><span class="p">]</span>
+        <span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;updateCache&quot;</span> 
+
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>set handlers</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:content:selectionapp&quot;</span><span class="p">,</span> <span class="nf">(opt = {})-&gt;</span>
+      <span class="k">new</span> <span class="nx">Controller</span><span class="p">.</span><span class="nx">ContentSelectionController</span> <span class="nx">opt</span>   
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

@@ -27,12 +27,19 @@ define(['app'], function(App) {
       };
 
       Layout.prototype.onShow = function() {
-        $('#question-property').on('mouseenter', function() {
-          return App.ContentCreator.closequestioneproperty = false;
+        this.$el.find('#question-property, #question-elements-property, #question-elements').on('click', function(evt) {
+          return evt.stopPropagation();
         });
-        return $('#question-property').parent().parent().on('mouseleave', function() {
-          return App.ContentCreator.closequestioneproperty = true;
-        });
+        $('html').on('click', (function(_this) {
+          return function() {
+            return _this.questPropertyRegion.close();
+          };
+        })(this));
+        return $('html').on('click', (function(_this) {
+          return function() {
+            return _this.questElementPropRegion.close();
+          };
+        })(this));
       };
 
       return Layout;

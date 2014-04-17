@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>views.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../doc-style.css" />
+  <script src="../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../", thisFile = "source\\apps\\media\\upload\\views.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>views.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;plupload&#39;</span>
+    <span class="s">&#39;text!apps/media/upload/templates/upload.html&#39;</span>
+    <span class="p">],</span> <span class="nf">(App, plupload, uploadTpl)-&gt;</span>
+  
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;Media.Upload.Views&#39;</span><span class="p">,</span> <span class="nf">(Views, App)-&gt;</span>
+
+        <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">UploadView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+          <span class="nv">template: </span><span class="nx">uploadTpl</span> 
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>setup plupload on show
+the url for plupload will be async-upload.php(wordpress default)
+this plupload configuration is copied over from wordpress core
+Note: do not change these settings</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>bind plupload script</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="vi">@uploader = </span><span class="k">new</span> <span class="nx">plupload</span><span class="p">.</span><span class="nx">Uploader</span>
+                        <span class="nv">runtimes    : </span><span class="s">&quot;gears,html5,flash,silverlight,browserplus&quot;</span>
+                        <span class="nv">file_data_name  : </span><span class="s">&quot;async-upload&quot;</span> <span class="c1"># key passed to $_FILE.</span>
+                        <span class="nv">multiple_queues : </span><span class="kc">true</span>
+                        <span class="nv">browse_button : </span><span class="s">&quot;choosefiles&quot;</span>
+                        <span class="nv">multipart     : </span><span class="kc">true</span>
+                        <span class="nv">urlstream_upload: </span><span class="kc">true</span>
+                        <span class="nv">max_file_size   : </span><span class="s">&quot;10mb&quot;</span>
+                        <span class="nv">url       : </span><span class="nx">UPLOADURL</span>
+                        <span class="nv">flash_swf_url : </span><span class="nx">SITEURL</span> <span class="o">+</span> <span class="s">&quot;/wp-includes/js/plupload/plupload.flash.swf&quot;</span>
+                        <span class="nv">silverlight_xap_url: </span><span class="nx">SITEURL</span> <span class="o">+</span> <span class="s">&quot;/wp-includes/js/plupload/plupload.silverlight.xap&quot;</span>
+                        <span class="nv">filters: </span><span class="p">[</span>
+                          <span class="nv">title: </span><span class="s">&quot;Image files&quot;</span>
+                          <span class="nv">extensions: </span><span class="s">&quot;jpg,gif,png&quot;</span>
+                        <span class="p">]</span>
+                        <span class="nv">multipart_params:</span>
+                          <span class="nv">action: </span><span class="s">&quot;upload-attachment&quot;</span>
+                          <span class="nv">_wpnonce: </span><span class="nx">_WPNONCE</span>
+            
+            
+            <span class="nx">@uploader</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+
+            <span class="nx">@uploader</span><span class="p">.</span><span class="nx">bind</span> <span class="s">&quot;FilesAdded&quot;</span><span class="p">,</span> <span class="nf">(up, files)=&gt;</span>
+              <span class="nx">@uploader</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">progress&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">()</span>
+            
+            <span class="nx">@uploader</span><span class="p">.</span><span class="nx">bind</span> <span class="s">&quot;UploadProgress&quot;</span><span class="p">,</span><span class="nf">(up, file)=&gt;</span>
+              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">file</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;.progress-bar&quot;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&quot;width&quot;</span><span class="p">,</span> <span class="nx">file</span><span class="p">.</span><span class="nx">percent</span> <span class="o">+</span> <span class="s">&quot;%&quot;</span>
+            
+            <span class="nx">@uploader</span><span class="p">.</span><span class="nx">bind</span> <span class="s">&quot;Error&quot;</span><span class="p">,</span> <span class="nf">(up, err)=&gt;</span>
+              <span class="nx">up</span><span class="p">.</span><span class="nx">refresh</span><span class="p">()</span> <span class="c1"># Reposition Flash/Silverlight</span>
+
+            <span class="nx">@uploader</span><span class="p">.</span><span class="nx">bind</span> <span class="s">&quot;FileUploaded&quot;</span><span class="p">,</span> <span class="nf">(up, file, response)=&gt;</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;.progress-bar&quot;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&quot;width&quot;</span><span class="p">,</span> <span class="s">&quot;0%&quot;</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">progress&quot;</span><span class="p">).</span><span class="nx">hide</span><span class="p">()</span>
+              <span class="nv">response = </span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">response</span><span class="p">)</span>
+              <span class="k">if</span> <span class="nx">response</span><span class="p">.</span><span class="nx">success</span>
+                <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;new:media:added&quot;</span><span class="p">,</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>destroyt the plupload instance on close to release memory</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
+            <span class="nx">@uploader</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
+              
+                
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

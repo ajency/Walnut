@@ -22,4 +22,5 @@ define [
 			'jqueryknob'
 			# 'bootstrapselect'
 			'select2'
+			'tagsinput'
 		], ->

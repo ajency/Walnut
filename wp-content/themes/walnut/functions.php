@@ -8,6 +8,7 @@ require_once 'modules/textbooks/ajax.php';
 require_once 'modules/menus/ajax.php';
 require_once 'modules/user/ajax.php';
 require_once 'modules/media/ajax.php';
+require_once 'modules/divisions/ajax.php';
 require_once 'custom_configs.php';
 
 add_theme_support('menus');
@@ -29,31 +30,4 @@ function upload_attachment($file_handler, $post_id, $setthumb = 'false') {
 	if ($setthumb)
 		update_post_meta($post_id, '_thumbnail_id', $attach_id);
 	return $attach_id;
-}
-
-
-add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_web_login' );
-
-add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
-
-function authenticate_web_login() {
-	$login_data=$_POST;
-	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
-	if(is_wp_error($login_check))
-		json_encode(array("error"=>"Invalid Username or Password."));
-	else{
-		wp_set_auth_cookie( $login_check->ID );
-		json_encode($login_check);
-	}
-	die;
-}
-
-function authenticate_app_login() {
-	$login_data=$_POST;
-	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
-	if(is_wp_error($login_check))
-		json_encode(array("error"=>"Invalid Username or Password."));
-	else{
-		json_encode($login_check);
-	}
 }

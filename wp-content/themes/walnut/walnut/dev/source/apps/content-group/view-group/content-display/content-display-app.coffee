@@ -10,11 +10,6 @@ define ['app'
 
 				{@model} = opts
 
-				console.log @model.get 'id'
-				console.log @model.get 'content_pieces'
-
-				console.log @model
-
 				#@groupContentCollection= App.request "get:content:pieces:of:group", @model.get 'id'
 				
 				@groupContentCollection= App.request "get:content:pieces:by:ids", @model.get 'content_pieces'
@@ -22,10 +17,8 @@ define ['app'
 				App.execute "when:fetched", @groupContentCollection, @showView
 
 			showView:=>
-				setTimeout ()=>
-					@view= view = @_getCollectionContentDisplayView @model
-					@show view, (loading:true, entities: [@groupContentCollection])
-				,3000
+				@view= view = @_getCollectionContentDisplayView @model
+				@show view, (loading:true, entities: [@groupContentCollection])
 
 			_getCollectionContentDisplayView :(model) =>
 				new ContentDisplayView 

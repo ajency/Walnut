@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>settings.jade</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../../../../doc-style.css" />
+  <script src="../../../../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../../../../", thisFile = "source\\apps\\content-creator\\content-builder\\elements\\row\\settings\\templates\\settings.jade", defaultSidebar = true;
+  </script>
+  <script src="../../../../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>settings.jade</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nt">header</span><span class="nc">.settings-header</span>
+  <span class="nc">.row</span>
+    <span class="nc">.col-sm-10</span>
+      <span class="nt">h5</span><span class="nc">.title</span> {{config.element}} Settings
+    <span class="nc">.col-sm-2.close-btn</span>
+      <span class="nt">a</span>(<span class="na">class=</span><span class="s">&#39;close-settings&#39;</span><span class="err">,</span> <span class="na">href=</span><span class="s">&#39;#&#39;</span>) &amp;times;
+<span class="nc">.row</span>
+  <span class="nc">.col-sm-12</span>
+    <span class="nt">form</span><span class="nc">.form-horizontal</span>(<span class="na">action=</span><span class="s">&#39;&#39;</span><span class="err">,</span> <span class="na">method=</span><span class="s">&#39;POST&#39;</span><span class="err">,</span> <span class="na">role=</span><span class="s">&#39;form&#39;</span>)
+      <span class="nc">.form-group</span>
+        <span class="nt">label</span><span class="nc">.col-sm-4.control-label</span>(<span class="na">for=</span><span class="s">&#39;&#39;</span>) Choose Style
+        <span class="nc">.col-sm-8</span>
+          <span class="nt">select</span>(<span class="na">name=</span><span class="s">&quot;style&quot;</span>)
+            <span class="nt">option</span>(<span class="na">value=</span><span class="s">&quot;&quot;</span>) None
+            <span class="err">{{</span><span class="nf">#styles</span>}}
+            <span class="nt">option</span>(<span class="na">value=</span><span class="s">&quot;{{name}}&quot;</span>) {{name}}
+            <span class="err">{{</span><span class="c">/styles}}</span>
+      <span class="nc">.form-group</span>
+        <span class="nt">label</span><span class="nc">.col-sm-4.control-label</span>(<span class="na">for=</span><span class="s">&#39;&#39;</span>) Draggable
+        <span class="nc">.col-sm-8</span>
+          <span class="nt">span</span><span class="nc">.checkbox</span>
+            <span class="nt">input</span>(<span class="na">type=</span><span class="s">&#39;checkbox&#39;</span> <span class="na">name=</span><span class="s">&quot;draggable&quot;</span>)
+        <span class="nc">.clearfix</span>
+      <span class="nc">.form-group</span>
+        <span class="nt">label</span><span class="nc">.col-sm-4.control-label</span>(<span class="na">for=</span><span class="s">&#39;&#39;</span>) No of columns
+        <span class="nc">.col-sm-8</span>
+          <span class="nc">.set-column-count.btn-group.btn-group-xs</span>
+            <span class="nt">a</span><span class="nc">.btn.btn-default</span> 1 
+            <span class="nt">a</span><span class="nc">.btn.btn-default</span> 2 
+            <span class="nt">a</span><span class="nc">.btn.btn-default</span> 3 
+            <span class="nt">a</span><span class="nc">.btn.btn-default</span> 4 
+            <span class="nt">a</span><span class="nc">.btn.btn-default</span> 6 
+            
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

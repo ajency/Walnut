@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>view.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../doc-style.css" />
+  <script src="../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../", thisFile = "source\\apps\\content-creator\\content-builder\\view.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>view.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.ContentBuilder.Views&quot;</span><span class="p">,</span> <span class="nf">(Views, App)-&gt;</span>
+
+    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">ContentBuilderView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+      <span class="nv">template : </span><span class="s">&#39;&lt;div id=&quot;myCanvas&quot; class=&quot;droppable-column&quot; height=&quot;300&quot;&gt;&lt;/div&gt;&#39;</span>
+
+
+      <span class="nv">onRender : </span><span class="nf">-&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span><span class="s">&#39;site-page-content-region&#39;</span>
+
+
+      <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.droppable-column&#39;</span><span class="p">).</span><span class="nx">sortable</span>
+                    <span class="nv">revert    : </span><span class="s">&#39;invalid&#39;</span>
+                    <span class="nv">items     : </span><span class="s">&#39;&gt; .element-wrapper&#39;</span>
+                    <span class="nv">connectWith : </span><span class="s">&#39;.droppable-column,.column&#39;</span>
+                    <span class="nv">start     : </span><span class="nf">(e, ui)-&gt;</span>
+                            <span class="nx">ui</span><span class="p">.</span><span class="nx">placeholder</span><span class="p">.</span><span class="nx">height</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="p">()</span>
+                            <span class="nb">window</span><span class="p">.</span><span class="nv">dragging = </span><span class="kc">true</span>
+                            <span class="k">return</span>
+                    <span class="nx">stop</span>    <span class="o">:</span><span class="nf">(e, ui)-&gt;</span> 
+                            <span class="nb">window</span><span class="p">.</span><span class="nv">dragging = </span><span class="kc">false</span>
+                            <span class="k">return</span>
+                    <span class="nv">handle    : </span><span class="s">&#39;.aj-imp-drag-handle&#39;</span>
+                    <span class="nv">helper    : </span><span class="s">&#39;clone&#39;</span>
+                    <span class="nv">opacity   : </span><span class="p">.</span><span class="mi">65</span>
+                    <span class="nv">receive   : </span><span class="nf">(evt, ui)=&gt;</span> 
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>trigger drop event if ui.item is Li tag</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                      <span class="k">if</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s">&quot;tagName&quot;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;LI&#39;</span>
+                        <span class="nv">type  = </span><span class="nx">ui</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-element&#39;</span>
+                        <span class="nx">@trigger</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">),</span> <span class="nx">type</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

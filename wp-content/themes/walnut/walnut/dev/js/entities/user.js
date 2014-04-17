@@ -17,7 +17,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         return {
           user_name: '',
           display_name: '',
-          user_email: ''
+          user_email: '',
+          user_role: []
         };
       };
 

@@ -45,7 +45,6 @@ define(['app'], function(App) {
         });
         $('#hotspot-textelement-fontfamily').select2('val', self.model.get('fontFamily'));
         $('#hotspot-textelement-fontfamily').on('change', function(e) {
-          this.options[0].disabled = true;
           return self.model.set('fontFamily', $(e.target).val());
         });
         $('#hotspot-textelement-text').on('input', (function(_this) {

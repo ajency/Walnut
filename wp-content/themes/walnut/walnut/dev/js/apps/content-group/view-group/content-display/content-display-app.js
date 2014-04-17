@@ -16,24 +16,17 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionContentDisplayController.prototype.initialize = function(opts) {
         this.model = opts.model;
-        console.log(this.model.get('id'));
-        console.log(this.model.get('content_pieces'));
-        console.log(this.model);
         this.groupContentCollection = App.request("get:content:pieces:by:ids", this.model.get('content_pieces'));
         return App.execute("when:fetched", this.groupContentCollection, this.showView);
       };
 
       CollectionContentDisplayController.prototype.showView = function() {
-        return setTimeout((function(_this) {
-          return function() {
-            var view;
-            _this.view = view = _this._getCollectionContentDisplayView(_this.model);
-            return _this.show(view, {
-              loading: true,
-              entities: [_this.groupContentCollection]
-            });
-          };
-        })(this), 3000);
+        var view;
+        this.view = view = this._getCollectionContentDisplayView(this.model);
+        return this.show(view, {
+          loading: true,
+          entities: [this.groupContentCollection]
+        });
       };
 
       CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model) {

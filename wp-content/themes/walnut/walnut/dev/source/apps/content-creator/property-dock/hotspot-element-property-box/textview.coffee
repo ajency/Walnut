@@ -188,7 +188,7 @@ define ['app'],(App)->
 
 					# on change of font family
 					$('#hotspot-textelement-fontfamily').on 'change',(e)->
-						@.options[0].disabled = true
+						# @.options[0].disabled = true
 						self.model.set 'fontFamily', $(e.target).val()
 						
 								

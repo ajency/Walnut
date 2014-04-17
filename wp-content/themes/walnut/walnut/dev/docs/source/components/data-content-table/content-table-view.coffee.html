@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>content-table-view.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "source\\components\\data-content-table\\content-table-view.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>content-table-view.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;controllers/region-controller&#39;</span><span class="p">],</span><span class="nf">(App, RegionController)-&gt;</span>
+
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentSelectionApp.Views&quot;</span><span class="p">,</span> <span class="nf">(Controller, App)-&gt;</span>
+    <span class="k">class</span> <span class="nx">dataContentTableView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+      <span class="nv">template      : </span><span class="s">&#39;&lt;table class=&quot;table table-hover table-condensed table-fixed-layout table-bordered&quot; id=&quot;dataContentTable&quot;&gt;</span>
+<span class="s">                  &lt;thead&gt;</span>
+<span class="s">                    &lt;tr&gt;</span>
+<span class="s">                      {{#tableData}}</span>
+<span class="s">                        {{#selectbox}}</span>
+<span class="s">                          &lt;th style=&quot;width:8%&quot;&gt;&lt;div id=&quot;check_all_div&quot; class=&quot;checkbox check-default&quot; style=&quot;margin-right:auto;margin-left:auto;&quot;&gt;</span>
+<span class="s">                          &lt;input id=&quot;check_all&quot; type=&quot;checkbox&quot;&gt;</span>
+<span class="s">                          &lt;label for=&quot;check_all&quot;&gt;&lt;/label&gt;</span>
+<span class="s">                          &lt;/div&gt;</span>
+<span class="s">                        &lt;/th&gt;</span>
+<span class="s">                      {{/selectbox}}</span>
+<span class="s">                        {{#data}}</span>
+<span class="s">                        &lt;th&gt;{{label}}&lt;/th&gt;</span>
+<span class="s">                      {{/data}}</span>
+<span class="s">                    {{/tableData}}</span>
+<span class="s">                    &lt;/tr&gt;</span>
+<span class="s">                  &lt;/thead&gt;</span>
+<span class="s">                  &lt;tbody&gt;</span>
+<span class="s">                  &lt;/tbody&gt;</span>
+<span class="s">                  &lt;/table&gt;&#39;</span>
+
+      <span class="nv">className       : </span><span class="s">&#39;tiles white grid simple vertical green&#39;</span>
+
+      <span class="nv">events: </span>
+        <span class="s">&#39;change #check_all_div&#39;</span> <span class="o">:</span> <span class="s">&#39;check_all&#39;</span>
+
+
+
+      <span class="nv">initialize: </span><span class="nf">(opts)-&gt;</span>
+        <span class="vi">@tableData= </span><span class="nx">opts</span><span class="p">.</span><span class="nx">tableConfig</span>
+
+      <span class="nv">serializeData: </span><span class="nf">-&gt;</span>
+        <span class="nv">data= </span><span class="k">super</span><span class="p">()</span>
+        <span class="nv">data.tableData= </span><span class="nx">@tableData</span>
+        <span class="nx">data</span>
+
+
+      <span class="nx">onShow</span><span class="o">:=&gt;</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">@collection</span><span class="p">.</span><span class="nx">models</span> <span class="p">,</span> <span class="nf">(item, index)=&gt;</span>
+          <span class="nv">row = </span><span class="s">&#39;&lt;tr&gt;&#39;</span>
+
+          <span class="k">if</span> <span class="nx">@tableData</span><span class="p">.</span><span class="nx">selectbox</span> 
+            <span class="nx">row</span> <span class="o">+=</span> <span class="s">&#39;&lt;td class=&quot;v-align-middle&quot;&gt;&lt;div class=&quot;checkbox check-default&quot;&gt;</span>
+<span class="s">                &lt;input class=&quot;tab_checkbox&quot; type=&quot;checkbox&quot; value=&quot;&#39;</span><span class="o">+</span><span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">@tableData</span><span class="p">.</span><span class="nx">id_attribute</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&quot; id=&quot;checkbox&#39;</span><span class="o">+</span><span class="nx">index</span><span class="o">+</span><span class="s">&#39;&quot;&gt;</span>
+<span class="s">                &lt;label for=&quot;checkbox&#39;</span><span class="o">+</span><span class="nx">index</span><span class="o">+</span><span class="s">&#39;&quot;&gt;&lt;/label&gt;</span>
+<span class="s">                &lt;/div&gt;</span>
+<span class="s">              &lt;/td&gt;&#39;</span>
+
+          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@tableData</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="nf">(el,ind)-&gt;</span>
+              <span class="nx">row</span> <span class="o">+=</span> <span class="s">&#39;&lt;td&gt; &#39;</span><span class="o">+</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">el</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39; &lt;/td&gt;&#39;</span>
+            
+
+          <span class="nx">row</span> <span class="o">+=</span><span class="s">&#39;&lt;/tr&gt;&#39;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable tbody&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">row</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#dataContentTable&#39;</span><span class="p">).</span><span class="nx">tablesorter</span><span class="p">();</span>
+
+        <span class="k">if</span> <span class="nx">@tableData</span><span class="p">.</span><span class="nx">pagination</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable&#39;</span><span class="p">).</span><span class="nx">after</span><span class="p">(</span><span class="s">&#39;</span>
+<span class="s">              &lt;div id=&quot;pager&quot; class=&quot;pager&quot;&gt;</span>
+<span class="s">                  &lt;i class=&quot;fa fa-chevron-left prev&quot;&gt;&lt;/i&gt;</span>
+<span class="s">                  &lt;span style=&quot;padding:0 15px&quot;  class=&quot;pagedisplay&quot;&gt;&lt;/span&gt; </span>
+<span class="s">                  &lt;i class=&quot;fa fa-chevron-right next&quot;&gt;&lt;/i&gt;          </span>
+<span class="s">                  &lt;select class=&quot;pagesize&quot;&gt;</span>
+<span class="s">                    &lt;option selected=&quot;selected&quot; value=&quot;5&quot;&gt;5&lt;/option&gt;</span>
+<span class="s">                    &lt;option value=&quot;10&quot;&gt;10&lt;/option&gt;</span>
+<span class="s">                    &lt;option value=&quot;20&quot;&gt;20&lt;/option&gt;</span>
+<span class="s">                    &lt;option value=&quot;30&quot;&gt;30&lt;/option&gt;</span>
+<span class="s">                    &lt;option value=&quot;40&quot;&gt;40&lt;/option&gt;</span>
+<span class="s">                &lt;/select&gt;</span>
+<span class="s">                &lt;/div&gt;&#39;</span><span class="p">)</span>
+          <span class="nv">pagerOptions = </span>
+            <span class="nv">container: </span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;.pager&quot;</span><span class="p">),</span>       
+            <span class="nv">output: </span><span class="s">&#39;{startRow} to {endRow} of {totalRows}&#39;</span>
+
+          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#dataContentTable&#39;</span><span class="p">).</span><span class="nx">tablesorterPager</span> <span class="nx">pagerOptions</span>
+
+      <span class="nx">check_all</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="k">if</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#check_all&#39;</span><span class="p">).</span><span class="o">is</span><span class="p">(</span><span class="s">&#39;:checked&#39;</span><span class="p">)</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;checked&#39;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable .tab_checkbox&#39;</span><span class="p">).</span><span class="nx">trigger</span><span class="p">(</span><span class="s">&#39;click&#39;</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s">&#39;checked&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+        <span class="k">else</span> 
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;not checked&#39;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#dataContentTable .tab_checkbox&#39;</span><span class="p">).</span><span class="nx">removeAttr</span><span class="p">(</span><span class="s">&#39;checked&#39;</span><span class="p">)</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

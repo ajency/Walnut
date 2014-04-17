@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Walnut Learn - Add Question</title>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+
+	<!-- NEED TO WORK ON -->
+
+	<link href="assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen">
+	<link href="assets/css/listnav.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
+
+	<link href="assets/plugins/jquery-datatable/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+	<link href="assets/plugins/datatables-responsive/css/datatables.responsive.css" rel="stylesheet" type="text/css" media="screen">
+
+
+	<!-- BEGIN CORE JS FRAMEWORK--> 
+	<script src="assets/plugins/jquery-1.8.3.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/boostrapv3/js/bootstrap.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/breakpoints.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript"></script> 
+	<!-- END CORE JS FRAMEWORK --> 
+	<!-- BEGIN PAGE LEVEL JS --> 	
+	<script src="assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript"></script> 	
+	<script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/pace/pace.min.js" type="text/javascript"></script>  
+	<script src="assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
+	<!-- END PAGE LEVEL PLUGINS -->
+	
+
+
+	<!-- BEGIN CORE TEMPLATE JS --> 
+	<script src="assets/js/core.js" type="text/javascript"></script> 
+	<script src="assets/js/chat.js" type="text/javascript"></script> 
+	<script src="assets/js/demo.js" type="text/javascript"></script> 
+	<!-- END CORE TEMPLATE JS --> 
+
+		<script src="assets/plugins/jquery-datatable/js/jquery.dataTables.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/jquery-datatable/extra/js/TableTools.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
+		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
+		<script type="text/javascript" src="assets/js/datatables.js"></script>
+
+		<script type="text/javascript" src="assets/js/row-link.js"></script>
+		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="assets/js/jquery.knob.js"></script>
+		<script type="text/javascript" src="assets/js/jquery-listnav.js"></script>
+
+	<!-- END NEED TO WORK ON -->
+
+</head>
+<body class="">
+<!-- BEGIN HEADER -->
+<div class="header navbar navbar-inverse"> 
+	<!-- BEGIN TOP NAVIGATION BAR -->
+	<div class="navbar-inner">
+		<!-- BEGIN NAVIGATION HEADER -->
+		<div class="header-seperation" style="display:none"> 
+			<!-- BEGIN MOBILE HEADER -->
+			<ul class="nav pull-left notifcation-center" id="main-menu-toggle-wrapper" style="display:none">	
+				<li class="dropdown">
+					<a id="main-menu-toggle" href="#main-menu" class="">
+						<div class="iconset top-menu-toggle-white"></div>
+					</a>
+				</li>		 
+			</ul>
+			<!-- END MOBILE HEADER -->
+			<!-- BEGIN LOGO -->	
+			<a href="#">
+				<img src="assets/img/logo.png" class="logo" alt="" data-src="assets/img/walnutlearn.png" data-src-retina="assets/img/logo2x.png" width="106" height="21"/>
+			</a>
+			<!-- END LOGO --> 
+			<!-- BEGIN LOGO NAV BUTTONS -->
+			<ul class="nav pull-right notifcation-center">	
+				
+				<!-- BEGIN MOBILE CHAT TOGGLER -->
+				<li class="dropdown" id="portrait-chat-toggler" style="display:none">
+					<a href="#sidr" class="chat-menu-toggle">
+						<div class="iconset top-chat-white"></div>
+					</a>
+				</li>
+				<!-- END MOBILE CHAT TOGGLER -->				        
+			</ul>
+			<!-- END LOGO NAV BUTTONS -->
+		</div>
+		<!-- END NAVIGATION HEADER -->
+		<!-- BEGIN CONTENT HEADER -->
+		<div class="header-quick-nav"> 
+			<!-- BEGIN HEADER LEFT SIDE SECTION -->
+			<div class="pull-left"> 
+				<!-- BEGIN SLIM NAVIGATION TOGGLE -->
+				<ul class="nav quick-section">
+					<li class="quicklinks">
+						<a href="#" class="" id="layout-condensed-toggle">
+							<div class="iconset top-menu-toggle-dark"></div>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks"><a href="#" class=""><div class="iconset top-reload"></div></a></li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks dropdown">
+						<a href="#" class="dropdown-toggle">
+							<div class="iconset top-messages"></div>
+							<span class="badge" id="msgs-badge">2</span>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+				</ul>
+				<!-- END SLIM NAVIGATION TOGGLE -->
+				<div class="chat-toggler">	
+					<!-- BEGIN NOTIFICATION CENTER -->
+					<a href="#" class="dropdown-toggle" id="my-task-list" data-placement="bottom" data-content="" data-toggle="dropdown" data-original-title="Notifications">
+						<div class="user-details"> 
+							<div class="username">
+								Notifications	<span class="badge badge-important">3</span>								
+							</div>						
+						</div> 
+						<div class="iconset top-down-arrow"></div>
+					</a>	
+					<div id="notification-list" style="display:none">
+						<div style="width:300px">
+							<!-- BEGIN NOTIFICATION MESSAGE -->
+							<div class="notification-messages info">
+								<div class="user-profile">
+									<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+								</div>
+								<div class="message-wrapper">
+									<div class="heading">Title of Notification</div>
+									<div class="description">Description...</div>
+									<div class="date pull-left">A min ago</div>										
+								</div>
+								<div class="clearfix"></div>									
+							</div>
+							<!-- END NOTIFICATION MESSAGE -->	
+						</div>				
+					</div>
+					<!-- END NOTIFICATION CENTER -->
+				</div>
+				<!-- BEGIN HEADER QUICK LINKS -->
+				<ul class="nav quick-section">
+
+				</ul>
+				<!-- BEGIN HEADER QUICK LINKS -->
+									
+			</div>
+			<!-- END HEADER LEFT SIDE SECTION -->
+			<!-- BEGIN HEADER RIGHT SIDE SECTION -->
+			<div class="pull-right"> 
+			
+			<div class="chat-toggler">	
+	<!--	<div class="user-details">
+            <div class="username"><img src="assets/img/running.gif" alt=""  /> <span class="bold"> Online </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>-->
+		  
+		 <div class="user-details">
+            <div class="username"> <span class="bold"> Offline </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>
+			<!-- <div class="user-details">
+            <div class="username"><img src="assets/img/connecting.gif" /> <span class="bold"> Connecting </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>-->
+					<!-- BEGIN PROFILE PICTURE -->
+					<div class="profile-pic"> 
+						<img src="assets/img/profiles/avatar_small.jpg" alt="" data-src="assets/img/profiles/avatar_small.jpg" data-src-retina="assets/img/profiles/avatar_small2x.jpg" width="35" height="35" /> 
+					</div>  
+					<!-- END PROFILE PICTURE -->     			
+				</div>
+				<!-- BEGIN HEADER NAV BUTTONS -->
+				<ul class="nav quick-section2">
+					<!-- BEGIN SETTINGS -->
+					<li class="quicklinks"> 
+						<a data-toggle="dropdown" class="dropdown-toggle pull-right" href="#" id="user-options">						
+							<div class="iconset top-settings-dark"></div> 	
+						</a>
+						<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="user-options">
+							<li><a href="#">My Account</a></li>
+							<li class="divider"></li>                
+							<li><a href="#"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+						</ul>
+					</li>
+					<!-- END SETTINGS -->
+					<li class="quicklinks"><span class="h-seperate"></span></li> 
+					<!-- BEGIN CHAT SIDEBAR TOGGLE -->
+					<li class="quicklinks"> 	
+						<a id="chat-menu-toggle" href="#sidr" class="chat-menu-toggle">
+							<div class="iconset top-chat-dark"><span class="badge badge-important hide" id="chat-message-count">1</span></div>
+						</a> 
+						<!-- BEGIN OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+						<div class="simple-chat-popup chat-menu-toggle hide">
+							<div class="simple-chat-popup-arrow"></div>
+							<div class="simple-chat-popup-inner">
+								<div style="width:100px">
+									<div class="semi-bold">Name</div>
+									<div class="message">Message...</div>
+								</div>
+							</div>
+						</div>
+						<!-- END OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+					</li>
+					<!-- END CHAT SIDEBAR TOGGLE --> 
+				</ul>
+				<!-- END HEADER NAV BUTTONS -->
+			</div>
+			<!-- END HEADER RIGHT SIDE SECTION -->
+		</div> 
+		<!-- END CONTENT HEADER --> 
+	</div>
+	<!-- END TOP NAVIGATION BAR --> 
+</div>
+<!-- END HEADER -->
+	
+<!-- BEGIN CONTENT -->
+<div class="page-container row-fluid">
+	<!-- BEGIN SIDEBAR -->
+	<!-- BEGIN MENU -->
+	<div class="page-sidebar mini" id="main-menu">
+		  <div class="page-sidebar-wrapper" id="main-menu-wrapper">
+		
+		<!-- BEGIN SIDEBAR MENU -->	
+		<p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
+		<ul>	
+   
+			<!-- BEGIN ONE LEVEL MENU -->
+			<li class="start">
+				<a href="javascript:;">
+					<i class="icon-custom-ui"></i>
+					<span class="title">Content Management</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Textbooks</a></li>
+					<li><a href="#">Add Question</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="javascript:;">
+					<i class="fa fa-pencil-square-o"></i>
+					<span class="title">Training Module</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Teacher Training</a></li>
+					<li><a href="#">Student Training</a></li>
+				</ul>
+			</li>
+			<!-- END ONE LEVEL MENU -->
+		
+		</ul>
+		<!-- END SIDEBAR MENU -->
+		<!-- BEGIN SIDEBAR WIDGETS -->
+		<div class="side-bar-widgets">
+
+		</div>
+		<div class="clearfix"></div>
+		<!-- END SIDEBAR WIDGETS --> 
+	</div>
+	</div>
+	<!-- BEGIN SCROLL UP HOVER -->
+	<a href="#" class="scrollup">Scroll</a>
+	<!-- END SCROLL UP HOVER -->
+	<!-- END MENU -->
+
+	<!-- END SIDEBAR --> 
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="page-content condensed"> 
+
+		<div class="content">  
+			<ul class="breadcrumb">
+				<li>
+				  <p>Dashboard</p>
+				</li>
+				<li>
+				  <a href="#">Training Module</a>
+				</li>
+				<li><a href="#">Teacher Training</a> </li>
+				<li><a href="#" class="active">Single Question</a> </li>
+			 </ul>
+			<!-- BEGIN PAGE TITLE -->
+			<!--<div class="page-title"> 
+				<h3>Add <span class="semi-bold">Question</span></h3>
+			</div>-->
+			<!-- END PAGE TITLE -->
+
+			<!-- BEGIN PlACE PAGE CONTENT HERE -->
+		
+				<div class="pieceWrapper">
+
+					<div class="tiles white m-b-20">
+						<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
+							<h4 class="bold pull-left text-info modName"><i class="fa fa-chevron-left"></i> <a href="#">Back to Module Name</a></h4>
+
+							<div class="modProgress pull-right">
+								<p class="bold small-text m-t-10 m-b-5">Progress</p>
+						        <div class="progress">
+						            <div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+						        </div>
+					        </div>
+					        <div class="clearfix"></div>
+				    	</div>
+				    	<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
+				    		<p class="bold small-text">Module Info: </p>
+				    		<p class="">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+				    	</div>
+			    	</div>
+
+					<div class="tiles white grid simple vertical blue m-b-0">
+						<div class="grid-body no-border">
+							<div class="p-t-10">
+							  <div class="row m-b-10">
+				                <div class="col-md-4 col-sm-4 b-grey b-r">
+				                  <label class="form-label bold small-text">Class</label>
+									4
+				                </div>
+				                <div class="col-md-4 col-sm-4 b-grey b-r">
+				                  <label class="form-label bold small-text">Subject</label>
+									Science			                  
+				                </div>
+				                <div class="col-md-4 col-sm-4">
+				                  <label class="form-label bold small-text">Chapter</label>
+									Internal Organs of the Body
+				                </div>
+				              </div>
+				              <div class="row">
+				                <div class="col-md-4 col-sm-4 b-grey b-r">
+				                  <label class="form-label bold small-text">Section</label>
+									Internal & External
+				                </div>
+				                <div class="col-md-4 col-sm-4 b-grey b-r">
+				                  <label class="form-label bold small-text">Sub-Section</label>
+									-			                  
+				                </div>
+				                <div class="col-md-4 col-sm-4">
+				                  <label class="form-label bold small-text">Type</label>
+									Difficult
+				                </div>
+				              </div>
+				          </div>
+				        </div>
+					</div>
+					<div class="tiles blue p-l-15 p-r-15">
+						<div class="tiles-body no-border">
+							<div class="row">
+				                <div class="col-md-3 col-sm-3">
+				                	<h3 class="text-white m-t-0 m-b-0 semi-bold time"> <i class="fa fa-clock-o"></i> 3m 15s</h3>
+				                </div>
+				                <div class="col-md-3 col-sm-3 text-center">
+				                  <a href="#" class="hashtags transparent"> <i class="fa fa-question"></i> View Info </a>		                  
+				                </div>
+				                <div class="col-md-3 col-sm-3 text-center">
+				                  <a href="#" class="hashtags transparent"> <i class="fa fa-eye"></i> View Answer </a>	                  
+				                </div>
+				                <div class="col-md-3 col-sm-3 text-right">
+				                  <a href="#" class="hashtags transparent"> <i class="fa fa-check"></i> Done </a>
+				                </div>
+				              </div>
+				          </div>
+				        </div>
+					</div>
+
+					<div class="teacherCanvas ">
+						<div class="grid-body p-t-20 p-b-15 no-border">
+
+
+			            </div>
+					</div>
+
+					<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
+				    	<p class="bold small-text">Question Info: </p>
+				    	<p class="">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+				    </div>
+
+				    <div class="studentList m-t-35">
+						<div class="m-b-15 semi-bold pull-left row">
+							<div class="col-sm-6">
+								<label class="form-label bold">Class</label>
+								<select id="class" class="form-control select2" >
+						            <option value="1">1</option>
+						            <option value="2">2</option>
+						            <option value="3">3</option>
+						        </select>
+						    </div>
+						    <div class="col-sm-6">
+						        <label class="form-label bold">Div</label>
+								<select id="div" class="form-control select2" >
+						            <option value="A">A</option>
+						            <option value="B">B</option>
+						            <option value="C">C</option>
+						        </select>
+						    </div>
+					    </div>
+
+						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"><button type="button" class="btn btn-primary btn-xs btn-sm"><i class="fa fa-check"></i> Done </button></div>
+
+						<div class="clearfix"></div>
+						<div class="row students m-t-20">
+							<div class="col-sm-2 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-7 col-xs-7 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-15 p-l-5 p-r-5 p-b-20 semi-bold">Very<br/>Few</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-5 col-xs-5 no-padding">
+					                  <div class="tiles default active"><h5 class="bold text-white text-center no-margin p-t-30 p-b-35"><5%</h5>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-2 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-7 col-xs-7 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-15 p-b-20 p-l-5 p-r-5 semi-bold">1/4th of the Class</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-5 col-xs-5 no-padding">
+					                  <div class="tiles default active">
+					                    <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">5-25%</h5>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-2 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-7 col-xs-7 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-15 p-b-20 p-l-5 p-r-5 semi-bold">Half the Class</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-5 col-xs-5 no-padding">
+					                  <div class="tiles default active">
+					                    <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">25-50%</h5>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-2 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-7 col-xs-7 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-15 p-b-20 p-l-5 p-r-5 semi-bold">3/4 the Class </h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-5 col-xs-5 no-padding">
+					                  <div class="tiles default active">
+						                   <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">50-75%</h5>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-sm-2 m-b-20">
+								<div class="row single tiles white no-margin">    
+					                <div class="col-md-7 col-xs-7 no-padding">
+					                  <div class="text-center">
+					                    <h4 class="text-primary no-margin p-t-15 p-b-20 p-l-5 p-r-5 semi-bold">Full<br/>Class</h4>
+					                    <div class="clearfix"></div>
+					                  </div>
+					                </div>
+									 <div class="col-md-5 col-xs-5 no-padding">
+					                  <div class="tiles default active">
+					                    <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">75-100%</h5>
+					                  </div>
+					                </div>
+					            </div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			<!-- END PLACE PAGE CONTENT HERE -->
+		</div>
+	</div>
+	<!-- END PAGE CONTAINER -->
+</div>
+<!-- END CONTENT --> 
+<script>
+	$("#class").select2();
+	$("#div").select2();
+
+	$( ".tiles.single" ).click(function() {
+	  $( this ).toggleClass( "selected" );
+	});
+</script>
+</body>
+</html>

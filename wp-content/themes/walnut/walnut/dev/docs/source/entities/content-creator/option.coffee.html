@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>option.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "source\\entities\\content-creator\\option.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>option.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;backbone&#39;</span><span class="p">],</span><span class="nf">(App,Backbone)-&gt;</span>
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;Entities.Option&quot;</span> <span class="p">,</span><span class="nf">(Option, App, Backbone, Marionette, $, _)-&gt;</span>
+
+        <span class="k">class</span> <span class="nx">Option</span><span class="p">.</span><span class="nx">OptionModel</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span>
+
+          <span class="nv">defaults: </span><span class="nf">-&gt;</span>
+            <span class="nv">marks : </span><span class="mi">0</span>
+            <span class="nv">text : </span><span class="s">&#39;&#39;</span>
+
+
+        <span class="k">class</span> <span class="nx">Option</span><span class="p">.</span><span class="nx">OptionCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+
+          <span class="nv">model : </span><span class="nx">Option</span><span class="p">.</span><span class="nx">OptionModel</span>
+
+
+        <span class="nv">API = </span>
+          <span class="nx">createOption</span><span class="o">:</span><span class="nf">(data)-&gt;</span>
+              <span class="nv">option = </span><span class="k">new</span> <span class="nx">Option</span><span class="p">.</span><span class="nx">OptionModel</span>
+
+              <span class="nx">option</span><span class="p">.</span><span class="nx">set</span> <span class="nx">data</span>
+
+              <span class="nx">option</span>
+
+          <span class="nx">createOptionCollection</span><span class="o">:</span><span class="nf">(data={})-&gt;</span>
+              <span class="nv">optionCollection = </span><span class="k">new</span> <span class="nx">Option</span><span class="p">.</span><span class="nx">OptionCollection</span>
+
+              <span class="nx">optionCollection</span><span class="p">.</span><span class="nx">set</span> <span class="nx">data</span>
+
+              <span class="nx">optionCollection</span>          
+
+        <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;create:new:option&quot;</span><span class="p">,</span><span class="nf">(data)-&gt;</span>
+            <span class="nx">API</span><span class="p">.</span><span class="nx">createOption</span> <span class="nx">data</span>
+
+
+        <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;create:new:option:collection&quot;</span><span class="p">,</span><span class="nf">(data)-&gt;</span>
+
+            <span class="nx">API</span><span class="p">.</span><span class="nx">createOptionCollection</span> <span class="nx">data</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

@@ -3,7 +3,6 @@ define ['app'],(App)->
 	App.module "ContentCreator.ContentBuilder.Element.Mcq.Views",
 	(Views, App, Backbone, Marionette,$, _)->
 
-		mcqID = 0
 		
 
 		class OptionView extends Marionette.ItemView
@@ -39,13 +38,11 @@ define ['app'],(App)->
 				@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
 				@editor.setData _.stripslashes @model.get 'text'
 
-				setTimeout ->
-					$('div.cke').on 'mouseenter',->
-						App.ContentCreator.closequestioneproperty = false
+				_.delay ->
+					$('div.cke').on 'click',(evt)->
+						evt.stopPropagation()
 
-					$('div.cke').on 'mouseleave',->
-						App.ContentCreator.closequestioneproperty = true
-				,2000
+				,3000
 
 
 
@@ -70,46 +67,39 @@ define ['app'],(App)->
 			itemViewContainer : 'div.options'
 
 			initialize:(options)->
-				mcqID = options.meta
-				console.log mcqID
+					@mcq_model = options.mcq_model
 
-			# trigger whrn the no of options has been changed
-			# change the default radio to checkbox if multple 
+				
+
+			# # trigger when the no of models in collection has been changed
+			# # change the default radio to checkbox if multple 
 			onAfterItemAdded:->
-				@$el.find('input').attr 'name','mcq-'+mcqID
-				@trigger "change:radio:to:checkbox"
+					if @mcq_model.get 'multiple'
+							@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
 			
+			# triggered on show of the view
 			onShow:->
-				@$el.attr 'id', 'mcq-'+mcqID
-				@$el.find('input').attr 'name','mcq-'+mcqID
+					if @mcq_model.get 'multiple'
+							@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
 
-				@trigger "change:radio:to:checkbox"
+					# set event handler for click of mcq and stop propogation of the event
+					@$el.parent().parent().on 'click',(evt)=>
+							@trigger "show:this:mcq:properties"
+							evt.stopPropagation()
 
-				@_setActiveHandler()
+					# events handlers for change of model attributes
+					@mcq_model.on 'change:multiple', @_changeMultipleAnswers
 
-			_setActiveHandler:->
+			# on change of multiple attribute in the model 
+			# change the input type
+			_changeMultipleAnswers:(model,multiple)=>
+				if multiple
+					@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+				else
+					@$el.find('.mcq-option input.mcq-option-select').attr 'type','radio'
 
-				showMcqPropertyFlag = false
+			
 
-				@$el.parent().parent().on 'mouseenter',->
-					showMcqPropertyFlag = true
-
-				@$el.parent().parent().on 'mouseleave',->
-					showMcqPropertyFlag = false
-
-				@$el.parent().parent().on 'mouseenter',->
-					App.ContentCreator.closequestioneproperty = false
-
-				@$el.parent().parent().on 'mouseleave',->
-					App.ContentCreator.closequestioneproperty = true
-
-				$('body').on 'click',=>
-					if showMcqPropertyFlag
-						@trigger "show:this:mcq:properties"
-
-					if App.ContentCreator.closequestioneproperty
-						console.log App.ContentCreator.closequestioneproperty
-						@trigger "hide:this:mcq:properties"
-
+				
 
 

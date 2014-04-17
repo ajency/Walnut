@@ -5,7 +5,7 @@
 # </ul>
 require.config 
 	
-	urlArgs : "ver=1"
+	urlArgs : "ver=#{(new Date()).getTime()}"
 	
 	baseUrl : '../wp-content/themes/walnut/walnut/dev/js'
 	
@@ -37,7 +37,8 @@ require.config
 		jqueryknob			: 'plugins/jquery.knob'
 		ckeditor			: 'plugins/ckeditor/ckeditor'
 		# bootstrapselect 	: 'plugins/bootstrapselect'
-		select2       : 'plugins/select2.min'
+		select2       		: 'plugins/select2.min'
+		tagsinput 			: 'plugins/bootstrap-tagsinput.min'
 
 	shim:
 		underscore: 
@@ -65,6 +66,7 @@ require.config
 		underscorestring : ['underscore']
 		syphon		: ['backbone']
 		select2      : ['jquery','bootstrap']
+		tagsinput : ['jquery','bootstrap']
 		app 		: ['plugins/content-creator-pluginloader','config/content-creator-configloader']
 
 	

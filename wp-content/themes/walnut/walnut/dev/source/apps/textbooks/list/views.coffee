@@ -33,7 +33,7 @@ define ['app'
 
 			serializeData : ->
 				data = super()
-				class_ids =@model.get 'classes'
+				class_ids = @model.get 'classes'
 				if class_ids
 					item_classes= _.sortBy(class_ids, (num)-> num)
 					class_string= ''

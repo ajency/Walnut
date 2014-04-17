@@ -18,7 +18,6 @@ define ['app'
 
 						@listenTo @layout,"change:option:number",(number)=>
 							@model.set 'optioncount',parseInt number
-							console.log @model
 
 						@listenTo @layout,"show:individual:marks:table", =>
 								marksView = @_getMarksView @model
@@ -38,6 +37,9 @@ define ['app'
 
 						new McqPropertyBox.Views.MarksView
 							collection : model.get 'elements'
+
+					onClose:->
+						localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
 
 
 
