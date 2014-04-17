@@ -168,9 +168,15 @@ function update_group_content_pieces($data= array()){
 function get_all_content_groups($args=array()){
     
     global $wpdb;
+    $search_str= ' where 1';
     
-    $content_groups = $wpdb->get_results("select id from {$wpdb->prefix}content_collection");
+    if(isset($args['textbook']))
+        $search_str .= ' and term_ids like "%\"'.$args['textbook'].'\";%"';
     
+        
+    $content_groups = $wpdb->get_results("select id from {$wpdb->prefix}content_collection ".$search_str);
+    
+    //echo "select id from {$wpdb->prefix}content_collection ".$search_str; exit;
     $content_data=array();
     
     foreach($content_groups as $item)
