@@ -3,5 +3,5 @@ define ['config/marionette'
 		'config/jquery-validate'
 		'config/middle-layer'
 		'config/jquery'
-		#'config/app-storage'
+		'config/app-storage'
 		], ->
