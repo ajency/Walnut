@@ -17,11 +17,11 @@ require_once('../../../wp-admin/includes/plugin.php');
 
 function create_custom_tables(){
     global $wpdb;
-   $textbook_class_relations_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}textbook_relationships 
-            (`id` INT NOT NULL AUTO_INCREMENT, `textbook_id` INT NOT NULL, 
-            `class_id` INT NOT NULL, PRIMARY KEY (`id`))";
-   
-   $wpdb->query($textbook_class_relations_table);
+    $textbook_class_relations_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}textbook_relationships 
+             (`id` INT NOT NULL AUTO_INCREMENT, `textbook_id` INT NOT NULL, 
+             `class_id` INT NOT NULL, PRIMARY KEY (`id`))";
+
+    $wpdb->query($textbook_class_relations_table);
 }
 create_custom_tables();
 /**
