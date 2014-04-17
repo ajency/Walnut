@@ -34,7 +34,7 @@ function authenticate_web_login() {
 	}
 }
 
-add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_app_login' );
+add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
 
 function authenticate_app_login() {
 	$login_data=$_POST['data'];
