@@ -35,7 +35,8 @@
     ckeditor      : 'plugins/ckeditor/ckeditor',
     // bootstrapselect   : 'plugins/bootstrapselect',
     select2       : 'plugins/select2.min',
-    tagsinput : 'plugins/bootstrap-tagsinput.min'
+    tagsinput : 'plugins/bootstrap-tagsinput.min',
+    screwbuttons    : 'plugins/jquery.screwdefaultbuttonsV2'
     
   },
   shim: {
@@ -68,6 +69,7 @@
     checkbox  : ['bootstrap'],
     select2      : ['jquery','bootstrap'],
     tagsinput : ['jquery','bootstrap'],
+    screwbuttons : ['jquery'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 })
