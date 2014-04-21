@@ -797,6 +797,59 @@ h3.time {
     *width: 20%;
   }
 }
+#myCanvas-miki .cbp_tmlabel {
+  cursor: pointer;
+}
+#myCanvas-miki .cbp_tmlabel a {
+  color: #0aa699;
+}
+#myCanvas-miki .cbp_tmlabel .tools {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  float: right;
+}
+#myCanvas-miki .cbp_tmlabel .tools > a {
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 16px;
+  width: 15px;
+  height: 15px;
+  color: #aab7c1;
+}
+#myCanvas-miki .cbp_tmlabel .tools > a.remove:before {
+  content: "\f00d";
+  font-family: FontAwesome;
+}
+#myCanvas-miki .cbp_tmlabel .tools > a.config:before {
+  content: "\f013";
+  font-family: FontAwesome;
+}
+#myCanvas-miki .cbp_tmlabel.done {
+  background-color: #f3f3f3;
+}
+#myCanvas-miki .cbp_tmlabel.done a {
+  color: #0bbeaf;
+}
+#myCanvas-miki .cbp_tmlabel.done .tiles.grey {
+  border-top: 1px solid #ffffff;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece,
+#myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel {
+  cursor: move;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmicon,
+#myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel .cbp_tmicon {
+  top: auto;
+}
+#myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel.view {
+  cursor: default;
+}
+#myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel.done:after {
+  border-right-color: #f3f3f3;
+}
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
   width: 50%;

@@ -103,7 +103,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         if ($(e.target).val() === 'take-class') {
           class_id = this.$el.find('#class').val();
           div_id = this.$el.find('#div').val();
-          App.navigate('teachers/take-class/' + class_id + '-' + div_id, {
+          App.navigate('teachers/take-class/' + class_id + '/' + div_id, {
             trigger: true
           });
         }

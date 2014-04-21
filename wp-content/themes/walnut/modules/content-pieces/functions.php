@@ -148,41 +148,68 @@ function update_group_content_pieces($data= array()){
     global $wpdb;
     $content_pieces = maybe_serialize($data['content_pieces']);
     
-    $exists = $wpdb->get_results("select id from {$wpdb->prefix}collection_meta where collection_id=".$data['id']." 
-        and meta_key='content_pieces'");
+    $exists_qry = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}collection_meta WHERE 
+        collection_id=%d AND meta_key=%s", $data['id'], 'content_pieces');
+    
+    $exists = $wpdb->get_results($exists_qry);
     
     if($exists){
-        $content_pieces_qry = "update {$wpdb->prefix}collection_meta set
-            meta_value='" . $content_pieces . "' where collection_id=".$data['id']."
-            and meta_key='content_pieces'";
+        $content_pieces_qry = $wpdb->prepare("UPDATE {$wpdb->prefix}collection_meta SET
+            meta_value=%s WHERE collection_id=%d AND meta_key=%s", 
+                $content_pieces,$data['id'],'content_pieces' );
     }
 
     else{
-        $content_pieces_qry = "insert into {$wpdb->prefix}collection_meta 
-            (collection_id, meta_key, meta_value) values (".$data['id'].",'content_pieces', '" . $content_pieces . "')";
+        $content_pieces_qry = $wpdb->prepare("INSERT into {$wpdb->prefix}collection_meta 
+            (collection_id, meta_key, meta_value) VALUES (%d,%s,%s)",
+                $data['id'],'content_pieces',$content_pieces );
     }
     
     $wpdb->query($content_pieces_qry);
 }
 
-function get_all_content_groups($args=array()){
+function update_training_module_status($args=array()){
     
     global $wpdb;
-    $search_str= ' where 1';
+    
+    extract($args);
+    
+    if(!isset($teacher_id))
+        $teacher_id= get_current_user_id();
+    
+    $data=array(
+        'division_id'=> 1,
+        'collection_id'=>$id,
+        'teacher_id'=> $teacher_id,
+        'date'=>date('Ymd'),
+        'status'=>$status
+    );
+    
+    $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
+    
+}
+
+function get_all_content_groups($args=array()){
+    
+    $current_blog= get_current_blog_id();
+    switch_to_blog(1);
+    
+    global $wpdb;
+    
+    $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection", null);
     
     if(isset($args['textbook']))
-        $search_str .= ' and term_ids like "%\"'.$args['textbook'].'\";%"';
+        $query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
     
-        
-    $content_groups = $wpdb->get_results("select id from {$wpdb->prefix}content_collection ".$search_str);
+    $content_groups = $wpdb->get_results($query);
     
-    //echo "select id from {$wpdb->prefix}content_collection ".$search_str; exit;
     $content_data=array();
+    switch_to_blog($current_blog);
     
     foreach($content_groups as $item)
         $content_data[]=  get_single_content_group($item->id);
     
-    
+    switch_to_blog($current_blog);
     return $content_data;
 }
 
@@ -190,30 +217,57 @@ function get_single_content_group($id){
     
     global $wpdb;
     
-    $fetch_query="select * from {$wpdb->prefix}content_collection where id=".$id;
-    $data = $wpdb->get_results($fetch_query);
+    $current_blog= get_current_blog_id();
+    switch_to_blog(1);
+    
+    $query = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}content_collection WHERE id= %d", $id);
+
+    $data = $wpdb->get_results($query);
     
     foreach ($data as $item){
         $data=$item;
-        $data->term_ids= maybe_unserialize ($data->term_ids);    
-        $duration = $item->duration;
-        $data->minshours ='mins';
+        $data->term_ids         = maybe_unserialize ($data->term_ids);    
+        $duration               = $item->duration;
+        $data->minshours        ='mins';
+        $data->total_minutes    = $data->duration; // only used for sorting accoring to time
         if($duration >= 60){
-            $data->duration= $duration/60;
-            $data->minshours ='hrs';
+            $data->duration     = $duration/60;
+            $data->minshours    ='hrs';
         }
     }
     
-    $description= $wpdb->get_results("select * from 
-    {$wpdb->prefix}collection_meta where collection_id=".$id, ARRAY_A);
+    
+    switch_to_blog($current_blog);
+    
+    $training_logs_query = $wpdb->prepare("SELECT * FROM 
+        {$wpdb->prefix}training_logs where collection_id=%d and status in ('started','completed')", $id);
+     
+    $training_logs  = $wpdb->get_results($training_logs_query);  
+    
+    foreach($training_logs as $logs){
+       if($logs->status=='started')
+           $data->status= 'started';
+       if($logs->status=='completed')
+           $data->status= 'completed';
+       $data->training_date= $logs->date;
+    }
+    
+    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta 
+        WHERE collection_id=%d",$id);
+    
+    $description= $wpdb->get_results($query_description);
 
     $data->description=$data->content_pieces=array();
 
     foreach($description as $key=>$value){
-       if ($value['meta_key']=='description' || $value['meta_key']=='content_pieces' ){
-           $meta_val = maybe_unserialize ($value['meta_value']);
-           $data->$value['meta_key']= $meta_val;
-       }
+       $meta_val = maybe_unserialize ($value->meta_value);
+       
+       if ($value->meta_key=='description')
+           $data->description= $meta_val;
+           
+       if ($value->meta_key=='content_pieces' )
+           $data->content_pieces= $meta_val;
+       
     }
     return $data;
     

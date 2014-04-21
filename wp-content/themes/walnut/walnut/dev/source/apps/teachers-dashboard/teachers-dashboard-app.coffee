@@ -11,10 +11,10 @@ define ['app'
 				class TeachersDashboardRouter extends Marionette.AppRouter
 
 					appRoutes : 
-						'teachers/dashboard' 					: 'teachersDashboard'
-						'teachers/take-class/:class_id-*div' 	: 'takeClass'
-						'teachers/start-training/:class_id' 	: 'startTraining'
-						'teachers/content-modules/textbook/:t_id'		 	: 'textbookModules'
+						'teachers/dashboard' 						: 'teachersDashboard'
+						'teachers/take-class/:classID/:div' 		: 'takeClass'
+						'teachers/start-training/:classID' 			: 'startTraining'
+						'teachers/take-class/:classID/:div/textbook/:tID' 	: 'textbookModules'
 
 
 				Controller = 
@@ -22,21 +22,21 @@ define ['app'
 						new TeachersDashboardApp.View.DashboardController
 											region : App.mainContentRegion
 
-					takeClass :(class_id,div) ->
+					takeClass :(classID,div) ->
 						new TeachersDashboardApp.View.TakeClassController
 							region 		: App.mainContentRegion
-							classID 	: class_id
+							classID 	: classID
 							division	: div
 
-					startTraining :(class_id) ->
+					startTraining :(classID) ->
 						new TeachersDashboardApp.View.StartTrainingController
 							region 		: App.mainContentRegion
-							classID 	: class_id
+							classID 	: classID
 
-					textbookModules :(t_id) ->
+					textbookModules :(classID,div,tID) ->
 						new TeachersDashboardApp.View.textbookModulesController
 							region 		: App.mainContentRegion
-							textbookID 	: t_id
+							textbookID 	: tID
 
 
 	

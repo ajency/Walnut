@@ -43,7 +43,8 @@ define ['app'
 				App.execute "when:fetched", [@textbooks,@divisionModel], =>
 					console.log @divisionModel
 					textbookListView= new View.TakeClass.TextbooksListView
-											collection: @textbooks
+							collection: @textbooks
+
 
 					classDescriptionView = new ClassDescriptionView
 							model: @divisionModel

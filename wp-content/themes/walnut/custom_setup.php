@@ -22,6 +22,16 @@ function create_custom_tables(){
              `class_id` INT NOT NULL, PRIMARY KEY (`id`))";
 
     $wpdb->query($textbook_class_relations_table);
+    
+    $class_divisions_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}training_logs 
+             (`id` INT NOT NULL AUTO_INCREMENT, `division_id` INT NOT NULL, 
+             `collection_id` INT NOT NULL, 
+             `teacher_id` INT NOT NULL, 
+             `date` DATETIME NOT NULL, 
+             `status` VARCHAR(255) NOT NULL, 
+             PRIMARY KEY (`id`))";
+
+    $wpdb->query($class_divisions_table);
 }
 create_custom_tables();
 /**
