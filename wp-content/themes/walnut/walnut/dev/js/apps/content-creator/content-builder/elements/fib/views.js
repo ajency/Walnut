@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
@@ -8,7 +7,6 @@ define(['app'], function(App) {
       __extends(FibView, _super);
 
       function FibView() {
-        this.configureEditor = __bind(this.configureEditor, this);
         return FibView.__super__.constructor.apply(this, arguments);
       }
 
@@ -44,8 +42,7 @@ define(['app'], function(App) {
       };
 
       FibView.prototype.initialize = function(options) {
-        this.blanksCollection = this.model.get('blanksArray');
-        return console.log(this.blanksCollection);
+        return this.blanksCollection = this.model.get('blanksArray');
       };
 
       FibView.prototype.onShow = function() {
@@ -57,7 +54,6 @@ define(['app'], function(App) {
           };
         })(this));
         this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
-        CKEDITOR.on('instanceCreated', this.configureEditor);
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
         return _.delay((function(_this) {
@@ -67,18 +63,6 @@ define(['app'], function(App) {
             });
           };
         })(this), 500);
-      };
-
-      FibView.prototype.configureEditor = function(event) {
-        var editor, element;
-        editor = event.editor;
-        element = editor.element;
-        return editor.on("configLoaded", function() {
-          return editor.config.toolbar.splice(2, 0, {
-            name: 'forms',
-            items: ['TextField']
-          });
-        });
       };
 
       FibView.prototype._changeFont = function(font) {
@@ -130,7 +114,6 @@ define(['app'], function(App) {
             }
             return _.delay(function() {
               var blanksModel;
-              console.log(_this.blanksCollection);
               blanksModel = _this.blanksCollection.get($(blank).attr('data-id'));
               blanksModel.off('change:maxlength');
               blanksModel.on('change:maxlength', function(model, maxlength) {

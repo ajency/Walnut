@@ -12,7 +12,7 @@ define ['app'],(App)->
 			tagName : 'div'
 
 			template : '<span>{{optionNo}}</span>
-						<input class="mcq-option-select" id="option-{{optionNo}}" type="radio"  value="no">
+						<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no">
 						
 						<p class="mcq-option-text"></p>'
 
@@ -45,6 +45,13 @@ define ['app'],(App)->
 
 				,500
 
+				# custom checkbox
+				@$el.find('input:checkbox').screwDefaultButtons
+					image: 'url("../wp-content/themes/walnut/images/csscheckbox.png")'
+					width: 32
+					height: 26
+					
+
 
 
 			# destroy the Ckeditor instance to avoiid memory leaks on close of element
@@ -72,32 +79,32 @@ define ['app'],(App)->
 
 				
 
-			# # trigger when the no of models in collection has been changed
-			# # change the default radio to checkbox if multple 
-			onAfterItemAdded:->
-					if @mcq_model.get 'multiple'
-							@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+			# # # trigger when the no of models in collection has been changed
+			# # # change the default radio to checkbox if multple 
+			# onAfterItemAdded:->
+			# 		if @mcq_model.get 'multiple'
+			# 				@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
 			
 			# triggered on show of the view
 			onShow:->
-					if @mcq_model.get 'multiple'
-							@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+					# if @mcq_model.get 'multiple'
+					# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
 
 					# set event handler for click of mcq and stop propogation of the event
 					@$el.parent().parent().on 'click',(evt)=>
 							@trigger "show:this:mcq:properties"
 							evt.stopPropagation()
 
-					# events handlers for change of model attributes
-					@mcq_model.on 'change:multiple', @_changeMultipleAnswers
+					# # events handlers for change of model attributes
+					# @mcq_model.on 'change:multiple', @_changeMultipleAnswers
 
-			# on change of multiple attribute in the model 
-			# change the input type
-			_changeMultipleAnswers:(model,multiple)=>
-				if multiple
-					@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
-				else
-					@$el.find('.mcq-option input.mcq-option-select').attr 'type','radio'
+			# # on change of multiple attribute in the model 
+			# # change the input type
+			# _changeMultipleAnswers:(model,multiple)=>
+			# 	if multiple
+			# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+			# 	else
+			# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','radio'
 
 			
 

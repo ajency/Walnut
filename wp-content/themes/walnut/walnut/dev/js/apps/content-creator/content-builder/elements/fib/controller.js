@@ -66,6 +66,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.deleteElement = function(model) {
+        model.set('blanksArray', '');
+        delete model.get('blanksArray');
         model.destroy();
         App.execute("close:question:properties");
         return this.eventObj.vent.trigger("question:removed");

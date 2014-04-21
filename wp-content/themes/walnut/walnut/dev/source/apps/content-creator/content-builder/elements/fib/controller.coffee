@@ -59,6 +59,8 @@ define ['app'
 									model : model
 
 					deleteElement:(model)->
+							model.set('blanksArray','')
+							delete model.get 'blanksArray'
 							model.destroy()
 							App.execute "close:question:properties"
 							# on delete enable all question elements in d element box

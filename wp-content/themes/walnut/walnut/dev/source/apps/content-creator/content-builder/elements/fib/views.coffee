@@ -33,7 +33,7 @@ define ['app'],(App)->
 
 			initialize:(options)->
 				@blanksCollection = @model.get 'blanksArray'
-				console.log @blanksCollection
+
 
 
 			onShow : ->
@@ -47,7 +47,7 @@ define ['app'],(App)->
 
 
 				@$el.find('p').attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
-				CKEDITOR.on 'instanceCreated', @configureEditor
+				# CKEDITOR.on 'instanceCreated', @configureEditor
 				@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
 				@editor.setData _.stripslashes @model.get 'text'
 
@@ -59,31 +59,23 @@ define ['app'],(App)->
 				,500
 				
 
-			# set configuration for the Ckeditor
-			configureEditor: (event) =>
-				editor = event.editor
-				element = editor.element
-				# Customize the editor configurations on "configLoaded" event,
-				# which is fired after the configuration file loading and
-				# execution. This makes it possible to change the
-				# configurations before the editor initialization takes place.
-				editor.on "configLoaded", ->
+			# # set configuration for the Ckeditor
+			# configureEditor: (event) =>
+			# 	editor = event.editor
+			# 	element = editor.element
+			# 	# Customize the editor configurations on "configLoaded" event,
+			# 	# which is fired after the configuration file loading and
+			# 	# execution. This makes it possible to change the
+			# 	# configurations before the editor initialization takes place.
+			# 	editor.on "configLoaded", ->
 
-					# Rearrange the layout of the toolbar.
-					# console.log editor.config.toolbar.indexOf 
-
-					editor.config.toolbar.splice 2,0,
-								name: 'forms'
-								items: [ 'TextField'] 
+			# 		# Rearrange the layout of the toolbar.
+			# 		console.log editor.config.toolbar
+			# 		editor.config.toolbar.splice 2,0,
+			# 					name: 'forms'
+			# 					items: [ 'TextField'] 
 							
 			
-
-
-			# on change of maxlength property
-			# _changeMaxLength:(model,maxlength)->
-			# 		@$el.find('input').prop 'maxLength',parseInt maxlength
-
-
 			# on change of font property
 			_changeFont:(font)->
 					@$el.find('input').css 'font-family',font
@@ -139,8 +131,6 @@ define ['app'],(App)->
 						@trigger "create:new:fib:element", blanksData
 
 					_.delay =>
-						console.log @blanksCollection
-						
 						# get a reference to the model
 						blanksModel = @blanksCollection.get $(blank).attr 'data-id'
 						

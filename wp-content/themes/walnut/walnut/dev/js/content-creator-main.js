@@ -30,7 +30,7 @@ require.config({
     ckeditor: 'plugins/ckeditor/ckeditor',
     select2: 'plugins/select2.min',
     tagsinput: 'plugins/bootstrap-tagsinput.min',
-    formelements: 'plugins/custom-form-elements'
+    screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
   },
   shim: {
     underscore: {
@@ -62,6 +62,7 @@ require.config({
     syphon: ['backbone'],
     select2: ['jquery', 'bootstrap'],
     tagsinput: ['jquery', 'bootstrap'],
+    screwbuttons: ['jquery'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 });
