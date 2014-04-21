@@ -28,6 +28,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
             return _this._getHotspotElementProperties(options.model);
           };
         })(this));
+        App.commands.setHandler("show:fib:element:properties", (function(_this) {
+          return function(options) {
+            return _this._getFibElementProperties(options.model);
+          };
+        })(this));
         App.commands.setHandler("close:question:element:properties", (function(_this) {
           return function() {
             return _this.layout.questElementPropRegion.close();
@@ -62,6 +67,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
 
       PropertyDockController.prototype._getHotspotElementProperties = function(model) {
         return App.execute("show:hotspot:element:properties:box", {
+          region: this.layout.questElementPropRegion,
+          model: model
+        });
+      };
+
+      PropertyDockController.prototype._getFibElementProperties = function(model) {
+        return App.execute("show:fib:element:properties:box", {
           region: this.layout.questElementPropRegion,
           model: model
         });

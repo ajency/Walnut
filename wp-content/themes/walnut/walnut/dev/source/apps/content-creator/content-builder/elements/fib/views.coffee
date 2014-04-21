@@ -30,10 +30,10 @@ define ['app'],(App)->
 				'click a'	: (e)-> e.preventDefault()
 				'blur p'	: '_textBlur'
 				'DOMSubtreeModified p'	: '_updateInputProperties'
-				# 'click input': ->console.log "input"
 
 			initialize:(options)->
-				@blanksCollection = options.blanksCollection
+				@blanksCollection = @model.get 'blanksArray'
+				console.log @blanksCollection
 
 
 			onShow : ->
@@ -41,6 +41,7 @@ define ['app'],(App)->
 				# setting of on click handler for showing of the property box for fib element
 				@$el.parent().parent().on 'click',(evt)=>
 					@trigger "show:this:fib:properties"
+					@trigger "close:hotspot:element:properties"
 					# stop propogation of click event
 					evt.stopPropagation()
 
@@ -69,6 +70,8 @@ define ['app'],(App)->
 				editor.on "configLoaded", ->
 
 					# Rearrange the layout of the toolbar.
+					# console.log editor.config.toolbar.indexOf 
+
 					editor.config.toolbar.splice 2,0,
 								name: 'forms'
 								items: [ 'TextField'] 
@@ -112,33 +115,50 @@ define ['app'],(App)->
 
 
 			_textBlur:(evt)->
-		
 				@model.set 'text', @$el.find('p').html()
 
+			# on modification of dom structure modification of p
 			_updateInputProperties:->
+				# iterate thru all input tags in current view
 				_.each @$el.find('input') ,(blank)=>
+					# if any input tag is without 'data-id' attr
 					if  _.isUndefined $(blank).attr('data-id')
+						# a a random unique id to the input
 						$(blank).attr 'data-id',_.uniqueId 'input-'
-						
+						# wait for ckeditor to finish adding the input
+						_.delay ->
+							$(blank).prop 'maxLength',parseInt 12
+						,100
+						# default val for model
 						blanksData = 
 								id : $(blank).attr 'data-id'
-								correct : []
+								correct_answers : []
 								marks : 1
-								maxlength : 12 #parseInt $(blank).attr 'maxlength' ? 12
+								maxlength : 12
+						# create a model and add to collection
 						@trigger "create:new:fib:element", blanksData
 
-						blanksModel = @blanksCollection.get $(blank).attr 'data-id'
-
-						$(blank).on 'click',->
-							console.log blanksModel
-
+					_.delay =>
+						console.log @blanksCollection
 						
-					# else
-					# 	_.delay =>
-					# 		@blanksCollection.get($(blank).attr('data-id')).set 'maxlength',parseInt $(blank).attr 'maxlength'
-					# 	,10
+						# get a reference to the model
+						blanksModel = @blanksCollection.get $(blank).attr 'data-id'
+						
+						# remove the event handler and add it again to prevent multiple event listeners
+						blanksModel.off('change:maxlength')
+						blanksModel.on 'change:maxlength',(model,maxlength)=>
+							@$el.find('input[data-id='+model.get('id')+']').prop 'maxLength',maxlength
+						
+						# # remove all events
+						$(blank).off()
+						# on click of input show properties for it
+						$(blank).on 'click',(e)=>
+							App.execute "show:fib:element:properties",
+								model : blanksModel
+							@trigger "show:this:fib:properties"
+							e.stopPropagation()
+					,10
 
-				
 				_.delay =>
 					if @blanksCollection.length > 0
 						_.each @blanksCollection.toJSON(), (blank)=>
@@ -147,9 +167,6 @@ define ['app'],(App)->
 							if _.isUndefined blankFound
 								@blanksCollection.remove blank
 				,100
-
-
-				console.log JSON.stringify @blanksCollection
 
 				@_changeFont @model.get 'font'
 				@_changeSize @model.get 'font_size'

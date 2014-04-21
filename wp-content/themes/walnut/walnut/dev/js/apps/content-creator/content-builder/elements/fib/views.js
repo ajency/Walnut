@@ -44,13 +44,15 @@ define(['app'], function(App) {
       };
 
       FibView.prototype.initialize = function(options) {
-        return this.blanksCollection = options.blanksCollection;
+        this.blanksCollection = this.model.get('blanksArray');
+        return console.log(this.blanksCollection);
       };
 
       FibView.prototype.onShow = function() {
         this.$el.parent().parent().on('click', (function(_this) {
           return function(evt) {
             _this.trigger("show:this:fib:properties");
+            _this.trigger("close:hotspot:element:properties");
             return evt.stopPropagation();
           };
         })(this));
@@ -112,21 +114,37 @@ define(['app'], function(App) {
       FibView.prototype._updateInputProperties = function() {
         _.each(this.$el.find('input'), (function(_this) {
           return function(blank) {
-            var blanksData, blanksModel;
+            var blanksData;
             if (_.isUndefined($(blank).attr('data-id'))) {
               $(blank).attr('data-id', _.uniqueId('input-'));
+              _.delay(function() {
+                return $(blank).prop('maxLength', parseInt(12));
+              }, 100);
               blanksData = {
                 id: $(blank).attr('data-id'),
-                correct: [],
+                correct_answers: [],
                 marks: 1,
                 maxlength: 12
               };
               _this.trigger("create:new:fib:element", blanksData);
-              blanksModel = _this.blanksCollection.get($(blank).attr('data-id'));
-              return $(blank).on('click', function() {
-                return console.log(blanksModel);
-              });
             }
+            return _.delay(function() {
+              var blanksModel;
+              console.log(_this.blanksCollection);
+              blanksModel = _this.blanksCollection.get($(blank).attr('data-id'));
+              blanksModel.off('change:maxlength');
+              blanksModel.on('change:maxlength', function(model, maxlength) {
+                return _this.$el.find('input[data-id=' + model.get('id') + ']').prop('maxLength', maxlength);
+              });
+              $(blank).off();
+              return $(blank).on('click', function(e) {
+                App.execute("show:fib:element:properties", {
+                  model: blanksModel
+                });
+                _this.trigger("show:this:fib:properties");
+                return e.stopPropagation();
+              });
+            }, 10);
           };
         })(this));
         _.delay((function(_this) {
@@ -144,7 +162,6 @@ define(['app'], function(App) {
             }
           };
         })(this), 100);
-        console.log(JSON.stringify(this.blanksCollection));
         this._changeFont(this.model.get('font'));
         this._changeSize(this.model.get('font_size'));
         this._changeColor(this.model.get('color'));
