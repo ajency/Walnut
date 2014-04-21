@@ -266,13 +266,13 @@ define(['app'], function(App) {
           return function(resizer) {
             var left, right, width;
             width = _this.$el.width();
-            left = _this.$el.offset().left + 50;
+            left = _this.$el.offset().left + width / 24;
             if (typeof $(resizer).prev('.aj-imp-col-divider').position() !== 'undefined') {
-              left = _this.$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + 50;
+              left = _this.$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + width / 24;
             }
-            right = _this.$el.offset().left + width - 50;
+            right = _this.$el.offset().left + width - width / 24;
             if (typeof $(resizer).next('.aj-imp-col-divider').position() !== 'undefined') {
-              right = _this.$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - 50;
+              right = _this.$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - width / 24;
             }
             return $(resizer).draggable("option", "containment", [left, 0, right, 0]);
           };

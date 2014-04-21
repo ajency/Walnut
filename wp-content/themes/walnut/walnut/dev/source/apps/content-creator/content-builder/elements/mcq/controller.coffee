@@ -9,6 +9,8 @@ define ['app'
 
 						initialize:(options)->
 
+							@eventObj = options.eventObj
+
 							# set default values for model
 							_.defaults options.modelData,
 										element  	: 'Mcq'
@@ -43,6 +45,10 @@ define ['app'
 							@listenTo view, "show show:this:mcq:properties",(options)=>									
 									App.execute "show:question:properties", 
 										model : @layout.model
+
+							# on show disable all question elements in d element box
+							@listenTo view, "show",=>
+								@eventObj.vent.trigger "question:dropped"
 
 							# show the view
 							@layout.elementRegion.show view
@@ -81,3 +87,6 @@ define ['app'
 							delete model.get 'elements'
 							model.destroy()
 							App.execute "close:question:properties"
+							# on delete enable all question elements in d element box
+							@eventObj.vent.trigger "question:removed"
+

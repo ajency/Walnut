@@ -45,3 +45,12 @@ define ['underscore', 'underscorestring'], ( _) ->
 			      	else
 			        	n1
 
+		# convert hex and opacity to rgba format for css
+		convertHex:(hex,opacity = 1)->
+			hex = hex.replace '#',''
+			r = parseInt hex.substring(0,2), 16
+			g = parseInt hex.substring(2,4), 16
+			b = parseInt hex.substring(4,6), 16
+
+			result = 'rgba('+r+','+g+','+b+','+opacity+')'
+

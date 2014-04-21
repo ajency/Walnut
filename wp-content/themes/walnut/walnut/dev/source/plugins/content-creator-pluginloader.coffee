@@ -23,4 +23,5 @@ define [
 			# 'bootstrapselect'
 			'select2'
 			'tagsinput'
+			'formelements'
 		], ->

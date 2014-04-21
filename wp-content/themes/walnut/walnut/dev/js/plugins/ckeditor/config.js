@@ -25,7 +25,9 @@ config.toolbar = [
 								groups: [ 'find', 'selection', 'spellchecker' ],
 								items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] }
 							,
-					// # 			# { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+							// 	{ name: 'forms',
+							// 	items: [ 'TextField'] }
+							// ,
 								'/'
 							,
 								{name: 'basicstyles',

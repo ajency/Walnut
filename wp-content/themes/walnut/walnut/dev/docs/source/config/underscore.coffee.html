@@ -137,6 +137,27 @@
                 <span class="s">&quot;&quot;</span>
               <span class="k">else</span>
                 <span class="nx">n1</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>convert hex and opacity to rgba format for css</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nx">convertHex</span><span class="o">:</span><span class="nf">(hex,opacity = 1)-&gt;</span>
+
+      <span class="nv">hex = </span><span class="nx">hex</span><span class="p">.</span><span class="nx">replace</span> <span class="s">&#39;#&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span>
+        <span class="nv">r = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span>
+        <span class="nv">g = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="mi">16</span>
+        <span class="nv">b = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="mi">16</span>
+
+        <span class="nv">result = </span><span class="s">&#39;rgba(&#39;</span><span class="o">+</span><span class="nx">r</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">+</span><span class="nx">g</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">+</span><span class="nx">b</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">+</span><span class="nx">opacity</span><span class="o">+</span><span class="s">&#39;)&#39;</span>
 </pre></div>
         </td>
       </tr>

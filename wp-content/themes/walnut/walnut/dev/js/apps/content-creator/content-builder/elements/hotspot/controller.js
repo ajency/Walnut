@@ -13,6 +13,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       }
 
       Controller.prototype.initialize = function(options) {
+        this.eventObj = options.eventObj;
         _.defaults(options.modelData, {
           element: 'Hotspot',
           content: '',
@@ -52,6 +53,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         this.listenTo(view, "close:hotspot:element:properties", function() {
           return App.execute("close:question:element:properties");
         });
+        this.listenTo(view, "show", (function(_this) {
+          return function() {
+            return _this.eventObj.vent.trigger("question:dropped");
+          };
+        })(this));
         this.layout.elementRegion.show(view, {
           loading: true
         });
@@ -61,12 +67,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.deleteElement = function(model) {
-        if (!this.layout.elementRegion.currentView.$el.canBeDeleted()) {
-          return alert("Please remove elements inside row and then delete.");
-        } else {
-          model.destroy();
-          return App.execute("close:question:elements");
-        }
+        model.destroy();
+        App.execute("close:question:elements");
+        return this.eventObj.vent.trigger("question:removed");
       };
 
       return Controller;

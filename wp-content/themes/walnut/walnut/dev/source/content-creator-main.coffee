@@ -39,6 +39,7 @@ require.config
 		# bootstrapselect 	: 'plugins/bootstrapselect'
 		select2       		: 'plugins/select2.min'
 		tagsinput 			: 'plugins/bootstrap-tagsinput.min'
+		formelements 		: 'plugins/custom-form-elements'
 
 	shim:
 		underscore: 
@@ -73,7 +74,7 @@ require.config
 
 ## Start with application
 require [	'plugins/content-creator-pluginloader'
-			'configs/content-creator-configloader'
+			'config/content-creator-configloader'
 			'app'
 			'entitiesloader'
 			'componentloader'

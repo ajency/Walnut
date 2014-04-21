@@ -12,11 +12,23 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       }
 
       ElementBoxController.prototype.initialize = function(options) {
+        var eventObj;
+        eventObj = options.eventObj;
         this.view = this._getElementBoxView();
+        this.listenTo(eventObj.vent, "question:dropped", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("question:dropped");
+          };
+        })(this));
+        this.listenTo(eventObj.vent, "question:removed", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("question:removed");
+          };
+        })(this));
         return this.show(this.view);
       };
 
-      ElementBoxController.prototype._getElementBoxView = function(elementsCollection) {
+      ElementBoxController.prototype._getElementBoxView = function() {
         return new ElementBox.Views.ElementBoxView;
       };
 
@@ -24,9 +36,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
 
     })(RegionController);
     return App.commands.setHandler("show:element:box", function(options) {
-      return new ElementBoxController({
-        region: options.region
-      });
+      return new ElementBoxController(options);
     });
   });
 });

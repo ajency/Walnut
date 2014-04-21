@@ -11,6 +11,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       }
 
       Controller.prototype.initialize = function(options) {
+        this.eventObj = options.eventObj;
         _.defaults(options.modelData, {
           marks: 1,
           element: 'Sort',
@@ -47,6 +48,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
           };
         })(this));
+        this.listenTo(view, "show", (function(_this) {
+          return function() {
+            return _this.eventObj.vent.trigger("question:dropped");
+          };
+        })(this));
         return this.layout.elementRegion.show(view);
       };
 
@@ -61,7 +67,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         model.set('elements', '');
         delete model.get('elements');
         model.destroy();
-        return App.execute("close:question:properties");
+        App.execute("close:question:properties");
+        return this.eventObj.vent.trigger("question:removed");
       };
 
       Controller.prototype._changeOptionCount = function(model, num) {

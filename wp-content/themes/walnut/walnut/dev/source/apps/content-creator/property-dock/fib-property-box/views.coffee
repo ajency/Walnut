@@ -14,7 +14,7 @@ define ['app'],(App)->
 
 										<div class="form-group">
 											<div class="bootstrap-tagsinput"> 
-												<input id="correct-answers" value="{{correct_answers}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
+												<input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
 											</div>
 										</div>
 
@@ -135,11 +135,19 @@ define ['app'],(App)->
 				'change select#fib-style' : '_changeStyle'
 				'change input#correct-answers' : '_changeCorrectAnswers'
 
+			mixinTemplateHelpers:(data)->
+
+				data.correctanswersFn = ->
+					@correct_answers.toString()
+
+				# console.log JSON.stringify data
+
+				data
+
 			onShow:(options)->
 					@$el.find('input#correct-answers').tagsinput('refresh');
 					# @$el.find('input#correct-answers').tagsinput('input').val @model.get('correct_answers')
-					
-					console.log JSON.stringify @model.toJSON()
+
 
 
 					#initialize Case Sensitive Checkbox based on model
@@ -199,7 +207,7 @@ define ['app'],(App)->
 
 			# function for changing the correct answer array						
 			_changeCorrectAnswers:(evt)->
-					@model.set 'correct_answers',$(evt.target).val()
+					@model.set 'correct_answers',$(evt.target).val().split(',')
 					
 			# function for changing model on change of 
 			# case sensitive checkbox

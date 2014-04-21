@@ -30,11 +30,13 @@ define(['app'], function(App) {
         this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
-        return _.delay(function() {
-          return $('div.cke').on('click', function(evt) {
-            return evt.stopPropagation();
-          });
-        }, 500);
+        return _.delay((function(_this) {
+          return function() {
+            return $('#cke_' + _this.editor.name).on('click', function(evt) {
+              return evt.stopPropagation();
+            });
+          };
+        })(this), 500);
       };
 
       OptionView.prototype.onClose = function() {
@@ -70,6 +72,7 @@ define(['app'], function(App) {
         })(this));
         this._changeBGColor();
         this.sort_model.on('change:bg_color', this._changeBGColor);
+        this.sort_model.on('change:bg_opacity', this._changeBGColor);
         this.sort_model.on('change:height', this._changeHeight);
         this._enableSorting();
         return this._changeHeight(this.sort_model, this.sort_model.get('height'));
@@ -82,7 +85,7 @@ define(['app'], function(App) {
       };
 
       SortView.prototype._changeBGColor = function(model, bgColor) {
-        return this.$el.find('.sort-option').css('background-color', this._convertHex(this.sort_model.get('bg_color'), this.sort_model.get('bg_opacity')));
+        return this.$el.find('.sort-option').css('background-color', _.convertHex(this.sort_model.get('bg_color'), this.sort_model.get('bg_opacity')));
       };
 
       SortView.prototype._changeHeight = function(model, height) {
@@ -108,15 +111,6 @@ define(['app'], function(App) {
             }
           };
         })(this));
-      };
-
-      SortView.prototype._convertHex = function(hex, opacity) {
-        var b, g, r, result;
-        hex = hex.replace('#', '');
-        r = parseInt(hex.substring(0, 2), 16);
-        g = parseInt(hex.substring(2, 4), 16);
-        b = parseInt(hex.substring(4, 6), 16);
-        return result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
       };
 
       SortView.prototype.onClose = function() {
