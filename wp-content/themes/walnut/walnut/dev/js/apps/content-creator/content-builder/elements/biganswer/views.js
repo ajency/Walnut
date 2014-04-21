@@ -55,11 +55,11 @@ define(['app'], function(App) {
 
       BigAnswerView.prototype._changeBigAnswerStyle = function(model, style) {
         if (style === 'uline') {
-          return this.$el.find('input').css('border-style', 'none none groove none');
+          return this.$el.find('input').removeClass("border").addClass("underline");
         } else if (style === 'box') {
-          return this.$el.find('input').css('border-style', 'groove');
+          return this.$el.find('input').removeClass("underline").addClass("border");
         } else {
-          return this.$el.find('input').css('border-style', 'none');
+          return this.$el.find('input').removeClass("underline border");
         }
       };
 

@@ -60,13 +60,13 @@ define ['app'],(App)->
 			_changeBigAnswerStyle:(model,style)->
 					# if underline
 					if style is 'uline'
-						@$el.find('input').css 'border-style', 'none none groove none'
+						@$el.find('input').removeClass("border").addClass "underline"
 					# if box
 					else if style is 'box'
-						@$el.find('input').css 'border-style', 'groove'
+						@$el.find('input').removeClass("underline").addClass "border"
 					# if blank
 					else 
-						 @$el.find('input').css 'border-style', 'none'
+						 @$el.find('input').removeClass "underline border"
 
 			
 			    
