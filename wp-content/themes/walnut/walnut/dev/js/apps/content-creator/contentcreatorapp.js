@@ -2,7 +2,7 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app', 'apps/content-creator/property-dock/controller'], function(App, RegionController) {
-  return App.module("ContentCreator", function(ContentCreator, App) {
+  return App.module("ContentCreator", function(ContentCreator, App, Backbone, Marionette, $, _) {
     var ContentCreatorController;
     ContentCreator.closequestionelementproperty = true;
     ContentCreator.closequestionelements = true;
@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       }
 
       ContentCreatorController.prototype.initialize = function(options) {
-        var breadcrumb_items;
+        var breadcrumb_items, eventObj;
         breadcrumb_items = {
           'items': [
             {
@@ -33,13 +33,16 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
         this.layout = this._getContentCreatorLayout();
+        eventObj = App.createEventObject();
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
             App.execute("show:element:box", {
-              region: _this.layout.elementBoxRegion
+              region: _this.layout.elementBoxRegion,
+              eventObj: eventObj
             });
             App.execute("show:content:builder", {
-              region: _this.layout.contentBuilderRegion
+              region: _this.layout.contentBuilderRegion,
+              eventObj: eventObj
             });
             return App.execute("show:property:dock", {
               region: _this.layout.PropertyRegion

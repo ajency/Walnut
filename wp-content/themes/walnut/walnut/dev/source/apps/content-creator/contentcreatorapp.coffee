@@ -5,7 +5,7 @@ define ['app'
 		'apps/content-creator/property-dock/controller'],(App,RegionController)->
 
 			
-			App.module "ContentCreator", (ContentCreator,App)->	
+			App.module "ContentCreator", (ContentCreator,App,Backbone,Marionette,$,_)->	
 
 				ContentCreator.closequestionelementproperty = true
 				ContentCreator.closequestionelements = true
@@ -25,14 +25,18 @@ define ['app'
 						# get the main layout for the content creator
 						@layout = @_getContentCreatorLayout()
 
+						eventObj = App.createEventObject()
+
 						# listen to "show" event of the layout and start the 
 						# elementboxapp passing the region 
 						@listenTo @layout,'show',=>
 							App.execute "show:element:box", 
 										region : @layout.elementBoxRegion
+										eventObj : eventObj
 
 							App.execute "show:content:builder",
 										region : @layout.contentBuilderRegion
+										eventObj : eventObj
 
 							App.execute "show:property:dock",
 										region : @layout.PropertyRegion

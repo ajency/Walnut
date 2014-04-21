@@ -8,6 +8,8 @@ define ['app'
 				class Sort.Controller extends Element.Controller
 
 					initialize : (options)->
+						@eventObj = options.eventObj
+
 						_.defaults options.modelData,
 							marks : 1
 							element : 'Sort'
@@ -40,6 +42,10 @@ define ['app'
 								App.execute "show:question:properties", 
 											model : @layout.model
 
+							# on show disable all question elements in d element box
+							@listenTo view, "show",=>
+								@eventObj.vent.trigger "question:dropped"
+
 							# show the view
 							@layout.elementRegion.show view
 
@@ -55,6 +61,9 @@ define ['app'
 							delete model.get 'elements'
 							model.destroy()
 							App.execute "close:question:properties"
+							# on delete enable all question elements in d element box
+							@eventObj.vent.trigger "question:removed"
+
 
 					# on change of optionNo attribute in the model 
 					# change the number of options

@@ -38,11 +38,12 @@ define ['app'],(App)->
 				@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
 				@editor.setData _.stripslashes @model.get 'text'
 
-				_.delay ->
-					$('div.cke').on 'click',(evt)->
+				# wait for CKEditor to be loaded
+				_.delay =>
+					$('#cke_'+@editor.name).on 'click',(evt)->
 						evt.stopPropagation()
 
-				,3000
+				,500
 
 
 

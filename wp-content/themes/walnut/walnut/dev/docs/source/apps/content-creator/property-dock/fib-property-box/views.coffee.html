@@ -53,7 +53,7 @@
 
 <span class="s">                    &lt;div class=&quot;form-group&quot;&gt;</span>
 <span class="s">                      &lt;div class=&quot;bootstrap-tagsinput&quot;&gt; </span>
-<span class="s">                        &lt;input id=&quot;correct-answers&quot; value=&quot;{{correct_answers}}&quot; type=&quot;text&quot; data-role=&quot;tagsinput&quot; placeholder=&quot;Type Answer and press Enter&quot; /&gt;</span>
+<span class="s">                        &lt;input id=&quot;correct-answers&quot; value=&quot;{{correctanswersFn}}&quot; type=&quot;text&quot; data-role=&quot;tagsinput&quot; placeholder=&quot;Type Answer and press Enter&quot; /&gt;</span>
 <span class="s">                      &lt;/div&gt;</span>
 <span class="s">                    &lt;/div&gt;</span>
 
@@ -185,6 +185,15 @@
         <span class="s">&#39;change select#fib-style&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeStyle&#39;</span>
         <span class="s">&#39;change input#correct-answers&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeCorrectAnswers&#39;</span>
 
+      <span class="nx">mixinTemplateHelpers</span><span class="o">:</span><span class="nf">(data)-&gt;</span>
+
+        <span class="nv">data.correctanswersFn = </span><span class="nf">-&gt;</span>
+          <span class="nx">@correct_answers</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">data</span>
+
+        <span class="nx">data</span>
+
       <span class="nx">onShow</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
           <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input#correct-answers&#39;</span><span class="p">).</span><span class="nx">tagsinput</span><span class="p">(</span><span class="s">&#39;refresh&#39;</span><span class="p">);</span>
 
@@ -199,8 +208,7 @@
 <p>@$el.find('input#correct-answers').tagsinput('input').val @model.get('correct_answers')</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+
 
 
 
@@ -403,7 +411,7 @@ resolved with this</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="nx">_changeCorrectAnswers</span><span class="o">:</span><span class="nf">(evt)-&gt;</span>
-          <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;correct_answers&#39;</span><span class="p">,</span><span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+          <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;correct_answers&#39;</span><span class="p">,</span><span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
           
 
 </pre></div>

@@ -73,6 +73,13 @@ define(['marionette', 'mustache'], function(Marionette, Mustache) {
     },
     getElementRegistrySize: function() {
       return _.size(this._elementRegistry);
+    },
+    createEventObject: function() {
+      return {
+        vent: new Backbone.Wreqr.EventAggregator(),
+        command: new Backbone.Wreqr.Commands(),
+        reqres: new Backbone.Wreqr.RequestResponse()
+      };
     }
   });
   _.extend(Marionette.Region.prototype, {

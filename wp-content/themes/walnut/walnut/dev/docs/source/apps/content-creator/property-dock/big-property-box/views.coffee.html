@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>views.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../doc-style.css" />
+  <script src="../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../", thisFile = "source\\apps\\content-creator\\property-dock\\big-property-box\\views.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>views.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.PropertyDock.FibPropertyBox.Views&quot;</span><span class="p">,</span>
+  <span class="nf">(Views,App,Backbone,Marionette,$,_)-&gt;</span>
+
+    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">PropertyView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+      <span class="nv">template : </span><span class="s">&#39;&lt;div class=&quot;tile-more-content no-padding&quot;&gt;</span>
+<span class="s">                &lt;div class=&quot;tiles green&quot;&gt;</span>
+<span class="s">                  &lt;div class=&quot;tile-footer drag&quot;&gt;</span>
+<span class="s">                    FIB&lt;i class=&quot;fa fa-chevron-right&quot;&gt;&lt;/i&gt; &lt;span class=&quot;semi-bold&quot;&gt;Fill In The Blanks Properties&lt;/span&gt;</span>
+<span class="s">                  &lt;/div&gt;</span>
+<span class="s">                  &lt;div class=&quot;docket-body&quot;&gt;</span>
+
+<span class="s">                    &lt;div class=&quot;form-group&quot;&gt;</span>
+<span class="s">                      &lt;div class=&quot;bootstrap-tagsinput&quot;&gt; </span>
+<span class="s">                        &lt;input id=&quot;correct-answers&quot; value=&quot;{{correctanswersFn}}&quot; type=&quot;text&quot; data-role=&quot;tagsinput&quot; placeholder=&quot;Type Answer and press Enter&quot; /&gt;</span>
+<span class="s">                      &lt;/div&gt;</span>
+<span class="s">                    &lt;/div&gt;</span>
+
+<span class="s">                    &lt;div &gt;Max Characters</span>
+<span class="s">                      &lt;input id=&quot;answer-max-length&quot; type=&quot;type&quot;  value=&quot;{{maxlength}}&quot;&gt;                     </span>
+<span class="s">                    &lt;/div&gt;</span>
+
+<span class="s">                    &lt;div&gt;</span>
+<span class="s">                      &lt;input id=&quot;check-case-sensitive&quot; type=&quot;checkbox&quot; name=&quot;check-ind-marks&quot;&gt; Case Sensitive</span>
+<span class="s">                    &lt;/div&gt;</span>
+<span class="s">                    </span>
+<span class="s">                    &lt;div&gt;</span>
+<span class="s">                      Font</span>
+<span class="s">                      &lt;select class=&quot;font&quot; id=&quot;fib-font&quot;&gt;</span>
+<span class="s">                        &lt;option value=&quot;Arial&quot;&gt;</span>
+<span class="s">                          Arial</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Calibri&quot;&gt;</span>
+<span class="s">                          Calibri</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Comic Sans MS&quot;&gt;</span>
+<span class="s">                          Comic Sans MS</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Courier&quot;&gt;</span>
+<span class="s">                          Courier</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Georgia&quot;&gt;</span>
+<span class="s">                          Georgia</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Helvetica&quot;&gt;</span>
+<span class="s">                          Helvetica</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Impact&quot;&gt;</span>
+<span class="s">                          Impact</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Lucida Console&quot;&gt;</span>
+<span class="s">                          Lucida Console</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Lucida Sans Unicode&quot;&gt;</span>
+<span class="s">                          Lucida Sans Unicode</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Tahoma&quot;&gt;</span>
+<span class="s">                          Tahoma</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Times New Roman&quot;&gt;</span>
+<span class="s">                          Times New Roman</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Trebuchet MS&quot;&gt;</span>
+<span class="s">                          Trebuchet MS</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                        &lt;option value=&quot;Verdana&quot;&gt;</span>
+<span class="s">                          Verdana</span>
+<span class="s">                        &lt;/option&gt;</span>
+<span class="s">                        </span>
+<span class="s">                      &lt;/select&gt;</span>
+<span class="s">                    &lt;/div&gt;</span>
+
+<span class="s">                    &lt;div class=&quot;&quot;&gt;</span>
+<span class="s">                      </span>
+<span class="s">                      &lt;div class=&quot;textProp slider success&quot;&gt;</span>
+<span class="s">                        Size </span>
+<span class="s">                        &lt;input type=&quot;text&quot; id=&quot;fib-fontsize&quot; class=&quot;fontSize&quot; data-slider-max=&quot;80&quot; data-slider-min=&quot;12&quot; data-slider-step=&quot;1&quot; data-slider-value=&quot;{{font_size}}&quot; data-slider-orientation=&quot;horizontal&quot; data-slider-selection=&quot;before&quot;&gt;</span>
+
+<span class="s">                      &lt;/div&gt;</span>
+
+<span class="s">                    &lt;/div&gt;</span>
+
+<span class="s">                    &lt;div&gt;</span>
+<span class="s">                      Marks</span>
+<span class="s">                      &lt;select id=&quot;marks&quot;&gt;</span>
+<span class="s">                        &lt;option value=&quot;1&quot;&gt;1&lt;/option&gt;</span>
+<span class="s">                        &lt;option value=&quot;2&quot;&gt;2&lt;/option&gt;  </span>
+<span class="s">                      &lt;/select&gt;</span>
+<span class="s">                    &lt;/div&gt;</span>
+
+<span class="s">                    </span>
+<span class="s">                    &lt;div class=&quot;form-group inline&quot;&gt;</span>
+<span class="s">                      Font-Color</span>
+<span class="s">                      &lt;input type=&quot;hidden&quot; id=&quot;font-color&quot; class=&quot;color-picker&quot; value=&quot;{{color}}&quot;&gt;</span>
+<span class="s">                    &lt;/div&gt;</span>
+<span class="s">                    &lt;div class=&quot;form-group inline&quot;&gt;</span>
+<span class="s">                      Background-Color</span>
+<span class="s">                      &lt;input type=&quot;hidden&quot; id=&quot;bg-color&quot; data-opacity=&quot;{{bg_opacity}}&quot; class=&quot;color-picker&quot; value={{bg_color}}&gt;</span>
+<span class="s">                    &lt;/div&gt;</span>
+
+<span class="s">                    &lt;div&gt;</span>
+<span class="s">                      Style</span>
+<span class="s">                      &lt;select id=&quot;fib-style&quot;&gt;</span>
+<span class="s">                        &lt;option value=&quot;uline&quot;&gt;Underline&lt;/option&gt;</span>
+<span class="s">                        &lt;option value=&quot;box&quot;&gt;Box&lt;/option&gt;</span>
+<span class="s">                        &lt;option value=&quot;blank&quot;&gt;Blank&lt;/option&gt;    </span>
+<span class="s">                      &lt;/select&gt;</span>
+<span class="s">                    &lt;/div&gt;</span>
+<span class="s">                  </span>
+<span class="s">                  &lt;/div&gt;</span>
+<span class="s">                &lt;/div&gt;</span>
+<span class="s">              &lt;/div&gt;&#39;</span> 
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>view events </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nv">events : </span>
+        <span class="s">&#39;blur #answer-max-length&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeMaxLength&#39;</span>
+        <span class="s">&#39;change input#check-case-sensitive&#39;</span><span class="o">:</span> <span class="s">&#39;_checkCaseSensitive&#39;</span>
+        <span class="s">&#39;change select#fib-font&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeFont&#39;</span>
+        <span class="s">&#39;change select#marks&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeMarks&#39;</span>
+        <span class="s">&#39;change select#fib-style&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeStyle&#39;</span>
+        <span class="s">&#39;change input#correct-answers&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeCorrectAnswers&#39;</span>
+
+      <span class="nx">mixinTemplateHelpers</span><span class="o">:</span><span class="nf">(data)-&gt;</span>
+
+        <span class="nv">data.correctanswersFn = </span><span class="nf">-&gt;</span>
+          <span class="nx">@correct_answers</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">data</span>
+
+        <span class="nx">data</span>
+
+      <span class="nx">onShow</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input#correct-answers&#39;</span><span class="p">).</span><span class="nx">tagsinput</span><span class="p">(</span><span class="s">&#39;refresh&#39;</span><span class="p">);</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>@$el.find('input#correct-answers').tagsinput('input').val @model.get('correct_answers')</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>initialize Case Sensitive Checkbox based on model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;case_sensitive&#39;</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#check-case-sensitive&#39;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>initialize the dropdown to use select2 plugin</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#fib-font&#39;</span><span class="p">).</span><span class="nx">select2</span>
+              <span class="nv">minimumResultsForSearch: </span><span class="o">-</span><span class="mi">1</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>initialize font dropdown based on model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#fib-font&#39;</span><span class="p">).</span><span class="nx">select2</span> <span class="s">&#39;val&#39;</span><span class="p">,</span><span class="nx">@</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;font&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>initialize the dropdown to use select2 plugin</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#marks&#39;</span><span class="p">).</span><span class="nx">select2</span>
+              <span class="nv">minimumResultsForSearch: </span><span class="o">-</span><span class="mi">1</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>initialize font dropdown based on model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#marks&#39;</span><span class="p">).</span><span class="nx">select2</span> <span class="s">&#39;val&#39;</span><span class="p">,</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;marks&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>initialize the dropdown to use select2 plugin</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#fib-style&#39;</span><span class="p">).</span><span class="nx">select2</span>
+              <span class="nv">minimumResultsForSearch: </span><span class="o">-</span><span class="mi">1</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>initialize font dropdown based on model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#fib-style&#39;</span><span class="p">).</span><span class="nx">select2</span> <span class="s">&#39;val&#39;</span><span class="p">,</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;style&#39;</span>
+        
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>initialize font size to use slider plugin</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.fontSize&#39;</span><span class="p">).</span><span class="nx">slider</span><span class="p">()</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+<p>listen to slide event of slider
+on slide change the model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#fib-fontsize&#39;</span><span class="p">).</span><span class="nx">slider</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;slide&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+<p>on click of slider , value set to null
+resolved with this</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nv">size = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;font_size&#39;</span>
+              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;font_size&#39;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.fontSize&#39;</span><span class="p">).</span><span class="nx">slider</span><span class="p">(</span><span class="s">&#39;getValue&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span><span class="o">||</span><span class="nx">size</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+</div>
+<p>initialize colorpicker for font color and set the on change event</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#font-color.color-picker&#39;</span><span class="p">).</span><span class="nx">minicolors</span>
+              <span class="nv">animationSpeed: </span><span class="mi">200</span>
+              <span class="nv">animationEasing: </span><span class="s">&#39;swing&#39;</span>
+              <span class="nv">control: </span><span class="s">&#39;hue&#39;</span>
+              <span class="nv">position: </span><span class="s">&#39;top left&#39;</span>
+              <span class="nv">showSpeed: </span><span class="mi">200</span>
+
+              <span class="nx">change</span> <span class="o">:</span><span class="nf">(hex,opacity)=&gt;</span>
+                  <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;color&#39;</span><span class="p">,</span> <span class="nx">hex</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+</div>
+<p>initialize colorpicker for background color and set the on change event</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#bg-color.color-picker&#39;</span><span class="p">).</span><span class="nx">minicolors</span>
+              <span class="nv">animationSpeed: </span><span class="mi">200</span>
+              <span class="nv">animationEasing: </span><span class="s">&#39;swing&#39;</span>
+              <span class="nv">control: </span><span class="s">&#39;hue&#39;</span>
+              <span class="nv">position: </span><span class="s">&#39;top right&#39;</span>
+              <span class="nv">showSpeed: </span><span class="mi">200</span>
+              <span class="nx">opacity</span> <span class="o">:</span><span class="kc">true</span>
+              <span class="nx">change</span> <span class="o">:</span><span class="nf">(hex,opacity)=&gt;</span>
+                  <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;bg_color&#39;</span><span class="p">,</span> <span class="nx">hex</span>
+                  <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;bg_opacity&#39;</span><span class="p">,</span> <span class="nx">opacity</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+</div>
+<p>function for changing the correct answer array                        </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeCorrectAnswers</span><span class="o">:</span><span class="nf">(evt)-&gt;</span>
+          <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;correct_answers&#39;</span><span class="p">,</span><span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+          
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+</div>
+<p>function for changing model on change of 
+case sensitive checkbox</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_checkCaseSensitive</span><span class="o">:</span><span class="nf">(evt)-&gt;</span>
+          <span class="k">if</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;checked&#39;</span>
+            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;case_sensitive&#39;</span><span class="p">,</span> <span class="kc">true</span>
+            
+          <span class="k">else</span>
+            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;case_sensitive&#39;</span><span class="p">,</span><span class="kc">false</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
+</div>
+<p>function for changing model on change of font dropbox</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeFont</span><span class="o">:</span><span class="nf">(evt)-&gt;</span> 
+          <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;font&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+</div>
+<p>function for changing model on change of marks dropbox</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeMarks</span><span class="o">:</span><span class="nf">(evt)-&gt;</span>
+          <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;marks&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+</div>
+<p>function for changing model on change of maxlength textbox</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">_changeMaxLength</span><span class="o">:</span><span class="nf">(evt)-&gt;</span> 
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
+</div>
+<p>check if the value is a number</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          <span class="k">if</span>  <span class="o">not</span> <span class="nb">isNaN</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span>
+              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;maxlength&#39;</span><span class="p">,</span><span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span>
+
+      <span class="nx">_changeStyle</span><span class="o">:</span><span class="nf">(evt)-&gt;</span>
+          <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;style&#39;</span><span class="p">,</span><span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+
+
+
+
+
+
+
+
+
+
+      
+
+
+
+
+        
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

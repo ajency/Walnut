@@ -44,7 +44,7 @@
     <span class="s">&#39;apps/content-creator/property-dock/controller&#39;</span><span class="p">],</span><span class="nf">(App,RegionController)-&gt;</span>
 
       
-      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator&quot;</span><span class="p">,</span> <span class="nf">(ContentCreator,App)-&gt;</span> 
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator&quot;</span><span class="p">,</span> <span class="nf">(ContentCreator,App,Backbone,Marionette,$,_)-&gt;</span> 
 
         <span class="nv">ContentCreator.closequestionelementproperty = </span><span class="kc">true</span>
         <span class="nv">ContentCreator.closequestionelements = </span><span class="kc">true</span>
@@ -75,6 +75,8 @@
         <td class="code highlight"><div class="highlight"><pre>
             <span class="vi">@layout = </span><span class="nx">@_getContentCreatorLayout</span><span class="p">()</span>
 
+            <span class="nv">eventObj = </span><span class="nx">App</span><span class="p">.</span><span class="nx">createEventObject</span><span class="p">()</span>
+
 
 </pre></div>
         </td>
@@ -91,9 +93,11 @@ elementboxapp passing the region </p>
             <span class="nx">@listenTo</span> <span class="nx">@layout</span><span class="p">,</span><span class="s">&#39;show&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
               <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:element:box&quot;</span><span class="p">,</span> 
                     <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">elementBoxRegion</span>
+                    <span class="nv">eventObj : </span><span class="nx">eventObj</span>
 
               <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:content:builder&quot;</span><span class="p">,</span>
                     <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">contentBuilderRegion</span>
+                    <span class="nv">eventObj : </span><span class="nx">eventObj</span>
 
               <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:property:dock&quot;</span><span class="p">,</span>
                     <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">PropertyRegion</span>

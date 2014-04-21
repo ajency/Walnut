@@ -29,7 +29,8 @@ require.config({
     jqueryknob: 'plugins/jquery.knob',
     ckeditor: 'plugins/ckeditor/ckeditor',
     select2: 'plugins/select2.min',
-    tagsinput: 'plugins/bootstrap-tagsinput.min'
+    tagsinput: 'plugins/bootstrap-tagsinput.min',
+    formelements: 'plugins/custom-form-elements'
   },
   shim: {
     underscore: {
@@ -65,6 +66,6 @@ require.config({
   }
 });
 
-require(['plugins/content-creator-pluginloader', 'configs/content-creator-configloader', 'app', 'entitiesloader', 'componentloader', 'apps/content-creator-appsloader'], function(plugins, configs, App) {
+require(['plugins/content-creator-pluginloader', 'config/content-creator-configloader', 'app', 'entitiesloader', 'componentloader', 'apps/content-creator-appsloader'], function(plugins, configs, App) {
   return App.start();
 });

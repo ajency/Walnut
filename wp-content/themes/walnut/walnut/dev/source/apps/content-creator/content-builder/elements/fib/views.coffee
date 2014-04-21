@@ -5,10 +5,36 @@ define ['app'],(App)->
 
 		class Views.FibView extends Marionette.ItemView
 
-			template : '<input  type="text" maxlength="{{maxlength}}" placeholder="Answer" style="
-					    font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; 
-					     width:100%; height: 100%; line-height : inherit; border-width : 5px;
-					     border-style: none;">'
+			template : '<p class="fib-text" ></p>'
+						# <input  type="text"
+						#  maxlength="{{maxlength}}" size="{{maxlength}}" placeholder="Answer" style="
+					 #    font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; 
+					 #      height: 100%; line-height : inherit; border-width : 5px;
+					 #     border-style: none; float:left">
+
+			# listen to the model events 
+			modelEvents : 
+					# 'change:maxlength'  : '_changeMaxLength'
+					'change:font' : (model,font)-> @_changeFont font
+					'change:font_size' : (model,size)->@_changeSize size
+					'change:color' : (model,color)->@_changeColor color
+					'change:bg_color' : (model,bg_color)->@_changeBGColor model
+					'change:bg_opacity' : (model,bg_opacity)->@_changeBGColor model
+					'change:style' : (model,style)->@_changeFibStyle style
+
+			# avoid and anchor tag click events
+			# listen to blur event for the text element so that we can save the new edited markup
+			# to server. The element will triggger a text:element:blur event on blur and pass the 
+			# current markupup as argument
+			events:
+				'click a'	: (e)-> e.preventDefault()
+				'blur p'	: '_textBlur'
+				'DOMSubtreeModified p'	: '_updateInputProperties'
+				# 'click input': ->console.log "input"
+
+			initialize:(options)->
+				@blanksCollection = options.blanksCollection
+
 
 			onShow : ->
 
@@ -18,45 +44,62 @@ define ['app'],(App)->
 					# stop propogation of click event
 					evt.stopPropagation()
 
-				# initialiaze the styles property on first show
-				@_changeBGColor()
-				@_changeFibStyle @model,@model.get 'style'
 
-			# listen to the model events 
-			modelEvents : 
-					'change:maxlength'  : '_changeMaxLength'
-					'change:font' : '_changeFont'
-					'change:font_size' : '_changeSize'
-					'change:color' : '_changeColor'
-					'change:bg_color' : '_changeBGColor'
-					'change:bg_opacity' : '_changeBGColor'
-					'change:style' : '_changeFibStyle'
+				@$el.find('p').attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
+				CKEDITOR.on 'instanceCreated', @configureEditor
+				@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
+				@editor.setData _.stripslashes @model.get 'text'
+
+				# wait for CKEditor to be loaded
+				_.delay =>
+					$('#cke_'+@editor.name).on 'click',(evt)->
+						evt.stopPropagation()
+
+				,500
+				
+
+			# set configuration for the Ckeditor
+			configureEditor: (event) =>
+				editor = event.editor
+				element = editor.element
+				# Customize the editor configurations on "configLoaded" event,
+				# which is fired after the configuration file loading and
+				# execution. This makes it possible to change the
+				# configurations before the editor initialization takes place.
+				editor.on "configLoaded", ->
+
+					# Rearrange the layout of the toolbar.
+					editor.config.toolbar.splice 2,0,
+								name: 'forms'
+								items: [ 'TextField'] 
+							
+			
 
 
 			# on change of maxlength property
-			_changeMaxLength:(model,maxlength)->
-					@$el.find('input').prop 'maxLength',parseInt maxlength
+			# _changeMaxLength:(model,maxlength)->
+			# 		@$el.find('input').prop 'maxLength',parseInt maxlength
 
 
 			# on change of font property
-			_changeFont:(model,font)->
+			_changeFont:(font)->
 					@$el.find('input').css 'font-family',font
 
 
 			# on change of font_size property
-			_changeSize:(model,size)->
+			_changeSize:(size)->
 					@$el.find('input').css 'font-size',size+"px"
 
 			# on change of color property
-			_changeColor:(model,color)->
+			_changeColor:(color)->
 					@$el.find('input').css 'color', color
 
 			# on change of bg_color property
-			_changeBGColor:(model,bgColor)->
-					@$el.find('input').css 'background-color', @_convertHex @model.get('bg_color'),@model.get('bg_opacity')
+			_changeBGColor:(model)->
+					@$el.find('input').css 'background-color', _.convertHex @model.get('bg_color'),@model.get('bg_opacity')
 
 			# on change of style property
-			_changeFibStyle:(model,style)->
+			_changeFibStyle:(style)->
 					# if underline
 					if style is 'uline'
 						@$el.find('input').css 'border-style', 'none none groove none'
@@ -67,13 +110,59 @@ define ['app'],(App)->
 					else 
 						 @$el.find('input').css 'border-style', 'none'
 
-			# convert hex and opacity to rgba format for css
-			_convertHex:(hex,opacity)->
-			    hex = hex.replace '#',''
-			    r = parseInt hex.substring(0,2), 16
-			    g = parseInt hex.substring(2,4), 16
-			    b = parseInt hex.substring(4,6), 16
 
-			    result = 'rgba('+r+','+g+','+b+','+opacity+')'
+			_textBlur:(evt)->
+		
+				@model.set 'text', @$el.find('p').html()
+
+			_updateInputProperties:->
+				_.each @$el.find('input') ,(blank)=>
+					if  _.isUndefined $(blank).attr('data-id')
+						$(blank).attr 'data-id',_.uniqueId 'input-'
+						
+						blanksData = 
+								id : $(blank).attr 'data-id'
+								correct : []
+								marks : 1
+								maxlength : 12 #parseInt $(blank).attr 'maxlength' ? 12
+						@trigger "create:new:fib:element", blanksData
+
+						blanksModel = @blanksCollection.get $(blank).attr 'data-id'
+
+						$(blank).on 'click',->
+							console.log blanksModel
+
+						
+					# else
+					# 	_.delay =>
+					# 		@blanksCollection.get($(blank).attr('data-id')).set 'maxlength',parseInt $(blank).attr 'maxlength'
+					# 	,10
+
+				
+				_.delay =>
+					if @blanksCollection.length > 0
+						_.each @blanksCollection.toJSON(), (blank)=>
+							blankFound = _.find @$el.find('input') ,(blankUI)=>
+												@blanksCollection.get(blank.id).get('id') is $(blankUI).attr 'data-id' 
+							if _.isUndefined blankFound
+								@blanksCollection.remove blank
+				,100
+
+
+				console.log JSON.stringify @blanksCollection
+
+				@_changeFont @model.get 'font'
+				@_changeSize @model.get 'font_size'
+				@_changeColor @model.get 'color'
+				@_changeBGColor @model
+				@_changeFibStyle @model.get 'style'
+
+
+			# destroy the Ckeditor instance to avoiid memory leaks on close of element
+			# this.editor will hold the reference to the editor instance
+			# Ckeditor has a destroy method to remove a editor instance
+			onClose:->
+				@editor.destroy()
+		
 			    
 

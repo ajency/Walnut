@@ -11,6 +11,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       }
 
       Controller.prototype.initialize = function(options) {
+        this.eventObj = options.eventObj;
         _.defaults(options.modelData, {
           element: 'Fib',
           maxlength: '12',
@@ -22,13 +23,16 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           case_sensitive: false,
           marks: 1,
           style: 'blank',
-          correct_answers: []
+          correct_answers: [],
+          text: "India has ",
+          blanksArray: []
         });
         return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype.renderElement = function() {
         var view;
+        this.blanksCollection = App.request("create:new:question:element:collection", this.layout.model.get('blanksArray'));
         view = this._getFibView(this.layout.model);
         this.listenTo(view, 'show show:this:fib:properties', (function(_this) {
           return function() {
@@ -37,18 +41,32 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
           };
         })(this));
+        this.listenTo(view, "show", (function(_this) {
+          return function() {
+            return _this.eventObj.vent.trigger("question:dropped");
+          };
+        })(this));
+        this.listenTo(view, "create:new:fib:element", (function(_this) {
+          return function(blanksData) {
+            var blanksModel;
+            blanksModel = App.request("create:new:question:element", blanksData);
+            return _this.blanksCollection.add(blanksModel);
+          };
+        })(this));
         return this.layout.elementRegion.show(view);
       };
 
       Controller.prototype._getFibView = function(model) {
         return new Fib.Views.FibView({
-          model: model
+          model: model,
+          blanksCollection: this.blanksCollection
         });
       };
 
       Controller.prototype.deleteElement = function(model) {
         model.destroy();
-        return App.execute("close:question:properties");
+        App.execute("close:question:properties");
+        return this.eventObj.vent.trigger("question:removed");
       };
 
       return Controller;

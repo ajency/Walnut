@@ -11,25 +11,27 @@ define ['app'
 
 					initialize : (options)->
 
-						# elementsCollection = App.request "get:elementbox:elements"
+						{eventObj} = options
+						
 						# get the main view for the element box
-						@view = @_getElementBoxView() #elementsCollection)
+						@view = @_getElementBoxView() 
+
+						
+						@listenTo eventObj.vent, "question:dropped", =>
+							@view.triggerMethod "question:dropped"
+
+						@listenTo eventObj.vent, "question:removed", =>
+							@view.triggerMethod "question:removed"
 
 						# show the view
 						@show @view
 
-					_getElementBoxView:(elementsCollection)->
-						
+					_getElementBoxView:()->
 						new ElementBox.Views.ElementBoxView
-									# collection : elementsCollection
-
-
-
 				
 
 				# create a command handler to start the element box controller
 				App.commands.setHandler "show:element:box", (options)->
-								new ElementBoxController
-											region : options.region
+								new ElementBoxController options
 
 				# App.commands.setHandler

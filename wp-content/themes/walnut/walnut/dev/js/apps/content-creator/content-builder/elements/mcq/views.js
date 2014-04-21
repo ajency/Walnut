@@ -32,11 +32,13 @@ define(['app'], function(App) {
         this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
-        return _.delay(function() {
-          return $('div.cke').on('click', function(evt) {
-            return evt.stopPropagation();
-          });
-        }, 3000);
+        return _.delay((function(_this) {
+          return function() {
+            return $('#cke_' + _this.editor.name).on('click', function(evt) {
+              return evt.stopPropagation();
+            });
+          };
+        })(this), 500);
       };
 
       OptionView.prototype.onClose = function() {
