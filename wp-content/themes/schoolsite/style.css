@@ -1,12 +1,13 @@
 /*
- Theme Name:   School Site
- Theme URI:    http://example.com/twenty-fourteen-child/
- Description:  Walnut Child Theme
- Author:       John Doe
- Author URI:   http://example.com
- Template:     walnut
- Version:      1.0.0
- Tags:         light, dark, two-columns, right-sidebar, responsive-layout, accessibility-ready
+Theme Name: School Site Template
+Description: Walnut Child Site
+Template: walnut
+Version: 1.0.0 
+
+Author: ajency.in 
+Author URI: https://ajency.in 
+License: GNU General Public License
+
 */
 
 @import url("../walnut/style.css");

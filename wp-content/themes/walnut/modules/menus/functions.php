@@ -42,12 +42,16 @@ function get_menu_to_array( $mn , $by = 'name') {
 
     //create all top level menu
     foreach ( (array) $m as $menu_item ) {
+        
+        $menu_url = $menu_item->url;
+        if(strpos($menu_url, '#') === 0)
+            $menu_url = get_site_url() .'/'.$menu_item->url;
 
         $mn = array(
             'ID'                => $menu_item->ID,
             'menu-order'        => $menu_item->menu_order,
             'post_title'        => $menu_item->title,
-            'menu_item_link'    => $menu_item->url,
+            'menu_item_link'    => $menu_url,
             'menu_id'           => $menu->term_id
         );
 
@@ -60,13 +64,17 @@ function get_menu_to_array( $mn , $by = 'name') {
 
     //add submenus
     foreach ( (array) $m as $menu_item ) {
+        
+         $menu_url = $menu_item->url;
+        if(strpos($menu_url, '#') === 0)
+            $menu_url = get_site_url() .'/'.$menu_item->url;
 
         $mn = array(
             'ID'                => $menu_item->ID,
-            'order'             => $menu_item->menu_order,
+            'menu-order'        => $menu_item->menu_order,
             'post_title'        => $menu_item->title,
-            'menu_item_link'    => $menu_item->url,
-            'menu_id'           => (int)$menu->term_id
+            'menu_item_link'    => $menu_url,
+            'menu_id'           => $menu->term_id
         );
 
         if ( (int)$menu_item->menu_item_parent !== 0 ) {

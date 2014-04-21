@@ -8,13 +8,15 @@
  * e.g., it puts together the home page when no home.php file exists.
  *
  * @link http://codex.wordpress.org/Template_Hierarchy
-
+ *
+ * @package WordPress
+ * @subpackage School Site Template
+ * @since Walnut 1.0
  */
 
 ?>
 
-<div id="main-content" class="main-content">
-SCHOOL SITE
-</div><!-- #main-content -->
-
 <?php
+//
+//$section = file_get_contents(get_site_url().'/wp-content/themes/walnut/walnut/index.html', NULL, NULL);
+//echo $section;

@@ -61,27 +61,38 @@ define(['marionette'], function(Marionette) {
       };
     })(this), 'json');
   });
-  App.vent.on("show:dashboard", function() {
-    if (typeof Pace !== 'undefined') {
-      Pace.restart();
-      $("#site_main_container").removeClass("showAll");
-    }
-    App.navigate('textbooks', {
-      trigger: true
-    });
-    App.execute("show:breadcrumbapp", {
-      region: App.breadcrumbRegion
-    });
-    App.execute("show:headerapp", {
-      region: App.headerRegion
-    });
-    App.execute("show:leftnavapp", {
-      region: App.leftNavRegion
-    });
-    return Pace.on('hide', function() {
-      return $("#site_main_container").addClass("showAll");
-    });
-  });
+  App.vent.on("show:dashboard", (function(_this) {
+    return function(user_role) {
+      var user;
+      if (typeof Pace !== 'undefined') {
+        Pace.restart();
+        $("#site_main_container").removeClass("showAll");
+      }
+      user = App.request("get:user:model");
+      user_role = user.get("roles");
+      if (user_role[0] === 'administrator') {
+        App.navigate('textbooks', {
+          trigger: true
+        });
+      } else {
+        App.navigate('teachers/dashboard', {
+          trigger: true
+        });
+      }
+      App.execute("show:breadcrumbapp", {
+        region: App.breadcrumbRegion
+      });
+      App.execute("show:headerapp", {
+        region: App.headerRegion
+      });
+      App.execute("show:leftnavapp", {
+        region: App.leftNavRegion
+      });
+      return Pace.on('hide', function() {
+        return $("#site_main_container").addClass("showAll");
+      });
+    };
+  })(this));
   App.vent.on("show:login", function() {
     App.leftNavRegion.close();
     App.headerRegion.close();

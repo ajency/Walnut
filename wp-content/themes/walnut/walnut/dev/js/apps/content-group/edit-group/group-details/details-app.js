@@ -136,10 +136,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       CollectionDetailsView.prototype.onShow = function() {
-        $("#textbooks").select2();
-        $("#chapters").select2();
-        $("#secs").val([]).select2();
-        return $("#subsecs").val([]).select2();
+        $("#textbooks, #chapters, #minshours").select2();
+        return $("#secs,#subsecs").val([]).select2();
       };
 
       CollectionDetailsView.prototype.onFetchChaptersComplete = function(chapters) {
@@ -151,7 +149,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             };
           })(this));
         } else {
-          return this.$el.find('#chapters').html('<option>No Chapters available</option>');
+          return this.$el.find('#chapters').html('<option value="">No Chapters available</option>');
         }
       };
 
@@ -165,7 +163,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               };
             })(this));
           } else {
-            this.$el.find('#secs').html('<option>No Sections available</option>');
+            this.$el.find('#secs').html('<option value="">No Sections available</option>');
           }
           if (_.size(allsections.subsections) > 0) {
             this.$el.find('#subsecs').html('');
@@ -178,8 +176,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             return this.$el.find('#subsecs').html('<option>No Sub Sections available</option>');
           }
         } else {
-          this.$el.find('#secs').html('<option>No Sections available</option>');
-          return this.$el.find('#subsecs').html('<option>No Sub Sections available</option>');
+          this.$el.find('#secs').html('<option value="">No Sections available</option>');
+          return this.$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
         }
       };
 

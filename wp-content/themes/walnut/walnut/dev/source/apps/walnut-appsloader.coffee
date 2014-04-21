@@ -5,4 +5,5 @@ define [
 		'apps/textbooks/app'
 		'apps/breadcrumb/app'
 		'apps/content-group/content-group-app'
+		'apps/teachers-dashboard/teachers-dashboard-app'
 		], ->

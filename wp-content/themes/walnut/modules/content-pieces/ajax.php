@@ -33,7 +33,9 @@ function create_content_group() {
     $data = array(
         'name' => $_POST['name'],
         'description' => maybe_serialize($_POST['description']),
-        'term_ids' => maybe_serialize($_POST['term_ids'])
+        'term_ids' => maybe_serialize($_POST['term_ids']),
+        'duration' => $_POST['duration'],
+        'minshours' => $_POST['minshours']
     );
 
     $id = save_content_group($data);
@@ -72,7 +74,12 @@ add_action('wp_ajax_update-content-group', 'update_content_group');
 
 function fetch_content_groups() {
     
-    $content_groups= get_all_content_groups();
+    $args= array();
+    
+    if($_GET['textbook'])
+        $args['textbook']= $_GET['textbook'];
+    
+    $content_groups= get_all_content_groups($args);
   
     wp_send_json(array('code' => 'OK', 'data' => $content_groups));
 }

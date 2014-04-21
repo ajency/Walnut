@@ -12,16 +12,6 @@ function admin_scripts_styles($hook) {
 
 add_action('admin_enqueue_scripts', 'admin_scripts_styles', 100);
 
-function new_school_setup( $blog_id ){
-    global $wpdb;   
-    $blog_details=  maybe_serialize($_POST['blog_additional']);
-    update_blog_option($blog_id, 'blog_meta',$blog_details);
-    update_blog_option($blog_id, 'template','schoolsite');
-    update_blog_option($blog_id, 'stylesheet','schoolsite');
-}
-add_action('wpmu_new_blog', 'new_school_setup');
-
-
 /*
   gcb_extend_blog_settings_fields
  * Function to add the university dropdown in the settings of the chapter.

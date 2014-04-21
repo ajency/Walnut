@@ -8,4 +8,5 @@ define [
 		'entities/breadcrumb'
 		'entities/content-pieces'
 		'entities/content-group'
+		'entities/divisions'
 		],->

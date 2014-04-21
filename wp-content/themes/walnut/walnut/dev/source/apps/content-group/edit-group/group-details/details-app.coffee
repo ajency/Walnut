@@ -88,11 +88,10 @@ define ['app'
 				'click #save-content-collection'	: 'save_content'
 
 			onShow:->
-				$("#textbooks").select2()
-				$("#chapters").select2()
+				$("#textbooks, #chapters, #minshours").select2()
+
 				#Multi Select
-				$("#secs").val([]).select2()
-				$("#subsecs").val([]).select2()
+				$("#secs,#subsecs").val([]).select2()
 
 			onFetchChaptersComplete:(chapters)->
 				if _.size(chapters)>0
@@ -102,7 +101,7 @@ define ['app'
 						.append '<option value="'+chap.get('term_id')+'">'+chap.get('name')+'</option>'
 				else 
 					@$el.find '#chapters'
-					.html '<option>No Chapters available</option>'
+					.html '<option value="">No Chapters available</option>'
 
 			onFetchSubsectionsComplete:(allsections)->
 				if _.size(allsections)>0
@@ -112,7 +111,7 @@ define ['app'
 							@$el.find('#secs')
 							.append '<option value="'+section.get('term_id')+'">'+section.get('name')+'</option>'
 					else 
-						@$el.find('#secs').html('<option>No Sections available</option>');
+						@$el.find('#secs').html('<option value="">No Sections available</option>');
 
 					if _.size(allsections.subsections)>0
 						@$el.find('#subsecs').html('');
@@ -122,8 +121,8 @@ define ['app'
 					else 
 						@$el.find('#subsecs').html '<option>No Sub Sections available</option>' 
 				else 
-					@$el.find('#secs').html('<option>No Sections available</option>');
-					@$el.find('#subsecs').html('<option>No Sub Sections available</option>');
+					@$el.find('#secs').html('<option value="">No Sections available</option>');
+					@$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
 
 
 			save_content:(e)->
@@ -138,6 +137,8 @@ define ['app'
 
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
+					#data.term_ids= _.compact(data.term_ids)
+					
 					@trigger "save:content:collection:details",data
 					
 

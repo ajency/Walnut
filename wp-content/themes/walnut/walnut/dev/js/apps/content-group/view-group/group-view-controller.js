@@ -48,10 +48,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               region: _this.layout.collectionDetailsRegion,
               model: _this.contentGroupModel
             });
-            return App.execute("show:viewgroup:content:displayapp", {
-              region: _this.layout.contentDisplayRegion,
-              model: _this.contentGroupModel
-            });
+            if (_.size(_this.contentGroupModel.get('content_pieces')) > 0) {
+              return App.execute("show:viewgroup:content:displayapp", {
+                region: _this.layout.contentDisplayRegion,
+                model: _this.contentGroupModel
+              });
+            }
           };
         })(this));
       };
