@@ -663,7 +663,7 @@
 }
 /*MCQ*/
 .mcq-option {
-  width: 145px;
+  width: 172px;
   margin-right: 10px;
   float: left;
   word-wrap: break-word;
@@ -679,6 +679,7 @@
   position: relative;
   z-index: 2;
   margin: 4px 5px 0;
+  background-size: 32px;
 }
 .mcq-option p {
   margin: 0;
@@ -724,13 +725,31 @@ p.mcq-option-text {
 	      -ms-user-select: none;
 	          user-select: none;
 }*/
-.checkbox {
-  width: 50px;
-  height: 41px;
-  padding: 0 5px 0 0;
-  background: url(../../../images/csscheckbox.png) no-repeat;
-  display: block;
-  float: left;
+/*.checkbox {
+	width: 50px;
+	height: 41px;
+	padding: 0 5px 0 0;
+	background: url(../../../images/csscheckbox.png) no-repeat;
+	display: block;
+	//clear: left;
+	float: left;
+}*/input[type="text"].underline {
+  text-decoration: none;
+  background: url(../../../images/underline.gif) repeat-x 100% 100%;
+  padding-bottom: 4px;
+  white-space: nowrap;
+  text-align: center;
+}
+input[type="text"].border {
+  text-align: center;
+  border: 15px solid transparent;
+  -webkit-border-image: url(../../../images/border.gif) 20 20 stretch;
+  /* Safari 5 */
+
+  -o-border-image: url(../../../images/border.gif) 20 20 stretch;
+  /* Opera */
+
+  border-image: url(../../../images/border.gif) 20 20 stretch;
 }
 .listBox {
   margin-top: 60px;
