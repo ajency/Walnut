@@ -12,15 +12,7 @@ define ['app'],(App)->
 									</div>
 									<div class="docket-body">
 
-										<div class="form-group">
-											<div class="bootstrap-tagsinput"> 
-												<input id="correct-answers" value="{{correct_answers}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
-											</div>
-										</div>
-
-										<div >Max Characters
-											<input id="answer-max-length" type="type"  value="{{maxlength}}">											
-										</div>
+										
 
 										<div>
 											<input id="check-case-sensitive" type="checkbox" name="check-ind-marks"> Case Sensitive
@@ -80,6 +72,19 @@ define ['app'],(App)->
 											  <option value="Verdana">
 											    Verdana
 											  </option>
+
+											  <option value="Chelsea Market">
+											    Chelsea Market
+											  </option>
+											  <option value="Indie Flower">
+											    Indie Flower
+											  </option>
+											  <option value="Just Another Hand">
+											    Just Another Hand
+											  </option>
+											  <option value="Sacramento">
+											    Sacramento
+											  </option>
 											  
 											</select>
 										</div>
@@ -128,19 +133,16 @@ define ['app'],(App)->
 
 			# view events 
 			events : 
-				'blur #answer-max-length' : '_changeMaxLength'
 				'change input#check-case-sensitive': '_checkCaseSensitive'
 				'change select#fib-font' : '_changeFont'
 				'change select#marks' : '_changeMarks'
 				'change select#fib-style' : '_changeStyle'
-				'change input#correct-answers' : '_changeCorrectAnswers'
+				
+
+			
 
 			onShow:(options)->
-					@$el.find('input#correct-answers').tagsinput('refresh');
-					# @$el.find('input#correct-answers').tagsinput('input').val @model.get('correct_answers')
 					
-					console.log JSON.stringify @model.toJSON()
-
 
 					#initialize Case Sensitive Checkbox based on model
 					if @model.get 'case_sensitive'
@@ -197,9 +199,7 @@ define ['app'],(App)->
 									@model.set 'bg_color', hex
 									@model.set 'bg_opacity', opacity
 
-			# function for changing the correct answer array						
-			_changeCorrectAnswers:(evt)->
-					@model.set 'correct_answers',$(evt.target).val()
+			
 					
 			# function for changing model on change of 
 			# case sensitive checkbox
@@ -219,14 +219,6 @@ define ['app'],(App)->
 			_changeMarks:(evt)->
 					@model.set 'marks', $(evt.target).val()
 
-
-			# function for changing model on change of maxlength textbox
-			_changeMaxLength:(evt)-> 
-					# check if the value is a number
-					if  not isNaN $(evt.target).val()
-							console.log @model
-							@model.set 'maxlength',$(evt.target).val()
-							console.log @model
 
 			_changeStyle:(evt)->
 					@model.set 'style',$(evt.target).val()

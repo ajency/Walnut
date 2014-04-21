@@ -13,6 +13,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       }
 
       Controller.prototype.initialize = function(options) {
+        this.eventObj = options.eventObj;
         _.defaults(options.modelData, {
           element: 'Mcq',
           optioncount: 2,
@@ -46,6 +47,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             return App.execute("show:question:properties", {
               model: _this.layout.model
             });
+          };
+        })(this));
+        this.listenTo(view, "show", (function(_this) {
+          return function() {
+            return _this.eventObj.vent.trigger("question:dropped");
           };
         })(this));
         return this.layout.elementRegion.show(view);
@@ -88,7 +94,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         model.set('elements', '');
         delete model.get('elements');
         model.destroy();
-        return App.execute("close:question:properties");
+        App.execute("close:question:properties");
+        return this.eventObj.vent.trigger("question:removed");
       };
 
       return Controller;

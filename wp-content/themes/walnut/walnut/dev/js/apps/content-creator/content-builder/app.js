@@ -12,16 +12,17 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       }
 
       ContentBuilderController.prototype.initialize = function(options) {
-        var elements;
+        var elements, eventObj;
+        eventObj = options.eventObj;
         elements = App.request("get:page:json");
         this.view = this._getContentBuilderView(elements);
         this.listenTo(this.view, "add:new:element", function(container, type) {
-          return App.request("add:new:element", container, type);
+          return App.request("add:new:element", container, type, eventObj);
         });
         this.listenTo(this.view, "dependencies:fetched", (function(_this) {
           return function() {
             return _.delay(function() {
-              return _this.startFillingElements();
+              return _this.startFillingElements(eventObj);
             }, 400);
           };
         })(this));
@@ -40,22 +41,22 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         return $('#myCanvas');
       };
 
-      ContentBuilderController.prototype.startFillingElements = function() {
+      ContentBuilderController.prototype.startFillingElements = function(eventObj) {
         var container, section;
         section = this.view.model.toJSON();
         container = $('#myCanvas');
         return _.each(section, (function(_this) {
           return function(element, i) {
             if (element.element === 'Row') {
-              return _this.addNestedElements(container, element);
+              return _this.addNestedElements(container, element, eventObj);
             } else {
-              return App.request("add:new:element", container, element.element, element);
+              return App.request("add:new:element", container, element.element, eventObj, element);
             }
           };
         })(this));
       };
 
-      ContentBuilderController.prototype.addNestedElements = function(container, element) {
+      ContentBuilderController.prototype.addNestedElements = function(container, element, eventObj) {
         var controller;
         controller = App.request("add:new:element", container, element.element, element);
         console.log(element.elements);
@@ -69,7 +70,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
               if (ele.element === 'Row') {
                 return _this.addNestedElements($(container), ele);
               } else {
-                return App.request("add:new:element", container, ele.element, ele);
+                return App.request("add:new:element", container, ele.element, eventObj, ele);
               }
             });
           };
@@ -80,11 +81,12 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
 
     })(RegionController);
     API = {
-      addNewElement: function(container, type, modelData) {
+      addNewElement: function(container, type, modelData, eventObj) {
         console.log(type);
         return new ContentBuilder.Element[type].Controller({
           container: container,
-          modelData: modelData
+          modelData: modelData,
+          eventObj: eventObj
         });
       },
       saveQuestion: function() {
@@ -94,15 +96,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       }
     };
     App.commands.setHandler("show:content:builder", function(options) {
-      return new ContentBuilderController({
-        region: options.region
-      });
+      return new ContentBuilderController(options);
     });
-    App.reqres.setHandler("add:new:element", function(container, type, modelData) {
+    App.reqres.setHandler("add:new:element", function(container, type, eventObj, modelData) {
       if (modelData == null) {
         modelData = {};
       }
-      return API.addNewElement(container, type, modelData);
+      return API.addNewElement(container, type, modelData, eventObj);
     });
     return App.commands.setHandler("save:question", function() {
       return API.saveQuestion();

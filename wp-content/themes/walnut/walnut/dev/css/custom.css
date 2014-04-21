@@ -52,6 +52,38 @@
 .p-t-60 {
   padding-top: 60px;
 }
+@font-face {
+  font-family: 'Chelsea Market';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Chelsea Market'), local('ChelseaMarket-Regular'), url(../fonts/ChelseaMarket-Regular.eot) format('embedded-opentype');
+  src: local('Chelsea Market'), local('ChelseaMarket-Regular'), url(../fonts/ChelseaMarket-Regular.ttf) format('True Type');
+  src: local('Chelsea Market'), local('ChelseaMarket-Regular'), url(../fonts/ChelseaMarket-Regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Indie Flower';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Indie Flower'), local('IndieFlower'), url(../fonts/ChelseaMarket-Regular.eot) format('embedded-opentype');
+  src: local('Indie Flower'), local('IndieFlower'), url(../fonts/ChelseaMarket-Regular.ttf) format('True Type');
+  src: local('Indie Flower'), local('IndieFlower'), url(../fonts/ChelseaMarket-Regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Just Another Hand';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Just Another Hand'), local('JustAnotherHand-Regular'), url(../fonts/ChelseaMarket-Regular.eot) format('embedded-opentype');
+  src: local('Just Another Hand'), local('JustAnotherHand-Regular'), url(../fonts/ChelseaMarket-Regular.ttf) format('True Type');
+  src: local('Just Another Hand'), local('JustAnotherHand-Regular'), url(../fonts/ChelseaMarket-Regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Sacramento';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Sacramento'), local('Sacramento-Regular'), url(../fonts/ChelseaMarket-Regular.eot) format('embedded-opentype');
+  src: local('Sacramento'), local('Sacramento-Regular'), url(../fonts/ChelseaMarket-Regular.ttf) format('True Type');
+  src: local('Sacramento'), local('Sacramento-Regular'), url(../fonts/ChelseaMarket-Regular.woff) format('woff');
+}
 .creator {
   position: relative;
 }
@@ -663,7 +695,7 @@
 }
 /*MCQ*/
 .mcq-option {
-  width: 145px;
+  width: 172px;
   margin-right: 10px;
   float: left;
   word-wrap: break-word;
@@ -679,6 +711,7 @@
   position: relative;
   z-index: 2;
   margin: 4px 5px 0;
+  background-size: 32px;
 }
 .mcq-option p {
   margin: 0;
@@ -694,6 +727,61 @@
 }
 #individual-marks-region input {
   margin-bottom: 4px;
+}
+/*input[type=checkbox].mcq-option-select {
+	display:none;
+}
+
+input[type=checkbox].mcq-option-select + p.mcq-option-text {
+	padding-left:55px;
+	height:41px; 
+	display:inline-block;
+	//line-height:41px;
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	//font-size:41px;
+	vertical-align:middle;
+	cursor:pointer;
+}
+
+input[type=checkbox].mcq-option-select:checked + p.mcq-option-text {
+	background-position: 0 -41px;
+}
+
+p.mcq-option-text {
+	background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_37dcefa588101cc5918ea69e918d56b9.png);
+	-webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	   -khtml-user-select: none;
+	     -moz-user-select: none;
+	      -ms-user-select: none;
+	          user-select: none;
+}*/
+/*.checkbox {
+	width: 50px;
+	height: 41px;
+	padding: 0 5px 0 0;
+	background: url(../../../images/csscheckbox.png) no-repeat;
+	display: block;
+	//clear: left;
+	float: left;
+}*/input[type="text"].underline {
+  text-decoration: none;
+  background: url(../../../images/underline.gif) repeat-x 100% 100%;
+  padding-bottom: 4px;
+  white-space: nowrap;
+  text-align: center;
+}
+input[type="text"].border {
+  text-align: center;
+  border: 15px solid transparent;
+  -webkit-border-image: url(../../../images/border.gif) 20 20 stretch;
+  /* Safari 5 */
+
+  -o-border-image: url(../../../images/border.gif) 20 20 stretch;
+  /* Opera */
+
+  border-image: url(../../../images/border.gif) 20 20 stretch;
 }
 .listBox {
   margin-top: 60px;

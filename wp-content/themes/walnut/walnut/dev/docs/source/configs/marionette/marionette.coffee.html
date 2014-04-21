@@ -150,6 +150,11 @@
     <span class="nv">getElementRegistrySize: </span><span class="nf">-&gt;</span>
       <span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="nx">@_elementRegistry</span>
 
+    <span class="nv">createEventObject: </span><span class="nf">-&gt;</span>
+        <span class="nv">vent : </span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Wreqr</span><span class="p">.</span><span class="nx">EventAggregator</span><span class="p">()</span>
+        <span class="nv">command : </span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Wreqr</span><span class="p">.</span><span class="nx">Commands</span><span class="p">()</span>
+        <span class="nv">reqres : </span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Wreqr</span><span class="p">.</span><span class="nx">RequestResponse</span><span class="p">()</span>
+
 
 </pre></div>
         </td>

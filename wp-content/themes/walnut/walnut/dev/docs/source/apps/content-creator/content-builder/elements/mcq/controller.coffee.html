@@ -48,6 +48,8 @@
 
             <span class="nx">initialize</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
 
+              <span class="vi">@eventObj = </span><span class="nx">options</span><span class="p">.</span><span class="nx">eventObj</span>
+
 
 </pre></div>
         </td>
@@ -158,6 +160,21 @@ and on the view event show the property box</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
+<p>on show disable all question elements in d element box</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;show&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+                <span class="nx">@eventObj</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;question:dropped&quot;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
 <p>show the view</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
@@ -180,7 +197,7 @@ and on the view event show the property box</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
 </div>
 <p>on change of optionNo attribute in the model 
 change the number of options</p>
@@ -196,7 +213,7 @@ change the number of options</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
 </div>
 <p>if greater then previous then add option</p>
         </td>
@@ -212,7 +229,7 @@ change the number of options</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
 </div>
 <p>else remove options</p>
         </td>
@@ -230,6 +247,20 @@ change the number of options</p>
               <span class="k">delete</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;elements&#39;</span>
               <span class="nx">model</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
               <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;close:question:properties&quot;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+<p>on delete enable all question elements in d element box</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nx">@eventObj</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;question:removed&quot;</span>
 </pre></div>
         </td>
       </tr>

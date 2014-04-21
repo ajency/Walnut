@@ -15,7 +15,7 @@ define ['app'],(App)->
 				# current markupup as argument
 				events:
 					'click a'	: (e)-> e.preventDefault()
-					'blur p'		: -> @model.set 'text', @$el.find('p').html()
+					'blur p'	: -> @model.set 'text', @$el.find('p').html()
 								# @trigger "text:element:blur"
 
 
@@ -30,9 +30,9 @@ define ['app'],(App)->
 					@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
 					@editor.setData _.stripslashes @model.get 'text'
 
-					_.delay ->
-						$('div.cke').on 'click',(evt)->
-							# console.log 'xx'
+					# wait for CKEditor to be loaded
+					_.delay =>
+						$('#cke_'+@editor.name).on 'click',(evt)->
 							evt.stopPropagation()
 
 					,500
@@ -67,6 +67,7 @@ define ['app'],(App)->
 
 					# events handlers for change of model attributes
 					@sort_model.on 'change:bg_color', @_changeBGColor
+					@sort_model.on 'change:bg_opacity', @_changeBGColor
 					@sort_model.on 'change:height', @_changeHeight
 
 					
@@ -87,7 +88,7 @@ define ['app'],(App)->
 
 			# on change of bg_color property
 			_changeBGColor:(model,bgColor)=>
-					@$el.find('.sort-option').css 'background-color', @_convertHex @sort_model.get('bg_color'),@sort_model.get('bg_opacity')
+					@$el.find('.sort-option').css 'background-color', _.convertHex @sort_model.get('bg_color'),@sort_model.get('bg_opacity')
 
 			# on change of height property
 			_changeHeight:(model,height)=>
@@ -106,16 +107,6 @@ define ['app'],(App)->
 						if not @$el.hasClass 'ui-sortable'
 							@$el.sortable
 								cursor: "move"
-
-
-			# convert hex and opacity to rgba format for css
-			_convertHex:(hex,opacity)->
-			    hex = hex.replace '#',''
-			    r = parseInt hex.substring(0,2), 16
-			    g = parseInt hex.substring(2,4), 16
-			    b = parseInt hex.substring(4,6), 16
-
-			    result = 'rgba('+r+','+g+','+b+','+opacity+')'
 
 			# on close drestroy the sortable
 			onClose:->

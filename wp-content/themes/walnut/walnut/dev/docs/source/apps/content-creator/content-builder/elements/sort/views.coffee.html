@@ -108,8 +108,8 @@ we can destroy it on close of element</p>
           <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
           <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;text&#39;</span>
 
-          <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="nf">-&gt;</span>
-            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;div.cke&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)-&gt;</span>
+          <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#cke_&#39;</span><span class="o">+</span><span class="nx">@editor</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)-&gt;</span>
 
 </pre></div>
         </td>
@@ -200,6 +200,7 @@ Ckeditor has a destroy method to remove a editor instance</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
           <span class="nx">@sort_model</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;change:bg_color&#39;</span><span class="p">,</span> <span class="nx">@_changeBGColor</span>
+          <span class="nx">@sort_model</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;change:bg_opacity&#39;</span><span class="p">,</span> <span class="nx">@_changeBGColor</span>
           <span class="nx">@sort_model</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;change:height&#39;</span><span class="p">,</span> <span class="nx">@_changeHeight</span>
 
           
@@ -264,7 +265,7 @@ Ckeditor has a destroy method to remove a editor instance</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="nx">_changeBGColor</span><span class="o">:</span><span class="nf">(model,bgColor)=&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.sort-option&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">@_convertHex</span> <span class="nx">@sort_model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">@sort_model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.sort-option&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">convertHex</span> <span class="nx">@sort_model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">@sort_model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
 
 
 </pre></div>
@@ -330,7 +331,7 @@ Ckeditor has a destroy method to remove a editor instance</p>
 <p>convert hex and opacity to rgba format for css</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_convertHex</span><span class="o">:</span><span class="nf">(hex,opacity)-&gt;</span>
+      <span class="nx">_convertHex</span><span class="o">:</span><span class="nf">(hex,opacity = 1)-&gt;</span>
           <span class="nv">hex = </span><span class="nx">hex</span><span class="p">.</span><span class="nx">replace</span> <span class="s">&#39;#&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span>
           <span class="nv">r = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span>
           <span class="nv">g = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="mi">16</span>

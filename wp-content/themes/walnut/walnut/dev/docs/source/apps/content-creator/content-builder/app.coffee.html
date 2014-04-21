@@ -51,18 +51,23 @@
 
           <span class="nv">initialize : </span><span class="nf">(options)-&gt;</span>
 
+            <span class="p">{</span><span class="nx">eventObj</span><span class="p">}</span> <span class="o">=</span> <span class="nx">options</span>
+
             <span class="nv">elements = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:page:json&quot;</span>
 
 
 
             <span class="vi">@view = </span><span class="nx">@_getContentBuilderView</span> <span class="nx">elements</span>
 
+            <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;question:dropped&quot;</span><span class="p">,</span> <span class="nf">-&gt;</span>
+              <span class="nx">eventObj</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;question:dropped&quot;</span>
+
             <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span> <span class="nf">(container, type)-&gt;</span>
-                  <span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span> <span class="nx">container</span><span class="p">,</span> <span class="nx">type</span>
+                  <span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span> <span class="nx">container</span><span class="p">,</span> <span class="nx">type</span> <span class="p">,</span> <span class="nx">eventObj</span>
 
             <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;dependencies:fetched&quot;</span><span class="p">,</span> <span class="o">=&gt;</span>
                 <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
-                  <span class="nx">@startFillingElements</span><span class="p">()</span>
+                  <span class="nx">@startFillingElements</span> <span class="nx">eventObj</span>
                 <span class="p">,</span> <span class="mi">400</span>
 
             <span class="nx">@show</span> <span class="nx">@view</span><span class="p">,</span>
@@ -91,18 +96,18 @@
 <p>start filling elements</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nv">startFillingElements: </span><span class="p">()</span><span class="nf">-&gt;</span>
+          <span class="nv">startFillingElements: </span><span class="nf">(eventObj)-&gt;</span>
             <span class="nv">section = </span><span class="nx">@view</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
 
             <span class="nv">container = </span><span class="nx">$</span><span class="p">(</span><span class="s">&#39;#myCanvas&#39;</span><span class="p">)</span>
             <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">section</span><span class="p">,</span> <span class="nf">(element, i)=&gt;</span>
               <span class="k">if</span> <span class="nx">element</span><span class="p">.</span><span class="nx">element</span> <span class="o">is</span> <span class="s">&#39;Row&#39;</span>
-                <span class="nx">@addNestedElements</span> <span class="nx">container</span><span class="p">,</span><span class="nx">element</span>
+                <span class="nx">@addNestedElements</span> <span class="nx">container</span><span class="p">,</span><span class="nx">element</span><span class="p">,</span> <span class="nx">eventObj</span>
               <span class="k">else</span>
-                <span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span><span class="nx">container</span><span class="p">,</span><span class="nx">element</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span> <span class="nx">element</span>
+                <span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span><span class="nx">container</span><span class="p">,</span><span class="nx">element</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span><span class="nx">eventObj</span><span class="p">,</span> <span class="nx">element</span>
 
           
-          <span class="nx">addNestedElements</span><span class="o">:</span><span class="nf">(container,element)-&gt;</span>
+          <span class="nx">addNestedElements</span><span class="o">:</span><span class="nf">(container,element,eventObj)-&gt;</span>
             <span class="nv">controller = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span><span class="nx">container</span><span class="p">,</span><span class="nx">element</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span> <span class="nx">element</span>
             <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">element</span><span class="p">.</span><span class="nx">elements</span>
             <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">element</span><span class="p">.</span><span class="nx">elements</span><span class="p">,</span> <span class="nf">(column, index)=&gt;</span>
@@ -113,7 +118,7 @@
                 <span class="k">if</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">element</span> <span class="o">is</span> <span class="s">&#39;Row&#39;</span>
                   <span class="nx">@addNestedElements</span> <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">),</span><span class="nx">ele</span>
                 <span class="k">else</span>
-                  <span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span><span class="nx">container</span><span class="p">,</span><span class="nx">ele</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span> <span class="nx">ele</span>
+                  <span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span><span class="nx">container</span><span class="p">,</span><span class="nx">ele</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span><span class="nx">eventObj</span><span class="p">,</span> <span class="nx">ele</span>
 
 
 
@@ -131,12 +136,13 @@
 <p>add a new element to the builder region</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nv">addNewElement : </span><span class="nf">(container , type, modelData)-&gt;</span>
+          <span class="nv">addNewElement : </span><span class="nf">(container , type, modelData, eventObj)-&gt;</span>
             <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">type</span>
             
             <span class="k">new</span> <span class="nx">ContentBuilder</span><span class="p">.</span><span class="nx">Element</span><span class="p">[</span><span class="nx">type</span><span class="p">].</span><span class="nx">Controller</span>
                     <span class="nv">container : </span><span class="nx">container</span>
                     <span class="nv">modelData : </span><span class="nx">modelData</span>
+                    <span class="nv">eventObj : </span><span class="nx">eventObj</span>
 
           <span class="nx">saveQuestion</span> <span class="o">:</span><span class="nf">-&gt;</span>
 
@@ -157,8 +163,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
         <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:content:builder&quot;</span><span class="p">,</span> <span class="nf">(options)-&gt;</span>
-                <span class="k">new</span> <span class="nx">ContentBuilderController</span>
-                      <span class="nv">region : </span><span class="nx">options</span><span class="p">.</span><span class="nx">region</span>
+                <span class="k">new</span> <span class="nx">ContentBuilderController</span> <span class="nx">options</span>
 
 
 </pre></div>
@@ -172,9 +177,9 @@
 <p>Request handler for new element</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;add:new:element&quot;</span> <span class="p">,</span> <span class="nf">(container, type, modelData = {})-&gt;</span>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;add:new:element&quot;</span> <span class="p">,</span> <span class="nf">(container, type,eventObj, modelData = {})-&gt;</span>
 
-            <span class="nx">API</span><span class="p">.</span><span class="nx">addNewElement</span> <span class="nx">container</span><span class="p">,</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">modelData</span>
+            <span class="nx">API</span><span class="p">.</span><span class="nx">addNewElement</span> <span class="nx">container</span><span class="p">,</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">modelData</span> <span class="p">,</span> <span class="nx">eventObj</span>
 
 
         <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;save:question&quot;</span><span class="p">,</span><span class="nf">-&gt;</span>

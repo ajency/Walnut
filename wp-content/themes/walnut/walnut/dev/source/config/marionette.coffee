@@ -55,6 +55,11 @@ define ['marionette','mustache'], (Marionette, Mustache)->
 		getElementRegistrySize: ->
 			_.size @_elementRegistry
 
+		createEventObject: ->
+				vent : new Backbone.Wreqr.EventAggregator()
+				command : new Backbone.Wreqr.Commands()
+				reqres : new Backbone.Wreqr.RequestResponse()
+
 	# add hide /unhide functionality to a region
 	_.extend Marionette.Region::,
 

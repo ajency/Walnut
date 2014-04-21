@@ -203,15 +203,15 @@ define ['app'],(App)->
 				
 				_.each resizers,(resizer)=>
 					width = @$el.width()
-					left = @$el.offset().left + 50
+					left = @$el.offset().left + width/24
 					
 					if typeof $(resizer).prev('.aj-imp-col-divider').position() isnt 'undefined'
-						left = @$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + 50
+						left = @$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + width/24
 
-					right = @$el.offset().left + width - 50
+					right = @$el.offset().left + width - width/24
 
 					if typeof $(resizer).next('.aj-imp-col-divider').position() isnt 'undefined'
-						right = @$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - 50
+						right = @$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - width/24
 
 					$(resizer).draggable  "option", "containment", [left, 0 , right , 0]
 

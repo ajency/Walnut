@@ -12,6 +12,7 @@ define ['app'
 					# intializer
 					initialize:(options)->
 
+						@eventObj = options.eventObj
 
 						_.defaults options.modelData,
 											element  	: 'Hotspot'
@@ -40,17 +41,8 @@ define ['app'
 						# get menu 
 						view = @_getHotspotView()
 
-						# @listenTo view, "show:media:manager", =>
-						# 			App.navigate "media-manager", trigger : true
-						# 			@listenTo App.vent,"media:manager:choosed:media",(media)=>
-						# 				@layout.model.set 'image_id', media.get 'id'
-						# 				console.log media.toJSON().url
-						# 				@layout.model.save()
-						# 				@stopListening App.vent,"media:manager:choosed:media"
 
-						#on click of any hotspot canvas show hotspot properties for that hotspot
-						@listenTo view, "show:hotspot:elements",=>
-							
+						@listenTo view, "show:hotspot:elements",=>							
 								App.execute "show:question:elements",
 										model : @layout.model
 
@@ -67,6 +59,10 @@ define ['app'
 
 						@listenTo view, "close:hotspot:element:properties",->
 								App.execute "close:question:element:properties"
+
+						# on show disable all question elements in d element box
+						@listenTo view, "show",=>
+								@eventObj.vent.trigger "question:dropped"
 		
 						@layout.elementRegion.show view,
 							loading:true
@@ -80,10 +76,8 @@ define ['app'
 
 					# remove the element model
 					deleteElement:(model)->
-						
-						if not @layout.elementRegion.currentView.$el.canBeDeleted()
-							alert "Please remove elements inside row and then delete."							
-						else
-							
 							model.destroy()
 							App.execute "close:question:elements"
+							# on delete enable all question elements in d element box
+							@eventObj.vent.trigger "question:removed"
+
