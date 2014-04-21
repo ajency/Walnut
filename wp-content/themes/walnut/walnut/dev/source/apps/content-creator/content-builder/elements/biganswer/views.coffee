@@ -5,10 +5,9 @@ define ['app'],(App)->
 
 		class Views.BigAnswerView extends Marionette.ItemView
 
-			template : '<input  type="text" maxlength="{{maxlength}}" placeholder="Answer" style="
+			template : '<input  type="text" maxlength="{{maxlength}}"  style="
 					    font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; 
-					     width:100%; height: 100%; line-height : inherit; border-width : 5px;
-					     border-style: none;">'
+					     width:100%; height: 100%; line-height : inherit;">'
 
 			onShow : ->
 

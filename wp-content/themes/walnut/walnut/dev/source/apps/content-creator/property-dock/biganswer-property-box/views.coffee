@@ -80,6 +80,19 @@ define ['app'],(App)->
 											  <option value="Verdana">
 											    Verdana
 											  </option>
+
+											  <option value="Chelsea Market">
+											    Chelsea Market
+											  </option>
+											  <option value="Indie Flower">
+											    Indie Flower
+											  </option>
+											  <option value="Just Another Hand">
+											    Just Another Hand
+											  </option>
+											  <option value="Sacramento">
+											    Sacramento
+											  </option>
 											  
 											</select>
 										</div>

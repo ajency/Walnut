@@ -10,7 +10,7 @@ define(['app'], function(App) {
         return BigAnswerView.__super__.constructor.apply(this, arguments);
       }
 
-      BigAnswerView.prototype.template = '<input  type="text" maxlength="{{maxlength}}" placeholder="Answer" style=" font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; width:100%; height: 100%; line-height : inherit; border-width : 5px; border-style: none;">';
+      BigAnswerView.prototype.template = '<input  type="text" maxlength="{{maxlength}}"  style=" font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; width:100%; height: 100%; line-height : inherit;">';
 
       BigAnswerView.prototype.onShow = function() {
         this.$el.parent().parent().on('click', (function(_this) {
