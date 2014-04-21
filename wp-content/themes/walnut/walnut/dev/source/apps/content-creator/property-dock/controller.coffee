@@ -26,6 +26,10 @@ define ['app'
 						App.commands.setHandler "show:hotspot:element:properties",(options)=>
 								@_getHotspotElementProperties options.model
 
+						# show fib element properties
+						App.commands.setHandler "show:fib:element:properties",(options)=>
+								@_getFibElementProperties options.model
+
 						App.commands.setHandler "close:question:element:properties",=>
 								@layout.questElementPropRegion.close()
 
@@ -56,6 +60,12 @@ define ['app'
 					_getHotspotElementProperties:(model)->
 						
 						App.execute "show:hotspot:element:properties:box",
+								region : @layout.questElementPropRegion
+								model : model
+
+					_getFibElementProperties:(model)->
+						
+						App.execute "show:fib:element:properties:box",
 								region : @layout.questElementPropRegion
 								model : model
 
