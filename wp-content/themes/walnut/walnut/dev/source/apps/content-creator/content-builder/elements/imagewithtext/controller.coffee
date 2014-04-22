@@ -72,6 +72,9 @@ define ['app'
 										#stop listening to event
 										@stopListening App.vent, "media:manager:choosed:media"
 
+									@listenTo App.vent,  "stop:listening:to:media:manager",=>
+											@stopListening App.vent, "media:manager:choosed:media"
+
 							@listenTo view, "text:element:blur",(html) =>
 								@layout.model.set 'content', "#{html}"
 								@layout.model.save() if @layout.model.hasChanged()
