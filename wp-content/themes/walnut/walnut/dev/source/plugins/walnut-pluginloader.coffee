@@ -22,4 +22,6 @@ define [
 			'unveil'
 			'moment'
 			'select2'
+			'datepicker'
+			'timepicker'
 		], ->

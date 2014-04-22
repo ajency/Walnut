@@ -13,9 +13,9 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
 
       TeachersDashboardRouter.prototype.appRoutes = {
         'teachers/dashboard': 'teachersDashboard',
-        'teachers/take-class/:class_id-*div': 'takeClass',
-        'teachers/start-training/:class_id': 'startTraining',
-        'teachers/content-modules/textbook/:t_id': 'textbookModules'
+        'teachers/take-class/:classID/:div': 'takeClass',
+        'teachers/start-training/:classID': 'startTraining',
+        'teachers/take-class/:classID/:div/textbook/:tID': 'textbookModules'
       };
 
       return TeachersDashboardRouter;
@@ -27,23 +27,23 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
           region: App.mainContentRegion
         });
       },
-      takeClass: function(class_id, div) {
+      takeClass: function(classID, div) {
         return new TeachersDashboardApp.View.TakeClassController({
           region: App.mainContentRegion,
-          classID: class_id,
+          classID: classID,
           division: div
         });
       },
-      startTraining: function(class_id) {
+      startTraining: function(classID) {
         return new TeachersDashboardApp.View.StartTrainingController({
           region: App.mainContentRegion,
-          classID: class_id
+          classID: classID
         });
       },
-      textbookModules: function(t_id) {
+      textbookModules: function(classID, div, tID) {
         return new TeachersDashboardApp.View.textbookModulesController({
           region: App.mainContentRegion,
-          textbookID: t_id
+          textbookID: tID
         });
       }
     };

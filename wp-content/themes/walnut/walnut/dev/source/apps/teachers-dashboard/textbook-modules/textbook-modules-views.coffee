@@ -1,49 +1,6 @@
-define ['app'
-		'controllers/region-controller'
-		], (App, RegionController)->
+define ['app'],(App)->
 
-	App.module "TeachersDashboardApp.View", (View, App)->
-
-		#List of textbooks available to a teacher for training or to take a class
-
-		class View.textbookModulesController extends RegionController
-			initialize : (opts) ->
-
-				{textbookID} = opts
-
-				@textbook= App.request "get:textbook:by:id", textbookID
-
-				@contentGroupsCollection = App.request "get:content:groups", ('textbook' :textbookID)
-
-				@view = view = @_getContentGroupsListingView @contentGroupsCollection
-
-				App.execute "when:fetched", @textbook, =>
-
-					textbookName= @textbook.get 'name'
-
-					breadcrumb_items = 'items':[
-							{'label':'Dashboard','link':'#teachers/dashboard'},
-							{'label':'Take Class','link':'javascript:;'},
-							{'label':textbookName,'link':'javascript:;','active':'active'}
-						]
-						
-					App.execute "update:breadcrumb:model", breadcrumb_items
-
-					@show @view, (loading:true)
-
-				@listenTo @view, "save:training:status" : (id)=>
-					singleModule = @contentGroupsCollection.get id
-					singleModule.set ('status': 'started')
-					singleModule.save({'changed':'status'}, {wait : true})
-					@view.triggerMethod 'status:change', singleModule
-
-			_getContentGroupsListingView : (collection)=>
-				new ContentGroupsView
-					collection: collection
-					templateHelpers:
-						showTextbookName :=>
-							@textbook.get 'name'
-
+	App.module "TeachersDashboardApp.View.TextbookModules",(TextbookModules, App)->		
 
 		class ContentGroupsItemView extends Marionette.ItemView
 
@@ -99,7 +56,7 @@ define ['app'
 				console.log 'schedule training'
 
 
-		class ContentGroupsView extends Marionette.CompositeView
+		class TextbookModules.ContentGroupsView extends Marionette.CompositeView
 			
 			template: '<div class="tiles white grid simple vertical blue">
 							<div class="grid-title no-border">
@@ -166,9 +123,4 @@ define ['app'
 				$('.input-append.date').datepicker
 					autoclose: true
 					todayHighlight: true
-	
-
-
-				
-
-
+		
