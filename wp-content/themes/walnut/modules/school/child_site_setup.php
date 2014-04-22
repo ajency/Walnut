@@ -2,14 +2,34 @@
 
 function setup_childsite($blog_id){
     global $wpdb;   
+    
+    //save the additional details of blog from setup. eg. licence validity
     $blog_details=  maybe_serialize($_POST['blog_additional']);
     update_blog_option($blog_id, 'blog_meta',$blog_details);
+    
+    echo '<br><br>Setting Theme and template<br>';
+    //setup the template and stylesheet for child sites
     update_blog_option($blog_id, 'template','walnut');
     update_blog_option($blog_id, 'stylesheet','schoolsite');
     
     $current_blog= get_current_blog_id();
     switch_to_blog($blog_id);
     
+    setup_childsite_roles();
+    
+    setup_childsite_custom_pages();
+    
+    setup_childsite_tables();
+    
+    setup_childsite_menus($current_blog, $blog_id);
+    
+    switch_to_blog($current_blog);
+    
+}
+
+function setup_childsite_roles(){
+    
+    echo '<br><br>Creating Childsite Roles<br>';
     global $wp_roles;
     if(get_role('subscriber')!=NULL)remove_role( 'subscriber' );//removes the subscriber role
     if(get_role('contributor')!=NULL)remove_role( 'contributor' );//removes the contributor role
@@ -27,7 +47,13 @@ function setup_childsite($blog_id){
     add_role( 'student','Student');
     add_role( 'parent','Parent');
     
+    echo '<br>school-admin, Student, Parent roles created.';
     
+}
+
+function setup_childsite_custom_pages(){
+    
+    echo '<br><br>Creating Custom Pages<br>';
     if (!get_page_by_title('Dashboard')) {
         $post = array();
         $post['post_type'] = 'page'; //could be 'page' for example
@@ -38,18 +64,48 @@ function setup_childsite($blog_id){
                            
     }
     update_post_meta($dashboard_id, '_wp_page_template', 'dashboard.php');
-   
+    echo 'Dashboard Page Created<br>';
+    
     update_option( 'page_on_front', $dashboard_id );
     update_option( 'show_on_front', 'page' );
+    echo 'Dashboard Page set as front page<br>';
+    
+}
+
+function setup_childsite_tables(){
+    global $wpdb;
+    
+    echo '<br><br>Creating Tables<br>';
     
     $class_divisions_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}class_divisions 
-             (`id` INT NOT NULL AUTO_INCREMENT, `divisions` INT NOT NULL, 
-             `class_id` INT NOT NULL, PRIMARY KEY (`id`))";
+             (`id` INT NOT NULL AUTO_INCREMENT, 
+             `divisions` INT NOT NULL, 
+             `class_id` INT NOT NULL, 
+             PRIMARY KEY (`id`))";
 
     $wpdb->query($class_divisions_table);
     
-    switch_to_blog($current_blog);
+    echo "{$wpdb->prefix}class_divisions table created<br>";
     
+    $class_divisions_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}training_logs 
+             (`id` INT NOT NULL AUTO_INCREMENT, `division_id` INT NOT NULL, 
+             `collection_id` INT NOT NULL, 
+             `teacher_id` INT NOT NULL, 
+             `date` DATETIME NOT NULL, 
+             `status` VARCHAR(255) NOT NULL, 
+             PRIMARY KEY (`id`))";
+
+    $wpdb->query($class_divisions_table);
+    
+    echo "{$wpdb->prefix}training_logs table created<br>";
+    
+    
+}
+
+function setup_childsite_menus($current_blog, $blog_id){
+    
+    echo '<br><br>Creating Menus: <br>';
+    switch_to_blog($current_blog);
     
     $parent_menus = wp_get_nav_menus();
 
@@ -60,6 +116,8 @@ function setup_childsite($blog_id){
 
         switch_to_blog($blog_id);
         $new_menu = wp_create_nav_menu($p_menu->name);
+        
+        echo $p_menu->name. ' created. <br>';
         
         foreach($parent_menu_items as $p_item){
            $p_item->post_status='publish';
@@ -78,7 +136,4 @@ function setup_childsite($blog_id){
            wp_update_nav_menu_item( $new_menu,0, $menu_data);
         }
     }
-    
-    switch_to_blog($current_blog);
-    
 }

@@ -36,6 +36,8 @@
         if(ENV == 'dev'){
         ?>
         
+        <link href="./wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
+        <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
         <link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
         <!--<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>-->
         <!-- BEGIN CORE CSS FRAMEWORK -->
@@ -78,7 +80,25 @@
                 </div>
             </div>
 
-            <div id="dialog-region"></div>
+            <div id="dialog-region">
+                <div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                          <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
+                        </div>
+                        <div class="modal-body">
+                          <div class="input-append success date">
+                                          <input type="text" placeholder="Select Date" class="span12">
+                                          <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> 
+                                  </div>
+                                  <button type="button" class="btn btn-primary">Save</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <script>
             AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';

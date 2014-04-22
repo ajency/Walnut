@@ -35,8 +35,6 @@ function extra_tax_fields($tag) {
 
                 </div>
             </div>
-        <!--<input type="text" name="term_meta[img]" id="term_meta[img]" size="3" style="width:60%;" value="<?php echo $term_meta['img'] ? $term_meta['img'] : ''; ?>"><br />
-                    <span class="description"><?php _e('Image for textbook: use full url with http://'); ?></span>-->
         </td>
     </tr>
     <tr class="form-field  textbook_fields" <?= $textbook_fields ?>>
@@ -77,43 +75,10 @@ function extra_tax_fields($tag) {
             <? } ?>
             <br>
             <span class="description"><?php _e('subjects which this textbook belongs to'); ?></span>
-            
-         <!--  <div  id='tags_area'>
-               <? if($subjects) {
-                   foreach($subjects as $sub){ 
-                        echo '<div class="termtags">
-                             <input name=term_tags[] value="'.$sub.'">
-                             <a onclick="jQuery(this).closest(\'div\').remove();" class="remove_tag">delete</a>
-                        </div>';
-                   }
-               }
-               ?>
-                   
-           </div>
-           -->
+         
        </td>
        
-   </tr><!--
-    <tr class="form-field">
-    <th scope="row" valign="top"><label for="tags">Add <?php _e('Tags'); ?></label></th>
-    <td>
-      <input type="text" name="" id="term_meta_tags" size="10" style="width:20%;">
-      <a id="tags_add">Add</a><br>
-    <br>   
-    </td>
-    </tr>
-    <script language="javascript">
-        jQuery(document).ready(function($) {            
-            $('#tags_add').click(function(){
-                var term_val=$('#term_meta_tags').val();
-                $('#tags_area').append('<div class="termtags"> \
-                            <input name=term_tags[] value="'+term_val+'"> \
-                            <a onclick="jQuery(this).closest(\'div\').remove();" class="remove_tag">delete</a></div>')
-                $('#term_meta_tags').val('');
-            });
-        });
-
-    </script>-->
+   </tr>
     <?php
 }
 
@@ -329,26 +294,65 @@ function get_textbooks_for_class($classid) {
     global $wpdb;
     $current_blog = get_current_blog_id();
     switch_to_blog(1);
+    
+    $data=array();
+    
     //$class= '"$classid";';
     
     //get the class_id from serialized array in db in the format "2";
-    $txtbook_qry = 'select textbook_id from '.$wpdb->prefix.'textbook_relationships where class_id like \'%"'.$classid.'";%\'';
-    $textbook_ids = $wpdb->get_results($txtbook_qry);
     
-    if (is_array($textbook_ids)) {
-        foreach ($textbook_ids as $book) {
-            $bookdets = get_book($book->textbook_id);
-            if($bookdets->parent == 0)
+    $txtbooks_assigned=get_assigned_textbooks();
+    
+    if($txtbooks_assigned){
+        $tids=implode(',',$txtbooks_assigned);
+        
+        $txtbook_qry= $wpdb->prepare("select textbook_id from {$wpdb->prefix}textbook_relationships 
+            where textbook_id in ($tids) and class_id like %s", '%"'.$classid.'";%');
+
+        $textbook_ids = $wpdb->get_results($txtbook_qry);
+
+        if (is_array($textbook_ids)) {
+            foreach ($textbook_ids as $book) {
+                $bookdets = get_book($book->textbook_id);
                 $data[]=$bookdets;
+            }
         }
     }
-    
     switch_to_blog($current_blog);
     return $data;
 }
 
-function get_textbooks_for_user() {
+function get_assigned_textbooks($user_id='') {
     
+    if($user_id=='')
+        $user_id=  get_current_user_id();
+    
+    $txtbooks_assigned=  get_usermeta($user_id, 'textbooks');
+    
+    $txtbook_ids= maybe_unserialize($txtbooks_assigned);
+    
+    return $txtbook_ids;
+    
+}
+
+/**
+ * 
+ * @param type $user_id
+ * @return type array
+ */
+function get_textbooks_for_user($user_id='') {
+    
+    $data=array();
+    
+    $txtbooks_assigned=get_assigned_textbooks($user_id);
+    
+    if (is_array($txtbooks_assigned)) {
+        foreach ($txtbooks_assigned as $book) {
+            $bookdets = get_book($book->textbook_id);
+            $data[]=$bookdets;
+        }
+    }
+    return $data;
 }
 
 function get_chapter_subsections($args = array()){

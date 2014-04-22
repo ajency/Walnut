@@ -1,86 +1,10 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['app', 'controllers/region-controller'], function(App, RegionController) {
-  return App.module("TeachersDashboardApp.View", function(View, App) {
-    var ContentGroupsItemView, ContentGroupsView;
-    View.textbookModulesController = (function(_super) {
-      __extends(textbookModulesController, _super);
-
-      function textbookModulesController() {
-        this._getContentGroupsListingView = __bind(this._getContentGroupsListingView, this);
-        return textbookModulesController.__super__.constructor.apply(this, arguments);
-      }
-
-      textbookModulesController.prototype.initialize = function(opts) {
-        var textbookID, view;
-        textbookID = opts.textbookID;
-        this.textbook = App.request("get:textbook:by:id", textbookID);
-        this.contentGroupsCollection = App.request("get:content:groups", {
-          'textbook': textbookID
-        });
-        this.view = view = this._getContentGroupsListingView(this.contentGroupsCollection);
-        App.execute("when:fetched", this.textbook, (function(_this) {
-          return function() {
-            var breadcrumb_items, textbookName;
-            textbookName = _this.textbook.get('name');
-            breadcrumb_items = {
-              'items': [
-                {
-                  'label': 'Dashboard',
-                  'link': '#teachers/dashboard'
-                }, {
-                  'label': 'Take Class',
-                  'link': 'javascript:;'
-                }, {
-                  'label': textbookName,
-                  'link': 'javascript:;',
-                  'active': 'active'
-                }
-              ]
-            };
-            App.execute("update:breadcrumb:model", breadcrumb_items);
-            return _this.show(_this.view, {
-              loading: true
-            });
-          };
-        })(this));
-        return this.listenTo(this.view, {
-          "save:training:status": (function(_this) {
-            return function(id) {
-              var singleModule;
-              singleModule = _this.contentGroupsCollection.get(id);
-              singleModule.set({
-                'status': 'started'
-              });
-              singleModule.save({
-                'changed': 'status'
-              }, {
-                wait: true
-              });
-              return _this.view.triggerMethod('status:change', singleModule);
-            };
-          })(this)
-        });
-      };
-
-      textbookModulesController.prototype._getContentGroupsListingView = function(collection) {
-        return new ContentGroupsView({
-          collection: collection,
-          templateHelpers: {
-            showTextbookName: (function(_this) {
-              return function() {
-                return _this.textbook.get('name');
-              };
-            })(this)
-          }
-        });
-      };
-
-      return textbookModulesController;
-
-    })(RegionController);
+define(['app'], function(App) {
+  return App.module("TeachersDashboardApp.View.TextbookModules", function(TextbookModules, App) {
+    var ContentGroupsItemView;
     ContentGroupsItemView = (function(_super) {
       __extends(ContentGroupsItemView, _super);
 
@@ -130,7 +54,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return ContentGroupsItemView;
 
     })(Marionette.ItemView);
-    return ContentGroupsView = (function(_super) {
+    return TextbookModules.ContentGroupsView = (function(_super) {
       __extends(ContentGroupsView, _super);
 
       function ContentGroupsView() {
