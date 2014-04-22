@@ -63,6 +63,9 @@ define ['app'
 										# @layout.model.save()
 										@stopListening App.vent,"media:manager:choosed:media"
 
+									@listenTo App.vent,  "stop:listening:to:media:manager",=>
+											@stopListening App.vent, "media:manager:choosed:media"
+
 							@listenTo view, "image:size:selected", (size)=>
 								@layout.model.set 'size', size
 								@layout.model.save()

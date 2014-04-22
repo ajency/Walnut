@@ -209,12 +209,22 @@ return</p>
             <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;show:login&quot;</span>
         <span class="p">,</span> <span class="s">&#39;json&#39;</span>
     
-      
-  <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;show:dashboard&quot;</span><span class="p">,</span> <span class="nf">-&gt;</span>
+
+  <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;show:dashboard&quot;</span><span class="p">,</span> <span class="nf">(user_role) =&gt;</span>
     <span class="k">if</span> <span class="k">typeof</span> <span class="nx">Pace</span> <span class="o">isnt</span> <span class="s">&#39;undefined&#39;</span>
       <span class="nx">Pace</span><span class="p">.</span><span class="nx">restart</span><span class="p">();</span>
       <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">site_main_container&quot;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span> <span class="s">&quot;showAll&quot;</span> <span class="p">);</span>
-    <span class="nx">App</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s">&#39;textbooks&#39;</span><span class="p">,</span> <span class="nv">trigger: </span><span class="kc">true</span><span class="p">)</span>
+
+    <span class="nv">user = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:user:model&quot;</span>
+    
+    <span class="nv">user_role= </span><span class="nx">user</span><span class="p">.</span><span class="nx">get</span> <span class="s">&quot;roles&quot;</span>
+    
+    <span class="k">if</span> <span class="nx">user_role</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s">&#39;administrator&#39;</span>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s">&#39;textbooks&#39;</span><span class="p">,</span> <span class="nv">trigger: </span><span class="kc">true</span><span class="p">)</span>
+
+    <span class="k">else</span> 
+      <span class="nx">App</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s">&#39;teachers/dashboard&#39;</span><span class="p">,</span> <span class="nv">trigger: </span><span class="kc">true</span><span class="p">)</span>
+
     <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:breadcrumbapp&quot;</span><span class="p">,</span> <span class="nx">region</span><span class="o">:</span><span class="nx">App</span><span class="p">.</span><span class="nx">breadcrumbRegion</span>
     <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:headerapp&quot;</span><span class="p">,</span> <span class="nx">region</span><span class="o">:</span><span class="nx">App</span><span class="p">.</span><span class="nx">headerRegion</span>
     <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:leftnavapp&quot;</span><span class="p">,</span> <span class="nx">region</span><span class="o">:</span><span class="nx">App</span><span class="p">.</span><span class="nx">leftNavRegion</span> 

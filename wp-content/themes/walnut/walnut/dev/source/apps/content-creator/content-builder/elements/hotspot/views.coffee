@@ -270,6 +270,9 @@ define ['app'],(App)->
 						# @layout.model.save()
 						@stopListening App.vent,"media:manager:choosed:media"
 
+					@listenTo App.vent,  "stop:listening:to:media:manager",=>
+							@stopListening App.vent, "media:manager:choosed:media"
+
 
 				@_updateDefaultLayer()
 

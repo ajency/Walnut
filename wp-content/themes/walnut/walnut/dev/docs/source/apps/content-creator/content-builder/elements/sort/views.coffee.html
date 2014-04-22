@@ -71,7 +71,7 @@ current markupup as argument</p>
         <td class="code highlight"><div class="highlight"><pre>
         <span class="nv">events:</span>
           <span class="s">&#39;click a&#39;</span> <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
-          <span class="s">&#39;blur p&#39;</span>    <span class="o">:</span> <span class="nf">-&gt;</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;text&#39;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span>
+          <span class="s">&#39;blur p&#39;</span>  <span class="o">:</span> <span class="nf">-&gt;</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;text&#39;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span>
 
 </pre></div>
         </td>
@@ -108,8 +108,6 @@ we can destroy it on close of element</p>
           <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
           <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;text&#39;</span>
 
-          <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
-            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#cke_&#39;</span><span class="o">+</span><span class="nx">@editor</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)-&gt;</span>
 
 </pre></div>
         </td>
@@ -119,9 +117,11 @@ we can destroy it on close of element</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
-<p>console.log 'xx'</p>
+<p>wait for CKEditor to be loaded</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
+          <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#cke_&#39;</span><span class="o">+</span><span class="nx">@editor</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)-&gt;</span>
               <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
 
           <span class="p">,</span><span class="mi">500</span>
@@ -319,7 +319,6 @@ Ckeditor has a destroy method to remove a editor instance</p>
                 <span class="nv">cursor: </span><span class="s">&quot;move&quot;</span>
 
 
-
 </pre></div>
         </td>
       </tr>
@@ -327,26 +326,6 @@ Ckeditor has a destroy method to remove a editor instance</p>
         <td class="docs">
 <div class="pilwrap">
   <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
-</div>
-<p>convert hex and opacity to rgba format for css</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_convertHex</span><span class="o">:</span><span class="nf">(hex,opacity = 1)-&gt;</span>
-          <span class="nv">hex = </span><span class="nx">hex</span><span class="p">.</span><span class="nx">replace</span> <span class="s">&#39;#&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span>
-          <span class="nv">r = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span>
-          <span class="nv">g = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="mi">16</span>
-          <span class="nv">b = </span><span class="nb">parseInt</span> <span class="nx">hex</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="mi">16</span>
-
-          <span class="nv">result = </span><span class="s">&#39;rgba(&#39;</span><span class="o">+</span><span class="nx">r</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">+</span><span class="nx">g</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">+</span><span class="nx">b</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">+</span><span class="nx">opacity</span><span class="o">+</span><span class="s">&#39;)&#39;</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
 </div>
 <p>on close drestroy the sortable</p>
         </td>

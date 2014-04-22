@@ -74,7 +74,8 @@
             <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">collectionDetailsRegion</span>
             <span class="nv">model  : </span><span class="nx">@contentGroupModel</span>
 
-          <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:viewgroup:content:displayapp&quot;</span><span class="p">,</span> <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">contentDisplayRegion</span><span class="p">,</span> <span class="nv">model: </span><span class="nx">@contentGroupModel</span>
+          <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">@contentGroupModel</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;content_pieces&#39;</span><span class="p">))</span><span class="o">&gt;</span><span class="mi">0</span>
+            <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:viewgroup:content:displayapp&quot;</span><span class="p">,</span> <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">contentDisplayRegion</span><span class="p">,</span> <span class="nv">model: </span><span class="nx">@contentGroupModel</span>
 
       <span class="nv">_getContentGroupViewLayout : </span><span class="o">=&gt;</span>
         <span class="k">new</span> <span class="nx">ContentGroupViewLayout</span>

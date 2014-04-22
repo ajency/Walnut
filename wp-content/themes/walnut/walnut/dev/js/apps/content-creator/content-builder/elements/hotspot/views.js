@@ -235,6 +235,11 @@ define(['app'], function(App) {
               return _this.stopListening(App.vent, "media:manager:choosed:media");
             };
           })(this));
+          this.listenTo(App.vent, "stop:listening:to:media:manager", (function(_this) {
+            return function() {
+              return _this.stopListening(App.vent, "media:manager:choosed:media");
+            };
+          })(this));
         }
         this._updateDefaultLayer();
         return this.optionLayer.draw();
