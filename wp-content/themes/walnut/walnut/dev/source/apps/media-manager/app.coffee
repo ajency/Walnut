@@ -78,6 +78,10 @@ define ['app'
 						'click button.media-manager-select' : ->
 												@trigger "media:selected"
 
+					onClose:->
+						#stop listening to event
+						App.vent.trigger "stop:listening:to:media:manager"
+
 				
 				#public API
 				API = 

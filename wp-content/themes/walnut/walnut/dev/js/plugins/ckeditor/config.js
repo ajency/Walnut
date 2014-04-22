@@ -53,4 +53,10 @@ config.toolbar = [
 					// # 			# { name: 'others', items: [ '-' ] },
 					// # 			# { name: 'about', items: [ 'About' ] }
 							]
+
+
+
+config.font_names = config.font_names+' ;Chelsea Market; Indie Flower; Just Another Hand; Sacramento'					
 };
+
+

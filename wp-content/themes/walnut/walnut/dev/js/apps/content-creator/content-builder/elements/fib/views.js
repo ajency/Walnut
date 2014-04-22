@@ -91,26 +91,19 @@ define(['app'], function(App) {
         }
       };
 
-      FibView.prototype._textBlur = function(evt) {
+      FibView.prototype._textBlur = function() {
         return this.model.set('text', this.$el.find('p').html());
       };
 
       FibView.prototype._updateInputProperties = function() {
         _.each(this.$el.find('input'), (function(_this) {
           return function(blank) {
-            var blanksData;
             if (_.isUndefined($(blank).attr('data-id'))) {
               $(blank).attr('data-id', _.uniqueId('input-'));
               _.delay(function() {
                 return $(blank).prop('maxLength', parseInt(12));
               }, 100);
-              blanksData = {
-                id: $(blank).attr('data-id'),
-                correct_answers: [],
-                marks: 1,
-                maxlength: 12
-              };
-              _this.trigger("create:new:fib:element", blanksData);
+              _this.trigger("create:new:fib:element", $(blank).attr('data-id'));
             }
             return _.delay(function() {
               var blanksModel;

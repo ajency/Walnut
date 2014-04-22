@@ -10,27 +10,17 @@ define(['app'], function(App) {
         return PropertyView.__super__.constructor.apply(this, arguments);
       }
 
-      PropertyView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> BigAnswer<i class="fa fa-chevron-right"></i> <span class="semi-bold">Big Answer Properties</span> </div> <div class="docket-body"> <div class="form-group"> <div class="bootstrap-tagsinput"> <input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" /> </div> </div> <div >Max Characters <input id="answer-max-length" type="type"  value="{{maxlength}}"> </div> <div> <input id="check-case-sensitive" type="checkbox" name="check-ind-marks"> Case Sensitive </div> <div> Font <select class="font" id="biganswer-font"> <option value="Arial"> Arial </option> <option value="Calibri"> Calibri </option> <option value="Comic Sans MS"> Comic Sans MS </option> <option value="Courier"> Courier </option> <option value="Georgia"> Georgia </option> <option value="Helvetica"> Helvetica </option> <option value="Impact"> Impact </option> <option value="Lucida Console"> Lucida Console </option> <option value="Lucida Sans Unicode"> Lucida Sans Unicode </option> <option value="Tahoma"> Tahoma </option> <option value="Times New Roman"> Times New Roman </option> <option value="Trebuchet MS"> Trebuchet MS </option> <option value="Verdana"> Verdana </option> <option value="Chelsea Market"> Chelsea Market </option> <option value="Indie Flower"> Indie Flower </option> <option value="Just Another Hand"> Just Another Hand </option> <option value="Sacramento"> Sacramento </option> </select> </div> <div class=""> <div class="textProp slider success"> Size <input type="text" id="biganswer-fontsize" class="fontSize" data-slider-max="80" data-slider-min="12" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div> Marks <select id="marks"> <option value="1">1</option> <option value="2">2</option> </select> </div> <div class="form-group inline"> Font-Color <input type="hidden" id="font-color" class="color-picker" value="{{color}}"> </div> <div class="form-group inline"> Background-Color <input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}> </div> <div> Style <select id="biganswer-style"> <option value="uline">Underline</option> <option value="box">Box</option> <option value="blank">Blank</option> </select> </div> </div> </div> </div>';
+      PropertyView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> BigAnswer<i class="fa fa-chevron-right"></i> <span class="semi-bold">Big Answer Properties</span> </div> <div class="docket-body"> <!--	<div class="form-group"> <div class="bootstrap-tagsinput"> <input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" /> </div> </div> --> <div >Max Characters <input id="answer-max-length" type="type"  value="{{maxlength}}"> </div> <div> <input id="check-case-sensitive" type="checkbox" name="check-ind-marks"> Case Sensitive </div> <div> Font <select class="font" id="biganswer-font"> <option value="Arial"> Arial </option> <option value="Calibri"> Calibri </option> <option value="Comic Sans MS"> Comic Sans MS </option> <option value="Courier"> Courier </option> <option value="Georgia"> Georgia </option> <option value="Helvetica"> Helvetica </option> <option value="Impact"> Impact </option> <option value="Lucida Console"> Lucida Console </option> <option value="Lucida Sans Unicode"> Lucida Sans Unicode </option> <option value="Tahoma"> Tahoma </option> <option value="Times New Roman"> Times New Roman </option> <option value="Trebuchet MS"> Trebuchet MS </option> <option value="Verdana"> Verdana </option> <option value="Chelsea Market"> Chelsea Market </option> <option value="Indie Flower"> Indie Flower </option> <option value="Just Another Hand"> Just Another Hand </option> <option value="Sacramento"> Sacramento </option> </select> </div> <div class=""> <div class="textProp slider success"> Size <input type="text" id="biganswer-fontsize" class="fontSize" data-slider-max="80" data-slider-min="12" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div> Marks <select id="marks"> <option value="1">1</option> <option value="2">2</option> </select> </div> <div class="form-group inline"> Font-Color <input type="hidden" id="font-color" class="color-picker" value="{{color}}"> </div> <div class="form-group inline"> Background-Color <input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}> </div> <div> Style <select id="biganswer-style"> <option value="uline">Underline</option> <option value="box">Box</option> <option value="blank">Blank</option> </select> </div> </div> </div> </div>';
 
       PropertyView.prototype.events = {
         'blur #answer-max-length': '_changeMaxLength',
         'change input#check-case-sensitive': '_checkCaseSensitive',
         'change select#biganswer-font': '_changeFont',
         'change select#marks': '_changeMarks',
-        'change select#biganswer-style': '_changeStyle',
-        'change input#correct-answers': '_changeCorrectAnswers'
-      };
-
-      PropertyView.prototype.mixinTemplateHelpers = function(data) {
-        data.correctanswersFn = function() {
-          return this.correct_answers.toString();
-        };
-        console.log(JSON.stringify(data));
-        return data;
+        'change select#biganswer-style': '_changeStyle'
       };
 
       PropertyView.prototype.onShow = function(options) {
-        this.$el.find('input#correct-answers').tagsinput('refresh');
         if (this.model.get('case_sensitive')) {
           this.$el.find('#check-case-sensitive').prop('checked', true);
         }
@@ -80,10 +70,6 @@ define(['app'], function(App) {
             };
           })(this)
         });
-      };
-
-      PropertyView.prototype._changeCorrectAnswers = function(evt) {
-        return this.model.set('correct_answers', $(evt.target).val().split(','));
       };
 
       PropertyView.prototype._checkCaseSensitive = function(evt) {

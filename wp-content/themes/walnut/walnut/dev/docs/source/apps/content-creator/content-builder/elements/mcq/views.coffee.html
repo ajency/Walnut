@@ -19,10 +19,19 @@
     <div id="tree"></div>
     <div id="headings">
       <div class="heading h1">
-        <a href="#trigger%20when%20the%20no%20of%20models%20in%20collection%20has%20been%20changed">trigger when the no of models in collection has been changed</a>
+        <a href="#%23%20trigger%20when%20the%20no%20of%20models%20in%20collection%20has%20been%20changed"># trigger when the no of models in collection has been changed</a>
       </div>
       <div class="heading h1">
-        <a href="#change%20the%20default%20radio%20to%20checkbox%20if%20multple">change the default radio to checkbox if multple</a>
+        <a href="#%23%20change%20the%20default%20radio%20to%20checkbox%20if%20multple"># change the default radio to checkbox if multple</a>
+      </div>
+      <div class="heading h1">
+        <a href="#events%20handlers%20for%20change%20of%20model%20attributes">events handlers for change of model attributes</a>
+      </div>
+      <div class="heading h1">
+        <a href="#on%20change%20of%20multiple%20attribute%20in%20the%20model">on change of multiple attribute in the model</a>
+      </div>
+      <div class="heading h1">
+        <a href="#change%20the%20input%20type">change the input type</a>
       </div>
     </div>
   </div>
@@ -57,7 +66,7 @@
       <span class="nv">tagName : </span><span class="s">&#39;div&#39;</span>
 
       <span class="nv">template : </span><span class="s">&#39;&lt;span&gt;{{optionNo}}&lt;/span&gt;</span>
-<span class="s">            &lt;input class=&quot;mcq-option-select&quot; id=&quot;option-{{optionNo}}&quot; type=&quot;radio&quot;  value=&quot;no&quot;&gt;</span>
+<span class="s">            &lt;input class=&quot;mcq-option-select&quot; id=&quot;option-{{optionNo}}&quot; type=&quot;checkbox&quot;  value=&quot;no&quot;&gt;</span>
 <span class="s">            </span>
 <span class="s">            &lt;p class=&quot;mcq-option-text&quot;&gt;&lt;/p&gt;&#39;</span>
 
@@ -116,11 +125,41 @@ we can destroy it on close of element</p>
         <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
         <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;text&#39;</span>
 
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>wait for CKEditor to be loaded</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
         <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
           <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#cke_&#39;</span><span class="o">+</span><span class="nx">@editor</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)-&gt;</span>
             <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
 
         <span class="p">,</span><span class="mi">500</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>custom checkbox</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input:checkbox&#39;</span><span class="p">).</span><span class="nx">screwDefaultButtons</span>
+          <span class="nv">image: </span><span class="s">&#39;url(&quot;../wp-content/themes/walnut/images/csscheckbox.png&quot;)&#39;</span>
+          <span class="nv">width: </span><span class="mi">32</span>
+          <span class="nv">height: </span><span class="mi">26</span>
+          
 
 
 
@@ -131,7 +170,7 @@ we can destroy it on close of element</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
 </div>
 <p>destroy the Ckeditor instance to avoiid memory leaks on close of element
 this.editor will hold the reference to the editor instance
@@ -166,27 +205,28 @@ Ckeditor has a destroy method to remove a editor instance</p>
       </tr>
       <tr>
         <td class="docs">
-<div class="pilwrap" id="trigger%20when%20the%20no%20of%20models%20in%20collection%20has%20been%20changed">
+<div class="pilwrap" id="%23%20trigger%20when%20the%20no%20of%20models%20in%20collection%20has%20been%20changed">
   <h1>
-    <a href="#trigger%20when%20the%20no%20of%20models%20in%20collection%20has%20been%20changed" name="trigger%20when%20the%20no%20of%20models%20in%20collection%20has%20been%20changed" class="pilcrow">&#182;</a>
-    trigger when the no of models in collection has been changed
+    <a href="#%23%20trigger%20when%20the%20no%20of%20models%20in%20collection%20has%20been%20changed" name="%23%20trigger%20when%20the%20no%20of%20models%20in%20collection%20has%20been%20changed" class="pilcrow">&#182;</a>
+    # trigger when the no of models in collection has been changed
   </h1>
 </div>
 
 
 
-<div class="pilwrap" id="change%20the%20default%20radio%20to%20checkbox%20if%20multple">
+<div class="pilwrap" id="%23%20change%20the%20default%20radio%20to%20checkbox%20if%20multple">
   <h1>
-    <a href="#change%20the%20default%20radio%20to%20checkbox%20if%20multple" name="change%20the%20default%20radio%20to%20checkbox%20if%20multple" class="pilcrow">&#182;</a>
-    change the default radio to checkbox if multple
+    <a href="#%23%20change%20the%20default%20radio%20to%20checkbox%20if%20multple" name="%23%20change%20the%20default%20radio%20to%20checkbox%20if%20multple" class="pilcrow">&#182;</a>
+    # change the default radio to checkbox if multple
   </h1>
 </div>
 
+
+<p>onAfterItemAdded:->
+        if @mcq_model.get 'multiple'
+                @$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">onAfterItemAdded</span><span class="o">:</span><span class="nf">-&gt;</span>
-          <span class="k">if</span> <span class="nx">@mcq_model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;multiple&#39;</span>
-              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.mcq-option input.mcq-option-select&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;type&#39;</span><span class="p">,</span><span class="s">&#39;checkbox&#39;</span>
       
 
 </pre></div>
@@ -195,14 +235,25 @@ Ckeditor has a destroy method to remove a editor instance</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <p>triggered on show of the view</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
-          <span class="k">if</span> <span class="nx">@mcq_model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;multiple&#39;</span>
-              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.mcq-option input.mcq-option-select&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;type&#39;</span><span class="p">,</span><span class="s">&#39;checkbox&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>if @mcq_model.get 'multiple'
+        @$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 
 
 </pre></div>
@@ -211,7 +262,7 @@ Ckeditor has a destroy method to remove a editor instance</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
 </div>
 <p>set event handler for click of mcq and stop propogation of the event</p>
         </td>
@@ -226,13 +277,17 @@ Ckeditor has a destroy method to remove a editor instance</p>
       </tr>
       <tr>
         <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+<div class="pilwrap" id="events%20handlers%20for%20change%20of%20model%20attributes">
+  <h1>
+    <a href="#events%20handlers%20for%20change%20of%20model%20attributes" name="events%20handlers%20for%20change%20of%20model%20attributes" class="pilcrow">&#182;</a>
+    events handlers for change of model attributes
+  </h1>
 </div>
-<p>events handlers for change of model attributes</p>
+
+
+<p>@mcq_model.on 'change:multiple', @_changeMultipleAnswers</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">@mcq_model</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;change:multiple&#39;</span><span class="p">,</span> <span class="nx">@_changeMultipleAnswers</span>
 
 
 </pre></div>
@@ -240,18 +295,30 @@ Ckeditor has a destroy method to remove a editor instance</p>
       </tr>
       <tr>
         <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+<div class="pilwrap" id="on%20change%20of%20multiple%20attribute%20in%20the%20model">
+  <h1>
+    <a href="#on%20change%20of%20multiple%20attribute%20in%20the%20model" name="on%20change%20of%20multiple%20attribute%20in%20the%20model" class="pilcrow">&#182;</a>
+    on change of multiple attribute in the model
+  </h1>
 </div>
-<p>on change of multiple attribute in the model 
-change the input type</p>
+
+
+
+<div class="pilwrap" id="change%20the%20input%20type">
+  <h1>
+    <a href="#change%20the%20input%20type" name="change%20the%20input%20type" class="pilcrow">&#182;</a>
+    change the input type
+  </h1>
+</div>
+
+
+<p>_changeMultipleAnswers:(model,multiple)=>
+    if multiple
+        @$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+    else
+        @$el.find('.mcq-option input.mcq-option-select').attr 'type','radio'</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_changeMultipleAnswers</span><span class="o">:</span><span class="nf">(model,multiple)=&gt;</span>
-        <span class="k">if</span> <span class="nx">multiple</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.mcq-option input.mcq-option-select&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;type&#39;</span><span class="p">,</span><span class="s">&#39;checkbox&#39;</span>
-        <span class="k">else</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.mcq-option input.mcq-option-select&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;type&#39;</span><span class="p">,</span><span class="s">&#39;radio&#39;</span>
 
       
 

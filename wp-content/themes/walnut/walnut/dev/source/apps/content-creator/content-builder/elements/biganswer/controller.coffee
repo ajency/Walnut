@@ -22,7 +22,7 @@ define ['app'
 								case_sensitive : false
 								marks: 2
 								style : 'blank'
-								correct_answers : []
+								# correct_answers : []
 
 							super options
 

@@ -22,8 +22,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           font_size: '12',
           case_sensitive: false,
           marks: 2,
-          style: 'blank',
-          correct_answers: []
+          style: 'blank'
         });
         return Controller.__super__.initialize.call(this, options);
       };

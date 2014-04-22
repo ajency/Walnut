@@ -50,8 +50,14 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           };
         })(this));
         this.listenTo(view, "create:new:fib:element", (function(_this) {
-          return function(blanksData) {
-            var blanksModel;
+          return function(blankId) {
+            var blanksData, blanksModel;
+            blanksData = {
+              id: blankId,
+              correct_answers: [],
+              marks: 1,
+              maxlength: 12
+            };
             blanksModel = App.request("create:new:question:element", blanksData);
             return _this.layout.model.get('blanksArray').add(blanksModel);
           };

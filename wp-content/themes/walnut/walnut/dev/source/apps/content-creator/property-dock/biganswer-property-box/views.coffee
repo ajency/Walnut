@@ -12,11 +12,11 @@ define ['app'],(App)->
 									</div>
 									<div class="docket-body">
 
-										<div class="form-group">
+									<!--	<div class="form-group">
 											<div class="bootstrap-tagsinput"> 
 												<input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
 											</div>
-										</div>
+										</div> -->
 
 										<div >Max Characters
 											<input id="answer-max-length" type="type"  value="{{maxlength}}">											
@@ -84,12 +84,15 @@ define ['app'],(App)->
 											  <option value="Chelsea Market">
 											    Chelsea Market
 											  </option>
+
 											  <option value="Indie Flower">
 											    Indie Flower
 											  </option>
+
 											  <option value="Just Another Hand">
 											    Just Another Hand
 											  </option>
+
 											  <option value="Sacramento">
 											    Sacramento
 											  </option>
@@ -146,20 +149,20 @@ define ['app'],(App)->
 				'change select#biganswer-font' : '_changeFont'
 				'change select#marks' : '_changeMarks'
 				'change select#biganswer-style' : '_changeStyle'
-				'change input#correct-answers' : '_changeCorrectAnswers'
+				# 'change input#correct-answers' : '_changeCorrectAnswers'
 
-			mixinTemplateHelpers:(data)->
+			# mixinTemplateHelpers:(data)->
 
-				data.correctanswersFn = ->
-					@correct_answers.toString()
+			# 	data.correctanswersFn = ->
+			# 		@correct_answers.toString()
 
-				console.log JSON.stringify data
+			# 	console.log JSON.stringify data
 
-				data
+			# 	data
 
 			onShow:(options)->
-					@$el.find('input#correct-answers').tagsinput('refresh');
-					# @$el.find('input#correct-answers').tagsinput('input').val @model.get('correct_answers')
+					# @$el.find('input#correct-answers').tagsinput('refresh');
+					# # @$el.find('input#correct-answers').tagsinput('input').val @model.get('correct_answers')
 
 
 
@@ -218,9 +221,9 @@ define ['app'],(App)->
 									@model.set 'bg_color', hex
 									@model.set 'bg_opacity', opacity
 
-			# function for changing the correct answer array						
-			_changeCorrectAnswers:(evt)->
-					@model.set 'correct_answers',$(evt.target).val().split(',')
+			# # function for changing the correct answer array						
+			# _changeCorrectAnswers:(evt)->
+			# 		@model.set 'correct_answers',$(evt.target).val().split(',')
 					
 			# function for changing model on change of 
 			# case sensitive checkbox

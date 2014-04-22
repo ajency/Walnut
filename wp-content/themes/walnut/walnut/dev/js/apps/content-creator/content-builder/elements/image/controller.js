@@ -57,8 +57,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
               App.navigate("media-manager", {
                 trigger: true
               });
-              return _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
+              _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
                 _this.layout.model.set('image_id', media.get('id'));
+                return _this.stopListening(App.vent, "media:manager:choosed:media");
+              });
+              return _this.listenTo(App.vent, "stop:listening:to:media:manager", function() {
                 return _this.stopListening(App.vent, "media:manager:choosed:media");
               });
             });

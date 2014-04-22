@@ -45,21 +45,21 @@ define ['app'],(App)->
 								<li data-element="Fib" > 
 									<a href="#" class="drag builder-element" > 
 										<div class="aj-imp-builder-title">
-											<i class="fa fa-list-ol"></i> Fill in the Blanks
+											<i class="bicon icon-uniF148"></i> Fill in the Blanks
 										</div> 
 									</a> 
 								</li>  
 								<li data-element="BigAnswer" > 
 									<a href="#" class="drag builder-element" > 
 										<div class="aj-imp-builder-title">
-											<i class="fa fa-list-ol"></i> Big Answer
+											<i class="bicon icon-uniF15E"></i> Big Answer
 										</div> 
 									</a> 
 								</li>  
 								<li data-element="Sort" > 
 									<a href="#" class="drag builder-element" > 
 										<div class="aj-imp-builder-title">
-											<i class="fa fa-list-ol"></i> Sort
+											<i class="bicon icon-uniF153"></i><i class="bicon icon-uniF154"></i> Sort
 										</div> 
 									</a> 
 								</li>  
