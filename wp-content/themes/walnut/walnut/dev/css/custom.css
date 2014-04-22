@@ -64,25 +64,25 @@
   font-family: 'Indie Flower';
   font-style: normal;
   font-weight: 400;
-  src: local('Indie Flower'), local('IndieFlower'), url(../fonts/ChelseaMarket-Regular.eot) format('embedded-opentype');
-  src: local('Indie Flower'), local('IndieFlower'), url(../fonts/ChelseaMarket-Regular.ttf) format('True Type');
-  src: local('Indie Flower'), local('IndieFlower'), url(../fonts/ChelseaMarket-Regular.woff) format('woff');
+  src: local('Indie Flower'), local('IndieFlower'), url(../fonts/IndieFlower.eot) format('embedded-opentype');
+  src: local('Indie Flower'), local('IndieFlower'), url(../fonts/IndieFlower.ttf) format('True Type');
+  src: local('Indie Flower'), local('IndieFlower'), url(../fonts/IndieFlower.woff) format('woff');
 }
 @font-face {
   font-family: 'Just Another Hand';
   font-style: normal;
   font-weight: 400;
-  src: local('Just Another Hand'), local('JustAnotherHand-Regular'), url(../fonts/ChelseaMarket-Regular.eot) format('embedded-opentype');
-  src: local('Just Another Hand'), local('JustAnotherHand-Regular'), url(../fonts/ChelseaMarket-Regular.ttf) format('True Type');
-  src: local('Just Another Hand'), local('JustAnotherHand-Regular'), url(../fonts/ChelseaMarket-Regular.woff) format('woff');
+  src: local('Just Another Hand'), local('JustAnotherHand-Regular'), url(../fonts/JustAnotherHand.eot) format('embedded-opentype');
+  src: local('Just Another Hand'), local('JustAnotherHand-Regular'), url(../fonts/JustAnotherHand.ttf) format('True Type');
+  src: local('Just Another Hand'), local('JustAnotherHand-Regular'), url(../fonts/JustAnotherHand.woff) format('woff');
 }
 @font-face {
   font-family: 'Sacramento';
   font-style: normal;
   font-weight: 400;
-  src: local('Sacramento'), local('Sacramento-Regular'), url(../fonts/ChelseaMarket-Regular.eot) format('embedded-opentype');
-  src: local('Sacramento'), local('Sacramento-Regular'), url(../fonts/ChelseaMarket-Regular.ttf) format('True Type');
-  src: local('Sacramento'), local('Sacramento-Regular'), url(../fonts/ChelseaMarket-Regular.woff) format('woff');
+  src: local('Sacramento'), local('Sacramento-Regular'), url(../fonts/Sacramento-Regular.eot) format('embedded-opentype');
+  src: local('Sacramento'), local('Sacramento-Regular'), url(../fonts/Sacramento-Regular.ttf) format('True Type');
+  src: local('Sacramento'), local('Sacramento-Regular'), url(../fonts/Sacramento-Regular.woff) format('woff');
 }
 .creator {
   position: relative;
