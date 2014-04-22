@@ -81,28 +81,16 @@
             </div>
 
             <div id="dialog-region">
-                <div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                          <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
-                        </div>
-                        <div class="modal-body">
-                          <div class="input-append success date">
-                                          <input type="text" placeholder="Select Date" class="span12">
-                                          <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> 
-                                  </div>
-                                  <button type="button" class="btn btn-primary">Save</button>
-                        </div>
-                      </div>
-                    </div>
-                </div>
             </div>
         </div>
+        <?php  global $class_ids; ?>
         <script>
             AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
             SITEURL = '<?php echo site_url() ?>';
+            CLASS_LABEL= {};
+            <?php foreach($class_ids as $class){ ?>
+                CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
+            <?php } ?>
         </script>
         <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
         <?php if (ENV == 'dev') { ?>

@@ -20,7 +20,7 @@ define ['app'
 				Controller = 
 					teachersDashboard : ->
 						new TeachersDashboardApp.View.DashboardController
-											region : App.mainContentRegion
+							region 		: App.mainContentRegion
 
 					takeClass :(classID,div) ->
 						new TeachersDashboardApp.View.TakeClassController
@@ -37,6 +37,8 @@ define ['app'
 						new TeachersDashboardApp.View.textbookModulesController
 							region 		: App.mainContentRegion
 							textbookID 	: tID
+							classID 	: classID
+							division	: div
 
 
 	

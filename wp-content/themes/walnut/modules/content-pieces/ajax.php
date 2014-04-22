@@ -70,7 +70,9 @@ function update_content_group() {
     if (isset($_POST['changed']) && ($_POST['changed']=='status')) {
         $data = array(
           'id' => $_POST['id'],
-          'status' => $_POST['status']
+          'status' => $_POST['status'],
+          'division' => $_POST['division'],
+          'training_date' => $_POST['training_date']
         );
         $update_training_module_status=update_training_module_status($data);
     }
@@ -82,10 +84,7 @@ add_action('wp_ajax_update-content-group', 'update_content_group');
 
 function fetch_content_groups() {
     
-    $args= array();
-    
-    if($_GET['textbook'])
-        $args['textbook']= $_GET['textbook'];
+    $args= $_GET;
     
     $content_groups= get_all_content_groups($args);
   
