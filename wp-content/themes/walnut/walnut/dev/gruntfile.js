@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     cssmin: {
       combine: {
         files: {
-          '../css/production/walnut.min.css': ['css/pace.coinspin.css','css/bootstrap.min.css',
+          '../css/production/walnut.min.css': ['css/pace.coinspin.css','css/datepicker.css','css/bootstrap-timepicker.css','css/bootstrap.min.css',
           'css/bootstrap-theme.css','css/font-awesome.css','css/animate.min.css',
           'css/style.css','css/responsive.css','css/custom-icon-set.css','css/custom.css']
         }

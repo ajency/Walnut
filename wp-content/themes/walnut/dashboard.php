@@ -52,7 +52,6 @@
         <link href="./wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
-        <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
         
 
         <!-- END CSS TEMPLATE -->
@@ -62,6 +61,8 @@
         ?>
             <link href="./wp-content/themes/walnut/walnut/production/css/walnut.min.css?ver=<?php echo $ver?>" rel="stylesheet" type="text/css"/>
         <?php }?>
+            
+        <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="">
         <div id="site_main_container">

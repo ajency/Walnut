@@ -43,7 +43,7 @@ define ['app'
 					@show modalview, region: App.dialogRegion
 
 					@listenTo modalview, "save:scheduled:date":(id,date)=>
-						date = moment(date.toString()).format("YYYY-MM-DD")
+						date = moment(date).format("YYYY-MM-DD")
 						@singleModule.set ('training_date': date)
 						@_saveTrainingStatus id, 'scheduled'
 

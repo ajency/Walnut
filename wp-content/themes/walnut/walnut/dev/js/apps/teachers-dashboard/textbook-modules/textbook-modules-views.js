@@ -42,7 +42,7 @@ define(['app'], function(App) {
         } else {
           data.status_str = '<span class="label label-important">Not Started</span>';
           data.action_str = '<i class="fa fa-play"></i> Start';
-          data.training_date = '<button type="button" class="btn btn-white btn-small pull-right m-r-10 training-date"> <i class="fa fa-calendar"></i> ' + training_date + '</button>';
+          data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-right m-r-10 training-date"> <i class="fa fa-calendar"></i> ' + training_date + '</button>';
         }
         return data;
       };

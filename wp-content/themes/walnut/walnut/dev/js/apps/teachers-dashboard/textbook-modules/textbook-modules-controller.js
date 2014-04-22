@@ -69,7 +69,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/textboo
               });
               return _this.listenTo(modalview, {
                 "save:scheduled:date": function(id, date) {
-                  date = moment(date.toString()).format("YYYY-MM-DD");
+                  date = moment(date).format("YYYY-MM-DD");
                   _this.singleModule.set({
                     'training_date': date
                   });
