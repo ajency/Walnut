@@ -37,19 +37,28 @@ define ['app'
 							# listen to show event, and trigger show property box event
 							# listen to show property box event and show the property by passing the current model
 							@listenTo view, 'show show:this:fib:properties',=>
-								App.execute "show:question:properties", 
+									App.execute "show:question:properties", 
 											model : @layout.model
+							# listen to close hotspot prop box evnt from view
 							@listenTo view, "close:hotspot:element:properties",->
-								App.execute "close:question:element:properties"
+									App.execute "close:question:element:properties"
 
 							# on show disable all question elements in d element box
 							@listenTo view, "show",=>
-								@eventObj.vent.trigger "question:dropped"
+									@eventObj.vent.trigger "question:dropped"
 
-
-							@listenTo view, "create:new:fib:element", (blanksData)=>	
-								blanksModel = App.request "create:new:question:element", blanksData
-								@layout.model.get('blanksArray').add blanksModel
+							# listen to create fib element  event from view
+							@listenTo view, "create:new:fib:element", (blankId)=>	
+									# default val for model
+									blanksData = 
+											id : blankId
+											correct_answers : []
+											marks : 1
+											maxlength : 12
+									# create a model
+									blanksModel = App.request "create:new:question:element", blanksData
+									# add model to collection
+									@layout.model.get('blanksArray').add blanksModel
 
 							# show the view
 							@layout.elementRegion.show view
@@ -59,6 +68,8 @@ define ['app'
 									model : model
 
 					deleteElement:(model)->
+							# empty the collection blanks array
+							# and delete it
 							model.set('blanksArray','')
 							delete model.get 'blanksArray'
 							model.destroy()

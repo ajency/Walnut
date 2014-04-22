@@ -120,10 +120,12 @@
         <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;add:content:pieces&quot;</span> <span class="o">:</span><span class="nf">(contentIDs) =&gt;</span>
 
           <span class="nv">groupContent = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:content:pieces:of:group&quot;</span><span class="p">,</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;id&#39;</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">groupContent</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">contentIDs</span>
 
           <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">contentIDs</span><span class="p">,</span> <span class="nf">(ele,index)=&gt;</span>
             <span class="nx">groupContent</span><span class="p">.</span><span class="nx">add</span> <span class="nx">@contentPiecesCollection</span><span class="p">.</span><span class="nx">get</span> <span class="nx">ele</span>
-        
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@contentPiecesCollection</span><span class="p">.</span><span class="nx">get</span> <span class="nx">ele</span>
 
         <span class="nx">@listenTo</span> <span class="nx">@contentGroupCollection</span><span class="p">,</span> <span class="s">&#39;content:pieces:of:group:removed&#39;</span><span class="p">,</span> <span class="nx">@contentPieceRemoved</span>
         
@@ -297,7 +299,6 @@
           <span class="nx">@trigger</span> <span class="s">&quot;add:content:pieces&quot;</span><span class="p">,</span> <span class="nx">content_pieces</span>
 
           <span class="k">for</span> <span class="nx">content_id</span> <span class="k">in</span> <span class="nx">content_pieces</span>
-            <span class="nx">@collection</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">content_id</span>
 
             <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">dataContentTable tr</span><span class="err">#</span><span class="s">row_&quot;</span><span class="o">+</span><span class="nx">content_id</span><span class="p">).</span><span class="nx">remove</span><span class="p">()</span>
 

@@ -28,7 +28,7 @@ define ['app'],(App)->
 			# current markupup as argument
 			events:
 				'click a'	: (e)-> e.preventDefault()
-				'blur p'	: '_textBlur'
+				'blur p'	: '_textBlur' 
 				'DOMSubtreeModified p'	: '_updateInputProperties'
 
 			initialize:(options)->
@@ -59,7 +59,7 @@ define ['app'],(App)->
 				,500
 				
 
-			# # set configuration for the Ckeditor
+			# set configuration for the Ckeditor
 			# configureEditor: (event) =>
 			# 	editor = event.editor
 			# 	element = editor.element
@@ -105,10 +105,9 @@ define ['app'],(App)->
 					else 
 						 @$el.find('input').removeClass "underline border"
 
-			
 
-
-			_textBlur:(evt)->
+			# save the text field on blur
+			_textBlur:->
 				@model.set 'text', @$el.find('p').html()
 
 			# on modification of dom structure modification of p
@@ -117,20 +116,15 @@ define ['app'],(App)->
 				_.each @$el.find('input') ,(blank)=>
 					# if any input tag is without 'data-id' attr
 					if  _.isUndefined $(blank).attr('data-id')
-						# a a random unique id to the input
+						# a  random unique id to the input
 						$(blank).attr 'data-id',_.uniqueId 'input-'
 						# wait for ckeditor to finish adding the input
 						_.delay ->
 							$(blank).prop 'maxLength',parseInt 12
 						,100
-						# default val for model
-						blanksData = 
-								id : $(blank).attr 'data-id'
-								correct_answers : []
-								marks : 1
-								maxlength : 12
+						
 						# create a model and add to collection
-						@trigger "create:new:fib:element", blanksData
+						@trigger "create:new:fib:element", $(blank).attr 'data-id'
 
 					_.delay =>
 						# get a reference to the model
@@ -141,9 +135,9 @@ define ['app'],(App)->
 						blanksModel.on 'change:maxlength',(model,maxlength)=>
 							@$el.find('input[data-id='+model.get('id')+']').prop 'maxLength',maxlength
 						
-						# # remove all events
-						$(blank).off()
+						# remove all events
 						# on click of input show properties for it
+						$(blank).off()
 						$(blank).on 'click',(e)=>
 							App.execute "show:fib:element:properties",
 								model : blanksModel
@@ -151,6 +145,8 @@ define ['app'],(App)->
 							e.stopPropagation()
 					,10
 
+				# delay for .1 sec for everything to get initialized
+				# loop thru the array, if 'input not found for it remove it from the array'
 				_.delay =>
 					if @blanksCollection.length > 0
 						_.each @blanksCollection.toJSON(), (blank)=>
@@ -160,6 +156,7 @@ define ['app'],(App)->
 								@blanksCollection.remove blank
 				,100
 
+				# add style for the blanks
 				@_changeFont @model.get 'font'
 				@_changeSize @model.get 'font_size'
 				@_changeColor @model.get 'color'

@@ -89,6 +89,8 @@
             <span class="k">if</span> <span class="nx">response</span><span class="p">.</span><span class="nx">error</span>
               <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&#39;login:fail&#39;</span><span class="p">,</span> <span class="nx">response</span>
             <span class="k">else</span>
+              <span class="nv">user = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:user:model&quot;</span>
+              <span class="nx">user</span><span class="p">.</span><span class="nx">set</span> <span class="nx">response</span>
               <span class="nx">@view</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
           <span class="p">);</span>
 
