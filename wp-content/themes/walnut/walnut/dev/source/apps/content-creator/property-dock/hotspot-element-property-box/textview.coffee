@@ -72,18 +72,18 @@ define ['app'
 							
 							# BOLD and ITALICS
 							if @model.get('fontBold') is 'bold'
-								@$el.find('#font-style.btn-group #bold-btn.btn').addClass 'active'
+								@$el.find('#font-style #bold-checkbox').prop 'checked',true
 							if @model.get('fontItalics') is 'italic'
-								@$el.find('#font-style.btn-group #italic-btn.btn').addClass 'active'
+								@$el.find('#font-style #italic-checkbox').prop 'checked',true
 
-							@$el.find('#font-style.btn-group .btn').on 'click',=>
+							@$el.find('#font-style .btn').on 'click',=>
 								_.delay =>
 									console.log "timeout"
-									if @$el.find('#font-style.btn-group #bold-btn.btn').hasClass 'active'
+									if @$el.find('#font-style #bold-checkbox').prop 'checked'
 									 	self.model.set 'fontBold', "bold"
 									else
 										self.model.set 'fontBold', ""
-									if @$el.find('#font-style.btn-group #italic-btn.btn').hasClass 'active'
+									if @$el.find('#font-style #italic-checkbox').prop 'checked'
 										self.model.set 'fontItalics', "italic"
 									else
 										self.model.set 'fontItalics', ""

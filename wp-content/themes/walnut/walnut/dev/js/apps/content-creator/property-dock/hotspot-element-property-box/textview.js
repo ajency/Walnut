@@ -65,21 +65,21 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
         });
         this.$el.find('#hotspot-textelement-fontfamily').select2('val', self.model.get('fontFamily'));
         if (this.model.get('fontBold') === 'bold') {
-          this.$el.find('#font-style.btn-group #bold-btn.btn').addClass('active');
+          this.$el.find('#font-style #bold-checkbox').prop('checked', true);
         }
         if (this.model.get('fontItalics') === 'italic') {
-          this.$el.find('#font-style.btn-group #italic-btn.btn').addClass('active');
+          this.$el.find('#font-style #italic-checkbox').prop('checked', true);
         }
-        return this.$el.find('#font-style.btn-group .btn').on('click', (function(_this) {
+        return this.$el.find('#font-style .btn').on('click', (function(_this) {
           return function() {
             return _.delay(function() {
               console.log("timeout");
-              if (_this.$el.find('#font-style.btn-group #bold-btn.btn').hasClass('active')) {
+              if (_this.$el.find('#font-style #bold-checkbox').prop('checked')) {
                 self.model.set('fontBold', "bold");
               } else {
                 self.model.set('fontBold', "");
               }
-              if (_this.$el.find('#font-style.btn-group #italic-btn.btn').hasClass('active')) {
+              if (_this.$el.find('#font-style #italic-checkbox').prop('checked')) {
                 return self.model.set('fontItalics', "italic");
               } else {
                 return self.model.set('fontItalics', "");
