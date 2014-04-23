@@ -51,7 +51,7 @@ define ['app'
 									subjectsList
 
 								showClassID:=>
-									@classID
+									CLASS_LABEL[@classID]
 
 
 

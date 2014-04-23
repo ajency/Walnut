@@ -29,7 +29,7 @@ define ['app'
 
 					renderElement : ->
 							@blanksCollection = App.request "create:new:question:element:collection",@layout.model.get 'blanksArray'
-
+				
 							@layout.model.set 'blanksArray',@blanksCollection
 							# get the view 
 							view = @_getFibView @layout.model
@@ -74,5 +74,6 @@ define ['app'
 							delete model.get 'blanksArray'
 							model.destroy()
 							App.execute "close:question:properties"
+							App.execute "close:question:element:properties"
 							# on delete enable all question elements in d element box
 							@eventObj.vent.trigger "question:removed"

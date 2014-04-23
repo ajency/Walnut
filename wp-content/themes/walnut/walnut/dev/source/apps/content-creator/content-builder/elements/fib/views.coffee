@@ -34,8 +34,6 @@ define ['app'],(App)->
 			initialize:(options)->
 				@blanksCollection = @model.get 'blanksArray'
 
-
-
 			onShow : ->
 
 				# setting of on click handler for showing of the property box for fib element
@@ -110,6 +108,8 @@ define ['app'],(App)->
 			_textBlur:->
 				@model.set 'text', @$el.find('p').html()
 
+				console.log @model
+
 			# on modification of dom structure modification of p
 			_updateInputProperties:->
 				# iterate thru all input tags in current view
@@ -139,6 +139,7 @@ define ['app'],(App)->
 						# on click of input show properties for it
 						$(blank).off()
 						$(blank).on 'click',(e)=>
+							console.log blanksModel
 							App.execute "show:fib:element:properties",
 								model : blanksModel
 							@trigger "show:this:fib:properties"
@@ -149,12 +150,16 @@ define ['app'],(App)->
 				# loop thru the array, if 'input not found for it remove it from the array'
 				_.delay =>
 					if @blanksCollection.length > 0
-						_.each @blanksCollection.toJSON(), (blank)=>
+
+						@blanksCollection.each (blank)=>
+							# console.log blank
 							blankFound = _.find @$el.find('input') ,(blankUI)=>
-												@blanksCollection.get(blank.id).get('id') is $(blankUI).attr 'data-id' 
+												blank.get('id') is $(blankUI).attr 'data-id' 
+
 							if _.isUndefined blankFound
+								# console.log  ' in remove'
 								@blanksCollection.remove blank
-				,100
+				,1000
 
 				# add style for the blanks
 				@_changeFont @model.get 'font'

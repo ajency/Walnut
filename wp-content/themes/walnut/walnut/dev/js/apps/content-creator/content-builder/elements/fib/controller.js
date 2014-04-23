@@ -76,6 +76,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         delete model.get('blanksArray');
         model.destroy();
         App.execute("close:question:properties");
+        App.execute("close:question:element:properties");
         return this.eventObj.vent.trigger("question:removed");
       };
 

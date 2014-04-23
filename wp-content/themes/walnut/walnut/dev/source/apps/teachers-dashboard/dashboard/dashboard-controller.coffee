@@ -33,7 +33,7 @@ define ['app'
 
 			template 	: teachersDashboardTpl
 
-			className 	: 'teacher-app'
+			className 	: 'row'
 
 			events 		:
 				'change #class' : (e)-> @loadDivisions $(e.target).val()

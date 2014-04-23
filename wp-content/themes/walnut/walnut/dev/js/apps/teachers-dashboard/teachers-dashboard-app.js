@@ -43,7 +43,9 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
       textbookModules: function(classID, div, tID) {
         return new TeachersDashboardApp.View.textbookModulesController({
           region: App.mainContentRegion,
-          textbookID: tID
+          textbookID: tID,
+          classID: classID,
+          division: div
         });
       }
     };

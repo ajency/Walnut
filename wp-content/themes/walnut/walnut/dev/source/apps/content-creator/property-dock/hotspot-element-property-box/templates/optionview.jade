@@ -1,0 +1,28 @@
+.tile-more-content.no-padding
+  .tiles.green
+    .tile-footer.drag
+      | Hotspot
+      i.fa.fa-chevron-right
+      span.semi-bold {{shape}} Element
+    .docket-body
+      #correct-answer.radio.radio-success
+        | Is this correct?
+        input#yes(type='radio', name='optionyes', value='yes')
+        label(for='yes') Yes
+        input#no(type='radio', name='optionyes', value='no', checked='checked')
+        label(for='no') No
+      | Marks
+      select.marks
+        option(value='1') 1
+        option(value='2') 2
+      .form-group
+        | Color
+        input#hidden-input.fontColor(type='hidden', value='#1a45a1')
+      #transparency.checkbox.check-success
+        input#checkbox3(type='checkbox', value='1')
+        label(for='checkbox3') Set Transparent
+      #knob.form-group
+        | Rotate
+        input.dial(type='text', data-min='0', data-max='360', data-width='40', data-height='40', data-displayinput='false', data-thickness='.5', data-fgcolor='#0AA699', data-angleoffset='90', data-cursor='true')
+      .form-group
+        button#delete.btn.btn-danger.btn-small(type='button') Delete
