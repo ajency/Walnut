@@ -120,12 +120,13 @@ define ['app'],(App)->
 
 				_.each _.range(numberOfResizers),(ele, index)=>
 					column = @getColumnAt(index + 1)
-					left = $(column).position().left
+					left = $(column).position().left-16
 					resizer = $(template)
 					resizer.attr('data-position', (index + 1))
 					resizer.css 'left', left
 					@$el.closest('.element-wrapper').children('.element-controls').append resizer
 					@makeResizer resizer 
+
 
 				@setColumnResizerContainment()
 
@@ -134,6 +135,7 @@ define ['app'],(App)->
 				row = resizer.parent()
 				snap = row.width()
 				snap = snap / 12
+				console.log snap
 				# console.log $(resizer).prev('.aj-imp-col-divider').attr("style")
 				# i = $(resizer).attr("data-position")
 				# console.log $(row).offset().top

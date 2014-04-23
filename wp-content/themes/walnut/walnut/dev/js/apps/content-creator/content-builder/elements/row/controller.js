@@ -13,7 +13,6 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       }
 
       Controller.prototype.initialize = function(options) {
-        console.log(options);
         _.defaults(options.modelData, {
           element: 'Row',
           columncount: 2,

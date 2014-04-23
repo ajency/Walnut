@@ -177,7 +177,7 @@ define(['app'], function(App) {
           return function(ele, index) {
             var column, left, resizer;
             column = _this.getColumnAt(index + 1);
-            left = $(column).position().left;
+            left = $(column).position().left - 16;
             resizer = $(template);
             resizer.attr('data-position', index + 1);
             resizer.css('left', left);
@@ -193,6 +193,7 @@ define(['app'], function(App) {
         row = resizer.parent();
         snap = row.width();
         snap = snap / 12;
+        console.log(snap);
         self = this;
         dragResizer = _.throttle((function(_this) {
           return function(event, ui) {

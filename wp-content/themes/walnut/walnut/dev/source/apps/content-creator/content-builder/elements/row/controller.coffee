@@ -11,8 +11,6 @@ define ['app'
 
 					# intializer
 					initialize:(options)->
-						console.log options
-
 						_.defaults options.modelData,
 											element  	: 'Row'
 											columncount : 2
