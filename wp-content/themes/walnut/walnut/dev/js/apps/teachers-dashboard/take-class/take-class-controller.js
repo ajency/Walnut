@@ -47,7 +47,12 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
             var classDescriptionView, textbookListView;
             console.log(_this.divisionModel);
             textbookListView = new View.TakeClass.TextbooksListView({
-              collection: _this.textbooks
+              collection: _this.textbooks,
+              templateHelpers: {
+                showUrl: function() {
+                  return '/textbook/28';
+                }
+              }
             });
             classDescriptionView = new ClassDescriptionView({
               model: _this.divisionModel,

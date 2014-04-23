@@ -44,6 +44,9 @@ define ['app'
 					console.log @divisionModel
 					textbookListView= new View.TakeClass.TextbooksListView
 							collection: @textbooks
+							templateHelpers:
+								showUrl:->
+									'/textbook/28'
 
 
 					classDescriptionView = new ClassDescriptionView

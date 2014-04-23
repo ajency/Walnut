@@ -178,14 +178,48 @@ function update_training_module_status($args=array()){
         $teacher_id= get_current_user_id();
     
     $data=array(
-        'division_id'=> 1,
+        'division_id'=> $division,
         'collection_id'=>$id,
         'teacher_id'=> $teacher_id,
         'date'=>date('Ymd'),
         'status'=>$status
     );
     
-    $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
+    if($status=='completed' || $status=='scheduled'){
+        if($status=='scheduled'){
+            $date = date('Ymd',strtotime($training_date));
+            $data['date']= $date;
+        }
+        $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
+    }
+    
+    else { //check if the last status was started/ scheduled and change it appropriately
+        $chk_logs_qry = $wpdb->prepare("select id,status from 
+            {$wpdb->prefix}training_logs where division_id=%d and 
+                collection_id=%d order by id desc limit 1",$division,$id);
+            
+        $chk_logs= $wpdb->get_results($chk_logs_qry);
+
+        if($chk_logs){
+            foreach($chk_logs as $log){
+                if($log->status=='started'){
+                   $data['status'] = 'resumed';
+                   $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
+                }
+
+                if($log->status=='scheduled'){
+                   $data['status'] = 'started';
+                   $content_group = $wpdb->update($wpdb->prefix . 'training_logs', $data, array('id'=>$log->id));
+                }
+            }
+        }
+        else {
+            $data['status'] = 'started';
+            $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
+        }
+    }
+    
+    return $content_group;
     
 }
 
@@ -206,14 +240,19 @@ function get_all_content_groups($args=array()){
     $content_data=array();
     switch_to_blog($current_blog);
     
+    $division = '';
+    
+    if(isset($args['division']))
+        $division = $args['division'];
+            
     foreach($content_groups as $item)
-        $content_data[]=  get_single_content_group($item->id);
+        $content_data[]=  get_single_content_group($item->id, $division);
     
     switch_to_blog($current_blog);
     return $content_data;
 }
 
-function get_single_content_group($id){
+function get_single_content_group($id, $division=''){
     
     global $wpdb;
     
@@ -239,17 +278,16 @@ function get_single_content_group($id){
     
     switch_to_blog($current_blog);
     
-    $training_logs_query = $wpdb->prepare("SELECT * FROM 
-        {$wpdb->prefix}training_logs where collection_id=%d and status in ('started','completed')", $id);
-     
-    $training_logs  = $wpdb->get_results($training_logs_query);  
-    
-    foreach($training_logs as $logs){
-       if($logs->status=='started')
-           $data->status= 'started';
-       if($logs->status=='completed')
-           $data->status= 'completed';
-       $data->training_date= $logs->date;
+    if($division !=''){
+        $training_logs_query = $wpdb->prepare("SELECT * FROM 
+            {$wpdb->prefix}training_logs WHERE collection_id=%d AND division_id=%d order by id desc limit 1", $id, $division);
+
+        $training_logs  = $wpdb->get_results($training_logs_query);  
+
+        foreach($training_logs as $logs){
+           $data->status= $logs->status;
+           $data->training_date= $logs->date;
+        }
     }
     
     $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta 

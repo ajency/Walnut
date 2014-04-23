@@ -10,9 +10,9 @@
 			height: 100%;
 			position: relative;
 			background-clip: content-box;
-			background: @color-white;
+			//background: @color-white;
 			&.empty-column {
-				background: url(../../../images/empty-drag-bg.svg) no-repeat center center @color-white;
+				background: url(../../../images/empty-drag-bg.svg) no-repeat center center /*@color-white*/;
 				background-clip: content-box;
 				background-size: contain;
 				min-height:100px !important;
@@ -102,9 +102,14 @@
 			li{
 				width: 96px;
 				height: 40px;
-				font-weight: bold;
+				//font-weight: bold;
 				i{
 					font-size: 17px;
+				}
+				.bicon{
+					font-size: 18px;
+					vertical-align: middle;
+					margin-right: 2px;
 				}
 			}
 		}
@@ -579,8 +584,8 @@
 
 /*MCQ*/
 .mcq-option {
-	width: 172px;
-	margin-right: 10px;
+	width: 160px;
+	margin-right: 5px;
 	float: left;
 	word-wrap: break-word;
 	border: 2px dashed @preview-grey;
@@ -617,4 +622,9 @@
 	input{
 		margin-bottom: 4px;
 	}
+}
+
+/*Sort*/
+.sort-option{
+	cursor: move;
 }

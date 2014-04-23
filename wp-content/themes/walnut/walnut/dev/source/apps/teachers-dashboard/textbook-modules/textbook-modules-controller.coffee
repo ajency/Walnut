@@ -1,5 +1,6 @@
 define ['app'
 		'controllers/region-controller'
+		'apps/teachers-dashboard/textbook-modules/textbook-modules-views'
 		], (App, RegionController)->
 
 	App.module "TeachersDashboardApp.View", (View, App)->
@@ -10,10 +11,12 @@ define ['app'
 			initialize : (opts) ->
 
 				{textbookID} = opts
+				{@classID} 	 = opts
+				{@division} 	 = opts
 
 				@textbook= App.request "get:textbook:by:id", textbookID
 
-				@contentGroupsCollection = App.request "get:content:groups", ('textbook' :textbookID)
+				@contentGroupsCollection = App.request "get:content:groups", ('textbook' :textbookID, 'division': @division)
 
 				@view = view = @_getContentGroupsListingView @contentGroupsCollection
 
@@ -23,7 +26,7 @@ define ['app'
 
 					breadcrumb_items = 'items':[
 							{'label':'Dashboard','link':'#teachers/dashboard'},
-							{'label':'Take Class','link':'javascript:;'},
+							{'label':'Take Class','link':'#teachers/take-class/'+@classID+'/'+@division},
 							{'label':textbookName,'link':'javascript:;','active':'active'}
 						]
 						
@@ -31,144 +34,91 @@ define ['app'
 
 					@show @view, (loading:true)
 
-				@listenTo @view, "save:training:status" : (id)=>
-					singleModule = @contentGroupsCollection.get id
-					singleModule.set ('status': 'started')
-					singleModule.save({'changed':'status'}, {wait : true})
-					@view.triggerMethod 'status:change', singleModule
+				@listenTo @view, "save:training:status" : (id,status)=>
+					@_saveTrainingStatus id,status
+
+				@listenTo @view, "schedule:training" : (id)=>
+					@singleModule = @contentGroupsCollection.get id
+					modalview = @_showScheduleModal @singleModule
+					@show modalview, region: App.dialogRegion
+
+					@listenTo modalview, "save:scheduled:date":(id,date)=>
+						date = moment(date).format("YYYY-MM-DD")
+						@singleModule.set ('training_date': date)
+						@_saveTrainingStatus id, 'scheduled'
+
+
+			_saveTrainingStatus: (id,status)=>
+
+				singleModule = @contentGroupsCollection.get id
+
+				singleModule.set ('status': status)
+
+				opts =
+					'changed' 	: 'status'
+					'division'	: @division
+
+				singleModule.save(opts, {wait : true})
+
+				@view.triggerMethod 'status:change', singleModule
 
 			_getContentGroupsListingView : (collection)=>
-				new ContentGroupsView
+				new View.TextbookModules.ContentGroupsView
 					collection: collection
 					templateHelpers:
 						showTextbookName :=>
 							@textbook.get 'name'
 
+			_showScheduleModal : (model)=>
+				new ScheduleModalView
+					model: model
 
-		class ContentGroupsItemView extends Marionette.ItemView
+		class ScheduleModalView extends Marionette.ItemView
 
-			template: '<td class="v-align-middle"><a href="#"></a>{{name}}</td>
-		               <td class="v-align-middle"><span class="muted">{{duration}} {{minshours}}</span></td>
-		               <td>
-			                <span class="muted status_label">{{&status_str}}</span>
-			               	<button data-id="{{id}}" type="button" class="btn btn-white btn-small pull-right action start-training">
-			               		{{&action_str}}
-			               	</button>
-			               	<button type="button" class="btn btn-white btn-small pull-right m-r-10 training-date" data-toggle="modal" data-target="#schedule">
-			               		<i class="fa fa-calendar"></i> 
-			               			{{training_date}}
-			               	</button>
-		               	</td>'
-
-			tagName : 'tr'		
-
-			events:
-				'click .training-date' : 'scheduleTraining'
-
-			onShow:->
-				@$el.attr 'id', 'row-'+ @model.get 'id'
-
-			serializeData:->
-
-				data=super()
-				
-				training_date= @model.get 'training_date'
-
-				if training_date is '' 
-					data.training_date = 'Schedule' 
-
-				else data.training_date = moment(training_date).format("Do MMM YYYY")
-
-				status = @model.get 'status'
-
-				if status is 'started'
-					data.status_str = '<span class="label label-info">In Progress</span>'
-					data.action_str = '<i class="fa fa-pause"></i> Resume'
-
-				else if status is'completed'
-					data.status_str = '<span class="label label-success">Completed</span>'
-					data.action_str = '<i class="fa fa-repeat"></i> Replay'
-
-				else
-					data.status_str = '<span class="label label-important">Not Started</span>'
-					data.action_str = '<i class="fa fa-play"></i> Start'
-
-				data
-
-			scheduleTraining:->
-				console.log 'schedule training'
-
-
-		class ContentGroupsView extends Marionette.CompositeView
-			
-			template: '<div class="tiles white grid simple vertical blue">
-							<div class="grid-title no-border">
-								<h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4>
-								<div class="tools">
-									<a href="javascript:;" class="collapse"></a>
-								</div>
-							</div>
-							<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
-								<div class="row">
-									<div class="col-lg-12">
-										<h4><span class="semi-bold">All</span> Modules</h4>
-										<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="modules">
-							                <thead>
-							                  <tr>
-							                    <th style="width:50%">Name</th>
-							                    <th style="width:10%" >Duration</th>
-							                    <th style="width:40%">Status</th>
-							                  </tr>
-							                </thead>
-							                <tbody>
-							                </tbody>
-							            </table>
-							        </div>
-							    </div>
-							</div>
-						</div>'
-
-			itemView: ContentGroupsItemView
-
-			itemViewContainer : 'tbody'
-
-			className : 'teacher-app moduleList'
+			template: '<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						  <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
+						</div>
+						<div class="modal-body">
+						  <div data-date-format="yyyy-mm-dd" class="input-append success date">
+										  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
+										  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> 
+								  </div>
+								  <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+						</div>
+					  </div>
+					</div>
+				</div>'
 
 			events: 
-				'click .start-training' : 'startTraining'
-
-
-			startTraining:(e)=>
-
-				dataID = $(e.target).attr 'data-id'
-				
-				@trigger "save:training:status", dataID
-
-			onStatusChange:(model)->
-
-				status= model.get 'status'
-
-				id = model.get 'id'
-
-				if status is 'started'
-					@$el.find 'tr#row-'+id+ ' .start-training'
-					.empty()
-					.html '<i class="fa fa-pause"></i> Resume'
-
-					@$el.find 'tr#row-'+id+ ' .status_label'
-					.html '<span class="label label-info">In Progress</span>'
-					
-					@$el.find 'tr#row-'+id+ ' .training-date'
-					.html '<i class="fa fa-calendar"></i> ' + moment().format("Do MMM YYYY")
-
+				'click .btn-primary' : 'saveScheduledDate'
 
 			onShow:->
 				$('.input-append.date').datepicker
 					autoclose: true
 					todayHighlight: true
-	
-
 
 				
+			serializeData:->
 
+				data = super()
+
+				training_date = @model.get 'training_date'
+
+				if training_date isnt ''
+					data.training_date = moment(training_date).format("YYYY-MM-DD")
+
+				data
+
+			saveScheduledDate:(e)=>
+
+				dataID = @model.get 'id'
+				scheduledDate = @$el.find '#scheduled-date'
+								.val()
+
+				if scheduledDate isnt ''
+					@trigger "save:scheduled:date", dataID, scheduledDate
 

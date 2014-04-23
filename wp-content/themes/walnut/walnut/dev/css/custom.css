@@ -95,10 +95,9 @@
   height: 100%;
   position: relative;
   background-clip: content-box;
-  background: #ffffff;
 }
 .creator .row .column.empty-column {
-  background: url(../../../images/empty-drag-bg.svg) no-repeat center center #ffffff;
+  background: url(../../../images/empty-drag-bg.svg) no-repeat center center /*@color-white*/;
   background-clip: content-box;
   background-size: contain;
   min-height: 100px !important;
@@ -177,10 +176,14 @@
 #toolbox .qstns ul li {
   width: 96px;
   height: 40px;
-  font-weight: bold;
 }
 #toolbox .qstns ul li i {
   font-size: 17px;
+}
+#toolbox .qstns ul li .bicon {
+  font-size: 18px;
+  vertical-align: middle;
+  margin-right: 2px;
 }
 .dock {
   position: absolute;
@@ -695,8 +698,8 @@
 }
 /*MCQ*/
 .mcq-option {
-  width: 172px;
-  margin-right: 10px;
+  width: 160px;
+  margin-right: 5px;
   float: left;
   word-wrap: break-word;
   border: 2px dashed #f3f3f3;
@@ -727,6 +730,10 @@
 }
 #individual-marks-region input {
   margin-bottom: 4px;
+}
+/*Sort*/
+.sort-option {
+  cursor: move;
 }
 /*input[type=checkbox].mcq-option-select {
 	display:none;

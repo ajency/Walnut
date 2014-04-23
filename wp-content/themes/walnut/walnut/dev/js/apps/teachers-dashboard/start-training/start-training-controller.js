@@ -55,7 +55,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/st
                   return subjectsList;
                 },
                 showClassID: function() {
-                  return _this.classID;
+                  return CLASS_LABEL[_this.classID];
                 }
               }
             });
