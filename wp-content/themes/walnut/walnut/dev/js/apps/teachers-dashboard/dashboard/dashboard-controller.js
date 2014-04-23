@@ -49,7 +49,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
 
       TeachersDashboardView.prototype.template = teachersDashboardTpl;
 
-      TeachersDashboardView.prototype.className = 'teacher-app';
+      TeachersDashboardView.prototype.className = 'row';
 
       TeachersDashboardView.prototype.events = {
         'change #class': function(e) {

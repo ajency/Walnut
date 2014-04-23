@@ -10,4 +10,17 @@ for($i=1; $i<=12; $i++){
 }
     
 $GLOBALS['class_ids']=$classids;
-$GLOBALS['all_subjects']=array('English','Maths', 'Geography');
+
+$GLOBALS['all_subjects']=array('English',
+                                'Hindi',
+                                'Maths',
+                                'Physics',
+                                'Chemistry',
+                                'Biology',
+                                'History',
+                                'Geography',
+                                'Computers',
+                                'P.T',
+                                'Art',
+                                'Music',
+                                'Life Skill');
