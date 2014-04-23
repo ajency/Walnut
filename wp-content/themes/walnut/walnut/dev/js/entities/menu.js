@@ -17,7 +17,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         post_title: '',
         menu_item_link: '',
         menu_item_parent: 0,
-        order: 0
+        order: 0,
+        submenu: []
       };
 
       MenuItemModel.prototype.name = 'menu-item';

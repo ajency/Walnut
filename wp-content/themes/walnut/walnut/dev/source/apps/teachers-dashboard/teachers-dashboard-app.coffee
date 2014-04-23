@@ -1,8 +1,9 @@
 define ['app'
 		'apps/teachers-dashboard/dashboard/dashboard-controller'
-		'apps/teachers-dashboard/start-training/start-training-controller'
 		'apps/teachers-dashboard/take-class/take-class-controller'
-		'apps/teachers-dashboard/textbook-modules/textbook-modules-controller'
+		'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-controller'
+		'apps/teachers-dashboard/start-training/start-training-controller'
+		'apps/teachers-dashboard/start-training/textbook-modules/textbook-modules-controller'
 		], (App)->
 
 			App.module "TeachersDashboardApp", (TeachersDashboardApp, App)->
@@ -11,10 +12,11 @@ define ['app'
 				class TeachersDashboardRouter extends Marionette.AppRouter
 
 					appRoutes : 
-						'teachers/dashboard' 						: 'teachersDashboard'
-						'teachers/take-class/:classID/:div' 		: 'takeClass'
-						'teachers/start-training/:classID' 			: 'startTraining'
-						'teachers/take-class/:classID/:div/textbook/:tID' 	: 'textbookModules'
+						'teachers/dashboard' 								: 'teachersDashboard'
+						'teachers/take-class/:classID/:div' 				: 'takeClass'
+						'teachers/take-class/:classID/:div/textbook/:tID' 	: 'takeClassTextbookModules'
+						'teachers/start-training/:classID' 					: 'startTraining'
+						'teachers/start-training/:classID/textbook/:tID' 	: 'startTrainingTextbookModules'
 
 
 				Controller = 
@@ -33,12 +35,18 @@ define ['app'
 							region 		: App.mainContentRegion
 							classID 	: classID
 
-					textbookModules :(classID,div,tID) ->
+					takeClassTextbookModules :(classID,div,tID) ->
 						new TeachersDashboardApp.View.textbookModulesController
 							region 		: App.mainContentRegion
 							textbookID 	: tID
 							classID 	: classID
 							division	: div
+
+					startTrainingTextbookModules :(classID,tID) ->
+						new TeachersDashboardApp.View.startTrainingTextbookModulesController
+							region 		: App.mainContentRegion
+							textbookID 	: tID
+							classID 	: classID
 
 
 	

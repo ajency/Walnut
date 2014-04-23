@@ -1,6 +1,6 @@
 define ['app'],(App)->
 
-	App.module "TeachersDashboardApp.View.TextbookModules",(TextbookModules, App)->		
+	App.module "TeachersDashboardApp.View.StartTrainingTextbookModules",(TextbookModules, App)->		
 
 		class ContentGroupsItemView extends Marionette.ItemView
 
@@ -71,7 +71,7 @@ define ['app'],(App)->
 								<div class="row">
 									<div class="col-lg-12">
 										<h4><span class="semi-bold">All</span> Modules</h4>
-										<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="modules">
+										<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="training-modules">
 							                <thead>
 							                  <tr>
 							                    <th style="width:50%">Name</th>
@@ -133,7 +133,7 @@ define ['app'],(App)->
 				@trigger "schedule:training", dataID
 
 			onShow:=>
-				@$el.find '#modules'
+				@$el.find '#training-modules'
 				.tablesorter()
 
 				pagerDiv = '<div id="pager" class="pager">

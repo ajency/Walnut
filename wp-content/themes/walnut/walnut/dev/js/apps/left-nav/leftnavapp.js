@@ -14,7 +14,9 @@ define(['app', 'controllers/region-controller', 'apps/left-nav/views'], function
         var menuCollection, view;
         menuCollection = App.request("get:site:menus");
         this.view = view = this._getLeftNavView(menuCollection);
-        return this.show(view);
+        return this.show(view, {
+          loading: true
+        });
       };
 
       LeftNavController.prototype._getLeftNavView = function(collection) {

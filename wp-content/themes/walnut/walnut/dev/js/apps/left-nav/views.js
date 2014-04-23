@@ -13,7 +13,18 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
       MenuItemView.prototype.tagName = 'li';
 
-      MenuItemView.prototype.template = '<a href="{{menu_item_link}}"><span>{{post_title}}</span></a>';
+      MenuItemView.prototype.template = '<a href="javascript:;"> <i class="{{iconClass}}"></i> <span class="title">{{post_title}}</span> <span class="arrow"></span> </a> <ul class="sub-menu"> {{#submenu}} <li><a href="{{menu_item_link}}">{{post_title}}</a></li> {{/submenu}} </ul>';
+
+      MenuItemView.prototype.serializeData = function() {
+        var data, iconClass;
+        data = MenuItemView.__super__.serializeData.call(this);
+        iconClass = 'icon-custom-ui';
+        if (this.model.get('post_title') === 'Training Module') {
+          iconClass = 'fa fa-pencil-square-o';
+        }
+        data.iconClass = iconClass;
+        return data;
+      };
 
       return MenuItemView;
 
@@ -35,7 +46,7 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
       LeftNavView.prototype.itemView = MenuItemView;
 
-      LeftNavView.prototype.itemViewContainer = 'ul.sub-menu';
+      LeftNavView.prototype.itemViewContainer = 'ul.menu-items';
 
       LeftNavView.prototype.events = {
         'click li': 'clickMenu'
@@ -43,6 +54,12 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
       LeftNavView.prototype.onShow = function() {
         var elem;
+        console.log(this.collection);
+        if (($('.creator').length > 0) || ($('.teacher-app').length > 0)) {
+          $("#main-menu").addClass("mini");
+          $(".start").removeClass("active open");
+          $(".arrow").removeClass("open");
+        }
         if ($('.page-sidebar').hasClass('mini')) {
           elem = $('.page-sidebar ul');
           elem.children('li.open').children('a').children('.arrow').removeClass('open');
