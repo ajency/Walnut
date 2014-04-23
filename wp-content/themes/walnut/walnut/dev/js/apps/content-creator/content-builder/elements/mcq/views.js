@@ -15,7 +15,7 @@ define(['app'], function(App) {
 
       OptionView.prototype.tagName = 'div';
 
-      OptionView.prototype.template = '<span>{{optionNo}}</span> <input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no"> <p class="mcq-option-text"></p>';
+      OptionView.prototype.template = '<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no"> <p class="mcq-option-text"></p>';
 
       OptionView.prototype.events = {
         'click a': function(e) {

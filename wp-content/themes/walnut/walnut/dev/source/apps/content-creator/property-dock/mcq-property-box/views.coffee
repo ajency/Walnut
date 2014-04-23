@@ -19,7 +19,7 @@ define ['app'],(App)->
 											<label for="no">No</label>
 										</div>
 
-										<div>
+										<div class="inline">
 											Options
 											<select id="options-num">
 												<option value="2">2</option>
@@ -32,7 +32,7 @@ define ['app'],(App)->
 											</select>
 										</div>
 
-										<div>
+										<div class="inline">
 											Marks
 											<select id="marks">
 												<option value="1">1</option>

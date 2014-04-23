@@ -11,7 +11,7 @@ define ['app'],(App)->
 
 			tagName : 'div'
 
-			template : '<span>{{optionNo}}</span>
+			template : '
 						<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no">
 						
 						<p class="mcq-option-text"></p>'

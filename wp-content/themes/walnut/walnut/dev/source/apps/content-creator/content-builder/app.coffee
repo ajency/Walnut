@@ -57,10 +57,8 @@ define ['app'
 
 					
 					addNestedElements:(container,element,eventObj)->
-						controller = App.request "add:new:element",container,element.element, element
-						console.log element.elements
+						controller = App.request "add:new:element",container,element.element,eventObj, element
 						_.each element.elements, (column, index)=>
-							
 							return if column.elements.length is 0
 							container = controller.layout.elementRegion.currentView.$el.children().eq(index)
 							_.each column.elements,(ele, i)=>
@@ -94,7 +92,6 @@ define ['app'
 
 				#Request handler for new element
 				App.reqres.setHandler "add:new:element" , (container, type,eventObj, modelData = {})->
-
 						API.addNewElement container, type, modelData , eventObj
 
 
