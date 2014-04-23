@@ -68,7 +68,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
             container = controller.layout.elementRegion.currentView.$el.children().eq(index);
             return _.each(column.elements, function(ele, i) {
               if (ele.element === 'Row') {
-                return _this.addNestedElements($(container), ele);
+                return _this.addNestedElements($(container), ele, eventObj);
               } else {
                 return App.request("add:new:element", container, ele.element, eventObj, ele);
               }

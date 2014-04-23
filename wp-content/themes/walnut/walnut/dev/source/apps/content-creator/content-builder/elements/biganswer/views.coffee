@@ -7,7 +7,7 @@ define ['app'],(App)->
 
 			template : '<textarea  type="text" maxlength="{{maxlength}}"  style="
 					    font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; 
-					     width:100%; height: 100%; line-height : inherit;">'
+					     max-width:100%; width :100%; height: 100%; line-height : inherit;">'
 
 			onShow : ->
 

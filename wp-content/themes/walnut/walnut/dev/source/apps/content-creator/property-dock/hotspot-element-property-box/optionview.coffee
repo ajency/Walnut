@@ -15,11 +15,13 @@ define ['app'
 							# TRANSPARENCY
 							# check model for Transparency and initialize checkbox
 							if @model.get 'transparent'
-								@$el.find('#transparency.checkbox #checkbox3').prop('checked',true)
+
+								@$el.find('#transparency-checkbox').prop('checked',true)
 
 							#on click of checkbox set model transparent to true
-							@$el.find('#transparency.checkbox').on 'change',=>
-								if @$el.find('#transparency.checkbox').hasClass 'checked'
+							@$el.find('#transparency-checkbox').on 'change',=>
+								console.log 'transparent changed'
+								if @$el.find('#transparency-checkbox').prop 'checked'
 									@model.set 'transparent', true
 								else
 									@model.set 'transparent',false
