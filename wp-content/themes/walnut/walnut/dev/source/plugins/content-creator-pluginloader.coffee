@@ -24,4 +24,5 @@ define [
 			'select2'
 			'tagsinput'
 			'screwbuttons'
+			# 'iosswitch'
 		], ->
