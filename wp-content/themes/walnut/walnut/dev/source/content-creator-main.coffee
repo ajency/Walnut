@@ -36,11 +36,9 @@ require.config
 		jquerycolor			: 'plugins/jquery.minicolors.min'
 		jqueryknob			: 'plugins/jquery.knob'
 		ckeditor			: 'plugins/ckeditor/ckeditor'
-		# bootstrapselect 	: 'plugins/bootstrapselect'
 		select2       		: 'plugins/select2.min'
 		tagsinput 			: 'plugins/bootstrap-tagsinput.min'
 		screwbuttons 		: 'plugins/jquery.screwdefaultbuttonsV2'
-		# iosswitch 			: 'plugins/ios7-switch'
 
 	shim:
 		underscore: 
@@ -51,8 +49,6 @@ require.config
 		jquerycolor : ['jquery']
 		jqueryknob	: ['jquery']
 		kineticresize : ['kinetic']
-		# iosswitch :
-		# 	exports : 'Switch'
 		backbone: 
 			deps 	: ['jquery','underscore']
 			exports : 'Backbone'
@@ -64,7 +60,6 @@ require.config
 			exports : 'plupload'
 		bootstrap : ['jquery','jqueryui']
 		bootstrapslider :['bootstrap']
-		# bootstrapselect : ['bootstrap']
 		checkbox  : ['bootstrap']
 		jqueryvalidate: ['jquery']
 		underscorestring : ['underscore']
