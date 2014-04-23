@@ -65,7 +65,7 @@ define ['app'
 							container = controller.layout.elementRegion.currentView.$el.children().eq(index)
 							_.each column.elements,(ele, i)=>
 								if ele.element is 'Row'
-									@addNestedElements $(container),ele
+									@addNestedElements $(container),ele,eventObj
 								else
 									App.request "add:new:element",container,ele.element,eventObj, ele
 

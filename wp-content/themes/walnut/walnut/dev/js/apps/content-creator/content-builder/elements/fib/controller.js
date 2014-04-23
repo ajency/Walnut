@@ -62,7 +62,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             return _this.layout.model.get('blanksArray').add(blanksModel);
           };
         })(this));
-        return this.layout.elementRegion.show(view);
+        return this.layout.elementRegion.show(view, {
+          loading: true
+        });
       };
 
       Controller.prototype._getFibView = function(model) {

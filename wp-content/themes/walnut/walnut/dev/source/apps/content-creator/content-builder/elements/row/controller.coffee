@@ -28,6 +28,7 @@ define ['app'
 						super()
 
 					_getRowView:()->
+
 						new Row.Views.RowView
 										model : @layout.model
 

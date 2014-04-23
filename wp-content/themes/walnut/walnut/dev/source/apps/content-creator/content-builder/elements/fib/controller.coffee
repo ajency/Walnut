@@ -61,7 +61,7 @@ define ['app'
 									@layout.model.get('blanksArray').add blanksModel
 
 							# show the view
-							@layout.elementRegion.show view
+							@layout.elementRegion.show view,(loading : true)
 
 					_getFibView : (model)->		
 							new Fib.Views.FibView

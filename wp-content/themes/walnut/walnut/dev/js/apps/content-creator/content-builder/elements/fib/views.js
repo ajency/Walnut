@@ -134,6 +134,7 @@ define(['app'], function(App) {
                   return blank.get('id') === $(blankUI).attr('data-id');
                 });
                 if (_.isUndefined(blankFound)) {
+                  console.log(' in remove');
                   return _this.blanksCollection.remove(blank);
                 }
               });
