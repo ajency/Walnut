@@ -12,6 +12,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					menu_item_link      : ''
 					menu_item_parent    : 0
 					order 				: 0
+					submenu				: []
 
 				name: 'menu-item'
 

@@ -40,55 +40,49 @@ function get_menu_to_array( $mn , $by = 'name') {
 
     $sorted_menu_items =  array();
 
-    //create all top level menu
+    $index=0;
+    
     foreach ( (array) $m as $menu_item ) {
         
-        $menu_url = $menu_item->url;
-        if(strpos($menu_url, '#') === 0)
-            $menu_url = get_site_url() .'/'.$menu_item->url;
-
-        $mn = array(
-            'ID'                => $menu_item->ID,
-            'menu-order'        => $menu_item->menu_order,
-            'post_title'        => $menu_item->title,
-            'menu_item_link'    => $menu_url,
-            'menu_id'           => $menu->term_id
-        );
-
-        if ( (int)$menu_item->menu_item_parent === 0 ) {
-
-            $sorted_menu_items[] = $mn;
+        //FETCH TOP LEVEL MENU ITEMS
+        if ( (int)$menu_item->menu_item_parent === 0 ){ 
+            
+            $mn= compose_menu_item($menu_item);
+            
+            $sorted_menu_items[$index] = $mn;
+            
+            //FETCH SUBMENUS FOR CURRENT TOP LEVEL MENU
+            foreach($m as $submenu_item){
+                
+                if($submenu_item->menu_item_parent==$menu_item->ID){
+                    $smn= compose_menu_item($submenu_item);
+                    $sorted_menu_items[$index]['submenu'][] = $smn;
+                }
+            }
+            $index++;
         }
-
-    }
-
-    //add submenus
-    foreach ( (array) $m as $menu_item ) {
         
-         $menu_url = $menu_item->url;
-        if(strpos($menu_url, '#') === 0)
-            $menu_url = get_site_url() .'/'.$menu_item->url;
-
-        $mn = array(
-            'ID'                => $menu_item->ID,
-            'menu-order'        => $menu_item->menu_order,
-            'post_title'        => $menu_item->title,
-            'menu_item_link'    => $menu_url,
-            'menu_id'           => $menu->term_id
-        );
-
-        if ( (int)$menu_item->menu_item_parent !== 0 ) {
-            $sorted_menu_items[]['subMenu'][] = $mn;
-        }
-
     }
-    $wp_menu = array(
-        'id'            => (int)$menu->term_id,
-        'menu_name'     => $menu->name,
-        'menu_slug'     => $menu->slug,
-        'menu_description'   => $menu->description,
-        'menu_items'    => $sorted_menu_items
+
+    return $sorted_menu_items;
+}
+
+//make a presentable menu item as per the what the frontend website view needs.
+
+function compose_menu_item($menu_item){
+    
+    $menu_url = $menu_item->url;
+    if(strpos($menu_url, '#') === 0)
+        $menu_url = get_site_url() .'/'.$menu_item->url;
+
+    $mn = array(
+        'ID'                => $menu_item->ID,
+        'menu-order'        => $menu_item->menu_order,
+        'post_title'        => $menu_item->title,
+        'menu_item_link'    => $menu_url,
+        'menu_id'           => $menu->term_id
     );
-
-    return $wp_menu['menu_items'];
+    
+    return $mn;
+    
 }

@@ -1,6 +1,6 @@
 define ['app'
 		'controllers/region-controller'
-		'apps/teachers-dashboard/textbook-modules/textbook-modules-views'
+		'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-views'
 		], (App, RegionController)->
 
 	App.module "TeachersDashboardApp.View", (View, App)->
@@ -63,7 +63,7 @@ define ['app'
 				@view.triggerMethod 'status:change', singleModule
 
 			_getContentGroupsListingView : (collection)=>
-				new View.TextbookModules.ContentGroupsView
+				new View.TakeClassTextbookModules.ContentGroupsView
 					collection: collection
 					templateHelpers:
 						showTextbookName :=>

@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/textbook-modules/textbook-modules-views'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-views'], function(App, RegionController) {
   return App.module("TeachersDashboardApp.View", function(View, App) {
     var ScheduleModalView;
     View.textbookModulesController = (function(_super) {
@@ -98,7 +98,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/textboo
       };
 
       textbookModulesController.prototype._getContentGroupsListingView = function(collection) {
-        return new View.TextbookModules.ContentGroupsView({
+        return new View.TakeClassTextbookModules.ContentGroupsView({
           collection: collection,
           templateHelpers: {
             showTextbookName: (function(_this) {
