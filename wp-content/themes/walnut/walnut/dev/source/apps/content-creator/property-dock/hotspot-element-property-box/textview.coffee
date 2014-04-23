@@ -1,4 +1,4 @@
-define ['app',
+define ['app'
 		'text!apps/content-creator/property-dock/hotspot-element-property-box/templates/textview.html'],
 		(App,Template)->
 
@@ -24,6 +24,15 @@ define ['app',
 
 						onShow:->
 							self = @	
+							# console.log Template
+							# Switch = require('iosswitch')
+							# checkbox = @$el.find('.ios')
+							# mySwitch = new Switch(checkbox);
+							# mySwitch.toggle();
+							# mySwitch.el.addEventListener 'click', (e)->
+							# 	e.preventDefault()
+							# 	mySwitch.toggle()
+							# , false
 
 							#FONT SIZE
 							# initialize font size slider
@@ -76,7 +85,7 @@ define ['app',
 							if @model.get('fontItalics') is 'italic'
 								@$el.find('#font-style.btn-group #italic-btn.btn').addClass 'active'
 
-							$('#font-style.btn-group .btn').on 'click',=>
+							@$el.find('#font-style.btn-group .btn').on 'click',=>
 								_.delay =>
 									console.log "timeout"
 									if @$el.find('#font-style.btn-group #bold-btn.btn').hasClass 'active'

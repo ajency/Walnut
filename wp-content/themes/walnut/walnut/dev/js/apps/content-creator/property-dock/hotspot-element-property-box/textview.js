@@ -70,7 +70,7 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
         if (this.model.get('fontItalics') === 'italic') {
           this.$el.find('#font-style.btn-group #italic-btn.btn').addClass('active');
         }
-        return $('#font-style.btn-group .btn').on('click', (function(_this) {
+        return this.$el.find('#font-style.btn-group .btn').on('click', (function(_this) {
           return function() {
             return _.delay(function() {
               console.log("timeout");

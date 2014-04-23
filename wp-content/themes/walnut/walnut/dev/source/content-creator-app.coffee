@@ -46,6 +46,7 @@ define ['marionette'], (Marionette)->
 		App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
 
 	App.on 'start', ->
+		console.log 'start app Main'
 		# start the content creator app
 		xhr = $.get "#{AJAXURL}?action=get-user-data", 
 		{}, 

@@ -74,5 +74,6 @@ define ['app'
 							delete model.get 'blanksArray'
 							model.destroy()
 							App.execute "close:question:properties"
+							App.execute "close:question:element:properties"
 							# on delete enable all question elements in d element box
 							@eventObj.vent.trigger "question:removed"

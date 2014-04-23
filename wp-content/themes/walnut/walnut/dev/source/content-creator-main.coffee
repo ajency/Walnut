@@ -40,6 +40,7 @@ require.config
 		select2       		: 'plugins/select2.min'
 		tagsinput 			: 'plugins/bootstrap-tagsinput.min'
 		screwbuttons 		: 'plugins/jquery.screwdefaultbuttonsV2'
+		# iosswitch 			: 'plugins/ios7-switch'
 
 	shim:
 		underscore: 
@@ -50,6 +51,8 @@ require.config
 		jquerycolor : ['jquery']
 		jqueryknob	: ['jquery']
 		kineticresize : ['kinetic']
+		# iosswitch :
+		# 	exports : 'Switch'
 		backbone: 
 			deps 	: ['jquery','underscore']
 			exports : 'Backbone'
