@@ -27,6 +27,10 @@ define ['app'
 							questionCollection = new QuestionElement.ElementCollection
 							
 							questionCollection.set data
+							
+							console.log questionCollection
+
+
 							questionCollection 
 
 
@@ -39,4 +43,5 @@ define ['app'
 						jsonData = data
 						# else
 						# 	jsonData = ''
+
 						API.createQuestionElementCollection jsonData

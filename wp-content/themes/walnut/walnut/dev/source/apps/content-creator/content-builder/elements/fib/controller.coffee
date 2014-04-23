@@ -29,7 +29,7 @@ define ['app'
 
 					renderElement : ->
 							@blanksCollection = App.request "create:new:question:element:collection",@layout.model.get 'blanksArray'
-
+				
 							@layout.model.set 'blanksArray',@blanksCollection
 							# get the view 
 							view = @_getFibView @layout.model

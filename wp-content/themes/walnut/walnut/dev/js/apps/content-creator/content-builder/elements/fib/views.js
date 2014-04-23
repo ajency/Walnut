@@ -92,7 +92,8 @@ define(['app'], function(App) {
       };
 
       FibView.prototype._textBlur = function() {
-        return this.model.set('text', this.$el.find('p').html());
+        this.model.set('text', this.$el.find('p').html());
+        return console.log(this.model);
       };
 
       FibView.prototype._updateInputProperties = function() {
@@ -114,6 +115,7 @@ define(['app'], function(App) {
               });
               $(blank).off();
               return $(blank).on('click', function(e) {
+                console.log(blanksModel);
                 App.execute("show:fib:element:properties", {
                   model: blanksModel
                 });
@@ -126,10 +128,10 @@ define(['app'], function(App) {
         _.delay((function(_this) {
           return function() {
             if (_this.blanksCollection.length > 0) {
-              return _.each(_this.blanksCollection.toJSON(), function(blank) {
+              return _this.blanksCollection.each(function(blank) {
                 var blankFound;
                 blankFound = _.find(_this.$el.find('input'), function(blankUI) {
-                  return _this.blanksCollection.get(blank.id).get('id') === $(blankUI).attr('data-id');
+                  return blank.get('id') === $(blankUI).attr('data-id');
                 });
                 if (_.isUndefined(blankFound)) {
                   return _this.blanksCollection.remove(blank);
@@ -137,7 +139,7 @@ define(['app'], function(App) {
               });
             }
           };
-        })(this), 100);
+        })(this), 1000);
         this._changeFont(this.model.get('font'));
         this._changeSize(this.model.get('font_size'));
         this._changeColor(this.model.get('color'));

@@ -24,16 +24,7 @@ define ['app'
 
 						onShow:->
 							self = @	
-							# console.log Template
-							# Switch = require('iosswitch')
-							# checkbox = @$el.find('.ios')
-							# mySwitch = new Switch(checkbox);
-							# mySwitch.toggle();
-							# mySwitch.el.addEventListener 'click', (e)->
-							# 	e.preventDefault()
-							# 	mySwitch.toggle()
-							# , false
-
+						
 							#FONT SIZE
 							# initialize font size slider
 							@$el.find('.fontSize').slider()
