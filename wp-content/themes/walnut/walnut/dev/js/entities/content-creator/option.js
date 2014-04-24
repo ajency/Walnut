@@ -11,6 +11,8 @@ define(['app', 'backbone'], function(App, Backbone) {
         return OptionModel.__super__.constructor.apply(this, arguments);
       }
 
+      OptionModel.prototype.idAttribute = 'optionNo';
+
       OptionModel.prototype.defaults = function() {
         return {
           marks: 0,

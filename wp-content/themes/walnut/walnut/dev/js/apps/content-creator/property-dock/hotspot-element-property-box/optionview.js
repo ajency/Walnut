@@ -39,7 +39,7 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
           })(this)
         });
         this.$el.find('.fontColor').minicolors('value', this.model.get('color'));
-        this.$el.find('#delete.btn-danger').on('click', (function(_this) {
+        this.$el.find('#delete.text-danger').on('click', (function(_this) {
           return function() {
             return _this.model.set('toDelete', true);
           };

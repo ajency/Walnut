@@ -5,6 +5,8 @@ define ['app'
 
 				class Option.OptionModel extends Backbone.Model
 
+					idAttribute : 'optionNo'
+					
 					defaults: ->
 						marks : 0
 						text : ''

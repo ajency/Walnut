@@ -12,17 +12,16 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       }
 
       ContentBuilderController.prototype.initialize = function(options) {
-        var elements, eventObj;
-        eventObj = options.eventObj;
+        var elements;
         elements = App.request("get:page:json");
         this.view = this._getContentBuilderView(elements);
         this.listenTo(this.view, "add:new:element", function(container, type) {
-          return App.request("add:new:element", container, type, eventObj);
+          return App.request("add:new:element", container, type);
         });
         this.listenTo(this.view, "dependencies:fetched", (function(_this) {
           return function() {
             return _.delay(function() {
-              return _this.startFillingElements(eventObj);
+              return _this.startFillingElements();
             }, 400);
           };
         })(this));
@@ -41,24 +40,24 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         return $('#myCanvas');
       };
 
-      ContentBuilderController.prototype.startFillingElements = function(eventObj) {
+      ContentBuilderController.prototype.startFillingElements = function() {
         var container, section;
         section = this.view.model.toJSON();
         container = $('#myCanvas');
         return _.each(section, (function(_this) {
           return function(element, i) {
             if (element.element === 'Row') {
-              return _this.addNestedElements(container, element, eventObj);
+              return _this.addNestedElements(container, element);
             } else {
-              return App.request("add:new:element", container, element.element, eventObj, element);
+              return App.request("add:new:element", container, element.element, element);
             }
           };
         })(this));
       };
 
-      ContentBuilderController.prototype.addNestedElements = function(container, element, eventObj) {
+      ContentBuilderController.prototype.addNestedElements = function(container, element) {
         var controller;
-        controller = App.request("add:new:element", container, element.element, eventObj, element);
+        controller = App.request("add:new:element", container, element.element, element);
         return _.each(element.elements, (function(_this) {
           return function(column, index) {
             if (column.elements.length === 0) {
@@ -67,9 +66,9 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
             container = controller.layout.elementRegion.currentView.$el.children().eq(index);
             return _.each(column.elements, function(ele, i) {
               if (ele.element === 'Row') {
-                return _this.addNestedElements($(container), ele, eventObj);
+                return _this.addNestedElements($(container), ele);
               } else {
-                return App.request("add:new:element", container, ele.element, eventObj, ele);
+                return App.request("add:new:element", container, ele.element, ele);
               }
             });
           };
@@ -80,12 +79,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
 
     })(RegionController);
     API = {
-      addNewElement: function(container, type, modelData, eventObj) {
+      addNewElement: function(container, type, modelData) {
         console.log(type);
         return new ContentBuilder.Element[type].Controller({
           container: container,
-          modelData: modelData,
-          eventObj: eventObj
+          modelData: modelData
         });
       },
       saveQuestion: function() {
@@ -97,11 +95,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
     App.commands.setHandler("show:content:builder", function(options) {
       return new ContentBuilderController(options);
     });
-    App.reqres.setHandler("add:new:element", function(container, type, eventObj, modelData) {
+    App.reqres.setHandler("add:new:element", function(container, type, modelData) {
       if (modelData == null) {
         modelData = {};
       }
-      return API.addNewElement(container, type, modelData, eventObj);
+      return API.addNewElement(container, type, modelData);
     });
     return App.commands.setHandler("save:question", function() {
       return API.saveQuestion();

@@ -3,16 +3,36 @@ define ['app'],(App)->
 	App.module "ContentCreator.ContentBuilder.Element.Mcq.Views",
 	(Views, App, Backbone, Marionette,$, _)->
 
-		
+		class Views.McqView extends Marionette.ItemView
 
-		class OptionView extends Marionette.ItemView
+			className : 'mcq'
+
+			onShow:->
+				@$el.attr 'id','mcq-container'
+
+				# set event handler for click of mcq and stop propogation of the event
+				@$el.parent().parent().on 'click',(evt)=>
+						@trigger "show:this:mcq:properties"
+						evt.stopPropagation()
+
+				@trigger "create:row:structure",
+						container : @$el
+
+				@$el.find('.aj-imp-drag-handle').remove()
+				@$el.find('.aj-imp-delete-btn').remove()
+				@$el.find('.aj-imp-settings-btn').remove()
+
+
+
+
+
+		class Views.McqOptionView extends Marionette.ItemView
 
 			className : 'mcq-option'
 
 			tagName : 'div'
 
-			template : '
-						<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no">
+			template : '<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no">
 						
 						<p class="mcq-option-text"></p>'
 
@@ -22,7 +42,7 @@ define ['app'],(App)->
 			# current markupup as argument
 			events:
 				'click a'	: (e)-> e.preventDefault()
-				'blur p'		: -> @model.set 'text', @$el.find('p').html()
+				'blur p'		: '_onBlur'
 							# @trigger "text:element:blur"
 
 
@@ -50,6 +70,14 @@ define ['app'],(App)->
 					image: 'url("../wp-content/themes/walnut/images/csscheckbox.png")'
 					width: 32
 					height: 26
+
+				@$el.parent().on "class:changed",=>
+					@model.set 'class', @$el.parent().attr('data-class')
+					# if e.originalEvent.attrName is 'data-class'
+					# 	console.log @$el.parent().attr('data-class')
+
+			_onBlur:->
+				@model.set 'text', @$el.find('p').html()
 					
 
 
@@ -61,53 +89,52 @@ define ['app'],(App)->
 				@editor.destroy()
 
 
-		class Views.McqView extends Marionette.CompositeView
+		# class Views.McqView extends Marionette.CompositeView
 
-			className : 'mcq'
+		# 	className : 'mcq'
 
-			template : '<div class="options"></div>
-						<div class="clearfix"></div>'
+		# 	template : '<div class="options"></div>
+		# 				<div class="clearfix"></div>'
 
 
 
-			itemView : OptionView
+		# 	itemView : OptionView
 
-			itemViewContainer : 'div.options'
+		# 	itemViewContainer : 'div.options'
 
-			initialize:(options)->
-					@mcq_model = options.mcq_model
-
-				
-
-			# # # trigger when the no of models in collection has been changed
-			# # # change the default radio to checkbox if multple 
-			# onAfterItemAdded:->
-			# 		if @mcq_model.get 'multiple'
-			# 				@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
-			
-			# triggered on show of the view
-			onShow:->
-					# if @mcq_model.get 'multiple'
-					# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
-
-					# set event handler for click of mcq and stop propogation of the event
-					@$el.parent().parent().on 'click',(evt)=>
-							@trigger "show:this:mcq:properties"
-							evt.stopPropagation()
-
-					# # events handlers for change of model attributes
-					# @mcq_model.on 'change:multiple', @_changeMultipleAnswers
-
-			# # on change of multiple attribute in the model 
-			# # change the input type
-			# _changeMultipleAnswers:(model,multiple)=>
-			# 	if multiple
-			# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
-			# 	else
-			# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','radio'
-
-			
+		# 	initialize:(options)->
+		# 			@mcq_model = options.mcq_model
 
 				
+
+		# 	# # # trigger when the no of models in collection has been changed
+		# 	# # # change the default radio to checkbox if multple 
+		# 	# onAfterItemAdded:->
+		# 	# 		if @mcq_model.get 'multiple'
+		# 	# 				@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+			
+		# 	# triggered on show of the view
+		# 	onShow:->
+		# 			# if @mcq_model.get 'multiple'
+		# 			# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+
+		# 			# set event handler for click of mcq and stop propogation of the event
+		# 			@$el.parent().parent().on 'click',(evt)=>
+		# 					@trigger "show:this:mcq:properties"
+		# 					evt.stopPropagation()
+
+		# 			# # events handlers for change of model attributes
+		# 			# @mcq_model.on 'change:multiple', @_changeMultipleAnswers
+
+		# 	# # on change of multiple attribute in the model 
+		# 	# # change the input type
+		# 	# _changeMultipleAnswers:(model,multiple)=>
+		# 	# 	if multiple
+		# 	# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+		# 	# 	else
+		# 	# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','radio'
+
+			
+
 
 
