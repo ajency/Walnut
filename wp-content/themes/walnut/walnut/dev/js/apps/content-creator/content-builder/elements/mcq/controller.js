@@ -8,6 +8,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       __extends(Controller, _super);
 
       function Controller() {
+        this._changeColumnCount = __bind(this._changeColumnCount, this);
         this._changeOptionCount = __bind(this._changeOptionCount, this);
         this.createRowStructure = __bind(this.createRowStructure, this);
         this.renderElement = __bind(this.renderElement, this);
@@ -60,7 +61,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.createRowStructure = function(options) {
-        var columnCounter, columnElement, columnElements, controller, elements, numberOfColumns, numberOfOptions, numberOfRows, optionsInMcqCounter, remainingClass, remainingColumns, _results;
+        var columnCounter, columnElement, columnElements, elements, numberOfColumns, numberOfOptions, numberOfRows, optionsInMcqCounter, remainingClass, remainingColumns, _results;
         numberOfColumns = this.layout.model.get('columncount');
         numberOfOptions = this.layout.model.get('optioncount');
         optionsInMcqCounter = 1;
@@ -98,20 +99,24 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             element: 'Row',
             elements: columnElements
           };
-          controller = App.request("add:new:element", options.container, 'Row', elements);
-          _.each(elements.elements, (function(_this) {
-            return function(column, index) {
-              var container;
-              if (column.elements.length === 0) {
-                return;
-              }
-              container = controller.layout.elementRegion.currentView.$el.children().eq(index);
-              return _this._addMcqOption(container, column.elements);
-            };
-          })(this));
+          this._createMcqRow(elements, options.container);
           _results.push(numberOfRows--);
         }
         return _results;
+      };
+
+      Controller.prototype._createMcqRow = function(elements, container) {
+        var controller;
+        controller = App.request("add:new:element", container, 'Row', elements);
+        return _.each(elements.elements, (function(_this) {
+          return function(column, index) {
+            if (column.elements.length === 0) {
+              return;
+            }
+            container = controller.layout.elementRegion.currentView.$el.children().eq(index);
+            return _this._addMcqOption(container, column.elements);
+          };
+        })(this));
       };
 
       Controller.prototype._addMcqOption = function(container, model) {
@@ -139,31 +144,34 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         });
       };
 
-      Controller.prototype._changeOptionCount = function(model, num) {
-        var newval, oldval;
-        oldval = model.previous('optioncount');
-        newval = num;
-        if (oldval < newval) {
-          while (oldval !== newval) {
-            oldval++;
+      Controller.prototype._changeOptionCount = function(model, newOptionCount) {
+        var numberOfColumns, oldOptionCount;
+        numberOfColumns = model.get('columncount');
+        model.get('elements').each(function(element) {
+          return element.set('class', 12 / numberOfColumns);
+        });
+        oldOptionCount = model.previous('optioncount');
+        if (oldOptionCount < newOptionCount) {
+          while (oldOptionCount !== newOptionCount) {
+            oldOptionCount++;
             model.get('elements').push({
-              optionNo: oldval,
-              "class": 6
+              optionNo: oldOptionCount,
+              "class": 12 / numberOfColumns
             });
           }
         }
-        if (oldval > newval) {
-          while (oldval !== newval) {
+        if (oldOptionCount > newOptionCount) {
+          while (oldOptionCount !== newOptionCount) {
             model.get('elements').pop();
-            oldval--;
+            oldOptionCount--;
           }
         }
         return this.renderElement();
       };
 
-      Controller.prototype._changeColumnCount = function() {
-        this.layout.model.get('elements').each(function(element) {
-          return element.set('class', 12 / numberOfColumns);
+      Controller.prototype._changeColumnCount = function(model, newColumnCount) {
+        model.get('elements').each(function(element) {
+          return element.set('class', 12 / newColumnCount);
         });
         return this.renderElement();
       };

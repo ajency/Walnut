@@ -56,7 +56,7 @@ define ['app'
 							@layout.elementRegion.show @view
 
 
-
+						# creates Row structure for mcq
 						createRowStructure:(options)=>
 
 								numberOfColumns = @layout.model.get('columncount')
@@ -102,22 +102,18 @@ define ['app'
 										element : 'Row'
 										elements : columnElements
 
-									controller = App.request "add:new:element",options.container,'Row', elements
-									_.each elements.elements, (column, index)=>
-										return if column.elements.length is 0
-										container = controller.layout.elementRegion.currentView.$el.children().eq(index)
-										# _.each column.elements,(ele, i)=>
-										# 	if column.elements.get('element') is 'Row'
-										# 		@addNestedElements $(container),ele
-										# 	else
-										# App.request "add:new:element",container,'Text'
-										@_addMcqOption(container,column.elements)
+
+									@_createMcqRow(elements,options.container)
+									
 
 									numberOfRows--
 
-							# on show disable all question elements in d element box
-							# @listenTo view, "show",=>
-							# 	@eventObj.vent.trigger "question:dropped"
+						_createMcqRow:(elements,container)->
+								controller = App.request "add:new:element",container,'Row', elements
+								_.each elements.elements, (column, index)=>
+										return if column.elements.length is 0
+										container = controller.layout.elementRegion.currentView.$el.children().eq(index)
+										@_addMcqOption(container,column.elements)
 
 						_addMcqOption:(container, model)->
 							view = @_getMcqOptionView model
@@ -143,25 +139,29 @@ define ['app'
 
 						# on change of optionNo attribute in the model 
 						# change the number of options
-						_changeOptionCount:(model,num)=>
-								oldval = model.previous('optioncount')
-								newval = num
+						_changeOptionCount:(model,newOptionCount)=>
+								numberOfColumns = model.get 'columncount'
+								model.get('elements').each (element)->
+									element.set 'class', 12/numberOfColumns
+										
+								oldOptionCount = model.previous('optioncount')
+								
 								# if greater then previous then add option
-								if oldval<newval
-									until oldval is newval
-										oldval++
-										model.get('elements').push({optionNo:oldval,class:6})
+								if oldOptionCount<newOptionCount
+									until oldOptionCount is newOptionCount
+										oldOptionCount++
+										model.get('elements').push({optionNo:oldOptionCount,class:12/numberOfColumns})
 								# else remove options
-								if oldval>newval
-									until oldval is newval
+								if oldOptionCount>newOptionCount
+									until oldOptionCount is newOptionCount
 										model.get('elements').pop()
-										oldval--
+										oldOptionCount--
 
 								@renderElement()
 
-						_changeColumnCount:->
-							@layout.model.get('elements').each (element)->
-									element.set 'class', 12/numberOfColumns
+						_changeColumnCount:(model,newColumnCount)=>
+							model.get('elements').each (element)->
+									element.set 'class', 12/newColumnCount
 							@renderElement()
 
 
