@@ -11,10 +11,17 @@ define(["backbone"], function(Backbone) {
       collection_name = collection.name;
       console.log('Collection name: ' + collection_name);
       if (collection_name === 'textbooks') {
-        data = App.reqres.request("get:" + collection_name + ":local");
-        data.done(function(d) {
-          return collection.set(d);
-        });
+        if (typeof options.data.class_id === 'undefined') {
+          data = App.reqres.request("get:" + collection_name + ":local");
+          data.done(function(d) {
+            return collection.set(d);
+          });
+        } else {
+          data = App.reqres.request("get:" + collection_name + ":by:id:local", options.data.class_id);
+          data.done(function(d) {
+            return collection.set(d);
+          });
+        }
       }
       if (collection_name === 'menu-item') {
         console.log('Menu items local');
@@ -22,13 +29,21 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'chapter') {
         data = App.reqres.request("get:" + collection_name + ":local", options.data.parent);
         data.done(function(d) {
+          console.log('Chapter options');
+          console.log(options);
           return collection.set(d);
         });
       }
       if (collection_name === 'content-piece') {
         data = App.reqres.request("get:" + collection_name + ":local", options.data.ids);
         data.done(function(d) {
-          console.log('Data');
+          return collection.set(d);
+        });
+      }
+      if (collection_name === 'division') {
+        data = App.reqres.request("get:" + collection_name + ":local");
+        data.done(function(d) {
+          console.log('Division data');
           console.log(d);
           return collection.set(d);
         });

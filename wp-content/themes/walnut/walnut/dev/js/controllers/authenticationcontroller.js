@@ -159,7 +159,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     AuthenticationController.prototype.inputNewUser = function() {
       return _.userDb.transaction((function(_this) {
         return function(tx) {
-          return tx.executeSql('INSERT INTO USERS (username, password) VALUES (?, ?)', [_this.data.txtusername, _this.data.txtpassword]);
+          return tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES (?, ?, "")', [_this.data.txtusername, _this.data.txtpassword]);
         };
       })(this), function(tx, err) {
         return console.log('Error: ' + err);

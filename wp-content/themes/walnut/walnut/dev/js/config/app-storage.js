@@ -5,7 +5,7 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
   console.log('Prepopulated DB Object: ' + _.db);
   _.userDb = window.openDatabase("UserDetails", "1.0", "User Details", 200000);
   return _.userDb.transaction(function(tx) {
-    return tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, username, password)');
+    return tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, username, password, user_role)');
   }, function(tx, err) {
     return console.log('Error: ' + err);
   }, function(tx) {

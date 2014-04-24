@@ -36,6 +36,7 @@ define ['detect','jquery', 'underscore'], (detect, $, _)->
       ,false)
 
 
+      #Check connectivity based on platform
       _.isOnline = ->
         switch _.checkPlatform()
           when 'Desktop'
@@ -46,14 +47,39 @@ define ['detect','jquery', 'underscore'], (detect, $, _)->
           when 'Mobile'
             if navigator.connection.type is Connection.NONE
               false
-            else true 
+            else true
 
 
-      #Get device current date and time
-      # _.getDateTime = ->
-      #     d = new Date()
-      #     datetime =  d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes()
-      #     datetime    
+      #Check if user is admin for app navigation based on user roles.
+      _.getUserRole =(username)->
+        role = ''
+
+        runQuery = ->
+          $.Deferred (d)->
+            _.userDb.transaction (tx)->
+              tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), onFailure(d))
+
+        onSuccess = (d)->
+          (tx,data)->
+            i=0
+            while i < data.rows.length
+              r = data.rows.item(i)
+              if r['username'] is username
+                role = r['user_role']
+              i++
+
+            d.resolve(role) 
+          
+        onFailure = (d)->
+          (tx,error)->
+            d.reject('OnFailure!: '+error)
+
+        $.when(runQuery()).done ->
+          console.log 'getUserRole transaction completed'
+        .fail (err)->
+          console.log 'Error: '+err      
+
+
 
        
 

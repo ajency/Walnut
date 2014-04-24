@@ -53,13 +53,14 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					textbook
 
 
+				# get all textbooks from local database
 				getTextbooksFromLocal:->
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
-									left outer join wp_textbook_relationships wtr on t.term_id=wtr.textbook_id  
-									WHERE t.term_id=tt.term_id and tt.taxonomy='textbook' and tt.parent=0", [], onSuccess(d), onFailure(d));
+									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id  
+									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0", [], onSuccess(d), onFailure(d));
 								
 
 					onSuccess =(d)->
@@ -69,10 +70,11 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							i = 0
 							while i < data.rows.length
 								row = data.rows.item(i)
+								
 								classes = subjects = ''
-								classes = unserialize(row["class_id"])	if row['class_id'] isnt ''
+								classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
 								subjects = unserialize(row["tags"]) if row["tags"] isnt ''
-
+								
 								result[i] = 
 									term_id: row["term_id"]
 									name: row["name"]
@@ -97,10 +99,76 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							d.reject('OnFailure!: '+error)
 
 					$.when(runQuery()).done (data)->
-						console.log 'Textbooks transaction completed'
+						console.log 'getAllTextbooks transaction completed'
 						
 					.fail (err)->
 						console.log('Error: '+err);
+
+
+				# get textbooks by id from local database
+				getTextbooksByIDFromLocal:(class_id)->
+					runQuery = ->
+						$.Deferred (d)->
+							_.db.transaction (tx)->
+								pattern = '%"'+class_id+'"%'
+								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
+									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 
+									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0
+									AND wtr.class_id LIKE '"+pattern+"' ", [], onSuccess(d), onFailure(d));
+								
+
+					onSuccess =(d)->
+						(tx,data)->
+							result = []
+							i = 0
+							while i < data.rows.length
+								row = data.rows.item(i)
+								pattern = '%"'+row['textbook_id']+'"%'
+
+								do (tx, row, i, pattern)->
+									tx.executeSql("SELECT count(id) AS count FROM wp_content_collection 
+										WHERE term_ids LIKE '"+pattern+"' ", []
+
+										,(tran,d)->
+											classes = subjects = ''
+											classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
+											subjects = unserialize(row["tags"]) if row["tags"] isnt ''
+
+											result[i] = 
+												term_id: row["term_id"]
+												name: row["name"]
+												slug: row["slug"]
+												term_group: row["term_group"]
+												term_order: row["term_order"]
+												term_taxonomy_id: row["term_taxonomy_id"]
+												taxonomy: row["taxonomy"]
+												description: row["description"]
+												parent: row["parent"]
+												count: row["count"]
+												classes: classes
+												subjects: subjects
+												modules_count: d.rows.item(0)['count']
+
+
+										,(tran,err)->
+											console.log 'Error: '+err
+										)
+
+								i++
+
+							d.resolve(result)
+
+
+					onFailure =(d)->
+						(tx,error)->
+							d.reject('OnFailure!: '+error)
+
+					$.when(runQuery()).done (data)->
+						console.log 'getTextbooksByID transaction completed'
+						
+					.fail (err)->
+						console.log('Error: '+err);	
+
 
 
 			# request handler to get all textbooks
@@ -112,6 +180,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 			# request handler to get all textbooks from local database
 			App.reqres.setHandler "get:textbooks:local", ->
-				API.getTextbooksFromLocal()		
+				API.getTextbooksFromLocal()
+
+			App.reqres.setHandler "get:textbooks:by:id:local", (class_id)->
+				API.getTextbooksByIDFromLocal class_id
 
 

@@ -79,37 +79,31 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 									FROM wp_content_collection wcc 
 									INNER JOIN wp_collection_meta wcm ON (wcc.id=wcm.collection_id AND wcm.meta_key=?) 
 									INNER JOIN wp_collection_meta wcm2 ON (wcc.id=wcm2.collection_id AND wcm2.meta_key=?) 
-									WHERE wcc.id=?', ['description', 'content_pieces', 10], onSuccess(d), onFailure(d))
+									WHERE wcc.id=?', ['description', 'content_pieces', 19], onSuccess(d), onFailure(d))
 
 					onSuccess = (d)->
 						(tx, data)->
 							console.log 'Content group success'
 							result = []
-							i = 0
-							while i < data.rows.length
-								r = data.rows.item(i)
-								term_ids = content_pieces = description = ''
-								term_ids = unserialize(r['term_ids']) if r['term_ids'] isnt ''
-								content_pieces = unserialize(r['content_pieces']) if r['content_pieces'] isnt ''
-								description = unserialize(r['description']) if r['description'] isnt ''
+							r = data.rows.item(0)
 
-								result = 
-									code:'OK'
-									data:
-										id: r['id']
-										name: r['name']
-										created_on: r['created_on']
-										created_by: r['created_by']
-										last_modified_on: r['last_modified_on']
-										last_modified_by: r['last_modified_by']
-										published_on: r['published_on']
-										published_by: r['published_by']
-										status: r['status']
-										type: r['type']
-										term_ids: term_ids
-										content_pieces: content_pieces
-										description: description
-								i++
+							result = 
+								code:'OK'
+								data:
+									id: r['id']
+									name: r['name']
+									created_on: r['created_on']
+									created_by: r['created_by']
+									last_modified_on: r['last_modified_on']
+									last_modified_by: r['last_modified_by']
+									published_on: r['published_on']
+									published_by: r['published_by']
+									status: r['status']
+									type: r['type']
+									term_ids: unserialize(r['term_ids'])
+									content_pieces: unserialize(r['content_pieces'])
+									description: unserialize(r['description'])
+							i++
 								
 							d.resolve(result)
 

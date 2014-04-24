@@ -134,7 +134,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		inputNewUser:->
 			_.userDb.transaction((tx)=>
 
-				tx.executeSql('INSERT INTO USERS (username, password) VALUES (?, ?)', [@data.txtusername, @data.txtpassword])
+				tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES (?, ?, "")', [@data.txtusername, @data.txtpassword])
 
 			,(tx,err)->
 				console.log 'Error: '+err 
@@ -153,8 +153,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				console.log 'Error: '+err 
 			,(tx)->
 				console.log 'Success: Updated user password'
-			)	
-
+			)
 
 
 

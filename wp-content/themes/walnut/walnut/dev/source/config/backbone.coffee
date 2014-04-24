@@ -17,9 +17,17 @@ define ["backbone"], (Backbone) ->
 			console.log 'Collection name: '+collection_name
 
 			if collection_name is 'textbooks'
-				data = App.reqres.request "get:#{collection_name}:local"
-				data.done (d)->
-					collection.set d
+				if typeof options.data.class_id is 'undefined'
+					#Get all textbooks
+					data = App.reqres.request "get:#{collection_name}:local"
+					data.done (d)->
+						collection.set d
+				else
+					#Get textbooks by class_id	
+					data = App.reqres.request "get:#{collection_name}:by:id:local", options.data.class_id
+					data.done (d)->
+						collection.set d
+				
 
 			if collection_name is 'menu-item'
 				console.log 'Menu items local'
@@ -27,14 +35,21 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'chapter'
 				data = App.reqres.request "get:#{collection_name}:local", options.data.parent 
 				data.done (d)->
+					console.log 'Chapter options'
+					console.log options
 					collection.set d
 
 			if collection_name is 'content-piece'
 				data = App.reqres.request "get:#{collection_name}:local", options.data.ids 
 				data.done (d)->
-					console.log 'Data'
-					console.log d
 					collection.set d
+
+			if collection_name is 'division'
+				data = App.reqres.request "get:#{collection_name}:local"
+				data.done (d)->
+					console.log 'Division data'
+					console.log d
+					collection.set d	
 
 			return true
 

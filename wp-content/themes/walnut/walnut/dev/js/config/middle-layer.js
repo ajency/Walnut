@@ -25,7 +25,7 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
   document.addEventListener("offline", function() {
     return console.log('Offline');
   }, false);
-  return _.isOnline = function() {
+  _.isOnline = function() {
     switch (_.checkPlatform()) {
       case 'Desktop':
         if (networkStatus === 1) {
@@ -41,5 +41,40 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
           return true;
         }
     }
+  };
+  return _.getUserRole = function(username) {
+    var onFailure, onSuccess, role, runQuery;
+    role = '';
+    runQuery = function() {
+      return $.Deferred(function(d) {
+        return _.userDb.transaction(function(tx) {
+          return tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), onFailure(d));
+        });
+      });
+    };
+    onSuccess = function(d) {
+      return function(tx, data) {
+        var i, r;
+        i = 0;
+        while (i < data.rows.length) {
+          r = data.rows.item(i);
+          if (r['username'] === username) {
+            role = r['user_role'];
+          }
+          i++;
+        }
+        return d.resolve(role);
+      };
+    };
+    onFailure = function(d) {
+      return function(tx, error) {
+        return d.reject('OnFailure!: ' + error);
+      };
+    };
+    return $.when(runQuery()).done(function() {
+      return console.log('getUserRole transaction completed');
+    }).fail(function(err) {
+      return console.log('Error: ' + err);
+    });
   };
 });

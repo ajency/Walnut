@@ -48,13 +48,6 @@ define ['marionette'], (Marionette)->
 		App.startHistory()
 
 		if _.checkPlatform() is 'Mobile'
-			#Changes needed to build walnut-app
-			# loginStatus = window.localStorage.getItem("key")
-			# if loginStatus is null or loginStatus is 'loggedout'
-			# 	@rootRoute = 'login'
-			# 	App.navigate(@rootRoute, trigger: true)
-			# else
-			# 	App.vent.trigger "show:dashboard"
 			@rootRoute = 'login'
 			App.navigate(@rootRoute, trigger: true)	
 			return
@@ -90,7 +83,13 @@ define ['marionette'], (Marionette)->
 		user_role= user.get "roles"
 		
 		if _.checkPlatform() is 'Mobile'
-			App.navigate('textbooks', trigger: true)
+			userRole = _.getUserRole($('#txtusername').val())
+			userRole.done (role)->
+				if role is 'administrator'
+					App.navigate('textbooks', trigger: true)
+				else
+					App.navigate('teachers/dashboard', trigger: true)
+
 		else
 			if user_role[0]=='administrator'
 				App.navigate('textbooks', trigger: true)

@@ -8,9 +8,9 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     _.userDb = window.openDatabase("UserDetails", "1.0", "User Details", 200000)
 
     _.userDb.transaction((tx)->
-        tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, username, password)')
-        # tx.executeSql('INSERT INTO USERS (username, password) VALUES ("deepak", "deepak")')
-        # tx.executeSql('INSERT INTO USERS (username, password) VALUES ("admin", "admin")')
+        tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, username, password, user_role)')
+        # tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES ("admin", "admin", "administrator")')
+        # tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES ("walnut", "walnut", "teacher")')
 
     ,(tx,err)->
         console.log 'Error: '+err
