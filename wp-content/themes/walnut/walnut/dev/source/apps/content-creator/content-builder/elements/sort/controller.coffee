@@ -42,9 +42,9 @@ define ['app'
 								App.execute "show:question:properties", 
 											model : @layout.model
 
-							# on show disable all question elements in d element box
-							@listenTo view, "show",=>
-								@eventObj.vent.trigger "question:dropped"
+							# # on show disable all question elements in d element box
+							# @listenTo view, "show",=>
+							# 	@eventObj.vent.trigger "question:dropped"
 
 							# show the view
 							@layout.elementRegion.show view
@@ -61,8 +61,8 @@ define ['app'
 							delete model.get 'elements'
 							model.destroy()
 							App.execute "close:question:properties"
-							# on delete enable all question elements in d element box
-							@eventObj.vent.trigger "question:removed"
+							# # on delete enable all question elements in d element box
+							# @eventObj.vent.trigger "question:removed"
 
 
 					# on change of optionNo attribute in the model 
