@@ -11,17 +11,17 @@ define ['app'
 
 					initialize : (options)->
 
-						{eventObj} = options
+						# {eventObj} = options
 						
 						# get the main view for the element box
 						@view = @_getElementBoxView() 
 
 						
-						@listenTo eventObj.vent, "question:dropped", =>
-							@view.triggerMethod "question:dropped"
+						# @listenTo eventObj.vent, "question:dropped", =>
+						# 	@view.triggerMethod "question:dropped"
 
-						@listenTo eventObj.vent, "question:removed", =>
-							@view.triggerMethod "question:removed"
+						# @listenTo eventObj.vent, "question:removed", =>
+						# 	@view.triggerMethod "question:removed"
 
 						# show the view
 						@show @view

@@ -20,14 +20,15 @@ define ['app'],(App)->
 							      
 							    </div>
 							    <div class="docket-body">
-							    	<div >Max Characters
-										<input id="answer-max-length" type="type"  value="{{maxlength}}">											
+							    	<div class="from-group">Max Characters
+										<input id="answer-max-length" type="text"  value="{{maxlength}}">
+
+											
 									</div>
 
-									<div class="form-group">
-										<div class="bootstrap-tagsinput"> 
+									<div class="">
+										Answers
 											<input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
-										</div>
 									</div>
 
 								</div>

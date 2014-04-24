@@ -103,11 +103,11 @@ define ['app'],(App)->
 								revert 				: 'invalid'
 
 
-				@on "question:dropped",=>
-					@$el.find('.qstns').find('*[data-element]').draggable 'disable'
+				# @on "question:dropped",=>
+				# 	@$el.find('.qstns').find('*[data-element]').draggable 'disable'
 
-				@on "question:removed",=>
-					@$el.find('.qstns').find('*[data-element]').draggable 'enable'
+				# @on "question:removed",=>
+				# 	@$el.find('.qstns').find('*[data-element]').draggable 'enable'
 
 
 

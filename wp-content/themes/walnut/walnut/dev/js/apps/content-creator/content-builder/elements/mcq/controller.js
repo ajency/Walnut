@@ -8,6 +8,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       __extends(Controller, _super);
 
       function Controller() {
+        this._changeColumnCount = __bind(this._changeColumnCount, this);
+        this._changeOptionCount = __bind(this._changeOptionCount, this);
+        this.createRowStructure = __bind(this.createRowStructure, this);
         this.renderElement = __bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
@@ -17,11 +20,14 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         _.defaults(options.modelData, {
           element: 'Mcq',
           optioncount: 2,
+          columncount: 2,
           elements: App.request("create:new:option:collection", [
             {
-              optionNo: 1
+              optionNo: 1,
+              "class": 6
             }, {
-              optionNo: 2
+              optionNo: 2,
+              "class": 6
             }
           ]),
           marks: 1,
@@ -29,11 +35,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           multiple: false
         });
         Controller.__super__.initialize.call(this, options);
-        return this.layout.model.on('change:optioncount', this._changeOptionCount);
+        this.layout.model.on('change:optioncount', this._changeOptionCount);
+        return this.layout.model.on('change:columncount', this._changeColumnCount);
       };
 
       Controller.prototype.renderElement = function() {
-        var optionCollection, optionsObj, view;
+        var optionCollection, optionsObj;
         optionsObj = this.layout.model.get('elements');
         if (optionsObj instanceof Backbone.Collection) {
           optionCollection = optionsObj;
@@ -41,20 +48,90 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           optionCollection = App.request("create:new:option:collection", optionsObj);
           this.layout.model.set('elements', optionCollection);
         }
-        view = this._getMcqView(optionCollection);
-        this.listenTo(view, "show show:this:mcq:properties", (function(_this) {
+        this.view = this._getMcqView(optionCollection);
+        this.listenTo(this.view, "show show:this:mcq:properties", (function(_this) {
           return function(options) {
             return App.execute("show:question:properties", {
               model: _this.layout.model
             });
           };
         })(this));
-        this.listenTo(view, "show", (function(_this) {
-          return function() {
-            return _this.eventObj.vent.trigger("question:dropped");
+        this.listenTo(this.view, "create:row:structure", this.createRowStructure);
+        return this.layout.elementRegion.show(this.view);
+      };
+
+      Controller.prototype.createRowStructure = function(options) {
+        var columnCounter, columnElement, columnElements, elements, numberOfColumns, numberOfOptions, numberOfRows, optionsInMcqCounter, remainingClass, remainingColumns, _results;
+        numberOfColumns = this.layout.model.get('columncount');
+        numberOfOptions = this.layout.model.get('optioncount');
+        optionsInMcqCounter = 1;
+        numberOfRows = Math.ceil(numberOfOptions / numberOfColumns);
+        _results = [];
+        while (!!numberOfRows) {
+          columnCounter = 1;
+          columnElements = new Array();
+          remainingClass = 12;
+          remainingColumns = numberOfColumns;
+          while (!(columnCounter > numberOfColumns)) {
+            if (optionsInMcqCounter <= numberOfOptions) {
+              columnElement = {
+                position: columnCounter,
+                element: 'Column',
+                className: this.layout.model.get('elements').get(optionsInMcqCounter).get('class'),
+                elements: this.layout.model.get('elements').get(optionsInMcqCounter)
+              };
+              columnElements.push(columnElement);
+              remainingClass = remainingClass - columnElement.className;
+              remainingColumns = numberOfColumns - columnCounter;
+              optionsInMcqCounter++;
+            } else {
+              columnElement = {
+                position: columnCounter,
+                element: 'Column',
+                className: remainingClass / remainingColumns,
+                elements: []
+              };
+              columnElements.push(columnElement);
+            }
+            columnCounter++;
+          }
+          elements = {
+            element: 'Row',
+            elements: columnElements
+          };
+          this._createMcqRow(elements, options.container);
+          _results.push(numberOfRows--);
+        }
+        return _results;
+      };
+
+      Controller.prototype._createMcqRow = function(elements, container) {
+        var controller;
+        controller = App.request("add:new:element", container, 'Row', elements);
+        return _.each(elements.elements, (function(_this) {
+          return function(column, index) {
+            if (column.elements.length === 0) {
+              return;
+            }
+            container = controller.layout.elementRegion.currentView.$el.children().eq(index);
+            return _this._addMcqOption(container, column.elements);
           };
         })(this));
-        return this.layout.elementRegion.show(view);
+      };
+
+      Controller.prototype._addMcqOption = function(container, model) {
+        var view;
+        view = this._getMcqOptionView(model);
+        view.render();
+        $(container).removeClass('empty-column');
+        $(container).append(view.$el);
+        return view.triggerMethod('show');
+      };
+
+      Controller.prototype._getMcqOptionView = function(model) {
+        return new Mcq.Views.McqOptionView({
+          model: model
+        });
       };
 
       Controller.prototype.bindEvents = function() {
@@ -63,39 +140,47 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
 
       Controller.prototype._getMcqView = function(optionCollection) {
         return new Mcq.Views.McqView({
-          collection: optionCollection,
-          mcq_model: this.layout.model
+          model: this.layout.model
         });
       };
 
-      Controller.prototype._changeOptionCount = function(model, num) {
-        var newval, oldval, _results;
-        oldval = model.previous('optioncount');
-        newval = num;
-        if (oldval < newval) {
-          while (oldval !== newval) {
-            oldval++;
+      Controller.prototype._changeOptionCount = function(model, newOptionCount) {
+        var numberOfColumns, oldOptionCount;
+        numberOfColumns = model.get('columncount');
+        model.get('elements').each(function(element) {
+          return element.set('class', 12 / numberOfColumns);
+        });
+        oldOptionCount = model.previous('optioncount');
+        if (oldOptionCount < newOptionCount) {
+          while (oldOptionCount !== newOptionCount) {
+            oldOptionCount++;
             model.get('elements').push({
-              optionNo: oldval
+              optionNo: oldOptionCount,
+              "class": 12 / numberOfColumns
             });
           }
         }
-        if (oldval > newval) {
-          _results = [];
-          while (oldval !== newval) {
+        if (oldOptionCount > newOptionCount) {
+          while (oldOptionCount !== newOptionCount) {
             model.get('elements').pop();
-            _results.push(oldval--);
+            oldOptionCount--;
           }
-          return _results;
         }
+        return this.renderElement();
+      };
+
+      Controller.prototype._changeColumnCount = function(model, newColumnCount) {
+        model.get('elements').each(function(element) {
+          return element.set('class', 12 / newColumnCount);
+        });
+        return this.renderElement();
       };
 
       Controller.prototype.deleteElement = function(model) {
         model.set('elements', '');
         delete model.get('elements');
         model.destroy();
-        App.execute("close:question:properties");
-        return this.eventObj.vent.trigger("question:removed");
+        return App.execute("close:question:properties");
       };
 
       return Controller;

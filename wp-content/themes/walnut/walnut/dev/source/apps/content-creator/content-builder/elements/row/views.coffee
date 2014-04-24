@@ -135,7 +135,6 @@ define ['app'],(App)->
 				row = resizer.parent()
 				snap = row.width()
 				snap = snap / 12
-				console.log snap
 				# console.log $(resizer).prev('.aj-imp-col-divider').attr("style")
 				# i = $(resizer).attr("data-position")
 				# console.log $(row).offset().top
@@ -197,6 +196,8 @@ define ['app'],(App)->
 						
 				$(columns[0]).attr('data-class',newClassZero).addClass "col-md-#{newClassZero}"
 				$(columns[1]).attr('data-class',newClassOne).addClass "col-md-#{newClassOne}"
+				$(columns[0]).trigger "class:changed"
+				$(columns[1]).trigger "class:changed"
 
 
 			# setting the containment for resizer

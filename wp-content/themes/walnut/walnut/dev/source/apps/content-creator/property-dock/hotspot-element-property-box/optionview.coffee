@@ -44,7 +44,7 @@ define ['app'
 
 
 							#DELETE
-							@$el.find('#delete.btn-danger').on 'click',=>
+							@$el.find('#delete.text-danger').on 'click',=>
 									@model.set 'toDelete', true
 
 

@@ -44,11 +44,6 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         this.listenTo(view, "close:hotspot:element:properties", function() {
           return App.execute("close:question:element:properties");
         });
-        this.listenTo(view, "show", (function(_this) {
-          return function() {
-            return _this.eventObj.vent.trigger("question:dropped");
-          };
-        })(this));
         this.listenTo(view, "create:new:fib:element", (function(_this) {
           return function(blankId) {
             var blanksData, blanksModel;
@@ -78,8 +73,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         delete model.get('blanksArray');
         model.destroy();
         App.execute("close:question:properties");
-        App.execute("close:question:element:properties");
-        return this.eventObj.vent.trigger("question:removed");
+        return App.execute("close:question:element:properties");
       };
 
       return Controller;

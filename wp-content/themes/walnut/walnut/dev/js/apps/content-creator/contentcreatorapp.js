@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       }
 
       ContentCreatorController.prototype.initialize = function(options) {
-        var breadcrumb_items, eventObj;
+        var breadcrumb_items;
         breadcrumb_items = {
           'items': [
             {
@@ -33,16 +33,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
         this.layout = this._getContentCreatorLayout();
-        eventObj = App.createEventObject();
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
             App.execute("show:element:box", {
-              region: _this.layout.elementBoxRegion,
-              eventObj: eventObj
+              region: _this.layout.elementBoxRegion
             });
             App.execute("show:content:builder", {
-              region: _this.layout.contentBuilderRegion,
-              eventObj: eventObj
+              region: _this.layout.contentBuilderRegion
             });
             return App.execute("show:property:dock", {
               region: _this.layout.PropertyRegion

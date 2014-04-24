@@ -193,7 +193,6 @@ define(['app'], function(App) {
         row = resizer.parent();
         snap = row.width();
         snap = snap / 12;
-        console.log(snap);
         self = this;
         dragResizer = _.throttle((function(_this) {
           return function(event, ui) {
@@ -257,7 +256,9 @@ define(['app'], function(App) {
         $(columns[0]).removeClass("col-md-" + currentClassZero);
         $(columns[1]).removeClass("col-md-" + currentClassOne);
         $(columns[0]).attr('data-class', newClassZero).addClass("col-md-" + newClassZero);
-        return $(columns[1]).attr('data-class', newClassOne).addClass("col-md-" + newClassOne);
+        $(columns[1]).attr('data-class', newClassOne).addClass("col-md-" + newClassOne);
+        $(columns[0]).trigger("class:changed");
+        return $(columns[1]).trigger("class:changed");
       };
 
       RowView.prototype.setColumnResizerContainment = function() {
