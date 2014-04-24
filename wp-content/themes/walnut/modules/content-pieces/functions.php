@@ -148,66 +148,164 @@ function update_group_content_pieces($data= array()){
     global $wpdb;
     $content_pieces = maybe_serialize($data['content_pieces']);
     
-    $exists = $wpdb->get_results("select id from {$wpdb->prefix}collection_meta where collection_id=".$data['id']." 
-        and meta_key='content_pieces'");
+    $exists_qry = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}collection_meta WHERE 
+        collection_id=%d AND meta_key=%s", $data['id'], 'content_pieces');
+    
+    $exists = $wpdb->get_results($exists_qry);
     
     if($exists){
-        $content_pieces_qry = "update {$wpdb->prefix}collection_meta set
-            meta_value='" . $content_pieces . "' where collection_id=".$data['id']."
-            and meta_key='content_pieces'";
+        $content_pieces_qry = $wpdb->prepare("UPDATE {$wpdb->prefix}collection_meta SET
+            meta_value=%s WHERE collection_id=%d AND meta_key=%s", 
+                $content_pieces,$data['id'],'content_pieces' );
     }
 
     else{
-        $content_pieces_qry = "insert into {$wpdb->prefix}collection_meta 
-            (collection_id, meta_key, meta_value) values (".$data['id'].",'content_pieces', '" . $content_pieces . "')";
+        $content_pieces_qry = $wpdb->prepare("INSERT into {$wpdb->prefix}collection_meta 
+            (collection_id, meta_key, meta_value) VALUES (%d,%s,%s)",
+                $data['id'],'content_pieces',$content_pieces );
     }
     
     $wpdb->query($content_pieces_qry);
 }
 
-function get_all_content_groups($args=array()){
+function update_training_module_status($args=array()){
     
     global $wpdb;
     
-    $content_groups = $wpdb->get_results("select id from {$wpdb->prefix}content_collection");
+    extract($args);
     
-    $content_data=array();
+    if(!isset($teacher_id))
+        $teacher_id= get_current_user_id();
     
-    foreach($content_groups as $item)
-        $content_data[]=  get_single_content_group($item->id);
+    $data=array(
+        'division_id'=> $division,
+        'collection_id'=>$id,
+        'teacher_id'=> $teacher_id,
+        'date'=>date('Ymd'),
+        'status'=>$status
+    );
     
+    if($status=='completed' || $status=='scheduled'){
+        if($status=='scheduled'){
+            $date = date('Ymd',strtotime($training_date));
+            $data['date']= $date;
+        }
+        $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
+    }
     
-    return $content_data;
-}
+    else { //check if the last status was started/ scheduled and change it appropriately
+        $chk_logs_qry = $wpdb->prepare("select id,status from 
+            {$wpdb->prefix}training_logs where division_id=%d and 
+                collection_id=%d order by id desc limit 1",$division,$id);
+            
+        $chk_logs= $wpdb->get_results($chk_logs_qry);
 
-function get_single_content_group($id){
-    
-    global $wpdb;
-    
-    $fetch_query="select * from {$wpdb->prefix}content_collection where id=".$id;
-    $data = $wpdb->get_results($fetch_query);
-    
-    foreach ($data as $item){
-        $data=$item;
-        $data->term_ids= maybe_unserialize ($data->term_ids);    
-        $duration = $item->duration;
-        $data->minshours ='mins';
-        if($duration >= 60){
-            $data->duration= $duration/60;
-            $data->minshours ='hrs';
+        if($chk_logs){
+            foreach($chk_logs as $log){
+                if($log->status=='started'){
+                   $data['status'] = 'resumed';
+                   $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
+                }
+
+                if($log->status=='scheduled'){
+                   $data['status'] = 'started';
+                   $content_group = $wpdb->update($wpdb->prefix . 'training_logs', $data, array('id'=>$log->id));
+                }
+            }
+        }
+        else {
+            $data['status'] = 'started';
+            $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
         }
     }
     
-    $description= $wpdb->get_results("select * from 
-    {$wpdb->prefix}collection_meta where collection_id=".$id, ARRAY_A);
+    return $content_group;
+    
+}
+
+function get_all_content_groups($args=array()){
+    
+    $current_blog= get_current_blog_id();
+    switch_to_blog(1);
+    
+    global $wpdb;
+    
+    $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection", null);
+    
+    if(isset($args['textbook']))
+        $query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
+    
+    $content_groups = $wpdb->get_results($query);
+    
+    $content_data=array();
+    switch_to_blog($current_blog);
+    
+    $division = '';
+    
+    if(isset($args['division']))
+        $division = $args['division'];
+            
+    foreach($content_groups as $item)
+        $content_data[]=  get_single_content_group($item->id, $division);
+    
+    switch_to_blog($current_blog);
+    return $content_data;
+}
+
+function get_single_content_group($id, $division=''){
+    
+    global $wpdb;
+    
+    $current_blog= get_current_blog_id();
+    switch_to_blog(1);
+    
+    $query = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}content_collection WHERE id= %d", $id);
+
+    $data = $wpdb->get_results($query);
+    
+    foreach ($data as $item){
+        $data=$item;
+        $data->term_ids         = maybe_unserialize ($data->term_ids);    
+        $duration               = $item->duration;
+        $data->minshours        ='mins';
+        $data->total_minutes    = $data->duration; // only used for sorting accoring to time
+        if($duration >= 60){
+            $data->duration     = $duration/60;
+            $data->minshours    ='hrs';
+        }
+    }
+    
+    
+    switch_to_blog($current_blog);
+    
+    if($division !=''){
+        $training_logs_query = $wpdb->prepare("SELECT * FROM 
+            {$wpdb->prefix}training_logs WHERE collection_id=%d AND division_id=%d order by id desc limit 1", $id, $division);
+
+        $training_logs  = $wpdb->get_results($training_logs_query);  
+
+        foreach($training_logs as $logs){
+           $data->status= $logs->status;
+           $data->training_date= $logs->date;
+        }
+    }
+    
+    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta 
+        WHERE collection_id=%d",$id);
+    
+    $description= $wpdb->get_results($query_description);
 
     $data->description=$data->content_pieces=array();
 
     foreach($description as $key=>$value){
-       if ($value['meta_key']=='description' || $value['meta_key']=='content_pieces' ){
-           $meta_val = maybe_unserialize ($value['meta_value']);
-           $data->$value['meta_key']= $meta_val;
-       }
+       $meta_val = maybe_unserialize ($value->meta_value);
+       
+       if ($value->meta_key=='description')
+           $data->description= $meta_val;
+           
+       if ($value->meta_key=='content_pieces' )
+           $data->content_pieces= $meta_val;
+       
     }
     return $data;
     

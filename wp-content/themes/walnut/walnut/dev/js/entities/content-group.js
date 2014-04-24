@@ -24,10 +24,12 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         published_by: '',
         status: '',
         type: '',
+        total_minutes: 0,
         duration: 0,
         minshrs: 'mins',
         term_ids: [],
-        content_pieces: []
+        content_pieces: [],
+        training_date: ''
       };
 
       ItemModel.prototype.name = 'content-group';

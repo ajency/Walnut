@@ -120,12 +120,13 @@ define ['app'],(App)->
 
 				_.each _.range(numberOfResizers),(ele, index)=>
 					column = @getColumnAt(index + 1)
-					left = $(column).position().left
+					left = $(column).position().left-16
 					resizer = $(template)
 					resizer.attr('data-position', (index + 1))
 					resizer.css 'left', left
 					@$el.closest('.element-wrapper').children('.element-controls').append resizer
 					@makeResizer resizer 
+
 
 				@setColumnResizerContainment()
 
@@ -134,6 +135,7 @@ define ['app'],(App)->
 				row = resizer.parent()
 				snap = row.width()
 				snap = snap / 12
+				console.log snap
 				# console.log $(resizer).prev('.aj-imp-col-divider').attr("style")
 				# i = $(resizer).attr("data-position")
 				# console.log $(row).offset().top
@@ -203,15 +205,15 @@ define ['app'],(App)->
 				
 				_.each resizers,(resizer)=>
 					width = @$el.width()
-					left = @$el.offset().left + 50
+					left = @$el.offset().left + width/24
 					
 					if typeof $(resizer).prev('.aj-imp-col-divider').position() isnt 'undefined'
-						left = @$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + 50
+						left = @$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + width/24
 
-					right = @$el.offset().left + width - 50
+					right = @$el.offset().left + width - width/24
 
 					if typeof $(resizer).next('.aj-imp-col-divider').position() isnt 'undefined'
-						right = @$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - 50
+						right = @$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - width/24
 
 					$(resizer).draggable  "option", "containment", [left, 0 , right , 0]
 

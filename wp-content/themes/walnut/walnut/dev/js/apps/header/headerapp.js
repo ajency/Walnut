@@ -71,10 +71,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       HeaderView.prototype.onShow = function() {
         if (($('.creator').length > 0) || ($('.teacher-app').length > 0)) {
           $('.page-content').addClass('condensed');
-          $(".header-seperation").css("display", "none");
-          $("#main-menu").addClass("mini");
-          $(".start").removeClass("active open");
-          return $(".arrow").removeClass("open");
+          return $(".header-seperation").css("display", "none");
         }
       };
 

@@ -59,12 +59,22 @@ function update_content_group() {
         $content_group = save_content_group($data);
     } 
    
-    if (isset($_POST['content_pieces']) && isset($_POST['changed'])) {
+    if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
         $data = array(
           'id' => $_POST['id'],
           'content_pieces' => $_POST['content_pieces']
         );
         $update_group_content_pieces=update_group_content_pieces($data);
+    }
+    
+    if (isset($_POST['changed']) && ($_POST['changed']=='status')) {
+        $data = array(
+          'id' => $_POST['id'],
+          'status' => $_POST['status'],
+          'division' => $_POST['division'],
+          'training_date' => $_POST['training_date']
+        );
+        $update_training_module_status=update_training_module_status($data);
     }
     
     wp_send_json(array('code' => 'OK', 'data' => array('id'=> $_POST['id'])));
@@ -74,7 +84,9 @@ add_action('wp_ajax_update-content-group', 'update_content_group');
 
 function fetch_content_groups() {
     
-    $content_groups= get_all_content_groups();
+    $args= $_GET;
+    
+    $content_groups= get_all_content_groups($args);
   
     wp_send_json(array('code' => 'OK', 'data' => $content_groups));
 }

@@ -12,7 +12,7 @@ define ['app'
 
 				@view= view = @_getLeftNavView menuCollection
 
-				@show view
+				@show view,(loading:true)
 
 			_getLeftNavView :(collection) ->
 				new Controller.Views.LeftNavView

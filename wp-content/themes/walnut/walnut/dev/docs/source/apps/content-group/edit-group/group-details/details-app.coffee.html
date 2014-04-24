@@ -149,8 +149,8 @@
         <span class="s">&#39;click #save-content-collection&#39;</span>  <span class="o">:</span> <span class="s">&#39;save_content&#39;</span>
 
       <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
-        <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">textbooks&quot;</span><span class="p">).</span><span class="nx">select2</span><span class="p">()</span>
-        <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">chapters&quot;</span><span class="p">).</span><span class="nx">select2</span><span class="p">()</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">textbooks, </span><span class="err">#</span><span class="s">chapters, </span><span class="err">#</span><span class="s">minshours&quot;</span><span class="p">).</span><span class="nx">select2</span><span class="p">()</span>
+
 
 </pre></div>
         </td>
@@ -163,8 +163,7 @@
 <p>Multi Select</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">secs&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">([]).</span><span class="nx">select2</span><span class="p">()</span>
-        <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">subsecs&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">([]).</span><span class="nx">select2</span><span class="p">()</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">secs,</span><span class="err">#</span><span class="s">subsecs&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">([]).</span><span class="nx">select2</span><span class="p">()</span>
 
       <span class="nx">onFetchChaptersComplete</span><span class="o">:</span><span class="nf">(chapters)-&gt;</span>
         <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">chapters</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span>
@@ -174,7 +173,7 @@
             <span class="p">.</span><span class="nx">append</span> <span class="s">&#39;&lt;option value=&quot;&#39;</span><span class="o">+</span><span class="nx">chap</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;term_id&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">chap</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&lt;/option&gt;&#39;</span>
         <span class="k">else</span> 
           <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;#chapters&#39;</span>
-          <span class="p">.</span><span class="nx">html</span> <span class="s">&#39;&lt;option&gt;No Chapters available&lt;/option&gt;&#39;</span>
+          <span class="p">.</span><span class="nx">html</span> <span class="s">&#39;&lt;option value=&quot;&quot;&gt;No Chapters available&lt;/option&gt;&#39;</span>
 
       <span class="nx">onFetchSubsectionsComplete</span><span class="o">:</span><span class="nf">(allsections)-&gt;</span>
         <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">allsections</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span>
@@ -184,7 +183,7 @@
               <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#secs&#39;</span><span class="p">)</span>
               <span class="p">.</span><span class="nx">append</span> <span class="s">&#39;&lt;option value=&quot;&#39;</span><span class="o">+</span><span class="nx">section</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;term_id&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">section</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&lt;/option&gt;&#39;</span>
           <span class="k">else</span> 
-            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#secs&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#secs&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option value=&quot;&quot;&gt;No Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
 
           <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">allsections</span><span class="p">.</span><span class="nx">subsections</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span>
             <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#subsecs&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">);</span>
@@ -194,8 +193,8 @@
           <span class="k">else</span> 
             <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#subsecs&#39;</span><span class="p">).</span><span class="nx">html</span> <span class="s">&#39;&lt;option&gt;No Sub Sections available&lt;/option&gt;&#39;</span> 
         <span class="k">else</span> 
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#secs&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#subsecs&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option&gt;No Sub Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#secs&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option value=&quot;&quot;&gt;No Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#subsecs&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;&lt;option value=&quot;&quot;&gt;No Sub Sections available&lt;/option&gt;&#39;</span><span class="p">);</span>
 
 
       <span class="nx">save_content</span><span class="o">:</span><span class="nf">(e)-&gt;</span>
@@ -210,6 +209,19 @@
 
         <span class="k">if</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;form&#39;</span><span class="p">).</span><span class="nx">valid</span><span class="p">()</span>
           <span class="nv">data = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Syphon</span><span class="p">.</span><span class="nx">serialize</span> <span class="p">(</span><span class="nx">@</span><span class="p">)</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>data.term_ids= _.compact(data.term_ids)</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+          
           <span class="nx">@trigger</span> <span class="s">&quot;save:content:collection:details&quot;</span><span class="p">,</span><span class="nx">data</span>
           
 
@@ -226,7 +238,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
 <p>set handlers</p>
         </td>

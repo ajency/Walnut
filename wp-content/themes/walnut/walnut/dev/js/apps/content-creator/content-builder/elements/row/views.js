@@ -177,7 +177,7 @@ define(['app'], function(App) {
           return function(ele, index) {
             var column, left, resizer;
             column = _this.getColumnAt(index + 1);
-            left = $(column).position().left;
+            left = $(column).position().left - 16;
             resizer = $(template);
             resizer.attr('data-position', index + 1);
             resizer.css('left', left);
@@ -193,6 +193,7 @@ define(['app'], function(App) {
         row = resizer.parent();
         snap = row.width();
         snap = snap / 12;
+        console.log(snap);
         self = this;
         dragResizer = _.throttle((function(_this) {
           return function(event, ui) {
@@ -266,13 +267,13 @@ define(['app'], function(App) {
           return function(resizer) {
             var left, right, width;
             width = _this.$el.width();
-            left = _this.$el.offset().left + 50;
+            left = _this.$el.offset().left + width / 24;
             if (typeof $(resizer).prev('.aj-imp-col-divider').position() !== 'undefined') {
-              left = _this.$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + 50;
+              left = _this.$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + width / 24;
             }
-            right = _this.$el.offset().left + width - 50;
+            right = _this.$el.offset().left + width - width / 24;
             if (typeof $(resizer).next('.aj-imp-col-divider').position() !== 'undefined') {
-              right = _this.$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - 50;
+              right = _this.$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - width / 24;
             }
             return $(resizer).draggable("option", "containment", [left, 0, right, 0]);
           };

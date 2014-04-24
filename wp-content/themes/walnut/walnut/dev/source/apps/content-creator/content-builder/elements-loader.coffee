@@ -5,5 +5,6 @@ define ['apps/content-creator/content-builder/elements/hotspot/controller'
 		'apps/content-creator/content-builder/elements/imagewithtext/controller'
 		'apps/content-creator/content-builder/elements/mcq/controller'
 		'apps/content-creator/content-builder/elements/fib/controller'
+		'apps/content-creator/content-builder/elements/biganswer/controller'
 		'apps/content-creator/content-builder/elements/sort/controller'
 		],->

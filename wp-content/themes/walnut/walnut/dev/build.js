@@ -32,7 +32,9 @@
     tablesorter     : 'plugins/jquery.tablesorter',
     tablesorter_pager : 'plugins/jquery.tablesorter.pager',
     moment            :'plugins/moment.min',
-    select2       : 'plugins/select2.min'
+    select2       : 'plugins/select2.min',
+    datepicker      : 'plugins/bootstrap-datepicker',
+    timepicker      : 'plugins/bootstrap-timepicker.min'
   },
   shim: {
     underscore: {
@@ -62,6 +64,8 @@
     mixitup     : ['jquery'],
     moment      : ['jquery'],
     select2      : ['jquery','bootstrap'],
+    datepicker      : ['jquery','bootstrap'],
+    timepicker      : ['jquery','bootstrap'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
   }
 })

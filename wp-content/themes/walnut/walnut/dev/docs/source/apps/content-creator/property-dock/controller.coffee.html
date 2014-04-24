@@ -76,6 +76,21 @@
             <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:hotspot:element:properties&quot;</span><span class="p">,</span><span class="nf">(options)=&gt;</span>
                 <span class="nx">@_getHotspotElementProperties</span> <span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
 
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>show fib element properties</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:fib:element:properties&quot;</span><span class="p">,</span><span class="nf">(options)=&gt;</span>
+                <span class="nx">@_getFibElementProperties</span> <span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+
             <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;close:question:element:properties&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
                 <span class="nx">@layout</span><span class="p">.</span><span class="nx">questElementPropRegion</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
 
@@ -106,6 +121,12 @@
           <span class="nx">_getHotspotElementProperties</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
             
             <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:hotspot:element:properties:box&quot;</span><span class="p">,</span>
+                <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">questElementPropRegion</span>
+                <span class="nv">model : </span><span class="nx">model</span>
+
+          <span class="nx">_getFibElementProperties</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
+            
+            <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:fib:element:properties:box&quot;</span><span class="p">,</span>
                 <span class="nv">region : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">questElementPropRegion</span>
                 <span class="nv">model : </span><span class="nx">model</span>
 

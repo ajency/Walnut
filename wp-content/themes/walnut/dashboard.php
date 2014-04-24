@@ -36,6 +36,8 @@
         if(ENV == 'dev'){
         ?>
         
+        <link href="./wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
+        <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
         <link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
         <!--<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>-->
         <!-- BEGIN CORE CSS FRAMEWORK -->
@@ -50,7 +52,6 @@
         <link href="./wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
-        <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
         
 
         <!-- END CSS TEMPLATE -->
@@ -60,6 +61,8 @@
         ?>
             <link href="./wp-content/themes/walnut/walnut/production/css/walnut.min.css?ver=<?php echo $ver?>" rel="stylesheet" type="text/css"/>
         <?php }?>
+            
+        <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="">
         <div id="site_main_container">
@@ -78,11 +81,17 @@
                 </div>
             </div>
 
-            <div id="dialog-region"></div>
+            <div id="dialog-region">
+            </div>
         </div>
+        <?php  global $class_ids; ?>
         <script>
             AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
             SITEURL = '<?php echo site_url() ?>';
+            CLASS_LABEL= {};
+            <?php foreach($class_ids as $class){ ?>
+                CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
+            <?php } ?>
         </script>
         <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
         <?php if (ENV == 'dev') { ?>

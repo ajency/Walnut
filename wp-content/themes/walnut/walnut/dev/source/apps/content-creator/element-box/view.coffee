@@ -26,38 +26,45 @@ define ['app'],(App)->
 							</ul> 
 						</div> 
 						<h5 class="semi-bold text-center b-b b-grey p-b-10">Questions</h5> 
-							<div class="qstns"> 
-								<ul class="elements"> 
-									<li data-element="Hotspot" > 
-										<a href="#" class="drag builder-element" > 
-											<div class="aj-imp-builder-title">
-												<i class="fa fa-bullseye"></i> Hotspot
-											</div> 
-										</a>
-									</li> 
-									<li data-element="Mcq" > 
-										<a href="#" class="drag builder-element" > 
-											<div class="aj-imp-builder-title">
-												<i class="fa fa-list-ol"></i> MCQ
-											</div> 
-										</a> 
-									</li>
-									<li data-element="Fib" > 
-										<a href="#" class="drag builder-element" > 
-											<div class="aj-imp-builder-title">
-												<i class="fa fa-list-ol"></i> Fill in the Blanks
-											</div> 
-										</a> 
-									</li>  
-									<li data-element="Sort" > 
-										<a href="#" class="drag builder-element" > 
-											<div class="aj-imp-builder-title">
-												<i class="fa fa-list-ol"></i> Sort
-											</div> 
-										</a> 
-									</li>  
-								</ul> 
-								<div class="clearfix"></div> 
+						<div class="qstns"> 
+							<ul class="elements"> 
+								<li data-element="Hotspot" > 
+									<a href="#" class="drag builder-element" > 
+										<div class="aj-imp-builder-title">
+											<i class="fa fa-bullseye"></i> Hotspot
+										</div> 
+									</a>
+								</li> 
+								<li data-element="Mcq" > 
+									<a href="#" class="drag builder-element" > 
+										<div class="aj-imp-builder-title">
+											<i class="fa fa-list-ol"></i> MCQ
+										</div> 
+									</a> 
+								</li>
+								<li data-element="Fib" > 
+									<a href="#" class="drag builder-element" > 
+										<div class="aj-imp-builder-title">
+											<i class="bicon icon-uniF148"></i> Fill in the Blanks
+										</div> 
+									</a> 
+								</li>  
+								<li data-element="BigAnswer" > 
+									<a href="#" class="drag builder-element" > 
+										<div class="aj-imp-builder-title">
+											<i class="fa fa-text-width"></i> Big Answer
+										</div> 
+									</a> 
+								</li>  
+								<li data-element="Sort" > 
+									<a href="#" class="drag builder-element" > 
+										<div class="aj-imp-builder-title">
+											<i class="fa fa-arrows-v"></i> Sort
+										</div> 
+									</a> 
+								</li>  
+							</ul> 
+							<div class="clearfix"></div> 
 						</div> 
 						<h5 class="semi-bold text-center b-b b-grey p-b-10">Elements</h5> 
 						<div class="tools">
@@ -85,7 +92,6 @@ define ['app'],(App)->
 						</div>'
 
 
-
 			onShow:->
 				
 				@$el.find('*[data-element]').draggable
@@ -95,6 +101,15 @@ define ['app'],(App)->
 								addClasses			: false
 								distance 			: 5
 								revert 				: 'invalid'
+
+
+				@on "question:dropped",=>
+					@$el.find('.qstns').find('*[data-element]').draggable 'disable'
+
+				@on "question:removed",=>
+					@$el.find('.qstns').find('*[data-element]').draggable 'enable'
+
+
 
 
 		# class ElementView extends Marionette.ItemView

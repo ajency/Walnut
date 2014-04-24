@@ -52,10 +52,12 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         if (param == null) {
           param = {};
         }
-        divisionCollection.fetch({
-          reset: true,
-          data: param
-        });
+        if (!divisionCollection.length > 0) {
+          divisionCollection.fetch({
+            reset: true,
+            data: param
+          });
+        }
         return divisionCollection;
       },
       getDivisionByID: function(id) {

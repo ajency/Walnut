@@ -10,9 +10,9 @@
 			height: 100%;
 			position: relative;
 			background-clip: content-box;
-			background: @color-white;
+			//background: @color-white;
 			&.empty-column {
-				background: url(../../../images/empty-drag-bg.svg) no-repeat center center @color-white;
+				background: url(../../../images/empty-drag-bg.svg) no-repeat center center /*@color-white*/;
 				background-clip: content-box;
 				background-size: contain;
 				min-height:100px !important;
@@ -102,9 +102,14 @@
 			li{
 				width: 96px;
 				height: 40px;
-				font-weight: bold;
+				//font-weight: bold;
 				i{
 					font-size: 17px;
+				}
+				.bicon{
+					font-size: 18px;
+					vertical-align: middle;
+					margin-right: 2px;
 				}
 			}
 		}
@@ -146,30 +151,35 @@
 		li{
 			float: left;
 			border: 2px solid #e5e9ec;
-			//background:#e5e9ec;
-			width: 65px;
-			height: 65px;
+			background:@color-white;
+			width: 92px;
+			height: 56px;
 			margin: 4px;
 			list-style-type: none;
 			cursor: move;
 			text-align: center;
 			padding: 0;
-			padding-top: 3%;
+			padding-top: 5%;
+			//.ease;
 			a{
 				cursor: move;
-				&:hover{
-					color: @color-green;
-				}
 			}
 			i{
-				font-size: 42px;
+				font-size: 35px;
+			}
+			&:hover{
+				background-color: @color-primary;
+				.ease;
+				a{
+					color: @color-white;
+				}
 			}
 		}
 	}
 }
 
 .docket-body{
-	background: @color-white;
+	background: @preview-grey;
 	padding: 15px 10px;
 	color: #000;
 	label{
@@ -199,13 +209,22 @@
 
 .textFormat{
 	display: inline-block;
-	.btn, .btn:focus{
-		background-color: #d1dade;
+	margin-left: 5px;
+	.checkbox label{
+		margin-right: 0;
+		padding-left: 10px;
+		padding-right: 10px;
+		margin-bottom: 0;
+		&:before, &:after{
+			display: none;
+		}
 	}
-	.btn:hover, .btn:active, .btn.active, .btn.disabled, .btn[disabled]{
+	input[type=checkbox]:checked + label {
 		background-color: @color-primary;
 		color: @color-white;
+		.box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
 	}
+	
 
 }
 
@@ -219,9 +238,12 @@
 	border-radius: 5px;
 }
 
-.rotateCtrl > div{
-	position: relative;
-	top: 15px;
+.rotateCtrl {
+	display: inline-block;
+	& > div{
+		position: relative;
+		top: 15px;
+	}
 }
 
 .element-wrapper {
@@ -579,8 +601,8 @@
 
 /*MCQ*/
 .mcq-option {
-	width: 145px;
-	margin-right: 10px;
+	width: 160px;
+	margin-right: 5px;
 	float: left;
 	word-wrap: break-word;
 	border: 2px dashed @preview-grey;
@@ -594,6 +616,7 @@
 		position: relative;
 		z-index: 2;
 		margin: 4px 5px 0;
+		background-size: 32px;
 	}
 	p{
 		margin: 0;
@@ -616,4 +639,9 @@
 	input{
 		margin-bottom: 4px;
 	}
+}
+
+/*Sort*/
+.sort-option{
+	cursor: move;
 }

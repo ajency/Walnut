@@ -12,18 +12,22 @@ define ['app'
 
 					initialize : (options)->
 
+						{eventObj} = options
+
 						elements = App.request "get:page:json"
 
 
 
 						@view = @_getContentBuilderView elements
 
+						
+
 						@listenTo @view, "add:new:element", (container, type)->
-									App.request "add:new:element", container, type
+									App.request "add:new:element", container, type , eventObj
 
 						@listenTo @view, "dependencies:fetched", =>
 								_.delay =>
-									@startFillingElements()
+									@startFillingElements eventObj
 								, 400
 
 						@show @view,
@@ -41,41 +45,40 @@ define ['app'
 
 
 					# start filling elements
-					startFillingElements: ()->
+					startFillingElements: (eventObj)->
 						section = @view.model.toJSON()
 
 						container = $('#myCanvas')
 						_.each section, (element, i)=>
 							if element.element is 'Row'
-								@addNestedElements container,element
+								@addNestedElements container,element, eventObj
 							else
-								App.request "add:new:element",container,element.element, element
+								App.request "add:new:element",container,element.element,eventObj, element
 
 					
-					addNestedElements:(container,element)->
-						controller = App.request "add:new:element",container,element.element, element
-						console.log element.elements
+					addNestedElements:(container,element,eventObj)->
+						controller = App.request "add:new:element",container,element.element,eventObj, element
 						_.each element.elements, (column, index)=>
-							
 							return if column.elements.length is 0
 							container = controller.layout.elementRegion.currentView.$el.children().eq(index)
 							_.each column.elements,(ele, i)=>
 								if ele.element is 'Row'
-									@addNestedElements $(container),ele
+									@addNestedElements $(container),ele,eventObj
 								else
-									App.request "add:new:element",container,ele.element, ele
+									App.request "add:new:element",container,ele.element,eventObj, ele
 
 
 
 
 				API = 
 					# add a new element to the builder region
-					addNewElement : (container , type, modelData)->
+					addNewElement : (container , type, modelData, eventObj)->
 						console.log type
 						
 						new ContentBuilder.Element[type].Controller
 										container : container
 										modelData : modelData
+										eventObj : eventObj
 
 					saveQuestion :->
 
@@ -85,13 +88,11 @@ define ['app'
 
 				# create a command handler to start the content builder controller
 				App.commands.setHandler "show:content:builder", (options)->
-								new ContentBuilderController
-											region : options.region
+								new ContentBuilderController options
 
 				#Request handler for new element
-				App.reqres.setHandler "add:new:element" , (container, type, modelData = {})->
-
-						API.addNewElement container, type, modelData
+				App.reqres.setHandler "add:new:element" , (container, type,eventObj, modelData = {})->
+						API.addNewElement container, type, modelData , eventObj
 
 
 				App.commands.setHandler "save:question",->

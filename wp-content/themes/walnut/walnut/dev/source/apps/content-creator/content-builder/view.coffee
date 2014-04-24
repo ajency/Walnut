@@ -31,3 +31,4 @@ define ['app'],(App)->
 											if ui.item.prop("tagName") is 'LI'
 												type  = ui.item.attr 'data-element'
 												@trigger "add:new:element", $(evt.target), type
+												

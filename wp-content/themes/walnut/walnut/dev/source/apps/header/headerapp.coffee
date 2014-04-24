@@ -48,11 +48,8 @@ define ['app'
 				
 			onShow:->						
 				if (($('.creator').length > 0) || ($('.teacher-app').length>0)) 
-						$('.page-content').addClass('condensed');
-						$(".header-seperation").css("display","none");
-						$("#main-menu").addClass("mini");
-						$(".start").removeClass("active open");
-						$(".arrow").removeClass("open");
+					$('.page-content').addClass('condensed');
+					$(".header-seperation").css("display","none");
 
 		# set handlers
 		App.commands.setHandler "show:headerapp", (opt = {})->

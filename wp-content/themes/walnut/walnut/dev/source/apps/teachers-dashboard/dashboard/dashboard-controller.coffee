@@ -33,7 +33,7 @@ define ['app'
 
 			template 	: teachersDashboardTpl
 
-			className 	: 'teacher-app'
+			className 	: 'row'
 
 			events 		:
 				'change #class' : (e)-> @loadDivisions $(e.target).val()
@@ -89,7 +89,7 @@ define ['app'
 				if $(e.target).val() is 'take-class'
 					class_id= @$el.find('#class').val()
 					div_id= @$el.find('#div').val()
-					App.navigate('teachers/take-class/'+class_id+'-'+div_id, trigger: true)
+					App.navigate('teachers/take-class/'+class_id+'/'+div_id, trigger: true)
 
 				if $(e.target).val() is 'start-training'
 					class_id= @$el.find('#class-training').val()

@@ -11,6 +11,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       }
 
       Controller.prototype.initialize = function(options) {
+        this.eventObj = options.eventObj;
         _.defaults(options.modelData, {
           element: 'Fib',
           maxlength: '12',
@@ -22,13 +23,16 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           case_sensitive: false,
           marks: 1,
           style: 'blank',
-          correct_answers: []
+          text: "India has ",
+          blanksArray: []
         });
         return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype.renderElement = function() {
         var view;
+        this.blanksCollection = App.request("create:new:question:element:collection", this.layout.model.get('blanksArray'));
+        this.layout.model.set('blanksArray', this.blanksCollection);
         view = this._getFibView(this.layout.model);
         this.listenTo(view, 'show show:this:fib:properties', (function(_this) {
           return function() {
@@ -37,7 +41,30 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
           };
         })(this));
-        return this.layout.elementRegion.show(view);
+        this.listenTo(view, "close:hotspot:element:properties", function() {
+          return App.execute("close:question:element:properties");
+        });
+        this.listenTo(view, "show", (function(_this) {
+          return function() {
+            return _this.eventObj.vent.trigger("question:dropped");
+          };
+        })(this));
+        this.listenTo(view, "create:new:fib:element", (function(_this) {
+          return function(blankId) {
+            var blanksData, blanksModel;
+            blanksData = {
+              id: blankId,
+              correct_answers: [],
+              marks: 1,
+              maxlength: 12
+            };
+            blanksModel = App.request("create:new:question:element", blanksData);
+            return _this.layout.model.get('blanksArray').add(blanksModel);
+          };
+        })(this));
+        return this.layout.elementRegion.show(view, {
+          loading: true
+        });
       };
 
       Controller.prototype._getFibView = function(model) {
@@ -47,8 +74,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.deleteElement = function(model) {
+        model.set('blanksArray', '');
+        delete model.get('blanksArray');
         model.destroy();
-        return App.execute("close:question:properties");
+        App.execute("close:question:properties");
+        App.execute("close:question:element:properties");
+        return this.eventObj.vent.trigger("question:removed");
       };
 
       return Controller;

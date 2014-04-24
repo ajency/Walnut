@@ -41,6 +41,10 @@ define ['app'
 
 					data.subject_string= subject_string;
 
+				route= App.getCurrentRoute()
+
+				data.url= '#'+route+'/textbook/'+ @model.get 'term_id'
+
 				data
 
 		class EmptyView extends Marionette.ItemView

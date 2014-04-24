@@ -13,6 +13,8 @@ CKEDITOR.editorConfig = function( config ) {
 
 	config.placeholder = 'Type here...'
 
+	config.floatSpaceDockedOffsetX = 30;
+	config.floatSpaceDockedOffsetY = 15;
 
 
 config.toolbar = [
@@ -25,7 +27,9 @@ config.toolbar = [
 								groups: [ 'find', 'selection', 'spellchecker' ],
 								items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] }
 							,
-					// # 			# { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+								{ name: 'forms',
+								items: [ 'TextField'] }
+							,
 								'/'
 							,
 								{name: 'basicstyles',
@@ -51,4 +55,10 @@ config.toolbar = [
 					// # 			# { name: 'others', items: [ '-' ] },
 					// # 			# { name: 'about', items: [ 'About' ] }
 							]
+
+
+
+config.font_names = config.font_names+' ;Chelsea Market; Indie Flower; Just Another Hand; Sacramento'					
 };
+
+

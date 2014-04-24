@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app'], function(App) {
+define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property-box/templates/optionview.html'], function(App, Template) {
   return App.module("ContentCreator.PropertyDock.HotspotElementPropertyBox.Views", function(Views, App, Backbone, Marionette, $, _) {
     return Views.OptionView = (function(_super) {
       __extends(OptionView, _super);
@@ -10,22 +10,23 @@ define(['app'], function(App) {
         return OptionView.__super__.constructor.apply(this, arguments);
       }
 
-      OptionView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot <i class="fa fa-chevron-right"></i> <span class="semi-bold">{{shape}} Element</span> </div> <div class="docket-body"> <div id="correct-answer" class="radio radio-success">Is this correct? <input id="yes" type="radio" name="optionyes" value="yes"> <label for="yes">Yes</label> <input id="no" type="radio" name="optionyes" value="no" checked="checked"> <label for="no">No</label> </div> Marks 	<select class="marks"> <option value="1">1</option> <option value="2">2</option> </select> <div class="form-group"> Color  <input type="hidden" id="hidden-input" class="fontColor" value="#1a45a1"> </div> <div id="transparency" class="checkbox check-success"> <input id="checkbox3" type="checkbox" value="1"> <label for="checkbox3">Set Transparent</label> </div> <div id="knob" class="form-group"> Rotate <input type="text" class="dial" data-min="0" data-max="360" data-width="40" data-height="40" data-displayInput=false data-thickness=".5" data-fgColor="#0AA699" data-angleOffset="90" data-cursor=true> </div> <div class="form-group"> <button type="button" id="delete" class="btn btn-danger btn-small">Delete</button> </div> </div> </div> </div>';
+      OptionView.prototype.template = Template;
 
       OptionView.prototype.onShow = function() {
         if (this.model.get('transparent')) {
-          $('#transparency.checkbox #checkbox3').prop('checked', true);
+          this.$el.find('#transparency-checkbox').prop('checked', true);
         }
-        $('#transparency.checkbox').on('change', (function(_this) {
+        this.$el.find('#transparency-checkbox').on('change', (function(_this) {
           return function() {
-            if ($('#transparency.checkbox').hasClass('checked')) {
+            console.log('transparent changed');
+            if (_this.$el.find('#transparency-checkbox').prop('checked')) {
               return _this.model.set('transparent', true);
             } else {
               return _this.model.set('transparent', false);
             }
           };
         })(this));
-        $('.fontColor').minicolors({
+        this.$el.find('.fontColor').minicolors({
           animationSpeed: 200,
           animationEasing: 'swing',
           control: 'hue',
@@ -37,15 +38,15 @@ define(['app'], function(App) {
             };
           })(this)
         });
-        $('.fontColor').minicolors('value', this.model.get('color'));
-        $('#delete.btn-danger').on('click', (function(_this) {
+        this.$el.find('.fontColor').minicolors('value', this.model.get('color'));
+        this.$el.find('#delete.btn-danger').on('click', (function(_this) {
           return function() {
             return _this.model.set('toDelete', true);
           };
         })(this));
         if (this.model.get('shape') === 'Rect') {
-          $('.dial').val(this.model.get('angle'));
-          $(".dial").knob({
+          this.$el.find('.dial').val(this.model.get('angle'));
+          this.$el.find(".dial").knob({
             change: (function(_this) {
               return function(val) {
                 return _this.model.set("angle", val);
@@ -53,17 +54,17 @@ define(['app'], function(App) {
             })(this)
           });
         } else {
-          $('#knob').hide();
+          this.$el.find('#knob').hide();
         }
         if (this.model.get('correct')) {
-          $("#correct-answer.radio input#yes").prop('checked', true);
+          this.$el.find("#correct-answer.radio input#yes").prop('checked', true);
         } else {
-          $("#correct-answer.radio input#no").prop('checked', true);
+          this.$el.find("#correct-answer.radio input#no").prop('checked', true);
         }
-        return $('#correct-answer.radio input').on('change', (function(_this) {
+        return this.$el.find('#correct-answer.radio input').on('change', (function(_this) {
           return function() {
             var _ref;
-            return _this.model.set('correct', (_ref = $('#correct-answer.radio input:checked').val() === "yes") != null ? _ref : {
+            return _this.model.set('correct', (_ref = _this.$el.find('#correct-answer.radio input:checked').val() === "yes") != null ? _ref : {
               "true": false
             });
           };

@@ -35,14 +35,16 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			API = 
 				# get all divisions
 				getDivisions:(param = {})->
-					
-					divisionCollection.fetch
-										reset : true
-										data  : param
+
+					if not divisionCollection.length >0
+						divisionCollection.fetch
+											reset : true
+											data  : param
 
 					divisionCollection
 
 				getDivisionByID:(id)->
+					
 					division = divisionCollection.get id
 
 					if not division 

@@ -1,9 +1,10 @@
 define [
-		'configs/jquery'
-		'configs/underscore'
-		'configs/backbone'
-		'configs/marionette/dialog-region'
-		'configs/marionette/settings-region'
-		'configs/marionette/formview'
-		'configs/marionette/marionette'
+		'config/jquery'
+		'config/jquery-validate'
+		'config/underscore'
+		'config/backbone'
+		'config/marionette/dialog-region'
+		'config/marionette/settings-region'
+		'config/marionette/formview'
+		'config/marionette/marionette'
 		],->

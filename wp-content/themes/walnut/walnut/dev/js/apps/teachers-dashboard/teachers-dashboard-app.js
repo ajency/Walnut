@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/teachers-dashboard/start-training/start-training-controller', 'apps/teachers-dashboard/take-class/take-class-controller'], function(App) {
+define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/teachers-dashboard/take-class/take-class-controller', 'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-controller', 'apps/teachers-dashboard/start-training/start-training-controller', 'apps/teachers-dashboard/start-training/textbook-modules/textbook-modules-controller'], function(App) {
   return App.module("TeachersDashboardApp", function(TeachersDashboardApp, App) {
     var Controller, TeachersDashboardRouter;
     TeachersDashboardRouter = (function(_super) {
@@ -13,8 +13,10 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
 
       TeachersDashboardRouter.prototype.appRoutes = {
         'teachers/dashboard': 'teachersDashboard',
-        'teachers/take-class/:class_id-*div': 'takeClass',
-        'teachers/start-training/:class_id': 'startTraining'
+        'teachers/take-class/:classID/:div': 'takeClass',
+        'teachers/take-class/:classID/:div/textbook/:tID': 'takeClassTextbookModules',
+        'teachers/start-training/:classID': 'startTraining',
+        'teachers/start-training/:classID/textbook/:tID': 'startTrainingTextbookModules'
       };
 
       return TeachersDashboardRouter;
@@ -26,17 +28,32 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
           region: App.mainContentRegion
         });
       },
-      takeClass: function(class_id, div) {
+      takeClass: function(classID, div) {
         return new TeachersDashboardApp.View.TakeClassController({
           region: App.mainContentRegion,
-          classID: class_id,
+          classID: classID,
           division: div
         });
       },
-      startTraining: function(class_id) {
+      startTraining: function(classID) {
         return new TeachersDashboardApp.View.StartTrainingController({
           region: App.mainContentRegion,
-          classID: class_id
+          classID: classID
+        });
+      },
+      takeClassTextbookModules: function(classID, div, tID) {
+        return new TeachersDashboardApp.View.textbookModulesController({
+          region: App.mainContentRegion,
+          textbookID: tID,
+          classID: classID,
+          division: div
+        });
+      },
+      startTrainingTextbookModules: function(classID, tID) {
+        return new TeachersDashboardApp.View.startTrainingTextbookModulesController({
+          region: App.mainContentRegion,
+          textbookID: tID,
+          classID: classID
         });
       }
     };

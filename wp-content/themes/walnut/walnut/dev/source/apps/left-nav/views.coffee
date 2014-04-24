@@ -6,8 +6,28 @@ define ['app','text!apps/left-nav/templates/leftnav.html'],(App,navTpl)->
 
 			tagName : 'li'
 
-			template : '<a href="{{menu_item_link}}"><span>{{post_title}}</span></a>'
+			template : '<a href="javascript:;">
+					<i class="{{iconClass}}"></i>
+					<span class="title">{{post_title}}</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					{{#submenu}}
+					<li><a href="{{menu_item_link}}">{{post_title}}</a></li>
+					{{/submenu}}
+				</ul>'
 
+			serializeData:->
+				data = super()
+
+				iconClass= 'icon-custom-ui'
+
+				if @model.get('post_title') is 'Training Module' 
+					iconClass= 'fa fa-pencil-square-o' 
+
+				data.iconClass= iconClass
+
+				data
 
 		class Views.LeftNavView extends Marionette.CompositeView
 
@@ -19,14 +39,22 @@ define ['app','text!apps/left-nav/templates/leftnav.html'],(App,navTpl)->
 
 			itemView 	: MenuItemView
 
-			itemViewContainer : 'ul.sub-menu'
+			itemViewContainer : 'ul.menu-items'
 
 
 			events: 
 				'click li'	: 'clickMenu'
 
 			onShow:->
+				console.log @collection
 				#Auto close open menus in Condensed menu
+
+				if (($('.creator').length > 0) || ($('.teacher-app').length>0)) 
+					$("#main-menu").addClass("mini");
+					$(".start").removeClass("active open");
+					$(".arrow").removeClass("open");
+
+
 				if($('.page-sidebar').hasClass('mini'))		
 					elem = $('.page-sidebar ul');
 					elem.children('li.open').children('a').children('.arrow').removeClass('open');
