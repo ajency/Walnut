@@ -728,9 +728,6 @@
   margin-bottom: 5px;
   min-height: 40px;
 }
-.mcq-option span {
-  float: left;
-}
 .mcq-option .mcq-option-select {
   float: left;
   z-index: 2;
@@ -757,6 +754,35 @@
 /*Sort*/
 .sort-option {
   cursor: move;
+}
+/*Editor popup*/
+.cke_dialog_body .cke_dialog_title {
+  background-color: #0090d9;
+  background-image: none;
+  color: #ffffff;
+  text-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding: 10px;
+}
+.cke_dialog_body a.cke_dialog_ui_button {
+  background: #f35958;
+  color: #ffffff;
+  text-shadow: none;
+  border: none;
+}
+.cke_dialog_body a.cke_dialog_ui_button:hover {
+  background: #f02a28;
+}
+.cke_dialog_body a.cke_dialog_ui_button span {
+  text-shadow: none;
+}
+.cke_dialog_body a.cke_dialog_ui_button_ok {
+  background: #0090d9;
+  border: none;
+}
+.cke_dialog_body a.cke_dialog_ui_button_ok:hover {
+  background: #006ea6;
 }
 /*input[type=checkbox].mcq-option-select {
 	display:none;
