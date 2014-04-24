@@ -601,25 +601,33 @@
 
 /*MCQ*/
 .mcq-option {
-	width: 160px;
-	margin-right: 5px;
-	float: left;
-	word-wrap: break-word;
+	width: 100%;
+	//margin-right: 5px;
+	//float: left;
+	//word-wrap: break-word;
 	border: 2px dashed @preview-grey;
 	padding: 5px;
 	margin-bottom: 5px;
+	//position: relative;
+	min-height: 40px;
 	span{
 		float: left;
 	}
 	.mcq-option-select{
 		float: left;
-		position: relative;
+		//position: absolute;
+		//top: 0px;
+		//left: 0;
 		z-index: 2;
 		margin: 4px 5px 0;
 		background-size: 32px;
 	}
 	p{
 		margin: 0;
+		//margin-left: 32px;
+		word-break: break-word;
+		//display: inline-block;
+		overflow: hidden;
 	}
 	p.placeholder{
 		color: darken(@body-bg, 2%);

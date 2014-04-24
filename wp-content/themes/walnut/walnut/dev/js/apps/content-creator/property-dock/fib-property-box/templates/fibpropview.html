@@ -5,13 +5,11 @@
 		</div>
 		<div class="docket-body">
 
-			
-
-			<div>
-				<input id="check-case-sensitive" type="checkbox" name="check-ind-marks"> Case Sensitive
+			<div class="checkbox check-success">
+				<input id="check-case-sensitive" type="checkbox" name="check-ind-marks"> <label for="check-case-sensitive">Case Sensitive</label>
 			</div>
 			
-			<div>
+			<div class="form-group">
 				Font
 				<select class="font" id="fib-font">
 				  <option value="Arial">
@@ -82,7 +80,7 @@
 				</select>
 			</div>
 
-			<div class="">
+			<div class="form-group">
         
 				<div class="textProp slider success">
 					Size 
@@ -92,7 +90,7 @@
 
 			</div>
 
-			<div>
+			<div class="form-group">
 				Marks
 				<select id="marks">
 					<option value="1">1</option>
@@ -100,23 +98,23 @@
 				</select>
 			</div>
 
-			
-			<div class="form-group inline">
-				Font-Color
-				<input type="hidden" id="font-color" class="color-picker" value="{{color}}">
-			</div>
-			<div class="form-group inline">
-				Background-Color
-				<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
-			</div>
-
-			<div>
+			<div class="form-group style">
 				Style
 				<select id="fib-style">
 					<option value="uline">Underline</option>
 					<option value="box">Box</option>
 					<option value="blank">Blank</option>		
 				</select>
+			</div>
+
+			<div class="b-b b-grey m-b-10 m-t-10 p-b-5 bold">Colors</div>
+			<div class="form-group inline colors">
+				Font
+				<input type="hidden" id="font-color" class="color-picker" value="{{color}}">
+			</div>
+			<div class="form-group inline colors">
+				Background
+				<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
 			</div>
 		
 		</div>

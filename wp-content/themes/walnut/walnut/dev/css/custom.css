@@ -722,26 +722,25 @@
 }
 /*MCQ*/
 .mcq-option {
-  width: 160px;
-  margin-right: 5px;
-  float: left;
-  word-wrap: break-word;
+  width: 100%;
   border: 2px dashed #f3f3f3;
   padding: 5px;
   margin-bottom: 5px;
+  min-height: 40px;
 }
 .mcq-option span {
   float: left;
 }
 .mcq-option .mcq-option-select {
   float: left;
-  position: relative;
   z-index: 2;
   margin: 4px 5px 0;
   background-size: 32px;
 }
 .mcq-option p {
   margin: 0;
+  word-break: break-word;
+  overflow: hidden;
 }
 .mcq-option p.placeholder {
   color: #dfe4e8;
@@ -815,6 +814,14 @@ textarea.border {
   /* Opera */
 
   border-image: url(../../../images/border.gif) 20 20 stretch;
+}
+.style .select2-container {
+  width: 65%;
+}
+.colors .minicolors-theme-default.minicolors {
+  width: 30px;
+  height: 22px;
+  margin-right: 10px;
 }
 .listBox {
   margin-top: 60px;
