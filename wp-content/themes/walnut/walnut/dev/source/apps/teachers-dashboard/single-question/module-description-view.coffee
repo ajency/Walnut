@@ -14,8 +14,9 @@ define ['app'
 				clock = setInterval @updateTime, 500		
 
 			updateTime :=>
-				@$el.find '.timedisplay'
-				.html '<i class="fa fa-clock-o"></i> '+ $('#timekeeper').html()
+				if _.size($('#timekeeper')) >0
+					@$el.find '.timedisplay'
+					.html '<i class="fa fa-clock-o"></i> '+ $('#timekeeper').html()
 
 
 	

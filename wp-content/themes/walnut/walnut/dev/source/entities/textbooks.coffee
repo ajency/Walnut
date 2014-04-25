@@ -57,8 +57,10 @@ define ["app", 'backbone'], (App, Backbone) ->
 					if not textbook 
 						textbook = new Textbooks.ItemModel term_id : id
 						textbook.fetch()
-						
-					textbook.get('name')
+
+					textbookName= textbook.get('name')
+
+					textbookName
 
 
 			# request handler to get all textbooks

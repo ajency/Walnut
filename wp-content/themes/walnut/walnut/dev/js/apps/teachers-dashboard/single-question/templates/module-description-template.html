@@ -1,6 +1,6 @@
 <div class="tiles white m-b-20">
 	<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
-		<h4 class="bold pull-left text-info modName"><i class="fa fa-chevron-left"></i> <a href="#">Back to {{name}}</a></h4>
+		<h4 class="bold pull-left text-info modName"><i class="fa fa-chevron-left"></i> <a href="javascript://" onclick="history.back()">Back to {{name}}</a></h4>
 
 		<div class="modProgress pull-right">
 			<p class="bold small-text m-t-10 m-b-5">Progress</p>
@@ -11,12 +11,8 @@
         <div class="clearfix"></div>
 	</div>
 	<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
-		<p class="bold small-text">Description: </p>
-		<p class="">{{description.description}}</p>
-	</div>
-	<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
-		<p class="bold small-text">Electronic Requirements: </p>
-		<p class="">{{description.electionic_requirements}}</p>
+		<p class="bold small-text">Objective: </p>
+		<p class="">{{description.objective}}</p>
 	</div>
 </div>
 
@@ -29,18 +25,18 @@
 				4
             </div>
             <div class="col-md-4 col-sm-4 b-grey b-r">
-              <label class="form-label bold small-text">Subject</label>
-				Science			                  
+              <label class="form-label bold small-text">Textbook</label>
+				{{showTextbookName}}	English		                  
             </div>
             <div class="col-md-4 col-sm-4">
               <label class="form-label bold small-text">Chapter</label>
-				Internal Organs of the Body
+			         --
             </div>
           </div>
           <div class="row">
             <div class="col-md-4 col-sm-4 b-grey b-r">
               <label class="form-label bold small-text">Section</label>
-				Internal & External
+				      --
             </div>
             <div class="col-md-4 col-sm-4 b-grey b-r">
               <label class="form-label bold small-text">Sub-Section</label>
