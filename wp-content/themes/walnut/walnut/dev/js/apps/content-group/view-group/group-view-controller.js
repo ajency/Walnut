@@ -15,25 +15,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       }
 
       GroupController.prototype.initialize = function(opts) {
-        var breadcrumb_items, layout, modelID;
-        modelID = opts.modelID;
-        this.contentGroupModel = App.request("get:content:group:by:id", modelID);
-        breadcrumb_items = {
-          'items': [
-            {
-              'label': 'Dashboard',
-              'link': 'javascript://'
-            }, {
-              'label': 'Content Management',
-              'link': 'javascript:;'
-            }, {
-              'label': 'View Content Group',
-              'link': 'javascript:;',
-              'active': 'active'
-            }
-          ]
-        };
-        App.execute("update:breadcrumb:model", breadcrumb_items);
+        var layout, model;
+        model = opts.model;
+        this.module = opts.module;
+        this.contentGroupModel = model;
         this.layout = layout = this._getContentGroupViewLayout();
         this.listenTo(layout, 'show', this.showContentGroupViews);
         return this.show(layout, {
@@ -46,7 +31,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           return function() {
             App.execute("show:viewgroup:content:group:detailsapp", {
               region: _this.layout.collectionDetailsRegion,
-              model: _this.contentGroupModel
+              model: _this.contentGroupModel,
+              module: _this.module
             });
             if (_.size(_this.contentGroupModel.get('content_pieces')) > 0) {
               return App.execute("show:viewgroup:content:displayapp", {

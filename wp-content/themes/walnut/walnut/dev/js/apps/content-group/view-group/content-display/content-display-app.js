@@ -9,6 +9,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       __extends(CollectionContentDisplayController, _super);
 
       function CollectionContentDisplayController() {
+        this.trainingModuleStarted = __bind(this.trainingModuleStarted, this);
         this._getCollectionContentDisplayView = __bind(this._getCollectionContentDisplayView, this);
         this.showView = __bind(this.showView, this);
         return CollectionContentDisplayController.__super__.constructor.apply(this, arguments);
@@ -16,8 +17,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionContentDisplayController.prototype.initialize = function(opts) {
         this.model = opts.model;
+        this.module = opts.module;
         this.groupContentCollection = App.request("get:content:pieces:by:ids", this.model.get('content_pieces'));
-        return App.execute("when:fetched", this.groupContentCollection, this.showView);
+        App.execute("when:fetched", this.groupContentCollection, this.showView);
+        return this.listenTo(this.model, 'training:module:started', this.trainingModuleStarted);
       };
 
       CollectionContentDisplayController.prototype.showView = function() {
@@ -32,8 +35,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model) {
         return new ContentDisplayView({
           model: model,
-          collection: this.groupContentCollection
+          collection: this.groupContentCollection,
+          module: this.module
         });
+      };
+
+      CollectionContentDisplayController.prototype.trainingModuleStarted = function() {
+        return this.view.triggerMethod("apply:urls");
       };
 
       return CollectionContentDisplayController;
@@ -72,8 +80,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       ContentDisplayView.prototype.id = 'myCanvas-miki';
 
-      ContentDisplayView.prototype.onShow = function() {
-        return console.log(this.collection);
+      ContentDisplayView.prototype.onApplyUrls = function() {
+        var currentRoute, item, itemurl, url, _i, _len, _ref, _results;
+        currentRoute = App.getCurrentRoute();
+        url = '#' + currentRoute + '/';
+        _ref = this.$el.find('li .contentPiece');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          itemurl = url + $(item).attr('data-id');
+          _results.push($(item).find('a').attr('href', itemurl));
+        }
+        return _results;
       };
 
       return ContentDisplayView;

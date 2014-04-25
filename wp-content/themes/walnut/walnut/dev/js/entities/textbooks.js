@@ -70,17 +70,30 @@ define(["app", 'backbone'], function(App, Backbone) {
           textbook = new Textbooks.ItemModel({
             term_id: id
           });
-          console.log(textbook);
           textbook.fetch();
         }
         return textbook;
+      },
+      getTextBookNameByID: function(id) {
+        var textbook;
+        textbook = textbookCollection.get(id);
+        if (!textbook) {
+          textbook = new Textbooks.ItemModel({
+            term_id: id
+          });
+          textbook.fetch();
+        }
+        return textbook.get('name');
       }
     };
     App.reqres.setHandler("get:textbooks", function(opt) {
       return API.getTextbooks(opt);
     });
-    return App.reqres.setHandler("get:textbook:by:id", function(id) {
+    App.reqres.setHandler("get:textbook:by:id", function(id) {
       return API.getTextBookByID(id);
+    });
+    return App.reqres.setHandler("get:textbook:name:by:id", function(id) {
+      return API.getTextBookNameByID(id);
     });
   });
 });

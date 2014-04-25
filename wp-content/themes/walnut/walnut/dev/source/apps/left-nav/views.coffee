@@ -25,6 +25,9 @@ define ['app','text!apps/left-nav/templates/leftnav.html'],(App,navTpl)->
 				if @model.get('post_title') is 'Training Module' 
 					iconClass= 'fa fa-pencil-square-o' 
 
+				if @model.get('post_title') is 'Content Management' 
+					iconClass= 'fa fa-book' 
+
 				data.iconClass= iconClass
 
 				data
@@ -48,8 +51,8 @@ define ['app','text!apps/left-nav/templates/leftnav.html'],(App,navTpl)->
 			onShow:->
 				console.log @collection
 				#Auto close open menus in Condensed menu
-
-				if (($('.creator').length > 0) || ($('.teacher-app').length>0)) 
+				#|| ($('.teacher-app').length>0)
+				if (($('.creator').length > 0) ) 
 					$("#main-menu").addClass("mini");
 					$(".start").removeClass("active open");
 					$(".arrow").removeClass("open");

@@ -79,8 +79,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         var contentGroupCollection;
         contentGroupCollection = App.request("get:content:groups");
         contentGroupCollection.add(model);
-        console.log(model);
-        console.log(contentGroupCollection);
         return this.view.triggerMethod('saved:content:group', model);
       };
 

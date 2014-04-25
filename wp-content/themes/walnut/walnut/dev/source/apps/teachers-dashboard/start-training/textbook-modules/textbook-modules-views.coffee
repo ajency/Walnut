@@ -148,13 +148,13 @@ define ['app'],(App)->
 								  <option value="40">40</option>
 							</select>
 						</div>'
-				@$el.find('#modules').after(pagerDiv)
+				@$el.find('#training-modules').after(pagerDiv)
 				pagerOptions = 
 					totalRows : _.size(@collection.modules)
 					container: $(".pager"),				
 					output: '{startRow} to {endRow} of {totalRows}'
 				
-				$('#modules').tablesorterPager pagerOptions
+				$('#training-modules').tablesorterPager pagerOptions
 
 
 		
