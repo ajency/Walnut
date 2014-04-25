@@ -28,6 +28,17 @@ define(['app'], function(App) {
         return this.$el.find('.aj-imp-settings-btn').remove();
       };
 
+      McqView.prototype.onPreTickAnswers = function() {
+        console.log(this.model.get('correct_answer'));
+        return _.each(this.model.get('correct_answer'), (function(_this) {
+          return function(optionNo) {
+            console.log('onPreTickAnswers');
+            _this.$el.find('input:checkbox[id=option-' + optionNo + ']').attr('checked', true);
+            return _this.$el.find('input:checkbox[id=option-' + optionNo + ']').parent().css('background-position', '0px -26px');
+          };
+        })(this));
+      };
+
       return McqView;
 
     })(Marionette.ItemView);
@@ -48,7 +59,8 @@ define(['app'], function(App) {
         'click a': function(e) {
           return e.preventDefault();
         },
-        'blur p': '_onBlur'
+        'blur p': '_onBlur',
+        'change input:checkbox': '_onClickOfCheckbox'
       };
 
       McqOptionView.prototype.onShow = function() {
@@ -77,6 +89,21 @@ define(['app'], function(App) {
 
       McqOptionView.prototype._onBlur = function() {
         return this.model.set('text', this.$el.find('p').html());
+      };
+
+      McqOptionView.prototype._onClickOfCheckbox = function(evt) {
+        if ($(evt.target).prop('checked')) {
+          console.log('checked');
+          return this.trigger('option:checked');
+        } else {
+          console.log('unchecked');
+          return this.trigger('option:unchecked');
+        }
+      };
+
+      McqOptionView.prototype.onClickCheckbox = function() {
+        this.$el.find('input:checkbox').attr('checked', true);
+        return this.$el.find('input:checkbox').parent().css('background-position', '0px -26px');
       };
 
       McqOptionView.prototype.onClose = function() {

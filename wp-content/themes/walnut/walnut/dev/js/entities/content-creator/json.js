@@ -29,7 +29,11 @@ define(["app", 'backbone'], function(App, Backbone) {
         return jsonModel;
       }
     };
-    return App.reqres.setHandler("get:page:json", function() {
+    return App.reqres.setHandler("get:page:json", function(data) {
+      if (data == null) {
+        data = {};
+      }
+      console.log(data);
       return API.getPageJSON();
     });
   });

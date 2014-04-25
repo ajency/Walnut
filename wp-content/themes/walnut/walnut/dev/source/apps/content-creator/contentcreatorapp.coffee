@@ -3,7 +3,7 @@ define ['app'
 		'apps/content-creator/element-box/elementboxapp'
 		'apps/content-creator/content-builder/app'
 		'apps/content-creator/property-dock/controller'
-		'apps/content-creator/preview-content-piece/preview-controller'],(App,RegionController)->
+		],(App,RegionController)->
 
 			
 			App.module "ContentCreator", (ContentCreator,App,Backbone,Marionette,$,_)->	
@@ -12,30 +12,26 @@ define ['app'
 				ContentCreator.closequestionelements = true
 				ContentCreator.closequestioneproperty = true
 
-				class ContentCreatorRouter extends Marionette.AppRouter
+				# class ContentCreatorRouter extends Marionette.AppRouter
 
-					appRoutes : 
-						''					 : 'showContentCreator'
-						'preview-item' : 'previewContentPiece'
+				# 	appRoutes : 
+				# 		''					 : 'showContentCreator'
 
-				Controller = 
-					showContentCreator :->
-						new ContentCreatorController
-							region 		: App.mainContentRegion
+				# Controller = 
+				# 	showContentCreator :->
+				# 		new ContentCreatorController
+				# 			region 		: App.mainContentRegion
 
-					previewContentPiece :(contentID) ->
-						new ContentCreator.View.PreviewController
-							region 		: App.mainContentRegion
-							contentID 	: contentID
 
-	
-				ContentCreator.on "start", ->
-					new ContentCreatorRouter
-							controller : Controller 
+				# ContentCreator.on "start", ->
+				# 	new ContentCreatorRouter
+				# 			controller : Controller 
 
 				class ContentCreatorController extends RegionController
 
 					initialize : (options)->
+
+
 						breadcrumb_items = 'items':[
 							{'label':'Dashboard','link':'javascript://'},
 							{'label':'Content Management','link':'javascript:;'},
@@ -54,12 +50,10 @@ define ['app'
 						@listenTo @layout,'show',=>
 							App.execute "show:element:box", 
 										region : @layout.elementBoxRegion
-									
 
 							App.execute "show:content:builder",
 										region : @layout.contentBuilderRegion
 										
-
 							App.execute "show:property:dock",
 										region : @layout.PropertyRegion
 						# show the layout

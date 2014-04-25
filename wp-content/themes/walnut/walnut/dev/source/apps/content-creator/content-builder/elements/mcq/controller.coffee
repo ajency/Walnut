@@ -20,12 +20,22 @@ define ['app'
 										marks : 1
 										individual_marks :false
 										multiple : false
+										correct_answer : [2]
 
 							super(options)
 
 							@layout.model.on 'change:optioncount', @_changeOptionCount
 
 							@layout.model.on 'change:columncount', @_changeColumnCount
+
+							@layout.model.on 'change:multiple',@_changeMultipleAnswers
+
+						# function for change of mi=ultiple answers
+						_changeMultipleAnswers:(model, multiple)=>
+								if not multiple
+									model.set 'correct_answer',[]
+									@renderElement()
+
 
 
 						# overiding the function
@@ -95,8 +105,6 @@ define ['app'
 												elements : []
 											columnElements.push columnElement
 										columnCounter++
-										
-
 
 									elements =
 										element : 'Row'
@@ -104,9 +112,10 @@ define ['app'
 
 
 									@_createMcqRow(elements,options.container)
-									
 
 									numberOfRows--
+
+								@view.triggerMethod 'preTickAnswers'
 
 						_createMcqRow:(elements,container)->
 								controller = App.request "add:new:element",container,'Row', elements
@@ -120,7 +129,25 @@ define ['app'
 							view.render()
 							$(container).removeClass 'empty-column'
 							$(container).append(view.$el)
+							@listenTo view, 'option:checked',=>
+								correctAnswerArray = @layout.model.get('correct_answer')
+								if not @layout.model.get('multiple') and correctAnswerArray.length
+									@layout.model.set 'correct_answer',[model.get('optionNo')]
+									console.log 'in check'
+									@renderElement()	
+								else
+									correctAnswerArray.push model.get('optionNo')
+								correctAnswerArray.sort()
+								console.log @layout.model.get('correct_answer')
+							@listenTo view, 'option:unchecked',=>
+								correctAnswerArray = @layout.model.get('correct_answer')
+								indexToRemove = $.inArray model.get('optionNo'),correctAnswerArray
+								correctAnswerArray.splice indexToRemove,1
+								console.log @layout.model.get('correct_answer')
 							view.triggerMethod 'show'
+
+						_optionChecked:()->
+
 
 						_getMcqOptionView:(model)->
 							new Mcq.Views.McqOptionView
