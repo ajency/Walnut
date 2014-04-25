@@ -15,7 +15,7 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       DivisionModel.prototype.defaults = {
         division: '',
-        class_id: '',
+        class_id: 0,
         students_count: 0
       };
 

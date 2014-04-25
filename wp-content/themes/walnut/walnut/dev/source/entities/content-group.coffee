@@ -29,10 +29,21 @@ define ["app", 'backbone'], (App, Backbone) ->
 				name: 'content-group'
 
 				
+				initialize:->
+					@on('start:module', @startModule, @)
+					@on('stop:module', @stopModule, @)
+
+				startModule:(model)=>
+					@trigger "training:module:started", model
+
+				stopModule:(model)=>
+					@trigger "training:module:stopped", model
+
 
 			# collection of group of content pieces eg. quizzes, teacher training modules etc.
 			class ContentGroup.ItemCollection extends Backbone.Collection
 				model : ContentGroup.ItemModel
+
 
 				url :->
 					 AJAXURL + '?action=get-content-groups'

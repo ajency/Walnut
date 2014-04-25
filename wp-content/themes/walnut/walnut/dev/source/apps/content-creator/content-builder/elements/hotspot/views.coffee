@@ -55,7 +55,7 @@ define ['app'],(App)->
 					
 
 				# set image to the default image layer
-				@_setDefaultImage()
+				# @_setDefaultImage()
 
 				# add the canvas layers
 				@stage.add @defaultLayer
@@ -113,47 +113,15 @@ define ['app'],(App)->
 
 			_setPropertyBoxCloseHandlers:->
 				$('body').on 'click',=>
-						# console.log App.ContentCreator.closequestionelementproperty
-						# if App.ContentCreator.closequestionelementproperty
-						# 	# console.log 'stage'
-						# 	App.execute "close:question:element:properties"
-						# if App.ContentCreator.closequestionelements and App.ContentCreator.closequestionelementproperty
-							
 
-							# App.execute "close:question:elements"
 							@contentObject.textData = @textCollection.toJSON()
 							@contentObject.optionData = @optionCollection.toJSON()
 							@contentObject.imageData = @imageCollection.toJSON()
 							console.log JSON.stringify @contentObject
-							# @model.set 'content', JSON.stringify @contentObject
-							# # console.log JSON.stringify @model.toJSON()
-							# if @model.hasChanged()
-							# 	console.log "saving them"
-							# 	localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
-							# 	console.log JSON.stringify @model.toJSON()
-
+						
 							@trigger "close:hotspot:elements",@contentObject
 
-				# $('#question-elements-property').on 'mouseover',->
-				# 		App.ContentCreator.closequestionelementproperty =  false
-				# $('#question-elements-property').on 'mouseout',->
-				# 		App.ContentCreator.closequestionelementproperty = true
-
-
-				# @$el.on 'mouseenter', '.kineticjs-content', ->
-				# 	# console.log 'over stage'
-				# 	App.ContentCreator.closequestionelements = false
-				# @$el.on 'mouseleave', '.kineticjs-content', ->
-				# 	# console.log 'outofStage'
-				# 	App.ContentCreator.closequestionelements = true
-
-				# $('#question-elements').on 'mouseover', ->
-				# 	# console.log "over question"
-				# 	App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = false
-				# $('#question-elements').on 'mouseout', ->
-				# 	# console.log "out of question"
-				# 	App.ContentCreator.closequestionelements = App.ContentCreator.closequestionelementproperty = true
-
+			
 	
 			_drawExistingElements:->
 				console.log @textCollection
@@ -203,7 +171,9 @@ define ['app'],(App)->
 								image 	: defaultImage
 						
 						@defaultLayer.add @hotspotDefault
-						@_updateDefaultLayer()
+						_.delay =>
+							@_updateDefaultLayer()
+						,500
 						@_updateDefaultImageSize()
 
 				defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg"
@@ -211,13 +181,20 @@ define ['app'],(App)->
 			# remove the default image from the layer if any hotspot elements are added
 			_updateDefaultLayer:->
 					i = 1
+					isEmptyFlag = true
 					while i<@stage.getChildren().length
 						if i
 							if @stage.getChildren()[i].getChildren().length
 								@defaultLayer.removeChildren()
 								console.log "remove default"
+								isEmptyFlag = false
 								break;
 						i++
+					if isEmptyFlag
+						# console.log "in else"
+						if not @stage.getChildren()[0].getChildren().length
+							# console.log 'in if'
+							@_setDefaultImage()
 					@defaultLayer.draw()
 					
 
@@ -347,8 +324,10 @@ define ['app'],(App)->
 							circleGrp.destroy()
 							@optionCollection.remove hotspotElement
 							App.ContentCreator.closequestionelementproperty = true
+							
 							App.execute "close:question:element:properties"
 							@optionLayer.draw()
+							@_updateDefaultLayer()
 
 					# on click of a circle element show properties
 					circleGrp.on 'mousedown click',(e)->
@@ -449,6 +428,7 @@ define ['app'],(App)->
 							App.ContentCreator.closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@optionLayer.draw()
+							@_updateDefaultLayer()
 
 					# on click of a circle element show properties
 					rectGrp.on 'mousedown click',(e)->
@@ -583,6 +563,7 @@ define ['app'],(App)->
 							App.ContentCreator.closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@textLayer.draw()
+							@_updateDefaultLayer()
 
 					# on change of the textAngle prop rotate the text
 					hotspotElement.on "change:textAngle",=>
@@ -684,6 +665,7 @@ define ['app'],(App)->
 							App.ContentCreator.closequestionelementproperty = true
 							App.execute "close:question:element:properties"
 							@imageLayer.draw()
+							@_updateDefaultLayer()
 
 
 					

@@ -69,7 +69,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.onShow = function() {
-        if (($('.creator').length > 0) || ($('.teacher-app').length > 0)) {
+        if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
           return $(".header-seperation").css("display", "none");
         }

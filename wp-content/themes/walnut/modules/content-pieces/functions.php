@@ -95,8 +95,13 @@ function get_single_content_piece($id){
     $content_piece->subjects = $subject_ids;
     $authordata = get_userdata($content_piece->post_author);
     $content_piece->creator = $authordata->display_name;
+    
+    // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
     $content_piece->content_type = ($content_type) ? $content_type : '--';
+    
+    // Question Type can be individual or chorus
+    $content_piece->question_type = 'individual'; 
         
    return $content_piece;
 }
@@ -136,7 +141,7 @@ function save_content_group($data = array()) {
         );
 
         if (isset($data['id']))
-            $content_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_data, array('id' => $data['id']));
+            $content_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_data, array('collection_id' => $data['id'], 'meta_key'=>'description'));
         else
             $content_meta = $wpdb->insert($wpdb->prefix . 'collection_meta', $meta_data);
     }
@@ -280,7 +285,9 @@ function get_single_content_group($id, $division=''){
     
     if($division !=''){
         $training_logs_query = $wpdb->prepare("SELECT * FROM 
-            {$wpdb->prefix}training_logs WHERE collection_id=%d AND division_id=%d order by id desc limit 1", $id, $division);
+            {$wpdb->prefix}training_logs WHERE collection_id=%d AND 
+                division_id=%d order by id desc limit 1",
+                    $id, $division);
 
         $training_logs  = $wpdb->get_results($training_logs_query);  
 

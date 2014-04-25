@@ -1,5 +1,5 @@
 
-define ['marionette','mustache', 'text!configs/marionette/templates/modal.html'], (Marionette, Mustache ,modalTpl) ->
+define ['marionette','mustache', 'text!config/marionette/templates/modal.html'], (Marionette, Mustache ,modalTpl) ->
 
 	class Marionette.Region.Dialog extends Marionette.Region
 

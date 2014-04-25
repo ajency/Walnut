@@ -37,6 +37,10 @@ define ['app'
 				@listenTo @view, "save:training:status" : (id,status)=>
 					@_saveTrainingStatus id,status
 
+					if status is 'started' or 'resumed'
+						currentRoute= App.getCurrentRoute()
+						App.navigate currentRoute+"/module/"+ id,true
+
 				@listenTo @view, "schedule:training" : (id)=>
 					@singleModule = @contentGroupsCollection.get id
 					modalview = @_showScheduleModal @singleModule

@@ -48,9 +48,17 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					if not textbook 
 						textbook = new Textbooks.ItemModel term_id : id
-						console.log textbook
 						textbook.fetch()
 					textbook
+
+				getTextBookNameByID:(id)->
+					textbook = textbookCollection.get id
+
+					if not textbook 
+						textbook = new Textbooks.ItemModel term_id : id
+						textbook.fetch()
+						
+					textbook.get('name')
 
 
 			# request handler to get all textbooks
@@ -59,3 +67,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:textbook:by:id", (id)->
 				API.getTextBookByID id
+
+			App.reqres.setHandler "get:textbook:name:by:id", (id)->
+				API.getTextBookNameByID id

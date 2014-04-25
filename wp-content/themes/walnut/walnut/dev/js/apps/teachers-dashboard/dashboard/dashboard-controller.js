@@ -86,6 +86,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
 
       TeachersDashboardView.prototype.loadDivisions = function(class_id) {
         var div, divs, _i, _len, _results;
+        class_id = parseInt(class_id);
         divs = this.collection.where({
           'class_id': class_id
         });
