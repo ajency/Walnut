@@ -611,7 +611,7 @@
 	//position: relative;
 	min-height: 40px;
 	span{
-		float: left;
+		//float: left;
 	}
 	.mcq-option-select{
 		float: left;
@@ -652,4 +652,37 @@
 /*Sort*/
 .sort-option{
 	cursor: move;
+}
+
+/*Editor popup*/
+.cke_dialog_body{
+	.cke_dialog_title{
+		background-color: @color-info;
+		background-image: none;
+		color: @color-white;
+		text-shadow: none;
+		-webkit-box-shadow: none;
+				box-shadow: none;
+		padding: 10px;
+	}
+	a.cke_dialog_ui_button{
+		background: @color-danger;
+		color: @color-white;
+		text-shadow: none;
+		border: none;
+		&:hover{
+			background: darken(@color-danger, 10%);
+		}
+		span{
+			text-shadow: none;
+		}
+	}
+	a.cke_dialog_ui_button_ok{
+		background: @color-info;
+		border: none;
+		&:hover{
+			background: darken(@color-info, 10%)
+		}
+	}
+
 }
