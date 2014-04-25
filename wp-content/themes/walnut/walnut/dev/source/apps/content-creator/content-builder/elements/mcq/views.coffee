@@ -6,6 +6,7 @@ define ['app'],(App)->
 		class Views.McqView extends Marionette.ItemView
 
 			className : 'mcq'
+			
 
 			onShow:->
 				@$el.attr 'id','mcq-container'
@@ -21,6 +22,14 @@ define ['app'],(App)->
 				@$el.find('.aj-imp-drag-handle').remove()
 				@$el.find('.aj-imp-delete-btn').remove()
 				@$el.find('.aj-imp-settings-btn').remove()
+
+			onPreTickAnswers:->
+				
+				console.log @model.get('correct_answer')
+				_.each @model.get('correct_answer'),(optionNo)=>
+					console.log 'onPreTickAnswers'
+					@$el.find('input:checkbox[id=option-'+optionNo+']').attr 'checked',true
+					@$el.find('input:checkbox[id=option-'+optionNo+']').parent().css('background-position','0px -26px')
 
 
 
@@ -43,7 +52,11 @@ define ['app'],(App)->
 			events:
 				'click a'	: (e)-> e.preventDefault()
 				'blur p'		: '_onBlur'
+				'change input:checkbox' : '_onClickOfCheckbox'
 							# @trigger "text:element:blur"
+
+			# triggers :
+			# 	'change input:checkbox' : '_onClickOfCheckbox'
 
 
 
@@ -78,6 +91,21 @@ define ['app'],(App)->
 
 			_onBlur:->
 				@model.set 'text', @$el.find('p').html()
+
+			_onClickOfCheckbox:(evt)->
+
+					if $(evt.target).prop 'checked'
+						console.log 'checked'
+						@trigger 'option:checked'
+					else 
+						console.log 'unchecked'
+						@trigger 'option:unchecked'
+
+
+			onClickCheckbox:()->
+
+				@$el.find('input:checkbox').attr 'checked',true
+				@$el.find('input:checkbox').parent().css('background-position','0px -26px')
 					
 
 

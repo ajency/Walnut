@@ -45,6 +45,7 @@ define ['app'
 						@listenTo view, "show:hotspot:elements",=>							
 								App.execute "show:question:elements",
 										model : @layout.model
+								App.execute "close:question:properties"
 
 
 						@listenTo view, "close:hotspot:elements", (contentObject)=>

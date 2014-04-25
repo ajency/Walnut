@@ -1,45 +1,12 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app', 'apps/content-creator/property-dock/controller', 'apps/content-creator/preview-content-piece/preview-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app', 'apps/content-creator/property-dock/controller'], function(App, RegionController) {
   return App.module("ContentCreator", function(ContentCreator, App, Backbone, Marionette, $, _) {
-    var ContentCreatorController, ContentCreatorRouter, Controller;
+    var ContentCreatorController;
     ContentCreator.closequestionelementproperty = true;
     ContentCreator.closequestionelements = true;
     ContentCreator.closequestioneproperty = true;
-    ContentCreatorRouter = (function(_super) {
-      __extends(ContentCreatorRouter, _super);
-
-      function ContentCreatorRouter() {
-        return ContentCreatorRouter.__super__.constructor.apply(this, arguments);
-      }
-
-      ContentCreatorRouter.prototype.appRoutes = {
-        '': 'showContentCreator',
-        'preview-item': 'previewContentPiece'
-      };
-
-      return ContentCreatorRouter;
-
-    })(Marionette.AppRouter);
-    Controller = {
-      showContentCreator: function() {
-        return new ContentCreatorController({
-          region: App.mainContentRegion
-        });
-      },
-      previewContentPiece: function(contentID) {
-        return new ContentCreator.View.PreviewController({
-          region: App.mainContentRegion,
-          contentID: contentID
-        });
-      }
-    };
-    ContentCreator.on("start", function() {
-      return new ContentCreatorRouter({
-        controller: Controller
-      });
-    });
     ContentCreatorController = (function(_super) {
       __extends(ContentCreatorController, _super);
 
