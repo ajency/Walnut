@@ -107,7 +107,6 @@
   padding: 0;
 }
 .creator .row .column .row {
-  margin: 0.5em;
   border: 1px solid transparent;
 }
 #site-page-content-region {
@@ -720,37 +719,6 @@
   font-size: 50px;
   color: #e5e9ec;
 }
-/*MCQ*/
-.mcq-option {
-  width: 100%;
-  border: 2px dashed #f3f3f3;
-  padding: 5px;
-  margin-bottom: 5px;
-  min-height: 40px;
-}
-.mcq-option .mcq-option-select {
-  float: left;
-  z-index: 2;
-  margin: 4px 5px 0;
-  background-size: 32px;
-}
-.mcq-option p {
-  margin: 0;
-  word-break: break-word;
-  overflow: hidden;
-}
-.mcq-option p.placeholder {
-  color: #dfe4e8;
-  font-size: 15px;
-  font-weight: bold;
-}
-#multiple-answer label {
-  margin-bottom: 10px;
-  margin-top: 5px;
-}
-#individual-marks-region input {
-  margin-bottom: 4px;
-}
 /*Sort*/
 .sort-option {
   cursor: move;
@@ -848,6 +816,73 @@ textarea.border {
   width: 30px;
   height: 22px;
   margin-right: 10px;
+}
+#mcq-container .element-wrapper {
+  border: none;
+  margin: 4px 0 0;
+}
+#mcq-container .element-wrapper .row .column.empty-column {
+  background: none;
+  min-height: 0 !important;
+}
+#mcq-container .element-wrapper .aj-imp-col-divider {
+  top: 0;
+  height: 45px;
+}
+#mcq-container .element-wrapper .aj-imp-col-divider p {
+  top: 16px;
+  left: -12px;
+  width: 25px;
+  height: 12px;
+}
+.mcq-option {
+  width: 100%;
+  padding: 5px;
+  min-height: 40px;
+}
+.mcq-option:before,
+.mcq-option:after {
+  content: " ";
+  display: table;
+}
+.mcq-option:after {
+  clear: both;
+}
+.mcq-option .mcq-option-select {
+  float: left;
+  z-index: 2;
+  margin: 4px 5px;
+  background-size: 32px;
+}
+.mcq-option p {
+  margin: 0;
+  word-break: break-word;
+  overflow: hidden;
+}
+.mcq-option p:focus {
+  outline: none;
+  border-bottom: 2px dashed #f3f3f3;
+}
+.mcq-option p.placeholder {
+  color: #dfe4e8;
+  font-size: 18px;
+  font-weight: bold;
+  border: 2px dashed #f3f3f3;
+  padding-left: 4px;
+}
+#multiple-answer label {
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+.mcqProp .select2-container {
+  width: 100%;
+}
+#individual-marks-region input {
+  margin-bottom: 4px;
+}
+#individual-marks-region label {
+  text-align: right;
+  padding-top: 8px;
 }
 .listBox {
   margin-top: 60px;
