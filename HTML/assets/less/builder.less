@@ -151,30 +151,35 @@
 		li{
 			float: left;
 			border: 2px solid #e5e9ec;
-			//background:#e5e9ec;
-			width: 65px;
-			height: 65px;
+			background:@color-white;
+			width: 92px;
+			height: 56px;
 			margin: 4px;
 			list-style-type: none;
 			cursor: move;
 			text-align: center;
 			padding: 0;
-			padding-top: 3%;
+			padding-top: 5%;
+			//.ease;
 			a{
 				cursor: move;
-				&:hover{
-					color: @color-green;
-				}
 			}
 			i{
-				font-size: 42px;
+				font-size: 35px;
+			}
+			&:hover{
+				background-color: @color-primary;
+				.ease;
+				a{
+					color: @color-white;
+				}
 			}
 		}
 	}
 }
 
 .docket-body{
-	background: @color-white;
+	background: @preview-grey;
 	padding: 15px 10px;
 	color: #000;
 	label{
@@ -214,11 +219,10 @@
 			display: none;
 		}
 	}
-	input[type=checkbox]:checked ~ label {
+	input[type=checkbox]:checked + label {
 		background-color: @color-primary;
 		color: @color-white;
-		-webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
-				box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
+		.box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
 	}
 	
 
@@ -234,9 +238,12 @@
 	border-radius: 5px;
 }
 
-.rotateCtrl > div{
-	position: relative;
-	top: 15px;
+.rotateCtrl {
+	display: inline-block;
+	& > div{
+		position: relative;
+		top: 15px;
+	}
 }
 
 .element-wrapper {
@@ -594,25 +601,33 @@
 
 /*MCQ*/
 .mcq-option {
-	width: 160px;
-	margin-right: 5px;
-	float: left;
-	word-wrap: break-word;
+	width: 100%;
+	//margin-right: 5px;
+	//float: left;
+	//word-wrap: break-word;
 	border: 2px dashed @preview-grey;
 	padding: 5px;
 	margin-bottom: 5px;
+	//position: relative;
+	min-height: 40px;
 	span{
-		float: left;
+		//float: left;
 	}
 	.mcq-option-select{
 		float: left;
-		position: relative;
+		//position: absolute;
+		//top: 0px;
+		//left: 0;
 		z-index: 2;
 		margin: 4px 5px 0;
 		background-size: 32px;
 	}
 	p{
 		margin: 0;
+		//margin-left: 32px;
+		word-break: break-word;
+		//display: inline-block;
+		overflow: hidden;
 	}
 	p.placeholder{
 		color: darken(@body-bg, 2%);
@@ -637,4 +652,37 @@
 /*Sort*/
 .sort-option{
 	cursor: move;
+}
+
+/*Editor popup*/
+.cke_dialog_body{
+	.cke_dialog_title{
+		background-color: @color-info;
+		background-image: none;
+		color: @color-white;
+		text-shadow: none;
+		-webkit-box-shadow: none;
+				box-shadow: none;
+		padding: 10px;
+	}
+	a.cke_dialog_ui_button{
+		background: @color-danger;
+		color: @color-white;
+		text-shadow: none;
+		border: none;
+		&:hover{
+			background: darken(@color-danger, 10%);
+		}
+		span{
+			text-shadow: none;
+		}
+	}
+	a.cke_dialog_ui_button_ok{
+		background: @color-info;
+		border: none;
+		&:hover{
+			background: darken(@color-info, 10%)
+		}
+	}
+
 }

@@ -177,7 +177,7 @@ define(['app'], function(App) {
           return function(ele, index) {
             var column, left, resizer;
             column = _this.getColumnAt(index + 1);
-            left = $(column).position().left;
+            left = $(column).position().left - 16;
             resizer = $(template);
             resizer.attr('data-position', index + 1);
             resizer.css('left', left);
@@ -256,7 +256,9 @@ define(['app'], function(App) {
         $(columns[0]).removeClass("col-md-" + currentClassZero);
         $(columns[1]).removeClass("col-md-" + currentClassOne);
         $(columns[0]).attr('data-class', newClassZero).addClass("col-md-" + newClassZero);
-        return $(columns[1]).attr('data-class', newClassOne).addClass("col-md-" + newClassOne);
+        $(columns[1]).attr('data-class', newClassOne).addClass("col-md-" + newClassOne);
+        $(columns[0]).trigger("class:changed");
+        return $(columns[1]).trigger("class:changed");
       };
 
       RowView.prototype.setColumnResizerContainment = function() {

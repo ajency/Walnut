@@ -52,14 +52,14 @@ define ['app'],(App)->
 								<li data-element="BigAnswer" > 
 									<a href="#" class="drag builder-element" > 
 										<div class="aj-imp-builder-title">
-											<i class="bicon icon-uniF15E"></i> Big Answer
+											<i class="fa fa-text-width"></i> Big Answer
 										</div> 
 									</a> 
 								</li>  
 								<li data-element="Sort" > 
 									<a href="#" class="drag builder-element" > 
 										<div class="aj-imp-builder-title">
-											<i class="bicon icon-uniF153"></i><i class="bicon icon-uniF154"></i> Sort
+											<i class="fa fa-arrows-v"></i> Sort
 										</div> 
 									</a> 
 								</li>  
@@ -103,11 +103,11 @@ define ['app'],(App)->
 								revert 				: 'invalid'
 
 
-				@on "question:dropped",=>
-					@$el.find('.qstns').find('*[data-element]').draggable 'disable'
+				# @on "question:dropped",=>
+				# 	@$el.find('.qstns').find('*[data-element]').draggable 'disable'
 
-				@on "question:removed",=>
-					@$el.find('.qstns').find('*[data-element]').draggable 'enable'
+				# @on "question:removed",=>
+				# 	@$el.find('.qstns').find('*[data-element]').draggable 'enable'
 
 
 

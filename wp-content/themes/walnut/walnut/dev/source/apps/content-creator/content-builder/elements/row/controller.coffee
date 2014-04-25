@@ -11,8 +11,6 @@ define ['app'
 
 					# intializer
 					initialize:(options)->
-						console.log options
-
 						_.defaults options.modelData,
 											element  	: 'Row'
 											columncount : 2
@@ -28,6 +26,7 @@ define ['app'
 						super()
 
 					_getRowView:()->
+
 						new Row.Views.RowView
 										model : @layout.model
 

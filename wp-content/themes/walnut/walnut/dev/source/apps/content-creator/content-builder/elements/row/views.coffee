@@ -120,12 +120,13 @@ define ['app'],(App)->
 
 				_.each _.range(numberOfResizers),(ele, index)=>
 					column = @getColumnAt(index + 1)
-					left = $(column).position().left
+					left = $(column).position().left-16
 					resizer = $(template)
 					resizer.attr('data-position', (index + 1))
 					resizer.css 'left', left
 					@$el.closest('.element-wrapper').children('.element-controls').append resizer
 					@makeResizer resizer 
+
 
 				@setColumnResizerContainment()
 
@@ -195,6 +196,8 @@ define ['app'],(App)->
 						
 				$(columns[0]).attr('data-class',newClassZero).addClass "col-md-#{newClassZero}"
 				$(columns[1]).attr('data-class',newClassOne).addClass "col-md-#{newClassOne}"
+				$(columns[0]).trigger "class:changed"
+				$(columns[1]).trigger "class:changed"
 
 
 			# setting the containment for resizer

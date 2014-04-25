@@ -1,54 +1,12 @@
-define ['app'],(App)->
+define ['app'
+		'text!apps/content-creator/property-dock/mcq-property-box/templates/mcqpropview.html'],(App,Template)->
 
 	App.module "ContentCreator.PropertyDock.McqPropertyBox.Views",
 	(Views,App,Backbone,Marionette,$,_)->
 
 		class Views.PropertyView extends Marionette.Layout
 
-			template : '<div class="tile-more-content no-padding">
-								<div class="tiles green">
-									<div class="tile-footer drag">
-										MCQ <i class="fa fa-chevron-right"></i> <span class="semi-bold">Multiple Choice Question Properties</span>
-									</div>
-									<div class="docket-body">
-
-										<div id="multiple-answer" class="radio radio-success">Multiple right answers allowed?
-											<input id="yes" type="radio" name="optionyes" value="yes">
-											<label for="yes">Yes</label>
-											<input id="no" type="radio" name="optionyes" value="no" checked="checked">
-											<label for="no">No</label>
-										</div>
-
-										<div>
-											Options
-											<select id="options-num">
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
-												<option value="5">5</option>
-												<option value="6">6</option>
-												<option value="7">7</option>
-												<option value="8">8</option>
-											</select>
-										</div>
-
-										<div>
-											Marks
-											<select id="marks">
-												<option value="1">1</option>
-												<option value="2">2</option>	
-											</select>
-										</div>
-
-										<div>
-											<input id="check-ind-marks" type="checkbox" name="check-ind-marks"> set marks to individual options
-										</div>
-
-										<div id="individual-marks-region"></div>
-									
-									</div>
-								</div>
-							</div>' 
+			template : 	Template
 
 			# defining regions of the layout view
 			regions : 
@@ -58,6 +16,7 @@ define ['app'],(App)->
 			# view events
 			events :
 				'change select#options-num': '_changeOptionNumber'
+				'change select#column-num': '_changeColumnNumber'
 				'change input#check-ind-marks': '_enableIndividualMarks'
 				'change select#marks' : '_changeMarks'
 				'change #multiple-answer.radio'  : '_multipleCorrectAnswers'
@@ -67,15 +26,20 @@ define ['app'],(App)->
 			# 	'change:multiple' : '_changeMultipleAllowed'
 
 			onShow:->
-				#initialize dropdowns
-				@$el.find('select#options-num, select#marks').select2
-							minimumResultsForSearch: -1
+				#initialize dropdowns to not show search 
+				@$el.find('select#options-num').select2
+						minimumResultsForSearch: -1
+				@$el.find('select#marks').select2
+						minimumResultsForSearch: -1
+				@$el.find('select#column-num').select2
+						minimumResultsForSearch: -1
+
+				# initialize  dropdown based on model
 				@$el.find('select#options-num').select2 'val', @model.get 'optioncount'
+				@$el.find('select#column-num').select2 'val', @model.get 'columncount'
 				@$el.find('select#marks').select2 'val', @model.get 'marks'
 
-				# initialize the dropdown to use select2 plugin for marks
-				@$el.find('#marks').select2
-						minimumResultsForSearch: -1
+
 				# initialize font dropdown based on model
 				@$el.find('#marks').select2 'val',@model.get 'marks'
 			
@@ -122,6 +86,9 @@ define ['app'],(App)->
 
 			_changeOptionNumber:(evt)->
 					@model.set 'optioncount',parseInt $(evt.target).val()
+
+			_changeColumnNumber:(evt)->
+					@model.set 'columncount',parseInt $(evt.target).val()
 
 
 

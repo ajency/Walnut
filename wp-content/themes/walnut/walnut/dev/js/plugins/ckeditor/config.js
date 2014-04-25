@@ -13,6 +13,8 @@ CKEDITOR.editorConfig = function( config ) {
 
 	config.placeholder = 'Type here...'
 
+	config.floatSpaceDockedOffsetX = 30;
+	config.floatSpaceDockedOffsetY = 15;
 
 
 config.toolbar = [

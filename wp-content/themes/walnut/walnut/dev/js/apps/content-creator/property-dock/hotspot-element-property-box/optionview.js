@@ -14,11 +14,12 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
 
       OptionView.prototype.onShow = function() {
         if (this.model.get('transparent')) {
-          this.$el.find('#transparency.checkbox #checkbox3').prop('checked', true);
+          this.$el.find('#transparency-checkbox').prop('checked', true);
         }
-        this.$el.find('#transparency.checkbox').on('change', (function(_this) {
+        this.$el.find('#transparency-checkbox').on('change', (function(_this) {
           return function() {
-            if (_this.$el.find('#transparency.checkbox').hasClass('checked')) {
+            console.log('transparent changed');
+            if (_this.$el.find('#transparency-checkbox').prop('checked')) {
               return _this.model.set('transparent', true);
             } else {
               return _this.model.set('transparent', false);
@@ -38,7 +39,7 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
           })(this)
         });
         this.$el.find('.fontColor').minicolors('value', this.model.get('color'));
-        this.$el.find('#delete.btn-danger').on('click', (function(_this) {
+        this.$el.find('#delete.text-danger').on('click', (function(_this) {
           return function() {
             return _this.model.set('toDelete', true);
           };

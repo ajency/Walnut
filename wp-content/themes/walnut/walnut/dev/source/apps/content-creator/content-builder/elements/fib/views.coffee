@@ -157,7 +157,7 @@ define ['app'],(App)->
 												blank.get('id') is $(blankUI).attr 'data-id' 
 
 							if _.isUndefined blankFound
-								# console.log  ' in remove'
+								console.log  ' in remove'
 								@blanksCollection.remove blank
 				,1000
 

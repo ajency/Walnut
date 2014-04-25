@@ -47,18 +47,18 @@ define ['app'
 						# get the main layout for the content creator
 						@layout = @_getContentCreatorLayout()
 
-						eventObj = App.createEventObject()
+						# eventObj = App.createEventObject()
 
 						# listen to "show" event of the layout and start the 
 						# elementboxapp passing the region 
 						@listenTo @layout,'show',=>
 							App.execute "show:element:box", 
 										region : @layout.elementBoxRegion
-										eventObj : eventObj
+									
 
 							App.execute "show:content:builder",
 										region : @layout.contentBuilderRegion
-										eventObj : eventObj
+										
 
 							App.execute "show:property:dock",
 										region : @layout.PropertyRegion

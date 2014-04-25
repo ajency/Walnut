@@ -43,9 +43,9 @@ define ['app'
 							@listenTo view, "close:hotspot:element:properties",->
 									App.execute "close:question:element:properties"
 
-							# on show disable all question elements in d element box
-							@listenTo view, "show",=>
-									@eventObj.vent.trigger "question:dropped"
+							# # on show disable all question elements in d element box
+							# @listenTo view, "show",=>
+							# 		@eventObj.vent.trigger "question:dropped"
 
 							# listen to create fib element  event from view
 							@listenTo view, "create:new:fib:element", (blankId)=>	
@@ -61,7 +61,7 @@ define ['app'
 									@layout.model.get('blanksArray').add blanksModel
 
 							# show the view
-							@layout.elementRegion.show view
+							@layout.elementRegion.show view,(loading : true)
 
 					_getFibView : (model)->		
 							new Fib.Views.FibView
@@ -75,5 +75,5 @@ define ['app'
 							model.destroy()
 							App.execute "close:question:properties"
 							App.execute "close:question:element:properties"
-							# on delete enable all question elements in d element box
-							@eventObj.vent.trigger "question:removed"
+							# # on delete enable all question elements in d element box
+							# @eventObj.vent.trigger "question:removed"
