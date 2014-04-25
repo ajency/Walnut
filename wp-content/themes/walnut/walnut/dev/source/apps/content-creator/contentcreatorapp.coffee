@@ -2,7 +2,8 @@ define ['app'
 		'controllers/region-controller'
 		'apps/content-creator/element-box/elementboxapp'
 		'apps/content-creator/content-builder/app'
-		'apps/content-creator/property-dock/controller'],(App,RegionController)->
+		'apps/content-creator/property-dock/controller'
+		'apps/content-creator/preview-content-piece/preview-controller'],(App,RegionController)->
 
 			
 			App.module "ContentCreator", (ContentCreator,App,Backbone,Marionette,$,_)->	
@@ -10,6 +11,27 @@ define ['app'
 				ContentCreator.closequestionelementproperty = true
 				ContentCreator.closequestionelements = true
 				ContentCreator.closequestioneproperty = true
+
+				class ContentCreatorRouter extends Marionette.AppRouter
+
+					appRoutes : 
+						''					 : 'showContentCreator'
+						'preview-item' : 'previewContentPiece'
+
+				Controller = 
+					showContentCreator :->
+						new ContentCreatorController
+							region 		: App.mainContentRegion
+
+					previewContentPiece :(contentID) ->
+						new ContentCreator.View.PreviewController
+							region 		: App.mainContentRegion
+							contentID 	: contentID
+
+	
+				ContentCreator.on "start", ->
+					new ContentCreatorRouter
+							controller : Controller 
 
 				class ContentCreatorController extends RegionController
 

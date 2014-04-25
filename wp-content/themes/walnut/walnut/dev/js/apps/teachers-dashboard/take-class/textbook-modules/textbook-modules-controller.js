@@ -54,7 +54,12 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
         this.listenTo(this.view, {
           "save:training:status": (function(_this) {
             return function(id, status) {
-              return _this._saveTrainingStatus(id, status);
+              var currentRoute;
+              _this._saveTrainingStatus(id, status);
+              if (status === 'started' || 'resumed') {
+                currentRoute = App.getCurrentRoute();
+                return App.navigate(currentRoute + "/module/" + id, true);
+              }
             };
           })(this)
         });

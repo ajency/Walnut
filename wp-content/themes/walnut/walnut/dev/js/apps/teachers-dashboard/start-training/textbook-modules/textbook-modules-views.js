@@ -103,13 +103,13 @@ define(['app'], function(App) {
         var pagerDiv, pagerOptions;
         this.$el.find('#training-modules').tablesorter();
         pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option selected="selected" value="5">5</option> <option value="10">10</option> <option value="20">20</option> <option value="30">30</option> <option value="40">40</option> </select> </div>';
-        this.$el.find('#modules').after(pagerDiv);
+        this.$el.find('#training-modules').after(pagerDiv);
         pagerOptions = {
           totalRows: _.size(this.collection.modules),
           container: $(".pager"),
           output: '{startRow} to {endRow} of {totalRows}'
         };
-        return $('#modules').tablesorterPager(pagerOptions);
+        return $('#training-modules').tablesorterPager(pagerOptions);
       };
 
       return ContentGroupsView;

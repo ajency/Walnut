@@ -39,6 +39,7 @@ require.config
 		select2				: 'plugins/select2.min'
 		datepicker			: 'plugins/bootstrap-datepicker'
 		timepicker			: 'plugins/bootstrap-timepicker.min'
+		jquerytimer			: 'plugins/timer.jquery'
 
 	shim:
 		underscore: 
@@ -68,6 +69,7 @@ require.config
 		select2			: ['jquery', 'bootstrap']
 		datepicker 		: ['jquery', 'bootstrap']
 		timepicker 		: ['jquery', 'bootstrap']
+		jquerytimer		: ['jquery']
 		app 			: ['plugins/walnut-pluginloader','config/walnut-configloader']
 
 	

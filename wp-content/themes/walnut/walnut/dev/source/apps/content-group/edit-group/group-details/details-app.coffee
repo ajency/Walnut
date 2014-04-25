@@ -45,9 +45,6 @@ define ['app'
 			successFn :(model)=>
 				contentGroupCollection = App.request "get:content:groups"
 				contentGroupCollection.add model
-
-				console.log model
-				console.log contentGroupCollection
 				@view.triggerMethod 'saved:content:group', model
 
 			errorFn :->
