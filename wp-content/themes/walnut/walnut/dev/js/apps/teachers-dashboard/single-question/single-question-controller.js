@@ -2,9 +2,9 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-question/students-list-view', 'apps/teachers-dashboard/single-question/module-description-view', 'apps/teachers-dashboard/single-question/chorus-options-view'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-question/student-list/student-list-app', 'apps/teachers-dashboard/single-question/question-display/question-display-app', 'apps/teachers-dashboard/single-question/module-description-view', 'apps/teachers-dashboard/single-question/chorus-options-view'], function(App, RegionController) {
   return App.module("TeachersDashboardApp.View", function(View, App) {
-    var QuestionDisplayView, SingleQuestionLayout;
+    var SingleQuestionLayout;
     View.SingleQuestionController = (function(_super) {
       __extends(SingleQuestionController, _super);
 
@@ -94,19 +94,16 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
       SingleQuestionController.prototype._showStudentsListView = function() {
         return App.execute("when:fetched", this.contentPiece, (function(_this) {
           return function() {
-            var chorusView, question_type, studentsCollection;
+            var chorusView, collectionID, questionID, question_type;
             question_type = _this.contentPiece.get('question_type');
+            questionID = _this.contentPiece.get('ID');
+            collectionID = _this.moduleID;
             if (question_type === 'individual') {
-              studentsCollection = App.request("get:user:collection", {
-                'role': 'student',
-                'division': _this.division
-              });
-              return App.execute("when:fetched", studentsCollection, function() {
-                var studentsListView;
-                studentsListView = new View.StudentsList.List({
-                  collection: studentsCollection
-                });
-                return _this.layout.studentsListRegion.show(studentsListView);
+              return App.execute("show:single:question:student:list:app", {
+                region: _this.layout.studentsListRegion,
+                questionID: questionID,
+                collectionID: collectionID,
+                division: _this.division
               });
             } else if (question_type === 'chorus') {
               chorusView = new View.ChorusOptionsView.ItemView;
@@ -117,15 +114,10 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
       };
 
       SingleQuestionController.prototype._showQuestionDisplayView = function() {
-        return App.execute("when:fetched", this.contentPiece, (function(_this) {
-          return function() {
-            var questionView;
-            questionView = new QuestionDisplayView({
-              model: _this.contentPiece
-            });
-            return _this.layout.questionsDetailsRegion.show(questionView);
-          };
-        })(this));
+        return App.execute("show:single:question:app", {
+          region: this.layout.questionsDetailsRegion,
+          model: this.contentPiece
+        });
       };
 
       SingleQuestionController.prototype._getTakeSingleQuestionLayout = function() {
@@ -135,7 +127,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
       return SingleQuestionController;
 
     })(RegionController);
-    SingleQuestionLayout = (function(_super) {
+    return SingleQuestionLayout = (function(_super) {
       __extends(SingleQuestionLayout, _super);
 
       function SingleQuestionLayout() {
@@ -153,17 +145,5 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
       return SingleQuestionLayout;
 
     })(Marionette.Layout);
-    return QuestionDisplayView = (function(_super) {
-      __extends(QuestionDisplayView, _super);
-
-      function QuestionDisplayView() {
-        return QuestionDisplayView.__super__.constructor.apply(this, arguments);
-      }
-
-      QuestionDisplayView.prototype.template = '<div class="teacherCanvas "> <div class="grid-body p-t-20 p-b-15 no-border"></div> </div> <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b"> <p class="bold small-text">Question Info: </p> <p class="">{{post_title}}</p> </div>';
-
-      return QuestionDisplayView;
-
-    })(Marionette.ItemView);
   });
 });
