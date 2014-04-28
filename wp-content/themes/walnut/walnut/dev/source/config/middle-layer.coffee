@@ -77,7 +77,9 @@ define ['detect','jquery', 'underscore'], (detect, $, _)->
         $.when(runQuery()).done ->
           console.log 'getUserRole transaction completed'
         .fail (err)->
-          console.log 'Error: '+err      
+          console.log 'Error: '+err  
+
+             
 
 
 

@@ -36,7 +36,7 @@ define ['app'],(App)->
 					training_date = 'Schedule' 
 
 				else training_date = moment(training_date).format("Do MMM YYYY")
-
+				
 				status = @model.get 'status'
 
 				if status is 'started' or status is 'resumed'

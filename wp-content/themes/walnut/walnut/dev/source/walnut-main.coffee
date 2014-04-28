@@ -8,7 +8,7 @@ require.config
 	
 	urlArgs : "ver=#{(new Date()).getTime()}"
 
-	#baseUrl : './wp-content/themes/walnut/walnut/dev/js'
+	# baseUrl : './wp-content/themes/walnut/walnut/dev/js'
 
 	# baseUrl for walnut app
 	baseUrl : '/dev/js'
@@ -41,6 +41,9 @@ require.config
 		moment				: 'plugins/moment.min'
 		select2				: 'plugins/select2.min'
 		unserialize			: 'plugins/unserialize'
+		datepicker			: 'plugins/bootstrap-datepicker'
+		timepicker			: 'plugins/bootstrap-timepicker.min'
+
 
 	shim:
 		underscore: 
@@ -68,6 +71,8 @@ require.config
 		syphon			: ['backbone']
 		moment			: ['jquery']
 		select2			: ['jquery', 'bootstrap']
+		datepicker 		: ['jquery', 'bootstrap']
+		timepicker 		: ['jquery', 'bootstrap']
 		app 			: ['plugins/walnut-pluginloader','config/walnut-configloader']
 
 	

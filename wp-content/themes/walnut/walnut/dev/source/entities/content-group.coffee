@@ -67,56 +67,224 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				saveContentGroupDetails: (data)->
 					contentGroupItem = new ContentGroup.ItemModel data
 					contentGroupItem
+				
+				# get content group from local
+				getContentGroupByIdFromLocal:(id, division)->
+					
+					getDateAndStatus =(collection_id, div)->
+						dateAndStatus =
+							date: ''
+							status: ''
+
+						runQ =->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT count(id) AS count, status, date FROM wp_training_logs 
+										WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, div], success(d), failure(d))
+
+						success =(d)->
+							(tx,data)->
+								if data.rows.item(0)['count'] isnt 0
+									dateAndStatus.date = data.rows.item(0)['date']
+									dateAndStatus.status = data.rows.item(0)['status']
+								d.resolve(dateAndStatus)
+
+						failure =(d)->
+							(tx, error)->
+								d.reject('Failure: '+error)
+
+						$.when(runQ()).done ->
+							console.log 'getDateAndStatus transaction completed'
+						.fail (err)->
+							console.log 'Error: '+err
 
 
-				getContentGroupFromLocal:->
-					runQuery = ->
+					getContentPiecesAndDescription =(collection_id)->
+						contentPiecesAndDescription =
+							content_pieces: ''
+							description: ''
+
+						runQ =->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), failure(d))
+
+						success =(d)->
+							(tx,data)->
+								i = 0
+								while i < data.rows.length
+									row = data.rows.item(i)
+									if row['meta_key'] is 'description'
+										contentPiecesAndDescription.description = row['meta_value']
+
+									if row['meta_key'] is 'content_pieces'
+										contentPiecesAndDescription.content_pieces = row['meta_value']
+
+									i++	
+								
+								d.resolve(contentPiecesAndDescription)
+
+						failure =(d)->
+							(tx, error)->
+								d.reject('Failure: '+error)
+
+						$.when(runQ()).done ->
+							console.log 'getContentPiecesAndDescription transaction completed'
+						.fail (err)->
+							console.log 'Error: '+err			
+
+					runMainQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
-								tx.executeSql('SELECT wcc.id as id, wcc.name as name, wcc.created_on as created_on, 
-									wcc.created_by as created_by, wcc.last_modified_on as last_modified_on,
-									wcc.last_modified_by as last_modified_by, wcc.published_on as published_on, 
-									wcc.published_by as published_by, wcc.status as status, wcc.type as type,
-									wcc.term_ids as term_ids, wcm.meta_value as description, wcm2.meta_value as content_pieces 
-									FROM wp_content_collection wcc 
-									INNER JOIN wp_collection_meta wcm ON (wcc.id=wcm.collection_id AND wcm.meta_key=?) 
-									INNER JOIN wp_collection_meta wcm2 ON (wcc.id=wcm2.collection_id AND wcm2.meta_key=?) 
-									WHERE wcc.id=?', ['description', 'content_pieces', 19], onSuccess(d), onFailure(d))
+								pattern = '%"'+id+'"%'
+								tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '"+pattern+"'", [], onSuccess(d), onFailure(d))
 
 					onSuccess = (d)->
 						(tx, data)->
-							console.log 'Content group success'
+							
 							result = []
-							r = data.rows.item(0)
+							i = 0
+							while i < data.rows.length
+								r = data.rows.item(i)
 
-							result = 
-								code:'OK'
-								data:
-									id: r['id']
-									name: r['name']
-									created_on: r['created_on']
-									created_by: r['created_by']
-									last_modified_on: r['last_modified_on']
-									last_modified_by: r['last_modified_by']
-									published_on: r['published_on']
-									published_by: r['published_by']
-									status: r['status']
-									type: r['type']
-									term_ids: unserialize(r['term_ids'])
-									content_pieces: unserialize(r['content_pieces'])
-									description: unserialize(r['description'])
-							i++
-								
+								do (r,i, division)->
+
+									dateAndStatus = getDateAndStatus(r['id'], division)
+									dateAndStatus.done (d)=>
+										status = d.status
+										date = d.date
+
+										do (r, i, date, status)->
+
+											contentPiecesAndDescription = getContentPiecesAndDescription(r['id'])
+											contentPiecesAndDescription.done (d)=>
+												content_pieces = description = ''
+												content_pieces = unserialize(d.content_pieces) if d.content_pieces isnt ''
+												description = unserialize(d.description) if d.description isnt ''
+												
+												result[i] = 
+													id: r['id']
+													name: r['name']
+													created_on: r['created_on']
+													created_by: r['created_by']
+													last_modified_on: r['last_modified_on']
+													last_modified_by: r['last_modified_by']
+													published_on: r['published_on']
+													published_by: r['published_by']
+													type: r['type']
+													term_ids: unserialize(r['term_ids'])
+													duration: getDuration(r['duration'])
+													minshours: getMinsHours(r['duration'])
+													total_minutes: r['duration']
+													status: status
+													training_date: date
+													content_pieces: content_pieces
+													description: description
+										
+								i++
+
 							d.resolve(result)
 
 					onFailure = (d)->
 						(tx, error)->
 							d.reject('OnFailure!: '+error)
 
-					$.when(runQuery()).done (data)->
-						console.log 'Content-group transaction completed'
+					getDuration = (duration)->
+						if duration > 60
+							duration/60
+						else
+							duration	
+
+					getMinsHours = (duration)->
+						if duration > 60
+							'hrs'
+						else 'mins'				
+
+					$.when(runMainQuery()).done (data)->
+						console.log 'Content-group-by-id transaction completed'
 					.fail (err)->
-						console.log 'Error: '+err
+						console.log 'Error: '+err	
+
+
+				saveOrUpdateContentGroupLocal:(division_id, collection_id, teacher_id, training_date, current_status) ->
+					
+					#function to get the last status
+					getLastStatus =->
+						lastStatus = 
+							id:''
+							status:''
+
+						runQ =->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT id,status FROM wp_training_logs WHERE division_id=? AND 
+										collection_id=? ORDER BY id DESC LIMIT 1", [division_id, collection_id], success(d), failure(d))
+
+						success =(d)->
+							(tx,data)->
+								if data.rows.length isnt 0
+									lastStatus.id = data.rows.item(0)['id']
+									lastStatus.status = data.rows.item(0)['status']
+								d.resolve(lastStatus)
+
+						failure =(d)->
+							(tx, error)->
+								d.reject('Failure: '+error)
+
+						$.when(runQ()).done ->
+							console.log 'getLastStatus transaction completed'
+						.fail (err)->
+							console.log 'Error: '+err
+
+
+					#function to insert record in wp_training_logs
+					insertTrainingLogs =(date, status)->
+						_.db.transaction( (tx)->
+							tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status) 
+								VALUES (?, ?, ?, ?, ?)", [division_id, collection_id, teacher_id, date, status])
+							
+						,(tx,err)->
+							console.log 'Error: '+err.message
+						,(tx)->
+							console.log 'Success: Inserted new record in wp_training_logs'
+						)
+
+
+					#function to update status in wp_training_logs
+					updateTrainingLogs =(id, status)->
+						_.db.transaction( (tx)->
+							tx.executeSql("UPDATE wp_training_logs SET status=? WHERE id=?", [status, id])
+							
+						,(tx,err)->
+							console.log 'Error: '+err.message
+						,(tx)->
+							console.log 'Success: Updated record in wp_training_logs'
+						)	
+
+
+					#Current date
+					d = new Date()
+					date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()
+
+					if current_status is 'completed' or current_status is 'scheduled'
+						if current_status is 'scheduled'
+							date = training_date
+						#insert new record in wp_training_logs
+						insertTrainingLogs(date, current_status)
+
+					else
+						#get last status
+						lastStatus = getLastStatus()
+						lastStatus.done (d)=>
+							if d.status isnt ''
+								if d.status is 'started'
+									insertTrainingLogs(date, 'resumed')
+
+								if d.status is 'scheduled'
+									updateTrainingLogs(d.id, 'started')
+
+							else
+								insertTrainingLogs(date, 'started')	
 
 
 
@@ -130,6 +298,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			App.reqres.setHandler "save:content:group:details", (data)->
 				API.saveContentGroupDetails data
 
-			# request handler to get all content groups from local database
-			App.reqres.setHandler "get:content-group:local", ->
-				API.getContentGroupFromLocal()	
+			# request handler to get content group by id from local database
+			App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
+				API.getContentGroupByIdFromLocal id,division
+
+			App.reqres.setHandler "save:update:content-group:local", (division_id, collection_id, teacher_id, training_date, status)->
+				API.saveOrUpdateContentGroupLocal division_id, collection_id, teacher_id, training_date, status	

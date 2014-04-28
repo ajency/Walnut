@@ -35,21 +35,22 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'chapter'
 				data = App.reqres.request "get:#{collection_name}:local", options.data.parent 
 				data.done (d)->
-					console.log 'Chapter options'
-					console.log options
-					collection.set d
-
-			if collection_name is 'content-piece'
-				data = App.reqres.request "get:#{collection_name}:local", options.data.ids 
-				data.done (d)->
 					collection.set d
 
 			if collection_name is 'division'
 				data = App.reqres.request "get:#{collection_name}:local"
 				data.done (d)->
-					console.log 'Division data'
-					console.log d
-					collection.set d	
+					collection.set d
+
+			if collection_name is 'content-group'
+				data = App.reqres.request "get:#{collection_name}:by:id:local", options.data.textbook, options.data.division
+				data.done (d)->
+					collection.set d
+
+			if collection_name is 'content-piece'
+				data = App.reqres.request "get:#{collection_name}:local", options.data.ids 
+				data.done (d)->
+					collection.set d			
 
 			return true
 
@@ -171,13 +172,13 @@ define ["backbone"], (Backbone) ->
 				#Changes needed for offline data retrieval
 				modelname = model.name
 				console.log 'Model name: '+modelname
+				console.log 'Model'
+				console.log model
 
 				if modelname is 'content-group'
-					data = App.reqres.request "get:#{modelname}:local"
-					data.done (d)->
-						console.log 'Model data'
-						console.log d
-						model.set d.data
+					attr = model.attributes
+					#teacher id hardcoded as 1 for now
+					data = App.reqres.request "save:update:#{modelname}:local", attr.division, attr.id, 1, attr.training_date, attr.status
 
 				if modelname is 'schools' #Not yet implemented
 					console.log 'Schools local'

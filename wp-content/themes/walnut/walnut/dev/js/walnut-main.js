@@ -28,7 +28,9 @@ require.config({
     detect: 'plugins/detect',
     moment: 'plugins/moment.min',
     select2: 'plugins/select2.min',
-    unserialize: 'plugins/unserialize'
+    unserialize: 'plugins/unserialize',
+    datepicker: 'plugins/bootstrap-datepicker',
+    timepicker: 'plugins/bootstrap-timepicker.min'
   },
   shim: {
     underscore: {
@@ -59,6 +61,8 @@ require.config({
     syphon: ['backbone'],
     moment: ['jquery'],
     select2: ['jquery', 'bootstrap'],
+    datepicker: ['jquery', 'bootstrap'],
+    timepicker: ['jquery', 'bootstrap'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

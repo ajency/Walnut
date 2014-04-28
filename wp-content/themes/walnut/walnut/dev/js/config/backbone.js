@@ -29,8 +29,18 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'chapter') {
         data = App.reqres.request("get:" + collection_name + ":local", options.data.parent);
         data.done(function(d) {
-          console.log('Chapter options');
-          console.log(options);
+          return collection.set(d);
+        });
+      }
+      if (collection_name === 'division') {
+        data = App.reqres.request("get:" + collection_name + ":local");
+        data.done(function(d) {
+          return collection.set(d);
+        });
+      }
+      if (collection_name === 'content-group') {
+        data = App.reqres.request("get:" + collection_name + ":by:id:local", options.data.textbook, options.data.division);
+        data.done(function(d) {
           return collection.set(d);
         });
       }
@@ -40,20 +50,12 @@ define(["backbone"], function(Backbone) {
           return collection.set(d);
         });
       }
-      if (collection_name === 'division') {
-        data = App.reqres.request("get:" + collection_name + ":local");
-        data.done(function(d) {
-          console.log('Division data');
-          console.log(d);
-          return collection.set(d);
-        });
-      }
       return true;
     }
   });
   _.extend(Backbone.Model.prototype, {
     sync: function(method, model, options) {
-      var allData, data, idAttr, modelname, onlyChanged, params, xhr, _action, _ref, _ref1;
+      var allData, attr, data, idAttr, modelname, onlyChanged, params, xhr, _action, _ref, _ref1;
       if (!this.name) {
         throw new Error("'name' property not set for the model");
       }
@@ -101,13 +103,11 @@ define(["backbone"], function(Backbone) {
       } else {
         modelname = model.name;
         console.log('Model name: ' + modelname);
+        console.log('Model');
+        console.log(model);
         if (modelname === 'content-group') {
-          data = App.reqres.request("get:" + modelname + ":local");
-          data.done(function(d) {
-            console.log('Model data');
-            console.log(d);
-            return model.set(d.data);
-          });
+          attr = model.attributes;
+          data = App.reqres.request("save:update:" + modelname + ":local", attr.division, attr.id, 1, attr.training_date, attr.status);
         }
         if (modelname === 'schools') {
           console.log('Schools local');

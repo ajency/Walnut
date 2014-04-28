@@ -253,7 +253,6 @@ function get_all_content_groups($args=array()){
 }
 
 function get_single_content_group($id, $division=''){
-    
     global $wpdb;
     
     $current_blog= get_current_blog_id();

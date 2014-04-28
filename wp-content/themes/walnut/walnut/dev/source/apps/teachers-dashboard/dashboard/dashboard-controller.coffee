@@ -73,7 +73,7 @@ define ['app'
 
 			loadDivisions:(class_id)=>
 
-				divs= @collection.where({'class_id':class_id})
+				divs= @collection.where({'class_id': parseInt(class_id)})
 				
 				@$el.find '#div'
 				.empty()

@@ -105,16 +105,43 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						console.log('Error: '+err);
 
 
-				# get textbooks by id from local database
+				# get textbooks by class id from local database
 				getTextbooksByIDFromLocal:(class_id)->
+
+					getTextBookIds =->
+						runQ =->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key='textbooks' AND user_id='1'", [], success(d), failure(d))
+
+						success =(d)->
+							(tx,data)->
+								ids = unserialize(data.rows.item(0)['meta_value'])
+								d.resolve(ids)
+
+						failure =(d)->
+							(tx, error)->
+								d.reject('Failure: '+error)
+
+						$.when(runQ()).done ->
+							console.log 'getTextBookIds transaction completed'
+						.fail (err)->
+							console.log 'Error: '+err	
+							
+								
 					runQuery = ->
+						ids = ''
+						textbookIds = getTextBookIds()
+						textbookIds.done (d)=>
+							ids = d
+
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								pattern = '%"'+class_id+'"%'
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 
 									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0
-									AND wtr.class_id LIKE '"+pattern+"' ", [], onSuccess(d), onFailure(d));
+					 				AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+ids+")", [], onSuccess(d), onFailure(d));
 								
 
 					onSuccess =(d)->
@@ -123,11 +150,10 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							i = 0
 							while i < data.rows.length
 								row = data.rows.item(i)
-								pattern = '%"'+row['textbook_id']+'"%'
-
-								do (tx, row, i, pattern)->
-									tx.executeSql("SELECT count(id) AS count FROM wp_content_collection 
-										WHERE term_ids LIKE '"+pattern+"' ", []
+								p = '%"'+row['textbook_id']+'"%'
+								
+								do (tx, row ,p, i)->
+									tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '"+p+"'", []
 
 										,(tran,d)->
 											classes = subjects = ''
@@ -148,12 +174,10 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 												classes: classes
 												subjects: subjects
 												modules_count: d.rows.item(0)['count']
-
-
+										
 										,(tran,err)->
-											console.log 'Error: '+err
-										)
-
+											console.log 'Error: '+err.message
+									)
 								i++
 
 							d.resolve(result)
@@ -163,11 +187,12 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						(tx,error)->
 							d.reject('OnFailure!: '+error)
 
+					
 					$.when(runQuery()).done (data)->
 						console.log 'getTextbooksByID transaction completed'
 						
 					.fail (err)->
-						console.log('Error: '+err);	
+						console.log('Error: '+err);
 
 
 

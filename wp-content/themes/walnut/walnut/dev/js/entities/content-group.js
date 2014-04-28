@@ -87,40 +87,146 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         contentGroupItem = new ContentGroup.ItemModel(data);
         return contentGroupItem;
       },
-      getContentGroupFromLocal: function() {
-        var onFailure, onSuccess, runQuery;
-        runQuery = function() {
+      getContentGroupByIdFromLocal: function(id, division) {
+        var getContentPiecesAndDescription, getDateAndStatus, getDuration, getMinsHours, onFailure, onSuccess, runMainQuery;
+        getDateAndStatus = function(collection_id, div) {
+          var dateAndStatus, failure, runQ, success;
+          dateAndStatus = {
+            date: '',
+            status: ''
+          };
+          runQ = function() {
+            return $.Deferred(function(d) {
+              return _.db.transaction(function(tx) {
+                return tx.executeSql("SELECT count(id) AS count, status, date FROM wp_training_logs WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, div], success(d), failure(d));
+              });
+            });
+          };
+          success = function(d) {
+            return function(tx, data) {
+              if (data.rows.item(0)['count'] !== 0) {
+                dateAndStatus.date = data.rows.item(0)['date'];
+                dateAndStatus.status = data.rows.item(0)['status'];
+              }
+              return d.resolve(dateAndStatus);
+            };
+          };
+          failure = function(d) {
+            return function(tx, error) {
+              return d.reject('Failure: ' + error);
+            };
+          };
+          return $.when(runQ()).done(function() {
+            return console.log('getDateAndStatus transaction completed');
+          }).fail(function(err) {
+            return console.log('Error: ' + err);
+          });
+        };
+        getContentPiecesAndDescription = function(collection_id) {
+          var contentPiecesAndDescription, failure, runQ, success;
+          contentPiecesAndDescription = {
+            content_pieces: '',
+            description: ''
+          };
+          runQ = function() {
+            return $.Deferred(function(d) {
+              return _.db.transaction(function(tx) {
+                return tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), failure(d));
+              });
+            });
+          };
+          success = function(d) {
+            return function(tx, data) {
+              var i, row;
+              i = 0;
+              while (i < data.rows.length) {
+                row = data.rows.item(i);
+                if (row['meta_key'] === 'description') {
+                  contentPiecesAndDescription.description = row['meta_value'];
+                }
+                if (row['meta_key'] === 'content_pieces') {
+                  contentPiecesAndDescription.content_pieces = row['meta_value'];
+                }
+                i++;
+              }
+              return d.resolve(contentPiecesAndDescription);
+            };
+          };
+          failure = function(d) {
+            return function(tx, error) {
+              return d.reject('Failure: ' + error);
+            };
+          };
+          return $.when(runQ()).done(function() {
+            return console.log('getContentPiecesAndDescription transaction completed');
+          }).fail(function(err) {
+            return console.log('Error: ' + err);
+          });
+        };
+        runMainQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql('SELECT wcc.id as id, wcc.name as name, wcc.created_on as created_on, wcc.created_by as created_by, wcc.last_modified_on as last_modified_on, wcc.last_modified_by as last_modified_by, wcc.published_on as published_on, wcc.published_by as published_by, wcc.status as status, wcc.type as type, wcc.term_ids as term_ids, wcm.meta_value as description, wcm2.meta_value as content_pieces FROM wp_content_collection wcc INNER JOIN wp_collection_meta wcm ON (wcc.id=wcm.collection_id AND wcm.meta_key=?) INNER JOIN wp_collection_meta wcm2 ON (wcc.id=wcm2.collection_id AND wcm2.meta_key=?) WHERE wcc.id=?', ['description', 'content_pieces', 19], onSuccess(d), onFailure(d));
+              var pattern;
+              pattern = '%"' + id + '"%';
+              return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], onSuccess(d), onFailure(d));
             });
           });
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var r, result;
-            console.log('Content group success');
+            var i, r, result;
             result = [];
-            r = data.rows.item(0);
-            result = {
-              code: 'OK',
-              data: {
-                id: r['id'],
-                name: r['name'],
-                created_on: r['created_on'],
-                created_by: r['created_by'],
-                last_modified_on: r['last_modified_on'],
-                last_modified_by: r['last_modified_by'],
-                published_on: r['published_on'],
-                published_by: r['published_by'],
-                status: r['status'],
-                type: r['type'],
-                term_ids: unserialize(r['term_ids']),
-                content_pieces: unserialize(r['content_pieces']),
-                description: unserialize(r['description'])
-              }
-            };
-            i++;
+            i = 0;
+            while (i < data.rows.length) {
+              r = data.rows.item(i);
+              (function(r, i, division) {
+                var dateAndStatus;
+                dateAndStatus = getDateAndStatus(r['id'], division);
+                return dateAndStatus.done((function(_this) {
+                  return function(d) {
+                    var date, status;
+                    status = d.status;
+                    date = d.date;
+                    return (function(r, i, date, status) {
+                      var contentPiecesAndDescription;
+                      contentPiecesAndDescription = getContentPiecesAndDescription(r['id']);
+                      return contentPiecesAndDescription.done((function(_this) {
+                        return function(d) {
+                          var content_pieces, description;
+                          content_pieces = description = '';
+                          if (d.content_pieces !== '') {
+                            content_pieces = unserialize(d.content_pieces);
+                          }
+                          if (d.description !== '') {
+                            description = unserialize(d.description);
+                          }
+                          return result[i] = {
+                            id: r['id'],
+                            name: r['name'],
+                            created_on: r['created_on'],
+                            created_by: r['created_by'],
+                            last_modified_on: r['last_modified_on'],
+                            last_modified_by: r['last_modified_by'],
+                            published_on: r['published_on'],
+                            published_by: r['published_by'],
+                            type: r['type'],
+                            term_ids: unserialize(r['term_ids']),
+                            duration: getDuration(r['duration']),
+                            minshours: getMinsHours(r['duration']),
+                            total_minutes: r['duration'],
+                            status: status,
+                            training_date: date,
+                            content_pieces: content_pieces,
+                            description: description
+                          };
+                        };
+                      })(this));
+                    })(r, i, date, status);
+                  };
+                })(this));
+              })(r, i, division);
+              i++;
+            }
             return d.resolve(result);
           };
         };
@@ -129,11 +235,103 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return d.reject('OnFailure!: ' + error);
           };
         };
-        return $.when(runQuery()).done(function(data) {
-          return console.log('Content-group transaction completed');
+        getDuration = function(duration) {
+          if (duration > 60) {
+            return duration / 60;
+          } else {
+            return duration;
+          }
+        };
+        getMinsHours = function(duration) {
+          if (duration > 60) {
+            return 'hrs';
+          } else {
+            return 'mins';
+          }
+        };
+        return $.when(runMainQuery()).done(function(data) {
+          return console.log('Content-group-by-id transaction completed');
         }).fail(function(err) {
           return console.log('Error: ' + err);
         });
+      },
+      saveOrUpdateContentGroupLocal: function(division_id, collection_id, teacher_id, training_date, current_status) {
+        var d, date, getLastStatus, insertTrainingLogs, lastStatus, updateTrainingLogs;
+        getLastStatus = function() {
+          var failure, lastStatus, runQ, success;
+          lastStatus = {
+            id: '',
+            status: ''
+          };
+          runQ = function() {
+            return $.Deferred(function(d) {
+              return _.db.transaction(function(tx) {
+                return tx.executeSql("SELECT id,status FROM wp_training_logs WHERE division_id=? AND collection_id=? ORDER BY id DESC LIMIT 1", [division_id, collection_id], success(d), failure(d));
+              });
+            });
+          };
+          success = function(d) {
+            return function(tx, data) {
+              if (data.rows.length !== 0) {
+                lastStatus.id = data.rows.item(0)['id'];
+                lastStatus.status = data.rows.item(0)['status'];
+              }
+              return d.resolve(lastStatus);
+            };
+          };
+          failure = function(d) {
+            return function(tx, error) {
+              return d.reject('Failure: ' + error);
+            };
+          };
+          return $.when(runQ()).done(function() {
+            return console.log('getLastStatus transaction completed');
+          }).fail(function(err) {
+            return console.log('Error: ' + err);
+          });
+        };
+        insertTrainingLogs = function(date, status) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status) VALUES (?, ?, ?, ?, ?)", [division_id, collection_id, teacher_id, date, status]);
+          }, function(tx, err) {
+            return console.log('Error: ' + err.message);
+          }, function(tx) {
+            return console.log('Success: Inserted new record in wp_training_logs');
+          });
+        };
+        updateTrainingLogs = function(id, status) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("UPDATE wp_training_logs SET status=? WHERE id=?", [status, id]);
+          }, function(tx, err) {
+            return console.log('Error: ' + err.message);
+          }, function(tx) {
+            return console.log('Success: Updated record in wp_training_logs');
+          });
+        };
+        d = new Date();
+        date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        if (current_status === 'completed' || current_status === 'scheduled') {
+          if (current_status === 'scheduled') {
+            date = training_date;
+          }
+          return insertTrainingLogs(date, current_status);
+        } else {
+          lastStatus = getLastStatus();
+          return lastStatus.done((function(_this) {
+            return function(d) {
+              if (d.status !== '') {
+                if (d.status === 'started') {
+                  insertTrainingLogs(date, 'resumed');
+                }
+                if (d.status === 'scheduled') {
+                  return updateTrainingLogs(d.id, 'started');
+                }
+              } else {
+                return insertTrainingLogs(date, 'started');
+              }
+            };
+          })(this));
+        }
       }
     };
     App.reqres.setHandler("get:content:groups", function(opt) {
@@ -145,8 +343,11 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     App.reqres.setHandler("save:content:group:details", function(data) {
       return API.saveContentGroupDetails(data);
     });
-    return App.reqres.setHandler("get:content-group:local", function() {
-      return API.getContentGroupFromLocal();
+    App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
+      return API.getContentGroupByIdFromLocal(id, division);
+    });
+    return App.reqres.setHandler("save:update:content-group:local", function(division_id, collection_id, teacher_id, training_date, status) {
+      return API.saveOrUpdateContentGroupLocal(division_id, collection_id, teacher_id, training_date, status);
     });
   });
 });

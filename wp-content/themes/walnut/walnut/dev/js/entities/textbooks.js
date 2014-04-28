@@ -132,26 +132,61 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         });
       },
       getTextbooksByIDFromLocal: function(class_id) {
-        var onFailure, onSuccess, runQuery;
+        var getTextBookIds, onFailure, onSuccess, runQuery;
+        getTextBookIds = function() {
+          var failure, runQ, success;
+          runQ = function() {
+            return $.Deferred(function(d) {
+              return _.db.transaction(function(tx) {
+                return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key='textbooks' AND user_id='1'", [], success(d), failure(d));
+              });
+            });
+          };
+          success = function(d) {
+            return function(tx, data) {
+              var ids;
+              ids = unserialize(data.rows.item(0)['meta_value']);
+              return d.resolve(ids);
+            };
+          };
+          failure = function(d) {
+            return function(tx, error) {
+              return d.reject('Failure: ' + error);
+            };
+          };
+          return $.when(runQ()).done(function() {
+            return console.log('getTextBookIds transaction completed');
+          }).fail(function(err) {
+            return console.log('Error: ' + err);
+          });
+        };
         runQuery = function() {
+          var ids, textbookIds;
+          ids = '';
+          textbookIds = getTextBookIds();
+          textbookIds.done((function(_this) {
+            return function(d) {
+              return ids = d;
+            };
+          })(this));
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
               var pattern;
               pattern = '%"' + class_id + '"%';
-              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' ", [], onSuccess(d), onFailure(d));
+              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' AND wtr.textbook_id IN (" + ids + ")", [], onSuccess(d), onFailure(d));
             });
           });
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, pattern, result, row;
+            var i, p, result, row;
             result = [];
             i = 0;
             while (i < data.rows.length) {
               row = data.rows.item(i);
-              pattern = '%"' + row['textbook_id'] + '"%';
-              (function(tx, row, i, pattern) {
-                return tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' ", [], function(tran, d) {
+              p = '%"' + row['textbook_id'] + '"%';
+              (function(tx, row, p, i) {
+                return tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + p + "'", [], function(tran, d) {
                   var classes, subjects;
                   classes = subjects = '';
                   if (row["class_id"] !== '') {
@@ -176,9 +211,9 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                     modules_count: d.rows.item(0)['count']
                   };
                 }, function(tran, err) {
-                  return console.log('Error: ' + err);
+                  return console.log('Error: ' + err.message);
                 });
-              })(tx, row, i, pattern);
+              })(tx, row, p, i);
               i++;
             }
             return d.resolve(result);
