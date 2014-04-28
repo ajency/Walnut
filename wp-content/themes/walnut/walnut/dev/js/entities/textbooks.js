@@ -75,7 +75,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         return textbook;
       },
       getTextBookNameByID: function(id) {
-        var textbook;
+        var textbook, textbookName;
         textbook = textbookCollection.get(id);
         if (!textbook) {
           textbook = new Textbooks.ItemModel({
@@ -83,7 +83,8 @@ define(["app", 'backbone'], function(App, Backbone) {
           });
           textbook.fetch();
         }
-        return textbook.get('name');
+        textbookName = textbook.get('name');
+        return textbookName;
       }
     };
     App.reqres.setHandler("get:textbooks", function(opt) {

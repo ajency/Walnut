@@ -53,6 +53,10 @@ add_action('init', 'create_content_piece_post_type');
 
 function get_content_pieces($args = array()) {
     
+    $current_blog_id= get_current_blog_id();
+    
+    switch_to_blog(1);
+    
     if(isset($args['ids'])){
         $ids = implode(',',$args['ids']);
         $args['post__in'] = $args['ids'];
@@ -69,11 +73,18 @@ function get_content_pieces($args = array()) {
     foreach ($content_items as $id) {
         $content_pieces[]= get_single_content_piece($id);
     }
-
+    
+    switch_to_blog($current_blog_id);
+    
     return $content_pieces;
+    
 }
 
 function get_single_content_piece($id){
+    
+    $current_blog_id= get_current_blog_id();
+    
+    switch_to_blog(1);
     
     $content_piece= get_post($id);
     
@@ -102,8 +113,10 @@ function get_single_content_piece($id){
     
     // Question Type can be individual or chorus
     $content_piece->question_type = 'individual'; 
-        
-   return $content_piece;
+    
+    switch_to_blog($current_blog_id);
+    
+    return $content_piece;
 }
 
 function save_content_group($data = array()) {
@@ -280,7 +293,24 @@ function get_single_content_group($id, $division=''){
         }
     }
     
+    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta 
+        WHERE collection_id=%d",$id);
     
+    $description= $wpdb->get_results($query_description);
+    
+    $data->description=$data->content_pieces=array();
+
+    foreach($description as $key=>$value){
+       $meta_val = maybe_unserialize ($value->meta_value);
+       
+       if ($value->meta_key=='description')
+           $data->description= $meta_val;
+           
+       if ($value->meta_key=='content_pieces' )
+           $data->content_pieces= $meta_val;
+       
+    }
+
     switch_to_blog($current_blog);
     
     if($division !=''){
@@ -297,23 +327,6 @@ function get_single_content_group($id, $division=''){
         }
     }
     
-    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta 
-        WHERE collection_id=%d",$id);
-    
-    $description= $wpdb->get_results($query_description);
-
-    $data->description=$data->content_pieces=array();
-
-    foreach($description as $key=>$value){
-       $meta_val = maybe_unserialize ($value->meta_value);
-       
-       if ($value->meta_key=='description')
-           $data->description= $meta_val;
-           
-       if ($value->meta_key=='content_pieces' )
-           $data->content_pieces= $meta_val;
-       
-    }
     return $data;
     
 }

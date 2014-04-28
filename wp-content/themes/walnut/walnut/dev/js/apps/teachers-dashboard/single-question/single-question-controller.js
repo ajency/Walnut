@@ -23,14 +23,19 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
         this.moduleID = opts.moduleID;
         questionID = opts.questionID;
         this.textbook = App.request("get:textbook:by:id", textbookID);
+        this.textbookName = '';
+        App.execute("when:fetched", this.textbook, (function(_this) {
+          return function() {
+            return _this.textbookName = _this.textbook.get('name');
+          };
+        })(this));
         this.contentGroupModel = App.request("get:content:group:by:id", this.moduleID);
         this.contentPiece = App.request("get:content:piece:by:id", questionID);
         App.execute("when:fetched", this.textbook, (function(_this) {
           return function() {
             return App.execute("when:fetched", _this.contentGroupModel, function() {
               return App.execute("when:fetched", _this.contentPiece, function() {
-                var breadcrumb_items, moduleName, questionTitle, textbookName;
-                textbookName = _this.textbook.get('name');
+                var breadcrumb_items, moduleName, questionTitle;
                 moduleName = _this.contentGroupModel.get('name');
                 questionTitle = _this.contentPiece.get('post_title');
                 breadcrumb_items = {
@@ -42,7 +47,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
                       'label': 'Take Class',
                       'link': '#teachers/take-class/' + classID + '/' + _this.division
                     }, {
-                      'label': textbookName,
+                      'label': _this.textbookName,
                       'link': '#teachers/take-class/' + classID + '/' + _this.division + '/textbook/' + textbookID
                     }, {
                       'label': moduleName,
@@ -74,7 +79,12 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
           return function() {
             var moduleDescriptionView;
             moduleDescriptionView = new View.ModuleDescription.Description({
-              model: _this.contentGroupModel
+              model: _this.contentGroupModel,
+              templateHelpers: {
+                showTextbookName: function() {
+                  return _this.textbookName;
+                }
+              }
             });
             return _this.layout.moduleDetailsRegion.show(moduleDescriptionView);
           };
@@ -84,11 +94,20 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
       SingleQuestionController.prototype._showStudentsListView = function() {
         return App.execute("when:fetched", this.contentPiece, (function(_this) {
           return function() {
-            var chorusView, question_type, studentsListView;
+            var chorusView, question_type, studentsCollection;
             question_type = _this.contentPiece.get('question_type');
             if (question_type === 'individual') {
-              studentsListView = new View.StudentsList.List;
-              return _this.layout.studentsListRegion.show(studentsListView);
+              studentsCollection = App.request("get:user:collection", {
+                'role': 'student',
+                'division': _this.division
+              });
+              return App.execute("when:fetched", studentsCollection, function() {
+                var studentsListView;
+                studentsListView = new View.StudentsList.List({
+                  collection: studentsCollection
+                });
+                return _this.layout.studentsListRegion.show(studentsListView);
+              });
             } else if (question_type === 'chorus') {
               chorusView = new View.ChorusOptionsView.ItemView;
               return _this.layout.studentsListRegion.show(chorusView);

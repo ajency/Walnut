@@ -21,21 +21,25 @@ define ['app'
 				{questionID}= opts
 
 
-				@textbook= App.request "get:textbook:by:id",textbookID 
+				@textbook = App.request "get:textbook:by:id",textbookID
+				@textbookName=''
+
+				App.execute "when:fetched", @textbook, =>
+					@textbookName = @textbook.get 'name'
+
 				@contentGroupModel = App.request "get:content:group:by:id", @moduleID
 				@contentPiece = App.request "get:content:piece:by:id", questionID
 
 				App.execute "when:fetched", @textbook, =>
 							App.execute "when:fetched", @contentGroupModel, =>
 								App.execute "when:fetched", @contentPiece, =>
-									textbookName= @textbook.get 'name'
 									moduleName = @contentGroupModel.get 'name'
 									questionTitle = @contentPiece.get 'post_title'
 
 									breadcrumb_items = 'items':[
 										{'label':'Dashboard','link':'#teachers/dashboard'},
 										{'label':'Take Class','link':'#teachers/take-class/'+classID+'/'+@division},
-										{'label':textbookName,'link':'#teachers/take-class/'+classID+'/'+@division+'/textbook/'+textbookID},
+										{'label':@textbookName,'link':'#teachers/take-class/'+classID+'/'+@division+'/textbook/'+textbookID},
 										{'label':moduleName,'link':'#teachers/take-class/'+classID+'/'+@division+'/textbook/'+textbookID+'/module/'+@moduleID},
 										{'label':questionTitle,'link':'javascript:;','active':'active'}
 									]
@@ -53,12 +57,18 @@ define ['app'
 
 				@listenTo layout, "show", @_showQuestionDisplayView
 				
+				
+
 			_showModuleDescriptionView :=>
 				App.execute "when:fetched", @contentGroupModel, =>
 					moduleDescriptionView= new View.ModuleDescription.Description
 											model :@contentGroupModel
+											templateHelpers:
+												showTextbookName:=>
+													@textbookName
 					
 					@layout.moduleDetailsRegion.show moduleDescriptionView
+
 
 			_showStudentsListView :=>
 				App.execute "when:fetched", @contentPiece, =>
@@ -66,8 +76,14 @@ define ['app'
 					question_type = @contentPiece.get('question_type')
 					
 					if question_type is 'individual'
-						studentsListView= new View.StudentsList.List 
-						@layout.studentsListRegion.show studentsListView 
+						studentsCollection= App.request "get:user:collection", ('role':'student', 'division': @division)
+
+						App.execute "when:fetched", studentsCollection, =>
+							studentsListView= new View.StudentsList.List 
+								collection: studentsCollection
+
+							@layout.studentsListRegion.show studentsListView 
+
 
 					else if question_type is 'chorus'	
 						chorusView= new View.ChorusOptionsView.ItemView
