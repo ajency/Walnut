@@ -10,6 +10,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       function Controller() {
         this._changeColumnCount = __bind(this._changeColumnCount, this);
         this._changeOptionCount = __bind(this._changeOptionCount, this);
+        this._optionUnchecked = __bind(this._optionUnchecked, this);
+        this._optionChecked = __bind(this._optionChecked, this);
         this.createRowStructure = __bind(this.createRowStructure, this);
         this.renderElement = __bind(this.renderElement, this);
         this._changeMultipleAnswers = __bind(this._changeMultipleAnswers, this);
@@ -134,34 +136,35 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         view.render();
         $(container).removeClass('empty-column');
         $(container).append(view.$el);
-        this.listenTo(view, 'option:checked', (function(_this) {
-          return function() {
-            var correctAnswerArray;
-            correctAnswerArray = _this.layout.model.get('correct_answer');
-            if (!_this.layout.model.get('multiple') && correctAnswerArray.length) {
-              _this.layout.model.set('correct_answer', [model.get('optionNo')]);
-              console.log('in check');
-              _this.renderElement();
-            } else {
-              correctAnswerArray.push(model.get('optionNo'));
-            }
-            correctAnswerArray.sort();
-            return console.log(_this.layout.model.get('correct_answer'));
-          };
-        })(this));
-        this.listenTo(view, 'option:unchecked', (function(_this) {
-          return function() {
-            var correctAnswerArray, indexToRemove;
-            correctAnswerArray = _this.layout.model.get('correct_answer');
-            indexToRemove = $.inArray(model.get('optionNo'), correctAnswerArray);
-            correctAnswerArray.splice(indexToRemove, 1);
-            return console.log(_this.layout.model.get('correct_answer'));
-          };
-        })(this));
-        return view.triggerMethod('show');
+        this.listenTo(view, 'option:checked', this._optionChecked);
+        this.listenTo(view, 'option:unchecked', this._optionUnchecked);
+        view.triggerMethod('show');
+        return $(container).on('remove', function() {
+          return view.triggerMethod('close');
+        });
       };
 
-      Controller.prototype._optionChecked = function() {};
+      Controller.prototype._optionChecked = function(model) {
+        var correctAnswerArray;
+        correctAnswerArray = this.layout.model.get('correct_answer');
+        if (!this.layout.model.get('multiple') && correctAnswerArray.length) {
+          this.layout.model.set('correct_answer', [model.get('optionNo')]);
+          console.log('in check');
+          this.renderElement();
+        } else {
+          correctAnswerArray.push(model.get('optionNo'));
+        }
+        correctAnswerArray.sort();
+        return console.log(this.layout.model.get('correct_answer'));
+      };
+
+      Controller.prototype._optionUnchecked = function(model) {
+        var correctAnswerArray, indexToRemove;
+        correctAnswerArray = this.layout.model.get('correct_answer');
+        indexToRemove = $.inArray(model.get('optionNo'), correctAnswerArray);
+        correctAnswerArray.splice(indexToRemove, 1);
+        return console.log(this.layout.model.get('correct_answer'));
+      };
 
       Controller.prototype._getMcqOptionView = function(model) {
         return new Mcq.Views.McqOptionView({

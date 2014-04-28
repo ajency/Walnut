@@ -76,7 +76,7 @@ define(['app'], function(App) {
           };
         })(this), 500);
         this.$el.find('input:checkbox').screwDefaultButtons({
-          image: 'url("../wp-content/themes/walnut/images/csscheckbox.png")',
+          image: 'url("../wp-content/themes/walnut/images/csscheckbox-correct.png")',
           width: 32,
           height: 26
         });
@@ -94,10 +94,10 @@ define(['app'], function(App) {
       McqOptionView.prototype._onClickOfCheckbox = function(evt) {
         if ($(evt.target).prop('checked')) {
           console.log('checked');
-          return this.trigger('option:checked');
+          return this.trigger('option:checked', this.model);
         } else {
           console.log('unchecked');
-          return this.trigger('option:unchecked');
+          return this.trigger('option:unchecked', this.model);
         }
       };
 

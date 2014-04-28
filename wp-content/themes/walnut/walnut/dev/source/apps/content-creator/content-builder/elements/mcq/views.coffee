@@ -80,7 +80,7 @@ define ['app'],(App)->
 
 				# custom checkbox
 				@$el.find('input:checkbox').screwDefaultButtons
-					image: 'url("../wp-content/themes/walnut/images/csscheckbox.png")'
+					image: 'url("../wp-content/themes/walnut/images/csscheckbox-correct.png")'
 					width: 32
 					height: 26
 
@@ -96,10 +96,10 @@ define ['app'],(App)->
 
 					if $(evt.target).prop 'checked'
 						console.log 'checked'
-						@trigger 'option:checked'
+						@trigger 'option:checked' , @model
 					else 
 						console.log 'unchecked'
-						@trigger 'option:unchecked'
+						@trigger 'option:unchecked' , @model
 
 
 			onClickCheckbox:()->

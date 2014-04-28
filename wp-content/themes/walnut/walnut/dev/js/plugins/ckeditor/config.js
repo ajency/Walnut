@@ -58,7 +58,8 @@ config.toolbar = [
 
 
 
-config.font_names = config.font_names+' ;Chelsea Market; Indie Flower; Just Another Hand; Sacramento'					
+config.font_names = config.font_names+' ;Chelsea Market; Indie Flower; Just Another Hand; Sacramento'		
+config.fontSize_defaultLabel = '22';	
 };
 
 

@@ -858,6 +858,7 @@ textarea.border {
   margin: 0;
   word-break: break-word;
   overflow: hidden;
+  font-size: 22px;
 }
 .mcq-option p:focus {
   outline: none;
@@ -883,6 +884,19 @@ textarea.border {
 #individual-marks-region label {
   text-align: right;
   padding-top: 8px;
+}
+@media (max-width: 1024px) {
+  #site-page-content-region {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #toolbox,
+  .dock.tiles {
+    display: none;
+  }
+}
+.hashtags {
+  font-size: 13px;
 }
 .listBox {
   margin-top: 60px;

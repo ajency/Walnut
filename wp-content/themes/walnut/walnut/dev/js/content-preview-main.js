@@ -12,7 +12,6 @@ require.config({
     underscore: 'plugins/underscore',
     backbone: 'plugins/backbone',
     bootstrap: 'plugins/bootstrap',
-    bootstrapslider: 'plugins/bootstrap-slider',
     marionette: 'plugins/backbone.marionette',
     text: 'plugins/text',
     mustache: 'plugins/mustache',
@@ -20,16 +19,11 @@ require.config({
     plupload: 'plugins/plupload.full',
     syphon: 'plugins/backbone.syphon',
     underscorestring: 'plugins/underscorestring',
-    entitiesloader: 'entities/content-creator-entities-loader',
+    entitiesloader: 'entities/content-preview-entities-loader',
     checkbox: 'plugins/flatui-checkbox',
-    componentloader: 'components/builder-component-loader',
+    componentloader: 'components/preview-component-loader',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
-    jquerycolor: 'plugins/jquery.minicolors.min',
-    jqueryknob: 'plugins/jquery.knob',
-    ckeditor: 'plugins/ckeditor/ckeditor',
-    select2: 'plugins/select2.min',
-    tagsinput: 'plugins/bootstrap-tagsinput.min',
     screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
   },
   shim: {
@@ -39,8 +33,6 @@ require.config({
     jquery: ['underscore'],
     jqueryui: ['jquery'],
     jqueryresize: ['jquery', 'jqueryui'],
-    jquerycolor: ['jquery'],
-    jqueryknob: ['jquery'],
     kineticresize: ['kinetic'],
     backbone: {
       deps: ['jquery', 'underscore'],
@@ -55,18 +47,15 @@ require.config({
       exports: 'plupload'
     },
     bootstrap: ['jquery', 'jqueryui'],
-    bootstrapslider: ['bootstrap'],
     checkbox: ['bootstrap'],
     jqueryvalidate: ['jquery'],
     underscorestring: ['underscore'],
     syphon: ['backbone'],
-    select2: ['jquery', 'bootstrap'],
-    tagsinput: ['jquery', 'bootstrap'],
     screwbuttons: ['jquery'],
-    app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
+    app: ['plugins/content-preview-pluginloader', 'config/content-preview-configloader']
   }
 });
 
-require(['plugins/content-creator-pluginloader', 'config/content-creator-configloader', 'app', 'entitiesloader', 'componentloader', 'apps/content-creator-appsloader'], function(plugins, configs, App) {
+require(['plugins/content-preview-pluginloader', 'config/content-preview-configloader', 'app', 'entitiesloader', 'componentloader', 'apps/content-preview-appsloader'], function(plugins, configs, App) {
   return App.start();
 });
