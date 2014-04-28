@@ -1,7 +1,6 @@
 <?php
 
 require_once 'functions.php';
-add_action( 'wp_ajax_get-user-data', 'get_user_data' );
 
 function get_user_data() {
         if(is_user_logged_in()){
@@ -11,17 +10,13 @@ function get_user_data() {
         else
            wp_send_json(array("error"=>"User not logged in."));
 }
-
-add_action( 'wp_ajax_logout_user', 'logout_current_user' );
+add_action( 'wp_ajax_get-user-data', 'get_user_data' );
 
 function logout_current_user() {
         wp_logout();
         wp_send_json(array("success"=>"User logged out."));
 }
-
-
-
-add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_web_login' );
+add_action( 'wp_ajax_logout_user', 'logout_current_user' );
 
 function authenticate_web_login() {
 	$login_data=$_POST['data'];
@@ -33,8 +28,7 @@ function authenticate_web_login() {
 		wp_send_json($login_check);
 	}
 }
-
-add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
+add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_web_login' );
 
 function authenticate_app_login() {
 	$login_data=$_POST['data'];
@@ -45,3 +39,13 @@ function authenticate_app_login() {
             wp_send_json($login_check);
 	
 }
+add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
+
+function fetch_users(){
+    
+    $user_data=get_user_list($_GET);
+    
+    wp_send_json($user_data);
+    
+}
+add_action( 'wp_ajax_get-users', 'fetch_users' );

@@ -1,56 +1,79 @@
 <div class="grid-title no-border">
-						<h4 class="">{{name}}</h4>
-						<div class="tools">
-							<a href="javascript:;" class="collapse"></a>
-						</div>
-						</div>
-						<div class="grid-body no-border" style="overflow: hidden; display: block;">
-						<div class="row ">
-							<div class="col-md-4">
-							    <div class="margin-bottom-20 ">
-									<label class="form-label">Objective</label>
-									{{description.objective}}
-									</div>
-							</div>
-							<div class="col-md-4">
-							    <div class="margin-bottom-20 ">
-									<label class="form-label">Physical Requirements</label>
-									{{description.physical_requirements}}
-								</div>
-							</div>
-							<div class="col-md-4">
-							    <div class="margin-bottom-20 ">
-									<label class="form-label">Textbook</label>
-									{{showTextbook}}
-								</div>
-							</div>												 
-						</div>
-						<div class="row ">
-								<div class="col-md-4">
-								   <div class="margin-bottom-20 ">
-									<label class="form-label">Description</label>
-									{{description.description}}
-								</div>
-							</div>
-							<div class="col-md-4">
-							    <div class="margin-bottom-20 ">
-									<label class="form-label">Electronic Requirements</label>
-								{{description.electionic_requirements}}
-								</div>
-							</div>
-							<div class="col-md-4">
-							    <div class="margin-bottom-20 ">
-									<label class="form-label">Chapter</label>
-									{{showChapter}}
-								</div>
-							</div>											 
-						</div>
-						<div class="row ">
-								<div class="col-md-4">
-								   <div class="margin-bottom-20 ">
-									<label class="form-label">Duration</label>
-									{{duration}} {{minshours}}
-								</div>
-							</div>										 
-						</div>
-					</div>
+	<h4 class="">{{name}}</h4>
+	<div class="tools">
+		<a href="javascript:;" class="collapse"></a>
+	</div>
+	</div>
+	<div class="grid-body no-border" style="overflow: hidden; display: block;">
+	<div class="row ">
+		<div class="col-md-4">
+		    <div class="margin-bottom-20 ">
+				<label class="form-label">Objective</label>
+				{{description.objective}}
+				</div>
+		</div>
+		<div class="col-md-4">
+		    <div class="margin-bottom-20 ">
+				<label class="form-label">Physical Requirements</label>
+				{{description.physical_requirements}}
+			</div>
+		</div>
+		<div class="col-md-4">
+		    <div class="margin-bottom-20 ">
+				<label class="form-label">Textbook</label>
+				{{getTextbookName}}
+			</div>
+		</div>												 
+	</div>
+	<div class="row ">
+			<div class="col-md-4">
+			   <div class="margin-bottom-20 ">
+				<label class="form-label">Description</label>
+				{{description.description}}
+			</div>
+		</div>
+		<div class="col-md-4">
+		    <div class="margin-bottom-20 ">
+				<label class="form-label">Electronic Requirements</label>
+			{{description.electionic_requirements}}
+			</div>
+		</div>
+		<div class="col-md-4">
+		    <div class="margin-bottom-20 ">
+				<label class="form-label">Chapter</label>
+				{{showChapter}}
+			</div>
+		</div>											 
+	</div>
+	<div class="row ">
+			<div class="col-md-4">
+			   <div class="margin-bottom-20 ">
+				<label class="form-label">Duration</label>
+				{{duration}} {{minshours}}
+			</div>
+		</div>										 
+	</div>
+</div>
+{{#takeClassModule}}
+<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="modProgress">
+				<p class="bold small-text m-t-10 m-b-5">In Progress</p>
+			    <div class="progress">
+			        <div data-percentage="0%" style="width: 0%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+			    </div>
+		   	</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="timedisplay"></div>
+			
+			<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
+				<i class="fa fa-play"></i> Start
+			</button> 
+
+			<button type="button" class="btn btn-white btn-small pull-right m-t-10 m-r-10" data-toggle="modal" data-target="#schedule"><i class="fa fa-calendar"></i> Schedule</button>
+		</div>
+	</div>
+</div>
+{{/takeClassModule}}

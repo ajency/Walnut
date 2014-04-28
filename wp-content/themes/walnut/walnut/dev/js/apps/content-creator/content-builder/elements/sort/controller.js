@@ -48,11 +48,6 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
           };
         })(this));
-        this.listenTo(view, "show", (function(_this) {
-          return function() {
-            return _this.eventObj.vent.trigger("question:dropped");
-          };
-        })(this));
         return this.layout.elementRegion.show(view);
       };
 
@@ -67,8 +62,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         model.set('elements', '');
         delete model.get('elements');
         model.destroy();
-        App.execute("close:question:properties");
-        return this.eventObj.vent.trigger("question:removed");
+        return App.execute("close:question:properties");
       };
 
       Controller.prototype._changeOptionCount = function(model, num) {

@@ -48,7 +48,7 @@ add_action('wp_ajax_create-content-group', 'create_content_group');
 function update_content_group() {
 
     global $wpdb;
-    if (isset($_POST['name'])) {
+    if (!isset($_POST['changed'])) {
         $data = array(
             'id' => $_POST['id'],
             'name' => $_POST['name'],
@@ -57,7 +57,7 @@ function update_content_group() {
         );
 
         $content_group = save_content_group($data);
-    } 
+    }
    
     if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
         $data = array(

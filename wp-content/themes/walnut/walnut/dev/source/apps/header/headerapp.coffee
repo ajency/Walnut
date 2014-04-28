@@ -47,7 +47,8 @@ define ['app'
 				data
 				
 			onShow:->						
-				if (($('.creator').length > 0) || ($('.teacher-app').length>0)) 
+				# || ($('.teacher-app').length>0)
+				if (($('.creator').length > 0)) 
 					$('.page-content').addClass('condensed');
 					$(".header-seperation").css("display","none");
 

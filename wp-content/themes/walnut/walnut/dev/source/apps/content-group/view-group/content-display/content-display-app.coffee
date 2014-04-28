@@ -9,12 +9,13 @@ define ['app'
 			initialize : (opts)->
 
 				{@model} = opts
-
-				#@groupContentCollection= App.request "get:content:pieces:of:group", @model.get 'id'
+				{@module} = opts
 				
 				@groupContentCollection= App.request "get:content:pieces:by:ids", @model.get 'content_pieces'
 				
 				App.execute "when:fetched", @groupContentCollection, @showView
+
+				@listenTo @model, 'training:module:started', @trainingModuleStarted
 
 			showView:=>
 				@view= view = @_getCollectionContentDisplayView @model
@@ -24,7 +25,10 @@ define ['app'
 				new ContentDisplayView 
 					model: model
 					collection: @groupContentCollection
+					module: @module
 
+			trainingModuleStarted:=>
+				@view.triggerMethod "apply:urls"
 
 		class ContentItemView extends Marionette.ItemView
 			
@@ -47,8 +51,22 @@ define ['app'
 
 			id			: 'myCanvas-miki'
 
-			onShow:->
-				console.log @collection
+			
+
+			onApplyUrls:->
+
+				currentRoute=App.getCurrentRoute()
+
+				url = '#'+currentRoute+'/'
+
+				for item in @$el.find('li .contentPiece')
+
+					itemurl = url+ $(item).attr 'data-id'
+
+					$(item).find 'a'
+					.attr 'href',itemurl
+
+
 
 		# set handlers
 		App.commands.setHandler "show:viewgroup:content:displayapp", (opt = {})->

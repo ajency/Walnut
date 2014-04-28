@@ -2,7 +2,8 @@ define ['app'
 		'controllers/region-controller'
 		'apps/content-creator/element-box/elementboxapp'
 		'apps/content-creator/content-builder/app'
-		'apps/content-creator/property-dock/controller'],(App,RegionController)->
+		'apps/content-creator/property-dock/controller'
+		],(App,RegionController)->
 
 			
 			App.module "ContentCreator", (ContentCreator,App,Backbone,Marionette,$,_)->	
@@ -11,9 +12,26 @@ define ['app'
 				ContentCreator.closequestionelements = true
 				ContentCreator.closequestioneproperty = true
 
+				# class ContentCreatorRouter extends Marionette.AppRouter
+
+				# 	appRoutes : 
+				# 		''					 : 'showContentCreator'
+
+				# Controller = 
+				# 	showContentCreator :->
+				# 		new ContentCreatorController
+				# 			region 		: App.mainContentRegion
+
+
+				# ContentCreator.on "start", ->
+				# 	new ContentCreatorRouter
+				# 			controller : Controller 
+
 				class ContentCreatorController extends RegionController
 
 					initialize : (options)->
+
+
 						breadcrumb_items = 'items':[
 							{'label':'Dashboard','link':'javascript://'},
 							{'label':'Content Management','link':'javascript:;'},
@@ -25,19 +43,17 @@ define ['app'
 						# get the main layout for the content creator
 						@layout = @_getContentCreatorLayout()
 
-						eventObj = App.createEventObject()
+						# eventObj = App.createEventObject()
 
 						# listen to "show" event of the layout and start the 
 						# elementboxapp passing the region 
 						@listenTo @layout,'show',=>
 							App.execute "show:element:box", 
 										region : @layout.elementBoxRegion
-										eventObj : eventObj
 
 							App.execute "show:content:builder",
 										region : @layout.contentBuilderRegion
-										eventObj : eventObj
-
+										
 							App.execute "show:property:dock",
 										region : @layout.PropertyRegion
 						# show the layout

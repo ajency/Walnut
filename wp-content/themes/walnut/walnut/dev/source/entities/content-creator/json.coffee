@@ -22,5 +22,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 					jsonModel
 
 			# handlers
-			App.reqres.setHandler "get:page:json", ()->
+			App.reqres.setHandler "get:page:json", (data={})->
+				console.log data
 				API.getPageJSON()

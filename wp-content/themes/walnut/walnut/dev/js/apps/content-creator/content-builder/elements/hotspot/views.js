@@ -54,7 +54,6 @@ define(['app'], function(App) {
         if (this.contentObject.height !== void 0) {
           this.stage.height(this.contentObject.height);
         }
-        this._setDefaultImage();
         this.stage.add(this.defaultLayer);
         this.stage.add(this.imageLayer);
         this.stage.add(this.textLayer);
@@ -168,7 +167,9 @@ define(['app'], function(App) {
               image: defaultImage
             });
             _this.defaultLayer.add(_this.hotspotDefault);
-            _this._updateDefaultLayer();
+            _.delay(function() {
+              return _this._updateDefaultLayer();
+            }, 500);
             return _this._updateDefaultImageSize();
           };
         })(this);
@@ -176,17 +177,24 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._updateDefaultLayer = function() {
-        var i;
+        var i, isEmptyFlag;
         i = 1;
+        isEmptyFlag = true;
         while (i < this.stage.getChildren().length) {
           if (i) {
             if (this.stage.getChildren()[i].getChildren().length) {
               this.defaultLayer.removeChildren();
               console.log("remove default");
+              isEmptyFlag = false;
               break;
             }
           }
           i++;
+        }
+        if (isEmptyFlag) {
+          if (!this.stage.getChildren()[0].getChildren().length) {
+            this._setDefaultImage();
+          }
         }
         return this.defaultLayer.draw();
       };
@@ -311,7 +319,8 @@ define(['app'], function(App) {
             _this.optionCollection.remove(hotspotElement);
             App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
-            return _this.optionLayer.draw();
+            _this.optionLayer.draw();
+            return _this._updateDefaultLayer();
           };
         })(this));
         circleGrp.on('mousedown click', function(e) {
@@ -408,7 +417,8 @@ define(['app'], function(App) {
             _this.optionCollection.remove(hotspotElement);
             App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
-            return _this.optionLayer.draw();
+            _this.optionLayer.draw();
+            return _this._updateDefaultLayer();
           };
         })(this));
         rectGrp.on('mousedown click', function(e) {
@@ -528,7 +538,8 @@ define(['app'], function(App) {
             _this.textCollection.remove(hotspotElement);
             App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
-            return _this.textLayer.draw();
+            _this.textLayer.draw();
+            return _this._updateDefaultLayer();
           };
         })(this));
         hotspotElement.on("change:textAngle", (function(_this) {
@@ -618,7 +629,8 @@ define(['app'], function(App) {
             _this.imageCollection.remove(hotspotElement);
             App.ContentCreator.closequestionelementproperty = true;
             App.execute("close:question:element:properties");
-            return _this.imageLayer.draw();
+            _this.imageLayer.draw();
+            return _this._updateDefaultLayer();
           };
         })(this));
       };

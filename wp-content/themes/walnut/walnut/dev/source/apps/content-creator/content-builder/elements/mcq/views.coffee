@@ -3,16 +3,45 @@ define ['app'],(App)->
 	App.module "ContentCreator.ContentBuilder.Element.Mcq.Views",
 	(Views, App, Backbone, Marionette,$, _)->
 
-		
+		class Views.McqView extends Marionette.ItemView
 
-		class OptionView extends Marionette.ItemView
+			className : 'mcq'
+			
+
+			onShow:->
+				@$el.attr 'id','mcq-container'
+
+				# set event handler for click of mcq and stop propogation of the event
+				@$el.parent().parent().on 'click',(evt)=>
+						@trigger "show:this:mcq:properties"
+						evt.stopPropagation()
+
+				@trigger "create:row:structure",
+						container : @$el
+
+				@$el.find('.aj-imp-drag-handle').remove()
+				@$el.find('.aj-imp-delete-btn').remove()
+				@$el.find('.aj-imp-settings-btn').remove()
+
+			onPreTickAnswers:->
+				
+				console.log @model.get('correct_answer')
+				_.each @model.get('correct_answer'),(optionNo)=>
+					console.log 'onPreTickAnswers'
+					@$el.find('input:checkbox[id=option-'+optionNo+']').attr 'checked',true
+					@$el.find('input:checkbox[id=option-'+optionNo+']').parent().css('background-position','0px -26px')
+
+
+
+
+
+		class Views.McqOptionView extends Marionette.ItemView
 
 			className : 'mcq-option'
 
 			tagName : 'div'
 
-			template : '
-						<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no">
+			template : '<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no">
 						
 						<p class="mcq-option-text"></p>'
 
@@ -22,8 +51,12 @@ define ['app'],(App)->
 			# current markupup as argument
 			events:
 				'click a'	: (e)-> e.preventDefault()
-				'blur p'		: -> @model.set 'text', @$el.find('p').html()
+				'blur p'		: '_onBlur'
+				'change input:checkbox' : '_onClickOfCheckbox'
 							# @trigger "text:element:blur"
+
+			# triggers :
+			# 	'change input:checkbox' : '_onClickOfCheckbox'
 
 
 
@@ -47,9 +80,32 @@ define ['app'],(App)->
 
 				# custom checkbox
 				@$el.find('input:checkbox').screwDefaultButtons
-					image: 'url("../wp-content/themes/walnut/images/csscheckbox.png")'
+					image: 'url("../wp-content/themes/walnut/images/csscheckbox-correct.png")'
 					width: 32
 					height: 26
+
+				@$el.parent().on "class:changed",=>
+					@model.set 'class', @$el.parent().attr('data-class')
+					# if e.originalEvent.attrName is 'data-class'
+					# 	console.log @$el.parent().attr('data-class')
+
+			_onBlur:->
+				@model.set 'text', @$el.find('p').html()
+
+			_onClickOfCheckbox:(evt)->
+
+					if $(evt.target).prop 'checked'
+						console.log 'checked'
+						@trigger 'option:checked' , @model
+					else 
+						console.log 'unchecked'
+						@trigger 'option:unchecked' , @model
+
+
+			onClickCheckbox:()->
+
+				@$el.find('input:checkbox').attr 'checked',true
+				@$el.find('input:checkbox').parent().css('background-position','0px -26px')
 					
 
 
@@ -61,53 +117,52 @@ define ['app'],(App)->
 				@editor.destroy()
 
 
-		class Views.McqView extends Marionette.CompositeView
+		# class Views.McqView extends Marionette.CompositeView
 
-			className : 'mcq'
+		# 	className : 'mcq'
 
-			template : '<div class="options"></div>
-						<div class="clearfix"></div>'
+		# 	template : '<div class="options"></div>
+		# 				<div class="clearfix"></div>'
 
 
 
-			itemView : OptionView
+		# 	itemView : OptionView
 
-			itemViewContainer : 'div.options'
+		# 	itemViewContainer : 'div.options'
 
-			initialize:(options)->
-					@mcq_model = options.mcq_model
-
-				
-
-			# # # trigger when the no of models in collection has been changed
-			# # # change the default radio to checkbox if multple 
-			# onAfterItemAdded:->
-			# 		if @mcq_model.get 'multiple'
-			# 				@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
-			
-			# triggered on show of the view
-			onShow:->
-					# if @mcq_model.get 'multiple'
-					# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
-
-					# set event handler for click of mcq and stop propogation of the event
-					@$el.parent().parent().on 'click',(evt)=>
-							@trigger "show:this:mcq:properties"
-							evt.stopPropagation()
-
-					# # events handlers for change of model attributes
-					# @mcq_model.on 'change:multiple', @_changeMultipleAnswers
-
-			# # on change of multiple attribute in the model 
-			# # change the input type
-			# _changeMultipleAnswers:(model,multiple)=>
-			# 	if multiple
-			# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
-			# 	else
-			# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','radio'
-
-			
+		# 	initialize:(options)->
+		# 			@mcq_model = options.mcq_model
 
 				
+
+		# 	# # # trigger when the no of models in collection has been changed
+		# 	# # # change the default radio to checkbox if multple 
+		# 	# onAfterItemAdded:->
+		# 	# 		if @mcq_model.get 'multiple'
+		# 	# 				@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+			
+		# 	# triggered on show of the view
+		# 	onShow:->
+		# 			# if @mcq_model.get 'multiple'
+		# 			# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+
+		# 			# set event handler for click of mcq and stop propogation of the event
+		# 			@$el.parent().parent().on 'click',(evt)=>
+		# 					@trigger "show:this:mcq:properties"
+		# 					evt.stopPropagation()
+
+		# 			# # events handlers for change of model attributes
+		# 			# @mcq_model.on 'change:multiple', @_changeMultipleAnswers
+
+		# 	# # on change of multiple attribute in the model 
+		# 	# # change the input type
+		# 	# _changeMultipleAnswers:(model,multiple)=>
+		# 	# 	if multiple
+		# 	# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','checkbox'
+		# 	# 	else
+		# 	# 		@$el.find('.mcq-option input.mcq-option-select').attr 'type','radio'
+
+			
+
 
 

@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
@@ -8,6 +9,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       __extends(ItemModel, _super);
 
       function ItemModel() {
+        this.stopModule = __bind(this.stopModule, this);
+        this.startModule = __bind(this.startModule, this);
         return ItemModel.__super__.constructor.apply(this, arguments);
       }
 
@@ -33,6 +36,19 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       };
 
       ItemModel.prototype.name = 'content-group';
+
+      ItemModel.prototype.initialize = function() {
+        this.on('start:module', this.startModule, this);
+        return this.on('stop:module', this.stopModule, this);
+      };
+
+      ItemModel.prototype.startModule = function(model) {
+        return this.trigger("training:module:started", model);
+      };
+
+      ItemModel.prototype.stopModule = function(model) {
+        return this.trigger("training:module:stopped", model);
+      };
 
       return ItemModel;
 

@@ -53,6 +53,10 @@ add_action('init', 'create_content_piece_post_type');
 
 function get_content_pieces($args = array()) {
     
+    $current_blog_id= get_current_blog_id();
+    
+    switch_to_blog(1);
+    
     if(isset($args['ids'])){
         $ids = implode(',',$args['ids']);
         $args['post__in'] = $args['ids'];
@@ -69,11 +73,18 @@ function get_content_pieces($args = array()) {
     foreach ($content_items as $id) {
         $content_pieces[]= get_single_content_piece($id);
     }
-
+    
+    switch_to_blog($current_blog_id);
+    
     return $content_pieces;
+    
 }
 
 function get_single_content_piece($id){
+    
+    $current_blog_id= get_current_blog_id();
+    
+    switch_to_blog(1);
     
     $content_piece= get_post($id);
     
@@ -95,10 +106,17 @@ function get_single_content_piece($id){
     $content_piece->subjects = $subject_ids;
     $authordata = get_userdata($content_piece->post_author);
     $content_piece->creator = $authordata->display_name;
+    
+    // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
     $content_piece->content_type = ($content_type) ? $content_type : '--';
-        
-   return $content_piece;
+    
+    // Question Type can be individual or chorus
+    $content_piece->question_type = 'individual'; 
+    
+    switch_to_blog($current_blog_id);
+    
+    return $content_piece;
 }
 
 function save_content_group($data = array()) {
@@ -136,7 +154,7 @@ function save_content_group($data = array()) {
         );
 
         if (isset($data['id']))
-            $content_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_data, array('id' => $data['id']));
+            $content_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_data, array('collection_id' => $data['id'], 'meta_key'=>'description'));
         else
             $content_meta = $wpdb->insert($wpdb->prefix . 'collection_meta', $meta_data);
     }
@@ -274,26 +292,11 @@ function get_single_content_group($id, $division=''){
         }
     }
     
-    
-    switch_to_blog($current_blog);
-    
-    if($division !=''){
-        $training_logs_query = $wpdb->prepare("SELECT * FROM 
-            {$wpdb->prefix}training_logs WHERE collection_id=%d AND division_id=%d order by id desc limit 1", $id, $division);
-
-        $training_logs  = $wpdb->get_results($training_logs_query);  
-
-        foreach($training_logs as $logs){
-           $data->status= $logs->status;
-           $data->training_date= $logs->date;
-        }
-    }
-    
     $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta 
         WHERE collection_id=%d",$id);
     
     $description= $wpdb->get_results($query_description);
-
+    
     $data->description=$data->content_pieces=array();
 
     foreach($description as $key=>$value){
@@ -306,6 +309,23 @@ function get_single_content_group($id, $division=''){
            $data->content_pieces= $meta_val;
        
     }
+
+    switch_to_blog($current_blog);
+    
+    if($division !=''){
+        $training_logs_query = $wpdb->prepare("SELECT * FROM 
+            {$wpdb->prefix}training_logs WHERE collection_id=%d AND 
+                division_id=%d order by id desc limit 1",
+                    $id, $division);
+
+        $training_logs  = $wpdb->get_results($training_logs_query);  
+
+        foreach($training_logs as $logs){
+           $data->status= $logs->status;
+           $data->training_date= $logs->date;
+        }
+    }
+    
     return $data;
     
 }

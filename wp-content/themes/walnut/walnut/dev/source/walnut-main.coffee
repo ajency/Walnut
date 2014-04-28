@@ -43,6 +43,7 @@ require.config
 		unserialize			: 'plugins/unserialize'
 		datepicker			: 'plugins/bootstrap-datepicker'
 		timepicker			: 'plugins/bootstrap-timepicker.min'
+		jquerytimer			: 'plugins/timer.jquery'
 
 
 	shim:
@@ -73,6 +74,7 @@ require.config
 		select2			: ['jquery', 'bootstrap']
 		datepicker 		: ['jquery', 'bootstrap']
 		timepicker 		: ['jquery', 'bootstrap']
+		jquerytimer		: ['jquery']
 		app 			: ['plugins/walnut-pluginloader','config/walnut-configloader']
 
 	

@@ -3,30 +3,67 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app'], function(App) {
   return App.module("ContentCreator.ContentBuilder.Element.Mcq.Views", function(Views, App, Backbone, Marionette, $, _) {
-    var OptionView;
-    OptionView = (function(_super) {
-      __extends(OptionView, _super);
+    Views.McqView = (function(_super) {
+      __extends(McqView, _super);
 
-      function OptionView() {
-        return OptionView.__super__.constructor.apply(this, arguments);
+      function McqView() {
+        return McqView.__super__.constructor.apply(this, arguments);
       }
 
-      OptionView.prototype.className = 'mcq-option';
+      McqView.prototype.className = 'mcq';
 
-      OptionView.prototype.tagName = 'div';
+      McqView.prototype.onShow = function() {
+        this.$el.attr('id', 'mcq-container');
+        this.$el.parent().parent().on('click', (function(_this) {
+          return function(evt) {
+            _this.trigger("show:this:mcq:properties");
+            return evt.stopPropagation();
+          };
+        })(this));
+        this.trigger("create:row:structure", {
+          container: this.$el
+        });
+        this.$el.find('.aj-imp-drag-handle').remove();
+        this.$el.find('.aj-imp-delete-btn').remove();
+        return this.$el.find('.aj-imp-settings-btn').remove();
+      };
 
-      OptionView.prototype.template = '<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no"> <p class="mcq-option-text"></p>';
+      McqView.prototype.onPreTickAnswers = function() {
+        console.log(this.model.get('correct_answer'));
+        return _.each(this.model.get('correct_answer'), (function(_this) {
+          return function(optionNo) {
+            console.log('onPreTickAnswers');
+            _this.$el.find('input:checkbox[id=option-' + optionNo + ']').attr('checked', true);
+            return _this.$el.find('input:checkbox[id=option-' + optionNo + ']').parent().css('background-position', '0px -26px');
+          };
+        })(this));
+      };
 
-      OptionView.prototype.events = {
+      return McqView;
+
+    })(Marionette.ItemView);
+    return Views.McqOptionView = (function(_super) {
+      __extends(McqOptionView, _super);
+
+      function McqOptionView() {
+        return McqOptionView.__super__.constructor.apply(this, arguments);
+      }
+
+      McqOptionView.prototype.className = 'mcq-option';
+
+      McqOptionView.prototype.tagName = 'div';
+
+      McqOptionView.prototype.template = '<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no"> <p class="mcq-option-text"></p>';
+
+      McqOptionView.prototype.events = {
         'click a': function(e) {
           return e.preventDefault();
         },
-        'blur p': function() {
-          return this.model.set('text', this.$el.find('p').html());
-        }
+        'blur p': '_onBlur',
+        'change input:checkbox': '_onClickOfCheckbox'
       };
 
-      OptionView.prototype.onShow = function() {
+      McqOptionView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-option-' + this.model.get('optionNo'));
         this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
@@ -38,50 +75,43 @@ define(['app'], function(App) {
             });
           };
         })(this), 500);
-        return this.$el.find('input:checkbox').screwDefaultButtons({
-          image: 'url("../wp-content/themes/walnut/images/csscheckbox.png")',
+        this.$el.find('input:checkbox').screwDefaultButtons({
+          image: 'url("../wp-content/themes/walnut/images/csscheckbox-correct.png")',
           width: 32,
           height: 26
         });
-      };
-
-      OptionView.prototype.onClose = function() {
-        return this.editor.destroy();
-      };
-
-      return OptionView;
-
-    })(Marionette.ItemView);
-    return Views.McqView = (function(_super) {
-      __extends(McqView, _super);
-
-      function McqView() {
-        return McqView.__super__.constructor.apply(this, arguments);
-      }
-
-      McqView.prototype.className = 'mcq';
-
-      McqView.prototype.template = '<div class="options"></div> <div class="clearfix"></div>';
-
-      McqView.prototype.itemView = OptionView;
-
-      McqView.prototype.itemViewContainer = 'div.options';
-
-      McqView.prototype.initialize = function(options) {
-        return this.mcq_model = options.mcq_model;
-      };
-
-      McqView.prototype.onShow = function() {
-        return this.$el.parent().parent().on('click', (function(_this) {
-          return function(evt) {
-            _this.trigger("show:this:mcq:properties");
-            return evt.stopPropagation();
+        return this.$el.parent().on("class:changed", (function(_this) {
+          return function() {
+            return _this.model.set('class', _this.$el.parent().attr('data-class'));
           };
         })(this));
       };
 
-      return McqView;
+      McqOptionView.prototype._onBlur = function() {
+        return this.model.set('text', this.$el.find('p').html());
+      };
 
-    })(Marionette.CompositeView);
+      McqOptionView.prototype._onClickOfCheckbox = function(evt) {
+        if ($(evt.target).prop('checked')) {
+          console.log('checked');
+          return this.trigger('option:checked', this.model);
+        } else {
+          console.log('unchecked');
+          return this.trigger('option:unchecked', this.model);
+        }
+      };
+
+      McqOptionView.prototype.onClickCheckbox = function() {
+        this.$el.find('input:checkbox').attr('checked', true);
+        return this.$el.find('input:checkbox').parent().css('background-position', '0px -26px');
+      };
+
+      McqOptionView.prototype.onClose = function() {
+        return this.editor.destroy();
+      };
+
+      return McqOptionView;
+
+    })(Marionette.ItemView);
   });
 });

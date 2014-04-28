@@ -18,7 +18,7 @@ function get_single_division($id){
         
         $data['id']             = $division->id;
         $data['division']       = $division->division;
-        $data['class_id']       = (int)$division->class_id;
+        $data['class_id']       = (int) $division->class_id;
         $data['class_label']    = $classids[$division->class_id]['label'];
         $data['students_count'] = $student_count;
     }

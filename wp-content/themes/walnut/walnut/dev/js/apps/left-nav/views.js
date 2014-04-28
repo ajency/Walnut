@@ -22,6 +22,9 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
         if (this.model.get('post_title') === 'Training Module') {
           iconClass = 'fa fa-pencil-square-o';
         }
+        if (this.model.get('post_title') === 'Content Management') {
+          iconClass = 'fa fa-book';
+        }
         data.iconClass = iconClass;
         return data;
       };
@@ -55,7 +58,7 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
       LeftNavView.prototype.onShow = function() {
         var elem;
         console.log(this.collection);
-        if (($('.creator').length > 0) || ($('.teacher-app').length > 0)) {
+        if ($('.creator').length > 0) {
           $("#main-menu").addClass("mini");
           $(".start").removeClass("active open");
           $(".arrow").removeClass("open");
