@@ -7,14 +7,14 @@ define ["app", 'backbone'], (App, Backbone) ->
 			class QuestionResponseModel extends Backbone.Model
 
 				defaults:
+					collection_id 			: 0
 					content_piece_id  	 	: 0
-					collection_id			: 0
 					date_created     	  	: ''
 					date_modified      	   	: ''
 					total_time	 			: 0
 					question_response		: []
-					time_started			: 0
-					time_completed			: 0
+					time_started			: ''
+					time_completed			: ''
 
 				name: 'question-response'
 
@@ -27,28 +27,31 @@ define ["app", 'backbone'], (App, Backbone) ->
 					 AJAXURL + '?action=get-question-response'
 				
 				parse:(resp)->
-					@total = resp.count	
+					@total = resp.count
 					resp.data
 
 			responseCollection = new QuestionResponseCollection
 
 			# API 
 			API = 
-				# get all textbooks
-				getQuestionResponse:(param = {})->
+				# get response collection
+				getAllQuestionResponses:(param = {})->
 					responseCollection.fetch
 										reset : true
 										data  : param
 
 					responseCollection
 
-				saveQuestionResponse:(param = {})->
+
+				saveQuestionResponse:(data)->
+					questionResponse = new QuestionResponseModel data
+					questionResponse
 
 
-			# request handler to get all textbooks
-			App.reqres.setHandler "get:question:response", (opt) ->
-				API.getQuestionResponse(opt)
+			# request handler to get all responses
+			App.reqres.setHandler "get:question:response:collection", (params) ->
+				API.getAllQuestionResponses params 
 
-			App.reqres.setHandler "save:question:response", (id)->
-				API.saveQuestionResponse id
+			App.reqres.setHandler "save:question:response", (qID)->
+				API.saveQuestionResponse qID
 

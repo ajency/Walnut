@@ -12,14 +12,14 @@ define(["app", 'backbone'], function(App, Backbone) {
       }
 
       QuestionResponseModel.prototype.defaults = {
-        content_piece_id: 0,
         collection_id: 0,
+        content_piece_id: 0,
         date_created: '',
         date_modified: '',
         total_time: 0,
         question_response: [],
-        time_started: 0,
-        time_completed: 0
+        time_started: '',
+        time_completed: ''
       };
 
       QuestionResponseModel.prototype.name = 'question-response';
@@ -52,7 +52,7 @@ define(["app", 'backbone'], function(App, Backbone) {
     })(Backbone.Collection);
     responseCollection = new QuestionResponseCollection;
     API = {
-      getQuestionResponse: function(param) {
+      getAllQuestionResponses: function(param) {
         if (param == null) {
           param = {};
         }
@@ -62,17 +62,17 @@ define(["app", 'backbone'], function(App, Backbone) {
         });
         return responseCollection;
       },
-      saveQuestionResponse: function(param) {
-        if (param == null) {
-          param = {};
-        }
+      saveQuestionResponse: function(data) {
+        var questionResponse;
+        questionResponse = new QuestionResponseModel(data);
+        return questionResponse;
       }
     };
-    App.reqres.setHandler("get:question:response", function(opt) {
-      return API.getQuestionResponse(opt);
+    App.reqres.setHandler("get:question:response:collection", function(params) {
+      return API.getAllQuestionResponses(params);
     });
-    return App.reqres.setHandler("save:question:response", function(id) {
-      return API.saveQuestionResponse(id);
+    return App.reqres.setHandler("save:question:response", function(qID) {
+      return API.saveQuestionResponse(qID);
     });
   });
 });
