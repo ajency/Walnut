@@ -53,15 +53,15 @@ define ['marionette'], (Marionette)->
 				user = App.request "get:user:model"
 				user.set resp.data
 				school = App.request "get:current:school"
-				App.vent.trigger "show:content:builder"
+				App.vent.trigger "show:content:preview"
 				App.loginRegion.close()
 			else 	
 				App.vent.trigger "show:login"
 		, 'json'
 
-	App.vent.on "show:content:builder",->
-		# App.execute "show:content:preview", 
-		# 				region : App.mainContentRegion
+	App.vent.on "show:content:preview",->
+		App.execute "show:content:preview", 
+						region : App.mainContentRegion
 		
 		App.execute "show:headerapp", region:App.headerRegion
 		App.execute "show:leftnavapp", region:App.leftNavRegion

@@ -13,7 +13,7 @@ define(['app'], function(App) {
 
       GridRow.prototype.className = 'row';
 
-      GridRow.prototype.template = '<div class="col-sm-4"><label>{{optionNo}}</label></div> <div class="col-sm-8"> <input type="text" value="{{marks}}" class="form-control"> </div>';
+      GridRow.prototype.template = '<div class="col-sm-4"><label>{{optionNo}}</label></div> <div class="col-sm-8"> <input data-id="{{optionNo}}" type="text" value="{{marks}}" class="form-control"> </div>';
 
       GridRow.prototype.events = {
         'blur input': function(evt) {
@@ -31,14 +31,31 @@ define(['app'], function(App) {
         return MarksView.__super__.constructor.apply(this, arguments);
       }
 
-      MarksView.prototype.template = '<div class="row"> <div class="col-sm-4"><h5>Option</h5></div> <div class="col-sm-8"><h5>Marks</h5></div> </div> <div class="items"> </div>';
+      MarksView.prototype.template = '<div class="row"> <div class="col-sm-4"><div class="text-right">Option</div></div> <div class="col-sm-8"><div>Marks</div></div> </div> <div class="items"> </div>';
 
       MarksView.prototype.itemView = GridRow;
 
       MarksView.prototype.itemViewContainer = 'div.items';
 
+      MarksView.prototype.initialize = function(options) {
+        return this.mcqModel = options.mcq_model;
+      };
+
       MarksView.prototype.onRender = function() {
         return console.log(this.collection);
+      };
+
+      MarksView.prototype.onShow = function() {
+        _.each(this.mcqModel.get('correct_answer'), (function(_this) {
+          return function(option) {
+            return _this.$el.find('input[data-id="' + option + '"]').prop('disabled', false);
+          };
+        })(this));
+        return _.each(_.difference(_.range(1, this.mcqModel.get('optioncount') + 1), this.mcqModel.get('correct_answer')), (function(_this) {
+          return function(option) {
+            return _this.$el.find('input[data-id="' + option + '"]').val(0).prop('disabled', true);
+          };
+        })(this));
       };
 
       return MarksView;

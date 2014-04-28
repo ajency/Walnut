@@ -46,7 +46,7 @@ define(['marionette'], function(Marionette) {
           user = App.request("get:user:model");
           user.set(resp.data);
           school = App.request("get:current:school");
-          App.vent.trigger("show:content:builder");
+          App.vent.trigger("show:content:preview");
           return App.loginRegion.close();
         } else {
           return App.vent.trigger("show:login");
@@ -54,7 +54,10 @@ define(['marionette'], function(Marionette) {
       };
     })(this), 'json');
   });
-  App.vent.on("show:content:builder", function() {
+  App.vent.on("show:content:preview", function() {
+    App.execute("show:content:preview", {
+      region: App.mainContentRegion
+    });
     App.execute("show:headerapp", {
       region: App.headerRegion
     });

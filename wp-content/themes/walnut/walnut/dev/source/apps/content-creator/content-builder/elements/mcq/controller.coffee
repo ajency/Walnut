@@ -117,6 +117,7 @@ define ['app'
 
 								@view.triggerMethod 'preTickAnswers'
 
+						# create a row of mcq
 						_createMcqRow:(elements,container)->
 								controller = App.request "add:new:element",container,'Row', elements
 								_.each elements.elements, (column, index)=>
@@ -124,12 +125,23 @@ define ['app'
 										container = controller.layout.elementRegion.currentView.$el.children().eq(index)
 										@_addMcqOption(container,column.elements)
 
+						# create an mcq option
 						_addMcqOption:(container, model)->
 							view = @_getMcqOptionView model
 							view.render()
 							$(container).removeClass 'empty-column'
 							$(container).append(view.$el)
-							@listenTo view, 'option:checked',=>
+							@listenTo view, 'option:checked', @_optionChecked
+								
+							@listenTo view, 'option:unchecked',@_optionUnchecked
+							# call show method of view
+							view.triggerMethod 'show'
+							# call close method on remove of container
+							$(container).on 'remove',->
+								view.triggerMethod 'close'
+
+						# when a checkbox is checked
+						_optionChecked:(model)=>
 								correctAnswerArray = @layout.model.get('correct_answer')
 								if not @layout.model.get('multiple') and correctAnswerArray.length
 									@layout.model.set 'correct_answer',[model.get('optionNo')]
@@ -139,14 +151,13 @@ define ['app'
 									correctAnswerArray.push model.get('optionNo')
 								correctAnswerArray.sort()
 								console.log @layout.model.get('correct_answer')
-							@listenTo view, 'option:unchecked',=>
+
+						# when a checkbox is unchecked
+						_optionUnchecked:(model)=>
 								correctAnswerArray = @layout.model.get('correct_answer')
 								indexToRemove = $.inArray model.get('optionNo'),correctAnswerArray
 								correctAnswerArray.splice indexToRemove,1
 								console.log @layout.model.get('correct_answer')
-							view.triggerMethod 'show'
-
-						_optionChecked:()->
 
 
 						_getMcqOptionView:(model)->
