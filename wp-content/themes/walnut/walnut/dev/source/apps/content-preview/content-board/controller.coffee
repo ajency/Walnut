@@ -1,51 +1,41 @@
 define ['app'
 		'controllers/region-controller'
-		'apps/content-creator/content-builder/view'
-		'apps/content-creator/content-builder/element/controller'
-		'apps/content-creator/content-builder/elements-loader'
-		'apps/content-creator/content-builder/autosave/controller'],(App,RegionController)->
+		'apps/content-preview/content-board/element/controller'
+		'apps/content-preview/content-board/view'
+		'apps/content-preview/content-board/elements-loader'
+		],(App,RegionController)->
 
-			App.module "ContentCreator.ContentBuilder", (ContentBuilder, App, Backbone, Marionette, $, _)->
+			App.module "ContentPreview.ContentBoard", (ContentBoard, App, Backbone, Marionette, $, _)->
 
-				
-				class ContentBuilderController extends RegionController
 
-					initialize : (options)->
+				class ContentBoard.Controller extends RegionController
+
+					initialize:(options)->
 
 						elements = App.request "get:page:json"
 
-
-						@view = @_getContentBuilderView elements
-
-						
+						@view = @_getContentBoardView elements
 
 						@listenTo @view, "add:new:element", (container, type)->
-									App.request "add:new:element", container, type 
+								App.request "add:new:element", container, type 
 
-						@listenTo @view, "dependencies:fetched", =>
+						@listenTo @view, 'dependencies:fetched',=>
 								_.delay =>
-									@startFillingElements()
+										@startFillingElements()
 								, 400
 
 						@show @view,
 							loading : true
 
-					_getContentBuilderView : (elements)->
-
-						new ContentBuilder.Views.ContentBuilderView
-								model : elements
-
-					_getContainer :->
-						
-							@view.$el.find('#myCanvas')
-						
-
+					_getContentBoardView:(model)->
+						new ContentBoard.Views.ContentBoardView
+							model : model
 
 					# start filling elements
 					startFillingElements: ()->
 						section = @view.model.toJSON()
 
-						container = @_getContainer()
+						container = $('#myCanvas')
 						_.each section, (element, i)=>
 							if element.element is 'Row'
 								@addNestedElements container,element
@@ -65,32 +55,19 @@ define ['app'
 									App.request "add:new:element",container,ele.element, ele
 
 
-
-
 				API = 
 					# add a new element to the builder region
 					addNewElement : (container , type, modelData)->
 						console.log type
 						
-						new ContentBuilder.Element[type].Controller
+						new ContentBoard.Element[type].Controller
 										container : container
 										modelData : modelData
-									
-
-					saveQuestion :->
-
-						autoSave = App.request "autosave:question:layout"
-						autoSave.autoSave()
 
 
-				# create a command handler to start the content builder controller
-				App.commands.setHandler "show:content:builder", (options)->
-								new ContentBuilderController options
+				App.commands.setHandler 'show:content:board',(options)->
+					new ContentBoard.Controller options
 
 				#Request handler for new element
 				App.reqres.setHandler "add:new:element" , (container, type, modelData = {})->
 						API.addNewElement container, type, modelData 
-
-
-				App.commands.setHandler "save:question",->
-						API.saveQuestion()

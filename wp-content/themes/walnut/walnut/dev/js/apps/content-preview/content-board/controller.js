@@ -1,24 +1,24 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/content-builder/view', 'apps/content-creator/content-builder/element/controller', 'apps/content-creator/content-builder/elements-loader', 'apps/content-creator/content-builder/autosave/controller'], function(App, RegionController) {
-  return App.module("ContentCreator.ContentBuilder", function(ContentBuilder, App, Backbone, Marionette, $, _) {
-    var API, ContentBuilderController;
-    ContentBuilderController = (function(_super) {
-      __extends(ContentBuilderController, _super);
+define(['app', 'controllers/region-controller', 'apps/content-preview/content-board/element/controller', 'apps/content-preview/content-board/view', 'apps/content-preview/content-board/elements-loader'], function(App, RegionController) {
+  return App.module("ContentPreview.ContentBoard", function(ContentBoard, App, Backbone, Marionette, $, _) {
+    var API;
+    ContentBoard.Controller = (function(_super) {
+      __extends(Controller, _super);
 
-      function ContentBuilderController() {
-        return ContentBuilderController.__super__.constructor.apply(this, arguments);
+      function Controller() {
+        return Controller.__super__.constructor.apply(this, arguments);
       }
 
-      ContentBuilderController.prototype.initialize = function(options) {
+      Controller.prototype.initialize = function(options) {
         var elements;
         elements = App.request("get:page:json");
-        this.view = this._getContentBuilderView(elements);
+        this.view = this._getContentBoardView(elements);
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
         });
-        this.listenTo(this.view, "dependencies:fetched", (function(_this) {
+        this.listenTo(this.view, 'dependencies:fetched', (function(_this) {
           return function() {
             return _.delay(function() {
               return _this.startFillingElements();
@@ -30,20 +30,16 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         });
       };
 
-      ContentBuilderController.prototype._getContentBuilderView = function(elements) {
-        return new ContentBuilder.Views.ContentBuilderView({
-          model: elements
+      Controller.prototype._getContentBoardView = function(model) {
+        return new ContentBoard.Views.ContentBoardView({
+          model: model
         });
       };
 
-      ContentBuilderController.prototype._getContainer = function() {
-        return this.view.$el.find('#myCanvas');
-      };
-
-      ContentBuilderController.prototype.startFillingElements = function() {
+      Controller.prototype.startFillingElements = function() {
         var container, section;
         section = this.view.model.toJSON();
-        container = this._getContainer();
+        container = $('#myCanvas');
         return _.each(section, (function(_this) {
           return function(element, i) {
             if (element.element === 'Row') {
@@ -55,7 +51,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         })(this));
       };
 
-      ContentBuilderController.prototype.addNestedElements = function(container, element) {
+      Controller.prototype.addNestedElements = function(container, element) {
         var controller;
         controller = App.request("add:new:element", container, element.element, element);
         return _.each(element.elements, (function(_this) {
@@ -75,34 +71,26 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         })(this));
       };
 
-      return ContentBuilderController;
+      return Controller;
 
     })(RegionController);
     API = {
       addNewElement: function(container, type, modelData) {
         console.log(type);
-        return new ContentBuilder.Element[type].Controller({
+        return new ContentBoard.Element[type].Controller({
           container: container,
           modelData: modelData
         });
-      },
-      saveQuestion: function() {
-        var autoSave;
-        autoSave = App.request("autosave:question:layout");
-        return autoSave.autoSave();
       }
     };
-    App.commands.setHandler("show:content:builder", function(options) {
-      return new ContentBuilderController(options);
+    App.commands.setHandler('show:content:board', function(options) {
+      return new ContentBoard.Controller(options);
     });
-    App.reqres.setHandler("add:new:element", function(container, type, modelData) {
+    return App.reqres.setHandler("add:new:element", function(container, type, modelData) {
       if (modelData == null) {
         modelData = {};
       }
       return API.addNewElement(container, type, modelData);
-    });
-    return App.commands.setHandler("save:question", function() {
-      return API.saveQuestion();
     });
   });
 });

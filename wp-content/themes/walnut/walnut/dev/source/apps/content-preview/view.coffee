@@ -11,11 +11,11 @@ define ['app'],(App)->
 							</div>
 							<div class="preview">
 								
-								<div class="" id="content-preview"></div>
-								<div class="" id="preview-result"></div>
+								<div class="" id="content-board"></div>
+								<div class="" id="side-panel"></div>
 							</div>
 							'
 
 				regions : 
-					contentPreviewRegion : '#content-preview' 
-					previewResultRegion : '#preview-result'
+					contentBoardRegion : '#content-board' 
+					sidePanelRegion : '#side-panel'
