@@ -9,4 +9,5 @@ define [
 		'entities/content-pieces'
 		'entities/content-group'
 		'entities/divisions'
+		'entities/question-response'
 		],->

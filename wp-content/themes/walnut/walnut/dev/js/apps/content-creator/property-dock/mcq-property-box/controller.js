@@ -41,7 +41,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
 
       Controller.prototype._getMarksView = function(model) {
         return new McqPropertyBox.Views.MarksView({
-          collection: model.get('elements')
+          collection: model.get('elements'),
+          mcq_model: model
         });
       };
 

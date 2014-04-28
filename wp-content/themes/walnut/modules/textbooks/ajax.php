@@ -16,8 +16,7 @@ function fetch_textbooks() {
     $args = wp_parse_args($args, $defaults);
     $textbooks=get_textbooks($args);
     
-    echo(wp_send_json($textbooks));
-    die;
+    wp_send_json($textbooks);
 }
 
 add_action( 'wp_ajax_read-textbook', 'read_textbook' );
@@ -28,8 +27,7 @@ function read_textbook() {
     
     $textbooks=get_book($_GET['term_id']);
     
-    echo(wp_send_json($textbooks));
-    die;
+    wp_send_json($textbooks);
 }
 
 add_action( 'wp_ajax_get-chapter-subsections', 'fetch_chapter_subsections' );
@@ -44,6 +42,5 @@ function fetch_chapter_subsections() {
     $args = wp_parse_args($args, $defaults);
     $subsections=get_chapter_subsections($args);
     
-    echo(wp_send_json($subsections));
-    die;
+    wp_send_json($subsections);
 }

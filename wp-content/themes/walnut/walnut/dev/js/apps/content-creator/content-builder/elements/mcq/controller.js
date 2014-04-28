@@ -10,8 +10,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       function Controller() {
         this._changeColumnCount = __bind(this._changeColumnCount, this);
         this._changeOptionCount = __bind(this._changeOptionCount, this);
+        this._optionUnchecked = __bind(this._optionUnchecked, this);
+        this._optionChecked = __bind(this._optionChecked, this);
         this.createRowStructure = __bind(this.createRowStructure, this);
         this.renderElement = __bind(this.renderElement, this);
+        this._changeMultipleAnswers = __bind(this._changeMultipleAnswers, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -32,11 +35,20 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           ]),
           marks: 1,
           individual_marks: false,
-          multiple: false
+          multiple: false,
+          correct_answer: [2]
         });
         Controller.__super__.initialize.call(this, options);
         this.layout.model.on('change:optioncount', this._changeOptionCount);
-        return this.layout.model.on('change:columncount', this._changeColumnCount);
+        this.layout.model.on('change:columncount', this._changeColumnCount);
+        return this.layout.model.on('change:multiple', this._changeMultipleAnswers);
+      };
+
+      Controller.prototype._changeMultipleAnswers = function(model, multiple) {
+        if (!multiple) {
+          model.set('correct_answer', []);
+          return this.renderElement();
+        }
       };
 
       Controller.prototype.renderElement = function() {
@@ -61,12 +73,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.createRowStructure = function(options) {
-        var columnCounter, columnElement, columnElements, elements, numberOfColumns, numberOfOptions, numberOfRows, optionsInMcqCounter, remainingClass, remainingColumns, _results;
+        var columnCounter, columnElement, columnElements, elements, numberOfColumns, numberOfOptions, numberOfRows, optionsInMcqCounter, remainingClass, remainingColumns;
         numberOfColumns = this.layout.model.get('columncount');
         numberOfOptions = this.layout.model.get('optioncount');
         optionsInMcqCounter = 1;
         numberOfRows = Math.ceil(numberOfOptions / numberOfColumns);
-        _results = [];
         while (!!numberOfRows) {
           columnCounter = 1;
           columnElements = new Array();
@@ -100,9 +111,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             elements: columnElements
           };
           this._createMcqRow(elements, options.container);
-          _results.push(numberOfRows--);
+          numberOfRows--;
         }
-        return _results;
+        return this.view.triggerMethod('preTickAnswers');
       };
 
       Controller.prototype._createMcqRow = function(elements, container) {
@@ -125,7 +136,34 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         view.render();
         $(container).removeClass('empty-column');
         $(container).append(view.$el);
-        return view.triggerMethod('show');
+        this.listenTo(view, 'option:checked', this._optionChecked);
+        this.listenTo(view, 'option:unchecked', this._optionUnchecked);
+        view.triggerMethod('show');
+        return $(container).on('remove', function() {
+          return view.triggerMethod('close');
+        });
+      };
+
+      Controller.prototype._optionChecked = function(model) {
+        var correctAnswerArray;
+        correctAnswerArray = this.layout.model.get('correct_answer');
+        if (!this.layout.model.get('multiple') && correctAnswerArray.length) {
+          this.layout.model.set('correct_answer', [model.get('optionNo')]);
+          console.log('in check');
+          this.renderElement();
+        } else {
+          correctAnswerArray.push(model.get('optionNo'));
+        }
+        correctAnswerArray.sort();
+        return console.log(this.layout.model.get('correct_answer'));
+      };
+
+      Controller.prototype._optionUnchecked = function(model) {
+        var correctAnswerArray, indexToRemove;
+        correctAnswerArray = this.layout.model.get('correct_answer');
+        indexToRemove = $.inArray(model.get('optionNo'), correctAnswerArray);
+        correctAnswerArray.splice(indexToRemove, 1);
+        return console.log(this.layout.model.get('correct_answer'));
       };
 
       Controller.prototype._getMcqOptionView = function(model) {

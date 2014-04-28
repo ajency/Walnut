@@ -74,7 +74,7 @@ Template Name: Content Creator
     <div id="settings-region"></div>
 </div>
 <script type="text/javascript">
-var THEMEURL = 'http://localhost/impruw/testsite93/wp-content/themes/impruwclientparent';
+
 var SITEURL = '<?php echo site_url();?>'
 AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
 var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';

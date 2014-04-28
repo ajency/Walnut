@@ -22,7 +22,9 @@ define(['app', 'text!apps/teachers-dashboard/single-question/templates/module-de
       };
 
       Description.prototype.updateTime = function() {
-        return this.$el.find('.timedisplay').html('<i class="fa fa-clock-o"></i> ' + $('#timekeeper').html());
+        if (_.size($('#timekeeper')) > 0) {
+          return this.$el.find('.timedisplay').html('<i class="fa fa-clock-o"></i> ' + $('#timekeeper').html());
+        }
       };
 
       return Description;

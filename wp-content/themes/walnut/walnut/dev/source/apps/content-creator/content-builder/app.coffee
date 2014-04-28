@@ -12,10 +12,7 @@ define ['app'
 
 					initialize : (options)->
 
-						
-
 						elements = App.request "get:page:json"
-
 
 
 						@view = @_getContentBuilderView elements
