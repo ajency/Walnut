@@ -16,6 +16,12 @@ define ['app'],(App)->
 						container : @$el
 
 				
+				
+
+				@$el.closest('.preview').find('#submit-answer-button').on 'click',=>
+						@trigger "submit:answer"
+
+				
 
 
 		class Views.McqOptionView extends Marionette.ItemView
@@ -53,6 +59,8 @@ define ['app'],(App)->
 				# 	@model.set 'class', @$el.parent().attr('data-class')
 					# if e.originalEvent.attrName is 'data-class'
 					# 	console.log @$el.parent().attr('data-class')
+
+
 
 			
 
