@@ -7,9 +7,10 @@ function get_user_list($data){
     if(isset($data['role']))
         $args['role']= $data['role'];
     
-    if(isset($data['division']))
+    if(isset($data['division'])){
         $args['meta_key'] = 'student_division';
         $args['meta_value']= $data['division'];
+    }
     
     $users = get_users($args);
     

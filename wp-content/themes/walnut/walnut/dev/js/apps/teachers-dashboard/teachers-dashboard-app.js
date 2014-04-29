@@ -45,7 +45,7 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
         });
       },
       takeSingleQuestion: function(classID, div, tID, mID, qID) {
-        return new TeachersDashboardApp.View.SingleQuestionController({
+        return new TeachersDashboardApp.SingleGroupApp.SingleQuestionController({
           region: App.mainContentRegion,
           textbookID: tID,
           classID: classID,

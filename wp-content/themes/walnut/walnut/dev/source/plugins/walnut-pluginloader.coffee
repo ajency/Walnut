@@ -25,4 +25,5 @@ define [
 			'datepicker'
 			'timepicker'
 			'jquerytimer'
+			'jquery_listnav'
 		], ->
