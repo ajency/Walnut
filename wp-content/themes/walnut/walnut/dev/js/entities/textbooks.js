@@ -133,23 +133,23 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         onFailure = function(d) {
           return function(tx, error) {
-            return d.reject('OnFailure!: ' + error);
+            return d.reject('ERROR: ' + error);
           };
         };
         return $.when(runQuery()).done(function(data) {
           return console.log('getAllTextbooks transaction completed');
-        }).fail(function(err) {
-          return console.log('Error: ' + err);
+        }).fail(function(error) {
+          return console.log('ERROR: ' + error);
         });
       },
       getTextbooksByIDFromLocal: function(class_id) {
-        var getTextBookIds, onFailure, onSuccess, runQuery;
+        var deferredErrorHandler, failureHandler, getTextBookIds, onSuccess, runMainQuery;
         getTextBookIds = function() {
-          var failure, runQ, success;
+          var runQ, success;
           runQ = function() {
             return $.Deferred(function(d) {
               return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key='textbooks' AND user_id='1'", [], success(d), failure(d));
+                return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key='textbooks' AND user_id='1'", [], success(d), deferredErrorHandler(d));
               });
             });
           };
@@ -160,18 +160,11 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
               return d.resolve(ids);
             };
           };
-          failure = function(d) {
-            return function(tx, error) {
-              return d.reject('Failure: ' + error);
-            };
-          };
           return $.when(runQ()).done(function() {
             return console.log('getTextBookIds transaction completed');
-          }).fail(function(err) {
-            return console.log('Error: ' + err);
-          });
+          }).fail(failureHandler);
         };
-        runQuery = function() {
+        runMainQuery = function() {
           var ids, textbookIds;
           ids = '';
           textbookIds = getTextBookIds();
@@ -184,7 +177,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return _.db.transaction(function(tx) {
               var pattern;
               pattern = '%"' + class_id + '"%';
-              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' AND wtr.textbook_id IN (" + ids + ")", [], onSuccess(d), onFailure(d));
+              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' AND wtr.textbook_id IN (" + ids + ")", [], onSuccess(d), deferredErrorHandler(d));
             });
           });
         };
@@ -221,8 +214,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                     subjects: subjects,
                     modules_count: d.rows.item(0)['count']
                   };
-                }, function(tx, err) {
-                  return console.log('Error: ' + err.message);
+                }, function(tx, error) {
+                  return console.log('ERROR: ' + error.message);
                 });
               })(tx, row, p, i);
               i++;
@@ -230,16 +223,17 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return d.resolve(result);
           };
         };
-        onFailure = function(d) {
+        deferredErrorHandler = function(d) {
           return function(tx, error) {
-            return d.reject('OnFailure!: ' + error);
+            return d.reject('ERROR: ' + error);
           };
         };
-        return $.when(runQuery()).done(function(data) {
+        failureHandler = function(error) {
+          return console.log('ERROR: ' + error);
+        };
+        return $.when(runMainQuery()).done(function(data) {
           return console.log('getTextbooksByID transaction completed');
-        }).fail(function(err) {
-          return console.log('Error: ' + err);
-        });
+        }).fail(failureHandler);
       }
     };
     App.reqres.setHandler("get:textbooks", function(opt) {

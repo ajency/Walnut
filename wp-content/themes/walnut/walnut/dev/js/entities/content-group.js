@@ -104,9 +104,9 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return contentGroupItem;
       },
       getContentGroupByIdFromLocal: function(id, division) {
-        var getChapterName, getContentPiecesAndDescription, getDateAndStatus, getDuration, getMinsHours, onFailure, onSuccess, runMainQuery;
+        var deferredErrorHandler, failureHandler, getChapterName, getContentPiecesAndDescription, getDateAndStatus, getDuration, getMinsHours, onSuccess, runMainQuery;
         getDateAndStatus = function(collection_id, div) {
-          var dateAndStatus, failure, runQ, success;
+          var dateAndStatus, runQ, success;
           dateAndStatus = {
             date: '',
             status: ''
@@ -114,7 +114,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           runQ = function() {
             return $.Deferred(function(d) {
               return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT count(id) AS count, status, date FROM wp_training_logs WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, div], success(d), failure(d));
+                return tx.executeSql("SELECT count(id) AS count, status, date FROM wp_training_logs WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, div], success(d), deferredErrorHandler(d));
               });
             });
           };
@@ -127,19 +127,12 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
               return d.resolve(dateAndStatus);
             };
           };
-          failure = function(d) {
-            return function(tx, error) {
-              return d.reject('Failure: ' + error);
-            };
-          };
           return $.when(runQ()).done(function() {
             return console.log('getDateAndStatus transaction completed');
-          }).fail(function(err) {
-            return console.log('Error: ' + err);
-          });
+          }).fail(failureHandler);
         };
         getContentPiecesAndDescription = function(collection_id) {
-          var contentPiecesAndDescription, failure, runQ, success;
+          var contentPiecesAndDescription, runQ, success;
           contentPiecesAndDescription = {
             content_pieces: '',
             description: ''
@@ -147,7 +140,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           runQ = function() {
             return $.Deferred(function(d) {
               return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), failure(d));
+                return tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), deferredErrorHandler(d));
               });
             });
           };
@@ -168,24 +161,17 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
               return d.resolve(contentPiecesAndDescription);
             };
           };
-          failure = function(d) {
-            return function(tx, error) {
-              return d.reject('Failure: ' + error);
-            };
-          };
           return $.when(runQ()).done(function() {
             return console.log('getContentPiecesAndDescription transaction completed');
-          }).fail(function(err) {
-            return console.log('Error: ' + err);
-          });
+          }).fail(failureHandler);
         };
         getChapterName = function(term_ids) {
-          var failure, runQ, success, temp;
+          var runQ, success, temp;
           temp = unserialize(term_ids);
           runQ = function() {
             return $.Deferred(function(d) {
               return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), failure(d));
+                return tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), deferredErrorHandler(d));
               });
             });
           };
@@ -200,23 +186,16 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
               return d.resolve(name);
             };
           };
-          failure = function(d) {
-            return function(tx, error) {
-              return d.reject('Failure: ' + error);
-            };
-          };
           return $.when(runQ()).done(function() {
             return console.log('getChapterName transaction completed');
-          }).fail(function(err) {
-            return console.log('Error: ' + err);
-          });
+          }).fail(failureHandler);
         };
         runMainQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
               var pattern;
               pattern = '%"' + id + '"%';
-              return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], onSuccess(d), onFailure(d));
+              return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], onSuccess(d), deferredErrorHandler(d));
             });
           });
         };
@@ -281,11 +260,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return d.resolve(result);
           };
         };
-        onFailure = function(d) {
-          return function(tx, error) {
-            return d.reject('OnFailure!: ' + error);
-          };
-        };
         getDuration = function(duration) {
           if (duration > 60) {
             return duration / 60;
@@ -300,11 +274,17 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return 'mins';
           }
         };
+        deferredErrorHandler = function(d) {
+          return function(tx, error) {
+            return d.reject('ERROR: ' + error);
+          };
+        };
+        failureHandler = function(error) {
+          return console.log('ERROR: ' + error);
+        };
         return $.when(runMainQuery()).done(function(data) {
           return console.log('Content-group-by-id transaction completed');
-        }).fail(function(err) {
-          return console.log('Error: ' + err);
-        });
+        }).fail(failureHandler);
       },
       saveOrUpdateContentGroupLocal: function(division_id, collection_id, teacher_id, training_date, current_status) {
         var d, date, getLastStatus, insertTrainingLogs, lastStatus, updateTrainingLogs;
@@ -332,20 +312,20 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           };
           failure = function(d) {
             return function(tx, error) {
-              return d.reject('Failure: ' + error);
+              return d.reject('ERROR: ' + error);
             };
           };
           return $.when(runQ()).done(function() {
             return console.log('getLastStatus transaction completed');
-          }).fail(function(err) {
-            return console.log('Error: ' + err);
+          }).fail(function(error) {
+            return console.log('ERROR: ' + error);
           });
         };
         insertTrainingLogs = function(date, status) {
           return _.db.transaction(function(tx) {
             return tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status) VALUES (?, ?, ?, ?, ?)", [division_id, collection_id, teacher_id, date, status]);
-          }, function(tx, err) {
-            return console.log('Error: ' + err.message);
+          }, function(tx, error) {
+            return console.log('ERROR: ' + error.message);
           }, function(tx) {
             return console.log('Success: Inserted new record in wp_training_logs');
           });
@@ -353,8 +333,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         updateTrainingLogs = function(id, status) {
           return _.db.transaction(function(tx) {
             return tx.executeSql("UPDATE wp_training_logs SET status=? WHERE id=?", [status, id]);
-          }, function(tx, err) {
-            return console.log('Error: ' + err.message);
+          }, function(tx, error) {
+            return console.log('ERROR: ' + error.message);
           }, function(tx) {
             return console.log('Success: Updated record in wp_training_logs');
           });

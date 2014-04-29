@@ -94,10 +94,10 @@ define ["app", 'backbone'], (App, Backbone) ->
 							data: 
 								ids: ids
 						contentPieces
+						
 
 				#get all content pieces from local database
 				getContentPieceFromLocal:(ids)->
-					console.log 'Ids: '+ids
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
@@ -146,12 +146,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onFailure =(d)->
 						(tx,error)->
-							d.reject('OnFailure!: '+error)
+							d.reject 'ERROR: '+error
 
 					$.when(runQuery()).done (d)->
 						console.log 'Content piece transaction completed'
-					.fail (err)->
-						console.log 'Error: '+err
+					.fail (error)->
+						console.log 'ERROR: '+error
 
 							
 						

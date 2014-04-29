@@ -53,6 +53,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						console.log division
 					division
 
+
 				#get divisions from local database
 				getDivisionsFromLocal:->
 					runQuery = ->
@@ -83,14 +84,14 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 										d.resolve(result)
 
-									,(tx,err)->
-										console.log 'Error: '+err
+									,(tx, error)->
+										console.log 'ERROR: '+error
 									)
 							
 
 					onFailure = (d)->
 						(tx, error)->
-							d.reject('OnFailure!: '+error)
+							d.reject 'ERROR: '+error
 
 
 					getClassLabel = (class_id)->
@@ -104,8 +105,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					$.when(runQuery()).done (data)->
 						console.log 'getDivisionsFromLocal transaction completed'
-					.fail (err)->
-						console.log 'Error: '+err
+					.fail (error)->
+						console.log 'ERROR: '+error
 
 
 

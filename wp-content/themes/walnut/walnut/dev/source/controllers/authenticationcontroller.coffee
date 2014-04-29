@@ -49,7 +49,6 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			else false
 
 
-
 		onlineMobileAuth:->
 			$.post AJAXURL + '?action=get-user-app-profile', 
 				   data: @data,
@@ -93,7 +92,6 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 					response = 
 						error : 'No such user has previously logged in'
 					@success response
-
 						
 
 
@@ -120,24 +118,22 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 					d.resolve(data)	
 				
 			onFailure = (d)->
-				(tx,error)->
-					d.reject('OnFailure!: '+error)
+				(tx, error)->
+					d.reject 'ERROR: '+error
 
 			$.when(runQuery()).done (data)->
 				console.log 'isExistingUser transaction completed'
-			.fail (err)->
-				console.log 'Error: '+err	
-
+			.fail (error)->
+				console.log 'ERROR: '+error	
 
 
 		
 		inputNewUser:->
 			_.userDb.transaction((tx)=>
-
 				tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES (?, ?, "")', [@data.txtusername, @data.txtpassword])
 
-			,(tx,err)->
-				console.log 'Error: '+err 
+			,(tx, error)->
+				console.log 'ERROR: '+error 
 			,(tx)->
 				console.log 'Success: Inserted new user'
 			)
@@ -146,11 +142,10 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		updateExistingUserPassword:->
 			_.userDb.transaction((tx)=>
-
 				tx.executeSql("UPDATE USERS SET password=? where username=?", [@data.txtpassword, @data.txtusername])
 
-			,(tx,err)->
-				console.log 'Error: '+err 
+			,(tx, error)->
+				console.log 'ERROR: '+error 
 			,(tx)->
 				console.log 'Success: Updated user password'
 			)

@@ -70,6 +70,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 										data  : param
 
 					subSectionsCollection
+					
 
 				#get chapters from local database
 				getChaptersFromLocal:(parent)->
@@ -110,13 +111,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onFailure =(d)->
 						(tx,error)->
-							d.reject('OnFailure: '+error)	
+							d.reject 'ERROR: '+error	
 
 					$.when(runQuery()).done (d)->
 						console.log 'getChaptersFromLocal transaction completed'
-
-					.fail (err)->
-						console.log 'Error: '+err
+					.fail (error)->
+						console.log 'ERROR: '+error
 
 
 			# request handler to get all Chapters

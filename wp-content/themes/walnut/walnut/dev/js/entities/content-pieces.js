@@ -146,7 +146,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getContentPieceFromLocal: function(ids) {
         var onFailure, onSuccess, runQuery;
-        console.log('Ids: ' + ids);
         runQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
@@ -198,13 +197,13 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onFailure = function(d) {
           return function(tx, error) {
-            return d.reject('OnFailure!: ' + error);
+            return d.reject('ERROR: ' + error);
           };
         };
         return $.when(runQuery()).done(function(d) {
           return console.log('Content piece transaction completed');
-        }).fail(function(err) {
-          return console.log('Error: ' + err);
+        }).fail(function(error) {
+          return console.log('ERROR: ' + error);
         });
       }
     };

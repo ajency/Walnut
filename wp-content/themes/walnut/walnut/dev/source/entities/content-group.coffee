@@ -92,7 +92,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
 									tx.executeSql("SELECT count(id) AS count, status, date FROM wp_training_logs 
-										WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, div], success(d), failure(d))
+										WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, div], success(d), deferredErrorHandler(d))
 
 						success =(d)->
 							(tx,data)->
@@ -101,14 +101,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 									dateAndStatus.status = data.rows.item(0)['status']
 								d.resolve(dateAndStatus)
 
-						failure =(d)->
-							(tx, error)->
-								d.reject('Failure: '+error)
-
 						$.when(runQ()).done ->
 							console.log 'getDateAndStatus transaction completed'
-						.fail (err)->
-							console.log 'Error: '+err
+						.fail(failureHandler)
 
 					#get content pieces and description
 					getContentPiecesAndDescription =(collection_id)->
@@ -119,7 +114,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						runQ =->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
-									tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), failure(d))
+									tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), deferredErrorHandler(d))
 
 						success =(d)->
 							(tx,data)->
@@ -136,14 +131,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								
 								d.resolve(contentPiecesAndDescription)
 
-						failure =(d)->
-							(tx, error)->
-								d.reject('Failure: '+error)
-
 						$.when(runQ()).done ->
 							console.log 'getContentPiecesAndDescription transaction completed'
-						.fail (err)->
-							console.log 'Error: '+err
+						.fail(failureHandler)
 
 					#get chapter name
 					getChapterName =(term_ids)->
@@ -152,7 +142,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						runQ =->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
-									tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), failure(d))
+									tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), deferredErrorHandler(d))
 
 						success =(d)->
 							(tx,data)->
@@ -162,21 +152,16 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 									name = data.rows.item(0)['name']
 								d.resolve(name)
 
-						failure =(d)->
-							(tx, error)->
-								d.reject('Failure: '+error)
-
 						$.when(runQ()).done ->
 							console.log 'getChapterName transaction completed'
-						.fail (err)->
-							console.log 'Error: '+err
+						.fail(failureHandler)
 												
 					#get data from wp_content_collection
 					runMainQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								pattern = '%"'+id+'"%'
-								tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '"+pattern+"'", [], onSuccess(d), onFailure(d))
+								tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '"+pattern+"'", [], onSuccess(d), deferredErrorHandler(d))
 
 					onSuccess = (d)->
 						(tx, data)->
@@ -230,10 +215,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 							d.resolve(result)
 
-					onFailure = (d)->
-						(tx, error)->
-							d.reject('OnFailure!: '+error)
-
 					getDuration = (duration)->
 						if duration > 60
 							duration/60
@@ -243,12 +224,19 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					getMinsHours = (duration)->
 						if duration > 60
 							'hrs'
-						else 'mins'				
+						else 'mins'	
+
+					#Error handlers
+					deferredErrorHandler =(d)->
+						(tx, error)->
+							d.reject 'ERROR: '+error
+
+					failureHandler = (error)->
+						console.log 'ERROR: '+error				
 
 					$.when(runMainQuery()).done (data)->
 						console.log 'Content-group-by-id transaction completed'
-					.fail (err)->
-						console.log 'Error: '+err	
+					.fail(failureHandler)	
 
 
 				saveOrUpdateContentGroupLocal:(division_id, collection_id, teacher_id, training_date, current_status) ->
@@ -265,7 +253,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 										collection_id=? ORDER BY id DESC LIMIT 1", [division_id, collection_id], success(d), failure(d))
 
 						success =(d)->
-							(tx,data)->
+							(tx, data)->
 								if data.rows.length isnt 0
 									lastStatus.id = data.rows.item(0)['id']
 									lastStatus.status = data.rows.item(0)['status']
@@ -273,12 +261,12 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 						failure =(d)->
 							(tx, error)->
-								d.reject('Failure: '+error)
+								d.reject 'ERROR: '+error
 
 						$.when(runQ()).done ->
 							console.log 'getLastStatus transaction completed'
-						.fail (err)->
-							console.log 'Error: '+err
+						.fail (error)->
+							console.log 'ERROR: '+error
 
 
 					#function to insert record in wp_training_logs
@@ -287,8 +275,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status) 
 								VALUES (?, ?, ?, ?, ?)", [division_id, collection_id, teacher_id, date, status])
 							
-						,(tx,err)->
-							console.log 'Error: '+err.message
+						,(tx, error)->
+							console.log 'ERROR: '+error.message
 						,(tx)->
 							console.log 'Success: Inserted new record in wp_training_logs'
 						)
@@ -299,8 +287,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						_.db.transaction( (tx)->
 							tx.executeSql("UPDATE wp_training_logs SET status=? WHERE id=?", [status, id])
 							
-						,(tx,err)->
-							console.log 'Error: '+err.message
+						,(tx, error)->
+							console.log 'ERROR: '+error.message
 						,(tx)->
 							console.log 'Success: Updated record in wp_training_logs'
 						)	

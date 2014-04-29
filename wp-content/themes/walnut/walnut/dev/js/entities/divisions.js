@@ -100,14 +100,14 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                 i++;
               }
               return d.resolve(result);
-            }, function(tx, err) {
-              return console.log('Error: ' + err);
+            }, function(tx, error) {
+              return console.log('ERROR: ' + error);
             });
           };
         };
         onFailure = function(d) {
           return function(tx, error) {
-            return d.reject('OnFailure!: ' + error);
+            return d.reject('ERROR: ' + error);
           };
         };
         getClassLabel = function(class_id) {
@@ -121,8 +121,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         return $.when(runQuery()).done(function(data) {
           return console.log('getDivisionsFromLocal transaction completed');
-        }).fail(function(err) {
-          return console.log('Error: ' + err);
+        }).fail(function(error) {
+          return console.log('ERROR: ' + error);
         });
       }
     };
