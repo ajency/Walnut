@@ -104,7 +104,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return contentGroupItem;
       },
       getContentGroupByIdFromLocal: function(id, division) {
-        var getContentPiecesAndDescription, getDateAndStatus, getDuration, getMinsHours, onFailure, onSuccess, runMainQuery;
+        var getChapterName, getContentPiecesAndDescription, getDateAndStatus, getDuration, getMinsHours, onFailure, onSuccess, runMainQuery;
         getDateAndStatus = function(collection_id, div) {
           var dateAndStatus, failure, runQ, success;
           dateAndStatus = {
@@ -179,6 +179,38 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return console.log('Error: ' + err);
           });
         };
+        getChapterName = function(term_ids) {
+          var failure, runQ, success, temp;
+          temp = unserialize(term_ids);
+          runQ = function() {
+            return $.Deferred(function(d) {
+              return _.db.transaction(function(tx) {
+                return tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), failure(d));
+              });
+            });
+          };
+          success = function(d) {
+            return function(tx, data) {
+              var name;
+              if (data.rows.length === 0) {
+                name = '';
+              } else {
+                name = data.rows.item(0)['name'];
+              }
+              return d.resolve(name);
+            };
+          };
+          failure = function(d) {
+            return function(tx, error) {
+              return d.reject('Failure: ' + error);
+            };
+          };
+          return $.when(runQ()).done(function() {
+            return console.log('getChapterName transaction completed');
+          }).fail(function(err) {
+            return console.log('Error: ' + err);
+          });
+        };
         runMainQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
@@ -198,24 +230,26 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
               (function(r, i, division) {
                 var dateAndStatus;
                 dateAndStatus = getDateAndStatus(r['id'], division);
-                return dateAndStatus.done((function(_this) {
-                  return function(d) {
-                    var date, status;
-                    status = d.status;
-                    date = d.date;
-                    return (function(r, i, date, status) {
-                      var contentPiecesAndDescription;
-                      contentPiecesAndDescription = getContentPiecesAndDescription(r['id']);
-                      return contentPiecesAndDescription.done((function(_this) {
-                        return function(d) {
-                          var content_pieces, description;
-                          content_pieces = description = '';
-                          if (d.content_pieces !== '') {
-                            content_pieces = unserialize(d.content_pieces);
-                          }
-                          if (d.description !== '') {
-                            description = unserialize(d.description);
-                          }
+                return dateAndStatus.done(function(d) {
+                  var date, status;
+                  status = d.status;
+                  date = d.date;
+                  return (function(r, i, date, status) {
+                    var contentPiecesAndDescription;
+                    contentPiecesAndDescription = getContentPiecesAndDescription(r['id']);
+                    return contentPiecesAndDescription.done(function(d) {
+                      var content_pieces, description;
+                      content_pieces = description = '';
+                      if (d.content_pieces !== '') {
+                        content_pieces = unserialize(d.content_pieces);
+                      }
+                      if (d.description !== '') {
+                        description = unserialize(d.description);
+                      }
+                      return (function(r, i, date, status, content_pieces, description) {
+                        var chapterName;
+                        chapterName = getChapterName(r['term_ids']);
+                        return chapterName.done(function(name) {
                           return result[i] = {
                             id: r['id'],
                             name: r['name'],
@@ -227,6 +261,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                             published_by: r['published_by'],
                             type: r['type'],
                             term_ids: unserialize(r['term_ids']),
+                            showChapter: name,
                             duration: getDuration(r['duration']),
                             minshours: getMinsHours(r['duration']),
                             total_minutes: r['duration'],
@@ -235,11 +270,11 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                             content_pieces: content_pieces,
                             description: description
                           };
-                        };
-                      })(this));
-                    })(r, i, date, status);
-                  };
-                })(this));
+                        });
+                      })(r, i, date, status, content_pieces, description);
+                    });
+                  })(r, i, date, status);
+                });
               })(r, i, division);
               i++;
             }

@@ -52,8 +52,19 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						textbook.fetch()
 					textbook
 
+				getTextBookNameByID:(id)->
+					textbook = textbookCollection.get id
 
-				# get all textbooks from local database
+					if not textbook 
+						textbook = new Textbooks.ItemModel term_id : id
+						textbook.fetch()
+
+					textbookName= textbook.get('name')
+
+					textbookName	
+
+
+				#get all textbooks from local database
 				getTextbooksFromLocal:->
 					runQuery = ->
 						$.Deferred (d)->
@@ -65,7 +76,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					onSuccess =(d)->
 						(tx,data)->
-							console.log 'Textbook success'
 							result = []
 							i = 0
 							while i < data.rows.length
@@ -155,7 +165,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								do (tx, row ,p, i)->
 									tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '"+p+"'", []
 
-										,(tran,d)->
+										,(tx, d)->
 											classes = subjects = ''
 											classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
 											subjects = unserialize(row["tags"]) if row["tags"] isnt ''
@@ -175,7 +185,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 												subjects: subjects
 												modules_count: d.rows.item(0)['count']
 										
-										,(tran,err)->
+										,(tx ,err)->
 											console.log 'Error: '+err.message
 									)
 								i++
@@ -202,6 +212,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:textbook:by:id", (id)->
 				API.getTextBookByID id
+
+			App.reqres.setHandler "get:textbook:name:by:id", (id)->
+				API.getTextBookNameByID id	
 
 			# request handler to get all textbooks from local database
 			App.reqres.setHandler "get:textbooks:local", ->

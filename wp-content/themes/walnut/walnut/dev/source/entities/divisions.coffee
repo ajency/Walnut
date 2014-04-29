@@ -53,7 +53,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						console.log division
 					division
 
-
+				#get divisions from local database
 				getDivisionsFromLocal:->
 					runQuery = ->
 						$.Deferred (d)->
@@ -62,7 +62,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					onSuccess = (d)->
 						(tx, data)->
-							console.log 'Division success'
 							result = []
 
 							tx.executeSql('SELECT cd.id AS id, cd.division AS division, cd.class_id AS class_id, COUNT(umeta_id) AS students_count 
@@ -104,7 +103,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 
 					$.when(runQuery()).done (data)->
-						console.log 'Division transaction completed'
+						console.log 'getDivisionsFromLocal transaction completed'
 					.fail (err)->
 						console.log 'Error: '+err
 

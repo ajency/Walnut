@@ -71,6 +71,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					subSectionsCollection
 
+				#get chapters from local database
 				getChaptersFromLocal:(parent)->
 					runQuery = ->
 						$.Deferred (d)->
@@ -80,7 +81,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onSuccess =(d)->
 						(tx,data)->
-							console.log 'Chapter success'
 							result = []
 							i=0
 							while i < data.rows.length
@@ -113,7 +113,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 							d.reject('OnFailure: '+error)	
 
 					$.when(runQuery()).done (d)->
-						console.log 'Chapters transaction completed'
+						console.log 'getChaptersFromLocal transaction completed'
 
 					.fail (err)->
 						console.log 'Error: '+err

@@ -77,6 +77,18 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         }
         return textbook;
       },
+      getTextBookNameByID: function(id) {
+        var textbook, textbookName;
+        textbook = textbookCollection.get(id);
+        if (!textbook) {
+          textbook = new Textbooks.ItemModel({
+            term_id: id
+          });
+          textbook.fetch();
+        }
+        textbookName = textbook.get('name');
+        return textbookName;
+      },
       getTextbooksFromLocal: function() {
         var onFailure, onSuccess, runQuery;
         runQuery = function() {
@@ -89,7 +101,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         onSuccess = function(d) {
           return function(tx, data) {
             var classes, i, result, row, subjects;
-            console.log('Textbook success');
             result = [];
             i = 0;
             while (i < data.rows.length) {
@@ -186,7 +197,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
               row = data.rows.item(i);
               p = '%"' + row['textbook_id'] + '"%';
               (function(tx, row, p, i) {
-                return tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + p + "'", [], function(tran, d) {
+                return tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + p + "'", [], function(tx, d) {
                   var classes, subjects;
                   classes = subjects = '';
                   if (row["class_id"] !== '') {
@@ -210,7 +221,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                     subjects: subjects,
                     modules_count: d.rows.item(0)['count']
                   };
-                }, function(tran, err) {
+                }, function(tx, err) {
                   return console.log('Error: ' + err.message);
                 });
               })(tx, row, p, i);
@@ -236,6 +247,9 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     });
     App.reqres.setHandler("get:textbook:by:id", function(id) {
       return API.getTextBookByID(id);
+    });
+    App.reqres.setHandler("get:textbook:name:by:id", function(id) {
+      return API.getTextBookNameByID(id);
     });
     App.reqres.setHandler("get:textbooks:local", function() {
       return API.getTextbooksFromLocal();

@@ -28,7 +28,7 @@ define ["backbone"], (Backbone) ->
 					data.done (d)->
 						collection.set d
 				
-
+			#Menu-item not yet implemented
 			if collection_name is 'menu-item'
 				console.log 'Menu items local'
 
@@ -172,8 +172,9 @@ define ["backbone"], (Backbone) ->
 				#Changes needed for offline data retrieval
 				modelname = model.name
 				console.log 'Model name: '+modelname
-				console.log 'Model'
 				console.log model
+				console.log 'Options'
+				console.log options
 
 				if modelname is 'content-group'
 					attr = model.attributes

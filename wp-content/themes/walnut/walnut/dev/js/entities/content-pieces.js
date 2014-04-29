@@ -157,7 +157,6 @@ define(["app", 'backbone'], function(App, Backbone) {
         onSuccess = function(d) {
           return function(tx, data) {
             var i, r, result;
-            console.log('Content piece success');
             result = [];
             i = 0;
             while (i < data.rows.length) {
@@ -189,7 +188,8 @@ define(["app", 'backbone'], function(App, Backbone) {
                 filter: 'raw',
                 subjects: '',
                 creator: 'admin',
-                content_type: ''
+                content_type: '',
+                question_type: ''
               };
               i++;
             }

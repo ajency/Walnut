@@ -84,7 +84,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         onSuccess = function(d) {
           return function(tx, data) {
             var result;
-            console.log('Division success');
             result = [];
             return tx.executeSql('SELECT cd.id AS id, cd.division AS division, cd.class_id AS class_id, COUNT(umeta_id) AS students_count FROM wp_class_divisions cd LEFT JOIN wp_usermeta um ON cd.id = meta_value AND meta_key="student_division" WHERE class_id in (' + unserialize(data.rows.item(0)['meta_value']) + ') GROUP BY cd.id', [], function(tx, data) {
               var i, r;
@@ -121,7 +120,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           }
         };
         return $.when(runQuery()).done(function(data) {
-          return console.log('Division transaction completed');
+          return console.log('getDivisionsFromLocal transaction completed');
         }).fail(function(err) {
           return console.log('Error: ' + err);
         });

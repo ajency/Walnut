@@ -78,10 +78,11 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				saveContentGroupDetails: (data)->
 					contentGroupItem = new ContentGroup.ItemModel data
 					contentGroupItem
+					
 				
 				# get content group from local
 				getContentGroupByIdFromLocal:(id, division)->
-					
+					#get the date and status from wp_training_logs
 					getDateAndStatus =(collection_id, div)->
 						dateAndStatus =
 							date: ''
@@ -109,7 +110,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						.fail (err)->
 							console.log 'Error: '+err
 
-
+					#get content pieces and description
 					getContentPiecesAndDescription =(collection_id)->
 						contentPiecesAndDescription =
 							content_pieces: ''
@@ -142,8 +143,35 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						$.when(runQ()).done ->
 							console.log 'getContentPiecesAndDescription transaction completed'
 						.fail (err)->
-							console.log 'Error: '+err			
+							console.log 'Error: '+err
 
+					#get chapter name
+					getChapterName =(term_ids)->
+						temp = unserialize(term_ids)
+
+						runQ =->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), failure(d))
+
+						success =(d)->
+							(tx,data)->
+								if data.rows.length is 0
+									name = ''
+								else	
+									name = data.rows.item(0)['name']
+								d.resolve(name)
+
+						failure =(d)->
+							(tx, error)->
+								d.reject('Failure: '+error)
+
+						$.when(runQ()).done ->
+							console.log 'getChapterName transaction completed'
+						.fail (err)->
+							console.log 'Error: '+err
+												
+					#get data from wp_content_collection
 					runMainQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
@@ -158,39 +186,45 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							while i < data.rows.length
 								r = data.rows.item(i)
 
-								do (r,i, division)->
+								do (r, i, division)->
 
 									dateAndStatus = getDateAndStatus(r['id'], division)
-									dateAndStatus.done (d)=>
+									dateAndStatus.done (d)->
 										status = d.status
 										date = d.date
 
 										do (r, i, date, status)->
 
 											contentPiecesAndDescription = getContentPiecesAndDescription(r['id'])
-											contentPiecesAndDescription.done (d)=>
+											contentPiecesAndDescription.done (d)->
 												content_pieces = description = ''
 												content_pieces = unserialize(d.content_pieces) if d.content_pieces isnt ''
 												description = unserialize(d.description) if d.description isnt ''
+
+												do(r, i, date, status, content_pieces, description)->
+													
+													chapterName = getChapterName(r['term_ids'])
+													chapterName.done (name)->
 												
-												result[i] = 
-													id: r['id']
-													name: r['name']
-													created_on: r['created_on']
-													created_by: r['created_by']
-													last_modified_on: r['last_modified_on']
-													last_modified_by: r['last_modified_by']
-													published_on: r['published_on']
-													published_by: r['published_by']
-													type: r['type']
-													term_ids: unserialize(r['term_ids'])
-													duration: getDuration(r['duration'])
-													minshours: getMinsHours(r['duration'])
-													total_minutes: r['duration']
-													status: status
-													training_date: date
-													content_pieces: content_pieces
-													description: description
+														result[i] = 
+															id: r['id']
+															name: r['name']
+															created_on: r['created_on']
+															created_by: r['created_by']
+															last_modified_on: r['last_modified_on']
+															last_modified_by: r['last_modified_by']
+															published_on: r['published_on']
+															published_by: r['published_by']
+															type: r['type']
+															term_ids: unserialize(r['term_ids'])
+															showChapter: name
+															duration: getDuration(r['duration'])
+															minshours: getMinsHours(r['duration'])
+															total_minutes: r['duration']
+															status: status
+															training_date: date
+															content_pieces: content_pieces
+															description: description
 										
 								i++
 
@@ -218,7 +252,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 
 				saveOrUpdateContentGroupLocal:(division_id, collection_id, teacher_id, training_date, current_status) ->
-					
 					#function to get the last status
 					getLastStatus =->
 						lastStatus = 

@@ -123,7 +123,6 @@ define(["app", 'backbone'], function(App, Backbone) {
         onSuccess = function(d) {
           return function(tx, data) {
             var i, r, result;
-            console.log('Chapter success');
             result = [];
             i = 0;
             while (i < data.rows.length) {
@@ -158,7 +157,7 @@ define(["app", 'backbone'], function(App, Backbone) {
           };
         };
         return $.when(runQuery()).done(function(d) {
-          return console.log('Chapters transaction completed');
+          return console.log('getChaptersFromLocal transaction completed');
         }).fail(function(err) {
           return console.log('Error: ' + err);
         });

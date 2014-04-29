@@ -95,6 +95,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 								ids: ids
 						contentPieces
 
+				#get all content pieces from local database
 				getContentPieceFromLocal:(ids)->
 					console.log 'Ids: '+ids
 					runQuery = ->
@@ -105,7 +106,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onSuccess =(d)->
 						(tx,data)->
-							console.log 'Content piece success'
 							result = []
 							i = 0
 							while i < data.rows.length
@@ -134,10 +134,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 									post_type: r['post_type']
 									post_mime_type: r['post_mime_type']
 									comment_count: r['comment_count']
+									#Need to implement
 									filter: 'raw'
 									subjects: ''
 									creator: 'admin'
 									content_type: ''
+									question_type: ''
 								i++
 							
 							d.resolve(result)
@@ -157,7 +159,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 			# request handler to get all ContentPieces
 			App.reqres.setHandler "get:content:pieces", (opt) ->
 				API.getContentPieces(opt)
-
 
 			# request handler to get all ContentPieces
 			App.reqres.setHandler "get:content:pieces:of:group", (groupid) ->
