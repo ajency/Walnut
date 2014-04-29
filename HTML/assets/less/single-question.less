@@ -1,13 +1,34 @@
-@media(max-width:1024px){
-	#site-page-content-region{
-		margin-left: auto;
-		margin-right: auto;
-	}
-	#toolbox, .dock.tiles{
-		display: none;
-	}
-}
 
 .hashtags{
 	font-size: 13px;
+}
+
+#content-board{
+	.element-wrapper{
+		border: none;
+	}
+}
+
+.answrMsg{
+	&.alert-success{
+		h3{
+			color: @color-success - @dark;
+		}
+	}
+	&.alert-error{
+		h3{
+			color: @color-danger - @dark;
+		}
+	}
+	&.alert-info{
+		h3{
+			color: @color-info - @dark;
+		}
+	}
+}
+
+.answrRight{
+	background: url(../../../images/underline.gif) no-repeat;
+	width: 25px;
+	height: 25px;
 }
