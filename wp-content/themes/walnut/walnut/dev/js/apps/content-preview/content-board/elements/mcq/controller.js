@@ -50,18 +50,35 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       };
 
       Controller.prototype._submitAnswer = function() {
+        var answersNotMarked, totalMarks;
         if (!this.answerModel.get('answer').length) {
           console.log('you havent selected any thing');
-          return App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
         } else {
           if (!this.layout.model.get('multiple')) {
             console.log(_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')));
             if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
               this.answerModel.set('marks', this.layout.model.get('marks'));
             }
-            return App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+          } else {
+            console.log('inhere');
+            if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
+              if (!_.difference(this.layout.model.get('correct_answer'), this.answerModel.get('answer')).length) {
+                this.answerModel.set('marks', this.layout.model.get('marks'));
+              } else {
+                answersNotMarked = _.difference(this.layout.model.get('correct_answer'), this.answerModel.get('answer'));
+                totalMarks = this.layout.model.get('marks');
+                _.each(answersNotMarked, (function(_this) {
+                  return function(notMarked) {
+                    return totalMarks -= _this.layout.model.get('elements').get(notMarked).get('marks');
+                  };
+                })(this));
+                this.answerModel.set('marks', totalMarks);
+              }
+            }
           }
         }
+        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        return this.view.triggerMethod("add:option:classes", this.answerModel.get('answer'));
       };
 
       Controller.prototype.createRowStructure = function(options) {

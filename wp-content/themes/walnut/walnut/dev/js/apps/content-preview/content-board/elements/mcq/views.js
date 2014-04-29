@@ -24,6 +24,33 @@ define(['app'], function(App) {
         })(this));
       };
 
+      McqView.prototype.onAddOptionClasses = function(answer) {
+        var correctOption, remainingOption, totalOptions, wrongOption;
+        totalOptions = this.model.get('optioncount');
+        correctOption = this.model.get('correct_answer');
+        wrongOption = _.difference(answer, correct);
+        remainingOption = _.difference(_.range(1, totalOptions + 1), correctOption, wrongOption);
+        _.each(correctOption, (function(_this) {
+          return function(option) {
+            return _this._addClass(option, 'ansRight');
+          };
+        })(this));
+        _.each(wrongOption, (function(_this) {
+          return function(option) {
+            return _this._addClass(option, 'ansWrong');
+          };
+        })(this));
+        return _.each(remainingOption, (function(_this) {
+          return function(option) {
+            return _this._addClass(option, 'ansFalse');
+          };
+        })(this));
+      };
+
+      McqView.prototype._addClass = function(option, className) {
+        return this.$el.find("#mcq-option-" + option).addClass(className);
+      };
+
       return McqView;
 
     })(Marionette.ItemView);

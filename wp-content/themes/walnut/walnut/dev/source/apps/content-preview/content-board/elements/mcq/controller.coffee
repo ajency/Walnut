@@ -58,14 +58,33 @@ define ['app'
 								# confirmbox = confirm 'You haven\'t selected anything..\n do you still want to continue?'
 								console.log 'you havent selected any thing'
 								# return if not confirmbox
-								App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+								# App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
 							
 							else
 								if not @layout.model.get 'multiple'
 									console.log _.difference(@answerModel.get('answer'),@layout.model.get('correct_answer'))
 									if not _.difference(@answerModel.get('answer'),@layout.model.get('correct_answer')).length
 										@answerModel.set 'marks',@layout.model.get 'marks'
-									App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+									# App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+								else	
+									console.log 'inhere'								
+									if not _.difference(@answerModel.get('answer'),@layout.model.get('correct_answer')).length
+										if not _.difference(@layout.model.get('correct_answer'),@answerModel.get('answer')).length
+											@answerModel.set 'marks',@layout.model.get 'marks'
+											# App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+										else 
+											answersNotMarked = _.difference(@layout.model.get('correct_answer'),@answerModel.get('answer'))
+											totalMarks = @layout.model.get 'marks'
+											_.each answersNotMarked,(notMarked)=>
+												totalMarks -= @layout.model.get('elements').get(notMarked).get('marks')
+											@answerModel.set 'marks',totalMarks
+											# App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+									# else
+										# App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+
+							App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+
+							@view.triggerMethod "add:option:classes",@answerModel.get('answer')
 
 
 
