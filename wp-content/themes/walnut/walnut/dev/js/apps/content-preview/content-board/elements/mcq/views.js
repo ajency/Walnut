@@ -28,7 +28,7 @@ define(['app'], function(App) {
         var correctOption, remainingOption, totalOptions, wrongOption;
         totalOptions = this.model.get('optioncount');
         correctOption = this.model.get('correct_answer');
-        wrongOption = _.difference(answer, correct);
+        wrongOption = _.difference(answer, correctOption);
         remainingOption = _.difference(_.range(1, totalOptions + 1), correctOption, wrongOption);
         _.each(correctOption, (function(_this) {
           return function(option) {

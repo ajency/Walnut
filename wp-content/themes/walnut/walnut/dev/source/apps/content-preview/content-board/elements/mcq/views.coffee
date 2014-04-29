@@ -24,8 +24,9 @@ define ['app'],(App)->
 			onAddOptionClasses:(answer)->
 				totalOptions = @model.get 'optioncount'
 				correctOption =  @model.get 'correct_answer'
-				wrongOption = _.difference answer, correct
+				wrongOption = _.difference answer, correctOption
 				remainingOption = _.difference _.range(1,totalOptions+1),correctOption,wrongOption
+
 
 				_.each correctOption ,(option)=>
 					@_addClass(option,'ansRight')
