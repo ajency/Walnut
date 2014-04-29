@@ -2,16 +2,16 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
-  return App.module("SingleQuestionDisplayApp.Controller", function(Controller, App) {
+  return App.module("SingleQuestionDisplayApp", function(SingleQuestion, App) {
     var QuestionDisplayView;
-    Controller.SingleQuestionDisplayApp = (function(_super) {
-      __extends(SingleQuestionDisplayApp, _super);
+    SingleQuestion.SingleQuestionController = (function(_super) {
+      __extends(SingleQuestionController, _super);
 
-      function SingleQuestionDisplayApp() {
-        return SingleQuestionDisplayApp.__super__.constructor.apply(this, arguments);
+      function SingleQuestionController() {
+        return SingleQuestionController.__super__.constructor.apply(this, arguments);
       }
 
-      SingleQuestionDisplayApp.prototype.initialize = function(opts) {
+      SingleQuestionController.prototype.initialize = function(opts) {
         var model, view;
         model = opts.model;
         this.view = view = this._showQuestionView(model);
@@ -20,13 +20,13 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         });
       };
 
-      SingleQuestionDisplayApp.prototype._showQuestionView = function(model) {
+      SingleQuestionController.prototype._showQuestionView = function(model) {
         return new QuestionDisplayView({
           model: model
         });
       };
 
-      return SingleQuestionDisplayApp;
+      return SingleQuestionController;
 
     })(RegionController);
     QuestionDisplayView = (function(_super) {
@@ -45,7 +45,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       if (opt == null) {
         opt = {};
       }
-      return new Controller.SingleQuestionDisplayApp(opt);
+      return new SingleQuestion.SingleQuestionController(opt);
     });
   });
 });

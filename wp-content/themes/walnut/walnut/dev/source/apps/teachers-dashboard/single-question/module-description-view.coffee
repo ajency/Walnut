@@ -1,7 +1,7 @@
 define ['app'
 		'text!apps/teachers-dashboard/single-question/templates/module-description-template.html'],(App,moduleDescriptionTemplate)->
 
-	App.module "TeachersDashboardApp.View.ModuleDescription",(ModuleDescription, App)->		
+	App.module "TeachersDashboardApp.SingleGroupApp.ModuleDescription",(ModuleDescription, App)->		
 
 		class ModuleDescription.Description extends Marionette.ItemView
 

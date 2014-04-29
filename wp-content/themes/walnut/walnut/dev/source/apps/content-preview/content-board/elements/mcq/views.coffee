@@ -21,6 +21,27 @@ define ['app'],(App)->
 				@$el.closest('.preview').find('#submit-answer-button').on 'click',=>
 						@trigger "submit:answer"
 
+			onAddOptionClasses:(answer)->
+				totalOptions = @model.get 'optioncount'
+				correctOption =  @model.get 'correct_answer'
+				wrongOption = _.difference answer, correct
+				remainingOption = _.difference _.range(1,totalOptions+1),correctOption,wrongOption
+
+				_.each correctOption ,(option)=>
+					@_addClass(option,'ansRight')
+
+				_.each wrongOption ,(option)=>
+					@_addClass(option,'ansWrong')
+
+				_.each remainingOption ,(option)=>
+					@_addClass(option,'ansFalse')
+
+			_addClass:(option,className)->
+				@$el.find("#mcq-option-#{option}").addClass(className)
+
+
+
+
 				
 
 

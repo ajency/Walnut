@@ -45,6 +45,8 @@
         <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
         <link href="./wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/listnav.css" rel="stylesheet" type="text/css">
+        
         
         <!-- END CORE CSS FRAMEWORK -->
 
@@ -95,7 +97,7 @@
         </script>
         <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
         <?php if (ENV == 'dev') { ?>
-            <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+            <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo $ver?>" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
             <?php } else {
             
             ?>

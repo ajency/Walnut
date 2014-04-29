@@ -1,9 +1,9 @@
 define ['app'
 		'controllers/region-controller'], (App, RegionController)->
 
-	App.module "SingleQuestionDisplayApp.Controller", (Controller, App)->
+	App.module "SingleQuestionDisplayApp", (SingleQuestion, App)->
 
-		class Controller.SingleQuestionDisplayApp extends RegionController
+		class SingleQuestion.SingleQuestionController extends RegionController
 
 			initialize : (opts)->
 				{model} = opts
@@ -11,7 +11,7 @@ define ['app'
 				@view= view = @_showQuestionView model
 
 				@show view, (loading:true)
-
+			
 
 			_showQuestionView :(model) ->
 				new QuestionDisplayView 
@@ -31,5 +31,5 @@ define ['app'
 
 		# set handlers
 		App.commands.setHandler "show:single:question:app", (opt = {})->
-			new Controller.SingleQuestionDisplayApp opt		
+			new SingleQuestion.SingleQuestionController opt		
 

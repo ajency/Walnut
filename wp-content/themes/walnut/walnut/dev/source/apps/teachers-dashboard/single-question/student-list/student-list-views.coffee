@@ -1,6 +1,6 @@
 define ['app'],(App)->
 
-	App.module "TeachersDashboardApp.View.StudentsList",(StudentsList, App)->		
+	App.module "SingleQuestionStudentsListApp.Views",(Views, App)->		
 
 
 		class StudentsItemView extends Marionette.ItemView
@@ -24,6 +24,9 @@ define ['app'],(App)->
 			                </div>
 			            </div>'
 
+			onShow:->
+				console.log 'item view'
+
 		class StudentsEmptyView extends Marionette.ItemView
 
 			template: '<div class="row single tiles white no-margin">    
@@ -38,12 +41,12 @@ define ['app'],(App)->
 			onShow:->
 				console.log 'empty view'
 
-		class StudentsList.List extends Marionette.CompositeView
+		class Views.StudentsList extends Marionette.CompositeView
 
 			className: 'studentList m-t-35'
 				
 			template : '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
-							<button type="button" class="btn btn-primary btn-xs btn-sm">
+							<button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm">
 								<i class="fa fa-check"></i> Done 
 							</button>
 						</div>
@@ -51,8 +54,8 @@ define ['app'],(App)->
 							<button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer">
 								<i class="fa fa-check-circle"></i> Right Answer
 							</button> 
-							<button type="button" class="btn btn-danger btn-xs btn-sm" id="wrong-answer">
-								<i class="fa fa-times-circle"></i> Wrong Answer
+							<button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer">
+								<i class="fa fa-minus-circle"></i> Unselect Answer
 							</button>
 						</div>
 						<div class="clearfix"></div>
@@ -66,33 +69,53 @@ define ['app'],(App)->
 
 			events:
 				'click .tiles.single'	: 'selectStudent'
-				'click #right-answer'	: 'markAsCorrectAnswer'
-				'click #wrong-answer'	: 'markAsWrongAnswer'
+				'click #right-answer'	: 'addToCorrectList'
+				'click #wrong-answer'	: 'removeFromCorrectList'
+				'click #question-done' 	: (e)-> @trigger "question:completed"
 
 			onShow:->
-				@correctAnswers = []
+				$ ".students" 
+				.listnav
+				    #filterSelector: '.last-name'
+				    includeNums: false
+				    #removeDisabled: true
+				
+
+				@correctAnswers = Marionette.getOption @, 'correctAnswers'
+				@correctAnswers = _.compact @correctAnswers
+
+				for ele in @$el.find '.tiles.single'
+					eleValue= parseInt($(ele).attr('data-id'))
+					if _.contains(@correctAnswers, eleValue)
+						console.log eleValue
+						@markAsCorrectAnswer ele
 
 			selectStudent:(e)->
 				$(e.target).closest('.tiles.single').toggleClass "selected"
 
-			markAsCorrectAnswer:->
+			addToCorrectList:=>
+
 				selectedStudents = @$el.find '.tiles.single.selected'
 
 				for student in selectedStudents
 					@correctAnswers = _.union @correctAnswers, parseInt $(student).attr 'data-id'
-					$(student).removeClass 'selected'
-					.find '.default'
-					.removeClass 'default'
-					.addClass 'green'
-					.find 'i'
-					.removeClass 'fa-minus-circle'
-					.addClass 'fa-check-circle'
+					@markAsCorrectAnswer student
 				
-				console.log _.uniq @correctAnswers
+				@correctAnswers= _.uniq @correctAnswers
+				console.log @correctAnswers
+				@trigger "save:question:response", @correctAnswers
 
-				@trigger "save:question:response"
+			markAsCorrectAnswer:(student)=>
+				console.log student
+				$(student).removeClass 'selected'
+				.find '.default'
+				.removeClass 'default'
+				.addClass 'green'
+				.find 'i'
+				.removeClass 'fa-minus-circle'
+				.addClass 'fa-check-circle'
 
-			markAsWrongAnswer:->
+			removeFromCorrectList:->
 				selectedStudents = @$el.find '.tiles.single.selected'
 
 				for student in selectedStudents
@@ -105,8 +128,5 @@ define ['app'],(App)->
 					.removeClass 'fa-check-circle'
 					.addClass 'fa-minus-circle'
 				
-				console.log @correctAnswers
 
-				@trigger "save:question:response"
-
-
+				@trigger "save:question:response", @correctAnswers
