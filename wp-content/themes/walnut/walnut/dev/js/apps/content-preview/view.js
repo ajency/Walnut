@@ -12,11 +12,11 @@ define(['app'], function(App) {
 
       Layout.prototype.className = '';
 
-      Layout.prototype.template = '<div class="page-title"> <h3><span class="semi-bold">Preview Question</span></h3> </div> <div class="preview"> <div class="" id="content-preview"></div> <div class="" id="preview-result"></div> </div>';
+      Layout.prototype.template = '<div class="page-title"> <h3><span class="semi-bold">Preview Question</span></h3> </div> <div class="preview"> <div class="" id="content-board"></div> <div class="" id="side-panel"></div> </div>';
 
       Layout.prototype.regions = {
-        contentPreviewRegion: '#content-preview',
-        previewResultRegion: '#preview-result'
+        contentBoardRegion: '#content-board',
+        sidePanelRegion: '#side-panel'
       };
 
       return Layout;

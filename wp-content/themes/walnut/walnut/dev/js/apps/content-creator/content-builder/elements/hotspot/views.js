@@ -201,29 +201,31 @@ define(['app'], function(App) {
 
       HotspotView.prototype._updateDefaultImageSize = function() {
         var height, width;
-        width = this.stage.width();
-        height = this.stage.height();
-        this.hotspotDefault.setSize({
-          width: 336,
-          height: 200
-        });
-        if (width < 220) {
+        if (this.hotspotDefault) {
+          width = this.stage.width();
+          height = this.stage.height();
           this.hotspotDefault.setSize({
-            width: width - 10,
-            height: (width - 10) / 1.68
+            width: 336,
+            height: 200
           });
-        }
-        if (height < 160) {
-          this.hotspotDefault.setSize({
-            width: (height - 10) * 1.68,
-            height: height - 10
+          if (width < 220) {
+            this.hotspotDefault.setSize({
+              width: width - 10,
+              height: (width - 10) / 1.68
+            });
+          }
+          if (height < 160) {
+            this.hotspotDefault.setSize({
+              width: (height - 10) * 1.68,
+              height: height - 10
+            });
+          }
+          this.hotspotDefault.position({
+            x: this.stage.width() / 2 - this.hotspotDefault.width() / 2,
+            y: this.stage.height() / 2 - this.hotspotDefault.height() / 2
           });
+          return this.defaultLayer.draw();
         }
-        this.hotspotDefault.position({
-          x: this.stage.width() / 2 - this.hotspotDefault.width() / 2,
-          y: this.stage.height() / 2 - this.hotspotDefault.height() / 2
-        });
-        return this.defaultLayer.draw();
       };
 
       HotspotView.prototype._addElements = function(type, elementPos) {

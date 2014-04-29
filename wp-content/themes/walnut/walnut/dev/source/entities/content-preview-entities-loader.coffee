@@ -11,4 +11,5 @@ define [
 		'entities/content-creator/option'
 		'entities/content-creator/json'
 		'entities/schools'
-		'entities/breadcrumb'],->
+		'entities/breadcrumb'
+		'entities/answer'],->

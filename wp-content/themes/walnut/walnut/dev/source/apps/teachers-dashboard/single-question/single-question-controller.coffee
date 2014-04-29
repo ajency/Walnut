@@ -1,7 +1,8 @@
 define ['app'
 		'controllers/region-controller'
 		#'text!apps/teachers-dashboard/take-class/templates/class-description.html'
-		'apps/teachers-dashboard/single-question/students-list-view'
+		'apps/teachers-dashboard/single-question/student-list/student-list-app'
+		'apps/teachers-dashboard/single-question/question-display/question-display-app'
 		'apps/teachers-dashboard/single-question/module-description-view'
 		'apps/teachers-dashboard/single-question/chorus-options-view'
 		], (App, RegionController)->
@@ -72,31 +73,26 @@ define ['app'
 
 			_showStudentsListView :=>
 				App.execute "when:fetched", @contentPiece, =>
-
 					question_type = @contentPiece.get('question_type')
-					
+					questionID = @contentPiece.get 'ID'
+					collectionID = @moduleID
+
 					if question_type is 'individual'
-						studentsCollection= App.request "get:user:collection", ('role':'student', 'division': @division)
-
-						App.execute "when:fetched", studentsCollection, =>
-							studentsListView= new View.StudentsList.List 
-								collection: studentsCollection
-
-							@layout.studentsListRegion.show studentsListView 
-
+						App.execute "show:single:question:student:list:app", 
+							region 			: @layout.studentsListRegion
+							questionID  	: questionID
+							collectionID 	: collectionID
+							division		: @division
 
 					else if question_type is 'chorus'	
 						chorusView= new View.ChorusOptionsView.ItemView
 						@layout.studentsListRegion.show chorusView 
 
 			_showQuestionDisplayView: =>
+				App.execute "show:single:question:app", 
+					region 			: @layout.questionsDetailsRegion
+					model 		  	: @contentPiece
 
-				App.execute "when:fetched", @contentPiece, =>
-
-					questionView= new QuestionDisplayView
-									model: @contentPiece
-
-					@layout.questionsDetailsRegion.show questionView
 
 			_getTakeSingleQuestionLayout : ->
 				new SingleQuestionLayout
@@ -114,15 +110,6 @@ define ['app'
 
 
 
-		class QuestionDisplayView extends Marionette.ItemView
-
-			template: '<div class="teacherCanvas ">
-						<div class="grid-body p-t-20 p-b-15 no-border"></div>
-					</div>
-
-					<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
-				    	<p class="bold small-text">Question Info: </p>
-				    	<p class="">{{post_title}}</p>
-				    </div>'
+		
 
 
