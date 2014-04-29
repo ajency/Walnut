@@ -1,6 +1,8 @@
 define ['app'
 		'controllers/region-controller'
 		'apps/content-preview/view'
+		'apps/content-preview/content-board/controller'
+		'apps/content-preview/top-panel/controller'
 		],(App,RegionController)->
 
 			App.module "ContentPreview",(ContentPreview, App, Backbone, Marionette, $,_)->
@@ -25,11 +27,14 @@ define ['app'
 						@listenTo @layout,'show',=>
 						
 
-							App.execute "show:preview:question:",
-										region : @layout.contentPreviewRegion
+							App.execute "show:top:panel",
+										region : @layout.topPanelRegion
+
+
+							App.execute "show:content:board",
+										region : @layout.contentBoardRegion
 										
-							App.execute "show:result",
-										region : @layout.previewResultRegion
+							
 						# show the layout
 						@show @layout
 

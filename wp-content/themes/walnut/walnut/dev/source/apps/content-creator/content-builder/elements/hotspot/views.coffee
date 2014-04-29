@@ -200,32 +200,34 @@ define ['app'],(App)->
 
 			# update the size of default image on change of stage
 			_updateDefaultImageSize:->
-					width = @stage.width()
-					height = @stage.height()
-
 					
 
-					@hotspotDefault.setSize
-						width 	: 336
-						height 	: 200
+					
+					if @hotspotDefault
 
-					if(width<220)
+						width = @stage.width()
+						height = @stage.height()
 						@hotspotDefault.setSize
-							width : width-10
-							height : (width-10)/1.68
+							width 	: 336
+							height 	: 200
 
-					if(height<160)
-						@hotspotDefault.setSize
-							width : (height-10)*1.68
-							height : height-10
+						if(width<220)
+							@hotspotDefault.setSize
+								width : width-10
+								height : (width-10)/1.68
+
+						if(height<160)
+							@hotspotDefault.setSize
+								width : (height-10)*1.68
+								height : height-10
 
 
 
-					@hotspotDefault.position
-						x : @stage.width()/2-@hotspotDefault.width()/2
-						y : @stage.height()/2-@hotspotDefault.height()/2
+						@hotspotDefault.position
+							x : @stage.width()/2-@hotspotDefault.width()/2
+							y : @stage.height()/2-@hotspotDefault.height()/2
 
-					@defaultLayer.draw()
+						@defaultLayer.draw()
 
 
 			_addElements: (type,elementPos)->

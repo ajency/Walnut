@@ -36,14 +36,14 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         });
       };
 
-      ContentBuilderController.prototype._getContainer = function(section) {
-        return $('#myCanvas');
+      ContentBuilderController.prototype._getContainer = function() {
+        return this.view.$el.find('#myCanvas');
       };
 
       ContentBuilderController.prototype.startFillingElements = function() {
         var container, section;
         section = this.view.model.toJSON();
-        container = $('#myCanvas');
+        container = this._getContainer();
         return _.each(section, (function(_this) {
           return function(element, i) {
             if (element.element === 'Row') {

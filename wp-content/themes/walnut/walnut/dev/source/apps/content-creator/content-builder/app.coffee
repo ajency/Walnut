@@ -35,9 +35,9 @@ define ['app'
 						new ContentBuilder.Views.ContentBuilderView
 								model : elements
 
-					_getContainer :(section)->
+					_getContainer :->
 						
-							$('#myCanvas')
+							@view.$el.find('#myCanvas')
 						
 
 
@@ -45,7 +45,7 @@ define ['app'
 					startFillingElements: ()->
 						section = @view.model.toJSON()
 
-						container = $('#myCanvas')
+						container = @_getContainer()
 						_.each section, (element, i)=>
 							if element.element is 'Row'
 								@addNestedElements container,element

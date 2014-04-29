@@ -817,6 +817,12 @@ textarea.border {
   height: 22px;
   margin-right: 10px;
 }
+.fib-text {
+  font-size: 22px;
+}
+.fib-text input[type="text"] {
+  margin: 0 8px;
+}
 #mcq-container .element-wrapper {
   border: none;
   margin: 4px 0 0;

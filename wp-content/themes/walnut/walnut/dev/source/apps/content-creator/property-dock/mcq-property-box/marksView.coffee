@@ -38,11 +38,14 @@ define ['app'],(App)->
 				console.log @collection
 
 			onShow:->
-				
+				# totalMarks = @mcqModel.get('marks') 
+				# totalMarks = 0
 				_.each @mcqModel.get('correct_answer') ,(option)=>
 					@$el.find('input[data-id="'+option+'"]').prop 'disabled',false
+					# totalMarks = totalMarks + parseInt @mcqModel.get('elements').get(option).get('marks')
 				_.each _.difference(_.range(1,@mcqModel.get('optioncount')+1),@mcqModel.get('correct_answer')),(option)=>
 					@$el.find('input[data-id="'+option+'"]').val(0).prop 'disabled',true
+				# console.log totalMarks
 
 
 

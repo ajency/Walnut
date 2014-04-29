@@ -272,7 +272,7 @@ define(['app'], function(App) {
             if (typeof $(resizer).prev('.aj-imp-col-divider').position() !== 'undefined') {
               left = _this.$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + width / 24;
             }
-            right = _this.$el.offset().left + width - width / 24;
+            right = _this.$el.offset().left + width - width / 18;
             if (typeof $(resizer).next('.aj-imp-col-divider').position() !== 'undefined') {
               right = _this.$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - width / 24;
             }
