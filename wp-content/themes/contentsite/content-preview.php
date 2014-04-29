@@ -60,7 +60,7 @@ Template Name: Content Preview
         <div class="page-container row-fluid">
                 <div id="left-nav-region"></div>
                 <a href="#" class="scrollup">Scroll</a>
-                <div class="page-content condensed">
+                <div class="page-content ">
                     <div class="content">
                         <div id="login-region"></div>
                         <div id="breadcrumb-region"></div>

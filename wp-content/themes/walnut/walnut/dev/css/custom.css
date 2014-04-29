@@ -865,18 +865,18 @@ textarea.border {
   clear: both;
 }
 .mcq-option.ansWrong {
-  opacity: 0.3;
+  opacity: 0.2;
   background: url(../../../images/answer-wrong.png) no-repeat right center;
-  outline: 2px dashed #f3f3f3;
+  border-bottom: 2px solid #f35958;
   background-size: 25px;
 }
 .mcq-option.ansFalse {
-  opacity: 0.3;
-  outline: 2px dashed #f3f3f3;
+  opacity: 0.2;
+  border-bottom: 2px solid #f35958;
 }
 .mcq-option.ansRight {
   background: url(../../../images/answer-right.png) no-repeat right center;
-  outline: 2px dashed #f3f3f3;
+  border-bottom: 2px solid #0dd6c5;
   background-size: 35px;
 }
 .mcq-option .mcq-option-select {
@@ -924,6 +924,9 @@ textarea.border {
 }
 .hashtags {
   font-size: 13px;
+}
+#content-board {
+  margin-top: 30px;
 }
 #content-board .element-wrapper {
   border: none;
