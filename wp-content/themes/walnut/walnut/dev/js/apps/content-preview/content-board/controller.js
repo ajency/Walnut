@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'apps/content-preview/content-board/element/controller', 'apps/content-preview/content-board/view', 'apps/content-preview/content-board/elements-loader'], function(App, RegionController) {
@@ -8,12 +9,17 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
       __extends(Controller, _super);
 
       function Controller() {
+        this.triggerShowResponse = __bind(this.triggerShowResponse, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
       Controller.prototype.initialize = function(options) {
-        var elements;
+        var answerData, elements, triggerOnce;
         elements = App.request("get:page:json");
+        answerData = {
+          marks: 0,
+          total: 0
+        };
         this.view = this._getContentBoardView(elements);
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
@@ -25,9 +31,25 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
             }, 400);
           };
         })(this));
+        triggerOnce = _.once(_.bind(this.triggerShowResponse, this, answerData));
+        App.commands.setHandler("show:response", (function(_this) {
+          return function(marks, total) {
+            answerData.marks += parseInt(marks);
+            answerData.total += parseInt(total);
+            return triggerOnce();
+          };
+        })(this));
         return this.show(this.view, {
           loading: true
         });
+      };
+
+      Controller.prototype.triggerShowResponse = function(answerData) {
+        return _.delay((function(_this) {
+          return function() {
+            return _this.view.triggerMethod('show:response', answerData.marks, answerData.total);
+          };
+        })(this), 500);
       };
 
       Controller.prototype._getContentBoardView = function(model) {
@@ -39,7 +61,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
       Controller.prototype.startFillingElements = function() {
         var container, section;
         section = this.view.model.toJSON();
-        container = $('#myCanvas');
+        container = $('#myCanvas #question-area');
         return _.each(section, (function(_this) {
           return function(element, i) {
             if (element.element === 'Row') {

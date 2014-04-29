@@ -10,8 +10,29 @@ define(['app'], function(App) {
         return ContentBoardView.__super__.constructor.apply(this, arguments);
       }
 
+      ContentBoardView.prototype.template = '<div id="question-area"></div> <div id="feedback-area"> <div id="correct" class="alert alert-success text-center answrMsg"> <h3 class="bold">You are right!</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="wrong" class="alert alert-error text-center answrMsg"> <h3 class="bold"> Sorry, you did not get this right.</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="partially-correct" class="alert alert-info text-center answrMsg"> <h3 class="bold">Well you are almost right.</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> </div>';
+
       ContentBoardView.prototype.onRender = function() {
-        return this.$el.attr('id', 'myCanvas');
+        this.$el.attr('id', 'myCanvas');
+        return this.$el.find('#feedback-area div').hide();
+      };
+
+      ContentBoardView.prototype.onShowResponse = function(marks, total) {
+        console.log(marks + total);
+        this.$el.find('.total-marks').text(total);
+        this.$el.find('.marks').text(marks);
+        if (marks === 0) {
+          this.$el.find('#feedback-area div').hide();
+          this.$el.find('#wrong').show();
+        }
+        if (marks === total) {
+          this.$el.find('#feedback-area div').hide();
+          this.$el.find('#correct').show();
+        }
+        if (marks > 0 && marks < total) {
+          this.$el.find('#feedback-area div').hide();
+          return this.$el.find('#partially-correct').show();
+        }
       };
 
       return ContentBoardView;

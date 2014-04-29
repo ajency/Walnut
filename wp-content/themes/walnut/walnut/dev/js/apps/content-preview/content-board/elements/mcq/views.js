@@ -14,9 +14,14 @@ define(['app'], function(App) {
 
       McqView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-container');
-        return this.trigger("create:row:structure", {
+        this.trigger("create:row:structure", {
           container: this.$el
         });
+        return this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
+          return function() {
+            return _this.trigger("submit:answer");
+          };
+        })(this));
       };
 
       return McqView;

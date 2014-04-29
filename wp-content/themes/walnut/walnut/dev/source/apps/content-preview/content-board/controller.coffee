@@ -14,6 +14,11 @@ define ['app'
 
 						elements = App.request "get:page:json"
 
+						answerData =
+								marks	: 0
+								total	: 0
+						
+
 						@view = @_getContentBoardView elements
 
 						@listenTo @view, "add:new:element", (container, type)->
@@ -24,8 +29,20 @@ define ['app'
 										@startFillingElements()
 								, 400
 
+						triggerOnce = _.once _.bind @triggerShowResponse, @,answerData
+
+						App.commands.setHandler "show:response",(marks,total)=>
+							answerData.marks += parseInt marks
+							answerData.total += parseInt total
+							triggerOnce()
+
 						@show @view,
 							loading : true
+
+					triggerShowResponse:(answerData)=>
+						_.delay =>
+							@view.triggerMethod 'show:response',answerData.marks,answerData.total
+						,500
 
 					_getContentBoardView:(model)->
 						new ContentBoard.Views.ContentBoardView
@@ -35,7 +52,7 @@ define ['app'
 					startFillingElements: ()->
 						section = @view.model.toJSON()
 
-						container = $('#myCanvas')
+						container = $('#myCanvas #question-area')
 						_.each section, (element, i)=>
 							if element.element is 'Row'
 								@addNestedElements container,element

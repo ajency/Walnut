@@ -8,9 +8,16 @@ define ['app'
 					class Mcq.Controller extends Element.Controller
 
 						initialize:(options)->
+							answerData =
+								answer : []
+								marks : 0
+								comment : 'Not Attempted'
+							@answerModel = App.request "create:new:answer",answerData
+
+
+
 
 							_.defaults options.modelData,
-									answer : []
 						
 							super(options)
 			
@@ -21,13 +28,13 @@ define ['app'
 						renderElement:()=>
 
 							optionsObj = @layout.model.get 'elements'
-							# if the object is a collection then keep as it is 
-							if optionsObj instanceof Backbone.Collection
-								optionCollection = optionsObj
-							# else convert it to collection and set it to mcq model
-							else
-								optionCollection = App.request "create:new:option:collection" , _.shuffle optionsObj
-								@layout.model.set 'elements',optionCollection
+							if not optionsObj.length
+								optionsObj.push[1]
+						
+							optionCollection = App.request "create:new:option:collection" , _.shuffle optionsObj
+							@layout.model.set 'elements',optionCollection
+
+							App.execute "show:total:marks",@layout.model.get 'marks'
 
 							# get the view
 							@view = @_getMcqView optionCollection
@@ -41,8 +48,27 @@ define ['app'
 							# listen to event from the view to create the row structure
 							@listenTo @view, "create:row:structure", @createRowStructure
 
+							@listenTo @view, "submit:answer", @_submitAnswer
+
 							# show the view
 							@layout.elementRegion.show @view
+
+						_submitAnswer:=>
+							if not @answerModel.get('answer').length
+								# confirmbox = confirm 'You haven\'t selected anything..\n do you still want to continue?'
+								console.log 'you havent selected any thing'
+								# return if not confirmbox
+								App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+							
+							else
+								if not @layout.model.get 'multiple'
+									console.log _.difference(@answerModel.get('answer'),@layout.model.get('correct_answer'))
+									if not _.difference(@answerModel.get('answer'),@layout.model.get('correct_answer')).length
+										@answerModel.set 'marks',@layout.model.get 'marks'
+									App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+
+
+
 
 
 						# creates Row structure for mcq
@@ -122,9 +148,9 @@ define ['app'
 
 						# when a checkbox is checked
 						_optionChecked:(model)=>
-								answerArray = @layout.model.get('answer')
+								answerArray = @answerModel.get 'answer'
 								if not @layout.model.get('multiple') and answerArray.length
-									@layout.model.set 'answer',[model.get('optionNo')]
+									@answerModel.set 'answer',[model.get('optionNo')]
 									console.log 'in check'
 									@view.$el.find('input:checkbox').prop 'checked',false
 									@view.$el.find('input:checkbox').parent().css('background-position','0px 0px')
@@ -134,14 +160,14 @@ define ['app'
 								else
 									answerArray.push model.get('optionNo')
 								answerArray.sort()
-								console.log @layout.model.get('answer')
+								console.log @answerModel.get('answer')
 
 						# when a checkbox is unchecked
 						_optionUnchecked:(model)=>
-								answerArray = @layout.model.get('answer')
+								answerArray = @answerModel.get('answer')
 								indexToRemove = $.inArray model.get('optionNo'),answerArray
 								answerArray.splice indexToRemove,1
-								console.log @layout.model.get('answer')
+								console.log @answerModel.get('answer')
 
 
 						_getMcqOptionView:(model)->

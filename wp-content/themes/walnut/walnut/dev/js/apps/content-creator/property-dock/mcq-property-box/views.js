@@ -15,7 +15,6 @@ define(['app', 'text!apps/content-creator/property-dock/mcq-property-box/templat
       PropertyView.prototype.template = Template;
 
       PropertyView.prototype.ui = {
-        individualMarksCheckbox: 'input#check-ind-marks',
         numberOfColumnsDropdown: 'select#column-num',
         numberOfOptionsDropdown: 'select#options-num',
         enableMultipleAnswersRadio: '#multiple-answer.radio',
@@ -29,7 +28,6 @@ define(['app', 'text!apps/content-creator/property-dock/mcq-property-box/templat
       PropertyView.prototype.events = {
         'change @ui.numberOfOptionsDropdown': '_changeOptionNumber',
         'change @ui.numberOfColumnsDropdown': '_changeColumnNumber',
-        'change @ui.individualMarksCheckbox': '_changeIndividualMarks',
         'change @ui.marksTextbox': '_changeMarks',
         'change @ui.enableMultipleAnswersRadio': '_changeMultipleCorrectAnswers'
       };
@@ -45,16 +43,29 @@ define(['app', 'text!apps/content-creator/property-dock/mcq-property-box/templat
         this.ui.numberOfColumnsDropdown.select2('val', this.model.get('columncount'));
         if (this.model.get('multiple')) {
           this.ui.enableMultipleAnswersRadio.find("input#yes").prop('checked', true);
+          this.trigger("show:individual:marks:table");
+          this.ui.marksTextbox.prop('disabled', true);
+          this._updateMarks();
         } else {
           this.ui.enableMultipleAnswersRadio.find("input#no").prop('checked', true);
-          this.model.set('individual_marks', false);
-          this.ui.individualMarksCheckbox.prop('disabled', true);
         }
-        if (this.model.get('individual_marks')) {
-          this.ui.individualMarksCheckbox.prop('checked', true);
-          this.ui.marksTextbox.val(0).prop('disabled', true);
-          return this.trigger("show:individual:marks:table");
-        }
+        return this.$el.find('#individual-marks-region').on('blur', 'input', (function(_this) {
+          return function(e) {
+            return _this._updateMarks();
+          };
+        })(this));
+      };
+
+      PropertyView.prototype._updateMarks = function() {
+        var totalMarks;
+        totalMarks = 0;
+        _.each(this.model.get('correct_answer'), (function(_this) {
+          return function(option) {
+            return totalMarks = totalMarks + parseInt(_this.model.get('elements').get(option).get('marks'));
+          };
+        })(this));
+        this.model.set('marks', totalMarks);
+        return this.ui.marksTextbox.val(totalMarks);
       };
 
       PropertyView.prototype._changeMultipleCorrectAnswers = function() {
@@ -63,19 +74,9 @@ define(['app', 'text!apps/content-creator/property-dock/mcq-property-box/templat
           "true": false
         });
         if (this.model.get('multiple')) {
-          return this.$el.find('input#check-ind-marks').prop('disabled', false);
-        }
-      };
-
-      PropertyView.prototype._changeIndividualMarks = function(evt) {
-        if ($(evt.target).prop('checked')) {
-          this.model.set('individual_marks', true);
-          this.ui.marksTextbox.val(0).prop('disabled', true);
-          return this.trigger("show:individual:marks:table");
-        } else {
-          this.model.set('individual_marks', false);
-          this.ui.marksTextbox.prop('disabled', false).val(this.model.get('marks'));
-          return this.trigger("hide:individual:marks:table");
+          this.trigger("show:individual:marks:table");
+          this.ui.marksTextbox.prop('disabled', true);
+          return this._updateMarks();
         }
       };
 
