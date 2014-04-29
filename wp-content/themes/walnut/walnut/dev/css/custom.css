@@ -853,6 +853,7 @@ textarea.border {
 .mcq-option {
   width: 100%;
   padding: 5px;
+  margin-bottom: 2px;
   min-height: 40px;
 }
 .mcq-option:before,
@@ -862,6 +863,21 @@ textarea.border {
 }
 .mcq-option:after {
   clear: both;
+}
+.mcq-option.ansWrong {
+  opacity: 0.3;
+  background: url(../../../images/answer-wrong.png) no-repeat right center;
+  outline: 2px dashed #f3f3f3;
+  background-size: 25px;
+}
+.mcq-option.ansFalse {
+  opacity: 0.3;
+  outline: 2px dashed #f3f3f3;
+}
+.mcq-option.ansRight {
+  background: url(../../../images/answer-right.png) no-repeat right center;
+  outline: 2px dashed #f3f3f3;
+  background-size: 35px;
 }
 .mcq-option .mcq-option-select {
   float: left;
@@ -922,9 +938,22 @@ textarea.border {
   color: #005da6;
 }
 .answrRight {
-  background: url(../../../images/underline.gif) no-repeat;
-  width: 25px;
-  height: 25px;
+  background: url(../../../images/answer.png) no-repeat;
+  width: 45px;
+  height: 34px;
+  background-position: 0 0;
+  float: left;
+  background-size: 78px 34px;
+  margin-left: 8px;
+}
+.answrWrong {
+  background: url(../../../images/answer.png) no-repeat;
+  width: 38px;
+  height: 34px;
+  background-position: -48px 0;
+  float: left;
+  background-size: 82px 34px;
+  margin-left: 8px;
 }
 .listBox {
   margin-top: 60px;

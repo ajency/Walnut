@@ -30,7 +30,7 @@
 	//word-wrap: break-word;
 	//border: 2px dashed @preview-grey;
 	padding: 5px;
-	//margin-bottom: 5px;
+	margin-bottom: 2px;
 	//position: relative;
 	min-height: 40px;
 	&:before, &:after {
@@ -39,6 +39,21 @@
 	}
 	&:after {
 	    clear: both;
+	}
+	&.ansWrong{
+		opacity: 0.3;
+		background: url(../../../images/answer-wrong.png) no-repeat right center;
+		outline: 2px dashed @preview-grey;
+		background-size: 25px;
+	}
+	&.ansFalse{
+		opacity: 0.3;
+		outline: 2px dashed @preview-grey;
+	}
+	&.ansRight{
+		background: url(../../../images/answer-right.png) no-repeat right center;
+		outline: 2px dashed @preview-grey;
+		background-size: 35px;
 	}
 	span{
 		//float: left;
@@ -101,3 +116,4 @@
 		padding-top: 8px;
 	}
 }
+

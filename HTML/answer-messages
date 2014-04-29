@@ -12,3 +12,5 @@
     <h3 class="bold">Well you are almost right.</h3>
     <h4 class="semi-bold">You scored: <span class="bold">15/25</span></h4>
 </div>
+
+<div class="answrWrong"></div>
