@@ -41,18 +41,18 @@
 	    clear: both;
 	}
 	&.ansWrong{
-		opacity: 0.3;
+		opacity: 0.2;
 		background: url(../../../images/answer-wrong.png) no-repeat right center;
-		outline: 2px dashed @preview-grey;
+		border-bottom: 2px solid @color-danger;
 		background-size: 25px;
 	}
 	&.ansFalse{
-		opacity: 0.3;
-		outline: 2px dashed @preview-grey;
+		opacity: 0.2;
+		border-bottom: 2px solid @color-danger;
 	}
 	&.ansRight{
 		background: url(../../../images/answer-right.png) no-repeat right center;
-		outline: 2px dashed @preview-grey;
+		border-bottom: 2px solid lighten(@color-success, 10%);
 		background-size: 35px;
 	}
 	span{
