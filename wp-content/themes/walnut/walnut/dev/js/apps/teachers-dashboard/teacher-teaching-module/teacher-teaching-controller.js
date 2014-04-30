@@ -48,7 +48,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype._showViews = function() {
         var layout;
-        console.log('show views');
         this.layout = layout = this._getTakeSingleQuestionLayout();
         this.show(this.layout, {
           loading: true,

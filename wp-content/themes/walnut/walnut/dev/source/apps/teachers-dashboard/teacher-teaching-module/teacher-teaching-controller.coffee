@@ -47,7 +47,6 @@ define ['app'
 
 			
 			_showViews:=>
-				console.log 'show views'
 				@layout= layout = @_getTakeSingleQuestionLayout()
 
 				@show @layout, (
