@@ -11,26 +11,31 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this._optionUnchecked = __bind(this._optionUnchecked, this);
         this._optionChecked = __bind(this._optionChecked, this);
         this.createRowStructure = __bind(this.createRowStructure, this);
+        this._submitAnswer = __bind(this._submitAnswer, this);
         this.renderElement = __bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
       Controller.prototype.initialize = function(options) {
-        _.defaults(options.modelData, {
-          answer: []
-        });
-        return Controller.__super__.initialize.call(this, options);
+        var answerData;
+        answerData = {
+          answer: [],
+          marks: 0,
+          comment: 'Not Attempted'
+        };
+        this.answerModel = App.request("create:new:answer", answerData);
+        return _.defaults(options.modelData, Controller.__super__.initialize.call(this, options));
       };
 
       Controller.prototype.renderElement = function() {
         var optionCollection, optionsObj;
         optionsObj = this.layout.model.get('elements');
-        if (optionsObj instanceof Backbone.Collection) {
-          optionCollection = optionsObj;
-        } else {
-          optionCollection = App.request("create:new:option:collection", _.shuffle(optionsObj));
-          this.layout.model.set('elements', optionCollection);
+        if (!optionsObj.length) {
+          optionsObj.push[1];
         }
+        optionCollection = App.request("create:new:option:collection", _.shuffle(optionsObj));
+        this.layout.model.set('elements', optionCollection);
+        App.execute("show:total:marks", this.layout.model.get('marks'));
         this.view = this._getMcqView(optionCollection);
         this.listenTo(this.view, "show show:this:mcq:properties", (function(_this) {
           return function(options) {
@@ -40,7 +45,40 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           };
         })(this));
         this.listenTo(this.view, "create:row:structure", this.createRowStructure);
+        this.listenTo(this.view, "submit:answer", this._submitAnswer);
         return this.layout.elementRegion.show(this.view);
+      };
+
+      Controller.prototype._submitAnswer = function() {
+        var answersNotMarked, totalMarks;
+        if (!this.answerModel.get('answer').length) {
+          console.log('you havent selected any thing');
+        } else {
+          if (!this.layout.model.get('multiple')) {
+            console.log(_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')));
+            if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
+              this.answerModel.set('marks', this.layout.model.get('marks'));
+            }
+          } else {
+            console.log('inhere');
+            if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
+              if (!_.difference(this.layout.model.get('correct_answer'), this.answerModel.get('answer')).length) {
+                this.answerModel.set('marks', this.layout.model.get('marks'));
+              } else {
+                answersNotMarked = _.difference(this.layout.model.get('correct_answer'), this.answerModel.get('answer'));
+                totalMarks = this.layout.model.get('marks');
+                _.each(answersNotMarked, (function(_this) {
+                  return function(notMarked) {
+                    return totalMarks -= _this.layout.model.get('elements').get(notMarked).get('marks');
+                  };
+                })(this));
+                this.answerModel.set('marks', totalMarks);
+              }
+            }
+          }
+        }
+        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        return this.view.triggerMethod("add:option:classes", this.answerModel.get('answer'));
       };
 
       Controller.prototype.createRowStructure = function(options) {
@@ -117,9 +155,9 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
 
       Controller.prototype._optionChecked = function(model) {
         var answerArray;
-        answerArray = this.layout.model.get('answer');
+        answerArray = this.answerModel.get('answer');
         if (!this.layout.model.get('multiple') && answerArray.length) {
-          this.layout.model.set('answer', [model.get('optionNo')]);
+          this.answerModel.set('answer', [model.get('optionNo')]);
           console.log('in check');
           this.view.$el.find('input:checkbox').prop('checked', false);
           this.view.$el.find('input:checkbox').parent().css('background-position', '0px 0px');
@@ -129,15 +167,15 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           answerArray.push(model.get('optionNo'));
         }
         answerArray.sort();
-        return console.log(this.layout.model.get('answer'));
+        return console.log(this.answerModel.get('answer'));
       };
 
       Controller.prototype._optionUnchecked = function(model) {
         var answerArray, indexToRemove;
-        answerArray = this.layout.model.get('answer');
+        answerArray = this.answerModel.get('answer');
         indexToRemove = $.inArray(model.get('optionNo'), answerArray);
         answerArray.splice(indexToRemove, 1);
-        return console.log(this.layout.model.get('answer'));
+        return console.log(this.answerModel.get('answer'));
       };
 
       Controller.prototype._getMcqOptionView = function(model) {

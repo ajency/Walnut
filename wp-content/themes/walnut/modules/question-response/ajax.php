@@ -27,24 +27,26 @@ function get_question_response(){
     global $wpdb;
     
     $collection_id= $_GET['collection_id'];
-    $question_id= $_GET['content_piece_id'];
+    //$question_id= $_GET['content_piece_id'];
     $division =  $_GET['division'];
+    //$question_type = 'individual';
     
     $question_response_qry=$wpdb->prepare("select * from {$wpdb->prefix}question_response
-        where collection_id=%d and content_piece_id=%d and division= %d ", array($collection_id, $question_id, $division));
+        where collection_id=%d and division= %d ", array($collection_id, $division));
 
     $question_response= $wpdb->get_results($question_response_qry);
     
-    foreach($question_response as $resp){
+    foreach($question_response as $k=> $resp){
         foreach($resp as $key=> $val){
-            $data[$key] = $val;
-            if($key=='question_response'){
+            $data[$k][$key] = $val;
+            if($key=='question_response' && $question_type=='individual'){
+                $q_resp_arr=array();
                 $qresponse = maybe_unserialize($val);
                 if($qresponse)
                     foreach($qresponse as $qres){
                         $q_resp_arr[]= (int) $qres;
                     }
-                   $data['question_response']=$q_resp_arr; 
+                   $data[$k]['question_response']=$q_resp_arr; 
             }
         }
     }

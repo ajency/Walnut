@@ -1,4 +1,4 @@
-define ['app'
+  define ['app'
 		'apps/teachers-dashboard/dashboard/dashboard-controller'
 		'apps/teachers-dashboard/take-class/take-class-controller'
 		'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-controller'
@@ -17,7 +17,7 @@ define ['app'
 						'teachers/dashboard' 											: 'teachersDashboard'
 						'teachers/take-class/:classID/:div' 							: 'takeClass'
 						'teachers/take-class/:classID/:div/textbook/:tID' 				: 'takeClassTextbookModules'
-						'teachers/take-class/:classID/:div/textbook/:tID/module/:mID/:qID' 	: 'takeSingleQuestion'
+						#'teachers/take-class/:classID/:div/textbook/:tID/module/:mID/:qID' 	: 'takeSingleQuestion'
 						'teachers/start-training/:classID' 								: 'startTraining'
 						'teachers/start-training/:classID/textbook/:tID' 				: 'startTrainingTextbookModules'
 
@@ -40,7 +40,7 @@ define ['app'
 							division	: div
 
 					takeSingleQuestion: (classID,div,tID, mID, qID) ->
-						new TeachersDashboardApp.View.SingleQuestionController
+						new TeachersDashboardApp.SingleGroupApp.SingleQuestionController
 							region 		: App.mainContentRegion
 							textbookID 	: tID
 							classID 	: classID

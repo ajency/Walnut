@@ -16,6 +16,34 @@ define ['app'],(App)->
 						container : @$el
 
 				
+				
+
+				@$el.closest('.preview').find('#submit-answer-button').on 'click',=>
+						@trigger "submit:answer"
+
+			onAddOptionClasses:(answer)->
+				totalOptions = @model.get 'optioncount'
+				correctOption =  @model.get 'correct_answer'
+				wrongOption = _.difference answer, correctOption
+				remainingOption = _.difference _.range(1,totalOptions+1),correctOption,wrongOption
+
+
+				_.each correctOption ,(option)=>
+					@_addClass(option,'ansRight')
+
+				_.each wrongOption ,(option)=>
+					@_addClass(option,'ansWrong')
+
+				_.each remainingOption ,(option)=>
+					@_addClass(option,'ansFalse')
+
+			_addClass:(option,className)->
+				@$el.find("#mcq-option-#{option}").addClass(className)
+
+
+
+
+				
 
 
 		class Views.McqOptionView extends Marionette.ItemView
@@ -53,6 +81,8 @@ define ['app'],(App)->
 				# 	@model.set 'class', @$el.parent().attr('data-class')
 					# if e.originalEvent.attrName is 'data-class'
 					# 	console.log @$el.parent().attr('data-class')
+
+
 
 			
 

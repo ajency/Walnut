@@ -44,6 +44,7 @@ require.config
 		datepicker			: 'plugins/bootstrap-datepicker'
 		timepicker			: 'plugins/bootstrap-timepicker.min'
 		jquerytimer			: 'plugins/timer.jquery'
+		jquery_listnav				: 'plugins/jquery-listnav'
 
 
 	shim:
@@ -75,6 +76,7 @@ require.config
 		datepicker 		: ['jquery', 'bootstrap']
 		timepicker 		: ['jquery', 'bootstrap']
 		jquerytimer		: ['jquery']
+		jquery_listnav		: ['jquery']
 		app 			: ['plugins/walnut-pluginloader','config/walnut-configloader']
 
 	

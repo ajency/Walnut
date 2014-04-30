@@ -9,7 +9,7 @@ define ['app'
 			template : 	Template
 
 			ui : 
-				individualMarksCheckbox : 'input#check-ind-marks'
+				# individualMarksCheckbox : 'input#check-ind-marks'
 				numberOfColumnsDropdown : 'select#column-num'
 				numberOfOptionsDropdown : 'select#options-num'
 				enableMultipleAnswersRadio : '#multiple-answer.radio'
@@ -24,7 +24,7 @@ define ['app'
 			events :
 				'change @ui.numberOfOptionsDropdown': '_changeOptionNumber'
 				'change @ui.numberOfColumnsDropdown': '_changeColumnNumber'
-				'change @ui.individualMarksCheckbox': '_changeIndividualMarks'
+				# 'change @ui.individualMarksCheckbox': '_changeIndividualMarks'
 				'change @ui.marksTextbox' : '_changeMarks'
 				'change @ui.enableMultipleAnswersRadio'  : '_changeMultipleCorrectAnswers'
 
@@ -43,41 +43,58 @@ define ['app'
 
 				# Multiple ANSWER
 				if @model.get 'multiple'
-					@ui.enableMultipleAnswersRadio.find("input#yes").prop 'checked',true	
+					@ui.enableMultipleAnswersRadio.find("input#yes").prop 'checked',true
+					@trigger "show:individual:marks:table"
+					@ui.marksTextbox.prop 'disabled',true
+					@_updateMarks()	
+					
 				else
 					@ui.enableMultipleAnswersRadio.find("input#no").prop 'checked',true
-					@model.set 'individual_marks',false
-					@ui.individualMarksCheckbox.prop 'disabled',true
 
-				if @model.get 'individual_marks'
-					@ui.individualMarksCheckbox.prop 'checked',true
-					@ui.marksTextbox.val(0).prop 'disabled',true
-					@trigger "show:individual:marks:table"
+				@$el.find('#individual-marks-region').on 'blur','input',(e)=>
+					@_updateMarks()
+					
+			_updateMarks:->
+				
+				totalMarks = 0
+				_.each @model.get('correct_answer') ,(option)=>
+					totalMarks = totalMarks + parseInt @model.get('elements').get(option).get('marks')
+				@model.set 'marks',totalMarks
+				@ui.marksTextbox.val totalMarks
+
+				# if @model.get 'individual_marks'
+				# 	@ui.individualMarksCheckbox.prop 'checked',true
+				# 	@ui.marksTextbox.val(0).prop 'disabled',true
+					
 
 
 
 			_changeMultipleCorrectAnswers:=>
 				@model.set 'multiple', @ui.enableMultipleAnswersRadio.find('input:checked').val()=="yes" ? true : false
 				if @model.get 'multiple'
-					@$el.find('input#check-ind-marks').prop 'disabled',false
+					@trigger "show:individual:marks:table"
+					@ui.marksTextbox.prop 'disabled',true
+					@_updateMarks()
+
 				
 
-			_changeIndividualMarks:(evt)->
-				if $(evt.target).prop 'checked'
-					@model.set 'individual_marks', true
-					@ui.marksTextbox.val(0).prop 'disabled',true
-					@trigger "show:individual:marks:table"
+			# _changeIndividualMarks:(evt)->
+			# 	if $(evt.target).prop 'checked'
+			# 		@model.set 'individual_marks', true
+			# 		@ui.marksTextbox.val(0).prop 'disabled',true
+					
 
-				else
-					@model.set 'individual_marks',false
-					@ui.marksTextbox.prop('disabled',false).val @model.get 'marks'
-					@trigger "hide:individual:marks:table"
+			# 	else
+			# 		@model.set 'individual_marks',false
+			# 		@ui.marksTextbox.prop('disabled',false).val @model.get 'marks'
+			# 		@trigger "hide:individual:marks:table"
 
 			# function for changing model on change of marks dropbox
 			_changeMarks:(evt)->
 					
 					if not isNaN $(evt.target).val()
 							@model.set 'marks', $(evt.target).val()
+
 
 
 			_changeOptionNumber:(evt)->

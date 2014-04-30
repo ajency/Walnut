@@ -14,9 +14,41 @@ define(['app'], function(App) {
 
       McqView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-container');
-        return this.trigger("create:row:structure", {
+        this.trigger("create:row:structure", {
           container: this.$el
         });
+        return this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
+          return function() {
+            return _this.trigger("submit:answer");
+          };
+        })(this));
+      };
+
+      McqView.prototype.onAddOptionClasses = function(answer) {
+        var correctOption, remainingOption, totalOptions, wrongOption;
+        totalOptions = this.model.get('optioncount');
+        correctOption = this.model.get('correct_answer');
+        wrongOption = _.difference(answer, correctOption);
+        remainingOption = _.difference(_.range(1, totalOptions + 1), correctOption, wrongOption);
+        _.each(correctOption, (function(_this) {
+          return function(option) {
+            return _this._addClass(option, 'ansRight');
+          };
+        })(this));
+        _.each(wrongOption, (function(_this) {
+          return function(option) {
+            return _this._addClass(option, 'ansWrong');
+          };
+        })(this));
+        return _.each(remainingOption, (function(_this) {
+          return function(option) {
+            return _this._addClass(option, 'ansFalse');
+          };
+        })(this));
+      };
+
+      McqView.prototype._addClass = function(option, className) {
+        return this.$el.find("#mcq-option-" + option).addClass(className);
       };
 
       return McqView;

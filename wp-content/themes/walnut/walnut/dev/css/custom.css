@@ -118,7 +118,8 @@
   background: #ffffff;
   left: 260px;
   top: 0;
-  min-width: 760px;
+  max-width: 760px;
+  margin: 0 auto;
   min-height: 500px !important;
   padding: 15px 10px;
 }
@@ -817,9 +818,23 @@ textarea.border {
   height: 22px;
   margin-right: 10px;
 }
+.fib-text {
+  font-size: 22px;
+  margin-bottom: 0;
+}
+.fib-text:focus {
+  outline: none;
+  border-bottom: 2px dashed #f3f3f3;
+}
+.fib-text input[type="text"] {
+  margin: 0 8px;
+  vertical-align: text-bottom;
+  valign: text-bottom;
+}
 #mcq-container .element-wrapper {
   border: none;
   margin: 4px 0 0;
+  padding: 0 7px;
 }
 #mcq-container .element-wrapper .row .column.empty-column {
   background: none;
@@ -838,6 +853,7 @@ textarea.border {
 .mcq-option {
   width: 100%;
   padding: 5px;
+  margin-bottom: 2px;
   min-height: 40px;
 }
 .mcq-option:before,
@@ -847,6 +863,21 @@ textarea.border {
 }
 .mcq-option:after {
   clear: both;
+}
+.mcq-option.ansWrong {
+  opacity: 0.2;
+  background: url(../../../images/answer-wrong.png) no-repeat right center;
+  border-bottom: 2px solid #f35958;
+  background-size: 25px;
+}
+.mcq-option.ansFalse {
+  opacity: 0.2;
+  border-bottom: 2px solid #f35958;
+}
+.mcq-option.ansRight {
+  background: url(../../../images/answer-right.png) no-repeat right center;
+  border-bottom: 2px solid #0dd6c5;
+  background-size: 35px;
 }
 .mcq-option .mcq-option-select {
   float: left;
@@ -871,6 +902,12 @@ textarea.border {
   border: 2px dashed #f3f3f3;
   padding-left: 4px;
 }
+.mcq-option .optionNo {
+  float: left;
+  padding-top: 6px;
+  padding-right: 2px;
+  font-size: 16px;
+}
 #multiple-answer label {
   margin-bottom: 10px;
   margin-top: 5px;
@@ -885,18 +922,41 @@ textarea.border {
   text-align: right;
   padding-top: 8px;
 }
-@media (max-width: 1024px) {
-  #site-page-content-region {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  #toolbox,
-  .dock.tiles {
-    display: none;
-  }
-}
 .hashtags {
   font-size: 13px;
+}
+#content-board {
+  margin-top: 30px;
+}
+#content-board .element-wrapper {
+  border: none;
+}
+.answrMsg.alert-success h3 {
+  color: #007366;
+}
+.answrMsg.alert-error h3 {
+  color: #c02625;
+}
+.answrMsg.alert-info h3 {
+  color: #005da6;
+}
+.answrRight {
+  background: url(../../../images/answer.png) no-repeat;
+  width: 45px;
+  height: 34px;
+  background-position: 0 0;
+  float: left;
+  background-size: 78px 34px;
+  margin-left: 8px;
+}
+.answrWrong {
+  background: url(../../../images/answer.png) no-repeat;
+  width: 38px;
+  height: 34px;
+  background-position: -48px 0;
+  float: left;
+  background-size: 82px 34px;
+  margin-left: 8px;
 }
 .listBox {
   margin-top: 60px;
