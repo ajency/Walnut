@@ -4,7 +4,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentPiece", function(ContentPiece, App, Backbone, Marionette, $, _) {
-    var API, contentPieceCollection, contentPiecesOfGroup;
+    var API, contentPieceCollection;
     ContentPiece.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -76,7 +76,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       return GroupItemCollection;
 
     })(Backbone.Collection);
-    contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
     API = {
       getContentPieces: function(param) {
         if (param == null) {
@@ -89,11 +88,12 @@ define(["app", 'backbone'], function(App, Backbone) {
         return contentPieceCollection;
       },
       getContentPiecesOfGroup: function(groupid) {
-        var contentGroup;
+        var contentGroup, contentPiecesOfGroup;
         if (groupid == null) {
           groupid = '';
         }
         if (groupid) {
+          contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
           contentGroup = App.request("get:content:group:by:id", groupid);
           App.execute("when:fetched", contentGroup, (function(_this) {
             return function() {

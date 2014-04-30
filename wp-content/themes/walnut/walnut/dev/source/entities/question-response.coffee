@@ -30,12 +30,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 					@total = resp.count
 					resp.data
 
-			responseCollection = new QuestionResponseCollection
+			
 
 			# API 
 			API = 
 				# get response collection
 				getAllQuestionResponses:(param = {})->
+					responseCollection = new QuestionResponseCollection
 					responseCollection.fetch
 										reset : true
 										data  : param

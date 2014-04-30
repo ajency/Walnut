@@ -10,6 +10,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       function ChorusOptionsController() {
         this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
+        this._showChorusOptionsView = __bind(this._showChorusOptionsView, this);
         this._changeQuestion = __bind(this._changeQuestion, this);
         return ChorusOptionsController.__super__.constructor.apply(this, arguments);
       }
@@ -17,7 +18,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ChorusOptionsController.prototype.initialize = function(opts) {
         var view;
         this.questionResponseModel = opts.questionResponseModel;
-        this.view = view = this._showQuestionView(this.questionResponseModel);
+        this.view = view = this._showChorusOptionsView(this.questionResponseModel);
         this.show(view, {
           loading: true
         });
@@ -29,7 +30,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         return this.region.trigger("goto:next:question");
       };
 
-      ChorusOptionsController.prototype._showQuestionView = function(model) {
+      ChorusOptionsController.prototype._showChorusOptionsView = function(model) {
         return new ChorusOptionsView({
           model: model,
           responsePercentage: this.questionResponseModel.get('question_response')

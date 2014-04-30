@@ -8,8 +8,8 @@ define ['app'
 
 			initialize : (opts)->
 				{@questionResponseModel} = opts
-
-				@view= view = @_showQuestionView @questionResponseModel
+				
+				@view= view = @_showChorusOptionsView @questionResponseModel
 
 				@show view, (loading:true)
 
@@ -21,7 +21,7 @@ define ['app'
 
 				@region.trigger "goto:next:question"	
 
-			_showQuestionView : (model)->
+			_showChorusOptionsView : (model)=>
 				new ChorusOptionsView 
 					model 				: model
 					responsePercentage 	: @questionResponseModel.get 'question_response'
