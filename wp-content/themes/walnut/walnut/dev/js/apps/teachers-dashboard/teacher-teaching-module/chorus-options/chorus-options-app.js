@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/single-question/chorus-options/templates/chorus-options-template.html'], function(App, RegionController, chorusOptionsTemplate) {
+define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/teacher-teaching-module/chorus-options/templates/chorus-options-template.html'], function(App, RegionController, chorusOptionsTemplate) {
   return App.module("SingleQuestionChorusOptionsApp", function(ChorusOptions, App) {
     var ChorusOptionsController, ChorusOptionsView;
     ChorusOptionsController = (function(_super) {
@@ -10,6 +10,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/si
 
       function ChorusOptionsController() {
         this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
+        this._changeQuestion = __bind(this._changeQuestion, this);
         return ChorusOptionsController.__super__.constructor.apply(this, arguments);
       }
 
@@ -25,7 +26,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/si
       };
 
       ChorusOptionsController.prototype._changeQuestion = function() {
-        return App.SingleQuestionChorusOptionsApp.trigger("goto:next:question");
+        return this.region.trigger("goto:next:question");
       };
 
       ChorusOptionsController.prototype._showQuestionView = function(model) {

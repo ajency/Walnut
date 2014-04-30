@@ -4,7 +4,7 @@
 		'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-controller'
 		'apps/teachers-dashboard/start-training/start-training-controller'
 		'apps/teachers-dashboard/start-training/textbook-modules/textbook-modules-controller'
-		'apps/teachers-dashboard/single-question/single-question-controller'
+		#'apps/teachers-dashboard/single-question/single-question-controller'
 		'apps/content-group/view-group/group-view-controller'
 		], (App)->
 

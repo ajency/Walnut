@@ -7,25 +7,25 @@ define ['app'
 		class SingleQuestionStudentsController extends RegionController
 
 			initialize : (opts)->
-				{@questionResponseModel} = opts
+				{@questionResponseModel,studentCollection} = opts
 
 				division = @questionResponseModel.get 'division'
 
-				studentsCollection= App.request "get:user:collection", ('role':'student', 'division': division)
+				@view= view = @_showStudentsListView studentCollection
 
-				@view= view = @_showStudentsListView studentsCollection
+
+				@show view, (loading:true, entities:[studentCollection])
+
 
 				@listenTo view, "save:question:response", @_saveQuestionResponse
 
 				@listenTo view, "question:completed", @_changeQuestion
 
-				@show view, (loading:true, entities:[studentsCollection])
+			_changeQuestion:=>
+				@region.trigger "goto:next:question"	
 
-			_changeQuestion:->
-				App.SingleQuestionStudentsListApp.trigger "goto:next:question"
 
 			_showStudentsListView :(collection) =>
-				console.log 'show student list view'
 				console.log @questionResponseModel.get 'question_response'
 				new Students.Views.StudentsList 
 					collection 			: collection
