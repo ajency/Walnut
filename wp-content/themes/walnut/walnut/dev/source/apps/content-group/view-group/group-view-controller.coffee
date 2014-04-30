@@ -17,20 +17,11 @@ define ['app'
 
 				@layout = layout = @_getContentGroupViewLayout()
 
-
 				@show layout, (loading:true)
 
 				@listenTo layout, 'show', @showContentGroupViews
 
-				@listenTo layout.collectionDetailsRegion, "start:teaching:module", @startTeachingModule
 
-
-			startTeachingModule:=>
-				App.execute "show:teacher:teaching:app", 
-						region : @layout.collectionDetailsRegion
-						model  : @contentGroupModel
-						module : @module
-						
 			showContentGroupViews:=>
 				App.execute "when:fetched", @contentGroupModel, =>
 					App.execute "show:viewgroup:content:group:detailsapp", 

@@ -65,7 +65,6 @@ define(['app'], function(App) {
           includeNums: false
         });
         this.correctAnswers = Marionette.getOption(this, 'correctAnswers');
-        console.log(this.correctAnswers);
         this.correctAnswers = _.compact(this.correctAnswers);
         _ref = this.$el.find('.tiles.single');
         _results = [];
@@ -73,7 +72,6 @@ define(['app'], function(App) {
           ele = _ref[_i];
           eleValue = parseInt($(ele).attr('data-id'));
           if (_.contains(this.correctAnswers, eleValue)) {
-            console.log(eleValue);
             _results.push(this.markAsCorrectAnswer(ele));
           } else {
             _results.push(void 0);

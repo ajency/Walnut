@@ -39,16 +39,10 @@ define ['app'
 					templateHelpers:
 						getTextbookName:=>
 							@textbookName 
-					
-						
-						
-
 
 			trainingModuleStarted:=>		
 				@startTime = moment().format();
 				@view.triggerMethod "display:time"
-				#@region.trigger "start:teaching:module"
-
 
 
 			trainingModuleStopped:=>		

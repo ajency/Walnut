@@ -26,7 +26,6 @@ define ['app'
 
 
 			_showStudentsListView :(collection) =>
-				console.log @questionResponseModel.get 'question_response'
 				new Students.Views.StudentsList 
 					collection 			: collection
 					correctAnswers 		: @questionResponseModel.get 'question_response'

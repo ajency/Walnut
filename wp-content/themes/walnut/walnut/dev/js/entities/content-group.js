@@ -4,7 +4,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentGroup", function(ContentGroup, App, Backbone, Marionette, $, _) {
-    var API, contentGroupCollection;
+    var API;
     ContentGroup.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -73,12 +73,13 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemCollection;
 
     })(Backbone.Collection);
-    contentGroupCollection = new ContentGroup.ItemCollection;
     API = {
       getContentGroups: function(param) {
+        var contentGroupCollection;
         if (param == null) {
           param = {};
         }
+        contentGroupCollection = new ContentGroup.ItemCollection;
         contentGroupCollection.fetch({
           reset: true,
           data: param
@@ -87,7 +88,9 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getContentGroupByID: function(id) {
         var contentGroup;
-        contentGroup = contentGroupCollection.get(id);
+        if (typeof contentGroupCollection !== "undefined" && contentGroupCollection !== null) {
+          contentGroup = contentGroupCollection.get(id);
+        }
         if (!contentGroup) {
           contentGroup = new ContentGroup.ItemModel({
             'id': id

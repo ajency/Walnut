@@ -87,7 +87,7 @@ function setup_childsite_tables(){
     
     echo "{$wpdb->prefix}class_divisions table created<br>";
     
-    $class_divisions_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}training_logs 
+    $training_logs_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}training_logs 
              (`id` INT NOT NULL AUTO_INCREMENT, `division_id` INT NOT NULL, 
              `collection_id` INT NOT NULL, 
              `teacher_id` INT NOT NULL, 
@@ -95,7 +95,7 @@ function setup_childsite_tables(){
              `status` VARCHAR(255) NOT NULL, 
              PRIMARY KEY (`id`))";
 
-    $wpdb->query($class_divisions_table);
+    $wpdb->query($training_logs_table);
     
     echo "{$wpdb->prefix}training_logs table created<br>";
     
@@ -103,6 +103,7 @@ function setup_childsite_tables(){
         `id` INT NOT NULL AUTO_INCREMENT ,
         `content_piece_id` INT NOT NULL ,
         `collection_id` INT NOT NULL ,
+        `division` INT NOT NULL ,
         `date_created` DATE NOT NULL ,
         `date_modified` DATE NOT NULL ,
         `total_time` VARCHAR( 255 ) NOT NULL ,

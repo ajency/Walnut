@@ -34,7 +34,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       SingleQuestionStudentsController.prototype._showStudentsListView = function(collection) {
-        console.log(this.questionResponseModel.get('question_response'));
         return new Students.Views.StudentsList({
           collection: collection,
           correctAnswers: this.questionResponseModel.get('question_response')
