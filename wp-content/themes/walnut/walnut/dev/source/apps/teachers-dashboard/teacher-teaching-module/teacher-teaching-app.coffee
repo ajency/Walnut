@@ -14,7 +14,6 @@
 
 					teacherTeachingModule: (classID,div,tID, mID, qID) ->
 
-						console.log 'teacherTeachingModule'
 						new TeacherTeachingApp.TeacherTeachingController
 							region 		: App.mainContentRegion
 							textbookID 	: tID
@@ -31,3 +30,6 @@
 
 
 							
+			# set handlers
+			App.commands.setHandler "show:teacher:teaching:app", (opt = {})->
+				new TeacherTeachingApp.TeacherTeachingController opt		

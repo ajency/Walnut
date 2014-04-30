@@ -2,7 +2,7 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'apps/teachers-dashboard/teacher-teaching-module/teacher-teaching-controller'], function(App) {
-  return App.module("TeacherTeachingApp", function(TeacherTeachingApp, App) {
+  App.module("TeacherTeachingApp", function(TeacherTeachingApp, App) {
     var Controller, TeacherTeachingRouter;
     TeacherTeachingRouter = (function(_super) {
       __extends(TeacherTeachingRouter, _super);
@@ -20,7 +20,6 @@ define(['app', 'apps/teachers-dashboard/teacher-teaching-module/teacher-teaching
     })(Marionette.AppRouter);
     Controller = {
       teacherTeachingModule: function(classID, div, tID, mID, qID) {
-        console.log('teacherTeachingModule');
         return new TeacherTeachingApp.TeacherTeachingController({
           region: App.mainContentRegion,
           textbookID: tID,
@@ -36,5 +35,11 @@ define(['app', 'apps/teachers-dashboard/teacher-teaching-module/teacher-teaching
         controller: Controller
       });
     });
+  });
+  return App.commands.setHandler("show:teacher:teaching:app", function(opt) {
+    if (opt == null) {
+      opt = {};
+    }
+    return new TeacherTeachingApp.TeacherTeachingController(opt);
   });
 });

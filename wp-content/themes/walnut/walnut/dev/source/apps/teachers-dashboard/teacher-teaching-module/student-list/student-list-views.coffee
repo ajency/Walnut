@@ -24,8 +24,6 @@ define ['app'],(App)->
 			                </div>
 			            </div>'
 
-			onShow:->
-				console.log 'item view'
 
 		class StudentsEmptyView extends Marionette.ItemView
 
@@ -38,8 +36,6 @@ define ['app'],(App)->
 			                </div>
 			            </div>'
 
-			onShow:->
-				console.log 'empty view'
 
 		class Views.StudentsList extends Marionette.CompositeView
 
@@ -82,6 +78,7 @@ define ['app'],(App)->
 				
 
 				@correctAnswers = Marionette.getOption @, 'correctAnswers'
+				console.log @correctAnswers
 				@correctAnswers = _.compact @correctAnswers
 
 				for ele in @$el.find '.tiles.single'
@@ -102,11 +99,9 @@ define ['app'],(App)->
 					@markAsCorrectAnswer student
 				
 				@correctAnswers= _.uniq @correctAnswers
-				console.log @correctAnswers
 				@trigger "save:question:response", @correctAnswers
 
 			markAsCorrectAnswer:(student)=>
-				console.log student
 				$(student).removeClass 'selected'
 				.find '.default'
 				.removeClass 'default'

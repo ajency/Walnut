@@ -112,7 +112,7 @@ function get_single_content_piece($id){
     $content_piece->content_type = ($content_type) ? $content_type : '--';
     
     // Question Type can be individual or chorus
-    $content_piece->question_type = 'chorus'; 
+    $content_piece->question_type = 'individual'; 
     
     switch_to_blog($current_blog_id);
     

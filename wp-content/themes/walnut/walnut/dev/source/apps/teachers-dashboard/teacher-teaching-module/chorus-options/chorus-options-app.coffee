@@ -1,6 +1,6 @@
 define ['app'
 		'controllers/region-controller'
-		'text!apps/teachers-dashboard/single-question/chorus-options/templates/chorus-options-template.html'], (App, RegionController,chorusOptionsTemplate)->
+		'text!apps/teachers-dashboard/teacher-teaching-module/chorus-options/templates/chorus-options-template.html'], (App, RegionController,chorusOptionsTemplate)->
 
 	App.module "SingleQuestionChorusOptionsApp", (ChorusOptions, App)->
 
@@ -17,9 +17,9 @@ define ['app'
 
 				@listenTo view, "question:completed", @_changeQuestion
 
-			_changeQuestion:->
+			_changeQuestion:=>
 
-				App.SingleQuestionChorusOptionsApp.trigger "goto:next:question"			
+				@region.trigger "goto:next:question"	
 
 			_showQuestionView : (model)->
 				new ChorusOptionsView 

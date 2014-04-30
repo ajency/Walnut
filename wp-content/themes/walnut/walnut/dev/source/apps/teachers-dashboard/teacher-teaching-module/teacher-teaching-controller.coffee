@@ -42,17 +42,13 @@ define ['app'
 					@_showViews()
 
 				@contentPiece = App.request "get:content:piece:by:id", @questionID
-				
-				@layout= layout = @_getTakeSingleQuestionLayout()
+		
 
-
-
-
-				App.SingleQuestionStudentsListApp.on('goto:next:question', @_changeQuestion)
-				App.SingleQuestionChorusOptionsApp.on('goto:next:question', @_changeQuestion)
 			
 			_showViews:=>
 				console.log 'show views'
+				@layout= layout = @_getTakeSingleQuestionLayout()
+
 				@show @layout, (
 					loading: true 
 					entities: [
@@ -68,6 +64,28 @@ define ['app'
 				@listenTo @layout, "show", @_showStudentsListView @questionResponseModel
 
 				@listenTo @layout, "show", @_showQuestionDisplayView @contentPiece		
+
+				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
+
+			_changeQuestion:=>
+				contentPieces = contentGroupModel.get 'content_pieces'
+				pieceIndex = _.indexOf(contentPieces, @questionID)
+
+				@questionID= contentPieces[pieceIndex+1]
+				
+				if @questionID
+					console.log @questionID
+					@contentPiece = questionsCollection.get @questionID
+
+					@questionResponseModel = @_getOrCreateModel @questionID
+
+					@_showQuestionDisplayView @contentPiece
+					
+					@_showStudentsListView @questionResponseModel
+
+				else 
+					console.log 'end of questions'
+
 
 			_getOrCreateModel:(content_piece_id)=>
 				@questionResponseModel = questionResponseCollection.findWhere 
@@ -98,13 +116,14 @@ define ['app'
 
 			_showStudentsListView :(questionResponseModel)=>
 				App.execute "when:fetched", @contentPiece, =>
-					console.log questionResponseModel
+
 					question_type = @contentPiece.get('question_type')
 
 					if question_type is 'individual'
 						App.execute "show:single:question:student:list:app", 
 							region 			: @layout.studentsListRegion
 							questionResponseModel: questionResponseModel
+							studentCollection: studentCollection
 
 					else if question_type is 'chorus'	
 						App.execute "show:single:question:chorus:options:app",
