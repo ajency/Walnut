@@ -15,6 +15,7 @@ define ['app'
 		studentCollection 			= null
 		questionsCollection 		= null
 		questionResponseCollection 	= null
+		contentPiece 				= null
 
 		class View.TeacherTeachingController extends RegionController
 
@@ -41,7 +42,7 @@ define ['app'
 					@_getOrCreateModel @questionID
 					@_showViews()
 
-				@contentPiece = App.request "get:content:piece:by:id", @questionID
+				contentPiece = App.request "get:content:piece:by:id", @questionID
 		
 
 			
@@ -63,7 +64,7 @@ define ['app'
 
 				@listenTo @layout, "show", @_showStudentsListView @questionResponseModel
 
-				@listenTo @layout, "show", @_showQuestionDisplayView @contentPiece		
+				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece		
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
@@ -75,11 +76,11 @@ define ['app'
 				
 				if @questionID
 					console.log @questionID
-					@contentPiece = questionsCollection.get @questionID
+					contentPiece = questionsCollection.get @questionID
 
 					@questionResponseModel = @_getOrCreateModel @questionID
 
-					@_showQuestionDisplayView @contentPiece
+					@_showQuestionDisplayView contentPiece
 					
 					@_showStudentsListView @questionResponseModel
 
@@ -115,9 +116,9 @@ define ['app'
 					model 		  	: model
 
 			_showStudentsListView :(questionResponseModel)=>
-				App.execute "when:fetched", @contentPiece, =>
+				App.execute "when:fetched", contentPiece, =>
 
-					question_type = @contentPiece.get('question_type')
+					question_type = contentPiece.get('question_type')
 
 					if question_type is 'individual'
 						App.execute "show:single:question:student:list:app", 
