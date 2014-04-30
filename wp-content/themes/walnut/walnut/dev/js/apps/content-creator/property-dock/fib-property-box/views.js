@@ -76,7 +76,8 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
             return _this._updateMarks();
           };
         })(this));
-        return this.listenTo(this.model.get('blanksArray'), 'add', this._updateMarks);
+        this.listenTo(this.model.get('blanksArray'), 'add', this._updateMarks);
+        return this.listenTo(this.model.get('blanksArray'), 'remove', this._updateMarks);
       };
 
       PropertyView.prototype._updateMarks = function() {
