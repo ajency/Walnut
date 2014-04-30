@@ -31,15 +31,23 @@ define ['app'],(App)->
 											<input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
 									</div>
 
+									<div class="m-b-10">
+										Marks
+										<input id="individual-marks" type="text" value="{{marks}}" class="form-control">
+									</div>
+
 								</div>
 							  </div>
 							</div>
 							    	'
+				ui :
+					individualMarksTextbox : '#individual-marks'
 
 				# view events 
 				events : 
 					'blur #answer-max-length' : '_changeMaxLength'
 					'change input#correct-answers' : '_changeCorrectAnswers'
+					'blur @ui.individualMarksTextbox' : '_changeIndividualMarks'
 
 				mixinTemplateHelpers:(data)->
 					data.correctanswersFn = ->
@@ -60,6 +68,8 @@ define ['app'],(App)->
 				_changeMaxLength:(evt)-> 
 					# check if the value is a number
 					if  not isNaN $(evt.target).val()
-							console.log @model
-							@model.set 'maxlength',$(evt.target).val()
-							console.log @model
+							@model.set 'maxlength',parseInt $(evt.target).val()
+
+				_changeIndividualMarks:(evt)->
+					if not isNaN $(evt.target).val()
+							@model.set 'marks', parseInt $(evt.target).val()
