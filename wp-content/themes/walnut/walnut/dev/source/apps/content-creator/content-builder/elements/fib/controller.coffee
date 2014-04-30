@@ -16,13 +16,13 @@ define ['app'
 								maxlength : '12'
 								font : 'Arial'
 								color : '#000000'
-								bg_color : '#c5ebd2'
-								bg_opacity : '0.42'
+								bg_color : '#ffffff'
+								bg_opacity : '0'
 								font_size : '12'
 								case_sensitive : false
 								marks: 0
-								style : 'blank'
-								text : "India has "
+								style : 'uline'
+								text : '  <input type=\"text\" data-cke-editable=\"1\" contenteditable=\"false\">​'
 								blanksArray : []
 
 							super options

@@ -86,6 +86,7 @@ define ['app'
 									@_updateMarks()
 
 							@listenTo @model.get('blanksArray') , 'add',@_updateMarks
+							@listenTo @model.get('blanksArray') , 'remove',@_updateMarks
 					
 
 					_updateMarks:=>
