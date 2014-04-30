@@ -49,7 +49,7 @@ define(['app'], function(App) {
         this.$el.parent().parent().on('click', (function(_this) {
           return function(evt) {
             _this.trigger("show:this:fib:properties");
-            _this.trigger("close:hotspot:element:properties");
+            _this.trigger("close:question:element:properties");
             return evt.stopPropagation();
           };
         })(this));
@@ -92,7 +92,10 @@ define(['app'], function(App) {
       };
 
       FibView.prototype._textBlur = function() {
-        this.model.set('text', this.$el.find('p').html());
+        var formatedText;
+        formatedText = this.$el.find('p').clone();
+        $(formatedText).find('input').attr('value', '');
+        this.model.set('text', formatedText.html());
         return console.log(this.model);
       };
 
@@ -101,23 +104,25 @@ define(['app'], function(App) {
           return function(blank) {
             if (_.isUndefined($(blank).attr('data-id'))) {
               $(blank).attr('data-id', _.uniqueId('input-'));
-              _.delay(function() {
-                return $(blank).prop('maxLength', parseInt(12));
-              }, 100);
               _this.trigger("create:new:fib:element", $(blank).attr('data-id'));
             }
             return _.delay(function() {
               var blanksModel;
               blanksModel = _this.blanksCollection.get($(blank).attr('data-id'));
-              blanksModel.off('change:maxlength');
-              blanksModel.on('change:maxlength', function(model, maxlength) {
-                return _this.$el.find('input[data-id=' + model.get('id') + ']').prop('maxLength', maxlength);
-              });
+              if (!$(blank).hasClass("fib" + (_.indexOf(_this.blanksCollection.toArray(), blanksModel) + 1))) {
+                $(blank).removeClass('fib1 fib2 fib3 fib4 fib5 fib6');
+                $(blank).addClass("fib" + (_.indexOf(_this.blanksCollection.toArray(), blanksModel) + 1));
+              }
+              _this.listenTo(blanksModel, 'change:correct_answers', _this._changeCorrectAnswers);
+              if (blanksModel.get('correct_answers').length) {
+                _this.$el.find("input[data-id=" + blanksModel.id + "]").val(blanksModel.get('correct_answers')[0]);
+              }
               $(blank).off();
               return $(blank).on('click', function(e) {
                 console.log(blanksModel);
                 App.execute("show:fib:element:properties", {
-                  model: blanksModel
+                  model: blanksModel,
+                  blankNo: _.indexOf(_this.blanksCollection.toArray(), blanksModel) + 1
                 });
                 _this.trigger("show:this:fib:properties");
                 return e.stopPropagation();
@@ -146,6 +151,12 @@ define(['app'], function(App) {
         this._changeColor(this.model.get('color'));
         this._changeBGColor(this.model);
         return this._changeFibStyle(this.model.get('style'));
+      };
+
+      FibView.prototype._changeCorrectAnswers = function(model, answerArray) {
+        if (answerArray.length) {
+          return this.$el.find("input[data-id=" + model.id + "]").val(answerArray[0]);
+        }
       };
 
       FibView.prototype.onClose = function() {

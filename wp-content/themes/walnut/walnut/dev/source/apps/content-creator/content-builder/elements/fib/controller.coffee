@@ -13,16 +13,16 @@ define ['app'
 							# set defaults for the model
 							_.defaults options.modelData,
 								element : 'Fib'
-								maxlength : '12'
+								# maxlength : '12'
 								font : 'Arial'
 								color : '#000000'
 								bg_color : '#ffffff'
-								bg_opacity : '0'
-								font_size : '12'
+								bg_opacity : 0
+								font_size : 12
 								case_sensitive : false
 								marks: 0
 								style : 'uline'
-								text : '  <input type=\"text\" data-cke-editable=\"1\" contenteditable=\"false\">​'
+								text : 'Add text here <input type=\"text\" data-cke-editable=\"1\" style=\" height :100%\" contenteditable=\"false\">​'
 								blanksArray : []
 
 							super options
@@ -40,7 +40,7 @@ define ['app'
 									App.execute "show:question:properties", 
 											model : @layout.model
 							# listen to close hotspot prop box evnt from view
-							@listenTo view, "close:hotspot:element:properties",->
+							@listenTo view, "close:question:element:properties",->
 									App.execute "close:question:element:properties"
 
 							# # on show disable all question elements in d element box
@@ -54,7 +54,8 @@ define ['app'
 											id : blankId
 											correct_answers : []
 											marks : 1
-											maxlength : 12
+											size : 12
+											# maxlength : 12
 									# create a model
 									blanksModel = App.request "create:new:question:element", blanksData
 									# add model to collection
