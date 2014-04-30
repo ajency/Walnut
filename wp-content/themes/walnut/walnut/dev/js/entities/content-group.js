@@ -87,7 +87,9 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getContentGroupByID: function(id) {
         var contentGroup;
-        contentGroup = contentGroupCollection.get(id);
+        if (contentGroupCollection != null) {
+          contentGroup = contentGroupCollection.get(id);
+        }
         if (!contentGroup) {
           contentGroup = new ContentGroup.ItemModel({
             'id': id

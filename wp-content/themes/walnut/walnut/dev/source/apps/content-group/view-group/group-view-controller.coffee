@@ -17,9 +17,10 @@ define ['app'
 
 				@layout = layout = @_getContentGroupViewLayout()
 
+				@show layout, (loading:true)
+
 				@listenTo layout, 'show', @showContentGroupViews
 
-				@show layout, (loading:true)
 
 			showContentGroupViews:=>
 				App.execute "when:fetched", @contentGroupModel, =>

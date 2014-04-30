@@ -45,7 +45,7 @@ define ['app'],(App)->
 								<li data-element="Fib" > 
 									<a href="#" class="drag builder-element" > 
 										<div class="aj-imp-builder-title">
-											<i class="bicon icon-uniF148"></i> Fill in the Blanks
+											<i class="bicon icon-uniF148"></i> FIB
 										</div> 
 									</a> 
 								</li>  

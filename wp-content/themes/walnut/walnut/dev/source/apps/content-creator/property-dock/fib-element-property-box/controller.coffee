@@ -10,14 +10,15 @@ define ['app'
 
 						initialize:(options)->
 
-							@view = @_getView(options.model)
+							@view = @_getView(options)
 
 							@show @view
 
-						_getView:(model)->
+						_getView:(options)->
 
 							new FibElementPropertyBox.Views.BlankElementView
-									model : model
+									model : options.model
+									blankNo: options.blankNo
 
 
 					App.commands.setHandler "show:fib:element:properties:box",(options)->
@@ -25,3 +26,4 @@ define ['app'
 							new FibElementPropertyBox.Controller 
 									region : options.region
 									model : options.model
+									blankNo : options.blankNo

@@ -28,12 +28,20 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       };
 
       Controller.prototype.renderElement = function() {
-        var optionCollection, optionsObj;
+        var optionCollection, optionsObj, shuffleFlag;
         optionsObj = this.layout.model.get('elements');
-        if (!optionsObj.length) {
-          optionsObj.push[1];
+        shuffleFlag = true;
+        _.each(optionsObj, (function(_this) {
+          return function(option) {
+            if (parseInt(option["class"]) !== 12 / _this.layout.model.get('columncount')) {
+              return shuffleFlag = false;
+            }
+          };
+        })(this));
+        if (shuffleFlag) {
+          optionsObj = _.shuffle(optionsObj);
         }
-        optionCollection = App.request("create:new:option:collection", _.shuffle(optionsObj));
+        optionCollection = App.request("create:new:option:collection", optionsObj);
         this.layout.model.set('elements', optionCollection);
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.view = this._getMcqView(optionCollection);

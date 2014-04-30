@@ -10,11 +10,15 @@ define(['app'], function(App) {
         return BlankElementView.__super__.constructor.apply(this, arguments);
       }
 
-      BlankElementView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> FIB <i class="fa fa-chevron-right"> </i> <span class="semi-bold"> Blank </span> </div> <div class="docket-body"> <div class="from-group">Max Characters <input id="answer-max-length" type="text"  value="{{maxlength}}"> </div> <div class=""> Answers <input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" /> </div> </div> </div> </div>';
+      BlankElementView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> FIB <i class="fa fa-chevron-right"> </i> <span class="semi-bold"> Blank No : <span id="blankPropertiesNo"></span> </span> </div> <div class="docket-body"> <!-- 	<div class="from-group">Set maximum characters allowed to enter <input id="answer-max-length" type="text"  value="{{maxlength}}"> </div>   --> <div class=""> Accepted answers <input id="correct-answers"   value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" /> </div> <div class="m-b-10"> Marks <input id="individual-marks" type="text" value="{{marks}}" class="form-control"> </div> </div> </div> </div>';
+
+      BlankElementView.prototype.ui = {
+        individualMarksTextbox: '#individual-marks'
+      };
 
       BlankElementView.prototype.events = {
-        'blur #answer-max-length': '_changeMaxLength',
-        'change input#correct-answers': '_changeCorrectAnswers'
+        'change input#correct-answers': '_changeCorrectAnswers',
+        'blur @ui.individualMarksTextbox': '_changeIndividualMarks'
       };
 
       BlankElementView.prototype.mixinTemplateHelpers = function(data) {
@@ -24,19 +28,23 @@ define(['app'], function(App) {
         return data;
       };
 
+      BlankElementView.prototype.initialize = function(options) {
+        return this.blankNo = options.blankNo;
+      };
+
       BlankElementView.prototype.onShow = function() {
-        return this.$el.find('input#correct-answers').tagsinput('refresh');
+        this.$el.find('input#correct-answers').tagsinput('refresh');
+        this.$el.find('#blankPropertiesNo').text(this.blankNo);
+        return console.log(this.blankNo);
       };
 
       BlankElementView.prototype._changeCorrectAnswers = function(evt) {
         return this.model.set('correct_answers', $(evt.target).val().split(','));
       };
 
-      BlankElementView.prototype._changeMaxLength = function(evt) {
+      BlankElementView.prototype._changeIndividualMarks = function(evt) {
         if (!isNaN($(evt.target).val())) {
-          console.log(this.model);
-          this.model.set('maxlength', $(evt.target).val());
-          return console.log(this.model);
+          return this.model.set('marks', parseInt($(evt.target).val()));
         }
       };
 

@@ -24,8 +24,6 @@ define ['app'],(App)->
 			                </div>
 			            </div>'
 
-			onShow:->
-				console.log 'item view'
 
 		class StudentsEmptyView extends Marionette.ItemView
 
@@ -38,8 +36,6 @@ define ['app'],(App)->
 			                </div>
 			            </div>'
 
-			onShow:->
-				console.log 'empty view'
 
 		class Views.StudentsList extends Marionette.CompositeView
 
@@ -47,7 +43,12 @@ define ['app'],(App)->
 				
 			template : '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
 							<button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm">
-								<i class="fa fa-check"></i> Done 
+								<i class="fa fa-forward"></i> Next Question 
+							</button>
+						</div>
+						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
+							<button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm">
+								<i class="fa fa-pause"></i> Pause
 							</button>
 						</div>
 						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20">
@@ -87,7 +88,6 @@ define ['app'],(App)->
 				for ele in @$el.find '.tiles.single'
 					eleValue= parseInt($(ele).attr('data-id'))
 					if _.contains(@correctAnswers, eleValue)
-						console.log eleValue
 						@markAsCorrectAnswer ele
 
 			selectStudent:(e)->
@@ -102,11 +102,9 @@ define ['app'],(App)->
 					@markAsCorrectAnswer student
 				
 				@correctAnswers= _.uniq @correctAnswers
-				console.log @correctAnswers
 				@trigger "save:question:response", @correctAnswers
 
 			markAsCorrectAnswer:(student)=>
-				console.log student
 				$(student).removeClass 'selected'
 				.find '.default'
 				.removeClass 'default'

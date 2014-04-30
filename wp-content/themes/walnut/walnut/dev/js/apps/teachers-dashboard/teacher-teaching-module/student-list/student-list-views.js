@@ -16,10 +16,6 @@ define(['app'], function(App) {
 
       StudentsItemView.prototype.template = '<div class="row single tiles white no-margin" data-id="{{ID}}"> <div class="col-md-8 col-xs-8 no-padding"> <div class="text-center"> <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">{{display_name}}</span> </h4> <div class="clearfix"></div> </div> </div> <div class="col-md-4 col-xs-4 no-padding"> <div class="tiles default active"> <div class="user-profile-pic text-left m-t-0 p-t-10"> <img data-src-retina="{{profile_pic}}" data-src="{{profile_pic}}" src="{{profile_pic}}" alt=""> </div> <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-minus-circle"></i></div> </div> </div> </div>';
 
-      StudentsItemView.prototype.onShow = function() {
-        return console.log('item view');
-      };
-
       return StudentsItemView;
 
     })(Marionette.ItemView);
@@ -31,10 +27,6 @@ define(['app'], function(App) {
       }
 
       StudentsEmptyView.prototype.template = '<div class="row single tiles white no-margin"> <div class="col-md-8 col-xs-8 no-padding"> <div class="text-center"> <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">No Students in Class</h4> <div class="clearfix"></div> </div> </div> </div>';
-
-      StudentsEmptyView.prototype.onShow = function() {
-        return console.log('empty view');
-      };
 
       return StudentsEmptyView;
 
@@ -50,7 +42,7 @@ define(['app'], function(App) {
 
       StudentsList.prototype.className = 'studentList m-t-35';
 
-      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-check"></i> Done </button> </div> <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20"> <button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> <div class="clearfix"></div> <div class="row students m-t-20" id="students-list"></div>';
+      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-forward"></i> Next Question </button> </div> <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-pause"></i> Pause </button> </div> <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20"> <button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> <div class="clearfix"></div> <div class="row students m-t-20" id="students-list"></div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
@@ -80,7 +72,6 @@ define(['app'], function(App) {
           ele = _ref[_i];
           eleValue = parseInt($(ele).attr('data-id'));
           if (_.contains(this.correctAnswers, eleValue)) {
-            console.log(eleValue);
             _results.push(this.markAsCorrectAnswer(ele));
           } else {
             _results.push(void 0);
@@ -102,12 +93,10 @@ define(['app'], function(App) {
           this.markAsCorrectAnswer(student);
         }
         this.correctAnswers = _.uniq(this.correctAnswers);
-        console.log(this.correctAnswers);
         return this.trigger("save:question:response", this.correctAnswers);
       };
 
       StudentsList.prototype.markAsCorrectAnswer = function(student) {
-        console.log(student);
         return $(student).removeClass('selected').find('.default').removeClass('default').addClass('green').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
       };
 

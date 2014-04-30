@@ -29,7 +29,7 @@ function get_question_response(){
     $collection_id= $_GET['collection_id'];
     //$question_id= $_GET['content_piece_id'];
     $division =  $_GET['division'];
-    //$question_type = 'individual';
+    $question_type = 'individual';
     
     $question_response_qry=$wpdb->prepare("select * from {$wpdb->prefix}question_response
         where collection_id=%d and division= %d ", array($collection_id, $division));

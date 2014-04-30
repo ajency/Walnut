@@ -20,10 +20,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         this.module = opts.module;
         this.contentGroupModel = model;
         this.layout = layout = this._getContentGroupViewLayout();
-        this.listenTo(layout, 'show', this.showContentGroupViews);
-        return this.show(layout, {
+        this.show(layout, {
           loading: true
         });
+        return this.listenTo(layout, 'show', this.showContentGroupViews);
       };
 
       GroupController.prototype.showContentGroupViews = function() {

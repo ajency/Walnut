@@ -14,7 +14,6 @@
 
 					teacherTeachingModule: (classID,div,tID, mID, qID) ->
 
-						console.log 'teacherTeachingModule'
 						new TeacherTeachingApp.TeacherTeachingController
 							region 		: App.mainContentRegion
 							textbookID 	: tID
@@ -26,8 +25,3 @@
 				TeacherTeachingApp.on "start", ->
 					new TeacherTeachingRouter
 							controller : Controller 
-
-
-
-
-							

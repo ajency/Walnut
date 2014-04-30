@@ -58,6 +58,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			API = 
 				# get all content groups
 				getContentGroups:(param = {})->
+
 					contentGroupCollection.fetch
 										reset : true
 										data  : param
@@ -66,7 +67,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
 				getContentGroupByID:(id)->
-					contentGroup = contentGroupCollection.get id
+
+					contentGroup = contentGroupCollection.get id if contentGroupCollection?
 
 					if not contentGroup 
 						contentGroup = new ContentGroup.ItemModel 'id': id

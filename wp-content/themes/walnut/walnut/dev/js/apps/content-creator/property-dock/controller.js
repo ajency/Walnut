@@ -30,7 +30,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         })(this));
         App.commands.setHandler("show:fib:element:properties", (function(_this) {
           return function(options) {
-            return _this._getFibElementProperties(options.model);
+            return _this._getFibElementProperties(options);
           };
         })(this));
         App.commands.setHandler("close:question:element:properties", (function(_this) {
@@ -72,10 +72,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         });
       };
 
-      PropertyDockController.prototype._getFibElementProperties = function(model) {
+      PropertyDockController.prototype._getFibElementProperties = function(options) {
         return App.execute("show:fib:element:properties:box", {
           region: this.layout.questElementPropRegion,
-          model: model
+          model: options.model,
+          blankNo: options.blankNo
         });
       };
 

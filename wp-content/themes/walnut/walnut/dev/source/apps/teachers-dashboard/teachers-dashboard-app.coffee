@@ -4,7 +4,7 @@
 		'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-controller'
 		'apps/teachers-dashboard/start-training/start-training-controller'
 		'apps/teachers-dashboard/start-training/textbook-modules/textbook-modules-controller'
-		'apps/teachers-dashboard/single-question/single-question-controller'
+		#'apps/teachers-dashboard/single-question/single-question-controller'
 		'apps/content-group/view-group/group-view-controller'
 		], (App)->
 
@@ -17,7 +17,7 @@
 						'teachers/dashboard' 											: 'teachersDashboard'
 						'teachers/take-class/:classID/:div' 							: 'takeClass'
 						'teachers/take-class/:classID/:div/textbook/:tID' 				: 'takeClassTextbookModules'
-						'teachers/take-class/:classID/:div/textbook/:tID/module/:mID/:qID' 	: 'takeSingleQuestion'
+						#'teachers/take-class/:classID/:div/textbook/:tID/module/:mID/:qID' 	: 'takeSingleQuestion'
 						'teachers/start-training/:classID' 								: 'startTraining'
 						'teachers/start-training/:classID/textbook/:tID' 				: 'startTrainingTextbookModules'
 

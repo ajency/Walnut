@@ -1,6 +1,6 @@
 define ['app'
 		'controllers/region-controller'
-		'text!apps/teachers-dashboard/single-question/chorus-options/templates/chorus-options-template.html'], (App, RegionController,chorusOptionsTemplate)->
+		'text!apps/teachers-dashboard/teacher-teaching-module/chorus-options/templates/chorus-options-template.html'], (App, RegionController,chorusOptionsTemplate)->
 
 	App.module "SingleQuestionChorusOptionsApp", (ChorusOptions, App)->
 
@@ -8,8 +8,8 @@ define ['app'
 
 			initialize : (opts)->
 				{@questionResponseModel} = opts
-
-				@view= view = @_showQuestionView @questionResponseModel
+				
+				@view= view = @_showChorusOptionsView @questionResponseModel
 
 				@show view, (loading:true)
 
@@ -17,11 +17,11 @@ define ['app'
 
 				@listenTo view, "question:completed", @_changeQuestion
 
-			_changeQuestion:->
+			_changeQuestion:=>
 
-				App.SingleQuestionChorusOptionsApp.trigger "goto:next:question"			
+				@region.trigger "goto:next:question"	
 
-			_showQuestionView : (model)->
+			_showChorusOptionsView : (model)=>
 				new ChorusOptionsView 
 					model 				: model
 					responsePercentage 	: @questionResponseModel.get 'question_response'

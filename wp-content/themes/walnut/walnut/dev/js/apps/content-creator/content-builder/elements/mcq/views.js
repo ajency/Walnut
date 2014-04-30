@@ -82,7 +82,7 @@ define(['app'], function(App) {
         });
         return this.$el.parent().on("class:changed", (function(_this) {
           return function() {
-            return _this.model.set('class', _this.$el.parent().attr('data-class'));
+            return _this.model.set('class', parseInt(_this.$el.parent().attr('data-class')));
           };
         })(this));
       };

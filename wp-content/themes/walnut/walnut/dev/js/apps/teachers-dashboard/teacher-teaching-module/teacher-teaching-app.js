@@ -20,7 +20,6 @@ define(['app', 'apps/teachers-dashboard/teacher-teaching-module/teacher-teaching
     })(Marionette.AppRouter);
     Controller = {
       teacherTeachingModule: function(classID, div, tID, mID, qID) {
-        console.log('teacherTeachingModule');
         return new TeacherTeachingApp.TeacherTeachingController({
           region: App.mainContentRegion,
           textbookID: tID,

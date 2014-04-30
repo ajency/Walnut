@@ -28,7 +28,7 @@ define ['app'
 
 						# show fib element properties
 						App.commands.setHandler "show:fib:element:properties",(options)=>
-								@_getFibElementProperties options.model
+								@_getFibElementProperties options
 
 						App.commands.setHandler "close:question:element:properties",=>
 								@layout.questElementPropRegion.close()
@@ -63,11 +63,12 @@ define ['app'
 								region : @layout.questElementPropRegion
 								model : model
 
-					_getFibElementProperties:(model)->
+					_getFibElementProperties:(options)->
 						
 						App.execute "show:fib:element:properties:box",
 								region : @layout.questElementPropRegion
-								model : model
+								model : options.model
+								blankNo : options.blankNo
 
 					_getElementProperties:(model)->
 						elementName = model.get 'element'

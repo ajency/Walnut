@@ -28,10 +28,20 @@ define ['app'
 						renderElement:()=>
 
 							optionsObj = @layout.model.get 'elements'
-							if not optionsObj.length
-								optionsObj.push[1]
+							# if not optionsObj.length
+							# 	optionsObj.push[1]
+							shuffleFlag = true
+
+							_.each optionsObj,(option)=>
+							
+									if parseInt(option.class) isnt 12/@layout.model.get 'columncount'
+										shuffleFlag = false
+										# break
+
+							if shuffleFlag
+								optionsObj = _.shuffle optionsObj
 						
-							optionCollection = App.request "create:new:option:collection" , _.shuffle optionsObj
+							optionCollection = App.request "create:new:option:collection" , optionsObj
 							@layout.model.set 'elements',optionCollection
 
 							App.execute "show:total:marks",@layout.model.get 'marks'
