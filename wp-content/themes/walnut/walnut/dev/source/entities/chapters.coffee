@@ -86,7 +86,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 							i=0
 							while i < data.rows.length
 								r = data.rows.item(i)
-								result[i] = 
+								result[i]=
 									term_id: r['term_id']
 									name: r['name']
 									slug: r['slug']
@@ -96,16 +96,16 @@ define ["app", 'backbone'], (App, Backbone) ->
 									taxonomy: r['taxonomy']
 									description: r['description']
 									parent: r['parent']
-									count: r['count']
+									count: r['count']#Questions
 									thumbnail: ''
 									cover_pic: ''
 									author: ''
 									classes: null
 									subjects: null
 									modules_count: ''
-									chapter_count: ''
+									chapter_count: ''#Sections
 
-								i++
+								i++	
 							
 							d.resolve(result)
 

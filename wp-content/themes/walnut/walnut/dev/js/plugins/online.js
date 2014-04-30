@@ -15,7 +15,7 @@ function getterSetter(variableParent, variableName, getterFunction, setterFuncti
     w.onlinejs = w.onlinejs || {};
 
     //Checks interval can be changed in runtime
-    w.onLineCheckTimeout = 5000;
+    w.onLineCheckTimeout = 20000;
 
     //Use window.onLineURL incapsulated variable
     w.onlinejs._onLineURL = "https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js";

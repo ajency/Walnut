@@ -165,21 +165,18 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					onSuccess = (d)->
 						(tx, data)->
-							
 							result = []
 							i = 0
 							while i < data.rows.length
 								r = data.rows.item(i)
 
 								do (r, i, division)->
-
 									dateAndStatus = getDateAndStatus(r['id'], division)
 									dateAndStatus.done (d)->
 										status = d.status
 										date = d.date
 
 										do (r, i, date, status)->
-
 											contentPiecesAndDescription = getContentPiecesAndDescription(r['id'])
 											contentPiecesAndDescription.done (d)->
 												content_pieces = description = ''
@@ -187,7 +184,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 												description = unserialize(d.description) if d.description isnt ''
 
 												do(r, i, date, status, content_pieces, description)->
-													
 													chapterName = getChapterName(r['term_ids'])
 													chapterName.done (name)->
 												
@@ -212,7 +208,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 															description: description
 										
 								i++
-
+							
 							d.resolve(result)
 
 					getDuration = (duration)->
