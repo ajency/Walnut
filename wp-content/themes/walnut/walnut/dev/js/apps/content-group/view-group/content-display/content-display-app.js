@@ -11,31 +11,31 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       function CollectionContentDisplayController() {
         this.trainingModuleStarted = __bind(this.trainingModuleStarted, this);
         this._getCollectionContentDisplayView = __bind(this._getCollectionContentDisplayView, this);
-        this.showView = __bind(this.showView, this);
         return CollectionContentDisplayController.__super__.constructor.apply(this, arguments);
       }
 
       CollectionContentDisplayController.prototype.initialize = function(opts) {
-        this.model = opts.model;
+        var groupContentCollection, model, questionResponseCollection, view;
+        model = opts.model;
         this.module = opts.module;
-        this.groupContentCollection = App.request("get:content:pieces:by:ids", this.model.get('content_pieces'));
-        App.execute("when:fetched", this.groupContentCollection, this.showView);
-        return this.listenTo(this.model, 'training:module:started', this.trainingModuleStarted);
-      };
-
-      CollectionContentDisplayController.prototype.showView = function() {
-        var view;
-        this.view = view = this._getCollectionContentDisplayView(this.model);
-        return this.show(view, {
-          loading: true,
-          entities: [this.groupContentCollection]
+        groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
+        questionResponseCollection = App.request("get:question:response:collection", {
+          'division': 3,
+          'collection_id': model.get('id')
         });
+        this.view = view = this._getCollectionContentDisplayView(model, groupContentCollection, questionResponseCollection);
+        this.show(view, {
+          loading: true,
+          entities: [groupContentCollection, questionResponseCollection]
+        });
+        return this.listenTo(model, 'training:module:started', this.trainingModuleStarted);
       };
 
-      CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model) {
+      CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model, collection, responseCollection) {
         return new ContentDisplayView({
           model: model,
-          collection: this.groupContentCollection,
+          collection: collection,
+          responseCollection: responseCollection,
           module: this.module
         });
       };
@@ -79,6 +79,15 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       ContentDisplayView.prototype.className = 'col-md-10';
 
       ContentDisplayView.prototype.id = 'myCanvas-miki';
+
+      ContentDisplayView.prototype.serializeData = function() {
+        var data, responseCollection;
+        data = ContentDisplayView.__super__.serializeData.call(this);
+        responseCollection = Marionette.getOption(this, 'responseCollection');
+        data.responseQuestionIDs = responseCollection.pluck('content_piece_id');
+        console.log(data.responseQuestionIDs);
+        return data;
+      };
 
       ContentDisplayView.prototype.onApplyUrls = function() {
         var currentRoute, item, itemurl, url, _i, _len, _ref, _results;
