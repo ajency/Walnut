@@ -1,31 +1,32 @@
 define ['app'
 		'controllers/region-controller'
 		#'text!apps/teachers-dashboard/take-class/templates/class-description.html'
-		'apps/teachers-dashboard/single-question/student-list/student-list-app'
-		'apps/teachers-dashboard/single-question/question-display/question-display-app'
+		'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app'
+		'apps/teachers-dashboard/teacher-teaching-module/question-display/question-display-app'
 		'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app'
-		'apps/teachers-dashboard/single-question/chorus-options/chorus-options-app'
+		'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'
 		], (App, RegionController)->
 
 	App.module "TeacherTeachingApp", (View, App)->
 
 		#Single Question description and answers
 
-		contentGroupModel		 	= null
+		contentGroupModel 			= null 
 		studentCollection 			= null
 		questionsCollection 		= null
-		questionResponseCollection 	= null	
-
+		questionResponseCollection 	= null
 
 		class View.TeacherTeachingController extends RegionController
 
 			initialize :(opts)->
 
-				{classID, division, textbookID,@moduleID, @questionID} = opts
+				{classID, @division, textbookID,@moduleID, @questionID} = opts
 
 				contentGroupModel = App.request "get:content:group:by:id", @moduleID
 
-				studentCollection = App.request "get:user:collection", ('role':'student', 'division': division)
+				studentCollection = App.request "get:user:collection", ('role':'student', 'division': @division)
+
+				questionsCollection = App.request "get:content:pieces:of:group", @moduleID
 
 				#initializing empty model incase data doesnt exist
 				@questionResponseModel = App.request "save:question:response", ''
@@ -38,23 +39,35 @@ define ['app'
 				App.execute "when:fetched",	questionResponseCollection, =>
 					#checking if model exists in collection. if so, replacing the empty model
 					@_getOrCreateModel @questionID
+					@_showViews()
 
 				@contentPiece = App.request "get:content:piece:by:id", @questionID
 				
 				@layout= layout = @_getTakeSingleQuestionLayout()
 
-				@show layout, (loading: true, entities: [contentGroupModel,studentCollection,questionResponseCollection])
 
-				@listenTo layout, "show", @_showModuleDescriptionView
-
-				@listenTo layout, "show", @_showStudentsListView @questionResponseModel
-
-				# @listenTo layout, "show", @_showQuestionDisplayView @contentPiece
 
 
 				App.SingleQuestionStudentsListApp.on('goto:next:question', @_changeQuestion)
 				App.SingleQuestionChorusOptionsApp.on('goto:next:question', @_changeQuestion)
-				
+			
+			_showViews:=>
+				console.log 'show views'
+				@show @layout, (
+					loading: true 
+					entities: [
+						contentGroupModel
+						studentCollection
+						questionsCollection
+						questionResponseCollection
+					]
+					)
+
+				@listenTo @layout, "show", @_showModuleDescriptionView
+
+				@listenTo @layout, "show", @_showStudentsListView @questionResponseModel
+
+				@listenTo @layout, "show", @_showQuestionDisplayView @contentPiece		
 
 			_getOrCreateModel:(content_piece_id)=>
 				@questionResponseModel = questionResponseCollection.findWhere 
@@ -67,6 +80,8 @@ define ['app'
 						'collection_id': @moduleID
 						'content_piece_id': @questionID
 						'division'	: @division
+
+
 				@questionResponseModel
 
 
@@ -76,8 +91,14 @@ define ['app'
 								region 	: @layout.moduleDetailsRegion
 								model 	:contentGroupModel
 
+			_showQuestionDisplayView:(model) =>
+				App.execute "show:single:question:app", 
+					region 			: @layout.questionsDetailsRegion
+					model 		  	: model
+
 			_showStudentsListView :(questionResponseModel)=>
 				App.execute "when:fetched", @contentPiece, =>
+					console.log questionResponseModel
 					question_type = @contentPiece.get('question_type')
 
 					if question_type is 'individual'

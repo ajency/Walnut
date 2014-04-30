@@ -16,10 +16,6 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
 				@view= view = @_getTextbooksView textbooksCollection
 
-				@listenTo @view, "show", ()->
-		
-													
-
 				@show view,(loading : true)
 
 			_getTextbooksView :(collection)->
