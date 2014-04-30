@@ -85,7 +85,7 @@ define ['app'],(App)->
 					height: 26
 
 				@$el.parent().on "class:changed",=>
-					@model.set 'class', @$el.parent().attr('data-class')
+					@model.set 'class', parseInt @$el.parent().attr('data-class')
 					# if e.originalEvent.attrName is 'data-class'
 					# 	console.log @$el.parent().attr('data-class')
 

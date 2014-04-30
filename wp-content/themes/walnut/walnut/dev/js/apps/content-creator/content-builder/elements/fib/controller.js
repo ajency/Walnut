@@ -21,7 +21,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           bg_opacity: '0.42',
           font_size: '12',
           case_sensitive: false,
-          marks: 1,
+          marks: 0,
           style: 'blank',
           text: "India has ",
           blanksArray: []

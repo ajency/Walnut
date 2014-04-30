@@ -20,7 +20,7 @@ define ['app'
 								bg_opacity : '0.42'
 								font_size : '12'
 								case_sensitive : false
-								marks: 1
+								marks: 0
 								style : 'blank'
 								text : "India has "
 								blanksArray : []
@@ -59,6 +59,8 @@ define ['app'
 									blanksModel = App.request "create:new:question:element", blanksData
 									# add model to collection
 									@layout.model.get('blanksArray').add blanksModel
+
+									# @layout.model.set 'marks',@layout.model.get('marks')+1
 
 							# show the view
 							@layout.elementRegion.show view,(loading : true)
