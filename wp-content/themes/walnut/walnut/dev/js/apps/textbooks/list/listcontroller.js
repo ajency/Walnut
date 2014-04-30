@@ -30,7 +30,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
         this.view = view = this._getTextbooksView(textbooksCollection);
-        this.listenTo(this.view, "show", function() {});
         return this.show(view, {
           loading: true
         });

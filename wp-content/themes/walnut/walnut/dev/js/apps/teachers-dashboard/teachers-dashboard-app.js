@@ -15,7 +15,6 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
         'teachers/dashboard': 'teachersDashboard',
         'teachers/take-class/:classID/:div': 'takeClass',
         'teachers/take-class/:classID/:div/textbook/:tID': 'takeClassTextbookModules',
-        'teachers/take-class/:classID/:div/textbook/:tID/module/:mID/:qID': 'takeSingleQuestion',
         'teachers/start-training/:classID': 'startTraining',
         'teachers/start-training/:classID/textbook/:tID': 'startTrainingTextbookModules'
       };

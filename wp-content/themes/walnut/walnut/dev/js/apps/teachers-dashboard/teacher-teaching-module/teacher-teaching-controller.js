@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-question/student-list/student-list-app', 'apps/teachers-dashboard/single-question/question-display/question-display-app', 'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app', 'apps/teachers-dashboard/single-question/chorus-options/chorus-options-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app', 'apps/teachers-dashboard/teacher-teaching-module/question-display/question-display-app', 'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app', 'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'], function(App, RegionController) {
   return App.module("TeacherTeachingApp", function(View, App) {
     var SingleQuestionLayout, contentGroupModel, questionResponseCollection, questionsCollection, studentCollection;
     contentGroupModel = null;
@@ -14,19 +14,22 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
 
       function TeacherTeachingController() {
         this._showStudentsListView = __bind(this._showStudentsListView, this);
+        this._showQuestionDisplayView = __bind(this._showQuestionDisplayView, this);
         this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
         this._getOrCreateModel = __bind(this._getOrCreateModel, this);
+        this._showViews = __bind(this._showViews, this);
         return TeacherTeachingController.__super__.constructor.apply(this, arguments);
       }
 
       TeacherTeachingController.prototype.initialize = function(opts) {
-        var classID, division, layout, textbookID;
-        classID = opts.classID, division = opts.division, textbookID = opts.textbookID, this.moduleID = opts.moduleID, this.questionID = opts.questionID;
+        var classID, layout, textbookID;
+        classID = opts.classID, this.division = opts.division, textbookID = opts.textbookID, this.moduleID = opts.moduleID, this.questionID = opts.questionID;
         contentGroupModel = App.request("get:content:group:by:id", this.moduleID);
         studentCollection = App.request("get:user:collection", {
           'role': 'student',
-          'division': division
+          'division': this.division
         });
+        questionsCollection = App.request("get:content:pieces:of:group", this.moduleID);
         this.questionResponseModel = App.request("save:question:response", '');
         questionResponseCollection = App.request("get:question:response:collection", {
           'collection_id': this.moduleID,
@@ -34,19 +37,25 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
         });
         App.execute("when:fetched", questionResponseCollection, (function(_this) {
           return function() {
-            return _this._getOrCreateModel(_this.questionID);
+            _this._getOrCreateModel(_this.questionID);
+            return _this._showViews();
           };
         })(this));
         this.contentPiece = App.request("get:content:piece:by:id", this.questionID);
         this.layout = layout = this._getTakeSingleQuestionLayout();
-        this.show(layout, {
-          loading: true,
-          entities: [contentGroupModel, studentCollection, questionResponseCollection]
-        });
-        this.listenTo(layout, "show", this._showModuleDescriptionView);
-        this.listenTo(layout, "show", this._showStudentsListView(this.questionResponseModel));
         App.SingleQuestionStudentsListApp.on('goto:next:question', this._changeQuestion);
         return App.SingleQuestionChorusOptionsApp.on('goto:next:question', this._changeQuestion);
+      };
+
+      TeacherTeachingController.prototype._showViews = function() {
+        console.log('show views');
+        this.show(this.layout, {
+          loading: true,
+          entities: [contentGroupModel, studentCollection, questionsCollection, questionResponseCollection]
+        });
+        this.listenTo(this.layout, "show", this._showModuleDescriptionView);
+        this.listenTo(this.layout, "show", this._showStudentsListView(this.questionResponseModel));
+        return this.listenTo(this.layout, "show", this._showQuestionDisplayView(this.contentPiece));
       };
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
@@ -75,10 +84,18 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/single-
         })(this));
       };
 
+      TeacherTeachingController.prototype._showQuestionDisplayView = function(model) {
+        return App.execute("show:single:question:app", {
+          region: this.layout.questionsDetailsRegion,
+          model: model
+        });
+      };
+
       TeacherTeachingController.prototype._showStudentsListView = function(questionResponseModel) {
         return App.execute("when:fetched", this.contentPiece, (function(_this) {
           return function() {
             var question_type;
+            console.log(questionResponseModel);
             question_type = _this.contentPiece.get('question_type');
             if (question_type === 'individual') {
               return App.execute("show:single:question:student:list:app", {
