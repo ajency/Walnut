@@ -19,6 +19,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			class UserCollection extends Backbone.Collection
 
 				model : Users.UserModel
+				name: 'user'
 
 				url : -> #ajax call to return a list of all the users from the databse
 					AJAXURL + '?action=get-users'

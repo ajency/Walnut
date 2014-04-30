@@ -38,6 +38,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       QuestionResponseCollection.prototype.comparator = 'term_order';
 
+      QuestionResponseCollection.prototype.name = 'question-response';
+
       QuestionResponseCollection.prototype.url = function() {
         return AJAXURL + '?action=get-question-response';
       };

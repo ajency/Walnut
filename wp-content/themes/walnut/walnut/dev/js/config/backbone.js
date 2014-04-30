@@ -50,6 +50,12 @@ define(["backbone"], function(Backbone) {
           return collection.set(d);
         });
       }
+      if (collection_name === 'user') {
+        console.log('User local');
+      }
+      if (collection_name === 'question-response') {
+        console.log('Question response local');
+      }
       return true;
     }
   });
@@ -103,15 +109,15 @@ define(["backbone"], function(Backbone) {
       } else {
         modelname = model.name;
         console.log('Model name: ' + modelname);
-        console.log(model);
-        console.log('Options');
-        console.log(options);
         if (modelname === 'content-group') {
           attr = model.attributes;
           data = App.reqres.request("save:update:" + modelname + ":local", attr.division, attr.id, 1, attr.training_date, attr.status);
         }
         if (modelname === 'schools') {
           console.log('Schools local');
+        }
+        if (modelname === 'content-piece') {
+          console.log('Content piece local');
         }
       }
       model.trigger("request", model, xhr, options);

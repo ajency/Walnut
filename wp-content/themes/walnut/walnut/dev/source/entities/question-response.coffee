@@ -23,6 +23,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 			class QuestionResponseCollection extends Backbone.Collection
 				model : QuestionResponseModel
 				comparator : 'term_order'
+				name: 'question-response'
+				
 				url :->
 					 AJAXURL + '?action=get-question-response'
 				

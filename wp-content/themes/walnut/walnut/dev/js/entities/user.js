@@ -35,6 +35,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       UserCollection.prototype.model = Users.UserModel;
 
+      UserCollection.prototype.name = 'user';
+
       UserCollection.prototype.url = function() {
         return AJAXURL + '?action=get-users';
       };
