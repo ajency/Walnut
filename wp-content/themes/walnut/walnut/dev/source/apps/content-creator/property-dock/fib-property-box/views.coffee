@@ -9,13 +9,17 @@ define ['app'
 
 					template : Template
 
+					ui : 
+						marksTextbox : 'input#marks'
 
 					# view events 
 					events : 
 						'change input#check-case-sensitive': '_checkCaseSensitive'
 						'change select#fib-font' : '_changeFont'
-						'change select#marks' : '_changeMarks'
+						# 'change select#marks' : '_changeMarks'
 						'change select#fib-style' : '_changeStyle'
+
+				
 
 					onShow:(options)->
 							
@@ -31,8 +35,8 @@ define ['app'
 							@$el.find('#fib-font').select2 'val',@.model.get 'font'
 
 							# initialize the dropdown to use select2 plugin
-							@$el.find('#marks').select2
-									minimumResultsForSearch: -1
+							# @$el.find('#marks').select2
+							# 		minimumResultsForSearch: -1
 							# initialize font dropdown based on model
 							@$el.find('#marks').select2 'val',@model.get 'marks'
 
@@ -75,6 +79,25 @@ define ['app'
 											@model.set 'bg_color', hex
 											@model.set 'bg_opacity', opacity
 
+
+
+							@$el.closest('#property-dock').on 'blur', 
+								'#question-elements-property #individual-marks',(evt)=>
+									@_updateMarks()
+
+							@listenTo @model.get('blanksArray') , 'add',@_updateMarks
+					
+
+					_updateMarks:=>
+							console.log 'change'
+							
+							totalMarks = 0
+							@model.get('blanksArray').each (option)=>
+								# console.log option
+								totalMarks = totalMarks + parseInt option.get('marks')
+							@model.set 'marks',totalMarks
+							@ui.marksTextbox.val totalMarks
+
 					
 							
 					# function for changing model on change of 
@@ -92,9 +115,14 @@ define ['app'
 							@model.set 'font', $(evt.target).val()
 
 					# function for changing model on change of marks dropbox
-					_changeMarks:(evt)->
-							@model.set 'marks', $(evt.target).val()
+					# _changeMarks:(evt)->
+					# 		@model.set 'marks', $(evt.target).val()
 
 
 					_changeStyle:(evt)->
 							@model.set 'style',$(evt.target).val()
+
+					onClose:->
+						@$el.closest('#property-dock').off 'blur', 
+								'#question-elements-property #individual-marks'
+									

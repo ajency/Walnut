@@ -48,8 +48,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       ViewCollecionDetailsController.prototype.trainingModuleStarted = function() {
         this.startTime = moment().format();
-        this.view.triggerMethod("display:time");
-        return this.region.trigger("start:teaching:module");
+        return this.view.triggerMethod("display:time");
       };
 
       ViewCollecionDetailsController.prototype.trainingModuleStopped = function() {

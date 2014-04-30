@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templates/fibpropview.html'], function(App, Template) {
@@ -7,15 +8,19 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
       __extends(PropertyView, _super);
 
       function PropertyView() {
+        this._updateMarks = __bind(this._updateMarks, this);
         return PropertyView.__super__.constructor.apply(this, arguments);
       }
 
       PropertyView.prototype.template = Template;
 
+      PropertyView.prototype.ui = {
+        marksTextbox: 'input#marks'
+      };
+
       PropertyView.prototype.events = {
         'change input#check-case-sensitive': '_checkCaseSensitive',
         'change select#fib-font': '_changeFont',
-        'change select#marks': '_changeMarks',
         'change select#fib-style': '_changeStyle'
       };
 
@@ -27,9 +32,6 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
           minimumResultsForSearch: -1
         });
         this.$el.find('#fib-font').select2('val', this.model.get('font'));
-        this.$el.find('#marks').select2({
-          minimumResultsForSearch: -1
-        });
         this.$el.find('#marks').select2('val', this.model.get('marks'));
         this.$el.find('#fib-style').select2({
           minimumResultsForSearch: -1
@@ -55,7 +57,7 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
             };
           })(this)
         });
-        return this.$el.find('#bg-color.color-picker').minicolors({
+        this.$el.find('#bg-color.color-picker').minicolors({
           animationSpeed: 200,
           animationEasing: 'swing',
           control: 'hue',
@@ -69,6 +71,25 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
             };
           })(this)
         });
+        this.$el.closest('#property-dock').on('blur', '#question-elements-property #individual-marks', (function(_this) {
+          return function(evt) {
+            return _this._updateMarks();
+          };
+        })(this));
+        return this.listenTo(this.model.get('blanksArray'), 'add', this._updateMarks);
+      };
+
+      PropertyView.prototype._updateMarks = function() {
+        var totalMarks;
+        console.log('change');
+        totalMarks = 0;
+        this.model.get('blanksArray').each((function(_this) {
+          return function(option) {
+            return totalMarks = totalMarks + parseInt(option.get('marks'));
+          };
+        })(this));
+        this.model.set('marks', totalMarks);
+        return this.ui.marksTextbox.val(totalMarks);
       };
 
       PropertyView.prototype._checkCaseSensitive = function(evt) {
@@ -83,12 +104,12 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
         return this.model.set('font', $(evt.target).val());
       };
 
-      PropertyView.prototype._changeMarks = function(evt) {
-        return this.model.set('marks', $(evt.target).val());
-      };
-
       PropertyView.prototype._changeStyle = function(evt) {
         return this.model.set('style', $(evt.target).val());
+      };
+
+      PropertyView.prototype.onClose = function() {
+        return this.$el.closest('#property-dock').off('blur', '#question-elements-property #individual-marks');
       };
 
       return PropertyView;

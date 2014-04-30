@@ -10,11 +10,16 @@ define(['app'], function(App) {
         return BlankElementView.__super__.constructor.apply(this, arguments);
       }
 
-      BlankElementView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> FIB <i class="fa fa-chevron-right"> </i> <span class="semi-bold"> Blank </span> </div> <div class="docket-body"> <div class="from-group">Max Characters <input id="answer-max-length" type="text"  value="{{maxlength}}"> </div> <div class=""> Answers <input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" /> </div> </div> </div> </div>';
+      BlankElementView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> FIB <i class="fa fa-chevron-right"> </i> <span class="semi-bold"> Blank </span> </div> <div class="docket-body"> <div class="from-group">Max Characters <input id="answer-max-length" type="text"  value="{{maxlength}}"> </div> <div class=""> Answers <input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" /> </div> <div class="m-b-10"> Marks <input id="individual-marks" type="text" value="{{marks}}" class="form-control"> </div> </div> </div> </div>';
+
+      BlankElementView.prototype.ui = {
+        individualMarksTextbox: '#individual-marks'
+      };
 
       BlankElementView.prototype.events = {
         'blur #answer-max-length': '_changeMaxLength',
-        'change input#correct-answers': '_changeCorrectAnswers'
+        'change input#correct-answers': '_changeCorrectAnswers',
+        'blur @ui.individualMarksTextbox': '_changeIndividualMarks'
       };
 
       BlankElementView.prototype.mixinTemplateHelpers = function(data) {
@@ -34,9 +39,13 @@ define(['app'], function(App) {
 
       BlankElementView.prototype._changeMaxLength = function(evt) {
         if (!isNaN($(evt.target).val())) {
-          console.log(this.model);
-          this.model.set('maxlength', $(evt.target).val());
-          return console.log(this.model);
+          return this.model.set('maxlength', parseInt($(evt.target).val()));
+        }
+      };
+
+      BlankElementView.prototype._changeIndividualMarks = function(evt) {
+        if (!isNaN($(evt.target).val())) {
+          return this.model.set('marks', parseInt($(evt.target).val()));
         }
       };
 
