@@ -78,13 +78,11 @@ define ['app'],(App)->
 				
 
 				@correctAnswers = Marionette.getOption @, 'correctAnswers'
-				console.log @correctAnswers
 				@correctAnswers = _.compact @correctAnswers
 
 				for ele in @$el.find '.tiles.single'
 					eleValue= parseInt($(ele).attr('data-id'))
 					if _.contains(@correctAnswers, eleValue)
-						console.log eleValue
 						@markAsCorrectAnswer ele
 
 			selectStudent:(e)->

@@ -4,11 +4,12 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app', 'apps/teachers-dashboard/teacher-teaching-module/question-display/question-display-app', 'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app', 'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'], function(App, RegionController) {
   return App.module("TeacherTeachingApp", function(View, App) {
-    var SingleQuestionLayout, contentGroupModel, questionResponseCollection, questionsCollection, studentCollection;
+    var SingleQuestionLayout, contentGroupModel, contentPiece, questionResponseCollection, questionsCollection, studentCollection;
     contentGroupModel = null;
     studentCollection = null;
     questionsCollection = null;
     questionResponseCollection = null;
+    contentPiece = null;
     View.TeacherTeachingController = (function(_super) {
       __extends(TeacherTeachingController, _super);
 
@@ -42,12 +43,11 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
             return _this._showViews();
           };
         })(this));
-        return this.contentPiece = App.request("get:content:piece:by:id", this.questionID);
+        return contentPiece = App.request("get:content:piece:by:id", this.questionID);
       };
 
       TeacherTeachingController.prototype._showViews = function() {
         var layout;
-        console.log('show views');
         this.layout = layout = this._getTakeSingleQuestionLayout();
         this.show(this.layout, {
           loading: true,
@@ -55,7 +55,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         });
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
         this.listenTo(this.layout, "show", this._showStudentsListView(this.questionResponseModel));
-        this.listenTo(this.layout, "show", this._showQuestionDisplayView(this.contentPiece));
+        this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
         return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
       };
 
@@ -66,9 +66,9 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this.questionID = contentPieces[pieceIndex + 1];
         if (this.questionID) {
           console.log(this.questionID);
-          this.contentPiece = questionsCollection.get(this.questionID);
+          contentPiece = questionsCollection.get(this.questionID);
           this.questionResponseModel = this._getOrCreateModel(this.questionID);
-          this._showQuestionDisplayView(this.contentPiece);
+          this._showQuestionDisplayView(contentPiece);
           return this._showStudentsListView(this.questionResponseModel);
         } else {
           return console.log('end of questions');
@@ -109,10 +109,10 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       TeacherTeachingController.prototype._showStudentsListView = function(questionResponseModel) {
-        return App.execute("when:fetched", this.contentPiece, (function(_this) {
+        return App.execute("when:fetched", contentPiece, (function(_this) {
           return function() {
             var question_type;
-            question_type = _this.contentPiece.get('question_type');
+            question_type = contentPiece.get('question_type');
             if (question_type === 'individual') {
               return App.execute("show:single:question:student:list:app", {
                 region: _this.layout.studentsListRegion,
