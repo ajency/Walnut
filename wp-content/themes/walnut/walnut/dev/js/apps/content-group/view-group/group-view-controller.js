@@ -11,6 +11,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       function GroupController() {
         this._getContentGroupViewLayout = __bind(this._getContentGroupViewLayout, this);
         this.showContentGroupViews = __bind(this.showContentGroupViews, this);
+        this.startTeachingModule = __bind(this.startTeachingModule, this);
         return GroupController.__super__.constructor.apply(this, arguments);
       }
 
@@ -20,9 +21,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         this.module = opts.module;
         this.contentGroupModel = model;
         this.layout = layout = this._getContentGroupViewLayout();
-        this.listenTo(layout, 'show', this.showContentGroupViews);
-        return this.show(layout, {
+        this.show(layout, {
           loading: true
+        });
+        this.listenTo(layout, 'show', this.showContentGroupViews);
+        return this.listenTo(layout.collectionDetailsRegion, "start:teaching:module", this.startTeachingModule);
+      };
+
+      GroupController.prototype.startTeachingModule = function() {
+        return App.execute("show:teacher:teaching:app", {
+          region: this.layout.collectionDetailsRegion,
+          model: this.contentGroupModel,
+          module: this.module
         });
       };
 

@@ -41,11 +41,15 @@ define ['app'
 							@textbookName 
 					
 						
+						
 
 
 			trainingModuleStarted:=>		
 				@startTime = moment().format();
 				@view.triggerMethod "display:time"
+				#@region.trigger "start:teaching:module"
+
+
 
 			trainingModuleStopped:=>		
 				@endTime = moment().format();

@@ -12,32 +12,28 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this.successFn = __bind(this.successFn, this);
         this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
         this._showStudentsListView = __bind(this._showStudentsListView, this);
+        this._changeQuestion = __bind(this._changeQuestion, this);
         return SingleQuestionStudentsController.__super__.constructor.apply(this, arguments);
       }
 
       SingleQuestionStudentsController.prototype.initialize = function(opts) {
-        var division, studentsCollection, view;
-        this.questionResponseModel = opts.questionResponseModel;
+        var division, studentCollection, view;
+        this.questionResponseModel = opts.questionResponseModel, studentCollection = opts.studentCollection;
         division = this.questionResponseModel.get('division');
-        studentsCollection = App.request("get:user:collection", {
-          'role': 'student',
-          'division': division
-        });
-        this.view = view = this._showStudentsListView(studentsCollection);
-        this.listenTo(view, "save:question:response", this._saveQuestionResponse);
-        this.listenTo(view, "question:completed", this._changeQuestion);
-        return this.show(view, {
+        this.view = view = this._showStudentsListView(studentCollection);
+        this.show(view, {
           loading: true,
-          entities: [studentsCollection]
+          entities: [studentCollection]
         });
+        this.listenTo(view, "save:question:response", this._saveQuestionResponse);
+        return this.listenTo(view, "question:completed", this._changeQuestion);
       };
 
       SingleQuestionStudentsController.prototype._changeQuestion = function() {
-        return App.SingleQuestionStudentsListApp.trigger("goto:next:question");
+        return this.region.trigger("goto:next:question");
       };
 
       SingleQuestionStudentsController.prototype._showStudentsListView = function(collection) {
-        console.log('show student list view');
         console.log(this.questionResponseModel.get('question_response'));
         return new Students.Views.StudentsList({
           collection: collection,

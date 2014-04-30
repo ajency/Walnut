@@ -1,6 +1,6 @@
 define ['app'
 		'controllers/region-controller'
-		'text!apps/teachers-dashboard/single-question/templates/module-description-template.html'], (App, RegionController,moduleDescriptionTemplate)->
+		'text!apps/teachers-dashboard/teacher-teaching-module/module-description/templates/module-description-template.html'], (App, RegionController,moduleDescriptionTemplate)->
 
 	App.module "TeacherTeachingApp.ModuleDescription", (ModuleDescription, App)->
 

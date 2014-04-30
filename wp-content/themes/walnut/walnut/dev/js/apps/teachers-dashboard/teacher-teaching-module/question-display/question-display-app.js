@@ -36,7 +36,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return QuestionDisplayView.__super__.constructor.apply(this, arguments);
       }
 
-      QuestionDisplayView.prototype.template = '<div class="teacherCanvas "> <div class="grid-body p-t-20 p-b-15 no-border"></div> <video id="video1" class="video-js vjs-default-skin" controls preload="none" width="350" height="264"> </video> </div> <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b"> <p class="bold small-text">Question Info: </p> <p class="">{{post_title}}</p> </div>';
+      QuestionDisplayView.prototype.template = '<div class="teacherCanvas "> <div class="grid-body p-t-20 p-b-15 no-border"></div> </div> <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b"> <p class="bold small-text">Question Info: </p> <p class="">{{post_title}}</p> </div>';
 
       return QuestionDisplayView;
 

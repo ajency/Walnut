@@ -17,12 +17,13 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this._showQuestionDisplayView = __bind(this._showQuestionDisplayView, this);
         this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
         this._getOrCreateModel = __bind(this._getOrCreateModel, this);
+        this._changeQuestion = __bind(this._changeQuestion, this);
         this._showViews = __bind(this._showViews, this);
         return TeacherTeachingController.__super__.constructor.apply(this, arguments);
       }
 
       TeacherTeachingController.prototype.initialize = function(opts) {
-        var classID, layout, textbookID;
+        var classID, textbookID;
         classID = opts.classID, this.division = opts.division, textbookID = opts.textbookID, this.moduleID = opts.moduleID, this.questionID = opts.questionID;
         contentGroupModel = App.request("get:content:group:by:id", this.moduleID);
         studentCollection = App.request("get:user:collection", {
@@ -41,21 +42,37 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
             return _this._showViews();
           };
         })(this));
-        this.contentPiece = App.request("get:content:piece:by:id", this.questionID);
-        this.layout = layout = this._getTakeSingleQuestionLayout();
-        App.SingleQuestionStudentsListApp.on('goto:next:question', this._changeQuestion);
-        return App.SingleQuestionChorusOptionsApp.on('goto:next:question', this._changeQuestion);
+        return this.contentPiece = App.request("get:content:piece:by:id", this.questionID);
       };
 
       TeacherTeachingController.prototype._showViews = function() {
+        var layout;
         console.log('show views');
+        this.layout = layout = this._getTakeSingleQuestionLayout();
         this.show(this.layout, {
           loading: true,
           entities: [contentGroupModel, studentCollection, questionsCollection, questionResponseCollection]
         });
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
         this.listenTo(this.layout, "show", this._showStudentsListView(this.questionResponseModel));
-        return this.listenTo(this.layout, "show", this._showQuestionDisplayView(this.contentPiece));
+        this.listenTo(this.layout, "show", this._showQuestionDisplayView(this.contentPiece));
+        return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
+      };
+
+      TeacherTeachingController.prototype._changeQuestion = function() {
+        var contentPieces, pieceIndex;
+        contentPieces = contentGroupModel.get('content_pieces');
+        pieceIndex = _.indexOf(contentPieces, this.questionID);
+        this.questionID = contentPieces[pieceIndex + 1];
+        if (this.questionID) {
+          console.log(this.questionID);
+          this.contentPiece = questionsCollection.get(this.questionID);
+          this.questionResponseModel = this._getOrCreateModel(this.questionID);
+          this._showQuestionDisplayView(this.contentPiece);
+          return this._showStudentsListView(this.questionResponseModel);
+        } else {
+          return console.log('end of questions');
+        }
       };
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
@@ -95,12 +112,12 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         return App.execute("when:fetched", this.contentPiece, (function(_this) {
           return function() {
             var question_type;
-            console.log(questionResponseModel);
             question_type = _this.contentPiece.get('question_type');
             if (question_type === 'individual') {
               return App.execute("show:single:question:student:list:app", {
                 region: _this.layout.studentsListRegion,
-                questionResponseModel: questionResponseModel
+                questionResponseModel: questionResponseModel,
+                studentCollection: studentCollection
               });
             } else if (question_type === 'chorus') {
               return App.execute("show:single:question:chorus:options:app", {
