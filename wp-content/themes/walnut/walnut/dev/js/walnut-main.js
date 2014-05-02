@@ -32,7 +32,8 @@ require.config({
     datepicker: 'plugins/bootstrap-datepicker',
     timepicker: 'plugins/bootstrap-timepicker.min',
     jquerytimer: 'plugins/timer.jquery',
-    jquery_listnav: 'plugins/jquery-listnav'
+    jquery_listnav: 'plugins/jquery-listnav',
+    video: 'plugins/video'
   },
   shim: {
     underscore: {

@@ -41,7 +41,7 @@ define ['app'
 					#checking if model exists in collection. if so, replacing the empty model
 					@_getOrCreateModel @questionID
 					@_showViews()
-
+					
 				contentPiece = App.request "get:content:piece:by:id", @questionID
 		
 
@@ -63,7 +63,7 @@ define ['app'
 
 				@listenTo @layout, "show", @_showStudentsListView @questionResponseModel
 
-				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece		
+				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 

@@ -1,5 +1,5 @@
 define ['app'
-		'controllers/region-controller'], (App, RegionController)->
+		'controllers/region-controller', 'video'], (App, RegionController)->
 
 	App.module "SingleQuestionDisplayApp", (SingleQuestion, App)->
 
@@ -27,9 +27,9 @@ define ['app'
 				    	<p class="bold small-text">Question Info: </p>
 				    	<p class="">{{post_title}}</p>
 				    </div>'
-
+			
 
 		# set handlers
 		App.commands.setHandler "show:single:question:app", (opt = {})->
-			new SingleQuestion.SingleQuestionController opt		
+			new SingleQuestion.SingleQuestionController opt
 
