@@ -30,7 +30,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       SingleQuestionStudentsController.prototype._changeQuestion = function() {
-        return this.region.trigger("goto:next:question");
+        this._saveQuestionResponse('');
+        return this.region.trigger("goto:next:question", this.questionResponseModel.get('content_piece_id'));
       };
 
       SingleQuestionStudentsController.prototype._showStudentsListView = function(collection) {

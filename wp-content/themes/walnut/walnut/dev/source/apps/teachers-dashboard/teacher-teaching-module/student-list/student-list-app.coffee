@@ -22,7 +22,8 @@ define ['app'
 				@listenTo view, "question:completed", @_changeQuestion
 
 			_changeQuestion:=>
-				@region.trigger "goto:next:question"	
+				@_saveQuestionResponse ''
+				@region.trigger "goto:next:question", @questionResponseModel.get 'content_piece_id'	
 
 
 			_showStudentsListView :(collection) =>

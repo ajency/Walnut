@@ -61,7 +61,8 @@ define ['app'
 						new ContentGroupApp.View.GroupController
 		 					region 		: App.mainContentRegion
 		 					model 		: @contentGroupModel
-		 					module 		: 'take-class'
+		 					module_name	: 'take-class'
+		 					division 	: div
 
 	
 				ContentGroupApp.on "start", ->

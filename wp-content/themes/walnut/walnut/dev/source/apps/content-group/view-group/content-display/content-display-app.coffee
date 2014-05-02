@@ -8,8 +8,7 @@ define ['app'
 
 			initialize : (opts)->
 
-				{model} = opts
-				{@module} = opts
+				{model, @module_name, questionResponseCollection} = opts
 				
 				groupContentCollection= App.request "get:content:pieces:by:ids", model.get 'content_pieces'
 				questionResponseCollection = App.request "get:question:response:collection", 
@@ -54,14 +53,15 @@ define ['app'
 
 			id			: 'myCanvas-miki'
 
-			serializeData:->
-				data=super()
-
+			onShow:->
 				responseCollection= Marionette.getOption @, 'responseCollection'
-				data.responseQuestionIDs= responseCollection.pluck 'content_piece_id'
-				console.log data.responseQuestionIDs
+				responseQuestionIDs= responseCollection.pluck 'content_piece_id'
 
-				data
+				for question in @$el.find '.contentPiece'
+					if _.contains responseQuestionIDs, $(question).attr 'data-id'
+						$ question
+						.find '.cbp_tmlabel'
+						.addClass 'done'
 
 			onApplyUrls:->
 

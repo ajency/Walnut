@@ -90,7 +90,8 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
         return new ContentGroupApp.View.GroupController({
           region: App.mainContentRegion,
           model: this.contentGroupModel,
-          module: 'take-class'
+          module_name: 'take-class',
+          division: div
         });
       }
     };

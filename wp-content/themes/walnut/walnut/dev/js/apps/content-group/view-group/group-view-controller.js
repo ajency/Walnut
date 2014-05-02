@@ -11,33 +11,60 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       function GroupController() {
         this._getContentGroupViewLayout = __bind(this._getContentGroupViewLayout, this);
         this.showContentGroupViews = __bind(this.showContentGroupViews, this);
+        this.startTeachingModule = __bind(this.startTeachingModule, this);
         return GroupController.__super__.constructor.apply(this, arguments);
       }
 
       GroupController.prototype.initialize = function(opts) {
-        var layout, model;
-        model = opts.model;
-        this.module = opts.module;
-        this.contentGroupModel = model;
+        var layout;
+        this.model = opts.model, this.module_name = opts.module_name, this.division = opts.division;
+        this.questionResponseCollection = App.request("get:question:response:collection", {
+          'division': this.division,
+          'collection_id': this.model.get('id')
+        });
+        App.execute("when:fetched", this.model, (function(_this) {
+          return function() {
+            return _this.groupContentCollection = App.request("get:content:pieces:by:ids", _this.model.get('content_pieces'));
+          };
+        })(this));
         this.layout = layout = this._getContentGroupViewLayout();
         this.show(layout, {
-          loading: true
+          loading: true,
+          entities: [this.model, this.questionResponseCollection, this.groupContentCollection]
         });
-        return this.listenTo(layout, 'show', this.showContentGroupViews);
+        this.listenTo(layout, 'show', this.showContentGroupViews);
+        return this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
+      };
+
+      GroupController.prototype.startTeachingModule = function() {
+        var content_pieces, nextQuestion, responseQuestionIDs;
+        responseQuestionIDs = this.questionResponseCollection.pluck('content_piece_id');
+        content_pieces = this.model.get('content_pieces');
+        nextQuestion = _.first(_.difference(content_pieces, responseQuestionIDs));
+        return App.execute("start:teacher:teaching:app", {
+          region: App.mainContentRegion,
+          division: this.division,
+          contentPiece: this.groupContentCollection.get(nextQuestion),
+          questionResponseCollection: this.questionResponseCollection,
+          contentGroupModel: this.model,
+          questionsCollection: this.groupContentCollection
+        });
       };
 
       GroupController.prototype.showContentGroupViews = function() {
-        return App.execute("when:fetched", this.contentGroupModel, (function(_this) {
+        return App.execute("when:fetched", this.model, (function(_this) {
           return function() {
             App.execute("show:viewgroup:content:group:detailsapp", {
               region: _this.layout.collectionDetailsRegion,
-              model: _this.contentGroupModel,
-              module: _this.module
+              model: _this.model,
+              module_name: _this.module_name
             });
-            if (_.size(_this.contentGroupModel.get('content_pieces')) > 0) {
+            if (_.size(_this.model.get('content_pieces')) > 0) {
               return App.execute("show:viewgroup:content:displayapp", {
                 region: _this.layout.contentDisplayRegion,
-                model: _this.contentGroupModel
+                model: _this.model,
+                questionResponseCollection: _this.questionResponseCollection,
+                groupContentCollection: _this.groupContentCollection
               });
             }
           };

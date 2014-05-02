@@ -16,8 +16,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionContentDisplayController.prototype.initialize = function(opts) {
         var groupContentCollection, model, questionResponseCollection, view;
-        model = opts.model;
-        this.module = opts.module;
+        model = opts.model, this.module_name = opts.module_name, questionResponseCollection = opts.questionResponseCollection;
         groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
         questionResponseCollection = App.request("get:question:response:collection", {
           'division': 3,
@@ -80,13 +79,21 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       ContentDisplayView.prototype.id = 'myCanvas-miki';
 
-      ContentDisplayView.prototype.serializeData = function() {
-        var data, responseCollection;
-        data = ContentDisplayView.__super__.serializeData.call(this);
+      ContentDisplayView.prototype.onShow = function() {
+        var question, responseCollection, responseQuestionIDs, _i, _len, _ref, _results;
         responseCollection = Marionette.getOption(this, 'responseCollection');
-        data.responseQuestionIDs = responseCollection.pluck('content_piece_id');
-        console.log(data.responseQuestionIDs);
-        return data;
+        responseQuestionIDs = responseCollection.pluck('content_piece_id');
+        _ref = this.$el.find('.contentPiece');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          question = _ref[_i];
+          if (_.contains(responseQuestionIDs, $(question).attr('data-id'))) {
+            _results.push($(question).find('.cbp_tmlabel').addClass('done'));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
       };
 
       ContentDisplayView.prototype.onApplyUrls = function() {
