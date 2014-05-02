@@ -11,6 +11,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       function GroupController() {
         this._getContentGroupViewLayout = __bind(this._getContentGroupViewLayout, this);
         this.showContentGroupViews = __bind(this.showContentGroupViews, this);
+        this.gotoTrainingModule = __bind(this.gotoTrainingModule, this);
         this.startTeachingModule = __bind(this.startTeachingModule, this);
         return GroupController.__super__.constructor.apply(this, arguments);
       }
@@ -33,7 +34,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           entities: [this.model, this.questionResponseCollection, this.groupContentCollection]
         });
         this.listenTo(layout, 'show', this.showContentGroupViews);
-        return this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
+        this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
+        return this.listenTo(this.layout.contentDisplayRegion, 'goto:question:readonly', (function(_this) {
+          return function(questionID) {
+            console.log('test on group view controller');
+            return _this.gotoTrainingModule(questionID, 'readonly');
+          };
+        })(this));
       };
 
       GroupController.prototype.startTeachingModule = function() {
@@ -41,13 +48,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         responseQuestionIDs = this.questionResponseCollection.pluck('content_piece_id');
         content_pieces = this.model.get('content_pieces');
         nextQuestion = _.first(_.difference(content_pieces, responseQuestionIDs));
+        return this.gotoTrainingModule(nextQuestion, 'class_mode');
+      };
+
+      GroupController.prototype.gotoTrainingModule = function(question, display_mode) {
         return App.execute("start:teacher:teaching:app", {
           region: App.mainContentRegion,
           division: this.division,
-          contentPiece: this.groupContentCollection.get(nextQuestion),
+          contentPiece: this.groupContentCollection.get(question),
           questionResponseCollection: this.questionResponseCollection,
           contentGroupModel: this.model,
-          questionsCollection: this.groupContentCollection
+          questionsCollection: this.groupContentCollection,
+          display_mode: display_mode
         });
       };
 

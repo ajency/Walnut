@@ -41,6 +41,12 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ModuleDescriptionView.prototype.template = moduleDescriptionTemplate;
 
+      ModuleDescriptionView.prototype.events = {
+        'click #back-to-module': function() {
+          return this.render;
+        }
+      };
+
       ModuleDescriptionView.prototype.onShow = function() {
         var clock;
         return clock = setInterval(this.updateTime, 500);

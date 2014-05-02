@@ -27,7 +27,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           loading: true,
           entities: [groupContentCollection, questionResponseCollection]
         });
-        return this.listenTo(model, 'training:module:started', this.trainingModuleStarted);
+        this.listenTo(model, 'training:module:started', this.trainingModuleStarted);
+        return this.listenTo(this.view, 'view:question:readonly', (function(_this) {
+          return function(questionID) {
+            return _this.region.trigger('goto:question:readonly', questionID);
+          };
+        })(this));
       };
 
       CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model, collection, responseCollection) {
@@ -66,6 +71,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       __extends(ContentDisplayView, _super);
 
       function ContentDisplayView() {
+        this.viewQuestionReadOnly = __bind(this.viewQuestionReadOnly, this);
         return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
 
@@ -79,6 +85,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       ContentDisplayView.prototype.id = 'myCanvas-miki';
 
+      ContentDisplayView.prototype.events = {
+        'click .cbp_tmlabel.done': 'viewQuestionReadOnly'
+      };
+
       ContentDisplayView.prototype.onShow = function() {
         var question, responseCollection, responseQuestionIDs, _i, _len, _ref, _results;
         responseCollection = Marionette.getOption(this, 'responseCollection');
@@ -88,12 +98,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           question = _ref[_i];
           if (_.contains(responseQuestionIDs, $(question).attr('data-id'))) {
-            _results.push($(question).find('.cbp_tmlabel').addClass('done'));
+            _results.push($(question).find('.cbp_tmlabel').addClass('done').find('a.question_link').css('cursor', 'pointer'));
           } else {
             _results.push(void 0);
           }
         }
         return _results;
+      };
+
+      ContentDisplayView.prototype.viewQuestionReadOnly = function(e) {
+        var questionID;
+        questionID = $(e.target).closest('.contentPiece').attr('data-id');
+        return this.trigger("view:question:readonly", questionID);
       };
 
       ContentDisplayView.prototype.onApplyUrls = function() {

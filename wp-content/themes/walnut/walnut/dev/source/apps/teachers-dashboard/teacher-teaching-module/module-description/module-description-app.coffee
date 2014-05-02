@@ -25,7 +25,9 @@ define ['app'
 
 			template : moduleDescriptionTemplate
 
-
+			events : 
+				'click #back-to-module':-> @render
+			
 			onShow:->
 				clock = setInterval @updateTime, 500		
 

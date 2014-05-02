@@ -20,7 +20,8 @@ define ['app'
 
 				@listenTo model, 'training:module:started', @trainingModuleStarted
 
-				
+				@listenTo @view, 'view:question:readonly', (questionID)=> 
+					@region.trigger 'goto:question:readonly', questionID
 
 			_getCollectionContentDisplayView :(model, collection, responseCollection) =>
 				new ContentDisplayView 
@@ -53,6 +54,9 @@ define ['app'
 
 			id			: 'myCanvas-miki'
 
+			events:
+				'click .cbp_tmlabel.done'	: 'viewQuestionReadOnly'
+
 			onShow:->
 				responseCollection= Marionette.getOption @, 'responseCollection'
 				responseQuestionIDs= responseCollection.pluck 'content_piece_id'
@@ -62,6 +66,15 @@ define ['app'
 						$ question
 						.find '.cbp_tmlabel'
 						.addClass 'done'
+						.find 'a.question_link'
+						.css 'cursor','pointer'
+
+			viewQuestionReadOnly:(e)=>
+				questionID= $ e.target
+							.closest '.contentPiece'
+							.attr 'data-id'
+
+				@trigger "view:question:readonly",questionID
 
 			onApplyUrls:->
 

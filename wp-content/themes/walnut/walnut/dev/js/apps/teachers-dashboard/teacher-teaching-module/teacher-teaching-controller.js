@@ -25,7 +25,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype.initialize = function(opts) {
         var layout;
-        this.division = opts.division, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, contentPiece = opts.contentPiece;
+        this.division = opts.division, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, contentPiece = opts.contentPiece, this.display_mode = opts.display_mode;
         studentCollection = App.request("get:user:collection", {
           'role': 'student',
           'division': this.division
@@ -60,7 +60,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           this._showQuestionDisplayView(contentPiece);
           return this._showStudentsListView(questionResponseModel);
         } else {
-          return console.log('end of questions');
+          console.log('end of questions');
+          return App.navigate(this.currentRoute);
         }
       };
 
@@ -106,12 +107,14 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
               return App.execute("show:single:question:student:list:app", {
                 region: _this.layout.studentsListRegion,
                 questionResponseModel: questionResponseModel,
-                studentCollection: studentCollection
+                studentCollection: studentCollection,
+                display_mode: _this.display_mode
               });
             } else if (question_type === 'chorus') {
               return App.execute("show:single:question:chorus:options:app", {
                 region: _this.layout.studentsListRegion,
-                questionResponseModel: questionResponseModel
+                questionResponseModel: questionResponseModel,
+                display_mode: _this.display_mode
               });
             }
           };

@@ -35,14 +35,13 @@ define(['app'], function(App) {
       __extends(StudentsList, _super);
 
       function StudentsList() {
-        this.markAsCorrectAnswer = __bind(this.markAsCorrectAnswer, this);
         this.addToCorrectList = __bind(this.addToCorrectList, this);
         return StudentsList.__super__.constructor.apply(this, arguments);
       }
 
       StudentsList.prototype.className = 'studentList m-t-35';
 
-      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-forward"></i> Next Question </button> </div> <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-pause"></i> Pause </button> </div> <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20"> <button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> <div class="clearfix"></div> <div class="row students m-t-20" id="students-list"></div>';
+      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-forward"></i> Next Question </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-pause"></i> Pause </button> </div> <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20"> <button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-t-20" id="students-list"></div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
@@ -54,9 +53,16 @@ define(['app'], function(App) {
         'click .tiles.single': 'selectStudent',
         'click #right-answer': 'addToCorrectList',
         'click #wrong-answer': 'removeFromCorrectList',
-        'click #question-done': function(e) {
-          return this.trigger("question:completed");
+        'click #question-done': 'questionCompleted'
+      };
+
+      StudentsList.prototype.serializeData = function() {
+        var data;
+        data = StudentsList.__super__.serializeData.call(this);
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          data.class_mode = true;
         }
+        return data;
       };
 
       StudentsList.prototype.onShow = function() {
@@ -109,6 +115,16 @@ define(['app'], function(App) {
           $(student).removeClass('selected').find('.green').removeClass('green').addClass('default').find('i').removeClass('fa-check-circle').addClass('fa-minus-circle');
         }
         return this.trigger("save:question:response", this.correctAnswers);
+      };
+
+      StudentsList.prototype.questionCompleted = function() {
+        if (_.size(this.correctAnswers) < 1 && Marionette.getOption(this, 'display_mode' === 'class_mode')) {
+          if (confirm('Are you sure no one answered correctly?')) {
+            return this.trigger("question:completed", "no_answer");
+          }
+        } else {
+          return this.trigger("question:completed");
+        }
       };
 
       return StudentsList;

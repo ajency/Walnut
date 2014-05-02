@@ -22,7 +22,7 @@ define ['app'
 
 			initialize :(opts)->
 
-				{@division,@moduleID,contentGroupModel,questionsCollection,questionResponseCollection,contentPiece} = opts
+				{@division,@moduleID,contentGroupModel,questionsCollection,questionResponseCollection,contentPiece,@display_mode} = opts
 
 				studentCollection = App.request "get:user:collection", ('role':'student', 'division': @division)
 
@@ -57,7 +57,7 @@ define ['app'
 
 
 			_changeQuestion:(current_question_id)=>
-				
+
 				current_question_id = current_question_id.toString()
 
 				contentPieces = contentGroupModel.get 'content_pieces'
@@ -78,6 +78,7 @@ define ['app'
 
 				else 
 					console.log 'end of questions'
+					App.navigate @currentRoute
 
 
 			_getOrCreateModel:(content_piece_id)=>
@@ -114,14 +115,16 @@ define ['app'
 
 					if question_type is 'individual'
 						App.execute "show:single:question:student:list:app", 
-							region 			: @layout.studentsListRegion
-							questionResponseModel: questionResponseModel
-							studentCollection: studentCollection
+							region 					: @layout.studentsListRegion
+							questionResponseModel	: questionResponseModel
+							studentCollection		: studentCollection
+							display_mode 	 		: @display_mode
 
 					else if question_type is 'chorus'	
 						App.execute "show:single:question:chorus:options:app",
 							region 			: @layout.studentsListRegion
 							questionResponseModel: questionResponseModel
+							display_mode 	 		: @display_mode
 
 			_getTakeSingleQuestionLayout : ->
 				new SingleQuestionLayout
