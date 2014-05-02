@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Users", function(Users, App, Backbone, Marionette, $, _) {
-    var API, UserCollection, user, userCollection;
+    var API, UserCollection, user;
     Users.UserModel = (function(_super) {
       __extends(UserModel, _super);
 
@@ -44,12 +44,13 @@ define(["app", 'backbone'], function(App, Backbone) {
       return UserCollection;
 
     })(Backbone.Collection);
-    userCollection = new UserCollection;
     API = {
       getUsers: function(params) {
+        var userCollection;
         if (params == null) {
           params = {};
         }
+        userCollection = new UserCollection;
         userCollection.fetch({
           data: params
         });

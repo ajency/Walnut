@@ -28,7 +28,7 @@
 	//margin-right: 5px;
 	//float: left;
 	//word-wrap: break-word;
-	//border: 2px dashed @preview-grey;
+	border: 2px solid transparent;
 	padding: 5px;
 	margin-bottom: 2px;
 	//position: relative;
@@ -45,15 +45,18 @@
 		background: url(../../../images/answer-wrong.png) no-repeat right center;
 		border-bottom: 2px solid @color-danger;
 		background-size: 25px;
+		.ease;
 	}
 	&.ansFalse{
 		opacity: 0.2;
 		border-bottom: 2px solid @color-danger;
+		.ease;
 	}
 	&.ansRight{
 		background: url(../../../images/answer-right.png) no-repeat right center;
 		border-bottom: 2px solid lighten(@color-success, 10%);
 		background-size: 35px;
+		.ease;
 	}
 	span{
 		//float: left;

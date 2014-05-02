@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.QuestionResponse", function(QuestionResponse, App, Backbone, Marionette, $, _) {
-    var API, QuestionResponseCollection, QuestionResponseModel, responseCollection;
+    var API, QuestionResponseCollection, QuestionResponseModel;
     QuestionResponseModel = (function(_super) {
       __extends(QuestionResponseModel, _super);
 
@@ -52,12 +52,13 @@ define(["app", 'backbone'], function(App, Backbone) {
       return QuestionResponseCollection;
 
     })(Backbone.Collection);
-    responseCollection = new QuestionResponseCollection;
     API = {
       getAllQuestionResponses: function(param) {
+        var responseCollection;
         if (param == null) {
           param = {};
         }
+        responseCollection = new QuestionResponseCollection;
         responseCollection.fetch({
           reset: true,
           data: param

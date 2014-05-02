@@ -15,20 +15,20 @@ define ['app'],(App)->
 							      </i>
 							      
 							      <span class="semi-bold">
-							        Blank
+							        Blank No : <span id="blankPropertiesNo"></span>
 							      </span>
 							      
 							    </div>
 							    <div class="docket-body">
-							    	<div class="from-group">Max Characters
+							   <!-- 	<div class="from-group">Set maximum characters allowed to enter
 										<input id="answer-max-length" type="text"  value="{{maxlength}}">
 
 											
-									</div>
+									</div>   -->
 
 									<div class="">
-										Answers
-											<input id="correct-answers" value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
+										Accepted answers
+											<input id="correct-answers"   value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
 									</div>
 
 									<div class="m-b-10">
@@ -45,7 +45,7 @@ define ['app'],(App)->
 
 				# view events 
 				events : 
-					'blur #answer-max-length' : '_changeMaxLength'
+					# 'blur #answer-max-length' : '_changeMaxLength'
 					'change input#correct-answers' : '_changeCorrectAnswers'
 					'blur @ui.individualMarksTextbox' : '_changeIndividualMarks'
 
@@ -54,21 +54,27 @@ define ['app'],(App)->
 						@correct_answers.toString()
 					data
 
+				initialize:(options)->
+					@blankNo = options.blankNo
+
 				onShow:->
 
 					@$el.find('input#correct-answers').tagsinput('refresh');
-					# @$el.find('input#correct-answers').tagsinput('input').val @model.get('correct_answers')
+					@$el.find('#blankPropertiesNo').text @blankNo
+					console.log @blankNo
 
 
 				# function for changing the correct answer array						
 				_changeCorrectAnswers:(evt)->
-						@model.set 'correct_answers',$(evt.target).val().split(',')
+
+						@model.set 'correct_answers', $(evt.target).val().split(',')
+
 
 				# function for changing model on change of maxlength textbox
-				_changeMaxLength:(evt)-> 
-					# check if the value is a number
-					if  not isNaN $(evt.target).val()
-							@model.set 'maxlength',parseInt $(evt.target).val()
+				# _changeMaxLength:(evt)-> 
+				# 	# check if the value is a number
+				# 	if  not isNaN $(evt.target).val()
+				# 			@model.set 'maxlength',parseInt $(evt.target).val()
 
 				_changeIndividualMarks:(evt)->
 					if not isNaN $(evt.target).val()

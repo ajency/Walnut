@@ -39,7 +39,7 @@ define ['app'],(App)->
 				# setting of on click handler for showing of the property box for fib element
 				@$el.parent().parent().on 'click',(evt)=>
 					@trigger "show:this:fib:properties"
-					@trigger "close:hotspot:element:properties"
+					@trigger "close:question:element:properties"
 					# stop propogation of click event
 					evt.stopPropagation()
 
@@ -106,7 +106,9 @@ define ['app'],(App)->
 
 			# save the text field on blur
 			_textBlur:->
-				@model.set 'text', @$el.find('p').html()
+				formatedText = @$el.find('p').clone()
+				$(formatedText).find('input').attr 'value',''
+				@model.set 'text', formatedText.html()
 
 				console.log @model
 
@@ -119,21 +121,34 @@ define ['app'],(App)->
 						# a  random unique id to the input
 						$(blank).attr 'data-id',_.uniqueId 'input-'
 						# wait for ckeditor to finish adding the input
-						_.delay ->
-							$(blank).prop 'maxLength',parseInt 12
-						,100
+						# _.delay ->
+						# 	$(blank).prop 'maxLength',parseInt 12
+						# ,100
 						
 						# create a model and add to collection
 						@trigger "create:new:fib:element", $(blank).attr 'data-id'
+						# $(blank).before("<span contenteditable='false' unselectable='on' class='fibId' id='#{$(blank).attr('data-id')}'></span>")
 
 					_.delay =>
 						# get a reference to the model
-						blanksModel = @blanksCollection.get $(blank).attr 'data-id'
 						
-						# remove the event handler and add it again to prevent multiple event listeners
-						blanksModel.off('change:maxlength')
-						blanksModel.on 'change:maxlength',(model,maxlength)=>
-							@$el.find('input[data-id='+model.get('id')+']').prop 'maxLength',maxlength
+						
+						blanksModel = @blanksCollection.get $(blank).attr 'data-id'
+						# console.log _.indexOf(@blanksCollection.toArray(), blanksModel)+1
+
+						if not $(blank).hasClass "fib#{_.indexOf(@blanksCollection.toArray(), blanksModel)+1}"
+								# console.log 'xx'
+								$(blank).removeClass 'fib1 fib2 fib3 fib4 fib5 fib6'
+								$(blank).addClass "fib#{_.indexOf(@blanksCollection.toArray(), blanksModel)+1}"
+								# @$el.find("span##{$(blank).attr('data-id')}").text _.indexOf(@blanksCollection.toArray(), blanksModel)+1
+						# # remove the event handler and add it again to prevent multiple event listeners
+						# blanksModel.off('change:maxlength')
+						# blanksModel.on 'change:maxlength',(model,maxlength)=>
+						# 	@$el.find('input[data-id='+model.get('id')+']').prop 'maxLength',maxlength
+						@listenTo blanksModel,'change:correct_answers',@_changeCorrectAnswers
+
+						if blanksModel.get('correct_answers').length
+							@$el.find("input[data-id=#{blanksModel.id}]").val blanksModel.get('correct_answers')[0]
 						
 						# remove all events
 						# on click of input show properties for it
@@ -142,6 +157,7 @@ define ['app'],(App)->
 							console.log blanksModel
 							App.execute "show:fib:element:properties",
 								model : blanksModel
+								blankNo : _.indexOf(@blanksCollection.toArray(), blanksModel)+1
 							@trigger "show:this:fib:properties"
 							e.stopPropagation()
 					,10
@@ -158,6 +174,8 @@ define ['app'],(App)->
 
 							if _.isUndefined blankFound
 								console.log  ' in remove'
+								
+								# @$el.find("span##{blank.id}").remove()
 								@blanksCollection.remove blank
 				,1000
 
@@ -167,6 +185,11 @@ define ['app'],(App)->
 				@_changeColor @model.get 'color'
 				@_changeBGColor @model
 				@_changeFibStyle @model.get 'style'
+
+			_changeCorrectAnswers:(model,answerArray)->
+				if answerArray.length
+					@$el.find("input[data-id=#{model.id}]").val answerArray[0]
+
 
 
 			# destroy the Ckeditor instance to avoiid memory leaks on close of element

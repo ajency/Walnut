@@ -8,23 +8,26 @@ define ['app'
 
 			initialize : (opts)->
 
-				{@model} = opts
+				{model} = opts
 				{@module} = opts
 				
-				@groupContentCollection= App.request "get:content:pieces:by:ids", @model.get 'content_pieces'
+				groupContentCollection= App.request "get:content:pieces:by:ids", model.get 'content_pieces'
+				questionResponseCollection = App.request "get:question:response:collection", 
+													'division' : 3
+													'collection_id' : model.get 'id'
+
+				@view= view = @_getCollectionContentDisplayView model, groupContentCollection, questionResponseCollection
+				@show view, (loading:true, entities: [groupContentCollection,questionResponseCollection])
+
+				@listenTo model, 'training:module:started', @trainingModuleStarted
+
 				
-				App.execute "when:fetched", @groupContentCollection, @showView
 
-				@listenTo @model, 'training:module:started', @trainingModuleStarted
-
-			showView:=>
-				@view= view = @_getCollectionContentDisplayView @model
-				@show view, (loading:true, entities: [@groupContentCollection])
-
-			_getCollectionContentDisplayView :(model) =>
+			_getCollectionContentDisplayView :(model, collection, responseCollection) =>
 				new ContentDisplayView 
 					model: model
-					collection: @groupContentCollection
+					collection: collection
+					responseCollection: responseCollection
 					module: @module
 
 			trainingModuleStarted:=>
@@ -51,7 +54,14 @@ define ['app'
 
 			id			: 'myCanvas-miki'
 
-			
+			serializeData:->
+				data=super()
+
+				responseCollection= Marionette.getOption @, 'responseCollection'
+				data.responseQuestionIDs= responseCollection.pluck 'content_piece_id'
+				console.log data.responseQuestionIDs
+
+				data
 
 			onApplyUrls:->
 

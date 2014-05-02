@@ -26,13 +26,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
 			# declare a user collection instance
-			userCollection = new UserCollection
+			
 			
 
 			# API
 			API =
 				getUsers:(params={})-> #returns a collection of users
-
+					userCollection = new UserCollection
 					userCollection.fetch
 						data : params
 

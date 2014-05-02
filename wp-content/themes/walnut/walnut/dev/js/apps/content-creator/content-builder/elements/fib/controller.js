@@ -14,16 +14,15 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         this.eventObj = options.eventObj;
         _.defaults(options.modelData, {
           element: 'Fib',
-          maxlength: '12',
           font: 'Arial',
           color: '#000000',
           bg_color: '#ffffff',
-          bg_opacity: '0',
-          font_size: '12',
+          bg_opacity: 0,
+          font_size: 12,
           case_sensitive: false,
           marks: 0,
           style: 'uline',
-          text: '  <input type=\"text\" data-cke-editable=\"1\" contenteditable=\"false\">​',
+          text: 'Add text here <input type=\"text\" data-cke-editable=\"1\" style=\" height :100%\" contenteditable=\"false\">​',
           blanksArray: []
         });
         return Controller.__super__.initialize.call(this, options);
@@ -41,7 +40,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
           };
         })(this));
-        this.listenTo(view, "close:hotspot:element:properties", function() {
+        this.listenTo(view, "close:question:element:properties", function() {
           return App.execute("close:question:element:properties");
         });
         this.listenTo(view, "create:new:fib:element", (function(_this) {
@@ -51,7 +50,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
               id: blankId,
               correct_answers: [],
               marks: 1,
-              maxlength: 12
+              size: 12
             };
             blanksModel = App.request("create:new:question:element", blanksData);
             return _this.layout.model.get('blanksArray').add(blanksModel);

@@ -16,6 +16,7 @@ define ['app'
 		questionsCollection 		= null
 		questionResponseCollection 	= null
 		contentPiece 				= null
+		questionResponseModel 		= null
 
 		class View.TeacherTeachingController extends RegionController
 
@@ -30,7 +31,7 @@ define ['app'
 				questionsCollection = App.request "get:content:pieces:of:group", @moduleID
 
 				#initializing empty model incase data doesnt exist
-				@questionResponseModel = App.request "save:question:response", ''
+				questionResponseModel = App.request "save:question:response", ''
 
 				#fetching collection of responses in current module for current division
 				questionResponseCollection = App.request "get:question:response:collection", 
@@ -40,13 +41,9 @@ define ['app'
 				App.execute "when:fetched",	questionResponseCollection, =>
 					#checking if model exists in collection. if so, replacing the empty model
 					@_getOrCreateModel @questionID
-					@_showViews()
-					
-				contentPiece = App.request "get:content:piece:by:id", @questionID
-		
 
-			
-			_showViews:=>
+				contentPiece = App.request "get:content:piece:by:id", @questionID
+				
 				@layout= layout = @_getTakeSingleQuestionLayout()
 
 				@show @layout, (
@@ -56,16 +53,19 @@ define ['app'
 						studentCollection
 						questionsCollection
 						questionResponseCollection
+						questionResponseModel
+						contentPiece
 					]
 					)
 
 				@listenTo @layout, "show", @_showModuleDescriptionView
 
-				@listenTo @layout, "show", @_showStudentsListView @questionResponseModel
+				@listenTo @layout, "show", @_showStudentsListView questionResponseModel
 
-				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece
+				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece		
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
+
 
 			_changeQuestion:=>
 				contentPieces = contentGroupModel.get 'content_pieces'
@@ -77,30 +77,30 @@ define ['app'
 					console.log @questionID
 					contentPiece = questionsCollection.get @questionID
 
-					@questionResponseModel = @_getOrCreateModel @questionID
+					questionResponseModel = @_getOrCreateModel @questionID
 
 					@_showQuestionDisplayView contentPiece
 					
-					@_showStudentsListView @questionResponseModel
+					@_showStudentsListView questionResponseModel
 
 				else 
 					console.log 'end of questions'
 
 
 			_getOrCreateModel:(content_piece_id)=>
-				@questionResponseModel = questionResponseCollection.findWhere 
+				questionResponseModel = questionResponseCollection.findWhere 
 											'content_piece_id': content_piece_id.toString()
 
 				#if model doesnt exist in collection setting default values
-				if not @questionResponseModel
-					@questionResponseModel = App.request "save:question:response", ''
-					@questionResponseModel.set 
+				if not questionResponseModel
+					questionResponseModel = App.request "save:question:response", ''
+					questionResponseModel.set 
 						'collection_id': @moduleID
 						'content_piece_id': @questionID
 						'division'	: @division
 
 
-				@questionResponseModel
+				questionResponseModel
 
 
 			_showModuleDescriptionView :=>
