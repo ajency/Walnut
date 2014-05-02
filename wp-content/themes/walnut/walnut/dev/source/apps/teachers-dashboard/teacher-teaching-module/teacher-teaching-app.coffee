@@ -25,3 +25,8 @@
 				TeacherTeachingApp.on "start", ->
 					new TeacherTeachingRouter
 							controller : Controller 
+
+
+			# set handlers
+			App.commands.setHandler "start:teacher:teaching:app", (opt = {})->
+				new App.TeacherTeachingApp.TeacherTeachingController opt	

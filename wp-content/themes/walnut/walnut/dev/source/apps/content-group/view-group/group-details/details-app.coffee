@@ -14,13 +14,15 @@ define ['app'
 				@endTime = '';
 
 				# for take-class module the template changes a bit
-				# so based on this value (@module) we set the template additional stuff
+				# so based on this value (@module_name) we set the template additional stuff
 
-				{@module} = opts 
+				{@module_name} = opts 
 
 				@view= view = @_getCollectionDetailsView @model
 
 				@show view, (loading:true)
+
+				@listenTo view, 'start:teaching:module', => @region.trigger "start:teaching:module"
 
 				@listenTo @model, 'training:module:started', @trainingModuleStarted
 
@@ -34,7 +36,7 @@ define ['app'
 
 				new CollectionDetailsView
 					model 	: model 								
-					module 	: @module
+					module_name 	: @module_name
 
 					templateHelpers:
 						getTextbookName:=>
@@ -66,11 +68,12 @@ define ['app'
 
 			serializeData:->
 				data = super()
-				data.takeClassModule= Marionette.getOption @, 'module'
+				data.takeClassModule= Marionette.getOption @, 'module_name'
 				data
 
 			startModule:=>
 				@model.trigger "start:module"
+				@trigger "start:teaching:module"
 
 			stopModule:=>
 				$('#timekeeper').timer('pause');

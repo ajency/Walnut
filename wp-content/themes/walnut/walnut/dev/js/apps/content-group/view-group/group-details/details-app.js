@@ -19,11 +19,16 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         this.model = opts.model;
         this.startTime = '';
         this.endTime = '';
-        this.module = opts.module;
+        this.module_name = opts.module_name;
         this.view = view = this._getCollectionDetailsView(this.model);
         this.show(view, {
           loading: true
         });
+        this.listenTo(view, 'start:teaching:module', (function(_this) {
+          return function() {
+            return _this.region.trigger("start:teaching:module");
+          };
+        })(this));
         this.listenTo(this.model, 'training:module:started', this.trainingModuleStarted);
         return this.listenTo(this.model, 'training:module:stopped', this.trainingModuleStopped);
       };
@@ -35,7 +40,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         this.textbookName = App.request("get:textbook:name:by:id", textbook);
         return new CollectionDetailsView({
           model: model,
-          module: this.module,
+          module_name: this.module_name,
           templateHelpers: {
             getTextbookName: (function(_this) {
               return function() {
@@ -87,12 +92,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       CollectionDetailsView.prototype.serializeData = function() {
         var data;
         data = CollectionDetailsView.__super__.serializeData.call(this);
-        data.takeClassModule = Marionette.getOption(this, 'module');
+        data.takeClassModule = Marionette.getOption(this, 'module_name');
         return data;
       };
 
       CollectionDetailsView.prototype.startModule = function() {
-        return this.model.trigger("start:module");
+        this.model.trigger("start:module");
+        return this.trigger("start:teaching:module");
       };
 
       CollectionDetailsView.prototype.stopModule = function() {
