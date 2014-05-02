@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone'], function(App, Backbone) {
+define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
   return App.module("Entities.QuestionResponse", function(QuestionResponse, App, Backbone, Marionette, $, _) {
     var API, QuestionResponseCollection, QuestionResponseModel;
     QuestionResponseModel = (function(_super) {
@@ -69,13 +69,65 @@ define(["app", 'backbone'], function(App, Backbone) {
         var questionResponse;
         questionResponse = new QuestionResponseModel(data);
         return questionResponse;
+      },
+      getQuestionResponseFromLocal: function(collection_id, division) {
+        var onFailure, onSuccess, question_type, runQuery;
+        question_type = 'individual';
+        runQuery = function() {
+          return $.Deferred(function(d) {
+            return _.db.transaction(function(tx) {
+              return tx.executeSql("SELECT * FROM wp_35_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), onFailure(d));
+            });
+          });
+        };
+        onSuccess = function(d) {
+          return function(tx, data) {
+            var i, q_resp, result, row;
+            result = [];
+            i = 0;
+            while (i < data.rows.length) {
+              row = data.rows.item(i);
+              q_resp = '';
+              if (question_type === 'individual') {
+                q_resp = unserialize(row['question_response']);
+              }
+              result[i] = {
+                id: row['id'],
+                content_piece_id: row['content_piece_id'],
+                collection_id: row['collection_id'],
+                division: row['division'],
+                date_created: row['date_created'],
+                date_modified: row['date_modified'],
+                total_time: row['total_time'],
+                question_response: q_resp,
+                time_started: row['time_started'],
+                time_completed: row['time_completed']
+              };
+              i++;
+            }
+            return d.resolve(result);
+          };
+        };
+        onFailure = function(d) {
+          return function(tx, error) {
+            return d.reject('ERROR: ' + error);
+          };
+        };
+        return $.when(runQuery()).done(function(data) {
+          return console.log('getQuestionResponseFromLocal transaction completed');
+        }).fail(function(error) {
+          return console.log('ERROR: ' + error);
+        });
       }
     };
     App.reqres.setHandler("get:question:response:collection", function(params) {
       return API.getAllQuestionResponses(params);
     });
-    return App.reqres.setHandler("save:question:response", function(qID) {
+    App.reqres.setHandler("save:question:response", function(qID) {
       return API.saveQuestionResponse(qID);
+    });
+    return App.reqres.setHandler("get:question-response:local", function(collection_id, division) {
+      return API.getQuestionResponseFromLocal(collection_id, division);
     });
   });
 });

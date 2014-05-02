@@ -38,6 +38,41 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					userCollection
 
+				#get users from local database	
+				getUsersFromLocal:(division)->
+					runQuery = ->
+						$.Deferred (d)->
+							_.db.transaction (tx)->
+								tx.executeSql("SELECT * FROM wp_users u INNER JOIN wp_usermeta um 
+									ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?", [division], onSuccess(d), onFailure(d));
+								
+
+					onSuccess =(d)->
+						(tx,data)->
+							result = []
+							i = 0
+							while i < data.rows.length
+								row = data.rows.item(i)
+								
+								result[i] = 
+									ID: row['ID']
+									display_name: row['display_name']
+									user_email: row['user_email']
+									profile_pic: ''
+
+								i++	
+		
+							d.resolve(result)
+
+					onFailure =(d)->
+						(tx,error)->
+							d.reject 'ERROR: '+error
+
+					$.when(runQuery()).done (data)->
+						console.log 'getUsersFromLocal transaction completed'
+					.fail (error)->
+						console.log 'ERROR: '+error	
+
 
 
 
@@ -46,3 +81,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:user:collection",(opts) ->
 				API.getUsers opts
+
+			# request handler to get users from local database
+			App.reqres.setHandler "get:user:local:by:division",(division) ->
+				API.getUsersFromLocal division

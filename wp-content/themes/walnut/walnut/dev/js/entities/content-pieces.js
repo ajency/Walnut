@@ -188,7 +188,7 @@ define(["app", 'backbone'], function(App, Backbone) {
                 subjects: '',
                 creator: 'admin',
                 content_type: '',
-                question_type: ''
+                question_type: 'individual'
               };
               i++;
             }

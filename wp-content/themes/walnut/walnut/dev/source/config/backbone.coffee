@@ -53,10 +53,18 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'user'
-				console.log 'User local'		
+				data = App.reqres.request "get:#{collection_name}:local:by:division", options.data.division
+				data.done (d)->
+					collection.set d
+					console.log 'user data'
+					console.log d
 
 			if collection_name is 'question-response'
-				console.log 'Question response local'
+				data = App.reqres.request "get:#{collection_name}:local", options.data.collection_id, options.data.division
+				data.done (d)->
+					collection.set d
+					console.log 'question-response data'
+					console.log d
 
 			return true
 
@@ -178,9 +186,6 @@ define ["backbone"], (Backbone) ->
 				#Changes needed for offline data retrieval
 				modelname = model.name
 				console.log 'Model name: '+modelname
-				# console.log model
-				# console.log 'Options'
-				# console.log options
 
 				if modelname is 'content-group'
 					attr = model.attributes
@@ -191,7 +196,9 @@ define ["backbone"], (Backbone) ->
 					console.log 'Schools local'
 
 				if modelname is 'content-piece'
-					console.log 'Content piece local'	
+					console.log 'Content piece local'
+					console.log 'Model'
+					console.log model
 
 			
 			# trigger the request event of the model

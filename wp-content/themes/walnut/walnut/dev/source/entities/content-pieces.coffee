@@ -139,7 +139,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 									subjects: ''
 									creator: 'admin'
 									content_type: ''
-									question_type: ''
+									question_type: 'individual'
 								i++
 							
 							d.resolve(result)

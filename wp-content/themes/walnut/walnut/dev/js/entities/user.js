@@ -55,13 +55,54 @@ define(["app", 'backbone'], function(App, Backbone) {
           data: params
         });
         return userCollection;
+      },
+      getUsersFromLocal: function(division) {
+        var onFailure, onSuccess, runQuery;
+        runQuery = function() {
+          return $.Deferred(function(d) {
+            return _.db.transaction(function(tx) {
+              return tx.executeSql("SELECT * FROM wp_users u INNER JOIN wp_usermeta um ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?", [division], onSuccess(d), onFailure(d));
+            });
+          });
+        };
+        onSuccess = function(d) {
+          return function(tx, data) {
+            var i, result, row;
+            result = [];
+            i = 0;
+            while (i < data.rows.length) {
+              row = data.rows.item(i);
+              result[i] = {
+                ID: row['ID'],
+                display_name: row['display_name'],
+                user_email: row['user_email'],
+                profile_pic: ''
+              };
+              i++;
+            }
+            return d.resolve(result);
+          };
+        };
+        onFailure = function(d) {
+          return function(tx, error) {
+            return d.reject('ERROR: ' + error);
+          };
+        };
+        return $.when(runQuery()).done(function(data) {
+          return console.log('getUsersFromLocal transaction completed');
+        }).fail(function(error) {
+          return console.log('ERROR: ' + error);
+        });
       }
     };
     App.reqres.setHandler("get:user:model", function() {
       return user;
     });
-    return App.reqres.setHandler("get:user:collection", function(opts) {
+    App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);
+    });
+    return App.reqres.setHandler("get:user:local:by:division", function(division) {
+      return API.getUsersFromLocal(division);
     });
   });
 });

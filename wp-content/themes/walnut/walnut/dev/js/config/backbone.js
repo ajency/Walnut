@@ -51,10 +51,20 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'user') {
-        console.log('User local');
+        data = App.reqres.request("get:" + collection_name + ":local:by:division", options.data.division);
+        data.done(function(d) {
+          collection.set(d);
+          console.log('user data');
+          return console.log(d);
+        });
       }
       if (collection_name === 'question-response') {
-        console.log('Question response local');
+        data = App.reqres.request("get:" + collection_name + ":local", options.data.collection_id, options.data.division);
+        data.done(function(d) {
+          collection.set(d);
+          console.log('question-response data');
+          return console.log(d);
+        });
       }
       return true;
     }
@@ -118,6 +128,8 @@ define(["backbone"], function(Backbone) {
         }
         if (modelname === 'content-piece') {
           console.log('Content piece local');
+          console.log('Model');
+          console.log(model);
         }
       }
       model.trigger("request", model, xhr, options);
