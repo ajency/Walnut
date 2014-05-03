@@ -10,7 +10,8 @@ define ['app'
 		class View.GroupController extends RegionController
 
 			initialize :(opts) ->
-				{@model, @module_name, @division} = opts
+				#mode refers to "training" mode or "take-class" mode
+				{@model, @mode, @division} = opts
 
 				@questionResponseCollection = App.request "get:question:response:collection", 
 													'division' : @division
@@ -41,6 +42,9 @@ define ['app'
 				@gotoTrainingModule nextQuestion, 'class_mode'
 
 			gotoTrainingModule:(question, display_mode)=>
+
+				display_mode= 'training' ? @mode is 'training'
+
 				App.execute "start:teacher:teaching:app", 
 					region 						: App.mainContentRegion
 					division					: @division
@@ -51,21 +55,19 @@ define ['app'
 					display_mode 				: display_mode # when display mode is readonly, the save response options are not shown
 															   # only when display mode is class_mode response changes can be done
 
-
-
-
 			showContentGroupViews:=>
 				App.execute "when:fetched", @model, =>
 					App.execute "show:viewgroup:content:group:detailsapp", 
 						region 						: @layout.collectionDetailsRegion
 						model  						: @model
-						module_name 				: @module_name
+						mode 						: @mode
 						questionResponseCollection 	: @questionResponseCollection
 
 					if _.size(@model.get('content_pieces'))>0
 						App.execute "show:viewgroup:content:displayapp",
 							region 						: @layout.contentDisplayRegion
 							model 						: @model
+							mode 						: @mode
 							questionResponseCollection 	: @questionResponseCollection
 							groupContentCollection 		: @groupContentCollection
 

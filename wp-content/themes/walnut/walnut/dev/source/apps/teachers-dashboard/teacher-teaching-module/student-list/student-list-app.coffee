@@ -16,7 +16,8 @@ define ['app'
 
 				@show view, (loading:true, entities:[studentCollection])
 
-
+				@listenTo @view, "goto:previous:route", => @region.trigger "goto:previous:route"
+				
 				@listenTo view, "save:question:response", @_saveQuestionResponse
 
 				@listenTo view, "question:completed", @_changeQuestion

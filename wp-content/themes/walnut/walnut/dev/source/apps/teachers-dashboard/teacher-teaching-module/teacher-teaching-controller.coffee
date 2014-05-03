@@ -49,11 +49,14 @@ define ['app'
 
 				@listenTo @layout, "show", @_showModuleDescriptionView
 
-				@listenTo @layout, "show", @_showStudentsListView questionResponseModel
+				if @display_mode isnt 'training'
+					@listenTo @layout, "show", @_showStudentsListView questionResponseModel
 
 				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece	
 
 				@listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoPreviousRoute
+				
+				@listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoPreviousRoute
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
@@ -76,7 +79,8 @@ define ['app'
 
 					@_showQuestionDisplayView contentPiece
 					
-					@_showStudentsListView questionResponseModel
+					if @display_mode isnt 'training'	
+						@_showStudentsListView questionResponseModel
 
 				else 
 					@_gotoPreviousRoute()

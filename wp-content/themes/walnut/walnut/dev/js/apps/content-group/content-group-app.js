@@ -15,7 +15,8 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
         'edit-group': 'editGroup',
         'view-group/:id': 'viewGroup',
         'list-groups': 'groupsListing',
-        'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule'
+        'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule',
+        'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule'
       };
 
       return ContentGroupRouter;
@@ -57,6 +58,29 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
         });
       },
       takeClassSingleModule: function(classID, div, tID, mID) {
+        var opts;
+        opts = {
+          classID: classID,
+          div: div,
+          tID: tID,
+          mID: mID,
+          mode: 'take-class'
+        };
+        return this.gotoTakeSingleQuestionModule(opts);
+      },
+      startTrainingSingleModule: function(classID, tID, mID) {
+        var opts;
+        opts = {
+          classID: classID,
+          tID: tID,
+          mID: mID,
+          mode: 'training'
+        };
+        return this.gotoTakeSingleQuestionModule(opts);
+      },
+      gotoTakeSingleQuestionModule: function(opts) {
+        var classID, div, mID, mode, tID;
+        classID = opts.classID, div = opts.div, tID = opts.tID, mID = opts.mID, mode = opts.mode;
         this.textbook = App.request("get:textbook:by:id", tID);
         this.contentGroupModel = App.request("get:content:group:by:id", mID);
         App.execute("when:fetched", this.textbook, (function(_this) {
@@ -90,7 +114,7 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
         return new ContentGroupApp.View.GroupController({
           region: App.mainContentRegion,
           model: this.contentGroupModel,
-          module_name: 'take-class',
+          mode: mode,
           division: div
         });
       }

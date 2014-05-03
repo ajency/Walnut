@@ -6,56 +6,74 @@ define ['app'
 
 	App.module "TeachersDashboardApp.View", (View, App)->
 
+		divisionModel= null
+		textbooks= null
+
 		#List of textbooks available to a teacher for training or to take a class
 
 		class View.TakeClassController extends RegionController
 
 			initialize :(opts)->
+				console.log opts
+				{@classID,@division, mode} = opts
+
+				breadcrumb_label= 'Start Training'
+
+				if mode is 'take-class'
+					divisionModel = App.request "get:division:by:id", @division
+					breadcrumb_label = 'Take Class'
+				else 
+					divisionModel = ''
 
 				breadcrumb_items = 'items':[
 						{'label':'Dashboard','link': '#teachers/dashboard'},
-						{'label':'Take Class','link':'javascript://'}
+						{'label':breadcrumb_label,'link':'javascript://'}
 					]
 
 				App.execute "update:breadcrumb:model", breadcrumb_items
 
-				{classID} = opts
+				textbooks = App.request "get:textbooks", (class_id : @classID)
 
-				{@division} = opts
-
-				@divisionModel = App.request "get:division:by:id", @division
-
-				@textbooks = App.request "get:textbooks", (class_id : classID)
-
-				# @view = view = @_getTextbooksListView textbooks
-
-				# @show view, (loading: true)
-				
 				@layout= layout = @_getTrainingModuleLayout()
 
-				@show layout, (loading: true, entities: [@textbooks,@divisionModel])
+				@show layout, (loading: true, entities: [textbooks,divisionModel])
 
-				@listenTo layout, "show", @_showTextbooksListView
+				@listenTo layout, "show", @_showTextbooksListView mode
 
 				
 
-			_showTextbooksListView :=>
-				App.execute "when:fetched", [@textbooks,@divisionModel], =>
-					console.log @divisionModel
+			_showTextbooksListView :(mode)=>
+
+				App.execute "when:fetched", [textbooks], =>
+
 					textbookListView= new View.TakeClass.TextbooksListView
-							collection: @textbooks
+							collection: textbooks
 							templateHelpers:
 								showUrl:->
 									'/textbook/28'
 
 
 					classDescriptionView = new ClassDescriptionView
-							model: @divisionModel
+
+							#model: divisionModel
 
 							templateHelpers: 
+
 								showSubjectsList:=>
-									subjectsList = _.uniq _.compact(_.flatten(@textbooks.pluck('subjects')))
+									subjectsList = _.uniq _.compact(_.flatten(textbooks.pluck('subjects')))
 									subjectsList
+
+								showClassLabel:=>
+									if mode is 'training'
+										CLASS_LABEL[@classID]
+									else 
+										divisionModel.get 'division'
+
+								showNoOfStudents:=>
+									if mode is 'training'
+										'N/A'
+									else 
+										divisionModel.get 'students_count'
 
 					@layout.textbooksListRegion.show(textbookListView)
 
@@ -78,5 +96,8 @@ define ['app'
 		class ClassDescriptionView extends Marionette.ItemView
 
 				template: classDescriptionTpl
+
+				onShow:->
+					console.log 'on show'
 
 

@@ -16,7 +16,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
-        this.model = opts.model, this.module_name = opts.module_name, this.questionResponseCollection = opts.questionResponseCollection;
+        this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection;
         this.startTime = '';
         this.endTime = '';
         this.view = view = this._getCollectionDetailsView(this.model);
@@ -39,7 +39,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         this.textbookName = App.request("get:textbook:name:by:id", textbook);
         return new CollectionDetailsView({
           model: model,
-          module_name: this.module_name,
+          mode: this.mode,
           templateHelpers: {
             getTextbookName: (function(_this) {
               return function() {
@@ -53,7 +53,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
                 allContentPieces = _this.model.get('content_pieces');
                 answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
                 unanswered = _.difference(allContentPieces, answeredPieces);
-                if (_.size(unanswered) > 0) {
+                if (_.size(unanswered) > 0 && _this.mode !== 'training') {
                   actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button> <button type="button" class="btn btn-white btn-small pull-right m-t-10 m-r-10" data-toggle="modal" data-target="#schedule"> <i class="fa fa-calendar"></i> Schedule </button>';
                 }
                 return actionButtons;
@@ -104,7 +104,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       CollectionDetailsView.prototype.serializeData = function() {
         var data;
         data = CollectionDetailsView.__super__.serializeData.call(this);
-        data.takeClassModule = Marionette.getOption(this, 'module_name');
+        data.takeClassModule = Marionette.getOption(this, 'mode');
         return data;
       };
 

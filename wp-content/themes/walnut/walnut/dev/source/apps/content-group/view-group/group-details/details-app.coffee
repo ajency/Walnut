@@ -9,9 +9,9 @@ define ['app'
 			initialize :(opts)->
 
 				# for take-class module the template changes a bit
-				# so based on this value (@module_name) we set the template additional stuff
+				# so based on this value (@mode) we set the template additional stuff
 
-				{@model,@module_name,@questionResponseCollection}= opts
+				{@model,@mode,@questionResponseCollection}= opts
 
 				@startTime = '';
 				@endTime = '';
@@ -34,7 +34,7 @@ define ['app'
 
 				new CollectionDetailsView
 					model 	: model 								
-					module_name 	: @module_name
+					mode 	: @mode
 
 					templateHelpers:
 
@@ -49,7 +49,7 @@ define ['app'
 							answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
 							unanswered = _.difference allContentPieces, answeredPieces
 
-							if _.size(unanswered) >0 
+							if _.size(unanswered) >0 and @mode isnt 'training'
 								actionButtons= '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
 									<i class="fa fa-play"></i> Start
 								</button>
@@ -84,7 +84,7 @@ define ['app'
 
 			serializeData:->
 				data = super()
-				data.takeClassModule= Marionette.getOption @, 'module_name'
+				data.takeClassModule= Marionette.getOption @, 'mode'
 				data
 
 			startModule:=>

@@ -50,10 +50,13 @@ define(['app'], function(App) {
       StudentsList.prototype.emptyView = StudentsEmptyView;
 
       StudentsList.prototype.events = {
-        'click .tiles.single': 'selectStudent',
+        'click .tiles.single.selectable': 'selectStudent',
         'click #right-answer': 'addToCorrectList',
         'click #wrong-answer': 'removeFromCorrectList',
-        'click #question-done': 'questionCompleted'
+        'click #question-done': 'questionCompleted',
+        'click #pause-session': function() {
+          return this.trigger("goto:previous:route");
+        }
       };
 
       StudentsList.prototype.serializeData = function() {
@@ -66,16 +69,23 @@ define(['app'], function(App) {
       };
 
       StudentsList.prototype.onShow = function() {
-        var ele, eleValue, _i, _len, _ref, _results;
+        var ele, eleValue, _i, _j, _len, _len1, _ref, _ref1, _results;
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          _ref = this.$el.find('.tiles.single');
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            ele = _ref[_i];
+            $(ele).addClass('selectable');
+          }
+        }
         $(".students").listnav({
           includeNums: false
         });
         this.correctAnswers = Marionette.getOption(this, 'correctAnswers');
         this.correctAnswers = _.compact(this.correctAnswers);
-        _ref = this.$el.find('.tiles.single');
+        _ref1 = this.$el.find('.tiles.single');
         _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          ele = _ref[_i];
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          ele = _ref1[_j];
           eleValue = parseInt($(ele).attr('data-id'));
           if (_.contains(this.correctAnswers, eleValue)) {
             _results.push(this.markAsCorrectAnswer(ele));

@@ -42,9 +42,12 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           entities: [contentGroupModel, studentCollection, questionsCollection, questionResponseCollection, questionResponseModel, contentPiece]
         });
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
-        this.listenTo(this.layout, "show", this._showStudentsListView(questionResponseModel));
+        if (this.display_mode !== 'training') {
+          this.listenTo(this.layout, "show", this._showStudentsListView(questionResponseModel));
+        }
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
+        this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
         return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
       };
 
@@ -59,7 +62,9 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
           this._showQuestionDisplayView(contentPiece);
-          return this._showStudentsListView(questionResponseModel);
+          if (this.display_mode !== 'training') {
+            return this._showStudentsListView(questionResponseModel);
+          }
         } else {
           return this._gotoPreviousRoute();
         }
