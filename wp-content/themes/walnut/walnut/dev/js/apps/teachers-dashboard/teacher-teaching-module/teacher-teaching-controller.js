@@ -44,6 +44,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
         this.listenTo(this.layout, "show", this._showStudentsListView(questionResponseModel));
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
+        this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
         return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
       };
 
@@ -60,9 +61,16 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           this._showQuestionDisplayView(contentPiece);
           return this._showStudentsListView(questionResponseModel);
         } else {
-          console.log('end of questions');
-          return App.navigate(this.currentRoute);
+          return this._gotoPreviousRoute();
         }
+      };
+
+      TeacherTeachingController.prototype._gotoPreviousRoute = function() {
+        var currRoute, newRoute, removeStr;
+        currRoute = App.getCurrentRoute();
+        removeStr = _.str.strRightBack(currRoute, '/');
+        newRoute = _.str.rtrim(currRoute, removeStr + '/');
+        return App.navigate(newRoute, true);
       };
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {

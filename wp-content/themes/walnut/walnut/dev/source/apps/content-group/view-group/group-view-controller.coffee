@@ -28,7 +28,7 @@ define ['app'
 				@listenTo @layout.collectionDetailsRegion, 'start:teaching:module', @startTeachingModule
 
 				@listenTo @layout.contentDisplayRegion , 'goto:question:readonly', (questionID)=>
-					console.log 'test on group view controller'
+					App.navigate App.getCurrentRoute()+'/question'
 					@gotoTrainingModule questionID, 'readonly'
 
 
@@ -57,16 +57,17 @@ define ['app'
 			showContentGroupViews:=>
 				App.execute "when:fetched", @model, =>
 					App.execute "show:viewgroup:content:group:detailsapp", 
-						region : @layout.collectionDetailsRegion
-						model  : @model
-						module_name : @module_name
+						region 						: @layout.collectionDetailsRegion
+						model  						: @model
+						module_name 				: @module_name
+						questionResponseCollection 	: @questionResponseCollection
 
 					if _.size(@model.get('content_pieces'))>0
 						App.execute "show:viewgroup:content:displayapp",
-							region : @layout.contentDisplayRegion
-							model: @model
-							questionResponseCollection : @questionResponseCollection
-							groupContentCollection 	: @groupContentCollection
+							region 						: @layout.contentDisplayRegion
+							model 						: @model
+							questionResponseCollection 	: @questionResponseCollection
+							groupContentCollection 		: @groupContentCollection
 
 			_getContentGroupViewLayout : =>
 				new ContentGroupViewLayout

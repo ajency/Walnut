@@ -13,6 +13,8 @@ define ['app'
 
 				@show view
 
+				@listenTo @view, "goto:previous:route", => @region.trigger "goto:previous:route"
+
 
 			_showModuleDescriptionView :(model) =>
 				new ModuleDescriptionView
@@ -26,7 +28,7 @@ define ['app'
 			template : moduleDescriptionTemplate
 
 			events : 
-				'click #back-to-module':-> @render
+				'click #back-to-module':-> @trigger "goto:previous:route"
 			
 			onShow:->
 				clock = setInterval @updateTime, 500		

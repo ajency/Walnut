@@ -51,7 +51,9 @@ define ['app'
 
 				@listenTo @layout, "show", @_showStudentsListView questionResponseModel
 
-				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece		
+				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece	
+
+				@listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoPreviousRoute
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
@@ -77,8 +79,16 @@ define ['app'
 					@_showStudentsListView questionResponseModel
 
 				else 
-					console.log 'end of questions'
-					App.navigate @currentRoute
+					@_gotoPreviousRoute()
+
+			_gotoPreviousRoute:->
+				currRoute = App.getCurrentRoute()
+
+				removeStr = _.str.strRightBack currRoute, '/'
+
+				newRoute  = _.str.rtrim currRoute, removeStr+'/'
+
+				App.navigate newRoute, true
 
 
 			_getOrCreateModel:(content_piece_id)=>
@@ -109,6 +119,7 @@ define ['app'
 					model 		  	: model
 
 			_showStudentsListView :(questionResponseModel)=>
+
 				App.execute "when:fetched", contentPiece, =>
 
 					question_type = contentPiece.get('question_type')

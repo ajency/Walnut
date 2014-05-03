@@ -118,7 +118,7 @@ define(['app'], function(App) {
       };
 
       StudentsList.prototype.questionCompleted = function() {
-        if (_.size(this.correctAnswers) < 1 && Marionette.getOption(this, 'display_mode' === 'class_mode')) {
+        if ((_.size(this.correctAnswers) < 1) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
           if (confirm('Are you sure no one answered correctly?')) {
             return this.trigger("question:completed", "no_answer");
           }

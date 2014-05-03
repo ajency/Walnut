@@ -37,7 +37,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
         return this.listenTo(this.layout.contentDisplayRegion, 'goto:question:readonly', (function(_this) {
           return function(questionID) {
-            console.log('test on group view controller');
+            App.navigate(App.getCurrentRoute() + '/question');
             return _this.gotoTrainingModule(questionID, 'readonly');
           };
         })(this));
@@ -69,7 +69,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             App.execute("show:viewgroup:content:group:detailsapp", {
               region: _this.layout.collectionDetailsRegion,
               model: _this.model,
-              module_name: _this.module_name
+              module_name: _this.module_name,
+              questionResponseCollection: _this.questionResponseCollection
             });
             if (_.size(_this.model.get('content_pieces')) > 0) {
               return App.execute("show:viewgroup:content:displayapp", {

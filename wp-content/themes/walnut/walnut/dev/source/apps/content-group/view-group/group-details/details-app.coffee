@@ -8,15 +8,13 @@ define ['app'
 
 			initialize :(opts)->
 
-				{@model}= opts
-
-				@startTime = '';
-				@endTime = '';
-
 				# for take-class module the template changes a bit
 				# so based on this value (@module_name) we set the template additional stuff
 
-				{@module_name} = opts 
+				{@model,@module_name,@questionResponseCollection}= opts
+
+				@startTime = '';
+				@endTime = '';
 
 				@view= view = @_getCollectionDetailsView @model
 
@@ -39,8 +37,26 @@ define ['app'
 					module_name 	: @module_name
 
 					templateHelpers:
+
 						getTextbookName:=>
 							@textbookName 
+
+						startScheduleButton:=>
+							
+							actionButtons= ''
+
+							allContentPieces= @model.get 'content_pieces'
+							answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
+							unanswered = _.difference allContentPieces, answeredPieces
+
+							if _.size(unanswered) >0 
+								actionButtons= '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
+									<i class="fa fa-play"></i> Start
+								</button>
+								<button type="button" class="btn btn-white btn-small pull-right m-t-10 m-r-10" data-toggle="modal" data-target="#schedule">
+									<i class="fa fa-calendar"></i> Schedule
+								</button>'
+							actionButtons
 
 			trainingModuleStarted:=>		
 				@startTime = moment().format();
@@ -72,6 +88,10 @@ define ['app'
 				data
 
 			startModule:=>
+
+				currentRoute = App.getCurrentRoute()
+				App.navigate currentRoute+"/question"
+
 				@model.trigger "start:module"
 				@trigger "start:teaching:module"
 
@@ -96,7 +116,7 @@ define ['app'
 				else 
 					$('#timekeeper').timer('resume');
 
-				clock = setInterval @updateTime, 500		
+				clock = setInterval @updateTime, 500
 
 			updateTime :=>
 				@$el.find '.timedisplay'

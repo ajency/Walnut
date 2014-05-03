@@ -138,8 +138,7 @@ define ['app'],(App)->
 				@trigger "save:question:response", @correctAnswers
 
 			questionCompleted:->
-
-				if _.size(@correctAnswers) < 1 and Marionette.getOption @, 'display_mode' is 'class_mode'
+				if (_.size(@correctAnswers) < 1) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
 					if confirm 'Are you sure no one answered correctly?'
 					    @trigger "question:completed", "no_answer"
 				else 
