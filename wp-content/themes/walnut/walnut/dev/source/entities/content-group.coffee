@@ -227,10 +227,10 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					#Error handlers
 					deferredErrorHandler =(d)->
 						(tx, error)->
-							d.reject 'ERROR: '+error
+							d.reject(error)
 
 					failureHandler = (error)->
-						console.log 'ERROR: '+error				
+						console.log 'ERROR: '+error.message				
 
 					$.when(runMainQuery()).done (data)->
 						console.log 'Content-group-by-id transaction completed'
@@ -259,12 +259,12 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 						failure =(d)->
 							(tx, error)->
-								d.reject 'ERROR: '+error
+								d.reject(error)
 
 						$.when(runQ()).done ->
 							console.log 'getLastStatus transaction completed'
 						.fail (error)->
-							console.log 'ERROR: '+error
+							console.log 'ERROR: '+error.message
 
 
 					#function to insert record in wp_training_logs
@@ -289,12 +289,10 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							console.log 'ERROR: '+error.message
 						,(tx)->
 							console.log 'Success: Updated record in wp_training_logs'
-						)	
+						)
 
-
-					#Current date
-					d = new Date()
-					date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()
+					
+					date = _.getCurrentDate()
 
 					if current_status is 'completed' or current_status is 'scheduled'
 						if current_status is 'scheduled'

@@ -8,7 +8,7 @@ require.config
 	
 	urlArgs : "ver=#{(new Date()).getTime()}"
 
-	# baseUrl : './wp-content/themes/walnut/walnut/dev/js'
+	# baseUrl : './wp- content/themes/walnut/walnut/dev/js'
 
 	# baseUrl for walnut app
 	baseUrl : '/dev/js'
@@ -46,6 +46,7 @@ require.config
 		jquerytimer			: 'plugins/timer.jquery'
 		jquery_listnav		: 'plugins/jquery-listnav'
 		video				: 'plugins/video'
+		serialize			: 'plugins/serialize'
 
 
 	shim:

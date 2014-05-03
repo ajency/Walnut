@@ -85,13 +85,13 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 										d.resolve(result)
 
 									,(tx, error)->
-										console.log 'ERROR: '+error
+										console.log 'ERROR: '+error.message
 									)
 							
 
 					onFailure = (d)->
 						(tx, error)->
-							d.reject 'ERROR: '+error
+							d.reject(error)
 
 
 					getClassLabel = (class_id)->
@@ -106,7 +106,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					$.when(runQuery()).done (data)->
 						console.log 'getDivisionsFromLocal transaction completed'
 					.fail (error)->
-						console.log 'ERROR: '+error
+						console.log 'ERROR: '+error.message
 
 
 

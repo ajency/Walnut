@@ -6,6 +6,9 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
         db.transaction((tx)->
             # tx.executeSql('DROP TABLE IF EXISTS wp_training_logs')
             tx.executeSql('CREATE TABLE IF NOT EXISTS wp_training_logs (id INTEGER PRIMARY KEY, division_id INTEGER, collection_id INTEGER, teacher_id INTEGER, date, status)')
+
+            # tx.executeSql('DROP TABLE IF EXISTS wp_question_response')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response (id INTEGER PRIMARY KEY, content_piece_id INTEGER, collection_id INTEGER, division INTEGER, date_created, date_modified, total_time, question_response, time_started, time_completed)')
             
         ,transactionErrorHandler
         ,(tx)->

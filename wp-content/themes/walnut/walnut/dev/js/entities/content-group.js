@@ -278,18 +278,18 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         deferredErrorHandler = function(d) {
           return function(tx, error) {
-            return d.reject('ERROR: ' + error);
+            return d.reject(error);
           };
         };
         failureHandler = function(error) {
-          return console.log('ERROR: ' + error);
+          return console.log('ERROR: ' + error.message);
         };
         return $.when(runMainQuery()).done(function(data) {
           return console.log('Content-group-by-id transaction completed');
         }).fail(failureHandler);
       },
       saveOrUpdateContentGroupLocal: function(division_id, collection_id, teacher_id, training_date, current_status) {
-        var d, date, getLastStatus, insertTrainingLogs, lastStatus, updateTrainingLogs;
+        var date, getLastStatus, insertTrainingLogs, lastStatus, updateTrainingLogs;
         getLastStatus = function() {
           var failure, lastStatus, runQ, success;
           lastStatus = {
@@ -314,13 +314,13 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           };
           failure = function(d) {
             return function(tx, error) {
-              return d.reject('ERROR: ' + error);
+              return d.reject(error);
             };
           };
           return $.when(runQ()).done(function() {
             return console.log('getLastStatus transaction completed');
           }).fail(function(error) {
-            return console.log('ERROR: ' + error);
+            return console.log('ERROR: ' + error.message);
           });
         };
         insertTrainingLogs = function(date, status) {
@@ -341,8 +341,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return console.log('Success: Updated record in wp_training_logs');
           });
         };
-        d = new Date();
-        date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        date = _.getCurrentDate();
         if (current_status === 'completed' || current_status === 'scheduled') {
           if (current_status === 'scheduled') {
             date = training_date;

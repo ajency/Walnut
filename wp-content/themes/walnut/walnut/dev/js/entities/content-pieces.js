@@ -197,13 +197,13 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onFailure = function(d) {
           return function(tx, error) {
-            return d.reject('ERROR: ' + error);
+            return d.reject(error);
           };
         };
         return $.when(runQuery()).done(function(d) {
           return console.log('Content piece transaction completed');
         }).fail(function(error) {
-          return console.log('ERROR: ' + error);
+          return console.log('ERROR: ' + error.message);
         });
       }
     };

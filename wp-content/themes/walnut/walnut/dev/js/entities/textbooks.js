@@ -133,13 +133,13 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         onFailure = function(d) {
           return function(tx, error) {
-            return d.reject('ERROR: ' + error);
+            return d.reject(error);
           };
         };
         return $.when(runQuery()).done(function(data) {
           return console.log('getAllTextbooks transaction completed');
         }).fail(function(error) {
-          return console.log('ERROR: ' + error);
+          return console.log('ERROR: ' + error.message);
         });
       },
       getTextbooksByIDFromLocal: function(class_id) {
@@ -225,11 +225,11 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         deferredErrorHandler = function(d) {
           return function(tx, error) {
-            return d.reject('ERROR: ' + error);
+            return d.reject(error);
           };
         };
         failureHandler = function(error) {
-          return console.log('ERROR: ' + error);
+          return console.log('ERROR: ' + error.message);
         };
         return $.when(runMainQuery()).done(function(data) {
           return console.log('getTextbooksByID transaction completed');

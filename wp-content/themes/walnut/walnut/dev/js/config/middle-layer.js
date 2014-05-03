@@ -42,7 +42,7 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
         }
     }
   };
-  return _.getUserRole = function(username) {
+  _.getUserRole = function(username) {
     var onFailure, onSuccess, role, runQuery;
     role = '';
     runQuery = function() {
@@ -68,13 +68,19 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
     };
     onFailure = function(d) {
       return function(tx, error) {
-        return d.reject('OnFailure!: ' + error);
+        return d.reject(error);
       };
     };
     return $.when(runQuery()).done(function() {
       return console.log('getUserRole transaction completed');
-    }).fail(function(err) {
-      return console.log('Error: ' + err);
+    }).fail(function(error) {
+      return console.log('ERROR: ' + error.message);
     });
+  };
+  return _.getCurrentDate = function() {
+    var d, date;
+    d = new Date();
+    date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+    return date;
   };
 });

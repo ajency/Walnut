@@ -105,12 +105,12 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					onFailure =(d)->
 						(tx,error)->
-							d.reject 'ERROR: '+error
+							d.reject(error)
 
 					$.when(runQuery()).done (data)->
 						console.log 'getAllTextbooks transaction completed'
 					.fail (error)->
-						console.log 'ERROR: '+error
+						console.log 'ERROR: '+error.message
 
 
 				# get textbooks by class id from local database
@@ -188,10 +188,10 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					#Error handlers
 					deferredErrorHandler =(d)->
 						(tx, error)->
-							d.reject 'ERROR: '+error
+							d.reject(error)
 
 					failureHandler = (error)->
-						console.log 'ERROR: '+error
+						console.log 'ERROR: '+error.message
 					
 					$.when(runMainQuery()).done (data)->
 						console.log 'getTextbooksByID transaction completed'

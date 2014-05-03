@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
+define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) {
   return App.module("Entities.QuestionResponse", function(QuestionResponse, App, Backbone, Marionette, $, _) {
     var API, QuestionResponseCollection, QuestionResponseModel;
     QuestionResponseModel = (function(_super) {
@@ -76,7 +76,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         runQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_35_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), onFailure(d));
+              return tx.executeSql("SELECT * FROM wp_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), onFailure(d));
             });
           });
         };
@@ -110,14 +110,51 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         onFailure = function(d) {
           return function(tx, error) {
-            return d.reject('ERROR: ' + error);
+            return d.reject(error);
           };
         };
         return $.when(runQuery()).done(function(data) {
           return console.log('getQuestionResponseFromLocal transaction completed');
         }).fail(function(error) {
-          return console.log('ERROR: ' + error);
+          return console.log('ERROR: ' + error.message);
         });
+      },
+      saveQuestionResponseLocal: function(p) {
+        var insertData, insertQuestionResponse, updateQuestionResponse;
+        insertQuestionResponse = function(data) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("INSERT INTO wp_question_response (content_piece_id, collection_id, division, date_created, date_modified, total_time, question_response, time_started, time_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [data.content_piece_id, data.collection_id, data.division, data.date_created, data.date_modified, data.total_time, data.question_response, data.time_started, data.time_completed]);
+          }, function(tx, error) {
+            return console.log('ERROR: ' + error.message);
+          }, function(tx) {
+            return console.log('Success: Inserted new record in wp_question_response');
+          });
+        };
+        updateQuestionResponse = function() {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("UPDATE wp_question_response SET status=? WHERE id=?", [status, id]);
+          }, function(tx, error) {
+            return console.log('ERROR: ' + error.message);
+          }, function(tx) {
+            return console.log('Success: Updated record in wp_question_response');
+          });
+        };
+        if (typeof p.id === 'undefined') {
+          insertData = {
+            collection_id: p.collection_id,
+            content_piece_id: p.content_piece_id,
+            division: p.division,
+            date_created: _.getCurrentDate(),
+            date_modified: _.getCurrentDate(),
+            total_time: 0,
+            question_response: serialize(p.question_response),
+            time_started: '',
+            time_completed: ''
+          };
+          return insertQuestionResponse(insertData);
+        } else {
+          return console.log('ID: ' + p.id);
+        }
       }
     };
     App.reqres.setHandler("get:question:response:collection", function(params) {
@@ -126,8 +163,11 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     App.reqres.setHandler("save:question:response", function(qID) {
       return API.saveQuestionResponse(qID);
     });
-    return App.reqres.setHandler("get:question-response:local", function(collection_id, division) {
+    App.reqres.setHandler("get:question-response:local", function(collection_id, division) {
       return API.getQuestionResponseFromLocal(collection_id, division);
+    });
+    return App.reqres.setHandler("save:question-response:local", function(params) {
+      return API.saveQuestionResponseLocal(params);
     });
   });
 });

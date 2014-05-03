@@ -119,12 +119,12 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				
 			onFailure = (d)->
 				(tx, error)->
-					d.reject 'ERROR: '+error
+					d.reject(error)
 
 			$.when(runQuery()).done (data)->
 				console.log 'isExistingUser transaction completed'
 			.fail (error)->
-				console.log 'ERROR: '+error	
+				console.log 'ERROR: '+error.message
 
 
 		
@@ -133,7 +133,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES (?, ?, "")', [@data.txtusername, @data.txtpassword])
 
 			,(tx, error)->
-				console.log 'ERROR: '+error 
+				console.log 'ERROR: '+error.message 
 			,(tx)->
 				console.log 'Success: Inserted new user'
 			)
@@ -145,7 +145,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				tx.executeSql("UPDATE USERS SET password=? where username=?", [@data.txtpassword, @data.txtusername])
 
 			,(tx, error)->
-				console.log 'ERROR: '+error 
+				console.log 'ERROR: '+error.message 
 			,(tx)->
 				console.log 'Success: Updated user password'
 			)

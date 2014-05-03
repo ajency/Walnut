@@ -15,6 +15,7 @@ define ["backbone"], (Backbone) ->
 
 			collection_name = collection.name
 			console.log 'Collection name: '+collection_name
+			opts = options.data
 
 			if collection_name is 'textbooks'
 				if typeof options.data.class_id is 'undefined'
@@ -24,7 +25,7 @@ define ["backbone"], (Backbone) ->
 						collection.set d
 				else
 					#Get textbooks by class_id	
-					data = App.reqres.request "get:#{collection_name}:by:id:local", options.data.class_id
+					data = App.reqres.request "get:#{collection_name}:by:id:local", opts.class_id
 					data.done (d)->
 						collection.set d
 				
@@ -33,7 +34,7 @@ define ["backbone"], (Backbone) ->
 				console.log 'Menu items local'
 
 			if collection_name is 'chapter'
-				data = App.reqres.request "get:#{collection_name}:local", options.data.parent 
+				data = App.reqres.request "get:#{collection_name}:local", opts.parent 
 				data.done (d)->
 					collection.set d
 
@@ -43,24 +44,22 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'content-group'
-				data = App.reqres.request "get:#{collection_name}:by:id:local", options.data.textbook, options.data.division
+				data = App.reqres.request "get:#{collection_name}:by:id:local", opts.textbook, opts.division
 				data.done (d)->
 					collection.set d
 
 			if collection_name is 'content-piece'
-				data = App.reqres.request "get:#{collection_name}:local", options.data.ids 
+				data = App.reqres.request "get:#{collection_name}:local", opts.ids 
 				data.done (d)->
 					collection.set d
 
 			if collection_name is 'user'
-				data = App.reqres.request "get:#{collection_name}:local:by:division", options.data.division
+				data = App.reqres.request "get:#{collection_name}:local:by:division", opts.division
 				data.done (d)->
 					collection.set d
-					console.log 'user data'
-					console.log d
 
 			if collection_name is 'question-response'
-				data = App.reqres.request "get:#{collection_name}:local", options.data.collection_id, options.data.division
+				data = App.reqres.request "get:#{collection_name}:local", opts.collection_id, opts.division
 				data.done (d)->
 					collection.set d
 					console.log 'question-response data'
@@ -186,6 +185,8 @@ define ["backbone"], (Backbone) ->
 				#Changes needed for offline data retrieval
 				modelname = model.name
 				console.log 'Model name: '+modelname
+				console.log 'Model data'
+				console.log model
 
 				if modelname is 'content-group'
 					attr = model.attributes
@@ -195,10 +196,8 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'schools' #Not yet implemented
 					console.log 'Schools local'
 
-				if modelname is 'content-piece'
-					console.log 'Content piece local'
-					console.log 'Model'
-					console.log model
+				if modelname is 'question-response'
+					data = App.reqres.request "save:#{modelname}:local", model.attributes
 
 			
 			# trigger the request event of the model
@@ -209,7 +208,6 @@ define ["backbone"], (Backbone) ->
 
 			# return the xhr object. this is a jquery deffered object
 			xhr
-
 			
 
 		

@@ -72,12 +72,20 @@ define ['detect','jquery', 'underscore'], (detect, $, _)->
           
         onFailure = (d)->
           (tx,error)->
-            d.reject('OnFailure!: '+error)
+            d.reject(error)
 
         $.when(runQuery()).done ->
           console.log 'getUserRole transaction completed'
-        .fail (err)->
-          console.log 'Error: '+err 
+        .fail (error)->
+          console.log 'ERROR: '+error.message 
+
+
+      #function to get current date
+      _.getCurrentDate =->
+        d = new Date()
+        date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()
+        date
+
 
 
           

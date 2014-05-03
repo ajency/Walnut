@@ -1,4 +1,4 @@
-define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
 
 		App.module "Entities.QuestionResponse", (QuestionResponse, App, Backbone, Marionette, $, _)->
 			
@@ -57,7 +57,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
-								tx.executeSql("SELECT * FROM wp_35_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), onFailure(d));
+								tx.executeSql("SELECT * FROM wp_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), onFailure(d));
 					
 					onSuccess =(d)->
 						(tx,data)->
@@ -86,12 +86,57 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					onFailure =(d)->
 						(tx,error)->
-							d.reject 'ERROR: '+error
+							d.reject(error)
 
 					$.when(runQuery()).done (data)->
 						console.log 'getQuestionResponseFromLocal transaction completed'
 					.fail (error)->
-						console.log 'ERROR: '+error	
+						console.log 'ERROR: '+error.message
+
+				
+				saveQuestionResponseLocal:(p)->
+					#function to insert record in wp_question_response
+					insertQuestionResponse =(data)->
+						_.db.transaction( (tx)->
+							tx.executeSql("INSERT INTO wp_question_response (content_piece_id, collection_id, division, date_created, date_modified, total_time, question_response, time_started, time_completed) 
+								VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [data.content_piece_id, data.collection_id, data.division, data.date_created, data.date_modified, data.total_time, data.question_response, data.time_started, data.time_completed])
+							
+						,(tx, error)->
+							console.log 'ERROR: '+error.message
+						,(tx)->
+							console.log 'Success: Inserted new record in wp_question_response'
+						)
+
+
+					#function to update record in wp_question_response
+					updateQuestionResponse =->
+						_.db.transaction( (tx)->
+							tx.executeSql("UPDATE wp_question_response SET status=? WHERE id=?", [status, id])
+							
+						,(tx, error)->
+							console.log 'ERROR: '+error.message
+						,(tx)->
+							console.log 'Success: Updated record in wp_question_response'
+						)
+
+					if typeof p.id is 'undefined'
+						insertData =
+							collection_id: p.collection_id
+							content_piece_id: p.content_piece_id
+							division: p.division
+							date_created: _.getCurrentDate()
+							date_modified: _.getCurrentDate()
+							total_time: 0
+							question_response: serialize(p.question_response)
+							time_started: ''
+							time_completed: ''
+						
+						insertQuestionResponse(insertData)	
+
+					else 
+						console.log 'ID: '+p.id		
+
+							
 
 
 			# request handler to get all responses
@@ -103,5 +148,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 			# request handler to get all responses from local database
 			App.reqres.setHandler "get:question-response:local", (collection_id, division)->
-				API.getQuestionResponseFromLocal collection_id, division	
+				API.getQuestionResponseFromLocal collection_id, division
+
+			App.reqres.setHandler "save:question-response:local", (params)->
+				API.saveQuestionResponseLocal params		
 

@@ -7,9 +7,10 @@ define(["backbone"], function(Backbone) {
   };
   _.extend(Backbone.Collection.prototype, {
     sync: function(method, collection, options) {
-      var collection_name, data;
+      var collection_name, data, opts;
       collection_name = collection.name;
       console.log('Collection name: ' + collection_name);
+      opts = options.data;
       if (collection_name === 'textbooks') {
         if (typeof options.data.class_id === 'undefined') {
           data = App.reqres.request("get:" + collection_name + ":local");
@@ -17,7 +18,7 @@ define(["backbone"], function(Backbone) {
             return collection.set(d);
           });
         } else {
-          data = App.reqres.request("get:" + collection_name + ":by:id:local", options.data.class_id);
+          data = App.reqres.request("get:" + collection_name + ":by:id:local", opts.class_id);
           data.done(function(d) {
             return collection.set(d);
           });
@@ -27,7 +28,7 @@ define(["backbone"], function(Backbone) {
         console.log('Menu items local');
       }
       if (collection_name === 'chapter') {
-        data = App.reqres.request("get:" + collection_name + ":local", options.data.parent);
+        data = App.reqres.request("get:" + collection_name + ":local", opts.parent);
         data.done(function(d) {
           return collection.set(d);
         });
@@ -39,27 +40,25 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'content-group') {
-        data = App.reqres.request("get:" + collection_name + ":by:id:local", options.data.textbook, options.data.division);
+        data = App.reqres.request("get:" + collection_name + ":by:id:local", opts.textbook, opts.division);
         data.done(function(d) {
           return collection.set(d);
         });
       }
       if (collection_name === 'content-piece') {
-        data = App.reqres.request("get:" + collection_name + ":local", options.data.ids);
+        data = App.reqres.request("get:" + collection_name + ":local", opts.ids);
         data.done(function(d) {
           return collection.set(d);
         });
       }
       if (collection_name === 'user') {
-        data = App.reqres.request("get:" + collection_name + ":local:by:division", options.data.division);
+        data = App.reqres.request("get:" + collection_name + ":local:by:division", opts.division);
         data.done(function(d) {
-          collection.set(d);
-          console.log('user data');
-          return console.log(d);
+          return collection.set(d);
         });
       }
       if (collection_name === 'question-response') {
-        data = App.reqres.request("get:" + collection_name + ":local", options.data.collection_id, options.data.division);
+        data = App.reqres.request("get:" + collection_name + ":local", opts.collection_id, opts.division);
         data.done(function(d) {
           collection.set(d);
           console.log('question-response data');
@@ -119,6 +118,8 @@ define(["backbone"], function(Backbone) {
       } else {
         modelname = model.name;
         console.log('Model name: ' + modelname);
+        console.log('Model data');
+        console.log(model);
         if (modelname === 'content-group') {
           attr = model.attributes;
           data = App.reqres.request("save:update:" + modelname + ":local", attr.division, attr.id, 1, attr.training_date, attr.status);
@@ -126,10 +127,8 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'schools') {
           console.log('Schools local');
         }
-        if (modelname === 'content-piece') {
-          console.log('Content piece local');
-          console.log('Model');
-          console.log(model);
+        if (modelname === 'question-response') {
+          data = App.reqres.request("save:" + modelname + ":local", model.attributes);
         }
       }
       model.trigger("request", model, xhr, options);

@@ -146,13 +146,13 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       };
       onFailure = function(d) {
         return function(tx, error) {
-          return d.reject('ERROR: ' + error);
+          return d.reject(error);
         };
       };
       return $.when(runQuery()).done(function(data) {
         return console.log('isExistingUser transaction completed');
       }).fail(function(error) {
-        return console.log('ERROR: ' + error);
+        return console.log('ERROR: ' + error.message);
       });
     };
 
@@ -162,7 +162,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           return tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES (?, ?, "")', [_this.data.txtusername, _this.data.txtpassword]);
         };
       })(this), function(tx, error) {
-        return console.log('ERROR: ' + error);
+        return console.log('ERROR: ' + error.message);
       }, function(tx) {
         return console.log('Success: Inserted new user');
       });
@@ -174,7 +174,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           return tx.executeSql("UPDATE USERS SET password=? where username=?", [_this.data.txtpassword, _this.data.txtusername]);
         };
       })(this), function(tx, error) {
-        return console.log('ERROR: ' + error);
+        return console.log('ERROR: ' + error.message);
       }, function(tx) {
         return console.log('Success: Updated user password');
       });

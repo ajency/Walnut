@@ -33,7 +33,8 @@ require.config({
     timepicker: 'plugins/bootstrap-timepicker.min',
     jquerytimer: 'plugins/timer.jquery',
     jquery_listnav: 'plugins/jquery-listnav',
-    video: 'plugins/video'
+    video: 'plugins/video',
+    serialize: 'plugins/serialize'
   },
   shim: {
     underscore: {

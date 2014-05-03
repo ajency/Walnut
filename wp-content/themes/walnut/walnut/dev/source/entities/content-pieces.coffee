@@ -146,12 +146,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onFailure =(d)->
 						(tx,error)->
-							d.reject 'ERROR: '+error
+							d.reject(error)
 
 					$.when(runQuery()).done (d)->
 						console.log 'Content piece transaction completed'
 					.fail (error)->
-						console.log 'ERROR: '+error
+						console.log 'ERROR: '+error.message
 
 							
 						
