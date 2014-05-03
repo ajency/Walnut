@@ -7,7 +7,7 @@ define ['app'
 		class ChorusOptionsController extends RegionController
 
 			initialize : (opts)->
-				{@questionResponseModel} = opts
+				{@questionResponseModel,@display_mode} = opts
 				
 				@view= view = @_showChorusOptionsView @questionResponseModel
 
@@ -17,14 +17,17 @@ define ['app'
 
 				@listenTo view, "question:completed", @_changeQuestion
 
-			_changeQuestion:=>
+			_changeQuestion:(resp)=>
+				
+				@_saveQuestionResponse '' if resp is 'no_answer'
 
-				@region.trigger "goto:next:question"	
+				@region.trigger "goto:next:question", @questionResponseModel.get 'content_piece_id'	
 
 			_showChorusOptionsView : (model)=>
 				new ChorusOptionsView 
 					model 				: model
 					responsePercentage 	: @questionResponseModel.get 'question_response'
+					display_mode 		: @display_mode
 
 			_saveQuestionResponse:(studResponse)=>
 				@questionResponseModel.set 
@@ -41,7 +44,7 @@ define ['app'
 
 			events:
 				'click .tiles.single'	: 'selectStudent'
-				'click #question-done' 	: (e)-> @trigger "question:completed"
+				'click #question-done' 	: 'questionCompleted'
 
 			onShow:->
 				responsePercentage = Marionette.getOption @, 'responsePercentage'
@@ -65,6 +68,14 @@ define ['app'
 
 				@trigger "save:question:response", dataValue
 
+			questionCompleted:=>
+				selectedAnswer = @$el.find '.tiles.single .green' 
+				
+				if (_.size(selectedAnswer) is 0) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
+					if confirm 'Are you sure no one answered correctly?'
+					    @trigger "question:completed", "no_answer"
+				else 
+					@trigger "question:completed"
 
 		# set handlers
 		App.commands.setHandler "show:single:question:chorus:options:app", (opt = {})->

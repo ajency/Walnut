@@ -27,6 +27,10 @@ define ['app'
 
 				@listenTo @layout.collectionDetailsRegion, 'start:teaching:module', @startTeachingModule
 
+				@listenTo @layout.contentDisplayRegion , 'goto:question:readonly', (questionID)=>
+					App.navigate App.getCurrentRoute()+'/question'
+					@gotoTrainingModule questionID, 'readonly'
+
 
 			startTeachingModule:=>
 
@@ -34,13 +38,18 @@ define ['app'
 				content_pieces 	 = @model.get 'content_pieces'
 				nextQuestion  		 = _.first _.difference content_pieces, responseQuestionIDs
 
+				@gotoTrainingModule nextQuestion, 'class_mode'
+
+			gotoTrainingModule:(question, display_mode)=>
 				App.execute "start:teacher:teaching:app", 
-					region 		: App.mainContentRegion
-					division	: @division
-					contentPiece	: @groupContentCollection.get nextQuestion
+					region 						: App.mainContentRegion
+					division					: @division
+					contentPiece				: @groupContentCollection.get question
 					questionResponseCollection 	: @questionResponseCollection
-					contentGroupModel 	: @model 
-					questionsCollection 	: @groupContentCollection
+					contentGroupModel 			: @model 
+					questionsCollection 		: @groupContentCollection
+					display_mode 				: display_mode # when display mode is readonly, the save response options are not shown
+															   # only when display mode is class_mode response changes can be done
 
 
 
@@ -48,16 +57,17 @@ define ['app'
 			showContentGroupViews:=>
 				App.execute "when:fetched", @model, =>
 					App.execute "show:viewgroup:content:group:detailsapp", 
-						region : @layout.collectionDetailsRegion
-						model  : @model
-						module_name : @module_name
+						region 						: @layout.collectionDetailsRegion
+						model  						: @model
+						module_name 				: @module_name
+						questionResponseCollection 	: @questionResponseCollection
 
 					if _.size(@model.get('content_pieces'))>0
 						App.execute "show:viewgroup:content:displayapp",
-							region : @layout.contentDisplayRegion
-							model: @model
-							questionResponseCollection : @questionResponseCollection
-							groupContentCollection 	: @groupContentCollection
+							region 						: @layout.contentDisplayRegion
+							model 						: @model
+							questionResponseCollection 	: @questionResponseCollection
+							groupContentCollection 		: @groupContentCollection
 
 			_getContentGroupViewLayout : =>
 				new ContentGroupViewLayout

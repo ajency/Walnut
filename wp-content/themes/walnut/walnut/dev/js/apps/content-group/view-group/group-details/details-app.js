@@ -16,10 +16,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
-        this.model = opts.model;
+        this.model = opts.model, this.module_name = opts.module_name, this.questionResponseCollection = opts.questionResponseCollection;
         this.startTime = '';
         this.endTime = '';
-        this.module_name = opts.module_name;
         this.view = view = this._getCollectionDetailsView(this.model);
         this.show(view, {
           loading: true
@@ -45,6 +44,19 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
             getTextbookName: (function(_this) {
               return function() {
                 return _this.textbookName;
+              };
+            })(this),
+            startScheduleButton: (function(_this) {
+              return function() {
+                var actionButtons, allContentPieces, answeredPieces, unanswered;
+                actionButtons = '';
+                allContentPieces = _this.model.get('content_pieces');
+                answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
+                unanswered = _.difference(allContentPieces, answeredPieces);
+                if (_.size(unanswered) > 0) {
+                  actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button> <button type="button" class="btn btn-white btn-small pull-right m-t-10 m-r-10" data-toggle="modal" data-target="#schedule"> <i class="fa fa-calendar"></i> Schedule </button>';
+                }
+                return actionButtons;
               };
             })(this)
           }
@@ -97,6 +109,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       };
 
       CollectionDetailsView.prototype.startModule = function() {
+        var currentRoute;
+        currentRoute = App.getCurrentRoute();
+        App.navigate(currentRoute + "/question");
         this.model.trigger("start:module");
         return this.trigger("start:teaching:module");
       };
