@@ -187,6 +187,8 @@ define ["backbone"], (Backbone) ->
 				console.log 'Model name: '+modelname
 				console.log 'Model data'
 				console.log model
+				console.log 'Model options'
+				console.log options
 
 				if modelname is 'content-group'
 					attr = model.attributes

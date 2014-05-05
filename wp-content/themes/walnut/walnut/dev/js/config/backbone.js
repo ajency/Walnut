@@ -120,6 +120,8 @@ define(["backbone"], function(Backbone) {
         console.log('Model name: ' + modelname);
         console.log('Model data');
         console.log(model);
+        console.log('Model options');
+        console.log(options);
         if (modelname === 'content-group') {
           attr = model.attributes;
           data = App.reqres.request("save:update:" + modelname + ":local", attr.division, attr.id, 1, attr.training_date, attr.status);
