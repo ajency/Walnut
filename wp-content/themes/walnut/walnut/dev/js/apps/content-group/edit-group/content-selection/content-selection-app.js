@@ -15,11 +15,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       }
 
       ContentSelectionController.prototype.initialize = function(opts) {
-        var model, tableConfig, view;
+        var tableConfig, view;
         this.textbooksCollection = App.request("get:textbooks");
         this.contentPiecesCollection = App.request("get:content:pieces");
-        model = opts.model;
-        this.contentGroupCollection = App.request("get:content:pieces:of:group", model.get('id'));
+        this.model = opts.model;
+        this.contentGroupCollection = App.request("get:content:pieces:of:group", this.model);
         tableConfig = {
           'data': [
             {
@@ -83,12 +83,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           "add:content:pieces": (function(_this) {
             return function(contentIDs) {
               var groupContent;
-              groupContent = App.request("get:content:pieces:of:group", model.get('id'));
-              console.log(groupContent);
-              console.log(contentIDs);
+              groupContent = App.request("get:content:pieces:of:group", _this.model);
               return _.each(contentIDs, function(ele, index) {
-                groupContent.add(_this.contentPiecesCollection.get(ele));
-                return console.log(_this.contentPiecesCollection.get(ele));
+                return groupContent.add(_this.contentPiecesCollection.get(ele));
               });
             };
           })(this)

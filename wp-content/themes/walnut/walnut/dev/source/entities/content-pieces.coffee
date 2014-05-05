@@ -44,6 +44,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					@trigger "content:pieces:of:group:added", model
 
 			
+			contentPiecesOfGroup = new ContentPiece.GroupItemCollection
 
 			# API 
 			API = 
@@ -56,26 +57,23 @@ define ["app", 'backbone'], (App, Backbone) ->
 					contentPieceCollection
 
 				# get all content pieces belonging to particular group
-				getContentPiecesOfGroup:(groupid = '')->
-					if groupid
-						contentPiecesOfGroup = new ContentPiece.GroupItemCollection
-						contentGroup= App.request "get:content:group:by:id", groupid
-						
-						App.execute "when:fetched", contentGroup, =>
-							contentIDs = contentGroup.get('content_pieces')
-							
-							for contentID in contentIDs
-								contentModel = contentPieceCollection.get contentID
+				getContentPiecesOfGroup:(groupModel)->
 
-								if not contentModel
-									contentModel = new ContentPiece.ItemModel 'ID' : contentID
-									contentModel.fetch()
+					contentIDs=  groupModel.get('content_pieces')
 
-								contentPiecesOfGroup.add contentModel
-					
-							contentPiecesOfGroup
+					if contentIDs
+						for contentID in contentIDs
+							contentModel = contentPieceCollection.get contentID
+
+							if not contentModel
+								contentModel = new ContentPiece.ItemModel 'ID' : contentID
+								contentModel.fetch()
+
+							contentPiecesOfGroup.add contentModel
 
 					contentPiecesOfGroup
+
+					
 
 				getContentPieceByID:(id)->
 					contentPiece = contentPieceCollection.get id
@@ -99,8 +97,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
 			# request handler to get all ContentPieces
-			App.reqres.setHandler "get:content:pieces:of:group", (groupid) ->
-				API.getContentPiecesOfGroup(groupid)
+			App.reqres.setHandler "get:content:pieces:of:group", (groupModel) ->
+				API.getContentPiecesOfGroup(groupModel)
 
 			App.reqres.setHandler "get:content:piece:by:id", (id)->
 				API.getContentPieceByID id
