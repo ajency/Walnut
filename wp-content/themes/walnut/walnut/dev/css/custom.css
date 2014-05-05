@@ -1000,6 +1000,84 @@ p.mcq-option-text {
   text-align: right;
   padding-top: 8px;
 }
+.sort-option {
+  border: 2px solid #f3f3f3;
+  padding: 5px;
+  margin: 5px;
+  box-sizing: border-box;
+  transition-property: transform, top, left;
+}
+.sort-option.ui-sortable-placeholder {
+  visibility: visible!important;
+  background: #f3f3f3;
+}
+.sort-option.ui-sortable-placeholder.active {
+  box-shadow: inset 0 0 200px #f3f3f3;
+}
+.sort-option.ui-sortable-placeholder.starting {
+  transition-property: none;
+}
+.sort-option.grabbing {
+  transform: rotate(3deg);
+}
+.sort-option.moving {
+  box-shadow: #f3f3f3 0 0 5px 2px !important;
+}
+.sort-option.ansWrong {
+  opacity: 0.3;
+  background: url(../../../images/answer-wrong.png) no-repeat right center;
+  border: none;
+  border-bottom: 2px solid #f35958;
+  background-size: 25px;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.sort-option.ansRight {
+  background: url(../../../images/answer-right.png) no-repeat right center;
+  border: none;
+  border-bottom: 2px solid #0dd6c5;
+  background-size: 35px;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+.sort-option p {
+  margin: 0;
+  word-break: break-word;
+  overflow: hidden;
+  font-size: 22px;
+}
+.sort-option p:focus {
+  outline: none;
+  border-bottom: 2px dashed #f3f3f3;
+}
+.ui-state-highlight {
+  background: #f3f3f3;
+  height: 50px !important;
+}
+/*Preview*/
+#content-board .sort-option .number {
+  display: none;
+}
 .hashtags {
   font-size: 13px;
 }
