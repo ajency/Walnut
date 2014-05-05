@@ -20,14 +20,7 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
       TextbooksItemView.prototype.onShow = function() {
         this.$el.attr('data-name', this.model.get('name'));
         this.$el.attr('data-modules', this.model.get('modules_count'));
-        this.$el.attr('data-subjects', this.model.get('subjects'));
-        return $('#textbooks').mixitup({
-          layoutMode: 'list',
-          listClass: 'list',
-          gridClass: 'grid',
-          effects: ['fade', 'blur'],
-          listEffects: ['fade', 'rotateX']
-        });
+        return this.$el.attr('data-subjects', this.model.get('subjects'));
       };
 
       TextbooksItemView.prototype.serializeData = function() {
@@ -86,6 +79,13 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
       TextbooksListView.prototype.itemViewContainer = 'ul.textbooks_list';
 
       TextbooksListView.prototype.onShow = function() {
+        this.$el.find('#textbooks').mixitup({
+          layoutMode: 'list',
+          listClass: 'list',
+          gridClass: 'grid',
+          effects: ['fade', 'blur'],
+          listEffects: ['fade', 'rotateX']
+        });
         return this.dimensions = {
           status: 'all'
         };

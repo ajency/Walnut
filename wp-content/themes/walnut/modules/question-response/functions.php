@@ -9,7 +9,7 @@ function update_question_response($data){
     $insertdata= array(
         'collection_id'         => $data['collection_id'],
         'content_piece_id'      => $data['content_piece_id'],
-        'division'              => 3,
+        'division'              => $data['division'],
         'date_created'          => date('Ymd'),
         'date_modified'         => date('Ymd'),
         'total_time'            => 0,

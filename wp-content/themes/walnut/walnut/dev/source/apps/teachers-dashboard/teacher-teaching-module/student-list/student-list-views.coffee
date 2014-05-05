@@ -43,7 +43,13 @@ define ['app'],(App)->
 				
 			template : '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
 							<button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm">
-								<i class="fa fa-check"></i> Done 
+								<i class="fa fa-forward"></i> Next Question 
+							</button>
+						</div>
+						{{#class_mode}}
+						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
+							<button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm">
+								<i class="fa fa-pause"></i> Pause
 							</button>
 						</div>
 						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20">
@@ -54,6 +60,7 @@ define ['app'],(App)->
 								<i class="fa fa-minus-circle"></i> Unselect Answer
 							</button>
 						</div>
+						{{/class_mode}}
 						<div class="clearfix"></div>
 						<div class="row students m-t-20" id="students-list"></div>'
 
@@ -64,12 +71,23 @@ define ['app'],(App)->
 			emptyView: StudentsEmptyView
 
 			events:
-				'click .tiles.single'	: 'selectStudent'
+				'click .tiles.single.selectable'	: 'selectStudent'
 				'click #right-answer'	: 'addToCorrectList'
 				'click #wrong-answer'	: 'removeFromCorrectList'
-				'click #question-done' 	: (e)-> @trigger "question:completed"
+				'click #question-done' 	: 'questionCompleted'
+				'click #pause-session'	:-> @trigger "goto:previous:route"
+
+			serializeData:->
+				data = super()
+				if Marionette.getOption(@, 'display_mode') is 'class_mode'
+					data.class_mode = true
+
+				data 
 
 			onShow:->
+				if Marionette.getOption(@, 'display_mode') is 'class_mode'
+					$(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
+
 				$ ".students" 
 				.listnav
 				    #filterSelector: '.last-name'
@@ -99,7 +117,7 @@ define ['app'],(App)->
 				@correctAnswers= _.uniq @correctAnswers
 				@trigger "save:question:response", @correctAnswers
 
-			markAsCorrectAnswer:(student)=>
+			markAsCorrectAnswer:(student)->
 				$(student).removeClass 'selected'
 				.find '.default'
 				.removeClass 'default'
@@ -121,5 +139,13 @@ define ['app'],(App)->
 					.removeClass 'fa-check-circle'
 					.addClass 'fa-minus-circle'
 				
-
 				@trigger "save:question:response", @correctAnswers
+
+			questionCompleted:->
+				if (_.size(@correctAnswers) < 1) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
+					if confirm 'Are you sure no one answered correctly?'
+					    @trigger "question:completed", "no_answer"
+				else 
+					@trigger "question:completed"
+
+

@@ -45,6 +45,7 @@ function setup_childsite_roles(){
             $wp_roles->add_role($role, $role_name, $role_cloned->capabilities);
          }
     add_role( 'student','Student');
+    add_role( 'teacher','Teacher');
     add_role( 'parent','Parent');
     
     echo '<br>school-admin, Student, Parent roles created.';
@@ -79,7 +80,7 @@ function setup_childsite_tables(){
     
     $class_divisions_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}class_divisions 
              (`id` INT NOT NULL AUTO_INCREMENT, 
-             `divisions` INT NOT NULL, 
+             `division` varchar(255) NOT NULL, 
              `class_id` INT NOT NULL, 
              PRIMARY KEY (`id`))";
 

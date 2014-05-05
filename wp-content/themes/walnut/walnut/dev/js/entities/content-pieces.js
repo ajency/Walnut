@@ -4,7 +4,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentPiece", function(ContentPiece, App, Backbone, Marionette, $, _) {
-    var API, contentPieceCollection;
+    var API, contentPieceCollection, contentPiecesOfGroup;
     ContentPiece.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -15,7 +15,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       ItemModel.prototype.idAttribute = 'ID';
 
       ItemModel.prototype.defaults = {
-        ID: '',
+        ID: 0,
         post_title: '',
         creator: '',
         post_modified: '',
@@ -76,6 +76,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       return GroupItemCollection;
 
     })(Backbone.Collection);
+    contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
     API = {
       getContentPieces: function(param) {
         if (param == null) {
@@ -87,32 +88,21 @@ define(["app", 'backbone'], function(App, Backbone) {
         });
         return contentPieceCollection;
       },
-      getContentPiecesOfGroup: function(groupid) {
-        var contentGroup, contentPiecesOfGroup;
-        if (groupid == null) {
-          groupid = '';
-        }
-        if (groupid) {
-          contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
-          contentGroup = App.request("get:content:group:by:id", groupid);
-          App.execute("when:fetched", contentGroup, (function(_this) {
-            return function() {
-              var contentID, contentIDs, contentModel, _i, _len;
-              contentIDs = contentGroup.get('content_pieces');
-              for (_i = 0, _len = contentIDs.length; _i < _len; _i++) {
-                contentID = contentIDs[_i];
-                contentModel = contentPieceCollection.get(contentID);
-                if (!contentModel) {
-                  contentModel = new ContentPiece.ItemModel({
-                    'ID': contentID
-                  });
-                  contentModel.fetch();
-                }
-                contentPiecesOfGroup.add(contentModel);
-              }
-              return contentPiecesOfGroup;
-            };
-          })(this));
+      getContentPiecesOfGroup: function(groupModel) {
+        var contentID, contentIDs, contentModel, _i, _len;
+        contentIDs = groupModel.get('content_pieces');
+        if (contentIDs) {
+          for (_i = 0, _len = contentIDs.length; _i < _len; _i++) {
+            contentID = contentIDs[_i];
+            contentModel = contentPieceCollection.get(contentID);
+            if (!contentModel) {
+              contentModel = new ContentPiece.ItemModel({
+                'ID': contentID
+              });
+              contentModel.fetch();
+            }
+            contentPiecesOfGroup.add(contentModel);
+          }
         }
         return contentPiecesOfGroup;
       },
@@ -146,8 +136,8 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:content:pieces", function(opt) {
       return API.getContentPieces(opt);
     });
-    App.reqres.setHandler("get:content:pieces:of:group", function(groupid) {
-      return API.getContentPiecesOfGroup(groupid);
+    App.reqres.setHandler("get:content:pieces:of:group", function(groupModel) {
+      return API.getContentPiecesOfGroup(groupModel);
     });
     App.reqres.setHandler("get:content:piece:by:id", function(id) {
       return API.getContentPieceByID(id);

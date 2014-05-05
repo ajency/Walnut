@@ -7,7 +7,7 @@ define ['app'
 		class SingleQuestionStudentsController extends RegionController
 
 			initialize : (opts)->
-				{@questionResponseModel,studentCollection} = opts
+				{@questionResponseModel,studentCollection, @display_mode} = opts
 
 				division = @questionResponseModel.get 'division'
 
@@ -16,19 +16,24 @@ define ['app'
 
 				@show view, (loading:true, entities:[studentCollection])
 
-
+				@listenTo @view, "goto:previous:route", => @region.trigger "goto:previous:route"
+				
 				@listenTo view, "save:question:response", @_saveQuestionResponse
 
 				@listenTo view, "question:completed", @_changeQuestion
 
-			_changeQuestion:=>
-				@region.trigger "goto:next:question"	
+			_changeQuestion:(resp)=>
+				
+				@_saveQuestionResponse '' if resp is 'no_answer'
+
+				@region.trigger "goto:next:question", @questionResponseModel.get 'content_piece_id'	
 
 
 			_showStudentsListView :(collection) =>
 				new Students.Views.StudentsList 
 					collection 			: collection
 					correctAnswers 		: @questionResponseModel.get 'question_response'
+					display_mode 		: @display_mode
 
 			_saveQuestionResponse:(studResponse)=>
 				@questionResponseModel.set 

@@ -8,24 +8,27 @@ define ['app'
 
 			initialize : (opts)->
 
-				{@model} = opts
-				{@module} = opts
-				
-				@groupContentCollection= App.request "get:content:pieces:by:ids", @model.get 'content_pieces'
+				{model, @mode, questionResponseCollection} = opts
 
-				App.execute "when:fetched", @groupContentCollection, @showView
+				groupContentCollection= App.request "get:content:pieces:by:ids", model.get 'content_pieces'
+				questionResponseCollection = App.request "get:question:response:collection", 
+													'division' : 3
+													'collection_id' : model.get 'id'
 
-				@listenTo @model, 'training:module:started', @trainingModuleStarted
+				@view= view = @_getCollectionContentDisplayView model, groupContentCollection, questionResponseCollection
+				@show view, (loading:true, entities: [groupContentCollection,questionResponseCollection])
 
-			showView:=>
-				@view= view = @_getCollectionContentDisplayView @model
-				@show view, (loading:true, entities: [@groupContentCollection])
+				@listenTo model, 'training:module:started', @trainingModuleStarted
 
-			_getCollectionContentDisplayView :(model) =>
+				@listenTo @view, 'view:question:readonly', (questionID)=> 
+					@region.trigger 'goto:question:readonly', questionID
+
+			_getCollectionContentDisplayView :(model, collection, responseCollection) =>
 				new ContentDisplayView 
 					model: model
-					collection: @groupContentCollection
-					module: @module
+					collection: collection
+					responseCollection: responseCollection
+					mode: @mode
 
 			trainingModuleStarted:=>
 				@view.triggerMethod "apply:urls"
@@ -51,7 +54,35 @@ define ['app'
 
 			id			: 'myCanvas-miki'
 
-			
+			events:
+				'click .cbp_tmlabel.completed'	: 'viewQuestionReadOnly'
+
+			onShow:->
+				responseCollection= Marionette.getOption @, 'responseCollection'
+				responseQuestionIDs= responseCollection.pluck 'content_piece_id'
+
+				if Marionette.getOption(@, 'mode') is 'training'
+					for question in @$el.find '.contentPiece'
+						$ question
+						.find '.cbp_tmlabel'
+						.addClass 'completed' 
+						.css 'cursor','pointer'
+
+
+				else
+					for question in @$el.find '.contentPiece'
+						if _.contains responseQuestionIDs, $(question).attr 'data-id'
+							$ question
+							.find '.cbp_tmlabel'
+							.addClass 'done completed'
+							.css 'cursor','pointer'
+
+			viewQuestionReadOnly:(e)=>
+				questionID= $ e.target
+							.closest '.contentPiece'
+							.attr 'data-id'
+
+				@trigger "view:question:readonly",questionID
 
 			onApplyUrls:->
 

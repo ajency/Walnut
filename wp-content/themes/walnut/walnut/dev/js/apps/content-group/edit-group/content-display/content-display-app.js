@@ -17,7 +17,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       CollectionEditContentDisplayController.prototype.initialize = function(opts) {
         var view;
         this.model = opts.model;
-        this.groupContentCollection = App.request("get:content:pieces:of:group", this.model.get('id'));
+        this.groupContentCollection = App.request("get:content:pieces:of:group", this.model);
         this.view = view = this._getCollectionContentDisplayView(this.model, this.groupContentCollection);
         this.show(view, {
           loading: true

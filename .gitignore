@@ -487,3 +487,11 @@ wp-content/themes/walnut/walnut/dev/node_modules/grunt-contrib-cssmin/node_modul
 wp-content/themes/walnut/walnut/dev/node_modules/grunt/node_modules/findup-sync/node_modules/glob/test/zz-cleanup.js
 wp-content/themes/walnut/walnut/dev/node_modules/grunt/node_modules/glob/test/zz-cleanup.js
 wp-content/uploads
+.idea/.name
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+.idea/walnut.iml
+.idea/workspace.xml

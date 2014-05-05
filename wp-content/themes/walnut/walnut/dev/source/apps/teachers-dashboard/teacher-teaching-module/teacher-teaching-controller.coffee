@@ -22,27 +22,16 @@ define ['app'
 
 			initialize :(opts)->
 
-				{classID, @division, textbookID,@moduleID, @questionID} = opts
-
-				contentGroupModel = App.request "get:content:group:by:id", @moduleID
+				{@division,@moduleID,contentGroupModel,questionsCollection,questionResponseCollection,contentPiece,@display_mode} = opts
 
 				studentCollection = App.request "get:user:collection", ('role':'student', 'division': @division)
-
-				questionsCollection = App.request "get:content:pieces:of:group", @moduleID
 
 				#initializing empty model incase data doesnt exist
 				questionResponseModel = App.request "save:question:response", ''
 
-				#fetching collection of responses in current module for current division
-				questionResponseCollection = App.request "get:question:response:collection", 
-					'collection_id': @moduleID
-					'division'	: @division
-
 				App.execute "when:fetched",	questionResponseCollection, =>
 					#checking if model exists in collection. if so, replacing the empty model
-					@_getOrCreateModel @questionID
-
-				contentPiece = App.request "get:content:piece:by:id", @questionID
+					@_getOrCreateModel contentPiece.get 'ID'
 				
 				@layout= layout = @_getTakeSingleQuestionLayout()
 
@@ -60,31 +49,49 @@ define ['app'
 
 				@listenTo @layout, "show", @_showModuleDescriptionView
 
-				@listenTo @layout, "show", @_showStudentsListView questionResponseModel
+				@listenTo @layout, "show", @_showStudentsListView questionResponseModel if @display_mode isnt 'training'
 
-				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece		
+				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece	
+
+				@listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoPreviousRoute
+				
+				@listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoPreviousRoute
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
 
-			_changeQuestion:=>
+			_changeQuestion:(current_question_id)=>
+
+				current_question_id = current_question_id.toString()
+
 				contentPieces = contentGroupModel.get 'content_pieces'
-				pieceIndex = _.indexOf(contentPieces, @questionID)
 
-				@questionID= contentPieces[pieceIndex+1]
+				pieceIndex = _.indexOf(contentPieces, current_question_id)
+
+				nextQuestion= contentPieces[pieceIndex+1]
 				
-				if @questionID
-					console.log @questionID
-					contentPiece = questionsCollection.get @questionID
+				if nextQuestion
 
-					questionResponseModel = @_getOrCreateModel @questionID
+					contentPiece = questionsCollection.get nextQuestion
+
+					questionResponseModel = @_getOrCreateModel nextQuestion
 
 					@_showQuestionDisplayView contentPiece
 					
-					@_showStudentsListView questionResponseModel
+					if @display_mode isnt 'training'	
+						@_showStudentsListView questionResponseModel
 
 				else 
-					console.log 'end of questions'
+					@_gotoPreviousRoute()
+
+			_gotoPreviousRoute:->
+				currRoute = App.getCurrentRoute()
+
+				removeStr = _.str.strRightBack currRoute, '/'
+
+				newRoute  = _.str.rtrim currRoute, removeStr+'/'
+
+				App.navigate newRoute, true
 
 
 			_getOrCreateModel:(content_piece_id)=>
@@ -95,8 +102,8 @@ define ['app'
 				if not questionResponseModel
 					questionResponseModel = App.request "save:question:response", ''
 					questionResponseModel.set 
-						'collection_id': @moduleID
-						'content_piece_id': @questionID
+						'collection_id': contentGroupModel.get 'id'
+						'content_piece_id': content_piece_id
 						'division'	: @division
 
 
@@ -115,20 +122,23 @@ define ['app'
 					model 		  	: model
 
 			_showStudentsListView :(questionResponseModel)=>
+
 				App.execute "when:fetched", contentPiece, =>
 
 					question_type = contentPiece.get('question_type')
 
 					if question_type is 'individual'
 						App.execute "show:single:question:student:list:app", 
-							region 			: @layout.studentsListRegion
-							questionResponseModel: questionResponseModel
-							studentCollection: studentCollection
+							region 					: @layout.studentsListRegion
+							questionResponseModel	: questionResponseModel
+							studentCollection		: studentCollection
+							display_mode 	 		: @display_mode
 
 					else if question_type is 'chorus'	
 						App.execute "show:single:question:chorus:options:app",
 							region 			: @layout.studentsListRegion
 							questionResponseModel: questionResponseModel
+							display_mode 	 		: @display_mode
 
 			_getTakeSingleQuestionLayout : ->
 				new SingleQuestionLayout

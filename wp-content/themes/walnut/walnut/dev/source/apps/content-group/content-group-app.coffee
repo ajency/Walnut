@@ -14,6 +14,7 @@ define ['app'
 						'view-group/:id' : 'viewGroup'
 						'list-groups' : 'groupsListing'
 						'teachers/take-class/:classID/:div/textbook/:tID/module/:mID' 	: 'takeClassSingleModule'
+						'teachers/start-training/:classID/textbook/:tID/module/:mID' 	: 'startTrainingSingleModule'
 
 
 				Controller = 
@@ -41,7 +42,26 @@ define ['app'
 											region : App.mainContentRegion
 
 					takeClassSingleModule:(classID,div,tID,mID)->
+						opts= 
+							classID : classID 
+							div 	: div
+							tID 	: tID
+							mID 	: mID
+							mode 	: 'take-class'
+						@gotoTakeSingleQuestionModule opts
+
+					startTrainingSingleModule:(classID,tID,mID)->
+						opts= 
+							classID : classID 
+							tID 	: tID
+							mID 	: mID
+							mode 	: 'training'
+						@gotoTakeSingleQuestionModule opts
+
+					gotoTakeSingleQuestionModule:(opts)->
 						
+						{classID,div,tID,mID,mode}=opts
+
 						@textbook= App.request "get:textbook:by:id",tID 
 						@contentGroupModel = App.request "get:content:group:by:id", mID
 
@@ -61,9 +81,9 @@ define ['app'
 						new ContentGroupApp.View.GroupController
 		 					region 		: App.mainContentRegion
 		 					model 		: @contentGroupModel
-		 					module 		: 'take-class'
+		 					mode		: mode
+		 					division 	: div
 
-	
 				ContentGroupApp.on "start", ->
 					new ContentGroupRouter
 							controller : Controller 

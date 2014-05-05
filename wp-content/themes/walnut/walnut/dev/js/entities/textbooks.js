@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Textbooks", function(Textbooks, App, Backbone, Marionette, $, _) {
-    var API, textbookCollection;
+    var API;
     Textbooks.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -51,12 +51,13 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemCollection;
 
     })(Backbone.Collection);
-    textbookCollection = new Textbooks.ItemCollection;
     API = {
       getTextbooks: function(param) {
+        var textbookCollection;
         if (param == null) {
           param = {};
         }
+        textbookCollection = new Textbooks.ItemCollection;
         textbookCollection.fetch({
           reset: true,
           data: param
@@ -65,7 +66,9 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getTextBookByID: function(id) {
         var textbook;
-        textbook = textbookCollection.get(id);
+        if (typeof textbookCollection !== "undefined" && textbookCollection !== null) {
+          textbook = textbookCollection.get(id);
+        }
         if (!textbook) {
           textbook = new Textbooks.ItemModel({
             term_id: id
@@ -76,7 +79,9 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getTextBookNameByID: function(id) {
         var textbook, textbookName;
-        textbook = textbookCollection.get(id);
+        if (typeof textbookCollection !== "undefined" && textbookCollection !== null) {
+          textbook = textbookCollection.get(id);
+        }
         if (!textbook) {
           textbook = new Textbooks.ItemModel({
             term_id: id

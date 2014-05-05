@@ -9,7 +9,7 @@ define ['app'
 			initialize : (opts)->
 				{@model} = opts
 				
-				@groupContentCollection= App.request "get:content:pieces:of:group", @model.get 'id'
+				@groupContentCollection= App.request "get:content:pieces:of:group", @model
 
 				@view= view = @_getCollectionContentDisplayView @model, @groupContentCollection
 

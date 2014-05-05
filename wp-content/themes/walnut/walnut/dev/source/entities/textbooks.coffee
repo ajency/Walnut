@@ -30,12 +30,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 					@total = resp.count	
 					resp.data
 
-			textbookCollection = new Textbooks.ItemCollection
+			
 
 			# API 
 			API = 
 				# get all textbooks
 				getTextbooks:(param = {})->
+					textbookCollection = new Textbooks.ItemCollection
 					textbookCollection.fetch
 										reset : true
 										data  : param
@@ -44,7 +45,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
 				getTextBookByID:(id)->
-					textbook = textbookCollection.get id
+					textbook = textbookCollection.get id if textbookCollection?
 
 					if not textbook 
 						textbook = new Textbooks.ItemModel term_id : id
@@ -52,7 +53,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					textbook
 
 				getTextBookNameByID:(id)->
-					textbook = textbookCollection.get id
+					textbook = textbookCollection.get id if textbookCollection?
 
 					if not textbook 
 						textbook = new Textbooks.ItemModel term_id : id

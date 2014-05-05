@@ -11,32 +11,36 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       function CollectionContentDisplayController() {
         this.trainingModuleStarted = __bind(this.trainingModuleStarted, this);
         this._getCollectionContentDisplayView = __bind(this._getCollectionContentDisplayView, this);
-        this.showView = __bind(this.showView, this);
         return CollectionContentDisplayController.__super__.constructor.apply(this, arguments);
       }
 
       CollectionContentDisplayController.prototype.initialize = function(opts) {
-        this.model = opts.model;
-        this.module = opts.module;
-        this.groupContentCollection = App.request("get:content:pieces:by:ids", this.model.get('content_pieces'));
-        App.execute("when:fetched", this.groupContentCollection, this.showView);
-        return this.listenTo(this.model, 'training:module:started', this.trainingModuleStarted);
-      };
-
-      CollectionContentDisplayController.prototype.showView = function() {
-        var view;
-        this.view = view = this._getCollectionContentDisplayView(this.model);
-        return this.show(view, {
-          loading: true,
-          entities: [this.groupContentCollection]
+        var groupContentCollection, model, questionResponseCollection, view;
+        model = opts.model, this.mode = opts.mode, questionResponseCollection = opts.questionResponseCollection;
+        groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
+        questionResponseCollection = App.request("get:question:response:collection", {
+          'division': 3,
+          'collection_id': model.get('id')
         });
+        this.view = view = this._getCollectionContentDisplayView(model, groupContentCollection, questionResponseCollection);
+        this.show(view, {
+          loading: true,
+          entities: [groupContentCollection, questionResponseCollection]
+        });
+        this.listenTo(model, 'training:module:started', this.trainingModuleStarted);
+        return this.listenTo(this.view, 'view:question:readonly', (function(_this) {
+          return function(questionID) {
+            return _this.region.trigger('goto:question:readonly', questionID);
+          };
+        })(this));
       };
 
-      CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model) {
+      CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model, collection, responseCollection) {
         return new ContentDisplayView({
           model: model,
-          collection: this.groupContentCollection,
-          module: this.module
+          collection: collection,
+          responseCollection: responseCollection,
+          mode: this.mode
         });
       };
 
@@ -67,6 +71,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       __extends(ContentDisplayView, _super);
 
       function ContentDisplayView() {
+        this.viewQuestionReadOnly = __bind(this.viewQuestionReadOnly, this);
         return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
 
@@ -79,6 +84,43 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       ContentDisplayView.prototype.className = 'col-md-10';
 
       ContentDisplayView.prototype.id = 'myCanvas-miki';
+
+      ContentDisplayView.prototype.events = {
+        'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
+      };
+
+      ContentDisplayView.prototype.onShow = function() {
+        var question, responseCollection, responseQuestionIDs, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
+        responseCollection = Marionette.getOption(this, 'responseCollection');
+        responseQuestionIDs = responseCollection.pluck('content_piece_id');
+        if (Marionette.getOption(this, 'mode') === 'training') {
+          _ref = this.$el.find('.contentPiece');
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            question = _ref[_i];
+            _results.push($(question).find('.cbp_tmlabel').addClass('completed').css('cursor', 'pointer'));
+          }
+          return _results;
+        } else {
+          _ref1 = this.$el.find('.contentPiece');
+          _results1 = [];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            question = _ref1[_j];
+            if (_.contains(responseQuestionIDs, $(question).attr('data-id'))) {
+              _results1.push($(question).find('.cbp_tmlabel').addClass('done completed').css('cursor', 'pointer'));
+            } else {
+              _results1.push(void 0);
+            }
+          }
+          return _results1;
+        }
+      };
+
+      ContentDisplayView.prototype.viewQuestionReadOnly = function(e) {
+        var questionID;
+        questionID = $(e.target).closest('.contentPiece').attr('data-id');
+        return this.trigger("view:question:readonly", questionID);
+      };
 
       ContentDisplayView.prototype.onApplyUrls = function() {
         var currentRoute, item, itemurl, url, _i, _len, _ref, _results;

@@ -17,23 +17,43 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ChorusOptionsController.prototype.initialize = function(opts) {
         var view;
-        this.questionResponseModel = opts.questionResponseModel;
+        this.questionResponseModel = opts.questionResponseModel, this.display_mode = opts.display_mode;
         this.view = view = this._showChorusOptionsView(this.questionResponseModel);
         this.show(view, {
           loading: true
         });
         this.listenTo(view, "save:question:response", this._saveQuestionResponse);
-        return this.listenTo(view, "question:completed", this._changeQuestion);
+        this.listenTo(view, "question:completed", this._changeQuestion);
+        return this.listenTo(this.view, "goto:previous:route", (function(_this) {
+          return function() {
+            return _this.region.trigger("goto:previous:route");
+          };
+        })(this));
       };
 
-      ChorusOptionsController.prototype._changeQuestion = function() {
-        return this.region.trigger("goto:next:question");
+      ChorusOptionsController.prototype._changeQuestion = function(resp) {
+        if (resp === 'no_answer') {
+          this._saveQuestionResponse('');
+        }
+        return this.region.trigger("goto:next:question", this.questionResponseModel.get('content_piece_id'));
       };
 
       ChorusOptionsController.prototype._showChorusOptionsView = function(model) {
         return new ChorusOptionsView({
           model: model,
-          responsePercentage: this.questionResponseModel.get('question_response')
+          responsePercentage: this.questionResponseModel.get('question_response'),
+          display_mode: this.display_mode,
+          templateHelpers: {
+            showPauseBtn: (function(_this) {
+              return function() {
+                var buttonStr;
+                if (_this.display_mode === 'class_mode') {
+                  buttonStr = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-pause"></i> Pause </button> </div>';
+                }
+                return buttonStr;
+              };
+            })(this)
+          }
         });
       };
 
@@ -55,6 +75,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       __extends(ChorusOptionsView, _super);
 
       function ChorusOptionsView() {
+        this.questionCompleted = __bind(this.questionCompleted, this);
         return ChorusOptionsView.__super__.constructor.apply(this, arguments);
       }
 
@@ -63,16 +84,26 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ChorusOptionsView.prototype.template = chorusOptionsTemplate;
 
       ChorusOptionsView.prototype.events = {
-        'click .tiles.single': 'selectStudent',
-        'click #question-done': function(e) {
-          return this.trigger("question:completed");
+        'click .tiles.single.selectable': 'selectStudent',
+        'click #question-done': 'questionCompleted',
+        'click #pause-session': function() {
+          return this.trigger("goto:previous:route");
         }
       };
 
       ChorusOptionsView.prototype.onShow = function() {
-        var responsePercentage;
+        var ele, responsePercentage, _i, _len, _ref;
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          _ref = this.$el.find('.tiles.single');
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            ele = _ref[_i];
+            $(ele).addClass('selectable');
+          }
+        }
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
-        return this.$el.find('#' + responsePercentage).find('.default').addClass('green');
+        if (responsePercentage != null) {
+          return this.$el.find('#' + responsePercentage).find('.default').addClass('green');
+        }
       };
 
       ChorusOptionsView.prototype.selectStudent = function(e) {
@@ -81,6 +112,18 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         dataValue = $(e.target).closest('.tiles.single').attr('id');
         $(e.target).closest('.tiles.single').find('.default').addClass('green').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
         return this.trigger("save:question:response", dataValue);
+      };
+
+      ChorusOptionsView.prototype.questionCompleted = function() {
+        var selectedAnswer;
+        selectedAnswer = this.$el.find('.tiles.single .green');
+        if ((_.size(selectedAnswer) === 0) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
+          if (confirm('Are you sure no one answered correctly?')) {
+            return this.trigger("question:completed", "no_answer");
+          }
+        } else {
+          return this.trigger("question:completed");
+        }
       };
 
       return ChorusOptionsView;

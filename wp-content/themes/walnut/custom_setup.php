@@ -23,7 +23,9 @@ function create_custom_tables(){
     
     $textbook_class_relations_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}textbook_relationships 
              (`id` INT NOT NULL AUTO_INCREMENT, `textbook_id` INT NOT NULL, 
-             `class_id` INT NOT NULL, PRIMARY KEY (`id`))";
+             `class_id` varchar(255) NOT NULL,
+             `tags` varchar(255) NOT NULL, 
+             PRIMARY KEY (`id`))";
 
     $wpdb->query($textbook_class_relations_table);
     
@@ -31,7 +33,7 @@ function create_custom_tables(){
     
     $class_divisions_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}class_divisions 
              (`id` INT NOT NULL AUTO_INCREMENT, 
-             `divisions` INT NOT NULL, 
+             `division` varchar(255) NOT NULL,
              `class_id` INT NOT NULL, 
              PRIMARY KEY (`id`))";
 
@@ -94,6 +96,7 @@ function add_new_roles_main_site()
     add_role( 'content-creator','Content Creator');
     add_role( 'content-approver','Content Approver');
     add_role( 'student','Student');
+    add_role( 'teacher','Teacher');
     add_role( 'parent','Parent');
 }
 add_new_roles_main_site();

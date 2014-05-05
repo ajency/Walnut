@@ -16,14 +16,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
-        this.model = opts.model;
+        this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection;
         this.startTime = '';
         this.endTime = '';
-        this.module = opts.module;
         this.view = view = this._getCollectionDetailsView(this.model);
         this.show(view, {
           loading: true
         });
+        this.listenTo(view, 'start:teaching:module', (function(_this) {
+          return function() {
+            return _this.region.trigger("start:teaching:module");
+          };
+        })(this));
         this.listenTo(this.model, 'training:module:started', this.trainingModuleStarted);
         return this.listenTo(this.model, 'training:module:stopped', this.trainingModuleStopped);
       };
@@ -35,11 +39,24 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         this.textbookName = App.request("get:textbook:name:by:id", textbook);
         return new CollectionDetailsView({
           model: model,
-          module: this.module,
+          mode: this.mode,
           templateHelpers: {
             getTextbookName: (function(_this) {
               return function() {
                 return _this.textbookName;
+              };
+            })(this),
+            startScheduleButton: (function(_this) {
+              return function() {
+                var actionButtons, allContentPieces, answeredPieces, unanswered;
+                actionButtons = '';
+                allContentPieces = _this.model.get('content_pieces');
+                answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
+                unanswered = _.difference(allContentPieces, answeredPieces);
+                if (_.size(unanswered) > 0 && _this.mode !== 'training') {
+                  actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button>';
+                }
+                return actionButtons;
               };
             })(this)
           }
@@ -87,12 +104,16 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       CollectionDetailsView.prototype.serializeData = function() {
         var data;
         data = CollectionDetailsView.__super__.serializeData.call(this);
-        data.takeClassModule = Marionette.getOption(this, 'module');
+        data.takeClassModule = Marionette.getOption(this, 'mode');
         return data;
       };
 
       CollectionDetailsView.prototype.startModule = function() {
-        return this.model.trigger("start:module");
+        var currentRoute;
+        currentRoute = App.getCurrentRoute();
+        App.navigate(currentRoute + "/question");
+        this.model.trigger("start:module");
+        return this.trigger("start:teaching:module");
       };
 
       CollectionDetailsView.prototype.stopModule = function() {

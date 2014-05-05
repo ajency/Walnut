@@ -8,19 +8,19 @@ define ['app'
 
 			initialize :(opts)->
 
-				{@model}= opts
+				# for take-class module the template changes a bit
+				# so based on this value (@mode) we set the template additional stuff
+
+				{@model,@mode,@questionResponseCollection}= opts
 
 				@startTime = '';
 				@endTime = '';
 
-				# for take-class module the template changes a bit
-				# so based on this value (@module) we set the template additional stuff
-
-				{@module} = opts 
-
 				@view= view = @_getCollectionDetailsView @model
 
 				@show view, (loading:true)
+
+				@listenTo view, 'start:teaching:module', => @region.trigger "start:teaching:module"
 
 				@listenTo @model, 'training:module:started', @trainingModuleStarted
 
@@ -34,11 +34,26 @@ define ['app'
 
 				new CollectionDetailsView
 					model 	: model 								
-					module 	: @module
+					mode 	: @mode
 
 					templateHelpers:
+
 						getTextbookName:=>
 							@textbookName 
+
+						startScheduleButton:=>
+							
+							actionButtons= ''
+
+							allContentPieces= @model.get 'content_pieces'
+							answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
+							unanswered = _.difference allContentPieces, answeredPieces
+
+							if _.size(unanswered) >0 and @mode isnt 'training'
+								actionButtons= '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
+									<i class="fa fa-play"></i> Start
+								</button>'
+							actionButtons
 
 			trainingModuleStarted:=>		
 				@startTime = moment().format();
@@ -66,11 +81,16 @@ define ['app'
 
 			serializeData:->
 				data = super()
-				data.takeClassModule= Marionette.getOption @, 'module'
+				data.takeClassModule= Marionette.getOption @, 'mode'
 				data
 
 			startModule:=>
+
+				currentRoute = App.getCurrentRoute()
+				App.navigate currentRoute+"/question"
+
 				@model.trigger "start:module"
+				@trigger "start:teaching:module"
 
 			stopModule:=>
 				$('#timekeeper').timer('pause');
@@ -93,7 +113,7 @@ define ['app'
 				else 
 					$('#timekeeper').timer('resume');
 
-				clock = setInterval @updateTime, 500		
+				clock = setInterval @updateTime, 500
 
 			updateTime :=>
 				@$el.find '.timedisplay'
