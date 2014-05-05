@@ -76,7 +76,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         return App.execute("show:fib:element:properties:box", {
           region: this.layout.questElementPropRegion,
           model: options.model,
-          blankNo: options.blankNo
+          fibModel: options.fibModel
         });
       };
 

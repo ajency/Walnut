@@ -18,7 +18,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       Controller.prototype._getView = function(options) {
         return new FibElementPropertyBox.Views.BlankElementView({
           model: options.model,
-          blankNo: options.blankNo
+          fibModel: options.fibModel
         });
       };
 
@@ -29,7 +29,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       return new FibElementPropertyBox.Controller({
         region: options.region,
         model: options.model,
-        blankNo: options.blankNo
+        fibModel: options.fibModel
       });
     });
   });

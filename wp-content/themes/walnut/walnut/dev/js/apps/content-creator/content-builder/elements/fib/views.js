@@ -16,8 +16,8 @@ define(['app'], function(App) {
         'change:font': function(model, font) {
           return this._changeFont(font);
         },
-        'change:font_size': function(model, size) {
-          return this._changeSize(size);
+        'change:font_size': function(model, fontSize) {
+          return this._changeFontSize(fontSize);
         },
         'change:color': function(model, color) {
           return this._changeColor(color);
@@ -69,8 +69,8 @@ define(['app'], function(App) {
         return this.$el.find('input').css('font-family', font);
       };
 
-      FibView.prototype._changeSize = function(size) {
-        return this.$el.find('input').css('font-size', size + "px");
+      FibView.prototype._changeFontSize = function(fontSize) {
+        return this.$el.find('input').css('font-size', fontSize + "px");
       };
 
       FibView.prototype._changeColor = function(color) {
@@ -91,6 +91,16 @@ define(['app'], function(App) {
         }
       };
 
+      FibView.prototype._changeCorrectAnswers = function(model, answerArray) {
+        if (answerArray.length) {
+          return this.$el.find("input[data-id=" + model.id + "]").val(answerArray[0]);
+        }
+      };
+
+      FibView.prototype._changeBlankSize = function(model, blankSize) {
+        return this.$el.find("input[data-id=" + model.id + "]").attr('size', blankSize);
+      };
+
       FibView.prototype._textBlur = function() {
         var formatedText;
         formatedText = this.$el.find('p').clone();
@@ -101,19 +111,24 @@ define(['app'], function(App) {
 
       FibView.prototype._updateInputProperties = function() {
         _.each(this.$el.find('input'), (function(_this) {
-          return function(blank) {
+          return function(blank, index) {
             if (_.isUndefined($(blank).attr('data-id'))) {
               $(blank).attr('data-id', _.uniqueId('input-'));
+              if ($(blank).parent().prop('tagName') !== 'SPAN') {
+                $(blank).wrap('<span contenteditable="false"></span>');
+                $(blank).before('<span></span>');
+              }
               _this.trigger("create:new:fib:element", $(blank).attr('data-id'));
             }
             return _.delay(function() {
               var blanksModel;
               blanksModel = _this.blanksCollection.get($(blank).attr('data-id'));
-              if (!$(blank).hasClass("fib" + (_.indexOf(_this.blanksCollection.toArray(), blanksModel) + 1))) {
-                $(blank).removeClass('fib1 fib2 fib3 fib4 fib5 fib6');
-                $(blank).addClass("fib" + (_.indexOf(_this.blanksCollection.toArray(), blanksModel) + 1));
+              blanksModel.set('blank_index', index + 1);
+              if (parseInt($(blank).prev().text()) !== index + 1) {
+                $(blank).prev().text(index + 1);
               }
               _this.listenTo(blanksModel, 'change:correct_answers', _this._changeCorrectAnswers);
+              _this.listenTo(blanksModel, 'change:blank_size', _this._changeBlankSize);
               if (blanksModel.get('correct_answers').length) {
                 _this.$el.find("input[data-id=" + blanksModel.id + "]").val(blanksModel.get('correct_answers')[0]);
               }
@@ -122,7 +137,7 @@ define(['app'], function(App) {
                 console.log(blanksModel);
                 App.execute("show:fib:element:properties", {
                   model: blanksModel,
-                  blankNo: _.indexOf(_this.blanksCollection.toArray(), blanksModel) + 1
+                  fibModel: _this.model
                 });
                 _this.trigger("show:this:fib:properties");
                 return e.stopPropagation();
@@ -147,16 +162,10 @@ define(['app'], function(App) {
           };
         })(this), 1000);
         this._changeFont(this.model.get('font'));
-        this._changeSize(this.model.get('font_size'));
+        this._changeFontSize(this.model.get('font_size'));
         this._changeColor(this.model.get('color'));
         this._changeBGColor(this.model);
         return this._changeFibStyle(this.model.get('style'));
-      };
-
-      FibView.prototype._changeCorrectAnswers = function(model, answerArray) {
-        if (answerArray.length) {
-          return this.$el.find("input[data-id=" + model.id + "]").val(answerArray[0]);
-        }
       };
 
       FibView.prototype.onClose = function() {

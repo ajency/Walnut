@@ -11,13 +11,15 @@ define ['app'
 
 					ui : 
 						marksTextbox : 'input#marks'
+						individualMarksCheckbox : 'input#check-individual-marks'
 
 					# view events 
 					events : 
 						'change input#check-case-sensitive': '_checkCaseSensitive'
 						'change select#fib-font' : '_changeFont'
-						# 'change select#marks' : '_changeMarks'
+						'blur @ui.marksTextbox' : '_changeMarks'
 						'change select#fib-style' : '_changeStyle'
+						'change @ui.individualMarksCheckbox' : '_toggleIndividualMarks'
 
 				
 
@@ -27,6 +29,12 @@ define ['app'
 							#initialize Case Sensitive Checkbox based on model
 							if @model.get 'case_sensitive'
 									@$el.find('#check-case-sensitive').prop 'checked',true
+
+							#initialize Case Sensitive Checkbox based on model
+							if @model.get 'enableIndividualMarks'
+									@ui.individualMarksCheckbox.prop 'checked',true
+									@ui.marksTextbox.prop 'disabled',true
+									@_enableCalculateMarks()
 
 							# initialize the dropdown to use select2 plugin
 							@$el.find('#fib-font').select2
@@ -38,7 +46,7 @@ define ['app'
 							# @$el.find('#marks').select2
 							# 		minimumResultsForSearch: -1
 							# initialize font dropdown based on model
-							@$el.find('#marks').select2 'val',@model.get 'marks'
+							# @$el.find('#marks').select2 'val',@model.get 'marks'
 
 							# initialize the dropdown to use select2 plugin
 							@$el.find('#fib-style').select2
@@ -81,13 +89,24 @@ define ['app'
 
 
 
-							@$el.closest('#property-dock').on 'blur', 
-								'#question-elements-property #individual-marks',(evt)=>
-									@_updateMarks()
-
-							@listenTo @model.get('blanksArray') , 'add',@_updateMarks
-							@listenTo @model.get('blanksArray') , 'remove',@_updateMarks
+							
+							
 					
+
+					_enableCalculateMarks:->
+						@_updateMarks()
+						@$el.closest('#property-dock').on 'blur', 
+							'#question-elements-property #individual-marks',(evt)=>
+								@_updateMarks()
+
+						@listenTo @model.get('blanksArray') , 'add',@_updateMarks
+						@listenTo @model.get('blanksArray') , 'remove',@_updateMarks
+
+					_disableCalculateMarks:->
+							@$el.closest('#property-dock').off 'blur', 
+								'#question-elements-property #individual-marks'
+							@stopListening @model.get('blanksArray')
+
 
 					_updateMarks:=>
 							console.log 'change'
@@ -123,7 +142,23 @@ define ['app'
 					_changeStyle:(evt)->
 							@model.set 'style',$(evt.target).val()
 
+					# function for changing model on change of 
+					# Enable individual marks checkbox
+					_toggleIndividualMarks:(evt)->
+							if $(evt.target).prop 'checked'
+								@model.set 'enableIndividualMarks', true
+								@ui.marksTextbox.prop 'disabled',true
+								@_enableCalculateMarks()
+								
+							else
+								@model.set 'enableIndividualMarks',false
+								@ui.marksTextbox.prop 'disabled',false
+								@_disableCalculateMarks()
+
+					_changeMarks:(evt)->
+						if not isNaN $(evt.target).val()
+							@model.set 'marks', parseInt $(evt.target).val()
+
 					onClose:->
-						@$el.closest('#property-dock').off 'blur', 
-								'#question-elements-property #individual-marks'
+						@_disableCalculateMarks()
 									
