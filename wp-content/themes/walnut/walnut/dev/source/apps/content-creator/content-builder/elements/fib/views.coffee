@@ -117,7 +117,10 @@ define ['app'],(App)->
 			_textBlur:->
 				formatedText = @$el.find('p').clone()
 				$(formatedText).find('input').attr 'value',''
+				$(formatedText).find('input').unwrap()
+				$(formatedText).find('input').prev().remove()
 				@model.set 'text', formatedText.html()
+				console.log formatedText.html()
 
 				console.log @model
 
@@ -130,9 +133,7 @@ define ['app'],(App)->
 						# a  random unique id to the input
 						$(blank).attr 'data-id',_.uniqueId 'input-'
 
-						if $(blank).parent().prop('tagName') isnt 'SPAN'
-							$(blank).wrap('<span contenteditable="false"></span>')
-							$(blank).before('<span></span>')
+						
 						# wait for ckeditor to finish adding the input
 						# _.delay ->
 						# 	$(blank).prop 'maxLength',parseInt 12
@@ -145,7 +146,9 @@ define ['app'],(App)->
 
 					_.delay =>
 						# get a reference to the model
-						
+						if $(blank).parent().prop('tagName') isnt 'SPAN'
+							$(blank).wrap('<span contenteditable="false"></span>')
+							$(blank).before('<span class="fibno"></span>')
 						
 						blanksModel = @blanksCollection.get $(blank).attr 'data-id'
 						# console.log _.indexOf(@blanksCollection.toArray(), blanksModel)+1

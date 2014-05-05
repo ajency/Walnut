@@ -105,7 +105,10 @@ define(['app'], function(App) {
         var formatedText;
         formatedText = this.$el.find('p').clone();
         $(formatedText).find('input').attr('value', '');
+        $(formatedText).find('input').unwrap();
+        $(formatedText).find('input').prev().remove();
         this.model.set('text', formatedText.html());
+        console.log(formatedText.html());
         return console.log(this.model);
       };
 
@@ -114,14 +117,14 @@ define(['app'], function(App) {
           return function(blank, index) {
             if (_.isUndefined($(blank).attr('data-id'))) {
               $(blank).attr('data-id', _.uniqueId('input-'));
-              if ($(blank).parent().prop('tagName') !== 'SPAN') {
-                $(blank).wrap('<span contenteditable="false"></span>');
-                $(blank).before('<span></span>');
-              }
               _this.trigger("create:new:fib:element", $(blank).attr('data-id'));
             }
             return _.delay(function() {
               var blanksModel;
+              if ($(blank).parent().prop('tagName') !== 'SPAN') {
+                $(blank).wrap('<span contenteditable="false"></span>');
+                $(blank).before('<span class="fibno"></span>');
+              }
               blanksModel = _this.blanksCollection.get($(blank).attr('data-id'));
               blanksModel.set('blank_index', index + 1);
               if (parseInt($(blank).prev().text()) !== index + 1) {
