@@ -20,13 +20,6 @@ define ['app'
 				@$el.attr 'data-subjects', @model.get 'subjects'
 
 
-				$('#textbooks').mixitup
-					layoutMode: 'list', # Start in list mode (display: block) by default
-					listClass: 'list', # Container class for when in list mode
-					gridClass: 'grid', # Container class for when in grid mode
-					effects: ['fade','blur'], # List of effects
-					listEffects: ['fade','rotateX'] # List of effects ONLY for list mode
-
 
 			serializeData : ->
 				data = super()
@@ -65,5 +58,13 @@ define ['app'
 			itemViewContainer : 'ul.textbooks_list'
 
 			onShow:->
+
+				@$el.find('#textbooks').mixitup
+					layoutMode: 'list', # Start in list mode (display: block) by default
+					listClass: 'list', # Container class for when in list mode
+					gridClass: 'grid', # Container class for when in grid mode
+					effects: ['fade','blur'], # List of effects
+					listEffects: ['fade','rotateX'] # List of effects ONLY for list mode
+
 				@dimensions = 
 					status: 'all'

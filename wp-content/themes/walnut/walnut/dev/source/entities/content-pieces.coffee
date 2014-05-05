@@ -8,7 +8,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				idAttribute : 'ID'
 
 				defaults:
-					ID       		   	: ''
+					ID       		   	: 0
 					post_title    		: ''
 					creator 	       	: ''
 					post_modified     	: ''

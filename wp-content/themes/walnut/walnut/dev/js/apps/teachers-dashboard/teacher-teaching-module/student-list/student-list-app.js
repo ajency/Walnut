@@ -18,25 +18,34 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       SingleQuestionStudentsController.prototype.initialize = function(opts) {
         var division, studentCollection, view;
-        this.questionResponseModel = opts.questionResponseModel, studentCollection = opts.studentCollection;
+        this.questionResponseModel = opts.questionResponseModel, studentCollection = opts.studentCollection, this.display_mode = opts.display_mode;
         division = this.questionResponseModel.get('division');
         this.view = view = this._showStudentsListView(studentCollection);
         this.show(view, {
           loading: true,
           entities: [studentCollection]
         });
+        this.listenTo(this.view, "goto:previous:route", (function(_this) {
+          return function() {
+            return _this.region.trigger("goto:previous:route");
+          };
+        })(this));
         this.listenTo(view, "save:question:response", this._saveQuestionResponse);
         return this.listenTo(view, "question:completed", this._changeQuestion);
       };
 
-      SingleQuestionStudentsController.prototype._changeQuestion = function() {
-        return this.region.trigger("goto:next:question");
+      SingleQuestionStudentsController.prototype._changeQuestion = function(resp) {
+        if (resp === 'no_answer') {
+          this._saveQuestionResponse('');
+        }
+        return this.region.trigger("goto:next:question", this.questionResponseModel.get('content_piece_id'));
       };
 
       SingleQuestionStudentsController.prototype._showStudentsListView = function(collection) {
         return new Students.Views.StudentsList({
           collection: collection,
-          correctAnswers: this.questionResponseModel.get('question_response')
+          correctAnswers: this.questionResponseModel.get('question_response'),
+          display_mode: this.display_mode
         });
       };
 

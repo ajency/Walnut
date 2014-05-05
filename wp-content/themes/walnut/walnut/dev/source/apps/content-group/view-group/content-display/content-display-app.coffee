@@ -8,9 +8,8 @@ define ['app'
 
 			initialize : (opts)->
 
-				{model} = opts
-				{@module} = opts
-				
+				{model, @mode, questionResponseCollection} = opts
+
 				groupContentCollection= App.request "get:content:pieces:by:ids", model.get 'content_pieces'
 				questionResponseCollection = App.request "get:question:response:collection", 
 													'division' : 3
@@ -21,14 +20,15 @@ define ['app'
 
 				@listenTo model, 'training:module:started', @trainingModuleStarted
 
-				
+				@listenTo @view, 'view:question:readonly', (questionID)=> 
+					@region.trigger 'goto:question:readonly', questionID
 
 			_getCollectionContentDisplayView :(model, collection, responseCollection) =>
 				new ContentDisplayView 
 					model: model
 					collection: collection
 					responseCollection: responseCollection
-					module: @module
+					mode: @mode
 
 			trainingModuleStarted:=>
 				@view.triggerMethod "apply:urls"
@@ -54,14 +54,35 @@ define ['app'
 
 			id			: 'myCanvas-miki'
 
-			serializeData:->
-				data=super()
+			events:
+				'click .cbp_tmlabel.completed'	: 'viewQuestionReadOnly'
 
+			onShow:->
 				responseCollection= Marionette.getOption @, 'responseCollection'
-				data.responseQuestionIDs= responseCollection.pluck 'content_piece_id'
-				console.log data.responseQuestionIDs
+				responseQuestionIDs= responseCollection.pluck 'content_piece_id'
 
-				data
+				if Marionette.getOption(@, 'mode') is 'training'
+					for question in @$el.find '.contentPiece'
+						$ question
+						.find '.cbp_tmlabel'
+						.addClass 'completed' 
+						.css 'cursor','pointer'
+
+
+				else
+					for question in @$el.find '.contentPiece'
+						if _.contains responseQuestionIDs, $(question).attr 'data-id'
+							$ question
+							.find '.cbp_tmlabel'
+							.addClass 'done completed'
+							.css 'cursor','pointer'
+
+			viewQuestionReadOnly:(e)=>
+				questionID= $ e.target
+							.closest '.contentPiece'
+							.attr 'data-id'
+
+				@trigger "view:question:readonly",questionID
 
 			onApplyUrls:->
 

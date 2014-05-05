@@ -17,7 +17,12 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         var model, view;
         model = opts.model;
         this.view = view = this._showModuleDescriptionView(model);
-        return this.show(view);
+        this.show(view);
+        return this.listenTo(this.view, "goto:previous:route", (function(_this) {
+          return function() {
+            return _this.region.trigger("goto:previous:route");
+          };
+        })(this));
       };
 
       ModuleDescriptionController.prototype._showModuleDescriptionView = function(model) {
@@ -40,6 +45,12 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ModuleDescriptionView.prototype.className = 'pieceWrapper';
 
       ModuleDescriptionView.prototype.template = moduleDescriptionTemplate;
+
+      ModuleDescriptionView.prototype.events = {
+        'click #back-to-module': function() {
+          return this.trigger("goto:previous:route");
+        }
+      };
 
       ModuleDescriptionView.prototype.onShow = function() {
         var clock;

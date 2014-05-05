@@ -31,7 +31,7 @@ function create_custom_tables(){
     
     $class_divisions_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}class_divisions 
              (`id` INT NOT NULL AUTO_INCREMENT, 
-             `divisions` INT NOT NULL, 
+             `division` varchar(255) NOT NULL,
              `class_id` INT NOT NULL, 
              PRIMARY KEY (`id`))";
 

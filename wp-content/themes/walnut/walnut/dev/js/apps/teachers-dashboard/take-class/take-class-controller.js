@@ -4,7 +4,9 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/take-class/templates/class-description.html', 'apps/teachers-dashboard/take-class/views'], function(App, RegionController, classDescriptionTpl) {
   return App.module("TeachersDashboardApp.View", function(View, App) {
-    var ClassDescriptionView, TextbookListLayout;
+    var ClassDescriptionView, TextbookListLayout, divisionModel, textbooks;
+    divisionModel = null;
+    textbooks = null;
     View.TakeClassController = (function(_super) {
       __extends(TakeClassController, _super);
 
@@ -14,40 +16,45 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
       }
 
       TakeClassController.prototype.initialize = function(opts) {
-        var breadcrumb_items, classID, layout;
+        var breadcrumb_items, breadcrumb_label, layout, mode;
+        console.log(opts);
+        this.classID = opts.classID, this.division = opts.division, mode = opts.mode;
+        breadcrumb_label = 'Start Training';
+        if (mode === 'take-class') {
+          divisionModel = App.request("get:division:by:id", this.division);
+          breadcrumb_label = 'Take Class';
+        } else {
+          divisionModel = '';
+        }
         breadcrumb_items = {
           'items': [
             {
               'label': 'Dashboard',
               'link': '#teachers/dashboard'
             }, {
-              'label': 'Take Class',
+              'label': breadcrumb_label,
               'link': 'javascript://'
             }
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
-        classID = opts.classID;
-        this.division = opts.division;
-        this.divisionModel = App.request("get:division:by:id", this.division);
-        this.textbooks = App.request("get:textbooks", {
-          class_id: classID
+        textbooks = App.request("get:textbooks", {
+          class_id: this.classID
         });
         this.layout = layout = this._getTrainingModuleLayout();
         this.show(layout, {
           loading: true,
-          entities: [this.textbooks, this.divisionModel]
+          entities: [textbooks, divisionModel]
         });
-        return this.listenTo(layout, "show", this._showTextbooksListView);
+        return this.listenTo(layout, "show", this._showTextbooksListView(mode));
       };
 
-      TakeClassController.prototype._showTextbooksListView = function() {
-        return App.execute("when:fetched", [this.textbooks, this.divisionModel], (function(_this) {
+      TakeClassController.prototype._showTextbooksListView = function(mode) {
+        return App.execute("when:fetched", [textbooks], (function(_this) {
           return function() {
             var classDescriptionView, textbookListView;
-            console.log(_this.divisionModel);
             textbookListView = new View.TakeClass.TextbooksListView({
-              collection: _this.textbooks,
+              collection: textbooks,
               templateHelpers: {
                 showUrl: function() {
                   return '/textbook/28';
@@ -55,12 +62,25 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
               }
             });
             classDescriptionView = new ClassDescriptionView({
-              model: _this.divisionModel,
               templateHelpers: {
                 showSubjectsList: function() {
                   var subjectsList;
-                  subjectsList = _.uniq(_.compact(_.flatten(_this.textbooks.pluck('subjects'))));
+                  subjectsList = _.uniq(_.compact(_.flatten(textbooks.pluck('subjects'))));
                   return subjectsList;
+                },
+                showClassLabel: function() {
+                  if (mode === 'training') {
+                    return CLASS_LABEL[_this.classID];
+                  } else {
+                    return divisionModel.get('division');
+                  }
+                },
+                showNoOfStudents: function() {
+                  if (mode === 'training') {
+                    return 'N/A';
+                  } else {
+                    return divisionModel.get('students_count');
+                  }
                 }
               }
             });
@@ -102,6 +122,10 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
       }
 
       ClassDescriptionView.prototype.template = classDescriptionTpl;
+
+      ClassDescriptionView.prototype.onShow = function() {
+        return console.log('on show');
+      };
 
       return ClassDescriptionView;
 

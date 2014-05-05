@@ -7,9 +7,10 @@ function save_question_response() {
     extract($_POST);
     
     $data = array(
-        'collection_id'=>$collection_id,
-        'content_piece_id'=> $content_piece_id,
-        'question_response'=>$question_response
+        'collection_id'     => $collection_id,
+        'content_piece_id'  => $content_piece_id,
+        'question_response' => $question_response,
+        'division'          => $division
     );
     
     if(isset($id))
@@ -39,18 +40,23 @@ function get_question_response(){
     foreach($question_response as $k=> $resp){
         foreach($resp as $key=> $val){
             $data[$k][$key] = $val;
-            if($key=='question_response' && $question_type=='individual'){
-                $q_resp_arr=array();
-                $qresponse = maybe_unserialize($val);
-                if($qresponse)
-                    foreach($qresponse as $qres){
-                        $q_resp_arr[]= (int) $qres;
-                    }
-                   $data[$k]['question_response']=$q_resp_arr; 
+            if($key=='question_response'){
+                $current_blog=  get_current_blog_id();
+                switch_to_blog(1);
+                $question_type= get_post_meta($resp->content_piece_id, 'question_type', true);
+                switch_to_blog($current_blog);
+                if($question_type=='individual'){
+                    $q_resp_arr=array();
+                    $qresponse = maybe_unserialize($val);
+                    if($qresponse)
+                        foreach($qresponse as $qres){
+                            $q_resp_arr[]= (int) $qres;
+                        }
+                       $data[$k]['question_response']=$q_resp_arr; 
+                }
             }
         }
     }
-    
     wp_send_json(array('data'=>$data, 'status'=>'OK'));
 }
 
