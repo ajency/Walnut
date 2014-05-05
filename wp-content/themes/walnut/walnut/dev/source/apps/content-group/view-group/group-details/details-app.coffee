@@ -52,9 +52,6 @@ define ['app'
 							if _.size(unanswered) >0 and @mode isnt 'training'
 								actionButtons= '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
 									<i class="fa fa-play"></i> Start
-								</button>
-								<button type="button" class="btn btn-white btn-small pull-right m-t-10 m-r-10" data-toggle="modal" data-target="#schedule">
-									<i class="fa fa-calendar"></i> Schedule
 								</button>'
 							actionButtons
 

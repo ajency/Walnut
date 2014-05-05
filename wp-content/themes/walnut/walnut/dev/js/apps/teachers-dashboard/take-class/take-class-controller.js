@@ -48,7 +48,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
       };
 
       TakeClassController.prototype._showTextbooksListView = function() {
-        return App.execute("when:fetched", [textbooks], (function(_this) {
+        return App.execute("when:fetched", textbooks, (function(_this) {
           return function() {
             var classDescriptionView, textbookListView;
             textbookListView = new View.TakeClass.TextbooksListView({

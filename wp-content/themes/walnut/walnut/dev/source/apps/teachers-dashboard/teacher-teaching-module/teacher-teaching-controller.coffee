@@ -49,8 +49,7 @@ define ['app'
 
 				@listenTo @layout, "show", @_showModuleDescriptionView
 
-				if @display_mode isnt 'training'
-					@listenTo @layout, "show", @_showStudentsListView questionResponseModel
+				@listenTo @layout, "show", @_showStudentsListView questionResponseModel if @display_mode isnt 'training'
 
 				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece	
 
@@ -72,7 +71,7 @@ define ['app'
 				nextQuestion= contentPieces[pieceIndex+1]
 				
 				if nextQuestion
-					console.log nextQuestion
+
 					contentPiece = questionsCollection.get nextQuestion
 
 					questionResponseModel = @_getOrCreateModel nextQuestion

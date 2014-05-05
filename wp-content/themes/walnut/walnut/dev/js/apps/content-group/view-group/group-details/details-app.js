@@ -54,7 +54,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
                 answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
                 unanswered = _.difference(allContentPieces, answeredPieces);
                 if (_.size(unanswered) > 0 && _this.mode !== 'training') {
-                  actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button> <button type="button" class="btn btn-white btn-small pull-right m-t-10 m-r-10" data-toggle="modal" data-target="#schedule"> <i class="fa fa-calendar"></i> Schedule </button>';
+                  actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button>';
                 }
                 return actionButtons;
               };

@@ -52,7 +52,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       GroupController.prototype.gotoTrainingModule = function(question, display_mode) {
-        display_mode = 'training' != null ? 'training' : this.mode === 'training';
+        if (this.mode === 'training') {
+          display_mode = 'training';
+        }
         return App.execute("start:teacher:teaching:app", {
           region: App.mainContentRegion,
           division: this.division,

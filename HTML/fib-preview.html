@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html><head>
+	<title>Walnut Learn</title>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta content="" name="description">
+	<meta content="" name="author">
+
+	<!-- NEED TO WORK ON -->
+
+	<!-- BEGIN CORE CSS FRAMEWORK -->
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/jquery-ui.css" rel="stylesheet" type="text/css">
+<!-- 	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/slider.css" rel="stylesheet" type="text/css">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/jquery.minicolors.css" rel="stylesheet" type="text/css">
+ -->	<!-- END CORE CSS FRAMEWORK -->
+
+	<!-- BEGIN CSS TEMPLATE -->
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
+	<link href="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css">
+	<!-- END CSS TEMPLATE -->
+
+
+<style>.cke{visibility:hidden;}</style><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="content-preview-main" src="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/js/content-preview-main.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="plugins/content-preview-pluginloader" src="../wp-content/themes/walnut/walnut/dev/js/plugins/content-preview-pluginloader.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="config/content-preview-configloader" src="../wp-content/themes/walnut/walnut/dev/js/config/content-preview-configloader.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entitiesloader" src="../wp-content/themes/walnut/walnut/dev/js/entities/content-preview-entities-loader.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="componentloader" src="../wp-content/themes/walnut/walnut/dev/js/components/preview-component-loader.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview-appsloader" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview-appsloader.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="kinetic" src="../wp-content/themes/walnut/walnut/dev/js/plugins/kinetic.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="mustache" src="../wp-content/themes/walnut/walnut/dev/js/plugins/mustache.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="text" src="../wp-content/themes/walnut/walnut/dev/js/plugins/text.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="spin" src="../wp-content/themes/walnut/walnut/dev/js/plugins/spin.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jqueryspin" src="../wp-content/themes/walnut/walnut/dev/js/plugins/jquery.spin.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="config/jquery" src="../wp-content/themes/walnut/walnut/dev/js/config/jquery.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="config/jquery-validate" src="../wp-content/themes/walnut/walnut/dev/js/config/jquery-validate.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="config/underscore" src="../wp-content/themes/walnut/walnut/dev/js/config/underscore.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="config/backbone" src="../wp-content/themes/walnut/walnut/dev/js/config/backbone.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="config/marionette/formview" src="../wp-content/themes/walnut/walnut/dev/js/config/marionette/formview.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="config/marionette/marionette" src="../wp-content/themes/walnut/walnut/dev/js/config/marionette/marionette.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="underscore" src="../wp-content/themes/walnut/walnut/dev/js/plugins/underscore.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/user" src="../wp-content/themes/walnut/walnut/dev/js/entities/user.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/menu" src="../wp-content/themes/walnut/walnut/dev/js/entities/menu.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/base-entities" src="../wp-content/themes/walnut/walnut/dev/js/entities/base-entities.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/content-creator/element" src="../wp-content/themes/walnut/walnut/dev/js/entities/content-creator/element.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/content-creator/media" src="../wp-content/themes/walnut/walnut/dev/js/entities/content-creator/media.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/content-creator/hotspotelement" src="../wp-content/themes/walnut/walnut/dev/js/entities/content-creator/hotspotelement.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/content-creator/questionelement" src="../wp-content/themes/walnut/walnut/dev/js/entities/content-creator/questionelement.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/content-creator/option" src="../wp-content/themes/walnut/walnut/dev/js/entities/content-creator/option.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/content-creator/json" src="../wp-content/themes/walnut/walnut/dev/js/entities/content-creator/json.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/schools" src="../wp-content/themes/walnut/walnut/dev/js/entities/schools.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/breadcrumb" src="../wp-content/themes/walnut/walnut/dev/js/entities/breadcrumb.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="entities/answer" src="../wp-content/themes/walnut/walnut/dev/js/entities/answer.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/header/headerapp" src="../wp-content/themes/walnut/walnut/dev/js/apps/header/headerapp.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/left-nav/leftnavapp" src="../wp-content/themes/walnut/walnut/dev/js/apps/left-nav/leftnavapp.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/controller" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/controller.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/breadcrumb/app" src="../wp-content/themes/walnut/walnut/dev/js/apps/breadcrumb/app.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="components/loading/controller" src="../wp-content/themes/walnut/walnut/dev/js/components/loading/controller.js?ver=1398858857273"></script><style type="text/css"></style><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="kineticresize" src="../wp-content/themes/walnut/walnut/dev/js/plugins/kinetic.plugin.resize.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jquery" src="../wp-content/themes/walnut/walnut/dev/js/plugins/jquery.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="underscorestring" src="../wp-content/themes/walnut/walnut/dev/js/plugins/underscorestring.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="controllers/region-controller" src="../wp-content/themes/walnut/walnut/dev/js/controllers/region-controller.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/left-nav/views" src="../wp-content/themes/walnut/walnut/dev/js/apps/left-nav/views.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/header/left/leftapp" src="../wp-content/themes/walnut/walnut/dev/js/apps/header/left/leftapp.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/header/right/rightapp" src="../wp-content/themes/walnut/walnut/dev/js/apps/header/right/rightapp.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/view" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/view.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/controller" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/controller.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/top-panel/controller" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/top-panel/controller.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="components/loading/view" src="../wp-content/themes/walnut/walnut/dev/js/components/loading/view.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jqueryui" src="../wp-content/themes/walnut/walnut/dev/js/plugins/jquery.ui.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="plupload" src="../wp-content/themes/walnut/walnut/dev/js/plugins/plupload.full.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="backbone" src="../wp-content/themes/walnut/walnut/dev/js/plugins/backbone.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jqueryvalidate" src="../wp-content/themes/walnut/walnut/dev/js/plugins/jquery.validate.min.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="screwbuttons" src="../wp-content/themes/walnut/walnut/dev/js/plugins/jquery.screwdefaultbuttonsV2.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/element/controller" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/element/controller.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/view" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/view.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/elements-loader" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/elements-loader.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/top-panel/view" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/top-panel/view.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="marionette" src="../wp-content/themes/walnut/walnut/dev/js/plugins/backbone.marionette.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="syphon" src="../wp-content/themes/walnut/walnut/dev/js/plugins/backbone.syphon.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jqueryresize" src="../wp-content/themes/walnut/walnut/dev/js/plugins/jquery.ba-resize.min.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="bootstrap" src="../wp-content/themes/walnut/walnut/dev/js/plugins/bootstrap.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="controllers/element-controller" src="../wp-content/themes/walnut/walnut/dev/js/controllers/element-controller.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/element/views" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/element/views.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/elements/row/controller" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/elements/row/controller.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/elements/text/controller" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/elements/text/controller.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/elements/mcq/controller" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/elements/mcq/controller.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="checkbox" src="../wp-content/themes/walnut/walnut/dev/js/plugins/flatui-checkbox.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="holder" src="../wp-content/themes/walnut/walnut/dev/js/plugins/holder.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/elements/text/view" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/elements/text/view.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/elements/row/views" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/elements/row/views.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="apps/content-preview/content-board/elements/mcq/views" src="../wp-content/themes/walnut/walnut/dev/js/apps/content-preview/content-board/elements/mcq/views.js?ver=1398858857273"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="app" src="../wp-content/themes/walnut/walnut/dev/js/content-preview-app.js?ver=1398858857273"></script><style id="holderjs-style" type="text/css"></style></head>
+<body class=" pace-done"><div class="pace  pace-inactive"><div class="pace-progress" data-progress-text="100%" data-progress="99" style="width: 100%;">
+  <div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div></div>
+
+
+<div id="site_main_container" class="showAll">
+  <div>
+    <div id="header-region">
+      <div class="header navbar navbar-inverse">
+        <div class="header navbar navbar-inverse">
+          
+          <!-- BEGIN TOP NAVIGATION BAR -->
+          <div class="navbar-inner">
+            <!-- BEGIN NAVIGATION HEADER -->
+            <div class="header-seperation">
+              
+              <!-- BEGIN MOBILE HEADER -->
+              <ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">
+                
+				<li class="dropdown">
+                  <a class="" href="#main-menu" id="main-menu-toggle">
+                    <div class="iconset top-menu-toggle-white">
+                    </div>
+                  </a>
+              </li>
+              
+          </ul>
+          <!-- END MOBILE HEADER -->
+          <!-- BEGIN LOGO -->
+          
+          <a href="#">
+            <img width="106" height="21" data-src-retina="http://localhost/walnut/wp-content/themes/walnut/images/walnutlearn.png" data-src="http://localhost/walnut/wp-content/themes/walnut/images/walnutlearn.png" alt="" class="logo" src="http://localhost/walnut/wp-content/themes/walnut/images/walnutlearn.png">
+          </a>
+          <!-- END LOGO -->
+          
+          <!-- BEGIN LOGO NAV BUTTONS -->
+          <ul class="nav pull-right notifcation-center">
+            
+            
+            <!-- BEGIN MOBILE CHAT TOGGLER -->
+            <li style="display:none" id="portrait-chat-toggler" class="dropdown">
+              <a class="chat-menu-toggle" href="#sidr">
+                <div class="iconset top-chat-white">
+                </div>
+              </a>
+            </li>
+            <!-- END MOBILE CHAT TOGGLER -->
+            
+          </ul>
+          <!-- END LOGO NAV BUTTONS -->
+      </div>
+      <!-- END NAVIGATION HEADER -->
+      <!-- BEGIN CONTENT HEADER -->
+      <div class="header-quick-nav">
+        
+        <div id="header-left">
+          <div class="pull-left">
+            <!-- BEGIN HEADER LEFT SIDE SECTION -->
+            <!-- BEGIN SLIM NAVIGATION TOGGLE -->
+            <ul class="nav quick-section">
+              <li class="quicklinks">
+                <a id="layout-condensed-toggle" class="" style="cursor:pointer">
+                  <div class="iconset top-menu-toggle-dark">
+                  </div>
+                </a>
+              </li>
+            </ul>
+            <!-- BEGIN HEADER QUICK LINKS -->
+            <ul class="nav quick-section">
+              
+            </ul>
+            <!-- BEGIN HEADER QUICK LINKS -->
+            
+			<!-- END HEADER LEFT SIDE SECTION -->
+              </div>
+          </div>
+          <div id="header-right">
+            <div class="pull-right">
+              <!-- BEGIN HEADER RIGHT SIDE SECTION -->
+              <!-- BEGIN HEADER NAV BUTTONS -->
+              <ul class="nav quick-section2">
+                <!-- BEGIN SETTINGS -->
+                <li class="quicklinks">
+                  
+                  <a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">
+                    
+                    <div class="iconset top-settings-dark">
+                    </div>
+                    
+                  </a>
+                  <ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">
+                    <li>
+                      <a href="#">
+                        My Account
+                      </a>
+                    </li>
+                    <li class="divider">
+                    </li>
+                    
+                    <li>
+                      <a id="user_logout" href="javascript://">
+                        <i class="fa fa-power-off">
+                        </i>
+                        &nbsp;&nbsp;Log Out
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <!-- END SETTINGS -->
+                
+              </ul>
+              <!-- END HEADER NAV BUTTONS -->
+              
+              <!-- END HEADER RIGHT SIDE SECTION -->
+            </div>
+          </div>
+          
+      </div>
+      
+      <!-- END CONTENT HEADER -->
+      
+  </div>
+  <!-- END TOP NAVIGATION BAR -->
+  
+  </div>
+          </div>
+      </div>
+      <div class="page-container row-fluid">
+        <div id="left-nav-region">
+          <div id="main-menu" class="page-sidebar">
+            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;">
+              <div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">
+                
+                <ul class="menu-items">
+                  
+                  
+                  <!-- BEGIN ONE LEVEL MENU -->
+                  
+                  <!-- END ONE LEVEL MENU -->
+                  
+                  <li>
+                    <a href="javascript:;">
+                      
+                      <i class="icon-custom-ui">
+                      </i>
+                      
+                      <span class="title">
+                        Textbooks
+                      </span>
+                      
+                      <span class="arrow">
+                      </span>
+                      
+                    </a>
+                    
+                    <ul class="sub-menu">
+                      
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="javascript:;">
+                      
+                      <i class="icon-custom-ui">
+                      </i>
+                      
+                      <span class="title">
+                        Content Creator
+                      </span>
+                      
+                      <span class="arrow">
+                      </span>
+                      
+                    </a>
+                    
+                    <ul class="sub-menu">
+                      
+                    </ul>
+                  </li>
+                </ul>
+                <!-- END SIDEBAR MENU -->
+                <!-- BEGIN SIDEBAR WIDGETS -->
+                <div class="side-bar-widgets">
+                  
+                </div>
+                <div class="clearfix">
+                </div>
+                <!-- END SIDEBAR WIDGETS -->
+                
+              </div>
+              <div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;">
+              </div>
+              <div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;">
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="scrollup" style="display: inline;">
+          Scroll
+        </a>
+        <div class="page-content ">
+          <div class="content">
+            <div id="login-region">
+            </div>
+            <div id="breadcrumb-region">
+              <ul class="breadcrumb">
+                <li>
+                  <a href="javascript://" class="">
+                    Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:;" class="">
+                    Content Management
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:;" class="active">
+                    Content Preview
+                  </a>
+                </li>
+                <p>
+                </p>
+              </ul>
+            </div>
+            <div id="main-content-region" data-height="1006">
+              <div>
+                <div class="page-title">
+                  
+                  <h3>
+                    <span class="semi-bold">
+                      Preview Question
+                    </span>
+                  </h3>
+                  
+                </div>
+                
+                <div class="preview">
+                  
+                  <div class="" id="top-panel">
+                    <div>
+                      <div class="pieceWrapper">
+                        
+                        <div class="tiles white grid simple vertical blue m-b-0">
+                          
+                          <div class="grid-body no-border">
+                            
+                            <div class="p-t-10">
+                              
+                              <div class="row m-b-10">
+                                
+                                <div class="col-md-4 col-sm-4 b-grey b-r">
+                                  
+                                  <label class="form-label bold small-text">
+                                    Class
+                                  </label>
+                                  4 
+                                </div>
+                                
+                                <div class="col-md-4 col-sm-4 b-grey b-r">
+                                  
+                                  <label class="form-label bold small-text">
+                                    Subject
+                                  </label>
+                                  Science 
+                                </div>
+                                
+                                <div class="col-md-4 col-sm-4">
+                                  
+                                  <label class="form-label bold small-text">
+                                    Chapter
+                                  </label>
+                                  Internal Organs of the Body 
+                                </div>
+                                
+                              </div>
+                              
+                              <div class="row">
+                                
+                                <div class="col-md-4 col-sm-4 b-grey b-r">
+                                  
+                                  <label class="form-label bold small-text">
+                                    Section
+                                  </label>
+                                  Internal &amp; External 
+                                </div>
+                                
+                                <div class="col-md-4 col-sm-4 b-grey b-r">
+                                  
+                                  <label class="form-label bold small-text">
+                                    Sub-Section
+                                  </label>
+                                  - 
+                                </div>
+                                
+                                <div class="col-md-4 col-sm-4">
+                                  
+                                  <label class="form-label bold small-text">
+                                    Type
+                                  </label>
+                                  Difficult 
+                                </div>
+                                
+                              </div>
+                              
+                            </div>
+                            
+                          </div>
+                          
+                        </div>
+                        
+                        <div class="tiles blue p-l-15 p-r-15">
+                          
+                          <div class="tiles-body no-border">
+                            
+                            <div class="row">
+                              
+                              <div class="col-md-4 col-sm-4">
+                                
+                                <h4 class="text-white m-t-0 m-b-0 semi-bold time">
+                                  
+                                  <i class="fa fa-clock-o">
+                                  </i>
+                                  3m15s
+                                </h4>
+                                
+                              </div>
+                              
+                              <div class="col-md-4 col-sm-4 text-center">
+                                
+                                <h4 class="text-white m-t-0 m-b-0  time">
+                                  Marks: 
+                                  <span id="total-marks" class="semi-bold">
+                                    8
+                                  </span>
+                                </h4>
+                                
+                              </div>
+                              
+                              <div class="col-md-4 col-sm-4 text-right">
+                                
+                                <a href="#" class="hashtags transparent">
+                                  
+                                  <i class="fa fa-lightbulb-o">
+                                  </i>
+                                  Hint 
+                                </a>
+                                
+                              </div>
+                              
+                            </div>
+                            
+                          </div>
+                          
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="" id="content-board">
+                    <div id="myCanvas">
+                      Before Submitting 
+                      <div id="question-area">
+                        <div class="element-wrapper">
+                          <form>
+                            <input type="hidden" name="meta_id" value="1398837899299">
+                            <input type="hidden" name="element" value="Mcq">
+                          </form>
+                          
+                          <div class="element-markup">
+                            <p class="fib-text" id="text-172" tabindex="0" spellcheck="false" role="textbox" style="position: relative;">
+                              
+                              The capital of Goa is
+                              
+                              <input type="text" data-id="input-176" contenteditable="true" style="font-family: 'Arial'; font-size: 22px; color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 0);" maxlength="12" class="underline">
+                              
+                              .
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      Case 1
+                      <div id="question-area">
+                        <div class="element-wrapper">
+                          <form>
+                            <input type="hidden" name="meta_id" value="1398837899299">
+                            <input type="hidden" name="element" value="Mcq">
+                          </form>
+                          
+                          <div class="element-markup">
+                            <p class="fib-text" id="text-172" tabindex="0" spellcheck="false" role="textbox" style="position: relative;">
+                              
+                              The capital of Goa is
+                              
+                              <input type="text" data-id="input-176" contenteditable="true" style="font-family: 'Arial'; font-size: 22px; color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 0);" maxlength="12" class="border ansWrong">
+                              
+                              .
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div id="feedback-area">
+                        
+                        <div id="correct" class="alert alert-success text-center answrMsg" style="display: none;">
+                          
+                          <h3 class="bold">
+                            You are right!
+                          </h3>
+                          
+                          <h4 class="semi-bold">
+                            You scored: 
+                            <span class="bold">
+                              <span class="marks">
+                              </span>
+                              /
+                              <span class="total-marks">
+                              </span>
+                            </span>
+                          </h4>
+                          
+                        </div>
+                        
+                        <div id="wrong" class="alert alert-error text-center answrMsg" style="/* display: none; */">
+                          
+                          <h3 class="bold">
+                            Sorry, you did not get this right.
+                          </h3>
+                          
+                          <h4 class="semi-bold">
+                            You scored: 
+                            <span class="bold">
+                              <span class="marks">
+                              </span>
+                              /
+                              <span class="total-marks">
+                              </span>
+                            </span>
+                          </h4>
+                          
+                        </div>
+                        
+                        <div class="alert alert-success text-center fibRightAns">
+                          
+                          
+                          <h5>
+                            The correct answer is:
+                          </h5>
+                          <h4 class="semi-bold">
+                            The capital of Goa is 
+                            <span class="fibAns">
+                              Panjim
+                            </span>
+                            .
+                          </h4>
+                          
+                          
+                        </div>
+                        
+                      </div>
+                      Case 2
+                      
+                      <div id="question-area">
+                        <div class="element-wrapper">
+                          <form>
+                            <input type="hidden" name="meta_id" value="1398837899299">
+                            <input type="hidden" name="element" value="Mcq">
+                          </form>
+                          
+                          <div class="element-markup">
+                            <p class="fib-text" id="text-172" tabindex="0" spellcheck="false" role="textbox" style="position: relative;">
+                              
+                              The capital of Goa is
+                              
+                              <input type="text" data-id="input-176" contenteditable="true" style="font-family: 'Arial'; font-size: 22px; color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 0);" maxlength="12" class="border ansRight">
+                              
+                              .
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div id="feedback-area">
+                        
+                        <div id="correct" class="alert alert-success text-center answrMsg" style="/* display: none; */">
+                          
+                          <h3 class="bold">
+                            You are right!
+                          </h3>
+                          
+                          <h4 class="semi-bold">
+                            You scored: 
+                            <span class="bold">
+                              <span class="marks">
+                              </span>
+                              /
+                              <span class="total-marks">
+                              </span>
+                            </span>
+                          </h4>
+                          
+                        </div>
+                        
+                        <div id="wrong" class="alert alert-error text-center answrMsg" style="display: none;">
+                          
+                          <h3 class="bold">
+                            Sorry, you did not get this right.
+                          </h3>
+                          
+                          <h4 class="semi-bold">
+                            You scored: 
+                            <span class="bold">
+                              <span class="marks">
+                              </span>
+                              /
+                              <span class="total-marks">
+                              </span>
+                            </span>
+                          </h4>
+                          
+                        </div>
+                        
+                        <div class="alert alert-success text-center fibRightAns" style="display: none;">
+  
+  
+						  <h5>
+						    The correct answer is:
+						  </h5>
+						  <h4 class="semi-bold">
+						    The capital of Goa is 
+						    <span class="fibAns">
+						      Panjim
+						    </span>
+						    .
+						  </h4>
+  
+  
+                        </div>
+                        
+                      </div>
+                      Case 3
+                      <div id="question-area">
+                        <div class="element-wrapper">
+                          <form>
+                            <input type="hidden" name="meta_id" value="1398837899299">
+                            <input type="hidden" name="element" value="Mcq">
+                          </form>
+                          
+                          <div class="element-markup">
+                            <p class="fib-text" id="text-172" tabindex="0" spellcheck="false" role="textbox" style="position: relative;">
+                              
+                              <input type="text" data-id="input-176" contenteditable="true" style="font-family: 'Arial'; font-size: 22px; color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 0);" maxlength="12" class="border ansRight">
+                              and 
+                              <input type="text" data-id="input-176" contenteditable="true" style="font-family: 'Arial'; font-size: 22px; color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 0);" maxlength="12" class="border ansWrong">
+                              are planets.
+                              
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="feedback-area">
+                        
+                        <div id="partially-correct" class="alert alert-info text-center answrMsg" style="/* display: none; */">
+                          
+                          <h3 class="bold">
+                            Well you are almost right.
+                          </h3>
+                          
+                          <h4 class="semi-bold">
+                            You scored: 
+                            <span class="bold">
+                              <span class="marks">
+                                4
+                              </span>
+                              /
+                              <span class="total-marks">
+                                8
+                              </span>
+                            </span>
+                          </h4>
+                          
+                        </div>
+                        
+                        <div id="wrong" class="alert alert-error text-center answrMsg" style="display: none;">
+                          
+                          <h3 class="bold">
+                            Sorry, you did not get this right.
+                          </h3>
+                          
+                          <h4 class="semi-bold">
+                            You scored: 
+                            <span class="bold">
+                              <span class="marks">
+                              </span>
+                              /
+                              <span class="total-marks">
+                              </span>
+                            </span>
+                          </h4>
+                          
+                        </div>
+                        
+                        <div class="alert alert-success text-center fibRightAns" style="/* display: none; */">
+  
+  
+						  <h5>
+						    The correct answer is:
+						  </h5>
+						  <h4 class="semi-bold">
+						    <span class="fibAns">
+						      Earth
+						    </span>
+						    and 
+						    <span class="fibAns">
+						      Mars
+						    </span>
+						    are planets.
+						  </h4>
+  
+  
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="" id="bottom-panel">
+                    
+                    <div>
+                      
+                      <div class="m-t-10  pull-right m-b-10 p-t-10 p-b-10">
+                        <button id="submit-answer-button" type="button" class="btn btn-primary">
+                          <i class="fa fa-check">
+                          </i>
+                          Submit
+                        </button>
+                      </div>
+                      
+                      <div class="m-t-10 pull-right m-b-10 p-t-10 p-b-10 m-r-20">
+                        
+                        <button id="skip-button" type="button" class="btn btn-danger">
+                          <i class="fa fa-forward">
+                          </i>
+                          Skip
+                        </button>
+                      </div>
+                      
+                      <div class="clearfix">
+                      </div>
+                      
+                    </div>
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+ 
+
+<script type="text/javascript" src="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+<script type="text/javascript" src="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/js/plugins/ckeditor/ckeditor.js"></script> 
+<script type="text/javascript" data-main="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/js/content-preview-main" src="http://localhost/walnut/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+
+
+
+
+</body></html>

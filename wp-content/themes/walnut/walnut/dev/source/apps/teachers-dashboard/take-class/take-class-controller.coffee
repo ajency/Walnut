@@ -43,10 +43,8 @@ define ['app'
 				
 
 			_showTextbooksListView :->
-
-				App.execute "when:fetched", [textbooks], =>
-
-					textbookListView = new View.TakeClass.TextbooksListView
+				App.execute "when:fetched", textbooks, =>
+					textbookListView= new View.TakeClass.TextbooksListView
 							collection: textbooks
 
 
@@ -72,9 +70,9 @@ define ['app'
 									else 
 										divisionModel.get 'students_count'
 
-					@layout.textbooksListRegion.show(textbookListView)
+						@layout.textbooksListRegion.show(textbookListView)
 
-					@layout.classDetailsRegion.show(classDescriptionView)
+						@layout.classDetailsRegion.show(classDescriptionView)
 
 			_getTrainingModuleLayout : ->
 				new TextbookListLayout
