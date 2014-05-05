@@ -806,8 +806,13 @@ p.mcq-option-text {
   outline: none;
   border-bottom: 2px dashed #f3f3f3;
 }
+.fib-text .fibno {
+  font-size: 15px;
+  opacity: 0.5;
+  margin-left: 5px;
+}
 .fib-text input[type="text"] {
-  margin: 0 8px;
+  margin: 0 8px 0 2px;
   padding: 0px 20px !important;
   vertical-align: text-bottom;
   valign: text-bottom;
@@ -815,7 +820,7 @@ p.mcq-option-text {
   white-space: nowrap;
   border: none;
   height: auto;
-  min-height: inherit;
+  min-height: 30px;
   border-bottom: 4px solid #f3f3f3;
 }
 .fib-text input[type="text"].underline {
@@ -868,6 +873,9 @@ p.mcq-option-text {
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 
+}
+.fib-text input[type="text"].active {
+  outline: 1px solid #0aa699;
 }
 .fibRightAns .fibAns {
   border-bottom: 2px solid #0aa699;
