@@ -58,7 +58,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         pieceIndex = _.indexOf(contentPieces, current_question_id);
         nextQuestion = contentPieces[pieceIndex + 1];
         if (nextQuestion) {
-          console.log(nextQuestion);
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
           this._showQuestionDisplayView(contentPiece);

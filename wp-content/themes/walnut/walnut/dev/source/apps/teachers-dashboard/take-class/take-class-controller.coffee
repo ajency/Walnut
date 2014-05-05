@@ -15,11 +15,11 @@ define ['app'
 
 			initialize :(opts)->
 				console.log opts
-				{@classID,@division, mode} = opts
+				{@classID,@division, @mode} = opts
 
 				breadcrumb_label= 'Start Training'
 
-				if mode is 'take-class'
+				if @mode is 'take-class'
 					divisionModel = App.request "get:division:by:id", @division
 					breadcrumb_label = 'Take Class'
 				else 
@@ -38,19 +38,14 @@ define ['app'
 
 				@show layout, (loading: true, entities: [textbooks,divisionModel])
 
-				@listenTo layout, "show", @_showTextbooksListView mode
+				@listenTo layout, "show", @_showTextbooksListView
 
 				
 
-			_showTextbooksListView :(mode)=>
-
-				App.execute "when:fetched", [textbooks], =>
-
+			_showTextbooksListView :->
+				App.execute "when:fetched", textbooks, =>
 					textbookListView= new View.TakeClass.TextbooksListView
 							collection: textbooks
-							templateHelpers:
-								showUrl:->
-									'/textbook/28'
 
 
 					classDescriptionView = new ClassDescriptionView
@@ -64,20 +59,20 @@ define ['app'
 									subjectsList
 
 								showClassLabel:=>
-									if mode is 'training'
+									if @mode is 'training'
 										CLASS_LABEL[@classID]
 									else 
 										divisionModel.get 'division'
 
 								showNoOfStudents:=>
-									if mode is 'training'
+									if @mode is 'training'
 										'N/A'
 									else 
 										divisionModel.get 'students_count'
 
-					@layout.textbooksListRegion.show(textbookListView)
+						@layout.textbooksListRegion.show(textbookListView)
 
-					@layout.classDetailsRegion.show(classDescriptionView)
+						@layout.classDetailsRegion.show(classDescriptionView)
 
 			_getTrainingModuleLayout : ->
 				new TextbookListLayout

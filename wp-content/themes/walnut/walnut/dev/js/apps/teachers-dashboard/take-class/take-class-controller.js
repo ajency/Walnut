@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/take-class/templates/class-description.html', 'apps/teachers-dashboard/take-class/views'], function(App, RegionController, classDescriptionTpl) {
@@ -11,16 +10,15 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
       __extends(TakeClassController, _super);
 
       function TakeClassController() {
-        this._showTextbooksListView = __bind(this._showTextbooksListView, this);
         return TakeClassController.__super__.constructor.apply(this, arguments);
       }
 
       TakeClassController.prototype.initialize = function(opts) {
-        var breadcrumb_items, breadcrumb_label, layout, mode;
+        var breadcrumb_items, breadcrumb_label, layout;
         console.log(opts);
-        this.classID = opts.classID, this.division = opts.division, mode = opts.mode;
+        this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
         breadcrumb_label = 'Start Training';
-        if (mode === 'take-class') {
+        if (this.mode === 'take-class') {
           divisionModel = App.request("get:division:by:id", this.division);
           breadcrumb_label = 'Take Class';
         } else {
@@ -46,20 +44,15 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
           loading: true,
           entities: [textbooks, divisionModel]
         });
-        return this.listenTo(layout, "show", this._showTextbooksListView(mode));
+        return this.listenTo(layout, "show", this._showTextbooksListView);
       };
 
-      TakeClassController.prototype._showTextbooksListView = function(mode) {
-        return App.execute("when:fetched", [textbooks], (function(_this) {
+      TakeClassController.prototype._showTextbooksListView = function() {
+        return App.execute("when:fetched", textbooks, (function(_this) {
           return function() {
             var classDescriptionView, textbookListView;
             textbookListView = new View.TakeClass.TextbooksListView({
-              collection: textbooks,
-              templateHelpers: {
-                showUrl: function() {
-                  return '/textbook/28';
-                }
-              }
+              collection: textbooks
             });
             classDescriptionView = new ClassDescriptionView({
               templateHelpers: {
@@ -69,14 +62,14 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
                   return subjectsList;
                 },
                 showClassLabel: function() {
-                  if (mode === 'training') {
+                  if (_this.mode === 'training') {
                     return CLASS_LABEL[_this.classID];
                   } else {
                     return divisionModel.get('division');
                   }
                 },
                 showNoOfStudents: function() {
-                  if (mode === 'training') {
+                  if (_this.mode === 'training') {
                     return 'N/A';
                   } else {
                     return divisionModel.get('students_count');

@@ -43,7 +43,8 @@ define ['app'
 
 			gotoTrainingModule:(question, display_mode)=>
 
-				display_mode= 'training' ? @mode is 'training'
+				display_mode= 'training' if @mode is 'training'
+
 
 				App.execute "start:teacher:teaching:app", 
 					region 						: App.mainContentRegion
