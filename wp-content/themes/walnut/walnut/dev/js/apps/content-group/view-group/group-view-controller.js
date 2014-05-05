@@ -18,7 +18,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       GroupController.prototype.initialize = function(opts) {
         var layout;
-        this.model = opts.model, this.module_name = opts.module_name, this.division = opts.division;
+        this.model = opts.model, this.mode = opts.mode, this.division = opts.division;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
           'collection_id': this.model.get('id')
@@ -52,6 +52,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       GroupController.prototype.gotoTrainingModule = function(question, display_mode) {
+        display_mode = 'training' != null ? 'training' : this.mode === 'training';
         return App.execute("start:teacher:teaching:app", {
           region: App.mainContentRegion,
           division: this.division,
@@ -69,13 +70,14 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             App.execute("show:viewgroup:content:group:detailsapp", {
               region: _this.layout.collectionDetailsRegion,
               model: _this.model,
-              module_name: _this.module_name,
+              mode: _this.mode,
               questionResponseCollection: _this.questionResponseCollection
             });
             if (_.size(_this.model.get('content_pieces')) > 0) {
               return App.execute("show:viewgroup:content:displayapp", {
                 region: _this.layout.contentDisplayRegion,
                 model: _this.model,
+                mode: _this.mode,
                 questionResponseCollection: _this.questionResponseCollection,
                 groupContentCollection: _this.groupContentCollection
               });

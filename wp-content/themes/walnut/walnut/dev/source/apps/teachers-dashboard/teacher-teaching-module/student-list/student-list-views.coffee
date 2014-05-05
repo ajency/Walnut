@@ -71,10 +71,11 @@ define ['app'],(App)->
 			emptyView: StudentsEmptyView
 
 			events:
-				'click .tiles.single'	: 'selectStudent'
+				'click .tiles.single.selectable'	: 'selectStudent'
 				'click #right-answer'	: 'addToCorrectList'
 				'click #wrong-answer'	: 'removeFromCorrectList'
 				'click #question-done' 	: 'questionCompleted'
+				'click #pause-session'	:-> @trigger "goto:previous:route"
 
 			serializeData:->
 				data = super()
@@ -84,6 +85,9 @@ define ['app'],(App)->
 				data 
 
 			onShow:->
+				if Marionette.getOption(@, 'display_mode') is 'class_mode'
+					$(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
+
 				$ ".students" 
 				.listnav
 				    #filterSelector: '.last-name'
@@ -143,4 +147,5 @@ define ['app'],(App)->
 					    @trigger "question:completed", "no_answer"
 				else 
 					@trigger "question:completed"
+
 

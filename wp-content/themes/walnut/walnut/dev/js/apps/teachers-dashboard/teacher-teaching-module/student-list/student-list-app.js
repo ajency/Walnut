@@ -25,6 +25,11 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           loading: true,
           entities: [studentCollection]
         });
+        this.listenTo(this.view, "goto:previous:route", (function(_this) {
+          return function() {
+            return _this.region.trigger("goto:previous:route");
+          };
+        })(this));
         this.listenTo(view, "save:question:response", this._saveQuestionResponse);
         return this.listenTo(view, "question:completed", this._changeQuestion);
       };

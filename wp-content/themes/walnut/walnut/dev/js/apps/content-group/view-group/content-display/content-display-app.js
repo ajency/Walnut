@@ -16,7 +16,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionContentDisplayController.prototype.initialize = function(opts) {
         var groupContentCollection, model, questionResponseCollection, view;
-        model = opts.model, this.module_name = opts.module_name, questionResponseCollection = opts.questionResponseCollection;
+        model = opts.model, this.mode = opts.mode, questionResponseCollection = opts.questionResponseCollection;
         groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
         questionResponseCollection = App.request("get:question:response:collection", {
           'division': 3,
@@ -40,7 +40,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           model: model,
           collection: collection,
           responseCollection: responseCollection,
-          module: this.module
+          mode: this.mode
         });
       };
 
@@ -86,24 +86,34 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       ContentDisplayView.prototype.id = 'myCanvas-miki';
 
       ContentDisplayView.prototype.events = {
-        'click .cbp_tmlabel.done': 'viewQuestionReadOnly'
+        'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
       };
 
       ContentDisplayView.prototype.onShow = function() {
-        var question, responseCollection, responseQuestionIDs, _i, _len, _ref, _results;
+        var question, responseCollection, responseQuestionIDs, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
         responseCollection = Marionette.getOption(this, 'responseCollection');
         responseQuestionIDs = responseCollection.pluck('content_piece_id');
-        _ref = this.$el.find('.contentPiece');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          question = _ref[_i];
-          if (_.contains(responseQuestionIDs, $(question).attr('data-id'))) {
-            _results.push($(question).find('.cbp_tmlabel').addClass('done').find('a.question_link').css('cursor', 'pointer'));
-          } else {
-            _results.push(void 0);
+        if (Marionette.getOption(this, 'mode') === 'training') {
+          _ref = this.$el.find('.contentPiece');
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            question = _ref[_i];
+            _results.push($(question).find('.cbp_tmlabel').addClass('completed').css('cursor', 'pointer'));
           }
+          return _results;
+        } else {
+          _ref1 = this.$el.find('.contentPiece');
+          _results1 = [];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            question = _ref1[_j];
+            if (_.contains(responseQuestionIDs, $(question).attr('data-id'))) {
+              _results1.push($(question).find('.cbp_tmlabel').addClass('done completed').css('cursor', 'pointer'));
+            } else {
+              _results1.push(void 0);
+            }
+          }
+          return _results1;
         }
-        return _results;
       };
 
       ContentDisplayView.prototype.viewQuestionReadOnly = function(e) {

@@ -23,7 +23,12 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
           loading: true
         });
         this.listenTo(view, "save:question:response", this._saveQuestionResponse);
-        return this.listenTo(view, "question:completed", this._changeQuestion);
+        this.listenTo(view, "question:completed", this._changeQuestion);
+        return this.listenTo(this.view, "goto:previous:route", (function(_this) {
+          return function() {
+            return _this.region.trigger("goto:previous:route");
+          };
+        })(this));
       };
 
       ChorusOptionsController.prototype._changeQuestion = function(resp) {
@@ -37,7 +42,18 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         return new ChorusOptionsView({
           model: model,
           responsePercentage: this.questionResponseModel.get('question_response'),
-          display_mode: this.display_mode
+          display_mode: this.display_mode,
+          templateHelpers: {
+            showPauseBtn: (function(_this) {
+              return function() {
+                var buttonStr;
+                if (_this.display_mode === 'class_mode') {
+                  buttonStr = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-pause"></i> Pause </button> </div>';
+                }
+                return buttonStr;
+              };
+            })(this)
+          }
         });
       };
 
@@ -68,14 +84,26 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ChorusOptionsView.prototype.template = chorusOptionsTemplate;
 
       ChorusOptionsView.prototype.events = {
-        'click .tiles.single': 'selectStudent',
-        'click #question-done': 'questionCompleted'
+        'click .tiles.single.selectable': 'selectStudent',
+        'click #question-done': 'questionCompleted',
+        'click #pause-session': function() {
+          return this.trigger("goto:previous:route");
+        }
       };
 
       ChorusOptionsView.prototype.onShow = function() {
-        var responsePercentage;
+        var ele, responsePercentage, _i, _len, _ref;
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          _ref = this.$el.find('.tiles.single');
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            ele = _ref[_i];
+            $(ele).addClass('selectable');
+          }
+        }
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
-        return this.$el.find('#' + responsePercentage).find('.default').addClass('green');
+        if (responsePercentage != null) {
+          return this.$el.find('#' + responsePercentage).find('.default').addClass('green');
+        }
       };
 
       ChorusOptionsView.prototype.selectStudent = function(e) {
