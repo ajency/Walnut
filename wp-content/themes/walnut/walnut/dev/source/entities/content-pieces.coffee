@@ -98,11 +98,28 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				#get all content pieces from local database
 				getContentPieceFromLocal:(ids)->
-					runQuery = ->
+					#get question_type from wp_postmeta
+					getQuestionType =(content_piece_id)->
+						runQ =->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT meta_value FROM wp_postmeta WHERE post_id=? AND meta_key='question_type'", [content_piece_id], success(d), deferredErrorHandler(d))
+
+						success =(d)->
+							(tx,data)->
+								meta_value = data.rows.item(0)['meta_value']
+								d.resolve(meta_value)
+
+						$.when(runQ()).done ->
+							console.log 'getQuestionType transaction completed'
+						.fail(failureHandler)
+
+
+					runMainQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' 
-									AND post_status = 'publish' AND ID in ("+ids+")", [], onSuccess(d), onFailure(d))
+									AND post_status = 'publish' AND ID in ("+ids+")", [], onSuccess(d), deferredErrorHandler(d))
 
 					onSuccess =(d)->
 						(tx,data)->
@@ -110,49 +127,59 @@ define ["app", 'backbone'], (App, Backbone) ->
 							i = 0
 							while i < data.rows.length
 								r = data.rows.item(i)
-								result[i] = 
-									ID: r['ID']
-									post_author: r['post_author']
-									post_date: r['post_date']
-									post_date_gmt: r['post_date_gmt']
-									post_content: r['post_content']
-									post_title: r['post_title']
-									post_excerpt: r['post_excerpt']
-									post_status: r['post_status']
-									comment_status: r['comment_status']
-									ping_status: r['ping_status']
-									post_password: r['post_password']
-									post_name: r['post_name']
-									to_ping: r['to_ping']
-									pinged: r['pinged']
-									post_modified: r['post_modified']
-									post_modified_gmt: r['post_modified_gmt']
-									post_content_filtered: r['post_content_filtered']
-									post_parent: r['post_parent']
-									guid: r['guid']
-									menu_order: r['menu_order']
-									post_type: r['post_type']
-									post_mime_type: r['post_mime_type']
-									comment_count: r['comment_count']
-									#Need to implement
-									filter: 'raw'
-									subjects: ''
-									creator: 'admin'
-									content_type: ''
-									question_type: 'individual'
+
+								do(r, i)->
+									questionType = getQuestionType(r['ID'])
+									questionType.done (question_type)->
+										
+										result[i] = 
+											ID: r['ID']
+											post_author: r['post_author']
+											post_date: r['post_date']
+											post_date_gmt: r['post_date_gmt']
+											post_content: r['post_content']
+											post_title: r['post_title']
+											post_excerpt: r['post_excerpt']
+											post_status: r['post_status']
+											comment_status: r['comment_status']
+											ping_status: r['ping_status']
+											post_password: r['post_password']
+											post_name: r['post_name']
+											to_ping: r['to_ping']
+											pinged: r['pinged']
+											post_modified: r['post_modified']
+											post_modified_gmt: r['post_modified_gmt']
+											post_content_filtered: r['post_content_filtered']
+											post_parent: r['post_parent']
+											guid: r['guid']
+											menu_order: r['menu_order']
+											post_type: r['post_type']
+											post_mime_type: r['post_mime_type']
+											comment_count: r['comment_count']
+											question_type: question_type
+
+											#Need to implement
+											filter: 'raw'
+											subjects: ''
+											creator: 'admin'
+											content_type: ''
+											
 								i++
 							
 							d.resolve(result)
 
-					onFailure =(d)->
-						(tx,error)->
+					#Error handlers
+					deferredErrorHandler =(d)->
+						(tx, error)->
 							d.reject(error)
 
-					$.when(runQuery()).done (d)->
-						console.log 'Content piece transaction completed'
-					.fail (error)->
+					failureHandler = (error)->
 						console.log 'ERROR: '+error.message
 
+
+					$.when(runMainQuery()).done (d)->
+						console.log 'Content piece transaction completed'
+					.fail(failureHandler)
 							
 						
 

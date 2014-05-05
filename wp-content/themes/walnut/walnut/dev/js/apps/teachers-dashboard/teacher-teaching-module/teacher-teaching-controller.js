@@ -75,7 +75,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
         questionResponseModel = questionResponseCollection.findWhere({
-          'content_piece_id': content_piece_id.toString()
+          'content_piece_id': parseInt(content_piece_id)
         });
         if (!questionResponseModel) {
           questionResponseModel = App.request("save:question:response", '');

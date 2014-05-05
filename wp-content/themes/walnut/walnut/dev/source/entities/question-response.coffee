@@ -53,46 +53,70 @@ define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
 
 				# get question response from local database
 				getQuestionResponseFromLocal:(collection_id, division)->
-					question_type = 'individual' #Hard coded for now
-					runQuery = ->
+					#get question_type from wp_postmeta
+					getQuestionType =(content_piece_id)->
+						runQ =->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT meta_value FROM wp_postmeta WHERE post_id=? AND meta_key='question_type'", [content_piece_id], success(d), deferredErrorHandler(d))
+
+						success =(d)->
+							(tx,data)->
+								meta_value = data.rows.item(0)['meta_value']
+								d.resolve(meta_value)
+
+						$.when(runQ()).done ->
+							console.log 'getQuestionType transaction completed'
+						.fail(failureHandler)
+
+
+					runMainQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
-								tx.executeSql("SELECT * FROM wp_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), onFailure(d));
+								tx.executeSql("SELECT * FROM wp_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), deferredErrorHandler(d));
 					
 					onSuccess =(d)->
 						(tx,data)->
 							result = []
 							i = 0
 							while i < data.rows.length
-								row = data.rows.item(i)
-								q_resp = ''
-								q_resp = unserialize(row['question_response']) if question_type is 'individual'
+								r = data.rows.item(i)
 
-								result[i] = 
-									id: row['id']
-									content_piece_id: row['content_piece_id']
-									collection_id: row['collection_id']
-									division: row['division']
-									date_created: row['date_created']
-									date_modified: row['date_modified']
-									total_time: row['total_time']
-									question_response: q_resp
-									time_started: row['time_started']
-									time_completed: row['time_completed']
+								do(r, i)->
+									questionType = getQuestionType(r['content_piece_id'])
+									questionType.done (question_type)->
+										if question_type is 'individual'
+											q_resp = unserialize(r['question_response'])
+										else q_resp = r['question_response']	
+
+										result[i] = 
+											id: r['id']
+											content_piece_id: r['content_piece_id']
+											collection_id: r['collection_id']
+											division: r['division']
+											date_created: r['date_created']
+											date_modified: r['date_modified']
+											total_time: r['total_time']
+											question_response: q_resp
+											time_started: r['time_started']
+											time_completed: r['time_completed']
 
 								i++	
 		
 							d.resolve(result)
 
-					onFailure =(d)->
-						(tx,error)->
+					#Error handlers
+					deferredErrorHandler =(d)->
+						(tx, error)->
 							d.reject(error)
 
-					$.when(runQuery()).done (data)->
-						console.log 'getQuestionResponseFromLocal transaction completed'
-					.fail (error)->
-						console.log 'ERROR: '+error.message
+					failureHandler = (error)->
+						console.log 'ERROR: '+error.message			
 
+					$.when(runMainQuery()).done (data)->
+						console.log 'getQuestionResponseFromLocal transaction completed'
+					.fail(failureHandler)
+				
 				
 				saveQuestionResponseLocal:(p)->
 					#function to insert record in wp_question_response
@@ -109,9 +133,10 @@ define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
 
 
 					#function to update record in wp_question_response
-					updateQuestionResponse =->
+					updateQuestionResponse =(data)->
 						_.db.transaction( (tx)->
-							tx.executeSql("UPDATE wp_question_response SET status=? WHERE id=?", [status, id])
+							tx.executeSql("UPDATE wp_question_response SET date_modified=?, question_response=? 
+								WHERE id=?", [data.date_modified, data.question_response, data.id])
 							
 						,(tx, error)->
 							console.log 'ERROR: '+error.message
@@ -134,9 +159,12 @@ define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
 						insertQuestionResponse(insertData)	
 
 					else 
-						console.log 'ID: '+p.id		
+						updateData =
+							id: p.id
+							date_modified: _.getCurrentDate()
+							question_response: serialize(p.question_response)
 
-							
+						updateQuestionResponse(updateData)
 
 
 			# request handler to get all responses

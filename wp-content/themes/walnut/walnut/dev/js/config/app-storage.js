@@ -18,7 +18,7 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
     });
   };
   transactionErrorHandler = function(tx, error) {
-    return console.log('ERROR: ' + error);
+    return console.log('ERROR: ' + error.message);
   };
   _.db = window.sqlitePlugin.openDatabase({
     name: "walnutapp"

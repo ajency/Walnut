@@ -145,11 +145,31 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
       },
       getContentPieceFromLocal: function(ids) {
-        var onFailure, onSuccess, runQuery;
-        runQuery = function() {
+        var deferredErrorHandler, failureHandler, getQuestionType, onSuccess, runMainQuery;
+        getQuestionType = function(content_piece_id) {
+          var runQ, success;
+          runQ = function() {
+            return $.Deferred(function(d) {
+              return _.db.transaction(function(tx) {
+                return tx.executeSql("SELECT meta_value FROM wp_postmeta WHERE post_id=? AND meta_key='question_type'", [content_piece_id], success(d), deferredErrorHandler(d));
+              });
+            });
+          };
+          success = function(d) {
+            return function(tx, data) {
+              var meta_value;
+              meta_value = data.rows.item(0)['meta_value'];
+              return d.resolve(meta_value);
+            };
+          };
+          return $.when(runQ()).done(function() {
+            return console.log('getQuestionType transaction completed');
+          }).fail(failureHandler);
+        };
+        runMainQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' AND post_status = 'publish' AND ID in (" + ids + ")", [], onSuccess(d), onFailure(d));
+              return tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' AND post_status = 'publish' AND ID in (" + ids + ")", [], onSuccess(d), deferredErrorHandler(d));
             });
           });
         };
@@ -160,51 +180,58 @@ define(["app", 'backbone'], function(App, Backbone) {
             i = 0;
             while (i < data.rows.length) {
               r = data.rows.item(i);
-              result[i] = {
-                ID: r['ID'],
-                post_author: r['post_author'],
-                post_date: r['post_date'],
-                post_date_gmt: r['post_date_gmt'],
-                post_content: r['post_content'],
-                post_title: r['post_title'],
-                post_excerpt: r['post_excerpt'],
-                post_status: r['post_status'],
-                comment_status: r['comment_status'],
-                ping_status: r['ping_status'],
-                post_password: r['post_password'],
-                post_name: r['post_name'],
-                to_ping: r['to_ping'],
-                pinged: r['pinged'],
-                post_modified: r['post_modified'],
-                post_modified_gmt: r['post_modified_gmt'],
-                post_content_filtered: r['post_content_filtered'],
-                post_parent: r['post_parent'],
-                guid: r['guid'],
-                menu_order: r['menu_order'],
-                post_type: r['post_type'],
-                post_mime_type: r['post_mime_type'],
-                comment_count: r['comment_count'],
-                filter: 'raw',
-                subjects: '',
-                creator: 'admin',
-                content_type: '',
-                question_type: 'individual'
-              };
+              (function(r, i) {
+                var questionType;
+                questionType = getQuestionType(r['ID']);
+                return questionType.done(function(question_type) {
+                  return result[i] = {
+                    ID: r['ID'],
+                    post_author: r['post_author'],
+                    post_date: r['post_date'],
+                    post_date_gmt: r['post_date_gmt'],
+                    post_content: r['post_content'],
+                    post_title: r['post_title'],
+                    post_excerpt: r['post_excerpt'],
+                    post_status: r['post_status'],
+                    comment_status: r['comment_status'],
+                    ping_status: r['ping_status'],
+                    post_password: r['post_password'],
+                    post_name: r['post_name'],
+                    to_ping: r['to_ping'],
+                    pinged: r['pinged'],
+                    post_modified: r['post_modified'],
+                    post_modified_gmt: r['post_modified_gmt'],
+                    post_content_filtered: r['post_content_filtered'],
+                    post_parent: r['post_parent'],
+                    guid: r['guid'],
+                    menu_order: r['menu_order'],
+                    post_type: r['post_type'],
+                    post_mime_type: r['post_mime_type'],
+                    comment_count: r['comment_count'],
+                    question_type: question_type,
+                    filter: 'raw',
+                    subjects: '',
+                    creator: 'admin',
+                    content_type: ''
+                  };
+                });
+              })(r, i);
               i++;
             }
             return d.resolve(result);
           };
         };
-        onFailure = function(d) {
+        deferredErrorHandler = function(d) {
           return function(tx, error) {
             return d.reject(error);
           };
         };
-        return $.when(runQuery()).done(function(d) {
-          return console.log('Content piece transaction completed');
-        }).fail(function(error) {
+        failureHandler = function(error) {
           return console.log('ERROR: ' + error.message);
-        });
+        };
+        return $.when(runMainQuery()).done(function(d) {
+          return console.log('Content piece transaction completed');
+        }).fail(failureHandler);
       }
     };
     App.reqres.setHandler("get:content:pieces", function(opt) {

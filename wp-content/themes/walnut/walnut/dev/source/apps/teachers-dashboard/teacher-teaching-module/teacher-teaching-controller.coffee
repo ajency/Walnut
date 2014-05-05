@@ -92,8 +92,10 @@ define ['app'
 
 
 			_getOrCreateModel:(content_piece_id)=>
+				
 				questionResponseModel = questionResponseCollection.findWhere 
-											'content_piece_id': content_piece_id.toString()
+											'content_piece_id':parseInt content_piece_id
+
 
 				#if model doesnt exist in collection setting default values
 				if not questionResponseModel

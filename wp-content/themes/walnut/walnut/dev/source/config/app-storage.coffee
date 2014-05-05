@@ -30,7 +30,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 
     #database transaction error handler
     transactionErrorHandler =(tx, error)->
-        console.log 'ERROR: '+error
+        console.log 'ERROR: '+error.message
 
 
     #Access data from a pre-populated local db file
