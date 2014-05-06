@@ -49,8 +49,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
               var correctAnswersArray;
               _this.answerModel.get('answer').push($(blank).val());
               correctAnswersArray = _this.blanksCollection.get($(blank).attr('data-id')).get('correct_answers');
-              if (!_this._checkAnswer($(blank).val(), correctAnswersArray)) {
-                return _this.answerModel.set('marks', 0);
+              if (_this._checkAnswer($(blank).val(), correctAnswersArray)) {
+                return $(blank).addClass('ansRight');
+              } else {
+                _this.answerModel.set('marks', 0);
+                return $(blank).addClass('ansWrong');
               }
             };
           })(this));
@@ -63,7 +66,10 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
               correctAnswersArray = blankModel.get('correct_answers');
               console.log(correctAnswersArray);
               if (_this._checkAnswer($(blank).val(), correctAnswersArray)) {
-                return _this.answerModel.set('marks', _this.answerModel.get('marks') + blankModel.get('marks'));
+                _this.answerModel.set('marks', _this.answerModel.get('marks') + blankModel.get('marks'));
+                return $(blank).addClass('ansRight');
+              } else {
+                return $(blank).addClass('ansWrong');
               }
             };
           })(this));

@@ -21,7 +21,7 @@ define ['app'
 							@blanksCollection = App.request "create:new:question:element:collection",@layout.model.get 'blanksArray'
 					
 							App.execute "show:total:marks",@layout.model.get 'marks'
-							
+
 							@layout.model.set 'blanksArray',@blanksCollection
 							# get the view 
 							@view = @_getFibView @layout.model
@@ -62,8 +62,12 @@ define ['app'
 								# get array of correct answers
 								correctAnswersArray = @blanksCollection.get($(blank).attr('data-id')).get('correct_answers')
 
-								if not @_checkAnswer $(blank).val(),correctAnswersArray
+								if @_checkAnswer $(blank).val(),correctAnswersArray
+									$(blank).addClass('ansRight')
+								else
 									@answerModel.set 'marks',0
+									$(blank).addClass('ansWrong')
+
 
 						else 
 							_.each @view.$el.find('input'), (blank,index)=>
@@ -77,6 +81,9 @@ define ['app'
 
 								if @_checkAnswer $(blank).val(),correctAnswersArray
 									@answerModel.set 'marks', @answerModel.get('marks')+blankModel.get('marks')
+									$(blank).addClass('ansRight')
+								else
+									$(blank).addClass('ansWrong')
 
 
 
