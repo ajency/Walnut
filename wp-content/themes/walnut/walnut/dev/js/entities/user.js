@@ -94,7 +94,7 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);
     });
-    return App.reqres.setHandler("get:user:local:by:division", function(division) {
+    return App.reqres.setHandler("get:user:by:division:local", function(division) {
       return API.getUsersFromLocal(division);
     });
   });

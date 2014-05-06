@@ -54,12 +54,17 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'user'
-				data = App.reqres.request "get:#{collection_name}:local:by:division", opts.division
+				data = App.reqres.request "get:#{collection_name}:by:division:local", opts.division
 				data.done (d)->
 					collection.set d
 
 			if collection_name is 'question-response'
 				data = App.reqres.request "get:#{collection_name}:local", opts.collection_id, opts.division
+				data.done (d)->
+					collection.set d
+
+			if collection_name is 'textbookName'
+				data = App.reqres.request "get:#{collection_name}:by:term_ids:local", opts.term_ids
 				data.done (d)->
 					collection.set d
 

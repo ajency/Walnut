@@ -113,27 +113,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						$.when(runQ()).done ->
 							console.log 'getContentPiecesAndDescription transaction completed'
 						.fail _.failureHandler
-
-					#get chapter name
-					getChapterName =(term_ids)->
-						temp = unserialize(term_ids)
-
-						runQ =->
-							$.Deferred (d)->
-								_.db.transaction (tx)->
-									tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), _.deferredErrorHandler(d))
-
-						success =(d)->
-							(tx,data)->
-								if data.rows.length is 0
-									name = ''
-								else	
-									name = data.rows.item(0)['name']
-								d.resolve(name)
-
-						$.when(runQ()).done ->
-							console.log 'getChapterName transaction completed'
-						.fail _.failureHandler
 												
 					#get data from wp_content_collection
 					runMainQuery = ->
@@ -162,29 +141,24 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 												content_pieces = unserialize(d.content_pieces) if d.content_pieces isnt ''
 												description = unserialize(d.description) if d.description isnt ''
 
-												do(r, i, date, status, content_pieces, description)->
-													chapterName = getChapterName(r['term_ids'])
-													chapterName.done (name)->
-												
-														result[i] = 
-															id: r['id']
-															name: r['name']
-															created_on: r['created_on']
-															created_by: r['created_by']
-															last_modified_on: r['last_modified_on']
-															last_modified_by: r['last_modified_by']
-															published_on: r['published_on']
-															published_by: r['published_by']
-															type: r['type']
-															term_ids: unserialize(r['term_ids'])
-															showChapter: name
-															duration: getDuration(r['duration'])
-															minshours: getMinsHours(r['duration'])
-															total_minutes: r['duration']
-															status: status
-															training_date: date
-															content_pieces: content_pieces
-															description: description
+												result[i] = 
+													id: r['id']
+													name: r['name']
+													created_on: r['created_on']
+													created_by: r['created_by']
+													last_modified_on: r['last_modified_on']
+													last_modified_by: r['last_modified_by']
+													published_on: r['published_on']
+													published_by: r['published_by']
+													type: r['type']
+													term_ids: unserialize(r['term_ids'])
+													duration: getDuration(r['duration'])
+													minshours: getMinsHours(r['duration'])
+													total_minutes: r['duration']
+													status: status
+													training_date: date
+													content_pieces: content_pieces
+													description: description
 										
 								i++
 							

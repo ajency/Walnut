@@ -131,6 +131,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getTextBookNamesByIDs: function(ids) {
         var textbookNamesCollection;
+        ids = _.compact(_.flatten(ids));
         textbookNamesCollection = new Textbooks.NamesCollection;
         textbookNamesCollection.fetch({
           reset: true,
@@ -268,6 +269,35 @@ define(["app", 'backbone'], function(App, Backbone) {
         return $.when(runMainQuery()).done(function(data) {
           return console.log('getTextbooksByID transaction completed');
         }).fail(_.failureHandler);
+      },
+      getTextBookNamesByIDsFromLocal: function(ids) {
+        var onSuccess, runQuery;
+        runQuery = function() {
+          return $.Deferred(function(d) {
+            return _.db.transaction(function(tx) {
+              return tx.executeSql("SELECT term_id, name FROM wp_terms WHERE term_id IN (" + ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
+            });
+          });
+        };
+        onSuccess = function(d) {
+          return function(tx, data) {
+            var i, r, result;
+            result = [];
+            i = 0;
+            while (i < data.rows.length) {
+              r = data.rows.item(i);
+              result[i] = {
+                id: r['term_id'],
+                name: r['name']
+              };
+              i++;
+            }
+            return d.resolve(result);
+          };
+        };
+        return $.when(runQuery()).done(function() {
+          return console.log('getTextBookNamesByIDsFromLocal transaction completed');
+        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:textbooks", function(opt) {
@@ -285,8 +315,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:textbook:local", function() {
       return API.getTextbooksFromLocal();
     });
-    return App.reqres.setHandler("get:textbook:by:id:local", function(class_id) {
+    App.reqres.setHandler("get:textbook:by:id:local", function(class_id) {
       return API.getTextbooksByIDFromLocal(class_id);
+    });
+    return App.reqres.setHandler("get:textbookName:by:term_ids:local", function(ids) {
+      return API.getTextBookNamesByIDsFromLocal(ids);
     });
   });
 });

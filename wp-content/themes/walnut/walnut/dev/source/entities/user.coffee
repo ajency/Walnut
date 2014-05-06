@@ -78,5 +78,5 @@ define ["app", 'backbone'], (App, Backbone) ->
 				API.getUsers opts
 
 			# request handler to get users from local database
-			App.reqres.setHandler "get:user:local:by:division",(division) ->
+			App.reqres.setHandler "get:user:by:division:local",(division) ->
 				API.getUsersFromLocal division

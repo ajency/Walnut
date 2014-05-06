@@ -83,6 +83,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					textbookName
 
 				getTextBookNamesByIDs:(ids)->
+					ids = _.compact _.flatten ids
 					textbookNamesCollection = new Textbooks.NamesCollection
 					textbookNamesCollection.fetch
 										reset : true
@@ -139,7 +140,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				# get textbooks by class id from local database
 				getTextbooksByIDFromLocal:(class_id)->
-
+					#user id hardcoded as 1 for now
 					getTextBookIds =->
 						runQ =->
 							$.Deferred (d)->
@@ -212,6 +213,30 @@ define ["app", 'backbone'], (App, Backbone) ->
 					.fail _.failureHandler
 
 
+				getTextBookNamesByIDsFromLocal : (ids)->
+					
+					runQuery = ->
+						$.Deferred (d)->
+							_.db.transaction (tx)->
+								tx.executeSql("SELECT term_id, name FROM wp_terms WHERE term_id IN ("+ids+")", [], onSuccess(d), _.deferredErrorHandler(d))
+
+					onSuccess =(d)->
+						(tx, data)->
+							result = []
+							i = 0
+							while i < data.rows.length
+								r = data.rows.item(i)
+								result[i] =
+									id: r['term_id']
+									name: r['name']
+								i++
+							d.resolve(result)
+
+					$.when(runQuery()).done ->
+						console.log 'getTextBookNamesByIDsFromLocal transaction completed'
+					.fail _.failureHandler	
+
+
 			# request handler to get all textbooks
 			App.reqres.setHandler "get:textbooks", (opt) ->
 				API.getTextbooks(opt)
@@ -231,5 +256,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:textbook:by:id:local", (class_id)->
 				API.getTextbooksByIDFromLocal class_id
+
+			App.reqres.setHandler "get:textbookName:by:term_ids:local", (ids)->
+				API.getTextBookNamesByIDsFromLocal ids		
 
 

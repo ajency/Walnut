@@ -106,7 +106,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return contentGroupItem;
       },
       getContentGroupByIdFromLocal: function(id, division) {
-        var getChapterName, getContentPiecesAndDescription, getDuration, getMinsHours, onSuccess, runMainQuery;
+        var getContentPiecesAndDescription, getDuration, getMinsHours, onSuccess, runMainQuery;
         getContentPiecesAndDescription = function(collection_id) {
           var contentPiecesAndDescription, runQ, success;
           contentPiecesAndDescription = {
@@ -139,31 +139,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           };
           return $.when(runQ()).done(function() {
             return console.log('getContentPiecesAndDescription transaction completed');
-          }).fail(_.failureHandler);
-        };
-        getChapterName = function(term_ids) {
-          var runQ, success, temp;
-          temp = unserialize(term_ids);
-          runQ = function() {
-            return $.Deferred(function(d) {
-              return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), _.deferredErrorHandler(d));
-              });
-            });
-          };
-          success = function(d) {
-            return function(tx, data) {
-              var name;
-              if (data.rows.length === 0) {
-                name = '';
-              } else {
-                name = data.rows.item(0)['name'];
-              }
-              return d.resolve(name);
-            };
-          };
-          return $.when(runQ()).done(function() {
-            return console.log('getChapterName transaction completed');
           }).fail(_.failureHandler);
         };
         runMainQuery = function() {
@@ -201,32 +176,25 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                       if (d.description !== '') {
                         description = unserialize(d.description);
                       }
-                      return (function(r, i, date, status, content_pieces, description) {
-                        var chapterName;
-                        chapterName = getChapterName(r['term_ids']);
-                        return chapterName.done(function(name) {
-                          return result[i] = {
-                            id: r['id'],
-                            name: r['name'],
-                            created_on: r['created_on'],
-                            created_by: r['created_by'],
-                            last_modified_on: r['last_modified_on'],
-                            last_modified_by: r['last_modified_by'],
-                            published_on: r['published_on'],
-                            published_by: r['published_by'],
-                            type: r['type'],
-                            term_ids: unserialize(r['term_ids']),
-                            showChapter: name,
-                            duration: getDuration(r['duration']),
-                            minshours: getMinsHours(r['duration']),
-                            total_minutes: r['duration'],
-                            status: status,
-                            training_date: date,
-                            content_pieces: content_pieces,
-                            description: description
-                          };
-                        });
-                      })(r, i, date, status, content_pieces, description);
+                      return result[i] = {
+                        id: r['id'],
+                        name: r['name'],
+                        created_on: r['created_on'],
+                        created_by: r['created_by'],
+                        last_modified_on: r['last_modified_on'],
+                        last_modified_by: r['last_modified_by'],
+                        published_on: r['published_on'],
+                        published_by: r['published_by'],
+                        type: r['type'],
+                        term_ids: unserialize(r['term_ids']),
+                        duration: getDuration(r['duration']),
+                        minshours: getMinsHours(r['duration']),
+                        total_minutes: r['duration'],
+                        status: status,
+                        training_date: date,
+                        content_pieces: content_pieces,
+                        description: description
+                      };
                     });
                   })(r, i, date, status);
                 });

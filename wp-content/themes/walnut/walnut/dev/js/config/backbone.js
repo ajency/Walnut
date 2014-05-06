@@ -52,13 +52,19 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'user') {
-        data = App.reqres.request("get:" + collection_name + ":local:by:division", opts.division);
+        data = App.reqres.request("get:" + collection_name + ":by:division:local", opts.division);
         data.done(function(d) {
           return collection.set(d);
         });
       }
       if (collection_name === 'question-response') {
         data = App.reqres.request("get:" + collection_name + ":local", opts.collection_id, opts.division);
+        data.done(function(d) {
+          return collection.set(d);
+        });
+      }
+      if (collection_name === 'textbookName') {
+        data = App.reqres.request("get:" + collection_name + ":by:term_ids:local", opts.term_ids);
         data.done(function(d) {
           return collection.set(d);
         });
