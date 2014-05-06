@@ -18,7 +18,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       GroupController.prototype.initialize = function(opts) {
         var layout;
-        this.model = opts.model, this.mode = opts.mode, this.division = opts.division;
+        this.model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
           'collection_id': this.model.get('id')
@@ -59,6 +59,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           contentGroupModel: this.model,
           questionsCollection: this.groupContentCollection,
           textbookNames: this.textbookNames,
+          classID: this.classID,
           display_mode: display_mode
         });
       };
