@@ -145,31 +145,11 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
       },
       getContentPieceFromLocal: function(ids) {
-        var deferredErrorHandler, failureHandler, getQuestionType, onSuccess, runMainQuery;
-        getQuestionType = function(content_piece_id) {
-          var runQ, success;
-          runQ = function() {
-            return $.Deferred(function(d) {
-              return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT meta_value FROM wp_postmeta WHERE post_id=? AND meta_key='question_type'", [content_piece_id], success(d), deferredErrorHandler(d));
-              });
-            });
-          };
-          success = function(d) {
-            return function(tx, data) {
-              var meta_value;
-              meta_value = data.rows.item(0)['meta_value'];
-              return d.resolve(meta_value);
-            };
-          };
-          return $.when(runQ()).done(function() {
-            return console.log('getQuestionType transaction completed');
-          }).fail(failureHandler);
-        };
+        var onSuccess, runMainQuery;
         runMainQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' AND post_status = 'publish' AND ID in (" + ids + ")", [], onSuccess(d), deferredErrorHandler(d));
+              return tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' AND post_status = 'publish' AND ID in (" + ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
         };
@@ -182,7 +162,7 @@ define(["app", 'backbone'], function(App, Backbone) {
               r = data.rows.item(i);
               (function(r, i) {
                 var questionType;
-                questionType = getQuestionType(r['ID']);
+                questionType = _.getQuestionType(r['ID']);
                 return questionType.done(function(question_type) {
                   return result[i] = {
                     ID: r['ID'],
@@ -221,17 +201,9 @@ define(["app", 'backbone'], function(App, Backbone) {
             return d.resolve(result);
           };
         };
-        deferredErrorHandler = function(d) {
-          return function(tx, error) {
-            return d.reject(error);
-          };
-        };
-        failureHandler = function(error) {
-          return console.log('ERROR: ' + error.message);
-        };
         return $.when(runMainQuery()).done(function(d) {
           return console.log('Content piece transaction completed');
-        }).fail(failureHandler);
+        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:content:pieces", function(opt) {

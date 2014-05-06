@@ -73,11 +73,11 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return division;
       },
       getDivisionsFromLocal: function() {
-        var getClassLabel, onFailure, onSuccess, runQuery;
+        var onSuccess, runQuery;
         runQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql('SELECT meta_value FROM wp_usermeta WHERE user_id=1 AND meta_key="classes"', [], onSuccess(d), onFailure(d));
+              return tx.executeSql('SELECT meta_value FROM wp_usermeta WHERE user_id=1 AND meta_key="classes"', [], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
         };
@@ -94,36 +94,18 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                   id: r['id'],
                   division: r['division'],
                   class_id: r['class_id'],
-                  class_label: getClassLabel(r['class_id']),
+                  class_label: CLASS_LABEL[r['class_id']],
                   students_count: r['students_count']
                 };
                 i++;
               }
               return d.resolve(result);
-            }, function(tx, error) {
-              return console.log('ERROR: ' + error.message);
-            });
+            }, _.transactionErrorHandler);
           };
-        };
-        onFailure = function(d) {
-          return function(tx, error) {
-            return d.reject(error);
-          };
-        };
-        getClassLabel = function(class_id) {
-          if (class_id === 1) {
-            return 'Junior KG';
-          } else if (class_id === 2) {
-            return 'Senior KG';
-          } else {
-            return 'Class ' + (class_id - 2);
-          }
         };
         return $.when(runQuery()).done(function(data) {
           return console.log('getDivisionsFromLocal transaction completed');
-        }).fail(function(error) {
-          return console.log('ERROR: ' + error.message);
-        });
+        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:divisions", function(opt) {

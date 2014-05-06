@@ -40,11 +40,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				#get users from local database	
 				getUsersFromLocal:(division)->
+
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_users u INNER JOIN wp_usermeta um 
-									ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?", [division], onSuccess(d), onFailure(d));
+									ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?", [division], onSuccess(d), _.deferredErrorHandler(d));
 								
 
 					onSuccess =(d)->
@@ -64,15 +65,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 		
 							d.resolve(result)
 
-					onFailure =(d)->
-						(tx,error)->
-							d.reject(error)
-
 					$.when(runQuery()).done (data)->
 						console.log 'getUsersFromLocal transaction completed'
-					.fail (error)->
-						console.log 'ERROR: '+error.message	
-
+					.fail _.failureHandler
 
 
 

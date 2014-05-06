@@ -103,7 +103,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			runQuery = ->
 				$.Deferred (d)->
 					_.userDb.transaction (tx)->
-						tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), onFailure(d))
+						tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
 				(tx,data)->
@@ -115,16 +115,11 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 							data.password = r['password']
 						i++
 
-					d.resolve(data)	
-				
-			onFailure = (d)->
-				(tx, error)->
-					d.reject(error)
+					d.resolve(data)
 
 			$.when(runQuery()).done (data)->
 				console.log 'isExistingUser transaction completed'
-			.fail (error)->
-				console.log 'ERROR: '+error.message
+			.fail _.failureHandler
 
 
 		
@@ -132,8 +127,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			_.userDb.transaction((tx)=>
 				tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES (?, ?, "")', [@data.txtusername, @data.txtpassword])
 
-			,(tx, error)->
-				console.log 'ERROR: '+error.message 
+			,_.transactionErrorhandler 
 			,(tx)->
 				console.log 'Success: Inserted new user'
 			)
@@ -144,8 +138,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			_.userDb.transaction((tx)=>
 				tx.executeSql("UPDATE USERS SET password=? where username=?", [@data.txtpassword, @data.txtusername])
 
-			,(tx, error)->
-				console.log 'ERROR: '+error.message 
+			,_.transactionErrorhandler 
 			,(tx)->
 				console.log 'Success: Updated user password'
 			)

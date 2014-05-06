@@ -74,11 +74,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				#get chapters from local database
 				getChaptersFromLocal:(parent)->
+					
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
-									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=?", [parent], onSuccess(d), onFailure(d))
+									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=?", [parent], onSuccess(d), _.deferredErrorHandler(d))
 
 					onSuccess =(d)->
 						(tx,data)->
@@ -109,14 +110,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 							
 							d.resolve(result)
 
-					onFailure =(d)->
-						(tx,error)->
-							d.reject 'ERROR: '+error	
-
 					$.when(runQuery()).done (d)->
 						console.log 'getChaptersFromLocal transaction completed'
-					.fail (error)->
-						console.log 'ERROR: '+error
+					.fail _.failureHandler
 
 
 			# request handler to get all Chapters

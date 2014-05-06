@@ -117,7 +117,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.isExistingUser = function(username) {
-      var data, onFailure, onSuccess, runQuery;
+      var data, onSuccess, runQuery;
       data = {
         exists: false,
         password: ''
@@ -125,7 +125,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.userDb.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), onFailure(d));
+            return tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -144,16 +144,9 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           return d.resolve(data);
         };
       };
-      onFailure = function(d) {
-        return function(tx, error) {
-          return d.reject(error);
-        };
-      };
       return $.when(runQuery()).done(function(data) {
         return console.log('isExistingUser transaction completed');
-      }).fail(function(error) {
-        return console.log('ERROR: ' + error.message);
-      });
+      }).fail(_.failureHandler);
     };
 
     AuthenticationController.prototype.inputNewUser = function() {
@@ -161,9 +154,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         return function(tx) {
           return tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES (?, ?, "")', [_this.data.txtusername, _this.data.txtpassword]);
         };
-      })(this), function(tx, error) {
-        return console.log('ERROR: ' + error.message);
-      }, function(tx) {
+      })(this), _.transactionErrorhandler, function(tx) {
         return console.log('Success: Inserted new user');
       });
     };
@@ -173,9 +164,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         return function(tx) {
           return tx.executeSql("UPDATE USERS SET password=? where username=?", [_this.data.txtpassword, _this.data.txtusername]);
         };
-      })(this), function(tx, error) {
-        return console.log('ERROR: ' + error.message);
-      }, function(tx) {
+      })(this), _.transactionErrorhandler, function(tx) {
         return console.log('Success: Updated user password');
       });
     };

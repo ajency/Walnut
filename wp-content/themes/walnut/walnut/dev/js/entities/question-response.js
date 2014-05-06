@@ -71,31 +71,11 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
         return questionResponse;
       },
       getQuestionResponseFromLocal: function(collection_id, division) {
-        var deferredErrorHandler, failureHandler, getQuestionType, onSuccess, runMainQuery;
-        getQuestionType = function(content_piece_id) {
-          var runQ, success;
-          runQ = function() {
-            return $.Deferred(function(d) {
-              return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT meta_value FROM wp_postmeta WHERE post_id=? AND meta_key='question_type'", [content_piece_id], success(d), deferredErrorHandler(d));
-              });
-            });
-          };
-          success = function(d) {
-            return function(tx, data) {
-              var meta_value;
-              meta_value = data.rows.item(0)['meta_value'];
-              return d.resolve(meta_value);
-            };
-          };
-          return $.when(runQ()).done(function() {
-            return console.log('getQuestionType transaction completed');
-          }).fail(failureHandler);
-        };
+        var onSuccess, runMainQuery;
         runMainQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), deferredErrorHandler(d));
+              return tx.executeSql("SELECT * FROM wp_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
         };
@@ -108,7 +88,7 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
               r = data.rows.item(i);
               (function(r, i) {
                 var questionType;
-                questionType = getQuestionType(r['content_piece_id']);
+                questionType = _.getQuestionType(r['content_piece_id']);
                 return questionType.done(function(question_type) {
                   var q_resp;
                   if (question_type === 'individual') {
@@ -135,59 +115,56 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
             return d.resolve(result);
           };
         };
-        deferredErrorHandler = function(d) {
-          return function(tx, error) {
-            return d.reject(error);
-          };
-        };
-        failureHandler = function(error) {
-          return console.log('ERROR: ' + error.message);
-        };
         return $.when(runMainQuery()).done(function(data) {
           return console.log('getQuestionResponseFromLocal transaction completed');
-        }).fail(failureHandler);
+        }).fail(_.failureHandler);
       },
       saveQuestionResponseLocal: function(p) {
-        var insertData, insertQuestionResponse, updateData, updateQuestionResponse;
+        var insertQuestionResponse, questionType, updateQuestionResponse;
         insertQuestionResponse = function(data) {
           return _.db.transaction(function(tx) {
             return tx.executeSql("INSERT INTO wp_question_response (content_piece_id, collection_id, division, date_created, date_modified, total_time, question_response, time_started, time_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [data.content_piece_id, data.collection_id, data.division, data.date_created, data.date_modified, data.total_time, data.question_response, data.time_started, data.time_completed]);
-          }, function(tx, error) {
-            return console.log('ERROR: ' + error.message);
-          }, function(tx) {
+          }, _.transactionErrorHandler, function(tx) {
             return console.log('Success: Inserted new record in wp_question_response');
           });
         };
         updateQuestionResponse = function(data) {
           return _.db.transaction(function(tx) {
             return tx.executeSql("UPDATE wp_question_response SET date_modified=?, question_response=? WHERE id=?", [data.date_modified, data.question_response, data.id]);
-          }, function(tx, error) {
-            return console.log('ERROR: ' + error.message);
-          }, function(tx) {
+          }, _.transactionErrorHandler, function(tx) {
             return console.log('Success: Updated record in wp_question_response');
           });
         };
-        if (typeof p.id === 'undefined') {
-          insertData = {
-            collection_id: p.collection_id,
-            content_piece_id: p.content_piece_id,
-            division: p.division,
-            date_created: _.getCurrentDate(),
-            date_modified: _.getCurrentDate(),
-            total_time: 0,
-            question_response: serialize(p.question_response),
-            time_started: '',
-            time_completed: ''
-          };
-          return insertQuestionResponse(insertData);
-        } else {
-          updateData = {
-            id: p.id,
-            date_modified: _.getCurrentDate(),
-            question_response: serialize(p.question_response)
-          };
-          return updateQuestionResponse(updateData);
-        }
+        questionType = _.getQuestionType(p.content_piece_id);
+        return questionType.done(function(question_type) {
+          var insertData, q_resp, updateData;
+          if (question_type === 'individual') {
+            q_resp = serialize(p.question_response);
+          } else {
+            q_resp = p.question_response;
+          }
+          if (typeof p.id === 'undefined') {
+            insertData = {
+              collection_id: p.collection_id,
+              content_piece_id: p.content_piece_id,
+              division: p.division,
+              date_created: _.getCurrentDate(),
+              date_modified: _.getCurrentDate(),
+              total_time: 0,
+              question_response: q_resp,
+              time_started: '',
+              time_completed: ''
+            };
+            return insertQuestionResponse(insertData);
+          } else {
+            updateData = {
+              id: p.id,
+              date_modified: _.getCurrentDate(),
+              question_response: q_resp
+            };
+            return updateQuestionResponse(updateData);
+          }
+        });
       }
     };
     App.reqres.setHandler("get:question:response:collection", function(params) {

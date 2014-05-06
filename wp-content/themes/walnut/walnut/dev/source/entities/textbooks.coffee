@@ -67,12 +67,13 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 				#get all textbooks from local database
 				getTextbooksFromLocal:->
+
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id  
-									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0", [], onSuccess(d), onFailure(d));
+									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0", [], onSuccess(d), _.deferredErrorHandler(d));
 								
 
 					onSuccess =(d)->
@@ -104,14 +105,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 		
 							d.resolve(result)
 
-					onFailure =(d)->
-						(tx,error)->
-							d.reject(error)
-
 					$.when(runQuery()).done (data)->
 						console.log 'getAllTextbooks transaction completed'
-					.fail (error)->
-						console.log 'ERROR: '+error.message
+					.fail _.failureHandler
 
 
 				# get textbooks by class id from local database
@@ -121,7 +117,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						runQ =->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
-									tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key='textbooks' AND user_id='1'", [], success(d), deferredErrorHandler(d))
+									tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key='textbooks' AND user_id='1'", [], success(d), _.deferredErrorHandler(d))
 
 						success =(d)->
 							(tx,data)->
@@ -130,14 +126,14 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 						$.when(runQ()).done ->
 							console.log 'getTextBookIds transaction completed'
-						.fail(failureHandler)
+						.fail _.failureHandler
 							
 								
 					runMainQuery = ->
-						ids = ''
+						textbook_ids = ''
 						textbookIds = getTextBookIds()
-						textbookIds.done (d)=>
-							ids = d
+						textbookIds.done (ids)=>
+							textbook_ids = ids
 
 						$.Deferred (d)->
 							_.db.transaction (tx)->
@@ -145,7 +141,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 
 									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0
-					 				AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+ids+")", [], onSuccess(d), deferredErrorHandler(d));
+					 				AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+textbook_ids+")", [], onSuccess(d), _.deferredErrorHandler(d));
 								
 
 					onSuccess =(d)->
@@ -179,24 +175,14 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 												subjects: subjects
 												modules_count: d.rows.item(0)['count']
 										
-										,(tx ,error)->
-											console.log 'ERROR: '+error.message
-									)
+										,_.transactionErrorHandler)
 								i++
 
 							d.resolve(result)
-
-					#Error handlers
-					deferredErrorHandler =(d)->
-						(tx, error)->
-							d.reject(error)
-
-					failureHandler = (error)->
-						console.log 'ERROR: '+error.message
 					
 					$.when(runMainQuery()).done (data)->
 						console.log 'getTextbooksByID transaction completed'
-					.fail(failureHandler)
+					.fail _.failureHandler
 
 
 			# request handler to get all textbooks

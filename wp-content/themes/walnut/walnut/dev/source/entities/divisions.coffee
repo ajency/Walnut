@@ -56,10 +56,11 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 				#get divisions from local database
 				getDivisionsFromLocal:->
+
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
-								tx.executeSql('SELECT meta_value FROM wp_usermeta WHERE user_id=1 AND meta_key="classes"', [], onSuccess(d), onFailure(d))
+								tx.executeSql('SELECT meta_value FROM wp_usermeta WHERE user_id=1 AND meta_key="classes"', [], onSuccess(d), _.deferredErrorHandler(d))
 
 					onSuccess = (d)->
 						(tx, data)->
@@ -77,36 +78,19 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 												id:r['id']
 												division:r['division']
 												class_id:r['class_id']
-												class_label:getClassLabel(r['class_id'])
+												class_label: CLASS_LABEL[r['class_id']]
 												students_count:r['students_count']
 
 											i++		
 
 										d.resolve(result)
 
-									,(tx, error)->
-										console.log 'ERROR: '+error.message
-									)
+									,_.transactionErrorHandler)
 							
-
-					onFailure = (d)->
-						(tx, error)->
-							d.reject(error)
-
-
-					getClassLabel = (class_id)->
-						if class_id is 1
-							'Junior KG'
-						else if class_id is 2
-							'Senior KG'
-						else
-							'Class '+(class_id - 2)
-
 
 					$.when(runQuery()).done (data)->
 						console.log 'getDivisionsFromLocal transaction completed'
-					.fail (error)->
-						console.log 'ERROR: '+error.message
+					.fail _.failureHandler
 
 
 

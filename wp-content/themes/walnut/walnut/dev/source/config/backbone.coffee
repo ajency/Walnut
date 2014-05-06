@@ -62,8 +62,6 @@ define ["backbone"], (Backbone) ->
 				data = App.reqres.request "get:#{collection_name}:local", opts.collection_id, opts.division
 				data.done (d)->
 					collection.set d
-					console.log 'question-response data'
-					console.log d
 
 			return true
 
@@ -185,15 +183,9 @@ define ["backbone"], (Backbone) ->
 				#Changes needed for offline data retrieval
 				modelname = model.name
 				console.log 'Model name: '+modelname
-				console.log 'Model data'
-				console.log model
-				console.log 'Model options'
-				console.log options
 
 				if modelname is 'content-group'
-					attr = model.attributes
-					#teacher id hardcoded as 1 for now
-					data = App.reqres.request "save:update:#{modelname}:local", attr.division, attr.id, 1, attr.training_date, attr.status
+					data = App.reqres.request "save:update:#{modelname}:local", model.attributes
 
 				if modelname is 'schools' #Not yet implemented
 					console.log 'Schools local'

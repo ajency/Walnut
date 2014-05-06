@@ -4,4 +4,5 @@ define ['config/marionette'
 		'config/middle-layer'
 		'config/jquery'
 		'config/app-storage'
+		'config/app-functions'
 		], ->

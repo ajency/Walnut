@@ -60,9 +60,7 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'question-response') {
         data = App.reqres.request("get:" + collection_name + ":local", opts.collection_id, opts.division);
         data.done(function(d) {
-          collection.set(d);
-          console.log('question-response data');
-          return console.log(d);
+          return collection.set(d);
         });
       }
       return true;
@@ -70,7 +68,7 @@ define(["backbone"], function(Backbone) {
   });
   _.extend(Backbone.Model.prototype, {
     sync: function(method, model, options) {
-      var allData, attr, data, idAttr, modelname, onlyChanged, params, xhr, _action, _ref, _ref1;
+      var allData, data, idAttr, modelname, onlyChanged, params, xhr, _action, _ref, _ref1;
       if (!this.name) {
         throw new Error("'name' property not set for the model");
       }
@@ -118,13 +116,8 @@ define(["backbone"], function(Backbone) {
       } else {
         modelname = model.name;
         console.log('Model name: ' + modelname);
-        console.log('Model data');
-        console.log(model);
-        console.log('Model options');
-        console.log(options);
         if (modelname === 'content-group') {
-          attr = model.attributes;
-          data = App.reqres.request("save:update:" + modelname + ":local", attr.division, attr.id, 1, attr.training_date, attr.status);
+          data = App.reqres.request("save:update:" + modelname + ":local", model.attributes);
         }
         if (modelname === 'schools') {
           console.log('Schools local');

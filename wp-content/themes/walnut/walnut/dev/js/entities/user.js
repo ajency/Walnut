@@ -57,11 +57,11 @@ define(["app", 'backbone'], function(App, Backbone) {
         return userCollection;
       },
       getUsersFromLocal: function(division) {
-        var onFailure, onSuccess, runQuery;
+        var onSuccess, runQuery;
         runQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_users u INNER JOIN wp_usermeta um ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?", [division], onSuccess(d), onFailure(d));
+              return tx.executeSql("SELECT * FROM wp_users u INNER JOIN wp_usermeta um ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?", [division], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
         };
@@ -83,16 +83,9 @@ define(["app", 'backbone'], function(App, Backbone) {
             return d.resolve(result);
           };
         };
-        onFailure = function(d) {
-          return function(tx, error) {
-            return d.reject(error);
-          };
-        };
         return $.when(runQuery()).done(function(data) {
           return console.log('getUsersFromLocal transaction completed');
-        }).fail(function(error) {
-          return console.log('ERROR: ' + error.message);
-        });
+        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:user:model", function() {

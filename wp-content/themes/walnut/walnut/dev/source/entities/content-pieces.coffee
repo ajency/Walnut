@@ -98,28 +98,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				#get all content pieces from local database
 				getContentPieceFromLocal:(ids)->
-					#get question_type from wp_postmeta
-					getQuestionType =(content_piece_id)->
-						runQ =->
-							$.Deferred (d)->
-								_.db.transaction (tx)->
-									tx.executeSql("SELECT meta_value FROM wp_postmeta WHERE post_id=? AND meta_key='question_type'", [content_piece_id], success(d), deferredErrorHandler(d))
-
-						success =(d)->
-							(tx,data)->
-								meta_value = data.rows.item(0)['meta_value']
-								d.resolve(meta_value)
-
-						$.when(runQ()).done ->
-							console.log 'getQuestionType transaction completed'
-						.fail(failureHandler)
-
-
+					
 					runMainQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' 
-									AND post_status = 'publish' AND ID in ("+ids+")", [], onSuccess(d), deferredErrorHandler(d))
+									AND post_status = 'publish' AND ID in ("+ids+")", [], onSuccess(d), _.deferredErrorHandler(d))
 
 					onSuccess =(d)->
 						(tx,data)->
@@ -129,7 +113,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 								r = data.rows.item(i)
 
 								do(r, i)->
-									questionType = getQuestionType(r['ID'])
+									questionType = _.getQuestionType(r['ID'])
 									questionType.done (question_type)->
 										
 										result[i] = 
@@ -168,18 +152,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 							
 							d.resolve(result)
 
-					#Error handlers
-					deferredErrorHandler =(d)->
-						(tx, error)->
-							d.reject(error)
-
-					failureHandler = (error)->
-						console.log 'ERROR: '+error.message
-
-
 					$.when(runMainQuery()).done (d)->
 						console.log 'Content piece transaction completed'
-					.fail(failureHandler)
+					.fail _.failureHandler
 							
 						
 

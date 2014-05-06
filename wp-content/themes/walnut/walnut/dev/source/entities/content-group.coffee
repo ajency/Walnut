@@ -84,29 +84,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				
 				# get content group from local
 				getContentGroupByIdFromLocal:(id, division)->
-					#get the date and status from wp_training_logs
-					getDateAndStatus =(collection_id, div)->
-						dateAndStatus =
-							date: ''
-							status: ''
-
-						runQ =->
-							$.Deferred (d)->
-								_.db.transaction (tx)->
-									tx.executeSql("SELECT count(id) AS count, status, date FROM wp_training_logs 
-										WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, div], success(d), deferredErrorHandler(d))
-
-						success =(d)->
-							(tx,data)->
-								if data.rows.item(0)['count'] isnt 0
-									dateAndStatus.date = data.rows.item(0)['date']
-									dateAndStatus.status = data.rows.item(0)['status']
-								d.resolve(dateAndStatus)
-
-						$.when(runQ()).done ->
-							console.log 'getDateAndStatus transaction completed'
-						.fail(failureHandler)
-
 					#get content pieces and description
 					getContentPiecesAndDescription =(collection_id)->
 						contentPiecesAndDescription =
@@ -116,7 +93,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						runQ =->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
-									tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), deferredErrorHandler(d))
+									tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), _.deferredErrorHandler(d))
 
 						success =(d)->
 							(tx,data)->
@@ -135,7 +112,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 						$.when(runQ()).done ->
 							console.log 'getContentPiecesAndDescription transaction completed'
-						.fail(failureHandler)
+						.fail _.failureHandler
 
 					#get chapter name
 					getChapterName =(term_ids)->
@@ -144,7 +121,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						runQ =->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
-									tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), deferredErrorHandler(d))
+									tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), _.deferredErrorHandler(d))
 
 						success =(d)->
 							(tx,data)->
@@ -156,14 +133,14 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 						$.when(runQ()).done ->
 							console.log 'getChapterName transaction completed'
-						.fail(failureHandler)
+						.fail _.failureHandler
 												
 					#get data from wp_content_collection
 					runMainQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								pattern = '%"'+id+'"%'
-								tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '"+pattern+"'", [], onSuccess(d), deferredErrorHandler(d))
+								tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '"+pattern+"'", [], onSuccess(d), _.deferredErrorHandler(d))
 
 					onSuccess = (d)->
 						(tx, data)->
@@ -173,7 +150,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								r = data.rows.item(i)
 
 								do (r, i, division)->
-									dateAndStatus = getDateAndStatus(r['id'], division)
+									dateAndStatus = _.getLastDetails(r['id'], division)
 									dateAndStatus.done (d)->
 										status = d.status
 										date = d.date
@@ -222,97 +199,66 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					getMinsHours = (duration)->
 						if duration > 60
 							'hrs'
-						else 'mins'	
-
-					#Error handlers
-					deferredErrorHandler =(d)->
-						(tx, error)->
-							d.reject(error)
-
-					failureHandler = (error)->
-						console.log 'ERROR: '+error.message				
+						else 'mins'				
 
 					$.when(runMainQuery()).done (data)->
 						console.log 'Content-group-by-id transaction completed'
-					.fail(failureHandler)	
+					.fail _.failureHandler
 
 
-				saveOrUpdateContentGroupLocal:(division_id, collection_id, teacher_id, training_date, current_status) ->
-					#function to get the last status
-					getLastStatus =->
-						lastStatus = 
-							id:''
-							status:''
-
-						runQ =->
-							$.Deferred (d)->
-								_.db.transaction (tx)->
-									tx.executeSql("SELECT id,status FROM wp_training_logs WHERE division_id=? AND 
-										collection_id=? ORDER BY id DESC LIMIT 1", [division_id, collection_id], success(d), failure(d))
-
-						success =(d)->
-							(tx, data)->
-								if data.rows.length isnt 0
-									lastStatus.id = data.rows.item(0)['id']
-									lastStatus.status = data.rows.item(0)['status']
-								d.resolve(lastStatus)
-
-						failure =(d)->
-							(tx, error)->
-								d.reject(error)
-
-						$.when(runQ()).done ->
-							console.log 'getLastStatus transaction completed'
-						.fail (error)->
-							console.log 'ERROR: '+error.message
-
-
+				saveOrUpdateContentGroupLocal:(p) ->
 					#function to insert record in wp_training_logs
-					insertTrainingLogs =(date, status)->
+					insertTrainingLogs =(data)->
 						_.db.transaction( (tx)->
 							tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status) 
-								VALUES (?, ?, ?, ?, ?)", [division_id, collection_id, teacher_id, date, status])
+								VALUES (?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status])
 							
-						,(tx, error)->
-							console.log 'ERROR: '+error.message
+						,_.transactionErrorHandler
 						,(tx)->
 							console.log 'Success: Inserted new record in wp_training_logs'
 						)
 
 
 					#function to update status in wp_training_logs
-					updateTrainingLogs =(id, status)->
+					updateTrainingLogs =(id, data)->
 						_.db.transaction( (tx)->
-							tx.executeSql("UPDATE wp_training_logs SET status=? WHERE id=?", [status, id])
+							tx.executeSql("UPDATE wp_training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id])
 							
-						,(tx, error)->
-							console.log 'ERROR: '+error.message
+						,_.transactionErrorHandler
 						,(tx)->
 							console.log 'Success: Updated record in wp_training_logs'
 						)
 
 					
-					date = _.getCurrentDate()
+					data =
+						division_id: p.division
+						collection_id: p.id
+						teacher_id: 1  #teacher id hardcoded as 1 for now
+						date: _.getCurrentDate()
+						status: p.status
 
-					if current_status is 'completed' or current_status is 'scheduled'
-						if current_status is 'scheduled'
-							date = training_date
+					if p.status is 'completed' or p.status is 'scheduled'
+						if p.status is 'scheduled'
+							data.date = p.training_date
 						#insert new record in wp_training_logs
-						insertTrainingLogs(date, current_status)
+						insertTrainingLogs(data)
 
 					else
 						#get last status
-						lastStatus = getLastStatus()
+						lastStatus = _.getLastDetails(p.id, p.division)
 						lastStatus.done (d)=>
 							if d.status isnt ''
 								if d.status is 'started'
-									insertTrainingLogs(date, 'resumed')
+									data.status = 'resumed'
+									insertTrainingLogs(data)
 
 								if d.status is 'scheduled'
-									updateTrainingLogs(d.id, 'started')
+									data.status = 'started'
+									updateTrainingLogs(d.id, data)
 
 							else
-								insertTrainingLogs(date, 'started')	
+								data.status = 'started'
+								insertTrainingLogs(data)	
 
 
 
@@ -330,5 +276,5 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
 				API.getContentGroupByIdFromLocal id,division
 
-			App.reqres.setHandler "save:update:content-group:local", (division_id, collection_id, teacher_id, training_date, status)->
-				API.saveOrUpdateContentGroupLocal division_id, collection_id, teacher_id, training_date, status	
+			App.reqres.setHandler "save:update:content-group:local", (params)->
+				API.saveOrUpdateContentGroupLocal params	

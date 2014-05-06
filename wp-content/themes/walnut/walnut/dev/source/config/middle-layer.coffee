@@ -1,4 +1,4 @@
-define ['detect','jquery', 'underscore'], (detect, $, _)->
+define ['detect', 'jquery', 'underscore'], (detect, $, _)->
 
       networkStatus = 0
 
@@ -48,44 +48,3 @@ define ['detect','jquery', 'underscore'], (detect, $, _)->
             if navigator.connection.type is Connection.NONE
               false
             else true
-
-
-      #Check if user is admin for app navigation based on user roles.
-      _.getUserRole =(username)->
-        role = ''
-
-        runQuery = ->
-          $.Deferred (d)->
-            _.userDb.transaction (tx)->
-              tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), onFailure(d))
-
-        onSuccess = (d)->
-          (tx,data)->
-            i=0
-            while i < data.rows.length
-              r = data.rows.item(i)
-              if r['username'] is username
-                role = r['user_role']
-              i++
-
-            d.resolve(role) 
-          
-        onFailure = (d)->
-          (tx,error)->
-            d.reject(error)
-
-        $.when(runQuery()).done ->
-          console.log 'getUserRole transaction completed'
-        .fail (error)->
-          console.log 'ERROR: '+error.message 
-
-
-      #function to get current date
-      _.getCurrentDate =->
-        d = new Date()
-        date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()
-        date
-
-
-
-          

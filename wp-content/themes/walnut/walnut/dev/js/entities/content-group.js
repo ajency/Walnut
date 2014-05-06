@@ -106,33 +106,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return contentGroupItem;
       },
       getContentGroupByIdFromLocal: function(id, division) {
-        var deferredErrorHandler, failureHandler, getChapterName, getContentPiecesAndDescription, getDateAndStatus, getDuration, getMinsHours, onSuccess, runMainQuery;
-        getDateAndStatus = function(collection_id, div) {
-          var dateAndStatus, runQ, success;
-          dateAndStatus = {
-            date: '',
-            status: ''
-          };
-          runQ = function() {
-            return $.Deferred(function(d) {
-              return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT count(id) AS count, status, date FROM wp_training_logs WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, div], success(d), deferredErrorHandler(d));
-              });
-            });
-          };
-          success = function(d) {
-            return function(tx, data) {
-              if (data.rows.item(0)['count'] !== 0) {
-                dateAndStatus.date = data.rows.item(0)['date'];
-                dateAndStatus.status = data.rows.item(0)['status'];
-              }
-              return d.resolve(dateAndStatus);
-            };
-          };
-          return $.when(runQ()).done(function() {
-            return console.log('getDateAndStatus transaction completed');
-          }).fail(failureHandler);
-        };
+        var getChapterName, getContentPiecesAndDescription, getDuration, getMinsHours, onSuccess, runMainQuery;
         getContentPiecesAndDescription = function(collection_id) {
           var contentPiecesAndDescription, runQ, success;
           contentPiecesAndDescription = {
@@ -142,7 +116,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           runQ = function() {
             return $.Deferred(function(d) {
               return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), deferredErrorHandler(d));
+                return tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), _.deferredErrorHandler(d));
               });
             });
           };
@@ -165,7 +139,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           };
           return $.when(runQ()).done(function() {
             return console.log('getContentPiecesAndDescription transaction completed');
-          }).fail(failureHandler);
+          }).fail(_.failureHandler);
         };
         getChapterName = function(term_ids) {
           var runQ, success, temp;
@@ -173,7 +147,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           runQ = function() {
             return $.Deferred(function(d) {
               return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), deferredErrorHandler(d));
+                return tx.executeSql("SELECT name FROM wp_terms WHERE term_id=?", [temp.chapter], success(d), _.deferredErrorHandler(d));
               });
             });
           };
@@ -190,14 +164,14 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           };
           return $.when(runQ()).done(function() {
             return console.log('getChapterName transaction completed');
-          }).fail(failureHandler);
+          }).fail(_.failureHandler);
         };
         runMainQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
               var pattern;
               pattern = '%"' + id + '"%';
-              return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], onSuccess(d), deferredErrorHandler(d));
+              return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
         };
@@ -210,7 +184,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
               r = data.rows.item(i);
               (function(r, i, division) {
                 var dateAndStatus;
-                dateAndStatus = getDateAndStatus(r['id'], division);
+                dateAndStatus = _.getLastDetails(r['id'], division);
                 return dateAndStatus.done(function(d) {
                   var date, status;
                   status = d.status;
@@ -276,90 +250,54 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return 'mins';
           }
         };
-        deferredErrorHandler = function(d) {
-          return function(tx, error) {
-            return d.reject(error);
-          };
-        };
-        failureHandler = function(error) {
-          return console.log('ERROR: ' + error.message);
-        };
         return $.when(runMainQuery()).done(function(data) {
           return console.log('Content-group-by-id transaction completed');
-        }).fail(failureHandler);
+        }).fail(_.failureHandler);
       },
-      saveOrUpdateContentGroupLocal: function(division_id, collection_id, teacher_id, training_date, current_status) {
-        var date, getLastStatus, insertTrainingLogs, lastStatus, updateTrainingLogs;
-        getLastStatus = function() {
-          var failure, lastStatus, runQ, success;
-          lastStatus = {
-            id: '',
-            status: ''
-          };
-          runQ = function() {
-            return $.Deferred(function(d) {
-              return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT id,status FROM wp_training_logs WHERE division_id=? AND collection_id=? ORDER BY id DESC LIMIT 1", [division_id, collection_id], success(d), failure(d));
-              });
-            });
-          };
-          success = function(d) {
-            return function(tx, data) {
-              if (data.rows.length !== 0) {
-                lastStatus.id = data.rows.item(0)['id'];
-                lastStatus.status = data.rows.item(0)['status'];
-              }
-              return d.resolve(lastStatus);
-            };
-          };
-          failure = function(d) {
-            return function(tx, error) {
-              return d.reject(error);
-            };
-          };
-          return $.when(runQ()).done(function() {
-            return console.log('getLastStatus transaction completed');
-          }).fail(function(error) {
-            return console.log('ERROR: ' + error.message);
-          });
-        };
-        insertTrainingLogs = function(date, status) {
+      saveOrUpdateContentGroupLocal: function(p) {
+        var data, insertTrainingLogs, lastStatus, updateTrainingLogs;
+        insertTrainingLogs = function(data) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status) VALUES (?, ?, ?, ?, ?)", [division_id, collection_id, teacher_id, date, status]);
-          }, function(tx, error) {
-            return console.log('ERROR: ' + error.message);
-          }, function(tx) {
+            return tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status) VALUES (?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status]);
+          }, _.transactionErrorHandler, function(tx) {
             return console.log('Success: Inserted new record in wp_training_logs');
           });
         };
-        updateTrainingLogs = function(id, status) {
+        updateTrainingLogs = function(id, data) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("UPDATE wp_training_logs SET status=? WHERE id=?", [status, id]);
-          }, function(tx, error) {
-            return console.log('ERROR: ' + error.message);
-          }, function(tx) {
+            return tx.executeSql("UPDATE wp_training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id]);
+          }, _.transactionErrorHandler, function(tx) {
             return console.log('Success: Updated record in wp_training_logs');
           });
         };
-        date = _.getCurrentDate();
-        if (current_status === 'completed' || current_status === 'scheduled') {
-          if (current_status === 'scheduled') {
-            date = training_date;
+        data = {
+          division_id: p.division,
+          collection_id: p.id,
+          teacher_id: 1,
+          date: _.getCurrentDate(),
+          status: p.status
+        };
+        if (p.status === 'completed' || p.status === 'scheduled') {
+          if (p.status === 'scheduled') {
+            data.date = p.training_date;
           }
-          return insertTrainingLogs(date, current_status);
+          return insertTrainingLogs(data);
         } else {
-          lastStatus = getLastStatus();
+          lastStatus = _.getLastDetails(p.id, p.division);
           return lastStatus.done((function(_this) {
             return function(d) {
               if (d.status !== '') {
                 if (d.status === 'started') {
-                  insertTrainingLogs(date, 'resumed');
+                  data.status = 'resumed';
+                  insertTrainingLogs(data);
                 }
                 if (d.status === 'scheduled') {
-                  return updateTrainingLogs(d.id, 'started');
+                  data.status = 'started';
+                  return updateTrainingLogs(d.id, data);
                 }
               } else {
-                return insertTrainingLogs(date, 'started');
+                data.status = 'started';
+                return insertTrainingLogs(data);
               }
             };
           })(this));
@@ -378,8 +316,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
       return API.getContentGroupByIdFromLocal(id, division);
     });
-    return App.reqres.setHandler("save:update:content-group:local", function(division_id, collection_id, teacher_id, training_date, status) {
-      return API.saveOrUpdateContentGroupLocal(division_id, collection_id, teacher_id, training_date, status);
+    return App.reqres.setHandler("save:update:content-group:local", function(params) {
+      return API.saveOrUpdateContentGroupLocal(params);
     });
   });
 });

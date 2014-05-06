@@ -10,7 +10,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
             # tx.executeSql('DROP TABLE IF EXISTS wp_question_response')
             tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response (id INTEGER PRIMARY KEY, content_piece_id INTEGER, collection_id INTEGER, division INTEGER, date_created, date_modified, total_time, question_response, time_started, time_completed)')
             
-        ,transactionErrorHandler
+        ,_.transactionErrorHandler
         ,(tx)->
             console.log 'Success: Pre-populated db transaction completed'
         )
@@ -23,15 +23,11 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
             # tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES ("admin", "admin", "administrator")')
             # tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES ("walnut", "walnut", "teacher")')
             
-        ,transactionErrorHandler
+        ,_.transactionErrorHandler
         ,(tx)->
             console.log 'Success: UserDetails transaction completed'
         )
-
-    #database transaction error handler
-    transactionErrorHandler =(tx, error)->
-        console.log 'ERROR: '+error.message
-
+        
 
     #Access data from a pre-populated local db file
     _.db = window.sqlitePlugin.openDatabase({name: "walnutapp"});

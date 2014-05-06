@@ -112,11 +112,11 @@ define(["app", 'backbone'], function(App, Backbone) {
         return subSectionsCollection;
       },
       getChaptersFromLocal: function(parent) {
-        var onFailure, onSuccess, runQuery;
+        var onSuccess, runQuery;
         runQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=?", [parent], onSuccess(d), onFailure(d));
+              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=?", [parent], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
         };
@@ -151,16 +151,9 @@ define(["app", 'backbone'], function(App, Backbone) {
             return d.resolve(result);
           };
         };
-        onFailure = function(d) {
-          return function(tx, error) {
-            return d.reject('ERROR: ' + error);
-          };
-        };
         return $.when(runQuery()).done(function(d) {
           return console.log('getChaptersFromLocal transaction completed');
-        }).fail(function(error) {
-          return console.log('ERROR: ' + error);
-        });
+        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:chapters", function(opt) {
