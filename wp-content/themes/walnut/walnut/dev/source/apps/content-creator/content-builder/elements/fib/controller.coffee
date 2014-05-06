@@ -20,6 +20,7 @@ define ['app'
 								bg_opacity : 0
 								font_size : 12
 								case_sensitive : false
+								enableIndividualMarks : false
 								marks: 0
 								style : 'uline'
 								text : 'Add text here <input type=\"text\" data-cke-editable=\"1\" style=\" height :100%\" contenteditable=\"false\">​'
@@ -52,9 +53,10 @@ define ['app'
 									# default val for model
 									blanksData = 
 											id : blankId
+											blank_index : 0
 											correct_answers : []
 											marks : 1
-											size : 12
+											blank_size : 20
 											# maxlength : 12
 									# create a model
 									blanksModel = App.request "create:new:question:element", blanksData

@@ -16,7 +16,7 @@ define ['app'],(App)->
 			modelEvents : 
 					# 'change:maxlength'  : '_changeMaxLength'
 					'change:font' : (model,font)-> @_changeFont font
-					'change:font_size' : (model,size)->@_changeSize size
+					'change:font_size' : (model,fontSize)->@_changeFontSize fontSize
 					'change:color' : (model,color)->@_changeColor color
 					'change:bg_color' : (model,bg_color)->@_changeBGColor model
 					'change:bg_opacity' : (model,bg_opacity)->@_changeBGColor model
@@ -80,8 +80,8 @@ define ['app'],(App)->
 
 
 			# on change of font_size property
-			_changeSize:(size)->
-					@$el.find('input').css 'font-size',size+"px"
+			_changeFontSize:(fontSize)->
+					@$el.find('input').css 'font-size',fontSize+"px"
 
 			# on change of color property
 			_changeColor:(color)->
@@ -103,23 +103,37 @@ define ['app'],(App)->
 					else 
 						 @$el.find('input').removeClass "underline border"
 
+			# when correct answers array changed fill the first correct answer in d blank
+			_changeCorrectAnswers:(model,answerArray)->
+				if answerArray.length
+					@$el.find("input[data-id=#{model.id}]").val answerArray[0]
+
+			# on change of the blank_size attr change the blank width
+			_changeBlankSize:(model,blankSize)->
+				@$el.find("input[data-id=#{model.id}]").attr 'size',blankSize
+
 
 			# save the text field on blur
 			_textBlur:->
 				formatedText = @$el.find('p').clone()
 				$(formatedText).find('input').attr 'value',''
+				$(formatedText).find('input').unwrap()
+				$(formatedText).find('input').prev().remove()
 				@model.set 'text', formatedText.html()
+				console.log formatedText.html()
 
 				console.log @model
 
 			# on modification of dom structure modification of p
 			_updateInputProperties:->
 				# iterate thru all input tags in current view
-				_.each @$el.find('input') ,(blank)=>
+				_.each @$el.find('input') ,(blank, index)=>
 					# if any input tag is without 'data-id' attr
 					if  _.isUndefined $(blank).attr('data-id')
 						# a  random unique id to the input
 						$(blank).attr 'data-id',_.uniqueId 'input-'
+
+						
 						# wait for ckeditor to finish adding the input
 						# _.delay ->
 						# 	$(blank).prop 'maxLength',parseInt 12
@@ -127,25 +141,33 @@ define ['app'],(App)->
 						
 						# create a model and add to collection
 						@trigger "create:new:fib:element", $(blank).attr 'data-id'
+						
 						# $(blank).before("<span contenteditable='false' unselectable='on' class='fibId' id='#{$(blank).attr('data-id')}'></span>")
 
 					_.delay =>
 						# get a reference to the model
-						
+						if $(blank).parent().prop('tagName') isnt 'SPAN'
+							$(blank).wrap('<span contenteditable="false"></span>')
+							$(blank).before('<span class="fibno"></span>')
 						
 						blanksModel = @blanksCollection.get $(blank).attr 'data-id'
 						# console.log _.indexOf(@blanksCollection.toArray(), blanksModel)+1
+						blanksModel.set 'blank_index',index+1
+						if parseInt($(blank).prev().text()) isnt index+1
+							$(blank).prev().text index+1
 
-						if not $(blank).hasClass "fib#{_.indexOf(@blanksCollection.toArray(), blanksModel)+1}"
+						# if not $(blank).hasClass "fib#{_.indexOf(@blanksCollection.toArray(), blanksModel)+1}"
 								# console.log 'xx'
-								$(blank).removeClass 'fib1 fib2 fib3 fib4 fib5 fib6'
-								$(blank).addClass "fib#{_.indexOf(@blanksCollection.toArray(), blanksModel)+1}"
+						# $(blank).removeClass 'fib1 fib2 fib3 fib4 fib5 fib6'
+						# $(blank).addClass "fib#{index+1}"
 								# @$el.find("span##{$(blank).attr('data-id')}").text _.indexOf(@blanksCollection.toArray(), blanksModel)+1
 						# # remove the event handler and add it again to prevent multiple event listeners
 						# blanksModel.off('change:maxlength')
 						# blanksModel.on 'change:maxlength',(model,maxlength)=>
 						# 	@$el.find('input[data-id='+model.get('id')+']').prop 'maxLength',maxlength
 						@listenTo blanksModel,'change:correct_answers',@_changeCorrectAnswers
+						@listenTo blanksModel,'change:blank_size',@_changeBlankSize
+
 
 						if blanksModel.get('correct_answers').length
 							@$el.find("input[data-id=#{blanksModel.id}]").val blanksModel.get('correct_answers')[0]
@@ -157,7 +179,7 @@ define ['app'],(App)->
 							console.log blanksModel
 							App.execute "show:fib:element:properties",
 								model : blanksModel
-								blankNo : _.indexOf(@blanksCollection.toArray(), blanksModel)+1
+								fibModel : @model
 							@trigger "show:this:fib:properties"
 							e.stopPropagation()
 					,10
@@ -181,14 +203,13 @@ define ['app'],(App)->
 
 				# add style for the blanks
 				@_changeFont @model.get 'font'
-				@_changeSize @model.get 'font_size'
+				@_changeFontSize @model.get 'font_size'
 				@_changeColor @model.get 'color'
 				@_changeBGColor @model
 				@_changeFibStyle @model.get 'style'
 
-			_changeCorrectAnswers:(model,answerArray)->
-				if answerArray.length
-					@$el.find("input[data-id=#{model.id}]").val answerArray[0]
+
+			
 
 
 
