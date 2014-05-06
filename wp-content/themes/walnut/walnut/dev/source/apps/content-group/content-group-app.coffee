@@ -83,6 +83,7 @@ define ['app'
 		 					model 		: @contentGroupModel
 		 					mode		: mode
 		 					division 	: div
+		 					classID 	: classID
 
 				ContentGroupApp.on "start", ->
 					new ContentGroupRouter

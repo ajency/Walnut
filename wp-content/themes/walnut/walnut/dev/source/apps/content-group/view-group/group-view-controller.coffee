@@ -11,7 +11,7 @@ define ['app'
 
 			initialize :(opts) ->
 				#mode refers to "training" mode or "take-class" mode
-				{@model, @mode, @division} = opts
+				{@model,@classID, @mode, @division} = opts
 
 				@questionResponseCollection = App.request "get:question:response:collection", 
 													'division' : @division
@@ -55,6 +55,7 @@ define ['app'
 					contentGroupModel 			: @model 
 					questionsCollection 		: @groupContentCollection
 					textbookNames 				: @textbookNames
+					classID 					: @classID
 					display_mode 				: display_mode # when display mode is readonly, the save response options are not shown
 															   # only when display mode is class_mode response changes can be done
 
@@ -62,7 +63,7 @@ define ['app'
 				App.execute "when:fetched", @model, =>
 					textbook_termIDs= _.flatten @model.get 'term_ids'
 					@textbookNames= App.request "get:textbook:names:by:ids", textbook_termIDs
-					
+
 					App.execute "when:fetched", @textbookNames, =>
 						App.execute "show:viewgroup:content:group:detailsapp", 
 							region 						: @layout.collectionDetailsRegion

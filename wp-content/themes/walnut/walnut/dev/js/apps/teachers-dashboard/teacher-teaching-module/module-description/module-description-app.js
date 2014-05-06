@@ -15,9 +15,10 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ModuleDescriptionController.prototype.initialize = function(opts) {
         var model, view;
-        model = opts.model, this.textbookNames = opts.textbookNames;
-        console.log(' @textbookNames');
-        console.log(this.textbookNames);
+        model = opts.model, this.textbookNames = opts.textbookNames, this.classID = opts.classID, this.division = opts.division;
+        if (this.division != null) {
+          this.divisionModel = App.request("get:division:by:id", this.division);
+        }
         this.view = view = this._showModuleDescriptionView(model);
         this.show(view, {
           loading: true,
@@ -36,6 +37,15 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         return new ModuleDescriptionView({
           model: model,
           templateHelpers: {
+            getClassOrDivision: (function(_this) {
+              return function() {
+                if (_this.divisionModel) {
+                  return _this.divisionModel.get('division');
+                } else {
+                  return CLASS_LABEL[_this.classID];
+                }
+              };
+            })(this),
             getTextbookName: (function(_this) {
               return function() {
                 var texbookName, textbook;

@@ -7,9 +7,9 @@ define ['app'
 		class ModuleDescriptionController extends RegionController
 
 			initialize : (opts)->
-				{model,@textbookNames} = opts
-				console.log ' @textbookNames'
-				console.log  @textbookNames
+				{model,@textbookNames, @classID, @division} = opts
+				
+				@divisionModel= App.request "get:division:by:id", @division if @division?
 				
 				@view= view = @_showModuleDescriptionView model
 
@@ -26,6 +26,12 @@ define ['app'
 					model 			: model
 
 					templateHelpers:
+
+						getClassOrDivision:=>
+							if @divisionModel
+								@divisionModel.get 'division'
+							else 
+								CLASS_LABEL[@classID]
 
 						getTextbookName:=>
 							textbook= @textbookNames.get terms.textbook

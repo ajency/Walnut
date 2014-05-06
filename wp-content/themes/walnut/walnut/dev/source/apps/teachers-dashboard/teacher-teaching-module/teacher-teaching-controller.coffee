@@ -22,7 +22,7 @@ define ['app'
 
 			initialize :(opts)->
 
-				{@division,@moduleID,contentGroupModel,
+				{@division,@classID,@moduleID,contentGroupModel,
 				questionsCollection,questionResponseCollection,
 				contentPiece,@display_mode,@textbookNames} = opts
 
@@ -118,6 +118,8 @@ define ['app'
 								region 	: @layout.moduleDetailsRegion
 								model 	:contentGroupModel
 								textbookNames: @textbookNames
+								classID 	: @classID
+								division: @division
 
 			_showQuestionDisplayView:(model) =>
 				App.execute "show:single:question:app", 
