@@ -44,3 +44,21 @@ function fetch_chapter_subsections() {
     
     wp_send_json($subsections);
 }
+
+add_action( 'wp_ajax_get-textbook-names', 'get_textbook_names' );
+function get_textbook_names(){
+    $args = array(
+        'include'=> $_GET['term_ids'],
+        'hide_empty'=> false
+        );
+   $textbooks= get_terms('textbook', $args);
+   
+   $i=0;
+   foreach($textbooks as $t){
+       $textbook_names[$i]['id']=$t->term_id;       
+       $textbook_names[$i]['name']=$t->name;
+       $i++;
+   }
+   
+   wp_send_json($textbook_names);
+}

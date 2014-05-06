@@ -44,6 +44,9 @@ define ['app'
 							@listenTo view, "close:question:element:properties",->
 									App.execute "close:question:element:properties"
 
+							App.commands.setHandler 'save:fib:text',->
+									view.triggerMethod 'save:text'
+
 							# # on show disable all question elements in d element box
 							# @listenTo view, "show",=>
 							# 		@eventObj.vent.trigger "question:dropped"

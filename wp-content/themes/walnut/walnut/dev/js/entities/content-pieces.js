@@ -4,7 +4,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentPiece", function(ContentPiece, App, Backbone, Marionette, $, _) {
-    var API, contentPieceCollection, contentPiecesOfGroup;
+    var API, contentPiecesOfGroup;
     ContentPiece.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -46,7 +46,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemCollection;
 
     })(Backbone.Collection);
-    contentPieceCollection = new ContentPiece.ItemCollection;
     ContentPiece.GroupItemCollection = (function(_super) {
       __extends(GroupItemCollection, _super);
 
@@ -79,9 +78,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
     API = {
       getContentPieces: function(param) {
+        var contentPieceCollection;
         if (param == null) {
           param = {};
         }
+        contentPieceCollection = new ContentPiece.ItemCollection;
         contentPieceCollection.fetch({
           reset: true,
           data: param
@@ -94,7 +95,9 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (contentIDs) {
           for (_i = 0, _len = contentIDs.length; _i < _len; _i++) {
             contentID = contentIDs[_i];
-            contentModel = contentPieceCollection.get(contentID);
+            if (typeof contentPieceCollection !== "undefined" && contentPieceCollection !== null) {
+              contentModel = contentPieceCollection.get(contentID);
+            }
             if (!contentModel) {
               contentModel = new ContentPiece.ItemModel({
                 'ID': contentID
@@ -108,7 +111,9 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getContentPieceByID: function(id) {
         var contentPiece;
-        contentPiece = contentPieceCollection.get(id);
+        if (typeof contentPieceCollection !== "undefined" && contentPieceCollection !== null) {
+          contentPiece = contentPieceCollection.get(id);
+        }
         if (!contentPiece) {
           contentPiece = new ContentPiece.ItemModel({
             ID: id

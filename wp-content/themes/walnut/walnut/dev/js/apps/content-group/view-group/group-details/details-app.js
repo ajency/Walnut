@@ -16,12 +16,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
-        this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection;
+        this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
         this.startTime = '';
         this.endTime = '';
         this.view = view = this._getCollectionDetailsView(this.model);
         this.show(view, {
-          loading: true
+          loading: true,
+          entities: [this.textbookNames]
         });
         this.listenTo(view, 'start:teaching:module', (function(_this) {
           return function() {
@@ -33,17 +34,30 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       };
 
       ViewCollecionDetailsController.prototype._getCollectionDetailsView = function(model) {
-        var terms, textbook;
+        var terms;
         terms = model.get('term_ids');
-        textbook = terms.textbook;
-        this.textbookName = App.request("get:textbook:name:by:id", textbook);
+        console.log(terms);
+        console.log(this.textbookNames);
         return new CollectionDetailsView({
           model: model,
           mode: this.mode,
           templateHelpers: {
             getTextbookName: (function(_this) {
               return function() {
-                return _this.textbookName;
+                var texbookName, textbook;
+                textbook = _this.textbookNames.get(terms.textbook);
+                if (textbook != null) {
+                  return texbookName = textbook.get('name');
+                }
+              };
+            })(this),
+            getChapterName: (function(_this) {
+              return function() {
+                var chapter, chapterName;
+                chapter = _this.textbookNames.get(terms.chapter);
+                if (chapter != null) {
+                  return chapterName = chapter.get('name');
+                }
               };
             })(this),
             startScheduleButton: (function(_this) {

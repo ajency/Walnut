@@ -28,6 +28,22 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemModel;
 
     })(Backbone.Model);
+    Textbooks.NameModel = (function(_super) {
+      __extends(NameModel, _super);
+
+      function NameModel() {
+        return NameModel.__super__.constructor.apply(this, arguments);
+      }
+
+      NameModel.prototype.defaults = {
+        name: ''
+      };
+
+      NameModel.prototype.name = 'textbookName';
+
+      return NameModel;
+
+    })(Backbone.Model);
     Textbooks.ItemCollection = (function(_super) {
       __extends(ItemCollection, _super);
 
@@ -49,6 +65,24 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       return ItemCollection;
+
+    })(Backbone.Collection);
+    Textbooks.NamesCollection = (function(_super) {
+      __extends(NamesCollection, _super);
+
+      function NamesCollection() {
+        return NamesCollection.__super__.constructor.apply(this, arguments);
+      }
+
+      NamesCollection.prototype.model = Textbooks.NameModel;
+
+      NamesCollection.prototype.comparator = 'term_order';
+
+      NamesCollection.prototype.url = function() {
+        return AJAXURL + '?action=get-textbook-names';
+      };
+
+      return NamesCollection;
 
     })(Backbone.Collection);
     API = {
@@ -90,6 +124,17 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
         textbookName = textbook.get('name');
         return textbookName;
+      },
+      getTextBookNamesByIDs: function(ids) {
+        var textbookNamesCollection;
+        textbookNamesCollection = new Textbooks.NamesCollection;
+        textbookNamesCollection.fetch({
+          reset: true,
+          data: {
+            term_ids: ids
+          }
+        });
+        return textbookNamesCollection;
       }
     };
     App.reqres.setHandler("get:textbooks", function(opt) {
@@ -98,8 +143,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:textbook:by:id", function(id) {
       return API.getTextBookByID(id);
     });
-    return App.reqres.setHandler("get:textbook:name:by:id", function(id) {
+    App.reqres.setHandler("get:textbook:name:by:id", function(id) {
       return API.getTextBookNameByID(id);
+    });
+    return App.reqres.setHandler("get:textbook:names:by:ids", function(ids) {
+      return API.getTextBookNamesByIDs(ids);
     });
   });
 });

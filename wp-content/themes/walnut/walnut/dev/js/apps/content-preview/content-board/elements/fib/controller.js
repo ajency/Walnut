@@ -22,8 +22,10 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
 
       Controller.prototype.renderElement = function() {
         this.blanksCollection = App.request("create:new:question:element:collection", this.layout.model.get('blanksArray'));
+        App.execute("show:total:marks", this.layout.model.get('marks'));
         this.layout.model.set('blanksArray', this.blanksCollection);
         this.view = this._getFibView(this.layout.model);
+        this.listenTo(this.view, "submit:answer", this._submitAnswer);
         return this.layout.elementRegion.show(this.view, {
           loading: true
         });
@@ -36,21 +38,50 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       };
 
       Controller.prototype._submitAnswer = function() {
-        var caseSensitive, enableIndividualMarks, fullCorrect;
+        var answerArray, enableIndividualMarks;
         enableIndividualMarks = this.layout.model.get('enableIndividualMarks');
-        caseSensitive = this.layout.model.get('case_sensitive');
-        _each(this.view.$el.find('input'), function(blank, index) {
-          return this.answerModel.get('answer').push($(blank).val());
-        });
+        this.caseSensitive = this.layout.model.get('case_sensitive');
+        answerArray = this.answerModel.get('answer');
         if (!enableIndividualMarks) {
-          fullCorrect = false;
-          _each(this.view.$el.find('input'), function(blank, index) {
-            var correctAnswers;
-            fullCorrect = false;
-            return correctAnswers = this.blanksCollection.get($(blanks).attr('data-id')).get('correct_answers');
-          });
+          this.answerModel.set('marks', this.layout.model.get('marks'));
+          _.each(this.view.$el.find('input'), (function(_this) {
+            return function(blank, index) {
+              var correctAnswersArray;
+              _this.answerModel.get('answer').push($(blank).val());
+              correctAnswersArray = _this.blanksCollection.get($(blank).attr('data-id')).get('correct_answers');
+              if (!_this._checkAnswer($(blank).val(), correctAnswersArray)) {
+                return _this.answerModel.set('marks', 0);
+              }
+            };
+          })(this));
+        } else {
+          _.each(this.view.$el.find('input'), (function(_this) {
+            return function(blank, index) {
+              var blankModel, correctAnswersArray;
+              _this.answerModel.get('answer').push($(blank).val());
+              blankModel = _this.blanksCollection.get($(blank).attr('data-id'));
+              correctAnswersArray = blankModel.get('correct_answers');
+              console.log(correctAnswersArray);
+              if (_this._checkAnswer($(blank).val(), correctAnswersArray)) {
+                return _this.answerModel.set('marks', _this.answerModel.get('marks') + blankModel.get('marks'));
+              }
+            };
+          })(this));
         }
-        return App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        if (this.answerModel.get('marks') < this.layout.model.get('marks')) {
+          return this.view.triggerMethod('show:feedback');
+        }
+      };
+
+      Controller.prototype._checkAnswer = function(answer, correctAnswersArray) {
+        if (this.caseSensitive) {
+          return _.contains(correctAnswersArray, answer);
+        } else {
+          return _.contains(_.map(correctAnswersArray, function(correctAnswer) {
+            return _.slugify(correctAnswer);
+          }), _.slugify(answer));
+        }
       };
 
       return Controller;

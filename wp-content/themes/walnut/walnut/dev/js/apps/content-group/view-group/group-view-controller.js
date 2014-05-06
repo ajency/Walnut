@@ -18,20 +18,16 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       GroupController.prototype.initialize = function(opts) {
         var layout;
-        this.model = opts.model, this.mode = opts.mode, this.division = opts.division;
+        this.model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
           'collection_id': this.model.get('id')
         });
-        App.execute("when:fetched", this.model, (function(_this) {
-          return function() {
-            return _this.groupContentCollection = App.request("get:content:pieces:by:ids", _this.model.get('content_pieces'));
-          };
-        })(this));
+        this.groupContentCollection = App.request("get:content:pieces:by:ids", this.model.get('content_pieces'));
         this.layout = layout = this._getContentGroupViewLayout();
         this.show(layout, {
           loading: true,
-          entities: [this.model, this.questionResponseCollection, this.groupContentCollection]
+          entities: [this.model, this.questionResponseCollection, this.groupContentCollection, this.textbookNames]
         });
         this.listenTo(layout, 'show', this.showContentGroupViews);
         this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
@@ -62,6 +58,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           questionResponseCollection: this.questionResponseCollection,
           contentGroupModel: this.model,
           questionsCollection: this.groupContentCollection,
+          textbookNames: this.textbookNames,
+          classID: this.classID,
           display_mode: display_mode
         });
       };
@@ -69,21 +67,27 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       GroupController.prototype.showContentGroupViews = function() {
         return App.execute("when:fetched", this.model, (function(_this) {
           return function() {
-            App.execute("show:viewgroup:content:group:detailsapp", {
-              region: _this.layout.collectionDetailsRegion,
-              model: _this.model,
-              mode: _this.mode,
-              questionResponseCollection: _this.questionResponseCollection
-            });
-            if (_.size(_this.model.get('content_pieces')) > 0) {
-              return App.execute("show:viewgroup:content:displayapp", {
-                region: _this.layout.contentDisplayRegion,
+            var textbook_termIDs;
+            textbook_termIDs = _.flatten(_this.model.get('term_ids'));
+            _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
+            return App.execute("when:fetched", _this.textbookNames, function() {
+              App.execute("show:viewgroup:content:group:detailsapp", {
+                region: _this.layout.collectionDetailsRegion,
                 model: _this.model,
                 mode: _this.mode,
                 questionResponseCollection: _this.questionResponseCollection,
-                groupContentCollection: _this.groupContentCollection
+                textbookNames: _this.textbookNames
               });
-            }
+              if (_.size(_this.model.get('content_pieces')) > 0) {
+                return App.execute("show:viewgroup:content:displayapp", {
+                  region: _this.layout.contentDisplayRegion,
+                  model: _this.model,
+                  mode: _this.mode,
+                  questionResponseCollection: _this.questionResponseCollection,
+                  groupContentCollection: _this.groupContentCollection
+                });
+              }
+            });
           };
         })(this));
       };

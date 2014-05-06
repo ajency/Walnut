@@ -11,14 +11,14 @@ define ['app'
 				# for take-class module the template changes a bit
 				# so based on this value (@mode) we set the template additional stuff
 
-				{@model,@mode,@questionResponseCollection}= opts
+				{@model,@mode,@questionResponseCollection,@textbookNames}= opts
 
 				@startTime = '';
 				@endTime = '';
 
 				@view= view = @_getCollectionDetailsView @model
 
-				@show view, (loading:true)
+				@show view, (loading:true, entities: [@textbookNames])
 
 				@listenTo view, 'start:teaching:module', => @region.trigger "start:teaching:module"
 
@@ -29,8 +29,8 @@ define ['app'
 			_getCollectionDetailsView : (model)->
 
 				terms= model.get 'term_ids'
-				textbook= terms.textbook
-				@textbookName = App.request "get:textbook:name:by:id", textbook
+				console.log terms
+				console.log @textbookNames
 
 				new CollectionDetailsView
 					model 	: model 								
@@ -39,7 +39,13 @@ define ['app'
 					templateHelpers:
 
 						getTextbookName:=>
-							@textbookName 
+							textbook= @textbookNames.get terms.textbook
+							texbookName = textbook.get 'name' if textbook?
+
+						getChapterName:=>
+							chapter= @textbookNames.get terms.chapter
+							chapterName = chapter.get 'name' if chapter?
+
 
 						startScheduleButton:=>
 							

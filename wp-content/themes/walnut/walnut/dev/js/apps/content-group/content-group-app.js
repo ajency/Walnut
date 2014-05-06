@@ -115,7 +115,8 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
           region: App.mainContentRegion,
           model: this.contentGroupModel,
           mode: mode,
-          division: div
+          division: div,
+          classID: classID
         });
       }
     };

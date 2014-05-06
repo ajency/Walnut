@@ -26,7 +26,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					 AJAXURL + '?action=get-content-pieces'
 
 
-			contentPieceCollection = new ContentPiece.ItemCollection
+			
 
 			# collection of content pieces in a content group. eg. questions in a quiz
 			class ContentPiece.GroupItemCollection extends Backbone.Collection
@@ -50,6 +50,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			API = 
 				# get all content pieces
 				getContentPieces:(param = {})->
+					contentPieceCollection = new ContentPiece.ItemCollection
 					contentPieceCollection.fetch
 										reset : true
 										data  : param
@@ -63,7 +64,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					if contentIDs
 						for contentID in contentIDs
-							contentModel = contentPieceCollection.get contentID
+							contentModel = contentPieceCollection.get contentID if contentPieceCollection?
 
 							if not contentModel
 								contentModel = new ContentPiece.ItemModel 'ID' : contentID
@@ -76,7 +77,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					
 
 				getContentPieceByID:(id)->
-					contentPiece = contentPieceCollection.get id
+					contentPiece = contentPieceCollection.get id if contentPieceCollection?
 
 					if not contentPiece 
 						contentPiece = new ContentPiece.ItemModel ID : id
