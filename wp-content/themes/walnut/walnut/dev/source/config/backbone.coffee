@@ -17,7 +17,7 @@ define ["backbone"], (Backbone) ->
 			console.log 'Collection name: '+collection_name
 			opts = options.data
 
-			if collection_name is 'textbooks'
+			if collection_name is 'textbook'
 				if typeof options.data.class_id is 'undefined'
 					#Get all textbooks
 					data = App.reqres.request "get:#{collection_name}:local"

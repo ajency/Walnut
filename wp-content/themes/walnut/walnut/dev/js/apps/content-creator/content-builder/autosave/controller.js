@@ -17,14 +17,28 @@ define(['app'], function(App) {
       };
 
       Controller.prototype.autoSave = function() {
-        var siteRegion, _json;
+        var options, siteRegion, _json;
         siteRegion = App.mainContentRegion.$el;
         _json = this._getPageJson(siteRegion);
         if (!_.isObject(_json)) {
           throw new Error("invalid json...");
         }
+        console.log('JSON.stringify _json');
         console.log(JSON.stringify(_json));
-        return localStorage.setItem('layout', JSON.stringify(_json));
+        localStorage.setItem('layout', JSON.stringify(_json));
+        options = {
+          type: 'POST',
+          url: AJAXURL,
+          data: {
+            action: 'save-content-piece-json',
+            json: JSON.stringify(_json)
+          }
+        };
+        return $.ajax(options).done(function(response) {
+          return console.log(response);
+        }).fail(function(resp) {
+          return console.log('error');
+        });
       };
 
       Controller.prototype._getPageJson = function($site) {

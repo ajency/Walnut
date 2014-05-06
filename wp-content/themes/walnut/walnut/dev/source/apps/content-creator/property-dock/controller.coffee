@@ -68,7 +68,8 @@ define ['app'
 						App.execute "show:fib:element:properties:box",
 								region : @layout.questElementPropRegion
 								model : options.model
-								blankNo : options.blankNo
+								fibModel : options.fibModel
+								# blankNo : options.blankNo
 
 					_getElementProperties:(model)->
 						elementName = model.get 'element'

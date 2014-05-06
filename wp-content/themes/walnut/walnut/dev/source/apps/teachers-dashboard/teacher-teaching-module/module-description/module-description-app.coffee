@@ -7,18 +7,58 @@ define ['app'
 		class ModuleDescriptionController extends RegionController
 
 			initialize : (opts)->
-				{model} = opts
-
+				{model,@textbookNames} = opts
+				console.log ' @textbookNames'
+				console.log  @textbookNames
+				
 				@view= view = @_showModuleDescriptionView model
 
-				@show view
+				@show view, (loading:true, entities:[@textbookNames])
 
 				@listenTo @view, "goto:previous:route", => @region.trigger "goto:previous:route"
 
 
 			_showModuleDescriptionView :(model) =>
+
+				terms= model.get 'term_ids'
+
 				new ModuleDescriptionView
 					model 			: model
+
+					templateHelpers:
+
+						getTextbookName:=>
+							textbook= @textbookNames.get terms.textbook
+							texbookName = textbook.get 'name' if textbook?
+
+						getChapterName:=>
+							chapter= @textbookNames.get terms.chapter
+							chapterName = chapter.get 'name' if chapter?
+
+						getSectionsNames:=>
+							sections= _.flatten terms.sections
+							sectionString = ''
+							sectionNames=[]
+
+							if sections
+								for section in sections
+									term= @textbookNames.get section
+									sectionName= term.get 'name' if term?
+									sectionNames.push sectionName
+
+								sectionString = sectionNames.join()
+
+						getSubSectionsNames:=>
+							subsections= _.flatten terms.subsections
+							subSectionString = ''
+							subsectionNames=[]
+
+							if subsections
+								for sub in subsections
+									subsection= @textbookNames.get sub
+									subsectionNames.push subsection.get 'name' if subsection?
+
+								subSectionString= subsectionNames.join()
 								
 	
 		class ModuleDescriptionView extends Marionette.ItemView

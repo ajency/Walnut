@@ -20,7 +20,7 @@ define ['app'],(App)->
 							      
 							    </div>
 							    <div class="docket-body">
-							   <!-- 	<div class="from-group">Set maximum characters allowed to enter
+					<!-- 			<div class="from-group">Set maximum characters allowed to enter
 										<input id="answer-max-length" type="text"  value="{{maxlength}}">
 
 											
@@ -28,12 +28,27 @@ define ['app'],(App)->
 
 									<div class="">
 										Accepted answers
-											<input id="correct-answers"   value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
+											<input id="correct-answers"   value="{{correctanswersFn}}" 
+											type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
+									</div>
+
+									<div class="form-group">
+						        
+										<div class="textProp slider success">
+											Size 
+											<input type="text" id="fib-blanksize" class="blankSize" 
+											data-slider-max="50" data-slider-min="1" data-slider-step="1"
+											data-slider-value="{{blank_size}}" data-slider-orientation="horizontal"
+											 data-slider-selection="before">
+
+										</div>
+
 									</div>
 
 									<div class="m-b-10">
 										Marks
-										<input id="individual-marks" type="text" value="{{marks}}" class="form-control">
+										<input id="individual-marks" type="text" value="{{marks}}" 
+										class="form-control">
 									</div>
 
 								</div>
@@ -55,14 +70,44 @@ define ['app'],(App)->
 					data
 
 				initialize:(options)->
-					@blankNo = options.blankNo
+					@fibModel = options.fibModel
+					# @blankNo = options.blankNo
 
 				onShow:->
 
 					@$el.find('input#correct-answers').tagsinput('refresh');
-					@$el.find('#blankPropertiesNo').text @blankNo
-					console.log @blankNo
+					@$el.find('#blankPropertiesNo').text @model.get 'blank_index'
+					console.log @model.get 'blank_index'
 
+					# initialize font size to use slider plugin
+					@$el.find('.blankSize').slider()
+					# listen to slide event of slider
+					# on slide change the model
+					@$el.find('#fib-blanksize').slider().on 'slide',=>
+							# on click of slider , value set to null
+							# resolved with this
+							size = @model.get 'blank_size'
+							@model.set 'blank_size', @$el.find('.blankSize').slider('getValue').val()||size
+
+					if not @fibModel.get 'enableIndividualMarks'
+						@_disableMarks()
+
+					@listenTo @fibModel , 'change:enableIndividualMarks',@_toggleMarks
+
+				_toggleMarks:(model,enableIndividualMarks)->
+					if enableIndividualMarks
+						@_enableMarks()
+
+					else 
+						@_disableMarks()
+
+				_disableMarks:->
+					@ui.individualMarksTextbox.val 0
+					@ui.individualMarksTextbox.prop 'disabled',true
+
+				_enableMarks:->
+					@ui.individualMarksTextbox.val @model.get 'marks'
+					@ui.individualMarksTextbox.prop 'disabled',false
 
 				# function for changing the correct answer array						
 				_changeCorrectAnswers:(evt)->

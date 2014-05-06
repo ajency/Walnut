@@ -4,7 +4,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentPiece", function(ContentPiece, App, Backbone, Marionette, $, _) {
-    var API, contentPieceCollection;
+    var API, contentPiecesOfGroup;
     ContentPiece.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -48,7 +48,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemCollection;
 
     })(Backbone.Collection);
-    contentPieceCollection = new ContentPiece.ItemCollection;
     ContentPiece.GroupItemCollection = (function(_super) {
       __extends(GroupItemCollection, _super);
 
@@ -78,49 +77,45 @@ define(["app", 'backbone'], function(App, Backbone) {
       return GroupItemCollection;
 
     })(Backbone.Collection);
+    contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
     API = {
       getContentPieces: function(param) {
+        var contentPieceCollection;
         if (param == null) {
           param = {};
         }
+        contentPieceCollection = new ContentPiece.ItemCollection;
         contentPieceCollection.fetch({
           reset: true,
           data: param
         });
         return contentPieceCollection;
       },
-      getContentPiecesOfGroup: function(groupid) {
-        var contentGroup, contentPiecesOfGroup;
-        if (groupid == null) {
-          groupid = '';
-        }
-        if (groupid) {
-          contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
-          contentGroup = App.request("get:content:group:by:id", groupid);
-          App.execute("when:fetched", contentGroup, (function(_this) {
-            return function() {
-              var contentID, contentIDs, contentModel, _i, _len;
-              contentIDs = contentGroup.get('content_pieces');
-              for (_i = 0, _len = contentIDs.length; _i < _len; _i++) {
-                contentID = contentIDs[_i];
-                contentModel = contentPieceCollection.get(contentID);
-                if (!contentModel) {
-                  contentModel = new ContentPiece.ItemModel({
-                    'ID': contentID
-                  });
-                  contentModel.fetch();
-                }
-                contentPiecesOfGroup.add(contentModel);
-              }
-              return contentPiecesOfGroup;
-            };
-          })(this));
+      getContentPiecesOfGroup: function(groupModel) {
+        var contentID, contentIDs, contentModel, _i, _len;
+        contentIDs = groupModel.get('content_pieces');
+        if (contentIDs) {
+          for (_i = 0, _len = contentIDs.length; _i < _len; _i++) {
+            contentID = contentIDs[_i];
+            if (typeof contentPieceCollection !== "undefined" && contentPieceCollection !== null) {
+              contentModel = contentPieceCollection.get(contentID);
+            }
+            if (!contentModel) {
+              contentModel = new ContentPiece.ItemModel({
+                'ID': contentID
+              });
+              contentModel.fetch();
+            }
+            contentPiecesOfGroup.add(contentModel);
+          }
         }
         return contentPiecesOfGroup;
       },
       getContentPieceByID: function(id) {
         var contentPiece;
-        contentPiece = contentPieceCollection.get(id);
+        if (typeof contentPieceCollection !== "undefined" && contentPieceCollection !== null) {
+          contentPiece = contentPieceCollection.get(id);
+        }
         if (!contentPiece) {
           contentPiece = new ContentPiece.ItemModel({
             ID: id
@@ -209,8 +204,8 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:content:pieces", function(opt) {
       return API.getContentPieces(opt);
     });
-    App.reqres.setHandler("get:content:pieces:of:group", function(groupid) {
-      return API.getContentPiecesOfGroup(groupid);
+    App.reqres.setHandler("get:content:pieces:of:group", function(groupModel) {
+      return API.getContentPiecesOfGroup(groupModel);
     });
     App.reqres.setHandler("get:content:piece:by:id", function(id) {
       return API.getContentPieceByID(id);

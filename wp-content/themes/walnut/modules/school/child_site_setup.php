@@ -45,6 +45,7 @@ function setup_childsite_roles(){
             $wp_roles->add_role($role, $role_name, $role_cloned->capabilities);
          }
     add_role( 'student','Student');
+    add_role( 'teacher','Teacher');
     add_role( 'parent','Parent');
     
     echo '<br>school-admin, Student, Parent roles created.';

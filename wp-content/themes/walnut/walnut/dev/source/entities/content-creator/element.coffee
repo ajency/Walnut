@@ -26,8 +26,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                     if element.get('element') isnt 'Row' and element.get('element') isnt 'Column' 
                         if element.isNew()
                             # save to server
-                            # element.save null,
-                            #          wait : true
+                            element.save null,
+                                wait : true
 
                             # save to local storage...........TO BE DELETED
                             i = new Date().getTime()

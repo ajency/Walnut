@@ -15,7 +15,6 @@ define ['app'
 		class EmptyView extends Marionette.ItemView
 			
 			template:	nochaptersTpl	
-			tagName : 'tr'
 			className: 'gradeX odd'
 
 		class Views.ChapterListView extends Marionette.CompositeView

@@ -15,9 +15,14 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ModuleDescriptionController.prototype.initialize = function(opts) {
         var model, view;
-        model = opts.model;
+        model = opts.model, this.textbookNames = opts.textbookNames;
+        console.log(' @textbookNames');
+        console.log(this.textbookNames);
         this.view = view = this._showModuleDescriptionView(model);
-        this.show(view);
+        this.show(view, {
+          loading: true,
+          entities: [this.textbookNames]
+        });
         return this.listenTo(this.view, "goto:previous:route", (function(_this) {
           return function() {
             return _this.region.trigger("goto:previous:route");
@@ -26,8 +31,67 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       };
 
       ModuleDescriptionController.prototype._showModuleDescriptionView = function(model) {
+        var terms;
+        terms = model.get('term_ids');
         return new ModuleDescriptionView({
-          model: model
+          model: model,
+          templateHelpers: {
+            getTextbookName: (function(_this) {
+              return function() {
+                var texbookName, textbook;
+                textbook = _this.textbookNames.get(terms.textbook);
+                if (textbook != null) {
+                  return texbookName = textbook.get('name');
+                }
+              };
+            })(this),
+            getChapterName: (function(_this) {
+              return function() {
+                var chapter, chapterName;
+                chapter = _this.textbookNames.get(terms.chapter);
+                if (chapter != null) {
+                  return chapterName = chapter.get('name');
+                }
+              };
+            })(this),
+            getSectionsNames: (function(_this) {
+              return function() {
+                var section, sectionName, sectionNames, sectionString, sections, term, _i, _len;
+                sections = _.flatten(terms.sections);
+                sectionString = '';
+                sectionNames = [];
+                if (sections) {
+                  for (_i = 0, _len = sections.length; _i < _len; _i++) {
+                    section = sections[_i];
+                    term = _this.textbookNames.get(section);
+                    if (term != null) {
+                      sectionName = term.get('name');
+                    }
+                    sectionNames.push(sectionName);
+                  }
+                  return sectionString = sectionNames.join();
+                }
+              };
+            })(this),
+            getSubSectionsNames: (function(_this) {
+              return function() {
+                var sub, subSectionString, subsection, subsectionNames, subsections, _i, _len;
+                subsections = _.flatten(terms.subsections);
+                subSectionString = '';
+                subsectionNames = [];
+                if (subsections) {
+                  for (_i = 0, _len = subsections.length; _i < _len; _i++) {
+                    sub = subsections[_i];
+                    subsection = _this.textbookNames.get(sub);
+                    if (subsection != null) {
+                      subsectionNames.push(subsection.get('name'));
+                    }
+                  }
+                  return subSectionString = subsectionNames.join();
+                }
+              };
+            })(this)
+          }
         });
       };
 

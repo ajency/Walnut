@@ -1,1 +1,1 @@
-define(['apps/content-preview/content-board/elements/row/controller', 'apps/content-preview/content-board/elements/text/controller', 'apps/content-preview/content-board/elements/mcq/controller'], function() {});
+define(['apps/content-preview/content-board/elements/row/controller', 'apps/content-preview/content-board/elements/text/controller', 'apps/content-preview/content-board/elements/mcq/controller', 'apps/content-preview/content-board/elements/fib/controller'], function() {});

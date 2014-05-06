@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
+define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Textbooks", function(Textbooks, App, Backbone, Marionette, $, _) {
     var API;
     Textbooks.ItemModel = (function(_super) {
@@ -28,6 +28,22 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       return ItemModel;
 
     })(Backbone.Model);
+    Textbooks.NameModel = (function(_super) {
+      __extends(NameModel, _super);
+
+      function NameModel() {
+        return NameModel.__super__.constructor.apply(this, arguments);
+      }
+
+      NameModel.prototype.defaults = {
+        name: ''
+      };
+
+      NameModel.prototype.name = 'textbookName';
+
+      return NameModel;
+
+    })(Backbone.Model);
     Textbooks.ItemCollection = (function(_super) {
       __extends(ItemCollection, _super);
 
@@ -37,7 +53,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
 
       ItemCollection.prototype.model = Textbooks.ItemModel;
 
-      ItemCollection.prototype.name = 'textbooks';
+      ItemCollection.prototype.name = 'textbook';
 
       ItemCollection.prototype.comparator = 'term_order';
 
@@ -51,6 +67,26 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       };
 
       return ItemCollection;
+
+    })(Backbone.Collection);
+    Textbooks.NamesCollection = (function(_super) {
+      __extends(NamesCollection, _super);
+
+      function NamesCollection() {
+        return NamesCollection.__super__.constructor.apply(this, arguments);
+      }
+
+      NamesCollection.prototype.model = Textbooks.NameModel;
+
+      NamesCollection.prototype.name = 'textbookName';
+
+      NamesCollection.prototype.comparator = 'term_order';
+
+      NamesCollection.prototype.url = function() {
+        return AJAXURL + '?action=get-textbook-names';
+      };
+
+      return NamesCollection;
 
     })(Backbone.Collection);
     API = {
@@ -75,7 +111,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           textbook = new Textbooks.ItemModel({
             term_id: id
           });
-          console.log(textbook);
           textbook.fetch();
         }
         return textbook;
@@ -93,6 +128,17 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         }
         textbookName = textbook.get('name');
         return textbookName;
+      },
+      getTextBookNamesByIDs: function(ids) {
+        var textbookNamesCollection;
+        textbookNamesCollection = new Textbooks.NamesCollection;
+        textbookNamesCollection.fetch({
+          reset: true,
+          data: {
+            term_ids: ids
+          }
+        });
+        return textbookNamesCollection;
       },
       getTextbooksFromLocal: function() {
         var onSuccess, runQuery;
@@ -233,10 +279,13 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     App.reqres.setHandler("get:textbook:name:by:id", function(id) {
       return API.getTextBookNameByID(id);
     });
-    App.reqres.setHandler("get:textbooks:local", function() {
+    App.reqres.setHandler("get:textbook:names:by:ids", function(ids) {
+      return API.getTextBookNamesByIDs(ids);
+    });
+    App.reqres.setHandler("get:textbook:local", function() {
       return API.getTextbooksFromLocal();
     });
-    return App.reqres.setHandler("get:textbooks:by:id:local", function(class_id) {
+    return App.reqres.setHandler("get:textbook:by:id:local", function(class_id) {
       return API.getTextbooksByIDFromLocal(class_id);
     });
   });

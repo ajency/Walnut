@@ -1,6 +1,7 @@
-define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
+define ["app", 'backbone'], (App, Backbone) ->
 
 		App.module "Entities.Textbooks", (Textbooks, App, Backbone, Marionette, $, _)->
+			
 
 			# textbook model
 			class Textbooks.ItemModel extends Backbone.Model
@@ -18,10 +19,19 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 				name: 'textbook'
 
+
+			# textbook model
+			class Textbooks.NameModel extends Backbone.Model
+
+				defaults:
+					name       		   	: ''
+
+				name: 'textbookName'
+
 			# textbooks collection class
 			class Textbooks.ItemCollection extends Backbone.Collection
 				model : Textbooks.ItemModel
-				name : 'textbooks'
+				name: 'textbook'
 				comparator : 'term_order'
 				url :->
 					 AJAXURL + '?action=get-textbooks'
@@ -29,6 +39,15 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				parse:(resp)->
 					@total = resp.count	
 					resp.data
+
+
+			# textbooks collection class
+			class Textbooks.NamesCollection extends Backbone.Collection
+				model : Textbooks.NameModel
+				name: 'textbookName'
+				comparator : 'term_order'
+				url :->
+					 AJAXURL + '?action=get-textbook-names'
 
 			
 
@@ -49,7 +68,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					if not textbook 
 						textbook = new Textbooks.ItemModel term_id : id
-						console.log textbook
 						textbook.fetch()
 					textbook
 
@@ -62,7 +80,16 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					textbookName= textbook.get('name')
 
-					textbookName	
+					textbookName
+
+				getTextBookNamesByIDs:(ids)->
+					textbookNamesCollection = new Textbooks.NamesCollection
+					textbookNamesCollection.fetch
+										reset : true
+										data:
+											term_ids  : ids
+											
+					textbookNamesCollection	
 
 
 				#get all textbooks from local database
@@ -193,13 +220,16 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				API.getTextBookByID id
 
 			App.reqres.setHandler "get:textbook:name:by:id", (id)->
-				API.getTextBookNameByID id	
+				API.getTextBookNameByID id
+
+			App.reqres.setHandler "get:textbook:names:by:ids", (ids)->
+				API.getTextBookNamesByIDs ids	
 
 			# request handler to get all textbooks from local database
-			App.reqres.setHandler "get:textbooks:local", ->
+			App.reqres.setHandler "get:textbook:local", ->
 				API.getTextbooksFromLocal()
 
-			App.reqres.setHandler "get:textbooks:by:id:local", (class_id)->
+			App.reqres.setHandler "get:textbook:by:id:local", (class_id)->
 				API.getTextbooksByIDFromLocal class_id
 
 

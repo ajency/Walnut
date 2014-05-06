@@ -11,7 +11,7 @@ define(["backbone"], function(Backbone) {
       collection_name = collection.name;
       console.log('Collection name: ' + collection_name);
       opts = options.data;
-      if (collection_name === 'textbooks') {
+      if (collection_name === 'textbook') {
         if (typeof options.data.class_id === 'undefined') {
           data = App.reqres.request("get:" + collection_name + ":local");
           data.done(function(d) {

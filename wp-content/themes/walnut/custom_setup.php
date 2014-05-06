@@ -23,7 +23,9 @@ function create_custom_tables(){
     
     $textbook_class_relations_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}textbook_relationships 
              (`id` INT NOT NULL AUTO_INCREMENT, `textbook_id` INT NOT NULL, 
-             `class_id` INT NOT NULL, PRIMARY KEY (`id`))";
+             `class_id` varchar(255) NOT NULL,
+             `tags` varchar(255) NOT NULL, 
+             PRIMARY KEY (`id`))";
 
     $wpdb->query($textbook_class_relations_table);
     
@@ -39,6 +41,38 @@ function create_custom_tables(){
     
     echo "{$wpdb->prefix}class_divisions table created<br>";
     
+    $content_collection_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}content_collection` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `name` varchar(255) NOT NULL,
+            `created_on` datetime NOT NULL,
+            `created_by` int(11) NOT NULL,
+            `last_modified_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `last_modified_by` int(11) NOT NULL,
+            `published_on` datetime NOT NULL,
+            `published_by` int(11) NOT NULL,
+            `status` varchar(255) NOT NULL,
+            `type` varchar(255) NOT NULL,
+            `term_ids` varchar(255) NOT NULL,
+            `duration` int(11) NOT NULL COMMENT 'in minutes',
+            PRIMARY KEY (`id`)
+          )";
+
+    $wpdb->query($content_collection_table);
+    
+    echo "{$wpdb->prefix}content_collection table created<br>";
+    
+    $collection_meta = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}collection_meta` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `collection_id` int(11) NOT NULL,
+            `meta_key` varchar(255) NOT NULL,
+            `meta_value` text NOT NULL,
+            PRIMARY KEY (`id`)
+          )";
+
+    $wpdb->query($collection_meta);
+    
+    echo "{$wpdb->prefix}collection_meta table created<br>";
+
     $training_logs_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}training_logs 
              (`id` INT NOT NULL AUTO_INCREMENT, `division_id` INT NOT NULL, 
              `collection_id` INT NOT NULL, 
@@ -94,6 +128,7 @@ function add_new_roles_main_site()
     add_role( 'content-creator','Content Creator');
     add_role( 'content-approver','Content Approver');
     add_role( 'student','Student');
+    add_role( 'teacher','Teacher');
     add_role( 'parent','Parent');
 }
 add_new_roles_main_site();

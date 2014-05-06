@@ -10,7 +10,7 @@ define(['app'], function(App) {
         return BlankElementView.__super__.constructor.apply(this, arguments);
       }
 
-      BlankElementView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> FIB <i class="fa fa-chevron-right"> </i> <span class="semi-bold"> Blank No : <span id="blankPropertiesNo"></span> </span> </div> <div class="docket-body"> <!-- 	<div class="from-group">Set maximum characters allowed to enter <input id="answer-max-length" type="text"  value="{{maxlength}}"> </div>   --> <div class=""> Accepted answers <input id="correct-answers"   value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" /> </div> <div class="m-b-10"> Marks <input id="individual-marks" type="text" value="{{marks}}" class="form-control"> </div> </div> </div> </div>';
+      BlankElementView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> FIB <i class="fa fa-chevron-right"> </i> <span class="semi-bold"> Blank No : <span id="blankPropertiesNo"></span> </span> </div> <div class="docket-body"> <!-- 			<div class="from-group">Set maximum characters allowed to enter <input id="answer-max-length" type="text"  value="{{maxlength}}"> </div>   --> <div class=""> Accepted answers <input id="correct-answers"   value="{{correctanswersFn}}" type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" /> </div> <div class="form-group"> <div class="textProp slider success"> Size <input type="text" id="fib-blanksize" class="blankSize" data-slider-max="50" data-slider-min="1" data-slider-step="1" data-slider-value="{{blank_size}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> <div class="m-b-10"> Marks <input id="individual-marks" type="text" value="{{marks}}" class="form-control"> </div> </div> </div> </div>';
 
       BlankElementView.prototype.ui = {
         individualMarksTextbox: '#individual-marks'
@@ -29,13 +29,43 @@ define(['app'], function(App) {
       };
 
       BlankElementView.prototype.initialize = function(options) {
-        return this.blankNo = options.blankNo;
+        return this.fibModel = options.fibModel;
       };
 
       BlankElementView.prototype.onShow = function() {
         this.$el.find('input#correct-answers').tagsinput('refresh');
-        this.$el.find('#blankPropertiesNo').text(this.blankNo);
-        return console.log(this.blankNo);
+        this.$el.find('#blankPropertiesNo').text(this.model.get('blank_index'));
+        console.log(this.model.get('blank_index'));
+        this.$el.find('.blankSize').slider();
+        this.$el.find('#fib-blanksize').slider().on('slide', (function(_this) {
+          return function() {
+            var size;
+            size = _this.model.get('blank_size');
+            return _this.model.set('blank_size', _this.$el.find('.blankSize').slider('getValue').val() || size);
+          };
+        })(this));
+        if (!this.fibModel.get('enableIndividualMarks')) {
+          this._disableMarks();
+        }
+        return this.listenTo(this.fibModel, 'change:enableIndividualMarks', this._toggleMarks);
+      };
+
+      BlankElementView.prototype._toggleMarks = function(model, enableIndividualMarks) {
+        if (enableIndividualMarks) {
+          return this._enableMarks();
+        } else {
+          return this._disableMarks();
+        }
+      };
+
+      BlankElementView.prototype._disableMarks = function() {
+        this.ui.individualMarksTextbox.val(0);
+        return this.ui.individualMarksTextbox.prop('disabled', true);
+      };
+
+      BlankElementView.prototype._enableMarks = function() {
+        this.ui.individualMarksTextbox.val(this.model.get('marks'));
+        return this.ui.individualMarksTextbox.prop('disabled', false);
       };
 
       BlankElementView.prototype._changeCorrectAnswers = function(evt) {

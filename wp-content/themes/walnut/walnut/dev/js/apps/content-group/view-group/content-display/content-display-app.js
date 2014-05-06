@@ -16,12 +16,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionContentDisplayController.prototype.initialize = function(opts) {
         var groupContentCollection, model, questionResponseCollection, view;
-        model = opts.model, this.mode = opts.mode, questionResponseCollection = opts.questionResponseCollection;
-        groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
-        questionResponseCollection = App.request("get:question:response:collection", {
-          'division': 3,
-          'collection_id': model.get('id')
-        });
+        model = opts.model, this.mode = opts.mode, questionResponseCollection = opts.questionResponseCollection, groupContentCollection = opts.groupContentCollection;
         this.view = view = this._getCollectionContentDisplayView(model, groupContentCollection, questionResponseCollection);
         this.show(view, {
           loading: true,
