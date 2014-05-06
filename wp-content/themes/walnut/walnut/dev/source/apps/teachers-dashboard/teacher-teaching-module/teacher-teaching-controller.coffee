@@ -22,7 +22,9 @@ define ['app'
 
 			initialize :(opts)->
 
-				{@division,@moduleID,contentGroupModel,questionsCollection,questionResponseCollection,contentPiece,@display_mode} = opts
+				{@division,@moduleID,contentGroupModel,
+				questionsCollection,questionResponseCollection,
+				contentPiece,@display_mode,@textbookNames} = opts
 
 				studentCollection = App.request "get:user:collection", ('role':'student', 'division': @division)
 
@@ -115,6 +117,7 @@ define ['app'
 					App.execute "show:teacher:teaching:module:description",
 								region 	: @layout.moduleDetailsRegion
 								model 	:contentGroupModel
+								textbookNames: @textbookNames
 
 			_showQuestionDisplayView:(model) =>
 				App.execute "show:single:question:app", 

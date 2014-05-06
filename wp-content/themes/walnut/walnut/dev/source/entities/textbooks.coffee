@@ -19,6 +19,15 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				name: 'textbook'
 
+
+			# textbook model
+			class Textbooks.NameModel extends Backbone.Model
+
+				defaults:
+					name       		   	: ''
+
+				name: 'textbookName'
+
 			# textbooks collection class
 			class Textbooks.ItemCollection extends Backbone.Collection
 				model : Textbooks.ItemModel
@@ -29,6 +38,15 @@ define ["app", 'backbone'], (App, Backbone) ->
 				parse:(resp)->
 					@total = resp.count	
 					resp.data
+
+
+			# textbooks collection class
+			class Textbooks.NamesCollection extends Backbone.Collection
+				model : Textbooks.NameModel
+				comparator : 'term_order'
+				url :->
+					 AJAXURL + '?action=get-textbook-names'
+				
 
 			
 
@@ -63,6 +81,15 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					textbookName
 
+				getTextBookNamesByIDs:(ids)->
+					textbookNamesCollection = new Textbooks.NamesCollection
+					textbookNamesCollection.fetch
+										reset : true
+										data:
+											term_ids  : ids
+											
+					textbookNamesCollection
+					
 
 			# request handler to get all textbooks
 			App.reqres.setHandler "get:textbooks", (opt) ->
@@ -73,3 +100,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:textbook:name:by:id", (id)->
 				API.getTextBookNameByID id
+
+
+			App.reqres.setHandler "get:textbook:names:by:ids", (ids)->
+				API.getTextBookNamesByIDs ids

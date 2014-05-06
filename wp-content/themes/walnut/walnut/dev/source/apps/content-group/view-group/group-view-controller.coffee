@@ -17,12 +17,13 @@ define ['app'
 													'division' : @division
 													'collection_id' : @model.get 'id'
 
-				App.execute "when:fetched", @model, =>
-					@groupContentCollection= App.request "get:content:pieces:by:ids", @model.get 'content_pieces'
+					
+
+				@groupContentCollection= App.request "get:content:pieces:by:ids", @model.get 'content_pieces'
 
 				@layout = layout = @_getContentGroupViewLayout()
 
-				@show layout, (loading:true, entities: [@model, @questionResponseCollection, @groupContentCollection])
+				@show layout, (loading:true, entities: [@model, @questionResponseCollection, @groupContentCollection,@textbookNames])
 
 				@listenTo layout, 'show', @showContentGroupViews
 
@@ -53,24 +54,30 @@ define ['app'
 					questionResponseCollection 	: @questionResponseCollection
 					contentGroupModel 			: @model 
 					questionsCollection 		: @groupContentCollection
+					textbookNames 				: @textbookNames
 					display_mode 				: display_mode # when display mode is readonly, the save response options are not shown
 															   # only when display mode is class_mode response changes can be done
 
 			showContentGroupViews:=>
 				App.execute "when:fetched", @model, =>
-					App.execute "show:viewgroup:content:group:detailsapp", 
-						region 						: @layout.collectionDetailsRegion
-						model  						: @model
-						mode 						: @mode
-						questionResponseCollection 	: @questionResponseCollection
-
-					if _.size(@model.get('content_pieces'))>0
-						App.execute "show:viewgroup:content:displayapp",
-							region 						: @layout.contentDisplayRegion
-							model 						: @model
+					textbook_termIDs= _.flatten @model.get 'term_ids'
+					@textbookNames= App.request "get:textbook:names:by:ids", textbook_termIDs
+					
+					App.execute "when:fetched", @textbookNames, =>
+						App.execute "show:viewgroup:content:group:detailsapp", 
+							region 						: @layout.collectionDetailsRegion
+							model  						: @model
 							mode 						: @mode
 							questionResponseCollection 	: @questionResponseCollection
-							groupContentCollection 		: @groupContentCollection
+							textbookNames 				: @textbookNames
+
+						if _.size(@model.get('content_pieces'))>0
+							App.execute "show:viewgroup:content:displayapp",
+								region 						: @layout.contentDisplayRegion
+								model 						: @model
+								mode 						: @mode
+								questionResponseCollection 	: @questionResponseCollection
+								groupContentCollection 		: @groupContentCollection
 
 			_getContentGroupViewLayout : =>
 				new ContentGroupViewLayout
@@ -85,4 +92,7 @@ define ['app'
 			regions:
 				collectionDetailsRegion	: '#collection-details-region'
 				contentDisplayRegion	: '#content-display-region'	
+
+
+
 

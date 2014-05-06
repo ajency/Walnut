@@ -8,13 +8,8 @@ define ['app'
 
 			initialize : (opts)->
 
-				{model, @mode, questionResponseCollection} = opts
-
-				groupContentCollection= App.request "get:content:pieces:by:ids", model.get 'content_pieces'
-				questionResponseCollection = App.request "get:question:response:collection", 
-													'division' : 3
-													'collection_id' : model.get 'id'
-
+				{model, @mode, questionResponseCollection,groupContentCollection} = opts
+				
 				@view= view = @_getCollectionContentDisplayView model, groupContentCollection, questionResponseCollection
 				@show view, (loading:true, entities: [groupContentCollection,questionResponseCollection])
 

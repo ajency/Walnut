@@ -102,3 +102,19 @@ function fetch_single_content_group() {
 }
 
 add_action('wp_ajax_read-content-group', 'fetch_single_content_group');
+
+function save_content_piece_json() {
+    
+    $postarr=array(
+      'post_status'=>'publish',
+      'post_type'=>'content_piece',
+      'post_title'=> 'test content piece'
+    );
+    $content_piece= wp_insert_post($postarr); 
+    echo $content_piece;
+    if($content_piece)
+        update_post_meta ($content_piece, 'layout_json',$_POST['json']);
+    wp_send_json(array('code' => 'OK', 'data' => $content_groups));
+}
+
+add_action('wp_ajax_save-content-piece-json', 'save_content_piece_json');

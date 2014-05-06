@@ -29,8 +29,6 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
 
       EmptyView.prototype.template = nochaptersTpl;
 
-      EmptyView.prototype.tagName = 'tr';
-
       EmptyView.prototype.className = 'gradeX odd';
 
       return EmptyView;
