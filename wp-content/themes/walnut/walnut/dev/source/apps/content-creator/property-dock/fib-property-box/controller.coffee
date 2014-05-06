@@ -25,6 +25,7 @@ define ['app'
 
 					# on close of property box save the model
 					onClose:->
+						App.execute 'save:fib:text'
 						localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
 
 				App.commands.setHandler "show:fib:properties",(options)->

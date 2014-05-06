@@ -28,7 +28,7 @@ define ['app'],(App)->
 			# current markupup as argument
 			events:
 				'click a'	: (e)-> e.preventDefault()
-				'blur p'	: '_textBlur' 
+				'blur p'	: 'onSaveText' 
 				'DOMSubtreeModified p'	: '_updateInputProperties'
 
 			initialize:(options)->
@@ -114,7 +114,7 @@ define ['app'],(App)->
 
 
 			# save the text field on blur
-			_textBlur:->
+			onSaveText:->
 				formatedText = @$el.find('p').clone()
 				$(formatedText).find('input').attr 'value',''
 				$(formatedText).find('input').unwrap()
