@@ -17,7 +17,7 @@ define ['app'
 
 
 
-							_.defaults options.modelData,
+							# _.defaults options.modelData,
 						
 							super(options)
 			
@@ -49,11 +49,11 @@ define ['app'
 							# get the view
 							@view = @_getMcqView optionCollection
 
-							# on show of the view 
-							# and on the view event show the property box
-							@listenTo @view, "show show:this:mcq:properties",(options)=>									
-									App.execute "show:question:properties", 
-										model : @layout.model
+							# # on show of the view 
+							# # and on the view event show the property box
+							# @listenTo @view, "show show:this:mcq:properties",(options)=>									
+							# 		App.execute "show:question:properties", 
+							# 			model : @layout.model
 
 							# listen to event from the view to create the row structure
 							@listenTo @view, "create:row:structure", @createRowStructure

@@ -19,23 +19,24 @@ define ['app'], (App)->
 				if not _.isObject _json
 					throw new Error "invalid json..."
 
-				console.log 'JSON.stringify _json'
 				console.log JSON.stringify _json
-				
 				localStorage.setItem 'layout',JSON.stringify _json
 
-				options = 
-					type 	: 'POST'
-					url  	: AJAXURL
-					data 	:
-						action 	: 'save-content-piece-json'
-						json 	: JSON.stringify _json
+				# _page_id = App.request "get:current:editable:page"
+
+				# options = 
+				# 	type 	: 'POST'
+				# 	url  	: AJAXURL
+				# 	data 	:
+				# 		action 	: 'save-page-json'
+				# 		json 	: JSON.stringify _json
+				# 		page_id : _page_id
 					
 
-				$.ajax( options ).done (response)->
-					console.log response
-				.fail (resp)->
-					console.log 'error'
+				# $.ajax( options ).done (response)->
+				# 	console.log response
+				# .fail (resp)->
+				# 	console.log 'error'
 
 			# get the json
 			_getPageJson:($site)->

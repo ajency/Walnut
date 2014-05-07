@@ -6,7 +6,7 @@ define ['app'],(App)->
 		class OptionView extends Marionette.ItemView
 				className : 'sort-option'
 
-				template : '<span>{{optionNo}}</span>							
+				template : '<input type="hidden" id="optionNo" value="{{optionNo}}">							
 							<p class="sort-option-text"></p>'
 
 				# avoid and anchor tag click events
@@ -97,9 +97,9 @@ define ['app'],(App)->
 
 			_enableSorting:->
 					# on mouse down on the text area remove sortable so as to enable typing
+						# @$el.sortable('destroy') if @$el.hasClass 'ui-sortable'
 					@$el.find('p').on 'mousedown',(evt)=>
 						evt.stopPropagation()
-						@$el.sortable('destroy') if @$el.hasClass 'ui-sortable'
 
 					# on mousedown of th option make it sortable if not already is
 					@$el.find('.sort-option').on 'mousedown',=>
@@ -107,6 +107,19 @@ define ['app'],(App)->
 						if not @$el.hasClass 'ui-sortable'
 							@$el.sortable
 								cursor: "move"
+								stop : @_onOptionPositionChanged
+
+			_onOptionPositionChanged:=>
+				@$el.find('input#optionNo').each (index,element)=>
+					console.log index+"  "+element.value
+					@collection.get(element.value).set 'index',index+1
+				
+				@collection.comparator = (model)-> 
+			  			model.get 'index'
+				
+				@collection.sort()
+
+
 
 			# on close drestroy the sortable
 			onClose:->

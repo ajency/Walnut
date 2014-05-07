@@ -10,23 +10,18 @@ define(['app'], function(App) {
         return PropertyView.__super__.constructor.apply(this, arguments);
       }
 
-      PropertyView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> MCQ <i class="fa fa-chevron-right"></i> <span class="semi-bold">Multiple Choice Question Properties</span> </div> <div class="docket-body"> <div> Options <select id="options-num"> <option value="2">2</option> <option value="3">3</option> <option value="4">4</option> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> </select> </div> <div> Marks <select id="marks"> <option value="1">1</option> <option value="2">2</option> </select> </div> <div class="form-group inline"> Background-Color <input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}> </div> <div class="slider success"> Height <input type="text" id="sort-height" class="height" data-slider-max="100" data-slider-min="40" data-slider-step="5" data-slider-value="{{height}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> </div> </div>';
+      PropertyView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> MCQ <i class="fa fa-chevron-right"></i> <span class="semi-bold">Multiple Choice Question Properties</span> </div> <div class="docket-body"> <div> Options <select id="options-num"> <option value="2">2</option> <option value="3">3</option> <option value="4">4</option> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> </select> </div> <div class="m-b-10"> Marks <input id="marks" type="text" value="{{marks}}" class="form-control" > </div> <div class="form-group inline"> Background-Color <input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}> </div> <div class="slider success"> Height <input type="text" id="sort-height" class="height" data-slider-max="100" data-slider-min="40" data-slider-step="5" data-slider-value="{{height}}" data-slider-orientation="horizontal" data-slider-selection="before"> </div> </div> </div> </div>';
 
       PropertyView.prototype.events = {
         'change select#options-num': '_changeOptionNumber',
-        'change select#marks': '_changeMarks'
+        'blur input#marks': '_changeMarks'
       };
 
       PropertyView.prototype.onShow = function() {
-        this.$el.find('select#options-num, select#marks').select2({
+        this.$el.find('select#options-num').select2({
           minimumResultsForSearch: -1
         });
         this.$el.find('select#options-num').select2('val', this.model.get('optioncount'));
-        this.$el.find('select#marks').select2('val', this.model.get('marks'));
-        this.$el.find('#marks').select2({
-          minimumResultsForSearch: -1
-        });
-        this.$el.find('#marks').select2('val', this.model.get('marks'));
         this.$el.find('#bg-color.color-picker').minicolors({
           animationSpeed: 200,
           animationEasing: 'swing',
@@ -52,7 +47,11 @@ define(['app'], function(App) {
       };
 
       PropertyView.prototype._changeMarks = function(evt) {
-        return this.model.set('marks', $(evt.target).val());
+        if (!isNaN($(evt.target).val())) {
+          this.model.set('marks', parseInt($(evt.target).val()));
+          console.log(parseInt($(evt.target).val()));
+          return console.log(this.model);
+        }
       };
 
       PropertyView.prototype._changeOptionNumber = function(evt) {

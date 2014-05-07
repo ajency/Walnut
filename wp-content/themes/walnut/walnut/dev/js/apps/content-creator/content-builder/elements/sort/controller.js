@@ -18,9 +18,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           optioncount: 2,
           elements: App.request("create:new:option:collection", [
             {
-              optionNo: 1
+              optionNo: _.uniqueId(),
+              index: 1
             }, {
-              optionNo: 2
+              optionNo: _.uniqueId(),
+              index: 2
             }
           ]),
           bg_color: '#b1c4e0',
@@ -66,25 +68,25 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype._changeOptionCount = function(model, num) {
-        var newval, oldval, _results;
+        var newval, oldval;
         oldval = model.previous('optioncount');
         newval = num;
         if (oldval < newval) {
           while (oldval !== newval) {
             oldval++;
             model.get('elements').push({
-              optionNo: oldval
+              optionNo: _.uniqueId(),
+              index: oldval
             });
           }
         }
         if (oldval > newval) {
-          _results = [];
           while (oldval !== newval) {
             model.get('elements').pop();
-            _results.push(oldval--);
+            oldval--;
           }
-          return _results;
         }
+        return console.log(model);
       };
 
       return Controller;

@@ -14,7 +14,7 @@ define(['app'], function(App) {
 
       OptionView.prototype.className = 'sort-option';
 
-      OptionView.prototype.template = '<span>{{optionNo}}</span> <p class="sort-option-text"></p>';
+      OptionView.prototype.template = '<input type="hidden" id="optionNo" value="{{optionNo}}"> <p class="sort-option-text"></p>';
 
       OptionView.prototype.events = {
         'click a': function(e) {
@@ -50,6 +50,7 @@ define(['app'], function(App) {
       __extends(SortView, _super);
 
       function SortView() {
+        this._onOptionPositionChanged = __bind(this._onOptionPositionChanged, this);
         this._changeHeight = __bind(this._changeHeight, this);
         this._changeBGColor = __bind(this._changeBGColor, this);
         return SortView.__super__.constructor.apply(this, arguments);
@@ -95,10 +96,7 @@ define(['app'], function(App) {
       SortView.prototype._enableSorting = function() {
         this.$el.find('p').on('mousedown', (function(_this) {
           return function(evt) {
-            evt.stopPropagation();
-            if (_this.$el.hasClass('ui-sortable')) {
-              return _this.$el.sortable('destroy');
-            }
+            return evt.stopPropagation();
           };
         })(this));
         return this.$el.find('.sort-option').on('mousedown', (function(_this) {
@@ -106,11 +104,25 @@ define(['app'], function(App) {
             _this.trigger("show:this:sort:properties");
             if (!_this.$el.hasClass('ui-sortable')) {
               return _this.$el.sortable({
-                cursor: "move"
+                cursor: "move",
+                stop: _this._onOptionPositionChanged
               });
             }
           };
         })(this));
+      };
+
+      SortView.prototype._onOptionPositionChanged = function() {
+        this.$el.find('input#optionNo').each((function(_this) {
+          return function(index, element) {
+            console.log(index + "  " + element.value);
+            return _this.collection.get(element.value).set('index', index + 1);
+          };
+        })(this));
+        this.collection.comparator = function(model) {
+          return model.get('index');
+        };
+        return this.collection.sort();
       };
 
       SortView.prototype.onClose = function() {

@@ -45,7 +45,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           return App.execute("close:question:element:properties");
         });
         App.commands.setHandler('save:fib:text', function() {
-          return view.triggerMethod('save:text');
+          return _.delay(function() {
+            return view.triggerMethod('save:text');
+          }, 500);
         });
         this.listenTo(view, "create:new:fib:element", (function(_this) {
           return function(blankId) {

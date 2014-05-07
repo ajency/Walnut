@@ -24,7 +24,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           comment: 'Not Attempted'
         };
         this.answerModel = App.request("create:new:answer", answerData);
-        return _.defaults(options.modelData, Controller.__super__.initialize.call(this, options));
+        return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype.renderElement = function() {
@@ -45,13 +45,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.layout.model.set('elements', optionCollection);
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.view = this._getMcqView(optionCollection);
-        this.listenTo(this.view, "show show:this:mcq:properties", (function(_this) {
-          return function(options) {
-            return App.execute("show:question:properties", {
-              model: _this.layout.model
-            });
-          };
-        })(this));
         this.listenTo(this.view, "create:row:structure", this.createRowStructure);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
         return this.layout.elementRegion.show(this.view);

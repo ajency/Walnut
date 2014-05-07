@@ -40,6 +40,7 @@ require.config
 		# select2       		: 'plugins/select2.min'
 		# tagsinput 			: 'plugins/bootstrap-tagsinput.min'
 		screwbuttons 		: 'plugins/jquery.screwdefaultbuttonsV2'
+		isotope				: 'plugins/isotope.pkgd.min'
 
 	shim:
 		underscore: 
