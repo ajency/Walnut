@@ -15,7 +15,7 @@ define ['app'
 							element : 'Sort'
 							optioncount : 2
 							elements 	: App.request "create:new:option:collection", [{optionNo:_.uniqueId(),index:1},{optionNo:_.uniqueId(),index:2}]
-							bg_color : '#b1c4e0'
+							bg_color : '#ffffff'
 							bg_opacity : 1
 							height : 40
 

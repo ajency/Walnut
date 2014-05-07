@@ -82,7 +82,6 @@ define(['app'], function(App) {
           this.$el.find('.sort').sortable('destroy');
         }
         $container = this.$el.find('.sort');
-        console.log($container);
         $container.isotope({
           itemSelector: '.sort-option',
           layoutMode: 'vertical',
@@ -93,14 +92,11 @@ define(['app'], function(App) {
         });
         return this.$el.find('#toggleView').on('click', (function(_this) {
           return function(evt) {
-            console.log($(evt.target));
-            return _.delay(function() {
-              var sortValue;
-              sortValue = $(evt.target).find('input').attr('data-sort-value');
-              return _this.$el.find('.sort').isotope({
-                sortBy: sortValue
-              });
-            }, 200);
+            var sortValue;
+            sortValue = $(evt.target).find('input').attr('data-sort-value');
+            return _this.$el.find('.sort').isotope({
+              sortBy: sortValue
+            });
           };
         })(this));
       };

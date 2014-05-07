@@ -25,7 +25,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
               index: 2
             }
           ]),
-          bg_color: '#b1c4e0',
+          bg_color: '#ffffff',
           bg_opacity: 1,
           height: 40
         });

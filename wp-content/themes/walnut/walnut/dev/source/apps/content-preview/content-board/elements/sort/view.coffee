@@ -89,8 +89,7 @@ define ['app'],(App)->
 
 				$container = @$el.find('.sort')
 
-				console.log $container
-				
+		
 				$container.isotope
 					# // options
 					itemSelector: '.sort-option'
@@ -102,12 +101,11 @@ define ['app'],(App)->
 
 					
 				@$el.find('#toggleView').on 'click',(evt)=>
-					console.log $(evt.target)
-					_.delay =>
+					# _.delay =>
 						sortValue = $(evt.target).find('input').attr('data-sort-value');
 						@$el.find('.sort').isotope
 							sortBy: sortValue 
-					,200
+					# ,200
 
 				
 
