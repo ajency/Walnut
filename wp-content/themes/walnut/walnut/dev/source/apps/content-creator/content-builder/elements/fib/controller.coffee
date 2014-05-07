@@ -45,7 +45,9 @@ define ['app'
 									App.execute "close:question:element:properties"
 
 							App.commands.setHandler 'save:fib:text',->
-									view.triggerMethod 'save:text'
+									_.delay ->
+										view.triggerMethod 'save:text'
+									,500
 
 							# # on show disable all question elements in d element box
 							# @listenTo view, "show",=>

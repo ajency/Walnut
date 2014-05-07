@@ -25,7 +25,8 @@ require.config({
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
     ckeditor: 'plugins/ckeditor/ckeditor',
-    screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
+    screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
+    isotope: 'plugins/isotope.pkgd.min'
   },
   shim: {
     underscore: {

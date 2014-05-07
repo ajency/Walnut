@@ -7,5 +7,5 @@ define [
 		'apps/content-preview/content-board/elements/mcq/controller'
 		'apps/content-preview/content-board/elements/fib/controller'
 		# 'apps/content-creator/content-builder/elements/biganswer/controller'
-		# 'apps/content-creator/content-builder/elements/sort/controller'
+		'apps/content-preview/content-board/elements/sort/controller'
 		],->

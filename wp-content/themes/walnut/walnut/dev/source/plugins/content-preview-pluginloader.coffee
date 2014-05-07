@@ -23,4 +23,5 @@ define [
 			# 'select2'
 			# 'tagsinput'
 			'screwbuttons'
+			'isotope'
 		], ->
