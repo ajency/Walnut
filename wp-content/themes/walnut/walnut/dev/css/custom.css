@@ -838,11 +838,10 @@ p.mcq-option-text {
   border-image: url(../../../images/border.gif) 20 20 stretch;
 }
 .fib-text input[type="text"].ansWrong {
-  opacity: 0.2;
-  background: url(../../../images/answer-wrong.png) no-repeat right center;
+  background: url(../../../images/wrong-ans.gif) no-repeat right center;
   border: none;
   border-bottom: 2px solid #f35958;
-  background-size: 7%;
+  background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
 
@@ -857,10 +856,10 @@ p.mcq-option-text {
 
 }
 .fib-text input[type="text"].ansRight {
-  background: url(../../../images/answer-right.png) no-repeat right center;
+  background: url(../../../images/right-ans.gif) no-repeat right center;
   border: none;
-  border-bottom: 2px solid #0dd6c5;
-  background-size: 10%;
+  border-bottom: 2px solid #0aa699;
+  background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
 
@@ -1458,4 +1457,7 @@ tbody.rowlink td {
 textarea.error,
 .select2-choice.error {
   border: 1px solid #f35958 !important;
+}
+.example {
+  width: 100px;
 }
