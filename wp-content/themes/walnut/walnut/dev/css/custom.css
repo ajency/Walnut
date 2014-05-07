@@ -1088,6 +1088,13 @@ p.mcq-option-text {
 .hashtags {
   font-size: 13px;
 }
+.cpTimer {
+  width: 190px;
+  margin: 0 auto;
+}
+.cpTimer h4 {
+  color: #ffffff;
+}
 #content-board {
   margin-top: 30px;
 }
@@ -1458,6 +1465,6 @@ textarea.error,
 .select2-choice.error {
   border: 1px solid #f35958 !important;
 }
-.example {
-  width: 100px;
+.page-content .content {
+  overflow: auto;
 }
