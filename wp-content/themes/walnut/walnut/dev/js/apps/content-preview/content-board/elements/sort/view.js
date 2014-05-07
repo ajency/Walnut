@@ -32,7 +32,7 @@ define(['app'], function(App) {
         return SortView.__super__.constructor.apply(this, arguments);
       }
 
-      SortView.prototype.template = '<div class="sort"></div> <div class="alert alert-success text-center fibRightAns" style="display: none;"> <div class="btn-group " data-toggle="buttons"> <label class="btn btn-default"> <input type="radio" name="sort" id="myAnswer" data-sort-value="myAnswer"> My Answer </label> <label class="btn btn-primary"> <input type="radio" name="sort" id="rightAnswer" data-sort-value="correctAnswer"> Correct Answer </label> </div> </div>';
+      SortView.prototype.template = '<div class="sort"></div> <div class="alert alert-success text-center fibRightAns" style="display: none;"> <div class="btn-group " data-toggle="buttons" id="toggleView"> <label class="btn btn-default"> <input type="radio" name="sort" id="myAnswer" data-sort-value="myAnswer"> My Answer </label> <label class="btn btn-primary"> <input type="radio" name="sort" id="rightAnswer" data-sort-value="correctAnswer"> Correct Answer </label> </div> </div>';
 
       SortView.prototype.itemView = OptionView;
 
@@ -70,17 +70,20 @@ define(['app'], function(App) {
       };
 
       SortView.prototype.onShowFeedback = function() {
+        var $container;
         this.$el.find('.fibRightAns').show();
         this.$el.find('input#optionNo').each((function(_this) {
           return function(index, element) {
-            $(element).before("<span class='myAnswer'>" + (index + 1) + "</span>");
-            return $(element).before("<span class='correctAnswer'>" + (_this.collection.get($(element).val()).get('index')) + "</span>");
+            $(element).before("<span class='myAnswer' style='display:none;'>" + (index + 1) + "</span>");
+            return $(element).before("<span class='correctAnswer' style='display:none;'>" + (_this.collection.get($(element).val()).get('index')) + "</span>");
           };
         })(this));
         if (this.$el.find('.sort').hasClass('ui-sortable')) {
           this.$el.find('.sort').sortable('destroy');
         }
-        this.$el.find('.sort').isotope({
+        $container = this.$el.find('.sort');
+        console.log($container);
+        $container.isotope({
           itemSelector: '.sort-option',
           layoutMode: 'vertical',
           getSortData: {
@@ -88,13 +91,16 @@ define(['app'], function(App) {
             myAnswer: '.myAnswer parseInt'
           }
         });
-        return this.$el.find('input[name="sort"]').on('click', (function(_this) {
+        return this.$el.find('#toggleView').on('click', (function(_this) {
           return function(evt) {
-            var sortValue;
-            sortValue = $(evt.target).attr('data-sort-value');
-            return _this.$el.find('.sort').isotope({
-              sortBy: sortValue
-            });
+            console.log($(evt.target));
+            return _.delay(function() {
+              var sortValue;
+              sortValue = $(evt.target).find('input').attr('data-sort-value');
+              return _this.$el.find('.sort').isotope({
+                sortBy: sortValue
+              });
+            }, 200);
           };
         })(this));
       };

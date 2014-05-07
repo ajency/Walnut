@@ -25,7 +25,7 @@ define ['app'],(App)->
 
 			template : '<div class="sort"></div>
 						<div class="alert alert-success text-center fibRightAns" style="display: none;">  
-							<div class="btn-group " data-toggle="buttons">
+							<div class="btn-group " data-toggle="buttons" id="toggleView">
 								<label class="btn btn-default">
 									<input type="radio" name="sort" id="myAnswer" data-sort-value="myAnswer"> My Answer
 								</label>
@@ -82,13 +82,16 @@ define ['app'],(App)->
 			onShowFeedback:->
 				@$el.find('.fibRightAns').show()
 				@$el.find('input#optionNo').each (index,element)=>
-					$(element).before("<span class='myAnswer'>#{index+1}</span>")
-					$(element).before("<span class='correctAnswer'>#{@collection.get($(element).val()).get('index')}</span>")
+					$(element).before("<span class='myAnswer' style='display:none;'>#{index+1}</span>")
+					$(element).before("<span class='correctAnswer' style='display:none;'>#{@collection.get($(element).val()).get('index')}</span>")
 
 				@$el.find('.sort').sortable('destroy') if @$el.find('.sort').hasClass 'ui-sortable'
 
+				$container = @$el.find('.sort')
 
-				@$el.find('.sort').isotope
+				console.log $container
+				
+				$container.isotope
 					# // options
 					itemSelector: '.sort-option'
 					layoutMode: 'vertical'
@@ -98,13 +101,15 @@ define ['app'],(App)->
 					
 
 					
-				@$el.find('input[name="sort"]').on 'click',(evt)=>
-					sortValue = $(evt.target).attr('data-sort-value');
-					@$el.find('.sort').isotope
-						 sortBy: sortValue 
+				@$el.find('#toggleView').on 'click',(evt)=>
+					console.log $(evt.target)
+					_.delay =>
+						sortValue = $(evt.target).find('input').attr('data-sort-value');
+						@$el.find('.sort').isotope
+							sortBy: sortValue 
+					,200
+
 				
-
-
 
 			# on close drestroy the sortable
 			onClose:->
