@@ -18,7 +18,6 @@ define(['app'], function(App) {
       };
 
       ContentBoardView.prototype.onShowResponse = function(marks, total) {
-        console.log(marks + total);
         this.$el.find('.total-marks').text(total);
         this.$el.find('.marks').text(marks);
         if (marks === 0) {

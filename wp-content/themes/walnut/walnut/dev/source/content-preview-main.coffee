@@ -40,6 +40,7 @@ require.config
 		# select2       		: 'plugins/select2.min'
 		# tagsinput 			: 'plugins/bootstrap-tagsinput.min'
 		screwbuttons 		: 'plugins/jquery.screwdefaultbuttonsV2'
+		bridget 			: 'plugins/jquery.bridget'
 		isotope				: 'plugins/isotope.pkgd.min'
 
 	shim:
@@ -70,6 +71,9 @@ require.config
 		# tagsinput : ['jquery','bootstrap']
 		screwbuttons : ['jquery']
 		app 		: ['plugins/content-preview-pluginloader','config/content-preview-configloader']
+		bridget : ['jquery']
+		isotope : ['jquery','bridget']
+
 
 	
 
