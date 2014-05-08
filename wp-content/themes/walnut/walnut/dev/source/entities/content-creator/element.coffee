@@ -23,12 +23,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                     if element.isNew()
                         console.log element
-                        element.set 'meta_id': 45
                         console.log '~~~~~~~~~~~~~'
                         json_data= JSON.stringify(data)
                         console.log '~~~~~~~~~~~~~'
-                        #element.save json_data,
-                            #wait: true
+                        element.save json_data,
+                            wait: true
 
                 element
 
