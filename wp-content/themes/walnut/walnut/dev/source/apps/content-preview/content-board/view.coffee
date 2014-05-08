@@ -28,7 +28,7 @@ define ['app'],(App)->
 
 
 			onShowResponse:(marks,total)->
-				console.log marks+total
+				
 				@$el.find('.total-marks').text total
 				@$el.find('.marks').text marks
 				if marks is 0

@@ -25,12 +25,9 @@ define ['app'],(App)->
 											</select>
 										</div>
 
-										<div>
+										<div class="m-b-10">
 											Marks
-											<select id="marks">
-												<option value="1">1</option>
-												<option value="2">2</option>	
-											</select>
+											<input id="marks" type="text" value="{{marks}}" class="form-control" >
 										</div>
 
 										<div class="form-group inline">
@@ -54,21 +51,17 @@ define ['app'],(App)->
 			# view events
 			events :
 				'change select#options-num': '_changeOptionNumber'
-				'change select#marks' : '_changeMarks'
+				'blur input#marks' : '_changeMarks'
 
 
 			onShow:->
 				#initialize dropdowns
-				@$el.find('select#options-num, select#marks').select2
+				@$el.find('select#options-num').select2
 							minimumResultsForSearch: -1
 				@$el.find('select#options-num').select2 'val', @model.get 'optioncount'
-				@$el.find('select#marks').select2 'val', @model.get 'marks'
+				
 
-				# initialize the dropdown to use select2 plugin for marks
-				@$el.find('#marks').select2
-						minimumResultsForSearch: -1
-				# initialize font dropdown based on model
-				@$el.find('#marks').select2 'val',@model.get 'marks'
+			
 
 				# initialize colorpicker for background color and set the on change event
 				@$el.find('#bg-color.color-picker').minicolors
@@ -97,7 +90,9 @@ define ['app'],(App)->
 
 			# function for changing model on change of marks dropbox
 			_changeMarks:(evt)->
-					@model.set 'marks', $(evt.target).val()
+				if not isNaN $(evt.target).val()
+					@model.set 'marks', parseInt $(evt.target).val()
+	
 
 			_changeOptionNumber:(evt)->
 					@model.set 'optioncount',parseInt $(evt.target).val()

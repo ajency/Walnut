@@ -39,46 +39,42 @@ define ['app'
 					renderElement:()=>
 						# @removeSpinner()
 						# get menu 
-						view = @_getHotspotView()
+						@view = @_getHotspotView()
 
-
-						@listenTo view, "show:hotspot:elements",=>							
+						# listen to show event, and trigger show property box event
+						# listen to show property box event and show the property by passing the current model
+						@listenTo @view, "show show:hotspot:elements",=>							
 								App.execute "show:question:elements",
 										model : @layout.model
-								App.execute "close:question:properties"
+								App.execute "show:question:properties", 
+										model : @layout.model
 
 
-						@listenTo view, "close:hotspot:elements", (contentObject)=>
-								console.log JSON.stringify contentObject
+						@listenTo @view, "close:hotspot:elements", (contentObject)=>
+								# console.log JSON.stringify contentObject
 								@layout.model.set 'content', JSON.stringify contentObject
 								# console.log JSON.stringify @model.toJSON()
-								if @layout.model.hasChanged()
-										console.log "saving them"
-										localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
-										console.log JSON.stringify @layout.model.toJSON()
+								
 								App.execute "close:question:elements"
 
-						@listenTo view, "close:hotspot:element:properties",->
+						# listen to view event for closing the hotspot element property region
+						# on mouse down anywhere on the hotspot except on the element
+						@listenTo @view, "close:hotspot:element:properties",->
 								App.execute "close:question:element:properties"
 
-						# # on show disable all question elements in d element box
-						# @listenTo view, "show",=>
-						# 		@eventObj.vent.trigger "question:dropped"
+						
 		
-						@layout.elementRegion.show view,
-							loading:true
-
-						# show hotspot properties for this hotspot
-						App.execute "show:question:elements",
-						 			model : @layout.model
-								
+						@layout.elementRegion.show @view,
+							loading:true							
 					
 
 
-					# remove the element model
+					# remove the element model and close all the property regions
 					deleteElement:(model)->
 							model.destroy()
 							App.execute "close:question:elements"
+							App.execute "close:question:properties"
+							App.execute "close:question:element:properties"
 							# # on delete enable all question elements in d element box
 							# @eventObj.vent.trigger "question:removed"
 

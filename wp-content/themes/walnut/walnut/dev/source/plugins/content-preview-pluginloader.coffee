@@ -2,6 +2,8 @@ define [
 			'underscore'
 			'jquery'
 			'jqueryui'
+			'bridget'
+			'isotope'
 			'jqueryresize'
 			'underscorestring'
 			'kinetic'
@@ -23,4 +25,5 @@ define [
 			# 'select2'
 			# 'tagsinput'
 			'screwbuttons'
+			
 		], ->

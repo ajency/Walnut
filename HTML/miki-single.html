@@ -11,6 +11,7 @@
 	<!-- NEED TO WORK ON -->
 
 	<link href="assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
 	<link href="assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
@@ -20,6 +21,7 @@
 	<link href="assets/css/listnav.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/TimeCircles.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
 
@@ -61,6 +63,7 @@
 		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="assets/js/jquery.knob.js"></script>
 		<script type="text/javascript" src="assets/js/jquery-listnav.js"></script>
+		<script type="text/javascript" src="assets/js/TimeCircles.js"></script>
 
 	<!-- END NEED TO WORK ON -->
 
@@ -305,16 +308,32 @@
 
 					<div class="tiles white m-b-20">
 						<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
-							<h4 class="bold pull-left text-info modName"><i class="fa fa-chevron-left"></i> <a href="#">Back to Module Name</a></h4>
+							<div class="row">
+								<div class="col-sm-4">
+									<h4 class="bold  text-info modName"><i class="fa fa-chevron-left"></i> <a href="#">Back to Module Name</a></h4>
+								</div>
 
-							<div class="modProgress pull-right">
-								<p class="bold small-text m-t-10 m-b-5">Progress</p>
-						        <div class="progress">
-						            <div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-						        </div>
-					        </div>
-					        <div class="clearfix"></div>
+								<div class="col-sm-8">
+
+									<button type="button" class="btn btn-white  action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>
+
+									<div class="modProgress pull-right">
+										<p class="bold small-text m-t-10 m-b-5">Progress</p>
+						       			<div class="progress progress-large">
+						            		<div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">4/10</div>
+						        		</div>
+					        		</div>
+
+							        <div class="pull-right m-r-30">
+							        	<p class="bold small-text"> Module Time</p>
+							        	<h4 class="text-grey m-t-0 m-b-0 semi-bold time"> <i class="fa fa-clock-o"></i> 12m 08s</h4>
+							        </div>
+
+					    		</div>
+					    		<div class="clearfix"></div>
+					    	</div>
 				    	</div>
+
 				    	<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
 				    		<p class="bold small-text">Module Info: </p>
 				    		<p class="">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
@@ -356,22 +375,20 @@
 				        </div>
 					</div>
 					<div class="tiles blue p-l-15 p-r-15">
-						<div class="tiles-body no-border">
 							<div class="row">
-				                <div class="col-md-3 col-sm-3">
-				                	<h3 class="text-white m-t-0 m-b-0 semi-bold time"> <i class="fa fa-clock-o"></i> 3m 15s</h3>
+				                <div class="col-xs-4">
+				                	<!--<h3 class="text-white m-t-0 m-b-0 semi-bold time"> <i class="fa fa-clock-o"></i> 3m 15s</h3>-->
+				                	<a href="#" class="m-t-35 hashtags transparent"> <i class="fa fa-question"></i> View Info </a>
 				                </div>
-				                <div class="col-md-3 col-sm-3 text-center">
-				                  <a href="#" class="hashtags transparent"> <i class="fa fa-question"></i> View Info </a>		                  
+				                <div class="col-xs-4 text-center">
+				                  	<div class="cpTimer" data-timer="10" style></div>                 
 				                </div>
-				                <div class="col-md-3 col-sm-3 text-center">
-				                  <a href="#" class="hashtags transparent"> <i class="fa fa-eye"></i> View Answer </a>	                  
-				                </div>
-				                <div class="col-md-3 col-sm-3 text-right">
-				                  <a href="#" class="hashtags transparent"> <i class="fa fa-check"></i> Done </a>
+
+				                <div class="col-xs-4 text-right">
+				                 <!--<a href="#" class="hashtags transparent"> <i class="fa fa-check"></i> Done </a>-->
+				                 <a href="#" class="m-t-35 hashtags transparent"> <i class="fa fa-eye"></i> View Answer </a>
 				                </div>
 				              </div>
-				          </div>
 				        </div>
 					</div>
 
@@ -582,6 +599,17 @@
 	$( ".tiles.single" ).click(function() {
 	  $( this ).toggleClass( "selected" );
 	});
+
+	$(".cpTimer").TimeCircles({
+		time: {
+		    Days: { show: false },
+		    Hours: { show: false },
+		    Minutes: { color: "#fff" },
+		    Seconds: { color: "#fff" }
+		},
+		circle_bg_color: "#fff",
+		bg_width: 0.2
+	}); 
 </script>
 </body>
 </html>

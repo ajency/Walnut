@@ -14,8 +14,8 @@ define ['app'
 							marks : 1
 							element : 'Sort'
 							optioncount : 2
-							elements 	: App.request "create:new:option:collection", [{optionNo:1},{optionNo:2}]
-							bg_color : '#b1c4e0'
+							elements 	: App.request "create:new:option:collection", [{optionNo:_.uniqueId(),index:1},{optionNo:_.uniqueId(),index:2}]
+							bg_color : '#ffffff'
 							bg_opacity : 1
 							height : 40
 
@@ -74,10 +74,11 @@ define ['app'
 							if oldval<newval
 								until oldval is newval
 									oldval++
-									model.get('elements').push({optionNo:oldval})
+									model.get('elements').push({optionNo:_.uniqueId(),index:oldval})
 							# else remove options
 							if oldval>newval
 								until oldval is newval
-									model.get('elements').pop()
+									model.get('elements').pop()#remove model.get('elements').where({index:oldval})[0]
 									oldval--
 
+							console.log model

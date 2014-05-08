@@ -1,7 +1,5 @@
 define ["app", 'backbone'], (App, Backbone) ->
     App.module "Entities.Elements", (Elements, App, Backbone, Marionette, $, _)->
-
-
         # Generic element model
         class Elements.ElementModel extends Backbone.Model
 
