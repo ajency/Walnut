@@ -1077,6 +1077,13 @@ p.mcq-option-text {
   outline: none;
   border-bottom: 2px dashed #f3f3f3;
 }
+.sort-option p.placeholder {
+  color: #dfe4e8;
+  font-size: 18px;
+  font-weight: bold;
+  border: 2px dashed #f3f3f3;
+  padding-left: 4px;
+}
 .ui-state-highlight {
   background: #f3f3f3;
   height: 50px !important;
