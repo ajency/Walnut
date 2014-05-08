@@ -8,7 +8,7 @@
   &.ui-sortable-placeholder {
     visibility: visible!important;
     background: @preview-grey;
-    //height: 50px !important;
+    height: 50px !important;
     &.active {
       box-shadow: inset 0 0 200px @preview-grey;                
     }
@@ -25,17 +25,19 @@
 
   &.ansWrong{
     opacity: 0.3;
-    background: url(../../../images/answer-wrong.png) no-repeat right center;
+    background: url(../../../images/wrong-ans.gif) no-repeat right center;
     border: none;
     border-bottom: 2px solid @color-danger;
     background-size: 25px;
+    padding-right: 40px;
     .ease;
   }
   &.ansRight{
-    background: url(../../../images/answer-right.png) no-repeat right center;
+    background: url(../../../images/right-ans.gif) no-repeat right center;
     border: none;
-    border-bottom: 2px solid lighten(@color-success, 10%);
-    background-size: 35px;
+    border-bottom: 2px solid @color-success;
+    background-size: 25px;
+    padding-right: 40px;
     .ease;
   }
 
