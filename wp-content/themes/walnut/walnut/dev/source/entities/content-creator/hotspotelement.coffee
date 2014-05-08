@@ -36,8 +36,9 @@ define ['app'
 						API.createHotspotElement data
 
 				App.reqres.setHandler "create:new:hotspot:element:collection",(data)->
-						if data!=undefined
+						if data isnt undefined
 							jsonData = data
+
 						else
 							jsonData = ''
 						API.createHotspotElementCollection jsonData

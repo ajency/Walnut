@@ -34,14 +34,6 @@ define(['app', 'backbone'], function(App, Backbone) {
 
       OptionCollection.prototype.model = Option.OptionModel;
 
-      OptionCollection.prototype.initialize = function() {
-        return this.on('add', this.addedOption, this);
-      };
-
-      OptionCollection.prototype.addedOption = function(model) {
-        return model.save();
-      };
-
       return OptionCollection;
 
     })(Backbone.Collection);

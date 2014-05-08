@@ -17,14 +17,6 @@ define ['app'
             model: Option.OptionModel
 
 
-
-            initialize:->
-                @on('add', @addedOption, @)
-
-
-            addedOption:(model)->
-                model.save()
-
         API =
             createOption: (data)->
                 option = new Option.OptionModel

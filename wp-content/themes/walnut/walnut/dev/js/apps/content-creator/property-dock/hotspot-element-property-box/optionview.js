@@ -12,6 +12,18 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
 
       OptionView.prototype.template = Template;
 
+      OptionView.prototype.ui = {
+        individualMarksTextbox: '#individual-marks'
+      };
+
+      OptionView.prototype.events = {
+        'blur @ui.individualMarksTextbox': '_changeIndividualMarks'
+      };
+
+      OptionView.prototype.initialize = function(options) {
+        return this.hotspotModel = options.hotspotModel;
+      };
+
       OptionView.prototype.onShow = function() {
         if (this.model.get('transparent')) {
           this.$el.find('#transparency-checkbox').prop('checked', true);
@@ -56,19 +68,55 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
         } else {
           this.$el.find('#knob').hide();
         }
-        if (this.model.get('correct')) {
-          this.$el.find("#correct-answer.radio input#yes").prop('checked', true);
-        } else {
-          this.$el.find("#correct-answer.radio input#no").prop('checked', true);
-        }
-        return this.$el.find('#correct-answer.radio input').on('change', (function(_this) {
+        this._initializeCorrectAnswer();
+        this.$el.find('#correct-answer.radio input').on('change', (function(_this) {
           return function() {
             var _ref;
-            return _this.model.set('correct', (_ref = _this.$el.find('#correct-answer.radio input:checked').val() === "yes") != null ? _ref : {
+            _this.model.set('correct', (_ref = _this.$el.find('#correct-answer.radio input:checked').val() === "yes") != null ? _ref : {
               "true": false
             });
+            return _this._toggleMarks();
           };
         })(this));
+        this.ui.individualMarksTextbox.on('change', function() {
+          return console.log('marks cxhanged');
+        });
+        this._toggleMarks();
+        return this.listenTo(this.hotspotModel, 'change:enableIndividualMarks', this._toggleMarks);
+      };
+
+      OptionView.prototype._initializeCorrectAnswer = function() {
+        if (this.model.get('correct')) {
+          return this.$el.find("#correct-answer.radio input#yes").prop('checked', true);
+        } else {
+          return this.$el.find("#correct-answer.radio input#no").prop('checked', true);
+        }
+      };
+
+      OptionView.prototype._toggleMarks = function(model, enableIndividualMarks) {
+        if (this.hotspotModel.get('enableIndividualMarks') && this.model.get('correct')) {
+          return this._enableMarks();
+        } else {
+          this.model.set('marks', 0);
+          this.ui.individualMarksTextbox.trigger('change');
+          return this._disableMarks();
+        }
+      };
+
+      OptionView.prototype._disableMarks = function() {
+        this.ui.individualMarksTextbox.val(0);
+        return this.ui.individualMarksTextbox.prop('disabled', true);
+      };
+
+      OptionView.prototype._enableMarks = function() {
+        this.ui.individualMarksTextbox.val(this.model.get('marks'));
+        return this.ui.individualMarksTextbox.prop('disabled', false);
+      };
+
+      OptionView.prototype._changeIndividualMarks = function(evt) {
+        if (!isNaN($(evt.target).val())) {
+          return this.model.set('marks', parseInt($(evt.target).val()));
+        }
       };
 
       return OptionView;

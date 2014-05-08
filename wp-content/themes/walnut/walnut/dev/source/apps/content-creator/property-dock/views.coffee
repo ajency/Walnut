@@ -48,4 +48,7 @@ define ['app'],(App)->
 					$('html').on 'click',=>
 						@questElementPropRegion.close()
 
+					$('html').on 'click',=>
+						@questElementRegion.close()
+
 					

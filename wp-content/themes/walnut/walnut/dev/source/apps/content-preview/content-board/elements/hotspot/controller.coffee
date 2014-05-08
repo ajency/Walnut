@@ -1,11 +1,11 @@
 define ['app'
-		'apps/content-creator/content-builder/element/controller'
-		'apps/content-creator/content-builder/elements/hotspot/views'],
+		'apps/content-preview/content-board/element/controller'
+		'apps/content-preview/content-board/elements/hotspot/view'],
 		(App,Element)->
 
-			App.module 'ContentCreator.ContentBuilder.Element.Hotspot', (Hotspot, App, Backbone, Marionette, $, _)->
+			App.module "ContentPreview.ContentBoard.Element.Hotspot" ,(Hotspot, App, Backbone, Marionette,$, _)->
 
-
+				
 				# menu controller
 				class Hotspot.Controller extends Element.Controller
 

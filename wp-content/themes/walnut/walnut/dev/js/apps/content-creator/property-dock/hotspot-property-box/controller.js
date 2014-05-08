@@ -23,8 +23,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
-        localStorage.setItem('ele' + this.model.get('meta_id'), JSON.stringify(this.model.toJSON()));
-        return console.log(JSON.stringify(this.model.toJSON()));
+        App.execute("save:hotspot:content");
+        return localStorage.setItem('ele' + this.model.get('meta_id'), JSON.stringify(this.model.toJSON()));
       };
 
       return Controller;

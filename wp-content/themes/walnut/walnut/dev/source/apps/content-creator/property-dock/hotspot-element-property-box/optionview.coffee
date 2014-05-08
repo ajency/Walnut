@@ -9,6 +9,15 @@ define ['app'
 
 						template : Template
 
+						ui :
+							individualMarksTextbox : '#individual-marks'
+
+						events:
+							'blur @ui.individualMarksTextbox' : '_changeIndividualMarks'
+
+						initialize:(options)->
+							@hotspotModel = options.hotspotModel
+
 						onShow:->
 
 
@@ -61,18 +70,52 @@ define ['app'
 
 
 							# CORRECT ANSWER
-							if @model.get 'correct'
-								@$el.find("#correct-answer.radio input#yes").prop 'checked',true
-							else
-								@$el.find("#correct-answer.radio input#no").prop 'checked',true
+							@_initializeCorrectAnswer()
+							
 
 							@$el.find('#correct-answer.radio input').on 'change',=>
 
 									@model.set 'correct', @$el.find('#correct-answer.radio input:checked').val()=="yes" ? true : false
-
+									@_toggleMarks()
 											
+							# if not @hotspotModel.get 'enableIndividualMarks'
+							# 	@_disableMarks()
+
+							@ui.individualMarksTextbox.on 'change',->
+								console.log 'marks cxhanged'
 
 
 
+							@_toggleMarks()
 
+							@listenTo @hotspotModel , 'change:enableIndividualMarks',@_toggleMarks
 
+						_initializeCorrectAnswer:->
+							if @model.get 'correct'
+								@$el.find("#correct-answer.radio input#yes").prop 'checked',true
+							else
+								@$el.find("#correct-answer.radio input#no").prop 'checked',true
+								
+								
+
+						_toggleMarks:(model,enableIndividualMarks)->
+
+							if @hotspotModel.get('enableIndividualMarks') and @model.get 'correct'
+								@_enableMarks()
+
+							else 
+								@model.set 'marks',0
+								@ui.individualMarksTextbox.trigger 'change'							
+								@_disableMarks()
+
+						_disableMarks:->
+							@ui.individualMarksTextbox.val 0
+							@ui.individualMarksTextbox.prop 'disabled',true
+
+						_enableMarks:->
+							@ui.individualMarksTextbox.val @model.get 'marks'
+							@ui.individualMarksTextbox.prop 'disabled',false
+
+						_changeIndividualMarks:(evt)->
+							if not isNaN $(evt.target).val()
+									@model.set 'marks', parseInt $(evt.target).val()

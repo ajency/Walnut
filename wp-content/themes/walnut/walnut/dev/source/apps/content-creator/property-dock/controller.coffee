@@ -24,7 +24,7 @@ define ['app'
 
 						# show hotspot element properties
 						App.commands.setHandler "show:hotspot:element:properties",(options)=>
-								@_getHotspotElementProperties options.model
+								@_getHotspotElementProperties options
 
 						# show fib element properties
 						App.commands.setHandler "show:fib:element:properties",(options)=>
@@ -57,11 +57,12 @@ define ['app'
 								region : @layout.questElementRegion
 								model : model
 
-					_getHotspotElementProperties:(model)->
+					_getHotspotElementProperties:(options)->
 						
 						App.execute "show:hotspot:element:properties:box",
 								region : @layout.questElementPropRegion
-								model : model
+								model : options.model
+								hotspotModel : options.hotspotModel
 
 					_getFibElementProperties:(options)->
 						
