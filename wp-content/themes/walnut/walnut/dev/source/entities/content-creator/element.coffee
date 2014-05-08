@@ -1,49 +1,40 @@
 define ["app", 'backbone'], (App, Backbone) ->
-
-        App.module "Entities.Elements", (Elements, App, Backbone, Marionette, $, _)->
-
-    
-            # Generic element model
-            class Elements.ElementModel extends Backbone.Model
-
-                # custom id attribute as we will be using post_meta table for saving this 
-                # element details
-                idAttribute : 'meta_id'
-
-                defaults:->
-                    style       : ''
-                    draggable   : true
-                
-                name : 'element'
-
-                
-            # PUBLIC API FOR ENitity
-            API =
-                createElement: (data = {})->
-                    
-                    element = new Elements.ElementModel                        
-                    element.set data    
-                    if element.get('element') isnt 'Row' and element.get('element') isnt 'Column' 
-                        if element.isNew()
-                            # save to server
-                            element.save null,
-                                wait : true
-
-                            # save to local storage...........TO BE DELETED
-                            i = new Date().getTime()
-                            element.set 'meta_id',i
-                            localStorage.setItem 'ele'+element.get('meta_id'), JSON.stringify(element.toJSON())
-                            i++
-                        
-                        # get from Local Storage ...........TO BE DELETED
-                        else
-                            ele = localStorage.getItem 'ele'+element.get 'meta_id'
-                            element.set JSON.parse ele
-
-                                
-                    element
+    App.module "Entities.Elements", (Elements, App, Backbone, Marionette, $, _)->
 
 
-            # REQUEST HANDLERS
-            App.reqres.setHandler "create:new:element",(data) ->
-                API.createElement data
+        # Generic element model
+        class Elements.ElementModel extends Backbone.Model
+
+            # custom id attribute as we will be using post_meta table for saving this
+            # element details
+            idAttribute: 'meta_id'
+
+            defaults: ->
+                style: ''
+                draggable: true
+
+            name: 'element'
+
+        # PUBLIC API FOR ENitity
+        API =
+            createElement: (data = {})->
+                element = new Elements.ElementModel
+                element.set data
+
+                if element.get('element') isnt 'Row' and element.get('element') isnt 'Column'
+
+                    if element.isNew()
+                        console.log element
+                        element.set 'meta_id': 45
+                        console.log '~~~~~~~~~~~~~'
+                        json_data= JSON.stringify(data)
+                        console.log '~~~~~~~~~~~~~'
+                        #element.save json_data,
+                            #wait: true
+
+                element
+
+
+        # REQUEST HANDLERS
+        App.reqres.setHandler "create:new:element", (data) ->
+            API.createElement data

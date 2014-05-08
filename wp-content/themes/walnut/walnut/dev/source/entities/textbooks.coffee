@@ -82,6 +82,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					textbookName
 
 				getTextBookNamesByIDs:(ids)->
+					ids = _.compact _.flatten ids
 					textbookNamesCollection = new Textbooks.NamesCollection
 					textbookNamesCollection.fetch
 										reset : true
