@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta charset="utf-8" />
+<title>Webarch - Responsive Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="" name="description" />
+<meta content="" name="author" />
+<!-- BEGIN CORE CSS FRAMEWORK -->
+<link href="assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
+<!-- END CORE CSS FRAMEWORK -->
+<!-- BEGIN CSS TEMPLATE -->
+<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
+<!-- END CSS TEMPLATE -->
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body class="error-body no-top">
+<div class="container">
+  <div class="row login-container">  
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+          <div class="tiles white">
+                  <div class="tiles-body">
+                    <h3 class="bold m-b-25">Sync</h3>
+
+                    <div class="row">
+                      <div class="col-sm-6 b-grey b-r ">
+                        <h4 class="semi-bold text-center b-grey b-b no-margin p-t-20 p-b-10">Last Sync</h4>
+                        <div class="b-grey b-b">
+                          <h2 class="m-b-0 semi-bold text-center text-success">21/06/14</h2>
+                          <h5 class="m-t-0 text-center text-success">08:36 PM</h5>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6 b-grey ">
+                        <h4 class="semi-bold text-center b-grey b-b no-margin p-t-20 p-b-10">Records to be synced</h4>
+                        <div class="b-grey b-b">
+                          <h2 class="m-b-0 semi-bold text-center text-error animate-number" data-value="423" data-animation-duration="1000">423</h2>
+                          <h5 class="m-t-0 text-center text-error">records</h5>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row m-t-25">
+                      <div class="col-sm-12">
+                        <button type="button" class="btn btn-primary btn-block"> Sync Now</button>
+
+                        <div class="alert alert-info text-center m-t-10">
+                          <i class="fa fa-refresh fa-spin"></i> Sync in progress. 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+     
+    
+  </div>
+</div>
+<!-- END CONTAINER -->
+<!-- BEGIN CORE JS FRAMEWORK-->
+<script src="assets/plugins/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script src="assets/plugins/pace/pace.min.js" type="text/javascript"></script>
+
+<!-- BEGIN CORE TEMPLATE JS -->
+<!-- END CORE TEMPLATE JS -->
+<script type="text/javascript">
+  $(".notification-messages").click(function(){
+       window.location=$(this).find("a").attr("href"); 
+       return false;
+  });
+
+
+</script>
+</body>
+</html>
