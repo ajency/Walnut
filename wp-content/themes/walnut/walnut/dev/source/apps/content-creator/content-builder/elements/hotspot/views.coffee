@@ -8,24 +8,26 @@ define ['app'],(App)->
 
 			className : 'stage'
 
-			template : '&nbsp;'
+			# template : '&nbsp;'
 
 			# events :
 				# 'mousedown' : -> @trigger "show:hotspot:elements"
 				# 'focus'	: -> console.log "blur" #'updateModel'
 
 			initialize:(opt = {})->
-				if @model.get('content')!=''
+				# get the content if already exists
+				if @model.get('content') isnt ''
 					@contentObject = JSON.parse @model.get 'content'
 				else 
 					@contentObject = new Object()
-				# @model.get('content')
+				
+				# create layer collections
 				@textCollection = App.request "create:new:hotspot:element:collection", @contentObject.textData
 				@optionCollection = App.request "create:new:hotspot:element:collection", @contentObject.optionData
 				@imageCollection = App.request "create:new:hotspot:element:collection", @contentObject.imageData
+				
 				#give a unique name to every hotspot canvas
-				# console.log "layout model  "+JSON.stringify @model
-				@stageName = "stage"+ new Date().getTime()
+				@stageName = _.uniqueId('stage')
 
 				# create the canvas layers
 				@imageLayer = new Kinetic.Layer
@@ -43,19 +45,15 @@ define ['app'],(App)->
 				
 
 			onShow:()->
-
+				# create a kinetic stage
 				@stage = new Kinetic.Stage
 						container: @stageName
 						width: @$el.parent().width()
 						height: @$el.parent().height()+80
 
-				if @contentObject.height!=undefined
+				if @contentObject.height isnt undefined
 					@stage.height @contentObject.height
 
-					
-
-				# set image to the default image layer
-				# @_setDefaultImage()
 
 				# add the canvas layers
 				@stage.add @defaultLayer
@@ -64,19 +62,8 @@ define ['app'],(App)->
 				@stage.add @optionLayer
 
 
-				# on resize
-				@$el.resize ()=>
-					# console.log $('#'+@stageName+'.stage').width()
-					@stage.setSize
-						width: @$el.width()
-						height: @$el.height()-5
-
-					@contentObject.height = @stage.height()
-					# resize the default image 
-					@_updateDefaultImageSize()
-
-				@$el.resizable
-						handles: "s" 
+				@_initializeCanvasResizing()
+				
 
 				@$el.parent().parent().on 'click',(evt)=>
 					@trigger 'show:hotspot:elements'
@@ -90,9 +77,9 @@ define ['app'],(App)->
 				@_drawExistingElements()
 				
 				#listen to drop event
-				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
+				# @listenTo @, 'add:hotspot:element' ,(type,elementPos)->
 
-						@_addElements type, elementPos
+				# 		@_addElements type, elementPos
 
 
 				# $('button.btn.btn-success.btn-cons2').on 'click',=>
@@ -108,8 +95,24 @@ define ['app'],(App)->
 										elementPos = 
 											left : evt.clientX-@$el.find('.kineticjs-content').offset().left
 											top  : evt.clientY-@$el.find('.kineticjs-content').offset().top + window.pageYOffset
-										@trigger "add:hotspot:element", type , elementPos
+										@triggerMethod "add:hotspot:element", type , elementPos
 
+			_initializeCanvasResizing:->
+				# on resize of the canvas height
+				@$el.resize @_setResizeHandler
+				# set resize bottom handle
+				@$el.resizable
+						handles: "s" 
+
+			_setResizeHandler:=>
+					# console.log $('#'+@stageName+'.stage').width()
+					@stage.setSize
+						width: @$el.width()
+						height: @$el.height()-5
+
+					@contentObject.height = @stage.height()
+					# resize the default image 
+					@_updateDefaultImageSize()
 
 			_setPropertyBoxCloseHandlers:->
 				$('body').on 'click',=>
@@ -121,12 +124,21 @@ define ['app'],(App)->
 						
 							@trigger "close:hotspot:elements",@contentObject
 
+							
+
 			
 	
 			_drawExistingElements:->
 				console.log @textCollection
 				@textCollection.each (model,i)=>
-					@_addTextElement
+					# @_addTextElement
+					# 		left: model.get 'x'
+					# 		top : model.get 'y'
+					# 	,	
+					# 		model
+					@triggerMethod "add:hotspot:element", 
+							'Hotspot-Text'
+						,
 							left: model.get 'x'
 							top : model.get 'y'
 						,	
@@ -230,16 +242,16 @@ define ['app'],(App)->
 						@defaultLayer.draw()
 
 
-			_addElements: (type,elementPos)->
+			onAddHotspotElement: (type,elementPos,model)->
 
 				if(type=="Hotspot-Circle")
-						@_addCircle elementPos
+						@_addCircle elementPos,model
 
 				else if(type=="Hotspot-Rectangle")
-						@_addRectangle elementPos
+						@_addRectangle elementPos,model
 
 				else if(type == "Hotspot-Text")
-						@_addTextElement elementPos
+						@_addTextElement elementPos,model
 				else if(type=="Hotspot-Image")
 					# @trigger "show:media:manager"
 					App.navigate "media-manager", trigger : true

@@ -48,9 +48,7 @@ define(['app'], function(App) {
 
       PropertyView.prototype._changeMarks = function(evt) {
         if (!isNaN($(evt.target).val())) {
-          this.model.set('marks', parseInt($(evt.target).val()));
-          console.log(parseInt($(evt.target).val()));
-          return console.log(this.model);
+          return this.model.set('marks', parseInt($(evt.target).val()));
         }
       };
 

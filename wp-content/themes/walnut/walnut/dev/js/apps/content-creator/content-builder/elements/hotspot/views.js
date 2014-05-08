@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
@@ -7,12 +8,11 @@ define(['app'], function(App) {
       __extends(HotspotView, _super);
 
       function HotspotView() {
+        this._setResizeHandler = __bind(this._setResizeHandler, this);
         return HotspotView.__super__.constructor.apply(this, arguments);
       }
 
       HotspotView.prototype.className = 'stage';
-
-      HotspotView.prototype.template = '&nbsp;';
 
       HotspotView.prototype.initialize = function(opt) {
         if (opt == null) {
@@ -26,7 +26,7 @@ define(['app'], function(App) {
         this.textCollection = App.request("create:new:hotspot:element:collection", this.contentObject.textData);
         this.optionCollection = App.request("create:new:hotspot:element:collection", this.contentObject.optionData);
         this.imageCollection = App.request("create:new:hotspot:element:collection", this.contentObject.imageData);
-        this.stageName = "stage" + new Date().getTime();
+        this.stageName = _.uniqueId('stage');
         this.imageLayer = new Kinetic.Layer({
           name: 'imageLayer'
         });
@@ -58,19 +58,7 @@ define(['app'], function(App) {
         this.stage.add(this.imageLayer);
         this.stage.add(this.textLayer);
         this.stage.add(this.optionLayer);
-        this.$el.resize((function(_this) {
-          return function() {
-            _this.stage.setSize({
-              width: _this.$el.width(),
-              height: _this.$el.height() - 5
-            });
-            _this.contentObject.height = _this.stage.height();
-            return _this._updateDefaultImageSize();
-          };
-        })(this));
-        this.$el.resizable({
-          handles: "s"
-        });
+        this._initializeCanvasResizing();
         this.$el.parent().parent().on('click', (function(_this) {
           return function(evt) {
             _this.trigger('show:hotspot:elements');
@@ -85,9 +73,6 @@ define(['app'], function(App) {
         })(this));
         this._setPropertyBoxCloseHandlers();
         this._drawExistingElements();
-        this.listenTo(this, 'add:hotspot:element', function(type, elementPos) {
-          return this._addElements(type, elementPos);
-        });
         return this.$el.find('.kineticjs-content').droppable({
           accept: '.hotspotable',
           drop: (function(_this) {
@@ -99,11 +84,27 @@ define(['app'], function(App) {
                   left: evt.clientX - _this.$el.find('.kineticjs-content').offset().left,
                   top: evt.clientY - _this.$el.find('.kineticjs-content').offset().top + window.pageYOffset
                 };
-                return _this.trigger("add:hotspot:element", type, elementPos);
+                return _this.triggerMethod("add:hotspot:element", type, elementPos);
               }
             };
           })(this)
         });
+      };
+
+      HotspotView.prototype._initializeCanvasResizing = function() {
+        this.$el.resize(this._setResizeHandler);
+        return this.$el.resizable({
+          handles: "s"
+        });
+      };
+
+      HotspotView.prototype._setResizeHandler = function() {
+        this.stage.setSize({
+          width: this.$el.width(),
+          height: this.$el.height() - 5
+        });
+        this.contentObject.height = this.stage.height();
+        return this._updateDefaultImageSize();
       };
 
       HotspotView.prototype._setPropertyBoxCloseHandlers = function() {
@@ -122,7 +123,7 @@ define(['app'], function(App) {
         console.log(this.textCollection);
         this.textCollection.each((function(_this) {
           return function(model, i) {
-            return _this._addTextElement({
+            return _this.triggerMethod("add:hotspot:element", 'Hotspot-Text', {
               left: model.get('x'),
               top: model.get('y')
             }, model);
@@ -228,13 +229,13 @@ define(['app'], function(App) {
         }
       };
 
-      HotspotView.prototype._addElements = function(type, elementPos) {
+      HotspotView.prototype.onAddHotspotElement = function(type, elementPos, model) {
         if (type === "Hotspot-Circle") {
-          this._addCircle(elementPos);
+          this._addCircle(elementPos, model);
         } else if (type === "Hotspot-Rectangle") {
-          this._addRectangle(elementPos);
+          this._addRectangle(elementPos, model);
         } else if (type === "Hotspot-Text") {
-          this._addTextElement(elementPos);
+          this._addTextElement(elementPos, model);
         } else if (type === "Hotspot-Image") {
           App.navigate("media-manager", {
             trigger: true

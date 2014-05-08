@@ -92,8 +92,7 @@ define ['app'],(App)->
 			_changeMarks:(evt)->
 				if not isNaN $(evt.target).val()
 					@model.set 'marks', parseInt $(evt.target).val()
-					console.log parseInt $(evt.target).val()
-					console.log @model
+	
 
 			_changeOptionNumber:(evt)->
 					@model.set 'optioncount',parseInt $(evt.target).val()
