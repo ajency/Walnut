@@ -27,8 +27,9 @@ define ['app'
 					onClose:->
 						# localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
 						# if @model.hasChanged()
+							App.execute "save:hotspot:content"
 							localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
-							console.log JSON.stringify @model.toJSON()
+							# console.log JSON.stringify @model.toJSON()
 
 
 				App.commands.setHandler "show:hotspot:properties",(options)->

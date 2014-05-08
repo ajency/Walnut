@@ -12,15 +12,17 @@ define ['app'
 
 							
 
-							@view = @_getView(options.model)
+							@view = @_getView(options)
 
 							@show @view
 
-						_getView:(model)->
-							elementType = model.get 'type'
+						_getView:(options)->
+							elementType = options.model.get 'type'
 							viewName = "#{elementType}View"
+							# console.log viewName
 							new HotspotElementPropertyBox.Views[viewName]
-									model : model
+									model : options.model
+									hotspotModel : options.hotspotModel
 
 
 					App.commands.setHandler "show:hotspot:element:properties:box",(options)->
@@ -28,3 +30,4 @@ define ['app'
 							new HotspotElementPropertyBoxController 
 									region : options.region
 									model : options.model
+									hotspotModel : options.hotspotModel

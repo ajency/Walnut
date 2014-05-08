@@ -1,5 +1,5 @@
 define [
-		# 'apps/content-creator/content-builder/elements/hotspot/controller'
+		# 'apps/content-preview/content-board/hotspot/controller'
 		'apps/content-preview/content-board/elements/row/controller'
 		'apps/content-preview/content-board/elements/text/controller'
 		# 'apps/content-creator/content-builder/elements/image/controller'

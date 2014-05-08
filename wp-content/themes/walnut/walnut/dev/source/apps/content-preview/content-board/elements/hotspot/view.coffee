@@ -1,8 +1,9 @@
 define ['app'],(App)->
 
-	# Row views
-	App.module 'ContentCreator.ContentBuilder.Element.Hotspot.Views', (Views, App, Backbone, Marionette, $, _)->
+	App.module "ContentPreview.ContentBoard.Element.Hotspot.Views",
+	(Views, App, Backbone, Marionette,$, _)->
 
+		class Views.FibView extends Marionette.ItemView
 		# Menu item view
 		class Views.HotspotView extends Marionette.ItemView
 

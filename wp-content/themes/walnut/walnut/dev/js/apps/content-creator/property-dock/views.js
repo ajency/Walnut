@@ -35,9 +35,14 @@ define(['app'], function(App) {
             return _this.questPropertyRegion.close();
           };
         })(this));
-        return $('html').on('click', (function(_this) {
+        $('html').on('click', (function(_this) {
           return function() {
             return _this.questElementPropRegion.close();
+          };
+        })(this));
+        return $('html').on('click', (function(_this) {
+          return function() {
+            return _this.questElementRegion.close();
           };
         })(this));
       };
