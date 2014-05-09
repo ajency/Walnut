@@ -47,6 +47,8 @@ function fetch_chapter_subsections() {
 
 add_action( 'wp_ajax_get-textbook-names', 'get_textbook_names' );
 function get_textbook_names(){
+    $current_blog = get_current_blog_id();
+    switch_to_blog(1);
     $args = array(
         'include'=> $_GET['term_ids'],
         'hide_empty'=> false
@@ -59,6 +61,6 @@ function get_textbook_names(){
        $textbook_names[$i]['name']=$t->name;
        $i++;
    }
-   
+   switch_to_blog($current_blog);
    wp_send_json($textbook_names);
 }

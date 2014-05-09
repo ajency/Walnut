@@ -104,17 +104,52 @@ function fetch_single_content_group() {
 add_action('wp_ajax_read-content-group', 'fetch_single_content_group');
 
 function save_content_piece_json() {
-    
-    $postarr=array(
-      'post_status'=>'publish',
-      'post_type'=>'content_piece',
-      'post_title'=> 'test content piece'
-    );
-    $content_piece= wp_insert_post($postarr); 
-    echo $content_piece;
-    if($content_piece)
-        update_post_meta ($content_piece, 'layout_json',$_POST['json']);
-    wp_send_json(array('code' => 'OK', 'data' => $content_groups));
+
+    $content_id=$_POST['content_id'];
+    $json =$_POST['json'];
+    if($content_id and $content_id != NaN)
+        update_content_piece_layout_meta($content_id,$json);
+
+    else
+        $content_id = save_content_piece_layout($json);
+
+    wp_send_json(array('ID'=>$content_id));
 }
 
 add_action('wp_ajax_save-content-piece-json', 'save_content_piece_json');
+
+function save_content_element() {
+    global $wpdb;
+    unset($_POST['action']);
+    $element_details=  maybe_serialize($_POST);
+
+    if(isset($_POST['meta_id'])){
+        $meta_id = $_POST['meta_id'];
+        $update_element_qry= $wpdb->prepare("update {$wpdb->prefix}postmeta set meta_value = %s where meta_id = %d", array($element_details,$meta_id));
+        $wpdb->query($update_element_qry);
+    }
+    else{
+        $insert_element_qry= $wpdb->prepare("insert into {$wpdb->prefix}postmeta values ('',%d,'content_element',%s)", array(0,$element_details));
+        $wpdb->query($insert_element_qry);
+
+        $meta_id= $wpdb->insert_id;
+    }
+    wp_send_json(array('meta_id'=>$meta_id));
+}
+
+add_action('wp_ajax_create-element', 'save_content_element');
+add_action('wp_ajax_update-element', 'save_content_element');
+
+function delete_content_element(){
+
+    global $wpdb;
+
+    $meta_id=$_POST['meta_id'];
+
+    $result=delete_metadata_by_mid('post',$meta_id);
+
+    wp_send_json(array('status'=>$result));
+
+}
+
+add_action('wp_ajax_delete-element', 'delete_content_element');

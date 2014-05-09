@@ -16,15 +16,34 @@ define(['app'], function(App) {
         }
       };
 
-      Controller.prototype.autoSave = function() {
-        var siteRegion, _json;
+      Controller.prototype.autoSave = function(contentPieceModel) {
+        var options, siteRegion, _json;
+        console.log(contentPieceModel);
         siteRegion = App.mainContentRegion.$el;
         _json = this._getPageJson(siteRegion);
+        console.log('_json');
+        console.log(_json);
         if (!_.isObject(_json)) {
           throw new Error("invalid json...");
         }
-        console.log(JSON.stringify(_json));
-        return localStorage.setItem('layout', JSON.stringify(_json));
+        options = {
+          type: 'POST',
+          url: AJAXURL,
+          data: {
+            action: 'save-content-piece-json',
+            json: _json,
+            content_id: contentPieceModel.get('ID')
+          }
+        };
+        return $.ajax(options).done(function(response) {
+          console.log(response.ID);
+          contentPieceModel.set({
+            'ID': response.ID
+          });
+          return console.log(contentPieceModel);
+        }).fail(function(resp) {
+          return console.log('error');
+        });
       };
 
       Controller.prototype._getPageJson = function($site) {

@@ -1,27 +1,22 @@
 define ["app", 'backbone'], (App, Backbone) ->
+    App.module "Entities.BuilderJSON", (BuilderJSON, App, Backbone, Marionette, $, _)->
+        class PageJson extends Backbone.Model
 
-		App.module "Entities.BuilderJSON", (BuilderJSON, App, Backbone, Marionette, $, _)->
-			
-			class PageJson extends Backbone.Model
+            idAttribute: 'ID'
 
-				idAttribute : 'page_id'
+            name: 'content-piece'
+            layout: ''
+            elements: []
 
-				name : 'page-json'
+        API =
+            getPageJSON: (id='151')->
+                jsonModel = new PageJson
+                    ID: parseInt id
+                jsonModel.fetch()
+
+                jsonModel
 
 
-			API = 
-				getPageJSON:()->
-					
-					jsonModel = new PageJson
-					# 				page_id : parseInt pageId
-					# json.fetch()
-					json = localStorage.getItem('layout');
-					console.log "retrived"+json
-					jsonModel.set JSON.parse json
-					console.log jsonModel
-					jsonModel
-
-			# handlers
-			App.reqres.setHandler "get:page:json", (data={})->
-				console.log data
-				API.getPageJSON()
+        # handlers
+        App.reqres.setHandler "get:page:json", (id)->
+            API.getPageJSON(id)

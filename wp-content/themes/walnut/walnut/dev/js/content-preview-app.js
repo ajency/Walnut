@@ -39,8 +39,9 @@ define(['marionette'], function(Marionette) {
   App.on('start', function() {
     var xhr;
     console.log('start app Main');
-    return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
-      return function(resp) {
+    xhr = $.get("" + AJAXURL + "?action=get-user-data", {});
+    (function(_this) {
+      return (function(resp) {
         var school, user;
         if (resp.success) {
           user = App.request("get:user:model");
@@ -51,8 +52,9 @@ define(['marionette'], function(Marionette) {
         } else {
           return App.vent.trigger("show:login");
         }
-      };
-    })(this), 'json');
+      });
+    })(this);
+    return 'json';
   });
   App.vent.on("show:content:preview", function() {
     App.execute("show:content:preview", {
