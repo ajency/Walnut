@@ -47,7 +47,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype._changeMultipleAnswers = function(model, multiple) {
         if (!multiple) {
           model.set('correct_answer', []);
-          return this.renderElement();
+          return this.view.triggerMethod("update:tick");
         }
       };
 
@@ -70,6 +70,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
 
       Controller.prototype.createRowStructure = function(options) {
         var columnCounter, columnElement, columnElements, elements, numberOfColumns, numberOfOptions, numberOfRows, optionsInMcqCounter, remainingClass, remainingColumns;
+        console.log(this.layout.model);
         numberOfColumns = this.layout.model.get('columncount');
         numberOfOptions = this.layout.model.get('optioncount');
         optionsInMcqCounter = 1;
@@ -146,7 +147,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         if (!this.layout.model.get('multiple') && correctAnswerArray.length) {
           this.layout.model.set('correct_answer', [model.get('optionNo')]);
           console.log('in check');
-          this.renderElement();
+          this.view.triggerMethod("update:tick");
         } else {
           correctAnswerArray.push(model.get('optionNo'));
         }
@@ -200,14 +201,14 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             oldOptionCount--;
           }
         }
-        return this.renderElement();
+        return this.layout.elementRegion.show(this.view);
       };
 
       Controller.prototype._changeColumnCount = function(model, newColumnCount) {
         model.get('elements').each(function(element) {
           return element.set('class', 12 / newColumnCount);
         });
-        return this.renderElement();
+        return this.layout.elementRegion.show(this.view);
       };
 
       Controller.prototype.deleteElement = function(model) {
