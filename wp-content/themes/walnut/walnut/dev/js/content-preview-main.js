@@ -24,7 +24,6 @@ require.config({
     componentloader: 'components/preview-component-loader',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
-    ckeditor: 'plugins/ckeditor/ckeditor',
     screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
     bridget: 'plugins/jquery.bridget',
     isotope: 'plugins/isotope.pkgd.min'
