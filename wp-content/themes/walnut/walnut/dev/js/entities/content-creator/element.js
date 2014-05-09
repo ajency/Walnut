@@ -27,7 +27,7 @@ define(["app", 'backbone'], function(App, Backbone) {
     })(Backbone.Model);
     API = {
       createElement: function(data) {
-        var element, json_data;
+        var element;
         if (data == null) {
           data = {};
         }
@@ -35,11 +35,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         element.set(data);
         if (element.get('element') !== 'Row' && element.get('element') !== 'Column') {
           if (element.isNew()) {
-            console.log(element);
-            console.log('~~~~~~~~~~~~~');
-            json_data = JSON.stringify(data);
-            console.log('~~~~~~~~~~~~~');
-            element.save(json_data, {
+            element.save(null, {
               wait: true
             });
           }

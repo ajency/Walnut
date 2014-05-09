@@ -22,11 +22,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 if element.get('element') isnt 'Row' and element.get('element') isnt 'Column'
 
                     if element.isNew()
-                        console.log element
-                        console.log '~~~~~~~~~~~~~'
-                        json_data= JSON.stringify(data)
-                        console.log '~~~~~~~~~~~~~'
-                        element.save json_data,
+                        element.save null,
                             wait: true
 
                 element

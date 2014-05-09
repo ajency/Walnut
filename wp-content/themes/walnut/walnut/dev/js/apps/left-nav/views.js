@@ -62,6 +62,9 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           $("#main-menu").addClass("mini");
           $(".start").removeClass("active open");
           $(".arrow").removeClass("open");
+          $('.page-content').addClass('condensed');
+        } else {
+          $('.page-content').removeClass('condensed');
         }
         if ($('.page-sidebar').hasClass('mini')) {
           elem = $('.page-sidebar ul');

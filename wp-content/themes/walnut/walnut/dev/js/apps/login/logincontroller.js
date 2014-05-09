@@ -69,7 +69,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginView.prototype.onShow = function() {
-        return $('body').addClass('error-body no-top');
+        $('body').addClass('error-body no-top');
+        return $('.page-content').addClass('condensed');
       };
 
       LoginView.prototype.submitLogin = function(e) {

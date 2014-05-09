@@ -140,18 +140,16 @@ function save_content_element() {
 add_action('wp_ajax_create-element', 'save_content_element');
 add_action('wp_ajax_update-element', 'save_content_element');
 
+function delete_content_element(){
 
-function fetch_content_element() {
     global $wpdb;
 
-    $meta_id=  $_GET['meta_id'];
+    $meta_id=$_POST['meta_id'];
 
-    $element_qry=$wpdb->prepare("select meta_value from {$wpdb->prefix}postmeta where meta_id=%d", $meta_id);
+    $result=delete_metadata_by_mid('post',$meta_id);
 
-    $element_data=$wpdb->get_var($element_qry);
-    $element_data= maybe_unserialize($element_data);
+    wp_send_json(array('status'=>$result));
 
-    wp_send_json($element_data);
 }
 
-add_action('wp_ajax_read-element', 'fetch_content_element');
+add_action('wp_ajax_delete-element', 'delete_content_element');
