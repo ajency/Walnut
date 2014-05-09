@@ -12,16 +12,17 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       }
 
       HotspotElementPropertyBoxController.prototype.initialize = function(options) {
-        this.view = this._getView(options.model);
+        this.view = this._getView(options);
         return this.show(this.view);
       };
 
-      HotspotElementPropertyBoxController.prototype._getView = function(model) {
+      HotspotElementPropertyBoxController.prototype._getView = function(options) {
         var elementType, viewName;
-        elementType = model.get('type');
+        elementType = options.model.get('type');
         viewName = "" + elementType + "View";
         return new HotspotElementPropertyBox.Views[viewName]({
-          model: model
+          model: options.model,
+          hotspotModel: options.hotspotModel
         });
       };
 
@@ -31,7 +32,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
     return App.commands.setHandler("show:hotspot:element:properties:box", function(options) {
       return new HotspotElementPropertyBoxController({
         region: options.region,
-        model: options.model
+        model: options.model,
+        hotspotModel: options.hotspotModel
       });
     });
   });

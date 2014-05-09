@@ -16,7 +16,7 @@ define ['app'
 										element  	: 'Mcq'
 										optioncount : 2
 										columncount : 2
-										elements 	: App.request "create:new:option:collection", [{optionNo:1, class:6},{optionNo:2,class:6}]
+										elements 	: [{optionNo:1, class:6},{optionNo:2,class:6}]
 										marks : 1
 										individual_marks :false
 										multiple : false
@@ -42,13 +42,9 @@ define ['app'
 						renderElement:()=>
 
 							optionsObj = @layout.model.get 'elements'
-							# if the object is a collection then keep as it is 
-							if optionsObj instanceof Backbone.Collection
-								optionCollection = optionsObj
-							# else convert it to collection and set it to mcq model
-							else
-								optionCollection = App.request "create:new:option:collection" , optionsObj
-								@layout.model.set 'elements',optionCollection
+						
+							optionCollection = App.request "create:new:option:collection" , optionsObj
+							@layout.model.set 'elements',optionCollection
 
 							# get the view
 							@view = @_getMcqView optionCollection

@@ -35,9 +35,6 @@ define(["app", 'backbone'], function(App, Backbone) {
         element.set(data);
         if (element.get('element') !== 'Row' && element.get('element') !== 'Column') {
           if (element.isNew()) {
-            element.save(null, {
-              wait: true
-            });
             i = new Date().getTime();
             element.set('meta_id', i);
             localStorage.setItem('ele' + element.get('meta_id'), JSON.stringify(element.toJSON()));

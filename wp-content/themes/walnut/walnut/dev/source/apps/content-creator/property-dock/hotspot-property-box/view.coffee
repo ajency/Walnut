@@ -1,0 +1,94 @@
+define ['app'],(App)->
+
+	App.module "ContentCreator.PropertyDock.HotspotPropertyBox.Views",
+		(Views,App,Backbone,Marionette,$,_)->
+
+			class Views.PropertyView extends Marionette.ItemView
+
+				template : '<div class="tile-more-content no-padding">
+								<div class="tiles green">
+									<div class="tile-footer drag">
+										MCQ <i class="fa fa-chevron-right"></i> <span class="semi-bold">Hotspot Question Properties</span>
+									</div>
+									<div class="docket-body">
+
+										<div class="checkbox check-success">
+											<input id="check-individual-marks" type="checkbox" name="check-individual-marks"> 
+											<label for="check-individual-marks">Set marks for each blank</label>
+										</div>
+
+										<div class="m-b-10">
+											Marks
+											<input id="marks" type="text" value="{{marks}}" class="form-control" >
+										</div>
+
+
+									</div>
+								</div>
+							</div>' 
+
+				events : 
+					'blur @ui.marksTextbox' : '_changeMarks'
+					'change @ui.individualMarksCheckbox' : '_toggleIndividualMarks'
+
+				ui :
+					marksTextbox : 'input#marks'
+					individualMarksCheckbox : 'input#check-individual-marks'
+
+				onShow:->
+					if @model.get 'enableIndividualMarks'
+							@ui.individualMarksCheckbox.prop 'checked',true
+							@ui.marksTextbox.prop 'disabled',true
+							@_enableCalculateMarks()
+
+
+				# function for changing model on change of marks dropbox
+				_changeMarks:(evt)->
+					if not isNaN $(evt.target).val()
+						@model.set 'marks', parseInt $(evt.target).val()
+
+				_enableCalculateMarks:->
+						@_updateMarks()
+						@$el.closest('#property-dock').on 'change', 
+							'#question-elements-property #individual-marks',(evt)=>
+								@_updateMarks()
+
+						@listenTo @model.get('optionCollection') , 'add',@_updateMarks
+						@listenTo @model.get('optionCollection') , 'remove',@_updateMarks
+	
+				_disableCalculateMarks:->
+						@$el.closest('#property-dock').off 'change', 
+							'#question-elements-property #individual-marks'
+						@stopListening @model.get('optionCollection')
+
+				_updateMarks:=>
+						# console.log 'change'
+						_.delay @_delayUpdateTillMarksChange, 50
+
+				_delayUpdateTillMarksChange:=>
+						totalMarks = 0
+						@model.get('optionCollection').each (option)=>
+							# console.log option
+
+							totalMarks = totalMarks + parseInt option.get('marks')
+						@model.set 'marks',totalMarks
+						$(@ui.marksTextbox).val totalMarks
+
+
+				# function for changing model on change of 
+				# Enable individual marks checkbox
+				_toggleIndividualMarks:(evt)->
+						if $(evt.target).prop 'checked'
+							@model.set 'enableIndividualMarks', true
+							@ui.marksTextbox.prop 'disabled',true
+							@_enableCalculateMarks()
+							
+						else
+							@model.set 'enableIndividualMarks',false
+							@ui.marksTextbox.prop 'disabled',false
+							@_disableCalculateMarks()
+
+				onClose:->
+					@_disableCalculateMarks()
+
+

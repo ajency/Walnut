@@ -24,7 +24,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           element: 'Mcq',
           optioncount: 2,
           columncount: 2,
-          elements: App.request("create:new:option:collection", [
+          elements: [
             {
               optionNo: 1,
               "class": 6
@@ -32,7 +32,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
               optionNo: 2,
               "class": 6
             }
-          ]),
+          ],
           marks: 1,
           individual_marks: false,
           multiple: false,
@@ -54,12 +54,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.renderElement = function() {
         var optionCollection, optionsObj;
         optionsObj = this.layout.model.get('elements');
-        if (optionsObj instanceof Backbone.Collection) {
-          optionCollection = optionsObj;
-        } else {
-          optionCollection = App.request("create:new:option:collection", optionsObj);
-          this.layout.model.set('elements', optionCollection);
-        }
+        optionCollection = App.request("create:new:option:collection", optionsObj);
+        this.layout.model.set('elements', optionCollection);
         this.view = this._getMcqView(optionCollection);
         this.listenTo(this.view, "show show:this:mcq:properties", (function(_this) {
           return function(options) {

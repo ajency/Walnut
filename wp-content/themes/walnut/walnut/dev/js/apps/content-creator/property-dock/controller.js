@@ -25,7 +25,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         })(this));
         App.commands.setHandler("show:hotspot:element:properties", (function(_this) {
           return function(options) {
-            return _this._getHotspotElementProperties(options.model);
+            return _this._getHotspotElementProperties(options);
           };
         })(this));
         App.commands.setHandler("show:fib:element:properties", (function(_this) {
@@ -65,10 +65,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         });
       };
 
-      PropertyDockController.prototype._getHotspotElementProperties = function(model) {
+      PropertyDockController.prototype._getHotspotElementProperties = function(options) {
         return App.execute("show:hotspot:element:properties:box", {
           region: this.layout.questElementPropRegion,
-          model: model
+          model: options.model,
+          hotspotModel: options.hotspotModel
         });
       };
 

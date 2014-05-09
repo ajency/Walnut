@@ -25,7 +25,9 @@ require.config({
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
     ckeditor: 'plugins/ckeditor/ckeditor',
-    screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
+    screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
+    bridget: 'plugins/jquery.bridget',
+    isotope: 'plugins/isotope.pkgd.min'
   },
   shim: {
     underscore: {
@@ -53,7 +55,9 @@ require.config({
     underscorestring: ['underscore'],
     syphon: ['backbone'],
     screwbuttons: ['jquery'],
-    app: ['plugins/content-preview-pluginloader', 'config/content-preview-configloader']
+    app: ['plugins/content-preview-pluginloader', 'config/content-preview-configloader'],
+    bridget: ['jquery'],
+    isotope: ['jquery', 'bridget']
   }
 });
 

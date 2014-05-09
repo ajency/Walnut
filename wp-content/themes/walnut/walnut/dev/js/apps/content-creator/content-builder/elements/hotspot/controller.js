@@ -16,8 +16,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         this.eventObj = options.eventObj;
         _.defaults(options.modelData, {
           element: 'Hotspot',
-          content: '',
-          marks: 1
+          height: 0,
+          marks: 1,
+          enableIndividualMarks: false,
+          optionCollection: [],
+          textCollection: [],
+          imageCollection: []
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -29,42 +33,45 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.renderElement = function() {
-        var view;
-        view = this._getHotspotView();
-        this.listenTo(view, "show:hotspot:elements", (function(_this) {
+        this.optionCollection = App.request("create:new:hotspot:element:collection", this.layout.model.get('optionCollection'));
+        this.textCollection = App.request("create:new:hotspot:element:collection", this.layout.model.get('textCollection'));
+        this.imageCollection = App.request("create:new:hotspot:element:collection", this.layout.model.get('imageCollection'));
+        this.layout.model.set('optionCollection', this.optionCollection);
+        this.layout.model.set('textCollection', this.textCollection);
+        this.layout.model.set('imageCollection', this.imageCollection);
+        this.view = this._getHotspotView();
+        this.listenTo(this.view, "show show:hotspot:elements", (function(_this) {
           return function() {
             App.execute("show:question:elements", {
               model: _this.layout.model
             });
-            return App.execute("close:question:properties");
+            return App.execute("show:question:properties", {
+              model: _this.layout.model
+            });
           };
         })(this));
-        this.listenTo(view, "close:hotspot:elements", (function(_this) {
-          return function(contentObject) {
-            console.log(JSON.stringify(contentObject));
-            _this.layout.model.set('content', JSON.stringify(contentObject));
-            if (_this.layout.model.hasChanged()) {
-              console.log("saving them");
-              localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
-              console.log(JSON.stringify(_this.layout.model.toJSON()));
-            }
-            return App.execute("close:question:elements");
-          };
-        })(this));
-        this.listenTo(view, "close:hotspot:element:properties", function() {
+        this.listenTo(this.view, "close:hotspot:element:properties", function() {
           return App.execute("close:question:element:properties");
         });
-        this.layout.elementRegion.show(view, {
-          loading: true
+        this.listenTo(this.view, "show:hotspot:element:properties", function(hotspotElement) {
+          return App.execute("show:hotspot:element:properties", {
+            model: hotspotElement,
+            hotspotModel: this.layout.model
+          });
         });
-        return App.execute("show:question:elements", {
-          model: this.layout.model
+        return this.layout.elementRegion.show(this.view, {
+          loading: true
         });
       };
 
       Controller.prototype.deleteElement = function(model) {
+        model.set('optionCollection', '');
+        model.set('textCollection', '');
+        model.set('imageCollection', '');
         model.destroy();
-        return App.execute("close:question:elements");
+        App.execute("close:question:elements");
+        App.execute("close:question:properties");
+        return App.execute("close:question:element:properties");
       };
 
       return Controller;

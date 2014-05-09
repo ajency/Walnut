@@ -37,7 +37,7 @@ define(['app'], function(App) {
         'click a': function(e) {
           return e.preventDefault();
         },
-        'blur p': '_textBlur',
+        'blur p': 'onSaveText',
         'DOMSubtreeModified p': '_updateInputProperties'
       };
 
@@ -101,7 +101,7 @@ define(['app'], function(App) {
         return this.$el.find("input[data-id=" + model.id + "]").attr('size', blankSize);
       };
 
-      FibView.prototype._textBlur = function() {
+      FibView.prototype.onSaveText = function() {
         var formatedText;
         formatedText = this.$el.find('p').clone();
         $(formatedText).find('input').attr('value', '');

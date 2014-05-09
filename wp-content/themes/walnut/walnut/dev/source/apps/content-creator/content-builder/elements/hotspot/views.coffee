@@ -8,24 +8,30 @@ define ['app'],(App)->
 
 			className : 'stage'
 
-			template : '&nbsp;'
+			# template : '&nbsp;'
 
 			# events :
 				# 'mousedown' : -> @trigger "show:hotspot:elements"
 				# 'focus'	: -> console.log "blur" #'updateModel'
 
 			initialize:(opt = {})->
-				if @model.get('content')!=''
-					@contentObject = JSON.parse @model.get 'content'
-				else 
-					@contentObject = new Object()
-				# @model.get('content')
-				@textCollection = App.request "create:new:hotspot:element:collection", @contentObject.textData
-				@optionCollection = App.request "create:new:hotspot:element:collection", @contentObject.optionData
-				@imageCollection = App.request "create:new:hotspot:element:collection", @contentObject.imageData
+				# get the content if already exists
+				# if @model.get('content') isnt ''
+
+				# 	@contentObject = JSON.parse @model.get 'content'
+				# else 
+				# 	@contentObject = new Object()
+
+
+
+				
+				# create layer collections
+				@textCollection = @model.get 'textCollection'#App.request "create:new:hotspot:element:collection", @contentObject.textData
+				@optionCollection = @model.get 'optionCollection'#App.request "create:new:hotspot:element:collection", @contentObject.optionData
+				@imageCollection = @model.get 'imageCollection'#App.request "create:new:hotspot:element:collection", @contentObject.imageData
+				
 				#give a unique name to every hotspot canvas
-				# console.log "layout model  "+JSON.stringify @model
-				@stageName = "stage"+ new Date().getTime()
+				@stageName = _.uniqueId('stage')
 
 				# create the canvas layers
 				@imageLayer = new Kinetic.Layer
@@ -43,19 +49,15 @@ define ['app'],(App)->
 				
 
 			onShow:()->
-
+				# create a kinetic stage
 				@stage = new Kinetic.Stage
 						container: @stageName
 						width: @$el.parent().width()
 						height: @$el.parent().height()+80
 
-				if @contentObject.height!=undefined
-					@stage.height @contentObject.height
+				if @model.get('height') isnt 0
+					@stage.height @model.get('height')
 
-					
-
-				# set image to the default image layer
-				# @_setDefaultImage()
 
 				# add the canvas layers
 				@stage.add @defaultLayer
@@ -64,19 +66,8 @@ define ['app'],(App)->
 				@stage.add @optionLayer
 
 
-				# on resize
-				@$el.resize ()=>
-					# console.log $('#'+@stageName+'.stage').width()
-					@stage.setSize
-						width: @$el.width()
-						height: @$el.height()-5
-
-					@contentObject.height = @stage.height()
-					# resize the default image 
-					@_updateDefaultImageSize()
-
-				@$el.resizable
-						handles: "s" 
+				@_initializeCanvasResizing()
+				
 
 				@$el.parent().parent().on 'click',(evt)=>
 					@trigger 'show:hotspot:elements'
@@ -86,13 +77,13 @@ define ['app'],(App)->
 					@trigger 'close:hotspot:element:properties'
 					evt.stopPropagation()
 
-				@_setPropertyBoxCloseHandlers()
+				# @_setPropertyBoxCloseHandlers()
 				@_drawExistingElements()
 				
 				#listen to drop event
-				@listenTo @, 'add:hotspot:element' ,(type,elementPos)->
+				# @listenTo @, 'add:hotspot:element' ,(type,elementPos)->
 
-						@_addElements type, elementPos
+				# 		@_addElements type, elementPos
 
 
 				# $('button.btn.btn-success.btn-cons2').on 'click',=>
@@ -108,59 +99,24 @@ define ['app'],(App)->
 										elementPos = 
 											left : evt.clientX-@$el.find('.kineticjs-content').offset().left
 											top  : evt.clientY-@$el.find('.kineticjs-content').offset().top + window.pageYOffset
-										@trigger "add:hotspot:element", type , elementPos
+										@triggerMethod "add:hotspot:element", type , elementPos
 
+			_initializeCanvasResizing:->
+				# on resize of the canvas height
+				@$el.resize @_setResizeHandler
+				# set resize bottom handle
+				@$el.resizable
+						handles: "s" 
 
-			_setPropertyBoxCloseHandlers:->
-				$('body').on 'click',=>
+			_setResizeHandler:=>
+					# console.log $('#'+@stageName+'.stage').width()
+					@stage.setSize
+						width: @$el.width()
+						height: @$el.height()-5
 
-							@contentObject.textData = @textCollection.toJSON()
-							@contentObject.optionData = @optionCollection.toJSON()
-							@contentObject.imageData = @imageCollection.toJSON()
-							console.log JSON.stringify @contentObject
-						
-							@trigger "close:hotspot:elements",@contentObject
-
-			
-	
-			_drawExistingElements:->
-				console.log @textCollection
-				@textCollection.each (model,i)=>
-					@_addTextElement
-							left: model.get 'x'
-							top : model.get 'y'
-						,	
-							model
-				@optionCollection.each (model,i)=>
-					if model.get('shape') is 'Rect'
-						@_addRectangle
-								left : model.get 'x'
-								top : model.get 'y'
-							,
-								model
-					if model.get('shape') is 'Circle'
-						@_addCircle
-								left : model.get 'x'
-								top : model.get 'y'
-							,
-								model
-
-				@imageCollection.each (model,i)=>
-					@_addImageElement
-							left : model.get 'x'
-							top : model.get 'y'
-						,
-							model.get 'url'
-						,
-							model
-
-				@_updateDefaultLayer()
-
-				setTimeout ->
-					$('body').trigger('mousedown')
-				,	1000
-
-
+					@model.set 'height', @stage.height()
+					# resize the default image 
+					@_updateDefaultImageSize()
 
 
 			_setDefaultImage:->
@@ -201,8 +157,6 @@ define ['app'],(App)->
 			# update the size of default image on change of stage
 			_updateDefaultImageSize:->
 					
-
-					
 					if @hotspotDefault
 
 						width = @stage.width()
@@ -221,27 +175,91 @@ define ['app'],(App)->
 								width : (height-10)*1.68
 								height : height-10
 
-
-
 						@hotspotDefault.position
 							x : @stage.width()/2-@hotspotDefault.width()/2
 							y : @stage.height()/2-@hotspotDefault.height()/2
 
 						@defaultLayer.draw()
 
+			# _setPropertyBoxCloseHandlers:->
+			# 	$('body').on 'click',=>
 
-			_addElements: (type,elementPos)->
+			# 			@contentObject.textData = @textCollection.toJSON()
+			# 			@contentObject.optionData = @optionCollection.toJSON()
+			# 			@contentObject.imageData = @imageCollection.toJSON()
+			# 			console.log JSON.stringify @contentObject
+					
+			# 			@trigger "close:hotspot:elements",@contentObject
+
+			# onSaveHotspotContent:->
+			# 		@contentObject.textData = @textCollection.toJSON()
+			# 		@contentObject.optionData = @optionCollection.toJSON()
+			# 		@contentObject.imageData = @imageCollection.toJSON()
+
+			# 		@model.set 'optionCollection',@optionCollection
+
+			# 		@model.set 'content', JSON.stringify @contentObject
+
+			
+	
+			_drawExistingElements:->
+				console.log @textCollection
+
+				@textCollection.each (model,i)=>
+						@_addEachElements 'Hotspot-Text',model
+					
+				@optionCollection.each (model,i)=>
+					if model.get('shape') is 'Rect'
+						@_addEachElements 'Hotspot-Rectangle',model
+
+					if model.get('shape') is 'Circle'
+						@_addEachElements 'Hotspot-Circle',model
+
+				@imageCollection.each (model,i)=>
+						@_addEachElements 'Hotspot-Image',model
+
+				@_updateDefaultLayer()
+
+				_.delay =>
+					@$el.trigger('mousedown')
+				,	10
+
+			_addEachElements:(type,model)->
+				@triggerMethod "add:hotspot:element", 
+							type
+						,
+							left: model.get 'x'
+							top : model.get 'y'
+						,	
+							model
+
+
+			
+
+
+			onAddHotspotElement: (type,elementPos,model)->
 
 				if(type=="Hotspot-Circle")
-						@_addCircle elementPos
+						@_addCircle elementPos,model
 
 				else if(type=="Hotspot-Rectangle")
-						@_addRectangle elementPos
+						@_addRectangle elementPos,model
 
 				else if(type == "Hotspot-Text")
-						@_addTextElement elementPos
+						@_addTextElement elementPos,model
 				else if(type=="Hotspot-Image")
-					# @trigger "show:media:manager"
+					# if model exists display it otherwise upload an image
+					if model
+						@_addImageElement elementPos, model.get('url'),model
+					else
+						@_uploadImage elementPos
+
+
+				@_updateDefaultLayer()
+
+				# @optionLayer.draw()
+
+			_uploadImage:(elementPos)->
 					App.navigate "media-manager", trigger : true
 					@listenTo App.vent,"media:manager:choosed:media",(media)=>
 						# @layout.model.set 'image_id', media.get 'id'
@@ -251,11 +269,6 @@ define ['app'],(App)->
 
 					@listenTo App.vent,  "stop:listening:to:media:manager",=>
 							@stopListening App.vent, "media:manager:choosed:media"
-
-
-				@_updateDefaultLayer()
-
-				@optionLayer.draw()
 
 
 			_addCircle: (elementPos,model)->
@@ -273,14 +286,17 @@ define ['app'],(App)->
 							color : '#000000'
 							transparent : false
 							correct : false
+							marks : 1
 							
 						hotspotElement = App.request "create:new:hotspot:element", modelData
 						@optionCollection.add hotspotElement
 
 					self = @
 
-					App.execute "show:hotspot:element:properties",
-								model : hotspotElement
+					
+
+					@trigger "show:hotspot:element:properties", hotspotElement
+							
 
 
 					circle = new Kinetic.Circle
@@ -325,24 +341,20 @@ define ['app'],(App)->
 					hotspotElement.on "change:toDelete",=>
 							circleGrp.destroy()
 							@optionCollection.remove hotspotElement
-							App.ContentCreator.closequestionelementproperty = true
 							
-							App.execute "close:question:element:properties"
+							@trigger "close:hotspot:element:properties"
 							@optionLayer.draw()
 							@_updateDefaultLayer()
 
 					# on click of a circle element show properties
-					circleGrp.on 'mousedown click',(e)->
+					circleGrp.on 'mousedown ',(e)=>
 							e.stopPropagation()
-							App.execute "show:hotspot:element:properties",
-									model : hotspotElement
+
+							@trigger "show:hotspot:element:properties", hotspotElement
 							# console.log @
 
-					circleGrp.on 'mouseover',->
-						App.ContentCreator.closequestionelementproperty = false
 
-					circleGrp.on 'mouseout',->
-						App.ContentCreator.closequestionelementproperty = true
+					
 
 					@optionLayer.draw()
 
@@ -364,6 +376,7 @@ define ['app'],(App)->
 							transparent : false
 							angle 	: 0
 							correct : false
+							marks : 1
 							
 
 						hotspotElement = App.request "create:new:hotspot:element", modelData
@@ -372,8 +385,7 @@ define ['app'],(App)->
 
 					self = @
 
-					App.execute "show:hotspot:element:properties",
-									model : hotspotElement
+					@trigger "show:hotspot:element:properties", hotspotElement
 
 					box = new Kinetic.Rect
 							name : "rect2"
@@ -427,24 +439,17 @@ define ['app'],(App)->
 					hotspotElement.on "change:toDelete",=>
 							rectGrp.destroy()
 							@optionCollection.remove hotspotElement
-							App.ContentCreator.closequestionelementproperty = true
-							App.execute "close:question:element:properties"
+							@trigger "close:hotspot:element:properties"
 							@optionLayer.draw()
 							@_updateDefaultLayer()
 
 					# on click of a circle element show properties
-					rectGrp.on 'mousedown click',(e)->
+					rectGrp.on 'mousedown ',(e)=>
 							e.stopPropagation()
-							App.execute "show:hotspot:element:properties",
-									model : hotspotElement
+							@trigger "show:hotspot:element:properties", hotspotElement
 							# console.log @
 
-					rectGrp.on 'mouseover',->
-						App.ContentCreator.closequestionelementproperty = false
-
-					rectGrp.on 'mouseout',->
-						App.ContentCreator.closequestionelementproperty = true
-
+					
 					@optionLayer.draw()
 
 					
@@ -476,8 +481,7 @@ define ['app'],(App)->
 
 					self = @
 
-					App.execute "show:hotspot:element:properties",
-									model : hotspotElement
+					@trigger "show:hotspot:element:properties", hotspotElement
 
 					tooltip = new Kinetic.Label
 						x: hotspotElement.get 'x'
@@ -505,10 +509,9 @@ define ['app'],(App)->
 
 
 					# on click of a text element show properties
-					tooltip.on 'mousedown click',(e)->
+					tooltip.on 'mousedown ',(e)=>
 							e.stopPropagation()
-							App.execute "show:hotspot:element:properties",
-									model : hotspotElement
+							@trigger "show:hotspot:element:properties", hotspotElement
 
 					# if model text is not empty then change the hotspot text
 					if hotspotElement.get('text') != ''
@@ -562,8 +565,7 @@ define ['app'],(App)->
 					hotspotElement.on "change:toDelete",=>
 							tooltip.destroy()
 							@textCollection.remove hotspotElement
-							App.ContentCreator.closequestionelementproperty = true
-							App.execute "close:question:element:properties"
+							@trigger "close:hotspot:element:properties"
 							@textLayer.draw()
 							@_updateDefaultLayer()
 
@@ -574,12 +576,7 @@ define ['app'],(App)->
 
 				
 
-					tooltip.on 'mouseover',->
-						App.ContentCreator.closequestionelementproperty = false
-
-					tooltip.on 'mouseout',->
-						App.ContentCreator.closequestionelementproperty = true
-
+					
 					tooltip.add canvasText
 
 					
@@ -611,8 +608,7 @@ define ['app'],(App)->
 					imageObject = new Image()
 					imageObject.src = hotspotElement.get 'url'
 					imageObject.onload = ()=>
-							App.execute "show:hotspot:element:properties",
-									model : hotspotElement
+							@trigger "show:hotspot:element:properties", hotspotElement
 
 							imageElement = new Kinetic.Image
 									image 	: imageObject
@@ -640,17 +636,12 @@ define ['app'],(App)->
 
 
 							# on click of a text element show properties
-							imageGrp.on 'mousedown click',(e)->
+							imageGrp.on 'mousedown ',(e)=>
 									e.stopPropagation()
-									App.execute "show:hotspot:element:properties",
-											model : hotspotElement
-									console.log @
+									@trigger "show:hotspot:element:properties", hotspotElement
+							
 
-							imageGrp.on 'mouseover',->
-								App.ContentCreator.closequestionelementproperty = false
-
-							imageGrp.on 'mouseout',->
-								App.ContentCreator.closequestionelementproperty = true
+							
 							
 					
 
@@ -664,8 +655,7 @@ define ['app'],(App)->
 					hotspotElement.on "change:toDelete",=>
 							imageGrp.destroy()
 							@imageCollection.remove hotspotElement
-							App.ContentCreator.closequestionelementproperty = true
-							App.execute "close:question:element:properties"
+							@trigger "close:hotspot:element:properties"
 							@imageLayer.draw()
 							@_updateDefaultLayer()
 
