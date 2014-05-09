@@ -74,6 +74,8 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             response = {
               success: true
             };
+            console.log('Success response');
+            console.log(resp);
             user = _this.isExistingUser(_this.data.txtusername);
             return user.done(function(d) {
               if (d.exists === true) {

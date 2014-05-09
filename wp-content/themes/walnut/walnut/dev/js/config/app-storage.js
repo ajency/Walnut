@@ -12,7 +12,7 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
   userDatabaseTransaction = function(db) {
     console.log('User DB Object: ' + db);
     return db.transaction(function(tx) {
-      return tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, username, password, user_role)');
+      return tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, user_id UNIQUE, username, password, user_role)');
     }, _.transactionErrorHandler, function(tx) {
       return console.log('Success: UserDetails transaction completed');
     });

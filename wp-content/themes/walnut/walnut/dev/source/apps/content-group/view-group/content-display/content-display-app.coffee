@@ -81,7 +81,7 @@ define ['app'
 
 			onApplyUrls:->
 
-				currentRoute=App.getCurrentRoute()
+				currentRoute = App.getCurrentRoute()
 
 				url = '#'+currentRoute+'/'
 

@@ -19,9 +19,8 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     userDatabaseTransaction =(db)->
         console.log 'User DB Object: '+db
         db.transaction((tx)->
-            tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, username, password, user_role)')
-            # tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES ("admin", "admin", "administrator")')
-            # tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES ("walnut", "walnut", "teacher")')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, user_id UNIQUE, username, password, user_role)')
+            # tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) VALUES ("", "walnut", "walnut", "teacher")')
             
         ,_.transactionErrorHandler
         ,(tx)->
@@ -35,5 +34,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     
     #User database having details of logged in users
     _.userDb = window.openDatabase("UserDetails", "1.0", "User Details", 200000)
-    userDatabaseTransaction(_.userDb)    
+    userDatabaseTransaction(_.userDb)
 
+
+    #Save logged in user id

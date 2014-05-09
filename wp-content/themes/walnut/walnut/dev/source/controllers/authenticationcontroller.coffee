@@ -61,6 +61,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				   		else
 				   			response = 
 				   				success : true
+				   			console.log 'Success response'
+				   			console.log resp	
 
 				   			user = @isExistingUser(@data.txtusername)
 				   			user.done (d)=>
