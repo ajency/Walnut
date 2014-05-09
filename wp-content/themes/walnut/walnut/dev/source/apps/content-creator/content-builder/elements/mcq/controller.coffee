@@ -34,7 +34,10 @@ define ['app'
 						_changeMultipleAnswers:(model, multiple)=>
 								if not multiple
 									model.set 'correct_answer',[]
-									@renderElement()
+									# @renderElement()
+									# @layout.elementRegion.show @view
+									@view.triggerMethod "update:tick"
+
 
 
 
@@ -64,7 +67,7 @@ define ['app'
 
 						# creates Row structure for mcq
 						createRowStructure:(options)=>
-
+								console.log @layout.model
 								numberOfColumns = @layout.model.get('columncount')
 								numberOfOptions = @layout.model.get('optioncount')
 								
@@ -142,7 +145,10 @@ define ['app'
 								if not @layout.model.get('multiple') and correctAnswerArray.length
 									@layout.model.set 'correct_answer',[model.get('optionNo')]
 									console.log 'in check'
-									@renderElement()	
+									# @renderElement()	
+									# @layout.elementRegion.show @view
+									@view.triggerMethod "update:tick"
+
 								else
 									correctAnswerArray.push model.get('optionNo')
 								correctAnswerArray.sort()
@@ -191,12 +197,14 @@ define ['app'
 										model.get('elements').pop()
 										oldOptionCount--
 
-								@renderElement()
+								# @renderElement()
+								@layout.elementRegion.show @view
 
 						_changeColumnCount:(model,newColumnCount)=>
 							model.get('elements').each (element)->
 									element.set 'class', 12/newColumnCount
-							@renderElement()
+							# @renderElement()
+							@layout.elementRegion.show @view
 
 
 					

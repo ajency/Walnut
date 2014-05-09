@@ -27,9 +27,19 @@ define ['app'],(App)->
 				
 				console.log @model.get('correct_answer')
 				_.each @model.get('correct_answer'),(optionNo)=>
-					console.log 'onPreTickAnswers'
+					# console.log 'onPreTickAnswers'
 					@$el.find('input:checkbox[id=option-'+optionNo+']').attr 'checked',true
 					@$el.find('input:checkbox[id=option-'+optionNo+']').parent().css('background-position','0px -26px')
+
+			onUpdateTick:->
+				correctOption = @model.get('correct_answer')
+				totalOptions = @model.get 'optioncount'
+				unselectedOptions = _.difference _.range(1,totalOptions+1),correctOption
+
+				_.each unselectedOptions,(optionNo)=>
+					# console.log 'onPreTickAnswers'
+					@$el.find('input:checkbox[id=option-'+optionNo+']').attr 'checked',false
+					@$el.find('input:checkbox[id=option-'+optionNo+']').parent().css('background-position','0px 0px')
 
 
 

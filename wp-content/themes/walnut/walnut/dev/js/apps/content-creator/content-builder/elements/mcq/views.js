@@ -32,9 +32,21 @@ define(['app'], function(App) {
         console.log(this.model.get('correct_answer'));
         return _.each(this.model.get('correct_answer'), (function(_this) {
           return function(optionNo) {
-            console.log('onPreTickAnswers');
             _this.$el.find('input:checkbox[id=option-' + optionNo + ']').attr('checked', true);
             return _this.$el.find('input:checkbox[id=option-' + optionNo + ']').parent().css('background-position', '0px -26px');
+          };
+        })(this));
+      };
+
+      McqView.prototype.onUpdateTick = function() {
+        var correctOption, totalOptions, unselectedOptions;
+        correctOption = this.model.get('correct_answer');
+        totalOptions = this.model.get('optioncount');
+        unselectedOptions = _.difference(_.range(1, totalOptions + 1), correctOption);
+        return _.each(unselectedOptions, (function(_this) {
+          return function(optionNo) {
+            _this.$el.find('input:checkbox[id=option-' + optionNo + ']').attr('checked', false);
+            return _this.$el.find('input:checkbox[id=option-' + optionNo + ']').parent().css('background-position', '0px 0px');
           };
         })(this));
       };
