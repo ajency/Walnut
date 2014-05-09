@@ -3,7 +3,6 @@ define ['app'
         'apps/content-creator/content-builder/elements/mcq/views'], (App, Element)->
 
     App.module "ContentCreator.ContentBuilder.Element.Mcq", (Mcq, App, Backbone, Marionette, $, _)->
-
         class Mcq.Controller extends Element.Controller
 
             initialize: (options)->
@@ -31,20 +30,25 @@ define ['app'
 
                 @layout.model.on 'change:multiple', @_changeMultipleAnswers
 
-        # function for change of mi=ultiple answers
+
+
+              # function for change of mi=ultiple answers
             _changeMultipleAnswers: (model, multiple)=>
                 if not multiple
                     model.set 'correct_answer', []
-                    @renderElement()
+                    # @renderElement()
+                    # @layout.elementRegion.show @view
+                    @view.triggerMethod "update:tick"
 
 
 
-        # overiding the function
+              # overiding the function
             renderElement: ()=>
                 optionsObj = @layout.model.get 'elements'
 
                 optionCollection = App.request "create:new:option:collection", optionsObj
                 @layout.model.set 'elements', optionCollection
+
 
                 # get the view
                 @view = @_getMcqView optionCollection
@@ -62,8 +66,9 @@ define ['app'
                 @layout.elementRegion.show @view
 
 
-        # creates Row structure for mcq
+                # creates Row structure for mcq
             createRowStructure: (options)=>
+                console.log @layout.model
                 numberOfColumns = @layout.model.get('columncount')
                 numberOfOptions = @layout.model.get('optioncount')
 
@@ -112,7 +117,7 @@ define ['app'
 
                 @view.triggerMethod 'preTickAnswers'
 
-        # create a row of mcq
+            # create a row of mcq
             _createMcqRow: (elements, container)->
                 controller = App.request "add:new:element", container, 'Row', elements
                 _.each elements.elements, (column, index)=>
@@ -120,7 +125,7 @@ define ['app'
                     container = controller.layout.elementRegion.currentView.$el.children().eq(index)
                     @_addMcqOption(container, column.elements)
 
-        # create an mcq option
+            # create an mcq option
             _addMcqOption: (container, model)->
                 view = @_getMcqOptionView model
                 view.render()
@@ -135,19 +140,22 @@ define ['app'
                 $(container).on 'remove', ->
                     view.triggerMethod 'close'
 
-        # when a checkbox is checked
+            # when a checkbox is checked
             _optionChecked: (model)=>
                 correctAnswerArray = @layout.model.get('correct_answer')
                 if not @layout.model.get('multiple') and correctAnswerArray.length
                     @layout.model.set 'correct_answer', [model.get('optionNo')]
                     console.log 'in check'
-                    @renderElement()
+                    # @renderElement()
+                    # @layout.elementRegion.show @view
+                    @view.triggerMethod "update:tick"
+
                 else
                     correctAnswerArray.push model.get('optionNo')
                 correctAnswerArray.sort()
                 console.log @layout.model.get('correct_answer')
 
-        # when a checkbox is unchecked
+            # when a checkbox is unchecked
             _optionUnchecked: (model)=>
                 correctAnswerArray = @layout.model.get('correct_answer')
                 indexToRemove = $.inArray model.get('optionNo'), correctAnswerArray
@@ -166,11 +174,11 @@ define ['app'
             _getMcqView: (optionCollection)->
                 new Mcq.Views.McqView
                     model: @layout.model
-        # collection : optionCollection
-        # mcq_model : @layout.model
+            # collection : optionCollection
+            # mcq_model : @layout.model
 
-        # on change of optionNo attribute in the model
-        # change the number of options
+            # on change of optionNo attribute in the model
+            # change the number of options
             _changeOptionCount: (model, newOptionCount)=>
                 numberOfColumns = model.get 'columncount'
                 model.get('elements').each (element)->
@@ -189,21 +197,20 @@ define ['app'
                         model.get('elements').pop()
                         oldOptionCount--
 
-                @renderElement()
+                # @renderElement()
+                @layout.elementRegion.show @view
 
             _changeColumnCount: (model, newColumnCount)=>
                 model.get('elements').each (element)->
                     element.set 'class', 12 / newColumnCount
-                @renderElement()
-
-
-
+                # @renderElement()
+                @layout.elementRegion.show @view
 
             deleteElement: (model)->
                 model.set('elements', '')
                 delete model.get 'elements'
                 model.destroy()
                 App.execute "close:question:properties"
-    # on delete enable all question elements in d element box
-    # @eventObj.vent.trigger "question:removed"
+# on delete enable all question elements in d element box
+# @eventObj.vent.trigger "question:removed"
 
