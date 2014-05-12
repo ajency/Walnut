@@ -20,6 +20,8 @@ define(['app', 'backbone'], function(App, Backbone) {
         };
       };
 
+      OptionModel.prototype.name = 'option-model';
+
       return OptionModel;
 
     })(Backbone.Model);
@@ -48,6 +50,8 @@ define(['app', 'backbone'], function(App, Backbone) {
           data = {};
         }
         optionCollection = new Option.OptionCollection;
+        console.log('option collection');
+        console.log(data);
         optionCollection.set(data);
         return optionCollection;
       }

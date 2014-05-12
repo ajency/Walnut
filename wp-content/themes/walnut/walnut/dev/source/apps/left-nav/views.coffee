@@ -1,104 +1,107 @@
-define ['app','text!apps/left-nav/templates/leftnav.html'],(App,navTpl)->
+define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
+    App.module "LeftNavApp.Controller.Views", (Views, App)->
+        class MenuItemView extends Marionette.ItemView
 
-	App.module "LeftNavApp.Controller.Views",(Views, App)->
+            tagName: 'li'
 
-		class MenuItemView extends Marionette.ItemView
+            template: '<a href="javascript:;">
+            					<i class="{{iconClass}}"></i>
+            					<span class="title">{{post_title}}</span>
+            					<span class="arrow"></span>
+            				</a>
+            				<ul class="sub-menu">
+            					{{#submenu}}
+            					<li><a href="{{menu_item_link}}">{{post_title}}</a></li>
+            					{{/submenu}}
+            				</ul>'
 
-			tagName : 'li'
+            serializeData: ->
+                data = super()
 
-			template : '<a href="javascript:;">
-					<i class="{{iconClass}}"></i>
-					<span class="title">{{post_title}}</span>
-					<span class="arrow"></span>
-				</a>
-				<ul class="sub-menu">
-					{{#submenu}}
-					<li><a href="{{menu_item_link}}">{{post_title}}</a></li>
-					{{/submenu}}
-				</ul>'
+                iconClass = 'icon-custom-ui'
 
-			serializeData:->
-				data = super()
+                if @model.get('post_title') is 'Training Module'
+                    iconClass = 'fa fa-pencil-square-o'
 
-				iconClass= 'icon-custom-ui'
+                if @model.get('post_title') is 'Content Management'
+                    iconClass = 'fa fa-book'
 
-				if @model.get('post_title') is 'Training Module' 
-					iconClass= 'fa fa-pencil-square-o' 
+                data.iconClass = iconClass
 
-				if @model.get('post_title') is 'Content Management' 
-					iconClass= 'fa fa-book' 
+                data
 
-				data.iconClass= iconClass
+        class Views.LeftNavView extends Marionette.CompositeView
 
-				data
+            template: navTpl
 
-		class Views.LeftNavView extends Marionette.CompositeView
+            id: 'main-menu'
 
-			template 	: navTpl
-			
-			id 			: 'main-menu' 
+            className: 'page-sidebar'
 
-			className	: 'page-sidebar'
+            itemView: MenuItemView
 
-			itemView 	: MenuItemView
-
-			itemViewContainer : 'ul.menu-items'
+            itemViewContainer: 'ul.menu-items'
 
 
-			events: 
-				'click li'	: 'clickMenu'
+            events:
+                'click li': 'clickMenu'
 
-			onShow:->
-				console.log @collection
-				#Auto close open menus in Condensed menu
-				#|| ($('.teacher-app').length>0)
-				if (($('.creator').length > 0) ) 
-					$("#main-menu").addClass("mini");
-					$(".start").removeClass("active open");
-					$(".arrow").removeClass("open");
+            onShow: ->
+                console.log @collection
+
+                #Auto close open menus in Condensed menu
+                #|| ($('.teacher-app').length>0)
+                if (($('.creator').length > 0) )
+                    $("#main-menu").addClass("mini");
+                    $(".start").removeClass("active open");
+                    $(".arrow").removeClass("open");
+                    $('.page-content').addClass('condensed');
+                else
+                    $('.page-content').removeClass('condensed');
+
+                if($('.page-sidebar').hasClass('mini'))
+                    elem = $('.page-sidebar ul');
+                    elem.children('li.open').children('a').children('.arrow').removeClass('open');
+                    elem.children('li.open').children('a').children('.arrow').removeClass('active');
+                    elem.children('li.open').children('.sub-menu').slideUp(200);
+                    elem.children('li').removeClass('open');
 
 
-				if($('.page-sidebar').hasClass('mini'))		
-					elem = $('.page-sidebar ul');
-					elem.children('li.open').children('a').children('.arrow').removeClass('open');
-					elem.children('li.open').children('a').children('.arrow').removeClass('active');
-					elem.children('li.open').children('.sub-menu').slideUp(200);
-					elem.children('li').removeClass('open');
-					
-			
-			clickMenu:(e)->
-				li_target=$(e.target).closest('li').find('a');
-				if (li_target.next().hasClass('sub-menu') == false) 
-					return; 
-				parent = li_target.parent().parent();
-				parent.children('li.open').children('a').children('.arrow').removeClass('open');
-				parent.children('li.open').children('a').children('.arrow').removeClass('active');
-				parent.children('li.open').children('.sub-menu').slideUp(200);
-				parent.children('li').removeClass('open');
-				#parent.children('li').removeClass('active');
-				
-				sub = li_target.next();
-				if (sub.is(":visible"))
-					$('.arrow', li_target).removeClass("open");
-					li_target.parent().removeClass("active");
-					sub.slideUp 200, () -> handleSidenarAndContentHeight();
-				else
-					$('.arrow', li_target).addClass("open");
-					li_target.parent().addClass("open");
-					sub.slideDown 200, ()-> handleSidenarAndContentHeight();
+            clickMenu: (e)->
+                li_target = $(e.target).closest('li').find('a');
+                if (li_target.next().hasClass('sub-menu') == false)
+                    return;
+                parent = li_target.parent().parent();
+                parent.children('li.open').children('a').children('.arrow').removeClass('open');
+                parent.children('li.open').children('a').children('.arrow').removeClass('active');
+                parent.children('li.open').children('.sub-menu').slideUp(200);
+                parent.children('li').removeClass('open');
+                #parent.children('li').removeClass('active');
 
-				e.preventDefault();
+                sub = li_target.next();
+                if (sub.is(":visible"))
+                    $('.arrow', li_target).removeClass("open");
+                    li_target.parent().removeClass("active");
+                    sub.slideUp 200, () ->
+                        handleSidenarAndContentHeight();
+                else
+                    $('.arrow', li_target).addClass("open");
+                    li_target.parent().addClass("open");
+                    sub.slideDown 200, ()->
+                        handleSidenarAndContentHeight();
 
-			handleSidenarAndContentHeight =  ()-> 
-				content = $('.page-content');
-				sidebar = $('.page-sidebar');
-				if (!content.attr("data-height"))
-					content.attr("data-height", content.height());
-				
-				if (sidebar.height() > content.height()) 
-					content.css("min-height", sidebar.height() + 120);
-				else
-					content.css("min-height", content.attr("data-height"));
+                e.preventDefault();
+
+            handleSidenarAndContentHeight = ()->
+                content = $('.page-content');
+                sidebar = $('.page-sidebar');
+                if (!content.attr("data-height"))
+                    content.attr("data-height", content.height());
+
+                if (sidebar.height() > content.height())
+                    content.css("min-height", sidebar.height() + 120);
+                else
+                    content.css("min-height", content.attr("data-height"));
 				
 
 

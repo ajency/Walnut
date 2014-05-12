@@ -1,41 +1,43 @@
 define ['app'
-		'backbone'],(App,Backbone)->
+        'backbone'], (App, Backbone)->
+    App.module "Entities.Option", (Option, App, Backbone, Marionette, $, _)->
+        class Option.OptionModel extends Backbone.Model
 
-			App.module "Entities.Option" ,(Option, App, Backbone, Marionette, $, _)->
+            idAttribute: 'optionNo'
 
-				class Option.OptionModel extends Backbone.Model
+            defaults: ->
+                marks: 0
+                text: ''
 
-					idAttribute : 'optionNo'
-					
-					defaults: ->
-						marks : 0
-						text : ''
-
-
-				class Option.OptionCollection extends Backbone.Collection
-
-					model : Option.OptionModel
+            name: 'option-model'
 
 
-				API = 
-					createOption:(data)->
-							option = new Option.OptionModel
+        class Option.OptionCollection extends Backbone.Collection
 
-							option.set data
-
-							option
-
-					createOptionCollection:(data={})->
-							optionCollection = new Option.OptionCollection
-
-							optionCollection.set data
-
-							optionCollection					
-
-				App.reqres.setHandler "create:new:option",(data)->
-						API.createOption data
+            model: Option.OptionModel
 
 
-				App.reqres.setHandler "create:new:option:collection",(data)->
+        API =
+            createOption: (data)->
+                option = new Option.OptionModel
 
-						API.createOptionCollection data
+                option.set data
+
+                option
+
+            createOptionCollection: (data = {})->
+                optionCollection = new Option.OptionCollection
+                console.log 'option collection'
+                console.log data
+                optionCollection.set data
+
+
+
+                optionCollection
+
+        App.reqres.setHandler "create:new:option", (data)->
+            API.createOption data
+
+
+        App.reqres.setHandler "create:new:option:collection", (data)->
+            API.createOptionCollection data

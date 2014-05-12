@@ -1,85 +1,84 @@
-
 define ['app'], (App)->
+    App.module 'ContentCreator.ContentBuilder.AutoSave', (AutoSave, App, Backbone, Marionette, $, _)->
 
-	App.module 'ContentCreator.ContentBuilder.AutoSave', (AutoSave, App, Backbone, Marionette, $, _)->
+        # Controller class for showing header resion
+        class AutoSave.Controller extends Marionette.Controller
 
-		# Controller class for showing header resion
-		class AutoSave.Controller extends Marionette.Controller
+            # initialize the controller. Get all required entities and show the view
+            initialize: (opt = {})->
 
-			# initialize the controller. Get all required entities and show the view
-			initialize:(opt = {})->
+                # autoSave
+            autoSave: (contentPieceModel)->
+                console.log contentPieceModel
+                siteRegion = App.mainContentRegion.$el
 
-			# autoSave
-			autoSave:->
+                _json = @_getPageJson siteRegion
 
-				siteRegion = App.mainContentRegion.$el
+                console.log '_json'
+                console.log _json
 
-				_json 	= @_getPageJson siteRegion
-				
-				if not _.isObject _json
-					throw new Error "invalid json..."
+                if not _.isObject _json
+                    throw new Error "invalid json..."
 
-				console.log JSON.stringify _json
-				localStorage.setItem 'layout',JSON.stringify _json
+                #localStorage.setItem 'layout',JSON.stringify _json
 
-				# _page_id = App.request "get:current:editable:page"
+                options =
+                    type: 'POST'
+                    url: AJAXURL
+                    data:
+                        action: 'save-content-piece-json'
+                        json: _json
+                        content_id: contentPieceModel.get 'ID'
 
-				# options = 
-				# 	type 	: 'POST'
-				# 	url  	: AJAXURL
-				# 	data 	:
-				# 		action 	: 'save-page-json'
-				# 		json 	: JSON.stringify _json
-				# 		page_id : _page_id
-					
 
-				# $.ajax( options ).done (response)->
-				# 	console.log response
-				# .fail (resp)->
-				# 	console.log 'error'
+                $.ajax(options).done (response)->
+                    console.log response.ID
+                    contentPieceModel.set 'ID': response.ID
+                    console.log contentPieceModel
 
-			# get the json
-			_getPageJson:($site)->
-				json = 
-					# header 	: @_getJson $site.find '#site-header-region'
-					@_getJson $site.find '#myCanvas'
-					# footer 	: @_getJson $site.find '#site-footer-region'
+                .fail (resp)->
+                        console.log 'error'
 
-				json
+            # get the json
+            _getPageJson: ($site)->
+                json =
+                # header 	: @_getJson $site.find '#site-header-region'
+                    @_getJson $site.find '#myCanvas'
+                # footer 	: @_getJson $site.find '#site-footer-region'
 
-			# generate the JSON for the layout
-			# loops through rows and nested columns and elements inside it
-			_getJson:($element, arr = [])->
+                json
 
-				# find all elements inside $element container
-				elements = $element.children '.element-wrapper'
+            # generate the JSON for the layout
+            # loops through rows and nested columns and elements inside it
+            _getJson: ($element, arr = [])->
 
-				_.each elements, (element, index)=>
-					
-					ele =
-						element : $(element).find('form input[name="element"]').val()
-						meta_id : parseInt $(element).find('form input[name="meta_id"]').val()
+                # find all elements inside $element container
+                elements = $element.children '.element-wrapper'
 
-					if ele.element is 'Row'
-						ele.draggable = $(element).children('form').find('input[name="draggable"]').val() is "true"
-						ele.style = $(element).children('form').find('input[name="style"]').val()
-						delete ele.meta_id
-						ele.elements = []
-						_.each $(element).children('.element-markup').children('.row').children('.column'), (column, index)=>
-							className = $(column).attr 'data-class'
-							col = 
-								position 	: index + 1
-								element 	: 'Column'
-								className 	: className
-								elements 	: @_getJson $(column)
-				
-							ele.elements.push col 
-							return
+                _.each elements, (element, index)=>
+                    ele =
+                        element: $(element).find('form input[name="element"]').val()
+                        meta_id: parseInt $(element).find('form input[name="meta_id"]').val()
 
-					arr.push ele
-					
-				arr
+                    if ele.element is 'Row'
+                        ele.draggable = $(element).children('form').find('input[name="draggable"]').val() is "true"
+                        ele.style = $(element).children('form').find('input[name="style"]').val()
+                        delete ele.meta_id
+                        ele.elements = []
+                        _.each $(element).children('.element-markup').children('.row').children('.column'), (column, index)=>
+                            className = $(column).attr 'data-class'
+                            col =
+                                position: index + 1
+                                element: 'Column'
+                                className: className
+                                elements: @_getJson $(column)
 
-		App.reqres.setHandler "autosave:question:layout", ->
+                            ele.elements.push col
+                            return
 
-				new AutoSave.Controller
+                    arr.push ele
+
+                arr
+
+        App.reqres.setHandler "autosave:question:layout", ->
+            new AutoSave.Controller

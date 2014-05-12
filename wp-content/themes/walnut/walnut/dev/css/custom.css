@@ -915,9 +915,9 @@ p.mcq-option-text {
 }
 .mcq-option.ansWrong {
   opacity: 0.2;
-  background: url(../../../images/answer-wrong.png) no-repeat right center;
+  background: url(../../../images/wrong-ans.gif) no-repeat right center;
   border-bottom: 2px solid #f35958;
-  background-size: 35px;
+  background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
 
@@ -948,9 +948,9 @@ p.mcq-option-text {
 
 }
 .mcq-option.ansRight {
-  background: url(../../../images/answer-right.png) no-repeat right center;
+  background: url(../../../images/right-ans.gif) no-repeat right center;
   border-bottom: 2px solid #0aa699;
-  background-size: 35px;
+  background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
 
@@ -1139,6 +1139,48 @@ p.mcq-option-text {
 	background-size: 82px 34px;
 	margin-left: 8px;
 }*/
+#textbooks.list .mix {
+  background-color: #f3f3f3;
+}
+#textbooks.list .mix:nth-child(2n+1) {
+  background-color: #fbfbfb;
+}
+#textbooks.list .list_header .meta {
+  margin-top: 0;
+}
+#textbooks.list .list_header .meta span {
+  margin-top: 0;
+  width: 15px;
+}
+#textbooks.list .list_header .meta span:after {
+  left: 2px;
+}
+#textbooks.list .meta.name {
+  width: 30%;
+}
+#textbooks.list .meta.area {
+  width: 15%;
+}
+#textbooks.list .meta {
+  width: 20%;
+  padding: 0 2% 0 2%;
+  float: left;
+}
+#textbooks.list .img_wrapper {
+  width: 40%;
+  float: left;
+  height: 65px;
+  margin-right: 10px;
+}
+#textbooks.list .titles {
+  vertical-align: top;
+  width: 54%;
+  float: left;
+  word-break: break-word;
+}
+#textbooks.list .titles h2 {
+  letter-spacing: 1px;
+}
 .listBox {
   margin-top: 60px;
 }
@@ -1363,42 +1405,6 @@ body {
 }
 .page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu > li > a:hover {
   background-color: #098e83 !important;
-}
-#textbooks.list .list_header .meta {
-  margin-top: 0;
-}
-#textbooks.list .list_header .meta span {
-  margin-top: 0;
-  width: 15px;
-}
-#textbooks.list .list_header .meta span:after {
-  left: 2px;
-}
-#textbooks.list .meta.name {
-  width: 30%;
-}
-#textbooks.list .meta.area {
-  width: 15%;
-}
-#textbooks.list .meta {
-  width: 20%;
-  padding: 0 2% 0 2%;
-  float: left;
-}
-#textbooks.list .img_wrapper {
-  width: 40%;
-  float: left;
-  height: 65px;
-  margin-right: 10px;
-}
-#textbooks.list .titles {
-  vertical-align: top;
-  width: 54%;
-  float: left;
-  word-break: break-word;
-}
-#textbooks.list .titles h2 {
-  letter-spacing: 1px;
 }
 tbody.rowlink td {
   cursor: pointer;

@@ -83,25 +83,29 @@ function get_content_pieces($args = array()) {
 $posts = get_posts($args);
 
 function get_single_content_piece($id){
-    
+
+    global $wpdb;
+
     $current_blog_id= get_current_blog_id();
     
     switch_to_blog(1);
     
     $content_piece= get_post($id);
-    
+
     $subject_ids = array();
-    
+
     $subjects = get_the_terms($id, 'textbook');
-    
+
     //FETCHING LIST OF TEXTBOOKS RELATED TO THE CONTENT PIECE
-    foreach ($subjects as $sub) {
-        
-        $subject_ids[] = $sub->term_id;
-        
-        while ($sub->parent >0){
-            $sub = get_term($sub->parent, 'textbook');
+    if($subjects){
+        foreach ($subjects as $sub) {
+
             $subject_ids[] = $sub->term_id;
+
+            while ($sub->parent >0){
+                $sub = get_term($sub->parent, 'textbook');
+                $subject_ids[] = $sub->term_id;
+            }
         }
     }
     //print_r($subject_ids);
@@ -113,13 +117,98 @@ function get_single_content_piece($id){
     $content_type = get_post_meta($id, 'content_type', true);
     $content_piece->content_type = ($content_type) ? $content_type : '--';
     
-    // Question Type can be individual or chorus
+    $content_layout= get_post_meta($id, 'layout_json', true);
+
+
+    $content_layout = maybe_unserialize($content_layout);
+
+    $content_elements=array();
+    if($content_layout)
+        $content_elements = get_json_to_clone($content_layout);
+
+    $content_piece->layout = $content_elements;
+
     $content_piece->question_type = get_post_meta($id, 'question_type', true); 
     
     switch_to_blog($current_blog_id);
-    
+
     return $content_piece;
 }
+
+function get_json_to_clone($elements)
+{
+    $d = array();
+
+    if (is_array($elements)) {
+        foreach ($elements as $element) {
+            if ($element['element'] === 'Row') {
+                $element['columncount'] = count($element['elements']);
+                $d[]                    = get_row_elements($element);
+            } else {
+                $meta = get_meta_values($element);
+                if ($meta !== FALSE)
+                    $d[] = $meta;
+            }
+        }
+    }
+
+    return $d;
+}
+
+function get_row_elements($element)
+{
+    foreach ($element['elements'] as &$column) {
+        if($column['elements']){
+            foreach ($column['elements'] as &$ele) {
+                if ($ele['element'] === 'Row') {
+                    $ele['columncount'] = count($ele['elements']);
+                    $ele                = get_row_elements($ele);
+                } else {
+                    $meta = get_meta_values($ele);
+                    if ($meta !== FALSE)
+                        $ele = wp_parse_args($meta, $ele);
+                }
+            }
+        }
+    }
+
+    return $element;
+}
+
+function get_meta_values($element, $create = FALSE)
+{
+    $meta = get_metadata_by_mid('post', $element['meta_id']);
+
+    if (!$meta)
+        return FALSE;
+
+    $ele            = maybe_unserialize($meta->meta_value);
+    $ele['meta_id'] = $create ? create_new_record($ele) : $element['meta_id'];
+    validate_element($ele);
+
+    return $ele;
+}
+
+
+
+function validate_element(&$element)
+{
+    $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id');
+    $boolkey = array('draggable', 'justified');
+
+    if (!is_array($element) && !is_object($element))
+        return $element;
+
+    foreach ($element as $key => $val) {
+        if (in_array($key, $numkeys))
+            $element[$key] = (int)$val;
+        if (in_array($key, $boolkey))
+            $element[$key] = $val === "true";
+    }
+
+    return $element;
+}
+
 
 function save_content_group($data = array()) {
     global $wpdb;
@@ -332,3 +421,26 @@ function get_single_content_group($id, $division=''){
     
 }
 
+function save_content_piece_layout($json){
+
+    $postarr=array(
+        'post_status'=>'publish',
+        'post_type'=>'content_piece',
+        'post_title'=> 'test content piece'
+    );
+    $content_id= wp_insert_post($postarr);
+
+    update_content_piece_layout_meta($content_id, $json);
+
+    return $content_id;
+}
+
+function update_content_piece_layout_meta($content_id, $json){
+
+    $content_layout = maybe_serialize($json);
+
+    if($content_id)
+        update_post_meta ($content_id, 'layout_json',$content_layout);
+
+    return $content_id;
+}
