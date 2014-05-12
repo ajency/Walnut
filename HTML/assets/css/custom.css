@@ -1480,13 +1480,15 @@ textarea.error,
   border: 1px solid #f35958 !important;
 }
 .mainLogo {
-  background: url(../../../images/logo-synapse.png);
-  width: 128px;
-  height: 128px;
-  margin: 0 auto;
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
+}
+.mainLogo img {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto;
+  display: block;
 }
 .smallLogo {
   background: url(../../../images/logo-synapse.png);
