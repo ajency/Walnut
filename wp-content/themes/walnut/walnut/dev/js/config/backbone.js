@@ -69,6 +69,12 @@ define(["backbone"], function(Backbone) {
           return collection.set(d);
         });
       }
+      if (collection_name === 'offlineUsers') {
+        data = App.reqres.request("get:" + collection_name + ":local");
+        data.done(function(d) {
+          return collection.set(d);
+        });
+      }
       return true;
     }
   });

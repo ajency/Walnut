@@ -42,7 +42,7 @@ define ['app'
 			serializeData : ->
 				data = super()
 				#data.logourl= SITEURL+ '/wp-content/themes/walnut/images/walnutlearn.png'
-				data.logourl= SITEURL+ '/images/walnutlearn.png'
+				data.logourl= SITEURL+ '/images/logo-synapse.png'
 				console.log SITEURL
 				data
 				

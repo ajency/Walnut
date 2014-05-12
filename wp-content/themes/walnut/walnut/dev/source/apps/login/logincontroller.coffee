@@ -4,9 +4,11 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 		class Controller.LoginController extends RegionController
 
-			initialize : ->
-				
-				@view= view = @_getLoginView()
+			initialize : (opts)->
+				# username used for mobile
+				{@username} = opts
+
+				@view = view = @_getLoginView()
 
 				# listen to authenticate:user event from the view.
 				@listenTo view, 'authenticate:user' , @authenticateUser
@@ -15,7 +17,11 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 				@listenTo view, 'close', ->
 					App.vent.trigger 'show:dashboard'
 
+				# listen to prepopulate:username event from the view for mobile
+				@listenTo view, 'prepopulate:username', @prepopulateUsername	
+
 				@show view, (loading: true)
+
 
 			_getLoginView : ->
 				new LoginView
@@ -37,6 +43,14 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 				authController.authenticate()
 
+			
+			# pre-populate username from list of logged in users
+			prepopulateUsername : ->
+				
+				$('#txtusername').val($.trim(@username)) if @username isnt 'undefined'
+						
+					
+
 
 		class LoginView extends Marionette.ItemView
 
@@ -50,6 +64,10 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 			onShow:->
 				$('body').addClass 'error-body no-top'
 
+				#Changes for mobile
+				@trigger "prepopulate:username"
+				
+
 			submitLogin: (e)->
 				e.preventDefault()
 				if @$el.find('form').valid()
@@ -61,6 +79,7 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 					data = Backbone.Syphon.serialize (@)
 					@trigger "authenticate:user",data
 
+
 			onLoginFail: (resp) ->
 				@$el.find('#checking_login, #invalid_login').remove();
 				
@@ -69,4 +88,7 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 
 
+		# set handlers
+		App.commands.setHandler "show:login:view:app", (opt = {})->
+			new Controller.LoginController opt
 

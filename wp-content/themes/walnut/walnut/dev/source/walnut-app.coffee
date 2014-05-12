@@ -48,7 +48,8 @@ define ['marionette'], (Marionette)->
 		App.startHistory()
 
 		if _.checkPlatform() is 'Mobile'
-			@rootRoute = 'login'
+			@rootRoute = 'app-login'
+			@rootRoute = 'login' if _.getBlogID() is null
 			App.navigate(@rootRoute, trigger: true)	
 			return
 
@@ -85,6 +86,7 @@ define ['marionette'], (Marionette)->
 		if _.checkPlatform() is 'Mobile'
 			userRole = _.getUserRole($('#txtusername').val())
 			userRole.done (role)->
+				console.log 'ROLE: '+role
 				if role is 'administrator'
 					App.navigate('textbooks', trigger: true)
 				else

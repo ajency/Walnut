@@ -13,13 +13,15 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         return LoginController.__super__.constructor.apply(this, arguments);
       }
 
-      LoginController.prototype.initialize = function() {
+      LoginController.prototype.initialize = function(opts) {
         var view;
+        this.username = opts.username;
         this.view = view = this._getLoginView();
         this.listenTo(view, 'authenticate:user', this.authenticateUser);
         this.listenTo(view, 'close', function() {
           return App.vent.trigger('show:dashboard');
         });
+        this.listenTo(view, 'prepopulate:username', this.prepopulateUsername);
         return this.show(view, {
           loading: true
         });
@@ -50,10 +52,16 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         return authController.authenticate();
       };
 
+      LoginController.prototype.prepopulateUsername = function() {
+        if (this.username !== 'undefined') {
+          return $('#txtusername').val($.trim(this.username));
+        }
+      };
+
       return LoginController;
 
     })(RegionController);
-    return LoginView = (function(_super) {
+    LoginView = (function(_super) {
       __extends(LoginView, _super);
 
       function LoginView() {
@@ -69,7 +77,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginView.prototype.onShow = function() {
-        return $('body').addClass('error-body no-top');
+        $('body').addClass('error-body no-top');
+        return this.trigger("prepopulate:username");
       };
 
       LoginView.prototype.submitLogin = function(e) {
@@ -91,5 +100,11 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       return LoginView;
 
     })(Marionette.ItemView);
+    return App.commands.setHandler("show:login:view:app", function(opt) {
+      if (opt == null) {
+        opt = {};
+      }
+      return new Controller.LoginController(opt);
+    });
   });
 });

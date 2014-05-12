@@ -35,7 +35,10 @@ define(['marionette'], function(Marionette) {
     }
     App.startHistory();
     if (_.checkPlatform() === 'Mobile') {
-      this.rootRoute = 'login';
+      this.rootRoute = 'app-login';
+      if (_.getBlogID() === null) {
+        this.rootRoute = 'login';
+      }
       App.navigate(this.rootRoute, {
         trigger: true
       });
@@ -80,6 +83,7 @@ define(['marionette'], function(Marionette) {
       if (_.checkPlatform() === 'Mobile') {
         userRole = _.getUserRole($('#txtusername').val());
         userRole.done(function(role) {
+          console.log('ROLE: ' + role);
           if (role === 'administrator') {
             return App.navigate('textbooks', {
               trigger: true

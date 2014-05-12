@@ -17,16 +17,12 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.authenticate = function() {
-      var response;
       switch (this.platform) {
         case 'Desktop':
           if (this.isOnline) {
-            return this.onlineAuth();
+            return this.onlineWebAuth();
           } else {
-            response = {
-              error: 'Connection could not be established. Please try again.'
-            };
-            return this.success(response);
+            return this.onConnectionError();
           }
           break;
         case 'Mobile':
@@ -36,23 +32,44 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             if (this.isOnline) {
               return this.onlineMobileAuth();
             } else {
-              response = {
-                error: 'Connection could not be established. Please try again.'
-              };
-              return this.success(response);
+              return this.onConnectionError();
             }
           }
       }
     };
 
-    AuthenticationController.prototype.onlineAuth = function() {
+    AuthenticationController.prototype.onlineWebAuth = function() {
       return $.post(AJAXURL + '?action=get-user-profile', {
         data: this.data
       }, this.success, 'json');
     };
 
+    AuthenticationController.prototype.onConnectionError = function() {
+      var response;
+      response = {
+        error: 'Connection could not be established. Please try again.'
+      };
+      return this.success(response);
+    };
+
+    AuthenticationController.prototype.onSuccessResponse = function() {
+      var response;
+      response = {
+        success: true
+      };
+      return this.success(response);
+    };
+
+    AuthenticationController.prototype.onErrorResponse = function(msg) {
+      var response;
+      response = {
+        error: '' + msg
+      };
+      return this.success(response);
+    };
+
     AuthenticationController.prototype.isOfflineLoginEnabled = function() {
-      if ($('#checkbox2').is(':checked')) {
+      if ($('#offline').is(':checked')) {
         return true;
       } else {
         return false;
@@ -64,27 +81,14 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         data: this.data
       }, (function(_this) {
         return function(resp) {
-          var response, user;
-          if (resp.error) {
-            response = {
-              error: resp.error
-            };
-            return _this.success(response);
+          if (resp.login_details.error) {
+            return _this.onErrorResponse(resp.login_details.error);
           } else {
-            response = {
-              success: true
-            };
-            console.log('Success response');
-            console.log(resp);
-            user = _this.isExistingUser(_this.data.txtusername);
-            return user.done(function(d) {
-              if (d.exists === true) {
-                _this.updateExistingUserPassword();
-              } else {
-                _this.inputNewUser();
-              }
-              return _this.success(response);
-            });
+            if (_.getBlogID() === null) {
+              return _this.initialAppLogin(resp);
+            } else {
+              return _this.authenticateUserBlogId(resp);
+            }
           }
         };
       })(this), 'json');
@@ -95,24 +99,48 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       user = this.isExistingUser(this.data.txtusername);
       return user.done((function(_this) {
         return function(d) {
-          var response;
           if (d.exists === true) {
             if (d.password === _this.data.txtpassword) {
-              response = {
-                success: true
-              };
-              return _this.success(response);
+              return _this.onSuccessResponse();
             } else {
-              response = {
-                error: 'Invalid Password'
-              };
-              return _this.success(response);
+              return _this.onErrorResponse('Invalid Password');
             }
           } else {
-            response = {
-              error: 'No such user has previously logged in'
-            };
-            return _this.success(response);
+            return _this.onErrorResponse('No such user has previously logged in');
+          }
+        };
+      })(this));
+    };
+
+    AuthenticationController.prototype.initialAppLogin = function(server_resp) {
+      var resp;
+      resp = server_resp.blog_details;
+      _.setBlogID(resp.blog_id);
+      _.setBlogName(resp.blog_name);
+      this.saveUpdateUserDetails(server_resp);
+      return this.onSuccessResponse();
+    };
+
+    AuthenticationController.prototype.authenticateUserBlogId = function(server_resp) {
+      var resp;
+      resp = server_resp.blog_details;
+      if (resp.blog_id !== _.getBlogID()) {
+        return this.onErrorResponse('The app is configured for school ' + _.getBlogName());
+      } else {
+        this.saveUpdateUserDetails(server_resp);
+        return this.onSuccessResponse();
+      }
+    };
+
+    AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
+      var user;
+      user = this.isExistingUser(this.data.txtusername);
+      return user.done((function(_this) {
+        return function(d) {
+          if (d.exists === true) {
+            return _this.updateExistingUserPassword(resp);
+          } else {
+            return _this.inputNewUser(resp);
           }
         };
       })(this));
@@ -126,7 +154,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       };
       runQuery = function() {
         return $.Deferred(function(d) {
-          return _.userDb.transaction(function(tx) {
+          return _.db.transaction(function(tx) {
             return tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
@@ -151,23 +179,27 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       }).fail(_.failureHandler);
     };
 
-    AuthenticationController.prototype.inputNewUser = function() {
-      return _.userDb.transaction((function(_this) {
+    AuthenticationController.prototype.inputNewUser = function(response) {
+      var resp;
+      resp = response.login_details;
+      return _.db.transaction((function(_this) {
         return function(tx) {
-          return tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES (?, ?, "")', [_this.data.txtusername, _this.data.txtpassword]);
+          return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) VALUES (?, ?, ?, ?)', [resp.ID, _this.data.txtusername, _this.data.txtpassword, resp.roles[0]]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
         return console.log('Success: Inserted new user');
       });
     };
 
-    AuthenticationController.prototype.updateExistingUserPassword = function() {
-      return _.userDb.transaction((function(_this) {
+    AuthenticationController.prototype.updateExistingUserPassword = function(response) {
+      var resp;
+      resp = response.login_details;
+      return _.db.transaction((function(_this) {
         return function(tx) {
-          return tx.executeSql("UPDATE USERS SET password=? where username=?", [_this.data.txtpassword, _this.data.txtusername]);
+          return tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [_this.data.txtusername, _this.data.txtpassword, resp.ID]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
-        return console.log('Success: Updated user password');
+        return console.log('Success: Updated user details');
       });
     };
 

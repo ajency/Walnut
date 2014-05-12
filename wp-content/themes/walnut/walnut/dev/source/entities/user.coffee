@@ -16,7 +16,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			user = new Users.UserModel
 			
 
-			class UserCollection extends Backbone.Collection
+			class UserCollection extends  Backbone.Collection
 
 				model : Users.UserModel
 				name: 'user'
@@ -25,7 +25,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 					AJAXURL + '?action=get-users'
 
 
-			# declare a user collection instance
+			# offline user collection instance
+			class LocalUserCollection extends Backbone.Collection
+
+				model : Users.UserModel
+				name: 'offlineUsers'
 			
 			
 
@@ -37,10 +41,10 @@ define ["app", 'backbone'], (App, Backbone) ->
 						data : params
 
 					userCollection
+					
 
-				#get users from local database	
+				#get students from local database	
 				getUsersFromLocal:(division)->
-
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
@@ -70,6 +74,35 @@ define ["app", 'backbone'], (App, Backbone) ->
 					.fail _.failureHandler
 
 
+				# get logged in users list
+				getLoggedinUsers:->
+					offlineUsers = new LocalUserCollection
+					offlineUsers.fetch()
+					offlineUsers
+
+				# get logged in users from local database
+				getOfflineUSersFromLocal:->
+					runQuery =->
+						$.Deferred (d)->
+							_.db.transaction (tx)->
+								tx.executeSql("SELECT username FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d))
+
+					onSuccess =(d)->
+						(tx, data)->
+							result = []
+							i = 0
+							while i < data.rows.length
+								result[i] = 
+									username: data.rows.item(i)['username']
+								i++
+							d.resolve(result)
+
+					$.when(runQuery()).done ->
+						console.log 'getOfflineUSersFromLocal transaction completed'
+					.fail _.failureHandler	
+
+
+
 
 			App.reqres.setHandler "get:user:model", ->
 				user	
@@ -80,3 +113,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 			# request handler to get users from local database
 			App.reqres.setHandler "get:user:by:division:local",(division) ->
 				API.getUsersFromLocal division
+
+			App.reqres.setHandler "get:loggedin:user:collection", ->
+				API.getLoggedinUsers()
+
+			App.reqres.setHandler "get:offlineUsers:local", ->
+				API.getOfflineUSersFromLocal()		
+
+
+			

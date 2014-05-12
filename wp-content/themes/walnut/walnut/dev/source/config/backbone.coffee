@@ -68,6 +68,11 @@ define ["backbone"], (Backbone) ->
 				data.done (d)->
 					collection.set d
 
+			if collection_name is 'offlineUsers'
+				data = App.reqres.request "get:#{collection_name}:local"
+				data.done (d)->
+					collection.set d		
+
 			return true
 
 

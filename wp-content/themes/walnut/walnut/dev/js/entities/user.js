@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Users", function(Users, App, Backbone, Marionette, $, _) {
-    var API, UserCollection, user;
+    var API, LocalUserCollection, UserCollection, user;
     Users.UserModel = (function(_super) {
       __extends(UserModel, _super);
 
@@ -42,6 +42,20 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       return UserCollection;
+
+    })(Backbone.Collection);
+    LocalUserCollection = (function(_super) {
+      __extends(LocalUserCollection, _super);
+
+      function LocalUserCollection() {
+        return LocalUserCollection.__super__.constructor.apply(this, arguments);
+      }
+
+      LocalUserCollection.prototype.model = Users.UserModel;
+
+      LocalUserCollection.prototype.name = 'offlineUsers';
+
+      return LocalUserCollection;
 
     })(Backbone.Collection);
     API = {
@@ -86,6 +100,39 @@ define(["app", 'backbone'], function(App, Backbone) {
         return $.when(runQuery()).done(function(data) {
           return console.log('getUsersFromLocal transaction completed');
         }).fail(_.failureHandler);
+      },
+      getLoggedinUsers: function() {
+        var offlineUsers;
+        offlineUsers = new LocalUserCollection;
+        offlineUsers.fetch();
+        return offlineUsers;
+      },
+      getOfflineUSersFromLocal: function() {
+        var onSuccess, runQuery;
+        runQuery = function() {
+          return $.Deferred(function(d) {
+            return _.db.transaction(function(tx) {
+              return tx.executeSql("SELECT username FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d));
+            });
+          });
+        };
+        onSuccess = function(d) {
+          return function(tx, data) {
+            var i, result;
+            result = [];
+            i = 0;
+            while (i < data.rows.length) {
+              result[i] = {
+                username: data.rows.item(i)['username']
+              };
+              i++;
+            }
+            return d.resolve(result);
+          };
+        };
+        return $.when(runQuery()).done(function() {
+          return console.log('getOfflineUSersFromLocal transaction completed');
+        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:user:model", function() {
@@ -94,8 +141,14 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);
     });
-    return App.reqres.setHandler("get:user:by:division:local", function(division) {
+    App.reqres.setHandler("get:user:by:division:local", function(division) {
       return API.getUsersFromLocal(division);
+    });
+    App.reqres.setHandler("get:loggedin:user:collection", function() {
+      return API.getLoggedinUsers();
+    });
+    return App.reqres.setHandler("get:offlineUsers:local", function() {
+      return API.getOfflineUSersFromLocal();
     });
   });
 });

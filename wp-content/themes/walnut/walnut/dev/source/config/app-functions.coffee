@@ -23,7 +23,7 @@ define ['underscore', 'underscorestring'], ( _) ->
 		getUserRole : (username)->
 			runQuery = ->
 				$.Deferred (d)->
-					_.userDb.transaction (tx)->
+					_.db.transaction (tx)->
 						tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d))
 			
 			onSuccess = (d)->
@@ -43,6 +43,7 @@ define ['underscore', 'underscorestring'], ( _) ->
 
 		#Get question_type from wp_postmeta
 		getQuestionType : (content_piece_id)->
+			question_type = ''
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
@@ -50,8 +51,9 @@ define ['underscore', 'underscorestring'], ( _) ->
 
 			onSuccess = (d)->
 				(tx, data)->
-					meta_value = data.rows.item(0)['meta_value']
-					d.resolve(meta_value)
+					if data.rows.length isnt 0
+						question_type = data.rows.item(0)['meta_value']
+					d.resolve(question_type)
 
 			$.when(runQuery()).done ->
 				console.log 'getQuestionType transaction completed'

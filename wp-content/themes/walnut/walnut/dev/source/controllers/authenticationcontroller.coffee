@@ -17,12 +17,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			switch @platform
 				when 'Desktop'
 					if @isOnline
-						@onlineAuth()
-					
+						@onlineWebAuth()
 					else
-						response =
-							error : 'Connection could not be established. Please try again.'
-						@success response	
+						@onConnectionError()	
 
 				when 'Mobile'
 					if @isOfflineLoginEnabled()
@@ -32,71 +29,108 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 						if @isOnline
 							@onlineMobileAuth()
 						else
-							response = 
-								error : 'Connection could not be established. Please try again.'
-							@success response	
+							@onConnectionError()	
 
 
-
-		onlineAuth:->
+		# server login request for website
+		onlineWebAuth:->
 			$.post AJAXURL + '?action=get-user-profile', data: @data, @success, 'json'
 
 
+		# when network connection not available 
+		onConnectionError:->
+			response = 
+				error : 'Connection could not be established. Please try again.'
+			@success response
 
+
+		# success response
+		onSuccessResponse:->
+			response = 
+				success : true
+			@success response
+
+
+		# error response
+		onErrorResponse:(msg)->
+			response = 
+				error : ''+msg
+			@success response	
+
+
+		# check if offline login is enabled
 		isOfflineLoginEnabled:->
-			if($('#checkbox2').is(':checked'))
+			if($('#offline').is(':checked'))
 				true
 			else false
 
 
+		# server login request for mobile
 		onlineMobileAuth:->
 			$.post AJAXURL + '?action=get-user-app-profile', 
 				   data: @data,
 				   (resp)=>
-				   		if resp.error
-				   			response = 
-				   				error : resp.error
-				   			@success response	
+				   		if resp.login_details.error
+				   			@onErrorResponse(resp.login_details.error)	
 
 				   		else
-				   			response = 
-				   				success : true
-				   			console.log 'Success response'
-				   			console.log resp	
-
-				   			user = @isExistingUser(@data.txtusername)
-				   			user.done (d)=>
-				   				if d.exists is true
-				   					@updateExistingUserPassword()
-				   				else
-				   					@inputNewUser()
-
-				   				@success response	
+				   			# if the blog id is null, then the app is installed
+				   			# for the first time.
+				   			if _.getBlogID() is null
+				   				@initialAppLogin(resp)
+				   			else
+				   				@authenticateUserBlogId(resp)
 				   	,
 				   	'json'	
 
-
+		
+		# offline login for mobile
 		offlineMobileAuth:->
 			user = @isExistingUser(@data.txtusername)
 			user.done (d)=>
 				if d.exists is true
 					if d.password is @data.txtpassword
-						response = 
-							success : true
-						@success response
+						@onSuccessResponse()
 
 					else
-						response = 
-							error : 'Invalid Password'
-						@success response		
+						@onErrorResponse('Invalid Password')		
 
 				else
-					response = 
-						error : 'No such user has previously logged in'
-					@success response
-						
+					@onErrorResponse('No such user has previously logged in')
 
 
+		# when the app is installed for the first time
+		initialAppLogin:(server_resp)->
+			resp = server_resp.blog_details
+			_.setBlogID(resp.blog_id)
+			_.setBlogName(resp.blog_name)
+
+			@saveUpdateUserDetails(server_resp)
+			@onSuccessResponse()
+
+		
+		# compare users blog id to that of the locally saved blog id
+		authenticateUserBlogId:(server_resp)->
+			resp = server_resp.blog_details
+
+			if resp.blog_id isnt _.getBlogID()
+				@onErrorResponse('The app is configured for school '+_.getBlogName())
+			else
+				@saveUpdateUserDetails(server_resp)
+				@onSuccessResponse()
+
+
+		# save new user or update existing user 
+		saveUpdateUserDetails:(resp)->
+			user = @isExistingUser(@data.txtusername)
+			user.done (d)=>
+				if d.exists is true
+				   	@updateExistingUserPassword(resp)
+				else
+				  	@inputNewUser(resp)
+
+
+		# check if user exists in local database
 		isExistingUser:(username)->
 			data = 
 				exists: false
@@ -104,7 +138,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			runQuery = ->
 				$.Deferred (d)->
-					_.userDb.transaction (tx)->
+					_.db.transaction (tx)->
 						tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
@@ -116,18 +150,19 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 							data.exists = true
 							data.password = r['password']
 						i++
-
 					d.resolve(data)
 
 			$.when(runQuery()).done (data)->
 				console.log 'isExistingUser transaction completed'
 			.fail _.failureHandler
 
-
 		
-		inputNewUser:->
-			_.userDb.transaction((tx)=>
-				tx.executeSql('INSERT INTO USERS (username, password, user_role) VALUES (?, ?, "")', [@data.txtusername, @data.txtpassword])
+		# insert new user
+		inputNewUser:(response)->
+			resp = response.login_details
+
+			_.db.transaction((tx)=>
+				tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) VALUES (?, ?, ?, ?)', [resp.ID, @data.txtusername, @data.txtpassword, resp.roles[0]])
 
 			,_.transactionErrorhandler 
 			,(tx)->
@@ -135,16 +170,17 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			)
 
 
+		# update existing user
+		updateExistingUserPassword:(response)->
+			resp = response.login_details
 
-		updateExistingUserPassword:->
-			_.userDb.transaction((tx)=>
-				tx.executeSql("UPDATE USERS SET password=? where username=?", [@data.txtpassword, @data.txtusername])
+			_.db.transaction((tx)=>
+				tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [@data.txtusername, @data.txtpassword, resp.ID])
 
 			,_.transactionErrorhandler 
 			,(tx)->
-				console.log 'Success: Updated user password'
+				console.log 'Success: Updated user details'
 			)
-
 
 
 

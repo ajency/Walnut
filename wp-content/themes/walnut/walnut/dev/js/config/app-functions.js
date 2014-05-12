@@ -16,7 +16,7 @@ define(['underscore', 'underscorestring'], function(_) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
-          return _.userDb.transaction(function(tx) {
+          return _.db.transaction(function(tx) {
             return tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
@@ -40,7 +40,8 @@ define(['underscore', 'underscorestring'], function(_) {
       }).fail(_.failureHandler);
     },
     getQuestionType: function(content_piece_id) {
-      var onSuccess, runQuery;
+      var onSuccess, question_type, runQuery;
+      question_type = '';
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
@@ -50,9 +51,10 @@ define(['underscore', 'underscorestring'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var meta_value;
-          meta_value = data.rows.item(0)['meta_value'];
-          return d.resolve(meta_value);
+          if (data.rows.length !== 0) {
+            question_type = data.rows.item(0)['meta_value'];
+          }
+          return d.resolve(question_type);
         };
       };
       return $.when(runQuery()).done(function() {
