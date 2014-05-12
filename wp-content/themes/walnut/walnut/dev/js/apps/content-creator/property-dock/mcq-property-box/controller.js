@@ -47,7 +47,9 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
-        return this.model.save();
+        if (this.model.hasChanged()) {
+          return console.log(this.model.get('elements'));
+        }
       };
 
       return Controller;

@@ -17,6 +17,8 @@ define ['app'
             model: Option.OptionModel
 
 
+
+
         API =
             createOption: (data)->
                 option = new Option.OptionModel
@@ -26,9 +28,9 @@ define ['app'
                 option
 
             createOptionCollection: (data = {})->
-                optionCollection = new Option.OptionCollection
                 console.log 'option collection'
                 console.log data
+                optionCollection = new Option.OptionCollection
                 optionCollection.set data
 
 

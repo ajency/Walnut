@@ -35,8 +35,21 @@ define ['app'
                     mcq_model: model
 
             onClose: ->
-                @model.save()
-                #localStorage.setItem 'ele' + @model.get('meta_id'), JSON.stringify(@model.toJSON())
+                if @model.hasChanged()
+
+                    console.log @model.get('elements')
+
+                    #@model.save(null, wait:true)
+#                    elementsModels= @model.get('elements').models
+#                    elements= _.map(elementsModels, (m)-> m.toJSON()).values()
+#                    optionCollection = App.request "create:new:option:collection", elements
+#                    @model.set 'elements', optionCollection
+
+
+
+
+
+        #localStorage.setItem 'ele' + @model.get('meta_id'), JSON.stringify(@model.toJSON())
 
 
         App.commands.setHandler "show:mcq:properties", (options)->

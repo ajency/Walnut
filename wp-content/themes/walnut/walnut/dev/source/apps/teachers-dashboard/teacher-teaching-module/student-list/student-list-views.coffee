@@ -27,7 +27,7 @@ define ['app'],(App)->
 
 		class StudentsEmptyView extends Marionette.ItemView
 
-			template: '<div class="row single tiles white no-margin">    
+			template: '<div class="row no-margin">
 			                <div class="col-md-8 col-xs-8 no-padding">
 			                  <div class="text-center">
 			                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">No Students in Class</h4>

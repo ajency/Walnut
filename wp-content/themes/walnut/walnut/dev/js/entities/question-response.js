@@ -11,15 +11,17 @@ define(["app", 'backbone'], function(App, Backbone) {
         return QuestionResponseModel.__super__.constructor.apply(this, arguments);
       }
 
+      QuestionResponseModel.prototype.idAttribute = 'ref_id';
+
       QuestionResponseModel.prototype.defaults = {
         collection_id: 0,
-        content_piece_id: 0,
-        date_created: '',
-        date_modified: '',
-        total_time: 0,
+        content_piece_id: '',
+        division: 0,
         question_response: [],
-        time_started: '',
-        time_completed: ''
+        total_time: 0,
+        start_date: '',
+        end_date: '',
+        status: ''
       };
 
       QuestionResponseModel.prototype.name = 'question-response';
@@ -67,13 +69,28 @@ define(["app", 'backbone'], function(App, Backbone) {
         var questionResponse;
         questionResponse = new QuestionResponseModel(data);
         return questionResponse;
+      },
+      updateQuestionResponseLogs: function(refID) {
+        var connection_resp;
+        return connection_resp = $.middle_layer(AJAXURL + '?action=update-question-response-logs', {
+          ref_id: refID
+        }, (function(_this) {
+          return function(response) {
+            if (response.error) {
+              return console.log('some error occured while saving question logs for refID: ' + refID);
+            }
+          };
+        })(this));
       }
     };
     App.reqres.setHandler("get:question:response:collection", function(params) {
       return API.getAllQuestionResponses(params);
     });
-    return App.reqres.setHandler("save:question:response", function(qID) {
+    App.reqres.setHandler("save:question:response", function(qID) {
       return API.saveQuestionResponse(qID);
+    });
+    return App.reqres.setHandler("update:question:response:logs", function(refID) {
+      return API.updateQuestionResponseLogs(refID);
     });
   });
 });

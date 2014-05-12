@@ -1,51 +1,52 @@
-define ['app'],(App)->
+define ['app'], (App)->
+    App.module "ContentCreator.PropertyDock.McqPropertyBox.Views",
+    (Views, App, Backbone, Marionette, $, _)->
+        class GridRow extends Marionette.ItemView
 
-	App.module "ContentCreator.PropertyDock.McqPropertyBox.Views",
-	(Views,App,Backbone,Marionette,$,_)->
+            className: 'row'
 
-		class GridRow extends Marionette.ItemView
-
-			className: 'row'
-
-			template : '<div class="col-sm-4"><label>{{optionNo}}</label></div>
-						<div class="col-sm-8">
-							<input data-id="{{optionNo}}" type="text" value="{{marks}}" class="form-control">
-						</div>						
-						'
-						
-
-			events : 
-				'blur input': (evt)-> @model.set 'marks',$(evt.target).val()
+            template: '<div class="col-sm-4"><label>{{optionNo}}</label></div>
+            						<div class="col-sm-8">
+            							<input data-id="{{optionNo}}" type="text" value="{{marks}}" class="form-control">
+            						</div>
+            						'
 
 
-		class Views.MarksView extends Marionette.CompositeView
+            events:
+                'blur input': (evt)->
+                    @model.set 'marks', $(evt.target).val()
 
-			template : '<div class="row">
-							<div class="col-sm-4"><div class="text-right">Option</div></div>
-							<div class="col-sm-8"><div>Marks</div></div>	
-						</div>	
-						<div class="items">
-						</div>'
 
-			itemView : GridRow
+        class Views.MarksView extends Marionette.CompositeView
 
-			itemViewContainer : 'div.items'
+            template: '<div class="row">
+            							<div class="col-sm-4"><div class="text-right">Option</div></div>
+            							<div class="col-sm-8"><div>Marks</div></div>
+            						</div>
+            						<div class="items">
+            						</div>'
 
-			initialize:(options)->
-				@mcqModel = options.mcq_model
+            itemView: GridRow
 
-			onRender:->
-				console.log @collection
+            itemViewContainer: 'div.items'
 
-			onShow:->
-				# totalMarks = @mcqModel.get('marks') 
-				# totalMarks = 0
-				_.each @mcqModel.get('correct_answer') ,(option)=>
-					@$el.find('input[data-id="'+option+'"]').prop 'disabled',false
-					# totalMarks = totalMarks + parseInt @mcqModel.get('elements').get(option).get('marks')
-				_.each _.difference(_.range(1,@mcqModel.get('optioncount')+1),@mcqModel.get('correct_answer')),(option)=>
-					@$el.find('input[data-id="'+option+'"]').val(0).prop 'disabled',true
-				# console.log totalMarks
+            initialize: (options)->
+                @mcqModel = options.mcq_model
+
+            onRender: ->
+                console.log @collection
+
+            onShow: ->
+                console.log @mcqModel
+                # totalMarks = @mcqModel.get('marks')
+                # totalMarks = 0
+                _.each @mcqModel.get('correct_answer'), (option)=>
+                    @$el.find('input[data-id="' + option + '"]').prop 'disabled', false
+                # totalMarks = totalMarks + parseInt @mcqModel.get('elements').get(option).get('marks')
+                _.each _.difference(_.range(1, @mcqModel.get('optioncount') + 1),
+                  @mcqModel.get('correct_answer')), (option)=>
+                    @$el.find('input[data-id="' + option + '"]').val(0).prop 'disabled', true
+# console.log totalMarks
 
 
 

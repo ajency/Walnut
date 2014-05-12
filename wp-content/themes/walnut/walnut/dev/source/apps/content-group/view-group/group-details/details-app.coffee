@@ -1,132 +1,126 @@
 define ['app'
-		'controllers/region-controller'
-		'text!apps/content-group/view-group/group-details/templates/group-details.html'], (App, RegionController, collectionDetailsTpl)->
+        'controllers/region-controller'
+        'text!apps/content-group/view-group/group-details/templates/group-details.html'], (App, RegionController, collectionDetailsTpl)->
+    App.module "CollecionDetailsApp.Controller", (Controller, App)->
+        class Controller.ViewCollecionDetailsController extends RegionController
 
-	App.module "CollecionDetailsApp.Controller", (Controller, App)->
+            initialize: (opts)->
 
-		class Controller.ViewCollecionDetailsController extends RegionController
+                # for take-class module the template changes a bit
+                # so based on this value (@mode) we set the template additional stuff
+                {@model,@mode,@questionResponseCollection,@textbookNames}= opts
 
-			initialize :(opts)->
+                @startTime = '';
+                @endTime = '';
 
-				# for take-class module the template changes a bit
-				# so based on this value (@mode) we set the template additional stuff
+                @view = view = @_getCollectionDetailsView @model
 
-				{@model,@mode,@questionResponseCollection,@textbookNames}= opts
+                @show view, (loading: true, entities: [@textbookNames])
 
-				@startTime = '';
-				@endTime = '';
+                @listenTo view, 'start:teaching:module', =>
+                    @region.trigger "start:teaching:module"
 
-				@view= view = @_getCollectionDetailsView @model
+                @listenTo @model, 'training:module:started', @trainingModuleStarted
 
-				@show view, (loading:true, entities: [@textbookNames])
+                @listenTo @model, 'training:module:stopped', @trainingModuleStopped
 
-				@listenTo view, 'start:teaching:module', => @region.trigger "start:teaching:module"
+            _getCollectionDetailsView: (model)->
+                terms = model.get 'term_ids'
+                console.log terms
+                console.log @textbookNames
 
-				@listenTo @model, 'training:module:started', @trainingModuleStarted
+                new CollectionDetailsView
+                    model: model
+                    mode: @mode
 
-				@listenTo @model, 'training:module:stopped', @trainingModuleStopped
-				
-			_getCollectionDetailsView : (model)->
+                    templateHelpers:
+                        getTextbookName: =>
+                            textbook = @textbookNames.get terms.textbook
+                            texbookName = textbook.get 'name' if textbook?
 
-				terms= model.get 'term_ids'
-				console.log terms
-				console.log @textbookNames
-
-				new CollectionDetailsView
-					model 	: model 								
-					mode 	: @mode
-
-					templateHelpers:
-
-						getTextbookName:=>
-							textbook= @textbookNames.get terms.textbook
-							texbookName = textbook.get 'name' if textbook?
-
-						getChapterName:=>
-							chapter= @textbookNames.get terms.chapter
-							chapterName = chapter.get 'name' if chapter?
+                        getChapterName: =>
+                            chapter = @textbookNames.get terms.chapter
+                            chapterName = chapter.get 'name' if chapter?
 
 
-						startScheduleButton:=>
-							
-							actionButtons= ''
+                        startScheduleButton: =>
+                            actionButtons = ''
 
-							allContentPieces= @model.get 'content_pieces'
-							answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
-							unanswered = _.difference allContentPieces, answeredPieces
+                            allContentPieces = @model.get 'content_pieces'
 
-							if _.size(unanswered) >0 and @mode isnt 'training'
-								actionButtons= '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
-									<i class="fa fa-play"></i> Start
-								</button>'
-							actionButtons
+                            answeredPieces= @questionResponseCollection.where "status":"completed"
 
-			trainingModuleStarted:=>		
-				@startTime = moment().format();
-				@view.triggerMethod "display:time"
+                            answeredIDs = _.chain answeredPieces
+                                            .map (m)->m.toJSON()
+                                            .pluck 'content_piece_id'
+                                            .value()
 
+                            answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
 
-			trainingModuleStopped:=>		
-				@endTime = moment().format();
-				@view.triggerMethod "stop:training:module"
+                            unanswered = _.difference allContentPieces, answeredIDs
 
-		class CollectionDetailsView extends Marionette.ItemView
+                            if _.size(unanswered) > 0 and @mode isnt 'training'
+                                actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
+                                									<i class="fa fa-play"></i> Start
+                                								</button>'
+                            actionButtons
 
-			template 	: collectionDetailsTpl
-
-			className 	: 'tiles white grid simple vertical green'
-
-			events: 
-				'click #start-module' : 'startModule'
-				'click #stop-module' : 'stopModule'
+            trainingModuleStarted: =>
+                @startTime = moment().format();
+                @view.triggerMethod "display:time"
 
 
-			onShow:->
-				if _.size($('#timekeeper'))>0
-					@onDisplayTime()
+            trainingModuleStopped: =>
+                @endTime = moment().format();
+                @view.triggerMethod "stop:training:module"
 
-			serializeData:->
-				data = super()
-				data.takeClassModule= Marionette.getOption @, 'mode'
-				data
+        class CollectionDetailsView extends Marionette.ItemView
 
-			startModule:=>
+            template: collectionDetailsTpl
 
-				currentRoute = App.getCurrentRoute()
-				App.navigate currentRoute+"/question"
+            className: 'tiles white grid simple vertical green'
 
-				@model.trigger "start:module"
-				@trigger "start:teaching:module"
-
-			stopModule:=>
-				$('#timekeeper').timer('pause');
-
-				@$el.find '#stop-module'
-				.attr 'id','start-module'
-				.html '<i class="fa fa-play"></i> Resume '
-
-				@model.trigger "stop:module"
-
-			onDisplayTime:->
-
-				@$el.find '#start-module'
-				.attr 'id','stop-module'
-				.html '<i class="fa fa-pause"></i> Pause '
-
-				if not _.size($('#timekeeper'))>0
-					$("#header-left").after "<div id='timekeeper' style='display:none'></div>"
-					$('#timekeeper').timer('start');
-				else 
-					$('#timekeeper').timer('resume');
-
-				clock = setInterval @updateTime, 500
-
-			updateTime :=>
-				@$el.find '.timedisplay'
-				.html 'Elapsed Time: '+ $('#timekeeper').html()
+            events:
+                'click #start-module': 'startModule'
+                'click #stop-module': 'stopModule'
 
 
-		# set handlers
-		App.commands.setHandler "show:viewgroup:content:group:detailsapp", (opt = {})->
-			new Controller.ViewCollecionDetailsController opt		
+            onShow: ->
+                if _.size($('#timekeeper')) > 0
+                    @onDisplayTime()
+
+            serializeData: ->
+                data = super()
+                data.takeClassModule = Marionette.getOption @, 'mode'
+                data
+
+            startModule: =>
+                currentRoute = App.getCurrentRoute()
+                App.navigate currentRoute + "/question"
+
+                @model.trigger "start:module"
+                @trigger "start:teaching:module"
+
+            stopModule: =>
+                $('#timekeeper').timer('pause');
+
+                @model.trigger "stop:module"
+
+            onDisplayTime: ->
+                if not _.size($('#timekeeper')) > 0
+                    $("#header-left").after "<div id='timekeeper' style='display:none'></div>"
+                    $('#timekeeper').timer('start');
+                else
+                    $('#timekeeper').timer('resume');
+
+                clock = setInterval @updateTime, 500
+
+            updateTime: =>
+                @$el.find '.timedisplay'
+                .html 'Elapsed Time: ' + $('#timekeeper').html()
+
+
+        # set handlers
+        App.commands.setHandler "show:viewgroup:content:group:detailsapp", (opt = {})->
+            new Controller.ViewCollecionDetailsController opt
 

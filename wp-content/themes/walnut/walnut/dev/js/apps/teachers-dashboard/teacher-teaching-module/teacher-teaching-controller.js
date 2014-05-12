@@ -30,7 +30,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           'role': 'student',
           'division': this.division
         });
-        questionResponseModel = App.request("save:question:response", '');
         App.execute("when:fetched", questionResponseCollection, (function(_this) {
           return function() {
             return _this._getOrCreateModel(contentPiece.get('ID'));
@@ -48,7 +47,10 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
-        return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
+        this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
+        return this.listenTo(this.layout, "close", function() {
+          return console.log('test close layout');
+        });
       };
 
       TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
@@ -78,16 +80,26 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
+        var modelData;
         questionResponseModel = questionResponseCollection.findWhere({
           'content_piece_id': content_piece_id.toString()
         });
-        if (!questionResponseModel) {
-          questionResponseModel = App.request("save:question:response", '');
-          questionResponseModel.set({
+        console.log(this.display_mode);
+        if (questionResponseModel) {
+          if (this.display_mode === 'class-mode') {
+            App.request("update:question:response:logs", questionResponseModel.get('ref_id'));
+          }
+        } else {
+          modelData = {
             'collection_id': contentGroupModel.get('id'),
             'content_piece_id': content_piece_id,
             'division': this.division
-          });
+          };
+          questionResponseModel = App.request("save:question:response", '');
+          questionResponseModel.set(modelData);
+          if (this.display_mode === 'class-mode') {
+            questionResponseModel.save();
+          }
         }
         return questionResponseModel;
       };

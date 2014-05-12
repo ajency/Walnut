@@ -13,11 +13,11 @@ function fetch_divisions() {
 
 add_action('wp_ajax_get-divisions', 'fetch_divisions');
 
-function fetch_single_division() {
+function ajax_fetch_single_division() {
     
-    $data= get_single_division($_GET['id']);
+    $data= fetch_single_division($_GET['id']);
     
     wp_send_json($data);
 }
 
-add_action('wp_ajax_read-division', 'fetch_single_division');
+add_action('wp_ajax_read-division', 'ajax_fetch_single_division');

@@ -62,11 +62,17 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
             })(this),
             startScheduleButton: (function(_this) {
               return function() {
-                var actionButtons, allContentPieces, answeredPieces, unanswered;
+                var actionButtons, allContentPieces, answeredIDs, answeredPieces, unanswered;
                 actionButtons = '';
                 allContentPieces = _this.model.get('content_pieces');
+                answeredPieces = _this.questionResponseCollection.where({
+                  "status": "completed"
+                });
+                answeredIDs = _.chain(answeredPieces).map(function(m) {
+                  return m.toJSON();
+                }).pluck('content_piece_id').value();
                 answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
-                unanswered = _.difference(allContentPieces, answeredPieces);
+                unanswered = _.difference(allContentPieces, answeredIDs);
                 if (_.size(unanswered) > 0 && _this.mode !== 'training') {
                   actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button>';
                 }
@@ -132,13 +138,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionDetailsView.prototype.stopModule = function() {
         $('#timekeeper').timer('pause');
-        this.$el.find('#stop-module').attr('id', 'start-module').html('<i class="fa fa-play"></i> Resume ');
         return this.model.trigger("stop:module");
       };
 
       CollectionDetailsView.prototype.onDisplayTime = function() {
         var clock;
-        this.$el.find('#start-module').attr('id', 'stop-module').html('<i class="fa fa-pause"></i> Pause ');
         if (!_.size($('#timekeeper')) > 0) {
           $("#header-left").after("<div id='timekeeper' style='display:none'></div>");
           $('#timekeeper').timer('start');

@@ -61,11 +61,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         this.questionResponseModel.set({
           'question_response': studResponse
         });
-        return this.questionResponseModel.save(null, {
-          wait: true,
-          success: this.successFn,
-          error: this.errorFn
-        });
+        return this.questionResponseModel.save();
       };
 
       return ChorusOptionsController;
