@@ -26,7 +26,7 @@ define(['app'], function(App) {
         return StudentsEmptyView.__super__.constructor.apply(this, arguments);
       }
 
-      StudentsEmptyView.prototype.template = '<div class="row single tiles white no-margin"> <div class="col-md-8 col-xs-8 no-padding"> <div class="text-center"> <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">No Students in Class</h4> <div class="clearfix"></div> </div> </div> </div>';
+      StudentsEmptyView.prototype.template = '<div class="row no-margin"> <div class="col-md-8 col-xs-8 no-padding"> <div class="text-center"> <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">No Students in Class</h4> <div class="clearfix"></div> </div> </div> </div>';
 
       return StudentsEmptyView;
 
@@ -41,7 +41,7 @@ define(['app'], function(App) {
 
       StudentsList.prototype.className = 'studentList m-t-35';
 
-      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-forward"></i> Next Question </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-pause"></i> Pause </button> </div> <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20"> <button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-t-20" id="students-list"></div>';
+      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-forward"></i> Next Question </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20"> <button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-t-20" id="students-list"></div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
@@ -53,10 +53,7 @@ define(['app'], function(App) {
         'click .tiles.single.selectable': 'selectStudent',
         'click #right-answer': 'addToCorrectList',
         'click #wrong-answer': 'removeFromCorrectList',
-        'click #question-done': 'questionCompleted',
-        'click #pause-session': function() {
-          return this.trigger("goto:previous:route");
-        }
+        'click #question-done': 'questionCompleted'
       };
 
       StudentsList.prototype.serializeData = function() {

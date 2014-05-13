@@ -46,6 +46,7 @@ define(['app'], function(App) {
       };
 
       MarksView.prototype.onShow = function() {
+        console.log(this.mcqModel);
         _.each(this.mcqModel.get('correct_answer'), (function(_this) {
           return function(option) {
             return _this.$el.find('input[data-id="' + option + '"]').prop('disabled', false);

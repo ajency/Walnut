@@ -30,7 +30,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           'role': 'student',
           'division': this.division
         });
-        questionResponseModel = App.request("save:question:response", '');
         App.execute("when:fetched", questionResponseCollection, (function(_this) {
           return function() {
             return _this._getOrCreateModel(contentPiece.get('ID'));
@@ -41,6 +40,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           loading: true,
           entities: [contentGroupModel, studentCollection, questionsCollection, questionResponseCollection, questionResponseModel, contentPiece]
         });
+        this.timerObject = new Backbone.Wreqr.RequestResponse();
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
         if (this.display_mode !== 'training') {
           this.listenTo(this.layout, "show", this._showStudentsListView(questionResponseModel));
@@ -48,7 +48,10 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
-        return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
+        this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
+        return this.listenTo(this.layout, "close", function() {
+          return console.log('test close layout');
+        });
       };
 
       TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
@@ -78,16 +81,25 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
+        var modelData;
         questionResponseModel = questionResponseCollection.findWhere({
           'content_piece_id': content_piece_id.toString()
         });
-        if (!questionResponseModel) {
-          questionResponseModel = App.request("save:question:response", '');
-          questionResponseModel.set({
+        if (questionResponseModel) {
+          if (this.display_mode === 'class_mode') {
+            App.request("update:question:response:logs", questionResponseModel.get('ref_id'));
+          }
+        } else {
+          modelData = {
             'collection_id': contentGroupModel.get('id'),
             'content_piece_id': content_piece_id,
             'division': this.division
-          });
+          };
+          questionResponseModel = App.request("save:question:response", '');
+          questionResponseModel.set(modelData);
+          if (this.display_mode === 'class_mode') {
+            questionResponseModel.save();
+          }
         }
         return questionResponseModel;
       };
@@ -98,9 +110,9 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
             return App.execute("show:teacher:teaching:module:description", {
               region: _this.layout.moduleDetailsRegion,
               model: contentGroupModel,
-              textbookNames: _this.textbookNames,
-              classID: _this.classID,
-              division: _this.division
+              timerObject: _this.timerObject,
+              questionResponseModel: questionResponseModel,
+              questionResponseCollection: questionResponseCollection
             });
           };
         })(this));
@@ -109,7 +121,11 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       TeacherTeachingController.prototype._showQuestionDisplayView = function(model) {
         return App.execute("show:single:question:app", {
           region: this.layout.questionsDetailsRegion,
-          model: model
+          model: model,
+          textbookNames: this.textbookNames,
+          questionResponseModel: questionResponseModel,
+          timerObject: this.timerObject,
+          display_mode: this.display_mode
         });
       };
 
@@ -123,13 +139,15 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
                 region: _this.layout.studentsListRegion,
                 questionResponseModel: questionResponseModel,
                 studentCollection: studentCollection,
-                display_mode: _this.display_mode
+                display_mode: _this.display_mode,
+                timerObject: _this.timerObject
               });
             } else if (question_type === 'chorus') {
               return App.execute("show:single:question:chorus:options:app", {
                 region: _this.layout.studentsListRegion,
                 questionResponseModel: questionResponseModel,
-                display_mode: _this.display_mode
+                display_mode: _this.display_mode,
+                timerObject: _this.timerObject
               });
             }
           };

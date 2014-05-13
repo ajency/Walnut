@@ -85,9 +85,14 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       };
 
       ContentDisplayView.prototype.onShow = function() {
-        var question, responseCollection, responseQuestionIDs, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
+        var completedResponses, question, responseCollection, responseQuestionIDs, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
         responseCollection = Marionette.getOption(this, 'responseCollection');
-        responseQuestionIDs = responseCollection.pluck('content_piece_id');
+        completedResponses = responseCollection.where({
+          'status': 'completed'
+        });
+        responseQuestionIDs = _.chain(completedResponses).map(function(m) {
+          return m.toJSON();
+        }).pluck('content_piece_id').value();
         if (Marionette.getOption(this, 'mode') === 'training') {
           _ref = this.$el.find('.contentPiece');
           _results = [];

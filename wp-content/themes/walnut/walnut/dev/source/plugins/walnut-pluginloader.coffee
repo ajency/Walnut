@@ -24,6 +24,6 @@ define [
 			'select2'
 			'datepicker'
 			'timepicker'
-			'jquerytimer'
+			'timecircles'
 			'jquery_listnav'
 		], ->

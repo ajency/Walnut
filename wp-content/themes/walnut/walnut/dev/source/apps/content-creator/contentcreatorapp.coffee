@@ -1,92 +1,95 @@
 define ['app'
-		'controllers/region-controller'
-		'apps/content-creator/element-box/elementboxapp'
-		'apps/content-creator/content-builder/app'
-		'apps/content-creator/property-dock/controller'
-		],(App,RegionController)->
+        'controllers/region-controller'
+        'apps/content-creator/element-box/elementboxapp'
+        'apps/content-creator/content-builder/app'
+        'apps/content-creator/property-dock/controller'
+        'apps/content-creator/options-bar/options-bar-app'], (App, RegionController)->
 
-			
-			App.module "ContentCreator", (ContentCreator,App,Backbone,Marionette,$,_)->	
+    App.module "ContentCreator", (ContentCreator, App, Backbone, Marionette, $, _)->
+        ContentCreator.closequestionelementproperty = true
+        ContentCreator.closequestionelements = true
+        ContentCreator.closequestioneproperty = true
 
-				ContentCreator.closequestionelementproperty = true
-				ContentCreator.closequestionelements = true
-				ContentCreator.closequestioneproperty = true
+        # class ContentCreatorRouter extends Marionette.AppRouter
 
-				# class ContentCreatorRouter extends Marionette.AppRouter
+        # 	appRoutes :
+        # 		''					 : 'showContentCreator'
 
-				# 	appRoutes : 
-				# 		''					 : 'showContentCreator'
-
-				# Controller = 
-				# 	showContentCreator :->
-				# 		new ContentCreatorController
-				# 			region 		: App.mainContentRegion
+        # Controller =
+        # 	showContentCreator :->
+        # 		new ContentCreatorController
+        # 			region 		: App.mainContentRegion
 
 
-				# ContentCreator.on "start", ->
-				# 	new ContentCreatorRouter
-				# 			controller : Controller 
+        # ContentCreator.on "start", ->
+        # 	new ContentCreatorRouter
+        # 			controller : Controller
 
-				class ContentCreatorController extends RegionController
+        class ContentCreatorController extends RegionController
 
-					initialize : (options)->
+            initialize: (options)->
+                breadcrumb_items =
+                    'items': [
+                        {'label': 'Dashboard', 'link': 'javascript://'},
+                        {'label': 'Content Management', 'link': 'javascript:;'},
+                        {'label': 'Content Creator', 'link': 'javascript:;', 'active': 'active'}
+                    ]
 
+                App.execute "update:breadcrumb:model", breadcrumb_items
 
-						breadcrumb_items = 'items':[
-							{'label':'Dashboard','link':'javascript://'},
-							{'label':'Content Management','link':'javascript:;'},
-							{'label':'Content Creator','link':'javascript:;','active':'active'}
-						]
-							
-						App.execute "update:breadcrumb:model", breadcrumb_items
+                # get the main layout for the content creator
+                @layout = @_getContentCreatorLayout()
 
-						# get the main layout for the content creator
-						@layout = @_getContentCreatorLayout()
+                # eventObj = App.createEventObject()
 
-						# eventObj = App.createEventObject()
+                # listen to "show" event of the layout and start the
+                # elementboxapp passing the region
+                @listenTo @layout, 'show', =>
 
-						# listen to "show" event of the layout and start the 
-						# elementboxapp passing the region 
-						@listenTo @layout,'show',=>
-							App.execute "show:element:box", 
-										region : @layout.elementBoxRegion
+                    App.execute "show:options:bar",
+                        region: @layout.optionsBarRegion
 
-							App.execute "show:content:builder",
-										region : @layout.contentBuilderRegion
-										
-							App.execute "show:property:dock",
-										region : @layout.PropertyRegion
-						# show the layout
-						@show @layout
+                    App.execute "show:element:box",
+                        region: @layout.elementBoxRegion
 
-					_getContentCreatorLayout:->
-						new ContentCreator.ContentCreatorLayout
+                    App.execute "show:content:builder",
+                        region: @layout.contentBuilderRegion
 
+                    App.execute "show:property:dock",
+                        region: @layout.PropertyRegion
 
-				class ContentCreator.ContentCreatorLayout extends Marionette.Layout 
+                # show the layout
+                @show @layout
 
-					className : ''
-
-					template : '<div class="page-title"> 
-									<h3>Add <span class="semi-bold">Question</span></h3>
-								</div>
-								<div class="creator">
-									<div class="tiles" id="toolbox"></div>
-									<div class="" id="content-builder"></div>
-									<div class="dock tiles" id="property-dock"></div>
-								</div>
-								'
-
-					regions : 
-						elementBoxRegion : '#toolbox'
-						contentBuilderRegion : '#content-builder' 
-						PropertyRegion : '#property-dock'
+            _getContentCreatorLayout: ->
+                new ContentCreator.ContentCreatorLayout
 
 
-				# create a command handler to start the content creator controller
-				App.commands.setHandler "show:content:creator", (options)->
-								new ContentCreatorController
-											region : options.region
+        class ContentCreator.ContentCreatorLayout extends Marionette.Layout
+
+            className: ''
+
+            template: '<div id="options-bar-region"></div>
+                                                                    <div class="page-title">
+                                                                      <h3>Add <span class="semi-bold">Question</span></h3>
+                                                                    </div>
+                                                                    <div class="creator">
+                                                                      <div class="tiles" id="toolbox"></div>
+                                                                      <div class="" id="content-builder"></div>
+                                                                      <div class="dock tiles" id="property-dock"></div>
+                                                                    </div>'
+
+            regions:
+                elementBoxRegion: '#toolbox'
+                contentBuilderRegion: '#content-builder'
+                PropertyRegion: '#property-dock'
+                optionsBarRegion: '#options-bar-region'
+
+
+        # create a command handler to start the content creator controller
+        App.commands.setHandler "show:content:creator", (options)->
+            new ContentCreatorController
+                region: options.region
 
 
 

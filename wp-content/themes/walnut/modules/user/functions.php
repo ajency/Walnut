@@ -19,12 +19,17 @@ function get_primary_blog_details($user_id=''){
 
     $blog =get_active_blog_for_user($user_id);
 
+    $blog_logo_id = get_blog_option($blog->blog_id, 'blog_logo');
+
+    switch_to_blog($blog->blog_id);
+
+    $blog_logo= wp_get_attachment_thumb_url($blog_logo_id);
+
     $blog_data= array(
         'blog_id'=> $blog->blog_id,
         'blog_name'=> $blog->blogname,
-        'blog_logo'=> ''
+        'blog_logo'=> $blog_logo
     );
-
     return $blog_data;
 }
 

@@ -47,7 +47,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype._changeMultipleAnswers = function(model, multiple) {
         if (!multiple) {
           model.set('correct_answer', []);
-          return this.view.triggerMethod("update:tick");
+          return this.layout.elementRegion.show(this.view);
         }
       };
 
@@ -145,11 +145,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         var correctAnswerArray;
         correctAnswerArray = this.layout.model.get('correct_answer');
         if (!this.layout.model.get('multiple') && correctAnswerArray.length) {
-          this.layout.model.set('correct_answer', [model.get('optionNo')]);
+          this.layout.model.set('correct_answer', [parseInt(model.get('optionNo'))]);
           console.log('in check');
           this.view.triggerMethod("update:tick");
         } else {
-          correctAnswerArray.push(model.get('optionNo'));
+          correctAnswerArray.push(parseInt(model.get('optionNo')));
         }
         correctAnswerArray.sort();
         return console.log(this.layout.model.get('correct_answer'));

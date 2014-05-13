@@ -40,8 +40,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       GroupController.prototype.startTeachingModule = function() {
-        var content_pieces, nextQuestion, responseQuestionIDs;
-        responseQuestionIDs = this.questionResponseCollection.pluck('content_piece_id');
+        var content_pieces, nextQuestion, responseCollection, responseQuestionIDs;
+        responseCollection = this.questionResponseCollection.where({
+          "status": "completed"
+        });
+        responseQuestionIDs = _.chain(responseCollection).map(function(m) {
+          return m.toJSON();
+        }).pluck('content_piece_id').value();
         content_pieces = this.model.get('content_pieces');
         nextQuestion = _.first(_.difference(content_pieces, responseQuestionIDs));
         return this.gotoTrainingModule(nextQuestion, 'class_mode');
