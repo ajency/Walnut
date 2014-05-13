@@ -5,7 +5,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		initialize : (options)->
 
-			{@data, @success} = options
+			{@url, @data, @success} = options
 
 			@platform = _.checkPlatform()
 
@@ -34,7 +34,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		# server login request for website
 		onlineWebAuth:->
-			$.post AJAXURL + '?action=get-user-profile', data: @data, @success, 'json'
+			$.post @url, data: @data, @success, 'json'
 
 
 		# when network connection not available 

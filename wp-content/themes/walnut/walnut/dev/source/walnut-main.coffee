@@ -47,6 +47,7 @@ require.config
 		jquery_listnav		: 'plugins/jquery-listnav'
 		video				: 'plugins/video'
 		serialize			: 'plugins/serialize'
+		timecircles 		: 'plugins/TimeCircles'
 
 
 	shim:
@@ -78,7 +79,8 @@ require.config
 		datepicker 		: ['jquery', 'bootstrap']
 		timepicker 		: ['jquery', 'bootstrap']
 		jquerytimer		: ['jquery']
-		jquery_listnav		: ['jquery']
+		jquery_listnav	: ['jquery']
+		timecircles 	: ['jquery']
 		app 			: ['plugins/walnut-pluginloader','config/walnut-configloader']
 
 	

@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) {
+define(["app", 'backbone', 'serialize'], function(App, Backbone) {
   return App.module("Entities.QuestionResponse", function(QuestionResponse, App, Backbone, Marionette, $, _) {
     var API, QuestionResponseCollection, QuestionResponseModel;
     QuestionResponseModel = (function(_super) {
@@ -11,15 +11,17 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
         return QuestionResponseModel.__super__.constructor.apply(this, arguments);
       }
 
+      QuestionResponseModel.prototype.idAttribute = 'ref_id';
+
       QuestionResponseModel.prototype.defaults = {
         collection_id: 0,
-        content_piece_id: 0,
-        date_created: '',
-        date_modified: '',
-        total_time: 0,
+        content_piece_id: '',
+        division: 0,
         question_response: [],
-        time_started: '',
-        time_completed: ''
+        time_taken: 0,
+        start_date: '',
+        end_date: '',
+        status: ''
       };
 
       QuestionResponseModel.prototype.name = 'question-response';
@@ -69,6 +71,22 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
         var questionResponse;
         questionResponse = new QuestionResponseModel(data);
         return questionResponse;
+      },
+      updateQuestionResponseLogs: function(refID) {
+        var connection_resp, options;
+        options = {
+          url: AJAXURL + '?action=update-question-response-logs',
+          data: refID,
+          success: (function(_this) {
+            return function(response) {
+              if (response.error) {
+                return console.log('some error occured while saving question logs for refID: ' + refID);
+              }
+            };
+          })(this)
+        };
+        connection_resp = App.request("get:auth:controller", options);
+        return connection_resp.authenticate();
       },
       getQuestionResponseFromLocal: function(collection_id, division) {
         var onSuccess, runMainQuery;
@@ -172,6 +190,9 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
     });
     App.reqres.setHandler("save:question:response", function(qID) {
       return API.saveQuestionResponse(qID);
+    });
+    App.reqres.setHandler("update:question:response:logs", function(refID) {
+      return API.updateQuestionResponseLogs(refID);
     });
     App.reqres.setHandler("get:question-response:local", function(collection_id, division) {
       return API.getQuestionResponseFromLocal(collection_id, division);

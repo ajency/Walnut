@@ -1,100 +1,101 @@
 define ['app'
-		'controllers/region-controller'
-		'text!apps/content-group/view-group/content-display/templates/content-display.html'], (App, RegionController, contentDisplayItemTpl)->
+        'controllers/region-controller'
+        'text!apps/content-group/view-group/content-display/templates/content-display.html'], (App, RegionController, contentDisplayItemTpl)->
+    App.module "CollectionContentDisplayApp.Controller", (Controller, App)->
+        class Controller.CollectionContentDisplayController extends RegionController
 
-	App.module "CollectionContentDisplayApp.Controller", (Controller, App)->
+            initialize: (opts)->
+                {model, @mode, questionResponseCollection,groupContentCollection} = opts
 
-		class Controller.CollectionContentDisplayController extends RegionController
+                @view = view = @_getCollectionContentDisplayView model, groupContentCollection, questionResponseCollection
+                @show view, (loading: true, entities: [groupContentCollection, questionResponseCollection])
 
-			initialize : (opts)->
+                @listenTo model, 'training:module:started', @trainingModuleStarted
 
-				{model, @mode, questionResponseCollection,groupContentCollection} = opts
-				
-				@view= view = @_getCollectionContentDisplayView model, groupContentCollection, questionResponseCollection
-				@show view, (loading:true, entities: [groupContentCollection,questionResponseCollection])
+                @listenTo @view, 'view:question:readonly', (questionID)=>
+                    @region.trigger 'goto:question:readonly', questionID
 
-				@listenTo model, 'training:module:started', @trainingModuleStarted
+            _getCollectionContentDisplayView: (model, collection, responseCollection) =>
+                new ContentDisplayView
+                    model: model
+                    collection: collection
+                    responseCollection: responseCollection
+                    mode: @mode
 
-				@listenTo @view, 'view:question:readonly', (questionID)=> 
-					@region.trigger 'goto:question:readonly', questionID
+            trainingModuleStarted: =>
+                @view.triggerMethod "apply:urls"
 
-			_getCollectionContentDisplayView :(model, collection, responseCollection) =>
-				new ContentDisplayView 
-					model: model
-					collection: collection
-					responseCollection: responseCollection
-					mode: @mode
+        class ContentItemView extends Marionette.ItemView
 
-			trainingModuleStarted:=>
-				@view.triggerMethod "apply:urls"
+            template: contentDisplayItemTpl
 
-		class ContentItemView extends Marionette.ItemView
-			
-			template 	: contentDisplayItemTpl
+            tagName: 'li'
 
-			tagName		: 'li'
-
-			className 	: ''
+            className: ''
 
 
-		class ContentDisplayView extends Marionette.CompositeView
+        class ContentDisplayView extends Marionette.CompositeView
 
-			template 	: '<ul class="cbp_tmtimeline"></ul>'
+            template: '<ul class="cbp_tmtimeline"></ul>'
 
-			itemView 	: ContentItemView
+            itemView: ContentItemView
 
-			itemViewContainer : 'ul.cbp_tmtimeline'
+            itemViewContainer: 'ul.cbp_tmtimeline'
 
-			className 	: 'col-md-10'
+            className: 'col-md-10'
 
-			id			: 'myCanvas-miki'
+            id: 'myCanvas-miki'
 
-			events:
-				'click .cbp_tmlabel.completed'	: 'viewQuestionReadOnly'
+            events:
+                'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
 
-			onShow:->
-				responseCollection= Marionette.getOption @, 'responseCollection'
-				responseQuestionIDs= responseCollection.pluck 'content_piece_id'
+            onShow: ->
+                responseCollection = Marionette.getOption @, 'responseCollection'
 
-				if Marionette.getOption(@, 'mode') is 'training'
-					for question in @$el.find '.contentPiece'
-						$ question
-						.find '.cbp_tmlabel'
-						.addClass 'completed' 
-						.css 'cursor','pointer'
+                completedResponses = responseCollection.where 'status': 'completed'
 
+                responseQuestionIDs = _.chain completedResponses
+                                        .map (m)->m.toJSON()
+                                        .pluck 'content_piece_id'
+                                        .value()
 
-				else
-					for question in @$el.find '.contentPiece'
-						if _.contains responseQuestionIDs, $(question).attr 'data-id'
-							$ question
-							.find '.cbp_tmlabel'
-							.addClass 'done completed'
-							.css 'cursor','pointer'
-
-			viewQuestionReadOnly:(e)=>
-				questionID= $ e.target
-							.closest '.contentPiece'
-							.attr 'data-id'
-
-				@trigger "view:question:readonly",questionID
-
-			onApplyUrls:->
-
-				currentRoute = App.getCurrentRoute()
-
-				url = '#'+currentRoute+'/'
-
-				for item in @$el.find('li .contentPiece')
-
-					itemurl = url+ $(item).attr 'data-id'
-
-					$(item).find 'a'
-					.attr 'href',itemurl
+                if Marionette.getOption(@, 'mode') is 'training'
+                    for question in @$el.find '.contentPiece'
+                        $ question
+                        .find '.cbp_tmlabel'
+                            .addClass 'completed'
+                                .css 'cursor', 'pointer'
 
 
+                else
+                    for question in @$el.find '.contentPiece'
+                        if _.contains responseQuestionIDs, $(question).attr 'data-id'
+                            $ question
+                            .find '.cbp_tmlabel'
+                                .addClass 'done completed'
+                                    .css 'cursor', 'pointer'
 
-		# set handlers
-		App.commands.setHandler "show:viewgroup:content:displayapp", (opt = {})->
-			new Controller.CollectionContentDisplayController opt		
+            viewQuestionReadOnly: (e)=>
+                questionID = $ e.target
+                .closest '.contentPiece'
+                    .attr 'data-id'
+
+                @trigger "view:question:readonly", questionID
+
+            onApplyUrls: ->
+                currentRoute = App.getCurrentRoute()
+
+                url = '#' + currentRoute + '/'
+
+                for item in @$el.find('li .contentPiece')
+
+                    itemurl = url + $(item).attr 'data-id'
+
+                    $(item).find 'a'
+                    .attr 'href', itemurl
+
+
+        # set handlers
+        App.commands.setHandler "show:viewgroup:content:displayapp", (opt = {})->
+            new Controller.CollectionContentDisplayController opt
 

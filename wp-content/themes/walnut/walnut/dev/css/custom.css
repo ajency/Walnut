@@ -1098,10 +1098,6 @@ p.mcq-option-text {
 .hashtags {
   font-size: 13px;
 }
-.cpTimer {
-  width: 190px;
-  margin: 0 auto;
-}
 .cpTimer h4 {
   color: #ffffff;
 }
@@ -1141,6 +1137,7 @@ p.mcq-option-text {
 }*/
 #textbooks.list .mix {
   background-color: #f3f3f3;
+  cursor: pointer;
 }
 #textbooks.list .mix:nth-child(2n+1) {
   background-color: #fbfbfb;
@@ -1283,9 +1280,6 @@ h3.time {
     *width: 20%;
   }
 }
-#myCanvas-miki .cbp_tmlabel {
-  cursor: pointer;
-}
 #myCanvas-miki .cbp_tmlabel a {
   color: #0aa699;
 }
@@ -1331,7 +1325,7 @@ h3.time {
   top: auto;
 }
 #myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel.view {
-  cursor: default;
+  cursor: pointer;
 }
 #myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel.done:after {
   border-right-color: #f3f3f3;

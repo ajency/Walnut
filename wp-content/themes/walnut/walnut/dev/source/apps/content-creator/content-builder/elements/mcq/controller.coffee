@@ -37,8 +37,8 @@ define ['app'
                 if not multiple
                     model.set 'correct_answer', []
                     # @renderElement()
-                    # @layout.elementRegion.show @view
-                    @view.triggerMethod "update:tick"
+                    @layout.elementRegion.show @view
+#                    @view.triggerMethod "update:tick"
 
 
 
@@ -144,14 +144,14 @@ define ['app'
             _optionChecked: (model)=>
                 correctAnswerArray = @layout.model.get('correct_answer')
                 if not @layout.model.get('multiple') and correctAnswerArray.length
-                    @layout.model.set 'correct_answer', [model.get('optionNo')]
+                    @layout.model.set 'correct_answer', [parseInt(model.get('optionNo'))]
                     console.log 'in check'
                     # @renderElement()
                     # @layout.elementRegion.show @view
                     @view.triggerMethod "update:tick"
 
                 else
-                    correctAnswerArray.push model.get('optionNo')
+                    correctAnswerArray.push parseInt(model.get('optionNo'))
                 correctAnswerArray.sort()
                 console.log @layout.model.get('correct_answer')
 

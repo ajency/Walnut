@@ -11,7 +11,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     }
 
     AuthenticationController.prototype.initialize = function(options) {
-      this.data = options.data, this.success = options.success;
+      this.url = options.url, this.data = options.data, this.success = options.success;
       this.platform = _.checkPlatform();
       return this.isOnline = _.isOnline();
     };
@@ -39,7 +39,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.onlineWebAuth = function() {
-      return $.post(AJAXURL + '?action=get-user-profile', {
+      return $.post(this.url, {
         data: this.data
       }, this.success, 'json');
     };

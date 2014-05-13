@@ -29,7 +29,8 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 			authenticateUser : (data)=>
 
-				authOptions = 
+				authOptions =
+					url : AJAXURL + '?action=get-user-profile'
 					data : data
 					success : (resp)=>
 						if resp.error

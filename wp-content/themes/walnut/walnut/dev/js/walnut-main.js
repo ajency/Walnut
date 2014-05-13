@@ -34,7 +34,8 @@ require.config({
     jquerytimer: 'plugins/timer.jquery',
     jquery_listnav: 'plugins/jquery-listnav',
     video: 'plugins/video',
-    serialize: 'plugins/serialize'
+    serialize: 'plugins/serialize',
+    timecircles: 'plugins/TimeCircles'
   },
   shim: {
     underscore: {
@@ -69,6 +70,7 @@ require.config({
     timepicker: ['jquery', 'bootstrap'],
     jquerytimer: ['jquery'],
     jquery_listnav: ['jquery'],
+    timecircles: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

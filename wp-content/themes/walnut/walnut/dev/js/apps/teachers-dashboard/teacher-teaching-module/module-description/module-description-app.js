@@ -15,92 +15,59 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ModuleDescriptionController.prototype.initialize = function(opts) {
         var model, view;
-        model = opts.model, this.textbookNames = opts.textbookNames, this.classID = opts.classID, this.division = opts.division;
-        if (this.division != null) {
-          this.divisionModel = App.request("get:division:by:id", this.division);
-        }
+        model = opts.model, this.questionResponseModel = opts.questionResponseModel, this.questionResponseCollection = opts.questionResponseCollection, this.timerObject = opts.timerObject;
         this.view = view = this._showModuleDescriptionView(model);
         this.show(view, {
-          loading: true,
-          entities: [this.textbookNames]
+          loading: true
         });
         return this.listenTo(this.view, "goto:previous:route", (function(_this) {
           return function() {
+            var elapsedTime;
+            if (_this.questionResponseModel.get('status') !== 'completed') {
+              elapsedTime = _this.timerObject.request("get:elapsed:time");
+              _this.questionResponseModel.set({
+                'time_taken': elapsedTime,
+                'status': 'paused'
+              });
+              _this.questionResponseModel.save();
+            }
             return _this.region.trigger("goto:previous:route");
           };
         })(this));
       };
 
       ModuleDescriptionController.prototype._showModuleDescriptionView = function(model) {
-        var terms;
+        var numOfQuestionsCompleted, terms, totalNumofQuestions, totalTimeTakenForModule;
         terms = model.get('term_ids');
+        numOfQuestionsCompleted = _.size(this.questionResponseCollection.where({
+          "status": "completed"
+        }));
+        totalNumofQuestions = _.size(model.get('content_pieces'));
+        totalTimeTakenForModule = _.reduce(this.questionResponseCollection.pluck('time_taken'), function(memo, num) {
+          return parseInt(memo + parseInt(num));
+        });
+        console.log(totalTimeTakenForModule);
         return new ModuleDescriptionView({
           model: model,
           templateHelpers: {
-            getClassOrDivision: (function(_this) {
-              return function() {
-                if (_this.divisionModel) {
-                  return _this.divisionModel.get('division');
-                } else {
-                  return CLASS_LABEL[_this.classID];
-                }
-              };
-            })(this),
-            getTextbookName: (function(_this) {
-              return function() {
-                var texbookName, textbook;
-                textbook = _this.textbookNames.get(terms.textbook);
-                if (textbook != null) {
-                  return texbookName = textbook.get('name');
-                }
-              };
-            })(this),
-            getChapterName: (function(_this) {
-              return function() {
-                var chapter, chapterName;
-                chapter = _this.textbookNames.get(terms.chapter);
-                if (chapter != null) {
-                  return chapterName = chapter.get('name');
-                }
-              };
-            })(this),
-            getSectionsNames: (function(_this) {
-              return function() {
-                var section, sectionName, sectionNames, sectionString, sections, term, _i, _len;
-                sections = _.flatten(terms.sections);
-                sectionString = '';
-                sectionNames = [];
-                if (sections) {
-                  for (_i = 0, _len = sections.length; _i < _len; _i++) {
-                    section = sections[_i];
-                    term = _this.textbookNames.get(section);
-                    if (term != null) {
-                      sectionName = term.get('name');
-                    }
-                    sectionNames.push(sectionName);
-                  }
-                  return sectionString = sectionNames.join();
-                }
-              };
-            })(this),
-            getSubSectionsNames: (function(_this) {
-              return function() {
-                var sub, subSectionString, subsection, subsectionNames, subsections, _i, _len;
-                subsections = _.flatten(terms.subsections);
-                subSectionString = '';
-                subsectionNames = [];
-                if (subsections) {
-                  for (_i = 0, _len = subsections.length; _i < _len; _i++) {
-                    sub = subsections[_i];
-                    subsection = _this.textbookNames.get(sub);
-                    if (subsection != null) {
-                      subsectionNames.push(subsection.get('name'));
-                    }
-                  }
-                  return subSectionString = subsectionNames.join();
-                }
-              };
-            })(this)
+            getProgressData: function() {
+              return numOfQuestionsCompleted + '/' + totalNumofQuestions;
+            },
+            getProgressPercentage: function() {
+              return parseInt((numOfQuestionsCompleted / totalNumofQuestions) * 100);
+            },
+            moduleTime: function() {
+              var hours, mins, seconds, time;
+              hours = 0;
+              time = totalTimeTakenForModule;
+              mins = parseInt(time / 60);
+              if (mins > 59) {
+                hours = parseInt(mins / 60);
+                mins = mins % 60;
+              }
+              seconds = time % 60;
+              return time = hours + 'h ' + mins + 'm ' + seconds + 's';
+            }
           }
         });
       };
@@ -121,7 +88,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ModuleDescriptionView.prototype.template = moduleDescriptionTemplate;
 
       ModuleDescriptionView.prototype.events = {
-        'click #back-to-module': function() {
+        'click #back-to-module, #pause-session': function() {
           return this.trigger("goto:previous:route");
         }
       };

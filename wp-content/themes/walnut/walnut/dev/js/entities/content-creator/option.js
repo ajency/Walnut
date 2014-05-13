@@ -49,9 +49,9 @@ define(['app', 'backbone'], function(App, Backbone) {
         if (data == null) {
           data = {};
         }
-        optionCollection = new Option.OptionCollection;
         console.log('option collection');
         console.log(data);
+        optionCollection = new Option.OptionCollection;
         optionCollection.set(data);
         return optionCollection;
       }

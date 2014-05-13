@@ -34,6 +34,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginController.prototype.authenticateUser = function(data) {
         var authController, authOptions;
         authOptions = {
+          url: AJAXURL + '?action=get-user-profile',
           data: data,
           success: (function(_this) {
             return function(resp) {
