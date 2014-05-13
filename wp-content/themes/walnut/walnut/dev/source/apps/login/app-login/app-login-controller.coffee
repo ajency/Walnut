@@ -12,10 +12,10 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 
 				@show view, (loading: true)
 
-				@listenTo view, "goto:login:view", (user)->
+				@listenTo view, "goto:login:view", (username)->
 					App.execute "show:login:view:app",
 						region 		: App.loginRegion
-						username 	: user
+						username 	: username
 
 
 			_getLoginView :(collection) ->
@@ -45,7 +45,7 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 			itemViewContainer: '#loginAccounts'
 
 			events: 
-				'click .message-wrapper' :'gotoLogin'
+				'click #loginAccounts' :'gotoLogin'
 
 				'click #addNewAccount' : 'gotoNewLogin'
 
@@ -55,4 +55,8 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 				@trigger "goto:login:view", username
 
 			gotoNewLogin: ->
-				@trigger "goto:login:view", ''
+				App.navigate('login', trigger: true)
+
+			onShow: ->
+				# change mainLogo to school logo
+				_.setMainLogo()

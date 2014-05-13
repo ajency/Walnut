@@ -78,7 +78,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
 
       LoginView.prototype.onShow = function() {
         $('body').addClass('error-body no-top');
-        return this.trigger("prepopulate:username");
+        this.trigger("prepopulate:username");
+        return _.setMainLogo();
       };
 
       LoginView.prototype.submitLogin = function(e) {

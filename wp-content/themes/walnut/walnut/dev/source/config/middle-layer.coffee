@@ -48,3 +48,14 @@ define ['detect', 'jquery', 'underscore'], (detect, $, _)->
             if navigator.connection.type is Connection.NONE
               false
             else true
+
+      
+      #Set main logo
+      _.setMainLogo =->
+        switch _.checkPlatform()
+          when 'Mobile'
+            # set the main app logo to school logo after the first user sign in
+            if _.getSchoolLogoSrc() isnt null
+              $("#logo").attr('src', _.getSchoolLogoSrc())
+            else 
+              $("#logo").attr('src', '/images/logo-synapse.png')

@@ -102,8 +102,12 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		# when the app is installed for the first time
 		initialAppLogin:(server_resp)->
 			resp = server_resp.blog_details
+			# set blog id and blog name
 			_.setBlogID(resp.blog_id)
 			_.setBlogName(resp.blog_name)
+
+			# download school logo
+			_.downloadSchoolLogo("http://aditya.synapsedu.info/wp-content/uploads/sites/3/2014/05/images.jpg")
 
 			@saveUpdateUserDetails(server_resp)
 			@onSuccessResponse()
@@ -125,7 +129,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			user = @isExistingUser(@data.txtusername)
 			user.done (d)=>
 				if d.exists is true
-				   	@updateExistingUserPassword(resp)
+				   	@updateExistingUser(resp)
 				else
 				  	@inputNewUser(resp)
 
@@ -166,12 +170,12 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			,_.transactionErrorhandler 
 			,(tx)->
-				console.log 'Success: Inserted new user'
+				console.log 'SUCCESS: Inserted new user'
 			)
 
 
 		# update existing user
-		updateExistingUserPassword:(response)->
+		updateExistingUser:(response)->
 			resp = response.login_details
 
 			_.db.transaction((tx)=>
@@ -179,7 +183,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			,_.transactionErrorhandler 
 			,(tx)->
-				console.log 'Success: Updated user details'
+				console.log 'SUCCESS: Updated user details'
 			)
 
 

@@ -25,7 +25,7 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
   document.addEventListener("offline", function() {
     return console.log('Offline');
   }, false);
-  return _.isOnline = function() {
+  _.isOnline = function() {
     switch (_.checkPlatform()) {
       case 'Desktop':
         if (networkStatus === 1) {
@@ -39,6 +39,16 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
           return false;
         } else {
           return true;
+        }
+    }
+  };
+  return _.setMainLogo = function() {
+    switch (_.checkPlatform()) {
+      case 'Mobile':
+        if (_.getSchoolLogoSrc() !== null) {
+          return $("#logo").attr('src', _.getSchoolLogoSrc());
+        } else {
+          return $("#logo").attr('src', '/images/logo-synapse.png');
         }
     }
   };

@@ -18,10 +18,10 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
         this.show(view, {
           loading: true
         });
-        return this.listenTo(view, "goto:login:view", function(user) {
+        return this.listenTo(view, "goto:login:view", function(username) {
           return App.execute("show:login:view:app", {
             region: App.loginRegion,
-            username: user
+            username: username
           });
         });
       };
@@ -65,7 +65,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
       AppLoginView.prototype.itemViewContainer = '#loginAccounts';
 
       AppLoginView.prototype.events = {
-        'click .message-wrapper': 'gotoLogin',
+        'click #loginAccounts': 'gotoLogin',
         'click #addNewAccount': 'gotoNewLogin'
       };
 
@@ -76,7 +76,13 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
       };
 
       AppLoginView.prototype.gotoNewLogin = function() {
-        return this.trigger("goto:login:view", '');
+        return App.navigate('login', {
+          trigger: true
+        });
+      };
+
+      AppLoginView.prototype.onShow = function() {
+        return _.setMainLogo();
       };
 
       return AppLoginView;

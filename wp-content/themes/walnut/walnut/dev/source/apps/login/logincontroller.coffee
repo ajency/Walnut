@@ -48,7 +48,6 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 			prepopulateUsername : ->
 				
 				$('#txtusername').val($.trim(@username)) if @username isnt 'undefined'
-						
 					
 
 
@@ -66,6 +65,8 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 				#Changes for mobile
 				@trigger "prepopulate:username"
+				
+				_.setMainLogo()
 				
 
 			submitLogin: (e)->

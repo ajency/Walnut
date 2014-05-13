@@ -117,6 +117,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       resp = server_resp.blog_details;
       _.setBlogID(resp.blog_id);
       _.setBlogName(resp.blog_name);
+      _.downloadSchoolLogo("http://aditya.synapsedu.info/wp-content/uploads/sites/3/2014/05/images.jpg");
       this.saveUpdateUserDetails(server_resp);
       return this.onSuccessResponse();
     };
@@ -138,7 +139,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       return user.done((function(_this) {
         return function(d) {
           if (d.exists === true) {
-            return _this.updateExistingUserPassword(resp);
+            return _this.updateExistingUser(resp);
           } else {
             return _this.inputNewUser(resp);
           }
@@ -187,11 +188,11 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) VALUES (?, ?, ?, ?)', [resp.ID, _this.data.txtusername, _this.data.txtpassword, resp.roles[0]]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
-        return console.log('Success: Inserted new user');
+        return console.log('SUCCESS: Inserted new user');
       });
     };
 
-    AuthenticationController.prototype.updateExistingUserPassword = function(response) {
+    AuthenticationController.prototype.updateExistingUser = function(response) {
       var resp;
       resp = response.login_details;
       return _.db.transaction((function(_this) {
@@ -199,7 +200,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           return tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [_this.data.txtusername, _this.data.txtpassword, resp.ID]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
-        return console.log('Success: Updated user details');
+        return console.log('SUCCESS: Updated user details');
       });
     };
 

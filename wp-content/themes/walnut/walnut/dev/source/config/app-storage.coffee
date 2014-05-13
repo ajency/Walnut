@@ -2,7 +2,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     
     #Local database transaction
     localDatabaseTransaction =(db)->
-        console.log 'Local database Object: '+db
+        console.log 'Local database object: '+db
         db.transaction((tx)->
             #User table
             tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, user_id UNIQUE, username, password, user_role)')
@@ -15,12 +15,16 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
             
         ,_.transactionErrorHandler
         ,(tx)->
-            console.log 'Success: Local db transaction completed'
+            console.log 'SUCCESS: Local db transaction completed'
         )
 
-     #Access data from a local db file
-    _.db = window.sqlitePlugin.openDatabase({name: "walnutapp"});
-    localDatabaseTransaction(_.db) 
+    #Access data from a local db file
+    document.addEventListener("deviceready", ->
+        
+        _.db = window.sqlitePlugin.openDatabase({name: "walnutapp"});
+        localDatabaseTransaction(_.db)
+
+    ,false)
 
 
     #Local storage
@@ -45,9 +49,40 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     _.getBlogName =->
         window.localStorage.getItem("blog_name")
 
+    # save/get school logo image source
+    _.setSchoolLogoSrc =(src)->
+        window.localStorage.setItem("school_logo_src", ""+src)
+
+    _.getSchoolLogoSrc =->
+        window.localStorage.getItem("school_logo_src")
 
 
     #Cordova File system API 
+    # download school logo
+    _.downloadSchoolLogo =(logo_url)->
+
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+            ,(fileSystem)->
+                fileSystem.root.getFile("logo.jpg", {create: true, exclusive:false} 
+                    ,(fileEntry)->
+                        filePath = fileEntry.toURL().replace("logo.jpg", "")
+                        fileEntry.remove()
+                        uri = encodeURI(logo_url)
+
+                        fileTransfer = new FileTransfer()
+                        fileTransfer.download(uri, filePath+"logo.jpg" 
+                            ,(file)->
+                                console.log 'School logo download successful'
+                                console.log 'Logo file source: '+file.toURL()
+                                _.setSchoolLogoSrc(file.toURL())
+
+                            ,_.fileTransferErrorHandler, true)
+                    
+                    ,_.fileErrorHandler)
+
+            ,_.fileSystemErrorHandler)
+
+
          
             
             
