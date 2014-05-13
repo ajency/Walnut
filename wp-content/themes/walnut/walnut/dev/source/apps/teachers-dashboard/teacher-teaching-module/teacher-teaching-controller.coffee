@@ -43,6 +43,8 @@ define ['app'
                     ]
                 )
 
+                @timerObject = new Backbone.Wreqr.RequestResponse()
+
                 @listenTo @layout, "show", @_showModuleDescriptionView
 
                 @listenTo @layout, "show", @_showStudentsListView questionResponseModel if @display_mode isnt 'training'
@@ -94,9 +96,8 @@ define ['app'
                 questionResponseModel = questionResponseCollection.findWhere
                     'content_piece_id': content_piece_id.toString()
 
-                console.log @display_mode
                 if questionResponseModel
-                    if @display_mode is 'class-mode'
+                    if @display_mode is 'class_mode'
                         App.request "update:question:response:logs", questionResponseModel.get 'ref_id'
 
                 #if model doesnt exist in collection setting default values
@@ -109,25 +110,31 @@ define ['app'
                     questionResponseModel = App.request "save:question:response", ''
                     questionResponseModel.set modelData
 
-                    if @display_mode is 'class-mode'
+                    if @display_mode is 'class_mode'
                         questionResponseModel.save()
 
                 questionResponseModel
 
 
             _showModuleDescriptionView: =>
+
                 App.execute "when:fetched", contentGroupModel, =>
                     App.execute "show:teacher:teaching:module:description",
                         region: @layout.moduleDetailsRegion
                         model: contentGroupModel
-                        textbookNames: @textbookNames
-                        classID: @classID
-                        division: @division
+                        timerObject : @timerObject
+                        questionResponseModel: questionResponseModel
+                        questionResponseCollection: questionResponseCollection
+
 
             _showQuestionDisplayView: (model) =>
                 App.execute "show:single:question:app",
                     region: @layout.questionsDetailsRegion
                     model: model
+                    textbookNames: @textbookNames
+                    questionResponseModel: questionResponseModel
+                    timerObject : @timerObject
+                    display_mode: @display_mode
 
             _showStudentsListView: (questionResponseModel)=>
                 App.execute "when:fetched", contentPiece, =>
@@ -139,12 +146,14 @@ define ['app'
                             questionResponseModel: questionResponseModel
                             studentCollection: studentCollection
                             display_mode: @display_mode
+                            timerObject : @timerObject
 
                     else if question_type is 'chorus'
                         App.execute "show:single:question:chorus:options:app",
                             region: @layout.studentsListRegion
                             questionResponseModel: questionResponseModel
                             display_mode: @display_mode
+                            timerObject : @timerObject
 
             _getTakeSingleQuestionLayout: ->
                 new SingleQuestionLayout

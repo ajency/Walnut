@@ -17,18 +17,14 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ChorusOptionsController.prototype.initialize = function(opts) {
         var view;
-        this.questionResponseModel = opts.questionResponseModel, this.display_mode = opts.display_mode;
+        this.questionResponseModel = opts.questionResponseModel, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
         this.view = view = this._showChorusOptionsView(this.questionResponseModel);
+        console.log(this.questionResponseModel);
         this.show(view, {
           loading: true
         });
         this.listenTo(view, "save:question:response", this._saveQuestionResponse);
-        this.listenTo(view, "question:completed", this._changeQuestion);
-        return this.listenTo(this.view, "goto:previous:route", (function(_this) {
-          return function() {
-            return _this.region.trigger("goto:previous:route");
-          };
-        })(this));
+        return this.listenTo(view, "question:completed", this._changeQuestion);
       };
 
       ChorusOptionsController.prototype._changeQuestion = function(resp) {
@@ -42,24 +38,17 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         return new ChorusOptionsView({
           model: model,
           responsePercentage: this.questionResponseModel.get('question_response'),
-          display_mode: this.display_mode,
-          templateHelpers: {
-            showPauseBtn: (function(_this) {
-              return function() {
-                var buttonStr;
-                if (_this.display_mode === 'class_mode') {
-                  buttonStr = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm"> <i class="fa fa-pause"></i> Pause </button> </div>';
-                }
-                return buttonStr;
-              };
-            })(this)
-          }
+          display_mode: this.display_mode
         });
       };
 
       ChorusOptionsController.prototype._saveQuestionResponse = function(studResponse) {
+        var elapsedTime;
+        elapsedTime = this.timerObject.request("get:elapsed:time");
         this.questionResponseModel.set({
-          'question_response': studResponse
+          'question_response': studResponse,
+          'status': 'completed',
+          'time_taken': elapsedTime
         });
         return this.questionResponseModel.save();
       };
@@ -81,10 +70,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ChorusOptionsView.prototype.events = {
         'click .tiles.single.selectable': 'selectStudent',
-        'click #question-done': 'questionCompleted',
-        'click #pause-session': function() {
-          return this.trigger("goto:previous:route");
-        }
+        'click #question-done': 'questionCompleted'
       };
 
       ChorusOptionsView.prototype.onShow = function() {

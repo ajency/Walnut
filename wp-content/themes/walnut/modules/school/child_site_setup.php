@@ -107,7 +107,7 @@ function setup_childsite_tables(){
         `division` INT NOT NULL ,
         `date_created` DATE NOT NULL ,
         `date_modified` DATE NOT NULL ,
-        `total_time` VARCHAR( 255 ) NOT NULL ,
+        `time_taken` VARCHAR( 255 ) NOT NULL ,
         `question_response` VARCHAR( 255 ) NOT NULL ,
         `time_started` TIMESTAMP NOT NULL ,
         `time_completed` TIMESTAMP NOT NULL ,

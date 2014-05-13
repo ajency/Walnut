@@ -46,6 +46,7 @@
         <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
         <link href="./wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
+        <link href="./wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
         
         
         <!-- END CORE CSS FRAMEWORK -->
@@ -90,6 +91,7 @@
         <script>
             AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
             SITEURL = '<?php echo site_url() ?>';
+            THEMEURL= '<?php echo get_template_directory_uri()?>';
             CLASS_LABEL= {};
             <?php foreach($class_ids as $class){ ?>
                 CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';

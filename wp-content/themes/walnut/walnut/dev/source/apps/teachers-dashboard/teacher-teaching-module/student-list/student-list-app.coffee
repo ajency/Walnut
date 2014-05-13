@@ -5,17 +5,15 @@ define ['app'
         class SingleQuestionStudentsController extends RegionController
 
             initialize: (opts)->
-                {@questionResponseModel,studentCollection, @display_mode} = opts
+                {@questionResponseModel,studentCollection, @display_mode,@timerObject} = opts
 
                 division = @questionResponseModel.get 'division'
 
+                console.log @questionResponseModel
                 @view = view = @_showStudentsListView studentCollection
 
 
                 @show view, (loading: true, entities: [studentCollection])
-
-                @listenTo @view, "goto:previous:route", =>
-                    @region.trigger "goto:previous:route"
 
                 @listenTo view, "save:question:response", @_saveQuestionResponse
 
@@ -35,8 +33,12 @@ define ['app'
 
             _saveQuestionResponse: (studResponse)=>
 
+                elapsedTime= @timerObject.request "get:elapsed:time"
+
                 @questionResponseModel.set
-                    'question_response': studResponse
+                    'question_response' : studResponse
+                    'status'            : 'completed'
+                    'time_taken'        : elapsedTime
 
                 @questionResponseModel.save(null, {wait: true, success: @successFn, error: @errorFn})
 

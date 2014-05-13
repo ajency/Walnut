@@ -47,11 +47,6 @@ define ['app'],(App)->
 							</button>
 						</div>
 						{{#class_mode}}
-						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
-							<button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm">
-								<i class="fa fa-pause"></i> Pause
-							</button>
-						</div>
 						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20">
 							<button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer">
 								<i class="fa fa-check-circle"></i> Right Answer
@@ -75,7 +70,6 @@ define ['app'],(App)->
 				'click #right-answer'	: 'addToCorrectList'
 				'click #wrong-answer'	: 'removeFromCorrectList'
 				'click #question-done' 	: 'questionCompleted'
-				'click #pause-session'	:-> @trigger "goto:previous:route"
 
 			serializeData:->
 				data = super()

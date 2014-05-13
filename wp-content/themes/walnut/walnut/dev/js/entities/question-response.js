@@ -18,7 +18,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         content_piece_id: '',
         division: 0,
         question_response: [],
-        total_time: 0,
+        time_taken: 0,
         start_date: '',
         end_date: '',
         status: ''

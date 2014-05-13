@@ -33,11 +33,14 @@ function update_question_response($data){
         $data_response= maybe_serialize($question_response);
     else
         $data_response='';
-    
+
+    if($status!='paused')
+        $status='completed';
+
     $update_data= array(
         'question_response'     => $data_response,
-        'total_time'            => $total_time,
-        'status'                => 'completed'
+        'time_taken'            => $time_taken,
+        'status'                => $status
     );
 
     $response = $wpdb->update($wpdb->prefix . 'question_response', $update_data,

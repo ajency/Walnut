@@ -30,7 +30,7 @@ require.config({
     select2: 'plugins/select2.min',
     datepicker: 'plugins/bootstrap-datepicker',
     timepicker: 'plugins/bootstrap-timepicker.min',
-    jquerytimer: 'plugins/timer.jquery',
+    timecircles: 'plugins/TimeCircles',
     jquery_listnav: 'plugins/jquery-listnav'
   },
   shim: {
@@ -64,7 +64,7 @@ require.config({
     select2: ['jquery', 'bootstrap'],
     datepicker: ['jquery', 'bootstrap'],
     timepicker: ['jquery', 'bootstrap'],
-    jquerytimer: ['jquery'],
+    timecircles: ['jquery'],
     jquery_listnav: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }

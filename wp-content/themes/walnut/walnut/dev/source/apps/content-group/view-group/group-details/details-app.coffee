@@ -10,19 +10,12 @@ define ['app'
                 # so based on this value (@mode) we set the template additional stuff
                 {@model,@mode,@questionResponseCollection,@textbookNames}= opts
 
-                @startTime = '';
-                @endTime = '';
-
                 @view = view = @_getCollectionDetailsView @model
 
                 @show view, (loading: true, entities: [@textbookNames])
 
                 @listenTo view, 'start:teaching:module', =>
                     @region.trigger "start:teaching:module"
-
-                @listenTo @model, 'training:module:started', @trainingModuleStarted
-
-                @listenTo @model, 'training:module:stopped', @trainingModuleStopped
 
             _getCollectionDetailsView: (model)->
                 terms = model.get 'term_ids'
@@ -65,14 +58,6 @@ define ['app'
                                 								</button>'
                             actionButtons
 
-            trainingModuleStarted: =>
-                @startTime = moment().format();
-                @view.triggerMethod "display:time"
-
-
-            trainingModuleStopped: =>
-                @endTime = moment().format();
-                @view.triggerMethod "stop:training:module"
 
         class CollectionDetailsView extends Marionette.ItemView
 
@@ -82,12 +67,6 @@ define ['app'
 
             events:
                 'click #start-module': 'startModule'
-                'click #stop-module': 'stopModule'
-
-
-            onShow: ->
-                if _.size($('#timekeeper')) > 0
-                    @onDisplayTime()
 
             serializeData: ->
                 data = super()
@@ -98,26 +77,7 @@ define ['app'
                 currentRoute = App.getCurrentRoute()
                 App.navigate currentRoute + "/question"
 
-                @model.trigger "start:module"
                 @trigger "start:teaching:module"
-
-            stopModule: =>
-                $('#timekeeper').timer('pause');
-
-                @model.trigger "stop:module"
-
-            onDisplayTime: ->
-                if not _.size($('#timekeeper')) > 0
-                    $("#header-left").after "<div id='timekeeper' style='display:none'></div>"
-                    $('#timekeeper').timer('start');
-                else
-                    $('#timekeeper').timer('resume');
-
-                clock = setInterval @updateTime, 500
-
-            updateTime: =>
-                @$el.find '.timedisplay'
-                .html 'Elapsed Time: ' + $('#timekeeper').html()
 
 
         # set handlers

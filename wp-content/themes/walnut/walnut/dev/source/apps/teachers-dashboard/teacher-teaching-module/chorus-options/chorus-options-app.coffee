@@ -5,18 +5,15 @@ define ['app'
         class ChorusOptionsController extends RegionController
 
             initialize: (opts)->
-                {@questionResponseModel,@display_mode} = opts
+                {@questionResponseModel,@display_mode,@timerObject} = opts
 
                 @view = view = @_showChorusOptionsView @questionResponseModel
-
+                console.log @questionResponseModel
                 @show view, (loading: true)
 
                 @listenTo view, "save:question:response", @_saveQuestionResponse
 
                 @listenTo view, "question:completed", @_changeQuestion
-
-                @listenTo @view, "goto:previous:route", =>
-                    @region.trigger "goto:previous:route"
 
             _changeQuestion: (resp)=>
                 @_saveQuestionResponse '' if resp is 'no_answer'
@@ -29,22 +26,16 @@ define ['app'
                     responsePercentage: @questionResponseModel.get 'question_response'
                     display_mode: @display_mode
 
-                    templateHelpers:
-                        showPauseBtn: =>
-                            if @display_mode is 'class_mode'
-                                buttonStr = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
-                                									  <button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm">
-                                									    <i class="fa fa-pause"></i> Pause
-                                									  </button>
-                                									</div>'
-                            buttonStr
-
             _saveQuestionResponse: (studResponse)=>
+
+                elapsedTime= @timerObject.request "get:elapsed:time"
+
                 @questionResponseModel.set
-                    'question_response': studResponse
+                    'question_response' : studResponse
+                    'status'            : 'completed'
+                    'time_taken'        : elapsedTime
 
                 @questionResponseModel.save()
-
 
         class ChorusOptionsView extends Marionette.ItemView
 
@@ -55,8 +46,6 @@ define ['app'
             events:
                 'click .tiles.single.selectable': 'selectStudent'
                 'click #question-done': 'questionCompleted'
-                'click #pause-session': ->
-                    @trigger "goto:previous:route"
 
             onShow: ->
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
