@@ -1,6 +1,7 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-group/view-group/content-display/templates/content-display.html'], (App, RegionController, contentDisplayItemTpl)->
+        'text!apps/content-group/view-group/content-display/templates/content-display.html',
+        'text!apps/content-group/view-group/content-display/templates/content-display-item.html'], (App, RegionController, contentDisplayTpl, contentDisplayItemTpl)->
     App.module "CollectionContentDisplayApp.Controller", (Controller, App)->
         class Controller.CollectionContentDisplayController extends RegionController
 
@@ -8,22 +9,28 @@ define ['app'
                 {model, @mode, questionResponseCollection,groupContentCollection} = opts
 
                 @view = view = @_getCollectionContentDisplayView model, groupContentCollection, questionResponseCollection
-                @show view, (loading: true, entities: [groupContentCollection, questionResponseCollection])
 
-                @listenTo model, 'training:module:started', @trainingModuleStarted
+                @show view, (loading: true, entities: [groupContentCollection, questionResponseCollection])
 
                 @listenTo @view, 'view:question:readonly', (questionID)=>
                     @region.trigger 'goto:question:readonly', questionID
 
             _getCollectionContentDisplayView: (model, collection, responseCollection) =>
+                timeTakenArray= responseCollection.pluck('time_taken');
+                totalTimeTakenForModule=0
+                if _.size(timeTakenArray)>0
+                    totalTimeTakenForModule =   _.reduce timeTakenArray, (memo, num)-> parseInt memo + parseInt num
+
                 new ContentDisplayView
                     model: model
                     collection: collection
                     responseCollection: responseCollection
                     mode: @mode
 
-            trainingModuleStarted: =>
-                @view.triggerMethod "apply:urls"
+                    templateHelpers:
+                        showElapsedTime:=>
+                            mins=parseInt(totalTimeTakenForModule/60)
+
 
         class ContentItemView extends Marionette.ItemView
 
@@ -36,15 +43,11 @@ define ['app'
 
         class ContentDisplayView extends Marionette.CompositeView
 
-            template: '<ul class="cbp_tmtimeline"></ul>'
+            template: contentDisplayTpl
 
             itemView: ContentItemView
 
             itemViewContainer: 'ul.cbp_tmtimeline'
-
-            className: 'col-md-10'
-
-            id: 'myCanvas-miki'
 
             events:
                 'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
@@ -82,17 +85,6 @@ define ['app'
 
                 @trigger "view:question:readonly", questionID
 
-            onApplyUrls: ->
-                currentRoute = App.getCurrentRoute()
-
-                url = '#' + currentRoute + '/'
-
-                for item in @$el.find('li .contentPiece')
-
-                    itemurl = url + $(item).attr 'data-id'
-
-                    $(item).find 'a'
-                    .attr 'href', itemurl
 
 
         # set handlers

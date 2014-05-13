@@ -29,7 +29,10 @@ define ['app'
 
                 numOfQuestionsCompleted = _.size @questionResponseCollection.where "status": "completed"
                 totalNumofQuestions = _.size model.get 'content_pieces'
-                totalTimeTakenForModule =   _.reduce @questionResponseCollection.pluck('time_taken'), (memo, num)-> parseInt memo + parseInt num
+                timeTakenArray= @questionResponseCollection.pluck('time_taken');
+                totalTimeTakenForModule=0
+                if _.size(timeTakenArray)>0
+                    totalTimeTakenForModule =   _.reduce timeTakenArray, (memo, num)-> parseInt memo + parseInt num
 
                 console.log totalTimeTakenForModule
                 new ModuleDescriptionView
@@ -50,8 +53,12 @@ define ['app'
                                 hours = parseInt mins/60
                                 mins= mins%60
                             seconds = time%60
+                            display_time=''
 
-                            time =hours+'h ' +mins + 'm '+ seconds+'s'
+                            if hours >0
+                                display_time= hours+'h '
+
+                            display_time += mins + 'm '+ seconds+'s'
 
 
         class ModuleDescriptionView extends Marionette.ItemView

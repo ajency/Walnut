@@ -19,14 +19,21 @@ define ['app'
 
             _getCollectionDetailsView: (model)->
                 terms = model.get 'term_ids'
-                console.log terms
-                console.log @textbookNames
+
+                numOfQuestionsCompleted = _.size @questionResponseCollection.where "status": "completed"
+                totalNumofQuestions = _.size model.get 'content_pieces'
 
                 new CollectionDetailsView
                     model: model
                     mode: @mode
 
                     templateHelpers:
+                        getProgressData:->
+                            numOfQuestionsCompleted + '/'+ totalNumofQuestions
+
+                        getProgressPercentage:->
+                            parseInt (numOfQuestionsCompleted / totalNumofQuestions)*100
+
                         getTextbookName: =>
                             textbook = @textbookNames.get terms.textbook
                             texbookName = textbook.get 'name' if textbook?

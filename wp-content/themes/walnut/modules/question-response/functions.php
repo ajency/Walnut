@@ -43,6 +43,9 @@ function update_question_response($data){
         'status'                => $status
     );
 
+    if($status=='completed')
+        $update_data['end_date']= date('Ymdhis');
+
     $response = $wpdb->update($wpdb->prefix . 'question_response', $update_data,
             array('ref_id'=>$ref_id) );
 

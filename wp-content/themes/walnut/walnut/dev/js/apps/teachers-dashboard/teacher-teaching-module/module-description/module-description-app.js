@@ -37,15 +37,19 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       };
 
       ModuleDescriptionController.prototype._showModuleDescriptionView = function(model) {
-        var numOfQuestionsCompleted, terms, totalNumofQuestions, totalTimeTakenForModule;
+        var numOfQuestionsCompleted, terms, timeTakenArray, totalNumofQuestions, totalTimeTakenForModule;
         terms = model.get('term_ids');
         numOfQuestionsCompleted = _.size(this.questionResponseCollection.where({
           "status": "completed"
         }));
         totalNumofQuestions = _.size(model.get('content_pieces'));
-        totalTimeTakenForModule = _.reduce(this.questionResponseCollection.pluck('time_taken'), function(memo, num) {
-          return parseInt(memo + parseInt(num));
-        });
+        timeTakenArray = this.questionResponseCollection.pluck('time_taken');
+        totalTimeTakenForModule = 0;
+        if (_.size(timeTakenArray) > 0) {
+          totalTimeTakenForModule = _.reduce(timeTakenArray, function(memo, num) {
+            return parseInt(memo + parseInt(num));
+          });
+        }
         console.log(totalTimeTakenForModule);
         return new ModuleDescriptionView({
           model: model,
@@ -57,7 +61,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
               return parseInt((numOfQuestionsCompleted / totalNumofQuestions) * 100);
             },
             moduleTime: function() {
-              var hours, mins, seconds, time;
+              var display_time, hours, mins, seconds, time;
               hours = 0;
               time = totalTimeTakenForModule;
               mins = parseInt(time / 60);
@@ -66,7 +70,11 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
                 mins = mins % 60;
               }
               seconds = time % 60;
-              return time = hours + 'h ' + mins + 'm ' + seconds + 's';
+              display_time = '';
+              if (hours > 0) {
+                display_time = hours + 'h ';
+              }
+              return display_time += mins + 'm ' + seconds + 's';
             }
           }
         });

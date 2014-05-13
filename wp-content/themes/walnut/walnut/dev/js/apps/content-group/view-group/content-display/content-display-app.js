@@ -2,14 +2,13 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/content-group/view-group/content-display/templates/content-display.html'], function(App, RegionController, contentDisplayItemTpl) {
+define(['app', 'controllers/region-controller', 'text!apps/content-group/view-group/content-display/templates/content-display.html', 'text!apps/content-group/view-group/content-display/templates/content-display-item.html'], function(App, RegionController, contentDisplayTpl, contentDisplayItemTpl) {
   return App.module("CollectionContentDisplayApp.Controller", function(Controller, App) {
     var ContentDisplayView, ContentItemView;
     Controller.CollectionContentDisplayController = (function(_super) {
       __extends(CollectionContentDisplayController, _super);
 
       function CollectionContentDisplayController() {
-        this.trainingModuleStarted = __bind(this.trainingModuleStarted, this);
         this._getCollectionContentDisplayView = __bind(this._getCollectionContentDisplayView, this);
         return CollectionContentDisplayController.__super__.constructor.apply(this, arguments);
       }
@@ -22,7 +21,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           loading: true,
           entities: [groupContentCollection, questionResponseCollection]
         });
-        this.listenTo(model, 'training:module:started', this.trainingModuleStarted);
         return this.listenTo(this.view, 'view:question:readonly', (function(_this) {
           return function(questionID) {
             return _this.region.trigger('goto:question:readonly', questionID);
@@ -31,16 +29,28 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       };
 
       CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model, collection, responseCollection) {
+        var timeTakenArray, totalTimeTakenForModule;
+        timeTakenArray = responseCollection.pluck('time_taken');
+        totalTimeTakenForModule = 0;
+        if (_.size(timeTakenArray) > 0) {
+          totalTimeTakenForModule = _.reduce(timeTakenArray, function(memo, num) {
+            return parseInt(memo + parseInt(num));
+          });
+        }
         return new ContentDisplayView({
           model: model,
           collection: collection,
           responseCollection: responseCollection,
-          mode: this.mode
+          mode: this.mode,
+          templateHelpers: {
+            showElapsedTime: (function(_this) {
+              return function() {
+                var mins;
+                return mins = parseInt(totalTimeTakenForModule / 60);
+              };
+            })(this)
+          }
         });
-      };
-
-      CollectionContentDisplayController.prototype.trainingModuleStarted = function() {
-        return this.view.triggerMethod("apply:urls");
       };
 
       return CollectionContentDisplayController;
@@ -70,15 +80,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentDisplayView.prototype.template = '<ul class="cbp_tmtimeline"></ul>';
+      ContentDisplayView.prototype.template = contentDisplayTpl;
 
       ContentDisplayView.prototype.itemView = ContentItemView;
 
       ContentDisplayView.prototype.itemViewContainer = 'ul.cbp_tmtimeline';
-
-      ContentDisplayView.prototype.className = 'col-md-10';
-
-      ContentDisplayView.prototype.id = 'myCanvas-miki';
 
       ContentDisplayView.prototype.events = {
         'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
@@ -120,20 +126,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         var questionID;
         questionID = $(e.target).closest('.contentPiece').attr('data-id');
         return this.trigger("view:question:readonly", questionID);
-      };
-
-      ContentDisplayView.prototype.onApplyUrls = function() {
-        var currentRoute, item, itemurl, url, _i, _len, _ref, _results;
-        currentRoute = App.getCurrentRoute();
-        url = '#' + currentRoute + '/';
-        _ref = this.$el.find('li .contentPiece');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          item = _ref[_i];
-          itemurl = url + $(item).attr('data-id');
-          _results.push($(item).find('a').attr('href', itemurl));
-        }
-        return _results;
       };
 
       return ContentDisplayView;
