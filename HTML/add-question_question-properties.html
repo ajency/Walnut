@@ -17,6 +17,7 @@
 	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen">
 	<link href="assets/plugins/bootstrap-tag/bootstrap-tagsinput.css" rel="stylesheet" type="text/css">
+	<link href="assets/plugins/bootstrap-spinner/bootstrap-spinner.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
@@ -43,8 +44,6 @@
 	<script src="assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
 	<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
 	<!-- END PAGE LEVEL PLUGINS -->
-	
-
 
 	<!-- BEGIN CORE TEMPLATE JS --> 
 	<script src="assets/js/core.js" type="text/javascript"></script> 
@@ -52,14 +51,15 @@
 	<script src="assets/js/demo.js" type="text/javascript"></script> 
 	<!-- END CORE TEMPLATE JS --> 
 
-		<script src="assets/plugins/jquery-datatable/js/jquery.dataTables.min.js" type="text/javascript"></script>
-		<script src="assets/plugins/jquery-datatable/extra/js/TableTools.min.js" type="text/javascript"></script>
-		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
-		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
-		<script type="text/javascript" src="assets/js/datatables.js"></script>
+	<script src="assets/plugins/jquery-datatable/js/jquery.dataTables.min.js" type="text/javascript"></script>
+	<script src="assets/plugins/jquery-datatable/extra/js/TableTools.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
+	<script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
+	<script type="text/javascript" src="assets/js/datatables.js"></script>
 
-		<script type="text/javascript" src="assets/js/row-link.js"></script>
-		<script src="assets/plugins/bootstrap-tag/bootstrap-tagsinput.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="assets/js/row-link.js"></script>
+	<script src="assets/plugins/bootstrap-tag/bootstrap-tagsinput.min.js" type="text/javascript"></script>
+	<script src="assets/plugins/bootstrap-spinner/jquery.spinner.min.js" type="text/javascript"></script>
 
 	<!-- END NEED TO WORK ON -->
 </head>
@@ -278,164 +278,144 @@
 			<!-- END PAGE TITLE -->
 
 			<!-- BEGIN MASHMENU -->
-			<div class="Dmenu">
+			<ul class="nav nav-tabs" id="subProps">
+              <li class="active"><a href="#settings">Settings</a></li>
+              <li class=""><a href="#meta">Meta</a></li>
+            </ul>
+            <div class="tab-content ">
+              <div class="tab-pane active" id="settings">
+            	<div class="row m-b-20">
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Subject</label>
+						<select id="subs" class="form-control select2" >
+		                    <option value="Jim">Jim</option>
+		                    <option value="John">John</option>
+		                    <option value="Lucy">Lucy</option>
+		                </select>
+	        		</div>
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Chapter <span class="muted small pull-right"> Select a Subject first</span></label>
+						<select id="chaps" class="form-control select2" >
+		                    <option value="Jim">Jim</option>
+		                    <option value="John">John</option>
+		                    <option value="Lucy">Lucy</option>
+		                </select>
+	        		</div>
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Tags</label>
+						<input type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" />
+	        		</div>
+	        	</div>
+	        	<div class="row m-b-20">
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>
+						<select id="secs" class="form-control select2" multiple="">
+		                    <option value="Jim">Jim</option>
+		                    <option value="John">John</option>
+		                    <option value="Lucy">Lucy</option>
+		                </select>
+	        		</div>
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Sub-Sections <span class="muted small pull-right"> Select a Chapter first</span></label>
+						<select id="subsecs" class="form-control select2" multiple="">
+		                    <option value="Jim">Jim</option>
+		                    <option value="John">John</option>
+		                    <option value="Lucy">Lucy</option>
+		                </select>
+	        		</div>
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Time</label>
+	        			<div class="row">
+		        			<div class="col-sm-6">
+		        				<input type="text" class="form-control" placeholder="Hours">
+		        			</div>
+		        			<div class="col-sm-6">
+		        				<input type="text" class="form-control" placeholder="Minutes">
+		        			</div>
+	        			</div>
+	        		</div>
+	        	</div>
+              </div>
+              <div class="tab-pane" id="meta">
+                <div class="row m-b-20">
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Question Type</label>
+						<select id="qType" class="form-control select2" >
+		                    <option value="chorus">Chorus</option>
+		                    <option value="b">B</option>
+		                    <option value="c">C</option>
+		                </select>
+	        			
+	        		</div>
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Status</label>
+						<select id="status" class="form-control select2" >
+		                    <option value="rev">Under Review</option>
+		                    <option value="b">B</option>
+		                    <option value="c">C</option>
+		                </select>
+	        		</div>
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Author</label>
+						<select id="author" class="form-control select2">
+		                    <option value="Jim">Jim</option>
+		                    <option value="John">John</option>
+		                    <option value="Lucy">Lucy</option>
+		                </select>
+	        		</div>
+	        		
+	        	</div>
+	        	<div class="row m-b-20">
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Published by</label>
+	        			<span class="lastMod muted">User 1</span>
+	        		</div>
+	        		<div class="col-sm-4">
+	        			<label class="form-label">Last Modified By:</label>
+						<span class="lastMod muted">User 2</span>
+	        		</div>
+	        		<div class="col-sm-4">
+						
+	        		</div>
+	        	</div>				        	
+              </div>
+              <div class="tab-pane" id="tab2Inspire">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h3>Follow us &amp; get updated!</h3>
+                    <p>Instantly connect to what's most important to you. Follow your friends, experts, favorite celebrities, and breaking news.</p>
+                    <br>
+                    <p><a href="#" class="btn-social"><i class="icon-facebook"></i></a> <a href="#" class="btn-social"><i class="icon-twitter"></i> </a> <a href="#" class="btn-social"><i class="icon-dribbble"></i></a> <a href="#" class="btn-social"><i class="icon-pinterest-sign"></i></a> <a href="#" class="btn-social"><i class="icon-tumblr"></i> </a> <a href="#" class="btn-social"><i class="icon-linkedin-sign"></i> </a> </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+			<!--<div class="Dmenu">
   
-			  <div class="mainCat">
-			      <h4 class="text-white m-l-10 m-r-10"><span class="semi-bold">Properties</span> Bar</h4>
+			  <div class="barName inline">
+			      <h4 class="text-white m-l-10 m-r-10 m-t-10"><span class="semi-bold">Options</span> Bar</h4>
 			  </div>
 			  
-			  <div class="mainCat">
-			    <a href="#" class="flink" data-catid="2">
-			      Option 1
-			    </a>
-			    <div class="allContent">
-			      <div class="snav">
-			        <div class="snavM">
-			          <a href="#" class="slink" data-catid="2">
-			            1
-			          </a>
-			          <a href="#" class="slink" data-catid="9">
-			            2
-			          </a>
-			          <a href="#" class="slink" data-catid="10">
-			            3
-			          </a>
-			          <a href="#" class="slink" data-catid="11">
-			            4
-			          </a>
-			          <a href="#" class="slink" data-catid="12">
-			            5
-			          </a>
-			        </div>
-			        <br class="clearfix">
-			      </div>
-			      </div>
-			  </div>
+			  	<ul class="inline">
+				  
+				  	<li class="mainCat">
+					    <a href="#" class="flink" data-catid="4">
+					      Properties
+					    </a>
+				    	<div class="allContent">
+					      <div class="snav">
+					        <div class="menuItems">
+					            
+					        </div>
+					        <br class="clearfix">
+					      </div>
+				      </div>
+				  </li>
+				</ul>
 			  
-			  <div class="mainCat">
-			    <a href="#" class="flink" data-catid="3">
-			      Settings
-			    </a>
-			    <div class="allContent">
-			      <div class="snav">
-			        <div class="snavM">
-			          <a href="#" class="slink" data-catid="3">
-			            Settings
-			          </a>
-			          <a href="#" class="slink" data-catid="13">
-			            Meta
-			          </a>
-			        </div>
-			        <div class="menuItems">
-			        	<div class="row m-b-20">
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Subject</label>
-								<select id="subs" class="form-control select2" >
-				                    <option value="Jim">Jim</option>
-				                    <option value="John">John</option>
-				                    <option value="Lucy">Lucy</option>
-				                </select>
-			        		</div>
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Chapter <span class="muted small pull-right"> Select a Subject first</span></label>
-								<select id="chaps" class="form-control select2" >
-				                    <option value="Jim">Jim</option>
-				                    <option value="John">John</option>
-				                    <option value="Lucy">Lucy</option>
-				                </select>
-			        		</div>
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Question Type</label>
-								<select id="qType" class="form-control select2" >
-				                    <option value="chorus">Chorus</option>
-				                    <option value="b">B</option>
-				                    <option value="c">C</option>
-				                </select>
-			        		</div>
-			        	</div>
-			        	<div class="row m-b-20">
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>
-								<select id="secs" class="form-control select2" multiple="">
-				                    <option value="Jim">Jim</option>
-				                    <option value="John">John</option>
-				                    <option value="Lucy">Lucy</option>
-				                </select>
-			        		</div>
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Sub-Sections <span class="muted small pull-right"> Select a Chapter first</span></label>
-								<select id="subsecs" class="form-control select2" multiple="">
-				                    <option value="Jim">Jim</option>
-				                    <option value="John">John</option>
-				                    <option value="Lucy">Lucy</option>
-				                </select>
-			        		</div>
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Status</label>
-								<select id="status" class="form-control select2" >
-				                    <option value="rev">Under Review</option>
-				                    <option value="b">B</option>
-				                    <option value="c">C</option>
-				                </select>
-			        		</div>
-			        	</div>
-			        	<div class="row m-b-20">
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Author</label>
-								<select id="author" class="form-control select2">
-				                    <option value="Jim">Jim</option>
-				                    <option value="John">John</option>
-				                    <option value="Lucy">Lucy</option>
-				                </select>
-			        		</div>
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Published by</label>
-			        			<span class="lastMod">User 1</span>
-			        		</div>
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Last Modified By:</label>
-								<span class="lastMod">User 2</span>
-			        		</div>
-			        	</div>
-			        	<div class="row m-b-20">
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Tags</label>
-								<div class="bootstrap-tagsinput"> <input type="text" data-role="tagsinput" placeholder="Type Answer and press Enter" /></div>
-			        		</div>
-			        		<div class="col-sm-4">
-			        			<label class="form-label">Time</label>
-			        			<span class="lastMod">User 1</span>
-			        		</div>
-			        		<div class="col-sm-4">
-								
-			        		</div>
-			        	</div>
-			        </div>
-			        <br class="clearfix">
-			      </div>
-			      </div>
-			  </div>
-			  
-			  <div class="mainCat">
-			    <a href="#" class="flink" data-catid="4">
-			      Questions
-			    </a>
-			    <div class="allContent">
-			      <div class="snav">
-			        <div class="menuItems">
-			          <div class="noCont">
-			            This option has no properties.
-			          </div>
-			        </div>
-			        <br class="clearfix">
-			      </div>
-			      </div>
-			  </div>
-			  
-			  <!-- end mainCat feat -->
 			  <br class="clearfix">
 			  
-			</div>
+			</div>-->
 
 			<!-- END MASHMENU -->
 
@@ -816,6 +796,13 @@
 //Multi Select
  	$("#secs").val([]).select2();
  	$("#subsecs").val([]).select2();
+
+
+ 	$('#subProps a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+	});
+
  </script>
 </body>
 </html>
