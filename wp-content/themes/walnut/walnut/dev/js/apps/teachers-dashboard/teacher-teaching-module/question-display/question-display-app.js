@@ -108,7 +108,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
                 }
               });
             } else if (total === 5) {
-              return alert('The expected time for this question is almost over.');
+              return console.log('The expected time for this question is almost over.');
             } else if (total === -1) {
               return qTimer.TimeCircles({
                 time: {

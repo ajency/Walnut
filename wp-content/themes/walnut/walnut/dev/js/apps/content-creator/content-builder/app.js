@@ -13,7 +13,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       }
 
       ContentBuilderController.prototype.initialize = function(options) {
-        contentPieceModel = App.request("get:page:json");
+        contentPieceModel = options.contentPieceModel;
         this.view = this._getContentBuilderView(contentPieceModel);
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
@@ -89,8 +89,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       saveQuestion: (function(_this) {
         return function() {
           var autoSave;
-          console.log('content piece');
-          console.log(contentPieceModel);
           autoSave = App.request("autosave:question:layout");
           return autoSave.autoSave(contentPieceModel);
         };

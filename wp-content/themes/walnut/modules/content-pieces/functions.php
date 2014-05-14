@@ -111,7 +111,7 @@ function get_single_content_piece($id){
     //print_r($subject_ids);
     $content_piece->subjects = $subject_ids;
     $authordata = get_userdata($content_piece->post_author);
-    $content_piece->creator = $authordata->display_name;
+    $content_piece->post_author = $authordata->display_name;
     
     // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
@@ -421,23 +421,43 @@ function get_single_content_group($id, $division=''){
     
 }
 
-function save_content_piece_layout($json){
+function save_content_piece($data){
 
-    $postarr=array(
-        'post_status'=>'publish',
+
+    $post_array=array(
+        'post_status'=>$data['post_status'],
         'post_type'=>'content_piece',
-        'post_title'=> 'test content piece'
+        'post_title'=> 'test content piece',
+        'post_author'=> $data['post_author']
     );
-    $content_id= wp_insert_post($postarr);
 
-    update_content_piece_layout_meta($content_id, $json);
+    $content_id= wp_insert_post($post_array);
+
+    if(!$content_id)
+        return false;
+
+    $content_layout = maybe_serialize($data['json']);
+
+    update_post_meta ($content_id, 'layout_json',$content_layout);
+
+    update_post_meta ($content_id, 'content_type',$data['content_type']);
+
+    update_post_meta ($content_id, 'question_type',$data['question_type']);
+
+    $term_ids = maybe_serialize($data['term_ids']);
+
+    update_post_meta ($content_id, 'term_ids',$term_ids);
+
+    update_post_meta ($content_id, 'duration',$data['duration']);
+
+    update_post_meta ($content_id, 'post_tags',$data['post_tags']);
 
     return $content_id;
 }
 
-function update_content_piece_layout_meta($content_id, $json){
+function update_content_piece($content_id, $data){
 
-    $content_layout = maybe_serialize($json);
+    $content_layout = maybe_serialize($data);
 
     if($content_id)
         update_post_meta ($content_id, 'layout_json',$content_layout);

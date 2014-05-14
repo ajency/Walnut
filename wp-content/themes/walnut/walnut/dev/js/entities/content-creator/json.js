@@ -17,8 +17,6 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       PageJson.prototype.layout = '';
 
-      PageJson.prototype.elements = [];
-
       return PageJson;
 
     })(Backbone.Model);
@@ -26,7 +24,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       getPageJSON: function(id) {
         var jsonModel;
         if (id == null) {
-          id = '151';
+          id = '';
         }
         jsonModel = new PageJson({
           ID: parseInt(id)

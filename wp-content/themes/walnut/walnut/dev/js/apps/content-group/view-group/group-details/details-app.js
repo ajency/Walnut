@@ -28,14 +28,22 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       };
 
       ViewCollecionDetailsController.prototype._getCollectionDetailsView = function(model) {
-        var terms;
+        var numOfQuestionsCompleted, terms, totalNumofQuestions;
         terms = model.get('term_ids');
-        console.log(terms);
-        console.log(this.textbookNames);
+        numOfQuestionsCompleted = _.size(this.questionResponseCollection.where({
+          "status": "completed"
+        }));
+        totalNumofQuestions = _.size(model.get('content_pieces'));
         return new CollectionDetailsView({
           model: model,
           mode: this.mode,
           templateHelpers: {
+            getProgressData: function() {
+              return numOfQuestionsCompleted + '/' + totalNumofQuestions;
+            },
+            getProgressPercentage: function() {
+              return parseInt((numOfQuestionsCompleted / totalNumofQuestions) * 100);
+            },
             getTextbookName: (function(_this) {
               return function() {
                 var texbookName, textbook;

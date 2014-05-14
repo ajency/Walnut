@@ -12,12 +12,16 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       }
 
       ElementBoxController.prototype.initialize = function(options) {
-        this.view = this._getElementBoxView();
+        var contentType;
+        contentType = options.contentType;
+        this.view = this._getElementBoxView(contentType);
         return this.show(this.view);
       };
 
-      ElementBoxController.prototype._getElementBoxView = function() {
-        return new ElementBox.Views.ElementBoxView;
+      ElementBoxController.prototype._getElementBoxView = function(contentType) {
+        return new ElementBox.Views.ElementBoxView({
+          contentType: contentType
+        });
       };
 
       return ElementBoxController;

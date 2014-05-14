@@ -47,9 +47,25 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
-        if (this.model.hasChanged()) {
-          return console.log(this.model.get('elements'));
-        }
+        var elements, elementsStr, models;
+        models = this.model.get('elements').models;
+        elements = [
+          {
+            optionNo: 1,
+            "class": 6,
+            text: 'TTT'
+          }, {
+            optionNo: 2,
+            "class": 6,
+            text: 'test 343'
+          }
+        ];
+        elements = _.map(models, function(m) {
+          console.log(m.toJSON());
+          return m.toJSON();
+        });
+        elementsStr = JSON.stringify(elements);
+        return console.log(elementsStr);
       };
 
       return Controller;

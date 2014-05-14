@@ -146,7 +146,7 @@ define ['app'
                                     Seconds:
                                         color: '#f8a616'
                         else if total is 5
-                            alert 'The expected time for this question is almost over.'
+                            console.log 'The expected time for this question is almost over.'
 
                         else if total is -1
                                 qTimer.TimeCircles

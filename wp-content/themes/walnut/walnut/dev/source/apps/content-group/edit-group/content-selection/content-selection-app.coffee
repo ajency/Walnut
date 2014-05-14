@@ -20,7 +20,8 @@ define ['app'
 							'value':'post_title'
 						}
 						{
-							'label':'Creator'
+							'label':'Author'
+              'value':'post_author'
 						}
 						{
 							'label'		:'Last Modified'
