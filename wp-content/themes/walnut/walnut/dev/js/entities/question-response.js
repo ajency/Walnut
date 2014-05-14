@@ -141,13 +141,12 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
         }).fail(_.failureHandler);
       },
       saveUpdateQuestionResponseLocal: function(model) {
-        var insert_question_response, update_question_response;
-        console.log('saveUpdateQuestionResponseLocal');
-        insert_question_response = function() {
+        var insert_question_response, questionType, update_question_response;
+        insert_question_response = function(q_resp) {
           var ref_id;
           ref_id = 'CP' + model.get('content_piece_id') + 'C' + model.get('collection_id') + 'D' + model.get('division');
           _.db.transaction(function(tx) {
-            return tx.executeSql('INSERT INTO wp_question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status) VALUES (?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), model.get('question_response'), model.get('time_taken'), model.get('start_date'), model.get('end_date'), 'started']);
+            return tx.executeSql('INSERT INTO wp_question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status) VALUES (?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), q_resp, model.get('time_taken'), _.getCurrentDateTime(0), model.get('end_date'), 'started']);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('SUCCESS: Inserted record in wp_question_response');
           });
@@ -156,32 +155,36 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
             'ref_id': ref_id
           });
         };
-        update_question_response = function() {
-          var questionType;
-          questionType = _.getQuestionType(model.get('content_piece_id'));
-          return questionType.done(function(question_type) {
-            var q_resp, status;
-            if (question_type === 'individual') {
-              q_resp = serialize(model.get('question_response'));
-            } else {
-              q_resp = model.get('question_response');
-            }
-            status = model.get('status');
-            if ((model.get('status')) !== 'paused') {
-              status = 'completed';
-            }
-            return _.db.transaction(function(tx) {
-              return tx.executeSql('UPDATE wp_question_response SET question_response=?, time_taken=?, status=? WHERE ref_id=?', [q_resp, model.get('time_taken'), status, model.get('ref_id')]);
-            }, _.transactionErrorHandler, function(tx) {
-              return console.log('SUCCESS: Updated record in wp_question_response');
-            });
+        update_question_response = function(q_resp) {
+          var end_date, status;
+          status = model.get('status');
+          if ((model.get('status')) !== 'paused') {
+            status = 'completed';
+          }
+          end_date = model.get('end_date');
+          if (status === 'completed') {
+            end_date = _.getCurrentDateTime(0);
+          }
+          return _.db.transaction(function(tx) {
+            return tx.executeSql('UPDATE wp_question_response SET question_response=?, time_taken=?, status=?, end_date=? WHERE ref_id=?', [q_resp, model.get('time_taken'), status, end_date, model.get('ref_id')]);
+          }, _.transactionErrorHandler, function(tx) {
+            return console.log('SUCCESS: Updated record in wp_question_response');
           });
         };
-        if (model.has('ref_id')) {
-          return update_question_response();
-        } else {
-          return insert_question_response();
-        }
+        questionType = _.getQuestionType(model.get('content_piece_id'));
+        return questionType.done(function(question_type) {
+          var q_resp;
+          if (question_type === 'individual') {
+            q_resp = serialize(model.get('question_response'));
+          } else {
+            q_resp = model.get('question_response');
+          }
+          if (model.has('ref_id')) {
+            return update_question_response(q_resp);
+          } else {
+            return insert_question_response(q_resp);
+          }
+        });
       }
     };
     App.reqres.setHandler("get:question:response:collection", function(params) {

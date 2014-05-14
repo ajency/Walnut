@@ -57,9 +57,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
         var contentPieces, nextQuestion, pieceIndex;
         current_question_id = current_question_id.toString();
-        if (_.checkPlatform() === 'Mobile') {
-          current_question_id = parseInt(current_question_id);
-        }
         contentPieces = contentGroupModel.get('content_pieces');
         pieceIndex = _.indexOf(contentPieces, current_question_id);
         nextQuestion = contentPieces[pieceIndex + 1];

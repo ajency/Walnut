@@ -112,17 +112,17 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                     console.log 'getQuestionResponseFromLocal transaction completed'
                 .fail _.failureHandler
                 
-                
+            
+            # save/update question_response and question_response_logs to local database    
             saveUpdateQuestionResponseLocal:(model)->
-                console.log 'saveUpdateQuestionResponseLocal'
 
-                insert_question_response = ->
+                insert_question_response =(q_resp) ->
 
                     ref_id = 'CP'+model.get('content_piece_id')+'C'+model.get('collection_id')+'D'+model.get('division')
 
                     _.db.transaction((tx)->
                         tx.executeSql('INSERT INTO wp_question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status) 
-                            VALUES (?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), model.get('question_response'), model.get('time_taken'), model.get('start_date'), model.get('end_date'), 'started'])
+                            VALUES (?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), q_resp, model.get('time_taken'), _.getCurrentDateTime(0), model.get('end_date'), 'started'])
 
                     ,_.transactionErrorHandler
                     ,(tx)->
@@ -136,21 +136,18 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                     model.set 'ref_id': ref_id
 
                 
-                update_question_response = ->
-
-                    questionType = _.getQuestionType(model.get('content_piece_id'))
-                    questionType.done (question_type)->
-                        if question_type is 'individual'
-                            q_resp = serialize(model.get('question_response'))
-                        else
-                            q_resp = model.get('question_response')
+                update_question_response =(q_resp) ->
 
                         status = model.get('status')
                         status = 'completed' if (model.get('status')) isnt 'paused'
 
+                        end_date = model.get('end_date')
+                        if status is 'completed'
+                            end_date = _.getCurrentDateTime(0)
+
                         _.db.transaction((tx)->
-                            tx.executeSql('UPDATE wp_question_response SET question_response=?, time_taken=?, status=? 
-                                WHERE ref_id=?', [q_resp, model.get('time_taken'), status, model.get('ref_id')])
+                            tx.executeSql('UPDATE wp_question_response SET question_response=?, time_taken=?, status=?, end_date=?
+                                WHERE ref_id=?', [q_resp, model.get('time_taken'), status, end_date, model.get('ref_id')])
 
                         ,_.transactionErrorHandler
                         ,(tx)->
@@ -158,14 +155,20 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                         )     
                         
 
-                
-                if model.has('ref_id')
-                    # update record in wp_question_response
-                    update_question_response()
+                questionType = _.getQuestionType(model.get('content_piece_id'))
+                questionType.done (question_type)->
+                    if question_type is 'individual'
+                        q_resp = serialize(model.get('question_response'))
+                    else
+                        q_resp = model.get('question_response')
 
-                else
-                    # insert new record in wp_question_response
-                    insert_question_response()   
+                    if model.has('ref_id')
+                        # update record in wp_question_response
+                        update_question_response(q_resp)
+
+                    else
+                        # insert new record in wp_question_response
+                        insert_question_response(q_resp)   
 
 
 

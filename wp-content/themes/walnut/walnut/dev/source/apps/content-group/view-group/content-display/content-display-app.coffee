@@ -69,11 +69,15 @@ define ['app'
 
                 else
                     for question in @$el.find '.contentPiece'
-                        if _.contains responseQuestionIDs, $(question).attr 'data-id'
+                        current_question = $(question).attr 'data-id'
+                        current_question = parseInt($(question).attr 'data-id') if _.checkPlatform() is 'Mobile'
+
+                        if _.contains responseQuestionIDs, current_question
                             $ question
                             .find '.cbp_tmlabel'
                                 .addClass 'done completed'
                                     .css 'cursor', 'pointer'
+                                    
 
             viewQuestionReadOnly: (e)=>
                 questionID = $ e.target

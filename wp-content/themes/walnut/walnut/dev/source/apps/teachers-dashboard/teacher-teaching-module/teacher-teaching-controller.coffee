@@ -62,9 +62,6 @@ define ['app'
             _changeQuestion: (current_question_id)=>
                 current_question_id = current_question_id.toString()
 
-                # use parseInt() for mobile
-                current_question_id = parseInt(current_question_id) if _.checkPlatform() is 'Mobile'
-
                 contentPieces = contentGroupModel.get 'content_pieces'
 
                 pieceIndex = _.indexOf(contentPieces, current_question_id)

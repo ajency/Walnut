@@ -85,7 +85,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       };
 
       ContentDisplayView.prototype.onShow = function() {
-        var completedResponses, question, responseCollection, responseQuestionIDs, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
+        var completedResponses, current_question, question, responseCollection, responseQuestionIDs, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
         responseCollection = Marionette.getOption(this, 'responseCollection');
         completedResponses = responseCollection.where({
           'status': 'completed'
@@ -106,7 +106,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           _results1 = [];
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
             question = _ref1[_j];
-            if (_.contains(responseQuestionIDs, $(question).attr('data-id'))) {
+            current_question = $(question).attr('data-id');
+            if (_.checkPlatform() === 'Mobile') {
+              current_question = parseInt($(question).attr('data-id'));
+            }
+            if (_.contains(responseQuestionIDs, current_question)) {
               _results1.push($(question).find('.cbp_tmlabel').addClass('done completed').css('cursor', 'pointer'));
             } else {
               _results1.push(void 0);
