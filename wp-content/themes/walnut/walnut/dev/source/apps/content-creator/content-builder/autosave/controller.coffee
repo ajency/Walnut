@@ -9,26 +9,24 @@ define ['app'], (App)->
 
                 # autoSave
             autoSave: (contentPieceModel)->
-                console.log contentPieceModel
+
                 siteRegion = App.mainContentRegion.$el
 
                 _json = @_getPageJson siteRegion
-
-                console.log '_json'
-                console.log _json
 
                 if not _.isObject _json
                     throw new Error "invalid json..."
 
                 #localStorage.setItem 'layout',JSON.stringify _json
 
+                data = contentPieceModel.toJSON()
+                data.action= 'save-content-piece-json'
+                data.json= _json
+
                 options =
                     type: 'POST'
                     url: AJAXURL
-                    data:
-                        action: 'save-content-piece-json'
-                        json: _json
-                        content_id: contentPieceModel.get 'ID'
+                    data:data
 
 
                 $.ajax(options).done (response)->

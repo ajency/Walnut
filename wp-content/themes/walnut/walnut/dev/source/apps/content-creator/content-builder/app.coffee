@@ -13,7 +13,7 @@ define ['app'
 
             initialize : (options)->
 
-                contentPieceModel = App.request "get:page:json"
+                {contentPieceModel} = options
 
 
                 @view = @_getContentBuilderView contentPieceModel
@@ -79,8 +79,7 @@ define ['app'
 
 
             saveQuestion :=>
-                console.log 'content piece'
-                console.log contentPieceModel
+
                 autoSave = App.request "autosave:question:layout"
                 autoSave.autoSave contentPieceModel
 

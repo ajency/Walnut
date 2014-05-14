@@ -6,8 +6,10 @@ define ['app'
         class PropertyDockController extends RegionController
 
             initialize: (options)->
-                @layout = @_getLayout()
 
+                {@saveModelCommand}= options
+
+                @layout = @_getLayout()
 
                 App.commands.setHandler "show:question:elements", (options)=>
                     @_getElementBox options.model
@@ -35,7 +37,7 @@ define ['app'
 
                 @show @layout
 
-
+                @listenTo @layout, "save:question", => @saveModelCommand.execute "save:model:data"
 
             _getLayout: ->
                 new PropertyDock.Views.Layout
@@ -72,5 +74,4 @@ define ['app'
 
 
         App.commands.setHandler "show:property:dock", (options)->
-            new PropertyDockController
-                region: options.region
+            new PropertyDockController options

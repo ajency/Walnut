@@ -47,11 +47,11 @@ function authenticate_app_login() {
 }
 add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
 
-function fetch_users(){
+function ajax_fetch_users(){
     
     $user_data=get_user_list($_GET);
     
     wp_send_json($user_data);
     
 }
-add_action( 'wp_ajax_get-users', 'fetch_users' );
+add_action( 'wp_ajax_get-users', 'ajax_fetch_users' );

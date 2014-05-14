@@ -17,23 +17,19 @@ define(['app'], function(App) {
       };
 
       Controller.prototype.autoSave = function(contentPieceModel) {
-        var options, siteRegion, _json;
-        console.log(contentPieceModel);
+        var data, options, siteRegion, _json;
         siteRegion = App.mainContentRegion.$el;
         _json = this._getPageJson(siteRegion);
-        console.log('_json');
-        console.log(_json);
         if (!_.isObject(_json)) {
           throw new Error("invalid json...");
         }
+        data = contentPieceModel.toJSON();
+        data.action = 'save-content-piece-json';
+        data.json = _json;
         options = {
           type: 'POST',
           url: AJAXURL,
-          data: {
-            action: 'save-content-piece-json',
-            json: _json,
-            content_id: contentPieceModel.get('ID')
-          }
+          data: data
         };
         return $.ajax(options).done(function(response) {
           console.log(response.ID);

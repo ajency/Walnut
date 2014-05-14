@@ -12,6 +12,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       }
 
       PropertyDockController.prototype.initialize = function(options) {
+        this.saveModelCommand = options.saveModelCommand;
         this.layout = this._getLayout();
         App.commands.setHandler("show:question:elements", (function(_this) {
           return function(options) {
@@ -48,7 +49,12 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
             return _this.layout.questPropertyRegion.close();
           };
         })(this));
-        return this.show(this.layout);
+        this.show(this.layout);
+        return this.listenTo(this.layout, "save:question", (function(_this) {
+          return function() {
+            return _this.saveModelCommand.execute("save:model:data");
+          };
+        })(this));
       };
 
       PropertyDockController.prototype._getLayout = function() {
@@ -95,9 +101,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
 
     })(RegionController);
     return App.commands.setHandler("show:property:dock", function(options) {
-      return new PropertyDockController({
-        region: options.region
-      });
+      return new PropertyDockController(options);
     });
   });
 });

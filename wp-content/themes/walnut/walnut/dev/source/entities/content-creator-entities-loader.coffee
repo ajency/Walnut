@@ -11,4 +11,8 @@ define [
 		'entities/content-creator/option'
 		'entities/content-creator/json'
 		'entities/schools'
-		'entities/breadcrumb'],->
+		'entities/breadcrumb'
+    'entities/content-pieces'
+    'entities/content-group'
+    'entities/textbooks'
+    'entities/chapters'],->

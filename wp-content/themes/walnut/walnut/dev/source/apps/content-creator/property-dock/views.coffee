@@ -18,10 +18,8 @@ define ['app'], (App)->
             						<div id="question-elements" class="docket"></div>'
 
             events:
-                'click  #save-question': 'saveQuestion'
+                'click  #save-question':-> @trigger "save:question"
 
-            saveQuestion: ->
-                App.execute "save:question"
 
             regions:
                 questElementPropRegion: '#question-elements-property'

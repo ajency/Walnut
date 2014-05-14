@@ -6,10 +6,10 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name: 'content-piece'
             layout: ''
-            elements: []
+
 
         API =
-            getPageJSON: (id='163')->
+            getPageJSON: (id='')->
                 jsonModel = new PageJson
                     ID: parseInt id
                 jsonModel.fetch()
