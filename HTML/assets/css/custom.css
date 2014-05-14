@@ -194,7 +194,6 @@
 .dock .builder_actions {
   background: #e5e9ec;
   padding-bottom: 15px;
-  margin-top: -48px;
 }
 .dock .btn-cons2 {
   width: 108px;
@@ -752,128 +751,143 @@
 .cke_dialog_body a.cke_dialog_ui_button_ok:hover {
   background: #006ea6;
 }
-div.Dmenu {
-  background: none repeat scroll 0 0 #0090d9;
-  font-size: 13px;
-  margin-bottom: 15px;
-  padding-left: 1px;
-  position: relative;
-  width: 100%;
-  z-index: 1;
-  height: 40px;
-}
-div.Dmenu a {
-  text-decoration: none;
-}
-div.Dmenu div.mainCat {
-  border-left: 2px solid transparent;
-  border-right: 2px solid transparent;
-  border-top: 2px solid transparent;
-  float: left;
-  transition: all 0.1s ease 0s;
-}
-div.Dmenu div.mainCat div.allContent {
-  background-color: #FFF;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
-  display: none;
-  max-height: 350px;
-  position: absolute;
-  top: 38px;
-  left: 0;
-  width: 100%;
-  z-index: -1;
-  border-radius: 0 0 3px 3px;
-}
-div.Dmenu div.mainCat div.allContent div.menuItems {
-  float: left;
-  width: 900px;
-  margin: 10px 0 1px 20px;
-  color: #000;
-}
-div.Dmenu div.mainCat div.allContent a.slink {
-  border-top: 1px solid #cddae9;
-  color: #40668c;
-  display: block;
-  font-weight: 700;
-  margin: 0 0 0 1px;
-  padding: 10px;
-}
-div.Dmenu div.mainCat div.allContent a.slink:hover {
-  background-color: #DDF0F9;
-  color: #2AA4CF;
-  padding-right: 10px;
-  margin-right: -1px;
-}
-div.Dmenu div.mainCat > a:before {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid #A8BACD;
-  content: "";
-  height: 0;
-  position: absolute;
-  right: 6px;
-  top: 17px;
-  width: 0;
-}
-div.Dmenu div.mainCat > a:hover:before {
-  border-top-color: #40668C;
-}
-div.Dmenu div.mainCat a.flink {
-  color: #fff;
-  display: block;
-  font-weight: 700;
-  height: 36px;
-  line-height: 36px;
-  padding-left: 10px;
-  padding-right: 18px;
-  position: relative;
-}
-div.Dmenu div.mainCat div.snav:hover div.menuItems {
-  height: 100%;
-}
-div.Dmenu div.mainCat div.snavM {
-  background: #DDF0F9;
-  float: left;
-  margin-bottom: 1px;
-  width: 150px;
-  height: 350px;
-  border-right: 1px solid #dde5ef;
-}
-div.Dmenu div.mainCat div.menuItems .inside {
-  border-bottom: 1px solid #DCE5EE;
-  padding: 10px 0;
-  margin-left: 5px;
-  margin-right: 5px;
-  float: left;
-}
-div.Dmenu div.mainCat div.menuItems .inside img {
-  padding-right: 10px;
-  width: 200px;
-}
-div.Dmenu div.mainCat div.menuItems .inside p {
-  color: #333;
-  font-size: 14px;
-  transition: all 0.2s ease 0s;
-  width: 200px;
-}
-div.Dmenu div.mainCat div.menuItems .noCont {
-  padding: 5px;
-  font-weight: 700;
-  color: #333;
-}
-div.Dmenu div.mainCat:hover {
-  background: none repeat scroll 0 0 #DDF0F9;
-}
-div.Dmenu div.mainCat:hover a {
-  color: #2AA4CF;
-}
-div.Dmenu div.mainCat:hover div.allContent {
-  display: block;
-}
-div.Dmenu a.flink:hover {
-  background-color: #DDF0F9;
-  border: medium none;
-  color: #2AA4CF;
+/*div.Dmenu {
+    background: none repeat scroll 0 0 @color-info;
+    //border-bottom: 1px solid #DCE5EE;
+    //border-top: 1px solid #DCE5EE;
+    font-size: 13px;
+    margin-bottom: 15px;
+    padding-left: 1px;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+    height:40px;
+    a {
+        text-decoration:none;
+    }
+    ul{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        vertical-align: top;
+    }
+    li.mainCat {
+        border-left:2px solid transparent;
+        border-right:2px solid transparent;
+        border-top:4px solid transparent;
+        float:left;
+        transition: all 0.1s ease 0s;
+        div.allContent {
+            background-color:@preview-grey;
+            //border:2px solid #DDF0F9;
+            box-shadow:0 2px 3px rgba(0, 0, 0, 0.3);
+            display:block;
+            max-height:350px;
+            position:absolute;
+            top:38px;
+            left: 0;
+            width:100%;
+            z-index:-1;
+            border-radius: 0 0 3px 3px;
+            div.menuItems {
+                float:left;
+                width:100%;
+                margin:0px 0 1px 0;
+                color:#000;
+            }
+            a.slink {
+                border-top:1px solid #cddae9;
+                color:#40668c;
+                display:block;
+                font-weight:700;
+                margin:0 0 0 1px;
+                padding:10px;
+            }
+            a.slink:hover {
+                background-color: #DDF0F9;
+                color: #2AA4CF;
+                padding-right: 10px;
+                margin-right: -1px;
+            }
+        }
+        & > a:before {
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 4px solid #A8BACD;
+            content: "";
+            height: 0;
+            position: absolute;
+            right: 6px;
+            top: 17px;
+            width: 0;
+        }
+        & > a:hover:before {
+            border-top-color: #40668C;
+        }
+        a.flink {
+            color: #fff;
+            display: block;
+            font-weight: 700;
+            height: 36px;
+            line-height: 36px;
+            padding-left: 10px;
+            padding-right: 18px;
+            position: relative;
+        }
+        div.snav:hover {
+            div.menuItems {
+                //border-left:1px solid #DDF0F9;
+                height:100%;
+                //padding-left:10px;
+            }
+        }
+        div.snavM {
+            background:#DDF0F9;
+            float:left;
+            margin-bottom:1px;
+            //margin-top:1px;
+            width:150px;
+            height:350px;
+            border-right:1px solid #dde5ef;
+        }
+        div.menuItems {
+            .inside {
+                border-bottom: 1px solid #DCE5EE;
+                padding: 10px 0;
+                margin-left:5px;
+                margin-right:5px;
+                float:left;
+                img {
+                    padding-right:10px;
+                    width:200px;
+                }
+                p {
+                    color: #333;
+                    font-size: 14px;
+                    transition: all 0.2s ease 0s;
+                    width:200px;
+                }
+            }
+            .noCont {
+                padding:5px;
+                font-weight:700;
+                color:#333;
+            }
+        }
+    }
+    li.mainCat:hover {
+        background:none repeat scroll 0 0 @color-white;
+        a {
+            color:#2AA4CF;
+        }
+    }
+    
+}*/
+#subProps {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 /*input[type=checkbox].mcq-option-select {
 	display:none;
@@ -1227,6 +1241,17 @@ p.mcq-option-text {
 .cpTimer .textDiv_Seconds span {
   opacity: 0.3;
 }
+.modInfo,
+.qstnInfo {
+  cursor: pointer;
+}
+.qstnStatus {
+  color: #0aa699;
+  font-size: 20px;
+}
+.qstnStatus i {
+  font-size: 22px;
+}
 #content-board {
   margin-top: 30px;
 }
@@ -1455,6 +1480,11 @@ h3.time {
 }
 #myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel.done:after {
   border-right-color: #f3f3f3;
+}
+#myCanvas-miki .cbp_tmtimeline > li .qstnStatus {
+  position: absolute;
+  right: -140px;
+  top: 12px;
 }
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
