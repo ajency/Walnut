@@ -109,11 +109,32 @@ define ['underscore', 'underscorestring'], ( _) ->
 
 			$.when(runQuery()).done ->
 				console.log 'getLastDetails transaction completed'
-			.fail _.failureHandler			
+			.fail _.failureHandler	
+
+
+		#Insert new records in wp_question_response_logs
+		updateQuestionResponseLogs : (refID)->
+
+			_.db.transaction((tx)->
+				tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time) VALUES (?,?)', [refID, _.getCurrentDateTime(2)])
+
+			,_.transactionErrorHandler
+            ,(tx)->
+                console.log 'SUCCESS: Inserted new record in wp_question_response_logs'
+            )	
+
 
 
 		#Get current date
-		getCurrentDate : ->
+		getCurrentDateTime : (bit)->
+			# bit = 0 - date
+			# 	  = 1 - time 
+			# 	  = 2 - date and time
+
 			d = new Date()
 			date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()
-			date		
+			time = d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()
+
+			return date if bit is 0
+			return time if bit is 1
+			return date+' '+time if bit is 2

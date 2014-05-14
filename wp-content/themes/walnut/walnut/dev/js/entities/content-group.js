@@ -242,7 +242,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           division_id: p.division,
           collection_id: p.id,
           teacher_id: 1,
-          date: _.getCurrentDate(),
+          date: _.getCurrentDateTime(0),
           status: p.status
         };
         if (p.status === 'completed' || p.status === 'scheduled') {

@@ -86,7 +86,11 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
           })(this)
         };
         connection_resp = App.request("get:auth:controller", options);
-        return connection_resp.authenticate();
+        if (_.checkPlatform() === 'Desktop') {
+          return connection_resp.authenticate();
+        } else {
+          return _.updateQuestionResponseLogs(refID);
+        }
       },
       getQuestionResponseFromLocal: function(collection_id, division) {
         var onSuccess, runMainQuery;
@@ -115,16 +119,15 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
                     q_resp = r['question_response'];
                   }
                   return result[i] = {
-                    id: r['id'],
+                    ref_id: r['ref_id'],
                     content_piece_id: r['content_piece_id'],
                     collection_id: r['collection_id'],
                     division: r['division'],
-                    date_created: r['date_created'],
-                    date_modified: r['date_modified'],
-                    total_time: r['total_time'],
                     question_response: q_resp,
-                    time_started: r['time_started'],
-                    time_completed: r['time_completed']
+                    time_taken: r['time_taken'],
+                    start_date: r['start_date'],
+                    end_date: r['end_date'],
+                    status: r['status']
                   };
                 });
               })(r, i);
@@ -137,52 +140,48 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
           return console.log('getQuestionResponseFromLocal transaction completed');
         }).fail(_.failureHandler);
       },
-      saveQuestionResponseLocal: function(p) {
-        var insertQuestionResponse, questionType, updateQuestionResponse;
-        insertQuestionResponse = function(data) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("INSERT INTO wp_question_response (content_piece_id, collection_id, division, date_created, date_modified, total_time, question_response, time_started, time_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [data.content_piece_id, data.collection_id, data.division, data.date_created, data.date_modified, data.total_time, data.question_response, data.time_started, data.time_completed]);
+      saveUpdateQuestionResponseLocal: function(model) {
+        var insert_question_response, update_question_response;
+        console.log('saveUpdateQuestionResponseLocal');
+        insert_question_response = function() {
+          var ref_id;
+          ref_id = 'CP' + model.get('content_piece_id') + 'C' + model.get('collection_id') + 'D' + model.get('division');
+          _.db.transaction(function(tx) {
+            return tx.executeSql('INSERT INTO wp_question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status) VALUES (?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), model.get('question_response'), model.get('time_taken'), model.get('start_date'), model.get('end_date'), 'started']);
           }, _.transactionErrorHandler, function(tx) {
-            return console.log('Success: Inserted new record in wp_question_response');
+            return console.log('SUCCESS: Inserted record in wp_question_response');
+          });
+          _.updateQuestionResponseLogs(ref_id);
+          return model.set({
+            'ref_id': ref_id
           });
         };
-        updateQuestionResponse = function(data) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("UPDATE wp_question_response SET date_modified=?, question_response=? WHERE id=?", [data.date_modified, data.question_response, data.id]);
-          }, _.transactionErrorHandler, function(tx) {
-            return console.log('Success: Updated record in wp_question_response');
+        update_question_response = function() {
+          var questionType;
+          questionType = _.getQuestionType(model.get('content_piece_id'));
+          return questionType.done(function(question_type) {
+            var q_resp, status;
+            if (question_type === 'individual') {
+              q_resp = serialize(model.get('question_response'));
+            } else {
+              q_resp = model.get('question_response');
+            }
+            status = model.get('status');
+            if ((model.get('status')) !== 'paused') {
+              status = 'completed';
+            }
+            return _.db.transaction(function(tx) {
+              return tx.executeSql('UPDATE wp_question_response SET question_response=?, time_taken=?, status=? WHERE ref_id=?', [q_resp, model.get('time_taken'), status, model.get('ref_id')]);
+            }, _.transactionErrorHandler, function(tx) {
+              return console.log('SUCCESS: Updated record in wp_question_response');
+            });
           });
         };
-        questionType = _.getQuestionType(p.content_piece_id);
-        return questionType.done(function(question_type) {
-          var insertData, q_resp, updateData;
-          if (question_type === 'individual') {
-            q_resp = serialize(p.question_response);
-          } else {
-            q_resp = p.question_response;
-          }
-          if (typeof p.id === 'undefined') {
-            insertData = {
-              collection_id: p.collection_id,
-              content_piece_id: p.content_piece_id,
-              division: p.division,
-              date_created: _.getCurrentDate(),
-              date_modified: _.getCurrentDate(),
-              total_time: 0,
-              question_response: q_resp,
-              time_started: '',
-              time_completed: ''
-            };
-            return insertQuestionResponse(insertData);
-          } else {
-            updateData = {
-              id: p.id,
-              date_modified: _.getCurrentDate(),
-              question_response: q_resp
-            };
-            return updateQuestionResponse(updateData);
-          }
-        });
+        if (model.has('ref_id')) {
+          return update_question_response();
+        } else {
+          return insert_question_response();
+        }
       }
     };
     App.reqres.setHandler("get:question:response:collection", function(params) {
@@ -197,8 +196,8 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
     App.reqres.setHandler("get:question-response:local", function(collection_id, division) {
       return API.getQuestionResponseFromLocal(collection_id, division);
     });
-    return App.reqres.setHandler("save:question-response:local", function(params) {
-      return API.saveQuestionResponseLocal(params);
+    return App.reqres.setHandler("save:question-response:local", function(model) {
+      return API.saveUpdateQuestionResponseLocal(model);
     });
   });
 });

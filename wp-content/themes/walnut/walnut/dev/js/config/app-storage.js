@@ -5,7 +5,8 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
     return db.transaction(function(tx) {
       tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, user_id UNIQUE, username, password, user_role)');
       tx.executeSql('CREATE TABLE IF NOT EXISTS wp_training_logs (id INTEGER PRIMARY KEY, division_id INTEGER, collection_id INTEGER, teacher_id INTEGER, date, status)');
-      return tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response (id INTEGER PRIMARY KEY, content_piece_id INTEGER, collection_id INTEGER, division INTEGER, date_created, date_modified, total_time, question_response, time_started, time_completed)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response (ref_id, content_piece_id INTEGER, collection_id INTEGER, division INTEGER, question_response, time_taken, start_date, end_date, status)');
+      return tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response_logs (qr_ref_id, start_time)');
     }, _.transactionErrorHandler, function(tx) {
       return console.log('SUCCESS: Local db transaction completed');
     });

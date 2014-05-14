@@ -57,6 +57,9 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
         var contentPieces, nextQuestion, pieceIndex;
         current_question_id = current_question_id.toString();
+        if (_.checkPlatform() === 'Mobile') {
+          current_question_id = parseInt(current_question_id);
+        }
         contentPieces = contentGroupModel.get('content_pieces');
         pieceIndex = _.indexOf(contentPieces, current_question_id);
         nextQuestion = contentPieces[pieceIndex + 1];
@@ -82,8 +85,12 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
         var modelData;
+        content_piece_id = content_piece_id.toString();
+        if (_.checkPlatform() === 'Mobile') {
+          content_piece_id = parseInt(content_piece_id);
+        }
         questionResponseModel = questionResponseCollection.findWhere({
-          'content_piece_id': content_piece_id.toString()
+          'content_piece_id': content_piece_id
         });
         if (questionResponseModel) {
           if (this.display_mode === 'class_mode') {

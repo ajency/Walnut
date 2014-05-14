@@ -63,7 +63,12 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
 
                 connection_resp = App.request "get:auth:controller", options
 
-                connection_resp.authenticate()
+                if _.checkPlatform() is 'Desktop'
+                    connection_resp.authenticate()
+
+                else
+                    # changes for mobile
+                    _.updateQuestionResponseLogs(refID)    
 
 
             # get question response from local database
@@ -86,19 +91,18 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                                 questionType.done (question_type)->
                                     if question_type is 'individual'
                                         q_resp = unserialize(r['question_response'])
-                                    else q_resp = r['question_response']    
+                                    else q_resp = r['question_response'] 
 
                                     result[i] = 
-                                        id: r['id']
+                                        ref_id: r['ref_id']
                                         content_piece_id: r['content_piece_id']
                                         collection_id: r['collection_id']
                                         division: r['division']
-                                        date_created: r['date_created']
-                                        date_modified: r['date_modified']
-                                        total_time: r['total_time']
                                         question_response: q_resp
-                                        time_started: r['time_started']
-                                        time_completed: r['time_completed']
+                                        time_taken: r['time_taken']
+                                        start_date: r['start_date']
+                                        end_date: r['end_date']
+                                        status: r['status']
 
                             i++ 
         
@@ -109,58 +113,59 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                 .fail _.failureHandler
                 
                 
-            saveQuestionResponseLocal:(p)->
-                #function to insert record in wp_question_response
-                insertQuestionResponse =(data)->
-                    _.db.transaction( (tx)->
-                        tx.executeSql("INSERT INTO wp_question_response (content_piece_id, collection_id, division, date_created, date_modified, total_time, question_response, time_started, time_completed) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [data.content_piece_id, data.collection_id, data.division, data.date_created, data.date_modified, data.total_time, data.question_response, data.time_started, data.time_completed])
-                            
+            saveUpdateQuestionResponseLocal:(model)->
+                console.log 'saveUpdateQuestionResponseLocal'
+
+                insert_question_response = ->
+
+                    ref_id = 'CP'+model.get('content_piece_id')+'C'+model.get('collection_id')+'D'+model.get('division')
+
+                    _.db.transaction((tx)->
+                        tx.executeSql('INSERT INTO wp_question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status) 
+                            VALUES (?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), model.get('question_response'), model.get('time_taken'), model.get('start_date'), model.get('end_date'), 'started'])
+
                     ,_.transactionErrorHandler
                     ,(tx)->
-                        console.log 'Success: Inserted new record in wp_question_response'
+                        console.log 'SUCCESS: Inserted record in wp_question_response'
                     )
 
+                    # update question_response_logs
+                    _.updateQuestionResponseLogs(ref_id)
 
-                #function to update record in wp_question_response
-                updateQuestionResponse =(data)->
-                    _.db.transaction( (tx)->
-                        tx.executeSql("UPDATE wp_question_response SET date_modified=?, question_response=? 
-                            WHERE id=?", [data.date_modified, data.question_response, data.id])
-                            
-                    ,_.transactionErrorHandler
-                    ,(tx)->
-                        console.log 'Success: Updated record in wp_question_response'
-                    )
+                    # pass ref_id to model
+                    model.set 'ref_id': ref_id
+
+                
+                update_question_response = ->
+
+                    questionType = _.getQuestionType(model.get('content_piece_id'))
+                    questionType.done (question_type)->
+                        if question_type is 'individual'
+                            q_resp = serialize(model.get('question_response'))
+                        else
+                            q_resp = model.get('question_response')
+
+                        status = model.get('status')
+                        status = 'completed' if (model.get('status')) isnt 'paused'
+
+                        _.db.transaction((tx)->
+                            tx.executeSql('UPDATE wp_question_response SET question_response=?, time_taken=?, status=? 
+                                WHERE ref_id=?', [q_resp, model.get('time_taken'), status, model.get('ref_id')])
+
+                        ,_.transactionErrorHandler
+                        ,(tx)->
+                            console.log 'SUCCESS: Updated record in wp_question_response'
+                        )     
                         
 
-                questionType = _.getQuestionType(p.content_piece_id)
-                questionType.done (question_type)->
-                    if question_type is 'individual'
-                        q_resp = serialize(p.question_response)
-                    else q_resp = p.question_response    
+                
+                if model.has('ref_id')
+                    # update record in wp_question_response
+                    update_question_response()
 
-                    if typeof p.id is 'undefined'
-                        insertData =
-                            collection_id: p.collection_id
-                            content_piece_id: p.content_piece_id
-                            division: p.division
-                            date_created: _.getCurrentDate()
-                            date_modified: _.getCurrentDate()
-                            total_time: 0
-                            question_response: q_resp
-                            time_started: ''
-                            time_completed: ''
-                            
-                        insertQuestionResponse(insertData)  
-
-                    else 
-                        updateData =
-                            id: p.id
-                            date_modified: _.getCurrentDate()
-                            question_response: q_resp
-
-                        updateQuestionResponse(updateData)        
+                else
+                    # insert new record in wp_question_response
+                    insert_question_response()   
 
 
 
@@ -178,6 +183,6 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
         App.reqres.setHandler "get:question-response:local", (collection_id, division)->
             API.getQuestionResponseFromLocal collection_id, division
 
-        App.reqres.setHandler "save:question-response:local", (params)->
-            API.saveQuestionResponseLocal params    
+        App.reqres.setHandler "save:question-response:local", (model)->
+            API.saveUpdateQuestionResponseLocal model    
 

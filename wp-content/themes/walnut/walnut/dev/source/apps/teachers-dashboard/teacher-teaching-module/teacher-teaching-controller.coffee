@@ -62,6 +62,9 @@ define ['app'
             _changeQuestion: (current_question_id)=>
                 current_question_id = current_question_id.toString()
 
+                # use parseInt() for mobile
+                current_question_id = parseInt(current_question_id) if _.checkPlatform() is 'Mobile'
+
                 contentPieces = contentGroupModel.get 'content_pieces'
 
                 pieceIndex = _.indexOf(contentPieces, current_question_id)
@@ -93,8 +96,13 @@ define ['app'
 
 
             _getOrCreateModel: (content_piece_id)=>
+                content_piece_id = content_piece_id.toString()
+
+                # use parseInt() for mobile
+                content_piece_id = parseInt(content_piece_id) if _.checkPlatform() is 'Mobile'
+
                 questionResponseModel = questionResponseCollection.findWhere
-                    'content_piece_id': content_piece_id.toString()
+                    'content_piece_id': content_piece_id
 
                 if questionResponseModel
                     if @display_mode is 'class_mode'

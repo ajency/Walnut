@@ -135,7 +135,7 @@ define(["backbone"], function(Backbone) {
           console.log('Schools local');
         }
         if (modelname === 'question-response') {
-          data = App.reqres.request("save:" + modelname + ":local", model.attributes);
+          data = App.reqres.request("save:" + modelname + ":local", model);
         }
       }
       model.trigger("request", model, xhr, options);

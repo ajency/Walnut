@@ -208,7 +208,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						division_id: p.division
 						collection_id: p.id
 						teacher_id: 1  #teacher id hardcoded as 1 for now
-						date: _.getCurrentDate()
+						date: _.getCurrentDateTime(0)
 						status: p.status
 
 					if p.status is 'completed' or p.status is 'scheduled'

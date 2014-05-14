@@ -117,11 +117,27 @@ define(['underscore', 'underscorestring'], function(_) {
         return console.log('getLastDetails transaction completed');
       }).fail(_.failureHandler);
     },
-    getCurrentDate: function() {
-      var d, date;
+    updateQuestionResponseLogs: function(refID) {
+      return _.db.transaction(function(tx) {
+        return tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time) VALUES (?,?)', [refID, _.getCurrentDateTime(2)]);
+      }, _.transactionErrorHandler, function(tx) {
+        return console.log('SUCCESS: Inserted new record in wp_question_response_logs');
+      });
+    },
+    getCurrentDateTime: function(bit) {
+      var d, date, time;
       d = new Date();
       date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-      return date;
+      time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+      if (bit === 0) {
+        return date;
+      }
+      if (bit === 1) {
+        return time;
+      }
+      if (bit === 2) {
+        return date + ' ' + time;
+      }
     }
   });
 });

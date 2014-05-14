@@ -201,7 +201,7 @@ define ["backbone"], (Backbone) ->
 					console.log 'Schools local'
 
 				if modelname is 'question-response'
-					data = App.reqres.request "save:#{modelname}:local", model.attributes
+					data = App.reqres.request "save:#{modelname}:local", model
 
 			
 			# trigger the request event of the model
