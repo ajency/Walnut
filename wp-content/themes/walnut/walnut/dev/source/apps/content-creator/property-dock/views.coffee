@@ -1,54 +1,39 @@
-define ['app'],(App)->
+define ['app'], (App)->
+    App.module "ContentCreator.PropertyDock.Views", (Views, App)->
+        class Views.Layout extends Marionette.Layout
 
-	App.module "ContentCreator.PropertyDock.Views",(Views,App)->
+            template: '<div class="builder_actions">
+                      					<button type="button" class="btn btn-success btn-cons2" id="save-question">
+                      					<i class="fa fa-check"></i> Save</button>
+                      					<button type="button" class="btn btn-success btn-cons2">
+                      					<i class="fa fa-eye"></i> Preview</button>
+                      				</div>
+            						<div class="tiles green">
+            							<div class="tiles-head">
+            								<h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4>
+            							</div>
+            						</div>
+            						<div id="question-elements-property" class="docket"></div>
+            						<div id="question-property" class="docket"></div>
+            						<div id="question-elements" class="docket"></div>'
 
-		class Views.Layout extends Marionette.Layout
+            events:
+                'click  #save-question': 'saveQuestion'
 
-			template : '<div class="builder_actions">
-          					<button type="button" class="btn btn-success btn-cons2" id="save-question">
-          					<i class="fa fa-check"></i> Save</button>
-          					<button type="button" class="btn btn-success btn-cons2">
-          					<i class="fa fa-eye"></i> Preview</button>
-          				</div>
-						<div class="tiles green">
-							<div class="tiles-head">
-								<h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4>
-							</div>
-						</div>
-						<div id="question-elements-property" class="docket"></div>
-						<div id="question-property" class="docket"></div>
-						<div id="question-elements" class="docket"></div>'
+            saveQuestion: ->
+                App.execute "save:question"
 
-			events :
-				'click  #save-question' : 'saveQuestion'
+            regions:
+                questElementPropRegion: '#question-elements-property'
+                questPropertyRegion: '#question-property'
+                questElementRegion: '#question-elements'
 
-			saveQuestion:->
-				App.execute "save:question"
+            onShow: ->
 
-			regions : 
-				questElementPropRegion: '#question-elements-property'
-				questPropertyRegion	: '#question-property'
-				questElementRegion	: '#question-elements'
+                @$el.find('#question-property, #question-elements-property, #question-elements').on 'click', (evt)->
+                    evt.stopPropagation()
 
-			onShow:->
-
-					# $('#question-property').on 'mouseover mouseenter',->
-					# 	App.ContentCreator.closequestioneproperty = false
-
-					# $('#question-property').parent().parent().on 'mouseleave',->
-					# 	App.ContentCreator.closequestioneproperty = true
-
-					@$el.find('#question-property, #question-elements-property, #question-elements').on 'click',(evt)->
-						evt.stopPropagation()
-
-
-					$('html').on 'click',=>
-						@questPropertyRegion.close()
-
-					$('html').on 'click',=>
-						@questElementPropRegion.close()
-
-					$('html').on 'click',=>
-						@questElementRegion.close()
-
-					
+                $('.content-creator-layout').on 'click', =>
+                    @questPropertyRegion.close()
+                    @questElementPropRegion.close()
+                    @questElementRegion.close()

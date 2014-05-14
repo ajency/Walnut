@@ -30,18 +30,10 @@ define(['app'], function(App) {
         this.$el.find('#question-property, #question-elements-property, #question-elements').on('click', function(evt) {
           return evt.stopPropagation();
         });
-        $('html').on('click', (function(_this) {
+        return $('.content-creator-layout').on('click', (function(_this) {
           return function() {
-            return _this.questPropertyRegion.close();
-          };
-        })(this));
-        $('html').on('click', (function(_this) {
-          return function() {
-            return _this.questElementPropRegion.close();
-          };
-        })(this));
-        return $('html').on('click', (function(_this) {
-          return function() {
+            _this.questPropertyRegion.close();
+            _this.questElementPropRegion.close();
             return _this.questElementRegion.close();
           };
         })(this));

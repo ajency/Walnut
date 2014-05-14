@@ -35,15 +35,26 @@ define ['app'
                     mcq_model: model
 
             onClose: ->
-                if @model.hasChanged()
+                    models= this.model.get('elements').models
 
-                    console.log @model.get('elements')
+                    elements= [
+                        {optionNo: 1, class: 6, text: 'TTT'},
+                        {optionNo: 2, class: 6, text: 'test 343'}
+                    ]
+
+                    elements= _.map models, (m)->
+                                                console.log m.toJSON()
+                                                m.toJSON()
+
+                    elementsStr = JSON.stringify(elements)
+                    console.log elementsStr
+
+                    #@model.set 'elements': elements
 
                     #@model.save(null, wait:true)
-#                    elementsModels= @model.get('elements').models
-#                    elements= _.map(elementsModels, (m)-> m.toJSON()).values()
-#                    optionCollection = App.request "create:new:option:collection", elements
-#                    @model.set 'elements', optionCollection
+
+                    #optionCollection = App.request "create:new:option:collection", elements
+                    #@model.set 'elements', optionCollection
 
 
 

@@ -1,37 +1,36 @@
 define ['app'
-		'controllers/region-controller'
-		'apps/content-creator/element-box/view'
-		
-		],(App,RegionController)->
+        'controllers/region-controller'
+        'apps/content-creator/element-box/view'
 
-			
-			App.module "ContentCreator.ElementBox", (ElementBox,App, Backbone, Marionette, $, _)->	
+], (App, RegionController)->
+    App.module "ContentCreator.ElementBox", (ElementBox, App, Backbone, Marionette, $, _)->
+        class ElementBoxController extends RegionController
 
-				class ElementBoxController extends RegionController
+            initialize: (options)->
+                {contentType} = options
 
-					initialize : (options)->
+                # {eventObj} = options
 
-						# {eventObj} = options
-						
-						# get the main view for the element box
-						@view = @_getElementBoxView() 
+                # get the main view for the element box
+                @view = @_getElementBoxView contentType
 
-						
-						# @listenTo eventObj.vent, "question:dropped", =>
-						# 	@view.triggerMethod "question:dropped"
 
-						# @listenTo eventObj.vent, "question:removed", =>
-						# 	@view.triggerMethod "question:removed"
+                # @listenTo eventObj.vent, "question:dropped", =>
+                # 	@view.triggerMethod "question:dropped"
 
-						# show the view
-						@show @view
+                # @listenTo eventObj.vent, "question:removed", =>
+                # 	@view.triggerMethod "question:removed"
 
-					_getElementBoxView:()->
-						new ElementBox.Views.ElementBoxView
-				
+                # show the view
+                @show @view
 
-				# create a command handler to start the element box controller
-				App.commands.setHandler "show:element:box", (options)->
-								new ElementBoxController options
+            _getElementBoxView: (contentType)->
+                new ElementBox.Views.ElementBoxView
+                    contentType: contentType
 
-				# App.commands.setHandler
+
+        # create a command handler to start the element box controller
+        App.commands.setHandler "show:element:box", (options)->
+            new ElementBoxController options
+
+# App.commands.setHandler
