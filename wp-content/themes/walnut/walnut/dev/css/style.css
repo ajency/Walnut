@@ -2168,9 +2168,10 @@ display:none;
   margin-top: 0px;   
   padding: 0px;
   background-color: #e5e9ec; 
-  overflow:auto; 
+  /*overflow:auto; */
+  overflow-y: visible;
   position:relative;
-  min-height:911px;
+  /*min-height:911px;*/
 }
 .page-content.condensed-layout{  
 	margin-left:50px !important;
@@ -7057,7 +7058,7 @@ input.error{
 }
 /** Login **/
 .login-container{
-	margin-top:13%;
+	margin-top:2%;
 }
 /** Lockscreen **/
 .lockscreen-wrapper{

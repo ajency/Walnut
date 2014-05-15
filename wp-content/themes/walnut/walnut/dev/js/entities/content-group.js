@@ -254,6 +254,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           lastStatus = _.getLastDetails(p.id, p.division);
           return lastStatus.done((function(_this) {
             return function(d) {
+              console.log('Last status: ' + d.status);
               if (d.status !== '') {
                 if (d.status === 'started') {
                   data.status = 'resumed';

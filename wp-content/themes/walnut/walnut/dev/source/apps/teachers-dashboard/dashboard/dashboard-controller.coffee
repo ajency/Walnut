@@ -67,8 +67,8 @@ define ['app'
 					e.preventDefault()
 					$(@).tab 'show'
 
-				$('#class, #div, #class-training')
-				.select2()
+				# $('#class, #div, #class-training')
+				# .select2()
 
 
 			loadDivisions:(class_id)=>

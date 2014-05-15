@@ -221,6 +221,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						#get last status
 						lastStatus = _.getLastDetails(p.id, p.division)
 						lastStatus.done (d)=>
+							console.log 'Last status: '+d.status
 							if d.status isnt ''
 								if d.status is 'started'
 									data.status = 'resumed'

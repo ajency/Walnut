@@ -77,11 +77,10 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         }
         this.$el.find('#class, #class-training').append(classes_dropdown);
         this.loadDivisions(class_ids[0]);
-        this.$el.find('#teacherOptns a').click(function(e) {
+        return this.$el.find('#teacherOptns a').click(function(e) {
           e.preventDefault();
           return $(this).tab('show');
         });
-        return $('#class, #div, #class-training').select2();
       };
 
       TeachersDashboardView.prototype.loadDivisions = function(class_id) {

@@ -26,7 +26,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               'label': 'Question',
               'value': 'post_title'
             }, {
-              'label': 'Creator'
+              'label': 'Author',
+              'value': 'post_author'
             }, {
               'label': 'Last Modified',
               'value': 'post_modified',

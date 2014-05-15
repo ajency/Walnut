@@ -21,6 +21,8 @@ define ["app", 'backbone'], (App, Backbone) ->
         class ContentPiece.ItemCollection extends Backbone.Collection
             model: ContentPiece.ItemModel
             comparator: 'ID'
+            name: 'content-piece'
+
             url: ->
                 AJAXURL + '?action=get-content-pieces'
 
@@ -29,6 +31,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         class ContentPiece.GroupItemCollection extends Backbone.Collection
             model: ContentPiece.ItemModel
             comparator: 'ID'
+            name: 'CONTENT-PIECE-NEW'
 
             initialize: ->
                 @on('remove', @removedModel, @)
@@ -88,6 +91,67 @@ define ["app", 'backbone'], (App, Backbone) ->
                             ids: ids
                     contentPieces
 
+            
+            #get all content pieces from local database
+            getContentPieceFromLocal:(ids)->
+                    
+                runMainQuery = ->
+                    $.Deferred (d)->
+                        _.db.transaction (tx)->
+                            tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' 
+                                AND post_status = 'publish' AND ID in ("+ids+")", [], onSuccess(d), _.deferredErrorHandler(d))
+
+                onSuccess =(d)->
+                    (tx,data)->
+                        result = []
+                        i = 0
+                        while i < data.rows.length
+                            r = data.rows.item(i)
+
+                            do(r, i)->
+                                questionType = _.getQuestionType(r['ID'])
+                                questionType.done (question_type)->
+                                        
+                                    result[i] = 
+                                        ID: r['ID']
+                                        post_author: r['post_author']
+                                        post_date: r['post_date']
+                                        post_date_gmt: r['post_date_gmt']
+                                        post_content: r['post_content']
+                                        post_title: r['post_title']
+                                        post_excerpt: r['post_excerpt']
+                                        post_status: r['post_status']
+                                        comment_status: r['comment_status']
+                                        ping_status: r['ping_status']
+                                        post_password: r['post_password']
+                                        post_name: r['post_name']
+                                        to_ping: r['to_ping']
+                                        pinged: r['pinged']
+                                        post_modified: r['post_modified']
+                                        post_modified_gmt: r['post_modified_gmt']
+                                        post_content_filtered: r['post_content_filtered']
+                                        post_parent: r['post_parent']
+                                        guid: r['guid']
+                                        menu_order: r['menu_order']
+                                        post_type: r['post_type']
+                                        post_mime_type: r['post_mime_type']
+                                        comment_count: r['comment_count']
+                                        question_type: question_type
+
+                                        #Need to implement
+                                        filter: 'raw'
+                                        subjects: ''
+                                        creator: 'admin'
+                                        content_type: ''
+                                            
+                            i++
+                            
+                        d.resolve(result)
+
+                $.when(runMainQuery()).done (d)->
+                    console.log 'getContentPieceFromLocal transaction completed'
+                .fail _.failureHandler        
+
         
 
 
@@ -105,3 +169,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "get:content:pieces:by:ids", (ids)->
             API.getContentPiecesByIDs ids
+
+
+        # request handler to get all ContentPieces from local database
+        App.reqres.setHandler "get:content-piece:local", (ids) ->
+            API.getContentPieceFromLocal ids    

@@ -55,6 +55,7 @@ define ['app'
                                             .pluck 'content_piece_id'
                                             .value()
 
+                            answeredIDs = _.map answeredIDs, (m)-> m.toString()
                             answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
 
                             unanswered = _.difference allContentPieces, answeredIDs
