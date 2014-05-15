@@ -20,9 +20,13 @@ define(['app', 'apps/login/logincontroller'], function(App) {
     })(Marionette.AppRouter);
     Controller = {
       showLogin: function() {
-        return new LoginApp.Controller.LoginController({
-          region: App.loginRegion
-        });
+        var userdata;
+        userdata = App.request("get:user:model");
+        if (!userdata) {
+          return new LoginApp.Controller.LoginController({
+            region: App.loginRegion
+          });
+        }
       }
     };
     return LoginApp.on("start", function() {
