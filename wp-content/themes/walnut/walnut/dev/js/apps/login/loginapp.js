@@ -22,7 +22,8 @@ define(['app', 'apps/login/logincontroller'], function(App) {
       showLogin: function() {
         var userdata;
         userdata = App.request("get:user:model");
-        if (!userdata) {
+        console.log(userdata.get('ID'));
+        if (!userdata.get('ID')) {
           return new LoginApp.Controller.LoginController({
             region: App.loginRegion
           });
