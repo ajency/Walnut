@@ -92,25 +92,8 @@ function get_single_content_piece($id){
     
     $content_piece= get_post($id);
 
-    $subject_ids = array();
-
-    $subjects = get_the_terms($id, 'textbook');
-
-    //FETCHING LIST OF TEXTBOOKS RELATED TO THE CONTENT PIECE
-    if($subjects){
-        foreach ($subjects as $sub) {
-
-            $subject_ids[] = $sub->term_id;
-
-            while ($sub->parent >0){
-                $sub = get_term($sub->parent, 'textbook');
-                $subject_ids[] = $sub->term_id;
-            }
-        }
-    }
-    //print_r($subject_ids);
-    $content_piece->subjects = $subject_ids;
     $authordata = get_userdata($content_piece->post_author);
+
     $content_piece->post_author = $authordata->display_name;
     
     // Content Type is 'teacher question' or 'student question' etc
@@ -128,7 +111,18 @@ function get_single_content_piece($id){
 
     $content_piece->layout = $content_elements;
 
-    $content_piece->question_type = get_post_meta($id, 'question_type', true); 
+    $content_piece->question_type = get_post_meta($id, 'question_type', true);
+
+    $content_piece->post_tags = get_post_meta($id, 'post_tags', true);
+
+    $content_piece->duration = get_post_meta($id, 'duration', true);
+
+    $term_ids_array= get_post_meta($id, 'term_ids', true);
+    $term_ids = maybe_unserialize($term_ids_array);
+
+    $content_piece->term_ids = $term_ids;
+
+
     
     switch_to_blog($current_blog_id);
 
