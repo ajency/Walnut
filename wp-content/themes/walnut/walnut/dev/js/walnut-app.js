@@ -51,9 +51,7 @@ define(['marionette'], function(Marionette) {
           App.execute("show:breadcrumbapp", {
             region: App.breadcrumbRegion
           });
-          if (_this.getCurrentRoute() === 'login') {
-            App.vent.trigger("show:dashboard");
-          }
+          App.vent.trigger("show:dashboard");
           return App.loginRegion.close();
         } else {
           return App.vent.trigger("show:login");

@@ -27,7 +27,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               'value': 'post_title'
             }, {
               'label': 'Author',
-              'value': 'post_author'
+              'value': 'post_author_name'
             }, {
               'label': 'Last Modified',
               'value': 'post_modified',

@@ -1,128 +1,122 @@
 define ['app'
-		'controllers/region-controller'
-		'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-views'
-		], (App, RegionController)->
+        'controllers/region-controller'
+        'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-views'
+], (App, RegionController)->
+    App.module "TeachersDashboardApp.View", (View, App)->
 
-	App.module "TeachersDashboardApp.View", (View, App)->
+        #List of textbooks available to a teacher for training or to take a class
+        class View.textbookModulesController extends RegionController
+            initialize: (opts) ->
+                {textbookID} = opts
+                {@classID}   = opts
+                {@division}   = opts
 
-		#List of textbooks available to a teacher for training or to take a class
+                @textbook = App.request "get:textbook:by:id", textbookID
 
-		class View.textbookModulesController extends RegionController
-			initialize : (opts) ->
+                @contentGroupsCollection = App.request "get:content:groups", ('textbook': textbookID, 'division': @division)
 
-				{textbookID} = opts
-				{@classID} 	 = opts
-				{@division} 	 = opts
+                @view = view = @_getContentGroupsListingView @contentGroupsCollection
 
-				@textbook= App.request "get:textbook:by:id", textbookID
+                App.execute "when:fetched", @textbook, =>
+                    textbookName = @textbook.get 'name'
 
-				@contentGroupsCollection = App.request "get:content:groups", ('textbook' :textbookID, 'division': @division)
+                    breadcrumb_items =
+                        'items': [
+                            {'label': 'Dashboard', 'link': '#teachers/dashboard'},
+                            {'label': 'Take Class', 'link': '#teachers/take-class/' + @classID + '/' + @division},
+                            {'label': textbookName, 'link': 'javascript:;', 'active': 'active'}
+                        ]
 
-				@view = view = @_getContentGroupsListingView @contentGroupsCollection
+                    App.execute "update:breadcrumb:model", breadcrumb_items
 
-				App.execute "when:fetched", @textbook, =>
+                    @show @view, (loading: true)
 
-					textbookName= @textbook.get 'name'
+                @listenTo @view, "save:training:status": (id, status)=>
+                    @_saveTrainingStatus id, status
 
-					breadcrumb_items = 'items':[
-							{'label':'Dashboard','link':'#teachers/dashboard'},
-							{'label':'Take Class','link':'#teachers/take-class/'+@classID+'/'+@division},
-							{'label':textbookName,'link':'javascript:;','active':'active'}
-						]
-						
-					App.execute "update:breadcrumb:model", breadcrumb_items
+                    if status is 'started' or 'resumed'
+                        currentRoute = App.getCurrentRoute()
+                        App.navigate currentRoute + "/module/" + id, true
 
-					@show @view, (loading:true)
+                @listenTo @view, "schedule:training": (id)=>
+                    @singleModule = @contentGroupsCollection.get id
+                    modalview = @_showScheduleModal @singleModule
+                    @show modalview, region: App.dialogRegion
 
-				@listenTo @view, "save:training:status" : (id,status)=>
-					@_saveTrainingStatus id,status
-
-					if status is 'started' or 'resumed'
-						currentRoute= App.getCurrentRoute()
-						App.navigate currentRoute+"/module/"+ id,true
-
-				@listenTo @view, "schedule:training" : (id)=>
-					@singleModule = @contentGroupsCollection.get id
-					modalview = @_showScheduleModal @singleModule
-					@show modalview, region: App.dialogRegion
-
-					@listenTo modalview, "save:scheduled:date":(id,date)=>
-						date = moment(date).format("YYYY-MM-DD")
-						@singleModule.set ('training_date': date)
-						@_saveTrainingStatus id, 'scheduled'
+                    @listenTo modalview, "save:scheduled:date": (id, date)=>
+                        date = moment(date).format("YYYY-MM-DD")
+                        @singleModule.set ('training_date': date)
+                        @_saveTrainingStatus id, 'scheduled'
 
 
-			_saveTrainingStatus: (id,status)=>
+            _saveTrainingStatus: (id, status)=>
+                singleModule = @contentGroupsCollection.get id
 
-				singleModule = @contentGroupsCollection.get id
+                singleModule.set ('status': status)
 
-				singleModule.set ('status': status)
+                opts =
+                    'changed': 'status'
+                    'division': @division
 
-				opts =
-					'changed' 	: 'status'
-					'division'	: @division
+                singleModule.save(opts, {wait: true})
 
-				singleModule.save(opts, {wait : true})
+                @view.triggerMethod 'status:change', singleModule
 
-				@view.triggerMethod 'status:change', singleModule
+            _getContentGroupsListingView: (collection)=>
+                new View.TakeClassTextbookModules.ContentGroupsView
+                    collection: collection
+                    templateHelpers:
+                        showTextbookName: =>
+                            @textbook.get 'name'
 
-			_getContentGroupsListingView : (collection)=>
-				new View.TakeClassTextbookModules.ContentGroupsView
-					collection: collection
-					templateHelpers:
-						showTextbookName :=>
-							@textbook.get 'name'
+            _showScheduleModal: (model)=>
+                new ScheduleModalView
+                    model: model
 
-			_showScheduleModal : (model)=>
-				new ScheduleModalView
-					model: model
+        class ScheduleModalView extends Marionette.ItemView
 
-		class ScheduleModalView extends Marionette.ItemView
+            template: '<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            					<div class="modal-dialog">
+            					  <div class="modal-content">
+            						<div class="modal-header">
+            						  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            						  <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
+            						</div>
+            						<div class="modal-body">
+            						  <div data-date-format="yyyy-mm-dd" class="input-append success date">
+            										  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
+            										  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
+            								  </div>
+            								  <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            						</div>
+            					  </div>
+            					</div>
+            				</div>'
 
-			template: '<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-					  <div class="modal-content">
-						<div class="modal-header">
-						  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						  <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
-						</div>
-						<div class="modal-body">
-						  <div data-date-format="yyyy-mm-dd" class="input-append success date">
-										  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
-										  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> 
-								  </div>
-								  <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-						</div>
-					  </div>
-					</div>
-				</div>'
+            events:
+                'click .btn-primary': 'saveScheduledDate'
 
-			events: 
-				'click .btn-primary' : 'saveScheduledDate'
+            onShow: ->
+                $('.input-append.date').datepicker
+                    autoclose: true
+                    todayHighlight: true
 
-			onShow:->
-				$('.input-append.date').datepicker
-					autoclose: true
-					todayHighlight: true
 
-				
-			serializeData:->
+            serializeData: ->
+                data = super()
 
-				data = super()
+                training_date = @model.get 'training_date'
 
-				training_date = @model.get 'training_date'
+                if training_date isnt ''
+                    data.training_date = moment(training_date).format("YYYY-MM-DD")
 
-				if training_date isnt ''
-					data.training_date = moment(training_date).format("YYYY-MM-DD")
+                data
 
-				data
+            saveScheduledDate: (e)=>
+                dataID = @model.get 'id'
+                scheduledDate = @$el.find '#scheduled-date'
+                .val()
 
-			saveScheduledDate:(e)=>
-
-				dataID = @model.get 'id'
-				scheduledDate = @$el.find '#scheduled-date'
-								.val()
-
-				if scheduledDate isnt ''
-					@trigger "save:scheduled:date", dataID, scheduledDate
+                if scheduledDate isnt ''
+                    @trigger "save:scheduled:date", dataID, scheduledDate
 

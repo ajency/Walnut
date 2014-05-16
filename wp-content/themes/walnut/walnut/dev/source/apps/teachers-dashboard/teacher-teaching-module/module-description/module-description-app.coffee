@@ -5,22 +5,13 @@ define ['app'
         class ModuleDescriptionController extends RegionController
 
             initialize: (opts)->
-                {model,@questionResponseModel,@questionResponseCollection,@timerObject} = opts
+                {model,@questionResponseModel,@questionResponseCollection,@timerObject,@display_mode} = opts
 
                 @view = view = @_showModuleDescriptionView model
 
                 @show view, (loading: true)
 
                 @listenTo @view, "goto:previous:route", =>
-                    if @questionResponseModel.get('status') isnt 'completed'
-                        elapsedTime = @timerObject.request "get:elapsed:time"
-
-                        @questionResponseModel.set
-                            'time_taken': elapsedTime
-                            'status': 'paused'
-
-                        @questionResponseModel.save()
-
                     @region.trigger "goto:previous:route"
 
 
@@ -34,11 +25,16 @@ define ['app'
                 if _.size(timeTakenArray)>0
                     totalTimeTakenForModule =   _.reduce timeTakenArray, (memo, num)-> parseInt memo + parseInt num
 
-                console.log totalTimeTakenForModule
                 new ModuleDescriptionView
                     model: model
 
                     templateHelpers:
+                        showPauseButton:=>
+                            pauseBtn='';
+                            if @display_mode is 'class_mode'
+                                pauseBtn= '<button type="button" id="pause-session" class="btn btn-white  action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>'
+                            pauseBtn
+
                         getProgressData:->
                             numOfQuestionsCompleted + '/'+ totalNumofQuestions
 
@@ -70,14 +66,6 @@ define ['app'
             events:
                 'click #back-to-module, #pause-session': ->
                     @trigger "goto:previous:route"
-
-            onShow: ->
-                clock = setInterval @updateTime, 500
-
-            updateTime: =>
-                if _.size($('#timekeeper')) > 0
-                    @$el.find '.timedisplay'
-                    .html '<i class="fa fa-clock-o"></i> ' + $('#timekeeper').html()
 
 
         # set handlers

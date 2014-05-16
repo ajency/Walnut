@@ -16,6 +16,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       SingleQuestionController.prototype.initialize = function(opts) {
         var model, questionResponseModel, view;
         model = opts.model, questionResponseModel = opts.questionResponseModel, this.timerObject = opts.timerObject, this.display_mode = opts.display_mode;
+        this.durationInSeconds = model.get('duration') * 60;
         this.view = view = this._showQuestionView(model, questionResponseModel);
         this.show(view, {
           loading: true
@@ -24,7 +25,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           return function() {
             var timeElapsed, timerTime;
             timerTime = $(_this.view.el).find('.cpTimer').TimeCircles().getTime();
-            timeElapsed = 15 - timerTime;
+            timeElapsed = _this.durationInSeconds - timerTime;
             return timeElapsed;
           };
         })(this));
@@ -39,7 +40,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
               return function() {
                 var timeTaken, timer;
                 timeTaken = parseInt(questionResponseModel.get('time_taken'));
-                return timer = 15 - timeTaken;
+                return timer = _this.durationInSeconds - timeTaken;
               };
             })(this)
           }

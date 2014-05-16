@@ -94,7 +94,7 @@ function get_single_content_piece($id){
 
     $authordata = get_userdata($content_piece->post_author);
 
-    $content_piece->post_author = $authordata->display_name;
+    $content_piece->post_author_name = $authordata->display_name;
     
     // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
@@ -102,69 +102,99 @@ function get_single_content_piece($id){
     
     $content_layout= get_post_meta($id, 'layout_json', true);
 
-
     $content_layout = maybe_unserialize($content_layout);
 
     $content_elements=array();
-    if($content_layout)
+    if($content_layout){
         $content_elements = get_json_to_clone($content_layout);
-
-    $content_piece->layout = $content_elements;
-
+        $content_piece->layout = $content_elements['elements'];
+        $excerpt_array= $content_elements['excerpt'];
+        $excerpt_array = __u::flatten($excerpt_array);
+        $excerpt= implode('<span class="divider"> | </span>',$excerpt_array);
+        $excerpt = strip_tags($excerpt);
+        $excerpt= substr($excerpt, 0, 150);
+        $content_piece->post_excerpt =$excerpt.'...';
+    }
     $content_piece->question_type = get_post_meta($id, 'question_type', true);
 
     $content_piece->post_tags = get_post_meta($id, 'post_tags', true);
 
-    $content_piece->duration = get_post_meta($id, 'duration', true);
+    $content_piece->duration = (int) get_post_meta($id, 'duration', true);
+
+    $last_modified_by = get_post_meta($id, 'last_modified_by', true);
+    $last_modified_by_user= get_userdata($last_modified_by);
+
+    $content_piece->last_modified_by = $last_modified_by_user->display_name;
+
+    $published_by = get_post_meta($id, 'published_by', true);
+    $published_by_user= get_userdata($published_by);
+    $content_piece->published_by = $published_by_user->display_name;
 
     $term_ids_array= get_post_meta($id, 'term_ids', true);
     $term_ids = maybe_unserialize($term_ids_array);
 
     $content_piece->term_ids = $term_ids;
 
-
-    
     switch_to_blog($current_blog_id);
 
     return $content_piece;
 }
 
+
 function get_json_to_clone($elements)
 {
     $d = array();
-
+    $excerpt= array();
     if (is_array($elements)) {
         foreach ($elements as $element) {
             if ($element['element'] === 'Row') {
                 $element['columncount'] = count($element['elements']);
-                $d[]                    = get_row_elements($element);
+                $d2= get_row_elements($element);
+                $d[]                    = $d2['element'];
+                $excerpt[]= $d2['excerpt'];
+
             } else {
                 $meta = get_meta_values($element);
-                if ($meta !== FALSE)
+                if ($meta !== FALSE){
                     $d[] = $meta;
+                    $excerpt[]=$meta['content'];
+                }
             }
         }
     }
 
-    return $d;
+    $content['elements']= $d;
+    $content['excerpt']= $excerpt;
+
+    return $content;
 }
 
 function get_row_elements($element)
 {
+    $excerpt= array();
+
     foreach ($element['elements'] as &$column) {
         if($column['elements']){
             foreach ($column['elements'] as &$ele) {
                 if ($ele['element'] === 'Row') {
                     $ele['columncount'] = count($ele['elements']);
-                    $ele                = get_row_elements($ele);
+                    $data= get_row_elements($ele);
+                    $ele = $data['element'];
+                    $excerpt []= $data['excerpt'];
                 } else {
                     $meta = get_meta_values($ele);
-                    if ($meta !== FALSE)
+                    if ($meta !== FALSE){
                         $ele = wp_parse_args($meta, $ele);
+                        if($ele['element']=='Text')
+                            $excerpt []= $ele['content'];
+                    }
                 }
             }
         }
     }
+
+    $element['element']= $element;
+    $element['excerpt']= $excerpt;
 
     return $element;
 }
@@ -418,13 +448,20 @@ function get_single_content_group($id, $division=''){
 
 function save_content_piece($data){
 
+    // only if post_author is set we will update it. else the current user will be set as post_author
+
+    $post_author=(isset($data['post_author'])) ? $data['post_author'] : get_current_user_id();
 
     $post_array=array(
-        'post_status'=>$data['post_status'],
-        'post_type'=>'content_piece',
-        'post_title'=> 'test content piece',
-        'post_author'=> $data['post_author']
+        'post_status'   => $data['post_status'],
+        'post_type'     => 'content-piece',
+        'post_title'    => 'test content piece',
+        'post_author'   => $post_author
     );
+
+    //if ID is set the post will be updated. if not, a new post will be created
+    if(isset($data['ID']))
+        $post_array['ID']= $data['ID'];
 
     $content_id= wp_insert_post($post_array);
 
@@ -446,6 +483,11 @@ function save_content_piece($data){
     update_post_meta ($content_id, 'duration',$data['duration']);
 
     update_post_meta ($content_id, 'post_tags',$data['post_tags']);
+
+    update_post_meta ($content_id, 'last_modified_by',$data['post_author']);
+
+    if($data['post_status']=='publish')
+        update_post_meta ($content_id, 'published_by',$data['post_author']);
 
     return $content_id;
 }

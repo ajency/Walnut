@@ -6,6 +6,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
   return App.module("ContentGroupApp.View", function(View, App) {
     var ContentGroupViewLayout;
     View.GroupController = (function(_super) {
+      var groupContentCollection, model;
+
       __extends(GroupController, _super);
 
       function GroupController() {
@@ -16,18 +18,24 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return GroupController.__super__.constructor.apply(this, arguments);
       }
 
+      model = null;
+
+      groupContentCollection = null;
+
       GroupController.prototype.initialize = function(opts) {
         var layout;
-        this.model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
+        model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
-          'collection_id': this.model.get('id')
+          'collection_id': model.get('id')
         });
-        this.groupContentCollection = App.request("get:content:pieces:by:ids", this.model.get('content_pieces'));
+        App.execute("when:fetched", model, function() {
+          return groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
+        });
         this.layout = layout = this._getContentGroupViewLayout();
         this.show(layout, {
           loading: true,
-          entities: [this.model, this.questionResponseCollection, this.groupContentCollection, this.textbookNames]
+          entities: [model, this.questionResponseCollection, groupContentCollection, this.textbookNames]
         });
         this.listenTo(layout, 'show', this.showContentGroupViews);
         this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
@@ -47,7 +55,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         responseQuestionIDs = _.chain(responseCollection).map(function(m) {
           return m.toJSON();
         }).pluck('content_piece_id').value();
-        content_pieces = this.model.get('content_pieces');
+        content_pieces = model.get('content_pieces');
         nextQuestion = _.first(_.difference(content_pieces, responseQuestionIDs));
         return this.gotoTrainingModule(nextQuestion, 'class_mode');
       };
@@ -59,10 +67,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return App.execute("start:teacher:teaching:app", {
           region: App.mainContentRegion,
           division: this.division,
-          contentPiece: this.groupContentCollection.get(question),
+          contentPiece: groupContentCollection.get(question),
           questionResponseCollection: this.questionResponseCollection,
-          contentGroupModel: this.model,
-          questionsCollection: this.groupContentCollection,
+          contentGroupModel: model,
+          questionsCollection: groupContentCollection,
           textbookNames: this.textbookNames,
           classID: this.classID,
           display_mode: display_mode
@@ -70,29 +78,27 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       GroupController.prototype.showContentGroupViews = function() {
-        return App.execute("when:fetched", this.model, (function(_this) {
+        var textbook_termIDs;
+        textbook_termIDs = _.flatten(model.get('term_ids'));
+        this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
+        return App.execute("when:fetched", this.textbookNames, (function(_this) {
           return function() {
-            var textbook_termIDs;
-            textbook_termIDs = _.flatten(_this.model.get('term_ids'));
-            _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
-            return App.execute("when:fetched", _this.textbookNames, function() {
-              App.execute("show:viewgroup:content:group:detailsapp", {
-                region: _this.layout.collectionDetailsRegion,
-                model: _this.model,
+            App.execute("show:viewgroup:content:group:detailsapp", {
+              region: _this.layout.collectionDetailsRegion,
+              model: model,
+              mode: _this.mode,
+              questionResponseCollection: _this.questionResponseCollection,
+              textbookNames: _this.textbookNames
+            });
+            if (_.size(model.get('content_pieces')) > 0) {
+              return App.execute("show:viewgroup:content:displayapp", {
+                region: _this.layout.contentDisplayRegion,
+                model: model,
                 mode: _this.mode,
                 questionResponseCollection: _this.questionResponseCollection,
-                textbookNames: _this.textbookNames
+                groupContentCollection: groupContentCollection
               });
-              if (_.size(_this.model.get('content_pieces')) > 0) {
-                return App.execute("show:viewgroup:content:displayapp", {
-                  region: _this.layout.contentDisplayRegion,
-                  model: _this.model,
-                  mode: _this.mode,
-                  questionResponseCollection: _this.questionResponseCollection,
-                  groupContentCollection: _this.groupContentCollection
-                });
-              }
-            });
+            }
           };
         })(this));
       };
