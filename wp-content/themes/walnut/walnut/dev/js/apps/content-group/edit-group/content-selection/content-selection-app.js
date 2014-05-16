@@ -24,7 +24,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           'data': [
             {
               'label': 'Question',
-              'value': 'post_title'
+              'value': 'post_excerpt'
             }, {
               'label': 'Author',
               'value': 'post_author_name'

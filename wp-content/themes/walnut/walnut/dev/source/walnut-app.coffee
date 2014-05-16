@@ -63,7 +63,7 @@ define ['marionette'], (Marionette)->
                     App.execute "show:headerapp", region: App.headerRegion
                     App.execute "show:leftnavapp", region: App.leftNavRegion
                     App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
-                    App.vent.trigger "show:dashboard"
+                    App.vent.trigger "show:dashboard" if @getCurrentRoute() is 'login'
                     App.loginRegion.close()
                 else
                     App.vent.trigger "show:login"
