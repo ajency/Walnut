@@ -15,7 +15,7 @@ define ['app'
                     'data': [
                         {
                             'label': 'Question'
-                            'value': 'post_title'
+                            'value': 'post_excerpt'
                         }
                         {
                             'label': 'Author'
