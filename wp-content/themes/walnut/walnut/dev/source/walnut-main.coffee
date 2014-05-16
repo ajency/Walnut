@@ -48,6 +48,7 @@ require.config
 		video				: 'plugins/video'
 		serialize			: 'plugins/serialize'
 		timecircles 		: 'plugins/TimeCircles'
+		selectordie			: 'plugins/selectordie.min'
 
 
 	shim:
@@ -81,6 +82,7 @@ require.config
 		jquerytimer		: ['jquery']
 		jquery_listnav	: ['jquery']
 		timecircles 	: ['jquery']
+		selectordie		: ['jquery']
 		app 			: ['plugins/walnut-pluginloader','config/walnut-configloader']
 
 	

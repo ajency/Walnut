@@ -77,10 +77,18 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         }
         this.$el.find('#class, #class-training').append(classes_dropdown);
         this.loadDivisions(class_ids[0]);
-        return this.$el.find('#teacherOptns a').click(function(e) {
+        this.$el.find('#teacherOptns a').click(function(e) {
           e.preventDefault();
           return $(this).tab('show');
         });
+        if (_.checkPlatform() === "Desktop") {
+          return $('#class, #div, #class-training').select2();
+        } else {
+          return $('#class, #div, #class-training').selectOrDie({
+            customClass: "custom",
+            customID: "custom"
+          });
+        }
       };
 
       TeachersDashboardView.prototype.loadDivisions = function(class_id) {

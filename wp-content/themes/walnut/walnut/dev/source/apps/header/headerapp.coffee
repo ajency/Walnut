@@ -41,8 +41,8 @@ define ['app'
 
 			serializeData : ->
 				data = super()
-				#data.logourl= SITEURL+ '/wp-content/themes/walnut/images/walnutlearn.png'
-				data.logourl= SITEURL+ '/images/logo-synapse.png'
+				data.logourl= SITEURL+ '/wp-content/themes/walnut/images/walnutlearn.png'
+				data.logourl= SITEURL+ '/images/logo-synapse.png' if _.checkPlatform() is 'Mobile'
 				console.log SITEURL
 				data
 				

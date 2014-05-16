@@ -26,4 +26,5 @@ define [
 			'timepicker'
 			'timecircles'
 			'jquery_listnav'
+			'selectordie'
 		], ->

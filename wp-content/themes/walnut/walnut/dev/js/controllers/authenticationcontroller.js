@@ -81,9 +81,12 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         data: this.data
       }, (function(_this) {
         return function(resp) {
+          var user;
           if (resp.login_details.error) {
             return _this.onErrorResponse(resp.login_details.error);
           } else {
+            user = App.request("get:user:model");
+            user.set(resp.login_details);
             if (_.getBlogID() === null) {
               return _this.initialAppLogin(resp);
             } else {
@@ -101,6 +104,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         return function(d) {
           if (d.exists === true) {
             if (d.password === _this.data.txtpassword) {
+              user = App.request("get:user:model");
+              user.set({
+                'ID': d.user_id
+              });
               return _this.onSuccessResponse();
             } else {
               return _this.onErrorResponse('Invalid Password');
@@ -150,6 +157,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     AuthenticationController.prototype.isExistingUser = function(username) {
       var data, onSuccess, runQuery;
       data = {
+        user_id: '',
         exists: false,
         password: ''
       };
@@ -169,6 +177,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             if (r['username'] === username) {
               data.exists = true;
               data.password = r['password'];
+              data.user_id = r['user_id'];
             }
             i++;
           }

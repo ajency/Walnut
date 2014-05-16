@@ -67,8 +67,15 @@ define ['app'
 					e.preventDefault()
 					$(@).tab 'show'
 
-				# $('#class, #div, #class-training')
-				# .select2()
+				if _.checkPlatform() is "Desktop"
+					$('#class, #div, #class-training')
+					.select2()
+				else
+					$('#class, #div, #class-training')
+					.selectOrDie({
+						customClass: "custom",
+						customID: "custom"
+						})
 
 
 			loadDivisions:(class_id)=>

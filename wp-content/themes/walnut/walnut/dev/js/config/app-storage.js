@@ -17,11 +17,11 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
     });
     return localDatabaseTransaction(_.db);
   }, false);
-  _.setLoginStatus = function(status) {
-    return window.localStorage.setItem("user_login_status", "" + status);
+  _.setUserID = function(id) {
+    return window.localStorage.setItem("user_id", "" + id);
   };
-  _.getLoginStatus = function() {
-    return window.localStorage.getItem("user_login_status");
+  _.getUserID = function() {
+    return window.localStorage.getItem("user_id");
   };
   _.setBlogID = function(id) {
     return window.localStorage.setItem("blog_id", "" + id);

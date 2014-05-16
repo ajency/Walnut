@@ -92,7 +92,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                     contentPieces
 
             
-            #get all content pieces from local database
+        #get all content pieces from local database
             getContentPieceFromLocal:(ids)->
                     
                 runMainQuery = ->

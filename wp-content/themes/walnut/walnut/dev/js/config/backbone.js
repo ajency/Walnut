@@ -18,7 +18,7 @@ define(["backbone"], function(Backbone) {
             return collection.set(d);
           });
         } else {
-          data = App.reqres.request("get:" + collection_name + ":by:id:local", opts.class_id);
+          data = App.reqres.request("get:" + collection_name + ":by:classid:local", opts.class_id);
           data.done(function(d) {
             return collection.set(d);
           });
@@ -133,6 +133,12 @@ define(["backbone"], function(Backbone) {
         }
         if (modelname === 'schools') {
           console.log('Schools local');
+        }
+        if (modelname === 'textbook') {
+          data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('term_id'));
+          data.done(function(d) {
+            return model.set(d);
+          });
         }
         if (modelname === 'question-response') {
           data = App.reqres.request("save:" + modelname + ":local", model);

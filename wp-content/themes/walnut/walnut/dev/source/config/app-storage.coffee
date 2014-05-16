@@ -30,12 +30,12 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 
 
     #Local storage
-    # save/get login status
-    _.setLoginStatus =(status)->
-        window.localStorage.setItem("user_login_status", ""+status)
+    # save/get logged in user ID
+    _.setUserID =(id)->
+        window.localStorage.setItem("user_id", ""+id)
 
-    _.getLoginStatus =->
-        window.localStorage.getItem("user_login_status")
+    _.getUserID =->
+        window.localStorage.getItem("user_id")
 
     # save/get blog id
     _.setBlogID =(id)->

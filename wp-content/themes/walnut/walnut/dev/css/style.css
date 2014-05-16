@@ -8066,3 +8066,9 @@ ul.my-friends li .profile-pic{
 .rickshaw_graph{
 	overflow:hidden;
 }
+
+
+/***App styles***/
+#teacherOptns .tab-content{
+	overflow:visible;
+}

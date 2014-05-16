@@ -74,6 +74,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				   			@onErrorResponse(resp.login_details.error)	
 
 				   		else
+				   			user = App.request "get:user:model"
+				   			user.set resp.login_details
+
 				   			# if the blog id is null, then the app is installed
 				   			# for the first time.
 				   			if _.getBlogID() is null
@@ -90,6 +93,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			user.done (d)=>
 				if d.exists is true
 					if d.password is @data.txtpassword
+						user = App.request "get:user:model"
+						user.set 'ID' : d.user_id
+
 						@onSuccessResponse()
 
 					else
@@ -136,7 +142,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		# check if user exists in local database
 		isExistingUser:(username)->
-			data = 
+			data =
+				user_id: ''
 				exists: false
 				password: ''
 
@@ -153,6 +160,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 						if r['username'] is username
 							data.exists = true
 							data.password = r['password']
+							data.user_id = r['user_id']
 						i++
 					d.resolve(data)
 

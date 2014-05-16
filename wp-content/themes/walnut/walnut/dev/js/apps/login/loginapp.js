@@ -23,7 +23,6 @@ define(['app', 'apps/login/logincontroller', 'apps/login/app-login/app-login-con
       showLogin: function() {
         var userdata;
         userdata = App.request("get:user:model");
-        console.log(userdata.get('ID'));
         if (!userdata.get('ID')) {
           return new LoginApp.Controller.LoginController({
             region: App.loginRegion

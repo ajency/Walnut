@@ -63,7 +63,10 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       HeaderView.prototype.serializeData = function() {
         var data;
         data = HeaderView.__super__.serializeData.call(this);
-        data.logourl = SITEURL + '/images/logo-synapse.png';
+        data.logourl = SITEURL + '/wp-content/themes/walnut/images/walnutlearn.png';
+        if (_.checkPlatform() === 'Mobile') {
+          data.logourl = SITEURL + '/images/logo-synapse.png';
+        }
         console.log(SITEURL);
         return data;
       };

@@ -46,6 +46,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				model : Textbooks.NameModel
 				name: 'textbookName'
 				comparator : 'term_order'
+
 				url :->
 					 AJAXURL + '?action=get-textbook-names'
 
@@ -139,7 +140,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
 				# get textbooks by class id from local database
-				getTextbooksByIDFromLocal:(class_id)->
+				getTextbooksByClassIDFromLocal:(class_id)->
 					#user id hardcoded as 1 for now
 					getTextBookIds =->
 						runQ =->
@@ -209,8 +210,54 @@ define ["app", 'backbone'], (App, Backbone) ->
 							d.resolve(result)
 					
 					$.when(runMainQuery()).done (data)->
-						console.log 'getTextbooksByID transaction completed'
+						console.log 'getTextbooksByClassIDFromLocal transaction completed'
 					.fail _.failureHandler
+
+
+				# get textbooks by textbook id from local database
+				getTextBookByIDFromLocal : (id)->
+
+					runQuery = ->
+						$.Deferred (d)->
+							_.db.transaction (tx)->
+								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
+									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id  
+									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND tt.term_id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
+								
+
+					onSuccess =(d)->
+						(tx,data)->
+							result = []
+							i = 0
+							while i < data.rows.length
+								row = data.rows.item(i)
+								
+								classes = subjects = ''
+								classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
+								subjects = unserialize(row["tags"]) if row["tags"] isnt ''
+								
+								result[i] = 
+									term_id: row["term_id"]
+									name: row["name"]
+									slug: row["slug"]
+									term_group: row["term_group"]
+									term_order: row["term_order"]
+									term_taxonomy_id: row["term_taxonomy_id"]
+									taxonomy: row["taxonomy"]
+									description: row["description"]
+									parent: row["parent"]
+									count: row["count"]
+									classes: classes
+									subjects: subjects
+
+								i++	
+		
+							d.resolve(result)
+
+					$.when(runQuery()).done (data)->
+						console.log 'getTextBookByIDFromLocal transaction completed'
+					.fail _.failureHandler
+
 
 
 				getTextBookNamesByIDsFromLocal : (ids)->
@@ -254,10 +301,15 @@ define ["app", 'backbone'], (App, Backbone) ->
 			App.reqres.setHandler "get:textbook:local", ->
 				API.getTextbooksFromLocal()
 
-			App.reqres.setHandler "get:textbook:by:id:local", (class_id)->
-				API.getTextbooksByIDFromLocal class_id
+			App.reqres.setHandler "get:textbook:by:classid:local", (class_id)->
+				API.getTextbooksByClassIDFromLocal class_id
+
+			App.reqres.setHandler "get:textbook:by:id:local", (id)->
+				API.getTextBookByIDFromLocal id	
 
 			App.reqres.setHandler "get:textbookName:by:term_ids:local", (ids)->
-				API.getTextBookNamesByIDsFromLocal ids		
+				API.getTextBookNamesByIDsFromLocal ids
+
+
 
 

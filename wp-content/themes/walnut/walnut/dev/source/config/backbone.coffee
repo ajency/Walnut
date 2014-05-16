@@ -25,7 +25,7 @@ define ["backbone"], (Backbone) ->
 						collection.set d
 				else
 					#Get textbooks by class_id	
-					data = App.reqres.request "get:#{collection_name}:by:id:local", opts.class_id
+					data = App.reqres.request "get:#{collection_name}:by:classid:local", opts.class_id
 					data.done (d)->
 						collection.set d
 				
@@ -199,6 +199,12 @@ define ["backbone"], (Backbone) ->
 
 				if modelname is 'schools' #Not yet implemented
 					console.log 'Schools local'
+
+				if modelname is 'textbook'
+					#Get textbooks by textbook_id	
+					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('term_id')
+					data.done (d)->
+						model.set d	
 
 				if modelname is 'question-response'
 					data = App.reqres.request "save:#{modelname}:local", model
