@@ -37,31 +37,14 @@ define ['app'
             onClose: ->
                     models= this.model.get('elements').models
 
-                    elements= [
-                        {optionNo: 1, class: 6, text: 'TTT'},
-                        {optionNo: 2, class: 6, text: 'test 343'}
-                    ]
+                    elements= _.map models, (m)-> m.toJSON()
 
-                    elements= _.map models, (m)->
-                                                console.log m.toJSON()
-                                                m.toJSON()
+                    @model.set 'elements': elements
 
-                    elementsStr = JSON.stringify(elements)
-                    console.log elementsStr
+                    @model.save()
 
-                    #@model.set 'elements': elements
-
-                    #@model.save(null, wait:true)
-
-                    #optionCollection = App.request "create:new:option:collection", elements
-                    #@model.set 'elements', optionCollection
-
-
-
-
-
-        #localStorage.setItem 'ele' + @model.get('meta_id'), JSON.stringify(@model.toJSON())
-
+                    optionCollection = App.request "create:new:option:collection", models
+                    @model.set 'elements', optionCollection
 
         App.commands.setHandler "show:mcq:properties", (options)->
             new McqPropertyBox.Controller

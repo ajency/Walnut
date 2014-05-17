@@ -12,7 +12,7 @@ define ['app'
             initialize: (options)->
                 {@contentType}= options
 
-                @contentPieceModel = App.request "get:page:json"
+                @contentPieceModel = App.request "get:page:json",100
 
                 App.execute "when:fetched", @contentPieceModel, =>
                     if not @contentPieceModel.get 'ID'
