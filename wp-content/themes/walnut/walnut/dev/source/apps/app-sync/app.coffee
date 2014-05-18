@@ -1,4 +1,5 @@
 define ['app'
+        'apps/app-sync/app-sync-view'
         'apps/app-sync/app-sync-controller'
         ], (App)->
 

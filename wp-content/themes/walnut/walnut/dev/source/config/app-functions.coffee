@@ -137,7 +137,7 @@ define ['underscore'], ( _) ->
 		updateQuestionResponseLogs : (refID)->
 
 			_.db.transaction((tx)->
-				tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time) VALUES (?,?)', [refID, _.getCurrentDateTime(2)])
+				tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time, sync) VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0])
 
 			,_.transactionErrorHandler
             ,(tx)->

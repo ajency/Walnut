@@ -129,7 +129,7 @@ define(['underscore'], function(_) {
     },
     updateQuestionResponseLogs: function(refID) {
       return _.db.transaction(function(tx) {
-        return tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time) VALUES (?,?)', [refID, _.getCurrentDateTime(2)]);
+        return tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time, sync) VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0]);
       }, _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: Inserted new record in wp_question_response_logs');
       });

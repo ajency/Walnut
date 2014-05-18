@@ -1,46 +1,27 @@
-define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionette, Backbone, $) {
-  var createTables, errorHandler, fail, gotFS, gotFile, gotFileEntry, initDatabase, prePopulate, readAsText, readValues;
-  errorHandler = function(error) {
-    return console.log("Error: " + error);
-  };
-  createTables = function(db) {
+define(['underscore', 'marionette', 'backbone', 'jquery', 'csvparse'], function(_, Marionette, Backbone, $, parse) {
+  _.createTables = function(db) {
     return db.transaction(function(transaction) {
       alert("create database");
       return transaction.executeSql('CREATE TABLE IF NOT EXISTS newdata(id INTEGER PRIMARY KEY, division_id INTEGER ,collection_id INTEGER,teacher_id INTEGER, date VARCHAR, status TEXT)');
-    }, errorHandler, function(data) {
+    }, _.transactionErrorhandler, function(data) {
       alert("Success");
       return console.log('Success create');
     });
   };
-  initDatabase = function() {
-    var DEMODB;
-    alert("initDatabase");
-    DEMODB = window.openDatabase("DEMODB", "1.0", "DEMO Database", 500000);
-    window.db = DEMODB;
-    return createTables(window.db);
+  _.prePopulate = function(data) {
+    return _.db.transaction(function(tx) {
+      var i, row, _i, _ref, _results;
+      _results = [];
+      for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
+        row = data[i];
+        _results.push(tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 1]));
+      }
+      return _results;
+    }, _.transactionErrorhandler, function(tx) {
+      return console.log('Data inserted successfully');
+    });
   };
-  prePopulate = function(results1) {
-    var allData, collectionId, date1, divisionId, id1, status1, teacherId;
-    if (results1.length === 1) {
-      allData = results1[0];
-      console.log(allData[0]);
-      id1 = allData[0];
-      divisionId = allData[1];
-      collectionId = allData[2];
-      teacherId = allData[3];
-      date1 = allData[4];
-      status1 = allData[5];
-      window.db.transaction(function(transaction) {
-        alert("insert");
-        transaction.executeSql("INSERT INTO newdata(id, division_id, collection_id, teacher_id, date, status) VALUES ('" + id1 + "','" + divisionId + "','" + collectionId + "','" + teacherId + "','" + date1 + "','" + status1 + "')");
-        return console.log("INSERT INTO newdata(id, division_id, collection_id, teacher_id, date, status) VALUES ('" + id1 + "','" + divisionId + "','" + collectionId + "','" + teacherId + "','" + date1 + "','" + status1 + "')");
-      }, errorHandler, function(data) {
-        return console.log('Success insert');
-      });
-      return readValues();
-    }
-  };
-  readValues = function() {
+  _.readValues = function() {
     return window.db.transaction(function(transaction) {
       alert("SELECT");
       return transaction.executeSql("SELECT * FROM newdata ", [], function(transaction, results) {
@@ -71,26 +52,36 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
           }
           return _results;
         }
-      }, errorHandler);
+      }, _.transactionErrorhandler);
     });
   };
-  gotFS = function(fileSystem) {
-    alert("gotFS");
+  _.PageLoading = function() {
+    return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+      return fileSystem.root.getFile("StudentsLogs.txt", {
+        create: true,
+        exclusive: false
+      }, function(fileEntry) {
+        var filePath, fileTransfer, uri;
+        fileTransfer = new FileTransfer();
+        uri = encodeURI("http://synapsedu.info/wp_35_training_logs.csv");
+        filePath = fileEntry.toURL();
+        return fileTransfer.download(uri, filePath, function(file) {
+          return _.readAsText(file);
+        }, _.fileTransferErrorHandler);
+      }, _.fileErrorHandler);
+    }, _.fileSystemErrorHandler);
+  };
+  _.fail = function(error) {
+    alert("error");
+    return console.log("error" + error.code);
+  };
+  _.gotFS = function(fileSystem) {
     return fileSystem.root.getFile("StudentsLogs.txt", {
       create: true,
       exclusive: false
     }, gotFileEntry, fail);
   };
-  _.PageLoading = function() {
-    alert("hello ");
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-    return initDatabase();
-  };
-  fail = function(error) {
-    alert("error");
-    return console.log("error" + error.code);
-  };
-  gotFileEntry = function(fileEntry) {
+  _.gotFileEntry = function(fileEntry) {
     var filePath, fileTransfer, uri;
     fileTransfer = new FileTransfer();
     uri = encodeURI("http://synapsedu.info/wp_35_training_logs.csv");
@@ -105,24 +96,20 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
       return console.log("upload error code" + error.code);
     }, true);
   };
-  gotFile = function(file) {
+  _.gotFile = function(file) {
     return readAsText(file);
   };
-  return readAsText = function(file) {
+  return _.readAsText = function(file) {
     var reader;
     reader = new FileReader();
     reader.onloadend = function(evt) {
-      var csvString, results;
+      var csvString, parsedData;
       csvString = evt.target.result;
-      return results = $.parse(csvString, {
+      parsedData = $.parse(csvString, {
         header: false,
-        dynamicTyping: false,
-        step: function(data, file, inputElem) {
-          var results1;
-          results1 = data.results;
-          return prePopulate(results1);
-        }
+        dynamicTyping: false
       });
+      return prePopulate(parsedData.results);
     };
     return reader.readAsText(file);
   };

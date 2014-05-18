@@ -223,7 +223,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         var data, insertTrainingLogs, lastStatus, updateTrainingLogs;
         insertTrainingLogs = function(data) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status) VALUES (?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status]);
+            return tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?, ?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status, 0]);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('Success: Inserted new record in wp_training_logs');
           });
