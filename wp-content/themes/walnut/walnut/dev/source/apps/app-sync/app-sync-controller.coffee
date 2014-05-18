@@ -30,7 +30,11 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 					
 
 			startSyncProcess : ->
+				alert "uol"
+				console.log "uhi"
+				_.PageLoading()
 				$('i').addClass('fa-spin')
 				$('#syncText').text('Syncing now...')	
+				
 				
 

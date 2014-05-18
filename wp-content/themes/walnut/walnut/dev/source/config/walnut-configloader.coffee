@@ -5,4 +5,5 @@ define ['config/marionette'
 		'config/jquery'
 		'config/app-storage'
 		'config/app-functions'
+		'config/app-sync'
 		], ->

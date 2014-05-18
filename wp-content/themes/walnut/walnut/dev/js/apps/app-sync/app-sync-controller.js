@@ -46,6 +46,9 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       };
 
       AppSyncView.prototype.startSyncProcess = function() {
+        alert("uol");
+        console.log("uhi");
+        _.PageLoading();
         $('i').addClass('fa-spin');
         return $('#syncText').text('Syncing now...');
       };
