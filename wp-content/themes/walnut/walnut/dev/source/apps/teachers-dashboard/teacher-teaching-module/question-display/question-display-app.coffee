@@ -6,6 +6,8 @@ define ['app'
             initialize: (opts)->
                 {model,questionResponseModel,@timerObject, @display_mode} = opts
 
+                @durationInSeconds= model.get('duration')*60
+
                 @view = view = @_showQuestionView model,questionResponseModel
 
                 @show view, (loading: true)
@@ -16,7 +18,7 @@ define ['app'
                                 .TimeCircles()
                                 .getTime()
 
-                    timeElapsed = 15 - timerTime
+                    timeElapsed = @durationInSeconds - timerTime
 
                     timeElapsed
 
@@ -29,7 +31,7 @@ define ['app'
                     templateHelpers:
                         timeLeftOrElapsed:=>
                             timeTaken= parseInt questionResponseModel.get 'time_taken'
-                            timer= 15 - timeTaken
+                            timer= @durationInSeconds - timeTaken
 
 
 

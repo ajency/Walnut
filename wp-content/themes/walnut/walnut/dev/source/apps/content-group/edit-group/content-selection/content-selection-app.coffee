@@ -15,11 +15,11 @@ define ['app'
                     'data': [
                         {
                             'label': 'Question'
-                            'value': 'post_title'
+                            'value': 'post_excerpt'
                         }
                         {
                             'label': 'Author'
-                            'value': 'post_author'
+                            'value': 'post_author_name'
                         }
                         {
                             'label': 'Last Modified'

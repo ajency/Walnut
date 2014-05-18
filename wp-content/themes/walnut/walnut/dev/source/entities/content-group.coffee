@@ -97,16 +97,13 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 						success =(d)->
 							(tx,data)->
-								i = 0
-								while i < data.rows.length
+								for i in [0..data.rows.length-1] by 1
 									row = data.rows.item(i)
 									if row['meta_key'] is 'description'
 										contentPiecesAndDescription.description = row['meta_value']
 
 									if row['meta_key'] is 'content_pieces'
 										contentPiecesAndDescription.content_pieces = row['meta_value']
-
-									i++	
 								
 								d.resolve(contentPiecesAndDescription)
 
@@ -116,6 +113,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 												
 					#get data from wp_content_collection
 					runMainQuery = ->
+
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								pattern = '%"'+id+'"%'
@@ -123,9 +121,11 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					onSuccess = (d)->
 						(tx, data)->
+							
 							result = []
-							i = 0
-							while i < data.rows.length
+
+							for i in [0..data.rows.length-1] by 1
+
 								r = data.rows.item(i)
 
 								do (r, i, division)->
@@ -159,8 +159,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 													training_date: date
 													content_pieces: content_pieces
 													description: description
-										
-								i++
 							
 							d.resolve(result)
 
@@ -180,9 +178,11 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					.fail _.failureHandler
 
 
-				saveOrUpdateContentGroupLocal:(p) ->
+				saveOrUpdateContentGroupLocal:(model) ->
+					
 					#function to insert record in wp_training_logs
 					insertTrainingLogs =(data)->
+
 						_.db.transaction( (tx)->
 							tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status) 
 								VALUES (?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status])
@@ -195,6 +195,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					#function to update status in wp_training_logs
 					updateTrainingLogs =(id, data)->
+						
 						_.db.transaction( (tx)->
 							tx.executeSql("UPDATE wp_training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id])
 							
@@ -205,21 +206,21 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					
 					data =
-						division_id: p.division
-						collection_id: p.id
+						division_id: model.get('division')
+						collection_id: model.get('id')
 						teacher_id: 1  #teacher id hardcoded as 1 for now
 						date: _.getCurrentDateTime(0)
-						status: p.status
+						status: model.get('status')
 
-					if p.status is 'completed' or p.status is 'scheduled'
-						if p.status is 'scheduled'
-							data.date = p.training_date
+					if model.get('status') is 'completed' or model.get('status') is 'scheduled'
+						if model.get('status') is 'scheduled'
+							data.date = model.get('training_date')
 						#insert new record in wp_training_logs
 						insertTrainingLogs(data)
 
 					else
 						#get last status
-						lastStatus = _.getLastDetails(p.id, p.division)
+						lastStatus = _.getLastDetails(model.get('id'), model.get('division'))
 						lastStatus.done (d)=>
 							console.log 'Last status: '+d.status
 							if d.status isnt ''
@@ -251,5 +252,5 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
 				API.getContentGroupByIdFromLocal id,division
 
-			App.reqres.setHandler "save:update:content-group:local", (params)->
-				API.saveOrUpdateContentGroupLocal params	
+			App.reqres.setHandler "save:update:content-group:local", (model)->
+				API.saveOrUpdateContentGroupLocal model	

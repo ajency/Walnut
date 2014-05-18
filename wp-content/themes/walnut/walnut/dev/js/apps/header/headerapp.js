@@ -64,7 +64,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         var data;
         data = HeaderView.__super__.serializeData.call(this);
         data.logourl = SITEURL + '/wp-content/themes/walnut/images/walnutlearn.png';
-        if (_.checkPlatform() === 'Mobile') {
+        if (_.platform() === 'DEVICE') {
           data.logourl = SITEURL + '/images/logo-synapse.png';
         }
         console.log(SITEURL);
@@ -72,6 +72,14 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.onShow = function() {
+        $('#main-menu-toggle').sidr({
+          name: 'main-menu',
+          side: 'left'
+        });
+        $('.chat-menu-toggle').sidr({
+          name: 'sidr',
+          side: 'right'
+        });
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
           return $(".header-seperation").css("display", "none");

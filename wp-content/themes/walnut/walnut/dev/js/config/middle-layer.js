@@ -1,40 +1,35 @@
 define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
-  var networkStatus;
-  networkStatus = 0;
-  _.checkPlatform = function() {
+  var connected;
+  _.platform = function() {
     var ua;
     ua = detect.parse(navigator.userAgent);
     if (ua.os.family === "Android" || ua.os.family === "iOS") {
-      return "Mobile";
+      return "DEVICE";
     } else {
-      return "Desktop";
+      return "BROWSER";
     }
   };
-  if (_.checkPlatform() === 'Desktop') {
+  if (_.platform() === 'BROWSER') {
     $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js');
   }
+  connected = false;
   window.onLineHandler = function() {
-    return networkStatus = 1;
+    return connected = true;
   };
   window.offLineHandler = function() {
-    return networkStatus = 0;
+    return connected = false;
   };
   document.addEventListener("online", function() {
-    return console.log('Online');
+    return console.log('Connection available');
   }, false);
   document.addEventListener("offline", function() {
-    return console.log('Offline');
+    return console.log('Connection unavailable');
   }, false);
   _.isOnline = function() {
-    switch (_.checkPlatform()) {
-      case 'Desktop':
-        if (networkStatus === 1) {
-          return true;
-        } else {
-          return false;
-        }
-        break;
-      case 'Mobile':
+    switch (_.platform()) {
+      case 'BROWSER':
+        return connected;
+      case 'DEVICE':
         if (navigator.connection.type === Connection.NONE) {
           return false;
         } else {
@@ -43,8 +38,8 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
     }
   };
   return _.setMainLogo = function() {
-    switch (_.checkPlatform()) {
-      case 'Mobile':
+    switch (_.platform()) {
+      case 'DEVICE':
         if (_.getSchoolLogoSrc() !== null) {
           return $("#logo").attr('src', _.getSchoolLogoSrc());
         } else {

@@ -12,20 +12,20 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
 
     AuthenticationController.prototype.initialize = function(options) {
       this.url = options.url, this.data = options.data, this.success = options.success;
-      this.platform = _.checkPlatform();
+      this.platform = _.platform();
       return this.isOnline = _.isOnline();
     };
 
     AuthenticationController.prototype.authenticate = function() {
       switch (this.platform) {
-        case 'Desktop':
+        case 'BROWSER':
           if (this.isOnline) {
             return this.onlineWebAuth();
           } else {
             return this.onConnectionError();
           }
           break;
-        case 'Mobile':
+        case 'DEVICE':
           if (this.isOfflineLoginEnabled()) {
             return this.offlineMobileAuth();
           } else {
@@ -81,12 +81,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         data: this.data
       }, (function(_this) {
         return function(resp) {
-          var user;
           if (resp.login_details.error) {
             return _this.onErrorResponse(resp.login_details.error);
           } else {
-            user = App.request("get:user:model");
-            user.set(resp.login_details);
+            _this.setUserModel();
             if (_.getBlogID() === null) {
               return _this.initialAppLogin(resp);
             } else {
@@ -98,16 +96,13 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.offlineMobileAuth = function() {
-      var user;
-      user = this.isExistingUser(this.data.txtusername);
-      return user.done((function(_this) {
-        return function(d) {
-          if (d.exists === true) {
-            if (d.password === _this.data.txtpassword) {
-              user = App.request("get:user:model");
-              user.set({
-                'ID': d.user_id
-              });
+      var offlineUser;
+      offlineUser = _.getUserDetails(this.data.txtusername);
+      return offlineUser.done((function(_this) {
+        return function(user) {
+          if (user.exists) {
+            if (user.password === _this.data.txtpassword) {
+              _this.setUserModel();
               return _this.onSuccessResponse();
             } else {
               return _this.onErrorResponse('Invalid Password');
@@ -141,52 +136,17 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
-      var user;
-      user = this.isExistingUser(this.data.txtusername);
-      return user.done((function(_this) {
-        return function(d) {
-          if (d.exists === true) {
+      var offlineUser;
+      offlineUser = _.getUserDetails(this.data.txtusername);
+      return offlineUser.done((function(_this) {
+        return function(user) {
+          if (user.exists) {
             return _this.updateExistingUser(resp);
           } else {
             return _this.inputNewUser(resp);
           }
         };
       })(this));
-    };
-
-    AuthenticationController.prototype.isExistingUser = function(username) {
-      var data, onSuccess, runQuery;
-      data = {
-        user_id: '',
-        exists: false,
-        password: ''
-      };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, r;
-          i = 0;
-          while (i < data.rows.length) {
-            r = data.rows.item(i);
-            if (r['username'] === username) {
-              data.exists = true;
-              data.password = r['password'];
-              data.user_id = r['user_id'];
-            }
-            i++;
-          }
-          return d.resolve(data);
-        };
-      };
-      return $.when(runQuery()).done(function(data) {
-        return console.log('isExistingUser transaction completed');
-      }).fail(_.failureHandler);
     };
 
     AuthenticationController.prototype.inputNewUser = function(response) {
@@ -210,6 +170,14 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         };
       })(this), _.transactionErrorhandler, function(tx) {
         return console.log('SUCCESS: Updated user details');
+      });
+    };
+
+    AuthenticationController.prototype.setUserModel = function() {
+      var user;
+      user = App.request("get:user:model");
+      return user.set({
+        'ID': '0'
       });
     };
 

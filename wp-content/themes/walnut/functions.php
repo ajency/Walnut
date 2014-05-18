@@ -11,6 +11,7 @@ require_once 'modules/media/ajax.php';
 require_once 'modules/divisions/ajax.php';
 require_once 'modules/question-response/ajax.php';
 require_once 'custom_configs.php';
+require_once 'underscore.php';
 
 add_theme_support('menus');
 

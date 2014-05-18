@@ -48,7 +48,8 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 			# pre-populate username from list of logged in users
 			prepopulateUsername : ->
 				
-				$('#txtusername').val($.trim(@username)) if @username isnt 'undefined'
+				$('#txtusername').val($.trim(@username)) if not _.isUndefined @username
+				
 					
 
 

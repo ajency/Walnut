@@ -25,7 +25,9 @@ define ['app'
 
 					# on close of property box save the model
 					onClose:->
-						localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
+						console.log @model
+						@model.save()
+						#localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
 
 				App.commands.setHandler "show:biganswer:properties",(options)->
 						new BigAnswerPropertyBox.Controller

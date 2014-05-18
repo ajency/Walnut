@@ -1,33 +1,37 @@
-define ['underscore', 'underscorestring'], ( _) ->
-
-	_.mixin _.str.exports()
+define ['underscore'], ( _) ->
 
 	# mixin to add additional functionality underscore
 	_.mixin
 
 		#Deferred error handler
 		deferredErrorHandler : (d)->
+			
 			(tx, error)->
 				d.reject error
 
 		#Failure handler
 		failureHandler : (error)->
+
 			console.log 'ERROR: '+error.message
 
 		#Database transaction error handler
 		transactionErrorHandler : (tx, error)->
+
 			console.log 'ERROR: '+error.message
 
 		#File error handler
 		fileErrorHandler : (error)->
+
 			console.log 'FILE ERROR: '+error.code
 
 		#File system error handler
 		fileSystemErrorHandler : (evt)->
+
 			console.log 'FILE SYSTEM ERROR: '+evt.target.error.code
 
 		#File transfer error handler
 		fileTransferErrorHandler : (error)->
+
 			switch error.code
 				when 1 
 					err_msg = 'FILE NOT FOUND'
@@ -45,31 +49,43 @@ define ['underscore', 'underscorestring'], ( _) ->
 			console.log 'ERROR TARGET: '+error.target
 
 
-		#Check if user is admin for app navigation based on user roles.
-		getUserRole : (username)->
+		#Get all user details from local database
+		getUserDetails : (username)->
+
+			userData = 
+				user_id : ''
+				password: ''
+				role : ''
+				exists : false
+
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d))
+						tx.executeSql("SELECT * FROM USERS WHERE username=?", [username], onSuccess(d), _.deferredErrorHandler(d))
 			
 			onSuccess = (d)->
 				(tx, data)->
-					i = 0
-					while i < data.rows.length
-						r = data.rows.item(i)
-						if r['username'] is username
-							role = r['user_role']
-						i++
-					d.resolve(role)
+
+					if data.rows.length isnt 0
+						r = data.rows.item(0)
+						userData =
+							user_id : r['user_id']
+							password : r['password']
+							role : r['user_role']
+							exists : true
+
+					d.resolve(userData)
 
 			$.when(runQuery()).done ->
-				console.log 'getUserRole transaction completed'
+				console.log 'getUserDetails transaction completed'
 			.fail _.failureHandler
 
 
 		#Get question_type from wp_postmeta
 		getQuestionType : (content_piece_id)->
+
 			question_type = ''
+
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
@@ -88,6 +104,7 @@ define ['underscore', 'underscorestring'], ( _) ->
 
 		#Get last details i.e id, status and date from wp_training_logs
 		getLastDetails : (collection_id, division)->
+
 			lastDetails = 
 				id: ''
 				date: ''
@@ -102,9 +119,13 @@ define ['underscore', 'underscorestring'], ( _) ->
 			onSuccess =(d)->
 				(tx, data)->
 					if data.rows.length isnt 0
-						lastDetails.id = data.rows.item(0)['id']
-						lastDetails.date  = data.rows.item(0)['date']
-						lastDetails.status = data.rows.item(0)['status']
+						r = data.rows.item(0)
+
+						lastDetails =
+							id : r['id']
+							date : r['date']
+							status : r['status']
+
 					d.resolve(lastDetails)
 
 			$.when(runQuery()).done ->

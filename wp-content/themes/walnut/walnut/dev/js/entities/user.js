@@ -81,10 +81,9 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, result, row;
+            var i, result, row, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               row = data.rows.item(i);
               result[i] = {
                 ID: row['ID'],
@@ -92,7 +91,6 @@ define(["app", 'backbone'], function(App, Backbone) {
                 user_email: row['user_email'],
                 profile_pic: ''
               };
-              i++;
             }
             return d.resolve(result);
           };
@@ -118,14 +116,12 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, result;
+            var i, result, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               result[i] = {
                 username: data.rows.item(i)['username']
               };
-              i++;
             }
             return d.resolve(result);
           };

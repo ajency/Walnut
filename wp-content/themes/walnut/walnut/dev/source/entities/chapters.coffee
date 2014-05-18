@@ -72,7 +72,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					subSectionsCollection
 					
 
-				#get chapters from local database
+				# get chapters from local database
 				getChaptersFromLocal:(parent)->
 					
 					runQuery = ->
@@ -84,9 +84,10 @@ define ["app", 'backbone'], (App, Backbone) ->
 					onSuccess =(d)->
 						(tx,data)->
 							result = []
-							i=0
-							while i < data.rows.length
+
+							for i in [0..data.rows.length-1] by 1
 								r = data.rows.item(i)
+								
 								result[i]=
 									term_id: r['term_id']
 									name: r['name']
@@ -105,8 +106,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 									subjects: null
 									modules_count: ''
 									chapter_count: ''#Sections
-
-								i++	
 							
 							d.resolve(result)
 

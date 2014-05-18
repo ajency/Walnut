@@ -152,48 +152,47 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, r, result;
+            var i, r, result, _fn, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            _fn = function(r, i) {
+              var questionType;
+              questionType = _.getQuestionType(r['ID']);
+              return questionType.done(function(question_type) {
+                return result[i] = {
+                  ID: r['ID'],
+                  post_author: r['post_author'],
+                  post_date: r['post_date'],
+                  post_date_gmt: r['post_date_gmt'],
+                  post_content: r['post_content'],
+                  post_title: r['post_title'],
+                  post_excerpt: r['post_excerpt'],
+                  post_status: r['post_status'],
+                  comment_status: r['comment_status'],
+                  ping_status: r['ping_status'],
+                  post_password: r['post_password'],
+                  post_name: r['post_name'],
+                  to_ping: r['to_ping'],
+                  pinged: r['pinged'],
+                  post_modified: r['post_modified'],
+                  post_modified_gmt: r['post_modified_gmt'],
+                  post_content_filtered: r['post_content_filtered'],
+                  post_parent: r['post_parent'],
+                  guid: r['guid'],
+                  menu_order: r['menu_order'],
+                  post_type: r['post_type'],
+                  post_mime_type: r['post_mime_type'],
+                  comment_count: r['comment_count'],
+                  question_type: question_type,
+                  filter: 'raw',
+                  subjects: '',
+                  creator: 'admin',
+                  content_type: ''
+                };
+              });
+            };
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               r = data.rows.item(i);
-              (function(r, i) {
-                var questionType;
-                questionType = _.getQuestionType(r['ID']);
-                return questionType.done(function(question_type) {
-                  return result[i] = {
-                    ID: r['ID'],
-                    post_author: r['post_author'],
-                    post_date: r['post_date'],
-                    post_date_gmt: r['post_date_gmt'],
-                    post_content: r['post_content'],
-                    post_title: r['post_title'],
-                    post_excerpt: r['post_excerpt'],
-                    post_status: r['post_status'],
-                    comment_status: r['comment_status'],
-                    ping_status: r['ping_status'],
-                    post_password: r['post_password'],
-                    post_name: r['post_name'],
-                    to_ping: r['to_ping'],
-                    pinged: r['pinged'],
-                    post_modified: r['post_modified'],
-                    post_modified_gmt: r['post_modified_gmt'],
-                    post_content_filtered: r['post_content_filtered'],
-                    post_parent: r['post_parent'],
-                    guid: r['guid'],
-                    menu_order: r['menu_order'],
-                    post_type: r['post_type'],
-                    post_mime_type: r['post_mime_type'],
-                    comment_count: r['comment_count'],
-                    question_type: question_type,
-                    filter: 'raw',
-                    subjects: '',
-                    creator: 'admin',
-                    content_type: ''
-                  };
-                });
-              })(r, i);
-              i++;
+              _fn(r, i);
             }
             return d.resolve(result);
           };

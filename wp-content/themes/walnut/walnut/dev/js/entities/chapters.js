@@ -122,10 +122,9 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, r, result;
+            var i, r, result, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               r = data.rows.item(i);
               result[i] = {
                 term_id: r['term_id'],
@@ -146,7 +145,6 @@ define(["app", 'backbone'], function(App, Backbone) {
                 modules_count: '',
                 chapter_count: ''
               };
-              i++;
             }
             return d.resolve(result);
           };

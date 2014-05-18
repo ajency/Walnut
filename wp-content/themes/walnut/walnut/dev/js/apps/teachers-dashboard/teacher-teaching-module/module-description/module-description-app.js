@@ -15,22 +15,13 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ModuleDescriptionController.prototype.initialize = function(opts) {
         var model, view;
-        model = opts.model, this.questionResponseModel = opts.questionResponseModel, this.questionResponseCollection = opts.questionResponseCollection, this.timerObject = opts.timerObject;
+        model = opts.model, this.questionResponseModel = opts.questionResponseModel, this.questionResponseCollection = opts.questionResponseCollection, this.timerObject = opts.timerObject, this.display_mode = opts.display_mode;
         this.view = view = this._showModuleDescriptionView(model);
         this.show(view, {
           loading: true
         });
         return this.listenTo(this.view, "goto:previous:route", (function(_this) {
           return function() {
-            var elapsedTime;
-            if (_this.questionResponseModel.get('status') !== 'completed') {
-              elapsedTime = _this.timerObject.request("get:elapsed:time");
-              _this.questionResponseModel.set({
-                'time_taken': elapsedTime,
-                'status': 'paused'
-              });
-              _this.questionResponseModel.save();
-            }
             return _this.region.trigger("goto:previous:route");
           };
         })(this));
@@ -50,10 +41,19 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
             return parseInt(memo + parseInt(num));
           });
         }
-        console.log(totalTimeTakenForModule);
         return new ModuleDescriptionView({
           model: model,
           templateHelpers: {
+            showPauseButton: (function(_this) {
+              return function() {
+                var pauseBtn;
+                pauseBtn = '';
+                if (_this.display_mode === 'class_mode') {
+                  pauseBtn = '<button type="button" id="pause-session" class="btn btn-white  action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>';
+                }
+                return pauseBtn;
+              };
+            })(this),
             getProgressData: function() {
               return numOfQuestionsCompleted + '/' + totalNumofQuestions;
             },
@@ -87,7 +87,6 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       __extends(ModuleDescriptionView, _super);
 
       function ModuleDescriptionView() {
-        this.updateTime = __bind(this.updateTime, this);
         return ModuleDescriptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -98,17 +97,6 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ModuleDescriptionView.prototype.events = {
         'click #back-to-module, #pause-session': function() {
           return this.trigger("goto:previous:route");
-        }
-      };
-
-      ModuleDescriptionView.prototype.onShow = function() {
-        var clock;
-        return clock = setInterval(this.updateTime, 500);
-      };
-
-      ModuleDescriptionView.prototype.updateTime = function() {
-        if (_.size($('#timekeeper')) > 0) {
-          return this.$el.find('.timedisplay').html('<i class="fa fa-clock-o"></i> ' + $('#timekeeper').html());
         }
       };
 

@@ -63,7 +63,7 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
 
                 connection_resp = App.request "get:auth:controller", options
 
-                if _.checkPlatform() is 'Desktop'
+                if _.platform() is 'BROWSER'
                     connection_resp.authenticate()
 
                 else
@@ -82,8 +82,9 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                 onSuccess =(d)->
                     (tx,data)->
                         result = []
-                        i = 0
-                        while i < data.rows.length
+
+                        for i in [0..data.rows.length-1] by 1
+                            
                             r = data.rows.item(i)
 
                             do(r, i)->
@@ -103,8 +104,6 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                                         start_date: r['start_date']
                                         end_date: r['end_date']
                                         status: r['status']
-
-                            i++ 
         
                         d.resolve(result)           
 

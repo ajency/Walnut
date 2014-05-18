@@ -104,8 +104,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                 onSuccess =(d)->
                     (tx,data)->
                         result = []
-                        i = 0
-                        while i < data.rows.length
+
+                        for i in [0..data.rows.length-1] by 1
+
                             r = data.rows.item(i)
 
                             do(r, i)->
@@ -143,8 +144,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                                         subjects: ''
                                         creator: 'admin'
                                         content_type: ''
-                                            
-                            i++
                             
                         d.resolve(result)
 

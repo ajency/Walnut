@@ -122,9 +122,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           };
           success = function(d) {
             return function(tx, data) {
-              var i, row;
-              i = 0;
-              while (i < data.rows.length) {
+              var i, row, _i, _ref;
+              for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
                 row = data.rows.item(i);
                 if (row['meta_key'] === 'description') {
                   contentPiecesAndDescription.description = row['meta_value'];
@@ -132,7 +131,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                 if (row['meta_key'] === 'content_pieces') {
                   contentPiecesAndDescription.content_pieces = row['meta_value'];
                 }
-                i++;
               }
               return d.resolve(contentPiecesAndDescription);
             };
@@ -152,54 +150,53 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, r, result;
+            var i, r, result, _fn, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            _fn = function(r, i, division) {
+              var dateAndStatus;
+              dateAndStatus = _.getLastDetails(r['id'], division);
+              return dateAndStatus.done(function(d) {
+                var date, status;
+                status = d.status;
+                date = d.date;
+                return (function(r, i, date, status) {
+                  var contentPiecesAndDescription;
+                  contentPiecesAndDescription = getContentPiecesAndDescription(r['id']);
+                  return contentPiecesAndDescription.done(function(d) {
+                    var content_pieces, description;
+                    content_pieces = description = '';
+                    if (d.content_pieces !== '') {
+                      content_pieces = unserialize(d.content_pieces);
+                    }
+                    if (d.description !== '') {
+                      description = unserialize(d.description);
+                    }
+                    return result[i] = {
+                      id: r['id'],
+                      name: r['name'],
+                      created_on: r['created_on'],
+                      created_by: r['created_by'],
+                      last_modified_on: r['last_modified_on'],
+                      last_modified_by: r['last_modified_by'],
+                      published_on: r['published_on'],
+                      published_by: r['published_by'],
+                      type: r['type'],
+                      term_ids: unserialize(r['term_ids']),
+                      duration: getDuration(r['duration']),
+                      minshours: getMinsHours(r['duration']),
+                      total_minutes: r['duration'],
+                      status: status,
+                      training_date: date,
+                      content_pieces: content_pieces,
+                      description: description
+                    };
+                  });
+                })(r, i, date, status);
+              });
+            };
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               r = data.rows.item(i);
-              (function(r, i, division) {
-                var dateAndStatus;
-                dateAndStatus = _.getLastDetails(r['id'], division);
-                return dateAndStatus.done(function(d) {
-                  var date, status;
-                  status = d.status;
-                  date = d.date;
-                  return (function(r, i, date, status) {
-                    var contentPiecesAndDescription;
-                    contentPiecesAndDescription = getContentPiecesAndDescription(r['id']);
-                    return contentPiecesAndDescription.done(function(d) {
-                      var content_pieces, description;
-                      content_pieces = description = '';
-                      if (d.content_pieces !== '') {
-                        content_pieces = unserialize(d.content_pieces);
-                      }
-                      if (d.description !== '') {
-                        description = unserialize(d.description);
-                      }
-                      return result[i] = {
-                        id: r['id'],
-                        name: r['name'],
-                        created_on: r['created_on'],
-                        created_by: r['created_by'],
-                        last_modified_on: r['last_modified_on'],
-                        last_modified_by: r['last_modified_by'],
-                        published_on: r['published_on'],
-                        published_by: r['published_by'],
-                        type: r['type'],
-                        term_ids: unserialize(r['term_ids']),
-                        duration: getDuration(r['duration']),
-                        minshours: getMinsHours(r['duration']),
-                        total_minutes: r['duration'],
-                        status: status,
-                        training_date: date,
-                        content_pieces: content_pieces,
-                        description: description
-                      };
-                    });
-                  })(r, i, date, status);
-                });
-              })(r, i, division);
-              i++;
+              _fn(r, i, division);
             }
             return d.resolve(result);
           };
@@ -222,7 +219,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           return console.log('Content-group-by-id transaction completed');
         }).fail(_.failureHandler);
       },
-      saveOrUpdateContentGroupLocal: function(p) {
+      saveOrUpdateContentGroupLocal: function(model) {
         var data, insertTrainingLogs, lastStatus, updateTrainingLogs;
         insertTrainingLogs = function(data) {
           return _.db.transaction(function(tx) {
@@ -239,19 +236,19 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           });
         };
         data = {
-          division_id: p.division,
-          collection_id: p.id,
+          division_id: model.get('division'),
+          collection_id: model.get('id'),
           teacher_id: 1,
           date: _.getCurrentDateTime(0),
-          status: p.status
+          status: model.get('status')
         };
-        if (p.status === 'completed' || p.status === 'scheduled') {
-          if (p.status === 'scheduled') {
-            data.date = p.training_date;
+        if (model.get('status') === 'completed' || model.get('status') === 'scheduled') {
+          if (model.get('status') === 'scheduled') {
+            data.date = model.get('training_date');
           }
           return insertTrainingLogs(data);
         } else {
-          lastStatus = _.getLastDetails(p.id, p.division);
+          lastStatus = _.getLastDetails(model.get('id'), model.get('division'));
           return lastStatus.done((function(_this) {
             return function(d) {
               console.log('Last status: ' + d.status);
@@ -285,8 +282,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
       return API.getContentGroupByIdFromLocal(id, division);
     });
-    return App.reqres.setHandler("save:update:content-group:local", function(params) {
-      return API.saveOrUpdateContentGroupLocal(params);
+    return App.reqres.setHandler("save:update:content-group:local", function(model) {
+      return API.saveOrUpdateContentGroupLocal(model);
     });
   });
 });

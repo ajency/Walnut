@@ -42,11 +42,21 @@ define ['app'
 			serializeData : ->
 				data = super()
 				data.logourl= SITEURL+ '/wp-content/themes/walnut/images/walnutlearn.png'
-				data.logourl= SITEURL+ '/images/logo-synapse.png' if _.checkPlatform() is 'Mobile'
+				data.logourl= SITEURL+ '/images/logo-synapse.png' if _.platform() is 'DEVICE'
 				console.log SITEURL
 				data
 				
-			onShow:->						
+			onShow:->
+				$('#main-menu-toggle').sidr({
+					name : 'main-menu',
+					side: 'left'
+				});
+
+				$('.chat-menu-toggle').sidr({		
+					name : 'sidr',
+					side: 'right'
+				});
+
 				# || ($('.teacher-app').length>0)
 				if (($('.creator').length > 0)) 
 					$('.page-content').addClass('condensed');
