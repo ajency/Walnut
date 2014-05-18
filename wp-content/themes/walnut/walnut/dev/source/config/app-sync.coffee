@@ -1,10 +1,10 @@
 define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbone, $)->
 
 	
-	_.errorHandler =(error)->
+	errorHandler =(error)->
 		console.log("Error: "+error)
 
-	_.createTables = (db) ->
+	createTables = (db) ->
 		db.transaction( (transaction)->
 			alert "create database"
 			transaction.executeSql('CREATE TABLE IF NOT EXISTS newdata(id INTEGER PRIMARY KEY, division_id INTEGER ,collection_id INTEGER,teacher_id INTEGER, date VARCHAR, status TEXT)')
@@ -16,13 +16,13 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 		)
 		
 		
-	_.initDatabase =() -> 
+	initDatabase =() -> 
 		alert "initDatabase"
 		DEMODB = window.openDatabase("DEMODB", "1.0", "DEMO Database", 500000)
 		window.db = DEMODB
 		createTables(window.db)
 
-	_.prePopulate =(results1)->
+	prePopulate =(results1)->
 		if results1.length==1
 			allData = results1[0]
 			console.log allData[0]
@@ -48,7 +48,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 			
 			
 
-	_.readValues=()->
+	readValues=()->
 		window.db.transaction( (transaction)->
 			alert "SELECT"
 			transaction.executeSql("SELECT * FROM newdata ", [], (transaction, results)->
@@ -105,7 +105,10 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 		# 	console.log("remo"+re)		###		
 		# )
 
-
+	gotFS = (fileSystem)->
+		alert "gotFS"
+		fileSystem.root.getFile("StudentsLogs.txt", {create: true, exclusive: false}, gotFileEntry, fail);
+		
 	_.PageLoading =->
 		alert "hello "
 		window.requestFileSystem LocalFileSystem.PERSISTENT, 0, gotFS, fail
@@ -113,17 +116,12 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 
 
 
-	_.fail =(error)->
+	fail =(error)->
 		alert "error" 
 		console.log "error"+error.code
 
 
-
-	_.gotFS = (fileSystem)->
-		alert "gotFS"
-		fileSystem.root.getFile("StudentsLogs.txt", {create: true, exclusive: false}, gotFileEntry, fail);
-
-	_.gotFileEntry = (fileEntry)->
+	gotFileEntry = (fileEntry)->
 		fileTransfer = new FileTransfer();
 		uri = encodeURI "http://synapsedu.info/wp_35_training_logs.csv"
 		filePath=fileEntry.toURL()
@@ -145,10 +143,10 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 		   
 		);
 
-	_.gotFile =(file)->
+	gotFile =(file)->
 		readAsText(file)
 
-	_.readAsText = (file)-> 
+	readAsText = (file)-> 
 
 	 reader = new FileReader();
 	 reader.onloadend = (evt) ->

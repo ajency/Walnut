@@ -1,8 +1,9 @@
 define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionette, Backbone, $) {
-  _.errorHandler = function(error) {
+  var createTables, errorHandler, fail, gotFS, gotFile, gotFileEntry, initDatabase, prePopulate, readAsText, readValues;
+  errorHandler = function(error) {
     return console.log("Error: " + error);
   };
-  _.createTables = function(db) {
+  createTables = function(db) {
     return db.transaction(function(transaction) {
       alert("create database");
       return transaction.executeSql('CREATE TABLE IF NOT EXISTS newdata(id INTEGER PRIMARY KEY, division_id INTEGER ,collection_id INTEGER,teacher_id INTEGER, date VARCHAR, status TEXT)');
@@ -11,14 +12,14 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
       return console.log('Success create');
     });
   };
-  _.initDatabase = function() {
+  initDatabase = function() {
     var DEMODB;
     alert("initDatabase");
     DEMODB = window.openDatabase("DEMODB", "1.0", "DEMO Database", 500000);
     window.db = DEMODB;
     return createTables(window.db);
   };
-  _.prePopulate = function(results1) {
+  prePopulate = function(results1) {
     var allData, collectionId, date1, divisionId, id1, status1, teacherId;
     if (results1.length === 1) {
       allData = results1[0];
@@ -39,7 +40,7 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
       return readValues();
     }
   };
-  _.readValues = function() {
+  readValues = function() {
     return window.db.transaction(function(transaction) {
       alert("SELECT");
       return transaction.executeSql("SELECT * FROM newdata ", [], function(transaction, results) {
@@ -73,23 +74,23 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
       }, errorHandler);
     });
   };
-  _.PageLoading = function() {
-    alert("hello ");
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-    return initDatabase();
-  };
-  _.fail = function(error) {
-    alert("error");
-    return console.log("error" + error.code);
-  };
-  _.gotFS = function(fileSystem) {
+  gotFS = function(fileSystem) {
     alert("gotFS");
     return fileSystem.root.getFile("StudentsLogs.txt", {
       create: true,
       exclusive: false
     }, gotFileEntry, fail);
   };
-  _.gotFileEntry = function(fileEntry) {
+  _.PageLoading = function() {
+    alert("hello ");
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+    return initDatabase();
+  };
+  fail = function(error) {
+    alert("error");
+    return console.log("error" + error.code);
+  };
+  gotFileEntry = function(fileEntry) {
     var filePath, fileTransfer, uri;
     fileTransfer = new FileTransfer();
     uri = encodeURI("http://synapsedu.info/wp_35_training_logs.csv");
@@ -104,10 +105,10 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
       return console.log("upload error code" + error.code);
     }, true);
   };
-  _.gotFile = function(file) {
+  gotFile = function(file) {
     return readAsText(file);
   };
-  return _.readAsText = function(file) {
+  return readAsText = function(file) {
     var reader;
     reader = new FileReader();
     reader.onloadend = function(evt) {
