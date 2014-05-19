@@ -14,7 +14,7 @@ define(['underscore', 'marionette', 'backbone', 'jquery', 'csvparse'], function(
       _results = [];
       for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
         row = data[i];
-        _results.push(tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 1]));
+        _results.push(tx.executeSql("INSERT INTO wp_training_logs ( division_id, collection_id, teacher_id, date,status,sync) VALUES (?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 1]));
       }
       return _results;
     }, _.transactionErrorhandler, function(tx) {

@@ -12,15 +12,13 @@ define ['underscore', 'marionette', 'backbone', 'jquery', 'csvparse'], (_, Mario
 			console.log 'Success create'
 		)
 		
-	
-
 	_.prePopulate = (data)->
 
 		_.db.transaction( (tx)->
 
 			for i in [0..data.length-1] by 1
 				row = data[i]
-				tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status, sync) 
+				tx.executeSql("INSERT INTO wp_training_logs ( division_id, collection_id, teacher_id, date,status,sync) 
 					VALUES (?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 1])
 
 		,_.transactionErrorhandler
