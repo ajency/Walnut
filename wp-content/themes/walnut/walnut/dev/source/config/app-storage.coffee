@@ -2,6 +2,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     
     #Local database transaction
     localDatabaseTransaction =(db)->
+        
         console.log 'Local database object: '+db
         db.transaction((tx)->
             #User table

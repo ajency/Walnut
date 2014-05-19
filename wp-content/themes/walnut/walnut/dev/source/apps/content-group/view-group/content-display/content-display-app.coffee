@@ -73,7 +73,7 @@ define ['app'
                 else
                     for question in @$el.find '.contentPiece'
                         current_question = $(question).attr 'data-id'
-                        current_question = parseInt($(question).attr 'data-id') if _.checkPlatform() is 'Mobile'
+                        current_question = parseInt($(question).attr 'data-id') if _.platform() is 'DEVICE'
 
                         if _.contains responseQuestionIDs, current_question
                             $ question

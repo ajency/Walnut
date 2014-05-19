@@ -83,7 +83,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
         var modelData;
         content_piece_id = content_piece_id.toString();
-        if (_.checkPlatform() === 'Mobile') {
+        if (_.platform() === 'DEVICE') {
           content_piece_id = parseInt(content_piece_id);
         }
         questionResponseModel = questionResponseCollection.findWhere({

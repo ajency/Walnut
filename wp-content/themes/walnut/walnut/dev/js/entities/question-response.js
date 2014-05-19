@@ -86,7 +86,7 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
           })(this)
         };
         connection_resp = App.request("get:auth:controller", options);
-        if (_.checkPlatform() === 'Desktop') {
+        if (_.platform() === 'BROWSER') {
           return connection_resp.authenticate();
         } else {
           return _.updateQuestionResponseLogs(refID);
@@ -103,35 +103,34 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, r, result;
+            var i, r, result, _fn, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            _fn = function(r, i) {
+              var questionType;
+              questionType = _.getQuestionType(r['content_piece_id']);
+              return questionType.done(function(question_type) {
+                var q_resp;
+                if (question_type === 'individual') {
+                  q_resp = unserialize(r['question_response']);
+                } else {
+                  q_resp = r['question_response'];
+                }
+                return result[i] = {
+                  ref_id: r['ref_id'],
+                  content_piece_id: r['content_piece_id'],
+                  collection_id: r['collection_id'],
+                  division: r['division'],
+                  question_response: q_resp,
+                  time_taken: r['time_taken'],
+                  start_date: r['start_date'],
+                  end_date: r['end_date'],
+                  status: r['status']
+                };
+              });
+            };
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               r = data.rows.item(i);
-              (function(r, i) {
-                var questionType;
-                questionType = _.getQuestionType(r['content_piece_id']);
-                return questionType.done(function(question_type) {
-                  var q_resp;
-                  if (question_type === 'individual') {
-                    q_resp = unserialize(r['question_response']);
-                  } else {
-                    q_resp = r['question_response'];
-                  }
-                  return result[i] = {
-                    ref_id: r['ref_id'],
-                    content_piece_id: r['content_piece_id'],
-                    collection_id: r['collection_id'],
-                    division: r['division'],
-                    question_response: q_resp,
-                    time_taken: r['time_taken'],
-                    start_date: r['start_date'],
-                    end_date: r['end_date'],
-                    status: r['status']
-                  };
-                });
-              })(r, i);
-              i++;
+              _fn(r, i);
             }
             return d.resolve(result);
           };

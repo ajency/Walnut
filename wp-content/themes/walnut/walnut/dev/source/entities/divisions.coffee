@@ -60,6 +60,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
+								# userid hardcoded as 1
 								tx.executeSql('SELECT meta_value FROM wp_usermeta WHERE user_id=1 AND meta_key="classes"', [], onSuccess(d), _.deferredErrorHandler(d))
 
 					onSuccess = (d)->
@@ -71,17 +72,17 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								WHERE class_id in ('+unserialize(data.rows.item(0)['meta_value'])+') GROUP BY cd.id', []
 
 									,(tx, data)->
-										i=0
-										while i < data.rows.length
+
+										for i in [0..data.rows.length-1] by 1
+
 											r = data.rows.item(i)
+
 											result[i] =
 												id:r['id']
 												division:r['division']
 												class_id:r['class_id']
 												class_label: CLASS_LABEL[r['class_id']]
 												students_count:r['students_count']
-
-											i++		
 
 										d.resolve(result)
 

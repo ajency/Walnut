@@ -1,5 +1,4 @@
-define(['underscore', 'underscorestring'], function(_) {
-  _.mixin(_.str.exports());
+define(['underscore'], function(_) {
   return _.mixin({
     deferredErrorHandler: function(d) {
       return function(tx, error) {
@@ -40,31 +39,38 @@ define(['underscore', 'underscorestring'], function(_) {
       console.log('ERROR SOURCE: ' + error.source);
       return console.log('ERROR TARGET: ' + error.target);
     },
-    getUserRole: function(username) {
-      var onSuccess, runQuery;
+    getUserDetails: function(username) {
+      var onSuccess, runQuery, userData;
+      userData = {
+        user_id: '',
+        password: '',
+        role: '',
+        exists: false
+      };
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT * FROM USERS WHERE username=?", [username], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var i, r, role;
-          i = 0;
-          while (i < data.rows.length) {
-            r = data.rows.item(i);
-            if (r['username'] === username) {
-              role = r['user_role'];
-            }
-            i++;
+          var r;
+          if (data.rows.length !== 0) {
+            r = data.rows.item(0);
+            userData = {
+              user_id: r['user_id'],
+              password: r['password'],
+              role: r['user_role'],
+              exists: true
+            };
           }
-          return d.resolve(role);
+          return d.resolve(userData);
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('getUserRole transaction completed');
+        return console.log('getUserDetails transaction completed');
       }).fail(_.failureHandler);
     },
     getQuestionType: function(content_piece_id) {
@@ -105,10 +111,14 @@ define(['underscore', 'underscorestring'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
+          var r;
           if (data.rows.length !== 0) {
-            lastDetails.id = data.rows.item(0)['id'];
-            lastDetails.date = data.rows.item(0)['date'];
-            lastDetails.status = data.rows.item(0)['status'];
+            r = data.rows.item(0);
+            lastDetails = {
+              id: r['id'],
+              date: r['date'],
+              status: r['status']
+            };
           }
           return d.resolve(lastDetails);
         };

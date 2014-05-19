@@ -1,61 +1,64 @@
 define ['detect', 'jquery', 'underscore'], (detect, $, _)->
 
-      networkStatus = 0
+	# middle layer adds functionality, triggers events and loads plugins based on the platform.
 
-      #Function to detect the platform
-      _.checkPlatform = ->
-        ua = detect.parse(navigator.userAgent)
-        if ua.os.family is "Android" or ua.os.family is "iOS" 
-          "Mobile"
-        else "Desktop"
+	# detect platform
+	_.platform = ->
 
+		ua = detect.parse navigator.userAgent
 
-      #Load script 'online.js' only for browser
-      $.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js') if _.checkPlatform() is 'Desktop'
-
-      
-      #Implementation for browser
-      #Event handlers triggered every 5 seconds indicating the status of the network connectivity.
-      window.onLineHandler = ->
-        networkStatus = 1   
-      
-      window.offLineHandler = ->
-        networkStatus = 0
+		if ua.os.family is "Android" or ua.os.family is "iOS" then "DEVICE" 
+		else "BROWSER"
 
 
-      #Implementation for mobile
-      #Mobile events
-      document.addEventListener("online"
-      ,()->
-        console.log 'Online'
-      ,false)
+	# load script 'online.js' only for browser.
+	# online.js will make an xhr request at a time interval of 20 seconds
+	# and check if internet connection is available.
+	if _.platform() is 'BROWSER'
+		$.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js')
 
-      document.addEventListener("offline"
-      ,()->
-        console.log 'Offline'
-      ,false)
+	# event handlers triggered based on internet connection availability for browser. 
+	connected = false
+	window.onLineHandler = ->
+		connected = true
+
+	window.offLineHandler = ->
+		connected = false
 
 
-      #Check connectivity based on platform
-      _.isOnline = ->
-        switch _.checkPlatform()
-          when 'Desktop'
-            if networkStatus is 1
-              true
-            else false
-            
-          when 'Mobile'
-            if navigator.connection.type is Connection.NONE
-              false
-            else true
+	# cordova events triggered based on internet connection availability for device.
+	document.addEventListener("online"
+		,->
+			console.log 'Connection available'
 
-      
-      #Set main logo
-      _.setMainLogo =->
-        switch _.checkPlatform()
-          when 'Mobile'
-            # set the main app logo to school logo after the first user sign in
-            if _.getSchoolLogoSrc() isnt null
-              $("#logo").attr('src', _.getSchoolLogoSrc())
-            else 
-              $("#logo").attr('src', '/images/logo-synapse.png')
+		, false)
+
+	document.addEventListener("offline"
+		,->
+			console.log 'Connection unavailable'
+
+		, false)
+
+
+	# check connectivity based on platform
+	_.isOnline = ->
+
+		switch _.platform()
+
+			when 'BROWSER'
+				connected
+
+			when 'DEVICE'
+				if navigator.connection.type is Connection.NONE	then false else true
+
+
+	# change main logo to school logo after initial user login
+	_.setMainLogo = ->
+
+		switch _.platform()
+
+			when 'DEVICE'
+				if _.getSchoolLogoSrc() isnt null
+					$("#logo").attr('src', _.getSchoolLogoSrc())
+				else 
+					$("#logo").attr('src', '/images/logo-synapse.png')	

@@ -45,6 +45,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				#get students from local database	
 				getUsersFromLocal:(division)->
+
 					runQuery = ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
@@ -54,9 +55,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onSuccess =(d)->
 						(tx,data)->
+
 							result = []
-							i = 0
-							while i < data.rows.length
+
+							for i in [0..data.rows.length-1] by 1
+
 								row = data.rows.item(i)
 								
 								result[i] = 
@@ -64,8 +67,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 									display_name: row['display_name']
 									user_email: row['user_email']
 									profile_pic: ''
-
-								i++	
 		
 							d.resolve(result)
 
@@ -79,9 +80,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 					offlineUsers = new LocalUserCollection
 					offlineUsers.fetch()
 					offlineUsers
+					
 
 				# get logged in users from local database
 				getOfflineUSersFromLocal:->
+
 					runQuery =->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
@@ -89,12 +92,14 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onSuccess =(d)->
 						(tx, data)->
+
 							result = []
-							i = 0
-							while i < data.rows.length
+
+							for i in [0..data.rows.length-1] by 1
+
 								result[i] = 
 									username: data.rows.item(i)['username']
-								i++
+
 							d.resolve(result)
 
 					$.when(runQuery()).done ->

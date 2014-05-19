@@ -24,7 +24,7 @@ define ["backbone"], (Backbone) ->
 					data.done (d)->
 						collection.set d
 				else
-					#Get textbooks by class_id	
+					#Get textbooks by class_id
 					data = App.reqres.request "get:#{collection_name}:by:classid:local", opts.class_id
 					data.done (d)->
 						collection.set d
@@ -186,7 +186,7 @@ define ["backbone"], (Backbone) ->
 			# params.processData = false  if params.type isnt "GET" and not options.emulateJSON						
 			
 			# Make the request, allowing the user to override any Ajax options.
-			if _.checkPlatform() is 'Desktop'
+			if _.platform() is 'BROWSER'
 				xhr = options.xhr = Backbone.ajax(_.extend(params, options))
 
 			else
@@ -195,7 +195,7 @@ define ["backbone"], (Backbone) ->
 				console.log 'Model name: '+modelname
 
 				if modelname is 'content-group'
-					data = App.reqres.request "save:update:#{modelname}:local", model.attributes
+					data = App.reqres.request "save:update:#{modelname}:local", model
 
 				if modelname is 'schools' #Not yet implemented
 					console.log 'Schools local'

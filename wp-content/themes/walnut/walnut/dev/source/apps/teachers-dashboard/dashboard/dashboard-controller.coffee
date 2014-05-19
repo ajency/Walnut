@@ -67,7 +67,7 @@ define ['app'
 					e.preventDefault()
 					$(@).tab 'show'
 
-				if _.checkPlatform() is "Desktop"
+				if _.platform() is "BROWSER"
 					$('#class, #div, #class-training')
 					.select2()
 				else

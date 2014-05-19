@@ -34,7 +34,7 @@ define(['marionette'], function(Marionette) {
       });
     }
     App.startHistory();
-    if (_.checkPlatform() === 'Mobile') {
+    if (_.platform() === 'DEVICE') {
       this.rootRoute = 'app-login';
       if (_.getBlogID() === null) {
         this.rootRoute = 'login';
@@ -80,11 +80,11 @@ define(['marionette'], function(Marionette) {
       }
       user = App.request("get:user:model");
       user_role = user.get("roles");
-      if (_.checkPlatform() === 'Mobile') {
-        userRole = _.getUserRole($('#txtusername').val());
-        userRole.done(function(role) {
-          console.log('ROLE: ' + role);
-          if (role === 'administrator') {
+      if (_.platform() === 'DEVICE') {
+        userRole = _.getUserDetails($('#txtusername').val());
+        userRole.done(function(user) {
+          console.log('ROLE: ' + user.role);
+          if (user.role === 'administrator') {
             return App.navigate('textbooks', {
               trigger: true
             });

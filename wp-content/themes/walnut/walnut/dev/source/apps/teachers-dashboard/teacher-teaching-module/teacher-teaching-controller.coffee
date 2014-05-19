@@ -96,7 +96,7 @@ define ['app'
                 content_piece_id = content_piece_id.toString()
 
                 # use parseInt() for mobile
-                content_piece_id = parseInt(content_piece_id) if _.checkPlatform() is 'Mobile'
+                content_piece_id = parseInt(content_piece_id) if _.platform() is 'DEVICE'
 
                 questionResponseModel = questionResponseCollection.findWhere
                     'content_piece_id': content_piece_id

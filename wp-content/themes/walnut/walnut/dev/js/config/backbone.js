@@ -123,13 +123,13 @@ define(["backbone"], function(Backbone) {
             params.data[idAttr] = model.get(idAttr);
           }
       }
-      if (_.checkPlatform() === 'Desktop') {
+      if (_.platform() === 'BROWSER') {
         xhr = options.xhr = Backbone.ajax(_.extend(params, options));
       } else {
         modelname = model.name;
         console.log('Model name: ' + modelname);
         if (modelname === 'content-group') {
-          data = App.reqres.request("save:update:" + modelname + ":local", model.attributes);
+          data = App.reqres.request("save:update:" + modelname + ":local", model);
         }
         if (modelname === 'schools') {
           console.log('Schools local');

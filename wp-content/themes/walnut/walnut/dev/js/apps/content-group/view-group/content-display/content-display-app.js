@@ -113,7 +113,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
             question = _ref1[_j];
             current_question = $(question).attr('data-id');
-            if (_.checkPlatform() === 'Mobile') {
+            if (_.platform() === 'DEVICE') {
               current_question = parseInt($(question).attr('data-id'));
             }
             if (_.contains(responseQuestionIDs, current_question)) {

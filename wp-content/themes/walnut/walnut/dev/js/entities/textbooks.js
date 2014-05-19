@@ -152,10 +152,9 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var classes, i, result, row, subjects;
+            var classes, i, result, row, subjects, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               row = data.rows.item(i);
               classes = subjects = '';
               if (row["class_id"] !== '') {
@@ -178,7 +177,6 @@ define(["app", 'backbone'], function(App, Backbone) {
                 classes: classes,
                 subjects: subjects
               };
-              i++;
             }
             return d.resolve(result);
           };
@@ -228,40 +226,39 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, p, result, row;
+            var i, p, result, row, _fn, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            _fn = function(tx, row, p, i) {
+              return tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + p + "'", [], function(tx, d) {
+                var classes, subjects;
+                classes = subjects = '';
+                if (row["class_id"] !== '') {
+                  classes = unserialize(row["class_id"]);
+                }
+                if (row["tags"] !== '') {
+                  subjects = unserialize(row["tags"]);
+                }
+                return result[i] = {
+                  term_id: row["term_id"],
+                  name: row["name"],
+                  slug: row["slug"],
+                  term_group: row["term_group"],
+                  term_order: row["term_order"],
+                  term_taxonomy_id: row["term_taxonomy_id"],
+                  taxonomy: row["taxonomy"],
+                  description: row["description"],
+                  parent: row["parent"],
+                  count: row["count"],
+                  classes: classes,
+                  subjects: subjects,
+                  modules_count: d.rows.item(0)['count']
+                };
+              }, _.transactionErrorHandler);
+            };
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               row = data.rows.item(i);
               p = '%"' + row['textbook_id'] + '"%';
-              (function(tx, row, p, i) {
-                return tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + p + "'", [], function(tx, d) {
-                  var classes, subjects;
-                  classes = subjects = '';
-                  if (row["class_id"] !== '') {
-                    classes = unserialize(row["class_id"]);
-                  }
-                  if (row["tags"] !== '') {
-                    subjects = unserialize(row["tags"]);
-                  }
-                  return result[i] = {
-                    term_id: row["term_id"],
-                    name: row["name"],
-                    slug: row["slug"],
-                    term_group: row["term_group"],
-                    term_order: row["term_order"],
-                    term_taxonomy_id: row["term_taxonomy_id"],
-                    taxonomy: row["taxonomy"],
-                    description: row["description"],
-                    parent: row["parent"],
-                    count: row["count"],
-                    classes: classes,
-                    subjects: subjects,
-                    modules_count: d.rows.item(0)['count']
-                  };
-                }, _.transactionErrorHandler);
-              })(tx, row, p, i);
-              i++;
+              _fn(tx, row, p, i);
             }
             return d.resolve(result);
           };
@@ -281,10 +278,9 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var classes, i, result, row, subjects;
+            var classes, i, result, row, subjects, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               row = data.rows.item(i);
               classes = subjects = '';
               if (row["class_id"] !== '') {
@@ -307,7 +303,6 @@ define(["app", 'backbone'], function(App, Backbone) {
                 classes: classes,
                 subjects: subjects
               };
-              i++;
             }
             return d.resolve(result);
           };
@@ -327,16 +322,14 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, r, result;
+            var i, r, result, _i, _ref;
             result = [];
-            i = 0;
-            while (i < data.rows.length) {
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               r = data.rows.item(i);
               result[i] = {
                 id: r['term_id'],
                 name: r['name']
               };
-              i++;
             }
             return d.resolve(result);
           };

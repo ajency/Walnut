@@ -107,9 +107,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onSuccess =(d)->
 						(tx,data)->
+
 							result = []
-							i = 0
-							while i < data.rows.length
+
+							for i in [0..data.rows.length-1] by 1
+
 								row = data.rows.item(i)
 								
 								classes = subjects = ''
@@ -129,8 +131,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 									count: row["count"]
 									classes: classes
 									subjects: subjects
-
-								i++	
 		
 							d.resolve(result)
 
@@ -143,6 +143,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				getTextbooksByClassIDFromLocal:(class_id)->
 					#user id hardcoded as 1 for now
 					getTextBookIds =->
+
 						runQ =->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
@@ -159,6 +160,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 							
 								
 					runMainQuery = ->
+
 						textbook_ids = ''
 						textbookIds = getTextBookIds()
 						textbookIds.done (ids)=>
@@ -166,7 +168,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 						$.Deferred (d)->
 							_.db.transaction (tx)->
+
 								pattern = '%"'+class_id+'"%'
+
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 
 									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0
@@ -175,9 +179,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onSuccess =(d)->
 						(tx,data)->
+
 							result = []
-							i = 0
-							while i < data.rows.length
+
+							for i in [0..data.rows.length-1] by 1
+
 								row = data.rows.item(i)
 								p = '%"'+row['textbook_id']+'"%'
 								
@@ -205,7 +211,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 												modules_count: d.rows.item(0)['count']
 										
 										,_.transactionErrorHandler)
-								i++
 
 							d.resolve(result)
 					
@@ -227,9 +232,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onSuccess =(d)->
 						(tx,data)->
+
 							result = []
-							i = 0
-							while i < data.rows.length
+
+							for i in [0..data.rows.length-1] by 1
+
 								row = data.rows.item(i)
 								
 								classes = subjects = ''
@@ -249,8 +256,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 									count: row["count"]
 									classes: classes
 									subjects: subjects
-
-								i++	
 		
 							d.resolve(result)
 
@@ -269,14 +274,17 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					onSuccess =(d)->
 						(tx, data)->
+
 							result = []
-							i = 0
-							while i < data.rows.length
+
+							for i in [0..data.rows.length-1] by 1
+
 								r = data.rows.item(i)
+
 								result[i] =
 									id: r['term_id']
 									name: r['name']
-								i++
+
 							d.resolve(result)
 
 					$.when(runQuery()).done ->
@@ -284,6 +292,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					.fail _.failureHandler	
 
 
+			
 			# request handler to get all textbooks
 			App.reqres.setHandler "get:textbooks", (opt) ->
 				API.getTextbooks(opt)

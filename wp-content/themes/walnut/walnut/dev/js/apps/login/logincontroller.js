@@ -54,7 +54,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginController.prototype.prepopulateUsername = function() {
-        if (this.username !== 'undefined') {
+        if (!_.isUndefined(this.username)) {
           return $('#txtusername').val($.trim(this.username));
         }
       };
