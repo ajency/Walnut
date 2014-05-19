@@ -23,7 +23,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
-        return localStorage.setItem('ele' + this.model.get('meta_id'), JSON.stringify(this.model.toJSON()));
+        console.log(this.model);
+        return this.model.save();
       };
 
       return Controller;

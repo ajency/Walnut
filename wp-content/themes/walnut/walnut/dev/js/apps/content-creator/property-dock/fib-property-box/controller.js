@@ -23,8 +23,19 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
+        var ElementCollection, elements, models;
         App.execute('save:fib:text');
-        return localStorage.setItem('ele' + this.model.get('meta_id'), JSON.stringify(this.model.toJSON()));
+        console.log(this.model);
+        models = this.model.get('blanksArray').models;
+        elements = _.map(models, function(m) {
+          return m.toJSON();
+        });
+        this.model.set({
+          'blanksArray': elements
+        });
+        this.model.save();
+        ElementCollection = App.request("create:new:question:element:collection", models);
+        return this.model.set('blanksArray', ElementCollection);
       };
 
       return Controller;

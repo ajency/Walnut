@@ -24,7 +24,19 @@ define ['app'
 
 
 					onClose:->
-						localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
+						models= @model.get('elements').models
+
+						elements= _.map models, (m)-> m.toJSON()
+						console.log elements
+						@model.set 'elements': elements
+
+						@model.save()
+
+						optionCollection = App.request "create:new:option:collection", models
+						
+						@model.set 'elements', optionCollection
+						console.log @model
+						#localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
 
 
 				App.commands.setHandler "show:sort:properties",(options)->

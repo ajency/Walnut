@@ -23,8 +23,40 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
+        var collection_types, imageCollection, imageModels, optionCollection, optionModels, textCollection, textModels;
         App.execute("save:hotspot:content");
-        return localStorage.setItem('ele' + this.model.get('meta_id'), JSON.stringify(this.model.toJSON()));
+        console.log(this.model);
+        collection_types = ['option', 'image', 'text'];
+        optionCollection = this.model.get('optionCollection').models;
+        optionModels = _.map(optionCollection, function(m) {
+          return m.toJSON();
+        });
+        this.model.set({
+          'optionCollection': optionModels
+        });
+        imageCollection = this.model.get('imageCollection').models;
+        imageModels = _.map(imageCollection, function(m) {
+          return m.toJSON();
+        });
+        this.model.set({
+          'imageCollection': imageModels
+        });
+        textCollection = this.model.get('textCollection').models;
+        textModels = _.map(textCollection, function(m) {
+          return m.toJSON();
+        });
+        this.model.set({
+          'textCollection': textModels
+        });
+        this.model.save();
+        optionCollection = App.request("create:new:option:collection", optionCollection);
+        imageCollection = App.request("create:new:option:collection", imageCollection);
+        textCollection = App.request("create:new:option:collection", textCollection);
+        return this.model.set({
+          'optionCollection': optionCollection,
+          'imageCollection': imageCollection,
+          'textCollection': textCollection
+        });
       };
 
       return Controller;
