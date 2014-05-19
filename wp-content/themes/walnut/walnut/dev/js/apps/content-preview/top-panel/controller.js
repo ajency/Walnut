@@ -9,16 +9,17 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
 
       function Controller() {
         this._showView = __bind(this._showView, this);
+        this.getResults = __bind(this.getResults, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
       Controller.prototype.initialize = function(options) {
-        var model, questionResponseModel, textbook_termIDs;
-        model = options.model, questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.classID = options.classID;
-        textbook_termIDs = _.flatten(model.get('term_ids'));
+        var textbook_termIDs;
+        this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.classID = options.classID, this.students = options.students;
+        textbook_termIDs = _.flatten(this.model.get('term_ids'));
         this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
-        this.durationInSeconds = model.get('duration') * 60;
-        this.view = this._showView(model, questionResponseModel);
+        this.durationInSeconds = this.model.get('duration') * 60;
+        this.view = this._showView(this.model, this.questionResponseModel);
         App.execute("when:fetched", this.textbookNames, (function(_this) {
           return function() {
             return _this.show(_this.view, {
@@ -34,6 +35,35 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
             return timeElapsed;
           };
         })(this));
+      };
+
+      Controller.prototype.getResults = function() {
+        var ans, answeredCorrectly, correct_answer, name, names, response, studID, student_names, _i, _j, _len, _len1;
+        correct_answer = 'No One';
+        names = [];
+        response = this.questionResponseModel.get('question_response');
+        if (this.model.get('question_type') === 'chorus') {
+          if (response) {
+            correct_answer = CHORUS_OPTIONS[response];
+          }
+        } else {
+          for (_i = 0, _len = response.length; _i < _len; _i++) {
+            studID = response[_i];
+            answeredCorrectly = this.students.where({
+              "ID": studID
+            });
+            for (_j = 0, _len1 = answeredCorrectly.length; _j < _len1; _j++) {
+              ans = answeredCorrectly[_j];
+              name = ans.get('display_name');
+            }
+            names.push(name);
+          }
+          if (_.size(names) > 0) {
+            student_names = names.join(', ');
+            correct_answer = _.size(names) + ' Students (' + student_names + ')';
+          }
+        }
+        return correct_answer;
       };
 
       Controller.prototype._showView = function(model, questionResponseModel) {
@@ -111,6 +141,16 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
                     }
                   }
                   return subSectionString = subsectionNames.join();
+                }
+              };
+            })(this),
+            getCompletedSummary: (function(_this) {
+              return function() {
+                var correct_answer, time_taken_in_mins;
+                if (questionResponseModel.get("status") === 'completed') {
+                  time_taken_in_mins = parseInt(questionResponseModel.get("time_taken") / 60);
+                  correct_answer = _this.getResults();
+                  return '<div class="row"> <div class="col-xs-6"> <p> <label class="form-label bold small-text inline">Time Alloted:</label>' + model.get("duration") + 'mins<br> <label class="form-label bold small-text inline">Time Taken:</label>' + time_taken_in_mins + 'mins </p> </div> <div class="col-xs-6"> <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed</div> </div> </div> <div class="row"> <div class="col-sm-12"> <p> <label class="form-label bold small-text inline">Correct Answer:</label>' + correct_answer + '</p> </div> </div> </div>';
                 }
               };
             })(this)

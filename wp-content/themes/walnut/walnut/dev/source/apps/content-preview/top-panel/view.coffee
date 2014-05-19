@@ -7,7 +7,7 @@ define ['app'], (App)->
                                   <div class="grid-body no-border">
                         							<div class="p-t-10">
                         								<div class="row">
-                        									<div class="col-sm-9">
+                        									<div class="col-sm-8">
                         									  <div class="row m-b-10">
                         						                <div class="col-xs-4 b-grey b-r">
                         						                  <label class="form-label bold small-text">Class</label>
@@ -37,9 +37,9 @@ define ['app'], (App)->
                         						                </div>
                         						              </div>
                         				          			</div>
-                        						        	<div class="col-sm-3">
+                        						        	<div class="col-sm-4">
                         						        		<div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>
-                        						        	</div>
+                                                 {{&getCompletedSummary}}
                         						    	</div>
                         				          	</div>
                         				        </div>

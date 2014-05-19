@@ -98,5 +98,9 @@ define ['app'
                 contentDisplayRegion: '#content-display-region'
 
 
+            onShow:->
+                $('.page-content').removeClass 'expand-page'
+
+
 
 

@@ -23,6 +23,10 @@ define ['app'
                 questionsCollection,questionResponseCollection,
                 contentPiece,@display_mode} = opts
 
+                App.leftNavRegion.close()
+                App.headerRegion.close()
+                App.breadcrumbRegion.close()
+
                 studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
                 App.execute "when:fetched", questionResponseCollection, =>
@@ -100,6 +104,9 @@ define ['app'
 
                 App.navigate newRoute, true
 
+                App.execute "show:headerapp", region: App.headerRegion
+                App.execute "show:leftnavapp", region: App.leftNavRegion
+
 
             _getOrCreateModel: (content_piece_id)=>
                 questionResponseModel = questionResponseCollection.findWhere
@@ -146,6 +153,7 @@ define ['app'
                     timerObject             : @timerObject
                     display_mode            : @display_mode
                     classID                 : @classID
+                    students: studentCollection
 
             _showStudentsListView: (questionResponseModel)=>
                 App.execute "when:fetched", contentPiece, =>
@@ -179,6 +187,9 @@ define ['app'
                 moduleDetailsRegion: '#module-details-region'
                 questionsDetailsRegion: '#question-details-region'
                 studentsListRegion: '#students-list-region'
+
+            onShow:->
+                $('.page-content').addClass 'condensed expand-page'
 
 
 

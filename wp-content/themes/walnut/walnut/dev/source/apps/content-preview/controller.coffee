@@ -9,8 +9,7 @@ define ['app'
 
             initialize: (options)->
 
-                {@model,@questionResponseModel,@timerObject, @display_mode,@classID} = options
-
+                {@model,@questionResponseModel,@timerObject, @display_mode,@classID,@students} = options
                 # get the main layout for the content preview
                 @layout = @_getContentPreviewLayout()
 
@@ -27,6 +26,7 @@ define ['app'
                         timerObject : @timerObject
                         display_mode: @display_mode
                         classID: @classID
+                        students: @students
 
 
                     App.execute "show:content:board",

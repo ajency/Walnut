@@ -11,7 +11,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
       }
 
       Controller.prototype.initialize = function(options) {
-        this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.classID = options.classID;
+        this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.classID = options.classID, this.students = options.students;
         this.layout = this._getContentPreviewLayout();
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
@@ -22,7 +22,8 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
               questionResponseModel: _this.questionResponseModel,
               timerObject: _this.timerObject,
               display_mode: _this.display_mode,
-              classID: _this.classID
+              classID: _this.classID,
+              students: _this.students
             });
             return App.execute("show:content:board", {
               region: _this.layout.contentBoardRegion,

@@ -125,6 +125,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         contentDisplayRegion: '#content-display-region'
       };
 
+      ContentGroupViewLayout.prototype.onShow = function() {
+        return $('.page-content').removeClass('expand-page');
+      };
+
       return ContentGroupViewLayout;
 
     })(Marionette.Layout);
