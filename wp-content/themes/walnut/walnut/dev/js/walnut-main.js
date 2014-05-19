@@ -36,7 +36,8 @@ require.config({
     video: 'plugins/video',
     serialize: 'plugins/serialize',
     timecircles: 'plugins/TimeCircles',
-    selectordie: 'plugins/selectordie.min'
+    selectordie: 'plugins/selectordie.min',
+    csvparse: 'plugins/jquery.parse'
   },
   shim: {
     underscore: {
@@ -73,6 +74,7 @@ require.config({
     jquery_listnav: ['jquery'],
     timecircles: ['jquery'],
     selectordie: ['jquery'],
+    csvparse: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

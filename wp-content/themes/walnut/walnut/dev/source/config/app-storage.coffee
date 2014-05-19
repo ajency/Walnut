@@ -4,17 +4,18 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     localDatabaseTransaction =(db)->
         
         console.log 'Local database object: '+db
+
         db.transaction((tx)->
             #User table
             tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, user_id UNIQUE, username, password, user_role)')
 
             # tx.executeSql('DROP TABLE IF EXISTS wp_training_logs')
-            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_training_logs (id INTEGER PRIMARY KEY, division_id INTEGER, collection_id INTEGER, teacher_id INTEGER, date, status)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_training_logs (id INTEGER PRIMARY KEY, division_id INTEGER, collection_id INTEGER, teacher_id INTEGER, date, status, sync)')
 
             # tx.executeSql('DROn TABLE IF EXISTS wp_question_response')
-            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response (ref_id, content_piece_id INTEGER, collection_id INTEGER, division INTEGER, question_response, time_taken, start_date, end_date, status)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response (ref_id, content_piece_id INTEGER, collection_id INTEGER, division INTEGER, question_response, time_taken, start_date, end_date, status, sync)')
 
-            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response_logs (qr_ref_id, start_time)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response_logs (qr_ref_id, start_time, sync)')
             
         ,_.transactionErrorHandler
         ,(tx)->
@@ -25,6 +26,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     document.addEventListener("deviceready", ->
         
         _.db = window.sqlitePlugin.openDatabase({name: "walnutapp"});
+
         localDatabaseTransaction(_.db)
 
     ,false)

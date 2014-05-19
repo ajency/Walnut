@@ -1,40 +1,22 @@
-define ['app', 'controllers/region-controller','text!apps/app-sync/templates/appsync.html'], (App, RegionController, AppSyncTpl)->
+define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, parse) ->
 
-	App.module "AppSync.Controller", (Controller, App)->
+	class SynchronizationController extends Marionette.Controller
 
-		class Controller.AppSyncController extends RegionController
-
-			initialize : ->
-
-				@view = view = @_getAppSyncView()
-
-				@show view, (loading: true)
+		initialize : ->
 
 
-			_getAppSyncView : ->
-				new AppSyncView
-					
+		startSync : ->
+			@error()
 
-
-		class AppSyncView extends Marionette.ItemView
-
-			template : AppSyncTpl
-
-			className : ''
-
-			events :
-				'click #syncNow' : 'startSyncProcess'
-
-			onShow : ->
-				$('#syncText').text('')
-					
-
-			startSyncProcess : ->
-				alert "uol"
-				console.log "uhi"
-				_.PageLoading()
-				$('i').addClass('fa-spin')
-				$('#syncText').text('Syncing now...')	
+		error: ->
 				
 				
 
+
+
+
+
+
+	# request handler
+ 	App.reqres.setHandler "get:sync:controller", ->
+ 		new SynchronizationController

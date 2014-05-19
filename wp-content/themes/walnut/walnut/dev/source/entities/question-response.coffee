@@ -120,8 +120,8 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                     ref_id = 'CP'+model.get('content_piece_id')+'C'+model.get('collection_id')+'D'+model.get('division')
 
                     _.db.transaction((tx)->
-                        tx.executeSql('INSERT INTO wp_question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status) 
-                            VALUES (?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), q_resp, model.get('time_taken'), _.getCurrentDateTime(0), model.get('end_date'), 'started'])
+                        tx.executeSql('INSERT INTO wp_question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status, sync) 
+                            VALUES (?,?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), q_resp, model.get('time_taken'), _.getCurrentDateTime(0), model.get('end_date'), 'started', 0])
 
                     ,_.transactionErrorHandler
                     ,(tx)->

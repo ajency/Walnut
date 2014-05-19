@@ -49,6 +49,7 @@ require.config
 		serialize			: 'plugins/serialize'
 		timecircles 		: 'plugins/TimeCircles'
 		selectordie			: 'plugins/selectordie.min'
+		csvparse			: 'plugins/jquery.parse'
 
 
 	shim:
@@ -83,6 +84,7 @@ require.config
 		jquery_listnav	: ['jquery']
 		timecircles 	: ['jquery']
 		selectordie		: ['jquery']
+		csvparse		: ['jquery']
 		app 			: ['plugins/walnut-pluginloader','config/walnut-configloader']
 
 	
