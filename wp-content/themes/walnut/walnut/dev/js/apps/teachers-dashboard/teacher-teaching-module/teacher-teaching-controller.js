@@ -49,9 +49,19 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
         this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
-        return this.listenTo(this.layout, "close", function() {
-          return console.log('test close layout');
-        });
+        return this.listenTo(this.layout, "close", (function(_this) {
+          return function() {
+            var elapsedTime;
+            if (questionResponseModel.get('status') !== 'completed') {
+              elapsedTime = _this.timerObject.request("get:elapsed:time");
+              questionResponseModel.set({
+                'time_taken': elapsedTime,
+                'status': 'paused'
+              });
+              return questionResponseModel.save();
+            }
+          };
+        })(this));
       };
 
       TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
@@ -116,7 +126,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
               model: contentGroupModel,
               timerObject: _this.timerObject,
               questionResponseModel: questionResponseModel,
-              questionResponseCollection: questionResponseCollection
+              questionResponseCollection: questionResponseCollection,
+              display_mode: _this.display_mode
             });
           };
         })(this));

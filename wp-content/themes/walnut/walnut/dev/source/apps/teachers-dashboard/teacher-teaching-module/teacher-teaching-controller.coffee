@@ -57,7 +57,16 @@ define ['app'
 
                 @listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
-                @listenTo @layout, "close", -> console.log 'test close layout'
+                @listenTo @layout, "close", =>
+
+                    if questionResponseModel.get('status') isnt 'completed'
+                        elapsedTime = @timerObject.request "get:elapsed:time"
+
+                        questionResponseModel.set
+                            'time_taken': elapsedTime
+                            'status': 'paused'
+
+                        questionResponseModel.save()
 
             _changeQuestion: (current_question_id)=>
                 current_question_id = current_question_id.toString()
@@ -130,6 +139,7 @@ define ['app'
                         timerObject : @timerObject
                         questionResponseModel: questionResponseModel
                         questionResponseCollection: questionResponseCollection
+                        display_mode: @display_mode
 
 
             _showQuestionDisplayView: (model) =>

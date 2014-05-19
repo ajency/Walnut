@@ -40,13 +40,7 @@ define ['app'
                     'status'            : 'completed'
                     'time_taken'        : elapsedTime
 
-                @questionResponseModel.save(null, {wait: true, success: @successFn, error: @errorFn})
-
-            successFn: (model)=>
-                console.log model
-
-            errorFn: ->
-                console.log 'error'
+                @questionResponseModel.save()
 
 
         # set handlers

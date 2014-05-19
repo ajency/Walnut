@@ -28,8 +28,6 @@ define ['app'
                 option
 
             createOptionCollection: (data = {})->
-                console.log 'option collection'
-                console.log data
                 optionCollection = new Option.OptionCollection
                 optionCollection.set data
 

@@ -26,7 +26,18 @@ define ['app'
 					# on close of property box save the model
 					onClose:->
 						App.execute 'save:fib:text'
-						localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
+						console.log @model
+						models= this.model.get('blanksArray').models
+
+						elements= _.map models, (m)-> m.toJSON()
+
+						@model.set 'blanksArray': elements
+
+						@model.save()
+
+						ElementCollection = App.request "create:new:question:element:collection", models
+						@model.set 'blanksArray', ElementCollection
+						#localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
 
 				App.commands.setHandler "show:fib:properties",(options)->
 						new FibPropertyBox.Controller

@@ -9,7 +9,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       __extends(SingleQuestionStudentsController, _super);
 
       function SingleQuestionStudentsController() {
-        this.successFn = __bind(this.successFn, this);
         this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
         this._showStudentsListView = __bind(this._showStudentsListView, this);
         this._changeQuestion = __bind(this._changeQuestion, this);
@@ -53,19 +52,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           'status': 'completed',
           'time_taken': elapsedTime
         });
-        return this.questionResponseModel.save(null, {
-          wait: true,
-          success: this.successFn,
-          error: this.errorFn
-        });
-      };
-
-      SingleQuestionStudentsController.prototype.successFn = function(model) {
-        return console.log(model);
-      };
-
-      SingleQuestionStudentsController.prototype.errorFn = function() {
-        return console.log('error');
+        return this.questionResponseModel.save();
       };
 
       return SingleQuestionStudentsController;
