@@ -8,34 +8,114 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
       __extends(Controller, _super);
 
       function Controller() {
-        this.triggerShowTotalMarks = __bind(this.triggerShowTotalMarks, this);
+        this._showView = __bind(this._showView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
       Controller.prototype.initialize = function(options) {
-        var triggerOnce;
-        this.view = this._showView();
-        this.total = 0;
-        triggerOnce = _.once(this.triggerShowTotalMarks);
-        App.commands.setHandler("show:total:marks", (function(_this) {
-          return function(total) {
-            _this.total += parseInt(total);
-            return triggerOnce();
+        var model, questionResponseModel, textbook_termIDs;
+        model = options.model, questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.classID = options.classID;
+        textbook_termIDs = _.flatten(model.get('term_ids'));
+        this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
+        this.durationInSeconds = model.get('duration') * 60;
+        this.view = this._showView(model, questionResponseModel);
+        App.execute("when:fetched", this.textbookNames, (function(_this) {
+          return function() {
+            return _this.show(_this.view, {
+              loading: true
+            });
           };
         })(this));
-        return this.show(this.view);
-      };
-
-      Controller.prototype.triggerShowTotalMarks = function() {
-        return _.delay((function(_this) {
+        return this.timerObject.setHandler("get:elapsed:time", (function(_this) {
           return function() {
-            return _this.view.triggerMethod("show:total:marks", _this.total);
+            var timeElapsed, timerTime;
+            timerTime = $(_this.view.el).find('.cpTimer').TimeCircles().getTime();
+            timeElapsed = _this.durationInSeconds - timerTime;
+            return timeElapsed;
           };
-        })(this), 500);
+        })(this));
       };
 
-      Controller.prototype._showView = function() {
-        return new TopPanel.Views.TopPanelView;
+      Controller.prototype._showView = function(model, questionResponseModel) {
+        var terms;
+        terms = model.get('term_ids');
+        return new TopPanel.Views.TopPanelView({
+          model: model,
+          display_mode: this.display_mode,
+          templateHelpers: {
+            timeLeftOrElapsed: (function(_this) {
+              return function() {
+                var responseTime, timeTaken, timer;
+                timeTaken = 0;
+                responseTime = questionResponseModel.get('time_taken');
+                if (responseTime !== 'NaN') {
+                  timeTaken = responseTime;
+                }
+                return timer = _this.durationInSeconds - timeTaken;
+              };
+            })(this),
+            getClass: (function(_this) {
+              return function() {
+                return CLASS_LABEL[_this.classID];
+              };
+            })(this),
+            getTextbookName: (function(_this) {
+              return function() {
+                var texbookName, textbook;
+                textbook = _this.textbookNames.get(terms.textbook);
+                if (textbook != null) {
+                  return texbookName = textbook.get('name');
+                }
+              };
+            })(this),
+            getChapterName: (function(_this) {
+              return function() {
+                var chapter, chapterName;
+                chapter = _this.textbookNames.get(terms.chapter);
+                if (chapter != null) {
+                  return chapterName = chapter.get('name');
+                }
+              };
+            })(this),
+            getSectionsNames: (function(_this) {
+              return function() {
+                var section, sectionName, sectionNames, sectionString, sections, term, _i, _len;
+                sections = _.flatten(terms.sections);
+                sectionString = '';
+                sectionNames = [];
+                if (sections) {
+                  for (_i = 0, _len = sections.length; _i < _len; _i++) {
+                    section = sections[_i];
+                    term = _this.textbookNames.get(section);
+                    if (term != null) {
+                      sectionName = term.get('name');
+                    }
+                    sectionNames.push(sectionName);
+                  }
+                  return sectionString = sectionNames.join();
+                }
+              };
+            })(this),
+            getSubSectionsNames: (function(_this) {
+              return function() {
+                var sub, subSectionString, subsection, subsectionNames, subsections, _i, _len;
+                subsections = _.flatten(terms.subsections);
+                subSectionString = '';
+                subsectionNames = [];
+                if (subsections) {
+                  for (_i = 0, _len = subsections.length; _i < _len; _i++) {
+                    sub = subsections[_i];
+                    subsection = _this.textbookNames.get(sub);
+                    if (subsection != null) {
+                      subsectionNames.push(subsection.get('name'));
+                    }
+                  }
+                  return subSectionString = subsectionNames.join();
+                }
+              };
+            })(this)
+          }
+        });
       };
 
       return Controller;

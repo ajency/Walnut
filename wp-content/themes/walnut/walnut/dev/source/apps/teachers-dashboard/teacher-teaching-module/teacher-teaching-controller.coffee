@@ -21,7 +21,7 @@ define ['app'
             initialize: (opts)->
                 {@division,@classID,@moduleID,contentGroupModel,
                 questionsCollection,questionResponseCollection,
-                contentPiece,@display_mode,@textbookNames} = opts
+                contentPiece,@display_mode} = opts
 
                 studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
@@ -138,13 +138,14 @@ define ['app'
 
 
             _showQuestionDisplayView: (model) =>
-                App.execute "show:single:question:app",
-                    region: @layout.questionsDetailsRegion
-                    model: model
-                    textbookNames: @textbookNames
-                    questionResponseModel: questionResponseModel
-                    timerObject : @timerObject
-                    display_mode: @display_mode
+                App.execute "show:content:preview",
+                    region                  : @layout.questionsDetailsRegion
+                    model                   : model
+                    textbookNames           : @textbookNames
+                    questionResponseModel   : questionResponseModel
+                    timerObject             : @timerObject
+                    display_mode            : @display_mode
+                    classID                 : @classID
 
             _showStudentsListView: (questionResponseModel)=>
                 App.execute "when:fetched", contentPiece, =>

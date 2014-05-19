@@ -25,7 +25,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype.initialize = function(opts) {
         var layout;
-        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, contentPiece = opts.contentPiece, this.display_mode = opts.display_mode, this.textbookNames = opts.textbookNames;
+        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, contentPiece = opts.contentPiece, this.display_mode = opts.display_mode;
         studentCollection = App.request("get:user:collection", {
           'role': 'student',
           'division': this.division
@@ -130,13 +130,14 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       TeacherTeachingController.prototype._showQuestionDisplayView = function(model) {
-        return App.execute("show:single:question:app", {
+        return App.execute("show:content:preview", {
           region: this.layout.questionsDetailsRegion,
           model: model,
           textbookNames: this.textbookNames,
           questionResponseModel: questionResponseModel,
           timerObject: this.timerObject,
-          display_mode: this.display_mode
+          display_mode: this.display_mode,
+          classID: this.classID
         });
       };
 

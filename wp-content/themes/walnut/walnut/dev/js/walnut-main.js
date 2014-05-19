@@ -31,7 +31,14 @@ require.config({
     datepicker: 'plugins/bootstrap-datepicker',
     timepicker: 'plugins/bootstrap-timepicker.min',
     timecircles: 'plugins/TimeCircles',
-    jquery_listnav: 'plugins/jquery-listnav'
+    jquery_listnav: 'plugins/jquery-listnav',
+    screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
+    bridget: 'plugins/jquery.bridget',
+    isotope: 'plugins/isotope.pkgd.min',
+    kinetic: 'plugins/kinetic',
+    kineticresize: 'plugins/kinetic.plugin.resize',
+    checkbox: 'plugins/flatui-checkbox',
+    holder: 'plugins/holder'
   },
   shim: {
     underscore: {
@@ -66,6 +73,11 @@ require.config({
     timepicker: ['jquery', 'bootstrap'],
     timecircles: ['jquery'],
     jquery_listnav: ['jquery'],
+    screwbuttons: ['jquery'],
+    checkbox: ['bootstrap'],
+    kineticresize: ['kinetic'],
+    bridget: ['jquery'],
+    isotope: ['jquery', 'bridget'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

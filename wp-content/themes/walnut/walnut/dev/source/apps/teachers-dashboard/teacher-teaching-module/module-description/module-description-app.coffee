@@ -47,8 +47,8 @@ define ['app'
                             mins=parseInt(time/60)
                             if mins >59
                                 hours = parseInt mins/60
-                                mins= mins%60
-                            seconds = time%60
+                                mins= parseInt mins%60
+                            seconds = parseInt time%60
                             display_time=''
 
                             if hours >0

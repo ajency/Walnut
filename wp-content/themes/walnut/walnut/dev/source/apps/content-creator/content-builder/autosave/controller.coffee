@@ -30,9 +30,12 @@ define ['app'], (App)->
 
 
                 $.ajax(options).done (response)->
-                    console.log response.ID
                     contentPieceModel.set 'ID': response.ID
-                    console.log contentPieceModel
+
+                    $('#saved-successfully').remove()
+
+                    $ ".creator"
+                    .before '<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>'
 
                 .fail (resp)->
                         console.log 'error'

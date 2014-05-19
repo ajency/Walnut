@@ -71,7 +71,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           questionResponseCollection: this.questionResponseCollection,
           contentGroupModel: model,
           questionsCollection: groupContentCollection,
-          textbookNames: this.textbookNames,
           classID: this.classID,
           display_mode: display_mode
         });

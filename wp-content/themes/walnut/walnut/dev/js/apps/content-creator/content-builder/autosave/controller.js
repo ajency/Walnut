@@ -32,11 +32,11 @@ define(['app'], function(App) {
           data: data
         };
         return $.ajax(options).done(function(response) {
-          console.log(response.ID);
           contentPieceModel.set({
             'ID': response.ID
           });
-          return console.log(contentPieceModel);
+          $('#saved-successfully').remove();
+          return $(".creator").before('<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>');
         }).fail(function(resp) {
           return console.log('error');
         });

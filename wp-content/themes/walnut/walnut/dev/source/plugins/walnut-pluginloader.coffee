@@ -26,4 +26,10 @@ define [
 			'timepicker'
 			'timecircles'
 			'jquery_listnav'
+      'bridget'
+      'isotope'
+      'kinetic'
+      'kineticresize'
+      'checkbox'
+      'screwbuttons'
 		], ->

@@ -1,57 +1,54 @@
-
 define ['app'
-		'controllers/element-controller'
-		'apps/content-preview/content-board/element/views'], (App, ElementController)->
+        'controllers/element-controller'
+        'apps/content-preview/content-board/element/views'], (App, ElementController)->
+    App.module 'ContentPreview.ContentBoard.Element', (Element, App, Backbone, Marionette, $, _)->
 
-			App.module 'ContentPreview.ContentBoard.Element', (Element, App, Backbone, Marionette, $, _)->
+        # Controller class for showing header resion
+        class Element.Controller extends ElementController
 
-				# Controller class for showing header resion
-				class Element.Controller extends ElementController
+            # initialize the controller. Get all required entities and show the view
+            initialize: (opts)->
+                {container, modelData} = opts
 
-					# initialize the controller. Get all required entities and show the view
-					initialize:(opts)->
+                options =
+                    bottom_margin: ''
+                    top_margin: ''
+                    left_margin: ''
+                    right_margin: ''
 
-						{container, modelData} = opts
+                _.defaults modelData, options
 
-						options = 
-							bottom_margin 	: ''
-							top_margin 		: ''
-							left_margin 	: ''
-							right_margin 	: ''
-											
-						_.defaults modelData, options
+                element = App.request "create:new:element", modelData
 
-						element = App.request "create:new:element", modelData
+                # define the element layout view
+                @layout = @_getView element
 
-						# define the element layout view
-						@layout = @_getView element
-
-
-						
-
-						@layout.elementRegion.on "show",(view)=>
-								model = Marionette.getOption @layout, 'model'
-								for margin in ['top_margin','left_margin','right_margin','bottom_margin']
-									@layout.setMargin model.get margin
-
-													
-						# add the element to container
-						@add @layout, $(container)
-
-						
-
-					# Get view
-					_getView : (elementModel)->
-						new Element.Views.ElementView
-										model : elementModel
-
-									
+                @layout.elementRegion.on "show", (view)=>
+                    model = Marionette.getOption @layout, 'model'
+                    for margin in ['top_margin', 'left_margin', 'right_margin', 'bottom_margin']
+                        @layout.setMargin model.get margin
 
 
-					# remove the element model
-					deleteElement:(model)->
-						model.destroy 
-								wait : true
+                # add the element to container
+                @add @layout, $(container)
+
+
+
+            # Get view
+            _getView: (elementModel)->
+
+                console.log 'elementModel'
+                console.log elementModel
+                new Element.Views.ElementView
+                    model: elementModel
+
+
+
+
+            # remove the element model
+            deleteElement: (model)->
+                model.destroy
+                    wait: true
 
 
 				
