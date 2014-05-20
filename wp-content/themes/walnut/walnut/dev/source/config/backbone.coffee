@@ -209,6 +209,10 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'question-response'
 					data = App.reqres.request "save:#{modelname}:local", model
 
+				if modelname is 'media'
+					console.log 'Media model'
+					console.log model	
+
 			
 			# trigger the request event of the model
 			model.trigger "request", model, xhr, options

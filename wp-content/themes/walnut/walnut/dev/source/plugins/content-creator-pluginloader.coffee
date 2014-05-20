@@ -8,6 +8,7 @@ define [
 			'plupload'
 			'kineticresize'
 			'backbone'
+			'babysitter'
 			'marionette'
 			'mustache'
 			'syphon'
@@ -23,4 +24,5 @@ define [
 			'select2'
 			'tagsinput'
 			'screwbuttons'
+			'videojs'
 		], ->

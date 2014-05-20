@@ -80,6 +80,11 @@ var SITEURL = '<?php echo site_url();?>'
 AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
 var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE    = '<?php echo wp_create_nonce('media-form');?>';
+<?php global $chorus_options; ?>
+CHORUS_OPTIONS= {};
+<?php foreach($chorus_options as $key=>$value){ ?>
+CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
+<?php } ?>
 
 </script>
 <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>

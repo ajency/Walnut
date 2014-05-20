@@ -152,47 +152,58 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, r, result, _fn, _i, _ref;
+            var i, result, row, _fn, _i, _ref;
             result = [];
-            _fn = function(r, i) {
-              var questionType;
-              questionType = _.getQuestionType(r['ID']);
-              return questionType.done(function(question_type) {
-                return result[i] = {
-                  ID: r['ID'],
-                  post_author: r['post_author'],
-                  post_date: r['post_date'],
-                  post_date_gmt: r['post_date_gmt'],
-                  post_content: r['post_content'],
-                  post_title: r['post_title'],
-                  post_excerpt: r['post_excerpt'],
-                  post_status: r['post_status'],
-                  comment_status: r['comment_status'],
-                  ping_status: r['ping_status'],
-                  post_password: r['post_password'],
-                  post_name: r['post_name'],
-                  to_ping: r['to_ping'],
-                  pinged: r['pinged'],
-                  post_modified: r['post_modified'],
-                  post_modified_gmt: r['post_modified_gmt'],
-                  post_content_filtered: r['post_content_filtered'],
-                  post_parent: r['post_parent'],
-                  guid: r['guid'],
-                  menu_order: r['menu_order'],
-                  post_type: r['post_type'],
-                  post_mime_type: r['post_mime_type'],
-                  comment_count: r['comment_count'],
-                  question_type: question_type,
-                  filter: 'raw',
-                  subjects: '',
-                  creator: 'admin',
-                  content_type: ''
-                };
+            _fn = function(row, i) {
+              var postAuthorName;
+              postAuthorName = _.getPostAuthorName(row['post_author']);
+              return postAuthorName.done(function(author_name) {
+                return (function(row, i, author_name) {
+                  var metaValue;
+                  metaValue = _.getMetaValue(row['ID']);
+                  return metaValue.done(function(meta_value) {
+                    return result[i] = {
+                      ID: row['ID'],
+                      post_author: row['post_author'],
+                      post_date: row['post_date'],
+                      post_date_gmt: row['post_date_gmt'],
+                      post_content: row['post_content'],
+                      post_title: row['post_title'],
+                      post_excerpt: row['post_excerpt'],
+                      post_status: row['post_status'],
+                      comment_status: row['comment_status'],
+                      ping_status: row['ping_status'],
+                      post_password: row['post_password'],
+                      post_name: row['post_name'],
+                      to_ping: row['to_ping'],
+                      pinged: row['pinged'],
+                      post_modified: row['post_modified'],
+                      post_modified_gmt: row['post_modified_gmt'],
+                      post_content_filtered: row['post_content_filtered'],
+                      post_parent: row['post_parent'],
+                      guid: row['guid'],
+                      menu_order: row['menu_order'],
+                      post_type: row['post_type'],
+                      post_mime_type: row['post_mime_type'],
+                      comment_count: row['comment_count'],
+                      filter: 'raw',
+                      post_author_name: author_name,
+                      content_type: meta_value.content_type,
+                      layout: meta_value.layout_json,
+                      question_type: meta_value.question_type,
+                      post_tags: meta_value.post_tags,
+                      duration: meta_value.duration,
+                      last_modified_by: meta_value.last_modified_by,
+                      published_by: meta_value.published_by,
+                      term_ids: meta_value.term_ids
+                    };
+                  });
+                })(row, i, author_name);
               });
             };
             for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-              r = data.rows.item(i);
-              _fn(r, i);
+              row = data.rows.item(i);
+              _fn(row, i);
             }
             return d.resolve(result);
           };

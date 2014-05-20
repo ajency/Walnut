@@ -67,15 +67,15 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
                 var actionButtons, allContentPieces, answeredIDs, answeredPieces, unanswered;
                 actionButtons = '';
                 allContentPieces = _this.model.get('content_pieces');
+                allContentPieces = _.map(allContentPieces, function(m) {
+                  return parseInt(m);
+                });
                 answeredPieces = _this.questionResponseCollection.where({
                   "status": "completed"
                 });
                 answeredIDs = _.chain(answeredPieces).map(function(m) {
                   return m.toJSON();
                 }).pluck('content_piece_id').value();
-                answeredIDs = _.map(answeredIDs, function(m) {
-                  return m.toString();
-                });
                 answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
                 unanswered = _.difference(allContentPieces, answeredIDs);
                 if (_.size(unanswered) > 0 && _this.mode !== 'training') {

@@ -143,6 +143,10 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'question-response') {
           data = App.reqres.request("save:" + modelname + ":local", model);
         }
+        if (modelname === 'media') {
+          console.log('Media model');
+          console.log(model);
+        }
       }
       model.trigger("request", model, xhr, options);
       if (method === 'read' || method === 'create') {

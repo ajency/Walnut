@@ -18,13 +18,16 @@ define ['app'
                     'division': @division
                     'collection_id': model.get 'id'
 
+
+                @studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
+
                 App.execute "when:fetched", model, ->
                     groupContentCollection = App.request "get:content:pieces:by:ids", model.get 'content_pieces'
 
                 @layout = layout = @_getContentGroupViewLayout()
 
                 @show layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
-                                                         @textbookNames])
+                                                         @textbookNames, @studentCollection])
 
                 @listenTo layout, 'show', @showContentGroupViews
 
@@ -59,8 +62,8 @@ define ['app'
                     questionResponseCollection: @questionResponseCollection
                     contentGroupModel: model
                     questionsCollection: groupContentCollection
-                    textbookNames: @textbookNames
                     classID: @classID
+                    studentCollection: @studentCollection
                     display_mode: display_mode # when display mode is readonly, the save response options are not shown
             # only when display mode is class_mode response changes can be done
 
@@ -83,6 +86,7 @@ define ['app'
                             mode: @mode
                             questionResponseCollection: @questionResponseCollection
                             groupContentCollection: groupContentCollection
+                            studentCollection: @studentCollection
 
             _getContentGroupViewLayout: =>
                 new ContentGroupViewLayout
@@ -97,6 +101,10 @@ define ['app'
             regions:
                 collectionDetailsRegion: '#collection-details-region'
                 contentDisplayRegion: '#content-display-region'
+
+
+            onShow:->
+                $('.page-content').removeClass 'expand-page'
 
 
 

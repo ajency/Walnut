@@ -42,7 +42,9 @@ define(['app', 'holder', 'text!apps/content-creator/content-builder/element/temp
         })(this));
       };
 
-      ElementView.prototype.onRender = function() {};
+      ElementView.prototype.onRender = function() {
+        return this.$el.find('.element-markup > span').spin(this._getOptions());
+      };
 
       ElementView.prototype.onShow = function() {
         return this.$el.mouseover((function(_this) {

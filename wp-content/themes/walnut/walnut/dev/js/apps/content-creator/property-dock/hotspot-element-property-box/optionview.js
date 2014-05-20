@@ -25,19 +25,6 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
       };
 
       OptionView.prototype.onShow = function() {
-        if (this.model.get('transparent')) {
-          this.$el.find('#transparency-checkbox').prop('checked', true);
-        }
-        this.$el.find('#transparency-checkbox').on('change', (function(_this) {
-          return function() {
-            console.log('transparent changed');
-            if (_this.$el.find('#transparency-checkbox').prop('checked')) {
-              return _this.model.set('transparent', true);
-            } else {
-              return _this.model.set('transparent', false);
-            }
-          };
-        })(this));
         this.$el.find('.fontColor').minicolors({
           animationSpeed: 200,
           animationEasing: 'swing',
@@ -117,6 +104,10 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
         if (!isNaN($(evt.target).val())) {
           return this.model.set('marks', parseInt($(evt.target).val()));
         }
+      };
+
+      OptionView.prototype.onBeforeClose = function() {
+        return this.ui.individualMarksTextbox.trigger('blur');
       };
 
       return OptionView;

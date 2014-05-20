@@ -8,7 +8,7 @@ require.config
 	urlArgs : "ver=#{(new Date()).getTime()}"
 	
 	baseUrl : '../wp-content/themes/walnut/walnut/dev/js'
-	
+
 	paths:
 		app 				: 'content-preview-app' 
 		jquery 				: 'plugins/jquery'
@@ -42,6 +42,8 @@ require.config
 		screwbuttons 		: 'plugins/jquery.screwdefaultbuttonsV2'
 		bridget 			: 'plugins/jquery.bridget'
 		isotope				: 'plugins/isotope.pkgd.min'
+		videojs				: 'plugins/video'
+
 
 	shim:
 		underscore: 

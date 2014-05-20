@@ -15,7 +15,7 @@ define ['app'], (App)->
                         <div class="tools">
                           <ul>
                             <li data-element="Row">
-                              <a href="#" class="drag builder-element" >
+                              <a class="drag builder-element" >
                                 <i class="bicon icon-uniF160"></i>
                                 <div class="aj-imp-builder-title">Row</div>
                               </a>
@@ -27,40 +27,47 @@ define ['app'], (App)->
                         <div class="qstns">
                           <ul class="elements">
                             <li data-element="Hotspot" >
-                              <a href="#" class="drag builder-element" >
+                              <a class="drag builder-element" >
                                 <div class="aj-imp-builder-title">
                                   <i class="fa fa-bullseye"></i> Hotspot
                                 </div>
                               </a>
                             </li>
                             <li data-element="Mcq" >
-                              <a href="#" class="drag builder-element" >
+                              <a class="drag builder-element" >
                                 <div class="aj-imp-builder-title">
                                   <i class="fa fa-list-ol"></i> MCQ
                                 </div>
                               </a>
                             </li>
                             <li data-element="Fib" >
-                              <a href="#" class="drag builder-element" >
+                              <a class="drag builder-element" >
                                 <div class="aj-imp-builder-title">
                                   <i class="bicon icon-uniF148"></i> FIB
                                 </div>
                               </a>
                             </li>
                             <li data-element="BigAnswer" >
-                              <a href="#" class="drag builder-element" >
+                              <a class="drag builder-element" >
                                 <div class="aj-imp-builder-title">
                                   <i class="fa fa-text-width"></i> Big Answer
                                 </div>
                               </a>
                             </li>
                             <li data-element="Sort" >
-                              <a href="#" class="drag builder-element" >
+                              <a class="drag builder-element" >
                                 <div class="aj-imp-builder-title">
                                   <i class="fa fa-arrows-v"></i> Sort
                                 </div>
                               </a>
                             </li>
+                            <li data-element="TeacherQuestion" > 
+								<a href="#" class="drag builder-element" > 
+									<div class="aj-imp-builder-title">
+										<i class="fa fa-arrows-v"></i> Teacher Question
+									</div> 
+								</a> 
+							</li>  
                           </ul>
                           <div class="clearfix"></div>
                         </div>
@@ -68,23 +75,29 @@ define ['app'], (App)->
                         <div class="tools">
                           <ul>
                             <li data-element="Image" class="hotspotable">
-                              <a href="#" class="drag builder-element" >
+                              <a class="drag builder-element" >
                                 <i class="bicon icon-uniF10E"></i>
                                 <div class="aj-imp-builder-title">Image</div>
                               </a>
                             </li>
                             <li data-element="Text" class="hotspotable">
-                              <a href="#" class="drag builder-element" >
+                              <a class="drag builder-element" >
                                 <i class="bicon icon-uniF11C"></i>
                                 <div class="aj-imp-builder-title">Text</div>
                               </a>
                             </li>
                             <li data-element="ImageWithText" class="hotspotable">
-                              <a href="#" class="drag builder-element" >
+                              <a class="drag builder-element" >
                                 <i class="bicon icon-uniF112"></i>
                                 <div class="aj-imp-builder-title">Image With Text</div>
                               </a>
                             </li>
+                            <li data-element="Video" class="hotspotable"> 
+								<a href="#" class="drag builder-element" > 
+									<i class="bicon icon-uniF112"></i> 
+									<div class="aj-imp-builder-title">Video</div> 
+								</a> 
+							</li>
                             <div class="clearfix"></div>
                           </ul>
                         </div>'
@@ -102,12 +115,13 @@ define ['app'], (App)->
                 contentType = Marionette.getOption @,'contentType'
 
                 if contentType is 'teacher_question'
-                    elementSet= ['Row','Image','Text','ImageWithText']
+                    elementSet= ['Row','TeacherQuestion','Image','Text','ImageWithText','Video']
                 else
-                    elementSet= ['Row','Hotspot','Mcq','Fib','BigAnswer','Sort', 'Image','Text','ImageWithText']
+                    elementSet= ['Row','Hotspot','Mcq','Fib','BigAnswer','Sort', 'Image','Text','ImageWithText','Video']
 
 
                 _.each @$el.find('li'), (el,ind)->
                     elementName= $(el).attr 'data-element'
                     if not _.contains elementSet, elementName
                         $(el).hide()
+

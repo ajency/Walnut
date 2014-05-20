@@ -13,22 +13,20 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
-        this.eventObj = options.eventObj;
-        _.defaults(options.modelData, {
-          element: 'Hotspot',
-          height: 0,
-          marks: 1,
-          enableIndividualMarks: false,
-          optionCollection: [],
-          textCollection: [],
-          imageCollection: []
-        });
+        var answerData;
+        answerData = {
+          answer: [],
+          marks: 0,
+          comment: 'Not Attempted'
+        };
+        this.answerModel = App.request("create:new:answer", answerData);
         return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype._getHotspotView = function() {
         return new Hotspot.Views.HotspotView({
-          model: this.layout.model
+          model: this.layout.model,
+          answerModel: this.answerModel
         });
       };
 
@@ -39,39 +37,52 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.layout.model.set('optionCollection', this.optionCollection);
         this.layout.model.set('textCollection', this.textCollection);
         this.layout.model.set('imageCollection', this.imageCollection);
+        App.execute("show:total:marks", this.layout.model.get('marks'));
         this.view = this._getHotspotView();
-        this.listenTo(this.view, "show show:hotspot:elements", (function(_this) {
-          return function() {
-            App.execute("show:question:elements", {
-              model: _this.layout.model
-            });
-            return App.execute("show:question:properties", {
-              model: _this.layout.model
-            });
-          };
-        })(this));
-        this.listenTo(this.view, "close:hotspot:element:properties", function() {
-          return App.execute("close:question:element:properties");
-        });
-        this.listenTo(this.view, "show:hotspot:element:properties", function(hotspotElement) {
-          return App.execute("show:hotspot:element:properties", {
-            model: hotspotElement,
-            hotspotModel: this.layout.model
-          });
-        });
+        this.listenTo(this.view, "submit:answer", this._submitAnswer);
         return this.layout.elementRegion.show(this.view, {
           loading: true
         });
       };
 
-      Controller.prototype.deleteElement = function(model) {
-        model.set('optionCollection', '');
-        model.set('textCollection', '');
-        model.set('imageCollection', '');
-        model.destroy();
-        App.execute("close:question:elements");
-        App.execute("close:question:properties");
-        return App.execute("close:question:element:properties");
+      Controller.prototype._submitAnswer = function() {
+        var answerId, answersNotMarked, correctOptions, correctOptionsIds, totalMarks;
+        console.log(this.optionCollection);
+        correctOptions = this.optionCollection.where({
+          correct: true
+        });
+        console.log(correctOptions);
+        correctOptionsIds = _.pluck(correctOptions, 'id');
+        console.log(correctOptionsIds);
+        answerId = _.pluck(this.answerModel.get('answer'), 'id');
+        if (this.layout.model.get('enableIndividualMarks')) {
+          console.log(_.difference(answerId, correctOptionsIds));
+          if (!_.difference(answerId, correctOptionsIds).length) {
+            if (!_.difference(correctOptionsIds, answerId).length) {
+              this.answerModel.set('marks', this.layout.model.get('marks'));
+            } else {
+              answersNotMarked = _.difference(correctOptionsIds, answerId);
+              totalMarks = this.layout.model.get('marks');
+              _.each(answersNotMarked, (function(_this) {
+                return function(notMarked) {
+                  console.log(_this.optionCollection.findWhere({
+                    id: notMarked
+                  }));
+                  return totalMarks -= _this.optionCollection.findWhere({
+                    id: notMarked
+                  }).get('marks');
+                };
+              })(this));
+              this.answerModel.set('marks', totalMarks);
+            }
+          }
+        } else {
+          if (!(_.difference(answerId, correctOptionsIds).length || _.difference(correctOptionsIds, answerId).length)) {
+            this.answerModel.set('marks', this.layout.model.get('marks'));
+          }
+        }
+        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        return this.view.triggerMethod('show:feedback');
       };
 
       return Controller;

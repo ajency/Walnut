@@ -1243,6 +1243,11 @@ p.mcq-option-text {
 }
 .qstnStatus {
   color: #0aa699;
+  font-size: 20px;
+}
+
+.qstnStatus i {
+    font-size: 22px;
 }
 #content-board {
   margin-top: 30px;
@@ -1473,6 +1478,11 @@ h3.time {
 #myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel.done:after {
   border-right-color: #f3f3f3;
 }
+#myCanvas-miki .cbp_tmtimeline > li .qstnStatus {
+    position: absolute;
+    right: -140px;
+    top: 12px;
+}
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
   width: 50%;
@@ -1638,3 +1648,6 @@ textarea.error,
   background-repeat: no-repeat;
   background-position: left center;
 }
+
+.expand-page{margin-left:0 !important}
+.expand-page .content{padding:0 !important}

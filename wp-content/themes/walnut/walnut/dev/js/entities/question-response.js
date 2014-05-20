@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone', 'serialize'], function(App, Backbone) {
+define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) {
   return App.module("Entities.QuestionResponse", function(QuestionResponse, App, Backbone, Marionette, $, _) {
     var API, QuestionResponseCollection, QuestionResponseModel;
     QuestionResponseModel = (function(_super) {
@@ -15,7 +15,7 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
 
       QuestionResponseModel.prototype.defaults = {
         collection_id: 0,
-        content_piece_id: '',
+        content_piece_id: 0,
         division: 0,
         question_response: [],
         time_taken: 0,
@@ -107,10 +107,10 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
             result = [];
             _fn = function(r, i) {
               var questionType;
-              questionType = _.getQuestionType(r['content_piece_id']);
-              return questionType.done(function(question_type) {
+              questionType = _.getMetaValue(r['content_piece_id']);
+              return questionType.done(function(meta_value) {
                 var q_resp;
-                if (question_type === 'individual') {
+                if (meta_value.question_type === 'individual') {
                   q_resp = unserialize(r['question_response']);
                 } else {
                   q_resp = r['question_response'];
@@ -170,10 +170,10 @@ define(["app", 'backbone', 'serialize'], function(App, Backbone) {
             return console.log('SUCCESS: Updated record in wp_question_response');
           });
         };
-        questionType = _.getQuestionType(model.get('content_piece_id'));
-        return questionType.done(function(question_type) {
+        questionType = _.getMetaValue(model.get('content_piece_id'));
+        return questionType.done(function(meta_value) {
           var q_resp;
-          if (question_type === 'individual') {
+          if (meta_value.question_type === 'individual') {
             q_resp = serialize(model.get('question_response'));
           } else {
             q_resp = model.get('question_response');
