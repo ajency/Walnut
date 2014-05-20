@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/content-creator/content-builder/elements/sort/views'], function(App, Element) {
@@ -7,6 +8,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       __extends(Controller, _super);
 
       function Controller() {
+        this._changeOptionCount = __bind(this._changeOptionCount, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -16,7 +18,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           marks: 1,
           element: 'Sort',
           optioncount: 2,
-          elements: App.request("create:new:option:collection", [
+          elements: [
             {
               optionNo: _.uniqueId(),
               index: 1
@@ -24,7 +26,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
               optionNo: _.uniqueId(),
               index: 2
             }
-          ]),
+          ],
           bg_color: '#ffffff',
           bg_opacity: 1,
           height: 40
@@ -42,7 +44,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           optionCollection = App.request("create:new:option:collection", optionsObj);
           this.layout.model.set('elements', optionCollection);
         }
-        view = this._getSortView(optionCollection);
+        this.view = view = this._getSortView(optionCollection);
         this.listenTo(view, 'show show:this:sort:properties', (function(_this) {
           return function() {
             return App.execute("show:question:properties", {
@@ -86,7 +88,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             oldval--;
           }
         }
-        return console.log(model);
+        return this.renderElement();
       };
 
       return Controller;

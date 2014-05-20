@@ -133,7 +133,6 @@
   width: 220px;
   background: #f3f3f3;
   position: absolute;
-  z-index: 2;
 }
 #toolbox .tools,
 #toolbox .qstns {
@@ -195,7 +194,6 @@
 .dock .builder_actions {
   background: #e5e9ec;
   padding-bottom: 15px;
-  margin-top: -48px;
 }
 .dock .btn-cons2 {
   width: 108px;
@@ -753,6 +751,144 @@
 .cke_dialog_body a.cke_dialog_ui_button_ok:hover {
   background: #006ea6;
 }
+/*div.Dmenu {
+    background: none repeat scroll 0 0 @color-info;
+    //border-bottom: 1px solid #DCE5EE;
+    //border-top: 1px solid #DCE5EE;
+    font-size: 13px;
+    margin-bottom: 15px;
+    padding-left: 1px;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+    height:40px;
+    a {
+        text-decoration:none;
+    }
+    ul{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        vertical-align: top;
+    }
+    li.mainCat {
+        border-left:2px solid transparent;
+        border-right:2px solid transparent;
+        border-top:4px solid transparent;
+        float:left;
+        transition: all 0.1s ease 0s;
+        div.allContent {
+            background-color:@preview-grey;
+            //border:2px solid #DDF0F9;
+            box-shadow:0 2px 3px rgba(0, 0, 0, 0.3);
+            display:block;
+            max-height:350px;
+            position:absolute;
+            top:38px;
+            left: 0;
+            width:100%;
+            z-index:-1;
+            border-radius: 0 0 3px 3px;
+            div.menuItems {
+                float:left;
+                width:100%;
+                margin:0px 0 1px 0;
+                color:#000;
+            }
+            a.slink {
+                border-top:1px solid #cddae9;
+                color:#40668c;
+                display:block;
+                font-weight:700;
+                margin:0 0 0 1px;
+                padding:10px;
+            }
+            a.slink:hover {
+                background-color: #DDF0F9;
+                color: #2AA4CF;
+                padding-right: 10px;
+                margin-right: -1px;
+            }
+        }
+        & > a:before {
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 4px solid #A8BACD;
+            content: "";
+            height: 0;
+            position: absolute;
+            right: 6px;
+            top: 17px;
+            width: 0;
+        }
+        & > a:hover:before {
+            border-top-color: #40668C;
+        }
+        a.flink {
+            color: #fff;
+            display: block;
+            font-weight: 700;
+            height: 36px;
+            line-height: 36px;
+            padding-left: 10px;
+            padding-right: 18px;
+            position: relative;
+        }
+        div.snav:hover {
+            div.menuItems {
+                //border-left:1px solid #DDF0F9;
+                height:100%;
+                //padding-left:10px;
+            }
+        }
+        div.snavM {
+            background:#DDF0F9;
+            float:left;
+            margin-bottom:1px;
+            //margin-top:1px;
+            width:150px;
+            height:350px;
+            border-right:1px solid #dde5ef;
+        }
+        div.menuItems {
+            .inside {
+                border-bottom: 1px solid #DCE5EE;
+                padding: 10px 0;
+                margin-left:5px;
+                margin-right:5px;
+                float:left;
+                img {
+                    padding-right:10px;
+                    width:200px;
+                }
+                p {
+                    color: #333;
+                    font-size: 14px;
+                    transition: all 0.2s ease 0s;
+                    width:200px;
+                }
+            }
+            .noCont {
+                padding:5px;
+                font-weight:700;
+                color:#333;
+            }
+        }
+    }
+    li.mainCat:hover {
+        background:none repeat scroll 0 0 @color-white;
+        a {
+            color:#2AA4CF;
+        }
+    }
+    
+}*/
+#subProps {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
 /*input[type=checkbox].mcq-option-select {
 	display:none;
 }
@@ -915,9 +1051,9 @@ p.mcq-option-text {
 }
 .mcq-option.ansWrong {
   opacity: 0.2;
-  background: url(../../../images/answer-wrong.png) no-repeat right center;
+  background: url(../../../images/wrong-ans.gif) no-repeat right center;
   border-bottom: 2px solid #f35958;
-  background-size: 35px;
+  background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
 
@@ -948,9 +1084,9 @@ p.mcq-option-text {
 
 }
 .mcq-option.ansRight {
-  background: url(../../../images/answer-right.png) no-repeat right center;
+  background: url(../../../images/right-ans.gif) no-repeat right center;
   border-bottom: 2px solid #0aa699;
-  background-size: 35px;
+  background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
 
@@ -1099,11 +1235,22 @@ p.mcq-option-text {
   font-size: 13px;
 }
 .cpTimer {
-  width: 190px;
-  margin: 0 auto;
+  max-width: 190px;
+  margin: 10px auto 0;
 }
-.cpTimer h4 {
-  color: #ffffff;
+.cpTimer .textDiv_Seconds span {
+  opacity: 0.3;
+}
+.modInfo,
+.qstnInfo {
+  cursor: pointer;
+}
+.qstnStatus {
+  color: #0aa699;
+  font-size: 20px;
+}
+.qstnStatus i {
+  font-size: 22px;
 }
 #content-board {
   margin-top: 30px;
@@ -1139,6 +1286,49 @@ p.mcq-option-text {
 	background-size: 82px 34px;
 	margin-left: 8px;
 }*/
+#textbooks.list .mix {
+  background-color: #f3f3f3;
+  cursor: pointer;
+}
+#textbooks.list .mix:nth-child(2n+1) {
+  background-color: #fbfbfb;
+}
+#textbooks.list .list_header .meta {
+  margin-top: 0;
+}
+#textbooks.list .list_header .meta span {
+  margin-top: 0;
+  width: 15px;
+}
+#textbooks.list .list_header .meta span:after {
+  left: 2px;
+}
+#textbooks.list .meta.name {
+  width: 30%;
+}
+#textbooks.list .meta.area {
+  width: 15%;
+}
+#textbooks.list .meta {
+  width: 20%;
+  padding: 0 2% 0 2%;
+  float: left;
+}
+#textbooks.list .img_wrapper {
+  width: 40%;
+  float: left;
+  height: 65px;
+  margin-right: 10px;
+}
+#textbooks.list .titles {
+  vertical-align: top;
+  width: 54%;
+  float: left;
+  word-break: break-word;
+}
+#textbooks.list .titles h2 {
+  letter-spacing: 1px;
+}
 .listBox {
   margin-top: 60px;
 }
@@ -1241,9 +1431,6 @@ h3.time {
     *width: 20%;
   }
 }
-#myCanvas-miki .cbp_tmlabel {
-  cursor: pointer;
-}
 #myCanvas-miki .cbp_tmlabel a {
   color: #0aa699;
 }
@@ -1289,10 +1476,15 @@ h3.time {
   top: auto;
 }
 #myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel.view {
-  cursor: default;
+  cursor: pointer;
 }
 #myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel.done:after {
   border-right-color: #f3f3f3;
+}
+#myCanvas-miki .cbp_tmtimeline > li .qstnStatus {
+  position: absolute;
+  right: -140px;
+  top: 12px;
 }
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
@@ -1363,42 +1555,6 @@ body {
 }
 .page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu > li > a:hover {
   background-color: #098e83 !important;
-}
-#textbooks.list .list_header .meta {
-  margin-top: 0;
-}
-#textbooks.list .list_header .meta span {
-  margin-top: 0;
-  width: 15px;
-}
-#textbooks.list .list_header .meta span:after {
-  left: 2px;
-}
-#textbooks.list .meta.name {
-  width: 30%;
-}
-#textbooks.list .meta.area {
-  width: 15%;
-}
-#textbooks.list .meta {
-  width: 20%;
-  padding: 0 2% 0 2%;
-  float: left;
-}
-#textbooks.list .img_wrapper {
-  width: 40%;
-  float: left;
-  height: 65px;
-  margin-right: 10px;
-}
-#textbooks.list .titles {
-  vertical-align: top;
-  width: 54%;
-  float: left;
-  word-break: break-word;
-}
-#textbooks.list .titles h2 {
-  letter-spacing: 1px;
 }
 tbody.rowlink td {
   cursor: pointer;
@@ -1476,16 +1632,18 @@ textarea.error,
   border: 1px solid #f35958 !important;
 }
 .mainLogo {
-  background: url('../img/logo-synapse.png');
-  width: 128px;
-  height: 128px;
-  margin: 0 auto;
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
 }
+.mainLogo img {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto;
+  display: block;
+}
 .smallLogo {
-  background: url('../img/logo-synapse.png');
+  background: url(../../../images/logo-synapse.png);
   width: 35px;
   height: 35px;
   margin: 0 auto;

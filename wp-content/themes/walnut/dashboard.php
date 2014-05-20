@@ -30,7 +30,8 @@
         <meta content="" name="description" />
         <meta content="" name="author" />
         <link href="./wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css"/>
-        
+        <link href="./wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
+
         <!-- NEED TO WORK ON -->
         <?php 
         $ver = date('YmdHis');
@@ -40,7 +41,7 @@
         <link href="./wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
         <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
         <link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
-        <!--<link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>-->
+        <link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
         <!-- BEGIN CORE CSS FRAMEWORK -->
         <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
@@ -86,14 +87,21 @@
             <div id="dialog-region">
             </div>
         </div>
-        <?php  global $class_ids; ?>
+        <?php  global $class_ids; global $chorus_options; ?>
         <script>
             AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
             SITEURL = '<?php echo site_url() ?>';
+            THEMEURL= '<?php echo get_template_directory_uri()?>';
             CLASS_LABEL= {};
             <?php foreach($class_ids as $class){ ?>
                 CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
             <?php } ?>
+
+            CHORUS_OPTIONS= {};
+            <?php foreach($chorus_options as $key=>$value){ ?>
+            CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
+            <?php } ?>
+
         </script>
         <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
         <?php if (ENV == 'dev') { ?>

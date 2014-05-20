@@ -10,7 +10,7 @@ define ['app'],(App)->
 			onShow 	: ->
 				@$el.attr 'data-position',@model.get 'position'
 				@$el.addClass("col-md-#{@model.get 'className'}").attr 'data-class',@model.get 'className'
-				@$el.sortable 
+				@$el.sortable
 						revert 		: 'invalid'
 						items 		: '> .element-wrapper'
 						connectWith : '.droppable-column,.column'
@@ -19,7 +19,7 @@ define ['app'],(App)->
 										ui.placeholder.height ui.item.height()
 										window.dragging = true
 										return
-						stop 		:(e, ui)-> 
+						stop 		:(e, ui)->
 										window.dragging = false
 										return
 						helper 		: 'clone'
@@ -39,9 +39,9 @@ define ['app'],(App)->
 
 			onClose:->
 				@$el.sortable('destroy') if @$el.hasClass 'ui-sortable'
-				
 
-			
+
+
 		# Menu item view
 		class Views.RowView extends Marionette.CollectionView
 
@@ -66,9 +66,9 @@ define ['app'],(App)->
 						delete col.elements
 						@collection.add col
 
-			onShow:()->	
-				@$el.attr 'id', _.uniqueId 'row-'	
-				_.delay => 
+			onShow:()->
+				@$el.attr 'id', _.uniqueId 'row-'
+				_.delay =>
 					@setColumnResizer()
 				,400
 
@@ -97,9 +97,9 @@ define ['app'],(App)->
 			clearResizers:()->
 				for resizer in @getResizers()
 					if $(resizer).hasClass 'ui-draggable'
-						$(resizer).draggable('destroy') 
+						$(resizer).draggable('destroy')
 						$(resizer).remove()
-				
+
 			destroySortableColumns:->
 				@$el.children('.column').sortable 'destroy'
 
@@ -109,7 +109,7 @@ define ['app'],(App)->
 
 			# set column resizer
 			setColumnResizer:()->
-				
+
 				@clearResizers()
 
 				#bail if only one column is present
@@ -131,12 +131,12 @@ define ['app'],(App)->
 					resizer.attr('data-position', (index + 1))
 					resizer.css 'left', left
 					@$el.closest('.element-wrapper').children('.element-controls').append resizer
-					@makeResizer resizer 
+					@makeResizer resizer
 
 
 				@setColumnResizerContainment()
 
-		
+
 			makeResizer:(resizer) ->
 				row = resizer.parent()
 				snap = row.width()
@@ -170,7 +170,7 @@ define ['app'],(App)->
 						@setColumnResizerContainment()
 					drag: dragResizer
 
-				
+
 			resizeColumns : (direction, position)->
 				#get columns to adjust width depending on position value.
 				#columns to adjust  = row.elements[postion - 1] and row.elements[position]
@@ -198,8 +198,8 @@ define ['app'],(App)->
 				$(columns[0]).removeClass "col-md-#{currentClassZero}"
 				$(columns[1]).removeClass "col-md-#{currentClassOne}"
 
-				
-						
+
+
 				$(columns[0]).attr('data-class',newClassZero).addClass "col-md-#{newClassZero}"
 				$(columns[1]).attr('data-class',newClassOne).addClass "col-md-#{newClassOne}"
 				$(columns[0]).trigger "class:changed"
@@ -209,11 +209,11 @@ define ['app'],(App)->
 			# setting the containment for resizer
 			setColumnResizerContainment: ->
 				resizers= @$el.closest('.element-wrapper').children('.element-controls').find('.aj-imp-col-divider')
-				
+
 				_.each resizers,(resizer)=>
 					width = @$el.width()
 					left = @$el.offset().left + width/24
-					
+
 					if typeof $(resizer).prev('.aj-imp-col-divider').position() isnt 'undefined'
 						left = @$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + width/24
 
@@ -236,7 +236,7 @@ define ['app'],(App)->
 			removeColumn:($column)->
 				#clear sortable
 				_position = parseInt $column.attr 'data-position'
-				column = @collection.findWhere position : _position					
+				column = @collection.findWhere position : _position
 				@collection.remove column
 
 			# adjust columns in row
@@ -246,7 +246,7 @@ define ['app'],(App)->
 				return  if requestedColumns is @columnCount()
 
 				colClass = 12 / requestedColumns
-				
+
 				if requestedColumns > @columnCount()
 					extraColumns = requestedColumns - @columnCount()
 					#adjust class of existing columns
@@ -257,7 +257,7 @@ define ['app'],(App)->
 					count = @columnCount()
 					for i in _.range(extraColumns)
 						@addNewColumn colClass, (count + i + 1)
-						
+
 
 				else if requestedColumns < @columnCount()
 					emptyColumns = []
@@ -265,30 +265,30 @@ define ['app'],(App)->
 						emptyColumns.push $(column) if $(column).isEmptyColumn()
 
 					emptyColsLen = emptyColumns.length
-				
+
 					#first check
 					if emptyColsLen is 0
 						alert "None of the columns are empty. Please delete elements inside columns to remove"
 						return
-				
+
 					#check if current columns - requested columns > empty columns
 					if @columnCount() - requestedColumns > emptyColsLen
 						alert "Unable to perform this action"
 						return
-					
+
 					colsToRemove = 0
-				
+
 					#check if current columns - requested columns <= empty columns
 					if @columnCount() - requestedColumns <= emptyColsLen
 						colsToRemove = @columnCount() - requestedColumns
 					else
 						colsToRemove = emptyColsLen - requestedColumns
-					
+
 					nCols = []
-				
+
 					#get columns to remove and reverse the array
 					cols = @getColumns().toArray().reverse()
-					
+
 					_.each cols, (column, index)=>
 						if colsToRemove is 0 or not $(column).isEmptyColumn()
 							return

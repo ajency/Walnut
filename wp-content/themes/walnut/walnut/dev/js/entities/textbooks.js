@@ -127,6 +127,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getTextBookNamesByIDs: function(ids) {
         var textbookNamesCollection;
+        ids = _.compact(_.flatten(ids));
         textbookNamesCollection = new Textbooks.NamesCollection;
         textbookNamesCollection.fetch({
           reset: true,

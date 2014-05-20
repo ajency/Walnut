@@ -1,4 +1,3 @@
-
 define ['app', 'controllers/element-controller'
 		'apps/content-creator/content-builder/element/views'], (App, ElementController)->
 
@@ -104,6 +103,10 @@ define ['app', 'controllers/element-controller'
 					deleteElement:(model)->
 						model.destroy 
 								wait : true
+
+
+
+
 
 
 				

@@ -11,30 +11,30 @@ define(["app", 'backbone'], function(App, Backbone) {
         return PageJson.__super__.constructor.apply(this, arguments);
       }
 
-      PageJson.prototype.idAttribute = 'page_id';
+      PageJson.prototype.idAttribute = 'ID';
 
-      PageJson.prototype.name = 'page-json';
+      PageJson.prototype.name = 'content-piece';
+
+      PageJson.prototype.layout = '';
 
       return PageJson;
 
     })(Backbone.Model);
     API = {
-      getPageJSON: function() {
-        var json, jsonModel;
-        jsonModel = new PageJson;
-        json = localStorage.getItem('layout');
-        console.log("retrived" + json);
-        jsonModel.set(JSON.parse(json));
-        console.log(jsonModel);
+      getPageJSON: function(id) {
+        var jsonModel;
+        if (id == null) {
+          id = '';
+        }
+        jsonModel = new PageJson({
+          ID: parseInt(id)
+        });
+        jsonModel.fetch();
         return jsonModel;
       }
     };
-    return App.reqres.setHandler("get:page:json", function(data) {
-      if (data == null) {
-        data = {};
-      }
-      console.log(data);
-      return API.getPageJSON();
+    return App.reqres.setHandler("get:page:json", function(id) {
+      return API.getPageJSON(id);
     });
   });
 });

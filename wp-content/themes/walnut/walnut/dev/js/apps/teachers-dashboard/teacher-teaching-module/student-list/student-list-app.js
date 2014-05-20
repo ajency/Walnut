@@ -9,7 +9,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       __extends(SingleQuestionStudentsController, _super);
 
       function SingleQuestionStudentsController() {
-        this.successFn = __bind(this.successFn, this);
         this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
         this._showStudentsListView = __bind(this._showStudentsListView, this);
         this._changeQuestion = __bind(this._changeQuestion, this);
@@ -18,18 +17,14 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       SingleQuestionStudentsController.prototype.initialize = function(opts) {
         var division, studentCollection, view;
-        this.questionResponseModel = opts.questionResponseModel, studentCollection = opts.studentCollection, this.display_mode = opts.display_mode;
+        this.questionResponseModel = opts.questionResponseModel, studentCollection = opts.studentCollection, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
         division = this.questionResponseModel.get('division');
+        console.log(this.questionResponseModel);
         this.view = view = this._showStudentsListView(studentCollection);
         this.show(view, {
           loading: true,
           entities: [studentCollection]
         });
-        this.listenTo(this.view, "goto:previous:route", (function(_this) {
-          return function() {
-            return _this.region.trigger("goto:previous:route");
-          };
-        })(this));
         this.listenTo(view, "save:question:response", this._saveQuestionResponse);
         return this.listenTo(view, "question:completed", this._changeQuestion);
       };
@@ -50,22 +45,14 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       SingleQuestionStudentsController.prototype._saveQuestionResponse = function(studResponse) {
+        var elapsedTime;
+        elapsedTime = this.timerObject.request("get:elapsed:time");
         this.questionResponseModel.set({
-          'question_response': studResponse
+          'question_response': studResponse,
+          'status': 'completed',
+          'time_taken': elapsedTime
         });
-        return this.questionResponseModel.save(null, {
-          wait: true,
-          success: this.successFn,
-          error: this.errorFn
-        });
-      };
-
-      SingleQuestionStudentsController.prototype.successFn = function(model) {
-        return console.log(model);
-      };
-
-      SingleQuestionStudentsController.prototype.errorFn = function() {
-        return console.log('error');
+        return this.questionResponseModel.save();
       };
 
       return SingleQuestionStudentsController;

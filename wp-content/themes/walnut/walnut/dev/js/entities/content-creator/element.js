@@ -27,7 +27,7 @@ define(["app", 'backbone'], function(App, Backbone) {
     })(Backbone.Model);
     API = {
       createElement: function(data) {
-        var ele, element, i;
+        var element;
         if (data == null) {
           data = {};
         }
@@ -35,13 +35,9 @@ define(["app", 'backbone'], function(App, Backbone) {
         element.set(data);
         if (element.get('element') !== 'Row' && element.get('element') !== 'Column') {
           if (element.isNew()) {
-            i = new Date().getTime();
-            element.set('meta_id', i);
-            localStorage.setItem('ele' + element.get('meta_id'), JSON.stringify(element.toJSON()));
-            i++;
-          } else {
-            ele = localStorage.getItem('ele' + element.get('meta_id'));
-            element.set(JSON.parse(ele));
+            element.save(null, {
+              wait: true
+            });
           }
         }
         return element;

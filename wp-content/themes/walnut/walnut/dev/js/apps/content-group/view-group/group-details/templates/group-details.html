@@ -59,10 +59,10 @@
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="modProgress">
-				<p class="bold small-text m-t-10 m-b-5">In Progress</p>
-			    <div class="progress">
-			        <div data-percentage="0%" style="width: 0%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-			    </div>
+                <p class="bold small-text m-t-10 m-b-5">Progress</p>
+                <div class="progress progress-large">
+                    <div data-percentage="{{getProgressPercentage}}%" style="width: {{getProgressPercentage}}%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">{{getProgressData}}</div>
+                </div>
 		   	</div>
 		</div>
 		<div class="col-sm-6">

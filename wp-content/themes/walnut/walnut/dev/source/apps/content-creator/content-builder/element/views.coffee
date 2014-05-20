@@ -108,6 +108,3 @@ define ['app'
 			            zIndex 		: 2e9
 			            top 		: '0px'
 			            left 		: '40px'
-
-				
-		

@@ -1,100 +1,88 @@
 define ['app'
-		'controllers/region-controller'
-		'text!apps/teachers-dashboard/teacher-teaching-module/chorus-options/templates/chorus-options-template.html'], (App, RegionController,chorusOptionsTemplate)->
+        'controllers/region-controller'
+        'text!apps/teachers-dashboard/teacher-teaching-module/chorus-options/templates/chorus-options-template.html'], (App, RegionController, chorusOptionsTemplate)->
+    App.module "SingleQuestionChorusOptionsApp", (ChorusOptions, App)->
+        class ChorusOptionsController extends RegionController
 
-	App.module "SingleQuestionChorusOptionsApp", (ChorusOptions, App)->
+            initialize: (opts)->
+                {@questionResponseModel,@display_mode,@timerObject} = opts
 
-		class ChorusOptionsController extends RegionController
+                @view = view = @_showChorusOptionsView @questionResponseModel
 
-			initialize : (opts)->
-				{@questionResponseModel,@display_mode} = opts
-				
-				@view= view = @_showChorusOptionsView @questionResponseModel
+                @show view, (loading: true)
 
-				@show view, (loading:true)
+                @listenTo view, "save:question:response", @_saveQuestionResponse
 
-				@listenTo view, "save:question:response", @_saveQuestionResponse
+                @listenTo view, "question:completed", @_changeQuestion
 
-				@listenTo view, "question:completed", @_changeQuestion
+            _changeQuestion: (resp)=>
+                @_saveQuestionResponse '' if resp is 'no_answer'
 
-				@listenTo @view, "goto:previous:route", => @region.trigger "goto:previous:route"
+                @region.trigger "goto:next:question", @questionResponseModel.get 'content_piece_id'
 
-			_changeQuestion:(resp)=>
-				
-				@_saveQuestionResponse '' if resp is 'no_answer'
+            _showChorusOptionsView: (model)=>
+                new ChorusOptionsView
+                    model: model
+                    responsePercentage: @questionResponseModel.get 'question_response'
+                    display_mode: @display_mode
 
-				@region.trigger "goto:next:question", @questionResponseModel.get 'content_piece_id'	
+            _saveQuestionResponse: (studResponse)=>
 
-			_showChorusOptionsView : (model)=>
-				new ChorusOptionsView 
-					model 				: model
-					responsePercentage 	: @questionResponseModel.get 'question_response'
-					display_mode 		: @display_mode
+                elapsedTime= @timerObject.request "get:elapsed:time"
 
-					templateHelpers:
-						showPauseBtn:=>
-							if @display_mode is 'class_mode'
-								buttonStr= '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
-									  <button type="button" id="pause-session" class="btn btn-primary btn-xs btn-sm">
-									    <i class="fa fa-pause"></i> Pause
-									  </button>
-									</div>'
-							buttonStr
+                @questionResponseModel.set
+                    'question_response' : studResponse
+                    'status'            : 'completed'
+                    'time_taken'        : elapsedTime
 
-			_saveQuestionResponse:(studResponse)=>
-				@questionResponseModel.set 
-					'question_response'	: studResponse
+                @questionResponseModel.save()
 
-				@questionResponseModel.save(null,{wait : true, success: @successFn, error: @errorFn})
+        class ChorusOptionsView extends Marionette.ItemView
 
+            className: 'studentList m-t-35'
 
-		class ChorusOptionsView extends Marionette.ItemView
+            template: chorusOptionsTemplate
 
-			className: 'studentList m-t-35'
+            events:
+                'click .tiles.single.selectable': 'selectStudent'
+                'click #question-done': 'questionCompleted'
 
-			template : chorusOptionsTemplate
+            onShow: ->
+                if Marionette.getOption(@, 'display_mode') is 'class_mode'
+                    $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
-			events:
-				'click .tiles.single.selectable'	: 'selectStudent'
-				'click #question-done' 	: 'questionCompleted'
-				'click #pause-session'	:-> @trigger "goto:previous:route"
+                responsePercentage = Marionette.getOption @, 'responsePercentage'
+                if responsePercentage?
+                    @$el.find '#' + responsePercentage
+                    .find '.default'
+                        .addClass 'green'
 
-			onShow:->
-				if Marionette.getOption(@, 'display_mode') is 'class_mode'
-					$(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
+            selectStudent: (e)->
+                @$el.find '.green'
+                .removeClass 'green'
 
-				responsePercentage = Marionette.getOption @, 'responsePercentage'
-				if responsePercentage?
-					@$el.find '#'+responsePercentage
-					.find '.default'
-					.addClass 'green'
+                dataValue = $(e.target).closest '.tiles.single'
+                .attr 'id'
 
-			selectStudent:(e)->
-				@$el.find '.green'
-				.removeClass 'green'
+                $(e.target).closest('.tiles.single')
+                .find '.default'
+                    .addClass 'green'
+                        .find 'i'
+                            .removeClass 'fa-minus-circle'
+                                .addClass 'fa-check-circle'
 
-				dataValue= $(e.target).closest '.tiles.single' 
-							.attr 'id'
+                @trigger "save:question:response", dataValue
 
-				$(e.target).closest('.tiles.single')
-				.find '.default'
-				.addClass 'green'
-				.find 'i'
-				.removeClass 'fa-minus-circle'
-				.addClass 'fa-check-circle'
+            questionCompleted: =>
+                selectedAnswer = @$el.find '.tiles.single .green'
 
-				@trigger "save:question:response", dataValue
+                if (_.size(selectedAnswer) is 0) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
+                    if confirm 'Are you sure no one answered correctly?'
+                        @trigger "question:completed", "no_answer"
+                else
+                    @trigger "question:completed"
 
-			questionCompleted:=>
-				selectedAnswer = @$el.find '.tiles.single .green' 
-
-				if (_.size(selectedAnswer) is 0) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
-					if confirm 'Are you sure no one answered correctly?'
-					    @trigger "question:completed", "no_answer"
-				else 
-					@trigger "question:completed"
-
-		# set handlers
-		App.commands.setHandler "show:single:question:chorus:options:app", (opt = {})->
-			new ChorusOptionsController opt	
+        # set handlers
+        App.commands.setHandler "show:single:question:chorus:options:app", (opt = {})->
+            new ChorusOptionsController opt
 				

@@ -1,151 +1,148 @@
 define ['app'
-		'controllers/region-controller'
-		'text!apps/content-group/edit-group/group-details/templates/collection-details.html'], (App, RegionController, collectionDetailsTpl)->
+        'controllers/region-controller'
+        'text!apps/content-group/edit-group/group-details/templates/collection-details.html'], (App, RegionController, collectionDetailsTpl)->
+    App.module "CollecionDetailsApp.Controller", (Controller, App)->
+        class Controller.EditCollecionDetailsController extends RegionController
 
-	App.module "CollecionDetailsApp.Controller", (Controller, App)->
+            initialize: (opts)->
+                {@model}= opts
 
-		class Controller.EditCollecionDetailsController extends RegionController
+                @textbooksCollection = App.request "get:textbooks"
 
-			initialize :(opts)->
+                App.execute "when:fetched", [@textbooksCollection], @showView
 
-				{@model}= opts
+            showView: =>
+                @view = view = @_getCollectionDetailsView @model
 
-				@textbooksCollection = App.request "get:textbooks"
+                @show view, (loading: true, entities: [@textbooksCollection])
 
-				App.execute "when:fetched", [@textbooksCollection], @showView
-				
-			showView:=>
+                @listenTo @view, "fetch:chapters": (term_id) =>
+                    chaptersCollection = App.request "get:chapters", ('parent': term_id)
+                    App.execute "when:fetched", chaptersCollection, =>
+                        @view.triggerMethod 'fetch:chapters:complete', chaptersCollection
 
-				@view= view = @_getCollectionDetailsView @model
+                @listenTo @view, "fetch:sections:subsections": (term_id) ->
+                    allSectionsCollection = App.request "get:subsections:by:chapter:id", ('child_of': term_id)
+                    App.execute "when:fetched", allSectionsCollection, =>
+                        #make list of sections directly belonging to chapter ie. parent=term_id
+                        sectionsList = allSectionsCollection.where 'parent': term_id
 
-				@show view, (loading:true, entities:[@textbooksCollection])
+                        #all the other sections are listed as subsections
+                        subsectionsList = _.difference(allSectionsCollection.models, sectionsList);
+                        allSections =
+                            'sections': sectionsList, 'subsections': subsectionsList
 
-				@listenTo @view, "fetch:chapters" :(term_id) =>
-					chaptersCollection = App.request "get:chapters", ('parent': term_id)
-					App.execute "when:fetched", chaptersCollection, =>
-						@view.triggerMethod 'fetch:chapters:complete', chaptersCollection
-
-				@listenTo @view, "fetch:sections:subsections" :(term_id) ->
-					allSectionsCollection = App.request "get:subsections:by:chapter:id", ('child_of': term_id)
-					App.execute "when:fetched", allSectionsCollection, =>
-						#make list of sections directly belonging to chapter ie. parent=term_id
-						sectionsList= allSectionsCollection.where 'parent': term_id
-
-						#all the other sections are listed as subsections
-						subsectionsList= _.difference(allSectionsCollection.models, sectionsList);
-						allSections= 'sections': sectionsList, 'subsections': subsectionsList
-
-						@view.triggerMethod 'fetch:subsections:complete', allSections
+                        @view.triggerMethod 'fetch:subsections:complete', allSections
 
 
-				@listenTo @view, "save:content:collection:details" :(data) =>
-					@model.save(data,{wait : true, success: @successFn, error: @errorFn})
+                @listenTo @view, "save:content:collection:details": (data) =>
+                    @model.save(data, {wait: true, success: @successFn, error: @errorFn})
 
 
-			successFn :(model)=>
-				contentGroupCollection = App.request "get:content:groups"
-				contentGroupCollection.add model
-				@view.triggerMethod 'saved:content:group', model
+            successFn: (model)=>
+                contentGroupCollection = App.request "get:content:groups"
+                contentGroupCollection.add model
+                @view.triggerMethod 'saved:content:group', model
 
-			errorFn :->
-				console.log 'error'
-								
-				
-			_getCollectionDetailsView : (model)->
-				new CollectionDetailsView
-					model 				: model 
-					templateHelpers: 
-						textbooksFilter:=>
-							textbooks= []
-							_.each(@textbooksCollection.models, (el,ind)->
-								textbooks.push('name':el.get('name'), 'id': el.get('term_id'))
-							)
-							textbooks
-								
+            errorFn: ->
+                console.log 'error'
 
 
-		class CollectionDetailsView extends Marionette.ItemView
-
-			template 	: collectionDetailsTpl
-
-			className 	: 'tiles white grid simple vertical green'
-
-			events :
-				'change #textbooks' 				:(e)-> 
-														@$el.find '#secs, #subsecs'
-														.select2 'data', null
-
-														@$el.find '#chapters, #secs, #subsecs'
-														.html ''
-														
-														@trigger "fetch:chapters", $(e.target).val()
-				
-				'change #chapters' 					:(e)-> @trigger "fetch:sections:subsections", $(e.target).val()
-
-				'click #save-content-collection'	: 'save_content'
-
-			onShow:->
-				$("#textbooks, #chapters, #minshours").select2()
-
-				#Multi Select
-				$("#secs,#subsecs").val([]).select2()
-
-			onFetchChaptersComplete:(chapters)->
-				if _.size(chapters)>0
-					@$el.find('#chapters').html('');
-					_.each chapters.models, (chap,index)=>
-						@$el.find '#chapters'
-						.append '<option value="'+chap.get('term_id')+'">'+chap.get('name')+'</option>'
-				else 
-					@$el.find '#chapters'
-					.html '<option value="">No Chapters available</option>'
-
-			onFetchSubsectionsComplete:(allsections)->
-				if _.size(allsections)>0
-					if _.size(allsections.sections)>0
-						@$el.find('#secs').html('');
-						_.each allsections.sections, (section,index)=>
-							@$el.find('#secs')
-							.append '<option value="'+section.get('term_id')+'">'+section.get('name')+'</option>'
-					else 
-						@$el.find('#secs').html('<option value="">No Sections available</option>');
-
-					if _.size(allsections.subsections)>0
-						@$el.find('#subsecs').html('');
-						_.each allsections.subsections, (section,index)=>
-							@$el.find '#subsecs'
-							.append '<option value="'+section.get('term_id')+'">'+section.get('name')+'</option>' 
-					else 
-						@$el.find('#subsecs').html '<option>No Sub Sections available</option>' 
-				else 
-					@$el.find('#secs').html('<option value="">No Sections available</option>');
-					@$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
+            _getCollectionDetailsView: (model)->
+                new CollectionDetailsView
+                    model: model
+                    templateHelpers:
+                        textbooksFilter: =>
+                            textbooks = []
+                            _.each(@textbooksCollection.models, (el, ind)->
+                                textbooks.push('name': el.get('name'), 'id': el.get('term_id'))
+                            )
+                            textbooks
 
 
-			save_content:(e)->
-				e.preventDefault()
+        class CollectionDetailsView extends Marionette.ItemView
 
-				$('#s2id_textbooks .select2-choice')
-				.removeClass 'error'
+            template: collectionDetailsTpl
 
-				if @$el.find('#textbooks').val() is ''
-					$('#s2id_textbooks .select2-choice')
-					.addClass 'error'
+            className: 'tiles white grid simple vertical green'
 
-				if @$el.find('form').valid()
-					data = Backbone.Syphon.serialize (@)
-					#data.term_ids= _.compact(data.term_ids)
-					
-					@trigger "save:content:collection:details",data
-					
+            events:
+                'change #textbooks': (e)->
+                    @$el.find '#secs, #subsecs'
+                    .select2 'data', null
 
-			onSavedContentGroup:(model) ->
-				@$el.find('#saved-success').remove();
+                    @$el.find '#chapters, #secs, #subsecs'
+                    .html ''
 
-				@$el.find '.grid-title'
-					.prepend '<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/'+model.get('id')+'">view your module</a></div><hr>'
+                    @trigger "fetch:chapters", $(e.target).val()
 
-		# set handlers
-		App.commands.setHandler "show:editgroup:content:group:detailsapp", (opt = {})->
-			new Controller.EditCollecionDetailsController opt		
+                'change #chapters': (e)->
+                    @trigger "fetch:sections:subsections", $(e.target).val()
+
+                'click #save-content-collection': 'save_content'
+
+            onShow: ->
+                $("#textbooks, #chapters, #minshours").select2()
+
+                #Multi Select
+                $("#secs,#subsecs").val([]).select2()
+
+            onFetchChaptersComplete: (chapters)->
+                if _.size(chapters) > 0
+                    @$el.find('#chapters').html('');
+                    _.each chapters.models, (chap, index)=>
+                        @$el.find '#chapters'
+                        .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
+                else
+                    @$el.find '#chapters'
+                    .html '<option value="">No Chapters available</option>'
+
+            onFetchSubsectionsComplete: (allsections)->
+                if _.size(allsections) > 0
+                    if _.size(allsections.sections) > 0
+                        @$el.find('#secs').html('');
+                        _.each allsections.sections, (section, index)=>
+                            @$el.find('#secs')
+                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                    else
+                        @$el.find('#secs').html('<option value="">No Sections available</option>');
+
+                    if _.size(allsections.subsections) > 0
+                        @$el.find('#subsecs').html('');
+                        _.each allsections.subsections, (section, index)=>
+                            @$el.find '#subsecs'
+                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                    else
+                        @$el.find('#subsecs').html '<option>No Sub Sections available</option>'
+                else
+                    @$el.find('#secs').html('<option value="">No Sections available</option>');
+                    @$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
+
+
+            save_content: (e)->
+                e.preventDefault()
+
+                $('#s2id_textbooks .select2-choice')
+                .removeClass 'error'
+
+                if @$el.find('#textbooks').val() is ''
+                    $('#s2id_textbooks .select2-choice')
+                    .addClass 'error'
+
+                if @$el.find('form').valid()
+                    data = Backbone.Syphon.serialize (@)
+                    #data.term_ids= _.compact(data.term_ids)
+
+                    @trigger "save:content:collection:details", data
+
+
+            onSavedContentGroup: (model) ->
+                @$el.find('#saved-success').remove();
+
+                @$el.find '.grid-title'
+                .prepend '<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/' + model.get('id') + '">view your module</a></div><hr>'
+
+        # set handlers
+        App.commands.setHandler "show:editgroup:content:group:detailsapp", (opt = {})->
+            new Controller.EditCollecionDetailsController opt
 

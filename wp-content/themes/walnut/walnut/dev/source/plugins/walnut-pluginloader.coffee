@@ -24,6 +24,12 @@ define [
 			'select2'
 			'datepicker'
 			'timepicker'
-			'jquerytimer'
+			'timecircles'
 			'jquery_listnav'
+      'bridget'
+      'isotope'
+      'kinetic'
+      'kineticresize'
+      'checkbox'
+      'screwbuttons'
 		], ->

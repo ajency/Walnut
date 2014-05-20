@@ -11,35 +11,29 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
       }
 
       Controller.prototype.initialize = function(options) {
-        var breadcrumb_items;
-        breadcrumb_items = {
-          'items': [
-            {
-              'label': 'Dashboard',
-              'link': 'javascript://'
-            }, {
-              'label': 'Content Management',
-              'link': 'javascript:;'
-            }, {
-              'label': 'Content Preview',
-              'link': 'javascript:;',
-              'active': 'active'
-            }
-          ]
-        };
-        App.execute("update:breadcrumb:model", breadcrumb_items);
+        this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.classID = options.classID, this.students = options.students;
         this.layout = this._getContentPreviewLayout();
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
             App.execute("show:top:panel", {
-              region: _this.layout.topPanelRegion
+              region: _this.layout.topPanelRegion,
+              model: _this.model,
+              textbookNames: _this.textbookNames,
+              questionResponseModel: _this.questionResponseModel,
+              timerObject: _this.timerObject,
+              display_mode: _this.display_mode,
+              classID: _this.classID,
+              students: _this.students
             });
             return App.execute("show:content:board", {
-              region: _this.layout.contentBoardRegion
+              region: _this.layout.contentBoardRegion,
+              model: _this.model
             });
           };
         })(this));
-        return this.show(this.layout);
+        return this.show(this.layout, {
+          loading: true
+        });
       };
 
       Controller.prototype._getContentPreviewLayout = function() {
@@ -50,10 +44,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
 
     })(RegionController);
     return App.commands.setHandler("show:content:preview", function(options) {
-      new ContentPreview.Controller;
-      return {
-        region: options.region
-      };
+      return new ContentPreview.Controller(options);
     });
   });
 });

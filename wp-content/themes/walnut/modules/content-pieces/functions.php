@@ -83,43 +83,156 @@ function get_content_pieces($args = array()) {
 $posts = get_posts($args);
 
 function get_single_content_piece($id){
-    
+
+    global $wpdb;
+
     $current_blog_id= get_current_blog_id();
     
     switch_to_blog(1);
     
     $content_piece= get_post($id);
-    
-    $subject_ids = array();
-    
-    $subjects = get_the_terms($id, 'textbook');
-    
-    //FETCHING LIST OF TEXTBOOKS RELATED TO THE CONTENT PIECE
-    foreach ($subjects as $sub) {
-        
-        $subject_ids[] = $sub->term_id;
-        
-        while ($sub->parent >0){
-            $sub = get_term($sub->parent, 'textbook');
-            $subject_ids[] = $sub->term_id;
-        }
-    }
-    //print_r($subject_ids);
-    $content_piece->subjects = $subject_ids;
+
     $authordata = get_userdata($content_piece->post_author);
-    $content_piece->creator = $authordata->display_name;
+
+    $content_piece->post_author_name = $authordata->display_name;
     
     // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
     $content_piece->content_type = ($content_type) ? $content_type : '--';
     
-    // Question Type can be individual or chorus
-    $content_piece->question_type = get_post_meta($id, 'question_type', true); 
-    
+    $content_layout= get_post_meta($id, 'layout_json', true);
+
+    $content_layout = maybe_unserialize($content_layout);
+
+    $content_elements=array();
+    if($content_layout){
+        $content_elements = get_json_to_clone($content_layout);
+        $content_piece->layout = $content_elements['elements'];
+        $excerpt_array= $content_elements['excerpt'];
+        $excerpt_array = __u::flatten($excerpt_array);
+        $excerpt= implode('<span class="divider"> | </span>',$excerpt_array);
+        $excerpt = strip_tags($excerpt);
+        $excerpt= substr($excerpt, 0, 150);
+        $content_piece->post_excerpt =$excerpt.'...';
+    }
+    $content_piece->question_type = get_post_meta($id, 'question_type', true);
+
+    $content_piece->post_tags = get_post_meta($id, 'post_tags', true);
+
+    $content_piece->duration = (int) get_post_meta($id, 'duration', true);
+
+    $last_modified_by = get_post_meta($id, 'last_modified_by', true);
+    $last_modified_by_user= get_userdata($last_modified_by);
+
+    $content_piece->last_modified_by = $last_modified_by_user->display_name;
+
+    $published_by = get_post_meta($id, 'published_by', true);
+    $published_by_user= get_userdata($published_by);
+    $content_piece->published_by = $published_by_user->display_name;
+
+    $term_ids_array= get_post_meta($id, 'term_ids', true);
+    $term_ids = maybe_unserialize($term_ids_array);
+
+    $content_piece->term_ids = $term_ids;
+
     switch_to_blog($current_blog_id);
-    
+
     return $content_piece;
 }
+
+
+function get_json_to_clone($elements)
+{
+    $d = array();
+    $excerpt= array();
+    if (is_array($elements)) {
+        foreach ($elements as $element) {
+            if ($element['element'] === 'Row') {
+                $element['columncount'] = count($element['elements']);
+                $d2= get_row_elements($element);
+                $d[]                    = $d2['element'];
+                $excerpt[]= $d2['excerpt'];
+
+            } else {
+                $meta = get_meta_values($element);
+                if ($meta !== FALSE){
+                    $d[] = $meta;
+                    $excerpt[]=$meta['content'];
+                }
+            }
+        }
+    }
+
+    $content['elements']= $d;
+    $content['excerpt']= $excerpt;
+
+    return $content;
+}
+
+function get_row_elements($element)
+{
+    $excerpt= array();
+
+    foreach ($element['elements'] as &$column) {
+        if($column['elements']){
+            foreach ($column['elements'] as &$ele) {
+                if ($ele['element'] === 'Row') {
+                    $ele['columncount'] = count($ele['elements']);
+                    $data= get_row_elements($ele);
+                    $ele = $data['element'];
+                    $excerpt []= $data['excerpt'];
+                } else {
+                    $meta = get_meta_values($ele);
+                    if ($meta !== FALSE){
+                        $ele = wp_parse_args($meta, $ele);
+                        if($ele['element']=='Text')
+                            $excerpt []= $ele['content'];
+                    }
+                }
+            }
+        }
+    }
+
+    $element['element']= $element;
+    $element['excerpt']= $excerpt;
+
+    return $element;
+}
+
+function get_meta_values($element, $create = FALSE)
+{
+    $meta = get_metadata_by_mid('post', $element['meta_id']);
+
+    if (!$meta)
+        return FALSE;
+
+    $ele            = maybe_unserialize($meta->meta_value);
+    $ele['meta_id'] = $create ? create_new_record($ele) : $element['meta_id'];
+    validate_element($ele);
+
+    return $ele;
+}
+
+
+
+function validate_element(&$element)
+{
+    $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id');
+    $boolkey = array('draggable', 'justified');
+
+    if (!is_array($element) && !is_object($element))
+        return $element;
+
+    foreach ($element as $key => $val) {
+        if (in_array($key, $numkeys))
+            $element[$key] = (int)$val;
+        if (in_array($key, $boolkey))
+            $element[$key] = $val === "true";
+    }
+
+    return $element;
+}
+
 
 function save_content_group($data = array()) {
     global $wpdb;
@@ -333,3 +446,58 @@ function get_single_content_group($id, $division=''){
     
 }
 
+function save_content_piece($data){
+
+    // only if post_author is set we will update it. else the current user will be set as post_author
+
+    $post_author=(isset($data['post_author'])) ? $data['post_author'] : get_current_user_id();
+
+    $post_array=array(
+        'post_status'   => $data['post_status'],
+        'post_type'     => 'content-piece',
+        'post_title'    => 'test content piece',
+        'post_author'   => $post_author
+    );
+
+    //if ID is set the post will be updated. if not, a new post will be created
+    if(isset($data['ID']))
+        $post_array['ID']= $data['ID'];
+
+    $content_id= wp_insert_post($post_array);
+
+    if(!$content_id)
+        return false;
+
+    $content_layout = maybe_serialize($data['json']);
+
+    update_post_meta ($content_id, 'layout_json',$content_layout);
+
+    update_post_meta ($content_id, 'content_type',$data['content_type']);
+
+    update_post_meta ($content_id, 'question_type',$data['question_type']);
+
+    $term_ids = maybe_serialize($data['term_ids']);
+
+    update_post_meta ($content_id, 'term_ids',$term_ids);
+
+    update_post_meta ($content_id, 'duration',$data['duration']);
+
+    update_post_meta ($content_id, 'post_tags',$data['post_tags']);
+
+    update_post_meta ($content_id, 'last_modified_by',$data['post_author']);
+
+    if($data['post_status']=='publish')
+        update_post_meta ($content_id, 'published_by',$data['post_author']);
+
+    return $content_id;
+}
+
+function update_content_piece($content_id, $data){
+
+    $content_layout = maybe_serialize($data);
+
+    if($content_id)
+        update_post_meta ($content_id, 'layout_json',$content_layout);
+
+    return $content_id;
+}

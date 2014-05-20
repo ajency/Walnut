@@ -3,6 +3,7 @@
 # <li>-this file sets the requirejs configurations </li> 
 # <li>-load all JS files</li>
 # </ul>
+
 require.config 
 	
 	urlArgs : "ver=#{(new Date()).getTime()}"
@@ -72,15 +73,14 @@ require.config
 		screwbuttons : ['jquery']
 		app 		: ['plugins/content-creator-pluginloader','config/content-creator-configloader']
 
-	
+
 
 ## Start with application
-require [	'plugins/content-creator-pluginloader'
-			'config/content-creator-configloader'
-			'app'
-			'entitiesloader'
-			'componentloader'
-			'apps/content-creator-appsloader'
-			], (plugins, configs, App)->
-
-				App.start() 
+require [  'plugins/content-creator-pluginloader'
+           'config/content-creator-configloader'
+           'app'
+           'entitiesloader'
+           'componentloader'
+           'apps/content-creator-appsloader'
+], (plugins, configs, App)->
+    App.start()

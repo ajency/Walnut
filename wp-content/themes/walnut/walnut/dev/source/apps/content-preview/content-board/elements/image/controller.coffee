@@ -10,13 +10,8 @@ define ['app'
 				class Image.Controller extends Element.Controller
 
 					# intializer
-					initialize:(options)->
-
-						
-
+					initialize:(options)->					
 						super(options)
-						
-			
 
 					# private etmplate helper function
 					# this function will get the necessary template helpers for the element
@@ -43,7 +38,4 @@ define ['app'
 							
 							view = @_getImageView imageModel
 
-							
-						
 							@layout.elementRegion.show view
-							

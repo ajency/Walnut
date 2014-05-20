@@ -17,7 +17,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       ItemModel.prototype.defaults = {
         ID: 0,
         post_title: '',
-        creator: '',
+        post_author: '',
         post_modified: '',
         post_date: '',
         post_tags: ''

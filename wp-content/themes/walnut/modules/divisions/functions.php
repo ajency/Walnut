@@ -1,6 +1,6 @@
 <?php
 
-function get_single_division($id){
+function fetch_single_division($id){
     
     global $wpdb;
     global $classids;
@@ -48,7 +48,7 @@ function get_all_divisions($user_id=''){
     $divisions = $wpdb->get_results($divisions_qry);
     
     foreach($divisions as $div)
-        $data[]=  get_single_division($div->id);
+        $data[]=  fetch_single_division($div->id);
     
     return $data;
     

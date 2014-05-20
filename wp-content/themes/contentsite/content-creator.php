@@ -39,8 +39,8 @@ Template Name: Content Creator
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/slider.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css">
+    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/mashmenu.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/jquery.minicolors.css" rel="stylesheet" type="text/css">
-	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
 	<!-- END CORE CSS FRAMEWORK -->
 
 	<!-- BEGIN CSS TEMPLATE -->
@@ -80,7 +80,11 @@ var SITEURL = '<?php echo site_url();?>'
 AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
 var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE    = '<?php echo wp_create_nonce('media-form');?>';
-var THEMEURL = '<?php echo get_template_directory_uri()?>';
+<?php global $chorus_options; ?>
+CHORUS_OPTIONS= {};
+<?php foreach($chorus_options as $key=>$value){ ?>
+CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
+<?php } ?>
 
 </script>
 <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>

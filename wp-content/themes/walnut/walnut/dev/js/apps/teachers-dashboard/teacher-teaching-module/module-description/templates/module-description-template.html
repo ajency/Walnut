@@ -1,70 +1,32 @@
 <div class="tiles white m-b-20">
 	<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
-		<h4 class="bold pull-left text-info modName"><i class="fa fa-chevron-left"></i> <a id="back-to-module" href="javascript://">Back to {{name}}</a></h4>
+        <div class="row">
+            <div class="col-sm-4">
+                <h4 class="bold  text-info modName"><i class="fa fa-chevron-left"></i> <a id="back-to-module" href="javascript://">Back to {{name}}</a></h4>
+            </div>
 
-		<div class="modProgress pull-right">
-			<p class="bold small-text m-t-10 m-b-5">Progress</p>
-	        <div class="progress">
-	            <div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-	        </div>
+            <div class="col-sm-8">
+
+                {{&showPauseButton}}
+
+                <div class="modProgress pull-right">
+                    <p class="bold small-text m-t-10 m-b-5">Progress</p>
+                    <div class="progress progress-large">
+                        <div data-percentage="{{getProgressPercentage}}%" style="width: {{getProgressPercentage}}%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">{{getProgressData}}</div>
+                    </div>
+                </div>
+
+                <div class="pull-right m-r-30">
+                    <p class="bold small-text"> Module Time</p>
+                    <h4 class="text-grey m-t-0 m-b-0 semi-bold time"> <i class="fa fa-clock-o"></i> {{moduleTime}}</h4>
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="clearfix"></div>
 	</div>
 	<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
 		<p class="bold small-text">Objective: </p>
 		<p class="">{{description.objective}}</p>
 	</div>
 </div>
-
-<div class="tiles white grid simple vertical blue m-b-0">
-	<div class="grid-body no-border">
-		<div class="p-t-10">
-		  <div class="row m-b-10">
-            <div class="col-md-4 col-sm-4 b-grey b-r">
-              <label class="form-label bold small-text">Class</label>
-				      {{getClassOrDivision}}
-            </div>
-            <div class="col-md-4 col-sm-4 b-grey b-r">
-              <label class="form-label bold small-text">Textbook</label>
-				        {{getTextbookName}}		                  
-            </div>
-            <div class="col-md-4 col-sm-4">
-              <label class="form-label bold small-text">Chapter</label>
-			         {{getChapterName}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 b-grey b-r">
-              <label class="form-label bold small-text">Section</label>
-				      {{getSectionsNames}}
-            </div>
-            <div class="col-md-4 col-sm-4 b-grey b-r">
-              <label class="form-label bold small-text">Sub-Section</label>
-				      {{getSubSectionsNames}}
-            </div>
-            <div class="col-md-4 col-sm-4">
-              <label class="form-label bold small-text">Type</label>
-				Difficult
-            </div>
-          </div>
-      </div>
-    </div>
-</div>
-<div class="tiles blue p-l-15 p-r-15">
-	<div class="tiles-body no-border">
-		<div class="row">
-            <div class="col-md-3 col-sm-3">
-            	<h3 class="text-white m-t-0 m-b-0 semi-bold time timedisplay"> <i class="fa fa-clock-o"></i> </h3>
-            </div>
-            <div class="col-md-3 col-sm-3 text-center">
-              <a href="#" class="hashtags transparent"> <i class="fa fa-question"></i> View Info </a>		                  
-            </div>
-            <div class="col-md-3 col-sm-3 text-center">
-              <a href="#" class="hashtags transparent"> <i class="fa fa-eye"></i> View Answer </a>	                  
-            </div>
-            <div class="col-md-3 col-sm-3 text-right">
-              <a href="#" class="hashtags transparent"> <i class="fa fa-check"></i> Done </a>
-            </div>
-          </div>
-      </div>
-    </div>

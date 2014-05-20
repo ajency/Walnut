@@ -1,49 +1,33 @@
 define ["app", 'backbone'], (App, Backbone) ->
+    App.module "Entities.Elements", (Elements, App, Backbone, Marionette, $, _)->
+        # Generic element model
+        class Elements.ElementModel extends Backbone.Model
 
-        App.module "Entities.Elements", (Elements, App, Backbone, Marionette, $, _)->
+            # custom id attribute as we will be using post_meta table for saving this
+            # element details
+            idAttribute: 'meta_id'
 
-    
-            # Generic element model
-            class Elements.ElementModel extends Backbone.Model
+            defaults: ->
+                style: ''
+                draggable: true
 
-                # custom id attribute as we will be using post_meta table for saving this 
-                # element details
-                idAttribute : 'meta_id'
+            name: 'element'
 
-                defaults:->
-                    style       : ''
-                    draggable   : true
-                
-                name : 'element'
+        # PUBLIC API FOR ENitity
+        API =
+            createElement: (data = {})->
+                element = new Elements.ElementModel
+                element.set data
 
-                
-            # PUBLIC API FOR ENitity
-            API =
-                createElement: (data = {})->
-                    
-                    element = new Elements.ElementModel                        
-                    element.set data    
-                    if element.get('element') isnt 'Row' and element.get('element') isnt 'Column' 
-                        if element.isNew()
-                            # save to server
-                            # element.save null,
-                            #          wait : true
+                if element.get('element') isnt 'Row' and element.get('element') isnt 'Column'
 
-                            # save to local storage...........TO BE DELETED
-                            i = new Date().getTime()
-                            element.set 'meta_id',i
-                            localStorage.setItem 'ele'+element.get('meta_id'), JSON.stringify(element.toJSON())
-                            i++
-                        
-                        # get from Local Storage ...........TO BE DELETED
-                        else
-                            ele = localStorage.getItem 'ele'+element.get 'meta_id'
-                            element.set JSON.parse ele
+                    if element.isNew()
+                        element.save null,
+                            wait: true
 
-                                
-                    element
+                element
 
 
-            # REQUEST HANDLERS
-            App.reqres.setHandler "create:new:element",(data) ->
-                API.createElement data
+        # REQUEST HANDLERS
+        App.reqres.setHandler "create:new:element", (data) ->
+            API.createElement data

@@ -2,29 +2,41 @@
 
 require_once 'functions.php';
 
-function save_question_response() {
+function create_question_response(){
+
+    extract($_POST);
+
+    $data = array(
+        'collection_id'     => $collection_id,
+        'content_piece_id'  => $content_piece_id,
+        'division'          => $division
+    );
+
+    $response_data = insert_question_response($data);
+
+    wp_send_json(array('ref_id'=>$response_data));
+}
+add_action( 'wp_ajax_create-question-response', 'create_question_response');
+
+function ajax_update_question_response() {
     
     extract($_POST);
     
     $data = array(
-        'collection_id'     => $collection_id,
-        'content_piece_id'  => $content_piece_id,
+        'ref_id'            => $ref_id,
         'question_response' => $question_response,
-        'division'          => $division
+        'time_taken'        => $time_taken,
+        'status'            => $status
     );
-    
-    if(isset($id))
-        $data['id']=$id;
             
-    $response_id = update_question_response($data);
+    $response_data = update_question_response($data);
     
-    wp_send_json(array('id'=>$response_id));
+    wp_send_json($response_data);
 }
-add_action( 'wp_ajax_create-question-response', 'save_question_response' );
-add_action( 'wp_ajax_update-question-response', 'save_question_response' );
+add_action( 'wp_ajax_update-question-response', 'ajax_update_question_response' );
 
 
-function get_question_response(){
+function ajax_get_question_response(){
     global $wpdb;
     
     $collection_id= $_GET['collection_id'];
@@ -61,4 +73,18 @@ function get_question_response(){
 }
 
 
-add_action( 'wp_ajax_get-question-response', 'get_question_response' );
+add_action( 'wp_ajax_get-question-response', 'ajax_get_question_response' );
+
+
+function ajax_update_question_response_logs() {
+
+    global $wpdb;
+
+    $ref_id= $_POST['ref_id'];
+
+    $log_response= update_question_response_logs($ref_id);
+
+    wp_send_json($log_response);
+}
+
+add_action( 'wp_ajax_update-question-response-logs', 'ajax_update_question_response_logs' );

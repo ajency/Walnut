@@ -19,33 +19,39 @@ function logout_current_user() {
 add_action( 'wp_ajax_logout_user', 'logout_current_user' );
 
 function authenticate_web_login() {
-	$login_data=$_POST['data'];
-	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
-	if(is_wp_error($login_check))
-		wp_send_json(array("error"=>"Invalid Username or Password"));
-	else{
-		wp_set_auth_cookie( $login_check->ID );
-		wp_send_json($login_check);
-	}
+
+    $login_details = authenticate_login($_POST['data']);
+
+    if($login_details->ID)
+        wp_set_auth_cookie( $login_details->ID );
+
+    wp_send_json($login_details);
+
 }
 add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_web_login' );
 
 function authenticate_app_login() {
-	$login_data=$_POST['data'];
-	$login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
-	if(is_wp_error($login_check))
-		wp_send_json(array("error"=>"Invalid Username or Password"));
-	else
-            wp_send_json($login_check);
+
+    $login_details = authenticate_login($_POST['data']);
+
+    $response_data['login_details'] = $login_details;
+
+    if($login_details->ID){
+
+        $response_data['blog_details'] = get_primary_blog_details($login_details->ID);
+
+    }
+
+    wp_send_json($response_data);
 	
 }
 add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
 
-function fetch_users(){
+function ajax_fetch_users(){
     
     $user_data=get_user_list($_GET);
     
     wp_send_json($user_data);
     
 }
-add_action( 'wp_ajax_get-users', 'fetch_users' );
+add_action( 'wp_ajax_get-users', 'ajax_fetch_users' );

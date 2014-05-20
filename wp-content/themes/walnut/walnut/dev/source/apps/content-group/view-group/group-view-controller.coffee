@@ -1,98 +1,105 @@
 define ['app'
-		'controllers/region-controller'
-		'text!apps/content-group/edit-group/templates/content-group.html'
-		'apps/content-group/view-group/group-details/details-app'
-		'apps/content-group/view-group/content-display/content-display-app'
-		], (App, RegionController, contentGroupTpl)->
+        'controllers/region-controller'
+        'text!apps/content-group/edit-group/templates/content-group.html'
+        'apps/content-group/view-group/group-details/details-app'
+        'apps/content-group/view-group/content-display/content-display-app'
+], (App, RegionController, contentGroupTpl)->
+    App.module "ContentGroupApp.View", (View, App)->
+        class View.GroupController extends RegionController
 
-	App.module "ContentGroupApp.View", (View, App)->
-		
-		class View.GroupController extends RegionController
+            model= null
+            groupContentCollection=null
 
-			initialize :(opts) ->
-				#mode refers to "training" mode or "take-class" mode
-				{@model,@classID, @mode, @division} = opts
+            initialize: (opts) ->
+                #mode refers to "training" mode or "take-class" mode
+                {model,@classID, @mode, @division} = opts
 
-				@questionResponseCollection = App.request "get:question:response:collection", 
-													'division' : @division
-													'collection_id' : @model.get 'id'
+                @questionResponseCollection = App.request "get:question:response:collection",
+                    'division': @division
+                    'collection_id': model.get 'id'
 
-					
+                App.execute "when:fetched", model, ->
+                    groupContentCollection = App.request "get:content:pieces:by:ids", model.get 'content_pieces'
 
-				@groupContentCollection= App.request "get:content:pieces:by:ids", @model.get 'content_pieces'
+                @layout = layout = @_getContentGroupViewLayout()
 
-				@layout = layout = @_getContentGroupViewLayout()
+                @show layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
+                                                         @textbookNames])
 
-				@show layout, (loading:true, entities: [@model, @questionResponseCollection, @groupContentCollection,@textbookNames])
+                @listenTo layout, 'show', @showContentGroupViews
 
-				@listenTo layout, 'show', @showContentGroupViews
+                @listenTo @layout.collectionDetailsRegion, 'start:teaching:module', @startTeachingModule
 
-				@listenTo @layout.collectionDetailsRegion, 'start:teaching:module', @startTeachingModule
-
-				@listenTo @layout.contentDisplayRegion , 'goto:question:readonly', (questionID)=>
-					App.navigate App.getCurrentRoute()+'/question'
-					@gotoTrainingModule questionID, 'readonly'
-
-
-			startTeachingModule:=>
-
-				responseQuestionIDs = @questionResponseCollection.pluck 'content_piece_id'
-				content_pieces 	 = @model.get 'content_pieces'
-				nextQuestion  		 = _.first _.difference content_pieces, responseQuestionIDs
-
-				@gotoTrainingModule nextQuestion, 'class_mode'
-
-			gotoTrainingModule:(question, display_mode)=>
-
-				display_mode= 'training' if @mode is 'training'
+                @listenTo @layout.contentDisplayRegion, 'goto:question:readonly', (questionID)=>
+                    App.navigate App.getCurrentRoute() + '/question'
+                    @gotoTrainingModule questionID, 'readonly'
 
 
-				App.execute "start:teacher:teaching:app", 
-					region 						: App.mainContentRegion
-					division					: @division
-					contentPiece				: @groupContentCollection.get question
-					questionResponseCollection 	: @questionResponseCollection
-					contentGroupModel 			: @model 
-					questionsCollection 		: @groupContentCollection
-					textbookNames 				: @textbookNames
-					classID 					: @classID
-					display_mode 				: display_mode # when display mode is readonly, the save response options are not shown
-															   # only when display mode is class_mode response changes can be done
+            startTeachingModule: =>
+                responseCollection= @questionResponseCollection.where "status":"completed"
 
-			showContentGroupViews:=>
-				App.execute "when:fetched", @model, =>
-					textbook_termIDs= _.flatten @model.get 'term_ids'
-					@textbookNames= App.request "get:textbook:names:by:ids", textbook_termIDs
+                responseQuestionIDs = _.chain responseCollection
+                                    .map (m)->m.toJSON()
+                                    .pluck 'content_piece_id'
+                                    .value()
 
-					App.execute "when:fetched", @textbookNames, =>
-						App.execute "show:viewgroup:content:group:detailsapp", 
-							region 						: @layout.collectionDetailsRegion
-							model  						: @model
-							mode 						: @mode
-							questionResponseCollection 	: @questionResponseCollection
-							textbookNames 				: @textbookNames
+                content_pieces = model.get 'content_pieces'
+                nextQuestion = _.first _.difference content_pieces, responseQuestionIDs
 
-						if _.size(@model.get('content_pieces'))>0
-							App.execute "show:viewgroup:content:displayapp",
-								region 						: @layout.contentDisplayRegion
-								model 						: @model
-								mode 						: @mode
-								questionResponseCollection 	: @questionResponseCollection
-								groupContentCollection 		: @groupContentCollection
+                @gotoTrainingModule nextQuestion, 'class_mode'
 
-			_getContentGroupViewLayout : =>
-				new ContentGroupViewLayout
+            gotoTrainingModule: (question, display_mode)=>
+                display_mode = 'training' if @mode is 'training'
 
 
-		class ContentGroupViewLayout extends Marionette.Layout
+                App.execute "start:teacher:teaching:app",
+                    region: App.mainContentRegion
+                    division: @division
+                    contentPiece: groupContentCollection.get question
+                    questionResponseCollection: @questionResponseCollection
+                    contentGroupModel: model
+                    questionsCollection: groupContentCollection
+                    classID: @classID
+                    display_mode: display_mode # when display mode is readonly, the save response options are not shown
+            # only when display mode is class_mode response changes can be done
 
-			template 	: contentGroupTpl
+            showContentGroupViews: =>
+                textbook_termIDs = _.flatten model.get 'term_ids'
+                @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
 
-			className 	: ''
+                App.execute "when:fetched", @textbookNames, =>
+                    App.execute "show:viewgroup:content:group:detailsapp",
+                        region: @layout.collectionDetailsRegion
+                        model: model
+                        mode: @mode
+                        questionResponseCollection: @questionResponseCollection
+                        textbookNames: @textbookNames
 
-			regions:
-				collectionDetailsRegion	: '#collection-details-region'
-				contentDisplayRegion	: '#content-display-region'	
+                    if _.size(model.get('content_pieces')) > 0
+                        App.execute "show:viewgroup:content:displayapp",
+                            region: @layout.contentDisplayRegion
+                            model: model
+                            mode: @mode
+                            questionResponseCollection: @questionResponseCollection
+                            groupContentCollection: groupContentCollection
+
+            _getContentGroupViewLayout: =>
+                new ContentGroupViewLayout
+
+
+        class ContentGroupViewLayout extends Marionette.Layout
+
+            template: contentGroupTpl
+
+            className: ''
+
+            regions:
+                collectionDetailsRegion: '#collection-details-region'
+                contentDisplayRegion: '#content-display-region'
+
+
+            onShow:->
+                $('.page-content').removeClass 'expand-page'
 
 
 

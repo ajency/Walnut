@@ -44,6 +44,3 @@ define ['app'],(App)->
 				
 				content = Marionette.getOption(this, 'templateHelpers').content
 				@$el.find('p').append _.stripslashes content
-
-
-		

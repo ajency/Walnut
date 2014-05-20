@@ -20,6 +20,8 @@ define(['app', 'backbone'], function(App, Backbone) {
         };
       };
 
+      OptionModel.prototype.name = 'option-model';
+
       return OptionModel;
 
     })(Backbone.Model);

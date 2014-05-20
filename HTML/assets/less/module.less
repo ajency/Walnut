@@ -1,7 +1,6 @@
 #myCanvas-miki{
 
 	.cbp_tmlabel{
-		cursor: pointer;
 		a{
 			color: @color-primary;
 		}
@@ -54,11 +53,17 @@
 		}
 
 		.cbp_tmlabel.view{
-			cursor: default;
+			cursor: pointer;
 		}
 
 		.cbp_tmlabel.done:after{
 			border-right-color: @preview-grey;
+		}
+
+		.qstnStatus{
+			position: absolute;
+			right: -140px;
+			top: 12px;
 		}
 	}
 }

@@ -1,5 +1,38 @@
 <?php
 
+function authenticate_login($data){
+
+    $login_data=$data;
+    $login_check=wp_authenticate($login_data['txtusername'],$login_data['txtpassword']);
+
+    if(is_wp_error($login_check))
+        return array("error"=>"Invalid Username or Password");
+
+    else
+        return $login_check;
+}
+
+function get_primary_blog_details($user_id=''){
+
+    if($user_id=='')
+        $user_id = get_current_user_id();
+
+    $blog =get_active_blog_for_user($user_id);
+
+    $blog_logo_id = get_blog_option($blog->blog_id, 'blog_logo');
+
+    switch_to_blog($blog->blog_id);
+
+    $blog_logo= wp_get_attachment_thumb_url($blog_logo_id);
+
+    $blog_data= array(
+        'blog_id'=> $blog->blog_id,
+        'blog_name'=> $blog->blogname,
+        'blog_logo'=> $blog_logo
+    );
+    return $blog_data;
+}
+
 function get_user_list($data){
     
     $args['blog_id']= get_current_blog_id();

@@ -15,14 +15,10 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ModuleDescriptionController.prototype.initialize = function(opts) {
         var model, view;
-        model = opts.model, this.textbookNames = opts.textbookNames, this.classID = opts.classID, this.division = opts.division;
-        if (this.division != null) {
-          this.divisionModel = App.request("get:division:by:id", this.division);
-        }
+        model = opts.model, this.questionResponseModel = opts.questionResponseModel, this.questionResponseCollection = opts.questionResponseCollection, this.timerObject = opts.timerObject, this.display_mode = opts.display_mode;
         this.view = view = this._showModuleDescriptionView(model);
         this.show(view, {
-          loading: true,
-          entities: [this.textbookNames]
+          loading: true
         });
         return this.listenTo(this.view, "goto:previous:route", (function(_this) {
           return function() {
@@ -32,75 +28,54 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       };
 
       ModuleDescriptionController.prototype._showModuleDescriptionView = function(model) {
-        var terms;
+        var numOfQuestionsCompleted, terms, timeTakenArray, totalNumofQuestions, totalTimeTakenForModule;
         terms = model.get('term_ids');
+        numOfQuestionsCompleted = _.size(this.questionResponseCollection.where({
+          "status": "completed"
+        }));
+        totalNumofQuestions = _.size(model.get('content_pieces'));
+        timeTakenArray = this.questionResponseCollection.pluck('time_taken');
+        totalTimeTakenForModule = 0;
+        if (_.size(timeTakenArray) > 0) {
+          totalTimeTakenForModule = _.reduce(timeTakenArray, function(memo, num) {
+            return parseInt(memo + parseInt(num));
+          });
+        }
         return new ModuleDescriptionView({
           model: model,
           templateHelpers: {
-            getClassOrDivision: (function(_this) {
+            showPauseButton: (function(_this) {
               return function() {
-                if (_this.divisionModel) {
-                  return _this.divisionModel.get('division');
-                } else {
-                  return CLASS_LABEL[_this.classID];
+                var pauseBtn;
+                pauseBtn = '';
+                if (_this.display_mode === 'class_mode') {
+                  pauseBtn = '<button type="button" id="pause-session" class="btn btn-white  action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>';
                 }
+                return pauseBtn;
               };
             })(this),
-            getTextbookName: (function(_this) {
-              return function() {
-                var texbookName, textbook;
-                textbook = _this.textbookNames.get(terms.textbook);
-                if (textbook != null) {
-                  return texbookName = textbook.get('name');
-                }
-              };
-            })(this),
-            getChapterName: (function(_this) {
-              return function() {
-                var chapter, chapterName;
-                chapter = _this.textbookNames.get(terms.chapter);
-                if (chapter != null) {
-                  return chapterName = chapter.get('name');
-                }
-              };
-            })(this),
-            getSectionsNames: (function(_this) {
-              return function() {
-                var section, sectionName, sectionNames, sectionString, sections, term, _i, _len;
-                sections = _.flatten(terms.sections);
-                sectionString = '';
-                sectionNames = [];
-                if (sections) {
-                  for (_i = 0, _len = sections.length; _i < _len; _i++) {
-                    section = sections[_i];
-                    term = _this.textbookNames.get(section);
-                    if (term != null) {
-                      sectionName = term.get('name');
-                    }
-                    sectionNames.push(sectionName);
-                  }
-                  return sectionString = sectionNames.join();
-                }
-              };
-            })(this),
-            getSubSectionsNames: (function(_this) {
-              return function() {
-                var sub, subSectionString, subsection, subsectionNames, subsections, _i, _len;
-                subsections = _.flatten(terms.subsections);
-                subSectionString = '';
-                subsectionNames = [];
-                if (subsections) {
-                  for (_i = 0, _len = subsections.length; _i < _len; _i++) {
-                    sub = subsections[_i];
-                    subsection = _this.textbookNames.get(sub);
-                    if (subsection != null) {
-                      subsectionNames.push(subsection.get('name'));
-                    }
-                  }
-                  return subSectionString = subsectionNames.join();
-                }
-              };
-            })(this)
+            getProgressData: function() {
+              return numOfQuestionsCompleted + '/' + totalNumofQuestions;
+            },
+            getProgressPercentage: function() {
+              return parseInt((numOfQuestionsCompleted / totalNumofQuestions) * 100);
+            },
+            moduleTime: function() {
+              var display_time, hours, mins, seconds, time;
+              hours = 0;
+              time = totalTimeTakenForModule;
+              mins = parseInt(time / 60);
+              if (mins > 59) {
+                hours = parseInt(mins / 60);
+                mins = parseInt(mins % 60);
+              }
+              seconds = parseInt(time % 60);
+              display_time = '';
+              if (hours > 0) {
+                display_time = hours + 'h ';
+              }
+              return display_time += mins + 'm ' + seconds + 's';
+            }
           }
         });
       };
@@ -112,7 +87,6 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       __extends(ModuleDescriptionView, _super);
 
       function ModuleDescriptionView() {
-        this.updateTime = __bind(this.updateTime, this);
         return ModuleDescriptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -121,19 +95,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ModuleDescriptionView.prototype.template = moduleDescriptionTemplate;
 
       ModuleDescriptionView.prototype.events = {
-        'click #back-to-module': function() {
+        'click #back-to-module, #pause-session': function() {
           return this.trigger("goto:previous:route");
-        }
-      };
-
-      ModuleDescriptionView.prototype.onShow = function() {
-        var clock;
-        return clock = setInterval(this.updateTime, 500);
-      };
-
-      ModuleDescriptionView.prototype.updateTime = function() {
-        if (_.size($('#timekeeper')) > 0) {
-          return this.$el.find('.timedisplay').html('<i class="fa fa-clock-o"></i> ' + $('#timekeeper').html());
         }
       };
 

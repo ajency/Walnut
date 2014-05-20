@@ -16,15 +16,30 @@ define(['app'], function(App) {
         }
       };
 
-      Controller.prototype.autoSave = function() {
-        var siteRegion, _json;
+      Controller.prototype.autoSave = function(contentPieceModel) {
+        var data, options, siteRegion, _json;
         siteRegion = App.mainContentRegion.$el;
         _json = this._getPageJson(siteRegion);
         if (!_.isObject(_json)) {
           throw new Error("invalid json...");
         }
-        console.log(JSON.stringify(_json));
-        return localStorage.setItem('layout', JSON.stringify(_json));
+        data = contentPieceModel.toJSON();
+        data.action = 'save-content-piece-json';
+        data.json = _json;
+        options = {
+          type: 'POST',
+          url: AJAXURL,
+          data: data
+        };
+        return $.ajax(options).done(function(response) {
+          contentPieceModel.set({
+            'ID': response.ID
+          });
+          $('#saved-successfully').remove();
+          return $(".creator").before('<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>');
+        }).fail(function(resp) {
+          return console.log('error');
+        });
       };
 
       Controller.prototype._getPageJson = function($site) {
@@ -73,7 +88,7 @@ define(['app'], function(App) {
                   element: 'TeacherQuestRow',
                   elements: _this._getJson($(column))
                 };
-                ele.elements.push(col);
+                return ele.elements.push(col);
               });
             }
             return arr.push(ele);

@@ -47,7 +47,17 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
-        return localStorage.setItem('ele' + this.model.get('meta_id'), JSON.stringify(this.model.toJSON()));
+        var elements, models, optionCollection;
+        models = this.model.get('elements').models;
+        elements = _.map(models, function(m) {
+          return m.toJSON();
+        });
+        this.model.set({
+          'elements': elements
+        });
+        this.model.save();
+        optionCollection = App.request("create:new:option:collection", models);
+        return this.model.set('elements', optionCollection);
       };
 
       return Controller;

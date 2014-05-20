@@ -1,92 +1,92 @@
 define ['app'
-		'apps/content-group/edit-group/group-edit-controller'
-		'apps/content-group/view-group/group-view-controller'
-		'apps/content-group/groups-listing/group-listing-controller'
-		], (App)->
+        'apps/content-group/edit-group/group-edit-controller'
+        'apps/content-group/view-group/group-view-controller'
+        'apps/content-group/groups-listing/group-listing-controller'
+], (App)->
+    App.module "ContentGroupApp", (ContentGroupApp, App)->
 
-			App.module "ContentGroupApp", (ContentGroupApp, App)->
+        #startWithParent = false
+        class ContentGroupRouter extends Marionette.AppRouter
 
-				#startWithParent = false
-				class ContentGroupRouter extends Marionette.AppRouter
-
-					appRoutes : 
-						'edit-group' : 'editGroup'
-						'view-group/:id' : 'viewGroup'
-						'list-groups' : 'groupsListing'
-						'teachers/take-class/:classID/:div/textbook/:tID/module/:mID' 	: 'takeClassSingleModule'
-						'teachers/start-training/:classID/textbook/:tID/module/:mID' 	: 'startTrainingSingleModule'
+            appRoutes:
+                'edit-group': 'editGroup'
+                'view-group/:id': 'viewGroup'
+                'list-groups': 'groupsListing'
+                'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule'
+                'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule'
 
 
-				Controller = 
-					editGroup : ->
-						new ContentGroupApp.Edit.GroupController
-											region : App.mainContentRegion
+        Controller =
+            editGroup: ->
+                new ContentGroupApp.Edit.GroupController
+                    region: App.mainContentRegion
 
-					viewGroup : (id)->
-						@contentGroupModel = App.request "get:content:group:by:id", id
+            viewGroup: (id)->
+                @contentGroupModel = App.request "get:content:group:by:id", id
 
-						breadcrumb_items = 'items':[
-							{'label':'Dashboard','link':'javascript://'},
-							{'label':'Content Management','link':'javascript:;'},
-							{'label':'View Content Group','link':'javascript:;','active':'active'}
-						]
-							
-						App.execute "update:breadcrumb:model", breadcrumb_items
+                breadcrumb_items =
+                    'items': [
+                        {'label': 'Dashboard', 'link': 'javascript://'},
+                        {'label': 'Content Management', 'link': 'javascript:;'},
+                        {'label': 'View Content Group', 'link': 'javascript:;', 'active': 'active'}
+                    ]
 
-						new ContentGroupApp.View.GroupController
-						 					region : App.mainContentRegion
-						 					model: @contentGroupModel
+                App.execute "update:breadcrumb:model", breadcrumb_items
 
-					groupsListing : ->
-						new ContentGroupApp.ListingView.GroupController
-											region : App.mainContentRegion
+                new ContentGroupApp.View.GroupController
+                    region: App.mainContentRegion
+                    model: @contentGroupModel
 
-					takeClassSingleModule:(classID,div,tID,mID)->
-						opts= 
-							classID : classID 
-							div 	: div
-							tID 	: tID
-							mID 	: mID
-							mode 	: 'take-class'
-						@gotoTakeSingleQuestionModule opts
+            groupsListing: ->
+                new ContentGroupApp.ListingView.GroupController
+                    region: App.mainContentRegion
 
-					startTrainingSingleModule:(classID,tID,mID)->
-						opts= 
-							classID : classID 
-							tID 	: tID
-							mID 	: mID
-							mode 	: 'training'
-						@gotoTakeSingleQuestionModule opts
+            takeClassSingleModule: (classID, div, tID, mID)->
+                opts =
+                    classID: classID
+                    div: div
+                    tID: tID
+                    mID: mID
+                    mode: 'take-class'
+                @gotoTakeSingleQuestionModule opts
 
-					gotoTakeSingleQuestionModule:(opts)->
-						
-						{classID,div,tID,mID,mode}=opts
+            startTrainingSingleModule: (classID, tID, mID)->
+                opts =
+                    classID: classID
+                    tID: tID
+                    mID: mID
+                    mode: 'training'
+                @gotoTakeSingleQuestionModule opts
 
-						@textbook= App.request "get:textbook:by:id",tID 
-						@contentGroupModel = App.request "get:content:group:by:id", mID
+            gotoTakeSingleQuestionModule: (opts)->
+                {classID,div,tID,mID,mode}=opts
 
-						App.execute "when:fetched", @textbook, =>
-							App.execute "when:fetched", @contentGroupModel, =>
-								textbookName= @textbook.get 'name'
-								moduleName = @contentGroupModel.get 'name'
-								breadcrumb_items = 'items':[
-									{'label':'Dashboard','link':'#teachers/dashboard'},
-									{'label':'Take Class','link':'#teachers/take-class/'+classID+'/'+div},
-									{'label':textbookName,'link':'#teachers/take-class/'+classID+'/'+div+'/textbook/'+tID},
-									{'label':moduleName,'link':'javascript:;','active':'active'}
-								]
-									
-								App.execute "update:breadcrumb:model", breadcrumb_items
+                @textbook = App.request "get:textbook:by:id", tID
+                @contentGroupModel = App.request "get:content:group:by:id", mID
 
-						new ContentGroupApp.View.GroupController
-		 					region 		: App.mainContentRegion
-		 					model 		: @contentGroupModel
-		 					mode		: mode
-		 					division 	: div
-		 					classID 	: classID
+                App.execute "when:fetched", @textbook, =>
+                    App.execute "when:fetched", @contentGroupModel, =>
+                        textbookName = @textbook.get 'name'
+                        moduleName = @contentGroupModel.get 'name'
+                        breadcrumb_items =
+                            'items': [
+                                {'label': 'Dashboard', 'link': '#teachers/dashboard'},
+                                {'label': 'Take Class', 'link': '#teachers/take-class/' + classID + '/' + div},
+                                {'label': textbookName, 'link': '#teachers/take-class/' + classID + '/' + div + '/textbook/' + tID},
+                                {'label': moduleName, 'link': 'javascript:;', 'active': 'active'}
+                            ]
 
-				ContentGroupApp.on "start", ->
-					new ContentGroupRouter
-							controller : Controller 
+                        App.execute "update:breadcrumb:model", breadcrumb_items
+
+                new ContentGroupApp.View.GroupController
+                    region: App.mainContentRegion
+                    model: @contentGroupModel
+                    mode: mode
+                    division: div
+                    classID: classID
+
+        ContentGroupApp.on "start", ->
+            new ContentGroupRouter
+                controller: Controller
 
 							

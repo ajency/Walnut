@@ -14,7 +14,7 @@ define ['app'
 							marks : 1
 							element : 'Sort'
 							optioncount : 2
-							elements 	: App.request "create:new:option:collection", [{optionNo:_.uniqueId(),index:1},{optionNo:_.uniqueId(),index:2}]
+							elements 	:[{optionNo:_.uniqueId(),index:1},{optionNo:_.uniqueId(),index:2}]
 							bg_color : '#ffffff'
 							bg_opacity : 1
 							height : 40
@@ -34,7 +34,7 @@ define ['app'
 								@layout.model.set 'elements',optionCollection
 
 							# get the view 
-							view = @_getSortView optionCollection
+							@view = view = @_getSortView optionCollection
 
 							# listen to show event, and trigger show property box event
 							# listen to show property box event and show the property by passing the current model
@@ -67,7 +67,7 @@ define ['app'
 
 					# on change of optionNo attribute in the model 
 					# change the number of options
-					_changeOptionCount:(model,num)->
+					_changeOptionCount:(model,num)=>
 							oldval = model.previous('optioncount')
 							newval = num
 							# if greater then previous then add option
@@ -81,4 +81,4 @@ define ['app'
 									model.get('elements').pop()#remove model.get('elements').where({index:oldval})[0]
 									oldval--
 
-							console.log model
+							@renderElement()

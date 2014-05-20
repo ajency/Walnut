@@ -1,163 +1,195 @@
 define ['app'
-		'controllers/region-controller'
-		#'text!apps/teachers-dashboard/take-class/templates/class-description.html'
-		'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app'
-		'apps/teachers-dashboard/teacher-teaching-module/question-display/question-display-app'
-		'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app'
-		'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'
-		], (App, RegionController)->
+        'controllers/region-controller'
+    #'text!apps/teachers-dashboard/take-class/templates/class-description.html'
+        'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app'
+        'apps/teachers-dashboard/teacher-teaching-module/question-display/question-display-app'
+        'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app'
+        'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'
+], (App, RegionController)->
+    App.module "TeacherTeachingApp", (View, App)->
 
-	App.module "TeacherTeachingApp", (View, App)->
+        #Single Question description and answers
+        contentGroupModel = null
+        studentCollection = null
+        questionsCollection = null
+        questionResponseCollection = null
+        contentPiece = null
+        questionResponseModel = null
 
-		#Single Question description and answers
+        class View.TeacherTeachingController extends RegionController
 
-		contentGroupModel 			= null 
-		studentCollection 			= null
-		questionsCollection 		= null
-		questionResponseCollection 	= null
-		contentPiece 				= null
-		questionResponseModel 		= null
+            initialize: (opts)->
+                {@division,@classID,@moduleID,contentGroupModel,
+                questionsCollection,questionResponseCollection,
+                contentPiece,@display_mode} = opts
 
-		class View.TeacherTeachingController extends RegionController
+                App.leftNavRegion.close()
+                App.headerRegion.close()
+                App.breadcrumbRegion.close()
 
-			initialize :(opts)->
+                studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
-				{@division,@classID,@moduleID,contentGroupModel,
-				questionsCollection,questionResponseCollection,
-				contentPiece,@display_mode,@textbookNames} = opts
+                App.execute "when:fetched", questionResponseCollection, =>
+                    #checking if model exists in collection. if so, replacing the empty model
+                    @_getOrCreateModel contentPiece.get 'ID'
 
-				studentCollection = App.request "get:user:collection", ('role':'student', 'division': @division)
+                @layout = layout = @_getTakeSingleQuestionLayout()
 
-				#initializing empty model incase data doesnt exist
-				questionResponseModel = App.request "save:question:response", ''
+                @show @layout, (
+                    loading: true
+                    entities: [
+                        contentGroupModel
+                        studentCollection
+                        questionsCollection
+                        questionResponseCollection
+                        questionResponseModel
+                        contentPiece
+                    ]
+                )
 
-				App.execute "when:fetched",	questionResponseCollection, =>
-					#checking if model exists in collection. if so, replacing the empty model
-					@_getOrCreateModel contentPiece.get 'ID'
-				
-				@layout= layout = @_getTakeSingleQuestionLayout()
+                @timerObject = new Backbone.Wreqr.RequestResponse()
 
-				@show @layout, (
-					loading: true 
-					entities: [
-						contentGroupModel
-						studentCollection
-						questionsCollection
-						questionResponseCollection
-						questionResponseModel
-						contentPiece
-					]
-					)
+                @listenTo @layout, "show", @_showModuleDescriptionView
 
-				@listenTo @layout, "show", @_showModuleDescriptionView
+                @listenTo @layout, "show", @_showStudentsListView questionResponseModel if @display_mode isnt 'training'
 
-				@listenTo @layout, "show", @_showStudentsListView questionResponseModel if @display_mode isnt 'training'
+                @listenTo @layout, "show", @_showQuestionDisplayView contentPiece
 
-				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece	
+                @listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoPreviousRoute
 
-				@listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoPreviousRoute
-				
-				@listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoPreviousRoute
+                @listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoPreviousRoute
 
-				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
+                @listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
+                @listenTo @layout, "close", =>
 
-			_changeQuestion:(current_question_id)=>
+                    if questionResponseModel.get('status') isnt 'completed'
+                        elapsedTime = @timerObject.request "get:elapsed:time"
 
-				current_question_id = current_question_id.toString()
+                        questionResponseModel.set
+                            'time_taken': elapsedTime
+                            'status': 'paused'
 
-				contentPieces = contentGroupModel.get 'content_pieces'
+                        questionResponseModel.save()
 
-				pieceIndex = _.indexOf(contentPieces, current_question_id)
+            _changeQuestion: (current_question_id)=>
+                current_question_id = current_question_id.toString()
 
-				nextQuestion= contentPieces[pieceIndex+1]
-				
-				if nextQuestion
+                contentPieces = contentGroupModel.get 'content_pieces'
 
-					contentPiece = questionsCollection.get nextQuestion
+                pieceIndex = _.indexOf(contentPieces, current_question_id)
 
-					questionResponseModel = @_getOrCreateModel nextQuestion
+                nextQuestion = contentPieces[pieceIndex + 1]
 
-					@_showQuestionDisplayView contentPiece
-					
-					if @display_mode isnt 'training'	
-						@_showStudentsListView questionResponseModel
+                if nextQuestion
 
-				else 
-					@_gotoPreviousRoute()
+                    contentPiece = questionsCollection.get nextQuestion
 
-			_gotoPreviousRoute:->
-				currRoute = App.getCurrentRoute()
+                    questionResponseModel = @_getOrCreateModel nextQuestion
 
-				removeStr = _.str.strRightBack currRoute, '/'
+                    @_showQuestionDisplayView contentPiece
 
-				newRoute  = _.str.rtrim currRoute, removeStr+'/'
+                    if @display_mode isnt 'training'
+                        @_showStudentsListView questionResponseModel
 
-				App.navigate newRoute, true
+                else
+                    @_gotoPreviousRoute()
 
+            _gotoPreviousRoute: ->
+                currRoute = App.getCurrentRoute()
 
-			_getOrCreateModel:(content_piece_id)=>
-				questionResponseModel = questionResponseCollection.findWhere 
-											'content_piece_id': content_piece_id.toString()
+                removeStr = _.str.strRightBack currRoute, '/'
 
-				#if model doesnt exist in collection setting default values
-				if not questionResponseModel
-					questionResponseModel = App.request "save:question:response", ''
-					questionResponseModel.set 
-						'collection_id': contentGroupModel.get 'id'
-						'content_piece_id': content_piece_id
-						'division'	: @division
+                newRoute = _.str.rtrim currRoute, removeStr + '/'
 
+                App.navigate newRoute, true
 
-				questionResponseModel
+                App.execute "show:headerapp", region: App.headerRegion
+                App.execute "show:leftnavapp", region: App.leftNavRegion
 
 
-			_showModuleDescriptionView :=>
-				App.execute "when:fetched", contentGroupModel,=>
-					App.execute "show:teacher:teaching:module:description",
-								region 	: @layout.moduleDetailsRegion
-								model 	:contentGroupModel
-								textbookNames: @textbookNames
-								classID 	: @classID
-								division: @division
+            _getOrCreateModel: (content_piece_id)=>
+                questionResponseModel = questionResponseCollection.findWhere
+                    'content_piece_id': content_piece_id.toString()
 
-			_showQuestionDisplayView:(model) =>
-				App.execute "show:single:question:app", 
-					region 			: @layout.questionsDetailsRegion
-					model 		  	: model
+                if questionResponseModel
+                    if @display_mode is 'class_mode'
+                        App.request "update:question:response:logs", questionResponseModel.get 'ref_id'
 
-			_showStudentsListView :(questionResponseModel)=>
+                #if model doesnt exist in collection setting default values
+                else
+                    modelData= {
+                        'collection_id': contentGroupModel.get 'id'
+                        'content_piece_id': content_piece_id
+                        'division': @division
+                    }
+                    questionResponseModel = App.request "save:question:response", ''
+                    questionResponseModel.set modelData
 
-				App.execute "when:fetched", contentPiece, =>
+                    if @display_mode is 'class_mode'
+                        questionResponseModel.save()
 
-					question_type = contentPiece.get('question_type')
+                questionResponseModel
 
-					if question_type is 'individual'
-						App.execute "show:single:question:student:list:app", 
-							region 					: @layout.studentsListRegion
-							questionResponseModel	: questionResponseModel
-							studentCollection		: studentCollection
-							display_mode 	 		: @display_mode
 
-					else if question_type is 'chorus'	
-						App.execute "show:single:question:chorus:options:app",
-							region 			: @layout.studentsListRegion
-							questionResponseModel: questionResponseModel
-							display_mode 	 		: @display_mode
+            _showModuleDescriptionView: =>
 
-			_getTakeSingleQuestionLayout : ->
-				new SingleQuestionLayout
+                App.execute "when:fetched", contentGroupModel, =>
+                    App.execute "show:teacher:teaching:module:description",
+                        region: @layout.moduleDetailsRegion
+                        model: contentGroupModel
+                        timerObject : @timerObject
+                        questionResponseModel: questionResponseModel
+                        questionResponseCollection: questionResponseCollection
+                        display_mode: @display_mode
 
-		class SingleQuestionLayout extends Marionette.Layout
 
-			template : '<div id="module-details-region"></div>
-						<div id="question-details-region"></div>
-						<div id="students-list-region"></div>'
+            _showQuestionDisplayView: (model) =>
+                App.execute "show:content:preview",
+                    region                  : @layout.questionsDetailsRegion
+                    model                   : model
+                    textbookNames           : @textbookNames
+                    questionResponseModel   : questionResponseModel
+                    timerObject             : @timerObject
+                    display_mode            : @display_mode
+                    classID                 : @classID
+                    students: studentCollection
 
-			regions: 
-				moduleDetailsRegion 	: '#module-details-region'
-				questionsDetailsRegion	: '#question-details-region'
-				studentsListRegion		: '#students-list-region'
+            _showStudentsListView: (questionResponseModel)=>
+                App.execute "when:fetched", contentPiece, =>
+                    question_type = contentPiece.get('question_type')
+
+                    if question_type is 'individual'
+                        App.execute "show:single:question:student:list:app",
+                            region: @layout.studentsListRegion
+                            questionResponseModel: questionResponseModel
+                            studentCollection: studentCollection
+                            display_mode: @display_mode
+                            timerObject : @timerObject
+
+                    else if question_type is 'chorus'
+                        App.execute "show:single:question:chorus:options:app",
+                            region: @layout.studentsListRegion
+                            questionResponseModel: questionResponseModel
+                            display_mode: @display_mode
+                            timerObject : @timerObject
+
+            _getTakeSingleQuestionLayout: ->
+                new SingleQuestionLayout
+
+        class SingleQuestionLayout extends Marionette.Layout
+
+            template: '<div id="module-details-region"></div>
+            						<div id="question-details-region"></div>
+            						<div id="students-list-region"></div>'
+
+            regions:
+                moduleDetailsRegion: '#module-details-region'
+                questionsDetailsRegion: '#question-details-region'
+                studentsListRegion: '#students-list-region'
+
+            onShow:->
+                $('.page-content').addClass 'condensed expand-page'
 
 
 

@@ -2,107 +2,106 @@
 ## The main dashboard App
 ##
 define ['marionette'], (Marionette)->
+    window.App = new Marionette.Application
 
-	window.App = new Marionette.Application
-	
-	# Main app regions
-	App.addRegions
-		leftNavRegion 		: '#left-nav-region'
-		headerRegion  		: '#header-region'
-		mainContentRegion 	: '#main-content-region'
-		dialogRegion 		: '#dialog-region'
-		loginRegion 		: '#login-region' 
-		breadcrumbRegion	: '#breadcrumb-region'
+# Main app regions
+    App.addRegions
+        leftNavRegion: '#left-nav-region'
+        headerRegion: '#header-region'
+        mainContentRegion: '#main-content-region'
+        dialogRegion: '#dialog-region'
+        loginRegion: '#login-region'
+        breadcrumbRegion: '#breadcrumb-region'
 
-	# The default route for app
-	App.rootRoute = ""
+    # The default route for app
+    App.rootRoute = ""
 
-	# loginRoute in case session expires
-	App.loginRoute = "login"
+    # loginRoute in case session expires
+    App.loginRoute = "login"
 
-	# Reqres handler to return a default region. If a controller is not explicitly specified a 
-	# region it will trigger default region handler
-	App.reqres.setHandler "default:region", ->
-		App.mainContentRegion
+    # Reqres handler to return a default region. If a controller is not explicitly specified a
+    # region it will trigger default region handler
+    App.reqres.setHandler "default:region", ->
+        App.mainContentRegion
 
-	# App command to handle async request and action to be performed after that
-	# entities are the the dependencies which trigger a fetch to server.
-	App.commands.setHandler "when:fetched", (entities, callback) ->
-		xhrs = _.chain([entities]).flatten().pluck("_fetch").value()
-		$.when(xhrs...).done ->
-			callback()
+    # App command to handle async request and action to be performed after that
+    # entities are the the dependencies which trigger a fetch to server.
+    App.commands.setHandler "when:fetched", (entities, callback) ->
+        xhrs = _.chain([entities]).flatten().pluck("_fetch").value()
+        $.when(xhrs...).done ->
+            callback()
 
-	# Registers a controller instance
-	App.commands.setHandler "register:instance", (instance, id) ->
-		App.register instance, id
-	
-	# Unregisters a controller instance
-	App.commands.setHandler "unregister:instance", (instance, id) ->
-		App.unregister instance, id
+    # Registers a controller instance
+    App.commands.setHandler "register:instance", (instance, id) ->
+        App.register instance, id
 
-	App.on "initialize:after", (options) ->
-		if typeof Pace isnt 'undefined'
-			Pace.on 'hide', ()->
-				$("#site_main_container").addClass( "showAll" );
+    # Unregisters a controller instance
+    App.commands.setHandler "unregister:instance", (instance, id) ->
+        App.unregister instance, id
 
-		App.startHistory()
+    App.on "initialize:after", (options) ->
+        if typeof Pace isnt 'undefined'
+            Pace.on 'hide', ()->
+                $("#site_main_container").addClass("showAll");
 
-		#@rootRoute = 'login' 
-		# if not logged in change rootRoute to login		
-		#App.navigate(@rootRoute, trigger: true)
-		#return
-        
-		# check app login status
-		xhr = $.get "#{AJAXURL}?action=get-user-data", 
-				{}, 
-				(resp)=>
-					if(resp.success)
-						console.log resp
-						user = App.request "get:user:model"
-						user.set resp.data
-						school = App.request "get:current:school"
-						App.execute "show:headerapp", region:App.headerRegion
-						App.execute "show:leftnavapp", region:App.leftNavRegion	
-						App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
-						App.vent.trigger "show:dashboard"  if @getCurrentRoute() is 'login'
-						App.loginRegion.close()
-					else 	
-						App.vent.trigger "show:login"
-				, 'json'
-		
+        App.startHistory()
 
-	App.vent.on "show:dashboard", (user_role) =>
-		if typeof Pace isnt 'undefined'
-			Pace.restart();
-			$("#site_main_container").removeClass( "showAll" );
+        #@rootRoute = 'login'
+        # if not logged in change rootRoute to login
+        #App.navigate(@rootRoute, trigger: true)
+        #return
 
-		user = App.request "get:user:model"
-		
-		user_role= user.get "roles"
-		
-		if user_role[0]=='administrator'
-			App.navigate('textbooks', trigger: true)
+        # check app login status
+        xhr = $.get "#{AJAXURL}?action=get-user-data",
+            {},
+            (resp)=>
+                if(resp.success)
+                    console.log resp
+                    user = App.request "get:user:model"
+                    user.set resp.data
+                    school = App.request "get:current:school"
+                    App.execute "show:headerapp", region: App.headerRegion
+                    App.execute "show:leftnavapp", region: App.leftNavRegion
+                    App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
+                    App.vent.trigger "show:dashboard" if @getCurrentRoute() is 'login'
+                    App.loginRegion.close()
+                else
+                    App.vent.trigger "show:login"
+            ,'json'
 
-		else 
-			App.navigate('teachers/dashboard', trigger: true)
 
-		App.execute "show:breadcrumbapp", region:App.breadcrumbRegion
-		App.execute "show:headerapp", region:App.headerRegion
-		App.execute "show:leftnavapp", region:App.leftNavRegion	
+    App.vent.on "show:dashboard", (user_role) =>
+        if typeof Pace isnt 'undefined'
+            Pace.restart();
+            $("#site_main_container").removeClass("showAll");
 
-		Pace.on 'hide', ()->
-			$("#site_main_container").addClass( "showAll" );
+        user = App.request "get:user:model"
 
-			
-	App.vent.on "show:login", ->
-		App.leftNavRegion.close()
-		App.headerRegion.close()
-		App.mainContentRegion.close()
-		App.breadcrumbRegion.close()
-		@rootRoute = 'login' 
-		# if not logged in change rootRoute to login		
-		App.navigate(@rootRoute, trigger: true)
-			
-	App
+        user_role = user.get "roles"
+
+        if user_role[0] == 'administrator'
+            App.navigate('textbooks', trigger: true)
+
+        else
+            App.navigate('teachers/dashboard', trigger: true)
+
+        App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
+        App.execute "show:headerapp", region: App.headerRegion
+        App.execute "show:leftnavapp", region: App.leftNavRegion
+
+        Pace.on 'hide', ()->
+            $("#site_main_container").addClass("showAll");
+
+
+    App.vent.on "show:login", ->
+        App.leftNavRegion.close()
+        App.headerRegion.close()
+        App.mainContentRegion.close()
+        App.breadcrumbRegion.close()
+        @rootRoute = 'login'
+        # if not logged in change rootRoute to login
+        App.navigate(@rootRoute, trigger: true)
+
+    App
 
 
