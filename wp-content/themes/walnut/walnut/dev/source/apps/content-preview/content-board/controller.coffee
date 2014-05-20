@@ -8,7 +8,6 @@ define ['app'
         class ContentBoard.Controller extends RegionController
 
             initialize: (options)->
-
                 {@model}=options
 
                 answerData =
@@ -44,43 +43,42 @@ define ['app'
 
             # start filling elements
             startFillingElements: ()->
-
                 section = @view.model.get 'layout'
 
 
-				container = $('#myCanvas #question-area')
-				_.each section, (element, i)=>
-					if element.element is 'Row' or element.element is 'TeacherQuestion'
-						@addNestedElements container,element
-					else
-						App.request "add:new:element",container,element.element, element
+                container = $('#myCanvas #question-area')
+                _.each section, (element, i)=>
+                    if element.element is 'Row' or element.element is 'TeacherQuestion'
+                        @addNestedElements container, element
+                    else
+                        App.request "add:new:element", container, element.element, element
 
 
-            addNestedElements: (container, element)->
-                controller = App.request "add:new:element", container, element.element, element
-                _.each element.elements, (column, index)=>
-                    return if not column.elements
-                    container = controller.layout.elementRegion.currentView.$el.children().eq(index)
-                    _.each column.elements, (ele, i)=>
-                        if ele.element is 'Row'
-                            @addNestedElements $(container), ele
-                        else
-                            App.request "add:new:element", container, ele.element, ele
+                            addNestedElements: (container, element)->
+                                controller = App.request "add:new:element", container, element.element, element
+                                _.each element.elements, (column, index)=>
+                                    return if not column.elements
+                                    container = controller.layout.elementRegion.currentView.$el.children().eq(index)
+                                    _.each column.elements, (ele, i)=>
+                                        if ele.element is 'Row'
+                                            @addNestedElements $(container), ele
+                                        else
+                                            App.request "add:new:element", container, ele.element, ele
 
 
-        API =
-        # add a new element to the builder region
-            addNewElement: (container, type, modelData)->
-                console.log type
+            API =
+            # add a new element to the builder region
+                addNewElement: (container, type, modelData)->
+                    console.log type
 
-                new ContentBoard.Element[type].Controller
-                    container: container
-                    modelData: modelData
+                    new ContentBoard.Element[type].Controller
+                        container: container
+                        modelData: modelData
 
 
-        App.commands.setHandler 'show:content:board', (options)->
-            new ContentBoard.Controller options
+            App.commands.setHandler 'show:content:board', (options)->
+                new ContentBoard.Controller options
 
-        #Request handler for new element
-        App.reqres.setHandler "add:new:element", (container, type, modelData = {})->
-            API.addNewElement container, type, modelData
+            #Request handler for new element
+            App.reqres.setHandler "add:new:element", (container, type, modelData = {})->
+                API.addNewElement container, type, modelData
