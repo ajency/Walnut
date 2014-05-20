@@ -142,7 +142,29 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
       },
       getContentPieceFromLocal: function(ids) {
-        var onSuccess, runMainQuery;
+        var getPostAuthorName, onSuccess, runMainQuery;
+        getPostAuthorName = function(post_author_id) {
+          var postAuthorName, runQuery, success;
+          postAuthorName = '';
+          runQuery = function() {
+            return $.Deferred(function(d) {
+              return _.db.transaction(function(tx) {
+                return tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?", [post_author_id], success(d), _.deferredErrorHandler(d));
+              });
+            });
+          };
+          success = function(d) {
+            return function(tx, data) {
+              if (data.rows.length !== 0) {
+                postAuthorName = data.rows.item(0)['display_name'];
+              }
+              return d.resolve(postAuthorName);
+            };
+          };
+          return $.when(runQuery()).done(function() {
+            return console.log('getPostAuthorName transaction completed');
+          }).fail(_.failureHandler);
+        };
         runMainQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
@@ -156,7 +178,7 @@ define(["app", 'backbone'], function(App, Backbone) {
             result = [];
             _fn = function(row, i) {
               var postAuthorName;
-              postAuthorName = _.getPostAuthorName(row['post_author']);
+              postAuthorName = getPostAuthorName(row['post_author']);
               return postAuthorName.done(function(author_name) {
                 return (function(row, i, author_name) {
                   var metaValue;
