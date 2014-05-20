@@ -71,7 +71,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           questionResponseCollection: this.questionResponseCollection,
           contentGroupModel: model,
           questionsCollection: groupContentCollection,
-          textbookNames: this.textbookNames,
           classID: this.classID,
           display_mode: display_mode
         });
@@ -124,6 +123,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       ContentGroupViewLayout.prototype.regions = {
         collectionDetailsRegion: '#collection-details-region',
         contentDisplayRegion: '#content-display-region'
+      };
+
+      ContentGroupViewLayout.prototype.onShow = function() {
+        return $('.page-content').removeClass('expand-page');
       };
 
       return ContentGroupViewLayout;

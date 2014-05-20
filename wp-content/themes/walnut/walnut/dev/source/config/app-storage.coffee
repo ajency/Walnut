@@ -36,7 +36,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     ,false)
 
 
-    #Local storage
+    #Cordova Local storage
     # save/get logged in user ID
     _.setUserID =(id)->
         window.localStorage.setItem("user_id", ""+id)

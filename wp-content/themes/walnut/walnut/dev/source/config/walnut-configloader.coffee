@@ -6,4 +6,5 @@ define ['config/marionette'
 		'config/middle-layer'
 		'config/app-storage'
 		'config/app-functions'
+		'config/app-contentpiece'
 		], ->

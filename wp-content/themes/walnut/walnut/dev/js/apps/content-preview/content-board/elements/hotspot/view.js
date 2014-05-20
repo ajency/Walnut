@@ -241,7 +241,7 @@ define(['app'], function(App) {
         });
         this.listenTo(App.vent, "media:manager:choosed:media", (function(_this) {
           return function(media) {
-            _this._addImageElement(elementPos, media.toJSON().url);
+            _this._addImageElement(elementPos, media.url);
             return _this.stopListening(App.vent, "media:manager:choosed:media");
           };
         })(this));
@@ -630,7 +630,7 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._getHotspotData = function() {
-        return this.stage.toJSON();
+        return this.stage;
       };
 
       return HotspotView;

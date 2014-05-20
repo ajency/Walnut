@@ -94,30 +94,6 @@ define ["app", 'backbone'], (App, Backbone) ->
             
         #get all content pieces from local database
             getContentPieceFromLocal:(ids)->
-                #184
-
-                getPostAuthorName = (post_author_id) ->
-                    postAuthorName = ''
-                    
-                    runQuery = ->
-                        $.Deferred (d)->
-                            _.db.transaction (tx)->
-                                tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?" 
-                                    ,[post_author_id], success(d), _.deferredErrorHandler(d))
-
-                    success = (d)->
-                        (tx, data)->
-                            if data.rows.length isnt 0
-                                postAuthorName = data.rows.item(0)['display_name']
-
-                            d.resolve postAuthorName
-                            
-                    $.when(runQuery()).done ->
-                        console.log 'getPostAuthorName transaction completed'
-                    .fail _.failureHandler 
-
-
-
                 # get data from wp_posts
                 runMainQuery = ->
                     $.Deferred (d)->
@@ -135,12 +111,14 @@ define ["app", 'backbone'], (App, Backbone) ->
                             row = data.rows.item(i)
 
                             do(row, i)->
-                                postAuthorName = getPostAuthorName(row['post_author'])
+                                postAuthorName = _.getPostAuthorName(row['post_author'])
                                 postAuthorName.done (author_name)->
 
                                     do(row, i, author_name)->
                                         metaValue = _.getMetaValue(row['ID'])
                                         metaValue.done (meta_value)->
+
+                                            # _.callFunc(meta_value.layout_json)
 
                                             result[i] = 
                                                 ID: row['ID']

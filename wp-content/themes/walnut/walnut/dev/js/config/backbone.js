@@ -48,8 +48,6 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'content-piece') {
         data = App.reqres.request("get:" + collection_name + ":local", opts.ids);
         data.done(function(d) {
-          console.log('content-piece data');
-          console.log(d);
           return collection.set(d);
         });
       }
@@ -144,6 +142,10 @@ define(["backbone"], function(Backbone) {
         }
         if (modelname === 'question-response') {
           data = App.reqres.request("save:" + modelname + ":local", model);
+        }
+        if (modelname === 'media') {
+          console.log('Media model');
+          console.log(model);
         }
       }
       model.trigger("request", model, xhr, options);
