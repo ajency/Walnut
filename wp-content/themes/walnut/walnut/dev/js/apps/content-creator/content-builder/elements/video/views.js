@@ -37,8 +37,10 @@ define(['app'], function(App) {
         this.$el.find('video').attr('id', videoId);
         this.videoElement = videojs(videoId);
         width = this.videoElement.width();
+        console.log(width);
         height = 9 * width / 16;
-        return this.videoElement.height(height);
+        this.videoElement.height(height);
+        return console.log(height);
       };
 
       VideoView.prototype.onVideoResized = function() {
