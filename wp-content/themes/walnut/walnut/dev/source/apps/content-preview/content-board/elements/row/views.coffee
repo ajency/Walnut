@@ -10,25 +10,25 @@ define ['app'],(App)->
 			onShow 	: ->
 				@$el.attr 'data-position',@model.get 'position'
 				@$el.addClass("col-md-#{@model.get 'className'}").attr 'data-class',@model.get 'className'
-				@$el.sortable 
-						revert 		: 'invalid'
-						items 		: '> .element-wrapper'
-						connectWith : '.droppable-column,.column'
-						handle 		: '.aj-imp-drag-handle'
-						start 		: (e, ui)->
-										ui.placeholder.height ui.item.height()
-										window.dragging = true
-										return
-						stop 		:(e, ui)-> 
-										window.dragging = false
-										return
-						helper 		: 'clone'
-						opacity		: .65
-						remove 		: (evt, ui)->
-										if $(evt.target).children().length is 0
-											$(evt.target).addClass 'empty-column'
-						update 		: (e,ui)->
-										$(e.target).removeClass 'empty-column'
+				# @$el.sortable 
+				# 		revert 		: 'invalid'
+				# 		items 		: '> .element-wrapper'
+				# 		connectWith : '.droppable-column,.column'
+				# 		handle 		: '.aj-imp-drag-handle'
+				# 		start 		: (e, ui)->
+				# 						ui.placeholder.height ui.item.height()
+				# 						window.dragging = true
+				# 						return
+				# 		stop 		:(e, ui)-> 
+				# 						window.dragging = false
+				# 						return
+				# 		helper 		: 'clone'
+				# 		opacity		: .65
+				# 		remove 		: (evt, ui)->
+				# 						if $(evt.target).children().length is 0
+				# 							$(evt.target).addClass 'empty-column'
+				# 		update 		: (e,ui)->
+				# 						$(e.target).removeClass 'empty-column'
 
 
 			onClose:->

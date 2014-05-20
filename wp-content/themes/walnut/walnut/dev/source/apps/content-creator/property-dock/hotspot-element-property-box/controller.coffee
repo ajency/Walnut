@@ -23,6 +23,8 @@ define ['app'
 							new HotspotElementPropertyBox.Views[viewName]
 									model : options.model
 									hotspotModel : options.hotspotModel
+						# onClose:->
+							# @view.ui.individualMarksTextbox.trigger 'blur',
 
 
 					App.commands.setHandler "show:hotspot:element:properties:box",(options)->

@@ -43,6 +43,7 @@ define ['app'
 
                     @model.save()
 
+
                     optionCollection = App.request "create:new:option:collection", models
                     @model.set 'elements', optionCollection
 
@@ -50,3 +51,4 @@ define ['app'
             new McqPropertyBox.Controller
                 region: options.region
                 model: options.model
+

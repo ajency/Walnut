@@ -20,10 +20,15 @@ define ['app'],(App)->
 			# override serializeData to set holder property for the view
 			mixinTemplateHelpers:(data)->
 				data = super data
+
+				console.log data
+				console.log @model.id
 			
 				if @model.isNew()
+					console.log @model.id
 					data.placeholder = true
 				else
+
 					data.image = true
 					data.imageurl = ''
 						# if @sizes['thumbnail'] then @sizes['thumbnail'].url else @sizes['full'].url

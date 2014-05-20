@@ -21,6 +21,7 @@ define ['app'
                 App.execute "when:fetched", @textbookNames, =>
                     @show @view, (loading: true)
 
+
                 @timerObject.setHandler "get:elapsed:time", ()=>
                     timerTime= $ @view.el
                     .find '.cpTimer'
@@ -32,9 +33,9 @@ define ['app'
                     timeElapsed
 
             getResults:=>
-                correct_answer='No One'
-                names=[]
-                response=@questionResponseModel.get 'question_response'
+                correct_answer= 'No One'
+                names= []
+                response= @questionResponseModel.get 'question_response'
                 if @model.get('question_type') is 'chorus'
                     if response
                         correct_answer= CHORUS_OPTIONS[response]
