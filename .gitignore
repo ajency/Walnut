@@ -1,4 +1,5 @@
 .htaccess
 wp-config.php
 wp-content/themes/walnut/walnut/dev/node_modules
+wp-content/uploads
 .idea
