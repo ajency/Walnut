@@ -9,7 +9,7 @@ define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
 
             defaults:
                 collection_id       : 0
-                content_piece_id    : ''
+                content_piece_id    : 0
                 division            : 0
                 question_response   : []
                 time_taken          : 0

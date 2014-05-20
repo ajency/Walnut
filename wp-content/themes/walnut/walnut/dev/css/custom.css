@@ -1478,6 +1478,11 @@ h3.time {
 #myCanvas-miki .cbp_tmtimeline > li .cbp_tmlabel.done:after {
   border-right-color: #f3f3f3;
 }
+#myCanvas-miki .cbp_tmtimeline > li .qstnStatus {
+    position: absolute;
+    right: -140px;
+    top: 12px;
+}
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
   width: 50%;
