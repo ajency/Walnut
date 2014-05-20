@@ -23,23 +23,19 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       valuesAll2 = "";
       return _.db.transaction(function(tx) {
         alert("SELECT");
-        tx.executeSql("SELECT * FROM wp_training_logs WHERE sync==0 ", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM wp_training_logs WHERE sync=0 ", [], function(tx, results) {
           valuesAll = results.rows.length;
-          alert("value is " + valuesAll);
           return console.log(valuesAll);
         }, _.transactionErrorhandler);
-        tx.executeSql("SELECT * FROM wp_question_response WHERE sync==0 ", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM wp_question_response WHERE sync=0 ", [], function(tx, results) {
           valuesAll1 = results.rows.length;
-          alert("value 1 is " + valuesAll1);
           return console.log(valuesAll1);
         }, _.transactionErrorhandler);
-        return tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync==0 ", [], function(tx, results) {
+        return tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync=0 ", [], function(tx, results) {
           var VALUESGT;
           valuesAll2 = results.rows.length;
-          alert("value 2 is " + valuesAll2);
           console.log(valuesAll2);
           VALUESGT = valuesAll + valuesAll1 + valuesAll2;
-          alert("ful value is" + VALUESGT);
           return $('#SyncRecords').text(VALUESGT);
         }, _.transactionErrorhandler);
       });

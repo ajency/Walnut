@@ -15,26 +15,22 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 			valuesAll2=""
 			_.db.transaction( (tx)->
 				alert "SELECT"
-				tx.executeSql("SELECT * FROM wp_training_logs WHERE sync==0 ", [], (tx, results)->
+				tx.executeSql("SELECT * FROM wp_training_logs WHERE sync=0 ", [], (tx, results)->
 					valuesAll = results.rows.length;
-					alert "value is "+valuesAll
 					console.log valuesAll					
 				,_.transactionErrorhandler
 					
 				)
-				tx.executeSql("SELECT * FROM wp_question_response WHERE sync==0 ", [], (tx, results)->
+				tx.executeSql("SELECT * FROM wp_question_response WHERE sync=0 ", [], (tx, results)->
 					valuesAll1 = results.rows.length;
-					alert "value 1 is "+valuesAll1
 					console.log valuesAll1					
 				,_.transactionErrorhandler
 					
 				)
-				tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync==0 ", [], (tx, results)->
+				tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync=0 ", [], (tx, results)->
 					valuesAll2 = results.rows.length;
-					alert "value 2 is "+valuesAll2
 					console.log valuesAll2
 					VALUESGT=valuesAll+valuesAll1+valuesAll2
-					alert "ful value is" +VALUESGT	
 					$('#SyncRecords').text(VALUESGT)
 
 				,_.transactionErrorhandler
@@ -46,13 +42,19 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 			# _.db.transaction( (tx)->
 			# 	alert "SELECT"
-			# 	tx.executeSql("select sum(rows) as total from (
-			# 		select count(*) as rows from wp_training_logs where sync=0 
+			# 	tx.executeSql("select sum(rows) as total from
+			# 		(select count(*) as rows from wp_training_logs where sync=0 
 			# 		union all
 			# 		select count(*) as rows from wp_question_response where sync=0
 			# 		union all
-			# 		select count(*) as rows from wp_question_response_logs where sync=0)")
+			# 		select count(*) as rows from wp_question_response_logs where sync=0)"
+			# 	,_.transactionErrorhandler
+			# 	)
+				
+			# 	alert "total value is" +total
+			# 	$('#SyncRecords').text(VALUESGT)
 
+			# )
 
 		Sync : ->
 			files = ["http://synapsedu.info/wp_35_training_logs.csv", "http://synapsedu.info/wp_35_question_response.csv" ,"http://synapsedu.info/wp_35_question_response_logs.csv"]
