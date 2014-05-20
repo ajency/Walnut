@@ -25,14 +25,10 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype.initialize = function(opts) {
         var layout;
-        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, contentPiece = opts.contentPiece, this.display_mode = opts.display_mode;
+        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, contentPiece = opts.contentPiece, this.display_mode = opts.display_mode, studentCollection = opts.studentCollection;
         App.leftNavRegion.close();
         App.headerRegion.close();
         App.breadcrumbRegion.close();
-        studentCollection = App.request("get:user:collection", {
-          'role': 'student',
-          'division': this.division
-        });
         App.execute("when:fetched", questionResponseCollection, (function(_this) {
           return function() {
             return _this._getOrCreateModel(contentPiece.get('ID'));
@@ -69,10 +65,13 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
         var contentPieces, nextQuestion, pieceIndex;
-        current_question_id = current_question_id.toString();
+        current_question_id = parseInt(current_question_id);
         contentPieces = contentGroupModel.get('content_pieces');
+        contentPieces = _.map(contentPieces, function(m) {
+          return parseInt(m);
+        });
         pieceIndex = _.indexOf(contentPieces, current_question_id);
-        nextQuestion = contentPieces[pieceIndex + 1];
+        nextQuestion = parseInt(contentPieces[pieceIndex + 1]);
         if (nextQuestion) {
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
@@ -102,7 +101,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
         var modelData;
         questionResponseModel = questionResponseCollection.findWhere({
-          'content_piece_id': content_piece_id.toString()
+          'content_piece_id': content_piece_id
         });
         if (questionResponseModel) {
           if (this.display_mode === 'class_mode') {

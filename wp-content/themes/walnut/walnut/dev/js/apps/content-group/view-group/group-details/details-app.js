@@ -67,6 +67,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
                 var actionButtons, allContentPieces, answeredIDs, answeredPieces, unanswered;
                 actionButtons = '';
                 allContentPieces = _this.model.get('content_pieces');
+                allContentPieces = _.map(allContentPieces, function(m) {
+                  return parseInt(m);
+                });
                 answeredPieces = _this.questionResponseCollection.where({
                   "status": "completed"
                 });
