@@ -7,15 +7,19 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 
         db.transaction((tx)->
             #User table
-            tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, user_id UNIQUE, username, password, user_role)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, user_id UNIQUE
+                , username, password, user_role)')
 
-            # tx.executeSql('DROP TABLE IF EXISTS wp_training_logs')
-            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_training_logs (id INTEGER PRIMARY KEY, division_id INTEGER, collection_id INTEGER, teacher_id INTEGER, date, status, sync)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_training_logs (id INTEGER PRIMARY KEY
+                , division_id INTEGER, collection_id INTEGER, teacher_id INTEGER, date, status
+                , sync INTEGER)')
 
-            # tx.executeSql('DROn TABLE IF EXISTS wp_question_response')
-            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response (ref_id, content_piece_id INTEGER, collection_id INTEGER, division INTEGER, question_response, time_taken, start_date, end_date, status, sync)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response (ref_id
+                , content_piece_id INTEGER, collection_id INTEGER, division INTEGER
+                , question_response, time_taken, start_date, end_date, status, sync INTEGER)')
 
-            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response_logs (qr_ref_id, start_time, sync)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS wp_question_response_logs (qr_ref_id
+                , start_time, sync INTEGER)')
             
         ,_.transactionErrorHandler
         ,(tx)->

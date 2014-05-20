@@ -51,6 +51,8 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'content-piece'
 				data = App.reqres.request "get:#{collection_name}:local", opts.ids 
 				data.done (d)->
+					console.log 'content-piece data'
+					console.log d
 					collection.set d
 
 			if collection_name is 'user'

@@ -150,18 +150,18 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, r, result, _fn, _i, _ref;
+            var i, result, row, _fn, _i, _ref;
             result = [];
-            _fn = function(r, i, division) {
+            _fn = function(row, i, division) {
               var dateAndStatus;
-              dateAndStatus = _.getLastDetails(r['id'], division);
+              dateAndStatus = _.getLastDetails(row['id'], division);
               return dateAndStatus.done(function(d) {
                 var date, status;
                 status = d.status;
                 date = d.date;
-                return (function(r, i, date, status) {
+                return (function(row, i, date, status) {
                   var contentPiecesAndDescription;
-                  contentPiecesAndDescription = getContentPiecesAndDescription(r['id']);
+                  contentPiecesAndDescription = getContentPiecesAndDescription(row['id']);
                   return contentPiecesAndDescription.done(function(d) {
                     var content_pieces, description;
                     content_pieces = description = '';
@@ -172,31 +172,31 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                       description = unserialize(d.description);
                     }
                     return result[i] = {
-                      id: r['id'],
-                      name: r['name'],
-                      created_on: r['created_on'],
-                      created_by: r['created_by'],
-                      last_modified_on: r['last_modified_on'],
-                      last_modified_by: r['last_modified_by'],
-                      published_on: r['published_on'],
-                      published_by: r['published_by'],
-                      type: r['type'],
-                      term_ids: unserialize(r['term_ids']),
-                      duration: getDuration(r['duration']),
-                      minshours: getMinsHours(r['duration']),
-                      total_minutes: r['duration'],
+                      id: row['id'],
+                      name: row['name'],
+                      created_on: row['created_on'],
+                      created_by: row['created_by'],
+                      last_modified_on: row['last_modified_on'],
+                      last_modified_by: row['last_modified_by'],
+                      published_on: row['published_on'],
+                      published_by: row['published_by'],
+                      type: row['type'],
+                      term_ids: unserialize(row['term_ids']),
+                      duration: getDuration(row['duration']),
+                      minshours: getMinsHours(row['duration']),
+                      total_minutes: row['duration'],
                       status: status,
                       training_date: date,
                       content_pieces: content_pieces,
                       description: description
                     };
                   });
-                })(r, i, date, status);
+                })(row, i, date, status);
               });
             };
             for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-              r = data.rows.item(i);
-              _fn(r, i, division);
+              row = data.rows.item(i);
+              _fn(row, i, division);
             }
             return d.resolve(result);
           };

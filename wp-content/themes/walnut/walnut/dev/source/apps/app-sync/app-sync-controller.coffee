@@ -6,6 +6,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 
 		startSync : ->
+			console.log 'Started Controller'
 			@error()
 
 		error: ->

@@ -2,6 +2,7 @@
   "name": "Walnut",
   "description": "Walnut App",
   "version": "1",
+  "permissions": ["<all_urls>"],
   "app": {
     "background": {
       "scripts": ["background.js"]

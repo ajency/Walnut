@@ -94,12 +94,37 @@ define ["app", 'backbone'], (App, Backbone) ->
             
         #get all content pieces from local database
             getContentPieceFromLocal:(ids)->
+                #184
+
+                getPostAuthorName = (post_author_id) ->
+                    postAuthorName = ''
                     
+                    runQuery = ->
+                        $.Deferred (d)->
+                            _.db.transaction (tx)->
+                                tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?" 
+                                    ,[post_author_id], success(d), _.deferredErrorHandler(d))
+
+                    success = (d)->
+                        (tx, data)->
+                            if data.rows.length isnt 0
+                                postAuthorName = data.rows.item(0)['display_name']
+
+                            d.resolve postAuthorName
+                            
+                    $.when(runQuery()).done ->
+                        console.log 'getPostAuthorName transaction completed'
+                    .fail _.failureHandler 
+
+
+
+                # get data from wp_posts
                 runMainQuery = ->
                     $.Deferred (d)->
                         _.db.transaction (tx)->
                             tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' 
-                                AND post_status = 'publish' AND ID in ("+ids+")", [], onSuccess(d), _.deferredErrorHandler(d))
+                                AND post_status = 'publish' AND ID in ("+ids+")", []
+                                , onSuccess(d), _.deferredErrorHandler(d))
 
                 onSuccess =(d)->
                     (tx,data)->
@@ -107,43 +132,50 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                         for i in [0..data.rows.length-1] by 1
 
-                            r = data.rows.item(i)
+                            row = data.rows.item(i)
 
-                            do(r, i)->
-                                questionType = _.getQuestionType(r['ID'])
-                                questionType.done (question_type)->
-                                        
-                                    result[i] = 
-                                        ID: r['ID']
-                                        post_author: r['post_author']
-                                        post_date: r['post_date']
-                                        post_date_gmt: r['post_date_gmt']
-                                        post_content: r['post_content']
-                                        post_title: r['post_title']
-                                        post_excerpt: r['post_excerpt']
-                                        post_status: r['post_status']
-                                        comment_status: r['comment_status']
-                                        ping_status: r['ping_status']
-                                        post_password: r['post_password']
-                                        post_name: r['post_name']
-                                        to_ping: r['to_ping']
-                                        pinged: r['pinged']
-                                        post_modified: r['post_modified']
-                                        post_modified_gmt: r['post_modified_gmt']
-                                        post_content_filtered: r['post_content_filtered']
-                                        post_parent: r['post_parent']
-                                        guid: r['guid']
-                                        menu_order: r['menu_order']
-                                        post_type: r['post_type']
-                                        post_mime_type: r['post_mime_type']
-                                        comment_count: r['comment_count']
-                                        question_type: question_type
+                            do(row, i)->
+                                postAuthorName = getPostAuthorName(row['post_author'])
+                                postAuthorName.done (author_name)->
 
-                                        #Need to implement
-                                        filter: 'raw'
-                                        subjects: ''
-                                        creator: 'admin'
-                                        content_type: ''
+                                    do(row, i, author_name)->
+                                        metaValue = _.getMetaValue(row['ID'])
+                                        metaValue.done (meta_value)->
+
+                                            result[i] = 
+                                                ID: row['ID']
+                                                post_author: row['post_author']
+                                                post_date: row['post_date']
+                                                post_date_gmt: row['post_date_gmt']
+                                                post_content: row['post_content']
+                                                post_title: row['post_title']
+                                                post_excerpt: row['post_excerpt']
+                                                post_status: row['post_status']
+                                                comment_status: row['comment_status']
+                                                ping_status: row['ping_status']
+                                                post_password: row['post_password']
+                                                post_name: row['post_name']
+                                                to_ping: row['to_ping']
+                                                pinged: row['pinged']
+                                                post_modified: row['post_modified']
+                                                post_modified_gmt: row['post_modified_gmt']
+                                                post_content_filtered: row['post_content_filtered']
+                                                post_parent: row['post_parent']
+                                                guid: row['guid']
+                                                menu_order: row['menu_order']
+                                                post_type: row['post_type']
+                                                post_mime_type: row['post_mime_type']
+                                                comment_count: row['comment_count']
+                                                filter: 'raw'
+                                                post_author_name: author_name
+                                                content_type: meta_value.content_type
+                                                layout: meta_value.layout_json
+                                                question_type: meta_value.question_type
+                                                post_tags: meta_value.post_tags
+                                                duration: meta_value.duration
+                                                last_modified_by: meta_value.last_modified_by
+                                                published_by: meta_value.published_by
+                                                term_ids: meta_value.term_ids
                             
                         d.resolve(result)
 

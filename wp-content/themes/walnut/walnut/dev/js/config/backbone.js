@@ -48,6 +48,8 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'content-piece') {
         data = App.reqres.request("get:" + collection_name + ":local", opts.ids);
         data.done(function(d) {
+          console.log('content-piece data');
+          console.log(d);
           return collection.set(d);
         });
       }

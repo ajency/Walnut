@@ -13,6 +13,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
     SynchronizationController.prototype.initialize = function() {};
 
     SynchronizationController.prototype.startSync = function() {
+      console.log('Started Controller');
       return this.error();
     };
 

@@ -1,4 +1,4 @@
-define ["app", 'backbone', 'serialize'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
     App.module "Entities.QuestionResponse", (QuestionResponse, App, Backbone, Marionette, $, _)->
 
 
@@ -88,9 +88,9 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                             r = data.rows.item(i)
 
                             do(r, i)->
-                                questionType = _.getQuestionType(r['content_piece_id'])
-                                questionType.done (question_type)->
-                                    if question_type is 'individual'
+                                questionType = _.getMetaValue(r['content_piece_id'])
+                                questionType.done (meta_value)->
+                                    if meta_value.question_type is 'individual'
                                         q_resp = unserialize(r['question_response'])
                                     else q_resp = r['question_response'] 
 
@@ -154,9 +154,9 @@ define ["app", 'backbone', 'serialize'], (App, Backbone) ->
                         )     
                         
 
-                questionType = _.getQuestionType(model.get('content_piece_id'))
-                questionType.done (question_type)->
-                    if question_type is 'individual'
+                questionType = _.getMetaValue(model.get('content_piece_id'))
+                questionType.done (meta_value)->
+                    if meta_value.question_type is 'individual'
                         q_resp = serialize(model.get('question_response'))
                     else
                         q_resp = model.get('question_response')

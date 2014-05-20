@@ -1,4 +1,4 @@
-define(['underscore'], function(_) {
+define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
     deferredErrorHandler: function(d) {
       return function(tx, error) {
@@ -8,7 +8,7 @@ define(['underscore'], function(_) {
     failureHandler: function(error) {
       return console.log('ERROR: ' + error.message);
     },
-    transactionErrorHandler: function(tx, error) {
+    transactionErrorHandler: function(error) {
       return console.log('ERROR: ' + error.message);
     },
     fileErrorHandler: function(error) {
@@ -56,13 +56,13 @@ define(['underscore'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var r;
+          var row;
           if (data.rows.length !== 0) {
-            r = data.rows.item(0);
+            row = data.rows.item(0);
             userData = {
-              user_id: r['user_id'],
-              password: r['password'],
-              role: r['user_role'],
+              user_id: row['user_id'],
+              password: row['password'],
+              role: row['user_role'],
               exists: true
             };
           }
@@ -73,26 +73,60 @@ define(['underscore'], function(_) {
         return console.log('getUserDetails transaction completed');
       }).fail(_.failureHandler);
     },
-    getQuestionType: function(content_piece_id) {
-      var onSuccess, question_type, runQuery;
-      question_type = '';
+    getMetaValue: function(content_piece_id) {
+      var meta_value, onSuccess, runQuery;
+      meta_value = {
+        question_type: '',
+        content_type: '',
+        layout_json: '',
+        post_tags: '',
+        duration: '',
+        last_modified_by: '',
+        published_by: '',
+        term_ids: ''
+      };
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT meta_value FROM wp_postmeta WHERE post_id=? AND meta_key='question_type'", [content_piece_id], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=?", [content_piece_id], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          if (data.rows.length !== 0) {
-            question_type = data.rows.item(0)['meta_value'];
+          var i, row, _i, _ref;
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            row = data.rows.item(i);
+            if (row['meta_key'] === 'question_type') {
+              meta_value.question_type = row['meta_value'];
+            }
+            if (row['meta_key'] === 'content_type') {
+              meta_value.content_type = row['meta_value'];
+            }
+            if (row['meta_key'] === 'layout_json') {
+              meta_value.layout_json = unserialize(unserialize(row['meta_value']));
+            }
+            if (row['meta_key'] === 'post_tags') {
+              meta_value.post_tags = row['meta_value'];
+            }
+            if (row['meta_key'] === 'duration') {
+              meta_value.duration = row['meta_value'];
+            }
+            if (row['meta_key'] === 'last_modified_by') {
+              meta_value.last_modified_by = row['meta_value'];
+            }
+            if (row['meta_key'] === 'published_by') {
+              meta_value.published_by = row['meta_value'];
+            }
+            if (row['meta_key'] === 'term_ids') {
+              meta_value.term_ids = unserialize(unserialize(row['meta_value']));
+            }
           }
-          return d.resolve(question_type);
+          return d.resolve(meta_value);
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('getQuestionType transaction completed');
+        return console.log('getMetaValue transaction completed');
       }).fail(_.failureHandler);
     },
     getLastDetails: function(collection_id, division) {
@@ -111,13 +145,13 @@ define(['underscore'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var r;
+          var row;
           if (data.rows.length !== 0) {
-            r = data.rows.item(0);
+            row = data.rows.item(0);
             lastDetails = {
-              id: r['id'],
-              date: r['date'],
-              status: r['status']
+              id: row['id'],
+              date: row['date'],
+              status: row['status']
             };
           }
           return d.resolve(lastDetails);

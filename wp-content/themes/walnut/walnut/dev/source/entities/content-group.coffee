@@ -126,35 +126,35 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 							for i in [0..data.rows.length-1] by 1
 
-								r = data.rows.item(i)
+								row = data.rows.item(i)
 
-								do (r, i, division)->
-									dateAndStatus = _.getLastDetails(r['id'], division)
+								do (row, i, division)->
+									dateAndStatus = _.getLastDetails(row['id'], division)
 									dateAndStatus.done (d)->
 										status = d.status
 										date = d.date
 
-										do (r, i, date, status)->
-											contentPiecesAndDescription = getContentPiecesAndDescription(r['id'])
+										do (row, i, date, status)->
+											contentPiecesAndDescription = getContentPiecesAndDescription(row['id'])
 											contentPiecesAndDescription.done (d)->
 												content_pieces = description = ''
 												content_pieces = unserialize(d.content_pieces) if d.content_pieces isnt ''
 												description = unserialize(d.description) if d.description isnt ''
 
 												result[i] = 
-													id: r['id']
-													name: r['name']
-													created_on: r['created_on']
-													created_by: r['created_by']
-													last_modified_on: r['last_modified_on']
-													last_modified_by: r['last_modified_by']
-													published_on: r['published_on']
-													published_by: r['published_by']
-													type: r['type']
-													term_ids: unserialize(r['term_ids'])
-													duration: getDuration(r['duration'])
-													minshours: getMinsHours(r['duration'])
-													total_minutes: r['duration']
+													id: row['id']
+													name: row['name']
+													created_on: row['created_on']
+													created_by: row['created_by']
+													last_modified_on: row['last_modified_on']
+													last_modified_by: row['last_modified_by']
+													published_on: row['published_on']
+													published_by: row['published_by']
+													type: row['type']
+													term_ids: unserialize(row['term_ids'])
+													duration: getDuration(row['duration'])
+													minshours: getMinsHours(row['duration'])
+													total_minutes: row['duration']
 													status: status
 													training_date: date
 													content_pieces: content_pieces
