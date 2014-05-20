@@ -27,6 +27,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				$('#syncText').text('')
 				syncController = App.request "get:sync:controller"
 				syncController.TotalRecordsUpdate()
+				
 					
 
 			startSyncProcess : ->

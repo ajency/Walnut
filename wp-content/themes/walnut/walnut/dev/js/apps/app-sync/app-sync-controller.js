@@ -17,62 +17,98 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
     };
 
     SynchronizationController.prototype.TotalRecordsUpdate = function() {
+      var valuesAll, valuesAll1, valuesAll2;
+      valuesAll = "";
+      valuesAll1 = "";
+      valuesAll2 = "";
       return _.db.transaction(function(tx) {
         alert("SELECT");
-        return tx.executeSql("SELECT * FROM wp_training_logs ", [], function(tx, results) {
-          var valuesAll;
+        tx.executeSql("SELECT * FROM wp_training_logs WHERE sync==0 ", [], function(tx, results) {
           valuesAll = results.rows.length;
+          alert("value is " + valuesAll);
           return console.log(valuesAll);
+        }, _.transactionErrorhandler);
+        tx.executeSql("SELECT * FROM wp_question_response WHERE sync==0 ", [], function(tx, results) {
+          valuesAll1 = results.rows.length;
+          alert("value 1 is " + valuesAll1);
+          return console.log(valuesAll1);
+        }, _.transactionErrorhandler);
+        return tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync==0 ", [], function(tx, results) {
+          var VALUESGT;
+          valuesAll2 = results.rows.length;
+          alert("value 2 is " + valuesAll2);
+          console.log(valuesAll2);
+          VALUESGT = valuesAll + valuesAll1 + valuesAll2;
+          alert("ful value is" + VALUESGT);
+          return $('#SyncRecords').text(VALUESGT);
         }, _.transactionErrorhandler);
       });
     };
 
     SynchronizationController.prototype.Sync = function() {
-      var files;
-      files = ["http://synapsedu.info/wp_35_training_logs.csv", "http://synapsedu.info/wp_35_question_response.csv", "wp_35_question_response_logs.csv"];
-      alert(files);
+      var currData, files;
+      files = ["http://synapsedu.info/wp_35_training_logs.csv", "http://synapsedu.info/wp_35_question_response.csv", "http://synapsedu.info/wp_35_question_response_logs.csv"];
+      currData = 0;
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
-          return fileSystem.root.getFile("StudentsLogs.txt", {
+          return fileSystem.root.getFile("StudentsLogs.csv", {
             create: true,
             exclusive: false
           }, function(fileEntry) {
-            var filePath, fileTransfer, uri;
-            fileTransfer = new FileTransfer();
-            uri = files;
-            filePath = fileEntry.toURL();
-            return fileTransfer.download(uri, filePath, function(file) {
-              console.log('File downloaded');
-              return _this.readAsText(file);
-            }, _.fileTransferErrorHandler, true);
+            var currentFileIndex, filePath1, i, _i, _ref, _results;
+            filePath1 = ["/WpTrainingLogs.csv", "/wp_35_question_response.csv", "/wp_35_question_response_logs.csv"];
+            _results = [];
+            for (i = _i = 0, _ref = files.length - 1; _i <= _ref; i = _i += 1) {
+              currentFileIndex = i;
+              alert("val" + i);
+              alert("new file is" + filePath1[i]);
+              alert("file is " + fileEntry.toURL());
+              fileEntry = fileUrl + filePath1[i];
+              alert("file entry" + fileEntry);
+              console.log("initiate download of file index " + i + " File Name: " + files[i]);
+              _results.push(_this.DownlaodFiles(files[i], fileEntry));
+            }
+            return _results;
           }, _.fileErrorHandler);
         };
       })(this), _.fileSystemErrorHandler);
     };
 
+    SynchronizationController.prototype.DownlaodFiles = function(files, fileEntry) {
+      var filePath, fileTransfer, uri;
+      fileTransfer = new FileTransfer();
+      uri = files;
+      filePath = fileEntry;
+      alert(filePath);
+      return fileTransfer.download(uri, filePath, (function(_this) {
+        return function(file) {
+          console.log('File downloaded' + file);
+          return _this.readAsText(file);
+        };
+      })(this), _.fileTransferErrorHandler, true);
+    };
+
     SynchronizationController.prototype.readAsText = function(file) {
-      var currentFileIndex, i, reader, _i, _ref;
-      for (i = _i = 0, _ref = file.length - 1; _i <= _ref; i = _i += 1) {
-        currentFileIndex = i;
-        console.log("initiate download of file index " + i + " File Name: " + files[i]);
-        files[i];
-      }
-      console.log("read files");
+      var reader;
+      console.log("read files" + file.toURL());
       reader = new FileReader();
       reader.onloadend = function(evt) {
         var csvString, parsedData;
+        alert("result" + evt.target.result);
+        alert("csvString" + csvString);
         csvString = evt.target.result;
         parsedData = $.parse(csvString, {
           header: false,
           dynamicTyping: false
         });
+        console.log("result is " + parsedData.results);
         return this.SendParsedData(parsedData.results);
       };
       return reader.readAsText(file);
     };
 
     SynchronizationController.prototype.SendParsedData = function(data) {
-      return _.db.transaction(function(tx) {
+      _.db.transaction(function(tx) {
         var i, row, _i, _ref, _results;
         _results = [];
         for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
@@ -81,10 +117,33 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
         }
         return _results;
       }, _.transactionErrorhandler, function(tx) {
-        console.log('Data inserted successfully');
-        return this.readValues;
+        return console.log('Data inserted successfully');
+      });
+      _.db.transaction(function(tx) {
+        var i, row, _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
+          row = data[i];
+          _results.push(tx.executeSql("INSERT INTO wp_question_response (ref_id,content_piece_id,collection_id,division,question_response,time_taken,start_date,end_date,status,sync) VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], 1]));
+        }
+        return _results;
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Data inserted successfully');
+      });
+      return _.db.transaction(function(tx) {
+        var i, row, _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
+          row = data[i];
+          _results.push(tx.executeSql("INSERT INTO wp_question_response_logs (qr_ref_id, start_time, sync) VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], 1]));
+        }
+        return _results;
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Data inserted successfully');
       });
     };
+
+    SynchronizationController.readValues;
 
     SynchronizationController.prototype.readValues = function() {
       return window.db.transaction(function(transaction) {

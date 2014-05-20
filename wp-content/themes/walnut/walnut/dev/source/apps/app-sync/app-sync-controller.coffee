@@ -4,43 +4,77 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 		initialize : ->
 
+
 		startSync : ->
 			@Sync()
 
 		#This function will get the file from device root and then download the data from the server and write it to the device file
 		TotalRecordsUpdate : ->
+			valuesAll=""
+			valuesAll1=""
+			valuesAll2=""
 			_.db.transaction( (tx)->
 				alert "SELECT"
-				tx.executeSql("SELECT * FROM wp_training_logs ", [], (tx, results)->
+				tx.executeSql("SELECT * FROM wp_training_logs WHERE sync==0 ", [], (tx, results)->
 					valuesAll = results.rows.length;
+					alert "value is "+valuesAll
 					console.log valuesAll					
 				,_.transactionErrorhandler
 					
 				)
+				tx.executeSql("SELECT * FROM wp_question_response WHERE sync==0 ", [], (tx, results)->
+					valuesAll1 = results.rows.length;
+					alert "value 1 is "+valuesAll1
+					console.log valuesAll1					
+				,_.transactionErrorhandler
+					
+				)
+				tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync==0 ", [], (tx, results)->
+					valuesAll2 = results.rows.length;
+					alert "value 2 is "+valuesAll2
+					console.log valuesAll2
+					VALUESGT=valuesAll+valuesAll1+valuesAll2
+					alert "ful value is" +VALUESGT	
+					$('#SyncRecords').text(VALUESGT)
+
+				,_.transactionErrorhandler
+					
+				)
+
 			)
+			
+
+			# _.db.transaction( (tx)->
+			# 	alert "SELECT"
+			# 	tx.executeSql("select sum(rows) as total from (
+			# 		select count(*) as rows from wp_training_logs where sync=0 
+			# 		union all
+			# 		select count(*) as rows from wp_question_response where sync=0
+			# 		union all
+			# 		select count(*) as rows from wp_question_response_logs where sync=0)")
 
 
 		Sync : ->
-			files = ["http://synapsedu.info/wp_35_training_logs.csv", "http://synapsedu.info/wp_35_question_response.csv" ,"wp_35_question_response_logs.csv"]
-			alert files
+			files = ["http://synapsedu.info/wp_35_training_logs.csv", "http://synapsedu.info/wp_35_question_response.csv" ,"http://synapsedu.info/wp_35_question_response_logs.csv"]
+			currData =0
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>
 
-					fileSystem.root.getFile("StudentsLogs.txt", {create: true, exclusive: false}
+					fileSystem.root.getFile("StudentsLogs.csv", {create: true, exclusive: false}
 
 						, (fileEntry)=>
-
-							fileTransfer = new FileTransfer()
-							uri = files
-							filePath=fileEntry.toURL()
-
-							fileTransfer.download(uri, filePath
-								,(file)=>
-									console.log 'File downloaded'
-									@readAsText file
-
-								,_.fileTransferErrorHandler, true)
+							# fileUrl= fileEntry.toURL()
+							filePath1=["/WpTrainingLogs.csv", "/wp_35_question_response.csv", "/wp_35_question_response_logs.csv"]
+							for i in [0..files.length-1] by 1
+								currentFileIndex = i
+								alert "val" +i
+								alert "new file is" +filePath1[i]
+								alert "file is " +fileEntry.toURL()
+								fileEntry = fileUrl+filePath1[i]
+								alert "file entry" +fileEntry
+								console.log "initiate download of file index " + i + " File Name: " + files[i]
+								@DownlaodFiles files[i], fileEntry
 
 						, _.fileErrorHandler)
 
@@ -49,26 +83,33 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 		# readAsText : ->
 		# 	alert 'readAsText'
+    
+		DownlaodFiles : (files , fileEntry)->
+			fileTransfer = new FileTransfer()
+			uri = files
+			filePath=fileEntry
+			alert filePath
+			fileTransfer.download(uri, filePath
+				,(file)=>
+					console.log 'File downloaded'+file
+					@readAsText file
 
-		
+				,_.fileTransferErrorHandler, true)
 
 		#This function raeds the file as text and Parse the .csv file to array f aarys who's result is sent through the function SendParsedData
 
 		readAsText : (file)->
-			for i in [0..file.length-1] by 1
-				currentFileIndex = i
-				console.log "initiate download of file index " + i + " File Name: " + files[i]
-				files[i]
-			console.log "read files"
+			console.log "read files" +file.toURL()
 			reader = new FileReader()
 			reader.onloadend = (evt)->
-
+				alert "result" +evt.target.result
+				alert "csvString" +csvString
 				csvString = evt.target.result
 				parsedData = $.parse(csvString, {
 					header : false
 					dynamicTyping : false
 					})
-
+				console.log "result is "+parsedData.results
 				@SendParsedData parsedData.results
 
 			reader.readAsText file
@@ -87,8 +128,33 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 			,_.transactionErrorhandler
 			,(tx)->
 				console.log 'Data inserted successfully'
-				@readValues
+				# @readValues
 			)
+			_.db.transaction( (tx)->
+
+				for i in [0..data.length-1] by 1
+					row = data[i]
+					tx.executeSql("INSERT INTO wp_question_response (ref_id,content_piece_id,collection_id,division,question_response,time_taken,start_date,end_date,status,sync) 
+						VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], 1])
+
+			,_.transactionErrorhandler
+			,(tx)->
+				console.log 'Data inserted successfully'
+				
+			)
+			_.db.transaction( (tx)->
+
+				for i in [0..data.length-1] by 1
+					row = data[i]
+					tx.executeSql("INSERT INTO wp_question_response_logs (qr_ref_id, start_time, sync) 
+						VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], 1])
+
+			,_.transactionErrorhandler
+			,(tx)->
+				console.log 'Data inserted successfully'
+				
+			)
+		@readValues
 
 	#This function Reads the inserted data
 
