@@ -118,8 +118,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                                         metaValue = _.getMetaValue(row['ID'])
                                         metaValue.done (meta_value)->
 
-                                            # _.callFunc(meta_value.layout_json)
-
                                             result[i] = 
                                                 ID: row['ID']
                                                 post_author: row['post_author']
@@ -167,7 +165,6 @@ define ["app", 'backbone'], (App, Backbone) ->
         # request handler to get all ContentPieces
         App.reqres.setHandler "get:content:pieces", (opt) ->
             API.getContentPieces(opt)
-
 
         # request handler to get all ContentPieces
         App.reqres.setHandler "get:content:pieces:of:group", (groupModel) ->

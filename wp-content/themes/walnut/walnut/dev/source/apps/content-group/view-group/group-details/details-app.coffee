@@ -55,7 +55,6 @@ define ['app'
                                             .pluck 'content_piece_id'
                                             .value()
 
-                            answeredIDs = _.map answeredIDs, (m)-> m.toString()
                             answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
 
                             unanswered = _.difference allContentPieces, answeredIDs
@@ -65,6 +64,8 @@ define ['app'
                                 									<i class="fa fa-play"></i> Start
                                 								</button>'
                             actionButtons
+
+
 
 
         class CollectionDetailsView extends Marionette.ItemView
