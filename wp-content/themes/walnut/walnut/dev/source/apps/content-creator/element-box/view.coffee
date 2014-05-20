@@ -62,12 +62,12 @@ define ['app'], (App)->
                               </a>
                             </li>
                             <li data-element="TeacherQuestion" > 
-								<a href="#" class="drag builder-element" > 
-									<div class="aj-imp-builder-title">
-										<i class="fa fa-arrows-v"></i> Teacher Question
-									</div> 
-								</a> 
-							</li>  
+                            <a class="drag builder-element" >
+                              <div class="aj-imp-builder-title">
+                                <i class="fa fa-arrows-v"></i> Teacher Question
+                              </div>
+                            </a>
+                          </li>
                           </ul>
                           <div class="clearfix"></div>
                         </div>

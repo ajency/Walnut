@@ -145,9 +145,10 @@ function get_json_to_clone($elements)
 {
     $d = array();
     $excerpt= array();
+    $row_elements = array('Row','TeacherQuestion','TeacherQuestionRow');
     if (is_array($elements)) {
         foreach ($elements as $element) {
-            if ($element['element'] === 'Row') {
+            if (in_array($element['element'], $row_elements)) {
                 $element['columncount'] = count($element['elements']);
                 $d2= get_row_elements($element);
                 $d[]                    = $d2['element'];
