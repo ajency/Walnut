@@ -20,7 +20,7 @@ define ['app'
 						# get the main layout for the content preview
 						@layout = @_getContentPreviewLayout()
 
-						# eventObj = App.createEventObject()
+            #	eventObj = App.createEventObject()
 
 						# listen to "show" event of the layout and start the 
 						# elementboxapp passing the region 
@@ -42,5 +42,7 @@ define ['app'
 						new ContentPreview.Views.Layout
 
 				App.commands.setHandler "show:content:preview", (options)->
-								new ContentPreview.Controller
-											region : options.region
+					  new ContentPreview.Controller
+							region : options.region
+
+

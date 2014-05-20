@@ -16,7 +16,10 @@ define(['app'], function(App) {
 
       ImageView.prototype.mixinTemplateHelpers = function(data) {
         data = ImageView.__super__.mixinTemplateHelpers.call(this, data);
+        console.log(data);
+        console.log(this.model.id);
         if (this.model.isNew()) {
+          console.log(this.model.id);
           data.placeholder = true;
         } else {
           data.image = true;

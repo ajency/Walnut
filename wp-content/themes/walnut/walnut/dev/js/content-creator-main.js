@@ -10,6 +10,7 @@ require.config({
     jqueryvalidate: 'plugins/jquery.validate.min',
     underscore: 'plugins/underscore',
     backbone: 'plugins/backbone',
+    babysitter: 'plugins/backbone.babysitter.min',
     bootstrap: 'plugins/bootstrap',
     bootstrapslider: 'plugins/bootstrap-slider',
     marionette: 'plugins/backbone.marionette',
@@ -30,7 +31,8 @@ require.config({
     ckeditor: 'plugins/ckeditor/ckeditor',
     select2: 'plugins/select2.min',
     tagsinput: 'plugins/bootstrap-tagsinput.min',
-    screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
+    screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
+    videojs: 'plugins/video'
   },
   shim: {
     underscore: {
@@ -46,6 +48,7 @@ require.config({
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
     },
+    babysitter: ['backbone'],
     marionette: {
       deps: ['backbone'],
       exports: 'Marionette'

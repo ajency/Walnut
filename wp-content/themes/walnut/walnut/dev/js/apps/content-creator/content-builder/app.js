@@ -46,7 +46,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         container = this._getContainer();
         return _.each(section, (function(_this) {
           return function(element, i) {
-            if (element.element === 'Row') {
+            if (element.element === 'Row' || element.element === 'TeacherQuestion') {
               return _this.addNestedElements(container, element);
             } else {
               return App.request("add:new:element", container, element.element, element);

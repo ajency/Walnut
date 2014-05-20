@@ -27,8 +27,14 @@ define ['app'],(App)->
 						remove 		: (evt, ui)->
 										if $(evt.target).children().length is 0
 											$(evt.target).addClass 'empty-column'
-						update 		: (e,ui)->
+						update 		: (e,ui)->																		
+
 										$(e.target).removeClass 'empty-column'
+						# receive 	: (e,ui)->
+						# 			if ui.item.find('form').find('input[name="element"]').val() is 'Video'
+						# 					App.execute "video:moved"
+						
+
 
 
 			onClose:->

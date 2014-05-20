@@ -31,7 +31,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
           return function() {
             return _this.view.triggerMethod("show:total:marks", _this.total);
           };
-        })(this), 500);
+        })(this), 200);
       };
 
       Controller.prototype._showView = function() {

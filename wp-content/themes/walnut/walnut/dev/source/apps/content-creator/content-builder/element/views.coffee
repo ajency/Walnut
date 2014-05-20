@@ -37,7 +37,7 @@ define ['app'
 
 					# set the data-element attribute for element 
 					onRender:->
-						# @$el.find('.element-markup > span').spin @_getOptions()
+						@$el.find('.element-markup > span').spin @_getOptions()
 						
 					# set mouse hover for element
 					onShow:()=>

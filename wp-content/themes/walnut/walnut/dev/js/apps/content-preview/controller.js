@@ -50,9 +50,10 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
 
     })(RegionController);
     return App.commands.setHandler("show:content:preview", function(options) {
-      return new ContentPreview.Controller({
+      new ContentPreview.Controller;
+      return {
         region: options.region
-      });
+      };
     });
   });
 });

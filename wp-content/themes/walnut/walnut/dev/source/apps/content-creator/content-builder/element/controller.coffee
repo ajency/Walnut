@@ -35,6 +35,7 @@ define ['app', 'controllers/element-controller'
 
 						# listen to delete element event
 						@listenTo @layout, "delete:element", (model)=>
+												
 												if confirm("Are you sure?")
 													@deleteElement model
 

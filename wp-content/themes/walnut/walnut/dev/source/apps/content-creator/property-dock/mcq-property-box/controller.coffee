@@ -41,12 +41,13 @@ define ['app'
 
 					onClose:->
 						localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
-
-
+						# console.log JSON.stringify(@model.get('elements').toJSON())
+						
 
 
 
 				App.commands.setHandler "show:mcq:properties",(options)->
+					
 					new McqPropertyBox.Controller
 							region : options.region
 							model : options.model

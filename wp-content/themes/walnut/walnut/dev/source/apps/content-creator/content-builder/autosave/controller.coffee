@@ -76,6 +76,20 @@ define ['app'], (App)->
 							ele.elements.push col 
 							return
 
+					if ele.element is 'TeacherQuestion'
+						# ele.draggable = $(element).children('form').find('input[name="draggable"]').val() is "true"
+						# ele.style = $(element).children('form').find('input[name="style"]').val()
+						delete ele.meta_id
+						ele.elements = []
+						_.each $(element).children('.element-markup').children('.teacher-question').children('.teacher-question-row'), (column, index)=>
+							col = 
+								position 	: index + 1
+								element 	: 'TeacherQuestRow'
+								elements 	: @_getJson $(column)
+				
+							ele.elements.push col 
+							return
+
 					arr.push ele
 					
 				arr

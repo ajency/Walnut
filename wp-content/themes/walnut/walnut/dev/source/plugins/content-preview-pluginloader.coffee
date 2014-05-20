@@ -25,5 +25,5 @@ define [
 			# 'select2'
 			# 'tagsinput'
 			'screwbuttons'
-			
+			'videojs'
 		], ->

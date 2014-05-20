@@ -79,16 +79,6 @@ define ['app'],(App)->
 
 				# @_setPropertyBoxCloseHandlers()
 				@_drawExistingElements()
-				
-				#listen to drop event
-				# @listenTo @, 'add:hotspot:element' ,(type,elementPos)->
-
-				# 		@_addElements type, elementPos
-
-
-				# $('button.btn.btn-success.btn-cons2').on 'click',=>
-				# 		console.log  @stage.toJSON()
-
 
 				#make the hotspot canvas area dropable
 				@$el.find('.kineticjs-content').droppable
@@ -104,6 +94,7 @@ define ['app'],(App)->
 			_initializeCanvasResizing:->
 				# on resize of the canvas height
 				@$el.resize @_setResizeHandler
+				@model.set 'height', @stage.height()
 				# set resize bottom handle
 				@$el.resizable
 						handles: "s" 
@@ -278,13 +269,14 @@ define ['app'],(App)->
 
 					else
 						modelData =
+							id : _.uniqueId('option')
 							type : 'Option'
 							shape : 'Circle'
 							x : elementPos.left
 							y: elementPos.top
 							radius : 20
 							color : '#000000'
-							transparent : false
+							# transparent : false
 							correct : false
 							marks : 1
 							
@@ -300,13 +292,14 @@ define ['app'],(App)->
 
 
 					circle = new Kinetic.Circle
+							id 			: hotspotElement.get 'id'
 							x 			: hotspotElement.get 'x'
 							y 			: hotspotElement.get 'y'
 							radius 		: hotspotElement.get 'radius'
 							stroke 		: hotspotElement.get 'color'
 							strokeWidth : 2
 							dash 		: [6,4 ]
-							dashEnabled : hotspotElement.get 'transparent'
+							dashEnabled : @model.get 'transparent'
 							fill : if hotspotElement.get("correct") then "rgba(12, 199, 55, 0.28)" else ""
 
 					circleGrp = resizeCircle circle,@optionLayer
@@ -317,9 +310,9 @@ define ['app'],(App)->
 							hotspotElement.set 'radius',circle.radius()
 
 					# on change of transparency redraw
-					hotspotElement.on "change:transparent",=>
+					@model.on "change:transparent",(model,transparent)=>
 						
-						circle.dashEnabled hotspotElement.get 'transparent'
+						circle.dashEnabled transparent
 						@optionLayer.draw()
 
 					# on change of color redraw
@@ -366,6 +359,7 @@ define ['app'],(App)->
 
 					else
 						modelData =
+							id : _.uniqueId('option')
 							type : 'Option'
 							shape : 'Rect'
 							x : elementPos.left
@@ -373,7 +367,7 @@ define ['app'],(App)->
 							width: 30
 							height: 30	
 							color : '#000000'
-							transparent : false
+							# transparent : false
 							angle 	: 0
 							correct : false
 							marks : 1
@@ -388,7 +382,8 @@ define ['app'],(App)->
 					@trigger "show:hotspot:element:properties", hotspotElement
 
 					box = new Kinetic.Rect
-							name : "rect2"
+							id : hotspotElement.get 'id'
+							# name : "rect2"
 							x: hotspotElement.get 'x'
 							y: hotspotElement.get 'y'
 							width: hotspotElement.get 'width'
@@ -396,7 +391,7 @@ define ['app'],(App)->
 							stroke: hotspotElement.get 'color'
 							strokeWidth: 2
 							dash : [6,4 ]
-							dashEnabled : hotspotElement.get 'transparent'	
+							dashEnabled : @model.get 'transparent'	
 							fill : if hotspotElement.get("correct") then "rgba(12, 199, 55, 0.28)" else ""
 
 					rectGrp = resizeRect box,@optionLayer
@@ -410,9 +405,9 @@ define ['app'],(App)->
 							hotspotElement.set 'height',box.height()
 
 					# on change of transparency redraw
-					hotspotElement.on "change:transparent",=>
+					@model.on "change:transparent",(model,transparent)=>
 						console.log rectGrp
-						box.dashEnabled hotspotElement.get 'transparent'
+						box.dashEnabled transparent
 						@optionLayer.draw()
 
 					# on change of color redraw

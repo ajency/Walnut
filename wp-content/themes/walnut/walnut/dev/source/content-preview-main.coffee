@@ -42,6 +42,8 @@ require.config
 		screwbuttons 		: 'plugins/jquery.screwdefaultbuttonsV2'
 		bridget 			: 'plugins/jquery.bridget'
 		isotope				: 'plugins/isotope.pkgd.min'
+		videojs				: 'plugins/video'
+
 
 	shim:
 		underscore: 

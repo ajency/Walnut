@@ -24,7 +24,7 @@ define ['app'
 					triggerShowTotalMarks:=>
 						_.delay =>
 							@view.triggerMethod "show:total:marks", @total
-						,500
+						,200
 
 					_showView:->
 						new TopPanel.Views.TopPanelView

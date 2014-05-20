@@ -75,6 +75,7 @@ define ['app'
 					_getElementProperties:(model)->
 						elementName = model.get 'element'
 						ele = _.slugify elementName
+						
 						App.execute "show:#{ele}:properties",
 								region : @layout.questPropertyRegion
 								model : model

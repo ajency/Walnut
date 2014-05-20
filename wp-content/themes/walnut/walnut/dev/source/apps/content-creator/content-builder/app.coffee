@@ -47,7 +47,7 @@ define ['app'
 
 						container = @_getContainer()
 						_.each section, (element, i)=>
-							if element.element is 'Row'
+							if element.element is 'Row' or element.element is 'TeacherQuestion'
 								@addNestedElements container,element
 							else
 								App.request "add:new:element",container,element.element, element
@@ -71,6 +71,7 @@ define ['app'
 					# add a new element to the builder region
 					addNewElement : (container , type, modelData)->
 						console.log type
+						# console.log container
 						
 						new ContentBuilder.Element[type].Controller
 										container : container

@@ -18,6 +18,7 @@ require.config
 		jqueryvalidate		: 'plugins/jquery.validate.min'
 		underscore			: 'plugins/underscore'
 		backbone    		: 'plugins/backbone'
+		babysitter 			: 'plugins/backbone.babysitter.min'
 		bootstrap   		: 'plugins/bootstrap'
 		bootstrapslider		: 'plugins/bootstrap-slider'
 		marionette  		: 'plugins/backbone.marionette'
@@ -39,6 +40,7 @@ require.config
 		select2       		: 'plugins/select2.min'
 		tagsinput 			: 'plugins/bootstrap-tagsinput.min'
 		screwbuttons 		: 'plugins/jquery.screwdefaultbuttonsV2'
+		videojs				: 'plugins/video'
 
 	shim:
 		underscore: 
@@ -52,6 +54,7 @@ require.config
 		backbone: 
 			deps 	: ['jquery','underscore']
 			exports : 'Backbone'
+		babysitter  : ['backbone']
 		marionette : 
 			deps 	: ['backbone']
 			exports : 'Marionette'
