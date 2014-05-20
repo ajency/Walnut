@@ -21,13 +21,11 @@ define ['app'
             initialize: (opts)->
                 {@division,@classID,@moduleID,contentGroupModel,
                 questionsCollection,questionResponseCollection,
-                contentPiece,@display_mode} = opts
+                contentPiece,@display_mode,studentCollection} = opts
 
                 App.leftNavRegion.close()
                 App.headerRegion.close()
                 App.breadcrumbRegion.close()
-
-                studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
                 App.execute "when:fetched", questionResponseCollection, =>
                     #checking if model exists in collection. if so, replacing the empty model
@@ -73,13 +71,13 @@ define ['app'
                         questionResponseModel.save()
 
             _changeQuestion: (current_question_id)=>
-                current_question_id = current_question_id.toString()
+                current_question_id = parseInt current_question_id
 
                 contentPieces = contentGroupModel.get 'content_pieces'
-
+                contentPieces =_.map contentPieces, (m)-> parseInt m
                 pieceIndex = _.indexOf(contentPieces, current_question_id)
 
-                nextQuestion = contentPieces[pieceIndex + 1]
+                nextQuestion = parseInt contentPieces[pieceIndex + 1]
 
                 if nextQuestion
 
@@ -110,7 +108,7 @@ define ['app'
 
             _getOrCreateModel: (content_piece_id)=>
                 questionResponseModel = questionResponseCollection.findWhere
-                    'content_piece_id': content_piece_id.toString()
+                    'content_piece_id': content_piece_id
 
                 if questionResponseModel
                     if @display_mode is 'class_mode'

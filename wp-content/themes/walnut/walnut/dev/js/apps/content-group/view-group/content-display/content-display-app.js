@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionContentDisplayController.prototype.initialize = function(opts) {
         var groupContentCollection, model, questionResponseCollection, view;
-        model = opts.model, this.mode = opts.mode, questionResponseCollection = opts.questionResponseCollection, groupContentCollection = opts.groupContentCollection;
+        model = opts.model, this.mode = opts.mode, questionResponseCollection = opts.questionResponseCollection, groupContentCollection = opts.groupContentCollection, this.studentCollection = opts.studentCollection;
         this.view = view = this._getCollectionContentDisplayView(model, groupContentCollection, questionResponseCollection);
         this.show(view, {
           loading: true,
@@ -41,6 +41,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           model: model,
           collection: collection,
           responseCollection: responseCollection,
+          studentCollection: this.studentCollection,
           mode: this.mode,
           templateHelpers: {
             showElapsedTime: (function(_this) {
@@ -69,6 +70,28 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       ContentItemView.prototype.className = '';
 
+      ContentItemView.prototype.mixinTemplateHelpers = function(data) {
+        var additionalData;
+        additionalData = Marionette.getOption(this, 'additionalData');
+        data.dateCompleted = additionalData.dateCompleted;
+        data.question_type = _.str.capitalize(data.question_type);
+        if (additionalData.responseStatus) {
+          data.responseStatus = additionalData.responseStatus;
+          data.timeTaken = additionalData.timeTaken;
+          data.correctAnswer = additionalData.correctAnswer;
+        }
+        return data;
+      };
+
+      ContentItemView.prototype.onShow = function() {
+        var content_icon;
+        content_icon = 'fa-question';
+        if (this.model.get('content_type' === 'content_piece')) {
+          content_icon = 'fa-youtube-play';
+        }
+        return this.$el.find('.cbp_tmicon .fa').addClass(content_icon);
+      };
+
       return ContentItemView;
 
     })(Marionette.ItemView);
@@ -77,6 +100,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       function ContentDisplayView() {
         this.viewQuestionReadOnly = __bind(this.viewQuestionReadOnly, this);
+        this.getResults = __bind(this.getResults, this);
         return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
 
@@ -85,6 +109,68 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       ContentDisplayView.prototype.itemView = ContentItemView;
 
       ContentDisplayView.prototype.itemViewContainer = 'ul.cbp_tmtimeline';
+
+      ContentDisplayView.prototype.itemViewOptions = function(model, index) {
+        var additionalData, data, mins, responseCollection, responseModel, responseModelArray, seconds, time, _i, _len;
+        responseCollection = Marionette.getOption(this, 'responseCollection');
+        responseModelArray = responseCollection.where({
+          "content_piece_id": model.get('ID')
+        });
+        for (_i = 0, _len = responseModelArray.length; _i < _len; _i++) {
+          responseModel = responseModelArray[_i];
+          responseModel = responseModel;
+        }
+        additionalData = {};
+        additionalData.dateCompleted = 'N/A';
+        if (responseModel) {
+          if (responseModel.get('status') === 'completed') {
+            additionalData.responseStatus = responseModel.get('status');
+            time = responseModel.get('time_taken');
+            mins = parseInt(time / 60);
+            if (mins > 59) {
+              mins = parseInt(mins % 60);
+            }
+            seconds = parseInt(time % 60);
+            additionalData.timeTaken = mins + 'm ' + seconds + 's';
+            additionalData.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY");
+            additionalData.correctAnswer = this.getResults(model, responseModel.get('question_response'));
+          }
+          console.log(additionalData);
+        }
+        return data = {
+          model: model,
+          additionalData: additionalData
+        };
+      };
+
+      ContentDisplayView.prototype.getResults = function(model, question_response) {
+        var ans, answeredCorrectly, correct_answer, name, names, studID, studentCollection, student_names, _i, _j, _len, _len1;
+        correct_answer = 'No One';
+        names = [];
+        studentCollection = Marionette.getOption(this, 'studentCollection');
+        if (model.get('question_type') === 'chorus') {
+          if (question_response) {
+            correct_answer = CHORUS_OPTIONS[question_response];
+          }
+        } else {
+          for (_i = 0, _len = question_response.length; _i < _len; _i++) {
+            studID = question_response[_i];
+            answeredCorrectly = studentCollection.where({
+              "ID": studID
+            });
+            for (_j = 0, _len1 = answeredCorrectly.length; _j < _len1; _j++) {
+              ans = answeredCorrectly[_j];
+              name = ans.get('display_name');
+            }
+            names.push(name);
+          }
+          if (_.size(names) > 0) {
+            student_names = names.join(', ');
+            correct_answer = _.size(names) + ' Students (' + student_names + ')';
+          }
+        }
+        return correct_answer;
+      };
 
       ContentDisplayView.prototype.events = {
         'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
@@ -112,7 +198,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           _results1 = [];
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
             question = _ref1[_j];
-            if (_.contains(responseQuestionIDs, $(question).attr('data-id'))) {
+            if (_.contains(responseQuestionIDs, parseInt($(question).attr('data-id')))) {
               _results1.push($(question).find('.cbp_tmlabel').addClass('done completed').css('cursor', 'pointer'));
             } else {
               _results1.push(void 0);
