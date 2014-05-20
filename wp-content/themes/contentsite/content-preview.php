@@ -36,6 +36,8 @@ Template Name: Content Preview
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/jquery-ui.css" rel="stylesheet" type="text/css">
+	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
+
 <!-- 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/slider.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css">
@@ -77,6 +79,7 @@ var SITEURL = '<?php echo site_url();?>'
 AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
 var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE    = '<?php echo wp_create_nonce('media-form');?>';
+var THEMEURL = '<?php echo get_template_directory_uri()?>';
 
 </script>
 <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>

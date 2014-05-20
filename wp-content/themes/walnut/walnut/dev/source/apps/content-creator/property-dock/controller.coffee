@@ -72,6 +72,8 @@ define ['app'
                     region: @layout.questPropertyRegion
                     model: model
 
-
+				
+		
         App.commands.setHandler "show:property:dock", (options)->
             new PropertyDockController options
+

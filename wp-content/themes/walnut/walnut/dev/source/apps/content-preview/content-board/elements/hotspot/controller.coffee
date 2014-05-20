@@ -3,96 +3,87 @@ define ['app'
 		'apps/content-preview/content-board/elements/hotspot/view'],
 		(App,Element)->
 
-			App.module "ContentPreview.ContentBoard.Element.Hotspot" ,(Hotspot, App, Backbone, Marionette,$, _)->
-
-				
-				# menu controller
-				class Hotspot.Controller extends Element.Controller
-
-					# intializer
-					initialize:(options)->
-
-						@eventObj = options.eventObj
-
-						_.defaults options.modelData,
-											element  	: 'Hotspot'
-											height 	: 0
-											marks : 1
-											enableIndividualMarks : false
-											optionCollection : []
-											textCollection : []
-											imageCollection :[]
-
-						super(options)
-
-					_getHotspotView:()->
-							
-							new Hotspot.Views.HotspotView
-									model : @layout.model
-
-								
-					# setup templates for the element
-					renderElement:()=>
-						@optionCollection = App.request "create:new:hotspot:element:collection",@layout.model.get 'optionCollection'
-						@textCollection = App.request "create:new:hotspot:element:collection",@layout.model.get 'textCollection'
-						@imageCollection = App.request "create:new:hotspot:element:collection",@layout.model.get 'imageCollection'
-				
-						@layout.model.set 'optionCollection',@optionCollection
-						@layout.model.set 'textCollection',@textCollection
-						@layout.model.set 'imageCollection',@imageCollection
-						# @removeSpinner()
-						# get menu 
-						@view = @_getHotspotView()
-
-						# listen to show event, and trigger show property box event
-						# listen to show property box event and show the property by passing the current model
-						@listenTo @view, "show show:hotspot:elements",=>							
-								App.execute "show:question:elements",
-										model : @layout.model
-								App.execute "show:question:properties", 
-										model : @layout.model
+        App.module "ContentPreview.ContentBoard.Element.Hotspot" ,
+        (Hotspot, App, Backbone, Marionette,$, _)->
 
 
-						# @listenTo @view, "close:hotspot:elements", (contentObject)=>
-						# 		# console.log JSON.stringify contentObject
-						# 		@layout.model.set 'content', JSON.stringify contentObject
-						# 		# console.log JSON.stringify @model.toJSON()
-								
-						# 		App.execute "close:question:elements"
+            # menu controller
+            class Hotspot.Controller extends Element.Controller
 
-						# App.commands.setHandler  "save:hotspot:content",=>
-						# 	@view.triggerMethod "save:hotspot:content"
-							# App.execute "close:question:elements"
+                # intializer
+                initialize:(options)->
 
-						# listen to view event for closing the hotspot element property region
-						# on mouse down anywhere on the hotspot except on the element
-						@listenTo @view, "close:hotspot:element:properties",->
-								App.execute "close:question:element:properties"
+                    answerData =
+                        answer : []
+                        marks : 0
+                        comment : 'Not Attempted'
+                    @answerModel = App.request "create:new:answer",answerData
 
-						@listenTo @view, "show:hotspot:element:properties",(hotspotElement)->
-							App.execute "show:hotspot:element:properties",
-								model : hotspotElement
-								hotspotModel : @layout.model
+                    super(options)
 
-						
-		
-						@layout.elementRegion.show @view,
-							loading:true							
-					
+                _getHotspotView:()->
+
+                    new Hotspot.Views.HotspotView
+                        model : @layout.model
+                        answerModel: @answerModel
 
 
-					# remove the element model and close all the property regions
-					deleteElement:(model)->
-							model.set('optionCollection','')
-							# delete model.get 'optionCollection'
-							model.set('textCollection','')
-							# delete model.get 'textCollection'
-							model.set('imageCollection','')
-							# delete model.get 'imageCollection'
-							model.destroy()
-							App.execute "close:question:elements"
-							App.execute "close:question:properties"
-							App.execute "close:question:element:properties"
-							# # on delete enable all question elements in d element box
-							# @eventObj.vent.trigger "question:removed"
+
+                # setup templates for the element
+                renderElement:()=>
+                    @optionCollection = App.request "create:new:hotspot:element:collection",@layout.model.get 'optionCollection'
+                    @textCollection = App.request "create:new:hotspot:element:collection",@layout.model.get 'textCollection'
+                    @imageCollection = App.request "create:new:hotspot:element:collection",@layout.model.get 'imageCollection'
+
+
+                    @layout.model.set 'optionCollection',@optionCollection
+                    @layout.model.set 'textCollection',@textCollection
+                    @layout.model.set 'imageCollection',@imageCollection
+
+
+
+                    App.execute "show:total:marks",@layout.model.get 'marks'
+                    # @removeSpinner()
+                    # get menu
+                    @view = @_getHotspotView()
+
+                    @listenTo @view, "submit:answer", @_submitAnswer
+
+                    @layout.elementRegion.show @view,
+                        loading:true
+
+                _submitAnswer:->
+                    console.log @optionCollection
+                    correctOptions = @optionCollection.where {correct:true}
+                    console.log correctOptions
+                    correctOptionsIds = _.pluck correctOptions,'id'
+                    console.log correctOptionsIds
+                    answerId = _.pluck @answerModel.get('answer'),'id'
+
+                    if @layout.model.get 'enableIndividualMarks'
+                        console.log _.difference(answerId,correctOptionsIds)
+                        if not _.difference(answerId,correctOptionsIds).length
+                            if not _.difference(correctOptionsIds,answerId).length
+                               @answerModel.set 'marks',@layout.model.get 'marks'
+                            else
+                                answersNotMarked = _.difference(correctOptionsIds,answerId)
+                                totalMarks = @layout.model.get 'marks'
+                                _.each answersNotMarked,(notMarked)=>
+                                    console.log @optionCollection.findWhere({id:notMarked})
+                                    totalMarks -= @optionCollection.findWhere({id:notMarked}).get('marks')
+                                @answerModel.set 'marks',totalMarks
+
+
+                    else
+                        unless _.difference(answerId,correctOptionsIds).length or _.difference(correctOptionsIds,answerId).length
+                           @answerModel.set 'marks',@layout.model.get 'marks'
+
+
+
+                    App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+
+                    # if @answerModel.get('marks') < @layout.model.get('marks')
+                    @view.triggerMethod 'show:feedback'
+
+
 

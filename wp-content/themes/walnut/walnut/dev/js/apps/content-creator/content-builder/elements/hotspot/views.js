@@ -87,6 +87,7 @@ define(['app'], function(App) {
 
       HotspotView.prototype._initializeCanvasResizing = function() {
         this.$el.resize(this._setResizeHandler);
+        this.model.set('height', this.stage.height());
         return this.$el.resizable({
           handles: "s"
         });
@@ -248,13 +249,13 @@ define(['app'], function(App) {
           hotspotElement = model;
         } else {
           modelData = {
+            id: _.uniqueId('option'),
             type: 'Option',
             shape: 'Circle',
             x: elementPos.left,
             y: elementPos.top,
             radius: 20,
             color: '#000000',
-            transparent: false,
             correct: false,
             marks: 1
           };
@@ -264,13 +265,14 @@ define(['app'], function(App) {
         self = this;
         this.trigger("show:hotspot:element:properties", hotspotElement);
         circle = new Kinetic.Circle({
+          id: hotspotElement.get('id'),
           x: hotspotElement.get('x'),
           y: hotspotElement.get('y'),
           radius: hotspotElement.get('radius'),
           stroke: hotspotElement.get('color'),
           strokeWidth: 2,
           dash: [6, 4],
-          dashEnabled: hotspotElement.get('transparent'),
+          dashEnabled: this.model.get('transparent'),
           fill: hotspotElement.get("correct") ? "rgba(12, 199, 55, 0.28)" : ""
         });
         circleGrp = resizeCircle(circle, this.optionLayer);
@@ -279,9 +281,9 @@ define(['app'], function(App) {
           hotspotElement.set('y', circle.getAbsolutePosition().y);
           return hotspotElement.set('radius', circle.radius());
         });
-        hotspotElement.on("change:transparent", (function(_this) {
-          return function() {
-            circle.dashEnabled(hotspotElement.get('transparent'));
+        this.model.on("change:transparent", (function(_this) {
+          return function(model, transparent) {
+            circle.dashEnabled(transparent);
             return _this.optionLayer.draw();
           };
         })(this));
@@ -325,6 +327,7 @@ define(['app'], function(App) {
           hotspotElement = model;
         } else {
           modelData = {
+            id: _.uniqueId('option'),
             type: 'Option',
             shape: 'Rect',
             x: elementPos.left,
@@ -332,7 +335,6 @@ define(['app'], function(App) {
             width: 30,
             height: 30,
             color: '#000000',
-            transparent: false,
             angle: 0,
             correct: false,
             marks: 1
@@ -343,7 +345,7 @@ define(['app'], function(App) {
         self = this;
         this.trigger("show:hotspot:element:properties", hotspotElement);
         box = new Kinetic.Rect({
-          name: "rect2",
+          id: hotspotElement.get('id'),
           x: hotspotElement.get('x'),
           y: hotspotElement.get('y'),
           width: hotspotElement.get('width'),
@@ -351,7 +353,7 @@ define(['app'], function(App) {
           stroke: hotspotElement.get('color'),
           strokeWidth: 2,
           dash: [6, 4],
-          dashEnabled: hotspotElement.get('transparent'),
+          dashEnabled: this.model.get('transparent'),
           fill: hotspotElement.get("correct") ? "rgba(12, 199, 55, 0.28)" : ""
         });
         rectGrp = resizeRect(box, this.optionLayer);
@@ -362,10 +364,10 @@ define(['app'], function(App) {
           hotspotElement.set('width', box.width());
           return hotspotElement.set('height', box.height());
         });
-        hotspotElement.on("change:transparent", (function(_this) {
-          return function() {
+        this.model.on("change:transparent", (function(_this) {
+          return function(model, transparent) {
             console.log(rectGrp);
-            box.dashEnabled(hotspotElement.get('transparent'));
+            box.dashEnabled(transparent);
             return _this.optionLayer.draw();
           };
         })(this));

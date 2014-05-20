@@ -47,12 +47,13 @@ define ['app'
 
                 section = @view.model.get 'layout'
 
-                container = $('#myCanvas #question-area')
-                _.each section, (element, i)=>
-                    if element.element is 'Row'
-                        @addNestedElements container, element
-                    else
-                        App.request "add:new:element", container, element.element, element
+
+				container = $('#myCanvas #question-area')
+				_.each section, (element, i)=>
+					if element.element is 'Row' or element.element is 'TeacherQuestion'
+						@addNestedElements container,element
+					else
+						App.request "add:new:element",container,element.element, element
 
 
             addNestedElements: (container, element)->

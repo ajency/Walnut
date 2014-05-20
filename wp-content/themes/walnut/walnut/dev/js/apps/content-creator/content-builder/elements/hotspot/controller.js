@@ -18,6 +18,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           element: 'Hotspot',
           height: 0,
           marks: 1,
+          transparent: false,
           enableIndividualMarks: false,
           optionCollection: [],
           textCollection: [],

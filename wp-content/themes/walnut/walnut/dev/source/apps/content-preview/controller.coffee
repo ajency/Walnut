@@ -42,3 +42,4 @@ define ['app'
 
         App.commands.setHandler "show:content:preview", (options)->
             new ContentPreview.Controller options
+

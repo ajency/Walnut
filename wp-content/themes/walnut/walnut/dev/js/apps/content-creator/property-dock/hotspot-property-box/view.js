@@ -13,23 +13,28 @@ define(['app'], function(App) {
         return PropertyView.__super__.constructor.apply(this, arguments);
       }
 
-      PropertyView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> MCQ <i class="fa fa-chevron-right"></i> <span class="semi-bold">Hotspot Question Properties</span> </div> <div class="docket-body"> <div class="checkbox check-success"> <input id="check-individual-marks" type="checkbox" name="check-individual-marks"> <label for="check-individual-marks">Set marks for each blank</label> </div> <div class="m-b-10"> Marks <input id="marks" type="text" value="{{marks}}" class="form-control" > </div> </div> </div> </div>';
+      PropertyView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> MCQ <i class="fa fa-chevron-right"></i> <span class="semi-bold">Hotspot Question Properties</span> </div> <div class="docket-body"> <div class="checkbox check-success"> <input id="check-individual-marks" type="checkbox" name="check-individual-marks"> <label for="check-individual-marks">Set marks for each blank</label> </div> <div class="m-b-10"> Marks <input id="marks" type="text" value="{{marks}}" class="form-control" > </div> <div id="transparency" class="checkbox check-success"> <input id="transparency-checkbox" type="checkbox" value="1"> <label for="transparency-checkbox">Set Transparent</label> </div> </div> </div> </div>';
 
       PropertyView.prototype.events = {
         'blur @ui.marksTextbox': '_changeMarks',
-        'change @ui.individualMarksCheckbox': '_toggleIndividualMarks'
+        'change @ui.individualMarksCheckbox': '_toggleIndividualMarks',
+        'change @ui.transparencyCheckbox': '_toggleTransparency'
       };
 
       PropertyView.prototype.ui = {
         marksTextbox: 'input#marks',
-        individualMarksCheckbox: 'input#check-individual-marks'
+        individualMarksCheckbox: 'input#check-individual-marks',
+        transparencyCheckbox: 'input#transparency-checkbox'
       };
 
       PropertyView.prototype.onShow = function() {
         if (this.model.get('enableIndividualMarks')) {
           this.ui.individualMarksCheckbox.prop('checked', true);
           this.ui.marksTextbox.prop('disabled', true);
-          return this._enableCalculateMarks();
+          this._enableCalculateMarks();
+        }
+        if (this.model.get('transparent')) {
+          return this.$el.find('#transparency-checkbox').prop('checked', true);
         }
       };
 
@@ -80,6 +85,14 @@ define(['app'], function(App) {
           this.model.set('enableIndividualMarks', false);
           this.ui.marksTextbox.prop('disabled', false);
           return this._disableCalculateMarks();
+        }
+      };
+
+      PropertyView.prototype._toggleTransparency = function() {
+        if (this.ui.transparencyCheckbox.prop('checked')) {
+          return this.model.set('transparent', true);
+        } else {
+          return this.model.set('transparent', false);
         }
       };
 

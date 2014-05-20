@@ -61,6 +61,13 @@ define ['app'], (App)->
                                 </div>
                               </a>
                             </li>
+                            <li data-element="TeacherQuestion" > 
+								<a href="#" class="drag builder-element" > 
+									<div class="aj-imp-builder-title">
+										<i class="fa fa-arrows-v"></i> Teacher Question
+									</div> 
+								</a> 
+							</li>  
                           </ul>
                           <div class="clearfix"></div>
                         </div>
@@ -85,6 +92,12 @@ define ['app'], (App)->
                                 <div class="aj-imp-builder-title">Image With Text</div>
                               </a>
                             </li>
+                            <li data-element="Video" class="hotspotable"> 
+								<a href="#" class="drag builder-element" > 
+									<i class="bicon icon-uniF112"></i> 
+									<div class="aj-imp-builder-title">Video</div> 
+								</a> 
+							</li>
                             <div class="clearfix"></div>
                           </ul>
                         </div>'
@@ -102,12 +115,13 @@ define ['app'], (App)->
                 contentType = Marionette.getOption @,'contentType'
 
                 if contentType is 'teacher_question'
-                    elementSet= ['Row','Image','Text','ImageWithText']
+                    elementSet= ['Row','TeacherQuestion','Image','Text','ImageWithText','Video']
                 else
-                    elementSet= ['Row','Hotspot','Mcq','Fib','BigAnswer','Sort', 'Image','Text','ImageWithText']
+                    elementSet= ['Row','Hotspot','Mcq','Fib','BigAnswer','Sort', 'Image','Text','ImageWithText','Video']
 
 
                 _.each @$el.find('li'), (el,ind)->
                     elementName= $(el).attr 'data-element'
                     if not _.contains elementSet, elementName
                         $(el).hide()
+

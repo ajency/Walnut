@@ -78,6 +78,19 @@ define(['app'], function(App) {
                 ele.elements.push(col);
               });
             }
+            if (ele.element === 'TeacherQuestion') {
+              delete ele.meta_id;
+              ele.elements = [];
+              _.each($(element).children('.element-markup').children('.teacher-question').children('.teacher-question-row'), function(column, index) {
+                var col;
+                col = {
+                  position: index + 1,
+                  element: 'TeacherQuestRow',
+                  elements: _this._getJson($(column))
+                };
+                return ele.elements.push(col);
+              });
+            }
             return arr.push(ele);
           };
         })(this));

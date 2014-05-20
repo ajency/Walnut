@@ -26,9 +26,18 @@ define ['app'],(App)->
 										handle 		: '.aj-imp-drag-handle'
 										helper 		: 'clone'
 										opacity		: .65
+																									
+												
 										receive		: (evt, ui)=> 
 											# trigger drop event if ui.item is Li tag
+
 											if ui.item.prop("tagName") is 'LI'
 												type  = ui.item.attr 'data-element'
+												
+												# if not $(evt.target).hasClass('teacher-question-row') and $(evt.target).not('.teacher-question-row div')
+												# console.log type
 												@trigger "add:new:element", $(evt.target), type
+
+											# if ui.item.find('form').find('input[name="element"]').val() is 'Video'
+											# 		App.execute "video:moved"
 												

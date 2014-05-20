@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
@@ -7,6 +8,7 @@ define(['app'], function(App) {
       __extends(McqView, _super);
 
       function McqView() {
+        this._showProperties = __bind(this._showProperties, this);
         return McqView.__super__.constructor.apply(this, arguments);
       }
 
@@ -14,12 +16,8 @@ define(['app'], function(App) {
 
       McqView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-container');
-        this.$el.parent().parent().on('click', (function(_this) {
-          return function(evt) {
-            _this.trigger("show:this:mcq:properties");
-            return evt.stopPropagation();
-          };
-        })(this));
+        this.$el.parent().parent().off('click', this._showProperties);
+        this.$el.parent().parent().on('click', this._showProperties);
         this.trigger("create:row:structure", {
           container: this.$el
         });
@@ -28,14 +26,23 @@ define(['app'], function(App) {
         return this.$el.find('.aj-imp-settings-btn').remove();
       };
 
+      McqView.prototype._showProperties = function(evt) {
+        this.trigger("show:this:mcq:properties");
+        return evt.stopPropagation();
+      };
+
       McqView.prototype.onPreTickAnswers = function() {
         console.log(this.model.get('correct_answer'));
-        return _.each(this.model.get('correct_answer'), (function(_this) {
-          return function(optionNo) {
-            _this.$el.find('input:checkbox[id=option-' + optionNo + ']').attr('checked', true);
-            return _this.$el.find('input:checkbox[id=option-' + optionNo + ']').parent().css('background-position', '0px -26px');
-          };
-        })(this));
+        return _.each(this.model.get('correct_answer'), _.bind(this._tickToggleOption, this, true));
+      };
+
+      McqView.prototype._tickToggleOption = function(checked, optionNo) {
+        this.$el.find('input:checkbox[id=option-' + optionNo + ']').attr('checked', checked);
+        if (checked) {
+          return this.$el.find('input:checkbox[id=option-' + optionNo + ']').parent().css('background-position', '0px -26px');
+        } else {
+          return this.$el.find('input:checkbox[id=option-' + optionNo + ']').parent().css('background-position', '0px 0px');
+        }
       };
 
       McqView.prototype.onUpdateTick = function() {
@@ -43,12 +50,7 @@ define(['app'], function(App) {
         correctOption = this.model.get('correct_answer');
         totalOptions = this.model.get('optioncount');
         unselectedOptions = _.difference(_.range(1, totalOptions + 1), correctOption);
-        return _.each(unselectedOptions, (function(_this) {
-          return function(optionNo) {
-            _this.$el.find('input:checkbox[id=option-' + optionNo + ']').attr('checked', false);
-            return _this.$el.find('input:checkbox[id=option-' + optionNo + ']').parent().css('background-position', '0px 0px');
-          };
-        })(this));
+        return _.each(unselectedOptions, _.bind(this._tickToggleOption, this, false));
       };
 
       return McqView;
@@ -92,11 +94,12 @@ define(['app'], function(App) {
           width: 32,
           height: 26
         });
-        return this.$el.parent().on("class:changed", (function(_this) {
+        this.$el.parent().on("class:changed", (function(_this) {
           return function() {
             return _this.model.set('class', parseInt(_this.$el.parent().attr('data-class')));
           };
         })(this));
+        return this.$el.parent().sortable('disable');
       };
 
       McqOptionView.prototype._onBlur = function() {
