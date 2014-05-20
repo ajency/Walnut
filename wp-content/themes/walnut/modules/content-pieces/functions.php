@@ -67,6 +67,7 @@ function get_content_pieces($args = array()) {
     $args['fields'] = 'ids';
     
     $content_items = get_posts($args);
+
     
     $content_pieces=array();
     

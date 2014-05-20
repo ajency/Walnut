@@ -54,16 +54,16 @@ define ['app'
                         App.request "add:new:element", container, element.element, element
 
 
-                            addNestedElements: (container, element)->
-                                controller = App.request "add:new:element", container, element.element, element
-                                _.each element.elements, (column, index)=>
-                                    return if not column.elements
-                                    container = controller.layout.elementRegion.currentView.$el.children().eq(index)
-                                    _.each column.elements, (ele, i)=>
-                                        if ele.element is 'Row'
-                                            @addNestedElements $(container), ele
-                                        else
-                                            App.request "add:new:element", container, ele.element, ele
+            addNestedElements: (container, element)->
+                controller = App.request "add:new:element", container, element.element, element
+                _.each element.elements, (column, index)=>
+                    return if not column.elements
+                    container = controller.layout.elementRegion.currentView.$el.children().eq(index)
+                    _.each column.elements, (ele, i)=>
+                        if ele.element is 'Row'
+                            @addNestedElements $(container), ele
+                        else
+                            App.request "add:new:element", container, ele.element, ele
 
 
             API =
