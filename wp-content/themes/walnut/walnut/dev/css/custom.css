@@ -1243,6 +1243,11 @@ p.mcq-option-text {
 }
 .qstnStatus {
   color: #0aa699;
+  font-size: 20px;
+}
+
+.qstnStatus i {
+    font-size: 22px;
 }
 #content-board {
   margin-top: 30px;
@@ -1638,3 +1643,6 @@ textarea.error,
   background-repeat: no-repeat;
   background-position: left center;
 }
+
+.expand-page{margin-left:0 !important}
+.expand-page .content{padding:0 !important}

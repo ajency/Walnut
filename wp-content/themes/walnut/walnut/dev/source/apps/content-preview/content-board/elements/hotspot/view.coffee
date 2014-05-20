@@ -264,7 +264,7 @@ define ['app'],(App)->
 					App.navigate "media-manager", trigger : true
 					@listenTo App.vent,"media:manager:choosed:media",(media)=>
 						# @layout.model.set 'image_id', media.get 'id'
-						@_addImageElement elementPos, media.toJSON().url
+						@_addImageElement elementPos, media.url
 						# @layout.model.save()
 						@stopListening App.vent,"media:manager:choosed:media"
 
@@ -698,6 +698,6 @@ define ['app'],(App)->
 					 
 			_getHotspotData:->
 
-				@stage.toJSON()
+				@stage
 
 			 

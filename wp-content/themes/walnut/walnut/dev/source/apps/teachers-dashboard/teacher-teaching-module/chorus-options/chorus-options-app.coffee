@@ -8,7 +8,7 @@ define ['app'
                 {@questionResponseModel,@display_mode,@timerObject} = opts
 
                 @view = view = @_showChorusOptionsView @questionResponseModel
-                console.log @questionResponseModel
+
                 @show view, (loading: true)
 
                 @listenTo view, "save:question:response", @_saveQuestionResponse

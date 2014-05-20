@@ -59,7 +59,6 @@ define ['app'
                     questionResponseCollection: @questionResponseCollection
                     contentGroupModel: model
                     questionsCollection: groupContentCollection
-                    textbookNames: @textbookNames
                     classID: @classID
                     display_mode: display_mode # when display mode is readonly, the save response options are not shown
             # only when display mode is class_mode response changes can be done
@@ -97,6 +96,10 @@ define ['app'
             regions:
                 collectionDetailsRegion: '#collection-details-region'
                 contentDisplayRegion: '#content-display-region'
+
+
+            onShow:->
+                $('.page-content').removeClass 'expand-page'
 
 
 

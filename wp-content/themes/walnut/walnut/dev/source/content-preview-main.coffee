@@ -8,7 +8,7 @@ require.config
 	urlArgs : "ver=#{(new Date()).getTime()}"
 	
 	baseUrl : '../wp-content/themes/walnut/walnut/dev/js'
-	
+
 	paths:
 		app 				: 'content-preview-app' 
 		jquery 				: 'plugins/jquery'

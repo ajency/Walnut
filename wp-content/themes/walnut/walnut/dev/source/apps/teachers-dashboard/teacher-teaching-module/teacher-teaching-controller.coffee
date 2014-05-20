@@ -21,7 +21,11 @@ define ['app'
             initialize: (opts)->
                 {@division,@classID,@moduleID,contentGroupModel,
                 questionsCollection,questionResponseCollection,
-                contentPiece,@display_mode,@textbookNames} = opts
+                contentPiece,@display_mode} = opts
+
+                App.leftNavRegion.close()
+                App.headerRegion.close()
+                App.breadcrumbRegion.close()
 
                 studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
@@ -100,6 +104,9 @@ define ['app'
 
                 App.navigate newRoute, true
 
+                App.execute "show:headerapp", region: App.headerRegion
+                App.execute "show:leftnavapp", region: App.leftNavRegion
+
 
             _getOrCreateModel: (content_piece_id)=>
                 content_piece_id = content_piece_id.toString()
@@ -143,13 +150,15 @@ define ['app'
 
 
             _showQuestionDisplayView: (model) =>
-                App.execute "show:single:question:app",
-                    region: @layout.questionsDetailsRegion
-                    model: model
-                    textbookNames: @textbookNames
-                    questionResponseModel: questionResponseModel
-                    timerObject : @timerObject
-                    display_mode: @display_mode
+                App.execute "show:content:preview",
+                    region                  : @layout.questionsDetailsRegion
+                    model                   : model
+                    textbookNames           : @textbookNames
+                    questionResponseModel   : questionResponseModel
+                    timerObject             : @timerObject
+                    display_mode            : @display_mode
+                    classID                 : @classID
+                    students: studentCollection
 
             _showStudentsListView: (questionResponseModel)=>
                 App.execute "when:fetched", contentPiece, =>
@@ -183,6 +192,9 @@ define ['app'
                 moduleDetailsRegion: '#module-details-region'
                 questionsDetailsRegion: '#question-details-region'
                 studentsListRegion: '#students-list-region'
+
+            onShow:->
+                $('.page-content').addClass 'condensed expand-page'
 
 
 
