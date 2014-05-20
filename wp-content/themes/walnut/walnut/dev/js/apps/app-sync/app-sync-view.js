@@ -40,7 +40,10 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       };
 
       AppSyncView.prototype.onShow = function() {
-        return $('#syncText').text('');
+        var syncController;
+        $('#syncText').text('');
+        syncController = App.request("get:sync:controller");
+        return syncController.TotalRecordsUpdate();
       };
 
       AppSyncView.prototype.startSyncProcess = function() {
