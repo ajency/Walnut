@@ -10,27 +10,51 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 		#This function will get the file from device root and then download the data from the server and write it to the device file
 		TotalRecordsUpdate : ->
-
+			valuesAll=""
+			valuesAll1=""
+			valuesAll2=""
 			_.db.transaction( (tx)->
-				tx.executeSql("SELECT SUM(rows) AS total FROM (
-					SELECT COUNT(*) AS rows FROM wp_training_logs WHERE sync=? 
-					UNION ALL 
-					SELECT COUNT(*) AS rows FROM wp_question_response WHERE sync=?
-					UNION ALL 
-					SELECT COUNT(*) AS rows FROM wp_question_response_logs WHERE sync=?)", [0,0,0]
+				alert "SELECT"
+				tx.executeSql("SELECT * FROM wp_training_logs WHERE sync=0 ", [], (tx, results)->
+					valuesAll = results.rows.length;
+					console.log valuesAll					
+				,_.transactionErrorhandler
+					
+				)
+				tx.executeSql("SELECT * FROM wp_question_response WHERE sync=0 ", [], (tx, results)->
+					valuesAll1 = results.rows.length;
+					console.log valuesAll1					
+				,_.transactionErrorhandler
+					
+				)
+				tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync=0 ", [], (tx, results)->
+					valuesAll2 = results.rows.length;
+					console.log valuesAll2
+					VALUESGT=valuesAll+valuesAll1+valuesAll2
+					$('#SyncRecords').text(VALUESGT)
 
-					,(tx, data)->
-						total = data.rows.item(0)['total']
-						$('#SyncRecords').text(total)
-
-					,_.transactionErrorhandler
+				,_.transactionErrorhandler
+					
 				)
 
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Fetched all records where sync=0'
 			)
+			
 
+			# _.db.transaction( (tx)->
+			# 	alert "SELECT"
+			# 	tx.executeSql("select sum(rows) as total from
+			# 		(select count(*) as rows from wp_training_logs where sync=0 
+			# 		union all
+			# 		select count(*) as rows from wp_question_response where sync=0
+			# 		union all
+			# 		select count(*) as rows from wp_question_response_logs where sync=0)"
+			# 	,_.transactionErrorhandler
+			# 	)
+				
+			# 	alert "total value is" +total
+			# 	$('#SyncRecords').text(VALUESGT)
+
+			# )
 
 		Sync : ->
 			files = ["http://synapsedu.info/wp_35_training_logs.csv", "http://synapsedu.info/wp_35_question_response.csv" ,"http://synapsedu.info/wp_35_question_response_logs.csv"]
@@ -61,7 +85,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 		# readAsText : ->
 		# 	alert 'readAsText'
-	
+    
 		DownlaodFiles : (files , fileEntry)->
 			fileTransfer = new FileTransfer()
 			uri = files
@@ -176,5 +200,5 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 
 	# request handler
-	App.reqres.setHandler "get:sync:controller", ->
-		new SynchronizationController
+ 	App.reqres.setHandler "get:sync:controller", ->
+ 		new SynchronizationController
