@@ -21,13 +21,18 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			template : AppSyncTpl
 
 			events :
+				'click #JsonToCSV' : 'StartConversion'
 				'click #syncNow' : 'startSyncProcess'
 
 			onShow : ->
 				$('#syncText').text('')
 				syncController = App.request "get:sync:controller"
 				syncController.TotalRecordsUpdate()
-				
+			
+			StartConversion : ->
+				syncController = App.request "get:sync:controller"
+				syncController.Conversion()
+
 					
 
 			startSyncProcess : ->

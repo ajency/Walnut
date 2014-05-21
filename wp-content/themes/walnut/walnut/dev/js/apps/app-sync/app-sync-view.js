@@ -36,6 +36,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.template = AppSyncTpl;
 
       AppSyncView.prototype.events = {
+        'click #JsonToCSV': 'StartConversion',
         'click #syncNow': 'startSyncProcess'
       };
 
@@ -44,6 +45,12 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         $('#syncText').text('');
         syncController = App.request("get:sync:controller");
         return syncController.TotalRecordsUpdate();
+      };
+
+      AppSyncView.prototype.StartConversion = function() {
+        var syncController;
+        syncController = App.request("get:sync:controller");
+        return syncController.Conversion();
       };
 
       AppSyncView.prototype.startSyncProcess = function() {

@@ -55,6 +55,7 @@ require.config
         serialize			: 'plugins/serialize'
         selectordie			: 'plugins/selectordie.min'
         csvparse			: 'plugins/jquery.parse'
+        json2csvparse       : 'plugins/json2csv'
 
 
     shim:
@@ -94,6 +95,7 @@ require.config
         isotope : ['jquery','bridget']
         selectordie		: ['jquery']
         csvparse		: ['jquery']
+        json2csvparse   : ['jquery']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
 
