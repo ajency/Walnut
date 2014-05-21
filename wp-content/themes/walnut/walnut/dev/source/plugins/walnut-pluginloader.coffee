@@ -37,4 +37,5 @@ define [
       		'serialize'
       		'selectordie'
       		'csvparse'
+      		'json2csvparse'
 		], ->

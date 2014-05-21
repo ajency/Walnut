@@ -20,6 +20,8 @@ define(["backbone"], function(Backbone) {
         } else {
           data = App.reqres.request("get:" + collection_name + ":by:classid:local", opts.class_id);
           data.done(function(d) {
+            console.log('textbook class id data');
+            console.log(d);
             return collection.set(d);
           });
         }

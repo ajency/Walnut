@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone'], function(App, Backbone) {
+define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
   return App.module("Entities.Textbooks", function(Textbooks, App, Backbone, Marionette, $, _) {
     var API;
     Textbooks.ItemModel = (function(_super) {
@@ -186,7 +186,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         }).fail(_.failureHandler);
       },
       getTextbooksByClassIDFromLocal: function(class_id) {
-        var getTextBookIds, onSuccess, runMainQuery;
+        var getModulesCount, getTextBookIds, onSuccess, runMainQuery;
         getTextBookIds = function() {
           var runQ, success;
           runQ = function() {
@@ -205,6 +205,27 @@ define(["app", 'backbone'], function(App, Backbone) {
           };
           return $.when(runQ()).done(function() {
             return console.log('getTextBookIds transaction completed');
+          }).fail(_.failureHandler);
+        };
+        getModulesCount = function(textbook_id) {
+          var pattern, runQ, success;
+          pattern = '%"' + textbook_id + '"%';
+          runQ = function() {
+            return $.Deferred(function(d) {
+              return _.db.transaction(function(tx) {
+                return tx.executeSql("SELECT COUNT(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], success(d), _.deferredErrorHandler(d));
+              });
+            });
+          };
+          success = function(d) {
+            return function(tx, data) {
+              var modules_count;
+              modules_count = data.rows.item(0)['count'];
+              return d.resolve(modules_count);
+            };
+          };
+          return $.when(runQ()).done(function() {
+            return console.log('getModulesCount transaction completed');
           }).fail(_.failureHandler);
         };
         runMainQuery = function() {
@@ -226,10 +247,12 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var i, p, result, row, _fn, _i, _ref;
+            var i, result, row, _fn, _i, _ref;
             result = [];
-            _fn = function(tx, row, p, i) {
-              return tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + p + "'", [], function(tx, d) {
+            _fn = function(tx, row, i) {
+              var modulesCount;
+              modulesCount = getModulesCount(row['textbook_id']);
+              return modulesCount.done(function(modules_count) {
                 var classes, subjects;
                 classes = subjects = '';
                 if (row["class_id"] !== '') {
@@ -251,15 +274,16 @@ define(["app", 'backbone'], function(App, Backbone) {
                   count: row["count"],
                   classes: classes,
                   subjects: subjects,
-                  modules_count: d.rows.item(0)['count']
+                  modules_count: modules_count
                 };
-              }, _.transactionErrorHandler);
+              });
             };
             for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               row = data.rows.item(i);
-              p = '%"' + row['textbook_id'] + '"%';
-              _fn(tx, row, p, i);
+              _fn(tx, row, i);
             }
+            console.log('Final result');
+            console.log(result);
             return d.resolve(result);
           };
         };

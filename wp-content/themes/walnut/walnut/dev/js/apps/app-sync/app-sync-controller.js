@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App, _, parse) {
+define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], function(Marionette, App, _, parse, ConvertToCSV) {
   var SynchronizationController;
   return SynchronizationController = (function(_super) {
     __extends(SynchronizationController, _super);
@@ -39,6 +39,158 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
           return $('#SyncRecords').text(VALUESGT);
         }, _.transactionErrorhandler);
       });
+    };
+
+    SynchronizationController.prototype.Conversion = function() {
+      var valuesAll, valuesAll1, valuesAll2;
+      valuesAll = "";
+      valuesAll1 = "";
+      valuesAll2 = "";
+      return _.db.transaction(function(tx) {
+        alert("SELECT 4 Conversion");
+        tx.executeSql("SELECT * FROM wp_training_logs WHERE sync=0 ", [], function(tx, results) {
+          var data, data1, data2, data3, data4, data5, i, row, training_data, _results;
+          valuesAll = results.rows.length;
+          console.log(valuesAll);
+          if (valuesAll === 0) {
+            return console.log("No user found");
+          } else {
+            i = 0;
+            _results = [];
+            while (i < valuesAll) {
+              row = results.rows.item(i);
+              data = row.id;
+              data1 = row.division_id;
+              data2 = row.collection_id;
+              data3 = row.teacher_id;
+              data4 = row.date;
+              data5 = row.status;
+              console.log(data);
+              console.log(data1);
+              console.log(data2);
+              console.log(data3);
+              console.log(data4);
+              console.log(data5);
+              console.log(i);
+              training_data = '{ "id": "' + row.id + '","division_id":"' + row.division_id + '", "collection_id": "' + row.collection_id + '", "teacher_id": "' + row.teacher_id + '", "date":"' + row.date + '", "status":"' + row.status + '"}';
+              console.log("1st data is :" + training_data);
+              _results.push(i++);
+            }
+            return _results;
+          }
+        }, _.transactionErrorhandler);
+        tx.executeSql("SELECT * FROM wp_question_response WHERE sync=0 ", [], function(tx, results) {
+          var data, data1, data2, data3, data4, data5, data6, data7, data8, data9, i, quest_resp_data, row, _results;
+          valuesAll1 = results.rows.length;
+          console.log(valuesAll1);
+          if (valuesAll === 0) {
+            return console.log("No user found");
+          } else {
+            i = 0;
+            _results = [];
+            while (i < valuesAll) {
+              row = results.rows.item(i);
+              data = row.ref_id;
+              data1 = row.content_piece_id;
+              data2 = row.collection_id;
+              data3 = row.division;
+              data4 = row.question_response;
+              data5 = row.time_taken;
+              data6 = row.start_date;
+              data7 = row.end_date;
+              data8 = row.status;
+              data9 = row.sync;
+              console.log(data);
+              console.log(data1);
+              console.log(data2);
+              console.log(data3);
+              console.log(data4);
+              console.log(data5);
+              console.log(data6);
+              console.log(data7);
+              console.log(data8);
+              console.log(data9);
+              console.log(i);
+              quest_resp_data = '{ "grp_name": "' + row.ref_id + '","grp_des":"' + row.content_piece_id + '", "grp_recuring": "' + row.collection_id + '", "grp_type": "' + row.division + '", "grp_currency":"' + row.question_response + '", "grp_chat":"' + row.time_taken + '","grp_chat":"' + row.start_date + '""grp_chat":"' + row.end_date + '""grp_chat":"' + row.status + '""grp_chat":"' + row.sync + '"}';
+              console.log("2n Data is " + quest_resp_data);
+              _results.push(i++);
+            }
+            return _results;
+          }
+        }, _.transactionErrorhandler);
+        return tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync=0 ", [], function(tx, results) {
+          var AllData, CSVdata, data, data1, data2, fullGrp, i, items, quesn_rep_logs, row;
+          valuesAll2 = results.rows.length;
+          console.log(valuesAll2);
+          if (valuesAll === 0) {
+            console.log("No user found");
+            items = [
+              {
+                name: "Item 1",
+                color: "Green",
+                size: "X-Large"
+              }, {
+                name: "Item 2",
+                color: "Green",
+                size: "X-Large"
+              }, {
+                name: "Item 3",
+                color: "Green",
+                size: "X-Large"
+              }
+            ];
+            fullGrp = JSON.stringify(items);
+            console.log("Ful Data is " + fullGrp);
+            CSVdata = this.ConvertToCSV(fullGrp);
+            console.log("CSV data is" + CSVdata);
+            alert("hello");
+            return this.WriteToFile(CSVdata);
+          } else {
+            i = 0;
+            while (i < valuesAll) {
+              row = results.rows.item(i);
+              data = row.qr_ref_id;
+              data1 = row.start_time;
+              data2 = row.sync;
+              console.log(data);
+              console.log(data1);
+              console.log(data2);
+              console.log(i);
+              quesn_rep_logs = '{ "id": "' + row.qr_ref_id + '","collection_id": "' + row.start_time + '", "teacher_id": "' + row.sync + '"}';
+              console.log("3rd data is " + quesn_rep_logs);
+              i++;
+            }
+            AllData = {
+              "group": {
+                "training_data": training_data,
+                "quest_resp_data": quest_resp_data,
+                "quesn_rep_logs": quesn_rep_logs
+              }
+            };
+            fullGrp = '&data=' + JSON.stringify(AllData);
+            alert(fullGrp);
+            console.log("Ful Data is " + fullGrp);
+            CSVdata = ConvertToCSV(fullGrp);
+            return console.log("CSV data is" + CSVdata);
+          }
+        }, _.transactionErrorhandler);
+      });
+    };
+
+    SynchronizationController.prototype.WriteToFile = function(CSVdata) {
+      alert("CSVdata is " + CSVdata);
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
+        return function(fileSystem) {
+          return fileSystem.root.getFile("csvread.txt", {
+            create: true,
+            exclusive: false
+          }, function(fileEntry) {
+            return fileEntry.createWriter(function(gotFileWriter) {
+              return writer.write("some sample text" + CSVdata);
+            }, _.fileErrorHandler);
+          }, _.fileErrorHandler);
+        };
+      })(this), _.fileSystemErrorHandler);
     };
 
     SynchronizationController.prototype.Sync = function() {

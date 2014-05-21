@@ -1,4 +1,4 @@
-define ["app", 'backbone'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 		App.module "Entities.Textbooks", (Textbooks, App, Backbone, Marionette, $, _)->
 			
@@ -142,7 +142,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				# get textbooks by class id from local database
 				getTextbooksByClassIDFromLocal:(class_id)->
 					#user id hardcoded as 1 for now
-					getTextBookIds =->
+					getTextBookIds = ->
 
 						runQ =->
 							$.Deferred (d)->
@@ -156,6 +156,26 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 						$.when(runQ()).done ->
 							console.log 'getTextBookIds transaction completed'
+						.fail _.failureHandler
+
+					
+					# get total modules count
+					getModulesCount = (textbook_id)->
+						pattern = '%"'+textbook_id+'"%'
+
+						runQ =->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT COUNT(id) AS count FROM wp_content_collection 
+										WHERE term_ids LIKE '"+pattern+"'", [], success(d), _.deferredErrorHandler(d))
+
+						success =(d)->
+							(tx,data)->
+								modules_count = data.rows.item(0)['count']
+								d.resolve(modules_count)
+
+						$.when(runQ()).done ->
+							console.log 'getModulesCount transaction completed'
 						.fail _.failureHandler
 							
 								
@@ -174,7 +194,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 
 									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0
-					 				AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+textbook_ids+")", [], onSuccess(d), _.deferredErrorHandler(d));
+									AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+textbook_ids+")", [], onSuccess(d), _.deferredErrorHandler(d));
 								
 
 					onSuccess =(d)->
@@ -185,32 +205,32 @@ define ["app", 'backbone'], (App, Backbone) ->
 							for i in [0..data.rows.length-1] by 1
 
 								row = data.rows.item(i)
-								p = '%"'+row['textbook_id']+'"%'
 								
-								do (tx, row ,p, i)->
-									tx.executeSql("SELECT count(id) AS count FROM wp_content_collection WHERE term_ids LIKE '"+p+"'", []
+								do(tx, row ,i)->
+									modulesCount = getModulesCount(row['textbook_id'])
+									modulesCount.done (modules_count)->
+									
+										classes = subjects = ''
+										classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
+										subjects = unserialize(row["tags"]) if row["tags"] isnt ''
 
-										,(tx, d)->
-											classes = subjects = ''
-											classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
-											subjects = unserialize(row["tags"]) if row["tags"] isnt ''
+										result[i] = 
+											term_id: row["term_id"]
+											name: row["name"]
+											slug: row["slug"]
+											term_group: row["term_group"]
+											term_order: row["term_order"]
+											term_taxonomy_id: row["term_taxonomy_id"]
+											taxonomy: row["taxonomy"]
+											description: row["description"]
+											parent: row["parent"]
+											count: row["count"]
+											classes: classes
+											subjects: subjects
+											modules_count: modules_count
 
-											result[i] = 
-												term_id: row["term_id"]
-												name: row["name"]
-												slug: row["slug"]
-												term_group: row["term_group"]
-												term_order: row["term_order"]
-												term_taxonomy_id: row["term_taxonomy_id"]
-												taxonomy: row["taxonomy"]
-												description: row["description"]
-												parent: row["parent"]
-												count: row["count"]
-												classes: classes
-												subjects: subjects
-												modules_count: d.rows.item(0)['count']
-										
-										,_.transactionErrorHandler)
+							console.log 'Final result'
+							console.log  result
 
 							d.resolve(result)
 					

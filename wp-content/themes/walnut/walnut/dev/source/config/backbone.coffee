@@ -27,6 +27,8 @@ define ["backbone"], (Backbone) ->
 					#Get textbooks by class_id
 					data = App.reqres.request "get:#{collection_name}:by:classid:local", opts.class_id
 					data.done (d)->
+						console.log 'textbook class id data'
+						console.log d
 						collection.set d
 				
 			#Menu-item not yet implemented
