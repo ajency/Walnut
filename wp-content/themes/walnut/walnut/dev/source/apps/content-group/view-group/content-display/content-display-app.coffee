@@ -30,8 +30,20 @@ define ['app'
 
                     templateHelpers:
                         showElapsedTime:=>
-                            mins=parseInt(totalTimeTakenForModule/60)
+                            hours=0
+                            time= totalTimeTakenForModule
+                            mins=parseInt totalTimeTakenForModule/60
+                            if mins >59
+                                hours = parseInt mins/60
+                                mins= parseInt mins%60
+                            seconds = parseInt time%60
+                            display_time=''
 
+                            if hours >0
+                                display_time= hours+'h '
+
+                            display_time += mins + 'm '+ seconds+'s'
+                            display_time
 
         class ContentItemView extends Marionette.ItemView
 

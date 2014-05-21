@@ -17,21 +17,25 @@
 						</select>
 					{{/tableData.filters}}-->
 					
-						<select id="textbooks-filter">
-							<option>Textbooks</option>
+						<select class="textbook-filter" id="textbooks-filter" style="width:150px">
+							<option value="">Select Textbooks</option>
 							{{#textbooksFilter}}
 								<option value="{{id}}">{{name}}</option>
 							{{/textbooksFilter}}
 						</select>
-						<select id="chapters-filter">
-								<option>Chapters</option>
+						<select class="textbook-filter" id="chapters-filter" style="width:150px">
+								<option value="">Select Chapters</option>
 						</select>
-						<select id="sections-filter">
-								<option>Sections</option>
+						<select class="textbook-filter" id="sections-filter" style="width:150px">
+								<option value="">Select Sections</option>
 						</select>
-						<select id="subsections-filter">
-								<option>Sub Sections</option>
+						<select class="textbook-filter" id="subsections-filter" style="width:200px">
+								<option value="">Select Sub Sections</option>
 						</select>
+                        <select class="content-type-filter" id="content-type-filter" style="width:200px">
+                            <option value="teacher_question">Teacher Question</option>
+                            <option value="content_piece">Content Piece</option>
+                        </select>
 				</div>
 			</div>
 		</div>

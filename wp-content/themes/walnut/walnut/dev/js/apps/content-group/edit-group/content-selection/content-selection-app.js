@@ -32,8 +32,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               'label': 'Last Modified',
               'value': 'post_modified',
               'dateField': true
-            }, {
-              'label': 'Content Type'
             }
           ],
           'idAttribute': 'ID',
@@ -130,6 +128,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         this.onContentPieceRemoved = __bind(this.onContentPieceRemoved, this);
         this.addContentPieces = __bind(this.addContentPieces, this);
         this.changeTextbooks = __bind(this.changeTextbooks, this);
+        this.filterContentType = __bind(this.filterContentType, this);
         this.filterTableData = __bind(this.filterTableData, this);
         this.onShow = __bind(this.onShow, this);
         return DataContentTableView.__super__.constructor.apply(this, arguments);
@@ -157,7 +156,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       DataContentTableView.prototype.onShow = function() {
-        return this.makeDataTable(this.collection.models, Marionette.getOption(this, 'tableConfig'));
+        this.makeDataTable(this.collection.models, Marionette.getOption(this, 'tableConfig'));
+        return $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
       };
 
       DataContentTableView.prototype.makeRow = function(item, index, tableData) {
@@ -228,16 +228,48 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       DataContentTableView.prototype.filterTableData = function(e) {
-        var filter_id, filtered_data;
-        filter_id = parseInt($(e.target).val());
-        if (filter_id) {
-          filtered_data = _.filter(this.collection.models, (function(_this) {
+        var content_type, filter_ids, filtered_data, filtered_models;
+        filter_ids = _.map(this.$el.find('select.textbook-filter'), function(ele, index) {
+          var item;
+          item = '';
+          if (!isNaN(ele.value)) {
+            item = ele.value;
+          }
+          return item;
+        });
+        filter_ids = _.compact(filter_ids);
+        content_type = this.$el.find('#content-type-filter').val();
+        filtered_models = this.collection.models;
+        if (content_type != null) {
+          filtered_models = this.collection.where({
+            'content_type': content_type
+          });
+        }
+        if (_.size(filter_ids) > 0) {
+          filtered_data = _.filter(filtered_models, (function(_this) {
             return function(item) {
-              if (_.contains(item.get('subjects'), filter_id)) {
-                return item;
+              var filtered_item, term_ids;
+              filtered_item = '';
+              term_ids = _.flatten(item.get('term_ids'));
+              if (_.size(_.intersection(term_ids, filter_ids)) > 0) {
+                filtered_item = item;
               }
+              return filtered_item;
             };
           })(this));
+        } else {
+          filtered_data = filtered_models;
+        }
+        return this.makeDataTable(filtered_data, Marionette.getOption(this, 'tableConfig'));
+      };
+
+      DataContentTableView.prototype.filterContentType = function(e) {
+        var content_type, filtered_data;
+        content_type = $(e.target).val();
+        if (content_type) {
+          filtered_data = this.collection.where({
+            'content_type': content_type
+          });
         } else {
           filtered_data = this.collection.models;
         }
