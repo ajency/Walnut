@@ -1,4 +1,4 @@
-define ["app", 'backbone'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 		App.module "Entities.Textbooks", (Textbooks, App, Backbone, Marionette, $, _)->
 			

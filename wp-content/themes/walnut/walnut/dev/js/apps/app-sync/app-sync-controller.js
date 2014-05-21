@@ -143,7 +143,6 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
             console.log("Ful Data is " + fullGrp);
             CSVdata = this.ConvertToCSV(fullGrp);
             console.log("CSV data is" + CSVdata);
-            alert("hello");
             return this.WriteToFile(CSVdata);
           } else {
             i = 0;

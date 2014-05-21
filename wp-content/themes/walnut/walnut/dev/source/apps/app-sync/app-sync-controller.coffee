@@ -150,7 +150,6 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse"], (Marion
 						console.log "Ful Data is " +fullGrp
 						CSVdata = @ConvertToCSV fullGrp
 						console.log "CSV data is" +CSVdata
-						alert "hello"
 						@WriteToFile CSVdata
 						#return;
 					
