@@ -46,17 +46,17 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
           entities: [this.textbooksCollection]
         });
         term_ids = this.contentPieceModel.get('term_ids');
-        if (term_ids != null) {
+        if (term_ids) {
           textbook_id = term_ids['textbook'];
-        }
-        if (term_ids['chapter'] != null) {
-          chapter_id = term_ids['chapter'];
-        }
-        if (textbook_id != null) {
-          this._fetchChapters(textbook_id, chapter_id);
-        }
-        if (chapter_id != null) {
-          this._fetchSections(chapter_id);
+          if (term_ids['chapter'] != null) {
+            chapter_id = term_ids['chapter'];
+          }
+          if (textbook_id != null) {
+            this._fetchChapters(textbook_id, chapter_id);
+          }
+          if (chapter_id != null) {
+            this._fetchSections(chapter_id);
+          }
         }
         this.listenTo(this.view, "fetch:chapters", this._fetchChapters);
         return this.listenTo(this.view, "fetch:sections:subsections", this._fetchSections);

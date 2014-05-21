@@ -37,19 +37,21 @@ define ['app'
                 # fetching the correct textbook, chapters, sections & subsections
                 # term_ids contain an array of textbook id, chapter id, section ids and subsection ids
                 term_ids= @contentPieceModel.get 'term_ids'
-                textbook_id= term_ids['textbook'] if term_ids?
 
-                chapter_id= term_ids['chapter'] if term_ids['chapter']?
+                if term_ids
+                    textbook_id= term_ids['textbook']
 
-                #fetch chapters based on the current content piece's textbook
-                @_fetchChapters(textbook_id, chapter_id) if textbook_id?
+                    chapter_id= term_ids['chapter'] if term_ids['chapter']?
 
-                #fetch sections based on chapter id
-                @_fetchSections(chapter_id) if chapter_id?
+                    #fetch chapters based on the current content piece's textbook
+                    @_fetchChapters(textbook_id, chapter_id) if textbook_id?
 
-                ## end of fetching of edit content piece
+                    #fetch sections based on chapter id
+                    @_fetchSections(chapter_id) if chapter_id?
 
-                ## listening to change in textbook to fetch new list of chapters
+                    ## end of fetching of edit content piece
+
+                    ## listening to change in textbook to fetch new list of chapters
                 # and sections
                 @listenTo @view, "fetch:chapters", @_fetchChapters
 
