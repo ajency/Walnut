@@ -70,14 +70,23 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
       };
 
       AppLoginView.prototype.gotoLogin = function(e) {
-        var username;
+        var user, username;
         username = $(e.target).text();
-        return this.trigger("goto:login:view", username);
+        this.trigger("goto:login:view", username);
+        user = App.request("get:user:model");
+        return user.set({
+          'ID': '0'
+        });
       };
 
       AppLoginView.prototype.gotoNewLogin = function() {
-        return App.navigate('login', {
+        var user;
+        App.navigate('login', {
           trigger: true
+        });
+        user = App.request("get:user:model");
+        return user.set({
+          'ID': '0'
         });
       };
 

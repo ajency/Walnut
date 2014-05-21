@@ -55,10 +55,65 @@ define(["app", 'backbone'], function(App, Backbone) {
           data: param
         });
         return menuCollection;
+      },
+      getMenusFromLocal: function() {
+        var data;
+        data = [
+          {
+            "ID": 91,
+            "menu-order": 1,
+            "post_title": "Content Management",
+            "menu_item_link": "#",
+            "menu_id": null,
+            "submenu": [
+              {
+                "ID": 40,
+                "menu-order": 2,
+                "post_title": "Textbooks",
+                "menu_item_link": "#textbooks",
+                "menu_id": null
+              }
+            ]
+          }, {
+            "ID": 92,
+            "menu-order": 4,
+            "post_title": "Training Module",
+            "menu_item_link": "#",
+            "menu_id": null,
+            "submenu": [
+              {
+                "ID": 93,
+                "menu-order": 6,
+                "post_title": "Teacher Training",
+                "menu_item_link": "#teachers/dashboard",
+                "menu_id": null
+              }
+            ]
+          }, {
+            "ID": 95,
+            "menu-order": 1,
+            "post_title": "Data Synchronization",
+            "menu_item_link": "#",
+            "menu_id": null,
+            "submenu": [
+              {
+                "ID": 96,
+                "menu-order": 2,
+                "post_title": "Sync",
+                "menu_item_link": "#sync",
+                "menu_id": null
+              }
+            ]
+          }
+        ];
+        return data;
       }
     };
-    return App.reqres.setHandler("get:site:menus", function() {
+    App.reqres.setHandler("get:site:menus", function() {
       return API.getMenus();
+    });
+    return App.reqres.setHandler("get:menu-item:local", function() {
+      return API.getMenusFromLocal();
     });
   });
   return App.Entities.Menus;

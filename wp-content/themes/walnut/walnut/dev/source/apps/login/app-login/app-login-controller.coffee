@@ -54,8 +54,14 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 				username= $(e.target).text()
 				@trigger "goto:login:view", username
 
+				user = App.request "get:user:model"
+				user.set 'ID' : '0'
+
 			gotoNewLogin: ->
 				App.navigate('login', trigger: true)
+				
+				user = App.request "get:user:model"
+				user.set 'ID' : '0'
 
 			onShow: ->
 				# change mainLogo to school logo

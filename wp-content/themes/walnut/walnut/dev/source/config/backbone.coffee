@@ -27,11 +27,13 @@ define ["backbone"], (Backbone) ->
 					#Get textbooks by class_id
 					data = App.reqres.request "get:#{collection_name}:by:classid:local", opts.class_id
 					data.done (d)->
+						console.log 'textbook classid data'
+						console.log d
 						collection.set d
-				
-			#Menu-item not yet implemented
+			
 			if collection_name is 'menu-item'
-				console.log 'Menu items local'
+				data = App.reqres.request "get:#{collection_name}:local"
+				collection.set data
 
 			if collection_name is 'chapter'
 				data = App.reqres.request "get:#{collection_name}:local", opts.parent 

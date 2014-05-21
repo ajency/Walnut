@@ -20,12 +20,15 @@ define(["backbone"], function(Backbone) {
         } else {
           data = App.reqres.request("get:" + collection_name + ":by:classid:local", opts.class_id);
           data.done(function(d) {
+            console.log('textbook classid data');
+            console.log(d);
             return collection.set(d);
           });
         }
       }
       if (collection_name === 'menu-item') {
-        console.log('Menu items local');
+        data = App.reqres.request("get:" + collection_name + ":local");
+        collection.set(data);
       }
       if (collection_name === 'chapter') {
         data = App.reqres.request("get:" + collection_name + ":local", opts.parent);

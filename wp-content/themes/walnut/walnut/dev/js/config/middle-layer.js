@@ -20,10 +20,10 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
     return connected = false;
   };
   document.addEventListener("online", function() {
-    return console.log('Connection available');
+    return console.log('Online');
   }, false);
   document.addEventListener("offline", function() {
-    return console.log('Connection unavailable');
+    return console.log('Offline');
   }, false);
   _.isOnline = function() {
     switch (_.platform()) {

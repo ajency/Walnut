@@ -22,6 +22,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
           return App.vent.trigger('show:dashboard');
         });
         this.listenTo(view, 'prepopulate:username', this.prepopulateUsername);
+        this.listenTo(view, 'disable:offline:login:type', this.disableOfflineLoginType);
         return this.show(view, {
           loading: true
         });
@@ -59,6 +60,13 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         }
       };
 
+      LoginController.prototype.disableOfflineLoginType = function() {
+        if (_.isUndefined(this.username)) {
+          $("#online").prop("checked", true);
+          return $('#offline').prop("disabled", true);
+        }
+      };
+
       return LoginController;
 
     })(RegionController);
@@ -80,7 +88,14 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginView.prototype.onShow = function() {
         $('body').addClass('error-body no-top');
         this.trigger("prepopulate:username");
-        return _.setMainLogo();
+        _.setMainLogo();
+        if (_.isOnline()) {
+          $('#connectionStatus').text('Internet connection available');
+        } else {
+          $('#connectionStatus').text('Internet connection not found');
+          $('#online').prop("disabled", true);
+        }
+        return this.trigger("disable:offline:login:type");
       };
 
       LoginView.prototype.submitLogin = function(e) {

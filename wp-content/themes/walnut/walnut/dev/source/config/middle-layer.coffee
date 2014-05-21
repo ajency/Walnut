@@ -29,13 +29,18 @@ define ['detect', 'jquery', 'underscore'], (detect, $, _)->
 	# cordova events triggered based on internet connection availability for device.
 	document.addEventListener("online"
 		,->
-			console.log 'Connection available'
+			console.log 'Online'
+			# $('#connectionStatus').text('Internet connection available')
+			# $('#online').prop("disabled",false)
 
 		, false)
 
 	document.addEventListener("offline"
 		,->
-			console.log 'Connection unavailable'
+			console.log 'Offline'
+			# $('#connectionStatus').text('Internet connection not found')
+			# $('#online').prop("disabled",true)
+			# $("#offline").prop("checked", true)
 
 		, false)
 

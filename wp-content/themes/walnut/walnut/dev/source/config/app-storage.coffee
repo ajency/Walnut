@@ -30,8 +30,10 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
     document.addEventListener("deviceready", ->
         
         _.db = window.sqlitePlugin.openDatabase({name: "walnutapp"});
-
         localDatabaseTransaction(_.db)
+
+        #Hide the splash screen image
+        navigator.splashscreen.hide()
 
     ,false)
 

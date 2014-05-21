@@ -18,7 +18,10 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 					App.vent.trigger 'show:dashboard'
 
 				# listen to prepopulate:username event from the view for mobile
-				@listenTo view, 'prepopulate:username', @prepopulateUsername	
+				@listenTo view, 'prepopulate:username', @prepopulateUsername
+
+				# listen to disable:offline:login:type event from the view for mobile
+				@listenTo view, 'disable:offline:login:type', @disableOfflineLoginType	
 
 				@show view, (loading: true)
 
@@ -49,7 +52,14 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 			prepopulateUsername : ->
 				
 				$('#txtusername').val($.trim(@username)) if not _.isUndefined @username
-				
+
+			
+			# disable offline login for add new account option
+			disableOfflineLoginType : ->
+
+				if _.isUndefined @username
+					$("#online").prop("checked", true)
+					$('#offline').prop("disabled",true)
 					
 
 
@@ -67,8 +77,16 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 				#Changes for mobile
 				@trigger "prepopulate:username"
-				
+
 				_.setMainLogo()
+
+				if _.isOnline() then $('#connectionStatus').text('Internet connection available')
+				else 
+					$('#connectionStatus').text('Internet connection not found')
+					$('#online').prop("disabled",true)
+
+				@trigger "disable:offline:login:type"	
+
 				
 
 			submitLogin: (e)->
