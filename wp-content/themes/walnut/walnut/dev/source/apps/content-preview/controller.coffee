@@ -5,15 +5,39 @@ define ['app'
         'apps/content-preview/top-panel/controller'
 ], (App, RegionController)->
     App.module "ContentPreview", (ContentPreview, App, Backbone, Marionette, $, _)->
+
+        class ContentPreviewRouter extends Marionette.AppRouter
+
+            appRoutes:
+                'content-piece/:contentID': 'viewContentPieces'
+
+        Controller =
+            viewContentPieces:(id) ->
+
+                App.execute "show:content:preview",
+                    region                  : App.mainContentRegion
+                    contentID               : id
+                    display_mode            : 'read-only'
+
+
+
         class ContentPreview.Controller extends RegionController
 
             initialize: (options)->
 
-                {@model,@questionResponseModel,@timerObject, @display_mode,@classID,@students} = options
+                {contentID, @model,@questionResponseModel,@timerObject, @display_mode,@classID,@students} = options
+
+                if contentID
+                    @model= App.request "get:content:piece:by:id", contentID
+
                 # get the main layout for the content preview
                 @layout = @_getContentPreviewLayout()
 
-                # eventObj = App.createEventObject()
+                App.execute "when:fetched", @model, =>
+                    # show the layout
+                    @show @layout, loading:true
+
+
 
                 # listen to "show" event of the layout and start the
                 # elementboxapp passing the region
@@ -21,7 +45,6 @@ define ['app'
                     App.execute "show:top:panel",
                         region: @layout.topPanelRegion
                         model: @model
-                        textbookNames: @textbookNames
                         questionResponseModel: @questionResponseModel
                         timerObject : @timerObject
                         display_mode: @display_mode
@@ -33,13 +56,15 @@ define ['app'
                         region: @layout.contentBoardRegion
                         model: @model
 
-
-                # show the layout
-                @show @layout, loading:true
-
             _getContentPreviewLayout: ->
                 new ContentPreview.Views.Layout
 
         App.commands.setHandler "show:content:preview", (options)->
             new ContentPreview.Controller options
+
+
+
+        ContentPreview.on "start", ->
+            new ContentPreviewRouter
+                controller: Controller
 

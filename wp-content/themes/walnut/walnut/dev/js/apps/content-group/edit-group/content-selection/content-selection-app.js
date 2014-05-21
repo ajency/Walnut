@@ -208,7 +208,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         if (tableData.pagination) {
           $("#dataContentTable").trigger("updateCache");
           this.$el.find('#pager').remove();
-          pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option selected="selected" value="5">5</option> <option value="10">10</option> <option value="20">20</option> <option value="30">30</option> <option value="40">40</option> </select> </div>';
+          pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option selected value="25">25</option> <option value="50">50</option> <option value="100">100</option> </select> </div>';
           this.$el.find('#dataContentTable').after(pagerDiv);
           pagerOptions = {
             totalRows: _.size(dataCollection),
@@ -251,7 +251,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               var filtered_item, term_ids;
               filtered_item = '';
               term_ids = _.flatten(item.get('term_ids'));
-              if (_.size(_.intersection(term_ids, filter_ids)) > 0) {
+              if (_.size(_.intersection(term_ids, filter_ids)) === _.size(filter_ids)) {
                 filtered_item = item;
               }
               return filtered_item;

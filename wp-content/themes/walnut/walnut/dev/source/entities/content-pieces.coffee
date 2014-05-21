@@ -50,6 +50,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                 contentPieceCollection = new ContentPiece.ItemCollection
                 contentPieceCollection.fetch
                     reset: true
+                    add: true
+                    remove: false
                     data: param
 
                 contentPieceCollection

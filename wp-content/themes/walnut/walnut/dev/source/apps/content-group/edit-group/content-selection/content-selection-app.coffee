@@ -162,11 +162,9 @@ define ['app'
                     								<span style="padding:0 15px"  class="pagedisplay"></span>
                     								<i class="fa fa-chevron-right next"></i>
                     								<select class="pagesize">
-                    									  <option selected="selected" value="5">5</option>
-                    									  <option value="10">10</option>
-                    									  <option value="20">20</option>
-                    									  <option value="30">30</option>
-                    									  <option value="40">40</option>
+                                        <option selected value="25">25</option>
+                    									  <option value="50">50</option>
+                                        <option value="100">100</option>
                     								</select>
                     							</div>'
                     @$el.find('#dataContentTable').after(pagerDiv)
@@ -204,7 +202,7 @@ define ['app'
                     filtered_data = _.filter filtered_models, (item)=>
                                         filtered_item=''
                                         term_ids= _.flatten item.get 'term_ids'
-                                        if _.size(_.intersection(term_ids, filter_ids)) >0
+                                        if _.size(_.intersection(term_ids, filter_ids)) == _.size(filter_ids)
                                             filtered_item=item
                                         filtered_item
                 else

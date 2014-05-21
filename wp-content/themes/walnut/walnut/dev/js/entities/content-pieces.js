@@ -85,6 +85,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         contentPieceCollection = new ContentPiece.ItemCollection;
         contentPieceCollection.fetch({
           reset: true,
+          add: true,
+          remove: false,
           data: param
         });
         return contentPieceCollection;
