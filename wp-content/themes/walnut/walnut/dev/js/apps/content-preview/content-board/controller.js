@@ -4,8 +4,9 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'apps/content-preview/content-board/element/controller', 'apps/content-preview/content-board/view', 'apps/content-preview/content-board/elements-loader'], function(App, RegionController) {
   return App.module("ContentPreview.ContentBoard", function(ContentBoard, App, Backbone, Marionette, $, _) {
-    var API;
-    ContentBoard.Controller = (function(_super) {
+    return ContentBoard.Controller = (function(_super) {
+      var API;
+
       __extends(Controller, _super);
 
       function Controller() {
@@ -89,26 +90,29 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
         })(this));
       };
 
+      API = {
+        addNewElement: function(container, type, modelData) {
+          console.log(type);
+          return new ContentBoard.Element[type].Controller({
+            container: container,
+            modelData: modelData
+          });
+        }
+      };
+
+      App.commands.setHandler('show:content:board', function(options) {
+        return new ContentBoard.Controller(options);
+      });
+
+      App.reqres.setHandler("add:new:element", function(container, type, modelData) {
+        if (modelData == null) {
+          modelData = {};
+        }
+        return API.addNewElement(container, type, modelData);
+      });
+
       return Controller;
 
     })(RegionController);
-    API = {
-      addNewElement: function(container, type, modelData) {
-        console.log(type);
-        return new ContentBoard.Element[type].Controller({
-          container: container,
-          modelData: modelData
-        });
-      }
-    };
-    App.commands.setHandler('show:content:board', function(options) {
-      return new ContentBoard.Controller(options);
-    });
-    return App.reqres.setHandler("add:new:element", function(container, type, modelData) {
-      if (modelData == null) {
-        modelData = {};
-      }
-      return API.addNewElement(container, type, modelData);
-    });
   });
 });

@@ -53,8 +53,10 @@ define ['app'],(App)->
 				
 				# set height according to the aspect ratio of 16:9
 				width = @videoElement.width()
+				console.log width
 				height = 9*width/16
 				@videoElement.height height
+				console.log height
 				
 
 				

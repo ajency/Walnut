@@ -83,10 +83,11 @@ define ['app'
 				class_id = parseInt class_id
 
 				divs= @collection.where({'class_id':class_id})
-
+				
 				@$el.find '#div'
 				.empty()
 				.select2('data', null)
+						
 
 				for div in divs
 					@$el.find '#div'
