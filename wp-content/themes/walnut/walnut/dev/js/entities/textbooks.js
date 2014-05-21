@@ -186,7 +186,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         }).fail(_.failureHandler);
       },
       getTextbooksByClassIDFromLocal: function(class_id) {
-        var getTextBookIds, onSuccess, runMainQuery;
+        var getModulesCount, getTextBookIds, onSuccess, runMainQuery;
         getTextBookIds = function() {
           var runQ, success;
           runQ = function() {
@@ -205,6 +205,26 @@ define(["app", 'backbone'], function(App, Backbone) {
           };
           return $.when(runQ()).done(function() {
             return console.log('getTextBookIds transaction completed');
+          }).fail(_.failureHandler);
+        };
+        getModulesCount = function(pattern) {
+          var runQ, success;
+          runQ = function() {
+            return $.Deferred(function(d) {
+              return _.db.transaction(function(tx) {
+                return tx.executeSql("SELECT COUNT(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], success(d), _.deferredErrorHandler(d));
+              });
+            });
+          };
+          success = function(d) {
+            return function(tx, data) {
+              var ids;
+              ids = unserialize(data.rows.item(0)['meta_value']);
+              return d.resolve(ids);
+            };
+          };
+          return $.when(runQ()).done(function() {
+            return console.log('getModulesCount transaction completed');
           }).fail(_.failureHandler);
         };
         runMainQuery = function() {

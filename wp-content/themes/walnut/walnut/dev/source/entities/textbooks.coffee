@@ -142,7 +142,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				# get textbooks by class id from local database
 				getTextbooksByClassIDFromLocal:(class_id)->
 					#user id hardcoded as 1 for now
-					getTextBookIds =->
+					getTextBookIds = ->
 
 						runQ =->
 							$.Deferred (d)->
@@ -156,6 +156,25 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 						$.when(runQ()).done ->
 							console.log 'getTextBookIds transaction completed'
+						.fail _.failureHandler
+
+					
+					# get total modules count
+					getModulesCount = (pattern)->
+
+						runQ =->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT COUNT(id) AS count FROM wp_content_collection 
+										WHERE term_ids LIKE '"+pattern+"'", [], success(d), _.deferredErrorHandler(d))
+
+						success =(d)->
+							(tx,data)->
+								ids = unserialize(data.rows.item(0)['meta_value'])
+								d.resolve(ids)
+
+						$.when(runQ()).done ->
+							console.log 'getModulesCount transaction completed'
 						.fail _.failureHandler
 							
 								

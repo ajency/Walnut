@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App, _, parse) {
   var SynchronizationController;
-  return SynchronizationController = (function(_super) {
+  SynchronizationController = (function(_super) {
     __extends(SynchronizationController, _super);
 
     function SynchronizationController() {
@@ -17,31 +17,14 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
     };
 
     SynchronizationController.prototype.TotalRecordsUpdate = function() {
-      var valuesAll, valuesAll1, valuesAll2;
-      valuesAll = "";
-      valuesAll1 = "";
-      valuesAll2 = "";
       return _.db.transaction(function(tx) {
-        alert("SELECT");
-        tx.executeSql("SELECT * FROM wp_training_logs WHERE sync==0 ", [], function(tx, results) {
-          valuesAll = results.rows.length;
-          alert("value is " + valuesAll);
-          return console.log(valuesAll);
+        return tx.executeSql("SELECT SUM(rows) AS total FROM ( SELECT COUNT(*) AS rows FROM wp_training_logs WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM wp_question_response WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM wp_question_response_logs WHERE sync=?)", [0, 0, 0], function(tx, data) {
+          var total;
+          total = data.rows.item(0)['total'];
+          return $('#SyncRecords').text(total);
         }, _.transactionErrorhandler);
-        tx.executeSql("SELECT * FROM wp_question_response WHERE sync==0 ", [], function(tx, results) {
-          valuesAll1 = results.rows.length;
-          alert("value 1 is " + valuesAll1);
-          return console.log(valuesAll1);
-        }, _.transactionErrorhandler);
-        return tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync==0 ", [], function(tx, results) {
-          var VALUESGT;
-          valuesAll2 = results.rows.length;
-          alert("value 2 is " + valuesAll2);
-          console.log(valuesAll2);
-          VALUESGT = valuesAll + valuesAll1 + valuesAll2;
-          alert("ful value is" + VALUESGT);
-          return $('#SyncRecords').text(VALUESGT);
-        }, _.transactionErrorhandler);
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Fetched all records where sync=0');
       });
     };
 
@@ -180,11 +163,10 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       });
     };
 
-    App.reqres.setHandler("get:sync:controller", function() {
-      return new SynchronizationController;
-    });
-
     return SynchronizationController;
 
   })(Marionette.Controller);
+  return App.reqres.setHandler("get:sync:controller", function() {
+    return new SynchronizationController;
+  });
 });
