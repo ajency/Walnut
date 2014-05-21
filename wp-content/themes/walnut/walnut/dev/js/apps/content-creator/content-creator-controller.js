@@ -14,7 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       ContentCreatorController.prototype.initialize = function(options) {
         var breadcrumb_items;
         this.contentType = options.contentType;
-        this.contentPieceModel = App.request("get:page:json", 196);
+        this.contentPieceModel = App.request("get:page:json");
         App.execute("when:fetched", this.contentPieceModel, (function(_this) {
           return function() {
             if (!_this.contentPieceModel.get('ID')) {
