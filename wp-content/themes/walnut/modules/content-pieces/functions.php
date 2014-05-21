@@ -146,13 +146,14 @@ function get_json_to_clone($elements)
 {
     $d = array();
     $excerpt= array();
-    $row_elements = array('Row','TeacherQuestion','TeacherQuestionRow');
+    $row_elements = array('Row','TeacherQuestion','TeacherQuestRow');
     if (is_array($elements)) {
         foreach ($elements as $element) {
             if (in_array($element['element'], $row_elements)) {
                 $element['columncount'] = count($element['elements']);
                 $d2= get_row_elements($element);
                 $d[]                    = $d2['element'];
+
                 $excerpt[]= $d2['excerpt'];
 
             } else {
@@ -164,7 +165,6 @@ function get_json_to_clone($elements)
             }
         }
     }
-
     $content['elements']= $d;
     $content['excerpt']= $excerpt;
 
@@ -174,13 +174,20 @@ function get_json_to_clone($elements)
 function get_row_elements($element)
 {
     $excerpt= array();
+    $row_elements = array('Row','TeacherQuestion','TeacherQuestRow');
 
     foreach ($element['elements'] as &$column) {
         if($column['elements']){
             foreach ($column['elements'] as &$ele) {
-                if ($ele['element'] === 'Row') {
+
+                if(isset($column['position']))
+                    $column['position']= (int) $column['position'];
+
+                if (in_array($ele['element'],$row_elements)) {
                     $ele['columncount'] = count($ele['elements']);
                     $data= get_row_elements($ele);
+
+                    $data['element']['position']= (int) $data['element']['position'];
                     $ele = $data['element'];
                     $excerpt []= $data['excerpt'];
                 } else {
@@ -226,8 +233,10 @@ function validate_element(&$element)
         return $element;
 
     foreach ($element as $key => $val) {
-        if (in_array($key, $numkeys))
+
+        if (in_array($key, $numkeys)){
             $element[$key] = (int)$val;
+        }
         if (in_array($key, $boolkey))
             $element[$key] = $val === "true";
     }
