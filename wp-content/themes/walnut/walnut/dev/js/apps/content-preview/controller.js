@@ -36,7 +36,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
 
       Controller.prototype.initialize = function(options) {
         var contentID;
-        contentID = options.contentID, this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.classID = options.classID, this.students = options.students;
+        contentID = options.contentID, this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.students = options.students;
         if (contentID) {
           this.model = App.request("get:content:piece:by:id", contentID);
         }
@@ -56,7 +56,6 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
               questionResponseModel: _this.questionResponseModel,
               timerObject: _this.timerObject,
               display_mode: _this.display_mode,
-              classID: _this.classID,
               students: _this.students
             });
             return App.execute("show:content:board", {

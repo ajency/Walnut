@@ -25,7 +25,7 @@ define ['app'
 
             initialize: (options)->
 
-                {contentID, @model,@questionResponseModel,@timerObject, @display_mode,@classID,@students} = options
+                {contentID, @model,@questionResponseModel,@timerObject, @display_mode,@students} = options
 
                 if contentID
                     @model= App.request "get:content:piece:by:id", contentID
@@ -48,7 +48,6 @@ define ['app'
                         questionResponseModel: @questionResponseModel
                         timerObject : @timerObject
                         display_mode: @display_mode
-                        classID: @classID
                         students: @students
 
 

@@ -14,13 +14,15 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
       }
 
       Controller.prototype.initialize = function(options) {
-        var textbook_termIDs;
+        var textbookID, textbook_termIDs;
         this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.classID = options.classID, this.students = options.students;
         textbook_termIDs = _.flatten(this.model.get('term_ids'));
         this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
         this.durationInSeconds = this.model.get('duration') * 60;
+        textbookID = this.model.get('term_ids').textbook;
+        this.textbookModel = App.request("get:textbook:by:id", textbookID);
         this.view = this._showView(this.model, this.questionResponseModel);
-        App.execute("when:fetched", [this.textbookNames], (function(_this) {
+        App.execute("when:fetched", [this.textbookNames, this.textbookModel], (function(_this) {
           return function() {
             return _this.show(_this.view, {
               loading: true
@@ -90,7 +92,14 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
             })(this),
             getClass: (function(_this) {
               return function() {
-                return CLASS_LABEL[_this.classID];
+                var classLabel, classes, classesArray, _i, _len;
+                classesArray = [];
+                classes = _this.textbookModel.get('classes');
+                for (_i = 0, _len = classes.length; _i < _len; _i++) {
+                  classLabel = classes[_i];
+                  classesArray.push(CLASS_LABEL[classLabel]);
+                }
+                return classesArray.join();
               };
             })(this),
             getTextbookName: (function(_this) {

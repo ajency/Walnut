@@ -15,10 +15,12 @@ define ['app'
 
                 @durationInSeconds= @model.get('duration')*60
 
+                textbookID= @model.get('term_ids').textbook
+                @textbookModel= App.request "get:textbook:by:id",textbookID
 
                 @view = @_showView @model,@questionResponseModel
 
-                App.execute "when:fetched", [@textbookNames], =>
+                App.execute "when:fetched", [@textbookNames, @textbookModel], =>
                     @show @view, (loading: true)
 
                 if @display_mode is 'class_mode'
@@ -71,7 +73,11 @@ define ['app'
                             timer= @durationInSeconds - timeTaken
 
                         getClass: =>
-                                CLASS_LABEL[@classID]
+                            classesArray=[]
+                            classes= @textbookModel.get 'classes'
+                            classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
+
+                            classesArray.join()
 
                         getTextbookName: =>
                             textbook = @textbookNames.get terms.textbook
