@@ -61,7 +61,46 @@ function get_content_pieces($args = array()) {
         $ids = implode(',',$args['ids']);
         $args['post__in'] = $args['ids'];
     }
-    
+
+
+    if(isset($args['content_type'])){
+
+//        $content_type_meta_array = array();
+//
+//        foreach($args['content_type'] as $content_type){
+//            $content_type_meta_array[]= array(
+//                'key'     => 'content_type',
+//                'value'   => $content_type,
+//                'compare' => '='
+//            );
+//        }
+//
+//        $content_type_meta= array_values($content_type_meta_array);
+//
+//        print_r($content_type_meta); //exit;
+
+        //NEED TO CHANGE THIS !!
+
+        $args['meta_query']=
+            array(
+                'relation' => 'OR',
+
+                array(
+                    'key'     => 'content_type',
+                    'value'   => 'teacher_question',
+                    'compare' => '='
+                ),
+
+                array(
+                    'key'     => 'content_type',
+                    'value'   => 'content_piece',
+                    'compare' => '='
+                ),
+
+            );
+
+      #  print_r($args['meta_query']); exit;
+    }
     
     $args['numberposts'] = -1;
     $args['fields'] = 'ids';

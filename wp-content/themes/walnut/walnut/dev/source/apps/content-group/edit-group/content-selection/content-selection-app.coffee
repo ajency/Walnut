@@ -6,7 +6,7 @@ define ['app'
 
             initialize: (opts) ->
                 @textbooksCollection = App.request "get:textbooks"
-                @contentPiecesCollection = App.request "get:content:pieces"
+                @contentPiecesCollection = App.request "get:content:pieces", content_type: ['teacher_question','content_piece']
                 {@model}= opts
 
                 @contentGroupCollection = App.request "get:content:pieces:of:group", @model
@@ -196,7 +196,8 @@ define ['app'
 
                 filtered_models= @collection.models
 
-                filtered_models = @collection.where 'content_type': content_type if content_type?
+                if content_type isnt ''
+                    filtered_models = @collection.where 'content_type': content_type
 
                 if _.size(filter_ids)>0
                     filtered_data = _.filter filtered_models, (item)=>
@@ -222,37 +223,77 @@ define ['app'
                 @makeDataTable(filtered_data, Marionette.getOption @, 'tableConfig')
 
             changeTextbooks: (e)=>
-                @$el.find('#chapters-filter, #sections-filter, #subsections-filter').html('<option>select chapter first</option>')
+
+                @$el.find '#chapters-filter, #sections-filter, #subsections-filter'
+                .select2 'data', ''
+
                 @trigger "fetch:chapters", $(e.target).val()
 
             onFetchChaptersComplete: (chapters)->
+
                 if _.size(chapters) > 0
-                    @$el.find('#chapters-filter').html('<option>--select chapter--</option>');
+
+                    $ '#chapters-filter'
+                    .select2 'data', {'text':'Select Chapter'}
+
                     _.each chapters.models, (chap, index)=>
-                        @$el.find('#chapters-filter').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
+                        @$el.find '#chapters-filter'
+                        .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
+
                 else
-                    @$el.find('#chapters-filter').html('<option>No Chapters available</option>');
-                    @$el.find('#sections-filter').html('<option>No Sections available</option>');
-                    @$el.find('#subsections-filter').html('<option>No SubSections available</option>');
+                    @$el.find '#chapters-filter,#sections-filter,#subsections-filter'
+                    .html ''
+
+                    @$el.find '#chapters-filter'
+                    .select2 'data', 'text': 'No chapters'
+
+                    @$el.find '#sections-filter'
+                    .select2 'data', 'text': 'No Sections'
+
+                    @$el.find '#subsections-filter'
+                    .select2 'data', 'text': 'No Subsections'
 
             onFetchSubsectionsComplete: (allsections)->
                 if _.size(allsections) > 0
+
                     if _.size(allsections.sections) > 0
-                        @$el.find('#sections-filter').html('<option>--select--</option>');
+
+                        $ '#sections-filter'
+                        .select2 'data', {'text':'Select Section'}
+
                         _.each allsections.sections, (section, index)=>
-                            @$el.find('#sections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+
+                            @$el.find '#sections-filter'
+                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+
                     else
-                        @$el.find('#sections-filter').html('<option>No Sections available</option>');
+                        $ '#sections-filter'
+                        .select2 'data', 'text': 'No Sections'
+                            .html ''
 
                     if _.size(allsections.subsections) > 0
-                        @$el.find('#subsections-filter').html('<option>--select--</option>');
+
+                        $ '#subsections-filter'
+                        .select2 'data', {'text':'Select SubSection'}
+
                         _.each allsections.subsections, (section, index)=>
-                            @$el.find('#subsections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+                            @$el.find '#subsections-filter'
+                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+
                     else
-                        @$el.find('#subsections-filter').html('<option>No Sub Sections available</option>');
+                        $ '#subsections-filter'
+                        .select2 'data', 'text': 'No Subsections'
+                            .html ''
+
                 else
-                    @$el.find('#sections-filter').html('<option>No Sections available</option>');
-                    @$el.find('#subsections-filter').html('<option>No Sub Sections available</option>');
+                    $('#sections-filter,#subsections-filter')
+                    .html ''
+
+                    $ '#sections-filter'
+                    .select2 'data', 'text': 'No Sections'
+
+                    $ '#subsections-filter'
+                    .select2 'data', 'text': 'No Subsections'
 
             addContentPieces: =>
                 content_pieces = _.pluck($('#dataContentTable .tab_checkbox:checked'), 'value')
