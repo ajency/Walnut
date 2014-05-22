@@ -17,9 +17,7 @@ define ['app'
 
                 @textbooksCollection = App.request "get:textbooks"
 
-                @authorsCollection = App.request "get:user:collection", 'role':'content-creator'
-
-                App.execute "when:fetched", [@textbooksCollection,@authorsCollection,@contentPieceModel], @showView
+                App.execute "when:fetched", [@textbooksCollection,@contentPieceModel], @showView
 
                 saveModelCommand.setHandler "save:model:data", =>
                     @view.triggerMethod "save:question:settings"
@@ -99,13 +97,6 @@ define ['app'
                                 textbooks.push(data)
 
                             textbooks
-
-                        authorsNames: =>
-                            authors = []
-                            _.each @authorsCollection.models, (el, ind)->
-                                authors.push('name': el.get('display_name'), 'ID': el.get('ID'))
-
-                            authors
 
 
 

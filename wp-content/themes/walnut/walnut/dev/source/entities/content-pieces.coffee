@@ -10,6 +10,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 ID: 0
                 post_title: ''
                 post_author: ''
+                post_author_name: ''
                 post_modified: ''
                 post_date: ''
                 post_tags: ''

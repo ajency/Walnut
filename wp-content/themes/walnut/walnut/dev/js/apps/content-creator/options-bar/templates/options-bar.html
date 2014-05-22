@@ -1,14 +1,14 @@
-<ul class="nav nav-tabs" id="subProps">
+<!--<ul class="nav nav-tabs" id="subProps">
     <li class="active"><a href="#settings">Settings</a></li>
     <li class=""><a href="#meta">Meta</a></li>
-</ul>
+</ul>-->
 <form name="contentpiece-settings">
     <div class="tab-content ">
         <div class="tab-pane active" id="settings">
             <div class="row m-b-20">
                 <div class="col-sm-4">
-                    <label class="form-label">Subject</label>
-                    <select name="term_ids[textbook]" id="subs" class="form-control select2" >
+                    <label class="form-label">Textbook</label>
+                    <select required name="term_ids[textbook]" id="subs" class="form-control select2" >
                         <option value="">--select textbook--</option>
                         {{#textbooksFilter}}
                         <option value="{{id}}" {{#selected}} selected="selected" {{/selected}}>{{name}}</option>
@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-sm-4">
                     <label class="form-label">Chapter <span class="muted small pull-right"> Select a Subject first</span></label>
-                    <select name="term_ids[chapter]" id="chaps" class="form-control select2" >
+                    <select required name="term_ids[chapter]" id="chaps" class="form-control select2" >
                     </select>
                 </div>
                 <div class="col-sm-4">
@@ -44,37 +44,30 @@
                             <input type="text" class="form-control" placeholder="Hours">
                         </div>-->
                         <div class="col-sm-6">
-                            <input name="duration" type="text" class="form-control" value="{{duration}}" placeholder="Minutes">
+                            <input required name="duration" type="text" class="form-control" value="{{duration}}" placeholder="Minutes">
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane" id="meta">
             <div class="row m-b-20">
                 <div class="col-sm-4">
                     <label class="form-label">Question Type</label>
-                    <select name="question_type" id="qType" class="form-control select2" >
+                    <select required name="question_type" id="qType" class="form-control select2" >
+                        <option value="">--select question type--</option>
                         <option value="chorus">Chorus</option>
                         <option value="individual">Individual</option>
                     </select>
-
                 </div>
                 <div class="col-sm-4">
                     <label class="form-label">Status</label>
-                    <select name="post_status" id="status" class="form-control select2" >
+                    <select required name="post_status" id="status" class="form-control select2" >
+                        <option value="">--select status--</option>
                         <option value="pending">Under Review</option>
                         <option value="publish">Published</option>
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <label class="form-label">Author</label>
-                    <select name="post_author" id="author" class="form-control select2" >
-                        <option value="">--select author--</option>
-                        {{#authorsNames}}
-                        <option value="{{ID}}">{{name}}</option>
-                        {{/authorsNames}}
-                    </select>
+                    <label class="form-label">Author</label>{{post_author_name}}
                 </div>
 
             </div>
@@ -89,16 +82,6 @@
                 </div>
                 <div class="col-sm-4">
 
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="tab2Inspire">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>Follow us &amp; get updated!</h3>
-                    <p>Instantly connect to what's most important to you. Follow your friends, experts, favorite celebrities, and breaking news.</p>
-                    <br>
-                    <p><a href="#" class="btn-social"><i class="icon-facebook"></i></a> <a href="#" class="btn-social"><i class="icon-twitter"></i> </a> <a href="#" class="btn-social"><i class="icon-dribbble"></i></a> <a href="#" class="btn-social"><i class="icon-pinterest-sign"></i></a> <a href="#" class="btn-social"><i class="icon-tumblr"></i> </a> <a href="#" class="btn-social"><i class="icon-linkedin-sign"></i> </a> </p>
                 </div>
             </div>
         </div>

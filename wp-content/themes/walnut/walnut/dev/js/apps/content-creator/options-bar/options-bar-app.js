@@ -21,10 +21,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
         saveModelCommand = options.saveModelCommand, this.contentPieceModel = options.contentPieceModel;
         this.view = this._getOptionsBarView(this.contentPieceModel);
         this.textbooksCollection = App.request("get:textbooks");
-        this.authorsCollection = App.request("get:user:collection", {
-          'role': 'content-creator'
-        });
-        App.execute("when:fetched", [this.textbooksCollection, this.authorsCollection, this.contentPieceModel], this.showView);
+        App.execute("when:fetched", [this.textbooksCollection, this.contentPieceModel], this.showView);
         saveModelCommand.setHandler("save:model:data", (function(_this) {
           return function() {
             return _this.view.triggerMethod("save:question:settings");
@@ -119,19 +116,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
                   return textbooks.push(data);
                 });
                 return textbooks;
-              };
-            })(this),
-            authorsNames: (function(_this) {
-              return function() {
-                var authors;
-                authors = [];
-                _.each(_this.authorsCollection.models, function(el, ind) {
-                  return authors.push({
-                    'name': el.get('display_name'),
-                    'ID': el.get('ID')
-                  });
-                });
-                return authors;
               };
             })(this)
           }
