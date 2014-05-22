@@ -64,10 +64,6 @@ define(['marionette'], function(Marionette) {
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
       var user;
-      if (typeof Pace !== 'undefined') {
-        Pace.restart();
-        $("#site_main_container").removeClass("showAll");
-      }
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (user_role[0] === 'administrator') {

@@ -534,10 +534,10 @@ function save_content_piece($data){
 
     update_post_meta ($content_id, 'post_tags',$data['post_tags']);
 
-    update_post_meta ($content_id, 'last_modified_by',$data['post_author']);
+    update_post_meta ($content_id, 'last_modified_by',$post_author);
 
     if($data['post_status']=='publish')
-        update_post_meta ($content_id, 'published_by',$data['post_author']);
+        update_post_meta ($content_id, 'published_by',$post_author);
 
     return $content_id;
 }
