@@ -71,10 +71,6 @@ define ['marionette'], (Marionette)->
 
 
     App.vent.on "show:dashboard", (user_role) =>
-        if typeof Pace isnt 'undefined'
-            Pace.restart();
-            $("#site_main_container").removeClass("showAll");
-
         user = App.request "get:user:model"
 
         user_role = user.get "roles"

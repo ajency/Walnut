@@ -26,10 +26,14 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (id == null) {
           id = '';
         }
-        jsonModel = new PageJson({
-          ID: parseInt(id)
-        });
-        jsonModel.fetch();
+        if (!id) {
+          jsonModel = new PageJson;
+        } else {
+          jsonModel = new PageJson({
+            ID: parseInt(id)
+          });
+          jsonModel.fetch();
+        }
         return jsonModel;
       }
     };

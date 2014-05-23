@@ -65,6 +65,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return this.listenTo(this.view, {
           "save:content:collection:details": (function(_this) {
             return function(data) {
+              App.navigate("edit-module");
+              _this.model.set({
+                'changed': 'module_details'
+              });
               return _this.model.save(data, {
                 wait: true,
                 success: _this.successFn,
@@ -194,7 +198,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {
         this.$el.find('#saved-success').remove();
-        return this.$el.find('.grid-title').prepend('<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/' + model.get('id') + '">view your module</a></div><hr>');
+        return this.$el.find('.grid-title').prepend('<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/' + model.get('id') + '">view your module</a><hr></div>');
       };
 
       return CollectionDetailsView;

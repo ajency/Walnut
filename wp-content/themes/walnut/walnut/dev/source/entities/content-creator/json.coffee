@@ -10,9 +10,15 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         API =
             getPageJSON: (id='')->
-                jsonModel = new PageJson
-                    ID: parseInt id
-                jsonModel.fetch()
+
+                if not id
+                    jsonModel = new PageJson
+
+                else
+                    jsonModel = new PageJson
+                                    ID: parseInt id
+
+                    jsonModel.fetch()
 
                 jsonModel
 

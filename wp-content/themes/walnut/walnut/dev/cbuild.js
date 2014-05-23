@@ -15,7 +15,6 @@
     jqueryvalidate: 'plugins/jquery.validate.min',
     underscore: 'plugins/underscore',
     backbone: 'plugins/backbone',
-    babysitter      : 'plugins/backbone.babysitter.min',
     bootstrap: 'plugins/bootstrap',
     marionette: 'plugins/backbone.marionette',
     text: 'plugins/text',
@@ -37,7 +36,8 @@
     select2       : 'plugins/select2.min',
     tagsinput : 'plugins/bootstrap-tagsinput.min',
     screwbuttons    : 'plugins/jquery.screwdefaultbuttonsV2',
-    videojs       : 'plugins/video'
+    babysitter 			: 'plugins/backbone.babysitter.min',
+    videojs				: 'plugins/video'
     
   },
   shim: {
@@ -70,6 +70,7 @@
     select2      : ['jquery','bootstrap'],
     tagsinput : ['jquery','bootstrap'],
     screwbuttons : ['jquery'],
+    babysitter  : ['backbone'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 })

@@ -49,14 +49,14 @@ add_action('wp_ajax_create-content-group', 'ajax_create_content_group');
 function ajax_update_content_group() {
 
     global $wpdb;
-    if (!isset($_POST['changed'])) {
+
+    if (isset($_POST['changed']) && $_POST['changed']=='module_details') {
         $data = array(
             'id' => $_POST['id'],
             'name' => $_POST['name'],
             'description' => maybe_serialize($_POST['description']),
             'term_ids' => maybe_serialize($_POST['term_ids'])
         );
-
         $content_group = save_content_group($data);
     }
    
