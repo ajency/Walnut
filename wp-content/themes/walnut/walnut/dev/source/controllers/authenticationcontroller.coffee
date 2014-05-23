@@ -115,6 +115,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		initialAppLogin:(server_resp)->
 
 			resp = server_resp.blog_details
+
+
+			CSVZipurl= resp.exported_csv_url
 			# set blog id and blog name
 			_.setBlogID(resp.blog_id)
 			_.setBlogName(resp.blog_name)

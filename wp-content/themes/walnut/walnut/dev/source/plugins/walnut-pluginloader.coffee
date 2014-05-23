@@ -38,4 +38,7 @@ define [
       		'selectordie'
       		'csvparse'
       		'json2csvparse'
+      		'Zip'
+      		'zipchk'
+      		'FileSaver'
 		], ->

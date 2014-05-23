@@ -203,7 +203,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           runQ = function() {
             return $.Deferred(function(d) {
               return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['textbooks', _.getUserID()], success(d), _.deferredErrorHandler(d));
+                return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['textbooks', 1], success(d), _.deferredErrorHandler(d));
               });
             });
           };
