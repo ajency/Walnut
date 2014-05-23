@@ -15,8 +15,7 @@ define(['underscore', 'marionette', 'backbone', 'jquery'], function(_, Marionett
     _.db = window.sqlitePlugin.openDatabase({
       name: "walnutapp"
     });
-    localDatabaseTransaction(_.db);
-    return navigator.splashscreen.hide();
+    return localDatabaseTransaction(_.db);
   }, false);
   _.setUserID = function(id) {
     return window.localStorage.setItem("user_id", "" + id);

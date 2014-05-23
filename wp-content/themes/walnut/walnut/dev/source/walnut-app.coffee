@@ -50,7 +50,8 @@ define ['marionette'], (Marionette)->
 		if _.platform() is 'DEVICE'
 			@rootRoute = 'app-login'
 			@rootRoute = 'login' if _.getBlogID() is null
-			App.navigate(@rootRoute, trigger: true)	
+			App.navigate(@rootRoute, trigger: true)
+			
 			return
 
 		else
@@ -84,13 +85,7 @@ define ['marionette'], (Marionette)->
 		user_role= user.get "roles"
 		
 		if _.platform() is 'DEVICE'
-			userRole = _.getUserDetails($('#txtusername').val())
-			userRole.done (user)->
-				console.log 'ROLE: '+user.role
-				if user.role is 'administrator'
-					App.navigate('textbooks', trigger: true)
-				else
-					App.navigate('teachers/dashboard', trigger: true)
+			App.navigate('teachers/dashboard', trigger: true)
 
 		else
 			if user_role[0]=='administrator'

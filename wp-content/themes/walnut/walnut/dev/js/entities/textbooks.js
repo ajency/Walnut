@@ -146,7 +146,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         runQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0", [], onSuccess(d), _.deferredErrorHandler(d));
+              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy=? AND tt.parent=?", ['textbook', 0], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
         };
@@ -192,7 +192,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           runQ = function() {
             return $.Deferred(function(d) {
               return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key='textbooks' AND user_id='1'", [], success(d), _.deferredErrorHandler(d));
+                return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['textbooks', _.getUserID()], success(d), _.deferredErrorHandler(d));
               });
             });
           };

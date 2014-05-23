@@ -20,10 +20,16 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
     return connected = false;
   };
   document.addEventListener("online", function() {
-    return console.log('Online');
+    console.log('Online');
+    $('#connectionStatus').text('Internet connection available');
+    return $('#online').prop("disabled", false);
   }, false);
   document.addEventListener("offline", function() {
-    return console.log('Offline');
+    console.log('Offline');
+    $('#connectionStatus').text('Internet connection not found');
+    $('#online').prop("disabled", true);
+    $('#online').prop("checked", false);
+    return $("#offline").prop("checked", true);
   }, false);
   _.isOnline = function() {
     switch (_.platform()) {

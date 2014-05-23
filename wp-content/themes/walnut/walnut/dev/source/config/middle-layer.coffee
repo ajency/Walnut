@@ -30,17 +30,18 @@ define ['detect', 'jquery', 'underscore'], (detect, $, _)->
 	document.addEventListener("online"
 		,->
 			console.log 'Online'
-			# $('#connectionStatus').text('Internet connection available')
-			# $('#online').prop("disabled",false)
+			$('#connectionStatus').text('Internet connection available')
+			$('#online').prop("disabled",false)
 
 		, false)
 
 	document.addEventListener("offline"
 		,->
 			console.log 'Offline'
-			# $('#connectionStatus').text('Internet connection not found')
-			# $('#online').prop("disabled",true)
-			# $("#offline").prop("checked", true)
+			$('#connectionStatus').text('Internet connection not found')
+			$('#online').prop("disabled",true)
+			$('#online').prop("checked",false)
+			$("#offline").prop("checked", true)
 
 		, false)
 

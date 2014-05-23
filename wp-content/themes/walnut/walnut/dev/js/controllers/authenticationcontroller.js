@@ -85,6 +85,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             return _this.onErrorResponse(resp.login_details.error);
           } else {
             _this.setUserModel();
+            _.setUserID(resp.login_details.ID);
             if (_.getBlogID() === null) {
               return _this.initialAppLogin(resp);
             } else {
@@ -103,6 +104,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           if (user.exists) {
             if (user.password === _this.data.txtpassword) {
               _this.setUserModel();
+              _.setUserID(user.user_id);
               return _this.onSuccessResponse();
             } else {
               return _this.onErrorResponse('Invalid Password');

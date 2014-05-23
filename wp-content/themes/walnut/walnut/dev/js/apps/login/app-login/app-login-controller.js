@@ -15,15 +15,16 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
         var LoginCollection, view;
         LoginCollection = App.request("get:loggedin:user:collection");
         this.view = view = this._getLoginView(LoginCollection);
-        this.show(view, {
-          loading: true
-        });
-        return this.listenTo(view, "goto:login:view", function(username) {
-          return App.execute("show:login:view:app", {
-            region: App.loginRegion,
-            username: username
+        this.show(view);
+        this.listenTo(view, "goto:login:view", function(username) {
+          return App.navigate("login/" + username, {
+            trigger: true
           });
         });
+        App.leftNavRegion.close();
+        App.headerRegion.close();
+        App.mainContentRegion.close();
+        return App.breadcrumbRegion.close();
       };
 
       AppController.prototype._getLoginView = function(collection) {
@@ -70,28 +71,20 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
       };
 
       AppLoginView.prototype.gotoLogin = function(e) {
-        var user, username;
+        var username;
         username = $(e.target).text();
-        this.trigger("goto:login:view", username);
-        user = App.request("get:user:model");
-        return user.set({
-          'ID': '0'
-        });
+        return this.trigger("goto:login:view", username);
       };
 
       AppLoginView.prototype.gotoNewLogin = function() {
-        var user;
-        App.navigate('login', {
+        return App.navigate('login', {
           trigger: true
-        });
-        user = App.request("get:user:model");
-        return user.set({
-          'ID': '0'
         });
       };
 
       AppLoginView.prototype.onShow = function() {
-        return _.setMainLogo();
+        _.setMainLogo();
+        return navigator.splashscreen.hide();
       };
 
       return AppLoginView;

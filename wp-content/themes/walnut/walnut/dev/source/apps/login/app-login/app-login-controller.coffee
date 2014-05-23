@@ -5,17 +5,20 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 		class Controller.AppController extends RegionController
 
 			initialize : ->
-				
+
 				LoginCollection = App.request "get:loggedin:user:collection"
 				
 				@view = view = @_getLoginView LoginCollection
 
-				@show view, (loading: true)
+				@show view
 
 				@listenTo view, "goto:login:view", (username)->
-					App.execute "show:login:view:app",
-						region 		: App.loginRegion
-						username 	: username
+					App.navigate "login/"+username, trigger:true
+
+				App.leftNavRegion.close()
+				App.headerRegion.close()
+				App.mainContentRegion.close()
+				App.breadcrumbRegion.close()	
 
 
 			_getLoginView :(collection) ->
@@ -51,18 +54,19 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 
 
 			gotoLogin:(e)->
+
 				username= $(e.target).text()
 				@trigger "goto:login:view", username
 
-				user = App.request "get:user:model"
-				user.set 'ID' : '0'
-
 			gotoNewLogin: ->
+
 				App.navigate('login', trigger: true)
-				
-				user = App.request "get:user:model"
-				user.set 'ID' : '0'
 
 			onShow: ->
+				
 				# change mainLogo to school logo
 				_.setMainLogo()
+
+				#Hide the splash screen image
+				navigator.splashscreen.hide()
+				

@@ -5,6 +5,7 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 		class Controller.LoginController extends RegionController
 
 			initialize : (opts)->
+				
 				# username used for mobile
 				{@username} = opts
 
@@ -23,7 +24,8 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 				# listen to disable:offline:login:type event from the view for mobile
 				@listenTo view, 'disable:offline:login:type', @disableOfflineLoginType	
 
-				@show view, (loading: true)
+				if _.platform() is 'BROWSER' then @show view, (loading: true)
+				else @show view
 
 
 			_getLoginView : ->
@@ -59,6 +61,7 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 				if _.isUndefined @username
 					$("#online").prop("checked", true)
+					$("#offline").prop("checked", false)
 					$('#offline').prop("disabled",true)
 					
 
@@ -85,8 +88,10 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 					$('#connectionStatus').text('Internet connection not found')
 					$('#online').prop("disabled",true)
 
-				@trigger "disable:offline:login:type"	
+				@trigger "disable:offline:login:type"
 
+				#Hide the splash screen image
+				navigator.splashscreen.hide()
 				
 
 			submitLogin: (e)->

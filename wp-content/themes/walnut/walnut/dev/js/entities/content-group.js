@@ -238,7 +238,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         data = {
           division_id: model.get('division'),
           collection_id: model.get('id'),
-          teacher_id: 1,
+          teacher_id: _.getUserID(),
           date: _.getCurrentDateTime(0),
           status: model.get('status')
         };

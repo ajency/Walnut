@@ -23,9 +23,13 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         });
         this.listenTo(view, 'prepopulate:username', this.prepopulateUsername);
         this.listenTo(view, 'disable:offline:login:type', this.disableOfflineLoginType);
-        return this.show(view, {
-          loading: true
-        });
+        if (_.platform() === 'BROWSER') {
+          return this.show(view, {
+            loading: true
+          });
+        } else {
+          return this.show(view);
+        }
       };
 
       LoginController.prototype._getLoginView = function() {
@@ -63,6 +67,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginController.prototype.disableOfflineLoginType = function() {
         if (_.isUndefined(this.username)) {
           $("#online").prop("checked", true);
+          $("#offline").prop("checked", false);
           return $('#offline').prop("disabled", true);
         }
       };
@@ -95,7 +100,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
           $('#connectionStatus').text('Internet connection not found');
           $('#online').prop("disabled", true);
         }
-        return this.trigger("disable:offline:login:type");
+        this.trigger("disable:offline:login:type");
+        return navigator.splashscreen.hide();
       };
 
       LoginView.prototype.submitLogin = function(e) {

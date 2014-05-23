@@ -61,7 +61,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								# userid hardcoded as 1
-								tx.executeSql('SELECT meta_value FROM wp_usermeta WHERE user_id=1 AND meta_key="classes"', [], onSuccess(d), _.deferredErrorHandler(d))
+								tx.executeSql("SELECT meta_value FROM wp_usermeta 
+									WHERE user_id=? AND meta_key=?"
+									, [_.getUserID(), 'classes'], onSuccess(d), _.deferredErrorHandler(d))
 
 					onSuccess = (d)->
 						(tx, data)->

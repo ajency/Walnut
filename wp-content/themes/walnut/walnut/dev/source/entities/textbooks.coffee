@@ -102,7 +102,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id  
-									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0", [], onSuccess(d), _.deferredErrorHandler(d));
+									WHERE t.term_id=tt.term_id AND tt.taxonomy=? AND tt.parent=?"
+									, ['textbook', 0], onSuccess(d), _.deferredErrorHandler(d));
 								
 
 					onSuccess =(d)->
@@ -140,25 +141,26 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 
 				# get textbooks by class id from local database
-				getTextbooksByClassIDFromLocal:(class_id)->
+				getTextbooksByClassIDFromLocal : (class_id)->
 					#user id hardcoded as 1 for now
-					getTextBookIds = ->
+					getTextBookIds =->
 
-						runQ =->
+						runQ = ->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
-									tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key='textbooks' AND user_id='1'", [], success(d), _.deferredErrorHandler(d))
-
-						success =(d)->
-							(tx,data)->
+									tx.executeSql("SELECT meta_value FROM wp_usermeta 
+										WHERE meta_key=? AND user_id=?", ['textbooks', _.getUserID()]
+										, success(d), _.deferredErrorHandler(d))
+						
+						success = (d)->
+							(tx, data)->
 								ids = unserialize(data.rows.item(0)['meta_value'])
-								d.resolve(ids)
+								d.resolve ids
 
 						$.when(runQ()).done ->
 							console.log 'getTextBookIds transaction completed'
 						.fail _.failureHandler
 
-					
 					# get total modules count
 					getModulesCount = (textbook_id)->
 						pattern = '%"'+textbook_id+'"%'
@@ -194,10 +196,12 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 
 									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0
-									AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+textbook_ids+")", [], onSuccess(d), _.deferredErrorHandler(d));
+									AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+textbook_ids+")", []
+									, onSuccess(d) , _.deferredErrorHandler(d));
 								
 
-					onSuccess =(d)->
+					onSuccess = (d)->
+						
 						(tx,data)->
 
 							result = []
@@ -206,6 +210,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 								row = data.rows.item(i)
 								
+								# TODO: break it up into small function
 								do (tx, row ,i)->
 									modulesCount = getModulesCount(row['textbook_id'])
 									modulesCount.done (modules_count)->

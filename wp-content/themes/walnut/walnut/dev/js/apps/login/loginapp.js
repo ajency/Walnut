@@ -13,6 +13,7 @@ define(['app', 'apps/login/logincontroller', 'apps/login/app-login/app-login-con
 
       LoginRouter.prototype.appRoutes = {
         'login': 'showLogin',
+        'login/:user': 'showLoginWithUser',
         'app-login': 'appLogin'
       };
 
@@ -26,6 +27,16 @@ define(['app', 'apps/login/logincontroller', 'apps/login/app-login/app-login-con
         if (!userdata.get('ID')) {
           return new LoginApp.Controller.LoginController({
             region: App.loginRegion
+          });
+        }
+      },
+      showLoginWithUser: function(username) {
+        var userdata;
+        userdata = App.request("get:user:model");
+        if (!userdata.get('ID')) {
+          return new LoginApp.Controller.LoginController({
+            region: App.loginRegion,
+            username: username
           });
         }
       },

@@ -10,7 +10,9 @@ define ['app'
 
                 appRoutes:
                     'login': 'showLogin'
+                    'login/:user' : 'showLoginWithUser'
                     'app-login' : 'appLogin'
+
 
 
             Controller =
@@ -22,11 +24,20 @@ define ['app'
                             region: App.loginRegion
 
 
+
+                showLoginWithUser:(username) ->
+                    userdata = App.request "get:user:model"
+                    if not userdata.get 'ID'
+                        new LoginApp.Controller.LoginController
+                            region: App.loginRegion
+                            username: username
+
+
                 appLogin:->
-                    userdata= App.request "get:user:model"
+                    userdata = App.request "get:user:model"
                     if not userdata.get 'ID'
                         new LoginApp.Controller.AppController
-                                            region : App.loginRegion            
+                            region : App.loginRegion            
 
 
             LoginApp.on "start", ->

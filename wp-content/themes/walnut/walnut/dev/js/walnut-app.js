@@ -73,7 +73,7 @@ define(['marionette'], function(Marionette) {
   });
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
-      var user, userRole;
+      var user;
       if (typeof Pace !== 'undefined') {
         Pace.restart();
         $("#site_main_container").removeClass("showAll");
@@ -81,18 +81,8 @@ define(['marionette'], function(Marionette) {
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        userRole = _.getUserDetails($('#txtusername').val());
-        userRole.done(function(user) {
-          console.log('ROLE: ' + user.role);
-          if (user.role === 'administrator') {
-            return App.navigate('textbooks', {
-              trigger: true
-            });
-          } else {
-            return App.navigate('teachers/dashboard', {
-              trigger: true
-            });
-          }
+        App.navigate('teachers/dashboard', {
+          trigger: true
         });
       } else {
         if (user_role[0] === 'administrator') {

@@ -77,6 +77,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				   			# set user model for back button navigation
 				   			@setUserModel()
 
+				   			# save logged in user id
+				   			_.setUserID(resp.login_details.ID)
+
 				   			# if the blog id is null, then the app is installed
 				   			# for the first time.
 				   			if _.getBlogID() is null then @initialAppLogin(resp)
@@ -95,6 +98,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 					if user.password is @data.txtpassword
 						# set user model for back button navigation
 						@setUserModel()
+
+						# save offline user id
+						_.setUserID(user.user_id)
 
 						@onSuccessResponse()
 
@@ -138,9 +144,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			offlineUser.done (user)=>
 				if user.exists then @updateExistingUser(resp)
 				else @inputNewUser(resp)
-
 		
-		# insert new user
+		
 		inputNewUser:(response)->
 
 			resp = response.login_details
@@ -154,8 +159,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				console.log 'SUCCESS: Inserted new user'
 			)
 
-
-		# update existing user
+		
 		updateExistingUser:(response)->
 
 			resp = response.login_details
