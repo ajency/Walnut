@@ -232,24 +232,24 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           var textbookIds, textbook_ids;
           textbook_ids = '';
           textbookIds = getTextBookIds();
-          textbookIds.done((function(_this) {
+          return textbookIds.done((function(_this) {
             return function(ids) {
-              return textbook_ids = ids;
+              textbook_ids = ids;
+              return $.Deferred(function(d) {
+                return _.db.transaction(function(tx) {
+                  var pattern;
+                  pattern = '%"' + class_id + '"%';
+                  return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' AND wtr.textbook_id IN (" + textbook_ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
+                });
+              });
             };
           })(this));
-          return $.Deferred(function(d) {
-            return _.db.transaction(function(tx) {
-              var pattern;
-              pattern = '%"' + class_id + '"%';
-              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' AND wtr.textbook_id IN (" + textbook_ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
-            });
-          });
         };
         onSuccess = function(d) {
           return function(tx, data) {
             var i, result, row, _fn, _i, _ref;
             result = [];
-            _fn = function(tx, row, i) {
+            _fn = function(row, i) {
               var modulesCount;
               modulesCount = getModulesCount(row['textbook_id']);
               return modulesCount.done(function(modules_count) {
@@ -280,7 +280,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             };
             for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               row = data.rows.item(i);
-              _fn(tx, row, i);
+              _fn(row, i);
             }
             return d.resolve(result);
           };

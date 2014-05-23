@@ -1,9 +1,9 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], function(Marionette, App, _, parse, ConvertToCSV) {
+define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], function(Marionette, App, _, parse) {
   var SynchronizationController;
-  return SynchronizationController = (function(_super) {
+  SynchronizationController = (function(_super) {
     __extends(SynchronizationController, _super);
 
     function SynchronizationController() {
@@ -16,28 +16,13 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
       return this.Sync();
     };
 
-    SynchronizationController.prototype.TotalRecordsUpdate = function() {
-      var valuesAll, valuesAll1, valuesAll2;
-      valuesAll = "";
-      valuesAll1 = "";
-      valuesAll2 = "";
+    SynchronizationController.prototype.totalRecordsUpdate = function() {
       return _.db.transaction(function(tx) {
-        alert("SELECT");
-        tx.executeSql("SELECT * FROM wp_training_logs WHERE sync=0 ", [], function(tx, results) {
-          valuesAll = results.rows.length;
-          return console.log(valuesAll);
+        return tx.executeSql("SELECT SUM(rows) AS total FROM (SELECT COUNT(*) AS rows FROM wp_training_logs WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM wp_question_response WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM wp_question_response_logs WHERE sync=?)", [0, 0, 0], function(tx, data) {
+          return $('#SyncRecords').text(data.rows.item(0)['total']);
         }, _.transactionErrorhandler);
-        tx.executeSql("SELECT * FROM wp_question_response WHERE sync=0 ", [], function(tx, results) {
-          valuesAll1 = results.rows.length;
-          return console.log(valuesAll1);
-        }, _.transactionErrorhandler);
-        return tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync=0 ", [], function(tx, results) {
-          var VALUESGT;
-          valuesAll2 = results.rows.length;
-          console.log(valuesAll2);
-          VALUESGT = valuesAll + valuesAll1 + valuesAll2;
-          return $('#SyncRecords').text(VALUESGT);
-        }, _.transactionErrorhandler);
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Fetched total records having sync flag=0');
       });
     };
 
@@ -46,150 +31,161 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
       valuesAll = "";
       valuesAll1 = "";
       valuesAll2 = "";
-      return _.db.transaction(function(tx) {
-        alert("SELECT 4 Conversion");
-        tx.executeSql("SELECT * FROM wp_training_logs WHERE sync=0 ", [], function(tx, results) {
-          var data, data1, data2, data3, data4, data5, i, row, training_data, _results;
-          valuesAll = results.rows.length;
-          console.log(valuesAll);
-          if (valuesAll === 0) {
-            return console.log("No user found");
-          } else {
-            i = 0;
-            _results = [];
-            while (i < valuesAll) {
-              row = results.rows.item(i);
-              data = row.id;
-              data1 = row.division_id;
-              data2 = row.collection_id;
-              data3 = row.teacher_id;
-              data4 = row.date;
-              data5 = row.status;
-              console.log(data);
-              console.log(data1);
-              console.log(data2);
-              console.log(data3);
-              console.log(data4);
-              console.log(data5);
-              console.log(i);
-              training_data = '{ "id": "' + row.id + '","division_id":"' + row.division_id + '", "collection_id": "' + row.collection_id + '", "teacher_id": "' + row.teacher_id + '", "date":"' + row.date + '", "status":"' + row.status + '"}';
-              console.log("1st data is :" + training_data);
-              _results.push(i++);
-            }
-            return _results;
-          }
-        }, _.transactionErrorhandler);
-        tx.executeSql("SELECT * FROM wp_question_response WHERE sync=0 ", [], function(tx, results) {
-          var data, data1, data2, data3, data4, data5, data6, data7, data8, data9, i, quest_resp_data, row, _results;
-          valuesAll1 = results.rows.length;
-          console.log(valuesAll1);
-          if (valuesAll === 0) {
-            return console.log("No user found");
-          } else {
-            i = 0;
-            _results = [];
-            while (i < valuesAll) {
-              row = results.rows.item(i);
-              data = row.ref_id;
-              data1 = row.content_piece_id;
-              data2 = row.collection_id;
-              data3 = row.division;
-              data4 = row.question_response;
-              data5 = row.time_taken;
-              data6 = row.start_date;
-              data7 = row.end_date;
-              data8 = row.status;
-              data9 = row.sync;
-              console.log(data);
-              console.log(data1);
-              console.log(data2);
-              console.log(data3);
-              console.log(data4);
-              console.log(data5);
-              console.log(data6);
-              console.log(data7);
-              console.log(data8);
-              console.log(data9);
-              console.log(i);
-              quest_resp_data = '{ "grp_name": "' + row.ref_id + '","grp_des":"' + row.content_piece_id + '", "grp_recuring": "' + row.collection_id + '", "grp_type": "' + row.division + '", "grp_currency":"' + row.question_response + '", "grp_chat":"' + row.time_taken + '","grp_chat":"' + row.start_date + '""grp_chat":"' + row.end_date + '""grp_chat":"' + row.status + '""grp_chat":"' + row.sync + '"}';
-              console.log("2n Data is " + quest_resp_data);
-              _results.push(i++);
-            }
-            return _results;
-          }
-        }, _.transactionErrorhandler);
-        return tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync=0 ", [], function(tx, results) {
-          var AllData, CSVdata, data, data1, data2, fullGrp, i, items, quesn_rep_logs, row;
-          valuesAll2 = results.rows.length;
-          console.log(valuesAll2);
-          if (valuesAll === 0) {
-            console.log("No user found");
-            items = [
-              {
-                name: "Item 1",
-                color: "Green",
-                size: "X-Large"
-              }, {
-                name: "Item 2",
-                color: "Green",
-                size: "X-Large"
-              }, {
-                name: "Item 3",
-                color: "Green",
-                size: "X-Large"
+      return _.db.transaction((function(_this) {
+        return function(tx) {
+          tx.executeSql("SELECT * FROM wp_training_logs WHERE sync=0 ", [], function(tx, results) {
+            var data, i, row, training_data, _results;
+            valuesAll = results.rows.length;
+            console.log(valuesAll);
+            if (valuesAll === 0) {
+              return console.log("No user found");
+            } else {
+              i = 0;
+              _results = [];
+              while (i < valuesAll) {
+                row = results.rows.item(i);
+                data = row.id;
+                training_data = '{ "id": "' + row.id + '","division_id":"' + row.division_id + '", "collection_id": "' + row.collection_id + '", "teacher_id": "' + row.teacher_id + '", "date":"' + row.date + '", "status":"' + row.status + '"}';
+                console.log("1st data is :" + training_data);
+                _results.push(i++);
               }
-            ];
-            fullGrp = JSON.stringify(items);
-            console.log("Ful Data is " + fullGrp);
-            CSVdata = this.ConvertToCSV(fullGrp);
-            console.log("CSV data is" + CSVdata);
-            return this.WriteToFile(CSVdata);
-          } else {
-            i = 0;
-            while (i < valuesAll) {
-              row = results.rows.item(i);
-              data = row.qr_ref_id;
-              data1 = row.start_time;
-              data2 = row.sync;
-              console.log(data);
-              console.log(data1);
-              console.log(data2);
-              console.log(i);
-              quesn_rep_logs = '{ "id": "' + row.qr_ref_id + '","collection_id": "' + row.start_time + '", "teacher_id": "' + row.sync + '"}';
-              console.log("3rd data is " + quesn_rep_logs);
-              i++;
+              return _results;
             }
-            AllData = {
-              "group": {
-                "training_data": training_data,
-                "quest_resp_data": quest_resp_data,
-                "quesn_rep_logs": quesn_rep_logs
+          }, _.transactionErrorhandler);
+          tx.executeSql("SELECT * FROM wp_question_response WHERE sync=0 ", [], function(tx, results) {
+            var i, quest_resp_data, row, _results;
+            valuesAll1 = results.rows.length;
+            console.log(valuesAll1);
+            if (valuesAll === 0) {
+              return console.log("No user found");
+            } else {
+              i = 0;
+              _results = [];
+              while (i < valuesAll) {
+                row = results.rows.item(i);
+                quest_resp_data = '{ "grp_name": "' + row.ref_id + '","grp_des":"' + row.content_piece_id + '", "grp_recuring": "' + row.collection_id + '", "grp_type": "' + row.division + '", "grp_currency":"' + row.question_response + '", "grp_chat":"' + row.time_taken + '","grp_chat":"' + row.start_date + '""grp_chat":"' + row.end_date + '""grp_chat":"' + row.status + '""grp_chat":"' + row.sync + '"}';
+                console.log("2n Data is " + quest_resp_data);
+                _results.push(i++);
               }
-            };
-            fullGrp = '&data=' + JSON.stringify(AllData);
-            alert(fullGrp);
-            console.log("Ful Data is " + fullGrp);
-            CSVdata = ConvertToCSV(fullGrp);
-            return console.log("CSV data is" + CSVdata);
-          }
-        }, _.transactionErrorhandler);
+              return _results;
+            }
+          }, _.transactionErrorhandler);
+          return tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync=0 ", [], function(tx, results) {
+            var AllData, CSVdata, fullGrp, i, items, quesn_rep_logs, row, _results;
+            valuesAll2 = results.rows.length;
+            console.log(valuesAll2);
+            if (valuesAll === 0) {
+              console.log("No user found");
+              items = [
+                {
+                  name: "Item 1",
+                  color: "Green",
+                  size: "X-Large"
+                }, {
+                  name: "Item 2",
+                  color: "Green",
+                  size: "X-Large"
+                }, {
+                  name: "Item 3",
+                  color: "Green",
+                  size: "X-Large"
+                }
+              ];
+              AllData = {
+                "group": {
+                  "training_data": items,
+                  "quest_resp_data": items,
+                  "quesn_rep_logs": items
+                }
+              };
+              fullGrp = JSON.stringify(items);
+              alert(fullGrp);
+              console.log("Ful Data is " + fullGrp);
+              CSVdata = ConvertToCSV(fullGrp);
+              console.log("CSV data is" + CSVdata);
+              alert("hello cald not");
+              return _this.WriteToFile(CSVdata);
+            } else {
+              i = 0;
+              _results = [];
+              while (i < valuesAll) {
+                row = results.rows.item(i);
+                quesn_rep_logs = '{ "id": "' + row.qr_ref_id + '","collection_id": "' + row.start_time + '", "teacher_id": "' + row.sync + '"}';
+                console.log("3rd data is " + quesn_rep_logs);
+                _results.push(i++);
+              }
+              return _results;
+            }
+          }, _.transactionErrorhandler);
+        };
+      })(this), _.transactionErrorhandler, function(tx) {
+        return console.log('Main transaction');
       });
     };
 
     SynchronizationController.prototype.WriteToFile = function(CSVdata) {
-      alert("CSVdata is " + CSVdata);
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
           return fileSystem.root.getFile("csvread.txt", {
             create: true,
             exclusive: false
           }, function(fileEntry) {
-            return fileEntry.createWriter(function(gotFileWriter) {
-              return writer.write("some sample text" + CSVdata);
+            return fileEntry.createWriter(function(writer) {
+              console.log("file entry is" + fileEntry.toURL());
+              writer.write(CSVdata);
+              $('#JsonToCSV').attr("disabled", "disabled");
+              $('#CSVupload').removeAttr("disabled");
+              return _this.fileRead();
+            }, _.fileTransferErrorHandler);
+          }, _.fileErrorHandler);
+        };
+      })(this), _.fileSystemErrorHandler);
+    };
+
+    SynchronizationController.prototype.fileRead = function() {
+      alert("hiee");
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
+        return function(fileSystem) {
+          return fileSystem.root.getFile("csvread.txt", {
+            create: true,
+            exclusive: false
+          }, function(fileEntry) {
+            return fileEntry.file(function(file) {
+              var reader;
+              alert("read as text");
+              alert("reader " + reader);
+              reader = new FileReader();
+              reader.onloadend = function(evt) {
+                alert("result" + evt.target.result);
+                return console.log("result" + evt.target.result);
+              };
+              return reader.readAsText(file);
             }, _.fileErrorHandler);
           }, _.fileErrorHandler);
         };
       })(this), _.fileSystemErrorHandler);
+    };
+
+    SynchronizationController.prototype.FileUpload = function(fileEntry) {
+      var ft, options, params;
+      options = new FileUploadOptions();
+      options.fileKey = "file";
+      options.fileName = fileEntry.substr(fileEntry.lastIndexOf('/') + 1);
+      options.mimeType = "text/csv;";
+      params = {};
+      params.value1 = "test";
+      params.value2 = "param";
+      options.params = params;
+      ft = new FileTransfer();
+      return ft.upload(fileEntry, encodeURI("http://some.server.com/upload.php"), function(r) {
+        console.log("Code = " + r.responseCode);
+        console.log("Response = " + r.response);
+        return console.log("Sent = " + r.bytesSent);
+      }, function(error) {
+        alert("An error has occurred: Code = " + error.code);
+        console.log("upload error source " + error.source);
+        return console.log("upload error target " + error.target);
+      }, options);
     };
 
     SynchronizationController.prototype.Sync = function() {
@@ -327,11 +323,10 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
       });
     };
 
-    App.reqres.setHandler("get:sync:controller", function() {
-      return new SynchronizationController;
-    });
-
     return SynchronizationController;
 
   })(Marionette.Controller);
+  return App.reqres.setHandler("get:sync:controller", function() {
+    return new SynchronizationController;
+  });
 });

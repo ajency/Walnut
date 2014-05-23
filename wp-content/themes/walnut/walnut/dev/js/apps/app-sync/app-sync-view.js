@@ -37,15 +37,18 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.events = {
         'click #JsonToCSV': 'StartConversion',
-        'click #syncNow': 'startSyncProcess'
+        'click #syncNow': 'startSyncProcess',
+        'click #CSVupload': 'FileUpload'
       };
 
       AppSyncView.prototype.onShow = function() {
         var syncController;
         $('#syncText').text('');
         syncController = App.request("get:sync:controller");
-        return syncController.TotalRecordsUpdate();
+        return syncController.totalRecordsUpdate();
       };
+
+      AppSyncView.prototype.FileUpload = function() {};
 
       AppSyncView.prototype.StartConversion = function() {
         var syncController;

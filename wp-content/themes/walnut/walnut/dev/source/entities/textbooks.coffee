@@ -101,8 +101,10 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
-									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id  
-									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0", [], onSuccess(d), _.deferredErrorHandler(d));
+									LEFT OUTER JOIN wp_textbook_relationships wtr 
+									ON t.term_id=wtr.textbook_id  
+									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' 
+									AND tt.parent=0", [], onSuccess(d), _.deferredErrorHandler(d));
 								
 
 					onSuccess =(d)->
@@ -147,7 +149,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						runQ =->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
-									tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key='textbooks' AND user_id='1'", [], success(d), _.deferredErrorHandler(d))
+									tx.executeSql("SELECT meta_value FROM wp_usermeta 
+										WHERE meta_key='textbooks' AND user_id='1'"
+										, [], success(d), _.deferredErrorHandler(d))
 
 						success =(d)->
 							(tx,data)->
@@ -166,8 +170,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						runQ =->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
-									tx.executeSql("SELECT COUNT(id) AS count FROM wp_content_collection 
-										WHERE term_ids LIKE '"+pattern+"'", [], success(d), _.deferredErrorHandler(d))
+									tx.executeSql("SELECT COUNT(id) AS count FROM 
+										wp_content_collection WHERE term_ids LIKE '"+pattern+"'"
+										, [], success(d), _.deferredErrorHandler(d))
 
 						success =(d)->
 							(tx,data)->
@@ -186,18 +191,21 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						textbookIds.done (ids)=>
 							textbook_ids = ids
 
-						$.Deferred (d)->
-							_.db.transaction (tx)->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
 
-								pattern = '%"'+class_id+'"%'
+									pattern = '%"'+class_id+'"%'
 
-								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
-									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 
-									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0
-									AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+textbook_ids+")", [], onSuccess(d), _.deferredErrorHandler(d));
+									tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
+										LEFT OUTER JOIN wp_textbook_relationships wtr 
+										ON t.term_id=wtr.textbook_id 
+										WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' 
+										AND tt.parent=0 AND wtr.class_id LIKE '"+pattern+"' 
+										AND wtr.textbook_id IN ("+textbook_ids+")", []
+										, onSuccess(d), _.deferredErrorHandler(d));
 								
 
-					onSuccess =(d)->
+					onSuccess = (d)->
 						(tx,data)->
 
 							result = []
@@ -206,7 +214,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 								row = data.rows.item(i)
 								
-								do (tx, row ,i)->
+								do (row ,i)->
 									modulesCount = getModulesCount(row['textbook_id'])
 									modulesCount.done (modules_count)->
 									
@@ -228,7 +236,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 											classes: classes
 											subjects: subjects
 											modules_count: modules_count
-
 
 							d.resolve(result)
 					
