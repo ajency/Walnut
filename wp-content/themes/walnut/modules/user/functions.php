@@ -8,8 +8,16 @@ function authenticate_login($data){
     if(is_wp_error($login_check))
         return array("error"=>"Invalid Username or Password");
 
-    else
-        return $login_check;
+    else{
+
+        $response_data['login_details']= $login_check;
+
+        wp_set_auth_cookie( $login_check->ID );
+        $response_data['blog_details'] = get_primary_blog_details($login_check->ID);
+
+        return $response_data;
+    }
+
 }
 
 function get_primary_blog_details($user_id=''){
@@ -18,7 +26,6 @@ function get_primary_blog_details($user_id=''){
         $user_id = get_current_user_id();
 
     $blog =get_active_blog_for_user($user_id);
-
     $blog_logo_id = get_blog_option($blog->blog_id, 'blog_logo');
 
     switch_to_blog($blog->blog_id);
@@ -28,7 +35,8 @@ function get_primary_blog_details($user_id=''){
     $blog_data= array(
         'blog_id'=> $blog->blog_id,
         'blog_name'=> $blog->blogname,
-        'blog_logo'=> $blog_logo
+        'blog_logo'=> $blog_logo,
+        'site_url'=> $blog->siteurl
     );
     return $blog_data;
 }

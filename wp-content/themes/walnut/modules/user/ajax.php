@@ -22,9 +22,6 @@ function authenticate_web_login() {
 
     $login_details = authenticate_login($_POST['data']);
 
-    if($login_details->ID)
-        wp_set_auth_cookie( $login_details->ID );
-
     wp_send_json($login_details);
 
 }
