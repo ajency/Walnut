@@ -149,7 +149,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							$.Deferred (d)->
 								_.db.transaction (tx)->
 									tx.executeSql("SELECT meta_value FROM wp_usermeta 
-										WHERE meta_key=? AND user_id=?", ['textbooks', _.getUserID()]
+										WHERE meta_key=? AND user_id=?", ['textbooks', 1]
 										, success(d), _.deferredErrorHandler(d))
 						
 						success = (d)->

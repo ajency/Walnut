@@ -36,9 +36,9 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.template = AppSyncTpl;
 
       AppSyncView.prototype.events = {
-        'click #JsonToCSV': 'StartConversion',
+        'click #JsonToCSV': 'startConversion',
         'click #syncNow': 'startSyncProcess',
-        'click #CSVupload': 'FileUpload'
+        'click #CSVupload': 'fileUpload'
       };
 
       AppSyncView.prototype.onShow = function() {
@@ -48,12 +48,12 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         return syncController.totalRecordsUpdate();
       };
 
-      AppSyncView.prototype.FileUpload = function() {};
+      AppSyncView.prototype.fileUpload = function() {};
 
-      AppSyncView.prototype.StartConversion = function() {
+      AppSyncView.prototype.startConversion = function() {
         var syncController;
         syncController = App.request("get:sync:controller");
-        return syncController.Conversion();
+        return syncController.selectRecords();
       };
 
       AppSyncView.prototype.startSyncProcess = function() {

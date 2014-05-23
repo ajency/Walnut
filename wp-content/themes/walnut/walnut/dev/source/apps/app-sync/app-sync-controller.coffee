@@ -1,4 +1,4 @@
-define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Marionette, App, _, parse) ->
+define ["marionette","app", "underscore", "csvparse" , "json2csvparse", "Zip", "zipchk", "FileSaver"], (Marionette, App, _, parse) ->
 
 	class SynchronizationController extends Marionette.Controller
 
@@ -30,7 +30,11 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 				console.log 'Fetched total records having sync flag=0'
 			)
 
-		Conversion : ->
+
+#This function Selects those record from the 3 tables which has sync flag set as 0
+#The Function is too long after succesful execution change it by calling differnt function for eavh transaction
+		
+		selectRecords : ->
 			valuesAll=""
 			valuesAll1=""
 			valuesAll2=""
@@ -42,10 +46,8 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 						console.log valuesAll
 						if valuesAll is 0 
 							console.log "No user found"
-							# return;
 						
 						else
-							
 							i= 0
 							while i < valuesAll
 								row = results.rows.item(i)
@@ -63,7 +65,6 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 						console.log valuesAll1
 						if valuesAll is 0 
 							console.log "No user found"
-							#return;
 						
 						else
 							i= 0
@@ -91,34 +92,31 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 							AllData = {"group":{"training_data":items, "quest_resp_data":items, 
 							"quesn_rep_logs": items}}
 							fullGrp = JSON.stringify items
-							alert fullGrp
 							console.log "Ful Data is " +fullGrp
 							CSVdata = ConvertToCSV fullGrp
-							console.log "CSV data is" +CSVdata
-							
-							alert "hello cald not"
-							@WriteToFile CSVdata
-							#return;
+							console.log "CSV data is" +CSVdata							
+							@writeToFile CSVdata
+
 						
 						else
 							i= 0
 							while i < valuesAll
 								row = results.rows.item(i)
-								quesn_rep_logs = '{ "id": "'+row.qr_ref_id+'","collection_id": "'+row.start_time+'", "teacher_id": "'+row.sync+'"}'
+								quesn_rep_logs = '{ "id": "'+row.qr_ref_id+'","collection_id": "'+row.start_time+'",
+								 "teacher_id": "'+row.sync+'"}'
 								console.log "3rd data is "+quesn_rep_logs
 								i++
 
-								# $('#SyncRecords').text(VALUESGT)
-								# AllData = training_data+quest_resp_data+quesn_rep_logs
-									# AllData = {"group":{"training_data":training_data, "quest_resp_data":quest_resp_data, 
-									# "quesn_rep_logs": quesn_rep_logs}}
-									
-									# fullGrp = '&data='+JSON.stringify AllData
-									# alert fullGrp
-									# console.log "Ful Data is " +fullGrp
-									# CSVdata = ConvertToCSV(fullGrp)
-									# console.log "CSV data is" +CSVdata
-
+							AllData = training_data+quest_resp_data+quesn_rep_logs
+							AllData = {"group":{"training_data":training_data, "quest_resp_data":quest_resp_data, 
+							"quesn_rep_logs": quesn_rep_logs}}
+								
+							fullGrp = JSON.stringify AllData
+							alert fullGrp
+							console.log "Ful Data is " +fullGrp
+							CSVdata = ConvertToCSV fullGrp
+							console.log "CSV data is" +CSVdata
+							@writeToFile CSVdata
 
 					,_.transactionErrorhandler)
 			
@@ -127,7 +125,9 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 				console.log 'Main transaction'
 			)
 
-		WriteToFile : (CSVdata)->
+#This function Creates a file and writes into it the the record provided selectRecords function
+
+		writeToFile : (CSVdata)->
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>
@@ -147,13 +147,13 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 
 								, _.fileTransferErrorHandler)
 							
-
 						, _.fileErrorHandler)
 
 				, _.fileSystemErrorHandler)
 
+#This function reads thee contents written in above created file
+
 		fileRead : ->
-			alert ("hiee")
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>
@@ -165,12 +165,13 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 							fileEntry.file(
 
 								(file)=>
-									alert "read as text"
-									alert "reader " +reader
 									reader = new FileReader()
-									reader.onloadend = (evt)->
+									reader.onloadend = (evt)=>
 										alert "result" +evt.target.result
+										csvData = evt.target.result
 										console.log "result" +evt.target.result
+										@ZipFile csvData
+
 									reader.readAsText file
 
 								, _.fileErrorHandler)
@@ -180,10 +181,80 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 				, _.fileSystemErrorHandler)
 
 
-			
-	
 
-		FileUpload: (fileEntry)->
+#This function update the sync flag to 1 in the respective tables
+		updateSync: ->
+
+			_.db.transaction( (tx)->
+				alert "insert id "+results.insertId
+				for i in [0..data.length-1] by 1
+					row = data[i]
+					tx.executeSql("UPDATE wp_training_logs SET (sync) VALUES (?)", [1])
+
+			,_.transactionErrorhandler
+			,(tx)->
+				console.log 'Data updated successfully'
+				# @readValues
+			)
+
+			_.db.transaction( (tx)->
+
+				for i in [0..data.length-1] by 1
+					row = data[i]
+					tx.executeSql("UPDATE wp_question_response SET (sync) VALUES (?)", [1])
+
+			,_.transactionErrorhandler
+			,(tx)->
+				console.log 'Data updated successfully'
+				
+			)
+
+			_.db.transaction( (tx)->
+
+				for i in [0..data.length-1] by 1
+					row = data[i]
+					tx.executeSql("UPDATE wp_question_response_logs SET (sync) VALUES (?)", [1])
+
+			,_.transactionErrorhandler
+			,(tx)->
+				console.log 'Data updated successfully'
+				
+			)
+
+#Function to Zip the .csv File
+		ZipFile : (csvData)=>
+			alert "zip"
+			zip = new JSZip();
+			alert zip
+			alert "cald"
+			alert zip.file
+			zip.file("csvread.txt", csvData)
+			# content = zip.generate({type:"text/plain;charset=utf-8"});
+			content = zip.generate({type:"blob"});
+
+			alert zip.file.content
+
+			alert content
+			alert "saved"
+			zip.file("csvread.txt").asText()
+			alert zip.file("csvread.txt").asText()
+# if (JSZip.support.uint8array) {
+#   zip.file("hello.txt").asUint8Array(); // Uint8Array { 0=72, 1=101, 2=108, more...}
+# }			
+			alert saveAs
+			alert "res" +zip.results
+			saveAs(content, "example.zip")
+
+			# string = "This is my compression test."
+			# alert "Size of sample is: " + string.length
+			# compressed = LZString.compress(string);
+			# alert "Size of compressed sample is: " + compressed.length
+			# string = LZString.decompress(compressed);
+			# alert "Sample is: " + string
+
+#This Function Will upload the zip file to the server
+
+		fileUpload: (fileEntry)->
 			options = new FileUploadOptions();
 			options.fileKey="file";
 			options.fileName=fileEntry.substr(fileEntry.lastIndexOf('/') + 1);
@@ -209,7 +280,7 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 
 				, options)
 
-
+#this Function Will download from server the updated records for the 3 tables
 		Sync : ->
 			files = ["http://synapsedu.info/wp_35_training_logs.csv", "http://synapsedu.info/wp_35_question_response.csv" ,"http://synapsedu.info/wp_35_question_response_logs.csv"]
 			currData =0
@@ -230,14 +301,14 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 								fileEntry = fileUrl+filePath1[i]
 								alert "file entry" +fileEntry
 								console.log "initiate download of file index " + i + " File Name: " + files[i]
-								@DownlaodFiles files[i], fileEntry
+								@downlaodFiles files[i], fileEntry
 
 						, _.fileErrorHandler)
 
 				, _.fileSystemErrorHandler)
 
 	
-		DownlaodFiles : (files , fileEntry)->
+		downlaodFiles : (files , fileEntry)->
 			fileTransfer = new FileTransfer()
 			uri = files
 			filePath=fileEntry
@@ -249,7 +320,7 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 
 				,_.fileTransferErrorHandler, true)
 
-		#This function raeds the file as text and Parse the .csv file to array f aarys who's result is sent through the function SendParsedData
+#This function raeds the file as text and Parse the .csv file to array f aarys who's result is sent through the function SendParsedData
 
 		readAsText : (file)->
 			console.log "read files" +file.toURL()
@@ -263,13 +334,13 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse" ], (Mario
 					dynamicTyping : false
 					})
 				console.log "result is "+parsedData.results
-				@SendParsedData parsedData.results
+				@sendParsedData parsedData.results
 
 			reader.readAsText file
 
-	#This function Inserts the data in the Database
+#This function Inserts the data in the Database
 
-		SendParsedData : (data)->
+		sendParsedData : (data)->
 
 			_.db.transaction( (tx)->
 

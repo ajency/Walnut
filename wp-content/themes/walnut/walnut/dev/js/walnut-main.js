@@ -43,7 +43,10 @@ require.config({
     serialize: 'plugins/serialize',
     selectordie: 'plugins/selectordie.min',
     csvparse: 'plugins/jquery.parse',
-    json2csvparse: 'plugins/json2csv'
+    json2csvparse: 'plugins/json2csv',
+    Zip: 'plugins/jszip',
+    zipchk: 'plugins/lz-string-1.3.3',
+    FileSaver: 'plugins/FileSaver'
   },
   shim: {
     underscore: {

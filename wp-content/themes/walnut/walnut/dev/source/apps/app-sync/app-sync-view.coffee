@@ -21,9 +21,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			template : AppSyncTpl
 
 			events :
-				'click #JsonToCSV' : 'StartConversion'
+				'click #JsonToCSV' : 'startConversion'
 				'click #syncNow' : 'startSyncProcess'
-				'click #CSVupload' : 'FileUpload'
+				'click #CSVupload' : 'fileUpload'
 
 
 			onShow : ->
@@ -31,11 +31,11 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				syncController = App.request "get:sync:controller"
 				syncController.totalRecordsUpdate()
 
-			FileUpload : ->
+			fileUpload : ->
 			
-			StartConversion : ->
+			startConversion : ->
 				syncController = App.request "get:sync:controller"
-				syncController.Conversion()
+				syncController.selectRecords()
 
 					
 

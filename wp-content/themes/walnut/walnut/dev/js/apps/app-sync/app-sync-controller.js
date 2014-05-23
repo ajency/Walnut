@@ -1,12 +1,14 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], function(Marionette, App, _, parse) {
+define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "Zip", "zipchk", "FileSaver"], function(Marionette, App, _, parse) {
   var SynchronizationController;
   SynchronizationController = (function(_super) {
     __extends(SynchronizationController, _super);
 
     function SynchronizationController() {
+      this.ZipFile = __bind(this.ZipFile, this);
       return SynchronizationController.__super__.constructor.apply(this, arguments);
     }
 
@@ -26,7 +28,7 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
       });
     };
 
-    SynchronizationController.prototype.Conversion = function() {
+    SynchronizationController.prototype.selectRecords = function() {
       var valuesAll, valuesAll1, valuesAll2;
       valuesAll = "";
       valuesAll1 = "";
@@ -71,7 +73,7 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
             }
           }, _.transactionErrorhandler);
           return tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync=0 ", [], function(tx, results) {
-            var AllData, CSVdata, fullGrp, i, items, quesn_rep_logs, row, _results;
+            var AllData, CSVdata, fullGrp, i, items, quesn_rep_logs, row;
             valuesAll2 = results.rows.length;
             console.log(valuesAll2);
             if (valuesAll === 0) {
@@ -99,22 +101,32 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
                 }
               };
               fullGrp = JSON.stringify(items);
-              alert(fullGrp);
               console.log("Ful Data is " + fullGrp);
               CSVdata = ConvertToCSV(fullGrp);
               console.log("CSV data is" + CSVdata);
-              alert("hello cald not");
-              return _this.WriteToFile(CSVdata);
+              return _this.writeToFile(CSVdata);
             } else {
               i = 0;
-              _results = [];
               while (i < valuesAll) {
                 row = results.rows.item(i);
                 quesn_rep_logs = '{ "id": "' + row.qr_ref_id + '","collection_id": "' + row.start_time + '", "teacher_id": "' + row.sync + '"}';
                 console.log("3rd data is " + quesn_rep_logs);
-                _results.push(i++);
+                i++;
               }
-              return _results;
+              AllData = training_data + quest_resp_data + quesn_rep_logs;
+              AllData = {
+                "group": {
+                  "training_data": training_data,
+                  "quest_resp_data": quest_resp_data,
+                  "quesn_rep_logs": quesn_rep_logs
+                }
+              };
+              fullGrp = JSON.stringify(AllData);
+              alert(fullGrp);
+              console.log("Ful Data is " + fullGrp);
+              CSVdata = ConvertToCSV(fullGrp);
+              console.log("CSV data is" + CSVdata);
+              return _this.writeToFile(CSVdata);
             }
           }, _.transactionErrorhandler);
         };
@@ -123,7 +135,7 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
       });
     };
 
-    SynchronizationController.prototype.WriteToFile = function(CSVdata) {
+    SynchronizationController.prototype.writeToFile = function(CSVdata) {
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
           return fileSystem.root.getFile("csvread.txt", {
@@ -143,7 +155,6 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
     };
 
     SynchronizationController.prototype.fileRead = function() {
-      alert("hiee");
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
           return fileSystem.root.getFile("csvread.txt", {
@@ -152,12 +163,13 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
           }, function(fileEntry) {
             return fileEntry.file(function(file) {
               var reader;
-              alert("read as text");
-              alert("reader " + reader);
               reader = new FileReader();
               reader.onloadend = function(evt) {
+                var csvData;
                 alert("result" + evt.target.result);
-                return console.log("result" + evt.target.result);
+                csvData = evt.target.result;
+                console.log("result" + evt.target.result);
+                return _this.ZipFile(csvData);
               };
               return reader.readAsText(file);
             }, _.fileErrorHandler);
@@ -166,7 +178,65 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
       })(this), _.fileSystemErrorHandler);
     };
 
-    SynchronizationController.prototype.FileUpload = function(fileEntry) {
+    SynchronizationController.prototype.updateSync = function() {
+      _.db.transaction(function(tx) {
+        var i, row, _i, _ref, _results;
+        alert("insert id " + results.insertId);
+        _results = [];
+        for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
+          row = data[i];
+          _results.push(tx.executeSql("UPDATE wp_training_logs SET (sync) VALUES (?)", [1]));
+        }
+        return _results;
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Data updated successfully');
+      });
+      _.db.transaction(function(tx) {
+        var i, row, _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
+          row = data[i];
+          _results.push(tx.executeSql("UPDATE wp_question_response SET (sync) VALUES (?)", [1]));
+        }
+        return _results;
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Data updated successfully');
+      });
+      return _.db.transaction(function(tx) {
+        var i, row, _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
+          row = data[i];
+          _results.push(tx.executeSql("UPDATE wp_question_response_logs SET (sync) VALUES (?)", [1]));
+        }
+        return _results;
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Data updated successfully');
+      });
+    };
+
+    SynchronizationController.prototype.ZipFile = function(csvData) {
+      var content, zip;
+      alert("zip");
+      zip = new JSZip();
+      alert(zip);
+      alert("cald");
+      alert(zip.file);
+      zip.file("csvread.txt", csvData);
+      content = zip.generate({
+        type: "blob"
+      });
+      alert(zip.file.content);
+      alert(content);
+      alert("saved");
+      zip.file("csvread.txt").asText();
+      alert(zip.file("csvread.txt").asText());
+      alert(saveAs);
+      alert("res" + zip.results);
+      return saveAs(content, "example.zip");
+    };
+
+    SynchronizationController.prototype.fileUpload = function(fileEntry) {
       var ft, options, params;
       options = new FileUploadOptions();
       options.fileKey = "file";
@@ -209,7 +279,7 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
               fileEntry = fileUrl + filePath1[i];
               alert("file entry" + fileEntry);
               console.log("initiate download of file index " + i + " File Name: " + files[i]);
-              _results.push(_this.DownlaodFiles(files[i], fileEntry));
+              _results.push(_this.downlaodFiles(files[i], fileEntry));
             }
             return _results;
           }, _.fileErrorHandler);
@@ -217,7 +287,7 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
       })(this), _.fileSystemErrorHandler);
     };
 
-    SynchronizationController.prototype.DownlaodFiles = function(files, fileEntry) {
+    SynchronizationController.prototype.downlaodFiles = function(files, fileEntry) {
       var filePath, fileTransfer, uri;
       fileTransfer = new FileTransfer();
       uri = files;
@@ -245,12 +315,12 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse"], functio
           dynamicTyping: false
         });
         console.log("result is " + parsedData.results);
-        return this.SendParsedData(parsedData.results);
+        return this.sendParsedData(parsedData.results);
       };
       return reader.readAsText(file);
     };
 
-    SynchronizationController.prototype.SendParsedData = function(data) {
+    SynchronizationController.prototype.sendParsedData = function(data) {
       _.db.transaction(function(tx) {
         var i, row, _i, _ref, _results;
         _results = [];
