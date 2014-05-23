@@ -77,6 +77,8 @@ define ['app'
 						customID: "custom"
 						})
 
+					_.checkSynapseAssetsDirectory()
+
 
 			loadDivisions:(class_id)=>
 

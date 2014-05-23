@@ -152,31 +152,42 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var classes, i, result, row, subjects, _i, _ref;
+            var i, result, row, _fn, _i, _ref;
             result = [];
+            _fn = function(row, i) {
+              var textbookOptions;
+              textbookOptions = _.getTextbookOptions(row['term_id']);
+              return textbookOptions.done(function(options) {
+                var classes, subjects;
+                classes = subjects = '';
+                if (row["class_id"] !== '') {
+                  classes = unserialize(row["class_id"]);
+                }
+                if (row["tags"] !== '') {
+                  subjects = unserialize(row["tags"]);
+                }
+                return result[i] = {
+                  term_id: row["term_id"],
+                  name: row["name"],
+                  slug: row["slug"],
+                  term_group: row["term_group"],
+                  term_order: row["term_order"],
+                  term_taxonomy_id: row["term_taxonomy_id"],
+                  taxonomy: row["taxonomy"],
+                  description: row["description"],
+                  parent: row["parent"],
+                  count: row["count"],
+                  classes: classes,
+                  subjects: subjects,
+                  author: options.author,
+                  thumbnail: options.attachmenturl,
+                  cover_pic: options.attachmenturl
+                };
+              });
+            };
             for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               row = data.rows.item(i);
-              classes = subjects = '';
-              if (row["class_id"] !== '') {
-                classes = unserialize(row["class_id"]);
-              }
-              if (row["tags"] !== '') {
-                subjects = unserialize(row["tags"]);
-              }
-              result[i] = {
-                term_id: row["term_id"],
-                name: row["name"],
-                slug: row["slug"],
-                term_group: row["term_group"],
-                term_order: row["term_order"],
-                term_taxonomy_id: row["term_taxonomy_id"],
-                taxonomy: row["taxonomy"],
-                description: row["description"],
-                parent: row["parent"],
-                count: row["count"],
-                classes: classes,
-                subjects: subjects
-              };
+              _fn(row, i);
             }
             return d.resolve(result);
           };
@@ -249,38 +260,47 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           return function(tx, data) {
             var i, result, row, _fn, _i, _ref;
             result = [];
-            _fn = function(tx, row, i) {
+            _fn = function(row, i) {
               var modulesCount;
               modulesCount = getModulesCount(row['textbook_id']);
               return modulesCount.done(function(modules_count) {
-                var classes, subjects;
-                classes = subjects = '';
-                if (row["class_id"] !== '') {
-                  classes = unserialize(row["class_id"]);
-                }
-                if (row["tags"] !== '') {
-                  subjects = unserialize(row["tags"]);
-                }
-                return result[i] = {
-                  term_id: row["term_id"],
-                  name: row["name"],
-                  slug: row["slug"],
-                  term_group: row["term_group"],
-                  term_order: row["term_order"],
-                  term_taxonomy_id: row["term_taxonomy_id"],
-                  taxonomy: row["taxonomy"],
-                  description: row["description"],
-                  parent: row["parent"],
-                  count: row["count"],
-                  classes: classes,
-                  subjects: subjects,
-                  modules_count: modules_count
-                };
+                return (function(row, i, modules_count) {
+                  var textbookOptions;
+                  textbookOptions = _.getTextbookOptions(row['term_id']);
+                  return textbookOptions.done(function(options) {
+                    var classes, subjects;
+                    classes = subjects = '';
+                    if (row["class_id"] !== '') {
+                      classes = unserialize(row["class_id"]);
+                    }
+                    if (row["tags"] !== '') {
+                      subjects = unserialize(row["tags"]);
+                    }
+                    return result[i] = {
+                      term_id: row["term_id"],
+                      name: row["name"],
+                      slug: row["slug"],
+                      term_group: row["term_group"],
+                      term_order: row["term_order"],
+                      term_taxonomy_id: row["term_taxonomy_id"],
+                      taxonomy: row["taxonomy"],
+                      description: row["description"],
+                      parent: row["parent"],
+                      count: row["count"],
+                      classes: classes,
+                      subjects: subjects,
+                      modules_count: modules_count,
+                      author: options.author,
+                      thumbnail: options.attachmenturl,
+                      cover_pic: options.attachmenturl
+                    };
+                  });
+                })(row, i, modules_count);
               });
             };
             for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
               row = data.rows.item(i);
-              _fn(tx, row, i);
+              _fn(row, i);
             }
             return d.resolve(result);
           };

@@ -1,44 +1,5 @@
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
-    deferredErrorHandler: function(d) {
-      return function(tx, error) {
-        return d.reject(error);
-      };
-    },
-    failureHandler: function(error) {
-      return console.log('ERROR: ' + error.message);
-    },
-    transactionErrorHandler: function(error) {
-      return console.log('ERROR: ' + error.message);
-    },
-    fileErrorHandler: function(error) {
-      return console.log('FILE ERROR: ' + error.code);
-    },
-    fileSystemErrorHandler: function(evt) {
-      return console.log('FILE SYSTEM ERROR: ' + evt.target.error.code);
-    },
-    fileTransferErrorHandler: function(error) {
-      var err_msg;
-      switch (error.code) {
-        case 1:
-          err_msg = 'FILE NOT FOUND';
-          break;
-        case 2:
-          err_msg = 'INVALID URL';
-          break;
-        case 3:
-          err_msg = 'CONNECTION';
-          break;
-        case 4:
-          err_msg = 'ABORT';
-          break;
-        default:
-          err_msg = 'UNKNOWN';
-      }
-      console.log('ERROR: ' + err_msg);
-      console.log('ERROR SOURCE: ' + error.source);
-      return console.log('ERROR TARGET: ' + error.target);
-    },
     getUserDetails: function(username) {
       var onSuccess, runQuery, userData;
       userData = {
@@ -159,6 +120,43 @@ define(['underscore', 'unserialize'], function(_) {
       };
       return $.when(runQuery()).done(function() {
         return console.log('getLastDetails transaction completed');
+      }).fail(_.failureHandler);
+    },
+    getTextbookOptions: function(id) {
+      var onSuccess, options, runQuery;
+      options = {
+        author: '',
+        attachmenturl: ''
+      };
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT option_value FROM wp_options WHERE option_name=?", ['taxonomy_' + id], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var attachmenturl, option_value, url;
+          if (data.rows.length !== 0) {
+            option_value = unserialize(data.rows.item(0)['option_value']);
+            url = option_value.attachmenturl;
+            if (url === 'false') {
+              attachmenturl = '';
+            } else {
+              attachmenturl = _.getSynapseAssetsDirectoryPath() + url.substr(url.indexOf("uploads/"));
+              attachmenturl = '<img src="' + attachmenturl + '">';
+            }
+            options = {
+              author: option_value.author,
+              attachmenturl: attachmenturl
+            };
+          }
+          return d.resolve(options);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getTextbookOptions transaction completed');
       }).fail(_.failureHandler);
     },
     updateQuestionResponseLogs: function(refID) {

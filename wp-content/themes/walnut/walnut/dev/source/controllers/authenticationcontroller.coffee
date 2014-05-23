@@ -70,6 +70,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			$.post AJAXURL + '?action=get-user-app-profile', 
 				   data: @data,
 				   (resp)=>
+				   		console.log 'RESP'
+				   		console.log resp
 				   		if resp.login_details.error
 				   			@onErrorResponse(resp.login_details.error)	
 

@@ -102,10 +102,11 @@ require.config
 ## Start with application
 require [  'plugins/walnut-pluginloader'
            'config/walnut-configloader'
+           'cordova/cordova-apploader'
            'app'
            'controllers/authenticationcontroller'
            'apps/walnut-appsloader'
            'entities/walnut-entities-loader'
            'componentloader'
-], (plugins, configs, App)->
+], (plugins, configs, cordova, App)->
     App.start()
