@@ -7,10 +7,7 @@ define ['app'],(App)->
 
 			template : '<p class="fib-text" ></p>'
 						# <input  type="text"
-						#  maxlength="{{maxlength}}" size="{{maxlength}}" placeholder="Answer" style="
-					 #    font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; 
-					 #      height: 100%; line-height : inherit; border-width : 5px;
-					 #     border-style: none; float:left">
+
 
 			# listen to the model events 
 			modelEvents : 
@@ -53,7 +50,6 @@ define ['app'],(App)->
 				_.delay =>
 					$('#cke_'+@editor.name).on 'click',(evt)->
 						evt.stopPropagation()
-
 				,500
 				
 
@@ -71,8 +67,8 @@ define ['app'],(App)->
 			# 		console.log editor.config.toolbar
 			# 		editor.config.toolbar.splice 2,0,
 			# 					name: 'forms'
-			# 					items: [ 'TextField'] 
-							
+			# 					items: [ 'TextField']
+
 			
 			# on change of font property
 			_changeFont:(font)->
