@@ -40,6 +40,12 @@ function authenticate_app_login() {
 
         $response_data['blog_details'] = get_primary_blog_details($login_details->ID);
 
+        require_once "csv_export_tables.php";
+
+        $blog_id= $response_data['blog_details']['blog_id'];
+
+        $response_data['exported_csv_url'] = export_tables_for_app($blog_id);
+
     }
 
     wp_send_json($response_data);
