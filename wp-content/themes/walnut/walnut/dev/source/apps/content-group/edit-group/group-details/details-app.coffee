@@ -36,6 +36,10 @@ define ['app'
 
 
                 @listenTo @view, "save:content:collection:details": (data) =>
+
+                    App.navigate "edit-module"
+
+                    @model.set 'changed': 'module_details'
                     @model.save(data, {wait: true, success: @successFn, error: @errorFn})
 
 
@@ -140,7 +144,7 @@ define ['app'
                 @$el.find('#saved-success').remove();
 
                 @$el.find '.grid-title'
-                .prepend '<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/' + model.get('id') + '">view your module</a></div><hr>'
+                .prepend '<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/' + model.get('id') + '">view your module</a><hr></div>'
 
         # set handlers
         App.commands.setHandler "show:editgroup:content:group:detailsapp", (opt = {})->

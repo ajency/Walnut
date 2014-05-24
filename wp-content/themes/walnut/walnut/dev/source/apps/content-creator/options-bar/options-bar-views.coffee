@@ -27,7 +27,7 @@ define ['app',
                     @trigger "fetch:sections:subsections", $(e.target).val()
 
             onShow:->
-                $ "#subs, #chaps, #qType, #status, #author, #secs, #subsecs"
+                $ "#subs, #chaps, #qType, #status, #secs, #subsecs"
                 .select2();
 
                 $('input.tagsinput').tagsinput()
@@ -43,9 +43,6 @@ define ['app',
                     postStatus= @model.get 'post_status'
                     $('#status').select2().select2('val',postStatus)
 
-                    author= @model.get 'post_author'
-                    $('#author').select2().select2('val',author)
-
             onFetchChaptersComplete: (chaps, curr_chapter)->
                 if _.size(chaps) > 0
                     @$el.find('#chaps').html('');
@@ -53,11 +50,10 @@ define ['app',
                         @$el.find '#chaps'
                         .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
 
-                    $('#chaps').select2().select2('val',curr_chapter)
+                    $('#chaps').select2().select2 'val',curr_chapter
 
                 else
-                    @$el.find '#chaps'
-                    .html '<option value="">No Chapters available</option>'
+                    $('#chaps').select2().select2 'data', null
 
             onFetchSubsectionsComplete: (allsections)=>
                 term_ids= @model.get 'term_ids'
@@ -74,22 +70,21 @@ define ['app',
                             @$el.find('#secs')
                             .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
 
-                        $('#secs').select2().select2('val',sectionIDs)
+                        $('#secs').select2().select2 'val',sectionIDs
 
                     else
-                        @$el.find('#secs').html('<option value="">No Sections available</option>');
+                        $('#secs').select2().select2 'data', null
 
                     if _.size(allsections.subsections) > 0
                         @$el.find('#subsecs').html('');
                         _.each allsections.subsections, (section, index)=>
                             @$el.find '#subsecs'
                             .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-                        $('#subsecs').select2().select2('val',subSectionIDs)
+                        $('#subsecs').select2().select2 'val',subSectionIDs
                     else
-                        @$el.find('#subsecs').html '<option>No Sub Sections available</option>'
+                        $('#subsecs').select2().select2 'data', null
                 else
-                    @$el.find('#secs').html '<option value="">No Sections available</option>'
-                    @$el.find('#subsecs').html '<option value="">No Sub Sections available</option>'
+                    $('#subsecs,#secs').select2().select2 'data', null
 
 
 

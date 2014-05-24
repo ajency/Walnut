@@ -28,8 +28,8 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype.onShow = function() {
-        var author, postStatus, qType;
-        $("#subs, #chaps, #qType, #status, #author, #secs, #subsecs").select2();
+        var postStatus, qType;
+        $("#subs, #chaps, #qType, #status, #secs, #subsecs").select2();
         $('input.tagsinput').tagsinput();
         $('#subProps a').click(function(e) {
           e.preventDefault();
@@ -39,9 +39,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           qType = this.model.get('question_type');
           $('#qType').select2().select2('val', qType);
           postStatus = this.model.get('post_status');
-          $('#status').select2().select2('val', postStatus);
-          author = this.model.get('post_author');
-          return $('#author').select2().select2('val', author);
+          return $('#status').select2().select2('val', postStatus);
         }
       };
 
@@ -55,7 +53,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           })(this));
           return $('#chaps').select2().select2('val', curr_chapter);
         } else {
-          return this.$el.find('#chaps').html('<option value="">No Chapters available</option>');
+          return $('#chaps').select2().select2('data', null);
         }
       };
 
@@ -78,7 +76,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
             })(this));
             $('#secs').select2().select2('val', sectionIDs);
           } else {
-            this.$el.find('#secs').html('<option value="">No Sections available</option>');
+            $('#secs').select2().select2('data', null);
           }
           if (_.size(allsections.subsections) > 0) {
             this.$el.find('#subsecs').html('');
@@ -89,11 +87,10 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
             })(this));
             return $('#subsecs').select2().select2('val', subSectionIDs);
           } else {
-            return this.$el.find('#subsecs').html('<option>No Sub Sections available</option>');
+            return $('#subsecs').select2().select2('data', null);
           }
         } else {
-          this.$el.find('#secs').html('<option value="">No Sections available</option>');
-          return this.$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
+          return $('#subsecs,#secs').select2().select2('data', null);
         }
       };
 

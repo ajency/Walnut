@@ -13,6 +13,7 @@ define ['app'
             appRoutes:
                 '': 'chooseContentType'
                 'create-content/:contentType': 'showContentCreator'
+                'edit-content/:contentID': 'editContent'
 
             Controller =
 
@@ -24,6 +25,11 @@ define ['app'
                     new ContentCreator.Controller.ContentCreatorController
                         region: App.mainContentRegion
                         contentType: contentType
+
+                editContent:(contentID)->
+                    new ContentCreator.Controller.ContentCreatorController
+                        region: App.mainContentRegion
+                        contentID: contentID
 
 
             ContentCreator.on "start", ->

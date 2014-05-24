@@ -1,25 +1,24 @@
 define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (App, RegionController)->
+    App.module "TextbooksApp.List", (List, App)->
+        class List.ListController extends RegionController
 
-	App.module "TextbooksApp.List", (List, App)->
+            initialize: ->
+                textbooksCollection = App.request "get:textbooks"
+                breadcrumb_items =
+                    'items': [
+                        {'label': 'Dashboard', 'link': 'javascript://'},
+                        {'label': 'Content Management', 'link': 'javascript://'},
+                        {'label': 'Textbooks', 'link': 'javascript://', 'active': 'active'}
+                    ]
 
-		class List.ListController extends RegionController
+                App.execute "update:breadcrumb:model", breadcrumb_items
 
-			initialize : ->
-				textbooksCollection = App.request "get:textbooks"
-				breadcrumb_items = 'items':[
-						{'label':'Dashboard','link':'javascript://'},
-						{'label':'Content Management','link':'javascript://'},
-						{'label':'Textbooks','link':'javascript://', 'active':'active'}
-					]
+                @view = view = @_getTextbooksView textbooksCollection
 
-				App.execute "update:breadcrumb:model", breadcrumb_items
+                @show view, (loading: true)
 
-				@view= view = @_getTextbooksView textbooksCollection
-
-				@show view,(loading : true)
-
-			_getTextbooksView :(collection)->
-				new List.Views.ListView
-								collection : collection
+            _getTextbooksView: (collection)->
+                new List.Views.ListView
+                    collection: collection
 
 
