@@ -28,7 +28,7 @@ function authenticate_web_login() {
     wp_send_json($login_details);
 
 }
-add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_app_login' );
+add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_web_login' );
 
 function authenticate_app_login() {
 
