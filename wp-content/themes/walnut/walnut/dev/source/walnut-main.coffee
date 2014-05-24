@@ -48,6 +48,7 @@ require.config
         kineticresize		: 'plugins/kinetic.plugin.resize'
         checkbox			: 'plugins/flatui-checkbox'
         holder				: 'plugins/holder'
+        videojs				: 'plugins/video'
 
     shim:
         underscore:

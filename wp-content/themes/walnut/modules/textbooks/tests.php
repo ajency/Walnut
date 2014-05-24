@@ -13,7 +13,7 @@ class TextBooksFunctionsTest extends WP_UnitTestCase {
         $textbooks = get_textbooks($args);
         $this->assertInternalType('array', $textbooks);
     }
-    
+
     public function testIfTextBookByClassIdIsProper() {
         $classid=1;
         //$term_id = 15;

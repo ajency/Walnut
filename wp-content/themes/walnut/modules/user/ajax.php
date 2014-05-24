@@ -1,6 +1,7 @@
 <?php
 
 require_once 'functions.php';
+require_once "csv_export_tables.php";
 
 function get_user_data() {
     if(is_user_logged_in()){
@@ -27,15 +28,13 @@ function authenticate_web_login() {
     wp_send_json($login_details);
 
 }
-add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_web_login' );
+add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_app_login' );
 
 function authenticate_app_login() {
 
     $login_details = authenticate_login($_POST['data']);
 
     if(!isset($login_details['error'])){
-
-        require_once "csv_export_tables.php";
 
         $blog_id= $login_details['blog_details']['blog_id'];
 
