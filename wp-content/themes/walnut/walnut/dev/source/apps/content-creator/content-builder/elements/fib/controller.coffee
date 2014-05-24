@@ -67,6 +67,7 @@ define ['app'
 									blanksModel = App.request "create:new:question:element", blanksData
 									# add model to collection
 									@layout.model.get('blanksArray').add blanksModel
+									# console.log @layout.model.get('blanksArray')
 
 									# @layout.model.set 'marks',@layout.model.get('marks')+1
 

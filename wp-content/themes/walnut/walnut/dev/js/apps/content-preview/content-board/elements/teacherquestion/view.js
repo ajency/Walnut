@@ -18,7 +18,7 @@ define(['app'], function(App) {
       RowView.prototype.template = '<span></span>';
 
       RowView.prototype.onShow = function() {
-        if (this.model.get('position') === 1) {
+        if (parseInt(this.model.get('position')) === 1) {
           this.$el.find('span').text('Question');
         } else {
           this.$el.find('span').text('Answer');
