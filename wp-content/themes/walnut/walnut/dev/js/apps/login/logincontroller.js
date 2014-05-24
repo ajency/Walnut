@@ -40,7 +40,10 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
               return _this.view.triggerMethod('login:fail', response);
             } else {
               user = App.request("get:user:model");
-              user.set(response);
+              user.set(response.login_details);
+              if (response.blog_details.site_url !== SITEURL) {
+                window.location = response.blog_details.site_url;
+              }
               return _this.view.close();
             }
           };

@@ -29,7 +29,11 @@ define ['app'
                             @view.triggerMethod 'login:fail', response
                         else
                             user = App.request "get:user:model"
-                            user.set response
+                            user.set response.login_details
+
+                            if response.blog_details.site_url isnt SITEURL
+                                window.location= response.blog_details.site_url
+
                             @view.close()
                 );
 

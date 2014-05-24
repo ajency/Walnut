@@ -2,6 +2,7 @@
 if ( ! isset( $content_width ) )
 	$content_width = 604;
 
+require_once 'underscore.php';
 require_once 'modules/school/ajax.php';
 require_once 'modules/content-pieces/ajax.php';
 require_once 'modules/textbooks/ajax.php';
@@ -11,7 +12,6 @@ require_once 'modules/media/ajax.php';
 require_once 'modules/divisions/ajax.php';
 require_once 'modules/question-response/ajax.php';
 require_once 'custom_configs.php';
-require_once 'underscore.php';
 
 add_theme_support('menus');
 
