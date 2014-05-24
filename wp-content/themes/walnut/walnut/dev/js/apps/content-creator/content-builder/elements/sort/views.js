@@ -14,21 +14,21 @@ define(['app'], function(App) {
 
       OptionView.prototype.className = 'sort-option';
 
-      OptionView.prototype.template = '<input type="hidden" id="optionNo" value="{{optionNo}}"> <p class="sort-option-text"></p>';
+      OptionView.prototype.template = '<input type="hidden" id="optionNo" value="{{optionNo}}"> <div class="sort-option-text"></div>';
 
       OptionView.prototype.events = {
         'click a': function(e) {
           return e.preventDefault();
         },
-        'blur p': function() {
-          return this.model.set('text', this.$el.find('p').html());
+        'blur .sort-option-text': function() {
+          return this.model.set('text', this.$el.find('.sort-option-text').html());
         }
       };
 
       OptionView.prototype.onShow = function() {
         this.$el.attr('id', 'sort-option-' + this.model.get('optionNo'));
-        this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
-        this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
+        this.$el.find('.sort-option-text').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
+        this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('.sort-option-text').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
         return _.delay((function(_this) {
           return function() {
@@ -94,7 +94,7 @@ define(['app'], function(App) {
       };
 
       SortView.prototype._enableSorting = function() {
-        this.$el.find('p').on('mousedown', (function(_this) {
+        this.$el.find('.sort-option-text').on('mousedown', (function(_this) {
           return function(evt) {
             return evt.stopPropagation();
           };

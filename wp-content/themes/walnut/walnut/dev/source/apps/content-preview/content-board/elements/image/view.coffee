@@ -38,5 +38,5 @@ define ['app'],(App)->
 				image = @model.getBestFit width
 				@$el.find('img').attr 'src',image.url
 
-				@trigger "image:size:selected", image.size
+				# @trigger "image:size:selected", image.size
 
