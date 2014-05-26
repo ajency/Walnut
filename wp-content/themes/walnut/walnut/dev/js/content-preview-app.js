@@ -26,9 +26,6 @@ define(['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
-    Pace.on('hide', function() {
-      return $("#site_main_container").addClass("showAll");
-    });
     App.startHistory();
     if (!this.getCurrentRoute()) {
       return App.navigate(this.rootRoute, {

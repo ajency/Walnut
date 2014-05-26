@@ -203,12 +203,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype._changeColumnCount = function(model, newColumnCount) {
-        model.get('elements').each(_.bind(this._changeColumnClass, this, numberOfColumns));
+        model.get('elements').each(_.bind(this._changeColumnClass, this, newColumnCount));
         return this.layout.elementRegion.show(this.view);
       };
 
-      Controller.prototype._changeColumnClass = function(element, numberOfColumns) {
-        return element.set('class', 12 / newColumnCount);
+      Controller.prototype._changeColumnClass = function(numberOfColumns, element) {
+        return element.set('class', 12 / numberOfColumns);
       };
 
       Controller.prototype.deleteElement = function(model) {
