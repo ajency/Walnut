@@ -73,9 +73,10 @@ define(['app'], function(App) {
       };
 
       ContentGroupsView.prototype.startTraining = function(e) {
-        var dataID;
+        var currentRoute, dataID;
         dataID = $(e.target).attr('data-id');
-        return this.trigger("save:training:status", dataID, 'started');
+        currentRoute = App.getCurrentRoute();
+        return App.navigate(currentRoute + "/module/" + dataID, true);
       };
 
       ContentGroupsView.prototype.onStatusChange = function(model) {
@@ -102,7 +103,7 @@ define(['app'], function(App) {
       ContentGroupsView.prototype.onShow = function() {
         var pagerDiv, pagerOptions;
         this.$el.find('#take-class-modules').tablesorter();
-        pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option selected="selected" value="5">5</option> <option value="10">10</option> <option value="20">20</option> <option value="30">30</option> <option value="40">40</option> </select> </div>';
+        pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option value="25" selected>25</option> <option value="50">50</option> <option value="100">100</option> </select> </div>';
         this.$el.find('#take-class-modules').after(pagerDiv);
         pagerOptions = {
           totalRows: _.size(this.collection.modules),

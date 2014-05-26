@@ -488,17 +488,38 @@ function get_single_content_group($id, $division=''){
     switch_to_blog($current_blog);
     
     if($division !=''){
-        $training_logs_query = $wpdb->prepare("SELECT * FROM 
+        $training_logs_query = $wpdb->prepare("SELECT date FROM
             {$wpdb->prefix}training_logs WHERE collection_id=%d AND 
                 division_id=%d order by id desc limit 1",
                     $id, $division);
 
-        $training_logs  = $wpdb->get_results($training_logs_query);  
+        $training_logs  = $wpdb->get_results($training_logs_query);
 
-        foreach($training_logs as $logs){
-           $data->status= $logs->status;
-           $data->training_date= $logs->date;
+        if($training_logs){
+            $data->training_date= $training_logs[0]->date;
+            $data->status = 'scheduled';
         }
+
+        $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status FROM
+            {$wpdb->prefix}question_response WHERE collection_id=%d AND
+                division=%d",
+            $id, $division);
+
+        $module_responses  = $wpdb->get_results($check_responses_query);
+        if($module_responses)
+            $data->status='started';
+
+        $response_content_ids=array();
+
+        foreach($module_responses as $response){
+            if($response->status=='completed')
+            $response_content_ids[]= $response->content_piece_id;
+        }
+
+
+        if(__u::difference($data->content_pieces,$response_content_ids) == null)
+            $data->status='completed';
+
     }
     
     return $data;
