@@ -748,10 +748,6 @@
   font-size: 50px;
   color: #e5e9ec;
 }
-/*Sort*/
-.sort-option {
-  cursor: move;
-}
 /*Editor popup*/
 .cke_dialog_body .cke_dialog_title {
   background-color: #0090d9;
@@ -796,6 +792,47 @@
 }
 #subProps > li.active > a {
   color: #1b1e24;
+}
+/*Media Manager*/
+#all-media-region .thumbnail::after {
+  clear: both;
+}
+#all-media-region .listView {
+  width: 100%;
+}
+#all-media-region .listView::after {
+  clear: both;
+}
+#all-media-region .listView .imgthumb {
+  width: 5%;
+}
+#all-media-region .single-img {
+  position: relative;
+}
+#all-media-region .ticker {
+  position: absolute;
+  top: -7px;
+  right: 5px;
+  color: #ffffff;
+  padding: 3px 4px;
+  border-radius: 2px;
+  background: #0090d9;
+  display: none;
+}
+#all-media-region .ui-selected a {
+  border: 2px solid #0090d9;
+}
+#all-media-region .ui-selected .ticker {
+  display: block;
+}
+#all-media-region .ui-selected .ticker .glyphicon-minus {
+  display: none;
+}
+#all-media-region .ui-selected .ticker:hover .glyphicon-minus {
+  display: inline-block;
+}
+#all-media-region .ui-selected .ticker:hover .glyphicon-ok {
+  display: none;
 }
 /*input[type=checkbox].mcq-option-select {
 	display:none;
@@ -1055,6 +1092,7 @@ p.mcq-option-text {
   padding: 5px;
   margin: 5px;
   box-sizing: border-box;
+  cursor: move;
   transition-property: transform, top, left;
 }
 .sort-option.ui-sortable-placeholder {
