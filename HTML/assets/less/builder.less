@@ -102,7 +102,7 @@
 		ul{
 			li{
 				width: 96px;
-				height: 40px;
+				//height: 40px;
 				//font-weight: bold;
 				i{
 					font-size: 17px;
@@ -361,6 +361,16 @@
 			outline: transparent;
 		}
 	}
+
+	.text, .editor{
+		font-size: 22px;
+		&.placeholder{
+		    color: darken(@body-bg, 2%);
+		    font-size: 18px;
+		    font-weight: bold;
+		    padding-left: 4px;
+		  }
+	}
 }
 .aj-imp-col-sel {
 	top: -4.6em;
@@ -565,6 +575,12 @@
 			display: block;
 		}
 
+	}
+	img{
+		position: relative;
+		z-index: 2;
+		margin-right: 10px;
+		cursor: pointer;
 	}
 	p{
 		margin: 0;

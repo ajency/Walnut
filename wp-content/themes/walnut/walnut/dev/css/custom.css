@@ -182,7 +182,6 @@
 }
 #toolbox .qstns ul li {
   width: 96px;
-  height: 40px;
 }
 #toolbox .qstns ul li i {
   font-size: 17px;
@@ -495,6 +494,17 @@
 .element-wrapper .cke_editable:focus {
   outline: transparent;
 }
+.element-wrapper .text,
+.element-wrapper .editor {
+  font-size: 22px;
+}
+.element-wrapper .text.placeholder,
+.element-wrapper .editor.placeholder {
+  color: #dfe4e8;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 4px;
+}
 .aj-imp-col-sel {
   top: -4.6em;
   display: none;
@@ -697,6 +707,12 @@
 .imagewithtext .image-placeholder .bicon {
   font-size: 40px;
   display: block;
+}
+.imagewithtext img {
+  position: relative;
+  z-index: 2;
+  margin-right: 10px;
+  cursor: pointer;
 }
 .imagewithtext p {
   margin: 0;
@@ -998,17 +1014,16 @@ p.mcq-option-text {
   margin: 4px 5px;
   background-size: 32px;
 }
-.mcq-option p {
+.mcq-option .mcq-option-text {
   margin: 0;
   word-break: break-word;
   overflow: hidden;
   font-size: 22px;
 }
-.mcq-option p:focus {
+.mcq-option .mcq-option-text:focus {
   outline: none;
-  border-bottom: 2px dashed #f3f3f3;
 }
-.mcq-option p.placeholder {
+.mcq-option .mcq-option-text.placeholder {
   color: #dfe4e8;
   font-size: 18px;
   font-weight: bold;
@@ -1098,21 +1113,19 @@ p.mcq-option-text {
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 
 }
-.sort-option p {
+.sort-option .sort-option-text {
   margin: 0;
   word-break: break-word;
   overflow: hidden;
   font-size: 22px;
 }
-.sort-option p:focus {
+.sort-option .sort-option-text:focus {
   outline: none;
-  border-bottom: 2px dashed #f3f3f3;
 }
-.sort-option p.placeholder {
+.sort-option .sort-option-text.placeholder {
   color: #dfe4e8;
   font-size: 18px;
   font-weight: bold;
-  border: 2px dashed #f3f3f3;
   padding-left: 4px;
 }
 .ui-state-highlight {
