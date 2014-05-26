@@ -352,6 +352,15 @@
 			}
 		}
 	}
+	p{
+		margin: 0;
+		
+	}
+	.cke_editable{
+		&:focus{
+			outline: transparent;
+		}
+	}
 }
 .aj-imp-col-sel {
 	top: -4.6em;
@@ -636,4 +645,21 @@
 		}
 	}
 
+}
+
+/*Properties Bar*/
+#subProps{
+    background-color: @color-info;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    & > li > a{
+        color: @preview-grey;
+        &:hover{
+            color: @color-white;
+        }
+    }
+    & > li.active > a{
+        color: @color-dark;
+    }
 }
