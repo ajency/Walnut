@@ -17,7 +17,8 @@
 	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
-	<link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen">
+	
+	<link href="assets/css/selectordie.css" rel="stylesheet" type="text/css" media="screen">
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
@@ -55,8 +56,9 @@
 		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
 		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
 		<script type="text/javascript" src="assets/js/datatables.js"></script>
-		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
+		<!--<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>-->
 		<script type="text/javascript" src="assets/js/row-link.js"></script>
+		<script type="text/javascript" src="assets/js/selectordie.min.js"></script>
 
 	<!-- END NEED TO WORK ON -->
 
@@ -363,9 +365,22 @@
 		$(this).tab('show');
 	});
 
-	$('#class').select2();
-	$('#div').select2();
-	$('#class-training').select2();
+	// $('#class').select2();
+	// $('#div').select2();
+	// $('#class-training').select2();
+
+	$('#class').selectOrDie({
+		customClass: "custom",
+    	customID:    "custom"
+	});
+	$('#div').selectOrDie({
+		customClass: "custom",
+    	customID:    "custom"
+	});
+	$('#class-training').selectOrDie({
+		customClass: "custom",
+    	customID:    "custom"
+	});
 </script>
 </body>
 </html>
