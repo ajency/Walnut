@@ -47,7 +47,7 @@ define ['app'
                             actionButtons = ''
 
                             allContentPieces = @model.get 'content_pieces'
-
+                            allContentPieces = _.map allContentPieces, (m)-> parseInt m
                             answeredPieces= @questionResponseCollection.where "status":"completed"
 
                             answeredIDs = _.chain answeredPieces

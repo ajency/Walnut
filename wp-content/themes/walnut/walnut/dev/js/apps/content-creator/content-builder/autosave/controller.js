@@ -32,11 +32,11 @@ define(['app'], function(App) {
           data: data
         };
         return $.ajax(options).done(function(response) {
-          console.log(response.ID);
           contentPieceModel.set({
             'ID': response.ID
           });
-          return console.log(contentPieceModel);
+          $('#saved-successfully').remove();
+          return $(".creator").before('<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>');
         }).fail(function(resp) {
           return console.log('error');
         });
@@ -76,6 +76,19 @@ define(['app'], function(App) {
                   elements: _this._getJson($(column))
                 };
                 ele.elements.push(col);
+              });
+            }
+            if (ele.element === 'TeacherQuestion') {
+              delete ele.meta_id;
+              ele.elements = [];
+              _.each($(element).children('.element-markup').children('.teacher-question').children('.teacher-question-row'), function(column, index) {
+                var col;
+                col = {
+                  position: index + 1,
+                  element: 'TeacherQuestRow',
+                  elements: _this._getJson($(column))
+                };
+                return ele.elements.push(col);
               });
             }
             return arr.push(ele);

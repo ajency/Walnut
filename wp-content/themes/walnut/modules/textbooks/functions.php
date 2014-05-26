@@ -205,7 +205,7 @@ function get_textbooks($args = array()) {
 
     $args = wp_parse_args($args, $defaults);
     extract($args);
-    
+
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all){
         $textbooks = get_terms('textbook', $args);

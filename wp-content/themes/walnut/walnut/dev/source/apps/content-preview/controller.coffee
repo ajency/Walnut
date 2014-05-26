@@ -1,46 +1,69 @@
 define ['app'
-		'controllers/region-controller'
-		'apps/content-preview/view'
-		'apps/content-preview/content-board/controller'
-		'apps/content-preview/top-panel/controller'
-		],(App,RegionController)->
+        'controllers/region-controller'
+        'apps/content-preview/view'
+        'apps/content-preview/content-board/controller'
+        'apps/content-preview/top-panel/controller'
+], (App, RegionController)->
+    App.module "ContentPreview", (ContentPreview, App, Backbone, Marionette, $, _)->
 
-			App.module "ContentPreview",(ContentPreview, App, Backbone, Marionette, $,_)->
+        class ContentPreviewRouter extends Marionette.AppRouter
 
-				class ContentPreview.Controller extends RegionController
+            appRoutes:
+                'content-piece/:contentID': 'viewContentPieces'
 
-					initialize:(options)->
-						breadcrumb_items = 'items':[
-							{'label':'Dashboard','link':'javascript://'},
-							{'label':'Content Management','link':'javascript:;'},
-							{'label':'Content Preview','link':'javascript:;','active':'active'}
-						]
-						App.execute "update:breadcrumb:model", breadcrumb_items
-						
-						# get the main layout for the content preview
-						@layout = @_getContentPreviewLayout()
+        Controller =
+            viewContentPieces:(id) ->
 
-						# eventObj = App.createEventObject()
-
-						# listen to "show" event of the layout and start the 
-						# elementboxapp passing the region 
-						@listenTo @layout,'show',=>
-						
-
-							App.execute "show:top:panel",
-										region : @layout.topPanelRegion
+                App.execute "show:content:preview",
+                    region                  : App.mainContentRegion
+                    contentID               : id
+                    display_mode            : 'read-only'
 
 
-							App.execute "show:content:board",
-										region : @layout.contentBoardRegion
-										
-							
-						# show the layout
-						@show @layout
 
-					_getContentPreviewLayout:->
-						new ContentPreview.Views.Layout
+        class ContentPreview.Controller extends RegionController
 
-				App.commands.setHandler "show:content:preview", (options)->
-								new ContentPreview.Controller
-											region : options.region
+            initialize: (options)->
+
+                {contentID, @model,@questionResponseModel,@timerObject, @display_mode,@students} = options
+
+                if contentID
+                    @model= App.request "get:content:piece:by:id", contentID
+
+                # get the main layout for the content preview
+                @layout = @_getContentPreviewLayout()
+
+                App.execute "when:fetched", @model, =>
+                    # show the layout
+                    @show @layout, loading:true
+
+
+
+                # listen to "show" event of the layout and start the
+                # elementboxapp passing the region
+                @listenTo @layout, 'show', =>
+                    App.execute "show:top:panel",
+                        region: @layout.topPanelRegion
+                        model: @model
+                        questionResponseModel: @questionResponseModel
+                        timerObject : @timerObject
+                        display_mode: @display_mode
+                        students: @students
+
+
+                    App.execute "show:content:board",
+                        region: @layout.contentBoardRegion
+                        model: @model
+
+            _getContentPreviewLayout: ->
+                new ContentPreview.Views.Layout
+
+        App.commands.setHandler "show:content:preview", (options)->
+            new ContentPreview.Controller options
+
+
+
+        ContentPreview.on "start", ->
+            new ContentPreviewRouter
+                controller: Controller
+

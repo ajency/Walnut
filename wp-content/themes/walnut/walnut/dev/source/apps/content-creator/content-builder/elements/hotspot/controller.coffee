@@ -18,6 +18,7 @@ define ['app'
 											element  	: 'Hotspot'
 											height 	: 0
 											marks : 1
+											transparent :false
 											enableIndividualMarks : false
 											optionCollection : []
 											textCollection : []

@@ -37,8 +37,8 @@ define ['app'
                     model : elements
 
             _getContainer :->
-
                 @view.$el.find('#myCanvas')
+
 
 
 
@@ -48,7 +48,7 @@ define ['app'
 
                 container = @_getContainer()
                 _.each section, (element, i)=>
-                    if element.element is 'Row'
+                    if element.element is 'Row' or element.element is 'TeacherQuestion'
                         @addNestedElements container,element
                     else
                         App.request "add:new:element",container,element.element, element
@@ -60,7 +60,7 @@ define ['app'
                     return if not column.elements
                     container = controller.layout.elementRegion.currentView.$el.children().eq(index)
                     _.each column.elements,(ele, i)=>
-                        if ele.element is 'Row'
+                        if ele.element is 'Row' or element.element is 'TeacherQuestion'
                             @addNestedElements $(container),ele
                         else
                             App.request "add:new:element",container,ele.element, ele

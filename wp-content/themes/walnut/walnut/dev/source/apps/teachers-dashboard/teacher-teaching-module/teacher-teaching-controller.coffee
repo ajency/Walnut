@@ -21,11 +21,13 @@ define ['app'
             initialize: (opts)->
                 {@division,@classID,@moduleID,contentGroupModel,
                 questionsCollection,questionResponseCollection,
-                contentPiece,@display_mode,@textbookNames} = opts
+                contentPiece,@display_mode,studentCollection} = opts
 
-                studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
+                App.leftNavRegion.close()
+                App.headerRegion.close()
+                App.breadcrumbRegion.close()
 
-                App.execute "when:fetched", questionResponseCollection, =>
+                App.execute "when:fetched", [questionResponseCollection, contentPiece], =>
                     #checking if model exists in collection. if so, replacing the empty model
                     @_getOrCreateModel contentPiece.get 'ID'
 
@@ -69,13 +71,13 @@ define ['app'
                         questionResponseModel.save()
 
             _changeQuestion: (current_question_id)=>
-                current_question_id = current_question_id.toString()
+                current_question_id = parseInt current_question_id
 
                 contentPieces = contentGroupModel.get 'content_pieces'
-
+                contentPieces =_.map contentPieces, (m)-> parseInt m
                 pieceIndex = _.indexOf(contentPieces, current_question_id)
 
-                nextQuestion = contentPieces[pieceIndex + 1]
+                nextQuestion = parseInt contentPieces[pieceIndex + 1]
 
                 if nextQuestion
 
@@ -100,10 +102,13 @@ define ['app'
 
                 App.navigate newRoute, true
 
+                App.execute "show:headerapp", region: App.headerRegion
+                App.execute "show:leftnavapp", region: App.leftNavRegion
+
 
             _getOrCreateModel: (content_piece_id)=>
                 questionResponseModel = questionResponseCollection.findWhere
-                    'content_piece_id': content_piece_id.toString()
+                    'content_piece_id': content_piece_id
 
                 if questionResponseModel
                     if @display_mode is 'class_mode'
@@ -138,13 +143,15 @@ define ['app'
 
 
             _showQuestionDisplayView: (model) =>
-                App.execute "show:single:question:app",
-                    region: @layout.questionsDetailsRegion
-                    model: model
-                    textbookNames: @textbookNames
-                    questionResponseModel: questionResponseModel
-                    timerObject : @timerObject
-                    display_mode: @display_mode
+                App.execute "show:content:preview",
+                    region                  : @layout.questionsDetailsRegion
+                    model                   : model
+                    textbookNames           : @textbookNames
+                    questionResponseModel   : questionResponseModel
+                    timerObject             : @timerObject
+                    display_mode            : @display_mode
+                    classID                 : @classID
+                    students: studentCollection
 
             _showStudentsListView: (questionResponseModel)=>
                 App.execute "when:fetched", contentPiece, =>
@@ -178,6 +185,9 @@ define ['app'
                 moduleDetailsRegion: '#module-details-region'
                 questionsDetailsRegion: '#question-details-region'
                 studentsListRegion: '#students-list-region'
+
+            onShow:->
+                $('.page-content').addClass 'condensed expand-page'
 
 
 

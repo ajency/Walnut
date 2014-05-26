@@ -6,6 +6,7 @@ define(['jquery', 'jqueryvalidate'], function($) {
     ignore: [],
     errorPlacement: function(error, element) {
       var icon, parent;
+      $(element).prev('.select2-container').find('.select2-choice').addClass('error');
       icon = $(element).parent('.input-with-icon').children('i');
       parent = $(element).parent('.input-with-icon');
       icon.removeClass('icon-ok').addClass('icon-exclamation');
@@ -13,6 +14,7 @@ define(['jquery', 'jqueryvalidate'], function($) {
     },
     success: function(label, element) {
       var icon, parent;
+      $(element).prev('.select2-container').find('.select2-choice').removeClass('error');
       icon = $(element).parent('.input-with-icon').children('i');
       parent = $(element).parent('.input-with-icon');
       icon.removeClass("icon-exclamation").addClass('icon-ok');

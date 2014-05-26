@@ -19,7 +19,6 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         var view;
         this.questionResponseModel = opts.questionResponseModel, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
         this.view = view = this._showChorusOptionsView(this.questionResponseModel);
-        console.log(this.questionResponseModel);
         this.show(view, {
           loading: true
         });

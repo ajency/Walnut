@@ -29,13 +29,17 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           'division': this.division,
           'collection_id': model.get('id')
         });
+        this.studentCollection = App.request("get:user:collection", {
+          'role': 'student',
+          'division': this.division
+        });
         App.execute("when:fetched", model, function() {
           return groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
         });
         this.layout = layout = this._getContentGroupViewLayout();
         this.show(layout, {
           loading: true,
-          entities: [model, this.questionResponseCollection, groupContentCollection, this.textbookNames]
+          entities: [model, this.questionResponseCollection, groupContentCollection, this.textbookNames, this.studentCollection]
         });
         this.listenTo(layout, 'show', this.showContentGroupViews);
         this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
@@ -71,8 +75,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           questionResponseCollection: this.questionResponseCollection,
           contentGroupModel: model,
           questionsCollection: groupContentCollection,
-          textbookNames: this.textbookNames,
           classID: this.classID,
+          studentCollection: this.studentCollection,
           display_mode: display_mode
         });
       };
@@ -96,7 +100,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
                 model: model,
                 mode: _this.mode,
                 questionResponseCollection: _this.questionResponseCollection,
-                groupContentCollection: groupContentCollection
+                groupContentCollection: groupContentCollection,
+                studentCollection: _this.studentCollection
               });
             }
           };
@@ -124,6 +129,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       ContentGroupViewLayout.prototype.regions = {
         collectionDetailsRegion: '#collection-details-region',
         contentDisplayRegion: '#content-display-region'
+      };
+
+      ContentGroupViewLayout.prototype.onShow = function() {
+        return $('.page-content').removeClass('expand-page');
       };
 
       return ContentGroupViewLayout;

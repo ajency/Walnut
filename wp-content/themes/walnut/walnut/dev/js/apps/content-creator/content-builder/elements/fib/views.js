@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
@@ -7,10 +8,13 @@ define(['app'], function(App) {
       __extends(FibView, _super);
 
       function FibView() {
+        this.configureEditor = __bind(this.configureEditor, this);
         return FibView.__super__.constructor.apply(this, arguments);
       }
 
-      FibView.prototype.template = '<p class="fib-text" ></p>';
+      FibView.prototype.tagName = 'p';
+
+      FibView.prototype.className = 'fib-text';
 
       FibView.prototype.modelEvents = {
         'change:font': function(model, font) {
@@ -37,8 +41,8 @@ define(['app'], function(App) {
         'click a': function(e) {
           return e.preventDefault();
         },
-        'blur p': 'onSaveText',
-        'DOMSubtreeModified p': '_updateInputProperties'
+        'blur .fib-text': 'onSaveText',
+        'DOMSubtreeModified': '_updateInputProperties'
       };
 
       FibView.prototype.initialize = function(options) {
@@ -53,16 +57,32 @@ define(['app'], function(App) {
             return evt.stopPropagation();
           };
         })(this));
-        this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
-        this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
+        this.$el.attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
+        CKEDITOR.on('instanceCreated', this.configureEditor);
+        this.editor = CKEDITOR.inline(document.getElementById(this.$el.attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
         return _.delay((function(_this) {
           return function() {
-            return $('#cke_' + _this.editor.name).on('click', function(evt) {
+            return $("#cke_" + _this.editor.name).on('click', function(evt) {
               return evt.stopPropagation();
             });
           };
         })(this), 500);
+      };
+
+      FibView.prototype.configureEditor = function(event) {
+        var editor, element;
+        editor = event.editor;
+        element = editor.element;
+        if (element.getAttribute('id') === this.$el.attr('id')) {
+          return editor.on('configLoaded', function() {
+            editor.config.toolbar.splice(2, 0, {
+              name: 'forms',
+              items: ['TextField']
+            });
+            return _.uniq(editor.config.toolbar);
+          });
+        }
       };
 
       FibView.prototype._changeFont = function(font) {
@@ -70,7 +90,7 @@ define(['app'], function(App) {
       };
 
       FibView.prototype._changeFontSize = function(fontSize) {
-        return this.$el.find('input').css('font-size', fontSize + "px");
+        return this.$el.find('input').css('font-size', "" + fontSize + "px");
       };
 
       FibView.prototype._changeColor = function(color) {
@@ -103,7 +123,7 @@ define(['app'], function(App) {
 
       FibView.prototype.onSaveText = function() {
         var formatedText;
-        formatedText = this.$el.find('p').clone();
+        formatedText = this.$el.clone();
         $(formatedText).find('input').attr('value', '');
         $(formatedText).find('input').unwrap();
         $(formatedText).find('input').prev().remove();
@@ -125,7 +145,7 @@ define(['app'], function(App) {
                 $(blank).wrap('<span contenteditable="false"></span>');
                 $(blank).before('<span class="fibno"></span>');
               }
-              blanksModel = _this.blanksCollection.get($(blank).attr('data-id'));
+              blanksModel = _this.model.get('blanksArray').get($(blank).attr('data-id'));
               blanksModel.set('blank_index', index + 1);
               if (parseInt($(blank).prev().text()) !== index + 1) {
                 $(blank).prev().text(index + 1);
@@ -145,7 +165,7 @@ define(['app'], function(App) {
                 _this.trigger("show:this:fib:properties");
                 return e.stopPropagation();
               });
-            }, 10);
+            }, 20);
           };
         })(this));
         _.delay((function(_this) {

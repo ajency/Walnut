@@ -38,7 +38,7 @@ define ['app'
             	           	</div>
             				<div class="col-sm-4">
             					<div class="tiles white text-center">
-            	                	<a class="heading p-t-40 p-b-40" href="#create-content/content"> Content </a>
+            	                	<a class="heading p-t-40 p-b-40" href="#create-content/content_piece"> Content </a>
             	           	 	</div>
             	           	</div>
             			</div>'

@@ -24,3 +24,11 @@ $GLOBALS['all_subjects']=array('English',
                                 'Art',
                                 'Music',
                                 'Life Skill');
+
+$GLOBALS['chorus_options']= array(
+    'few'           =>'Very Few',
+    'one-fourth'    =>'1/4th of the Class',
+    'half'          =>'Half the Class',
+    'three-fourth'  =>'3/4 the Class',
+    'full'          =>'Full Class'
+);

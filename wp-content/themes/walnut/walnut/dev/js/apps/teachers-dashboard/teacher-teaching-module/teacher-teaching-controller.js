@@ -25,12 +25,11 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype.initialize = function(opts) {
         var layout;
-        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, contentPiece = opts.contentPiece, this.display_mode = opts.display_mode, this.textbookNames = opts.textbookNames;
-        studentCollection = App.request("get:user:collection", {
-          'role': 'student',
-          'division': this.division
-        });
-        App.execute("when:fetched", questionResponseCollection, (function(_this) {
+        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, contentPiece = opts.contentPiece, this.display_mode = opts.display_mode, studentCollection = opts.studentCollection;
+        App.leftNavRegion.close();
+        App.headerRegion.close();
+        App.breadcrumbRegion.close();
+        App.execute("when:fetched", [questionResponseCollection, contentPiece], (function(_this) {
           return function() {
             return _this._getOrCreateModel(contentPiece.get('ID'));
           };
@@ -66,10 +65,13 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
         var contentPieces, nextQuestion, pieceIndex;
-        current_question_id = current_question_id.toString();
+        current_question_id = parseInt(current_question_id);
         contentPieces = contentGroupModel.get('content_pieces');
+        contentPieces = _.map(contentPieces, function(m) {
+          return parseInt(m);
+        });
         pieceIndex = _.indexOf(contentPieces, current_question_id);
-        nextQuestion = contentPieces[pieceIndex + 1];
+        nextQuestion = parseInt(contentPieces[pieceIndex + 1]);
         if (nextQuestion) {
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
@@ -87,13 +89,19 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         currRoute = App.getCurrentRoute();
         removeStr = _.str.strRightBack(currRoute, '/');
         newRoute = _.str.rtrim(currRoute, removeStr + '/');
-        return App.navigate(newRoute, true);
+        App.navigate(newRoute, true);
+        App.execute("show:headerapp", {
+          region: App.headerRegion
+        });
+        return App.execute("show:leftnavapp", {
+          region: App.leftNavRegion
+        });
       };
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
         var modelData;
         questionResponseModel = questionResponseCollection.findWhere({
-          'content_piece_id': content_piece_id.toString()
+          'content_piece_id': content_piece_id
         });
         if (questionResponseModel) {
           if (this.display_mode === 'class_mode') {
@@ -130,13 +138,15 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       TeacherTeachingController.prototype._showQuestionDisplayView = function(model) {
-        return App.execute("show:single:question:app", {
+        return App.execute("show:content:preview", {
           region: this.layout.questionsDetailsRegion,
           model: model,
           textbookNames: this.textbookNames,
           questionResponseModel: questionResponseModel,
           timerObject: this.timerObject,
-          display_mode: this.display_mode
+          display_mode: this.display_mode,
+          classID: this.classID,
+          students: studentCollection
         });
       };
 
@@ -185,6 +195,10 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         moduleDetailsRegion: '#module-details-region',
         questionsDetailsRegion: '#question-details-region',
         studentsListRegion: '#students-list-region'
+      };
+
+      SingleQuestionLayout.prototype.onShow = function() {
+        return $('.page-content').addClass('condensed expand-page');
       };
 
       return SingleQuestionLayout;

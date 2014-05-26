@@ -19,30 +19,7 @@ define(['app'], function(App) {
 
       ColumnView.prototype.onShow = function() {
         this.$el.attr('data-position', this.model.get('position'));
-        this.$el.addClass("col-md-" + (this.model.get('className'))).attr('data-class', this.model.get('className'));
-        return this.$el.sortable({
-          revert: 'invalid',
-          items: '> .element-wrapper',
-          connectWith: '.droppable-column,.column',
-          handle: '.aj-imp-drag-handle',
-          start: function(e, ui) {
-            ui.placeholder.height(ui.item.height());
-            window.dragging = true;
-          },
-          stop: function(e, ui) {
-            window.dragging = false;
-          },
-          helper: 'clone',
-          opacity: .65,
-          remove: function(evt, ui) {
-            if ($(evt.target).children().length === 0) {
-              return $(evt.target).addClass('empty-column');
-            }
-          },
-          update: function(e, ui) {
-            return $(e.target).removeClass('empty-column');
-          }
-        });
+        return this.$el.addClass("col-md-" + (this.model.get('className'))).attr('data-class', this.model.get('className'));
       };
 
       ColumnView.prototype.onClose = function() {

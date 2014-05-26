@@ -22,6 +22,11 @@ define ['app'],(App)->
 											<input id="marks" type="text" value="{{marks}}" class="form-control" >
 										</div>
 
+										<div id="transparency" class="checkbox check-success">
+											<input id="transparency-checkbox" type="checkbox" value="1">
+											<label for="transparency-checkbox">Set Transparent</label>
+										</div>
+
 
 									</div>
 								</div>
@@ -30,16 +35,26 @@ define ['app'],(App)->
 				events : 
 					'blur @ui.marksTextbox' : '_changeMarks'
 					'change @ui.individualMarksCheckbox' : '_toggleIndividualMarks'
+					'change @ui.transparencyCheckbox' : '_toggleTransparency'
 
 				ui :
 					marksTextbox : 'input#marks'
 					individualMarksCheckbox : 'input#check-individual-marks'
+					transparencyCheckbox : 'input#transparency-checkbox'
 
 				onShow:->
 					if @model.get 'enableIndividualMarks'
 							@ui.individualMarksCheckbox.prop 'checked',true
 							@ui.marksTextbox.prop 'disabled',true
 							@_enableCalculateMarks()
+
+					# TRANSPARENCY
+					# check model for Transparency and initialize checkbox
+					if @model.get 'transparent'
+
+						@$el.find('#transparency-checkbox').prop('checked',true)
+
+					
 
 
 				# function for changing model on change of marks dropbox
@@ -87,6 +102,13 @@ define ['app'],(App)->
 							@model.set 'enableIndividualMarks',false
 							@ui.marksTextbox.prop 'disabled',false
 							@_disableCalculateMarks()
+
+				_toggleTransparency:->
+					#on click of checkbox set model transparent to true
+						if @ui.transparencyCheckbox.prop 'checked'
+							@model.set 'transparent', true
+						else
+							@model.set 'transparent',false
 
 				onClose:->
 					@_disableCalculateMarks()

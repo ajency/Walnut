@@ -12,7 +12,7 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
       }
 
       ContentGroupRouter.prototype.appRoutes = {
-        'edit-group': 'editGroup',
+        'add-module': 'editGroup',
         'view-group/:id': 'viewGroup',
         'list-groups': 'groupsListing',
         'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule',

@@ -9,9 +9,11 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.uiColor = '#AADC6E';
 	config.format_tags = 'p;h1;h2;h3;h4;h5;h6;pre;address;div';
 
-	config.extraPlugins = 'confighelper';
+	// config.extraPlugins = 'confighelper';
+	// config.extraPlugins = 'justify';
+// 
+	config.placeholder = 'Type here...';
 
-	config.placeholder = 'Type here...'
 
 	config.floatSpaceDockedOffsetX = 30;
 	config.floatSpaceDockedOffsetY = 15;
@@ -26,19 +28,23 @@ config.toolbar = [
 								{name: 'editing',
 								groups: [ 'find', 'selection', 'spellchecker' ],
 								items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] }
-							,
-								{ name: 'forms',
-								items: [ 'TextField'] }
+							
 							,
 								'/'
 							,
 								{name: 'basicstyles',
-								groups: [ 'basicstyles', 'cleanup' ],
-								items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ]}
+								groups: [ 'basicstyles', 'cleanup' ,'align'],
+								items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-','RemoveFormat']}
+						
 							,
 								{name: 'paragraph',
-								groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ],
-								items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ]}
+								groups: [ 'list', 'indent', 'blocks','align' ],
+								items: [ 
+								// 'NumberedList', 'BulletedList', '-',
+								// 'Outdent', 'Indent', '-',
+								// 'Blockquote',  '-',
+								'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']}
+
 							,	
 					// # 			# { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
 								{name: 'insert',
@@ -47,7 +53,7 @@ config.toolbar = [
 								'/'
 							,
 								{name: 'styles',
-								items: [ 'Styles', 'Format', 'Font', 'FontSize' ] }
+								items: [ 'Styles',  'Font', 'FontSize' ] }
 							,
 								{name: 'colors',
 								items: [ 'TextColor', 'BGColor' ] }
