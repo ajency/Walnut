@@ -28,7 +28,9 @@ define(['marionette'], function(Marionette) {
   });
   App.on("initialize:after", function(options) {
     var xhr;
-    if (typeof Pace !== 'undefined') {
+    if (typeof Pace === 'undefined') {
+      $("#site_main_container").addClass("showAll");
+    } else {
       Pace.on('hide', function() {
         return $("#site_main_container").addClass("showAll");
       });
