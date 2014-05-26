@@ -1,106 +1,9 @@
-define ['app'], (App)->
-
+define ['app'
+        'text!apps/content-creator/element-box/templates/toolbox.html'], (App,Template)->
     App.module "ContentCreator.ElementBox.Views", (Views, App)->
-
         class Views.ElementBoxView extends Marionette.ItemView
 
-            template:'<div class="tiles green">
-                          <div class="tiles-head">
-                            <h4 class="text-white">
-                              <span class="semi-bold">Tool</span>box
-                            </h4>
-                          </div>
-                        </div>
-                        <h5 class="semi-bold text-center b-b b-grey p-b-10">Components</h5>
-                        <div class="tools">
-                          <ul>
-                            <li data-element="Row">
-                              <a class="drag builder-element" >
-                                <i class="bicon icon-uniF160"></i>
-                                <div class="aj-imp-builder-title">Row</div>
-                              </a>
-                            </li>
-                            <div class="clearfix"></div>
-                          </ul>
-                        </div>
-                        <h5 class="semi-bold text-center b-b b-grey p-b-10">Questions</h5>
-                        <div class="qstns">
-                          <ul class="elements">
-                            <li data-element="Hotspot" >
-                              <a class="drag builder-element" >
-                                <div class="aj-imp-builder-title">
-                                  <i class="fa fa-bullseye"></i> Hotspot
-                                </div>
-                              </a>
-                            </li>
-                            <li data-element="Mcq" >
-                              <a class="drag builder-element" >
-                                <div class="aj-imp-builder-title">
-                                  <i class="fa fa-list-ol"></i> MCQ
-                                </div>
-                              </a>
-                            </li>
-                            <li data-element="Fib" >
-                              <a class="drag builder-element" >
-                                <div class="aj-imp-builder-title">
-                                  <i class="bicon icon-uniF148"></i> FIB
-                                </div>
-                              </a>
-                            </li>
-                            <li data-element="BigAnswer" >
-                              <a class="drag builder-element" >
-                                <div class="aj-imp-builder-title">
-                                  <i class="fa fa-text-width"></i> Big Answer
-                                </div>
-                              </a>
-                            </li>
-                            <li data-element="Sort" >
-                              <a class="drag builder-element" >
-                                <div class="aj-imp-builder-title">
-                                  <i class="fa fa-arrows-v"></i> Sort
-                                </div>
-                              </a>
-                            </li>
-                            <li data-element="TeacherQuestion" > 
-                            <a class="drag builder-element" >
-                              <div class="aj-imp-builder-title">
-                                <i class="fa fa-arrows-v"></i> Teacher Question
-                              </div>
-                            </a>
-                          </li>
-                          </ul>
-                          <div class="clearfix"></div>
-                        </div>
-                        <h5 class="semi-bold text-center b-b b-grey p-b-10">Elements</h5>
-                        <div class="tools">
-                          <ul>
-                            <li data-element="Image" class="hotspotable">
-                              <a class="drag builder-element" >
-                                <i class="bicon icon-uniF10E"></i>
-                                <div class="aj-imp-builder-title">Image</div>
-                              </a>
-                            </li>
-                            <li data-element="Text" class="hotspotable">
-                              <a class="drag builder-element" >
-                                <i class="bicon icon-uniF11C"></i>
-                                <div class="aj-imp-builder-title">Text</div>
-                              </a>
-                            </li>
-                            <li data-element="ImageWithText" class="hotspotable">
-                              <a class="drag builder-element" >
-                                <i class="bicon icon-uniF112"></i>
-                                <div class="aj-imp-builder-title">Image With Text</div>
-                              </a>
-                            </li>
-                            <li data-element="Video" class="hotspotable"> 
-								<a href="#" class="drag builder-element" > 
-									<i class="bicon icon-uniF112"></i> 
-									<div class="aj-imp-builder-title">Video</div> 
-								</a> 
-							</li>
-                            <div class="clearfix"></div>
-                          </ul>
-                        </div>'
+            template: Template
 
 
             onShow: ->
@@ -112,16 +15,17 @@ define ['app'], (App)->
                     distance: 5
                     revert: 'invalid'
 
-                contentType = Marionette.getOption @,'contentType'
+                contentType = Marionette.getOption @, 'contentType'
 
                 if contentType is 'teacher_question'
-                    elementSet= ['Row','TeacherQuestion','Image','Text','ImageWithText','Video']
+                    elementSet = ['Row', 'TeacherQuestion', 'Image', 'Text', 'ImageWithText', 'Video']
                 else
-                    elementSet= ['Row','Hotspot','Mcq','Fib','BigAnswer','Sort', 'Image','Text','ImageWithText','Video']
+                    elementSet = ['Row', 'Hotspot', 'Mcq', 'Fib', 'BigAnswer', 'Sort', 'Image', 'Text', 'ImageWithText',
+                                  'Video']
 
 
-                _.each @$el.find('li'), (el,ind)->
-                    elementName= $(el).attr 'data-element'
+                _.each @$el.find('li'), (el, ind)->
+                    elementName = $(el).attr 'data-element'
                     if not _.contains elementSet, elementName
                         $(el).hide()
 
