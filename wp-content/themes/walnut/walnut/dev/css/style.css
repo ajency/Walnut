@@ -2568,7 +2568,7 @@ textarea[class*="span"]
 }
 
 .small {
-  width: 120px !important;
+  /*width: 120px !important;*/
 }
 
 .medium {

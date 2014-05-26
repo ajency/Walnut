@@ -102,7 +102,7 @@
 		ul{
 			li{
 				width: 96px;
-				height: 40px;
+				//height: 40px;
 				//font-weight: bold;
 				i{
 					font-size: 17px;
@@ -352,6 +352,25 @@
 			}
 		}
 	}
+	p{
+		margin: 0;
+		
+	}
+	.cke_editable{
+		&:focus{
+			outline: transparent;
+		}
+	}
+
+	.text, .editor{
+		font-size: 22px;
+		&.placeholder{
+		    color: darken(@body-bg, 2%);
+		    font-size: 18px;
+		    font-weight: bold;
+		    padding-left: 4px;
+		  }
+	}
 }
 .aj-imp-col-sel {
 	top: -4.6em;
@@ -557,6 +576,12 @@
 		}
 
 	}
+	img{
+		position: relative;
+		z-index: 2;
+		margin-right: 10px;
+		cursor: pointer;
+	}
 	p{
 		margin: 0;
 	}
@@ -636,4 +661,21 @@
 		}
 	}
 
+}
+
+/*Properties Bar*/
+#subProps{
+    background-color: @color-info;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    & > li > a{
+        color: @preview-grey;
+        &:hover{
+            color: @color-white;
+        }
+    }
+    & > li.active > a{
+        color: @color-dark;
+    }
 }

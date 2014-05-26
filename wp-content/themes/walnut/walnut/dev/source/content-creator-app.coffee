@@ -1,5 +1,4 @@
 define ['marionette'], (Marionette)->
-
     window.App = new Marionette.Application
 
     # Main app regions
@@ -38,10 +37,14 @@ define ['marionette'], (Marionette)->
     App.commands.setHandler "unregister:instance", (instance, id) ->
         App.unregister instance, id
 
-
-
     App.on "initialize:after", (options) ->
-        console.log 'initialize after'
+
+        if typeof Pace is 'undefined'
+            $("#site_main_container").addClass("showAll");
+
+        else
+            Pace.on 'hide', ()->
+                $("#site_main_container").addClass("showAll");
 
         App.startHistory()
         App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
@@ -50,17 +53,17 @@ define ['marionette'], (Marionette)->
         console.log 'start app Main'
         # start the content creator app
         xhr = $.get "#{AJAXURL}?action=get-user-data",
-            {},
-            (resp)=>
-                if(resp.success)
-                    user = App.request "get:user:model"
-                    user.set resp.data
-                    school = App.request "get:current:school"
-                    App.vent.trigger "show:content:builder"
-                    App.loginRegion.close()
-                else
-                    App.vent.trigger "show:login"
-            , 'json'
+          {},
+        (resp)=>
+            if(resp.success)
+                user = App.request "get:user:model"
+                user.set resp.data
+                school = App.request "get:current:school"
+                App.vent.trigger "show:content:builder"
+                App.loginRegion.close()
+            else
+                App.vent.trigger "show:login"
+        , 'json'
 
     App.vent.on "show:content:builder", ->
         App.execute "show:content:creator",
