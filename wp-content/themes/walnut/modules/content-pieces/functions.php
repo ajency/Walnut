@@ -294,12 +294,11 @@ function save_content_group($data = array()) {
     
     $content_data = array(
         'name'              => $data['name'],
-        'term_ids'          => $data['term_ids'],
+        'term_ids'          => maybe_serialize($data['term_ids']),
         'last_modified_on'  => date('y-m-d H:i:s'),
         'last_modified_by'  => get_current_user_id(),
         'duration'          => $duration
     );
-    
 
     if (isset($data['id'])) {
         $content_group = $wpdb->update($wpdb->prefix . 'content_collection', $content_data, array('id' => $data['id']));
@@ -312,16 +311,26 @@ function save_content_group($data = array()) {
     }
     if ($content_group) {
 
-        $meta_data = array(
+        $meta_description = array(
             'collection_id' => $group_id,
             'meta_key' => 'description',
-            'meta_value' => $data['description']
+            'meta_value' => maybe_serialize($data['description'])
         );
 
         if (isset($data['id']))
-            $content_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_data, array('collection_id' => $data['id'], 'meta_key'=>'description'));
+            $content_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_description, array('collection_id' => $data['id'], 'meta_key'=>'description'));
         else
-            $content_meta = $wpdb->insert($wpdb->prefix . 'collection_meta', $meta_data);
+            $content_meta = $wpdb->insert($wpdb->prefix . 'collection_meta', $meta_description);
+
+        $meta_textbook = array(
+            'collection_id' => $group_id,
+            'meta_key' => 'textbook',
+            'meta_value' => $data['term_ids']['textbook']
+        );
+        if (isset($data['id']))
+            $textbook_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_textbook, array('collection_id' => $data['id'], 'meta_key'=>'textbook'));
+        else
+            $textbook_meta = $wpdb->insert($wpdb->prefix . 'collection_meta', $meta_textbook);
     }
 
     return $group_id;

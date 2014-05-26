@@ -33,8 +33,8 @@ function ajax_create_content_group() {
 
     $data = array(
         'name' => $_POST['name'],
-        'description' => maybe_serialize($_POST['description']),
-        'term_ids' => maybe_serialize($_POST['term_ids']),
+        'description' => $_POST['description'],
+        'term_ids' => $_POST['term_ids'],
         'duration' => $_POST['duration'],
         'minshours' => $_POST['minshours']
     );
@@ -54,8 +54,10 @@ function ajax_update_content_group() {
         $data = array(
             'id' => $_POST['id'],
             'name' => $_POST['name'],
-            'description' => maybe_serialize($_POST['description']),
-            'term_ids' => maybe_serialize($_POST['term_ids'])
+            'description' => $_POST['description'],
+            'term_ids' => $_POST['term_ids'],
+            'duration' => $_POST['duration'],
+            'minshours' => $_POST['minshours']
         );
         $content_group = save_content_group($data);
     }

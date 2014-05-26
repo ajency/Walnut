@@ -6,7 +6,7 @@
  * Time: 5:15 PM
  */
 
-function export_tables_for_app($blog_id='', $last_sync=''){
+function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
     if($blog_id=='')
         $blog_id=get_current_blog_id();
@@ -15,7 +15,7 @@ function export_tables_for_app($blog_id='', $last_sync=''){
 
     switch_to_blog($blog_id);
 
-    $tables_to_export= get_tables_to_export($blog_id, $last_sync);
+    $tables_to_export= get_tables_to_export($blog_id, $last_sync, $user_id);
 
     $exported_tables= prepare_csvs_for_export($tables_to_export);
 
@@ -77,7 +77,7 @@ function export_table_to_csv($table){
 }
 
 
-function get_tables_to_export($blog_id, $last_sync){
+function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
 
     global $wpdb;
 
@@ -118,10 +118,10 @@ function get_tables_to_export($blog_id, $last_sync){
     }
 
     else{
-        $tables_list[]= get_posts_table_query($last_sync);
-        $tables_list[]= get_postmeta_table_query($last_sync);
-        $tables_list[]= get_collection_table_query($last_sync);
-        $tables_list[]= get_collectionmeta_table_query($last_sync);
+        $tables_list[]= get_posts_table_query($last_sync, $user_id);
+        $tables_list[]= get_postmeta_table_query($last_sync, $user_id);
+        $tables_list[]= get_collection_table_query($last_sync, $user_id);
+        $tables_list[]= get_collectionmeta_table_query($last_sync, $user_id);
     }
 
     return $tables_list;
@@ -181,18 +181,22 @@ function get_usermeta_table_query($blog_id){
     return $usermeta_table;
 }
 
-function get_posts_table_query($last_sync=''){
+function get_posts_table_query($last_sync='', $user_id=''){
 
     global $wpdb;
 
     if(!$last_sync)
         return false;
 
+    if($user_id)
+        $user_content_pieces=get_content_pieces_for_user($user_id);
+
     $posts_table_query=$wpdb->prepare(
-        "SELECT * FROM {$wpdb->base_prefix}posts
+            "SELECT * FROM {$wpdb->base_prefix}posts
                 WHERE post_modified > '%s'",
-        $last_sync
+            $last_sync
     );
+
     $posts_table= array(
         'query'=> $posts_table_query,
         'table_name'=> "{$wpdb->base_prefix}posts"
@@ -201,7 +205,7 @@ function get_posts_table_query($last_sync=''){
     return $posts_table;
 }
 
-function get_postmeta_table_query($last_sync=''){
+function get_postmeta_table_query($last_sync='', $user_id=''){
 
     global $wpdb;
 
@@ -224,16 +228,25 @@ function get_postmeta_table_query($last_sync=''){
     return $postmeta_table;
 }
 
-function get_collection_table_query($last_sync=''){
+function get_collection_table_query($last_sync='', $user_id=''){
 
     global $wpdb;
 
     if(!$last_sync)
         return false;
 
+    $collectionStr = '';
+
+    if($user_id){
+        $collection_ids=get_collection_ids_for_user($user_id);
+        $collection_ids= join(',',$collection_ids);
+        $collectionStr = "AND id in ($collection_ids)";
+    }
+
     $collection_table_query=$wpdb->prepare(
         "SELECT * FROM {$wpdb->base_prefix}content_collection
-                WHERE last_modified_on > '%s'",
+                WHERE last_modified_on > '%s'"
+                .$collectionStr,
         $last_sync
     );
 
@@ -245,17 +258,26 @@ function get_collection_table_query($last_sync=''){
     return $collection_table;
 }
 
-function get_collectionmeta_table_query($last_sync=''){
+function get_collectionmeta_table_query($last_sync='', $user_id=''){
 
     global $wpdb;
 
     if(!$last_sync)
         return false;
 
+    $collectionStr = '';
+
+    if($user_id){
+        $collection_ids=get_collection_ids_for_user($user_id);
+        $collection_ids= join(',',$collection_ids);
+        $collectionStr = "AND cm.collection_id in ($collection_ids)";
+    }
+
     $collectionmeta_table_query=$wpdb->prepare(
         "SELECT cm.* FROM {$wpdb->base_prefix}content_collection c, {$wpdb->base_prefix}collection_meta cm
                 WHERE c.last_modified_on > '%s'
-                AND c.ID = cm.collection_id",
+                AND c.ID = cm.collection_id"
+                .$collectionStr,
         $last_sync
     );
 
@@ -265,6 +287,76 @@ function get_collectionmeta_table_query($last_sync=''){
     );
 
     return $collectionmeta_table;
+}
+
+function get_collection_ids_for_user($user_id){
+
+    global $wpdb;
+
+    if(!user_id)
+        return false;
+
+    $textbook_ids= get_user_meta($user_id, 'textbooks', true);
+
+    $textbook_ids_str= '';
+
+    if($textbook_ids){
+        $textbook_ids_str = join(',',$textbook_ids);
+    }
+
+
+    $collection_table_query = $wpdb->prepare(
+        "SELECT cc.id FROM
+            {$wpdb->base_prefix}content_collection cc,
+            {$wpdb->base_prefix}collection_meta cm
+            WHERE
+                cc.id = cm.collection_id
+                AND cm.meta_key=%s
+                AND cm.meta_value in ($textbook_ids_str)",
+        'textbook'
+    );
+
+    $collection_ids= $wpdb->get_results($collection_table_query,ARRAY_A);
+
+    $collection_ids= __u::flatten($collection_ids);
+
+    return $collection_ids;
+}
+
+function get_content_pieces_for_user($user_id){
+
+    if(!$user_id)
+        return false;
+
+    global $wpdb;
+
+    $content_pieces=array();
+
+    $collection_ids=get_collection_ids_for_user($user_id);
+
+    if($collection_ids){
+        $collection_id_str= join(',',$collection_ids);
+        $collection_content_pieces= $wpdb->prepare(
+            "SELECT meta_value from {$wpdb->base_prefix}collection_meta
+                WHERE meta_key = %s and collection_id in ($collection_id_str)",
+            array("content_pieces")
+        );
+
+        $content_pieces_result = $wpdb->get_results($collection_content_pieces);
+
+        if($content_pieces_result){
+            foreach($content_pieces_result as $content){
+                $content_pieces[]= maybe_unserialize($content->meta_value);
+            }
+
+            $content_pieces= __u::flatten($content_pieces);
+        }
+
+    }
+
+
+    return $content_pieces;
+
 }
 
 function exportMysqlToCsv($table, $sql_query=''){
