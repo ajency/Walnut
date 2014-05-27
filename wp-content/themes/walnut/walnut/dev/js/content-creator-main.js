@@ -32,7 +32,8 @@ require.config({
     select2: 'plugins/select2.min',
     tagsinput: 'plugins/bootstrap-tagsinput.min',
     screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
-    videojs: 'plugins/video'
+    videojs: 'plugins/video',
+    panzer: 'plugins/panzer'
   },
   shim: {
     underscore: {
@@ -66,6 +67,7 @@ require.config({
     select2: ['jquery', 'bootstrap'],
     tagsinput: ['jquery', 'bootstrap'],
     screwbuttons: ['jquery'],
+    panzer: ['jquery'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 });

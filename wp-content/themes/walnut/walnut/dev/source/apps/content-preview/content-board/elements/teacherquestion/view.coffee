@@ -15,16 +15,15 @@ define ['app'],(App)->
 					@$el.find('span').text('Answer')
 					_.delay =>
 						@$el.hide()
-						@$el.after('<span>Answer</span><button type="button" id="show-answer"
-                        class="btn btn-default btn-sm btn-small">View Answer</button>')
-						@$el.nextAll('button#show-answer').on 'click',@_removeButtonAndShowAnswer
+						@$el.after('<div class="teacher-question-row column"><span>Answer</span><button type="button" id="show-answer"
+                        class="btn btn-default btn-sm btn-small">View Answer</button></div>')
+						@$el.next().find('button#show-answer').on 'click',@_removeButtonAndShowAnswer
 					,0
 
 				@$el.attr 'data-position',@model.get 'position'
 				
 			_removeButtonAndShowAnswer:(evt)=>
-				$(evt.target).hide()
-				$(evt.target).prev().hide()
+				$(evt.target).parent().hide()
 				@$el.show()
 				
 
