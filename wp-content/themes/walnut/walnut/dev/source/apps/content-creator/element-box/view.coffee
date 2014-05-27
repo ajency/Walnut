@@ -1,5 +1,5 @@
 define ['app'
-        'text!apps/content-creator/element-box/templates/toolbox.html'], (App,Template)->
+        'text!apps/content-creator/element-box/templates/toolbox.html'], (App, Template)->
     App.module "ContentCreator.ElementBox.Views", (Views, App)->
         class Views.ElementBoxView extends Marionette.ItemView
 
@@ -18,10 +18,10 @@ define ['app'
                 contentType = Marionette.getOption @, 'contentType'
 
                 if contentType is 'teacher_question'
-                    elementSet = ['Row', 'TeacherQuestion', 'Image', 'Text', 'ImageWithText', 'Video']
+                    elementSet = ['Row', 'TeacherQuestion', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio']
                 else
                     elementSet = ['Row', 'Hotspot', 'Mcq', 'Fib', 'BigAnswer', 'Sort', 'Image', 'Text', 'ImageWithText',
-                                  'Video']
+                                  'Video', 'Audio']
 
 
                 _.each @$el.find('li'), (el, ind)->

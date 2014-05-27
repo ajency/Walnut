@@ -45,10 +45,16 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
-        this.layout = this._getContentCreatorLayout(this.contentPieceModel);
-        this.listenTo(this.layout, 'show', (function(_this) {
+        this.layout = this._getContentCreatorLayout();
+        App.execute("when:fetched", this.contentPieceModel, (function(_this) {
           return function() {
-            console.log(_this.saveModelCommand);
+            return _this.show(_this.layout, {
+              loading: true
+            });
+          };
+        })(this));
+        return this.listenTo(this.layout, 'show', (function(_this) {
+          return function() {
             App.execute("show:options:bar", {
               region: _this.layout.optionsBarRegion,
               contentType: _this.contentType,
@@ -57,7 +63,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
             });
             App.execute("show:element:box", {
               region: _this.layout.elementBoxRegion,
-              contentType: _this.contentType
+              contentType: _this.contentPieceModel.get('content_type')
             });
             App.execute("show:content:builder", {
               region: _this.layout.contentBuilderRegion,
@@ -69,7 +75,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
             });
           };
         })(this));
-        return this.show(this.layout);
       };
 
       ContentCreatorController.prototype._getContentCreatorLayout = function() {

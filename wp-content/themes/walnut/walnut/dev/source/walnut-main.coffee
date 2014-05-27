@@ -52,6 +52,7 @@ require.config
         checkbox			: 'plugins/flatui-checkbox'
         holder				: 'plugins/holder'
         videojs             : 'plugins/video'
+        panzer              : 'plugins/panzer'
         unserialize			: 'plugins/unserialize'
         serialize			: 'plugins/serialize'
         selectordie			: 'plugins/selectordie.min'
@@ -103,7 +104,7 @@ require.config
         selectordie		: ['jquery']
         csvparse		: ['jquery']
         json2csvparse   : ['jquery']
-
+        panzer          : ['jquery']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
 

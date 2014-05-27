@@ -33,6 +33,7 @@ define [
   		'checkbox'
   		'screwbuttons'
       'videojs'
+      'panzer'
   		'detect'
   		'unserialize'
   		'serialize'

@@ -57,12 +57,12 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
       LeftNavView.prototype.onShow = function() {
         var elem;
-        console.log(this.collection);
         if ($('.creator').length > 0) {
           $("#main-menu").addClass("mini");
           $(".start").removeClass("active open");
           $(".arrow").removeClass("open");
           $('.page-content').addClass('condensed');
+          $('.header-seperation').hide();
         } else {
           $('.page-content').removeClass('condensed');
         }
