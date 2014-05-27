@@ -36,9 +36,6 @@ define ['marionette'], (Marionette)->
         App.unregister instance, id
 
     App.on "initialize:after", (options) ->
-        Pace.on 'hide', ()->
-            $("#site_main_container").addClass("showAll");
-
         App.startHistory()
         App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
 

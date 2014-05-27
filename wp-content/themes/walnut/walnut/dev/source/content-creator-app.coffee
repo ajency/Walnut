@@ -38,14 +38,6 @@ define ['marionette'], (Marionette)->
         App.unregister instance, id
 
     App.on "initialize:after", (options) ->
-
-        if typeof Pace is 'undefined'
-            $("#site_main_container").addClass("showAll");
-
-        else
-            Pace.on 'hide', ()->
-                $("#site_main_container").addClass("showAll");
-
         App.startHistory()
         App.navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
 
@@ -63,7 +55,7 @@ define ['marionette'], (Marionette)->
                     App.loginRegion.close()
                 else
                     App.vent.trigger "show:login"
-            , 'json'
+            ,'json'
 
     App.vent.on "show:content:builder", ->
         App.execute "show:content:creator",

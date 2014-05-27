@@ -90,7 +90,13 @@ CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
  ?>
 
 </script>
+
 <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+<script>
+     Pace.on( 'hide', function(){
+         $("#site_main_container").addClass("showAll");
+     })
+</script>
  <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/ckeditor/ckeditor.js"></script> 
 <?php if(ENV=='dev') { ?>
 <script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main.js?ver=<?php echo $ver?>" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>

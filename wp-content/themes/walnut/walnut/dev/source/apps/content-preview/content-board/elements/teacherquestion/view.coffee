@@ -15,8 +15,9 @@ define ['app'],(App)->
 					@$el.find('span').text('Answer')
 					_.delay =>
 						@$el.hide()
-						@$el.after('<span>Answer</span><input type="button" id="show-answer" value="Show Answer">')
-						@$el.nextAll('input#show-answer').on 'click',@_removeButtonAndShowAnswer
+						@$el.after('<span>Answer</span><button type="button" id="show-answer"
+                        class="btn btn-default btn-sm btn-small">View Answer</button>')
+						@$el.nextAll('button#show-answer').on 'click',@_removeButtonAndShowAnswer
 					,0
 
 				@$el.attr 'data-position',@model.get 'position'

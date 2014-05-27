@@ -105,6 +105,11 @@
 
         </script>
         <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+        <script>
+            Pace.on( 'hide', function(){
+                $("#site_main_container").addClass("showAll");
+            })
+        </script>
         <?php if (ENV == 'dev') { ?>
             <script type="text/javascript" data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo $ver?>" src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
             <?php } else {
