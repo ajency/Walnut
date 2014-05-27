@@ -55,8 +55,9 @@ define ['app'
                         region: @layout.contentBoardRegion
                         model: @model
 
-            _getContentPreviewLayout: ->
+            _getContentPreviewLayout: =>
                 new ContentPreview.Views.Layout
+                    model: @model
 
         App.commands.setHandler "show:content:preview", (options)->
             new ContentPreview.Controller options
