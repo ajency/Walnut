@@ -104,7 +104,9 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     AuthenticationController.prototype.initialAppLogin = function(server_resp) {
       var CSVZipurl, resp;
       resp = server_resp.blog_details;
-      CSVZipurl = resp.exported_csv_url;
+      CSVZipurl = server_resp.exported_csv_url;
+      console.log("url " + CSVZipurl);
+      alert("url" + CSVZipurl);
       _.setBlogID(resp.blog_id);
       _.setBlogName(resp.blog_name);
       _.downloadSchoolLogo("http://aditya.synapsedu.info/wp-content/uploads/sites/3/2014/05/images.jpg");

@@ -41,4 +41,5 @@ define [
       		'Zip'
       		'zipchk'
       		'FileSaver'
+      		'archive'
 		], ->
