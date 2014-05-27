@@ -74,7 +74,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
         });
         singleModule = this.contentGroupsCollection.get(id);
         singleModule.set({
-          'status': status
+          'status': 'scheduled'
         });
         opts = {
           'changed': 'status',

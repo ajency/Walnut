@@ -71,8 +71,12 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           elem.children('li.open').children('a').children('.arrow').removeClass('open');
           elem.children('li.open').children('a').children('.arrow').removeClass('active');
           elem.children('li.open').children('.sub-menu').slideUp(200);
-          return elem.children('li').removeClass('open');
+          elem.children('li').removeClass('open');
         }
+        return $('#main-menu-toggle').sidr({
+          name: 'main-menu',
+          side: 'left'
+        });
       };
 
       LeftNavView.prototype.clickMenu = function(e) {

@@ -798,22 +798,22 @@ and (orientation : portrait) {
        only screen and (-o-min-device-pixel-ratio: 200/100),
        only screen and (min-device-pixel-ratio: 2.0) {
 		.grid.simple .grid-title .tools a{
-  			background: url('../images/icon/portlet-tray-2x.png');
+  			background: url('/images/icon/portlet-tray-2x.png');
 			background-size: 199px 57px;
 		} 	
 		.tiles .controller a{
 			position:relative;
-			background: url('../images/icon/portlet-tray-2x.png');
+			background: url('/images/icon/portlet-tray-2x.png');
 			background-size: 199px 57px;
 		}
 		.widget-item .controller a{
 			position:relative;
-			background: url('../images/icon/portlet-tray-2x.png');
+			background: url('/images/icon/portlet-tray-2x.png');
 			background-size: 199px 57px;
 		}
 	
 		.iconset{
-		background: url('../images/icon/top-trayx2.png'); 
+		background: url('/images/icon/top-trayx2.png'); 
 		background-size: 394px 29px;
 		}
 		

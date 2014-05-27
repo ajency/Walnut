@@ -66,6 +66,11 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     elem.children('li.open').children('.sub-menu').slideUp(200);
                     elem.children('li').removeClass('open');
 
+                $('#main-menu-toggle').sidr({
+                    name : 'main-menu',
+                    side: 'left'
+                });     
+
 
             clickMenu: (e)->
                 li_target = $(e.target).closest('li').find('a');

@@ -39,6 +39,7 @@ require.config({
     kineticresize: 'plugins/kinetic.plugin.resize',
     checkbox: 'plugins/flatui-checkbox',
     holder: 'plugins/holder',
+    videojs: 'plugins/video',
     unserialize: 'plugins/unserialize',
     serialize: 'plugins/serialize',
     selectordie: 'plugins/selectordie.min',

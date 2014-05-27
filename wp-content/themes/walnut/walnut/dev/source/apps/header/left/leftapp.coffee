@@ -46,6 +46,8 @@ define ['app'
 						$('.scrollup').addClass('to-edge');
 						$('.header-seperation').hide();
 						$('.footer-widget').hide();
+
+			
 					
 				
 

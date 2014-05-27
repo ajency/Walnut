@@ -232,7 +232,8 @@ define(["app", 'backbone'], function(App, Backbone) {
                             duration: meta_value.duration,
                             last_modified_by: meta_value.last_modified_by,
                             published_by: meta_value.published_by,
-                            term_ids: meta_value.term_ids
+                            term_ids: meta_value.term_ids,
+                            instructions: meta_value.instructions
                           };
                         });
                       }

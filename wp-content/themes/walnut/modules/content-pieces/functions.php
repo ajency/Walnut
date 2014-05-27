@@ -495,7 +495,7 @@ function get_single_content_group($id, $division=''){
         $training_logs  = $wpdb->get_results($training_logs_query);
 
         if($training_logs){
-            $data->training_date= $training_logs[0]->date;
+            $data->training_date = $training_logs[0]->date;
             $data->status = 'scheduled';
         }
 

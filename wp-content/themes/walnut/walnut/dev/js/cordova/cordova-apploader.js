@@ -1,1 +1,1 @@
-define(['cordova/app-error-handlers', 'cordova/app-database-storage', 'cordova/app-local-storage', 'cordova/app-functions', 'cordova/app-file-download', 'cordova/app-directory-sdcard', 'cordova/app-content-loader'], function() {});
+define(['cordova/app-error-handlers', 'cordova/app-database-storage', 'cordova/app-local-storage', 'cordova/app-functions', 'cordova/app-file-download', 'cordova/app-directory-sdcard', 'cordova/app-content-loader', 'cordova/entities/app-content-group'], function() {});
