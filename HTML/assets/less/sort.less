@@ -4,6 +4,7 @@
   padding: 5px;
   margin: 5px; 
   box-sizing: border-box;
+  cursor: move;
   transition-property: transform, top, left;
   &.ui-sortable-placeholder {
     visibility: visible!important;
@@ -41,7 +42,7 @@
     .ease;
   }
 
-  p{
+  .sort-option-text{
     margin: 0;
     //margin-left: 32px;
     word-break: break-word;
@@ -50,15 +51,15 @@
     font-size: 22px;
     &:focus{
       outline: none;
-      border-bottom: 2px dashed @preview-grey;
+      //border-bottom: 2px dashed @preview-grey;
     }
   }
 
-  p.placeholder{
+  .sort-option-text.placeholder{
     color: darken(@body-bg, 2%);
     font-size: 18px;
     font-weight: bold;
-    border: 2px dashed @preview-grey;
+    //border: 2px dashed @preview-grey;
     padding-left: 4px;
   }
 }

@@ -9,14 +9,15 @@ define ['app'],(App)->
 			# tagName 	: 'div'
 			template 	: '<span></span>'
 			onShow 	: ->
-				if @model.get('position') is 1
+				if parseInt(@model.get('position')) is 1
 					@$el.find('span').text('Question')
 				else
 					@$el.find('span').text('Answer')
 					_.delay =>
 						@$el.hide()
-						@$el.after('<span>Answer</span><input type="button" id="show-answer" value="Show Answer">')
-						@$el.nextAll('input#show-answer').on 'click',@_removeButtonAndShowAnswer
+						@$el.after('<span>Answer</span><button type="button" id="show-answer"
+                        class="btn btn-default btn-sm btn-small">View Answer</button>')
+						@$el.nextAll('button#show-answer').on 'click',@_removeButtonAndShowAnswer
 					,0
 
 				@$el.attr 'data-position',@model.get 'position'

@@ -2,7 +2,7 @@
   "name": "Walnut",
   "description": "Walnut App",
   "version": "1",
-  "permissions": ["<all_urls>"],
+  "permissions": ["<all_urls>", "storage", "unlimitedStorage"],
   "app": {
     "background": {
       "scripts": ["background.js"]

@@ -208,8 +208,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					data =
 						division_id: model.get('division')
 						collection_id: model.get('id')
-						teacher_id: 1 #teacher id hardcoded as 1 for now
-						date: _.getCurrentDateTime(0)
+						teacher_id: _.getUserID() #teacher id hardcoded as 1 for now
+						date: _.getCurrentDateTime(	0)
 						status: model.get('status')
 
 					if model.get('status') is 'completed' or model.get('status') is 'scheduled'

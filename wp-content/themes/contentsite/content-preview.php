@@ -83,6 +83,11 @@ var THEMEURL = '<?php echo get_template_directory_uri()?>';
 
 </script>
 <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+<script>
+    Pace.on( 'hide', function(){
+        $("#site_main_container").addClass("showAll");
+    })
+</script>
  <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/ckeditor/ckeditor.js"></script>
  
  <?php if(ENV=='dev') { ?>

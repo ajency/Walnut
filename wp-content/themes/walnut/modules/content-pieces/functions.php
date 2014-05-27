@@ -294,12 +294,11 @@ function save_content_group($data = array()) {
     
     $content_data = array(
         'name'              => $data['name'],
-        'term_ids'          => $data['term_ids'],
+        'term_ids'          => maybe_serialize($data['term_ids']),
         'last_modified_on'  => date('y-m-d H:i:s'),
         'last_modified_by'  => get_current_user_id(),
         'duration'          => $duration
     );
-    
 
     if (isset($data['id'])) {
         $content_group = $wpdb->update($wpdb->prefix . 'content_collection', $content_data, array('id' => $data['id']));
@@ -312,16 +311,26 @@ function save_content_group($data = array()) {
     }
     if ($content_group) {
 
-        $meta_data = array(
+        $meta_description = array(
             'collection_id' => $group_id,
             'meta_key' => 'description',
-            'meta_value' => $data['description']
+            'meta_value' => maybe_serialize($data['description'])
         );
 
         if (isset($data['id']))
-            $content_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_data, array('collection_id' => $data['id'], 'meta_key'=>'description'));
+            $content_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_description, array('collection_id' => $data['id'], 'meta_key'=>'description'));
         else
-            $content_meta = $wpdb->insert($wpdb->prefix . 'collection_meta', $meta_data);
+            $content_meta = $wpdb->insert($wpdb->prefix . 'collection_meta', $meta_description);
+
+        $meta_textbook = array(
+            'collection_id' => $group_id,
+            'meta_key' => 'textbook',
+            'meta_value' => $data['term_ids']['textbook']
+        );
+        if (isset($data['id']))
+            $textbook_meta = $wpdb->update($wpdb->prefix . 'collection_meta', $meta_textbook, array('collection_id' => $data['id'], 'meta_key'=>'textbook'));
+        else
+            $textbook_meta = $wpdb->insert($wpdb->prefix . 'collection_meta', $meta_textbook);
     }
 
     return $group_id;
@@ -478,17 +487,38 @@ function get_single_content_group($id, $division=''){
     switch_to_blog($current_blog);
     
     if($division !=''){
-        $training_logs_query = $wpdb->prepare("SELECT * FROM 
+        $training_logs_query = $wpdb->prepare("SELECT date FROM
             {$wpdb->prefix}training_logs WHERE collection_id=%d AND 
                 division_id=%d order by id desc limit 1",
                     $id, $division);
 
-        $training_logs  = $wpdb->get_results($training_logs_query);  
+        $training_logs  = $wpdb->get_results($training_logs_query);
 
-        foreach($training_logs as $logs){
-           $data->status= $logs->status;
-           $data->training_date= $logs->date;
+        if($training_logs){
+            $data->training_date= $training_logs[0]->date;
+            $data->status = 'scheduled';
         }
+
+        $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status FROM
+            {$wpdb->prefix}question_response WHERE collection_id=%d AND
+                division=%d",
+            $id, $division);
+
+        $module_responses  = $wpdb->get_results($check_responses_query);
+        if($module_responses)
+            $data->status='started';
+
+        $response_content_ids=array();
+
+        foreach($module_responses as $response){
+            if($response->status=='completed')
+            $response_content_ids[]= $response->content_piece_id;
+        }
+
+
+        if(__u::difference($data->content_pieces,$response_content_ids) == null)
+            $data->status='completed';
+
     }
     
     return $data;

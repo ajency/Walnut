@@ -24,8 +24,7 @@ define(['app'], function(App) {
         var image, width;
         width = this.$el.width();
         image = this.model.getBestFit(width);
-        this.$el.find('img').attr('src', image.url);
-        return this.trigger("image:size:selected", image.size);
+        return this.$el.find('img').attr('src', image.url);
       };
 
       return ImageView;

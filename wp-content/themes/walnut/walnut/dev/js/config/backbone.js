@@ -145,8 +145,10 @@ define(["backbone"], function(Backbone) {
           data = App.reqres.request("save:" + modelname + ":local", model);
         }
         if (modelname === 'media') {
-          console.log('Media model');
-          console.log(model);
+          data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('id'));
+          data.done(function(d) {
+            return model.set(d);
+          });
         }
       }
       model.trigger("request", model, xhr, options);
