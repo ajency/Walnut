@@ -19,22 +19,29 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     AuthenticationController.prototype.authenticate = function() {
       switch (this.platform) {
         case 'BROWSER':
-          if (this.isOnline) {
-            return this.onlineWebAuth();
-          } else {
-            return this.onConnectionError();
-          }
-          break;
+          return this.browserLogin();
         case 'DEVICE':
-          if (this.isOfflineLoginEnabled()) {
-            return this.offlineMobileAuth();
-          } else {
-            if (this.isOnline) {
-              return this.onlineMobileAuth();
-            } else {
-              return this.onConnectionError();
-            }
-          }
+          return this.deviceLogin();
+      }
+    };
+
+    AuthenticationController.prototype.browserLogin = function() {
+      if (this.isOnline) {
+        return this.onlineWebAuth();
+      } else {
+        return this.onConnectionError();
+      }
+    };
+
+    AuthenticationController.prototype.deviceLogin = function() {
+      if (this.isOfflineLoginEnabled()) {
+        return this.offlineDeviceAuth();
+      } else {
+        if (this.isOnline) {
+          return this.onlineDeviceAuth();
+        } else {
+          return this.onConnectionError();
+        }
       }
     };
 
@@ -42,30 +49,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       return $.post(this.url, {
         data: this.data
       }, this.success, 'json');
-    };
-
-    AuthenticationController.prototype.onConnectionError = function() {
-      var response;
-      response = {
-        error: 'Connection could not be established. Please try again.'
-      };
-      return this.success(response);
-    };
-
-    AuthenticationController.prototype.onSuccessResponse = function() {
-      var response;
-      response = {
-        success: true
-      };
-      return this.success(response);
-    };
-
-    AuthenticationController.prototype.onErrorResponse = function(msg) {
-      var response;
-      response = {
-        error: '' + msg
-      };
-      return this.success(response);
     };
 
     AuthenticationController.prototype.isOfflineLoginEnabled = function() {
@@ -76,15 +59,15 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       }
     };
 
-    AuthenticationController.prototype.onlineMobileAuth = function() {
+    AuthenticationController.prototype.onlineDeviceAuth = function() {
       return $.post(AJAXURL + '?action=get-user-app-profile', {
         data: this.data
       }, (function(_this) {
         return function(resp) {
           console.log('RESP');
           console.log(resp);
-          if (resp.login_details.error) {
-            return _this.onErrorResponse(resp.login_details.error);
+          if (resp.error) {
+            return _this.onErrorResponse(resp.error);
           } else {
             _this.setUserModel();
             _.setUserID(resp.login_details.ID);
@@ -98,7 +81,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       })(this), 'json');
     };
 
-    AuthenticationController.prototype.offlineMobileAuth = function() {
+    AuthenticationController.prototype.offlineDeviceAuth = function() {
       var offlineUser;
       offlineUser = _.getUserDetails(this.data.txtusername);
       return offlineUser.done((function(_this) {
@@ -178,11 +161,35 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       });
     };
 
+    AuthenticationController.prototype.onConnectionError = function() {
+      var response;
+      response = {
+        error: 'Connection could not be established. Please try again.'
+      };
+      return this.success(response);
+    };
+
+    AuthenticationController.prototype.onSuccessResponse = function() {
+      var response;
+      response = {
+        success: true
+      };
+      return this.success(response);
+    };
+
+    AuthenticationController.prototype.onErrorResponse = function(msg) {
+      var response;
+      response = {
+        error: '' + msg
+      };
+      return this.success(response);
+    };
+
     AuthenticationController.prototype.setUserModel = function() {
       var user;
       user = App.request("get:user:model");
       return user.set({
-        'ID': '0'
+        'ID': '' + _.getUserID()
       });
     };
 

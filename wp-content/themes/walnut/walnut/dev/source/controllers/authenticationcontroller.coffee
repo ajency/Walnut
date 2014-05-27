@@ -1,4 +1,5 @@
 define ["marionette","app", "underscore"], (Marionette, App, _) ->
+	
 	#Controls login authentication based on platform
 
 	class AuthenticationController extends Marionette.Controller
@@ -12,68 +13,52 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			@isOnline = _.isOnline()
 
 
-		authenticate:->
+		authenticate :->
 
 			switch @platform
 
 				when 'BROWSER'
-					if @isOnline then @onlineWebAuth()
-					else @onConnectionError()	
+					@browserLogin()	
 
 				when 'DEVICE'
-					if @isOfflineLoginEnabled() then @offlineMobileAuth()
-					
-					else 
-						if @isOnline then @onlineMobileAuth()
-						else @onConnectionError()	
+					@deviceLogin()
+
+		
+		browserLogin : ->
+
+			if @isOnline then @onlineWebAuth() else @onConnectionError()
+
+		
+		deviceLogin : ->
+
+			if @isOfflineLoginEnabled() then @offlineDeviceAuth()
+			else 
+				if @isOnline then @onlineDeviceAuth()
+				else @onConnectionError()
+		
 
 
-		# server login request for website
+		# login for website
 		onlineWebAuth:->
 
-			$.post @url, data: @data, @success, 'json'
+			$.post @url, data: @data, @success, 'json'	
 
-
-		# when network connection not available 
-		onConnectionError:->
-
-			response = 
-				error : 'Connection could not be established. Please try again.'
-			@success response
-
-
-		# success response
-		onSuccessResponse:->
-
-			response = 
-				success : true
-			@success response
-
-
-		# error response
-		onErrorResponse:(msg)->
-
-			response = 
-				error : ''+msg
-			@success response	
-
-
-		# check if offline login is enabled
+		
 		isOfflineLoginEnabled:->
 
 			if($('#offline').is(':checked')) then true else false
 
-
-		# server login request for mobile
-		onlineMobileAuth:->
+		
+		# login for device
+		onlineDeviceAuth:->
 
 			$.post AJAXURL + '?action=get-user-app-profile', 
 				   data: @data,
 				   (resp)=>
 				   		console.log 'RESP'
 				   		console.log resp
-				   		if resp.login_details.error
-				   			@onErrorResponse(resp.login_details.error)	
+				   		if resp.error
+				   			@onErrorResponse(resp.error)	
 
 				   		else
 				   			# set user model for back button navigation
@@ -90,8 +75,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				   	'json'	
 
 		
-		# offline login for mobile
-		offlineMobileAuth:->
+		# offline login for device
+		offlineDeviceAuth : ->
 
 			offlineUser = _.getUserDetails(@data.txtusername)
 
@@ -112,7 +97,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 
 		# when the app is installed for the first time
-		initialAppLogin:(server_resp)->
+		initialAppLogin : (server_resp)->
 
 			resp = server_resp.blog_details
 
@@ -130,7 +115,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		
 		# compare users blog id to that of the locally saved blog id
-		authenticateUserBlogId:(server_resp)->
+		authenticateUserBlogId : (server_resp)->
 
 			resp = server_resp.blog_details
 
@@ -142,7 +127,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 
 		# save new user or update existing user 
-		saveUpdateUserDetails:(resp)->
+		saveUpdateUserDetails : (resp)->
 
 			offlineUser = _.getUserDetails(@data.txtusername)
 			
@@ -151,7 +136,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				else @inputNewUser(resp)
 		
 		
-		inputNewUser:(response)->
+		inputNewUser : (response)->
 
 			resp = response.login_details
 
@@ -165,7 +150,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			)
 
 		
-		updateExistingUser:(response)->
+		updateExistingUser : (response)->
 
 			resp = response.login_details
 
@@ -178,12 +163,33 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				console.log 'SUCCESS: Updated user details'
 			)
 
+		
+		onConnectionError :->
 
-		# set user model
-		setUserModel: ->
-			# user model is set to dummy data for back button navigation
+			response = 
+				error : 'Connection could not be established. Please try again.'
+			@success response
+
+		
+		onSuccessResponse :->
+
+			response = 
+				success : true
+			@success response
+
+		
+		onErrorResponse :(msg)->
+
+			response = 
+				error : ''+msg
+			@success response	
+
+		
+		# user model set for back button navigation
+		setUserModel : ->
+			
 			user = App.request "get:user:model"
-			user.set 'ID' : '0'
+			user.set 'ID' : ''+_.getUserID()
 
 
  	# request handler

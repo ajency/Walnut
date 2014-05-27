@@ -63,7 +63,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								# userid hardcoded as 1
 								tx.executeSql("SELECT meta_value FROM wp_usermeta 
 									WHERE user_id=? AND meta_key=?"
-									, [1, 'classes'], onSuccess(d), _.deferredErrorHandler(d))
+									, [_.getUserID(), 'classes'], onSuccess(d), _.deferredErrorHandler(d))
 
 					onSuccess = (d)->
 						(tx, data)->

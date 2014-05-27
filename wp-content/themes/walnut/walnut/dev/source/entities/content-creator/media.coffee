@@ -1,4 +1,4 @@
-define ["app", 'backbone'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 		App.module "Entities.Media", (Media, App, Backbone, Marionette, $, _)->
 
@@ -53,6 +53,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					posts_per_page  : 40
 				
 				model : Media.MediaModel
+				name : 'media'
 
 				parse:(resp)->
 					return resp.data if resp.code is 'OK'
@@ -104,6 +105,75 @@ define ["app", 'backbone'], (App, Backbone) ->
 					media = new Media.MediaModel data
 					mediaCollection.add media
 					media
+				
+				
+				# get media from local database
+				getMediaByIdFromLocal : (id)->
+					console.log 'ID: '+id	
+
+					# get meta_value from wp_postmeta having meta_key='_wp_attachment_metadata'
+					getAttachmentData =->
+
+						runQuery = ->
+							$.Deferred (d)->
+								_.db.transaction (tx)->
+									tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_key=? 
+										AND post_id=?", ['_wp_attachment_metadata', id]
+										, success(d), _.deferredErrorHandler(d))
+
+						success = (d)->
+							(tx, data)->
+								meta_value = ''
+								if data.rows.length isnt 0
+									meta_value = unserialize(data.rows.item(0)['meta_value'])
+								
+								d.resolve(meta_value)
+
+						$.when(runQuery()).done ->
+							console.log 'getAttachmentData transaction completed'
+						.fail _.failureHandler
+						
+
+					runMainQuery = ->
+						$.Deferred (d)->
+							_.db.transaction (tx)->
+								tx.executeSql("SELECT * FROM wp_posts WHERE id=?"
+									, [id]
+									, onSuccess(d), _.deferredErrorHandler(d))
+
+					onSuccess = (d)->
+						(tx, data)->
+
+							row = data.rows.item(0)
+
+							attacmentData = getAttachmentData()
+							attacmentData.done (data)->
+
+								url = row['guid']
+								mediaUrl = _.getSynapseAssetsDirectoryPath()+url.substr(url.indexOf("uploads/"))
+
+								_.each data.sizes, (size)->
+									size.url = mediaUrl
+								
+								result = 
+									id: row['ID']
+									filename: data.file
+									url: mediaUrl
+									mime: row['post_mime_type']
+									icon: ''
+									sizes: data.sizes
+									height: data.height
+									width: data.width
+
+								d.resolve(result)	
+
+					
+					$.when(runMainQuery()).done ->
+						console.log 'getMediaByIdFromLocal transaction completed'
+					.fail _.failureHandler
+
+
+
 
 
 			#REQUEST HANDLERS
@@ -118,3 +188,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.commands.setHandler "new:media:added",(modelData)->
 				API.createNewMedia modelData
+
+			#Request handler to get media from local database
+			App.reqres.setHandler "get:media:by:id:local",(id)->
+				API.getMediaByIdFromLocal id	

@@ -9,7 +9,10 @@ define ['app'],(App)->
 			# tagName 	: 'div'
 			template 	: '<span></span>'
 			onShow 	: ->
-				if @model.get('position') is 1
+				position = @model.get('position')
+				position = parseInt @model.get('position') if _.platform() is 'DEVICE'
+
+				if position is 1
 					@$el.find('span').text('Question')
 				else
 					@$el.find('span').text('Answer')
