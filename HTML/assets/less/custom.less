@@ -75,6 +75,25 @@ body{
 	}
 }
 
+#walnutProfile{
+	.user{
+		font-size: 20px;
+		color: @dash-grey;
+		padding: 20px 20px 5px;
+	}
+	.appLogout{
+		padding: 5px 22px;
+		width: 100%;
+		display: block;
+		color: @color-white;
+		border-top: 1px solid lighten(@3-grey, 5%);
+		border-bottom: 1px solid lighten(@3-grey, 5%);
+		&:hover{
+			color: lighten(@dash-grey, 5%);
+		}
+	}
+}
+
 tbody.rowlink{
 	td{
 		cursor: pointer;
@@ -180,4 +199,9 @@ textarea.error, .select2-choice.error {
 	background-position: left center;
 }
 
-
+/*App Highlight Color*/
+* {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important; 
+    -webkit-focus-ring-color: rgba(255, 255, 255, 0) !important; 
+    outline: none !important;
+} 
