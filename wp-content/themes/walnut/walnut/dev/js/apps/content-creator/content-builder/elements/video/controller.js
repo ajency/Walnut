@@ -15,7 +15,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.initialize = function(options) {
         _.defaults(options.modelData, {
           element: 'Video',
-          image_id: 0,
+          video_id: 0,
           height: 0,
           width: 0,
           videoUrl: 'http://video-js.zencoder.com/oceans-clip.mp4'

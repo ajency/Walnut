@@ -31,25 +31,18 @@ define ['app'
 
                     @show @view, (loading: true)
 
-                @listenTo @view, "save:training:status": (id, status)=>
-                    @_saveTrainingStatus id, status
-
-                    if status is 'started' or 'resumed'
-                        currentRoute = App.getCurrentRoute()
-                        App.navigate currentRoute + "/module/" + id, true
-
                 @listenTo @view, "schedule:training": (id)=>
                     @singleModule = @contentGroupsCollection.get id
                     modalview = @_showScheduleModal @singleModule
                     @show modalview, region: App.dialogRegion
 
-                    @listenTo modalview, "save:scheduled:date": (id, date)=>
-                        date = moment(date).format("YYYY-MM-DD")
-                        @singleModule.set ('training_date': date)
-                        @_saveTrainingStatus id, 'scheduled'
+                    @listenTo modalview, "save:scheduled:date", @_saveTrainingStatus
 
 
-            _saveTrainingStatus: (id, status)=>
+            _saveTrainingStatus: (id, date)=>
+                date = moment(date).format("YYYY-MM-DD")
+                @singleModule.set ('training_date': date)
+
                 singleModule = @contentGroupsCollection.get id
 
                 singleModule.set ('status': status)

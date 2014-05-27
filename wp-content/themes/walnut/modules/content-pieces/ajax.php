@@ -33,8 +33,8 @@ function ajax_create_content_group() {
 
     $data = array(
         'name' => $_POST['name'],
-        'description' => maybe_serialize($_POST['description']),
-        'term_ids' => maybe_serialize($_POST['term_ids']),
+        'description' => $_POST['description'],
+        'term_ids' => $_POST['term_ids'],
         'duration' => $_POST['duration'],
         'minshours' => $_POST['minshours']
     );
@@ -54,8 +54,10 @@ function ajax_update_content_group() {
         $data = array(
             'id' => $_POST['id'],
             'name' => $_POST['name'],
-            'description' => maybe_serialize($_POST['description']),
-            'term_ids' => maybe_serialize($_POST['term_ids'])
+            'description' => $_POST['description'],
+            'term_ids' => $_POST['term_ids'],
+            'duration' => $_POST['duration'],
+            'minshours' => $_POST['minshours']
         );
         $content_group = save_content_group($data);
     }
@@ -69,13 +71,15 @@ function ajax_update_content_group() {
     }
     
     if (isset($_POST['changed']) && ($_POST['changed']=='status')) {
-        $data = array(
-          'id' => $_POST['id'],
-          'status' => $_POST['status'],
-          'division' => $_POST['division'],
-          'training_date' => $_POST['training_date']
-        );
-        $update_training_module_status=update_training_module_status($data);
+        if($_POST['status'] == 'scheduled'){
+            $data = array(
+              'id' => $_POST['id'],
+              'status' => $_POST['status'],
+              'division' => $_POST['division'],
+              'training_date' => $_POST['training_date']
+            );
+            $update_training_module_status=update_training_module_status($data);
+        }
     }
     
     wp_send_json(array('code' => 'OK', 'data' => array('id'=> $_POST['id'])));

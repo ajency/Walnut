@@ -67,20 +67,20 @@ define(['app'], function(App) {
 
       McqOptionView.prototype.tagName = 'div';
 
-      McqOptionView.prototype.template = '<span class="optionNo">{{optionNo}}</span><input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no"> <p class="mcq-option-text"></p>';
+      McqOptionView.prototype.template = '<span class="optionNo">{{optionNo}}</span><input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no"> <div class="mcq-option-text"></div>';
 
       McqOptionView.prototype.events = {
         'click a': function(e) {
           return e.preventDefault();
         },
-        'blur p': '_onBlur',
+        'blur .mcq-option-text': '_onBlur',
         'change input:checkbox': '_onClickOfCheckbox'
       };
 
       McqOptionView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-option-' + this.model.get('optionNo'));
-        this.$el.find('p').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
-        this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('p').attr('id')));
+        this.$el.find('.mcq-option-text').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
+        this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('.mcq-option-text').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
         _.delay((function(_this) {
           return function() {
@@ -103,7 +103,7 @@ define(['app'], function(App) {
       };
 
       McqOptionView.prototype._onBlur = function() {
-        return this.model.set('text', this.$el.find('p').html());
+        return this.model.set('text', this.$el.find('.mcq-option-text').html());
       };
 
       McqOptionView.prototype._onClickOfCheckbox = function(evt) {

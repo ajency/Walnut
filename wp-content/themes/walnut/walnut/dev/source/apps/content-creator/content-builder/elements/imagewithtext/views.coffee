@@ -15,7 +15,7 @@ define ['app'],(App)->
 						{{#placeholder}}
 							<div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Image</div>
 						{{/placeholder}}
-						<p class="editor"></p>
+						<div class="editor"></div>
 						<div class="clearfix"></div>'
 
 			# override serializeData to set holder property for the view
@@ -43,7 +43,7 @@ define ['app'],(App)->
 							#e.stopPropagation()
 							@trigger "show:media:manager"
 
-				'blur p.editor' : (e)-> @trigger "text:element:blur", @$el.children('p.editor').html()
+				'blur .editor' : (e)-> @trigger "text:element:blur", @$el.children('.editor').html()
 
 			onStyleUpadted:(newStyle, prevStyle)->
 				@$el.removeClass prevStyle
@@ -61,8 +61,8 @@ define ['app'],(App)->
 			# reloading placeholder image again
 			onShow:->
 				#run ckeditor
-				@$el.children('p.editor').attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
-				@editor = CKEDITOR.inline document.getElementById @$el.children('p.editor').attr 'id'
+				@$el.children('.editor').attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
+				@editor = CKEDITOR.inline document.getElementById @$el.children('.editor').attr 'id'
 				content = Marionette.getOption(this, 'templateHelpers').content
 				@editor.setData _.stripslashes content
 

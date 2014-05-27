@@ -18,20 +18,15 @@ define(['app'], function(App) {
       RowView.prototype.template = '<span></span>';
 
       RowView.prototype.onShow = function() {
-        var position;
-        position = this.model.get('position');
-        if (_.platform() === 'DEVICE') {
-          position = parseInt(this.model.get('position'));
-        }
-        if (position === 1) {
+        if (parseInt(this.model.get('position')) === 1) {
           this.$el.find('span').text('Question');
         } else {
           this.$el.find('span').text('Answer');
           _.delay((function(_this) {
             return function() {
               _this.$el.hide();
-              _this.$el.after('<span>Answer</span><input type="button" id="show-answer" value="Show Answer">');
-              return _this.$el.nextAll('input#show-answer').on('click', _this._removeButtonAndShowAnswer);
+              _this.$el.after('<span>Answer</span><button type="button" id="show-answer" class="btn btn-default btn-sm btn-small">View Answer</button>');
+              return _this.$el.nextAll('button#show-answer').on('click', _this._removeButtonAndShowAnswer);
             };
           })(this), 0);
         }

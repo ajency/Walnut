@@ -7,7 +7,7 @@ define ['app'],(App)->
 				className : 'sort-option'
 
 				template : '<input type="hidden" id="optionNo" value="{{optionNo}}">							
-							<p class="sort-option-text"></p>'
+							<div class="sort-option-text"></div>'
 
 				# avoid and anchor tag click events
 				# listen to blur event for the text element so that we can save the new edited markup
@@ -15,7 +15,7 @@ define ['app'],(App)->
 				# current markupup as argument
 				events:
 					'click a'	: (e)-> e.preventDefault()
-					'blur p'	: -> @model.set 'text', @$el.find('p').html()
+					'blur .sort-option-text'	: -> @model.set 'text', @$el.find('.sort-option-text').html()
 								# @trigger "text:element:blur"
 
 
@@ -26,8 +26,8 @@ define ['app'],(App)->
 				# we can destroy it on close of element
 				onShow:->
 					@$el.attr 'id', 'sort-option-'+@model.get 'optionNo'
-					@$el.find('p').attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
-					@editor = CKEDITOR.inline document.getElementById @$el.find('p').attr 'id'
+					@$el.find('.sort-option-text').attr('contenteditable','true').attr 'id', _.uniqueId 'text-'
+					@editor = CKEDITOR.inline document.getElementById @$el.find('.sort-option-text').attr 'id'
 					@editor.setData _.stripslashes @model.get 'text'
 
 					# wait for CKEditor to be loaded
@@ -98,7 +98,7 @@ define ['app'],(App)->
 			_enableSorting:->
 					# on mouse down on the text area remove sortable so as to enable typing
 						# @$el.sortable('destroy') if @$el.hasClass 'ui-sortable'
-					@$el.find('p').on 'mousedown',(evt)=>
+					@$el.find('.sort-option-text').on 'mousedown',(evt)=>
 						evt.stopPropagation()
 
 					# on mousedown of th option make it sortable if not already is

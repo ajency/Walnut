@@ -34,9 +34,6 @@ function update_question_response($data){
     else
         $data_response='';
 
-    if($status!='paused')
-        $status='completed';
-
     $update_data= array(
         'question_response'     => $data_response,
         'time_taken'            => $time_taken,
