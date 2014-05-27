@@ -4,6 +4,4 @@ define ['config/marionette'
     	'config/underscore'
 		'config/jquery'
 		'config/middle-layer'
-		'config/app-storage'
-		'config/app-functions'
 		], ->

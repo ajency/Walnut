@@ -21,10 +21,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
         saveModelCommand = options.saveModelCommand, this.contentPieceModel = options.contentPieceModel;
         this.view = this._getOptionsBarView(this.contentPieceModel);
         this.textbooksCollection = App.request("get:textbooks");
-        this.authorsCollection = App.request("get:user:collection", {
-          'role': 'content-creator'
-        });
-        App.execute("when:fetched", [this.textbooksCollection, this.authorsCollection, this.contentPieceModel], this.showView);
+        App.execute("when:fetched", [this.textbooksCollection, this.contentPieceModel], this.showView);
         saveModelCommand.setHandler("save:model:data", (function(_this) {
           return function() {
             return _this.view.triggerMethod("save:question:settings");
@@ -46,17 +43,17 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
           entities: [this.textbooksCollection]
         });
         term_ids = this.contentPieceModel.get('term_ids');
-        if (term_ids != null) {
+        if (term_ids) {
           textbook_id = term_ids['textbook'];
-        }
-        if (term_ids['chapter'] != null) {
-          chapter_id = term_ids['chapter'];
-        }
-        if (textbook_id != null) {
-          this._fetchChapters(textbook_id, chapter_id);
-        }
-        if (chapter_id != null) {
-          this._fetchSections(chapter_id);
+          if (term_ids['chapter'] != null) {
+            chapter_id = term_ids['chapter'];
+          }
+          if (textbook_id != null) {
+            this._fetchChapters(textbook_id, chapter_id);
+          }
+          if (chapter_id != null) {
+            this._fetchSections(chapter_id);
+          }
         }
         this.listenTo(this.view, "fetch:chapters", this._fetchChapters);
         return this.listenTo(this.view, "fetch:sections:subsections", this._fetchSections);
@@ -119,19 +116,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
                   return textbooks.push(data);
                 });
                 return textbooks;
-              };
-            })(this),
-            authorsNames: (function(_this) {
-              return function() {
-                var authors;
-                authors = [];
-                _.each(_this.authorsCollection.models, function(el, ind) {
-                  return authors.push({
-                    'name': el.get('display_name'),
-                    'ID': el.get('ID')
-                  });
-                });
-                return authors;
               };
             })(this)
           }

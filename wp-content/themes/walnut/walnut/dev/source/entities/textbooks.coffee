@@ -114,24 +114,32 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							for i in [0..data.rows.length-1] by 1
 
 								row = data.rows.item(i)
+
+								do(row, i)->
+									textbookOptions = _.getTextbookOptions(row['term_id'])
+									textbookOptions.done (options)->
 								
-								classes = subjects = ''
-								classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
-								subjects = unserialize(row["tags"]) if row["tags"] isnt ''
-								
-								result[i] = 
-									term_id: row["term_id"]
-									name: row["name"]
-									slug: row["slug"]
-									term_group: row["term_group"]
-									term_order: row["term_order"]
-									term_taxonomy_id: row["term_taxonomy_id"]
-									taxonomy: row["taxonomy"]
-									description: row["description"]
-									parent: row["parent"]
-									count: row["count"]
-									classes: classes
-									subjects: subjects
+										classes = subjects = ''
+										classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
+										subjects = unserialize(row["tags"]) if row["tags"] isnt ''
+										
+										result[i] = 
+											term_id: row["term_id"]
+											name: row["name"]
+											slug: row["slug"]
+											term_group: row["term_group"]
+											term_order: row["term_order"]
+											term_taxonomy_id: row["term_taxonomy_id"]
+											taxonomy: row["taxonomy"]
+											description: row["description"]
+											parent: row["parent"]
+											count: row["count"]
+											classes: classes
+											subjects: subjects
+											author: options.author
+											thumbnail: options.attachmenturl
+											cover_pic: options.attachmenturl
+
 		
 							d.resolve(result)
 
@@ -211,28 +219,35 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								row = data.rows.item(i)
 								
 								# TODO: break it up into small function
-								do (tx, row ,i)->
+								do (row ,i)->
 									modulesCount = getModulesCount(row['textbook_id'])
 									modulesCount.done (modules_count)->
-									
-										classes = subjects = ''
-										classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
-										subjects = unserialize(row["tags"]) if row["tags"] isnt ''
 
-										result[i] = 
-											term_id: row["term_id"]
-											name: row["name"]
-											slug: row["slug"]
-											term_group: row["term_group"]
-											term_order: row["term_order"]
-											term_taxonomy_id: row["term_taxonomy_id"]
-											taxonomy: row["taxonomy"]
-											description: row["description"]
-											parent: row["parent"]
-											count: row["count"]
-											classes: classes
-											subjects: subjects
-											modules_count: modules_count
+										do(row, i, modules_count)->
+											textbookOptions = _.getTextbookOptions(row['term_id'])
+											textbookOptions.done (options)->
+									
+												classes = subjects = ''
+												classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
+												subjects = unserialize(row["tags"]) if row["tags"] isnt ''
+
+												result[i] = 
+													term_id: row["term_id"]
+													name: row["name"]
+													slug: row["slug"]
+													term_group: row["term_group"]
+													term_order: row["term_order"]
+													term_taxonomy_id: row["term_taxonomy_id"]
+													taxonomy: row["taxonomy"]
+													description: row["description"]
+													parent: row["parent"]
+													count: row["count"]
+													classes: classes
+													subjects: subjects
+													modules_count: modules_count
+													author: options.author
+													thumbnail: options.attachmenturl
+													cover_pic: options.attachmenturl
 
 
 							d.resolve(result)

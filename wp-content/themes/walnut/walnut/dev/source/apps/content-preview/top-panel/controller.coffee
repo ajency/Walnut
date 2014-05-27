@@ -15,22 +15,24 @@ define ['app'
 
                 @durationInSeconds= @model.get('duration')*60
 
+                textbookID= @model.get('term_ids').textbook
+                @textbookModel= App.request "get:textbook:by:id",textbookID
 
                 @view = @_showView @model,@questionResponseModel
 
-                App.execute "when:fetched", @textbookNames, =>
+                App.execute "when:fetched", [@textbookNames, @textbookModel], =>
                     @show @view, (loading: true)
 
+                if @display_mode is 'class_mode'
+                    @timerObject.setHandler "get:elapsed:time", ()=>
+                        timerTime= $ @view.el
+                        .find '.cpTimer'
+                            .TimeCircles()
+                            .getTime()
 
-                @timerObject.setHandler "get:elapsed:time", ()=>
-                    timerTime= $ @view.el
-                    .find '.cpTimer'
-                        .TimeCircles()
-                        .getTime()
+                        timeElapsed = @durationInSeconds - timerTime
 
-                    timeElapsed = @durationInSeconds - timerTime
-
-                    timeElapsed
+                        timeElapsed
 
             getResults:=>
                 correct_answer= 'No One'
@@ -63,14 +65,19 @@ define ['app'
                         timeLeftOrElapsed:=>
                             timeTaken=0
 
-                            responseTime= questionResponseModel.get 'time_taken'
+                            responseTime= questionResponseModel.get('time_taken') if questionResponseModel
 
-                            timeTaken= responseTime if responseTime isnt 'NaN'
+                            if responseTime and responseTime isnt 'NaN'
+                                timeTaken= responseTime
 
                             timer= @durationInSeconds - timeTaken
 
                         getClass: =>
-                                CLASS_LABEL[@classID]
+                            classesArray=[]
+                            classes= @textbookModel.get 'classes'
+                            classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
+
+                            classesArray.join()
 
                         getTextbookName: =>
                             textbook = @textbookNames.get terms.textbook
@@ -106,7 +113,7 @@ define ['app'
                                 subSectionString = subsectionNames.join()
 
                         getCompletedSummary:=>
-                            if questionResponseModel.get("status") is 'completed'
+                            if questionResponseModel and questionResponseModel.get("status") is 'completed'
 
                                 time_taken_in_mins= parseInt questionResponseModel.get("time_taken") / 60
                                 correct_answer= @getResults()

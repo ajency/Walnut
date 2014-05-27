@@ -17,7 +17,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       ContentSelectionController.prototype.initialize = function(opts) {
         var tableConfig, view;
         this.textbooksCollection = App.request("get:textbooks");
-        this.contentPiecesCollection = App.request("get:content:pieces");
+        this.contentPiecesCollection = App.request("get:content:pieces", {
+          content_type: ['teacher_question', 'content_piece']
+        });
         this.model = opts.model;
         this.contentGroupCollection = App.request("get:content:pieces:of:group", this.model);
         tableConfig = {
@@ -208,7 +210,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         if (tableData.pagination) {
           $("#dataContentTable").trigger("updateCache");
           this.$el.find('#pager').remove();
-          pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option selected="selected" value="5">5</option> <option value="10">10</option> <option value="20">20</option> <option value="30">30</option> <option value="40">40</option> </select> </div>';
+          pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option selected value="25">25</option> <option value="50">50</option> <option value="100">100</option> </select> </div>';
           this.$el.find('#dataContentTable').after(pagerDiv);
           pagerOptions = {
             totalRows: _.size(dataCollection),
@@ -240,7 +242,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         filter_ids = _.compact(filter_ids);
         content_type = this.$el.find('#content-type-filter').val();
         filtered_models = this.collection.models;
-        if (content_type != null) {
+        if (content_type !== '') {
           filtered_models = this.collection.where({
             'content_type': content_type
           });
@@ -251,7 +253,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               var filtered_item, term_ids;
               filtered_item = '';
               term_ids = _.flatten(item.get('term_ids'));
-              if (_.size(_.intersection(term_ids, filter_ids)) > 0) {
+              if (_.size(_.intersection(term_ids, filter_ids)) === _.size(filter_ids)) {
                 filtered_item = item;
               }
               return filtered_item;
@@ -277,50 +279,72 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       DataContentTableView.prototype.changeTextbooks = function(e) {
-        this.$el.find('#chapters-filter, #sections-filter, #subsections-filter').html('<option>select chapter first</option>');
+        this.$el.find('#chapters-filter, #sections-filter, #subsections-filter').select2('data', '');
         return this.trigger("fetch:chapters", $(e.target).val());
       };
 
       DataContentTableView.prototype.onFetchChaptersComplete = function(chapters) {
         if (_.size(chapters) > 0) {
-          this.$el.find('#chapters-filter').html('<option>--select chapter--</option>');
+          $('#chapters-filter').select2('data', {
+            'text': 'Select Chapter'
+          });
           return _.each(chapters.models, (function(_this) {
             return function(chap, index) {
               return _this.$el.find('#chapters-filter').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
             };
           })(this));
         } else {
-          this.$el.find('#chapters-filter').html('<option>No Chapters available</option>');
-          this.$el.find('#sections-filter').html('<option>No Sections available</option>');
-          return this.$el.find('#subsections-filter').html('<option>No SubSections available</option>');
+          this.$el.find('#chapters-filter,#sections-filter,#subsections-filter').html('');
+          this.$el.find('#chapters-filter').select2('data', {
+            'text': 'No chapters'
+          });
+          this.$el.find('#sections-filter').select2('data', {
+            'text': 'No Sections'
+          });
+          return this.$el.find('#subsections-filter').select2('data', {
+            'text': 'No Subsections'
+          });
         }
       };
 
       DataContentTableView.prototype.onFetchSubsectionsComplete = function(allsections) {
         if (_.size(allsections) > 0) {
           if (_.size(allsections.sections) > 0) {
-            this.$el.find('#sections-filter').html('<option>--select--</option>');
+            $('#sections-filter').select2('data', {
+              'text': 'Select Section'
+            });
             _.each(allsections.sections, (function(_this) {
               return function(section, index) {
                 return _this.$el.find('#sections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
               };
             })(this));
           } else {
-            this.$el.find('#sections-filter').html('<option>No Sections available</option>');
+            $('#sections-filter').select2('data', {
+              'text': 'No Sections'
+            }).html('');
           }
           if (_.size(allsections.subsections) > 0) {
-            this.$el.find('#subsections-filter').html('<option>--select--</option>');
+            $('#subsections-filter').select2('data', {
+              'text': 'Select SubSection'
+            });
             return _.each(allsections.subsections, (function(_this) {
               return function(section, index) {
                 return _this.$el.find('#subsections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
               };
             })(this));
           } else {
-            return this.$el.find('#subsections-filter').html('<option>No Sub Sections available</option>');
+            return $('#subsections-filter').select2('data', {
+              'text': 'No Subsections'
+            }).html('');
           }
         } else {
-          this.$el.find('#sections-filter').html('<option>No Sections available</option>');
-          return this.$el.find('#subsections-filter').html('<option>No Sub Sections available</option>');
+          $('#sections-filter,#subsections-filter').html('');
+          $('#sections-filter').select2('data', {
+            'text': 'No Sections'
+          });
+          return $('#subsections-filter').select2('data', {
+            'text': 'No Subsections'
+          });
         }
       };
 

@@ -51,7 +51,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return ChooseContentTypeView.__super__.constructor.apply(this, arguments);
       }
 
-      ChooseContentTypeView.prototype.template = '<div class="col-sm-4"> <div class="tiles white text-center"> <a class="heading p-t-40 p-b-40" href="#create-content/teacher_question"> Teacher Question </a> </div> </div> <div class="col-sm-4"> <div class="tiles white text-center"> <a class="heading p-t-40 p-b-40" href="#create-content/student_question"> Student Question </a> </div> </div> <div class="col-sm-4"> <div class="tiles white text-center"> <a class="heading p-t-40 p-b-40" href="#create-content/content"> Content </a> </div> </div> </div>';
+      ChooseContentTypeView.prototype.template = '<div class="col-sm-4"> <div class="tiles white text-center"> <a class="heading p-t-40 p-b-40" href="#create-content/teacher_question"> Teacher Question </a> </div> </div> <div class="col-sm-4"> <div class="tiles white text-center"> <a class="heading p-t-40 p-b-40" href="#create-content/student_question"> Student Question </a> </div> </div> <div class="col-sm-4"> <div class="tiles white text-center"> <a class="heading p-t-40 p-b-40" href="#create-content/content_piece"> Content </a> </div> </div> </div>';
 
       ChooseContentTypeView.prototype.className = 'row creator';
 

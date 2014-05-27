@@ -27,7 +27,7 @@ define ['app'
                 App.headerRegion.close()
                 App.breadcrumbRegion.close()
 
-                App.execute "when:fetched", questionResponseCollection, =>
+                App.execute "when:fetched", [questionResponseCollection, contentPiece], =>
                     #checking if model exists in collection. if so, replacing the empty model
                     @_getOrCreateModel contentPiece.get 'ID'
 

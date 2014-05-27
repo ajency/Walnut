@@ -18,7 +18,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-cr
 
       ContentCreatorRouter.prototype.appRoutes = {
         '': 'chooseContentType',
-        'create-content/:contentType': 'showContentCreator'
+        'create-content/:contentType': 'showContentCreator',
+        'edit-content/:contentID': 'editContent'
       };
 
       Controller = {
@@ -31,6 +32,12 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-cr
           return new ContentCreator.Controller.ContentCreatorController({
             region: App.mainContentRegion,
             contentType: contentType
+          });
+        },
+        editContent: function(contentID) {
+          return new ContentCreator.Controller.ContentCreatorController({
+            region: App.mainContentRegion,
+            contentID: contentID
           });
         }
       };

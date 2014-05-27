@@ -84,10 +84,11 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         if (_.platform() === "BROWSER") {
           return $('#class, #div, #class-training').select2();
         } else {
-          return $('#class, #div, #class-training').selectOrDie({
+          $('#class, #div, #class-training').selectOrDie({
             customClass: "custom",
             customID: "custom"
           });
+          return _.checkSynapseAssetsDirectory();
         }
       };
 

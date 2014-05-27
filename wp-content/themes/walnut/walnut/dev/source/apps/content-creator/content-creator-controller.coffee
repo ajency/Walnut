@@ -10,9 +10,12 @@ define ['app'
         class Controller.ContentCreatorController extends RegionController
 
             initialize: (options)->
-                {@contentType}= options
+                {@contentType, contentID}= options
 
-                @contentPieceModel = App.request "get:page:json"
+                if contentID
+                    @contentPieceModel = App.request "get:page:json", contentID
+                else
+                    @contentPieceModel = App.request "get:page:json"
 
                 App.execute "when:fetched", @contentPieceModel, =>
                     if not @contentPieceModel.get 'ID'

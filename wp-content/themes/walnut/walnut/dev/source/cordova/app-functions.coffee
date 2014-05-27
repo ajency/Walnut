@@ -2,53 +2,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	# mixin to add additional functionality underscore
 	_.mixin
-
-		#Deferred error handler
-		deferredErrorHandler : (d)->
-			
-			(tx, error)->
-				d.reject error
-
-		#Failure handler
-		failureHandler : (error)->
-
-			console.log 'ERROR: '+error.message
-
-		#Database transaction error handler
-		transactionErrorHandler : (error)->
-
-			console.log 'ERROR: '+error.message
-
-		#File error handler
-		fileErrorHandler : (error)->
-
-			console.log 'FILE ERROR: '+error.code
-
-		#File system error handler
-		fileSystemErrorHandler : (evt)->
-
-			console.log 'FILE SYSTEM ERROR: '+evt.target.error.code
-
-		#File transfer error handler
-		fileTransferErrorHandler : (error)->
-
-			switch error.code
-				when 1 
-					err_msg = 'FILE NOT FOUND'
-				when 2
-					err_msg = 'INVALID URL'	
-				when 3
-					err_msg = 'CONNECTION'
-				when 4
-					err_msg = 'ABORT'
-				else
-					err_msg = 'UNKNOWN'	
-
-			console.log 'ERROR: '+err_msg
-			console.log 'ERROR SOURCE: '+error.source
-			console.log 'ERROR TARGET: '+error.target
-
-
+	
 		#Get all user details from local database
 		getUserDetails : (username)->
 
@@ -166,6 +120,42 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			$.when(runQuery()).done ->
 				console.log 'getLastDetails transaction completed'
+			.fail _.failureHandler
+
+
+		#Get additional textbook options
+		getTextbookOptions : (id)->
+
+			options =
+				author:''
+				attachmenturl:''
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT option_value FROM wp_options WHERE option_name=?"
+							, ['taxonomy_'+id], onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+					if data.rows.length isnt 0
+						option_value = unserialize(data.rows.item(0)['option_value'])
+
+						url = option_value.attachmenturl
+						if url is 'false'
+							attachmenturl = ''
+						else
+							attachmenturl = _.getSynapseAssetsDirectoryPath()+url.substr(url.indexOf("uploads/"))
+							attachmenturl = '<img src="'+attachmenturl+'">'
+
+						options = 
+							author: option_value.author
+							attachmenturl: attachmenturl
+
+					d.resolve options
+					
+			$.when(runQuery()).done ->
+				console.log 'getTextbookOptions transaction completed'
 			.fail _.failureHandler	
 
 

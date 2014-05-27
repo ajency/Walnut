@@ -29,7 +29,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         App.leftNavRegion.close();
         App.headerRegion.close();
         App.breadcrumbRegion.close();
-        App.execute("when:fetched", questionResponseCollection, (function(_this) {
+        App.execute("when:fetched", [questionResponseCollection, contentPiece], (function(_this) {
           return function() {
             return _this._getOrCreateModel(contentPiece.get('ID'));
           };
