@@ -24,7 +24,6 @@ define ['app'
 
                 @listenTo @view, "save:data:to:model", (data)=>
                     @contentPieceModel.set data
-                    console.log @contentPieceModel
                     App.execute "save:question"
 
             showView: =>

@@ -21,7 +21,6 @@ define ['app'
                     if not @contentPieceModel.get 'ID'
                         @contentPieceModel.set 'content_type': @contentType
 
-
                 #command to help trigger of Options/Meta settings save to model
                 #when save button is clicked from property dock
                 #save needs to happen only after meta settings are set to model
@@ -38,14 +37,17 @@ define ['app'
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
                 # get the main layout for the content creator
-                @layout = @_getContentCreatorLayout @contentPieceModel
+                @layout = @_getContentCreatorLayout()
+
+                # show the layout
+                App.execute "when:fetched",@contentPieceModel,=>
+                    @show @layout, loading:true
 
                 # eventObj = App.createEventObject()
 
                 # listen to "show" event of the layout and start the
                 # elementboxapp passing the region
                 @listenTo @layout, 'show', =>
-                    console.log @saveModelCommand
 
                     App.execute "show:options:bar",
                         region: @layout.optionsBarRegion
@@ -55,7 +57,7 @@ define ['app'
 
                     App.execute "show:element:box",
                         region: @layout.elementBoxRegion
-                        contentType: @contentType
+                        contentType: @contentPieceModel.get 'content_type'
 
                     App.execute "show:content:builder",
                         region: @layout.contentBuilderRegion
@@ -64,9 +66,6 @@ define ['app'
                     App.execute "show:property:dock",
                         region: @layout.PropertyRegion
                         saveModelCommand : @saveModelCommand
-
-                # show the layout
-                @show @layout
 
             _getContentCreatorLayout: ->
                 new ContentCreatorLayout

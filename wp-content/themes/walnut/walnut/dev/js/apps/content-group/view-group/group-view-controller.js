@@ -52,7 +52,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       GroupController.prototype.startTeachingModule = function() {
-        var content_pieces, nextQuestion, responseCollection, responseQuestionIDs;
+        var content_piece_ids, content_pieces, nextQuestion, responseCollection, responseQuestionIDs;
         responseCollection = this.questionResponseCollection.where({
           "status": "completed"
         });
@@ -60,7 +60,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           return m.toJSON();
         }).pluck('content_piece_id').value();
         content_pieces = model.get('content_pieces');
-        nextQuestion = _.first(_.difference(content_pieces, responseQuestionIDs));
+        if (content_pieces) {
+          content_piece_ids = _.map(content_pieces, function(m) {
+            return parseInt(m);
+          });
+        }
+        nextQuestion = _.first(_.difference(content_piece_ids, responseQuestionIDs));
         return this.gotoTrainingModule(nextQuestion, 'class_mode');
       };
 

@@ -625,11 +625,6 @@
 	}
 }
 
-/*Sort*/
-.sort-option{
-	cursor: move;
-}
-
 /*Editor popup*/
 .cke_dialog_body{
 	.cke_dialog_title{
@@ -678,4 +673,53 @@
     & > li.active > a{
         color: @color-dark;
     }
+}
+
+/*Media Manager*/
+#all-media-region{
+	.thumbnail::after{
+		clear: both;
+	}
+	.listView{
+		width: 100%;
+		&::after{
+			clear: both;
+		}
+		.imgthumb{
+			width: 5%;
+			//float: left;
+		}
+	}
+	.single-img{
+		position: relative;
+	}
+	.ticker{
+		position: absolute;
+		top: -7px;
+		right: 5px;
+		color: @color-white;
+		padding: 3px 4px;
+		border-radius: 2px;
+		background: @color-info;
+		display: none;
+	}
+	.ui-selected{
+		a{
+			border: 2px solid @color-info;
+		}
+		.ticker{
+			display: block;
+			.glyphicon-minus{
+				display: none;
+			}
+			&:hover{
+				.glyphicon-minus{
+					display: inline-block;
+				}
+				.glyphicon-ok{
+					display: none;
+				}
+			}
+		}
+	}
 }

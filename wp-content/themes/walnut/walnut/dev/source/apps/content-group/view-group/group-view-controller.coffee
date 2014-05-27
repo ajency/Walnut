@@ -47,7 +47,10 @@ define ['app'
                                     .value()
 
                 content_pieces = model.get 'content_pieces'
-                nextQuestion = _.first _.difference content_pieces, responseQuestionIDs
+                if content_pieces
+                    content_piece_ids= _.map content_pieces, (m)-> parseInt m
+
+                nextQuestion = _.first _.difference content_piece_ids, responseQuestionIDs
 
                 @gotoTrainingModule nextQuestion, 'class_mode'
 
