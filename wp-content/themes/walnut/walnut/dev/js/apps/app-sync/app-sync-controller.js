@@ -16,7 +16,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
     SynchronizationController.prototype.initialize = function() {};
 
     SynchronizationController.prototype.startSync = function() {
-      return this.Sync();
+      return this.dwnldUnZip();
     };
 
     SynchronizationController.prototype.totalRecordsUpdate = function() {
@@ -297,11 +297,30 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
             loader = new ZipLoader(fullpath);
             alert("loader" + fullpath);
             return $.each(loader.getEntries(fullpath), function(i, entry) {
-              return console.log("Name: " + entry.name() + " Size: " + entry.size() + " is Directory: " + entry.isDirectory());
+              console.log("Name: " + entry.name() + " Size: " + entry.size() + " is Directory: " + entry.isDirectory());
+              return _this.readAsTextData(entry);
             });
           }, _.fileTransferErrorHandler);
         };
       })(this), _.fileErrorHandler);
+    };
+
+    SynchronizationController.prototype.readAsTextData = function(file) {
+      var reader;
+      console.log("read files" + file.toURL());
+      reader = new FileReader();
+      reader.onloadend = function(evt) {
+        var csvString, parsedData;
+        alert("result" + evt.target.result);
+        alert("csvString" + csvString);
+        csvString = evt.target.result;
+        parsedData = $.parse(csvString, {
+          header: false,
+          dynamicTyping: false
+        });
+        return console.log("result is " + parsedData.results);
+      };
+      return reader.readAsText(file);
     };
 
     SynchronizationController.prototype.fileUpload = function(fileEntry) {

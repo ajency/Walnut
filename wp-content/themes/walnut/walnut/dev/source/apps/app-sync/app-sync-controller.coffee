@@ -6,7 +6,8 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 
 		startSync : ->
-			@Sync()
+			@dwnldUnZip()
+			# @Sync()
 
 		
 		totalRecordsUpdate : ->
@@ -310,7 +311,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 				, _.fileSystemErrorHandler)
 
-
+# Download the zip file from the server and extract its contents
 		dwnldUnZip : ()->
 			dwnldFileName= "logs.zip"
 			url = encodeURI("http://synapsedu.info/wp-content/uploads/sites/3/tmp/csvs-1150220140526102131.zip")
@@ -349,10 +350,27 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 							
 							, (i, entry)=>
 								console.log "Name: " + entry.name() + " Size: " + entry.size() + " is Directory: " + entry.isDirectory()
-						
+								@readAsTextData entry
 						, _.fileTransferErrorHandler)
 				
 				, _.fileErrorHandler)
+
+		#this functio will read the unzipped data
+		readAsTextData : (file)->
+			console.log "read files" +file.toURL()
+			reader = new FileReader()
+			reader.onloadend = (evt)->
+				alert "result" +evt.target.result
+				alert "csvString" +csvString
+				csvString = evt.target.result
+				parsedData = $.parse(csvString, {
+					header : false
+					dynamicTyping : false
+					})
+				console.log "result is "+parsedData.results
+
+			reader.readAsText file
+
 
 #This Function Will upload the zip file to the server
 

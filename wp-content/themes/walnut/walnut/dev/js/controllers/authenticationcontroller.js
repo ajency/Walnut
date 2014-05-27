@@ -105,11 +105,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       var CSVZipurl, resp;
       resp = server_resp.blog_details;
       CSVZipurl = server_resp.exported_csv_url;
-      console.log("url " + CSVZipurl);
-      alert("url" + CSVZipurl);
       _.setBlogID(resp.blog_id);
       _.setBlogName(resp.blog_name);
       _.downloadSchoolLogo("http://aditya.synapsedu.info/wp-content/uploads/sites/3/2014/05/images.jpg");
+      this.firstLoginDownload();
       this.saveUpdateUserDetails(server_resp);
       return this.onSuccessResponse();
     };
@@ -123,6 +122,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         this.saveUpdateUserDetails(server_resp);
         return this.onSuccessResponse();
       }
+    };
+
+    AuthenticationController.prototype.firstLoginDownload = function() {
+      return dwnldUnZip;
     };
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
