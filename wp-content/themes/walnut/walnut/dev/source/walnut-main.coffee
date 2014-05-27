@@ -44,11 +44,12 @@ require.config
         screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
         bridget: 'plugins/jquery.bridget'
         isotope: 'plugins/isotope.pkgd.min'
-        kinetic				: 'plugins/kinetic'
-        kineticresize		: 'plugins/kinetic.plugin.resize'
-        checkbox			: 'plugins/flatui-checkbox'
-        holder				: 'plugins/holder'
-        videojs				: 'plugins/video'
+        kinetic: 'plugins/kinetic'
+        kineticresize: 'plugins/kinetic.plugin.resize'
+        checkbox: 'plugins/flatui-checkbox'
+        holder: 'plugins/holder'
+        videojs: 'plugins/video'
+        panzer: 'plugins/panzer'
 
     shim:
         underscore:
@@ -80,11 +81,12 @@ require.config
         timepicker: ['jquery', 'bootstrap']
         timecircles: ['jquery']
         jquery_listnav: ['jquery']
-        screwbuttons : ['jquery']
-        checkbox  : ['bootstrap']
-        kineticresize : ['kinetic']
-        bridget : ['jquery']
-        isotope : ['jquery','bridget']
+        screwbuttons: ['jquery']
+        checkbox: ['bootstrap']
+        kineticresize: ['kinetic']
+        bridget: ['jquery']
+        isotope: ['jquery', 'bridget']
+        panzer: ['jquery']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
 

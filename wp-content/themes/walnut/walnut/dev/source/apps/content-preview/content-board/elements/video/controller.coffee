@@ -24,11 +24,8 @@ define ['app'
 
 					# setup templates for the element
 					renderElement:()=>
-				
-					
-						view = @_getVideoView()
 
-				
+						view = @_getVideoView()
 
 						@layout.elementRegion.show view
 							

@@ -33,4 +33,5 @@ define [
     'checkbox'
     'screwbuttons'
     'videojs'
+    'panzer'
 ], ->
