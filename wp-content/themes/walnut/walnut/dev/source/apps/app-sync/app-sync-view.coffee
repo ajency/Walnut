@@ -32,6 +32,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				syncController.totalRecordsUpdate()
 
 			fileUpload : ->
+				syncController = App.request "get:sync:controller"
+				syncController.dwnldUnZip()
+				
 			
 			startConversion : ->
 				syncController = App.request "get:sync:controller"

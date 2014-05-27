@@ -1,4 +1,4 @@
-define ["marionette","app", "underscore", "csvparse" , "json2csvparse", "Zip", "zipchk", "FileSaver"], (Marionette, App, _, parse) ->
+define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse", "Zip", "zipchk", "FileSaver"], (Marionette, App, _, parse, getEntries) ->
 
 	class SynchronizationController extends Marionette.Controller
 
@@ -139,6 +139,7 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse", "Zip", "
 							fileEntry.createWriter(
 
 								(writer)=>
+									alert "file entry is" +fileEntry.toURL()
 									console.log "file entry is" +fileEntry.toURL()
 									writer.write(CSVdata)
 									$('#JsonToCSV').attr("disabled","disabled")
@@ -223,27 +224,35 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse", "Zip", "
 
 #Function to Zip the .csv File
 		ZipFile : (csvData)=>
-			alert "zip"
 			zip = new JSZip();
-			alert zip
-			alert "cald"
-			alert zip.file
 			zip.file("csvread.txt", csvData)
-			# content = zip.generate({type:"text/plain;charset=utf-8"});
-			content = zip.generate({type:"blob"});
-
-			alert zip.file.content
-
-			alert content
-			alert "saved"
-			zip.file("csvread.txt").asText()
-			alert zip.file("csvread.txt").asText()
+			content = zip.generate({type:"text/plain"});
+			# content1 = ""+content
+			# alert "1"+content1
+			# alert "saved"
+			# zip.file("csvread.txt").asText()
+			@saveZipData content
+			# filepath = "file:///data/data/com.your.company.HelloWorld/files/files/csvread.txt"
+			# window.resolveLocalFileSystemURL(content1
+			# 	, (fileEntry)->
+			# 		alert fileEntry.name
+			# 		console.log fileEntry.name
+			# 	,  _.fileSystemErrorHandler)
+			# window.saveAs(content, filepath+"/hello.zip");
+			# window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
+			# 	,(fileSystem)->
+			# 		console.log fileSystem.name
+			# 		console.log fileSystem.root.name
+			# 	, _.fileSystemErrorHandler)
 # if (JSZip.support.uint8array) {
 #   zip.file("hello.txt").asUint8Array(); // Uint8Array { 0=72, 1=101, 2=108, more...}
 # }			
-			alert saveAs
-			alert "res" +zip.results
-			saveAs(content, "example.zip")
+			# alert saveAs
+			# alert FileSaver.readFile
+			# FileSaver.readFile("csvread.zip", (err, data)->
+			# 	zip = new JSZip(data)
+			# )
+			# saveAs(content, "example.zip")
 
 			# string = "This is my compression test."
 			# alert "Size of sample is: " + string.length
@@ -251,6 +260,99 @@ define ["marionette","app", "underscore", "csvparse" , "json2csvparse", "Zip", "
 			# alert "Size of compressed sample is: " + compressed.length
 			# string = LZString.decompress(compressed);
 			# alert "Sample is: " + string
+
+		saveZipData : (content)->
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
+
+				, (fileSystem)=>
+
+					fileSystem.root.getFile("hello.zip", {create: true, exclusive: false}
+
+						, (fileEntry)=>
+
+							fileEntry.createWriter(
+
+								(writer)=>
+									alert "file entry is" +fileEntry.toURL()
+									console.log "file entry is" +fileEntry.toURL()
+									writer.write(content)
+									@fileReadZip()
+
+								, _.fileTransferErrorHandler)
+							
+						, _.fileErrorHandler)
+
+				, _.fileSystemErrorHandler)
+
+		fileReadZip : ->
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
+
+				, (fileSystem)=>
+
+					fileSystem.root.getFile("hello.zip", null
+
+						, (fileEntry)=>
+
+							fileEntry.file(
+
+								(file)=>
+									reader = new FileReader()
+									reader.onloadend = (evt)=>
+										alert "result" +evt.target.result
+										csvData = evt.target.result
+										console.log "result" +evt.target.result
+										@fileUpload fileEntry
+									reader.readAsText file
+
+								, _.fileErrorHandler)
+
+						, _.fileErrorHandler)
+
+				, _.fileSystemErrorHandler)
+
+
+		dwnldUnZip : ()->
+			dwnldFileName= "logs.zip"
+			url = encodeURI("http://synapsedu.info/wp-content/uploads/sites/3/tmp/csvs-1150220140526102131.zip")
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
+
+				, (fileSystem)=>
+
+					fileSystem.root.getFile(dwnldFileName, {create: true, exclusive: false}
+
+						, (fileEntry)=>
+							# fileUrl= fileEntry.toURL()
+							alert "file is " +fileEntry.toURL()
+							fileEntry= fileEntry.toURL()
+							@fileUnZip url, fileEntry
+
+						, _.fileErrorHandler)
+
+				, _.fileSystemErrorHandler)
+
+			
+
+		fileUnZip : (url, filename)=>
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
+				
+				, (fs)=>
+					zipPath = filename
+					fileTransfer = new FileTransfer();
+					fileTransfer.download(url, zipPath
+						
+						,(entry)=>
+							console.log entry.toURL()+"  Hello!";
+							fullpath = entry.toURL()
+							loader = new ZipLoader(fullpath)
+							alert "loader"+fullpath
+							$.each loader.getEntries(fullpath)
+							
+							, (i, entry)=>
+								console.log "Name: " + entry.name() + " Size: " + entry.size() + " is Directory: " + entry.isDirectory()
+						
+						, _.fileTransferErrorHandler)
+				
+				, _.fileErrorHandler)
 
 #This Function Will upload the zip file to the server
 

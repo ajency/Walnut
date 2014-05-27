@@ -2,12 +2,13 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "Zip", "zipchk", "FileSaver"], function(Marionette, App, _, parse) {
+define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse", "Zip", "zipchk", "FileSaver"], function(Marionette, App, _, parse, getEntries) {
   var SynchronizationController;
   SynchronizationController = (function(_super) {
     __extends(SynchronizationController, _super);
 
     function SynchronizationController() {
+      this.fileUnZip = __bind(this.fileUnZip, this);
       this.ZipFile = __bind(this.ZipFile, this);
       return SynchronizationController.__super__.constructor.apply(this, arguments);
     }
@@ -143,6 +144,7 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "Zip", "
             exclusive: false
           }, function(fileEntry) {
             return fileEntry.createWriter(function(writer) {
+              alert("file entry is" + fileEntry.toURL());
               console.log("file entry is" + fileEntry.toURL());
               writer.write(CSVdata);
               $('#JsonToCSV').attr("disabled", "disabled");
@@ -217,23 +219,89 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "Zip", "
 
     SynchronizationController.prototype.ZipFile = function(csvData) {
       var content, zip;
-      alert("zip");
       zip = new JSZip();
-      alert(zip);
-      alert("cald");
-      alert(zip.file);
       zip.file("csvread.txt", csvData);
       content = zip.generate({
-        type: "blob"
+        type: "text/plain"
       });
-      alert(zip.file.content);
-      alert(content);
-      alert("saved");
-      zip.file("csvread.txt").asText();
-      alert(zip.file("csvread.txt").asText());
-      alert(saveAs);
-      alert("res" + zip.results);
-      return saveAs(content, "example.zip");
+      return this.saveZipData(content);
+    };
+
+    SynchronizationController.prototype.saveZipData = function(content) {
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
+        return function(fileSystem) {
+          return fileSystem.root.getFile("hello.zip", {
+            create: true,
+            exclusive: false
+          }, function(fileEntry) {
+            return fileEntry.createWriter(function(writer) {
+              alert("file entry is" + fileEntry.toURL());
+              console.log("file entry is" + fileEntry.toURL());
+              writer.write(content);
+              return _this.fileReadZip();
+            }, _.fileTransferErrorHandler);
+          }, _.fileErrorHandler);
+        };
+      })(this), _.fileSystemErrorHandler);
+    };
+
+    SynchronizationController.prototype.fileReadZip = function() {
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
+        return function(fileSystem) {
+          return fileSystem.root.getFile("hello.zip", null, function(fileEntry) {
+            return fileEntry.file(function(file) {
+              var reader;
+              reader = new FileReader();
+              reader.onloadend = function(evt) {
+                var csvData;
+                alert("result" + evt.target.result);
+                csvData = evt.target.result;
+                console.log("result" + evt.target.result);
+                return _this.fileUpload(fileEntry);
+              };
+              return reader.readAsText(file);
+            }, _.fileErrorHandler);
+          }, _.fileErrorHandler);
+        };
+      })(this), _.fileSystemErrorHandler);
+    };
+
+    SynchronizationController.prototype.dwnldUnZip = function() {
+      var dwnldFileName, url;
+      dwnldFileName = "logs.zip";
+      url = encodeURI("http://synapsedu.info/wp-content/uploads/sites/3/tmp/csvs-1150220140526102131.zip");
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
+        return function(fileSystem) {
+          return fileSystem.root.getFile(dwnldFileName, {
+            create: true,
+            exclusive: false
+          }, function(fileEntry) {
+            alert("file is " + fileEntry.toURL());
+            fileEntry = fileEntry.toURL();
+            return _this.fileUnZip(url, fileEntry);
+          }, _.fileErrorHandler);
+        };
+      })(this), _.fileSystemErrorHandler);
+    };
+
+    SynchronizationController.prototype.fileUnZip = function(url, filename) {
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
+        return function(fs) {
+          var fileTransfer, zipPath;
+          zipPath = filename;
+          fileTransfer = new FileTransfer();
+          return fileTransfer.download(url, zipPath, function(entry) {
+            var fullpath, loader;
+            console.log(entry.toURL() + "  Hello!");
+            fullpath = entry.toURL();
+            loader = new ZipLoader(fullpath);
+            alert("loader" + fullpath);
+            return $.each(loader.getEntries(fullpath), function(i, entry) {
+              return console.log("Name: " + entry.name() + " Size: " + entry.size() + " is Directory: " + entry.isDirectory());
+            });
+          }, _.fileTransferErrorHandler);
+        };
+      })(this), _.fileErrorHandler);
     };
 
     SynchronizationController.prototype.fileUpload = function(fileEntry) {

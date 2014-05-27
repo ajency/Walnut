@@ -58,7 +58,9 @@ require.config
         json2csvparse       : 'plugins/json2csv'
         Zip                 : 'plugins/jszip'
         zipchk              : 'plugins/lz-string-1.3.3'
-        FileSaver            : 'plugins/FileSaver'
+        FileSaver           : 'plugins/FileSaver'
+        archive             : 'plugins/archive'
+
 
 
 

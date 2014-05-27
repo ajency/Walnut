@@ -115,7 +115,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			resp = server_resp.blog_details
 
 
-			CSVZipurl= resp.exported_csv_url
+			CSVZipurl= server_resp.exported_csv_url
+			console.log "url "+CSVZipurl
+			alert "url"+CSVZipurl
 			# set blog id and blog name
 			_.setBlogID(resp.blog_id)
 			_.setBlogName(resp.blog_name)
