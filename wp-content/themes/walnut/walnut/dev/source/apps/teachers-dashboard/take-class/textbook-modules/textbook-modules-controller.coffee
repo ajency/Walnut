@@ -45,7 +45,7 @@ define ['app'
 
                 singleModule = @contentGroupsCollection.get id
 
-                singleModule.set ('status': status)
+                singleModule.set ('status': 'scheduled')
 
                 opts =
                     'changed': 'status'
