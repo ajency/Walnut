@@ -162,7 +162,7 @@ function save_extra_taxonomy_fields($term_id) {
                         where textbook_id=" . $t_id;
         else 
             $textbooks_query="insert into {$wpdb->prefix}textbook_relationships values ('','".$t_id."', '".$classes."','".$tags."')";
-        //echo $textbooks_query; exit;
+
         $wpdb->query($textbooks_query);
     }
 }

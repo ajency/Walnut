@@ -42,6 +42,7 @@ Template Name: Content Creator
     <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/mashmenu.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/jquery.minicolors.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
+    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
 	<!-- END CORE CSS FRAMEWORK -->
 
 	<!-- BEGIN CSS TEMPLATE -->
@@ -94,7 +95,7 @@ CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
 <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
 <script>
      Pace.on( 'hide', function(){
-         $("#site_main_container").addClass("showAll");
+         document.getElementById("site_main_container").setAttribute('class','showAll');
      })
 </script>
  <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/ckeditor/ckeditor.js"></script> 

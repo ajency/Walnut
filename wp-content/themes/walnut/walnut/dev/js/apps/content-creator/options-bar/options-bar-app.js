@@ -30,7 +30,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
         return this.listenTo(this.view, "save:data:to:model", (function(_this) {
           return function(data) {
             _this.contentPieceModel.set(data);
-            console.log(_this.contentPieceModel);
             return App.execute("save:question");
           };
         })(this));

@@ -71,13 +71,15 @@ function ajax_update_content_group() {
     }
     
     if (isset($_POST['changed']) && ($_POST['changed']=='status')) {
-        $data = array(
-          'id' => $_POST['id'],
-          'status' => $_POST['status'],
-          'division' => $_POST['division'],
-          'training_date' => $_POST['training_date']
-        );
-        $update_training_module_status=update_training_module_status($data);
+        if($_POST['status'] == 'scheduled'){
+            $data = array(
+              'id' => $_POST['id'],
+              'status' => $_POST['status'],
+              'division' => $_POST['division'],
+              'training_date' => $_POST['training_date']
+            );
+            $update_training_module_status=update_training_module_status($data);
+        }
     }
     
     wp_send_json(array('code' => 'OK', 'data' => array('id'=> $_POST['id'])));

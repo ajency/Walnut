@@ -15,7 +15,7 @@ function create_content_piece_post_type() {
         ),
         'public' => true,
         'has_archive' => true,
-        'supports' => array('title', 'editor', 'comments', 'thumbnail','custom-fields')
+        'supports' => array('title', 'editor', 'comments', 'thumbnail','custom-fields', 'revisions')
             )
     );
 
@@ -135,11 +135,42 @@ function get_single_content_piece($id){
     $authordata = get_userdata($content_piece->post_author);
 
     $content_piece->post_author_name = $authordata->display_name;
-    
+
+    $content_piece_meta_serialized=get_post_meta($id, 'content_piece_meta', true);
+
+    $content_piece_meta= maybe_unserialize($content_piece_meta_serialized);
+
     // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
+
     $content_piece->content_type = ($content_type) ? $content_type : '--';
-    
+
+    $content_piece->question_type = $content_piece_meta['question_type'];
+
+    $content_piece->post_tags = $content_piece_meta['post_tags'];
+
+    $content_piece->instructions = $content_piece_meta['instructions'];
+
+    $content_piece->duration = (int) $content_piece_meta['duration'];
+
+    $last_modified_by = $content_piece_meta['last_modified_by'];
+
+    $last_modified_by_user= get_userdata($last_modified_by);
+
+    $content_piece->last_modified_by = $last_modified_by_user->display_name;
+
+    $published_by = $content_piece_meta['published_by'];
+
+    $published_by_user= get_userdata($published_by);
+
+    $content_piece->published_by = $published_by_user->display_name;
+
+    $term_ids_array= $content_piece_meta['term_ids'];
+
+    $term_ids = maybe_unserialize($term_ids_array);
+
+    $content_piece->term_ids = $term_ids;
+
     $content_layout= get_post_meta($id, 'layout_json', true);
 
     $content_layout = maybe_unserialize($content_layout);
@@ -155,25 +186,6 @@ function get_single_content_piece($id){
         $excerpt= substr($excerpt, 0, 150);
         $content_piece->post_excerpt =$excerpt.'...';
     }
-    $content_piece->question_type = get_post_meta($id, 'question_type', true);
-
-    $content_piece->post_tags = get_post_meta($id, 'post_tags', true);
-
-    $content_piece->duration = (int) get_post_meta($id, 'duration', true);
-
-    $last_modified_by = get_post_meta($id, 'last_modified_by', true);
-    $last_modified_by_user= get_userdata($last_modified_by);
-
-    $content_piece->last_modified_by = $last_modified_by_user->display_name;
-
-    $published_by = get_post_meta($id, 'published_by', true);
-    $published_by_user= get_userdata($published_by);
-    $content_piece->published_by = $published_by_user->display_name;
-
-    $term_ids_array= get_post_meta($id, 'term_ids', true);
-    $term_ids = maybe_unserialize($term_ids_array);
-
-    $content_piece->term_ids = $term_ids;
 
     switch_to_blog($current_blog_id);
 
@@ -419,7 +431,7 @@ function get_all_content_groups($args=array()){
     
     $current_blog= get_current_blog_id();
     switch_to_blog(1);
-    
+
     global $wpdb;
     
     $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection", null);
@@ -488,17 +500,38 @@ function get_single_content_group($id, $division=''){
     switch_to_blog($current_blog);
     
     if($division !=''){
-        $training_logs_query = $wpdb->prepare("SELECT * FROM 
+        $training_logs_query = $wpdb->prepare("SELECT date FROM
             {$wpdb->prefix}training_logs WHERE collection_id=%d AND 
                 division_id=%d order by id desc limit 1",
                     $id, $division);
 
-        $training_logs  = $wpdb->get_results($training_logs_query);  
+        $training_logs  = $wpdb->get_results($training_logs_query);
 
-        foreach($training_logs as $logs){
-           $data->status= $logs->status;
-           $data->training_date= $logs->date;
+        if($training_logs){
+            $data->training_date= $training_logs[0]->date;
+            $data->status = 'scheduled';
         }
+
+        $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status FROM
+            {$wpdb->prefix}question_response WHERE collection_id=%d AND
+                division=%d",
+            $id, $division);
+
+        $module_responses  = $wpdb->get_results($check_responses_query);
+        if($module_responses)
+            $data->status='started';
+
+        $response_content_ids=array();
+
+        foreach($module_responses as $response){
+            if($response->status=='completed')
+            $response_content_ids[]= $response->content_piece_id;
+        }
+
+
+        if(__u::difference($data->content_pieces,$response_content_ids) == null)
+            $data->status='completed';
+
     }
     
     return $data;
@@ -514,7 +547,7 @@ function save_content_piece($data){
     $post_array=array(
         'post_status'   => $data['post_status'],
         'post_type'     => 'content-piece',
-        'post_title'    => 'test content piece',
+        'post_title'    => 'content piece',
         'post_author'   => $post_author
     );
 
@@ -533,20 +566,21 @@ function save_content_piece($data){
 
     update_post_meta ($content_id, 'content_type',$data['content_type']);
 
-    update_post_meta ($content_id, 'question_type',$data['question_type']);
+    $content_piece_additional = array(
+        'question_type'     => $data['question_type'],
+        'term_ids'          => $data['term_ids'],
+        'duration'          => $data['duration'],
+        'post_tags'         => $data['post_tags'],
+        'instructions'         => $data['instructions'],
+        'last_modified_by'  => $post_author
+    );
 
-    $term_ids = maybe_serialize($data['term_ids']);
-
-    update_post_meta ($content_id, 'term_ids',$term_ids);
-
-    update_post_meta ($content_id, 'duration',$data['duration']);
-
-    update_post_meta ($content_id, 'post_tags',$data['post_tags']);
-
-    update_post_meta ($content_id, 'last_modified_by',$post_author);
+    $content_piece_meta= maybe_serialize($content_piece_additional);
 
     if($data['post_status']=='publish')
-        update_post_meta ($content_id, 'published_by',$post_author);
+        $content_piece_additional['published_by']=$post_author;
+
+    update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
 
     return $content_id;
 }

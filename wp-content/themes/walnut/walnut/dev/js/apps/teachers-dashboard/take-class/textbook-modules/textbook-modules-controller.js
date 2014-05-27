@@ -51,18 +51,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
             });
           };
         })(this));
-        this.listenTo(this.view, {
-          "save:training:status": (function(_this) {
-            return function(id, status) {
-              var currentRoute;
-              _this._saveTrainingStatus(id, status);
-              if (status === 'started' || 'resumed') {
-                currentRoute = App.getCurrentRoute();
-                return App.navigate(currentRoute + "/module/" + id, true);
-              }
-            };
-          })(this)
-        });
         return this.listenTo(this.view, {
           "schedule:training": (function(_this) {
             return function(id) {
@@ -72,25 +60,21 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
               _this.show(modalview, {
                 region: App.dialogRegion
               });
-              return _this.listenTo(modalview, {
-                "save:scheduled:date": function(id, date) {
-                  date = moment(date).format("YYYY-MM-DD");
-                  _this.singleModule.set({
-                    'training_date': date
-                  });
-                  return _this._saveTrainingStatus(id, 'scheduled');
-                }
-              });
+              return _this.listenTo(modalview, "save:scheduled:date", _this._saveTrainingStatus);
             };
           })(this)
         });
       };
 
-      textbookModulesController.prototype._saveTrainingStatus = function(id, status) {
+      textbookModulesController.prototype._saveTrainingStatus = function(id, date) {
         var opts, singleModule;
+        date = moment(date).format("YYYY-MM-DD");
+        this.singleModule.set({
+          'training_date': date
+        });
         singleModule = this.contentGroupsCollection.get(id);
         singleModule.set({
-          'status': status
+          'status': 'scheduled'
         });
         opts = {
           'changed': 'status',

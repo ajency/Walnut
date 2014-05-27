@@ -10,4 +10,5 @@ define [
 		'apps/content-preview/content-board/elements/sort/controller'
 		'apps/content-preview/content-board/elements/teacherquestion/controller'
 		'apps/content-preview/content-board/elements/video/controller'
+        'apps/content-preview/content-board/elements/audio/controller'
 		],->

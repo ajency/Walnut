@@ -25,8 +25,8 @@ define(['app'], function(App) {
           _.delay((function(_this) {
             return function() {
               _this.$el.hide();
-              _this.$el.after('<span>Answer</span><button type="button" id="show-answer" class="btn btn-default btn-sm btn-small">View Answer</button>');
-              return _this.$el.nextAll('button#show-answer').on('click', _this._removeButtonAndShowAnswer);
+              _this.$el.after('<div class="teacher-question-row column"><span>Answer</span><button type="button" id="show-answer" class="btn btn-default btn-sm btn-small">View Answer</button></div>');
+              return _this.$el.next().find('button#show-answer').on('click', _this._removeButtonAndShowAnswer);
             };
           })(this), 0);
         }
@@ -34,8 +34,7 @@ define(['app'], function(App) {
       };
 
       RowView.prototype._removeButtonAndShowAnswer = function(evt) {
-        $(evt.target).hide();
-        $(evt.target).prev().hide();
+        $(evt.target).parent().hide();
         return this.$el.show();
       };
 
