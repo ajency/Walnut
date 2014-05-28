@@ -14,6 +14,15 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncController.prototype.initialize = function() {
         var view;
         this.view = view = this._getAppSyncView();
+        this.listenTo(view, 'close:view', this.closeView);
+        this.listenTo(view, 'close', function() {
+          return App.navigate('teachers/dashboard', {
+            trigger: true
+          });
+        });
+        App.commands.setHandler("close:sync:view", function() {
+          return this.view.close();
+        });
         return this.show(view, {
           loading: true
         });

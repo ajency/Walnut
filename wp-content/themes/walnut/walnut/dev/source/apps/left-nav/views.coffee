@@ -45,6 +45,8 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
 
             events:
                 'click li': 'clickMenu'
+                
+                'click #user_logout': 'appLogout'
 
             onShow: ->
 
@@ -67,17 +69,22 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     elem.children('li').removeClass('open');
 
                 # changes for mobile
-                $('#main-menu-toggle').sidr({
-                    name : 'main-menu',
-                    side: 'left'
-                });
+                if _.platform() is 'DEVICE'
+                    $('#main-menu-toggle').sidr({
+                        name : 'main-menu',
+                        side: 'left'
+                    });
 
-                $('.chat-menu-toggle').sidr({       
-                    name : 'walnutProfile',
-                    side: 'right',
-                    renaming: false,
-                    source: '#walnutProf'
-                })    
+                    $('.chat-menu-toggle').sidr({       
+                        name : 'walnutProfile',
+                        side: 'right',
+                        renaming: false,
+                        source: '#walnutProf'
+                    })   
+
+                    userName = _.getUserDetails(_.getUserID(), null) 
+                    userName.done (user)->
+                        console.log 'USERNAME: '+user.username
 
 
             clickMenu: (e)->
@@ -115,6 +122,10 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     content.css("min-height", sidebar.height() + 120);
                 else
                     content.css("min-height", content.attr("data-height"));
+
+
+            appLogout = ->
+                console.log 'Logout'        
 				
 
 

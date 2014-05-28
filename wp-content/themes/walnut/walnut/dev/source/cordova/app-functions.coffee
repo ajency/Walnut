@@ -8,19 +8,20 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	
 		#Get all user details from local database
-		getUserDetails : (username)->
+		getUserDetails : (userid, username)->
 
-			userData = 
-				user_id : ''
-				password: ''
-				role : ''
-				exists : false
+			userData = user_id : '', username: '', password: '', role : '', exists : false
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM USERS WHERE username=?"
-							, [username], onSuccess(d), _.deferredErrorHandler(d))
+						if username isnt null
+							tx.executeSql("SELECT * FROM USERS WHERE username=?"
+								, [username], onSuccess(d), _.deferredErrorHandler(d))
+
+						if userid isnt null
+							tx.executeSql("SELECT * FROM USERS WHERE user_id=?"
+								, [userid], onSuccess(d), _.deferredErrorHandler(d))	
 			
 			onSuccess = (d)->
 				(tx, data)->
@@ -29,6 +30,7 @@ define ['underscore', 'unserialize'], ( _) ->
 						row = data.rows.item(0)
 						userData =
 							user_id : row['user_id']
+							username: row['username']
 							password : row['password']
 							role : row['user_role']
 							exists : true

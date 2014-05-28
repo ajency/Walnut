@@ -85,7 +85,10 @@ define ['marionette'], (Marionette)->
 		user_role= user.get "roles"
 		
 		if _.platform() is 'DEVICE'
-			App.navigate('teachers/dashboard', trigger: true)
+			if _.getInitialSyncFlag() is null
+				App.navigate('sync', trigger: true)
+			else	
+				App.navigate('teachers/dashboard', trigger: true)
 
 		else
 			if user_role[0]=='administrator'

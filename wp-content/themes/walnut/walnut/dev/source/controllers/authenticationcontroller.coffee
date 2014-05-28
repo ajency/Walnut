@@ -78,7 +78,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		# offline login for device
 		offlineDeviceAuth : ->
 
-			offlineUser = _.getUserDetails(@data.txtusername)
+			offlineUser = _.getUserDetails(null, @data.txtusername)
 
 			offlineUser.done (user)=>
 				if user.exists
@@ -140,7 +140,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		# save new user or update existing user 
 		saveUpdateUserDetails : (resp)->
 
-			offlineUser = _.getUserDetails(@data.txtusername)
+			offlineUser = _.getUserDetails(null, @data.txtusername)
 			
 			offlineUser.done (user)=>
 				if user.exists then @updateExistingUser(resp)
