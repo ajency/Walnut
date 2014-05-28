@@ -61,6 +61,8 @@ require.config
         zipchk              : 'plugins/lz-string-1.3.3'
         FileSaver           : 'plugins/FileSaver'
         archive             : 'plugins/archive'
+        jszipUtils          : 'plugins/jszip-utils'
+        jszipLoad           : 'plugins/jszip-load'
         
 
 

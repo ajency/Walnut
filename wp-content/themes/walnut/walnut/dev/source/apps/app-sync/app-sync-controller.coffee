@@ -14,11 +14,11 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 			_.db.transaction( (tx)->
 				tx.executeSql("SELECT SUM(rows) AS total FROM 
-					(SELECT COUNT(*) AS rows FROM wp_training_logs WHERE sync=? 
+					(SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"training_logs WHERE sync=? 
 					UNION ALL 
-					SELECT COUNT(*) AS rows FROM wp_question_response WHERE sync=? 
+					SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"question_response WHERE sync=? 
 					UNION ALL 
-					SELECT COUNT(*) AS rows FROM wp_question_response_logs WHERE sync=?)", [0,0,0]
+					SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"question_response_logs WHERE sync=?)", [0,0,0]
 
 				,(tx, data)->
 					$('#SyncRecords').text(data.rows.item(0)['total'])
@@ -353,8 +353,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 											console.log "is"+file
 											reader = new FileReader()
 											reader.onloadend = (evt)=>
-												console.log "result" +evt.target.result
-												console.log  "csvString" +csvString
+												# console.log "result" +evt.target.result
 												csvString = evt.target.result
 												parsedData = $.parse(csvString, {
 													header : false
@@ -422,30 +421,18 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				# console.log file
 				@sendParsedData1 file ,filePath
-				@sendParsedData2 file1 ,filePath
-				@sendParsedData3 file2 ,filePath
-				@sendParsedData4 file3 ,filePath
-				@sendParsedData5 file4 ,filePath
-				@sendParsedData6 file5 ,filePath
-				@sendParsedData7 file6 ,filePath
-				@sendParsedData8 file7 ,filePath
-				@sendParsedData9 file8 ,filePath
-				@sendParsedData10 file9 ,filePath
-				@sendParsedData11 file10 ,filePath
-				@sendParsedData12 file11 ,filePath
-				@sendParsedData13 file12 ,filePath
-				@sendParsedData14 file13 ,filePath
-				@sendParsedData15 file14 ,filePath
+				
+
 
 		
 		readAsText : (file)->
 			console.log "hiee1"+file
 			reader = new FileReader()
 			reader.onloadend = (evt)=>
-				alert "hii"
-				console.log  "result" +evt.target.result
-				console.log  "csvString" +csvString
-				csvString = evt.target.result
+				alert "in"
+				# console.log  "result" +evt.target.result
+				# csvString = evt.target.result
+				# console.log  "csvString" +csvString
 				parsedData = $.parse(csvString, {
 					header : false
 					dynamicTyping : false
@@ -454,269 +441,290 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 			reader.readAsText file
 
 #14 insert functions
-		sendParsedData1 : (file, fileEntry)->
+		sendParsedData1 : (file, fileEntry)=>
+			fileEntry=fileEntry
 			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+			readData.done (data)=>
+				# console.log "parsed data"+data
 			
-				_.db.transaction( (tx)->
+				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
 						row = data[i]
-						console.log "data is"data[i]
-						tx.executeSql("INSERT INTO wp_3_class_divisions (id, division, class_id	,) 
+						tx.executeSql("INSERT INTO wp_3_class_divisions (id, division, class_id) 
 							VALUES (?, ?, ?)", [data[i][1], data[i][2], data[i][3]])
 
 				,_.transactionErrorhandler
-				,(tx)->
-					console.log 'Data inserted successfully'
+				,(tx)=>
+					console.log 'Data inserted successfully1'
+					file1 =  "SynapseAssets/"+_.getTblPrefix()+"question_response.csv"
+					@sendParsedData2 file1 ,fileEntry
+					# @readValues
+				)
+				# @sendParsedData2 file1 ,fileEntry
+
+
+
+		sendParsedData2 : (file1, fileEntry)=>
+			fileEntry=fileEntry
+			readData = @chkReader(file1)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
+
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response (content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date,status) 
+							VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)", [ data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9]])
+
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully2'
+					file14 =  "SynapseAssets/"+_.getTblPrefix()+"question_response_logs.csv"
+					@sendParsedData15 file14 ,fileEntry
+					# @readValues
+				)
+		sendParsedData15 : (file14, fileEntry)=>
+			fileEntry=fileEntry
+			readData = @chkReader(file14)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
+
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response_logs (start_time) 
+							VALUES ( ?)", [data[i][2]])
+
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully15'
+					file2 =  "SynapseAssets/"+_.getTblPrefix()+"training_logs.csv"
+					@sendParsedData3 file2 ,fileEntry
 					# @readValues
 				)
 
-		sendParsedData2 : (file1, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+		sendParsedData3 : (file2, fileEntry)=>
+			readData = @chkReader(file2)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-			_.db.transaction( (tx)->
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"training_logs ( division_id,collection_id, teacher_id, date,status) 
+							VALUES ( ?,?, ?, ?,?)", [ data[i][2],data[i][3],data[i][4],data[i][5]],data[i][6])
 
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_3_question_response (ref_id,content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date status) 
-						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9]])
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully3'
+					file3 =  "SynapseAssets/wp_collection_meta.csv"
+					@sendParsedData4 file3 ,fileEntry
+					# @readValues
+				)
+		sendParsedData4 : (file3, fileEntry)=>
+			readData = @chkReader(file3)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-		sendParsedData15 : (file14, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_collection_meta (id, collection_id, meta_key, meta_value) 
+							VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
 
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_3_question_response_logs (qr_ref_id, start_time) 
-						VALUES (?, ?)", [data[i][1], data[i][2]])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-
-		sendParsedData3 : (file2, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
-
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_3_training_logs (id, division_id,collection_id, teacher_id, date,status) 
-						VALUES (?, ?,?, ?, ?)", [data[i][1], data[i][2],data[i][3],data[i][4],data[i][5]])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-		sendParsedData4 : (file3, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
-
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_collection_meta (id, collection_id, meta_key, meta_value) 
-						VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully4'
+					file4 =  "SynapseAssets/wp_content_collection.csv"
+					@sendParsedData5 file4 ,fileEntry
+					# @readValues
+				)
 
 		
-		sendParsedData5 : (file4, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+		sendParsedData5 : (file4, fileEntry)=>
+			readData = @chkReader(file4)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-			_.db.transaction( (tx)->
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on, created_by, last_modified_on,last_modified_by,published_on,published_by, status,type,term_ids,duration) 
+							VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10],data[i][11], data[i][12]])
 
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on, created_by, last_modified_on,last_modified_by,published_on,published_by, status,type,term_ids,duration) 
-						VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10],data[i][11], data[i][12]])
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully5'
+					file5 =  "SynapseAssets/wp_options.csv"
+					@sendParsedData6 file5 ,fileEntry
+					# @readValues
+				)
 
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
+		sendParsedData6 : (file5, fileEntry)=>
+			readData = @chkReader(file5)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-		sendParsedData6 : (file5, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_options (option_id, option_name, option_value, autoload) 
+							VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
 
-			_.db.transaction( (tx)->
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully6'
+					file6 =  "SynapseAssets/wp_postmeta.csv"
+					@sendParsedData7 file6 ,fileEntry
 
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_options (option_id, option_name, option_value, autoload) 
-						VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
+					# @readValues
+				)
+		sendParsedData7 : (file6, fileEntry)=>
+			readData = @chkReader(file6)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-		sendParsedData7 : (file6, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key,meta_value) 
+							VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
 
-			_.db.transaction( (tx)->
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully7'
+					file7 =  "SynapseAssets/wp_posts.csv"
+					@sendParsedData8 file7 ,fileEntry
+					# @readValues
+				)
 
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key, meta_value) 
-						VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
+		sendParsedData8 : (file7, fileEntry)=>
+			readData = @chkReader(file7)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_posts (ID,post_author,post_date,post_date_gmt,post_content,post_title,post_excerpt,post_status,comment_status,ping_status,post_password,post_name,to_ping,pinged,post_modified,post_modified_gmt,post_content_filtered,post_parent,guid,menu_order,post_type,post_mime_type,comment_count) 
+							VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10],data[i][11], data[i][12], data[i][13], data[i][14], data[i][15],data[i][16], data[i][17], data[i][18], data[i][19], data[i][20],data[i][21], data[i][22], data[i][23]])
 
-		sendParsedData8 : (file7, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully8'
+					file8 =  "SynapseAssets/wp_term_relationships.csv"
+					@sendParsedData9 file8 ,fileEntry
+					# @readValues
+				)
 
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_posts (ID, post_author, post_date,post_date_gmt,post_title,post_excerpt, post_status,comment_status,ping_status,post_password,post_name,to_ping,pinged,post_modified,post_modified_gmt,post_content_filtered,post_parent,guid,menu_order,post_type,post_mime_type, comment_count) 
-						VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10],data[i][11], data[i][12], data[i][13], data[i][14], data[i][15],data[i][16], data[i][17], data[i][18], data[i][19], data[i][20],data[i][21], data[i][22], data[i][23]])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-
-		sendParsedData9 : (file8, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
-
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id, term_order) 
+		sendParsedData9 : (file8, fileEntry)=>
+			readData = @chkReader(file8)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_term_relationships (object_id,term_taxonomy_id, term_order) 
 						VALUES (?, ?, ?)", [data[i][1], data[i][2], data[i][3]])
 
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-		sendParsedData10 : (file9, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully9'
+					file9 =  "SynapseAssets/wp_term_taxonomy.csv"
+					@sendParsedData10 file9 ,fileEntry
+					# @readValues
+				)
+		sendParsedData10 : (file9, fileEntry)=>
+			readData = @chkReader(file9)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-			_.db.transaction( (tx)->
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy, description, parent, count) 
+							VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6]])
 
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy, description, parent, count) 
-						VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6]])
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully10'
+					file10 = "SynapseAssets/wp_terms.csv"
+					@sendParsedData11 file10 ,fileEntry
+					# @readValues
+				)
+		sendParsedData11 : (file10, fileEntry)=>
+			readData = @chkReader(file10)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-		sendParsedData11 : (file10, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_terms (term_id, name, slug, term_group) 
+							VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
 
-			_.db.transaction( (tx)->
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully11'
+					file11 = "SynapseAssets/wp_textbook_relationships.csv"
+					@sendParsedData12 file11 ,fileEntry
+					# @readValues
+				)
+		sendParsedData12 : (file11, fileEntry)=>
+			readData = @chkReader(file11)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_terms (term_id, name, slug, term_group, term_order) 
-						VALUES (?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5]])
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_textbook_relationships (id, textbook_id, class_id, tags) 
+							VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
 
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-		sendParsedData12 : (file11, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully12'
+					file12 = "SynapseAssets/wp_usermeta.csv"
+					@sendParsedData13 file12 ,fileEntry
+					# @readValues
+				)
+		sendParsedData13 : (file12, fileEntry)=>
+			readData = @chkReader(file12)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-			_.db.transaction( (tx)->
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) 
+							VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
 
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_textbook_relationships (id, textbook_id, class_id, tags) 
-						VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully13'
+					file13 = "SynapseAssets/wp_users.csv"
+					@sendParsedData14 file13 ,fileEntry
+					# @readValues
+				)
+		sendParsedData14 : (file13, fileEntry)=>
+			readData = @chkReader(file13)
+			readData.done (data)=>
+				# console.log "parsed data"+data
+				_.db.transaction( (tx)=>
 
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-		sendParsedData13 : (file12, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
+					for i in [0..data.length-1] by 1
+						row = data[i]
+						tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename,user_email,user_url,user_registered,user_activation_key, user_status,display_name, spam,deleted) 
+							VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5],data[i][6], data[i][7], data[i][8], data[i][9], data[i][10],data[i][11], data[i][12]])
 
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) 
-						VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-		sendParsedData14 : (file13, fileEntry)->
-			readData = @chkReader(file)
-			readData.done (data)->
-				console.log "parsed data"+data
-
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename,user_email,user_url,user_registered,user_activation_key, user_status,display_name, spam,deleted) 
-						VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5],data[i][6], data[i][7], data[i][8], data[i][9], data[i][10],data[i][11], data[i][12]])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
+				,_.transactionErrorhandler
+				,(tx)=>
+					console.log 'Data inserted successfully14'
+					App.execute "close:sync:view"
+					_.setInitialSyncFlag('sync')
+					# @readValues
+				)
 
 
 #this functio will read the unzipped data
