@@ -81,9 +81,15 @@ define(['marionette'], function(Marionette) {
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        App.navigate('teachers/dashboard', {
-          trigger: true
-        });
+        if (_.getInitialSyncFlag() === null) {
+          App.navigate('sync', {
+            trigger: true
+          });
+        } else {
+          App.navigate('teachers/dashboard', {
+            trigger: true
+          });
+        }
       } else {
         if (user_role[0] === 'administrator') {
           App.navigate('textbooks', {

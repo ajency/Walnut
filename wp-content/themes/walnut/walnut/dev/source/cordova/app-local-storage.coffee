@@ -39,6 +39,14 @@ define ['underscore', 'jquery'], (_, $)->
         window.localStorage.setItem("synapse_directory_path", ""+path)
 
     _.getSynapseAssetsDirectoryPath =->
-        window.localStorage.getItem("synapse_directory_path") 
+        window.localStorage.getItem("synapse_directory_path")
+
+
+    # save/get initial app sync flag
+    _.setInitialSyncFlag =(flag)->
+        window.localStorage.setItem("initial_sync_flag", ""+flag)
+
+    _.getInitialSyncFlag =->
+        window.localStorage.getItem("initial_sync_flag")   
 
 

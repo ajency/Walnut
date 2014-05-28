@@ -33,7 +33,7 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
     })(Marionette.ItemView);
     return Views.LeftNavView = (function(_super) {
-      var handleSidenarAndContentHeight;
+      var appLogout, handleSidenarAndContentHeight;
 
       __extends(LeftNavView, _super);
 
@@ -52,11 +52,12 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
       LeftNavView.prototype.itemViewContainer = 'ul.menu-items';
 
       LeftNavView.prototype.events = {
-        'click li': 'clickMenu'
+        'click li': 'clickMenu',
+        'click #user_logout': 'appLogout'
       };
 
       LeftNavView.prototype.onShow = function() {
-        var elem;
+        var elem, userName;
         if ($('.creator').length > 0) {
           $("#main-menu").addClass("mini");
           $(".start").removeClass("active open");
@@ -73,16 +74,22 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           elem.children('li.open').children('.sub-menu').slideUp(200);
           elem.children('li').removeClass('open');
         }
-        $('#main-menu-toggle').sidr({
-          name: 'main-menu',
-          side: 'left'
-        });
-        return $('.chat-menu-toggle').sidr({
-          name: 'walnutProfile',
-          side: 'right',
-          renaming: false,
-          source: '#walnutProf'
-        });
+        if (_.platform() === 'DEVICE') {
+          $('#main-menu-toggle').sidr({
+            name: 'main-menu',
+            side: 'left'
+          });
+          $('.chat-menu-toggle').sidr({
+            name: 'walnutProfile',
+            side: 'right',
+            renaming: false,
+            source: '#walnutProf'
+          });
+          userName = _.getUserDetails(_.getUserID(), null);
+          return userName.done(function(user) {
+            return console.log('USERNAME: ' + user.username);
+          });
+        }
       };
 
       LeftNavView.prototype.clickMenu = function(e) {
@@ -125,6 +132,10 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
         } else {
           return content.css("min-height", content.attr("data-height"));
         }
+      };
+
+      appLogout = function() {
+        return console.log('Logout');
       };
 
       return LeftNavView;

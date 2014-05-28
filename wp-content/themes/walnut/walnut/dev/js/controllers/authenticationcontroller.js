@@ -83,7 +83,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
 
     AuthenticationController.prototype.offlineDeviceAuth = function() {
       var offlineUser;
-      offlineUser = _.getUserDetails(this.data.txtusername);
+      offlineUser = _.getUserDetails(null, this.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {
@@ -129,7 +129,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
       var offlineUser;
-      offlineUser = _.getUserDetails(this.data.txtusername);
+      offlineUser = _.getUserDetails(null, this.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {

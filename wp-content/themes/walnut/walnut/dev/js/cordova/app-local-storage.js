@@ -26,7 +26,13 @@ define(['underscore', 'jquery'], function(_, $) {
   _.setSynapseAssetsDirectoryPath = function(path) {
     return window.localStorage.setItem("synapse_directory_path", "" + path);
   };
-  return _.getSynapseAssetsDirectoryPath = function() {
+  _.getSynapseAssetsDirectoryPath = function() {
     return window.localStorage.getItem("synapse_directory_path");
+  };
+  _.setInitialSyncFlag = function(flag) {
+    return window.localStorage.setItem("initial_sync_flag", "" + flag);
+  };
+  return _.getInitialSyncFlag = function() {
+    return window.localStorage.getItem("initial_sync_flag");
   };
 });
