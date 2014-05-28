@@ -182,6 +182,7 @@
 }
 #toolbox .qstns ul li {
   width: 96px;
+  padding-top: 8%;
 }
 #toolbox .qstns ul li i {
   font-size: 17px;
@@ -1112,6 +1113,7 @@ p.mcq-option-text {
 }
 .sort-option {
   border: 2px solid #f3f3f3;
+  border-right-width: 35px;
   padding: 5px;
   margin: 5px;
   box-sizing: border-box;
