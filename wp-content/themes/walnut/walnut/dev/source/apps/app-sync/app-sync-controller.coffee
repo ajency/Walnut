@@ -36,9 +36,9 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 #The Function is too long after succesful execution change it by calling differnt function for eavh transaction
 		
 		selectRecords : ->
-			valuesAll=""
-			valuesAll1=""
-			valuesAll2=""
+			valuesAll = ""
+			valuesAll1 = ""
+			valuesAll2 = ""
 			_.db.transaction((tx)=>
 				tx.executeSql("SELECT * FROM wp_training_logs WHERE sync=0 ", [] 
 
@@ -783,9 +783,9 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 		fileUpload: (fileEntry)->
 			options = new FileUploadOptions();
-			options.fileKey="file";
-			options.fileName=fileEntry.substr(fileEntry.lastIndexOf('/') + 1);
-			options.mimeType="text/csv;";
+			options.fileKey = "file";
+			options.fileName = fileEntry.substr(fileEntry.lastIndexOf('/') + 1);
+			options.mimeType = "text/csv;";
 			
 			params = {};
 			params.value1 = "test";

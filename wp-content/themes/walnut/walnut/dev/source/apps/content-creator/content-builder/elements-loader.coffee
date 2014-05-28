@@ -9,4 +9,5 @@ define ['apps/content-creator/content-builder/elements/hotspot/controller'
 		'apps/content-creator/content-builder/elements/sort/controller'
 		'apps/content-creator/content-builder/elements/teacherquestion/controller'
 		'apps/content-creator/content-builder/elements/video/controller'
+        'apps/content-creator/content-builder/elements/audio/controller'
 		],->

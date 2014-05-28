@@ -1,6 +1,6 @@
 define(['underscore'], function(_) {
   return _.downloadSchoolLogo = function(logo_url) {
-    return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+    return window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fileSystem) {
       return fileSystem.root.getFile("logo.jpg", {
         create: true,
         exclusive: false

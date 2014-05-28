@@ -4,7 +4,7 @@ define ['underscore'], (_)->
 	
 	_.downloadSchoolLogo =(logo_url)->
 
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+		window.requestFileSystem(LocalFileSystem.TEMPORARY, 0 
 			,(fileSystem)->
 				fileSystem.root.getFile("logo.jpg", {create: true, exclusive:false} 
 					,(fileEntry)->

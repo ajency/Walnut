@@ -47,16 +47,6 @@ define ['app'
 				data
 				
 			onShow:->
-				$('#main-menu-toggle').sidr({
-					name : 'main-menu',
-					side: 'left'
-				});
-
-				$('.chat-menu-toggle').sidr({		
-					name : 'sidr',
-					side: 'right'
-				});
-
 				# || ($('.teacher-app').length>0)
 				if (($('.creator').length > 0)) 
 					$('.page-content').addClass('condensed');

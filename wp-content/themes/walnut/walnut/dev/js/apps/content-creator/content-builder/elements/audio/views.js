@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       AudioView.prototype.className = 'audio';
 
-      AudioView.prototype.template = '{{#audio}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="http://www.eyespot.com/2013/wp-content/uploads/2013/04/video-clip.jpg" data-setup="{}" controls> <source src="{{videoUrl}}" type="video/mp4" /> </video> <div class="clearfix"></div> {{/audio}} {{#placeholder}} <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Video</div> {{/placeholder}}';
+      AudioView.prototype.template = '{{#audio}} <audio controls> <source src="{{audioUrl}}" type="audio/ogg"> Your browser does not support the audio element. </audio> {{/audio}} {{#placeholder}} <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Audio</div> {{/placeholder}}';
 
       AudioView.prototype.mixinTemplateHelpers = function(data) {
         data = AudioView.__super__.mixinTemplateHelpers.call(this, data);
@@ -26,7 +26,13 @@ define(['app'], function(App) {
         }
       };
 
-      AudioView.prototype.onShow = function() {};
+      AudioView.prototype.onShow = function() {
+        return this.$el.find('audio').panzer({
+          layout: 'big',
+          expanded: true,
+          showduration: true
+        });
+      };
 
       return AudioView;
 

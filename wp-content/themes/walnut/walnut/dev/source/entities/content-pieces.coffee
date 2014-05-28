@@ -190,6 +190,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 															last_modified_by: meta_value.last_modified_by
 															published_by: meta_value.published_by
 															term_ids: meta_value.term_ids
+															instructions: meta_value.instructions
 							
 						d.resolve(result)
 

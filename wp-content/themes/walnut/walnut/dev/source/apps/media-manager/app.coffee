@@ -71,7 +71,7 @@ define ['app'
 						editMediaRegion : '#edit-media-region'
 
 					dialogOptions : 
-						modal_title : 'Media Manager'
+						modal_title : 'Image Manager'
 						modal_size  : 'wide-modal'
 
 					events: 

@@ -19,14 +19,31 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         'click a': function(e) {
           return e.preventDefault();
         },
-        'click': function(e) {
-          var media;
-          media = $(e.target).hasClass('single-img') ? $(e.target) : $(e.target).closest('.single-img');
-          if ($(media).hasClass('ui-selected')) {
-            return this.trigger("media:element:selected");
-          } else {
-            return this.trigger("media:element:unselected");
-          }
+        'click': '_whenImageClicked'
+      };
+
+      MediaView.prototype.mixinTemplateHelpers = function(data) {
+        data = MediaView.__super__.mixinTemplateHelpers.call(this, data);
+        if (data.sizes && data.sizes.thumbnail && data.sizes.thumbnail.url) {
+          data.imagePreview = this.imagePreview = true;
+        } else {
+          data.imagePreview = this.imagePreview = false;
+        }
+        return data;
+      };
+
+      MediaView.prototype._whenImageClicked = function(e) {
+        var media;
+        console.log('clicked');
+        console.log(e.target);
+        media = $(e.target).hasClass('single-img') ? $(e.target) : $(e.target).closest('.single-img');
+        this.trigger("media:element:selected");
+        return console.log('media selected ' + media);
+      };
+
+      MediaView.prototype.onShow = function() {
+        if (!this.imagePreview) {
+          return this.$el.hide();
         }
       };
 
@@ -40,9 +57,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         return GridView.__super__.constructor.apply(this, arguments);
       }
 
-      GridView.prototype.className = 'row';
-
-      GridView.prototype.template = '<div id="selectable-images"></div>';
+      GridView.prototype.template = '<div class="btn-group"> <a  id="list" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-th-list"></span> List </a> <a  id="grid" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-th"></span> Grid </a> </div> <div class="input-group transparent pull-right"> <span class="input-group-addon "> <i class="fa fa-instagram"></i> </span> <input type="text" class="form-control" placeholder="Search"> </div> <div class="clearfix"></div> <div class="row"> <div id="selectable-images"></div> </div>';
 
       GridView.prototype.itemView = MediaView;
 
@@ -55,6 +70,40 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
           }).selectable();
         } else {
           return this.$el.find('#selectable-images').selectable();
+        }
+      };
+
+      GridView.prototype.onShow = function() {
+        this.$el.find('a#list.btn').on('click', _.bind(this._changeChildClass, this, 'List'));
+        this.$el.find('a#grid.btn').on('click', _.bind(this._changeChildClass, this, 'Grid'));
+        return this.on('after:item:added', (function(_this) {
+          return function(imageView) {
+            if (_this.$el.find('.single-img:first').hasClass('col-sm-2')) {
+              _this._changeChildClass('Grid');
+            } else if (_this.$el.find('.single-img:first').hasClass('listView')) {
+              _this._changeChildClass('List');
+            }
+            _this.$el.closest('.tab-content').siblings('.nav-tabs').find('.all-media-tab').find('a').trigger('click');
+            imageView.$el.find('img').trigger('click');
+            return _this._selectSelectableElements(_this.$el.find('#selectable-images'), imageView.$el);
+          };
+        })(this));
+      };
+
+      GridView.prototype._selectSelectableElements = function(selectableContainer, elementsToSelect) {
+        $(".ui-selected", selectableContainer).not(elementsToSelect).removeClass("ui-selected");
+        return $(elementsToSelect).not(".ui-selected").addClass("ui-selected");
+      };
+
+      GridView.prototype._changeChildClass = function(toType, evt) {
+        return this.children.each(_.bind(this._changeClassOfEachChild, this, toType));
+      };
+
+      GridView.prototype._changeClassOfEachChild = function(type, child) {
+        if (type === 'List') {
+          return child.$el.removeClass('col-sm-2').addClass('listView');
+        } else if (type === 'Grid') {
+          return child.$el.removeClass('listView').addClass('col-sm-2');
         }
       };
 

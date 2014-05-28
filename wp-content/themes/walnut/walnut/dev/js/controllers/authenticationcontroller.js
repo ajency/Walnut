@@ -107,7 +107,8 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       CSVZipurl = server_resp.exported_csv_url;
       _.setBlogID(resp.blog_id);
       _.setBlogName(resp.blog_name);
-      _.downloadSchoolLogo("http://aditya.synapsedu.info/wp-content/uploads/sites/3/2014/05/images.jpg");
+      _.localDatabaseTransaction(_.db);
+      _.downloadSchoolLogo(resp.blog_logo);
       this.firstLoginDownload();
       this.saveUpdateUserDetails(server_resp);
       return this.onSuccessResponse();

@@ -57,12 +57,12 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
       LeftNavView.prototype.onShow = function() {
         var elem;
-        console.log(this.collection);
         if ($('.creator').length > 0) {
           $("#main-menu").addClass("mini");
           $(".start").removeClass("active open");
           $(".arrow").removeClass("open");
           $('.page-content').addClass('condensed');
+          $('.header-seperation').hide();
         } else {
           $('.page-content').removeClass('condensed');
         }
@@ -71,8 +71,18 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           elem.children('li.open').children('a').children('.arrow').removeClass('open');
           elem.children('li.open').children('a').children('.arrow').removeClass('active');
           elem.children('li.open').children('.sub-menu').slideUp(200);
-          return elem.children('li').removeClass('open');
+          elem.children('li').removeClass('open');
         }
+        $('#main-menu-toggle').sidr({
+          name: 'main-menu',
+          side: 'left'
+        });
+        return $('.chat-menu-toggle').sidr({
+          name: 'walnutProfile',
+          side: 'right',
+          renaming: false,
+          source: '#walnutProf'
+        });
       };
 
       LeftNavView.prototype.clickMenu = function(e) {

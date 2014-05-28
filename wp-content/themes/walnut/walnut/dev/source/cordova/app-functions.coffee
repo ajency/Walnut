@@ -2,6 +2,10 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	# mixin to add additional functionality underscore
 	_.mixin
+
+		getTblPrefix : ->
+			'wp_'+_.getBlogID()+'_'
+
 	
 		#Get all user details from local database
 		getUserDetails : (username)->
@@ -48,6 +52,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				last_modified_by : ''
 				published_by : ''
 				term_ids : ''
+				instructions: ''
 
 			runQuery = ->
 				$.Deferred (d)->
@@ -82,44 +87,15 @@ define ['underscore', 'unserialize'], ( _) ->
 							meta_value.published_by = row['meta_value']
 							
 						if row['meta_key'] is 'term_ids'
-							meta_value.term_ids = unserialize(unserialize(row['meta_value']))				
+							meta_value.term_ids = unserialize(unserialize(row['meta_value']))
+
+						if row['meta_key'] is 'instructions'
+							meta_value.instructions = row['meta_value']				
 
 					d.resolve(meta_value)
 
 			$.when(runQuery()).done ->
 				console.log 'getMetaValue transaction completed'
-			.fail _.failureHandler
-
-
-		#Get last details i.e id, status and date from wp_training_logs
-		getLastDetails : (collection_id, division)->
-
-			lastDetails = 
-				id: ''
-				date: ''
-				status: ''
-
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT id, status, date FROM wp_training_logs 
-							WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1"
-							, [collection_id, division], onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess =(d)->
-				(tx, data)->
-					if data.rows.length isnt 0
-						row = data.rows.item(0)
-
-						lastDetails =
-							id : row['id']
-							date : row['date']
-							status : row['status']
-
-					d.resolve(lastDetails)
-
-			$.when(runQuery()).done ->
-				console.log 'getLastDetails transaction completed'
 			.fail _.failureHandler
 
 
@@ -163,8 +139,9 @@ define ['underscore', 'unserialize'], ( _) ->
 		updateQuestionResponseLogs : (refID)->
 
 			_.db.transaction((tx)->
-				tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time, sync) 
-					VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0])
+				tx.executeSql('INSERT INTO '+_.getTblPrefix()+'question_response_logs 
+					(qr_ref_id, start_time, sync) VALUES (?,?,?)'
+					, [refID, _.getCurrentDateTime(2), 0])
 
 			,_.transactionErrorHandler
             ,(tx)->

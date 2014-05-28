@@ -14,11 +14,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
 
       Controller.prototype.initialize = function(options) {
         _.defaults(options.modelData, {
-          element: 'Video',
+          element: 'Audio',
           audio_id: 0,
           height: 0,
           width: 0,
-          audioUrl: 'http://video-js.zencoder.com/oceans-clip.mp4'
+          audioUrl: 'http://www.jplayer.org/audio/ogg/Miaow-04-Lismore.ogg'
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -27,7 +27,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         return Controller.__super__.bindEvents.call(this);
       };
 
-      Controller.prototype._getAudioView = function(imageModel) {
+      Controller.prototype._getAudioView = function() {
         return new Audio.Views.AudioView({
           model: this.layout.model
         });

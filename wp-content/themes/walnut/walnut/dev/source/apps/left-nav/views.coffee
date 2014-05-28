@@ -47,7 +47,6 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                 'click li': 'clickMenu'
 
             onShow: ->
-                console.log @collection
 
                 #Auto close open menus in Condensed menu
                 #|| ($('.teacher-app').length>0)
@@ -56,6 +55,7 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     $(".start").removeClass("active open");
                     $(".arrow").removeClass("open");
                     $('.page-content').addClass('condensed');
+                    $('.header-seperation').hide();
                 else
                     $('.page-content').removeClass('condensed');
 
@@ -65,6 +65,19 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     elem.children('li.open').children('a').children('.arrow').removeClass('active');
                     elem.children('li.open').children('.sub-menu').slideUp(200);
                     elem.children('li').removeClass('open');
+
+                # changes for mobile
+                $('#main-menu-toggle').sidr({
+                    name : 'main-menu',
+                    side: 'left'
+                });
+
+                $('.chat-menu-toggle').sidr({       
+                    name : 'walnutProfile',
+                    side: 'right',
+                    renaming: false,
+                    source: '#walnutProf'
+                })    
 
 
             clickMenu: (e)->

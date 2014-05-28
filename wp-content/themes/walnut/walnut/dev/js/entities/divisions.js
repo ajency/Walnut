@@ -85,7 +85,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           return function(tx, data) {
             var result;
             result = [];
-            return tx.executeSql('SELECT cd.id AS id, cd.division AS division, cd.class_id AS class_id, COUNT(umeta_id) AS students_count FROM wp_class_divisions cd LEFT JOIN wp_usermeta um ON cd.id = meta_value AND meta_key="student_division" WHERE class_id in (' + unserialize(data.rows.item(0)['meta_value']) + ') GROUP BY cd.id', [], function(tx, data) {
+            return tx.executeSql('SELECT cd.id AS id, cd.division AS division, cd.class_id AS class_id, COUNT(umeta_id) AS students_count FROM ' + _.getTblPrefix() + 'class_divisions cd LEFT JOIN wp_usermeta um ON cd.id = meta_value AND meta_key="student_division" WHERE class_id in (' + unserialize(data.rows.item(0)['meta_value']) + ') GROUP BY cd.id', [], function(tx, data) {
               var i, r, _i, _ref;
               for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
                 r = data.rows.item(i);

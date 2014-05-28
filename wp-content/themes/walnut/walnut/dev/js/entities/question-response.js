@@ -97,7 +97,7 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
         runMainQuery = function() {
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
+              return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
         };
@@ -145,7 +145,7 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
           var ref_id;
           ref_id = 'CP' + model.get('content_piece_id') + 'C' + model.get('collection_id') + 'D' + model.get('division');
           _.db.transaction(function(tx) {
-            return tx.executeSql('INSERT INTO wp_question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status, sync) VALUES (?,?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), q_resp, model.get('time_taken'), _.getCurrentDateTime(0), model.get('end_date'), 'started', 0]);
+            return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status, sync) VALUES (?,?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), q_resp, model.get('time_taken'), _.getCurrentDateTime(0), model.get('end_date'), 'started', 0]);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('SUCCESS: Inserted record in wp_question_response');
           });
@@ -165,7 +165,7 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
             end_date = _.getCurrentDateTime(0);
           }
           return _.db.transaction(function(tx) {
-            return tx.executeSql('UPDATE wp_question_response SET question_response=?, time_taken=?, status=?, end_date=? WHERE ref_id=?', [q_resp, model.get('time_taken'), status, end_date, model.get('ref_id')]);
+            return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET question_response=?, time_taken=?, status=?, end_date=? WHERE ref_id=?', [q_resp, model.get('time_taken'), status, end_date, model.get('ref_id')]);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('SUCCESS: Updated record in wp_question_response');
           });

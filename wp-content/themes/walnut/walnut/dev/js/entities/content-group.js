@@ -106,44 +106,12 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return contentGroupItem;
       },
       getContentGroupByIdFromLocal: function(id, division) {
-        var getContentPiecesAndDescription, getDuration, getMinsHours, onSuccess, runMainQuery;
-        getContentPiecesAndDescription = function(collection_id) {
-          var contentPiecesAndDescription, runQ, success;
-          contentPiecesAndDescription = {
-            content_pieces: '',
-            description: ''
-          };
-          runQ = function() {
-            return $.Deferred(function(d) {
-              return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], success(d), _.deferredErrorHandler(d));
-              });
-            });
-          };
-          success = function(d) {
-            return function(tx, data) {
-              var i, row, _i, _ref;
-              for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-                row = data.rows.item(i);
-                if (row['meta_key'] === 'description') {
-                  contentPiecesAndDescription.description = row['meta_value'];
-                }
-                if (row['meta_key'] === 'content_pieces') {
-                  contentPiecesAndDescription.content_pieces = row['meta_value'];
-                }
-              }
-              return d.resolve(contentPiecesAndDescription);
-            };
-          };
-          return $.when(runQ()).done(function() {
-            return console.log('getContentPiecesAndDescription transaction completed');
-          }).fail(_.failureHandler);
-        };
-        runMainQuery = function() {
+        var onSuccess, runQuery;
+        runQuery = function() {
+          var pattern;
+          pattern = '%"' + id + '"%';
           return $.Deferred(function(d) {
             return _.db.transaction(function(tx) {
-              var pattern;
-              pattern = '%"' + id + '"%';
               return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
@@ -153,24 +121,24 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             var i, result, row, _fn, _i, _ref;
             result = [];
             _fn = function(row, i, division) {
-              var dateAndStatus;
-              dateAndStatus = _.getLastDetails(row['id'], division);
-              return dateAndStatus.done(function(d) {
-                var date, status;
-                status = d.status;
-                date = d.date;
-                return (function(row, i, date, status) {
-                  var contentPiecesAndDescription;
-                  contentPiecesAndDescription = getContentPiecesAndDescription(row['id']);
-                  return contentPiecesAndDescription.done(function(d) {
-                    var content_pieces, description;
-                    content_pieces = description = '';
-                    if (d.content_pieces !== '') {
-                      content_pieces = unserialize(d.content_pieces);
-                    }
-                    if (d.description !== '') {
-                      description = unserialize(d.description);
-                    }
+              var contentPiecesAndDescription;
+              contentPiecesAndDescription = _.getContentPiecesAndDescription(row['id']);
+              return contentPiecesAndDescription.done(function(d) {
+                var content_pieces, description;
+                content_pieces = description = '';
+                if (d.content_pieces !== '') {
+                  content_pieces = unserialize(d.content_pieces);
+                }
+                if (d.description !== '') {
+                  description = unserialize(d.description);
+                }
+                return (function(row, i, content_pieces, description) {
+                  var dateAndStatus;
+                  dateAndStatus = _.getDateAndStatus(row['id'], division, content_pieces);
+                  return dateAndStatus.done(function(d) {
+                    var date, status;
+                    status = d.status;
+                    date = d.date;
                     return result[i] = {
                       id: row['id'],
                       name: row['name'],
@@ -182,8 +150,8 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                       published_by: row['published_by'],
                       type: row['type'],
                       term_ids: unserialize(row['term_ids']),
-                      duration: getDuration(row['duration']),
-                      minshours: getMinsHours(row['duration']),
+                      duration: _.getDuration(row['duration']),
+                      minshours: _.getMinsHours(row['duration']),
                       total_minutes: row['duration'],
                       status: status,
                       training_date: date,
@@ -191,7 +159,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                       description: description
                     };
                   });
-                })(row, i, date, status);
+                })(row, i, content_pieces, description);
               });
             };
             for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
@@ -201,21 +169,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             return d.resolve(result);
           };
         };
-        getDuration = function(duration) {
-          if (duration > 60) {
-            return duration / 60;
-          } else {
-            return duration;
-          }
-        };
-        getMinsHours = function(duration) {
-          if (duration > 60) {
-            return 'hrs';
-          } else {
-            return 'mins';
-          }
-        };
-        return $.when(runMainQuery()).done(function(data) {
+        return $.when(runQuery()).done(function(data) {
           return console.log('Content-group-by-id transaction completed');
         }).fail(_.failureHandler);
       },
@@ -223,14 +177,14 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         var data, insertTrainingLogs, lastStatus, updateTrainingLogs;
         insertTrainingLogs = function(data) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?, ?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status, 0]);
+            return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?, ?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status, 0]);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('Success: Inserted new record in wp_training_logs');
           });
         };
         updateTrainingLogs = function(id, data) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("UPDATE wp_training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id]);
+            return tx.executeSql("UPDATE " + _.getTblPrefix() + "training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id]);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('Success: Updated record in wp_training_logs');
           });

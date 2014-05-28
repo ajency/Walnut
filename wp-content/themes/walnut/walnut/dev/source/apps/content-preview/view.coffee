@@ -14,8 +14,8 @@ define ['app'], (App)->
                             <p class="bold small-text inline text-grey"><i class="fa fa-question"></i> Question Info </p>
                             <div class="tools"> <a href="javascript:;" class="arrow expand"></a> </div>
                           </div>
-                          <div style="overflow: hidden; display: none;" class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20">
-                            <p class="">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                          <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20">
+                            <p class="">{{instructions}}</p>
                           </div>
                         </div>
                     </div>

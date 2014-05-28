@@ -1,5 +1,8 @@
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
+    getTblPrefix: function() {
+      return 'wp_' + _.getBlogID() + '_';
+    },
     getUserDetails: function(username) {
       var onSuccess, runQuery, userData;
       userData = {
@@ -44,7 +47,8 @@ define(['underscore', 'unserialize'], function(_) {
         duration: '',
         last_modified_by: '',
         published_by: '',
-        term_ids: ''
+        term_ids: '',
+        instructions: ''
       };
       runQuery = function() {
         return $.Deferred(function(d) {
@@ -82,44 +86,15 @@ define(['underscore', 'unserialize'], function(_) {
             if (row['meta_key'] === 'term_ids') {
               meta_value.term_ids = unserialize(unserialize(row['meta_value']));
             }
+            if (row['meta_key'] === 'instructions') {
+              meta_value.instructions = row['meta_value'];
+            }
           }
           return d.resolve(meta_value);
         };
       };
       return $.when(runQuery()).done(function() {
         return console.log('getMetaValue transaction completed');
-      }).fail(_.failureHandler);
-    },
-    getLastDetails: function(collection_id, division) {
-      var lastDetails, onSuccess, runQuery;
-      lastDetails = {
-        id: '',
-        date: '',
-        status: ''
-      };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT id, status, date FROM wp_training_logs WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var row;
-          if (data.rows.length !== 0) {
-            row = data.rows.item(0);
-            lastDetails = {
-              id: row['id'],
-              date: row['date'],
-              status: row['status']
-            };
-          }
-          return d.resolve(lastDetails);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getLastDetails transaction completed');
       }).fail(_.failureHandler);
     },
     getTextbookOptions: function(id) {
@@ -161,7 +136,7 @@ define(['underscore', 'unserialize'], function(_) {
     },
     updateQuestionResponseLogs: function(refID) {
       return _.db.transaction(function(tx) {
-        return tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time, sync) VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0]);
+        return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_logs (qr_ref_id, start_time, sync) VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0]);
       }, _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: Inserted new record in wp_question_response_logs');
       });
