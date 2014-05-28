@@ -127,7 +127,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		
 		#Download the data from server for 1st time login
 		firstLoginDownload :->
-			dwnldUnZip
+			# syncController = App.request "get:sync:controller"
+			# syncController.dwnldUnZip() 
 
 
 

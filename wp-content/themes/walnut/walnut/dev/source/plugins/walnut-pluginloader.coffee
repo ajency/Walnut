@@ -38,9 +38,11 @@ define [
   		'serialize'
   		'selectordie'
   		'csvparse'
+  		'archive'
   		'json2csvparse'
   		'Zip'
   		'zipchk'
   		'FileSaver'
-  		'archive'
+  		'jszipUtils'
+  		'jszipLoad'
 		], ->

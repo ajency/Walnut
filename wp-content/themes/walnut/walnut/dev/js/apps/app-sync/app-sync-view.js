@@ -48,11 +48,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         return syncController.totalRecordsUpdate();
       };
 
-      AppSyncView.prototype.fileUpload = function() {
-        var syncController;
-        syncController = App.request("get:sync:controller");
-        return syncController.dwnldUnZip();
-      };
+      AppSyncView.prototype.fileUpload = function() {};
 
       AppSyncView.prototype.startConversion = function() {
         var syncController;

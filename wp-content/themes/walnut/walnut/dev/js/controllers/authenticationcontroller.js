@@ -124,9 +124,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       }
     };
 
-    AuthenticationController.prototype.firstLoginDownload = function() {
-      return dwnldUnZip;
-    };
+    AuthenticationController.prototype.firstLoginDownload = function() {};
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
       var offlineUser;

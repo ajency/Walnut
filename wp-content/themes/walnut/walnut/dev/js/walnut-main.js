@@ -39,15 +39,18 @@ require.config({
     kineticresize: 'plugins/kinetic.plugin.resize',
     checkbox: 'plugins/flatui-checkbox',
     holder: 'plugins/holder',
+    videojs: 'plugins/video',
     unserialize: 'plugins/unserialize',
     serialize: 'plugins/serialize',
     selectordie: 'plugins/selectordie.min',
     csvparse: 'plugins/jquery.parse',
+    archive: 'plugins/archive',
     json2csvparse: 'plugins/json2csv',
     Zip: 'plugins/jszip',
     zipchk: 'plugins/lz-string-1.3.3',
     FileSaver: 'plugins/FileSaver',
-    archive: 'plugins/archive'
+    jszipUtils: 'plugins/jszip-utils',
+    jszipLoad: 'plugins/jszip-load'
   },
   shim: {
     underscore: {
@@ -90,6 +93,7 @@ require.config({
     selectordie: ['jquery'],
     csvparse: ['jquery'],
     json2csvparse: ['jquery'],
+    archive: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });
