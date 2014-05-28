@@ -41,13 +41,6 @@ define ['marionette'], (Marionette)->
 
     App.on "initialize:after", (options) ->
 
-        if typeof Pace is 'undefined'
-            $("#site_main_container").addClass("showAll");
-
-        else
-            Pace.on 'hide', ()->
-                $("#site_main_container").addClass("showAll");
-
         App.startHistory()
 
         #@rootRoute = 'login'

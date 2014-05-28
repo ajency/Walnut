@@ -15,7 +15,7 @@ function create_content_piece_post_type() {
         ),
         'public' => true,
         'has_archive' => true,
-        'supports' => array('title', 'editor', 'comments', 'thumbnail','custom-fields')
+        'supports' => array('title', 'editor', 'comments', 'thumbnail','custom-fields', 'revisions')
             )
     );
 
@@ -431,7 +431,7 @@ function get_all_content_groups($args=array()){
     
     $current_blog= get_current_blog_id();
     switch_to_blog(1);
-    
+
     global $wpdb;
     
     $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection", null);
