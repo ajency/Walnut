@@ -73,9 +73,15 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           elem.children('li.open').children('.sub-menu').slideUp(200);
           elem.children('li').removeClass('open');
         }
-        return $('#main-menu-toggle').sidr({
+        $('#main-menu-toggle').sidr({
           name: 'main-menu',
           side: 'left'
+        });
+        return $('.chat-menu-toggle').sidr({
+          name: 'walnutProfile',
+          side: 'right',
+          renaming: false,
+          source: '#walnutProf'
         });
       };
 

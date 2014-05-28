@@ -1,5 +1,8 @@
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
+    getTblPrefix: function() {
+      return 'wp_' + _.getBlogID() + '_';
+    },
     getUserDetails: function(username) {
       var onSuccess, runQuery, userData;
       userData = {
@@ -133,7 +136,7 @@ define(['underscore', 'unserialize'], function(_) {
     },
     updateQuestionResponseLogs: function(refID) {
       return _.db.transaction(function(tx) {
-        return tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time, sync) VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0]);
+        return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_logs (qr_ref_id, start_time, sync) VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0]);
       }, _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: Inserted new record in wp_question_response_logs');
       });

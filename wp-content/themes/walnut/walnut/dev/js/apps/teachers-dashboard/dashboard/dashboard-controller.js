@@ -82,14 +82,9 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
           return $(this).tab('show');
         });
         if (_.platform() === "BROWSER") {
-          return $('#class, #div, #class-training').select2();
-        } else {
-          $('#class, #div, #class-training').selectOrDie({
-            customClass: "custom",
-            customID: "custom"
-          });
-          return _.checkSynapseAssetsDirectory();
+          $('#class, #div, #class-training').select2();
         }
+        return _.checkSynapseAssetsDirectory();
       };
 
       TeachersDashboardView.prototype.loadDivisions = function(class_id) {
@@ -98,7 +93,11 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         divs = this.collection.where({
           'class_id': class_id
         });
-        this.$el.find('#div').empty().select2('data', null);
+        if (_.platform() === "BROWSER") {
+          this.$el.find('#div').empty().select2('data', null);
+        } else {
+          this.$el.find('#div').empty();
+        }
         _results = [];
         for (_i = 0, _len = divs.length; _i < _len; _i++) {
           div = divs[_i];

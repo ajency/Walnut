@@ -101,15 +101,20 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			resp = server_resp.blog_details
 
-
 			CSVZipurl= server_resp.exported_csv_url
+			
 			# set blog id and blog name
 			_.setBlogID(resp.blog_id)
 			_.setBlogName(resp.blog_name)
 
+			#Local transaction
+			_.localDatabaseTransaction(_.db)
+
 			# download school logo
-			_.downloadSchoolLogo("http://aditya.synapsedu.info/wp-content/uploads/sites/3/2014/05/images.jpg")
+			_.downloadSchoolLogo(resp.blog_logo)
+			
 			@firstLoginDownload()
+			
 			@saveUpdateUserDetails(server_resp)
 			@onSuccessResponse()
 
@@ -125,9 +130,10 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				@saveUpdateUserDetails(server_resp)
 				@onSuccessResponse()
 		
+		
 		#Download the data from server for 1st time login
 		firstLoginDownload :->
-			dwnldUnZip
+			# dwnldUnZip
 
 
 

@@ -151,7 +151,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					insertTrainingLogs =(data)->
 
 						_.db.transaction( (tx)->
-							tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status, sync) 
+							tx.executeSql("INSERT INTO "+_.getTblPrefix()+"training_logs (division_id, collection_id, teacher_id, date, status, sync) 
 								VALUES (?, ?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status, 0])
 							
 						,_.transactionErrorHandler
@@ -164,7 +164,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					updateTrainingLogs =(id, data)->
 						
 						_.db.transaction( (tx)->
-							tx.executeSql("UPDATE wp_training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id])
+							tx.executeSql("UPDATE "+_.getTblPrefix()+"training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id])
 							
 						,_.transactionErrorHandler
 						,(tx)->

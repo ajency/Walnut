@@ -2,6 +2,10 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	# mixin to add additional functionality underscore
 	_.mixin
+
+		getTblPrefix : ->
+			'wp_'+_.getBlogID()+'_'
+
 	
 		#Get all user details from local database
 		getUserDetails : (username)->
@@ -135,8 +139,9 @@ define ['underscore', 'unserialize'], ( _) ->
 		updateQuestionResponseLogs : (refID)->
 
 			_.db.transaction((tx)->
-				tx.executeSql('INSERT INTO wp_question_response_logs (qr_ref_id, start_time, sync) 
-					VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0])
+				tx.executeSql('INSERT INTO '+_.getTblPrefix()+'question_response_logs 
+					(qr_ref_id, start_time, sync) VALUES (?,?,?)'
+					, [refID, _.getCurrentDateTime(2), 0])
 
 			,_.transactionErrorHandler
             ,(tx)->

@@ -70,14 +70,8 @@ define ['app'
 				if _.platform() is "BROWSER"
 					$('#class, #div, #class-training')
 					.select2()
-				else
-					$('#class, #div, #class-training')
-					.selectOrDie({
-						customClass: "custom",
-						customID: "custom"
-						})
 
-					_.checkSynapseAssetsDirectory()
+				_.checkSynapseAssetsDirectory()
 
 
 			loadDivisions:(class_id)=>
@@ -86,10 +80,13 @@ define ['app'
 
 				divs= @collection.where({'class_id':class_id})
 				
-				@$el.find '#div'
-				.empty()
-				.select2('data', null)
-						
+				if _.platform() is "BROWSER"
+					@$el.find '#div'
+					.empty()
+					.select2('data', null)
+				else
+					@$el.find '#div'
+					.empty()
 
 				for div in divs
 					@$el.find '#div'

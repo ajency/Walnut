@@ -37,7 +37,6 @@ define [
   		'detect'
   		'unserialize'
   		'serialize'
-  		'selectordie'
   		'csvparse'
   		'json2csvparse'
   		'Zip'

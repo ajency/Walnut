@@ -177,14 +177,14 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         var data, insertTrainingLogs, lastStatus, updateTrainingLogs;
         insertTrainingLogs = function(data) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?, ?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status, 0]);
+            return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?, ?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status, 0]);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('Success: Inserted new record in wp_training_logs');
           });
         };
         updateTrainingLogs = function(id, data) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("UPDATE wp_training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id]);
+            return tx.executeSql("UPDATE " + _.getTblPrefix() + "training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id]);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('Success: Updated record in wp_training_logs');
           });

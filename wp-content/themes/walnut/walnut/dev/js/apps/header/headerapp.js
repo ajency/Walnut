@@ -72,10 +72,6 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.onShow = function() {
-        $('.chat-menu-toggle').sidr({
-          name: 'sidr',
-          side: 'right'
-        });
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
           return $(".header-seperation").css("display", "none");

@@ -55,15 +55,13 @@ require.config
         panzer              : 'plugins/panzer'
         unserialize			: 'plugins/unserialize'
         serialize			: 'plugins/serialize'
-        selectordie			: 'plugins/selectordie.min'
         csvparse			: 'plugins/jquery.parse'
         json2csvparse       : 'plugins/json2csv'
         Zip                 : 'plugins/jszip'
         zipchk              : 'plugins/lz-string-1.3.3'
         FileSaver           : 'plugins/FileSaver'
         archive             : 'plugins/archive'
-
-
+        
 
 
     shim:
@@ -101,7 +99,6 @@ require.config
         kineticresize : ['kinetic']
         bridget : ['jquery']
         isotope : ['jquery','bridget']
-        selectordie		: ['jquery']
         csvparse		: ['jquery']
         json2csvparse   : ['jquery']
         panzer          : ['jquery']
