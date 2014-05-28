@@ -19,6 +19,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
         this.region = App.settingsRegion;
         model = App.request("get:element:settings:options", 'ImageWithText');
         view = this._getSettingView(model, this.model);
+        this.listenTo(view, 'show', (function(_this) {
+          return function() {
+            return _this.region.$el.center(false);
+          };
+        })(this));
         this.listenTo(view, "element:style:changed", (function(_this) {
           return function(style) {
             return _this.model.set("style", style);
