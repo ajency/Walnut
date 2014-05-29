@@ -80,7 +80,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
               _results = [];
               while (i < valuesAll) {
                 row = results.rows.item(i);
-                quest_resp_data = '{ "grp_name": "' + row.ref_id + '","grp_des":"' + row.content_piece_id + '", "grp_recuring": "' + row.collection_id + '", "grp_type": "' + row.division + '", "grp_currency":"' + row.question_response + '", "grp_chat":"' + row.time_taken + '","grp_chat":"' + row.start_date + '""grp_chat":"' + row.end_date + '""grp_chat":"' + row.status + '""grp_chat":"' + row.sync + '"}';
+                quest_resp_data = '{ "ref id": "' + row.ref_id + '","content id":"' + row.content_piece_id + '", "collection id": "' + row.collection_id + '", "division": "' + row.division + '", "question response":"' + row.question_response + '", "time taken":"' + row.time_taken + '","start date":"' + row.start_date + '""end date":"' + row.end_date + '""status":"' + row.status + '""sync":"' + row.sync + '"}';
                 console.log("2n Data is " + quest_resp_data);
                 _results.push(i++);
               }
