@@ -14,15 +14,16 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncController.prototype.initialize = function() {
         var view;
         this.view = view = this._getAppSyncView();
-        this.listenTo(view, 'close:view', this.closeView);
         this.listenTo(view, 'close', function() {
           return App.navigate('teachers/dashboard', {
             trigger: true
           });
         });
-        App.commands.setHandler("close:sync:view", function() {
-          return this.view.close();
-        });
+        App.commands.setHandler("close:sync:view", (function(_this) {
+          return function() {
+            return _this.view.close();
+          };
+        })(this));
         return this.show(view, {
           loading: true
         });
@@ -57,11 +58,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         return syncController.totalRecordsUpdate();
       };
 
-      AppSyncView.prototype.fileUpload = function() {
-        var syncController;
-        syncController = App.request("get:sync:controller");
-        return syncController.dwnldUnZip();
-      };
+      AppSyncView.prototype.fileUpload = function() {};
 
       AppSyncView.prototype.startConversion = function() {
         var syncController;
