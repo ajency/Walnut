@@ -100,8 +100,11 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		initialAppLogin : (server_resp)->
 
 			resp = server_resp.blog_details
+			_.setDwnlduri(server_resp.exported_csv_url)
 
-			CSVZipurl= server_resp.exported_csv_url
+			TimeStampValue=server_resp.exported_csv_url
+
+			_.setDwnldTimeStamp(TimeStampValue)
 			
 			# set blog id and blog name
 			_.setBlogID(resp.blog_id)

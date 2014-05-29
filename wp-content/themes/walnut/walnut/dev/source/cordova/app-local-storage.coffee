@@ -50,3 +50,26 @@ define ['underscore', 'jquery'], (_, $)->
         window.localStorage.getItem("initial_sync_flag")   
 
 
+    #save/get App sync dwnld time stamp
+    _.setDwnldTimeStamp =(TimeStampValue)->
+        window.localStorage.setItem("dwnld_time_stamp", ""+TimeStampValue)
+
+    _.getDwnldTimeStamp =->
+        window.localStorage.getItem("dwnld_time_stamp")   
+
+
+#save/get uri to dwnld from
+    _.setDwnlduri =(uriValue)->
+        window.localStorage.setItem("dwnldUri", ""+uriValue)
+
+    _.getDwnlduri =->
+        window.localStorage.getItem("dwnldUri")   
+
+
+    #save/get App sync dwnld time stamp
+    _.setTotalRecords =(total)->
+        window.localStorage.setItem("total_records", ""+total)
+
+    _.getTotalRecords =->
+        window.localStorage.getItem("total_records")   
+

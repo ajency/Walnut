@@ -44,8 +44,8 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
             tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'question_response_logs 
                 (qr_ref_id, start_time, sync INTEGER)')
 
-            tx.executeSql('CREATE TABLE IF NOT EXISTS sync_time 
-                (id, type_of_operation, time_stamp)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS sync_time_details
+                (id INTEGER PRIMARY KEY, type_of_operation, time_stamp)')
             
         ,_.transactionErrorHandler
         ,(tx)->

@@ -39,12 +39,35 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 			onShow : ->
 				$('#syncText').text('')
-				syncController = App.request "get:sync:controller"
-				syncController.totalRecordsUpdate()
+				if _.getInitialSyncFlag() is null
+					$('#JsonToCSV').attr("disabled","disabled")
+					syncController = App.request "get:sync:controller"
+					syncController.totalRecordsUpdate()
+
+				else
+					@checkForRecords()
+					
+
+				
+			checkForRecords:->
+				alert _.getTotalRecords()
+				if _.getTotalRecords() is null
+					$('#JsonToCSV').attr("disabled","disabled")
+					$('#CSVupload').attr("disabled","disabled")
+					$('#syncNow').removeAttr("disabled")
+					syncController = App.request "get:sync:controller"
+					syncController.totalRecordsUpdate()	
+
+				else
+					$('#JsonToCSV').removeAttr("disabled")
+					$('#CSVupload').attr("disabled","disabled")
+					$('#syncNow').attr("disabled","disabled")
+					syncController = App.request "get:sync:controller"
+					syncController.totalRecordsUpdate()	
 
 			fileUpload : ->
-				# syncController = App.request "get:sync:controller"
-				# syncController.dwnldUnZip()
+				syncController = App.request "get:sync:controller"
+				syncController.fileReadZip()
 				
 			
 			startConversion : ->

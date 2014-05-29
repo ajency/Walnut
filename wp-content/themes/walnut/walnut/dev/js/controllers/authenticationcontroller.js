@@ -102,9 +102,11 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.initialAppLogin = function(server_resp) {
-      var CSVZipurl, resp;
+      var TimeStampValue, resp;
       resp = server_resp.blog_details;
-      CSVZipurl = server_resp.exported_csv_url;
+      _.setDwnlduri(server_resp.exported_csv_url);
+      TimeStampValue = server_resp.exported_csv_url;
+      _.setDwnldTimeStamp(TimeStampValue);
       _.setBlogID(resp.blog_id);
       _.setBlogName(resp.blog_name);
       _.localDatabaseTransaction(_.db);

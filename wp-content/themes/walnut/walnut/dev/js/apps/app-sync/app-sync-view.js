@@ -54,11 +54,38 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.onShow = function() {
         var syncController;
         $('#syncText').text('');
-        syncController = App.request("get:sync:controller");
-        return syncController.totalRecordsUpdate();
+        if (_.getInitialSyncFlag() === null) {
+          $('#JsonToCSV').attr("disabled", "disabled");
+          syncController = App.request("get:sync:controller");
+          return syncController.totalRecordsUpdate();
+        } else {
+          return this.checkForRecords();
+        }
       };
 
-      AppSyncView.prototype.fileUpload = function() {};
+      AppSyncView.prototype.checkForRecords = function() {
+        var syncController;
+        alert(_.getTotalRecords());
+        if (_.getTotalRecords() === null) {
+          $('#JsonToCSV').attr("disabled", "disabled");
+          $('#CSVupload').attr("disabled", "disabled");
+          $('#syncNow').removeAttr("disabled");
+          syncController = App.request("get:sync:controller");
+          return syncController.totalRecordsUpdate();
+        } else {
+          $('#JsonToCSV').removeAttr("disabled");
+          $('#CSVupload').attr("disabled", "disabled");
+          $('#syncNow').attr("disabled", "disabled");
+          syncController = App.request("get:sync:controller");
+          return syncController.totalRecordsUpdate();
+        }
+      };
+
+      AppSyncView.prototype.fileUpload = function() {
+        var syncController;
+        syncController = App.request("get:sync:controller");
+        return syncController.fileReadZip();
+      };
 
       AppSyncView.prototype.startConversion = function() {
         var syncController;

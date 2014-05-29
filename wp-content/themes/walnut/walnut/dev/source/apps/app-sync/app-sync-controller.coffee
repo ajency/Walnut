@@ -7,12 +7,11 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 		startSync : ->
 			@dwnldUnZip()
-			# @Sync()
 
 		
-		totalRecordsUpdate : ->
+		totalRecordsUpdate : =>
 
-			_.db.transaction( (tx)->
+			_.db.transaction( (tx)=>
 				tx.executeSql("SELECT SUM(rows) AS total FROM 
 					(SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"training_logs WHERE sync=? 
 					UNION ALL 
@@ -20,17 +19,31 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					UNION ALL 
 					SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"question_response_logs WHERE sync=?)", [0,0,0]
 
-				,(tx, data)->
+				,(tx, data)=>
 					$('#SyncRecords').text(data.rows.item(0)['total'])
+					alert total
+					_.setTotalRecords(total)
+					@chkTotalrecords total
 
 				,_.transactionErrorhandler
 				)
 
 			_.transactionErrorhandler
-			,(tx)->
+			,(tx)=>
 				console.log 'Fetched total records having sync flag=0'
+				
 			)
 
+		chkTotalrecords :(total) ->
+			alert "total is"+total
+			if total is 0
+				$('#JsonToCSV').attr("disabled","disabled")
+				$('#CSVupload').attr("disabled","disabled")
+				$('#syncNow').removeAttr("disabled")
+			else
+				$('#JsonToCSV').removeAttr("disabled")
+				$('#CSVupload').attr("disabled","disabled")
+				$('#syncNow').attr("disabled","disabled")
 
 #This function Selects those record from the 3 tables which has sync flag set as 0
 #The Function is too long after succesful execution change it by calling differnt function for eavh transaction
@@ -40,7 +53,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 			valuesAll1 = ""
 			valuesAll2 = ""
 			_.db.transaction((tx)=>
-				tx.executeSql("SELECT * FROM wp_training_logs WHERE sync=0 ", [] 
+				tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"training_logs WHERE sync=0 ", [] 
 
 					,(tx, results)->
 						valuesAll = results.rows.length;
@@ -59,7 +72,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					
 					,_.transactionErrorhandler)
 
-				tx.executeSql("SELECT * FROM wp_question_response WHERE sync=0 ", []
+				tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"question_response WHERE sync=0 ", []
 
 					,(tx, results)->
 						valuesAll1 = results.rows.length;
@@ -77,7 +90,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					
 					,_.transactionErrorhandler)
 
-				tx.executeSql("SELECT * FROM wp_question_response_logs WHERE sync=0 ", []
+				tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"question_response_logs WHERE sync=0 ", []
 
 					, (tx, results)=>
 						valuesAll2 = results.rows.length;
@@ -133,7 +146,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				, (fileSystem)=>
 
-					fileSystem.root.getFile("csvread.txt", {create: true, exclusive: false}
+					fileSystem.root.getFile("SynapseAssets/csvread.txt", {create: true, exclusive: false}
 
 						, (fileEntry)=>
 
@@ -143,15 +156,66 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 									alert "file entry is" +fileEntry.toURL()
 									console.log "file entry is" +fileEntry.toURL()
 									writer.write(CSVdata)
-									$('#JsonToCSV').attr("disabled","disabled")
-									$('#CSVupload').removeAttr("disabled")
-									@fileRead()
+									@updateSync()
+									
 
 								, _.fileTransferErrorHandler)
 							
 						, _.fileErrorHandler)
 
 				, _.fileSystemErrorHandler)
+
+
+
+#This function will update the sync flag to 1 in the respective tables and disable the generate and download button and enable upload button
+		updateSync: =>
+
+			_.db.transaction( (tx)=>
+				alert "insert id "+results.insertId
+				for i in [0..data.length-1] by 1
+					row = data[i]
+					tx.executeSql("UPDATE "+_.getTblPrefix()+"_training_logs SET (sync) VALUES (?)", [1])
+
+			,_.transactionErrorhandler
+			,(tx)=>
+				console.log 'Data updated successfully'
+				@updateQuestRespn()
+				# @readValues
+			)
+
+		updateQuestRespn: =>
+
+			_.db.transaction( (tx)=>
+
+				for i in [0..data.length-1] by 1
+					row = data[i]
+					tx.executeSql("UPDATE "+_.getTblPrefix()+"_question_response SET (sync) VALUES (?)", [1])
+
+			,_.transactionErrorhandler
+			,(tx)=>
+				console.log 'Data updated successfully'
+				@updateQuestRespnLogs()
+				
+			)
+
+		updateQuestRespnLogs : =>
+
+			_.db.transaction( (tx)=>
+
+				for i in [0..data.length-1] by 1
+					row = data[i]
+					tx.executeSql("UPDATE "+_.getTblPrefix()+"_question_response_logs SET (sync) VALUES (?)", [1])
+
+			,_.transactionErrorhandler
+			,(tx)=>
+				console.log 'Data updated successfully'
+				$('#SyncRecords').text(0)
+				$('#JsonToCSV').attr("disabled","disabled")
+				$('#CSVupload').removeAttr("disabled")
+				$('#syncNow').attr("disabled","disabled")
+				@fileRead()
+				
+			)
 
 #This function reads thee contents written in above created file
 
@@ -160,7 +224,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				, (fileSystem)=>
 
-					fileSystem.root.getFile("csvread.txt", {create: true, exclusive: false}
+					fileSystem.root.getFile("SynapseAssets/csvread.txt", {create: true, exclusive: false}
 
 						, (fileEntry)=>
 
@@ -183,92 +247,21 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 				, _.fileSystemErrorHandler)
 
 
-
-#This function update the sync flag to 1 in the respective tables
-		updateSync: ->
-
-			_.db.transaction( (tx)->
-				alert "insert id "+results.insertId
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("UPDATE wp_training_logs SET (sync) VALUES (?)", [1])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data updated successfully'
-				# @readValues
-			)
-
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("UPDATE wp_question_response SET (sync) VALUES (?)", [1])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data updated successfully'
-				
-			)
-
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("UPDATE wp_question_response_logs SET (sync) VALUES (?)", [1])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data updated successfully'
-				
-			)
-
 #Function to Zip the .csv File
 		ZipFile : (csvData)=>
 			zip = new JSZip();
 			zip.file("csvread.txt", csvData)
 			content = zip.generate({type:"text/plain"});
-			# content1 = ""+content
-			# alert "1"+content1
-			# alert "saved"
 			zip.file("csvread.txt").asText()
-			alert zip.file("csvread.txt").asText()
 			@saveZipData content
-			# filepath = "file:///data/data/com.your.company.HelloWorld/files/files/csvread.txt"
-			# window.resolveLocalFileSystemURL(content1
-			# 	, (fileEntry)->
-			# 		alert fileEntry.name
-			# 		console.log fileEntry.name
-			# 	,  _.fileSystemErrorHandler)
-			# window.saveAs(content, filepath+"/hello.zip");
-			# window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-			# 	,(fileSystem)->
-			# 		console.log fileSystem.name
-			# 		console.log fileSystem.root.name
-			# 	, _.fileSystemErrorHandler)
-# if (JSZip.support.uint8array) {
-#   zip.file("hello.txt").asUint8Array(); // Uint8Array { 0=72, 1=101, 2=108, more...}
-# }			
-			# alert saveAs
-			# alert FileSaver.readFile
-			# FileSaver.readFile("csvread.zip", (err, data)->
-			# 	zip = new JSZip(data)
-			# )
-			# saveAs(content, "example.zip")
 
-			# string = "This is my compression test."
-			# alert "Size of sample is: " + string.length
-			# compressed = LZString.compress(string);
-			# alert "Size of compressed sample is: " + compressed.length
-			# string = LZString.decompress(compressed);
-			# alert "Sample is: " + string
 
 		saveZipData : (content)->
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>
 
-					fileSystem.root.getFile("hello.zip", {create: true, exclusive: false}
+					fileSystem.root.getFile("SynapseAssets/hello.zip", {create: true, exclusive: false}
 
 						, (fileEntry)=>
 
@@ -278,7 +271,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 									alert "file entry is" +fileEntry.toURL()
 									console.log "file entry is" +fileEntry.toURL()
 									writer.write(content)
-									@fileReadZip()
+
 
 								, _.fileTransferErrorHandler)
 							
@@ -291,7 +284,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				, (fileSystem)=>
 
-					fileSystem.root.getFile("hello.zip", null
+					fileSystem.root.getFile("SynapseAssets/hello.zip", null
 
 						, (fileEntry)=>
 
@@ -314,7 +307,8 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 # Download the zip file from the server and extract its contents
 		dwnldUnZip : ->
-			uri = encodeURI("http://synapsedu.info/wp-content/uploads/sites/3/tmp/csvs-1150220140526102131.zip")
+			uri = encodeURI(_.getDwnlduri())
+
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>
@@ -327,7 +321,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 							fileTransfer = new FileTransfer()
 							fileTransfer.download(uri, filePath+"logs.zip" 
 								,(file)=>
-									# alert file.toURL()
+									
 									@fileUnZip filePath, file.toURL()
 								
 								,_.fileTransferErrorHandler, true)
@@ -353,7 +347,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 											console.log "is"+file
 											reader = new FileReader()
 											reader.onloadend = (evt)=>
-												# console.log "result" +evt.target.result
+												
 												csvString = evt.target.result
 												parsedData = $.parse(csvString, {
 													header : false
@@ -391,55 +385,14 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 
 
-		# readUnzipFile : (filePath)->
-		# 	file=[]
-		# 	fileUnzip = ["wp_3_class_divisions.csv", "wp_3_question_response.csv", "wp_3_training_logs.csv", "wp_collection_meta.csv", "wp_content_collection.csv", "wp_options.csv", "wp_postmeta.csv", "wp_posts.csv","wp_term_relationships.csv","wp_term_taxonomy.csv","wp_terms.csv","wp_textbook_relationships.csv","wp_usermeta.csv","wp_users.csv"]
-		# 	flength = fileUnzip.length
-		# 	for i in [0..flength-1] by 1
-		# 		# console.log fileUnzip[i]
-		# 		file[i] = filePath+fileUnzip[i]
-		# 		console.log file[i]
-		# 		@readAllUnzipData filePath,file[i], flength
-					
 		readUnzipFile1 : (filePath)->
-				# console.log fileUnzip[i]
 				file = 	 "SynapseAssets/wp_3_class_divisions.csv"
-				file1 =  "SynapseAssets/wp_3_question_response.csv"
-				file14 =  "SynapseAssets/wp_3_question_response_logs.csv"
-				file2 =  "SynapseAssets/wp_3_training_logs.csv"
-				file3 =  "SynapseAssets/wp_collection_meta.csv"
-				file4 =  "SynapseAssets/wp_content_collection.csv"
-				file5 =  "SynapseAssets/wp_options.csv"
-				file6 =  "SynapseAssets/wp_postmeta.csv"
-				file7 =  "SynapseAssets/wp_posts.csv"
-				file8 =  "SynapseAssets/wp_term_relationships.csv"
-				file9 =  "SynapseAssets/wp_term_taxonomy.csv"
-				file10 = "SynapseAssets/wp_terms.csv"
-				file11 = "SynapseAssets/wp_textbook_relationships.csv"
-				file12 = "SynapseAssets/wp_usermeta.csv"
-				file13 = "SynapseAssets/wp_users.csv"
 
-				# console.log file
 				@sendParsedData1 file ,filePath
 				
 
 
 		
-		readAsText : (file)->
-			console.log "hiee1"+file
-			reader = new FileReader()
-			reader.onloadend = (evt)=>
-				alert "in"
-				# console.log  "result" +evt.target.result
-				# csvString = evt.target.result
-				# console.log  "csvString" +csvString
-				parsedData = $.parse(csvString, {
-					header : false
-					dynamicTyping : false
-					})
-				console.log "result is "+parsedData.results
-			reader.readAsText file
-
 #14 insert functions
 		sendParsedData1 : (file, fileEntry)=>
 			fileEntry=fileEntry
@@ -459,9 +412,9 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully1'
 					file1 =  "SynapseAssets/"+_.getTblPrefix()+"question_response.csv"
 					@sendParsedData2 file1 ,fileEntry
-					# @readValues
+
 				)
-				# @sendParsedData2 file1 ,fileEntry
+
 
 
 
@@ -469,7 +422,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 			fileEntry=fileEntry
 			readData = @chkReader(file1)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -482,13 +435,13 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully2'
 					file14 =  "SynapseAssets/"+_.getTblPrefix()+"question_response_logs.csv"
 					@sendParsedData15 file14 ,fileEntry
-					# @readValues
+
 				)
 		sendParsedData15 : (file14, fileEntry)=>
 			fileEntry=fileEntry
 			readData = @chkReader(file14)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -501,13 +454,13 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully15'
 					file2 =  "SynapseAssets/"+_.getTblPrefix()+"training_logs.csv"
 					@sendParsedData3 file2 ,fileEntry
-					# @readValues
+
 				)
 
 		sendParsedData3 : (file2, fileEntry)=>
 			readData = @chkReader(file2)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -520,12 +473,12 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully3'
 					file3 =  "SynapseAssets/wp_collection_meta.csv"
 					@sendParsedData4 file3 ,fileEntry
-					# @readValues
+
 				)
 		sendParsedData4 : (file3, fileEntry)=>
 			readData = @chkReader(file3)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -538,14 +491,14 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully4'
 					file4 =  "SynapseAssets/wp_content_collection.csv"
 					@sendParsedData5 file4 ,fileEntry
-					# @readValues
+
 				)
 
 		
 		sendParsedData5 : (file4, fileEntry)=>
 			readData = @chkReader(file4)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -558,13 +511,13 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully5'
 					file5 =  "SynapseAssets/wp_options.csv"
 					@sendParsedData6 file5 ,fileEntry
-					# @readValues
+
 				)
 
 		sendParsedData6 : (file5, fileEntry)=>
 			readData = @chkReader(file5)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -578,12 +531,12 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					file6 =  "SynapseAssets/wp_postmeta.csv"
 					@sendParsedData7 file6 ,fileEntry
 
-					# @readValues
+
 				)
 		sendParsedData7 : (file6, fileEntry)=>
 			readData = @chkReader(file6)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -596,13 +549,13 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully7'
 					file7 =  "SynapseAssets/wp_posts.csv"
 					@sendParsedData8 file7 ,fileEntry
-					# @readValues
+
 				)
 
 		sendParsedData8 : (file7, fileEntry)=>
 			readData = @chkReader(file7)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -615,13 +568,13 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully8'
 					file8 =  "SynapseAssets/wp_term_relationships.csv"
 					@sendParsedData9 file8 ,fileEntry
-					# @readValues
+
 				)
 
 		sendParsedData9 : (file8, fileEntry)=>
 			readData = @chkReader(file8)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 					for i in [0..data.length-1] by 1
 						row = data[i]
@@ -633,12 +586,12 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully9'
 					file9 =  "SynapseAssets/wp_term_taxonomy.csv"
 					@sendParsedData10 file9 ,fileEntry
-					# @readValues
+
 				)
 		sendParsedData10 : (file9, fileEntry)=>
 			readData = @chkReader(file9)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -651,12 +604,12 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully10'
 					file10 = "SynapseAssets/wp_terms.csv"
 					@sendParsedData11 file10 ,fileEntry
-					# @readValues
+
 				)
 		sendParsedData11 : (file10, fileEntry)=>
 			readData = @chkReader(file10)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -669,12 +622,11 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully11'
 					file11 = "SynapseAssets/wp_textbook_relationships.csv"
 					@sendParsedData12 file11 ,fileEntry
-					# @readValues
+
 				)
 		sendParsedData12 : (file11, fileEntry)=>
 			readData = @chkReader(file11)
 			readData.done (data)=>
-				# console.log "parsed data"+data
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -687,12 +639,10 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully12'
 					file12 = "SynapseAssets/wp_usermeta.csv"
 					@sendParsedData13 file12 ,fileEntry
-					# @readValues
 				)
 		sendParsedData13 : (file12, fileEntry)=>
 			readData = @chkReader(file12)
 			readData.done (data)=>
-				# console.log "parsed data"+data
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -705,12 +655,12 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					console.log 'Data inserted successfully13'
 					file13 = "SynapseAssets/wp_users.csv"
 					@sendParsedData14 file13 ,fileEntry
-					# @readValues
+
 				)
 		sendParsedData14 : (file13, fileEntry)=>
 			readData = @chkReader(file13)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+
 				_.db.transaction( (tx)=>
 
 					for i in [0..data.length-1] by 1
@@ -721,75 +671,53 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 				,_.transactionErrorhandler
 				,(tx)=>
 					console.log 'Data inserted successfully14'
+					$('#JsonToCSV').removeAttr("disabled")
+					$('#CSVupload').attr("disabled","disabled")
+					$('#syncNow').attr("disabled","disabled")
+					App.execute "close:sync:view"
+					_.setInitialSyncFlag('sync')
+					# @updateDwnldTime()
+
+				)
+
+
+		
+		updateDwnldTime :->
+			timestamp = _.getDwnldTimeStamp()
+			if _.getInitialSyncFlag() is null
+			 
+				_.db.transaction( (tx)=>
+
+						# for i in [0..data.length-1] by 1
+						# 	row = data[i]
+						tx.executeSql("INSERT INTO sync_time_details (type_of_operation, time_stamp) 
+							VALUES (?, ?)", [ "DownZip",8:36 ])
+
+					,_.transactionErrorhandler
+					,(tx)=>
+						console.log 'Sync Data INSERTED successfully '
+						App.execute "close:sync:view"
+						_.setInitialSyncFlag('sync')
+						# @readValues
+					)
+			else
+				_.db.transaction( (tx)->
+						tx.executeSql("UPDATE sync_time_details SET (type_of_operation,time_stamp) VALUES (?,?)", ["DownZip", 8:36 ])
+
+				,_.transactionErrorhandler
+				,(tx)->
+					console.log 'Sync Data UPDATED successfully'
 					App.execute "close:sync:view"
 					_.setInitialSyncFlag('sync')
 					# @readValues
 				)
 
 
-#this functio will read the unzipped data
-		# readAsTextData : (file)->
-		# 	console.log "read files" +file.toURL()
-		# 	reader = new FileReader()
-		# 	reader.onloadend = (evt)->
-		# 		alert "result" +evt.target.result
-		# 		alert "csvString" +csvString
-		# 		csvString = evt.target.result
-		# 		parsedData = $.parse(csvString, {
-		# 			header : false
-		# 			dynamicTyping : false
-		# 			})
-		# 		console.log "result is "+parsedData.results
-
-		# 	reader.readAsText file
-			# fileUnZip : (url, filename)->
-			# 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-					
-			# 		, (fs)=>
-			# 			zipPath = filename
-			# 			fileTransfer = new FileTransfer();
-			# 			fileTransfer.download(url, zipPath
-							
-			# 				,((entry)=>
-			# 					# alert "load"+entry.fullPath
-			# 					console.log entry.toURL()+"  Hello!";
-			# 					fullpath = entry.toURL()
-			# 					loader = new ZipLoader(fullpath)
-			# 					$.each loader.getEntries(fullpath)
-
-			# 					, (i, entry)=>
-			# 						console.log "Name: " + entry.name() + " Size: " + entry.size() + " is Directory: " + entry.isDirectory()
-			# 						@readAsTextData entry)
-			# 				, _.fileTransferErrorHandler)
-					
-			# 		, _.fileErrorHandler)
-
-			# dwnl : (url, filename)->
-			# 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-					
-			# 		, (fs)=>
-			# 			zipPath = filename
-			# 			fileTransfer = new FileTransfer();
-			# 			fileTransfer.download(url, zipPath
-							
-			# 				,(entry)=>
-			# 					# alert "load"+entry.fullPath
-			# 					console.log entry.toURL()+"  Hello!";
-			# 					fullpath = entry.toURL()
-			# 					# reader = new FileReader()
-			# 					# reader.onloadend = (evt)->
-			# 					# 	alert "result" +evt.target.result
-			# 					# reader.readAsText file
-			# 					@fileUnZip fullpath
-			# 				, _.fileTransferErrorHandler)
-					
-			# 		, _.fileErrorHandler)
-			
 
 
 #This Function Will upload the zip file to the server
 
-		fileUpload: (fileEntry)->
+		fileUpload: (fileEntry)=>
 			options = new FileUploadOptions();
 			options.fileKey = "file";
 			options.fileName = fileEntry.substr(fileEntry.lastIndexOf('/') + 1);
@@ -803,10 +731,11 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 			ft = new FileTransfer();
 			ft.upload(fileEntry, encodeURI("http://some.server.com/upload.php")
-				, (r)->
+				, (r)=>
 					console.log "Code = " + r.responseCode
 					console.log "Response = " + r.response
 					console.log "Sent = " + r.bytesSent
+					@chkForNewRecords
 
 				, (error)->
 					alert "An error has occurred: Code = " + error.code
@@ -815,143 +744,15 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				, options)
 
-#this Function Will download from server the updated records for the 3 tables
-		Sync : ->
-			files = ["http://synapsedu.info/wp_35_training_logs.csv", "http://synapsedu.info/wp_35_question_response.csv" ,"http://synapsedu.info/wp_35_question_response_logs.csv"]
-			currData =0
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-
-				, (fileSystem)=>
-
-					fileSystem.root.getFile("StudentsLogs.csv", {create: true, exclusive: false}
-
-						, (fileEntry)=>
-							# fileUrl= fileEntry.toURL()
-							filePath1=["/WpTrainingLogs.csv", "/wp_35_question_response.csv", "/wp_35_question_response_logs.csv"]
-							for i in [0..files.length-1] by 1
-								currentFileIndex = i
-								alert "val" +i
-								alert "new file is" +filePath1[i]
-								alert "file is " +fileEntry.toURL()
-								fileEntry = fileUrl+filePath1[i]
-								alert "file entry" +fileEntry
-								console.log "initiate download of file index " + i + " File Name: " + files[i]
-								@downlaodFiles files[i], fileEntry
-
-						, _.fileErrorHandler)
-
-				, _.fileSystemErrorHandler)
-
-	
-		downlaodFiles : (files , fileEntry)->
-			fileTransfer = new FileTransfer()
-			uri = files
-			filePath=fileEntry
-			alert filePath
-			fileTransfer.download(uri, filePath
-				,(file)=>
-					console.log 'File downloaded'+file
-					@readAsText file
-
-				,_.fileTransferErrorHandler, true)
-
-#This function raeds the file as text and Parse the .csv file to array f aarys who's result is sent through the function SendParsedData
-
-		# readAsText : (file)->
-		# 	reader = new FileReader()
-		# 	reader.onloadend = (evt)->
-		# 		alert "result" +evt.target.result
-		# 		alert "csvString" +csvString
-		# 		csvString = evt.target.result
-		# 		parsedData = $.parse(csvString, {
-		# 			header : false
-		# 			dynamicTyping : false
-		# 			})
-		# 		console.log "result is "+parsedData.results
-		# 		@sendParsedData parsedData.results
-
-		# 	reader.readAsText file
-
-#This function Inserts the data in the Database
-
-		sendParsedData : (data)->
-
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_training_logs (division_id, collection_id, teacher_id, date, status, sync) 
-						VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], 1])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				# @readValues
-			)
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_question_response (ref_id,content_piece_id,collection_id,division,question_response,time_taken,start_date,end_date,status,sync) 
-						VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], 1])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				
-			)
-			_.db.transaction( (tx)->
-
-				for i in [0..data.length-1] by 1
-					row = data[i]
-					tx.executeSql("INSERT INTO wp_question_response_logs (qr_ref_id, start_time, sync) 
-						VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], 1])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Data inserted successfully'
-				
-			)
-		@readValues
-
-	#This function Reads the inserted data
-
-		readValues : ()->
-			window.db.transaction( (transaction)->
-				alert "SELECT"
-				transaction.executeSql("SELECT * FROM wp_training_logs ", [], (transaction, results)->
-					valuesAll = results.rows.length;
-					console.log valuesAll
-					if valuesAll == 0 
-						console.log "No user found"
-						#return;
-					
-					else
-						
-						i= 0
-						while i < valuesAll
-							row = results.rows.item(i)
-							data = row.id
-							data1 =results.rows.item(i).division_id
-							data2 =results.rows.item(i).collection_id
-							data3 =results.rows.item(i).teacher_id 
-							data4 =results.rows.item(i).date
-							data5 =results.rows.item(i).status
-							console.log data
-							console.log data1
-							console.log data2
-							console.log data3
-							console.log data4
-							console.log data5
-							console.log i
-							i++
-							
-
-											
-				,_.transactionErrorhandler
-					
-				)
-			)
+		chkForNewRecords :->
+			if totalRecordsUpdate() is null
+				$('#JsonToCSV').attr("disabled","disabled")
+				$('#CSVupload').attr("disabled","disabled")
+				$('#syncNow').removeAttr("disabled")
+			else
+				$('#JsonToCSV').removeAttr("disabled")
+				$('#CSVupload').attr("disabled","disabled")
+				$('#syncNow').attr("disabled","disabled")
 
 
 

@@ -32,7 +32,25 @@ define(['underscore', 'jquery'], function(_, $) {
   _.setInitialSyncFlag = function(flag) {
     return window.localStorage.setItem("initial_sync_flag", "" + flag);
   };
-  return _.getInitialSyncFlag = function() {
+  _.getInitialSyncFlag = function() {
     return window.localStorage.getItem("initial_sync_flag");
+  };
+  _.setDwnldTimeStamp = function(TimeStampValue) {
+    return window.localStorage.setItem("dwnld_time_stamp", "" + TimeStampValue);
+  };
+  _.getDwnldTimeStamp = function() {
+    return window.localStorage.getItem("dwnld_time_stamp");
+  };
+  _.setDwnlduri = function(uriValue) {
+    return window.localStorage.setItem("dwnldUri", "" + uriValue);
+  };
+  _.getDwnlduri = function() {
+    return window.localStorage.getItem("dwnldUri");
+  };
+  _.setTotalRecords = function(total) {
+    return window.localStorage.setItem("total_records", "" + total);
+  };
+  return _.getTotalRecords = function() {
+    return window.localStorage.getItem("total_records");
   };
 });
