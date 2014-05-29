@@ -35,7 +35,6 @@ define(['marionette'], function(Marionette) {
     }
     App.startHistory();
     if (_.platform() === 'DEVICE') {
-      console.log('USER ID: ' + _.getUserID());
       if (_.getUserID() === null || _.getUserID() === 'null') {
         this.rootRoute = 'app-login';
         if (_.getBlogID() === null) {
@@ -91,9 +90,15 @@ define(['marionette'], function(Marionette) {
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        App.navigate('teachers/dashboard', {
-          trigger: true
-        });
+        if (_.getInitialSyncFlag() === null) {
+          App.navigate('sync', {
+            trigger: true
+          });
+        } else {
+          App.navigate('teachers/dashboard', {
+            trigger: true
+          });
+        }
       } else {
         if (user_role[0] === 'administrator') {
           App.navigate('textbooks', {

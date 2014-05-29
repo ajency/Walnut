@@ -23,7 +23,6 @@ define(['app', 'apps/login/logincontroller', 'apps/login/app-login/app-login-con
     Controller = {
       showLogin: function() {
         var userdata;
-        console.log('showLogin');
         userdata = App.request("get:user:model");
         if (!userdata.get('ID')) {
           return new LoginApp.Controller.LoginController({
@@ -33,7 +32,6 @@ define(['app', 'apps/login/logincontroller', 'apps/login/app-login/app-login-con
       },
       showLoginWithUser: function(username) {
         var userdata;
-        console.log('showLoginWithUser');
         userdata = App.request("get:user:model");
         if (!userdata.get('ID')) {
           return new LoginApp.Controller.LoginController({
@@ -44,7 +42,6 @@ define(['app', 'apps/login/logincontroller', 'apps/login/app-login/app-login-con
       },
       appLogin: function() {
         var userdata;
-        console.log('appLogin');
         userdata = App.request("get:user:model");
         if (!userdata.get('ID')) {
           return new LoginApp.Controller.AppController({

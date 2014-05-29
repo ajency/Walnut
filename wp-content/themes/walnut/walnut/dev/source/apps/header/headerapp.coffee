@@ -77,8 +77,21 @@ define ['app'
 
 				user = App.request "get:user:model"
 				user.clear()
-				
+
+				App.leftNavRegion.close()
+				App.headerRegion.close()
+				App.mainContentRegion.close()
+				App.breadcrumbRegion.close()
 				App.navigate('app-login', trigger: true)
+				
+				document.addEventListener("backbutton"
+					,->
+						if App.getCurrentRoute() is 'app-login'
+							navigator.app.exitApp()
+						else	
+							App.navigate('app-login', trigger: true)	
+
+					, false)
 						
 
 

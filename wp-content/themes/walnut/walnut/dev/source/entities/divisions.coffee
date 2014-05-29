@@ -61,8 +61,10 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								# userid hardcoded as 1
+								# meta_key='divisions'
+								console.log 'User id: '+_.getUserID()
 								tx.executeSql("SELECT meta_value FROM wp_usermeta 
-									WHERE user_id=? AND meta_key=?" , [_.getUserID(), 'classes']
+									WHERE user_id=? AND meta_key=?" , [_.getUserID(), 'divisions']
 									, onSuccess(d), _.deferredErrorHandler(d))
 
 					onSuccess = (d)->
@@ -70,10 +72,10 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 							result = []
 
 							tx.executeSql('SELECT cd.id AS id, cd.division AS division, cd.class_id 
-								AS class_id, COUNT(umeta_id) AS students_count 
+								AS class_id, COUNT(um.umeta_id) AS students_count 
 								FROM '+_.getTblPrefix()+'class_divisions cd LEFT JOIN wp_usermeta um 
 								ON cd.id = meta_value AND meta_key="student_division" 
-								WHERE class_id in ('+unserialize(data.rows.item(0)['meta_value'])+') 
+								WHERE id in ('+unserialize(data.rows.item(0)['meta_value'])+') 
 								GROUP BY cd.id', []
 
 									,(tx, data)->

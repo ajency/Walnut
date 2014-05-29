@@ -284,7 +284,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
 
     SynchronizationController.prototype.dwnldUnZip = function() {
       var uri;
-      uri = encodeURI("http://synapsedu.info/wp-content/uploads/sites/3/tmp/csvs-1150220140526102131.zip");
+      uri = encodeURI("http://synapsedu.info/wp-content/uploads/sites/7/tmp/csvs-1150220140526102131.zip");
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
           return fileSystem.root.getFile("SynapseAssets/logs.zip", {

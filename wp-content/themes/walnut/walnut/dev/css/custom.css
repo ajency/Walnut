@@ -1589,3 +1589,7 @@ textarea.error,
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
   -webkit-focus-ring-color: #0090d9 !important;
 }
+
+body{
+  height: 100%;
+}

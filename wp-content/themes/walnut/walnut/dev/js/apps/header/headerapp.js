@@ -97,9 +97,22 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         $.sidr('close', 'walnutProfile');
         user = App.request("get:user:model");
         user.clear();
-        return App.navigate('app-login', {
+        App.leftNavRegion.close();
+        App.headerRegion.close();
+        App.mainContentRegion.close();
+        App.breadcrumbRegion.close();
+        App.navigate('app-login', {
           trigger: true
         });
+        return document.addEventListener("backbutton", function() {
+          if (App.getCurrentRoute() === 'app-login') {
+            return navigator.app.exitApp();
+          } else {
+            return App.navigate('app-login', {
+              trigger: true
+            });
+          }
+        }, false);
       };
 
       return HeaderView;

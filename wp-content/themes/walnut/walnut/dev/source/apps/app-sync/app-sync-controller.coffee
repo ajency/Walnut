@@ -1,4 +1,6 @@
-define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "jszipLoad", "json2csvparse", "Zip", "zipchk", "FileSaver"], (Marionette, App, _, parse, getEntries, JSZipUtils,load) ->
+define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "jszipLoad"
+		, "json2csvparse", "Zip", "zipchk", "FileSaver"]
+		, (Marionette, App, _, parse, getEntries, JSZipUtils,load) ->
 
 	class SynchronizationController extends Marionette.Controller
 
@@ -314,7 +316,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 # Download the zip file from the server and extract its contents
 		dwnldUnZip : ->
-			uri = encodeURI("http://synapsedu.info/wp-content/uploads/sites/3/tmp/csvs-1150220140526102131.zip")
+			uri = encodeURI("http://synapsedu.info/wp-content/uploads/sites/7/tmp/csvs-1150220140526102131.zip")
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>

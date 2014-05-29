@@ -48,7 +48,6 @@ define ['marionette'], (Marionette)->
 		App.startHistory()
 
 		if _.platform() is 'DEVICE'
-			console.log 'USER ID: '+_.getUserID()
 			if _.getUserID() is null or _.getUserID() is 'null'
 				@rootRoute = 'app-login'
 				@rootRoute = 'login' if _.getBlogID() is null
@@ -92,10 +91,10 @@ define ['marionette'], (Marionette)->
 		user_role= user.get "roles"
 		
 		if _.platform() is 'DEVICE'
-			# if _.getInitialSyncFlag() is null
-			# 	App.navigate('sync', trigger: true)
-			# else	
-			App.navigate('teachers/dashboard', trigger: true)
+			if _.getInitialSyncFlag() is null
+				App.navigate('sync', trigger: true)
+			else	
+				App.navigate('teachers/dashboard', trigger: true)
 
 		else
 			if user_role[0]=='administrator'
