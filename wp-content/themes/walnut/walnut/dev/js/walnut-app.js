@@ -27,7 +27,7 @@ define(['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
-    var xhr;
+    var user, xhr;
     if (typeof Pace !== 'undefined') {
       Pace.on('hide', function() {
         return $("#site_main_container").addClass("showAll");
@@ -35,17 +35,27 @@ define(['marionette'], function(Marionette) {
     }
     App.startHistory();
     if (_.platform() === 'DEVICE') {
-      this.rootRoute = 'app-login';
-      if (_.getBlogID() === null) {
-        this.rootRoute = 'login';
+      console.log('USER ID: ' + _.getUserID());
+      if (_.getUserID() === null || _.getUserID() === 'null') {
+        this.rootRoute = 'app-login';
+        if (_.getBlogID() === null) {
+          this.rootRoute = 'login';
+        }
+        App.navigate(this.rootRoute, {
+          trigger: true
+        });
+      } else {
+        user = App.request("get:user:model");
+        user.set({
+          'ID': '' + _.getUserID()
+        });
+        App.vent.trigger("show:dashboard");
+        App.loginRegion.close();
       }
-      App.navigate(this.rootRoute, {
-        trigger: true
-      });
     } else {
       return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
         return function(resp) {
-          var school, user;
+          var school;
           if (resp.success) {
             console.log(resp);
             user = App.request("get:user:model");
@@ -81,15 +91,9 @@ define(['marionette'], function(Marionette) {
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        if (_.getInitialSyncFlag() === null) {
-          App.navigate('sync', {
-            trigger: true
-          });
-        } else {
-          App.navigate('teachers/dashboard', {
-            trigger: true
-          });
-        }
+        App.navigate('teachers/dashboard', {
+          trigger: true
+        });
       } else {
         if (user_role[0] === 'administrator') {
           App.navigate('textbooks', {

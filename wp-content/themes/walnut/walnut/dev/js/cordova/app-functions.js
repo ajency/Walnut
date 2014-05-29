@@ -3,11 +3,10 @@ define(['underscore', 'unserialize'], function(_) {
     getTblPrefix: function() {
       return 'wp_' + _.getBlogID() + '_';
     },
-    getUserDetails: function(userid, username) {
+    getUserDetails: function(username) {
       var onSuccess, runQuery, userData;
       userData = {
         user_id: '',
-        username: '',
         password: '',
         role: '',
         exists: false
@@ -15,12 +14,7 @@ define(['underscore', 'unserialize'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            if (username !== null) {
-              tx.executeSql("SELECT * FROM USERS WHERE username=?", [username], onSuccess(d), _.deferredErrorHandler(d));
-            }
-            if (userid !== null) {
-              return tx.executeSql("SELECT * FROM USERS WHERE user_id=?", [userid], onSuccess(d), _.deferredErrorHandler(d));
-            }
+            return tx.executeSql("SELECT * FROM USERS WHERE username=?", [username], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -31,7 +25,6 @@ define(['underscore', 'unserialize'], function(_) {
             row = data.rows.item(0);
             userData = {
               user_id: row['user_id'],
-              username: row['username'],
               password: row['password'],
               role: row['user_role'],
               exists: true

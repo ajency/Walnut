@@ -5,6 +5,12 @@ define(['underscore', 'jquery'], function(_, $) {
   _.getUserID = function() {
     return window.localStorage.getItem("user_id");
   };
+  _.setUserName = function(name) {
+    return window.localStorage.setItem("user_name", "" + name);
+  };
+  _.getUserName = function() {
+    return window.localStorage.getItem("user_name");
+  };
   _.setBlogID = function(id) {
     return window.localStorage.setItem("blog_id", "" + id);
   };

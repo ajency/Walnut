@@ -71,6 +71,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           } else {
             _this.setUserModel();
             _.setUserID(resp.login_details.ID);
+            _.setUserName(_this.data.txtusername);
             if (_.getBlogID() === null) {
               return _this.initialAppLogin(resp);
             } else {
@@ -83,13 +84,14 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
 
     AuthenticationController.prototype.offlineDeviceAuth = function() {
       var offlineUser;
-      offlineUser = _.getUserDetails(null, this.data.txtusername);
+      offlineUser = _.getUserDetails(this.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {
             if (user.password === _this.data.txtpassword) {
               _this.setUserModel();
               _.setUserID(user.user_id);
+              _.setUserName(_this.data.txtusername);
               return _this.onSuccessResponse();
             } else {
               return _this.onErrorResponse('Invalid Password');
@@ -129,7 +131,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
       var offlineUser;
-      offlineUser = _.getUserDetails(null, this.data.txtusername);
+      offlineUser = _.getUserDetails(this.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {

@@ -37,7 +37,8 @@ define [
 						when "opacity"
 							@region.currentView.$el.removeAttr "style"
 						when "spinner"
-							return realView.close() if @region.currentView isnt loadingView
+							if @region.currentView
+								return realView.close() if @region.currentView isnt loadingView
 
 
 					if not config.debug

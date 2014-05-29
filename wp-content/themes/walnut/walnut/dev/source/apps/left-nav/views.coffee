@@ -42,12 +42,10 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
 
             itemViewContainer: 'ul.menu-items'
 
-
             events:
                 'click li': 'clickMenu'
-                
-                'click #user_logout': 'appLogout'
 
+            
             onShow: ->
 
                 #Auto close open menus in Condensed menu
@@ -75,16 +73,6 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                         side: 'left'
                     });
 
-                    $('.chat-menu-toggle').sidr({       
-                        name : 'walnutProfile',
-                        side: 'right',
-                        renaming: false,
-                        source: '#walnutProf'
-                    })   
-
-                    userName = _.getUserDetails(_.getUserID(), null) 
-                    userName.done (user)->
-                        console.log 'USERNAME: '+user.username
 
 
             clickMenu: (e)->
@@ -103,16 +91,17 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     $('.arrow', li_target).removeClass("open");
                     li_target.parent().removeClass("active");
                     sub.slideUp 200, () ->
-                        handleSidenarAndContentHeight();
+                        @handleSidenarAndContentHeight();
                 else
                     $('.arrow', li_target).addClass("open");
                     li_target.parent().addClass("open");
                     sub.slideDown 200, ()->
-                        handleSidenarAndContentHeight();
+                        @handleSidenarAndContentHeight();
 
                 e.preventDefault();
 
-            handleSidenarAndContentHeight = ()->
+
+            handleSidenarAndContentHeight : ->
                 content = $('.page-content');
                 sidebar = $('.page-sidebar');
                 if (!content.attr("data-height"))
@@ -122,10 +111,3 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     content.css("min-height", sidebar.height() + 120);
                 else
                     content.css("min-height", content.attr("data-height"));
-
-
-            appLogout = ->
-                console.log 'Logout'        
-				
-
-

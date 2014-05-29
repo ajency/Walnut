@@ -18,6 +18,7 @@ define ['app'
             Controller =
 
                 showLogin: ->
+                    console.log 'showLogin'
                     userdata= App.request "get:user:model"
                     if not userdata.get 'ID'
                         new LoginApp.Controller.LoginController
@@ -26,6 +27,7 @@ define ['app'
 
 
                 showLoginWithUser:(username) ->
+                    console.log 'showLoginWithUser'
                     userdata = App.request "get:user:model"
                     if not userdata.get 'ID'
                         new LoginApp.Controller.LoginController
@@ -34,6 +36,7 @@ define ['app'
 
 
                 appLogin:->
+                    console.log 'appLogin'
                     userdata = App.request "get:user:model"
                     if not userdata.get 'ID'
                         new LoginApp.Controller.AppController
