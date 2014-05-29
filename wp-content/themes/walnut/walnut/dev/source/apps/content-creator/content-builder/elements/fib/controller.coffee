@@ -23,7 +23,7 @@ define ['app'
 								enableIndividualMarks : false
 								marks: 0
 								style : 'uline'
-								text : 'Add text here <input type=\"text\" data-cke-editable=\"1\" style=\" height :100%\" contenteditable=\"false\">​'
+								text : 'Add text here <input type=\"text\" data-cke-editable=\"1\" style=\" height :100%\" contenteditable=\"false\">'
 								blanksArray : []
 
 							super options

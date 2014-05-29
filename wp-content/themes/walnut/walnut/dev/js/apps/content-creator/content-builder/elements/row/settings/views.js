@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-creator/content-builder/elements/row/settings/templates/settings.html'], function(App, settingsTpl) {
@@ -7,6 +8,7 @@ define(['app', 'text!apps/content-creator/content-builder/elements/row/settings/
       __extends(SettingsView, _super);
 
       function SettingsView() {
+        this._closeViewWhenClickedOutside = __bind(this._closeViewWhenClickedOutside, this);
         return SettingsView.__super__.constructor.apply(this, arguments);
       }
 
@@ -34,6 +36,9 @@ define(['app', 'text!apps/content-creator/content-builder/elements/row/settings/
       };
 
       SettingsView.prototype.events = {
+        'click': function(evt) {
+          return evt.stopPropagation();
+        },
         'click .close-settings': function(evt) {
           evt.preventDefault();
           return App.settingsRegion.close();
@@ -47,6 +52,19 @@ define(['app', 'text!apps/content-creator/content-builder/elements/row/settings/
         'change input[name="draggable"]': function(evt) {
           return this.trigger("element:draggable:changed", $(evt.target).is(':checked'));
         }
+      };
+
+      SettingsView.prototype.onShow = function() {
+        return $(window).on('click', this._closeViewWhenClickedOutside);
+      };
+
+      SettingsView.prototype._closeViewWhenClickedOutside = function() {
+        console.log('window clicked closing setting');
+        return this.close();
+      };
+
+      SettingsView.prototype.onClose = function() {
+        return $(window).off('click', this._closeViewWhenClickedOutside);
       };
 
       return SettingsView;
