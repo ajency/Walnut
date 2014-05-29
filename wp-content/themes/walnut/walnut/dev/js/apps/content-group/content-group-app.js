@@ -12,8 +12,9 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
       }
 
       ContentGroupRouter.prototype.appRoutes = {
-        'add-module': 'editGroup',
+        'add-module': 'addGroup',
         'view-group/:id': 'viewGroup',
+        'edit-group/:id': 'editGroup',
         'list-groups': 'groupsListing',
         'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule',
         'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule'
@@ -23,9 +24,15 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
 
     })(Marionette.AppRouter);
     Controller = {
-      editGroup: function() {
+      addGroup: function() {
         return new ContentGroupApp.Edit.GroupController({
           region: App.mainContentRegion
+        });
+      },
+      editGroup: function(id) {
+        return new ContentGroupApp.Edit.GroupController({
+          region: App.mainContentRegion,
+          group_id: id
         });
       },
       viewGroup: function(id) {
