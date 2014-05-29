@@ -270,7 +270,8 @@
 .docket-body label {
   color: #777a80;
 }
-.docket-body select.marks {
+.docket-body select.marks,
+.docket-body select.blanks {
   width: auto;
 }
 .docket-body .radio label {
@@ -786,6 +787,10 @@
   background: #006ea6;
 }
 /*Properties Bar*/
+#options-bar-region label {
+  font-size: 13px;
+  line-height: 10px;
+}
 #subProps {
   background-color: #0090d9;
   -webkit-border-radius: 4px;

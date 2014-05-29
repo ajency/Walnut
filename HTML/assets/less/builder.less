@@ -187,8 +187,10 @@
 	label{
 		color: #777a80;
 	}
-	select.marks{
-		width: auto;
+	select{
+		&.marks, &.blanks{
+			width: auto;
+		}
 	}
 	.radio label{
 		margin-right: 6px;
@@ -660,6 +662,12 @@
 }
 
 /*Properties Bar*/
+#options-bar-region{
+	label{
+		font-size: 13px;
+		line-height: 10px;
+	}
+}
 #subProps{
     background-color: @color-info;
     -webkit-border-radius: 4px;
