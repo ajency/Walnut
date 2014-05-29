@@ -39,6 +39,9 @@ define ['app'
 				leftRegion	: '#header-left'
 				rightRegion	: '#header-right'
 
+			events :
+				'click #app_logout': 'appUserLogout'
+
 			serializeData : ->
 				data = super()
 				data.logourl= SITEURL+ '/wp-content/themes/walnut/images/walnutlearn.png'
@@ -51,6 +54,47 @@ define ['app'
 				if (($('.creator').length > 0)) 
 					$('.page-content').addClass('condensed');
 					$(".header-seperation").css("display","none");
+
+				# changes for mobile
+				if _.platform() is 'DEVICE'
+
+					$('.right-menu').sidr({       
+						name : 'walnutProfile',
+						side: 'right',
+						renaming: false
+					}) 
+
+					#display name of logged in user
+					@$el.find('#app_username').text('Hi '+_.getUserName()+',')
+
+			
+			appUserLogout : ->
+				console.log 'appUserLogout'
+
+				_.setUserID(null)
+
+				$.sidr('close', 'walnutProfile')
+
+				user = App.request "get:user:model"
+				user.clear()
+
+				App.leftNavRegion.close()
+				App.headerRegion.close()
+				App.mainContentRegion.close()
+				App.breadcrumbRegion.close()
+				App.navigate('app-login', trigger: true)
+				
+				document.addEventListener("backbutton"
+					,->
+						if App.getCurrentRoute() is 'app-login'
+							navigator.app.exitApp()
+						else	
+							App.navigate('app-login', trigger: true)	
+
+					, false)
+						
+
+
 
 		# set handlers
 		App.commands.setHandler "show:headerapp", (opt = {})->

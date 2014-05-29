@@ -104,6 +104,7 @@ require.config
         csvparse		: ['jquery']
         json2csvparse   : ['jquery']
         panzer          : ['jquery']
+        jszipLoad       : ['jszipUtils']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
 

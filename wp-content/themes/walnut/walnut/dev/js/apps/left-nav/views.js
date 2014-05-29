@@ -33,8 +33,6 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
     })(Marionette.ItemView);
     return Views.LeftNavView = (function(_super) {
-      var appLogout, handleSidenarAndContentHeight;
-
       __extends(LeftNavView, _super);
 
       function LeftNavView() {
@@ -52,12 +50,11 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
       LeftNavView.prototype.itemViewContainer = 'ul.menu-items';
 
       LeftNavView.prototype.events = {
-        'click li': 'clickMenu',
-        'click #user_logout': 'appLogout'
+        'click li': 'clickMenu'
       };
 
       LeftNavView.prototype.onShow = function() {
-        var elem, userName;
+        var elem;
         if ($('.creator').length > 0) {
           $("#main-menu").addClass("mini");
           $(".start").removeClass("active open");
@@ -75,19 +72,9 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           elem.children('li').removeClass('open');
         }
         if (_.platform() === 'DEVICE') {
-          $('#main-menu-toggle').sidr({
+          return $('#main-menu-toggle').sidr({
             name: 'main-menu',
             side: 'left'
-          });
-          $('.chat-menu-toggle').sidr({
-            name: 'walnutProfile',
-            side: 'right',
-            renaming: false,
-            source: '#walnutProf'
-          });
-          userName = _.getUserDetails(_.getUserID(), null);
-          return userName.done(function(user) {
-            return console.log('USERNAME: ' + user.username);
           });
         }
       };
@@ -108,19 +95,19 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           $('.arrow', li_target).removeClass("open");
           li_target.parent().removeClass("active");
           sub.slideUp(200, function() {
-            return handleSidenarAndContentHeight();
+            return this.handleSidenarAndContentHeight();
           });
         } else {
           $('.arrow', li_target).addClass("open");
           li_target.parent().addClass("open");
           sub.slideDown(200, function() {
-            return handleSidenarAndContentHeight();
+            return this.handleSidenarAndContentHeight();
           });
         }
         return e.preventDefault();
       };
 
-      handleSidenarAndContentHeight = function() {
+      LeftNavView.prototype.handleSidenarAndContentHeight = function() {
         var content, sidebar;
         content = $('.page-content');
         sidebar = $('.page-sidebar');
@@ -132,10 +119,6 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
         } else {
           return content.css("min-height", content.attr("data-height"));
         }
-      };
-
-      appLogout = function() {
-        return console.log('Logout');
       };
 
       return LeftNavView;

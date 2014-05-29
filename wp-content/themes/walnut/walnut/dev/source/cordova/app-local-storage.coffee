@@ -10,6 +10,14 @@ define ['underscore', 'jquery'], (_, $)->
         window.localStorage.getItem("user_id")
 
 
+    # save/get logged in username
+    _.setUserName =(name)->
+        window.localStorage.setItem("user_name", ""+name)
+
+    _.getUserName =->
+        window.localStorage.getItem("user_name")    
+
+
     # save/get blog id
     _.setBlogID =(id)->
         window.localStorage.setItem("blog_id", ""+id)

@@ -44,24 +44,20 @@ define ['app'
         # collection view
         class Views.GridView extends Marionette.CompositeView
 
-            template: '<div class="btn-group">
-                            <a  id="list" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-th-list"></span>
-                                List
-                            </a>
-                            <a  id="grid" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-th"></span>
-                                Grid
-                            </a>
+            template: '<div class="row b-b b-grey m-b-10">
+                            <div class="btn-group">
+                                <a id="list" class="btn btn-default btn-sm btn-small">
+                                    <span class="glyphicon glyphicon-th-list"></span> List
+                                </a>
+                                <a id="grid" class="btn btn-default btn-sm btn-small">
+                                    <span class="glyphicon glyphicon-th"></span> Grid
+                                </a>
+                            </div>
+                            <div class="input-with-icon right pull-right mediaSearch m-b-10">
+                                <i class="fa fa-search"></i>
+                                <input type="text" class="form-control" placeholder="Search">
+                            </div>
                         </div>
-
-                        <div class="input-group transparent pull-right">
-                            <span class="input-group-addon ">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                            <input type="text" class="form-control" placeholder="Search">
-                        </div>
-
                         <div class="clearfix"></div>
                         <div class="row">
                             <div id="selectable-images"></div>
@@ -96,6 +92,7 @@ define ['app'
                     #trigger the selectable to point to the newly added image
                     imageView.$el.find('img').trigger 'click'
                     @_selectSelectableElements @$el.find('#selectable-images'),imageView.$el
+
 
 #            programatically select elements
             _selectSelectableElements :(selectableContainer, elementsToSelect)->

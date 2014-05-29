@@ -60,6 +60,10 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         rightRegion: '#header-right'
       };
 
+      HeaderView.prototype.events = {
+        'click #app_logout': 'appUserLogout'
+      };
+
       HeaderView.prototype.serializeData = function() {
         var data;
         data = HeaderView.__super__.serializeData.call(this);
@@ -74,8 +78,41 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       HeaderView.prototype.onShow = function() {
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
-          return $(".header-seperation").css("display", "none");
+          $(".header-seperation").css("display", "none");
         }
+        if (_.platform() === 'DEVICE') {
+          $('.right-menu').sidr({
+            name: 'walnutProfile',
+            side: 'right',
+            renaming: false
+          });
+          return this.$el.find('#app_username').text('Hi ' + _.getUserName() + ',');
+        }
+      };
+
+      HeaderView.prototype.appUserLogout = function() {
+        var user;
+        console.log('appUserLogout');
+        _.setUserID(null);
+        $.sidr('close', 'walnutProfile');
+        user = App.request("get:user:model");
+        user.clear();
+        App.leftNavRegion.close();
+        App.headerRegion.close();
+        App.mainContentRegion.close();
+        App.breadcrumbRegion.close();
+        App.navigate('app-login', {
+          trigger: true
+        });
+        return document.addEventListener("backbutton", function() {
+          if (App.getCurrentRoute() === 'app-login') {
+            return navigator.app.exitApp();
+          } else {
+            return App.navigate('app-login', {
+              trigger: true
+            });
+          }
+        }, false);
       };
 
       return HeaderView;

@@ -34,19 +34,19 @@ function get_all_divisions($user_id=''){
     if($user_id=='')
         $user_id= get_current_user_id();
     
-    $class_ids= "";
+    $division_data = get_user_meta($user_id, 'divisions', true);
+
+    $division_ids= maybe_unserialize($division_data);
+
+    $division_ids= __u::compact($division_ids);
+
+    if($division_ids)
+        $division_str = implode(',',$division_ids);
     
-    $classes_data = get_user_meta($user_id, 'classes');
-    
-    $classes= maybe_unserialize($classes_data);
-    
-    if($classes)
-        $class_ids = implode(',',$classes[0]);
-    
-    $divisions_qry="select id from {$wpdb->prefix}class_divisions where class_id in (".$class_ids.")";
+    $divisions_qry="select id from {$wpdb->prefix}class_divisions where id in (".$division_str.")";
 
     $divisions = $wpdb->get_results($divisions_qry);
-    
+
     foreach($divisions as $div)
         $data[]=  fetch_single_division($div->id);
     

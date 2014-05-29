@@ -64,8 +64,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				   			# set user model for back button navigation
 				   			@setUserModel()
 
-				   			# save logged in user id
+				   			# save logged in user id and username
 				   			_.setUserID(resp.login_details.ID)
+				   			_.setUserName(@data.txtusername)
 
 				   			# if the blog id is null, then the app is installed
 				   			# for the first time.
@@ -78,7 +79,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		# offline login for device
 		offlineDeviceAuth : ->
 
-			offlineUser = _.getUserDetails(null, @data.txtusername)
+			offlineUser = _.getUserDetails(@data.txtusername)
 
 			offlineUser.done (user)=>
 				if user.exists
@@ -86,8 +87,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 						# set user model for back button navigation
 						@setUserModel()
 
-						# save offline user id
+						# save offline user id and username
 						_.setUserID(user.user_id)
+						_.setUserName(@data.txtusername)
 
 						@onSuccessResponse()
 
@@ -143,7 +145,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		# save new user or update existing user 
 		saveUpdateUserDetails : (resp)->
 
-			offlineUser = _.getUserDetails(null, @data.txtusername)
+			offlineUser = _.getUserDetails(@data.txtusername)
 			
 			offlineUser.done (user)=>
 				if user.exists then @updateExistingUser(resp)

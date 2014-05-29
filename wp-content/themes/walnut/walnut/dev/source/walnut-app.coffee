@@ -48,10 +48,16 @@ define ['marionette'], (Marionette)->
 		App.startHistory()
 
 		if _.platform() is 'DEVICE'
-			@rootRoute = 'app-login'
-			@rootRoute = 'login' if _.getBlogID() is null
-			App.navigate(@rootRoute, trigger: true)
-			
+			if _.getUserID() is null or _.getUserID() is 'null'
+				@rootRoute = 'app-login'
+				@rootRoute = 'login' if _.getBlogID() is null
+				App.navigate(@rootRoute, trigger: true)
+			else
+				user = App.request "get:user:model"
+				user.set 'ID' : ''+_.getUserID()
+				App.vent.trigger "show:dashboard"
+				App.loginRegion.close()	
+
 			return
 
 		else

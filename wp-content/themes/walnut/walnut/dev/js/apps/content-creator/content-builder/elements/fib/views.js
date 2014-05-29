@@ -12,8 +12,6 @@ define(['app'], function(App) {
         return FibView.__super__.constructor.apply(this, arguments);
       }
 
-      FibView.prototype.tagName = 'p';
-
       FibView.prototype.className = 'fib-text';
 
       FibView.prototype.modelEvents = {
@@ -50,6 +48,9 @@ define(['app'], function(App) {
       };
 
       FibView.prototype.onShow = function() {
+        console.log('html ');
+        this.$el.find('.hidden-align-fix').empty();
+        this.$el.find('.hidden-align-fix').next('p').text('ff');
         this.$el.parent().parent().on('click', (function(_this) {
           return function(evt) {
             _this.trigger("show:this:fib:properties");
@@ -63,9 +64,10 @@ define(['app'], function(App) {
         this.editor.setData(_.stripslashes(this.model.get('text')));
         return _.delay((function(_this) {
           return function() {
-            return $("#cke_" + _this.editor.name).on('click', function(evt) {
+            $("#cke_" + _this.editor.name).on('click', function(evt) {
               return evt.stopPropagation();
             });
+            return _this.$el.append('<p class=\"hidden-align-fix\" contenteditable=\"false\" style=\"display:none;\"></p>');
           };
         })(this), 500);
       };
@@ -123,7 +125,7 @@ define(['app'], function(App) {
 
       FibView.prototype.onSaveText = function() {
         var formatedText;
-        formatedText = this.$el.clone();
+        formatedText = this.$el.find('p').first().clone();
         $(formatedText).find('input').attr('value', '');
         $(formatedText).find('input').unwrap();
         $(formatedText).find('input').prev().remove();

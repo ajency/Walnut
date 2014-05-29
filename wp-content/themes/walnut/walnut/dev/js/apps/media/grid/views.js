@@ -57,7 +57,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         return GridView.__super__.constructor.apply(this, arguments);
       }
 
-      GridView.prototype.template = '<div class="btn-group"> <a  id="list" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-th-list"></span> List </a> <a  id="grid" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-th"></span> Grid </a> </div> <div class="input-group transparent pull-right"> <span class="input-group-addon "> <i class="fa fa-instagram"></i> </span> <input type="text" class="form-control" placeholder="Search"> </div> <div class="clearfix"></div> <div class="row"> <div id="selectable-images"></div> </div>';
+      GridView.prototype.template = '<div class="row b-b b-grey m-b-10"> <div class="btn-group"> <a id="list" class="btn btn-default btn-sm btn-small"> <span class="glyphicon glyphicon-th-list"></span> List </a> <a id="grid" class="btn btn-default btn-sm btn-small"> <span class="glyphicon glyphicon-th"></span> Grid </a> </div> <div class="input-with-icon right pull-right mediaSearch m-b-10"> <i class="fa fa-search"></i> <input type="text" class="form-control" placeholder="Search"> </div> </div> <div class="clearfix"></div> <div class="row"> <div id="selectable-images"></div> </div>';
 
       GridView.prototype.itemView = MediaView;
 
