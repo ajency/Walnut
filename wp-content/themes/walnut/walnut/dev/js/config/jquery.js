@@ -19,6 +19,27 @@ define(['jquery', 'underscore'], function($, _) {
     })(this));
     return empty;
   };
+  $.fn.center = function(parent) {
+    if (parent) {
+      parent = this.parent();
+    } else {
+      parent = window;
+    }
+    this.css({
+      position: "fixed",
+      top: (($(parent).height() - this.outerHeight()) / 2) + $(parent).scrollTop() + "px",
+      left: (($(parent).width() - this.outerWidth()) / 2) + $(parent).scrollLeft() + "px"
+    });
+    $(window).on('scroll', (function(_this) {
+      return function() {
+        console.log(_this);
+        return _this.css({
+          top: (($(parent).height() - _this.outerHeight()) / 2) + $(parent).scrollTop() + "px"
+        });
+      };
+    })(this));
+    return this;
+  };
   adjustPageDim = _.debounce(function() {
     var height, minHeight;
     height = $(window).height();

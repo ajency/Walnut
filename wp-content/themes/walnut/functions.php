@@ -13,6 +13,7 @@ require_once 'modules/divisions/ajax.php';
 require_once 'modules/question-response/ajax.php';
 require_once 'custom_configs.php';
 
+
 add_theme_support('menus');
 
 //add extra fields to custom taxonomy edit form callback function
@@ -33,3 +34,4 @@ function upload_attachment($file_handler, $post_id, $setthumb = 'false') {
 		update_post_meta($post_id, '_thumbnail_id', $attach_id);
 	return $attach_id;
 }
+
