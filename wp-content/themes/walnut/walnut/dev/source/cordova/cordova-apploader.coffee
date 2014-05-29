@@ -8,4 +8,5 @@ define ['cordova/app-error-handlers'
 
 		#cordova app entities
 		'cordova/entities/app-content-group'
+		'cordova/entities/app-divisions'
 		], ->
