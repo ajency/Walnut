@@ -1,39 +1,53 @@
 define ['app'
-		'text!apps/content-creator/content-builder/elements/imagewithtext/settings/templates/settings.html'],
-		(App, settingsTpl)->
+        'text!apps/content-creator/content-builder/elements/imagewithtext/settings/templates/settings.html'],
+(App, settingsTpl)->
 
-			# Headerapp views
-			App.module 'ContentCreator.ContentBuilder.Element.ImageWithText.Settings.Views',
-			(Views, App, Backbone, Marionette, $, _)->
+    # Headerapp views
+    App.module 'ContentCreator.ContentBuilder.Element.ImageWithText.Settings.Views',
+    (Views, App, Backbone, Marionette, $, _)->
+        class Views.SettingsView extends Marionette.ItemView
 
-				class Views.SettingsView extends Marionette.ItemView
+            template: settingsTpl
 
-					template : settingsTpl
+            className: 'modal-content settings-box'
 
-					className : 'modal-content settings-box'
+            initialize: (opt = {})->
+                {@eleModel} = opt
+                super opt
 
-					initialize:(opt = {})->
-						{@eleModel} = opt
-						super opt
+            onRender: ->
+                @$el.find('input[type="checkbox"]').checkbox()
+                @$el.find('select').select2
+                    minimumResultsForSearch: -1
+                @setFields()
 
-					onRender:->
-						@$el.find('input[type="checkbox"]').checkbox()
-						@$el.find('select').select2
-								minimumResultsForSearch: -1
-						@setFields()
+            # set fields for the form
+            setFields: ->
+                if @eleModel.get('draggable') is true
+                    @$el.find('input[name="draggable"]').checkbox('check')
 
-					# set fields for the form
-					setFields:->
-						if @eleModel.get('draggable') is true
-							@$el.find('input[name="draggable"]').checkbox('check')
-						
-						@$el.find('select[name="align"]').select2 'val',@eleModel.get 'align'
-						
+                @$el.find('select[name="align"]').select2 'val', @eleModel.get 'align'
 
-					events:
-						'click .close-settings' : (evt)-> 
-											evt.preventDefault()
-											App.settingsRegion.close()
-						'change select[name="style"]' 	:(evt)-> @trigger "element:style:changed", $(evt.target).val()
-						'change input[name="draggable"]': (evt)-> @trigger "element:draggable:changed", $(evt.target).is(':checked')
-						'change select[name="align"]' : (evt)-> @trigger "element:alignment:changed", $(evt.target).val()
+
+            events:
+                'click': (evt)->
+                    evt.stopPropagation()
+                'click .close-settings': (evt)->
+                    evt.preventDefault()
+                    App.settingsRegion.close()
+                'change select[name="style"]': (evt)->
+                    @trigger "element:style:changed", $(evt.target).val()
+                'change input[name="draggable"]': (evt)->
+                    @trigger "element:draggable:changed", $(evt.target).is(':checked')
+                'change select[name="align"]': (evt)->
+                    @trigger "element:alignment:changed", $(evt.target).val()
+
+            onShow: ->
+                $(window).on 'click', @_closeViewWhenClickedOutside
+
+            _closeViewWhenClickedOutside:=>
+                console.log 'window clicked closing setting'
+                @close()
+
+            onClose:->
+                $(window).off 'click',  @_closeViewWhenClickedOutside
