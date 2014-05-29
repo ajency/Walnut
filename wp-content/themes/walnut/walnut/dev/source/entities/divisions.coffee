@@ -71,12 +71,15 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						(tx, data)->
 							result = []
 
+							ids = unserialize(unserialize(data.rows.item(0)['meta_value']))
+							ids = _.compact(ids)
+							console.log 'ids: '+ids
+
 							tx.executeSql('SELECT cd.id AS id, cd.division AS division, cd.class_id 
 								AS class_id, COUNT(um.umeta_id) AS students_count 
 								FROM '+_.getTblPrefix()+'class_divisions cd LEFT JOIN wp_usermeta um 
 								ON cd.id = meta_value AND meta_key="student_division" 
-								WHERE id in ('+unserialize(data.rows.item(0)['meta_value'])+') 
-								GROUP BY cd.id', []
+								WHERE id in ('+ids+') GROUP BY cd.id', []
 
 									,(tx, data)->
 
