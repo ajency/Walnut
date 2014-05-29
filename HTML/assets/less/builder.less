@@ -102,6 +102,7 @@
 		ul{
 			li{
 				width: 96px;
+				padding-top: 8%;
 				//height: 40px;
 				//font-weight: bold;
 				i{
@@ -186,8 +187,10 @@
 	label{
 		color: #777a80;
 	}
-	select.marks{
-		width: auto;
+	select{
+		&.marks, &.blanks{
+			width: auto;
+		}
 	}
 	.radio label{
 		margin-right: 6px;
@@ -659,6 +662,12 @@
 }
 
 /*Properties Bar*/
+#options-bar-region{
+	label{
+		font-size: 13px;
+		line-height: 10px;
+	}
+}
 #subProps{
     background-color: @color-info;
     -webkit-border-radius: 4px;
@@ -677,8 +686,16 @@
 
 /*Media Manager*/
 #all-media-region{
-	.thumbnail::after{
-		clear: both;
+	.thumbnail{
+		cursor: pointer;
+		height: 92px;
+		background-color: @preview-grey;
+		&::after{
+			clear: both;
+		}
+	}
+	.mediaSearch{
+		width: 35%;
 	}
 	.listView{
 		width: 100%;
@@ -687,11 +704,23 @@
 		}
 		.thumbnail{
 			height: 45px;
-			margin-bottom: 5px;
+			margin-bottom: 10px;
 		}
 		.imgthumb{
 			width: 5%;
-			//float: left;
+			float: left;
+			margin-right: 10px;
+		}
+		.ticker{
+			right: -5px;
+		}
+		.imaTitle{
+			font-weight: bold;
+		}
+	}
+	.col-sm-2{
+		.imaTitle{
+			display: none;
 		}
 	}
 	.single-img{
