@@ -74,7 +74,7 @@ define ['underscore', 'jquery'], (_, $)->
         window.localStorage.getItem("dwnldUri")   
 
 
-    #save/get App sync dwnld time stamp
+    #save/get total records
     _.setTotalRecords =(total)->
         window.localStorage.setItem("total_records", ""+total)
 

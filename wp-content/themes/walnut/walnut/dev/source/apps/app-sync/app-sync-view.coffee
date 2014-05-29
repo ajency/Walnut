@@ -48,25 +48,13 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 					syncController.totalRecordsUpdate()
 
 				else
-					@checkForRecords()
-					
-
-				
-			checkForRecords:->
-				alert _.getTotalRecords()
-				if _.getTotalRecords() is null
-					$('#JsonToCSV').attr("disabled","disabled")
-					$('#CSVupload').attr("disabled","disabled")
-					$('#syncNow').removeAttr("disabled")
-					syncController = App.request "get:sync:controller"
-					syncController.totalRecordsUpdate()	
-
-				else
 					$('#JsonToCSV').removeAttr("disabled")
 					$('#CSVupload').attr("disabled","disabled")
 					$('#syncNow').attr("disabled","disabled")
 					syncController = App.request "get:sync:controller"
-					syncController.totalRecordsUpdate()	
+					syncController.totalRecordsUpdate()
+
+				
 
 			fileUpload : ->
 				syncController = App.request "get:sync:controller"

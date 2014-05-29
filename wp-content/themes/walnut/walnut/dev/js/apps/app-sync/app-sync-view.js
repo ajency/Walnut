@@ -60,20 +60,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
           syncController = App.request("get:sync:controller");
           return syncController.totalRecordsUpdate();
         } else {
-          return this.checkForRecords();
-        }
-      };
-
-      AppSyncView.prototype.checkForRecords = function() {
-        var syncController;
-        alert(_.getTotalRecords());
-        if (_.getTotalRecords() === null) {
-          $('#JsonToCSV').attr("disabled", "disabled");
-          $('#CSVupload').attr("disabled", "disabled");
-          $('#syncNow').removeAttr("disabled");
-          syncController = App.request("get:sync:controller");
-          return syncController.totalRecordsUpdate();
-        } else {
           $('#JsonToCSV').removeAttr("disabled");
           $('#CSVupload').attr("disabled", "disabled");
           $('#syncNow').attr("disabled", "disabled");
