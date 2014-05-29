@@ -13,7 +13,7 @@ function fetch_single_division($id){
         
         $student_count_qry="select count(umeta_id) from {$wpdb->base_prefix}usermeta 
             where meta_key='student_division' and meta_value='".$id."'";
-        //echo $student_count_qry;
+        
         $student_count=$wpdb->get_var($student_count_qry);
         
         $data['id']             = $division->id;
@@ -29,7 +29,6 @@ function fetch_single_division($id){
 function get_all_divisions($user_id=''){
     
     global $wpdb;
-    global $classids;
     
     if($user_id=='')
         $user_id= get_current_user_id();
