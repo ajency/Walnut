@@ -53,6 +53,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.onShow = function() {
         var syncController;
+        navigator.splashscreen.hide();
         $('#syncText').text('');
         if (_.getInitialSyncFlag() === null) {
           $('#JsonToCSV').attr("disabled", "disabled");

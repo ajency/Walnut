@@ -400,7 +400,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
 
     SynchronizationController.prototype.readUnzipFile1 = function(filePath) {
       var file;
-      file = "SynapseAssets/wp_3_class_divisions.csv";
+      file = "SynapseAssets/" + _.getTblPrefix() + "class_divisions.csv";
       return this.sendParsedData1(file, filePath);
     };
 
@@ -415,7 +415,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_3_class_divisions (id, division, class_id) VALUES (?, ?, ?)", [data[i][1], data[i][2], data[i][3]]));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "class_divisions (id, division, class_id) VALUES (?, ?, ?)", [data[i][0], data[i][1], data[i][2]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {

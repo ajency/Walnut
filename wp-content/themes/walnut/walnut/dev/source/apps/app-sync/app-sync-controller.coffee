@@ -386,16 +386,16 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 
 		readUnzipFile1 : (filePath)->
-				file = 	 "SynapseAssets/wp_3_class_divisions.csv"
+			file = 	 "SynapseAssets/"+_.getTblPrefix()+"class_divisions.csv"
 
-				@sendParsedData1 file ,filePath
+			@sendParsedData1 file ,filePath
 				
 
 
 		
 #14 insert functions
 		sendParsedData1 : (file, fileEntry)=>
-			fileEntry=fileEntry
+			fileEntry = fileEntry
 			readData = @chkReader(file)
 			readData.done (data)=>
 				# console.log "parsed data"+data
@@ -404,11 +404,12 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 					for i in [0..data.length-1] by 1
 						row = data[i]
-						tx.executeSql("INSERT INTO wp_3_class_divisions (id, division, class_id) 
-							VALUES (?, ?, ?)", [data[i][1], data[i][2], data[i][3]])
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions (id, division, class_id) 
+							VALUES (?, ?, ?)", [data[i][0], data[i][1], data[i][2]])
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully1'
 					file1 =  "SynapseAssets/"+_.getTblPrefix()+"question_response.csv"
 					@sendParsedData2 file1 ,fileEntry
@@ -432,6 +433,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully2'
 					file14 =  "SynapseAssets/"+_.getTblPrefix()+"question_response_logs.csv"
 					@sendParsedData15 file14 ,fileEntry
@@ -451,6 +453,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully15'
 					file2 =  "SynapseAssets/"+_.getTblPrefix()+"training_logs.csv"
 					@sendParsedData3 file2 ,fileEntry
@@ -470,6 +473,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully3'
 					file3 =  "SynapseAssets/wp_collection_meta.csv"
 					@sendParsedData4 file3 ,fileEntry
@@ -488,6 +492,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully4'
 					file4 =  "SynapseAssets/wp_content_collection.csv"
 					@sendParsedData5 file4 ,fileEntry
@@ -508,6 +513,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully5'
 					file5 =  "SynapseAssets/wp_options.csv"
 					@sendParsedData6 file5 ,fileEntry
@@ -527,6 +533,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully6'
 					file6 =  "SynapseAssets/wp_postmeta.csv"
 					@sendParsedData7 file6 ,fileEntry
@@ -546,6 +553,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully7'
 					file7 =  "SynapseAssets/wp_posts.csv"
 					@sendParsedData8 file7 ,fileEntry
@@ -565,6 +573,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully8'
 					file8 =  "SynapseAssets/wp_term_relationships.csv"
 					@sendParsedData9 file8 ,fileEntry
@@ -583,6 +592,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully9'
 					file9 =  "SynapseAssets/wp_term_taxonomy.csv"
 					@sendParsedData10 file9 ,fileEntry
@@ -601,6 +611,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully10'
 					file10 = "SynapseAssets/wp_terms.csv"
 					@sendParsedData11 file10 ,fileEntry
@@ -619,6 +630,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully11'
 					file11 = "SynapseAssets/wp_textbook_relationships.csv"
 					@sendParsedData12 file11 ,fileEntry
@@ -636,6 +648,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully12'
 					file12 = "SynapseAssets/wp_usermeta.csv"
 					@sendParsedData13 file12 ,fileEntry
@@ -652,6 +665,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully13'
 					file13 = "SynapseAssets/wp_users.csv"
 					@sendParsedData14 file13 ,fileEntry
@@ -670,6 +684,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				,_.transactionErrorhandler
 				,(tx)=>
+					
 					console.log 'Data inserted successfully14'
 					$('#JsonToCSV').removeAttr("disabled")
 					$('#CSVupload').attr("disabled","disabled")
