@@ -302,6 +302,7 @@ function get_textbooks_for_class($classid) {
     //get the class_id from serialized array in db in the format "2";
     
     $txtbooks_assigned=get_assigned_textbooks();
+    $txtbooks_assigned = __u::compact($txtbooks_assigned);
     
     if($txtbooks_assigned){
         $tids=implode(',',$txtbooks_assigned);
