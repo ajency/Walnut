@@ -42,10 +42,11 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
       return _.db.transaction((function(_this) {
         return function(tx) {
           return tx.executeSql("SELECT SUM(rows) AS total FROM (SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "training_logs WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response_logs WHERE sync=?)", [0, 0, 0], function(tx, data) {
+            var totalRecords;
+            totalRecords = data.rows.item(0)['total'];
+            _.setTotalRecords(totalRecords);
             $('#SyncRecords').text(data.rows.item(0)['total']);
-            alert(total);
-            _.setTotalRecords(total);
-            return _this.chkTotalrecords(total);
+            return _this.chkTotalrecords(totalRecords);
           }, _.transactionErrorhandler);
         };
       })(this), _.transactionErrorhandler, (function(_this) {
@@ -56,7 +57,6 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
     };
 
     SynchronizationController.prototype.chkTotalrecords = function(total) {
-      alert("total is" + total);
       if (total === 0) {
         $('#JsonToCSV').attr("disabled", "disabled");
         $('#CSVupload').attr("disabled", "disabled");
@@ -400,7 +400,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
 
     SynchronizationController.prototype.readUnzipFile1 = function(filePath) {
       var file;
-      file = "SynapseAssets/wp_3_class_divisions.csv";
+      file = "SynapseAssets/" + _.getTblPrefix() + "class_divisions.csv";
       return this.sendParsedData1(file, filePath);
     };
 
@@ -415,7 +415,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_3_class_divisions (id, division, class_id) VALUES (?, ?, ?)", [data[i][1], data[i][2], data[i][3]]));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "class_divisions (id, division, class_id) VALUES (?, ?, ?)", [data[i][0], data[i][1], data[i][2]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -439,7 +439,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response (content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date,status) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)", [data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9]]));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response (content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date,status) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -463,7 +463,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response_logs (start_time) VALUES ( ?)", [data[i][2]]));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response_logs (start_time) VALUES ( ?)", [data[i][1]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -486,7 +486,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs ( division_id,collection_id, teacher_id, date,status) VALUES ( ?,?, ?, ?,?)", [data[i][2], data[i][3], data[i][4], data[i][5]], data[i][6]));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs ( division_id,collection_id, teacher_id, date,status) VALUES ( ?,?, ?, ?,?)", [data[i][1], data[i][2], data[i][3], data[i][4]], data[i][5]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -509,7 +509,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_collection_meta (id, collection_id, meta_key, meta_value) VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]]));
+              _results.push(tx.executeSql("INSERT INTO wp_collection_meta (id, collection_id, meta_key, meta_value) VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -532,7 +532,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on, created_by, last_modified_on,last_modified_by,published_on,published_by, status,type,term_ids,duration) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10], data[i][11], data[i][12]]));
+              _results.push(tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on, created_by, last_modified_on,last_modified_by,published_on,published_by, status,type,term_ids,duration) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10], data[i][11]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -555,7 +555,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_options (option_id, option_name, option_value, autoload) VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]]));
+              _results.push(tx.executeSql("INSERT INTO wp_options (option_id, option_name, option_value, autoload) VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -578,7 +578,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key,meta_value) VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]]));
+              _results.push(tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key,meta_value) VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -601,7 +601,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_posts (ID,post_author,post_date,post_date_gmt,post_content,post_title,post_excerpt,post_status,comment_status,ping_status,post_password,post_name,to_ping,pinged,post_modified,post_modified_gmt,post_content_filtered,post_parent,guid,menu_order,post_type,post_mime_type,comment_count) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10], data[i][11], data[i][12], data[i][13], data[i][14], data[i][15], data[i][16], data[i][17], data[i][18], data[i][19], data[i][20], data[i][21], data[i][22], data[i][23]]));
+              _results.push(tx.executeSql("INSERT INTO wp_posts (ID,post_author,post_date,post_date_gmt,post_content,post_title,post_excerpt,post_status,comment_status,ping_status,post_password,post_name,to_ping,pinged,post_modified,post_modified_gmt,post_content_filtered,post_parent,guid,menu_order,post_type,post_mime_type,comment_count) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10], data[i][11], data[i][12], data[i][13], data[i][14], data[i][15], data[i][16], data[i][17], data[i][18], data[i][19], data[i][20], data[i][21], data[i][22]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -624,7 +624,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_term_relationships (object_id,term_taxonomy_id, term_order) VALUES (?, ?, ?)", [data[i][1], data[i][2], data[i][3]]));
+              _results.push(tx.executeSql("INSERT INTO wp_term_relationships (object_id,term_taxonomy_id, term_order) VALUES (?, ?, ?)", [data[i][0], data[i][1], data[i][2]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -647,7 +647,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy, description, parent, count) VALUES (?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6]]));
+              _results.push(tx.executeSql("INSERT INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy, description, parent, count) VALUES (?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -670,7 +670,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_terms (term_id, name, slug, term_group) VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]]));
+              _results.push(tx.executeSql("INSERT INTO wp_terms (term_id, name, slug, term_group) VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -693,7 +693,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_textbook_relationships (id, textbook_id, class_id, tags) VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]]));
+              _results.push(tx.executeSql("INSERT INTO wp_textbook_relationships (id, textbook_id, class_id, tags) VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -716,7 +716,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) VALUES (?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4]]));
+              _results.push(tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -739,7 +739,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename,user_email,user_url,user_registered,user_activation_key, user_status,display_name, spam,deleted) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10], data[i][11], data[i][12]]));
+              _results.push(tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename,user_email,user_url,user_registered,user_activation_key, user_status,display_name, spam,deleted) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10], data[i][11]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -814,7 +814,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
     };
 
     SynchronizationController.prototype.chkForNewRecords = function() {
-      if (totalRecordsUpdate() === null) {
+      if (_.getTotalRecords() === null) {
         $('#JsonToCSV').attr("disabled", "disabled");
         $('#CSVupload').attr("disabled", "disabled");
         return $('#syncNow').removeAttr("disabled");
