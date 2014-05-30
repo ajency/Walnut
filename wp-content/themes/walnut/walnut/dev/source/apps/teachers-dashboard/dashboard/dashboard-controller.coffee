@@ -72,6 +72,8 @@ define ['app'
 					.select2()
 
 				_.checkSynapseAssetsDirectory()
+				# Hide the splash screen image
+				navigator.splashscreen.hide()
 
 
 			loadDivisions:(class_id)=>

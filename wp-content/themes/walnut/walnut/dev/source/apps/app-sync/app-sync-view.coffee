@@ -38,6 +38,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 
 			onShow : ->
+				# Hide the splash screen image
+				navigator.splashscreen.hide()
+				
 				$('#syncText').text('')
 				if _.getInitialSyncFlag() is null
 					$('#JsonToCSV').attr("disabled","disabled")

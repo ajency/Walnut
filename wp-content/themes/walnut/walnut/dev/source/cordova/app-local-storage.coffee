@@ -66,7 +66,7 @@ define ['underscore', 'jquery'], (_, $)->
         window.localStorage.getItem("dwnld_time_stamp")   
 
 
-#save/get uri to dwnld from
+    #save/get uri to dwnld from
     _.setDwnlduri =(uriValue)->
         window.localStorage.setItem("dwnldUri", ""+uriValue)
 
