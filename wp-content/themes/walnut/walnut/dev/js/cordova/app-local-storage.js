@@ -35,11 +35,11 @@ define(['underscore', 'jquery'], function(_, $) {
   _.getSynapseAssetsDirectoryPath = function() {
     return window.localStorage.getItem("synapse_directory_path");
   };
-  _.setInitialSyncFlag = function(flag) {
-    return window.localStorage.setItem("initial_sync_flag", "" + flag);
+  _.setFilePath = function(path) {
+    return window.localStorage.setItem("filepath", "" + path);
   };
-  _.getInitialSyncFlag = function() {
-    return window.localStorage.getItem("initial_sync_flag");
+  _.getFilePath = function() {
+    return window.localStorage.getItem("filepath");
   };
   _.setDwnldTimeStamp = function(TimeStampValue) {
     return window.localStorage.setItem("dwnld_time_stamp", "" + TimeStampValue);

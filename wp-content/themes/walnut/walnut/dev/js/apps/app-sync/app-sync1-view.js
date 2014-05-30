@@ -53,20 +53,26 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       };
 
       AppSyncView.prototype.onShow = function() {
-        var syncController;
+        var syncDetailsCount;
         navigator.splashscreen.hide();
-        $('#syncText').text('');
-        if (_.getInitialSyncFlag() === null) {
-          $('#JsonToCSV').attr("disabled", "disabled");
+        syncDetailsCount = _.getTotalSyncDetailsCount();
+        return syncDetailsCount.done(function(count) {
+          var syncController;
+          if (count === 0) {
+            $('#syncDateDwnld').text("--/--/--");
+            $('#syncTimeDwnld').text("--:--");
+            $('#syncDateUpld').text("--/--/--");
+            $('#syncTimeUpld').text("--:--");
+            $('#last5dwnlds').attr("disabled", "disabled");
+            $("#UploadView *").attr("disabled", "disabled").off('click');
+          } else {
+            App.navigate('teachers/dashboard', {
+              trigger: true
+            });
+          }
           syncController = App.request("get:sync:controller");
           return syncController.totalRecordsUpdate();
-        } else {
-          $('#JsonToCSV').removeAttr("disabled");
-          $('#CSVupload').attr("disabled", "disabled");
-          $('#syncNow').attr("disabled", "disabled");
-          syncController = App.request("get:sync:controller");
-          return syncController.totalRecordsUpdate();
-        }
+        });
       };
 
       AppSyncView.prototype.fileUpload = function() {
@@ -75,18 +81,17 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         return syncController.getuploadURL();
       };
 
-      AppSyncView.prototype.startConversion = function() {
-        var syncController;
-        syncController = App.request("get:sync:controller");
-        return syncController.selectRecords();
-      };
+      AppSyncView.prototype.startConversion = function() {};
 
       AppSyncView.prototype.startSyncProcess = function() {
-        var syncController;
-        $('i').addClass('fa-spin');
-        $('#syncText').text('Syncing now...');
-        syncController = App.request("get:sync:controller");
-        return syncController.startSync();
+        if (_.isOnline()) {
+          alert("go");
+          return App.navigate('sync3', {
+            trigger: true
+          });
+        } else {
+          return $('#NetwrkCnctnDwnld').css("display", "block");
+        }
       };
 
       AppSyncView.prototype.showlast5downloads = function() {

@@ -91,11 +91,14 @@ define ['marionette'], (Marionette)->
 		user_role= user.get "roles"
 		
 		if _.platform() is 'DEVICE'
-			if _.getInitialSyncFlag() is null
-				App.navigate('sync1', trigger: true)
-			else
-				App.navigate('teachers/dashboard', trigger: true)
-
+			syncDetailsCount = _.getTotalSyncDetailsCount()
+			syncDetailsCount.done (count)->
+				console.log  'Count: '+count
+				if count is 0
+					App.navigate('sync1', trigger: true)
+				else
+					App.navigate('teachers/dashboard', trigger: true)
+					
 		else
 			if user_role[0]=='administrator'
 				App.navigate('textbooks', trigger: true)

@@ -35,7 +35,42 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.template = AppSyncTpl;
 
-      AppSyncView.prototype.onShow = function() {};
+      AppSyncView.prototype.events = {
+        'click #DownloadNow': 'startDownload',
+        'click #importNow': 'startImport'
+      };
+
+      AppSyncView.prototype.onShow = function() {
+        var syncDetailsCount;
+        navigator.splashscreen.hide();
+        syncDetailsCount = _.getTotalSyncDetailsCount();
+        return syncDetailsCount.done(function(count) {
+          if (count === 0) {
+            $('#imprtDateTime').hide();
+            $('#progressBarDwnld').hide();
+            $('#progressBarImprt').hide();
+            $('#progressBarUpld').hide();
+            $("#imprtFiles *").attr("disabled", "disabled").off('click');
+            return $("#syncUpld3 *").attr("disabled", "disabled").off('click');
+          } else {
+            return App.navigate('teachers/dashboard', {
+              trigger: true
+            });
+          }
+        });
+      };
+
+      AppSyncView.prototype.startDownload = function() {
+        var syncController;
+        syncController = App.request("get:sync:controller");
+        return syncController.dwnldUnZip();
+      };
+
+      AppSyncView.prototype.startImport = function() {
+        var syncController;
+        syncController = App.request("get:sync:controller");
+        return syncController.readUnzipFile1();
+      };
 
       return AppSyncView;
 

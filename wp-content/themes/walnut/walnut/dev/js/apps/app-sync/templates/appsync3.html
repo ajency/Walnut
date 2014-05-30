@@ -10,22 +10,22 @@
                             <h5 class="semi-bold text-center no-margin p-t-20">Get Files</h5>
                             <div class="">
                               <h5 class="m-t-5 semi-bold text-center text-success">Last Download: 13/05/2014 @ 08:36 PM</h5>
-                              <button type="button" class="btn btn-success btn-sm btn-small h-center block"><span class="bold">Download Now</span></button>
+                              <button id="DownloadNow" type="button" class="btn btn-success btn-sm btn-small h-center block"><span class="bold">Download Now</span></button>
                               <div class="progress progress-striped active progress-small h-center m-t-5">
-                                <div data-percentage="0%" style="width: 45%;" class="progress-bar progress-bar-success"></div>
+                                <div id="progressBarDwnld" data-percentage="0%" style="width: 45%;" class="progress-bar progress-bar-success"></div>
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        <div class="row">
+                        <div id="imprtFiles" class="row">
                           <div class="col-sm-12 b-grey b-r m-b-10">
                             <h5 class="semi-bold text-center no-margin p-t-20">Import Files</h5>
                             <div class="">
-                              <h5 class="m-t-5 semi-bold text-center text-success">Last Import: 13/05/2014 @ 08:36 PM</h5>
-                              <button type="button" class="btn btn-success btn-sm btn-small h-center block"><span class="bold">Import Now</span></button>
+                              <h5 id="imprtDateTime" class="m-t-5 semi-bold text-center text-success">Last Import: 13/05/2014 @ 08:36 PM</h5>
+                              <button id="importNow" type="button" class="btn btn-success btn-sm btn-small h-center block"><span class="bold">Import Now</span></button>
                               <div class="progress progress-striped active progress-small h-center m-t-5">
-                                <div data-percentage="0%" style="width: 45%;" class="progress-bar progress-bar-success"></div>
+                                <div id="progressBarImprt" data-percentage="0%" style="width: 45%;" class="progress-bar progress-bar-success"></div>
                               </div>
                             </div>
                           </div>
@@ -33,13 +33,13 @@
 
                       </div>
 
-                      <div class="col-sm-6">
+                      <div id="syncUpld3" class="col-sm-6">
                         <h3 class="semi-bold text-center">Sync Upload <span class="fa fa-upload"></span></h3>
                         <div class="row">
                             <div class="m-t-55">
                               <h5 class="semi-bold text-center no-margin p-t-20 ">Upload Progress</h5>
                               <div class="progress progress-striped active progress-small h-center m-t-10">
-                                <div data-percentage="0%" style="width: 45%;" class="progress-bar progress-bar-success"></div>
+                                <div id="progressBarUpld" data-percentage="0%" style="width: 45%;" class="progress-bar progress-bar-success"></div>
                               </div>
                             </div>
                           </div>

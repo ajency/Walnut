@@ -375,6 +375,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 # Download the zip file from the server and extract its contents
 		dwnldUnZip : ->
+			alert "yes"
 			uri = encodeURI(_.getDwnlduri())
 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
@@ -385,6 +386,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 						,(fileEntry)=>
 							filePath = fileEntry.toURL().replace("logs.zip", "")
+							_.setFilePath(filePath)
 							fileEntry.remove()
 							fileTransfer = new FileTransfer()
 							fileTransfer.download(uri, filePath+"logs.zip" 
@@ -445,7 +447,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 			success =()=>
 				console.log 'Files unzipped'
-				@readUnzipFile1 filePath
+				# @readUnzipFile1 filePath
 
 
 			zip.unzip(fullpath, filePath, success)
@@ -453,7 +455,8 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 
 
-		readUnzipFile1 : (filePath)->
+		readUnzipFile1 : ->
+				filePath = _.getFilePath()
 				file = 	 "SynapseAssets/"+_.getTblPrefix()+"class_divisions.csv"
 
 				@sendParsedData1 file ,filePath
@@ -795,28 +798,13 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 					# @readValues
 				)
 
-#this function will check if its users 1st login, if yes then the data wil be synched directly the time stamp will be retrieved from the sync_detais table
-		chkForFirstLogin :->
-			_.db.transaction((tx)=>
-				tx.executeSql("SELECT * FROM sync_details ", [] 
 
-					,(tx, results)=>
-						valuesAll = results.rows.length;
-						console.log valuesAll
-						if valuesAll is 0 
-							console.log "fisrt login"
-							_.setFirstLogin(valuesAll)
-						
-						else
-							# @getLastTimeofSync()
 
-					
-					,_.transactionErrorhandler)
-				)
 #get the last 5 time for uploads from the local database
 		getLastTimeofDownSync : ->
 			_.db.transaction((tx)=>
-				tx.executeSql("SELECT * FROM sync_details WHERE type_of_operation='DownZip' ORDER BY time_stamp DESC LIMIT 5 ", [] 
+				tx.executeSql("SELECT * FROM sync_details WHERE type_of_operation='DownZip' 
+					ORDER BY time_stamp DESC LIMIT 5 ", [] 
 
 					,(tx, results)=>
 						time stamp=results
@@ -857,7 +845,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 		getDownloadURL:->
 
-			$.post AJAXURL + '?action=get-sync-details',
+			$.post AJAXURL + '?action=sync-database',
 				data: _.getDwnldTimeStamp(),
 				   (resp)=>
 				   		console.log 'RESP'
@@ -867,8 +855,8 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 				   		else
 				   			# save logged in user id and username
-				   			_.setDwnlduri(resp.login_details.ID)
-				   			_.setDwnldTimeStamp(resp.login_details.ID)
+				   			_.setDwnlduri(resp.exported_csv_url)
+				   			_.setDwnldTimeStamp(resp.sync_time)
 				   			
 				   			# _.setUserName(@data.txtusername)
 
