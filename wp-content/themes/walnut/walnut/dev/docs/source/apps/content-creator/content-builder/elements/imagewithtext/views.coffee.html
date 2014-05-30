@@ -76,7 +76,7 @@
 <span class="s">            {{#placeholder}}</span>
 <span class="s">              &lt;div class=&quot;image-placeholder&quot;&gt;&lt;span class=&quot;bicon icon-uniF10E&quot;&gt;&lt;/span&gt;Upload Image&lt;/div&gt;</span>
 <span class="s">            {{/placeholder}}</span>
-<span class="s">            &lt;p class=&quot;editor&quot;&gt;&lt;/p&gt;</span>
+<span class="s">            &lt;div class=&quot;editor&quot;&gt;&lt;/div&gt;</span>
 <span class="s">            &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt;&#39;</span>
 
 
@@ -126,7 +126,7 @@
         <td class="code highlight"><div class="highlight"><pre>
               <span class="nx">@trigger</span> <span class="s">&quot;show:media:manager&quot;</span>
 
-        <span class="s">&#39;blur p.editor&#39;</span> <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">@trigger</span> <span class="s">&quot;text:element:blur&quot;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;p.editor&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span>
+        <span class="s">&#39;blur .editor&#39;</span> <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">@trigger</span> <span class="s">&quot;text:element:blur&quot;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;.editor&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span>
 
       <span class="nx">onStyleUpadted</span><span class="o">:</span><span class="nf">(newStyle, prevStyle)-&gt;</span>
         <span class="nx">@$el</span><span class="p">.</span><span class="nx">removeClass</span> <span class="nx">prevStyle</span>
@@ -166,8 +166,8 @@ reloading placeholder image again</p>
 <p>run ckeditor</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;p.editor&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span><span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
-        <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;p.editor&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;.editor&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span><span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
+        <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;.editor&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
         <span class="nv">content = </span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s">&#39;templateHelpers&#39;</span><span class="p">).</span><span class="nx">content</span>
         <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">content</span>
 

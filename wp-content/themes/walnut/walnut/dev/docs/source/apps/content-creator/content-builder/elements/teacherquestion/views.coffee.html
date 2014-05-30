@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>views.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../../doc-style.css" />
+  <script src="../../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../../", thisFile = "source\\apps\\content-creator\\content-builder\\elements\\teacherquestion\\views.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>views.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Row views</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.TeacherQuestion.Views&#39;</span><span class="p">,</span> <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
+
+    <span class="k">class</span> <span class="nx">RowView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+      <span class="nv">className   : </span><span class="s">&#39;teacher-question-row column&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>tagName     : 'div'</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nv">template  : </span><span class="s">&#39;&lt;span&gt;&lt;/span&gt;&#39;</span>
+      <span class="nv">onShow  : </span><span class="nf">-&gt;</span>
+        <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;position&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="mi">1</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;span&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s">&#39;Question&#39;</span><span class="p">)</span>
+        <span class="k">else</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;span&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s">&#39;Answer&#39;</span><span class="p">)</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-position&#39;</span><span class="p">,</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;position&#39;</span>
+        
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>@$el.addClass("col-md-#{@model.get 'className'}").attr 'data-class',@model.get 'className'</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">sortable</span> 
+            <span class="nv">revert    : </span><span class="s">&#39;invalid&#39;</span>
+            <span class="nv">items     : </span><span class="s">&#39;&gt; .element-wrapper&#39;</span>
+            <span class="nv">connectWith : </span><span class="s">&#39;.droppable-column, .column&#39;</span>
+            <span class="nv">handle    : </span><span class="s">&#39;.aj-imp-drag-handle&#39;</span>
+            <span class="nv">start     : </span><span class="nf">(e, ui)-&gt;</span>
+                    <span class="nx">ui</span><span class="p">.</span><span class="nx">placeholder</span><span class="p">.</span><span class="nx">height</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="p">()</span>
+                    <span class="nb">window</span><span class="p">.</span><span class="nv">dragging = </span><span class="kc">true</span>
+                    <span class="k">return</span>
+            <span class="nx">stop</span>    <span class="o">:</span><span class="nf">(e, ui)-&gt;</span> 
+                    <span class="nb">window</span><span class="p">.</span><span class="nv">dragging = </span><span class="kc">false</span>
+                    <span class="k">return</span>
+            <span class="nv">helper    : </span><span class="s">&#39;clone&#39;</span>
+            <span class="nv">opacity   : </span><span class="p">.</span><span class="mi">65</span>
+            <span class="nv">remove    : </span><span class="nf">(evt, ui)-&gt;</span>
+                    <span class="k">if</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">children</span><span class="p">().</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
+                      <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&#39;empty-column&#39;</span>
+            <span class="nv">update    : </span><span class="nf">(e,ui)-&gt;</span>
+                    
+                    <span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">removeClass</span> <span class="s">&#39;empty-column&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>receive        : (evt, ui)=> 
+                if ui.item.find('form').find('input[name="element"]').val() is 'Video'
+                    App.execute "video:moved"
+if ui.item.prop("tagName") isnt 'LI'
+    if _.contains ['Fib','Hotspot','Sort','BigAnswer','Mcq'],ui.item.find('input[name="element"]').val()
+$(ui.sender).sortable('cancel')</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        
+        
+
+
+      <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">sortable</span><span class="p">(</span><span class="s">&#39;destroy&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">hasClass</span> <span class="s">&#39;ui-sortable&#39;</span>
+        
+      <span class="nx">onAddDefaultTextElement</span><span class="o">:</span><span class="nf">-&gt;</span>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">,</span> <span class="s">&#39;Text&#39;</span>
+
+      
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>Menu item view</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">MainView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">CollectionView</span>
+
+      <span class="nv">className : </span><span class="s">&#39;teacher-question&#39;</span>
+
+      <span class="nv">template : </span><span class="s">&#39;&amp;nbsp;&#39;</span>
+
+      <span class="nv">itemView : </span><span class="nx">RowView</span>
+
+      <span class="nx">initialize</span><span class="o">:</span><span class="nf">(opt = {})-&gt;</span>
+        <span class="vi">@model = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">model</span>
+        <span class="vi">@collection = </span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+        <span class="k">if</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
+          <span class="k">for</span> <span class="nx">i</span> <span class="k">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+            <span class="nx">@collection</span><span class="p">.</span><span class="nx">add</span>
+                <span class="nv">position  : </span><span class="nx">i</span>
+                <span class="nv">element   : </span><span class="s">&#39;TeacherQuestRow&#39;</span>
+                <span class="nv">elements  : </span><span class="p">[]</span>
+        <span class="k">else</span>
+          <span class="k">for</span> <span class="nx">row</span> <span class="k">in</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">)</span>
+            <span class="nv">ro = </span><span class="nx">_</span><span class="p">.</span><span class="nx">clone</span> <span class="nx">row</span>
+            <span class="k">delete</span> <span class="nx">ro</span><span class="p">.</span><span class="nx">elements</span>
+            <span class="nx">@collection</span><span class="p">.</span><span class="nx">add</span> <span class="nx">ro</span>
+
+        
+      <span class="nx">onShow</span><span class="o">:</span><span class="nf">(opt = {})-&gt;</span>
+        <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
+          <span class="nx">@collection</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@_addTextForChild</span>
+            
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>else 
+    for row in @model.get('elements')
+        if row.elements.length is 0
+            model = @collection.findWhere {position:row.position}
+            @_addTextForChild model</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+      <span class="nx">_addTextForChild</span><span class="o">:</span><span class="nf">(model)=&gt;</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@children</span><span class="p">.</span><span class="nx">findByModel</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span>
+          <span class="nv">itemview = </span><span class="nx">@children</span><span class="p">.</span><span class="nx">findByModel</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span>
+          <span class="nx">itemview</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&quot;add:default:text:element&quot;</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

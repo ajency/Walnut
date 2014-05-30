@@ -18,6 +18,12 @@
     </div>
     <div id="tree"></div>
     <div id="headings">
+      <div class="heading h1">
+        <a href="#on%20show%20disable%20all%20question%20elements%20in%20d%20element%20box">on show disable all question elements in d element box</a>
+      </div>
+      <div class="heading h1">
+        <a href="#on%20delete%20enable%20all%20question%20elements%20in%20d%20element%20box">on delete enable all question elements in d element box</a>
+      </div>
     </div>
   </div>
   <div id="sidebar-toggle"></div>
@@ -53,8 +59,8 @@
               <span class="nv">marks : </span><span class="mi">1</span>
               <span class="nv">element : </span><span class="s">&#39;Sort&#39;</span>
               <span class="nv">optioncount : </span><span class="mi">2</span>
-              <span class="nv">elements  : </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:option:collection&quot;</span><span class="p">,</span> <span class="p">[{</span><span class="nx">optionNo</span><span class="o">:</span><span class="mi">1</span><span class="p">},{</span><span class="nx">optionNo</span><span class="o">:</span><span class="mi">2</span><span class="p">}]</span>
-              <span class="nv">bg_color : </span><span class="s">&#39;#b1c4e0&#39;</span>
+              <span class="nx">elements</span>  <span class="o">:</span><span class="p">[{</span><span class="nx">optionNo</span><span class="o">:</span><span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span><span class="p">(),</span><span class="nx">index</span><span class="o">:</span><span class="mi">1</span><span class="p">},{</span><span class="nx">optionNo</span><span class="o">:</span><span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span><span class="p">(),</span><span class="nx">index</span><span class="o">:</span><span class="mi">2</span><span class="p">}]</span>
+              <span class="nv">bg_color : </span><span class="s">&#39;#ffffff&#39;</span>
               <span class="nv">bg_opacity : </span><span class="mi">1</span>
               <span class="nv">height : </span><span class="mi">40</span>
 
@@ -106,7 +112,7 @@
 <p>get the view </p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-              <span class="nv">view = </span><span class="nx">@_getSortView</span> <span class="nx">optionCollection</span>
+              <span class="vi">@view = </span><span class="nv">view = </span><span class="nx">@_getSortView</span> <span class="nx">optionCollection</span>
 
 
 </pre></div>
@@ -131,14 +137,18 @@ listen to show property box event and show the property by passing the current m
       </tr>
       <tr>
         <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+<div class="pilwrap" id="on%20show%20disable%20all%20question%20elements%20in%20d%20element%20box">
+  <h1>
+    <a href="#on%20show%20disable%20all%20question%20elements%20in%20d%20element%20box" name="on%20show%20disable%20all%20question%20elements%20in%20d%20element%20box" class="pilcrow">&#182;</a>
+    on show disable all question elements in d element box
+  </h1>
 </div>
-<p>on show disable all question elements in d element box</p>
+
+
+<p>@listenTo view, "show",=>
+    @eventObj.vent.trigger "question:dropped"</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-              <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;show&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
-                <span class="nx">@eventObj</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;question:dropped&quot;</span>
 
 
 </pre></div>
@@ -183,13 +193,17 @@ coz the model cant be deleted with a collection in it</p>
       </tr>
       <tr>
         <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+<div class="pilwrap" id="on%20delete%20enable%20all%20question%20elements%20in%20d%20element%20box">
+  <h1>
+    <a href="#on%20delete%20enable%20all%20question%20elements%20in%20d%20element%20box" name="on%20delete%20enable%20all%20question%20elements%20in%20d%20element%20box" class="pilcrow">&#182;</a>
+    on delete enable all question elements in d element box
+  </h1>
 </div>
-<p>on delete enable all question elements in d element box</p>
+
+
+<p>@eventObj.vent.trigger "question:removed"</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-              <span class="nx">@eventObj</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;question:removed&quot;</span>
 
 
 
@@ -205,7 +219,7 @@ coz the model cant be deleted with a collection in it</p>
 change the number of options</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">_changeOptionCount</span><span class="o">:</span><span class="nf">(model,num)-&gt;</span>
+          <span class="nx">_changeOptionCount</span><span class="o">:</span><span class="nf">(model,num)=&gt;</span>
               <span class="nv">oldval = </span><span class="nx">model</span><span class="p">.</span><span class="nx">previous</span><span class="p">(</span><span class="s">&#39;optioncount&#39;</span><span class="p">)</span>
               <span class="nv">newval = </span><span class="nx">num</span>
 
@@ -223,7 +237,7 @@ change the number of options</p>
               <span class="k">if</span> <span class="nx">oldval</span><span class="o">&lt;</span><span class="nx">newval</span>
                 <span class="k">until</span> <span class="nx">oldval</span> <span class="o">is</span> <span class="nx">newval</span>
                   <span class="nx">oldval</span><span class="o">++</span>
-                  <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">push</span><span class="p">({</span><span class="nx">optionNo</span><span class="o">:</span><span class="nx">oldval</span><span class="p">})</span>
+                  <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">push</span><span class="p">({</span><span class="nx">optionNo</span><span class="o">:</span><span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span><span class="p">(),</span><span class="nx">index</span><span class="o">:</span><span class="nx">oldval</span><span class="p">})</span>
 
 </pre></div>
         </td>
@@ -238,8 +252,10 @@ change the number of options</p>
         <td class="code highlight"><div class="highlight"><pre>
               <span class="k">if</span> <span class="nx">oldval</span><span class="o">&gt;</span><span class="nx">newval</span>
                 <span class="k">until</span> <span class="nx">oldval</span> <span class="o">is</span> <span class="nx">newval</span>
-                  <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">pop</span><span class="p">()</span>
+                  <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">pop</span><span class="p">()</span><span class="c1">#remove model.get(&#39;elements&#39;).where({index:oldval})[0]</span>
                   <span class="nx">oldval</span><span class="o">--</span>
+
+              <span class="nx">@renderElement</span><span class="p">()</span>
 </pre></div>
         </td>
       </tr>

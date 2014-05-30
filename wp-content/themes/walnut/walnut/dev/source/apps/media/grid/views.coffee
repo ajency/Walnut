@@ -91,16 +91,16 @@ define ['app'
                     .find('.all-media-tab').find('a').trigger 'click'
                     #trigger the selectable to point to the newly added image
                     imageView.$el.find('img').trigger 'click'
-                    @_selectSelectableElements @$el.find('#selectable-images'),imageView.$el
+                    @$el.find('#selectable-images').selectSelectableElements imageView.$el
 
 
 #            programatically select elements
-            _selectSelectableElements :(selectableContainer, elementsToSelect)->
-                # remove the class ui-selected for the ones not selected
-                $(".ui-selected", selectableContainer).not(elementsToSelect).
-                removeClass("ui-selected")
-                # add ui-selected class to the elements to select
-                $(elementsToSelect).not(".ui-selected").addClass("ui-selected")
+#            _selectSelectableElements :(selectableContainer, elementsToSelect)->
+#                # remove the class ui-selected for the ones not selected
+#                $(".ui-selected", selectableContainer).not(elementsToSelect).
+#                removeClass("ui-selected")
+#                # add ui-selected class to the elements to select
+#                $(elementsToSelect).not(".ui-selected").addClass("ui-selected")
 
             _changeChildClass: (toType, evt)->
                 @children.each _.bind @_changeClassOfEachChild, @, toType

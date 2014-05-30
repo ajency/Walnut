@@ -75,8 +75,9 @@
             <span class="nx">API</span><span class="p">.</span><span class="nx">createHotspotElement</span> <span class="nx">data</span>
 
         <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;create:new:hotspot:element:collection&quot;</span><span class="p">,</span><span class="nf">(data)-&gt;</span>
-            <span class="k">if</span> <span class="nx">data</span><span class="o">!=</span><span class="kc">undefined</span>
+            <span class="k">if</span> <span class="nx">data</span> <span class="o">isnt</span> <span class="kc">undefined</span>
               <span class="nv">jsonData = </span><span class="nx">data</span>
+
             <span class="k">else</span>
               <span class="nv">jsonData = </span><span class="s">&#39;&#39;</span>
             <span class="nx">API</span><span class="p">.</span><span class="nx">createHotspotElementCollection</span> <span class="nx">jsonData</span>

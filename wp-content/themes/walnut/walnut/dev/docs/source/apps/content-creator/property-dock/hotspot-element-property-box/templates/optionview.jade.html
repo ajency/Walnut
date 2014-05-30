@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>optionview.jade</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../../doc-style.css" />
+  <script src="../../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../../", thisFile = "source\\apps\\content-creator\\property-dock\\hotspot-element-property-box\\templates\\optionview.jade", defaultSidebar = true;
+  </script>
+  <script src="../../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>optionview.jade</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nc">.tile-more-content.no-padding</span>
+  <span class="nc">.tiles.green</span>
+    <span class="nc">.tile-footer.drag</span>
+      | Hotspot
+      <span class="nt">i</span><span class="nc">.fa.fa-chevron-right</span>
+      <span class="nt">span</span><span class="nc">.semi-bold</span> {{shape}} Element
+    <span class="nc">.docket-body</span>
+      <span class="nf">#correct-answer</span><span class="nc">.radio.radio-success</span>
+        | Is this correct?
+        <span class="nt">input</span><span class="nf">#yes</span>(<span class="na">type=</span><span class="s">&#39;radio&#39;</span><span class="err">,</span> <span class="na">name=</span><span class="s">&#39;optionyes&#39;</span><span class="err">,</span> <span class="na">value=</span><span class="s">&#39;yes&#39;</span>)
+        <span class="nt">label</span>(<span class="na">for=</span><span class="s">&#39;yes&#39;</span>) Yes
+        <span class="nt">input</span><span class="nf">#no</span>(<span class="na">type=</span><span class="s">&#39;radio&#39;</span><span class="err">,</span> <span class="na">name=</span><span class="s">&#39;optionyes&#39;</span><span class="err">,</span> <span class="na">value=</span><span class="s">&#39;no&#39;</span><span class="err">,</span> <span class="na">checked=</span><span class="s">&#39;checked&#39;</span>)
+        <span class="nt">label</span>(<span class="na">for=</span><span class="s">&#39;no&#39;</span>) No
+      | Marks
+      <span class="nt">select</span><span class="nc">.marks</span>
+        <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;1&#39;</span>) 1
+        <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;2&#39;</span>) 2
+      <span class="nc">.form-group</span>
+        | Color
+        <span class="nt">input</span><span class="nf">#hidden-input</span><span class="nc">.fontColor</span>(<span class="na">type=</span><span class="s">&#39;hidden&#39;</span><span class="err">,</span> <span class="na">value=</span><span class="s">&#39;#1a45a1&#39;</span>)
+      <span class="nf">#transparency</span><span class="nc">.checkbox.check-success</span>
+        <span class="nt">input</span><span class="nf">#checkbox3</span>(<span class="na">type=</span><span class="s">&#39;checkbox&#39;</span><span class="err">,</span> <span class="na">value=</span><span class="s">&#39;1&#39;</span>)
+        <span class="nt">label</span>(<span class="na">for=</span><span class="s">&#39;checkbox3&#39;</span>) Set Transparent
+      <span class="nf">#knob</span><span class="nc">.form-group</span>
+        | Rotate
+        <span class="nt">input</span><span class="nc">.dial</span>(<span class="na">type=</span><span class="s">&#39;text&#39;</span><span class="err">,</span> <span class="na">data-min=</span><span class="s">&#39;0&#39;</span><span class="err">,</span> <span class="na">data-max=</span><span class="s">&#39;360&#39;</span><span class="err">,</span> <span class="na">data-width=</span><span class="s">&#39;40&#39;</span><span class="err">,</span> <span class="na">data-height=</span><span class="s">&#39;40&#39;</span><span class="err">,</span> <span class="na">data-displayinput=</span><span class="s">&#39;false&#39;</span><span class="err">,</span> <span class="na">data-thickness=</span><span class="s">&#39;.5&#39;</span><span class="err">,</span> <span class="na">data-fgcolor=</span><span class="s">&#39;#0AA699&#39;</span><span class="err">,</span> <span class="na">data-angleoffset=</span><span class="s">&#39;90&#39;</span><span class="err">,</span> <span class="na">data-cursor=</span><span class="s">&#39;true&#39;</span>)
+      <span class="nc">.form-group</span>
+        <span class="nt">button</span><span class="nf">#delete</span><span class="nc">.btn.btn-danger.btn-small</span>(<span class="na">type=</span><span class="s">&#39;button&#39;</span>) Delete
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

@@ -113,7 +113,8 @@ function get_content_pieces($args = array()) {
     foreach ($content_items as $id) {
         $content_pieces[]= get_single_content_piece($id);
     }
-    
+
+
     switch_to_blog($current_blog_id);
     
     return $content_pieces;
@@ -147,25 +148,25 @@ function get_single_content_piece($id){
 
     $content_piece->question_type = get_post_meta($id, 'question_type', true);
 
-    $content_piece->post_tags = $content_piece_meta['post_tags'];
+    $content_piece->post_tags = (isset($content_piece_meta['post_tags']))? $content_piece_meta['post_tags']: '';
 
-    $content_piece->instructions = $content_piece_meta['instructions'];
+    $content_piece->instructions = (isset($content_piece_meta['instructions']))? $content_piece_meta['instructions']: '';
 
-    $content_piece->duration = (int) $content_piece_meta['duration'];
+    $content_piece->duration = (isset($content_piece_meta['duration']))? (int) $content_piece_meta['duration']: '';
 
-    $last_modified_by = $content_piece_meta['last_modified_by'];
+    $last_modified_by = (isset($content_piece_meta['last_modified_by']))? $content_piece_meta['last_modified_by']: '';
 
     $last_modified_by_user= get_userdata($last_modified_by);
 
     $content_piece->last_modified_by = $last_modified_by_user->display_name;
 
-    $published_by = $content_piece_meta['published_by'];
+    $published_by = (isset($content_piece_meta['published_by']))? $content_piece_meta['published_by']: '';
 
     $published_by_user= get_userdata($published_by);
 
     $content_piece->published_by = $published_by_user->display_name;
 
-    $term_ids_array= $content_piece_meta['term_ids'];
+    $term_ids_array= (isset($content_piece_meta['term_ids']))? $content_piece_meta['term_ids']: '';
 
     $term_ids = maybe_unserialize($term_ids_array);
 
@@ -440,7 +441,9 @@ function get_all_content_groups($args=array()){
         $query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
     
     $content_groups = $wpdb->get_results($query);
-    
+
+
+
     $content_data=array();
     switch_to_blog($current_blog);
     

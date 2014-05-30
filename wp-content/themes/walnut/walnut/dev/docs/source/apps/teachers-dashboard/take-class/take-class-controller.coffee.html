@@ -38,12 +38,13 @@
 
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
-    <span class="s">&#39;controllers/region-controller&#39;</span>
-    <span class="s">&#39;text!apps/teachers-dashboard/take-class/templates/class-description.html&#39;</span>
-    <span class="s">&#39;apps/teachers-dashboard/take-class/views&#39;</span>
-    <span class="p">],</span> <span class="nf">(App, RegionController,classDescriptionTpl)-&gt;</span>
-
-  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;TeachersDashboardApp.View&quot;</span><span class="p">,</span> <span class="nf">(View, App)-&gt;</span>
+        <span class="s">&#39;controllers/region-controller&#39;</span>
+        <span class="s">&#39;text!apps/teachers-dashboard/take-class/templates/class-description.html&#39;</span>
+        <span class="s">&#39;apps/teachers-dashboard/take-class/views&#39;</span>
+<span class="p">],</span> <span class="nf">(App, RegionController, classDescriptionTpl)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;TeachersDashboardApp.View&quot;</span><span class="p">,</span> <span class="nf">(View, App)-&gt;</span>
+        <span class="nv">divisionModel = </span><span class="kc">null</span>
+        <span class="nv">textbooks = </span><span class="kc">null</span>
 
 
 </pre></div>
@@ -58,24 +59,45 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-    <span class="k">class</span> <span class="nx">View</span><span class="p">.</span><span class="nx">TakeClassController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+        <span class="k">class</span> <span class="nx">View</span><span class="p">.</span><span class="nx">TakeClassController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
 
-      <span class="nx">initialize</span> <span class="o">:</span><span class="nf">(opts)-&gt;</span>
+            <span class="nv">initialize: </span><span class="nf">(opts)-&gt;</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">opts</span>
+                <span class="p">{</span><span class="nx">@classID</span><span class="p">,</span><span class="nx">@division</span><span class="p">,</span> <span class="nx">@mode</span><span class="p">}</span> <span class="o">=</span> <span class="nx">opts</span>
 
-        <span class="nv">breadcrumb_items = </span><span class="s">&#39;items&#39;</span><span class="o">:</span><span class="p">[</span>
-            <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Dashboard&#39;</span><span class="p">,</span><span class="s">&#39;link&#39;</span><span class="o">:</span> <span class="s">&#39;#teachers/dashboard&#39;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span><span class="s">&#39;Take Class&#39;</span><span class="p">,</span><span class="s">&#39;link&#39;</span><span class="o">:</span><span class="s">&#39;javascript://&#39;</span><span class="p">}</span>
-          <span class="p">]</span>
+                <span class="nv">breadcrumb_label = </span><span class="s">&#39;Start Training&#39;</span>
 
-        <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;update:breadcrumb:model&quot;</span><span class="p">,</span> <span class="nx">breadcrumb_items</span>
+                <span class="k">if</span> <span class="nx">@mode</span> <span class="o">is</span> <span class="s">&#39;take-class&#39;</span>
+                    <span class="nv">divisionModel = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:division:by:id&quot;</span><span class="p">,</span> <span class="nx">@division</span>
+                    <span class="nv">breadcrumb_label = </span><span class="s">&#39;Take Class&#39;</span>
+                <span class="k">else</span>
+                    <span class="nv">divisionModel = </span><span class="s">&#39;&#39;</span>
 
-        <span class="p">{</span><span class="nx">classID</span><span class="p">}</span> <span class="o">=</span> <span class="nx">opts</span>
+                <span class="nv">breadcrumb_items =</span>
+                    <span class="s">&#39;items&#39;</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span> <span class="s">&#39;Dashboard&#39;</span><span class="p">,</span> <span class="s">&#39;link&#39;</span><span class="o">:</span> <span class="s">&#39;#teachers/dashboard&#39;</span><span class="p">},</span>
+                        <span class="p">{</span><span class="s">&#39;label&#39;</span><span class="o">:</span> <span class="nx">breadcrumb_label</span><span class="p">,</span> <span class="s">&#39;link&#39;</span><span class="o">:</span> <span class="s">&#39;javascript://&#39;</span><span class="p">}</span>
+                    <span class="p">]</span>
 
-        <span class="p">{</span><span class="nx">@division</span><span class="p">}</span> <span class="o">=</span> <span class="nx">opts</span>
+                <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;update:breadcrumb:model&quot;</span><span class="p">,</span> <span class="nx">breadcrumb_items</span>
 
-        <span class="vi">@divisionModel = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:division:by:id&quot;</span><span class="p">,</span> <span class="nx">@division</span>
+                <span class="nv">textbooks = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:textbooks&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nv">class_id: </span><span class="nx">@classID</span><span class="p">)</span>
 
-        <span class="vi">@textbooks = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:textbooks&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nv">class_id : </span><span class="nx">classID</span><span class="p">)</span>
+                <span class="vi">@layout = </span><span class="nv">layout = </span><span class="nx">@_getTrainingModuleLayout</span><span class="p">()</span>
+
+                <span class="nx">@show</span> <span class="nx">layout</span><span class="p">,</span> <span class="p">(</span><span class="nv">loading: </span><span class="kc">true</span><span class="p">,</span> <span class="nv">entities: </span><span class="p">[</span><span class="nx">textbooks</span><span class="p">,</span> <span class="nx">divisionModel</span><span class="p">])</span>
+
+                <span class="nx">@listenTo</span> <span class="nx">layout</span><span class="p">,</span> <span class="s">&quot;show&quot;</span><span class="p">,</span> <span class="nx">@_showTextbooksListView</span>
+
+
+
+            <span class="nv">_showTextbooksListView: </span><span class="nf">-&gt;</span>
+                <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;when:fetched&quot;</span><span class="p">,</span> <span class="nx">textbooks</span><span class="p">,</span> <span class="o">=&gt;</span>
+                    <span class="nv">textbookListView = </span><span class="k">new</span> <span class="nx">View</span><span class="p">.</span><span class="nx">TakeClass</span><span class="p">.</span><span class="nx">TextbooksListView</span>
+                        <span class="nv">collection: </span><span class="nx">textbooks</span>
+
+
+                    <span class="nv">classDescriptionView = </span><span class="k">new</span> <span class="nx">ClassDescriptionView</span>
 
 
 </pre></div>
@@ -86,66 +108,50 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
-<p>@view = view = @_getTextbooksListView textbooks</p>
+<p>model: divisionModel</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
+                        <span class="nv">templateHelpers:</span>
+                            <span class="nv">showSubjectsList: </span><span class="o">=&gt;</span>
+                                <span class="nv">subjectsList = </span><span class="nx">_</span><span class="p">.</span><span class="nx">uniq</span> <span class="nx">_</span><span class="p">.</span><span class="nx">compact</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">(</span><span class="nx">textbooks</span><span class="p">.</span><span class="nx">pluck</span><span class="p">(</span><span class="s">&#39;subjects&#39;</span><span class="p">)))</span>
+                                <span class="nx">subjectsList</span>
 
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
-</div>
-<p>@show view, (loading: true)</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-        
-        <span class="vi">@layout= </span><span class="nv">layout = </span><span class="nx">@_getTrainingModuleLayout</span><span class="p">()</span>
+                            <span class="nv">showClassLabel: </span><span class="o">=&gt;</span>
+                                <span class="k">if</span> <span class="nx">@mode</span> <span class="o">is</span> <span class="s">&#39;training&#39;</span>
+                                    <span class="nx">CLASS_LABEL</span><span class="p">[</span><span class="nx">@classID</span><span class="p">]</span>
+                                <span class="k">else</span>
+                                    <span class="nx">divisionModel</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;division&#39;</span>
 
-        <span class="nx">@show</span> <span class="nx">layout</span><span class="p">,</span> <span class="p">(</span><span class="nv">loading: </span><span class="kc">true</span><span class="p">,</span> <span class="nv">entities: </span><span class="p">[</span><span class="nx">@textbooks</span><span class="p">,</span><span class="nx">@divisionModel</span><span class="p">])</span>
+                            <span class="nv">showNoOfStudents: </span><span class="o">=&gt;</span>
+                                <span class="k">if</span> <span class="nx">@mode</span> <span class="o">is</span> <span class="s">&#39;training&#39;</span>
+                                    <span class="s">&#39;N/A&#39;</span>
+                                <span class="k">else</span>
+                                    <span class="nx">divisionModel</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;students_count&#39;</span>
 
-        <span class="nx">@listenTo</span> <span class="nx">layout</span><span class="p">,</span> <span class="s">&quot;show&quot;</span><span class="p">,</span> <span class="nx">@_showTextbooksListView</span>
+                      <span class="nx">@layout</span><span class="p">.</span><span class="nx">textbooksListRegion</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">textbookListView</span><span class="p">)</span>
 
-        
+                      <span class="nx">@layout</span><span class="p">.</span><span class="nx">classDetailsRegion</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">classDescriptionView</span><span class="p">)</span>
 
-      <span class="nx">_showTextbooksListView</span> <span class="o">:=&gt;</span>
-        <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;when:fetched&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nx">@textbooks</span><span class="p">,</span><span class="nx">@divisionModel</span><span class="p">],</span> <span class="o">=&gt;</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@divisionModel</span>
-          <span class="nv">textbookListView= </span><span class="k">new</span> <span class="nx">View</span><span class="p">.</span><span class="nx">TakeClass</span><span class="p">.</span><span class="nx">TextbooksListView</span>
-                      <span class="nv">collection: </span><span class="nx">@textbooks</span>
+            <span class="nv">_getTrainingModuleLayout: </span><span class="nf">-&gt;</span>
+                <span class="k">new</span> <span class="nx">TextbookListLayout</span>
 
-          <span class="nv">classDescriptionView = </span><span class="k">new</span> <span class="nx">ClassDescriptionView</span>
-              <span class="nv">model: </span><span class="nx">@divisionModel</span>
+        <span class="k">class</span> <span class="nx">TextbookListLayout</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Layout</span>
 
-              <span class="nv">templateHelpers: </span>
-                <span class="nx">showSubjectsList</span><span class="o">:=&gt;</span>
-                  <span class="nv">subjectsList = </span><span class="nx">_</span><span class="p">.</span><span class="nx">uniq</span> <span class="nx">_</span><span class="p">.</span><span class="nx">compact</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">(</span><span class="nx">@textbooks</span><span class="p">.</span><span class="nx">pluck</span><span class="p">(</span><span class="s">&#39;subjects&#39;</span><span class="p">)))</span>
-                  <span class="nx">subjectsList</span>
+            <span class="nv">template: </span><span class="s">&#39;&lt;div id=&quot;class-details-region&quot;&gt;&lt;/div&gt;</span>
+<span class="s">                          &lt;div id=&quot;textbooks-list-region&quot;&gt;&lt;/div&gt;&#39;</span>
 
-          <span class="nx">@layout</span><span class="p">.</span><span class="nx">textbooksListRegion</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">textbookListView</span><span class="p">)</span>
-
-          <span class="nx">@layout</span><span class="p">.</span><span class="nx">classDetailsRegion</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">classDescriptionView</span><span class="p">)</span>
-
-      <span class="nv">_getTrainingModuleLayout : </span><span class="nf">-&gt;</span>
-        <span class="k">new</span> <span class="nx">TextbookListLayout</span>
-
-    <span class="k">class</span> <span class="nx">TextbookListLayout</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Layout</span>
-
-        <span class="nv">template : </span><span class="s">&#39;&lt;div id=&quot;class-details-region&quot;&gt;&lt;/div&gt;</span>
-<span class="s">              &lt;div id=&quot;textbooks-list-region&quot;&gt;&lt;/div&gt;&#39;</span>
-
-        <span class="nv">regions: </span>
-          <span class="nv">classDetailsRegion  : </span><span class="s">&#39;#class-details-region&#39;</span>
-          <span class="nv">textbooksListRegion : </span><span class="s">&#39;#textbooks-list-region&#39;</span>
+            <span class="nv">regions:</span>
+                <span class="nv">classDetailsRegion: </span><span class="s">&#39;#class-details-region&#39;</span>
+                <span class="nv">textbooksListRegion: </span><span class="s">&#39;#textbooks-list-region&#39;</span>
 
 
+        <span class="k">class</span> <span class="nx">ClassDescriptionView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
 
-    <span class="k">class</span> <span class="nx">ClassDescriptionView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+            <span class="nv">template: </span><span class="nx">classDescriptionTpl</span>
 
-        <span class="nv">template: </span><span class="nx">classDescriptionTpl</span>
+            <span class="nv">onShow: </span><span class="nf">-&gt;</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;on show&#39;</span>
 </pre></div>
         </td>
       </tr>

@@ -32,6 +32,7 @@ define ["app", 'backbone'], (App, Backbone) ->
             comparator: 'ID'
 
             initialize: ->
+                console.log 'content piece '
                 @on('remove', @removedModel, @)
                 @on('add', @addedPieces, @)
 
@@ -54,7 +55,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                     add: true
                     remove: false
                     data: param
-
+                console.log AJAXURL
+                console.log 'contentPieceCollection'
+                console.log contentPieceCollection
                 contentPieceCollection
 
         # get all content pieces belonging to particular group

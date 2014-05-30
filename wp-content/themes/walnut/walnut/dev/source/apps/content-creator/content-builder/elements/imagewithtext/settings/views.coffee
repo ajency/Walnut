@@ -42,12 +42,3 @@ define ['app'
                 'change select[name="align"]': (evt)->
                     @trigger "element:alignment:changed", $(evt.target).val()
 
-            onShow: ->
-                $(window).on 'click', @_closeViewWhenClickedOutside
-
-            _closeViewWhenClickedOutside:=>
-                console.log 'window clicked closing setting'
-                @close()
-
-            onClose:->
-                $(window).off 'click',  @_closeViewWhenClickedOutside

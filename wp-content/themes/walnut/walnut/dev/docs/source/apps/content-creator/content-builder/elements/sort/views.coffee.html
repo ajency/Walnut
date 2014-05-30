@@ -51,8 +51,8 @@
     <span class="k">class</span> <span class="nx">OptionView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
         <span class="nv">className : </span><span class="s">&#39;sort-option&#39;</span>
 
-        <span class="nv">template : </span><span class="s">&#39;&lt;span&gt;{{optionNo}}&lt;/span&gt;             </span>
-<span class="s">              &lt;p class=&quot;sort-option-text&quot;&gt;&lt;/p&gt;&#39;</span>
+        <span class="nv">template : </span><span class="s">&#39;&lt;input type=&quot;hidden&quot; id=&quot;optionNo&quot; value=&quot;{{optionNo}}&quot;&gt;              </span>
+<span class="s">              &lt;div class=&quot;sort-option-text&quot;&gt;&lt;/div&gt;&#39;</span>
 
 
 </pre></div>
@@ -71,7 +71,7 @@ current markupup as argument</p>
         <td class="code highlight"><div class="highlight"><pre>
         <span class="nv">events:</span>
           <span class="s">&#39;click a&#39;</span> <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
-          <span class="s">&#39;blur p&#39;</span>  <span class="o">:</span> <span class="nf">-&gt;</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;text&#39;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span>
+          <span class="s">&#39;blur .sort-option-text&#39;</span>  <span class="o">:</span> <span class="nf">-&gt;</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;text&#39;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.sort-option-text&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span>
 
 </pre></div>
         </td>
@@ -104,8 +104,8 @@ we can destroy it on close of element</p>
         <td class="code highlight"><div class="highlight"><pre>
         <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
           <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;sort-option-&#39;</span><span class="o">+</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;optionNo&#39;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span><span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
-          <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.sort-option-text&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span><span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
+          <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.sort-option-text&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
           <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;text&#39;</span>
 
 
@@ -293,12 +293,12 @@ Ckeditor has a destroy method to remove a editor instance</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
 </div>
-<p>on mouse down on the text area remove sortable so as to enable typing</p>
+<p>on mouse down on the text area remove sortable so as to enable typing
+@$el.sortable('destroy') if @$el.hasClass 'ui-sortable'</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;mousedown&#39;</span><span class="p">,</span><span class="nf">(evt)=&gt;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.sort-option-text&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;mousedown&#39;</span><span class="p">,</span><span class="nf">(evt)=&gt;</span>
             <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
-            <span class="nx">@$el</span><span class="p">.</span><span class="nx">sortable</span><span class="p">(</span><span class="s">&#39;destroy&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">hasClass</span> <span class="s">&#39;ui-sortable&#39;</span>
 
 
 </pre></div>
@@ -317,6 +317,19 @@ Ckeditor has a destroy method to remove a editor instance</p>
             <span class="k">if</span> <span class="o">not</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">hasClass</span> <span class="s">&#39;ui-sortable&#39;</span>
               <span class="nx">@$el</span><span class="p">.</span><span class="nx">sortable</span>
                 <span class="nv">cursor: </span><span class="s">&quot;move&quot;</span>
+                <span class="nv">stop : </span><span class="nx">@_onOptionPositionChanged</span>
+
+      <span class="nx">_onOptionPositionChanged</span><span class="o">:=&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input#optionNo&#39;</span><span class="p">).</span><span class="nx">each</span> <span class="nf">(index,element)=&gt;</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">index</span><span class="o">+</span><span class="s">&quot;  &quot;</span><span class="o">+</span><span class="nx">element</span><span class="p">.</span><span class="nx">value</span>
+          <span class="nx">@collection</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">value</span><span class="p">).</span><span class="nx">set</span> <span class="s">&#39;index&#39;</span><span class="p">,</span><span class="nx">index</span><span class="o">+</span><span class="mi">1</span>
+        
+        <span class="vi">@collection.comparator = </span><span class="nf">(model)-&gt;</span> 
+              <span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;index&#39;</span>
+        
+        <span class="nx">@collection</span><span class="p">.</span><span class="nx">sort</span><span class="p">()</span>
+
+
 
 
 </pre></div>

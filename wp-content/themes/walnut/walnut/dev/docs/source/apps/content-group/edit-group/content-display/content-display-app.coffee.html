@@ -48,7 +48,7 @@
       <span class="nv">initialize : </span><span class="nf">(opts)-&gt;</span>
         <span class="p">{</span><span class="nx">@model</span><span class="p">}</span> <span class="o">=</span> <span class="nx">opts</span>
         
-        <span class="vi">@groupContentCollection= </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:content:pieces:of:group&quot;</span><span class="p">,</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;id&#39;</span>
+        <span class="vi">@groupContentCollection= </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:content:pieces:of:group&quot;</span><span class="p">,</span> <span class="nx">@model</span>
 
         <span class="vi">@view= </span><span class="nv">view = </span><span class="nx">@_getCollectionContentDisplayView</span> <span class="nx">@model</span><span class="p">,</span> <span class="nx">@groupContentCollection</span>
 

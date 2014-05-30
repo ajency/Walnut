@@ -38,7 +38,6 @@
 
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span> <span class="nf">(App)-&gt;</span>
-
   <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.AutoSave&#39;</span><span class="p">,</span> <span class="nf">(AutoSave, App, Backbone, Marionette, $, _)-&gt;</span>
 
 
@@ -67,7 +66,7 @@
 <p>initialize the controller. Get all required entities and show the view</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">initialize</span><span class="o">:</span><span class="nf">(opt = {})-&gt;</span>
+      <span class="nv">initialize: </span><span class="nf">(opt = {})-&gt;</span>
 
 
 </pre></div>
@@ -81,17 +80,14 @@
 <p>autoSave</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">autoSave</span><span class="o">:</span><span class="nf">-&gt;</span>
+      <span class="nv">autoSave: </span><span class="nf">(contentPieceModel)-&gt;</span>
 
         <span class="nv">siteRegion = </span><span class="nx">App</span><span class="p">.</span><span class="nx">mainContentRegion</span><span class="p">.</span><span class="nx">$el</span>
 
-        <span class="nv">_json   = </span><span class="nx">@_getPageJson</span> <span class="nx">siteRegion</span>
-        
+        <span class="nv">_json = </span><span class="nx">@_getPageJson</span> <span class="nx">siteRegion</span>
+
         <span class="k">if</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span> <span class="nx">_json</span>
           <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&quot;invalid json...&quot;</span>
-
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">_json</span>
-        <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span> <span class="s">&#39;layout&#39;</span><span class="p">,</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">_json</span>
 
 
 </pre></div>
@@ -102,9 +98,30 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
-<p>_page_id = App.request "get:current:editable:page"</p>
+<p>localStorage.setItem 'layout',JSON.stringify _json</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
+
+        <span class="nv">data = </span><span class="nx">contentPieceModel</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+        <span class="nv">data.action= </span><span class="s">&#39;save-content-piece-json&#39;</span>
+        <span class="nv">data.json= </span><span class="nx">_json</span>
+
+        <span class="nv">options =</span>
+          <span class="nv">type: </span><span class="s">&#39;POST&#39;</span>
+          <span class="nv">url: </span><span class="nx">AJAXURL</span>
+          <span class="nx">data</span><span class="o">:</span><span class="nx">data</span>
+
+
+        <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">(</span><span class="nx">options</span><span class="p">).</span><span class="nx">done</span> <span class="nf">(response)-&gt;</span>
+          <span class="nx">contentPieceModel</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;ID&#39;</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">ID</span>
+
+          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#saved-successfully&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">()</span>
+
+          <span class="nx">$</span> <span class="s">&quot;.creator&quot;</span>
+          <span class="p">.</span><span class="nx">before</span> <span class="s">&#39;&lt;div id=&quot;saved-successfully&quot; style=&quot;text-align:center;&quot; class=&quot;alert alert-success&quot;&gt;Content Piece Saved Successfully&lt;/div&gt;&#39;</span>
+
+        <span class="p">.</span><span class="nx">fail</span> <span class="nf">(resp)-&gt;</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;error&#39;</span>
 
 
 </pre></div>
@@ -115,17 +132,11 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
-<p>options = 
-    type    : 'POST'
-    url     : AJAXURL
-    data    :
-        action  : 'save-page-json'
-        json    : JSON.stringify _json
-        page_id : _page_id</p>
+<p>get the json</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          
-
+      <span class="nv">_getPageJson: </span><span class="nf">($site)-&gt;</span>
+        <span class="nv">json =</span>
 
 </pre></div>
         </td>
@@ -134,36 +145,6 @@
         <td class="docs">
 <div class="pilwrap">
   <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
-</div>
-<p>$.ajax( options ).done (response)->
-    console.log response
-.fail (resp)->
-    console.log 'error'</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
-</div>
-<p>get the json</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_getPageJson</span><span class="o">:</span><span class="nf">($site)-&gt;</span>
-        <span class="nv">json = </span>
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <p>header     : @_getJson $site.find '#site-header-region'</p>
         </td>
@@ -176,7 +157,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
 <p>footer     : @_getJson $site.find '#site-footer-region'</p>
         </td>
@@ -191,13 +172,13 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <p>generate the JSON for the layout
 loops through rows and nested columns and elements inside it</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_getJson</span><span class="o">:</span><span class="nf">($element, arr = [])-&gt;</span>
+      <span class="nv">_getJson: </span><span class="nf">($element, arr = [])-&gt;</span>
 
 
 </pre></div>
@@ -206,7 +187,7 @@ loops through rows and nested columns and elements inside it</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
 </div>
 <p>find all elements inside $element container</p>
         </td>
@@ -214,10 +195,9 @@ loops through rows and nested columns and elements inside it</p>
         <span class="nv">elements = </span><span class="nx">$element</span><span class="p">.</span><span class="nx">children</span> <span class="s">&#39;.element-wrapper&#39;</span>
 
         <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">elements</span><span class="p">,</span> <span class="nf">(element, index)=&gt;</span>
-          
           <span class="nv">ele =</span>
-            <span class="nv">element : </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;form input[name=&quot;element&quot;]&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
-            <span class="nv">meta_id : </span><span class="nb">parseInt</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;form input[name=&quot;meta_id&quot;]&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+            <span class="nv">element: </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;form input[name=&quot;element&quot;]&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+            <span class="nv">meta_id: </span><span class="nb">parseInt</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;form input[name=&quot;meta_id&quot;]&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
 
           <span class="k">if</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">element</span> <span class="o">is</span> <span class="s">&#39;Row&#39;</span>
             <span class="nv">ele.draggable = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;form&#39;</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input[name=&quot;draggable&quot;]&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">is</span> <span class="s">&quot;true&quot;</span>
@@ -226,22 +206,47 @@ loops through rows and nested columns and elements inside it</p>
             <span class="nv">ele.elements = </span><span class="p">[]</span>
             <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;.element-markup&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;.row&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;.column&#39;</span><span class="p">),</span> <span class="nf">(column, index)=&gt;</span>
               <span class="nv">className = </span><span class="nx">$</span><span class="p">(</span><span class="nx">column</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;data-class&#39;</span>
+              <span class="nv">col =</span>
+                <span class="nv">position: </span><span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="nv">element: </span><span class="s">&#39;Column&#39;</span>
+                <span class="nv">className: </span><span class="nx">className</span>
+                <span class="nv">elements: </span><span class="nx">@_getJson</span> <span class="nx">$</span><span class="p">(</span><span class="nx">column</span><span class="p">)</span>
+
+              <span class="nx">ele</span><span class="p">.</span><span class="nx">elements</span><span class="p">.</span><span class="nx">push</span> <span class="nx">col</span>
+              <span class="k">return</span>
+
+          <span class="k">if</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">element</span> <span class="o">is</span> <span class="s">&#39;TeacherQuestion&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>ele.draggable = $(element).children('form').find('input[name="draggable"]').val() is "true"
+ele.style = $(element).children('form').find('input[name="style"]').val()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="k">delete</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">meta_id</span>
+            <span class="nv">ele.elements = </span><span class="p">[]</span>
+            <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;.element-markup&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;.teacher-question&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;.teacher-question-row&#39;</span><span class="p">),</span> <span class="nf">(column, index)=&gt;</span>
               <span class="nv">col = </span>
                 <span class="nv">position  : </span><span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="nv">element   : </span><span class="s">&#39;Column&#39;</span>
-                <span class="nv">className   : </span><span class="nx">className</span>
+                <span class="nv">element   : </span><span class="s">&#39;TeacherQuestRow&#39;</span>
                 <span class="nv">elements  : </span><span class="nx">@_getJson</span> <span class="nx">$</span><span class="p">(</span><span class="nx">column</span><span class="p">)</span>
         
               <span class="nx">ele</span><span class="p">.</span><span class="nx">elements</span><span class="p">.</span><span class="nx">push</span> <span class="nx">col</span> 
-              <span class="k">return</span>
+              
 
           <span class="nx">arr</span><span class="p">.</span><span class="nx">push</span> <span class="nx">ele</span>
-          
+
         <span class="nx">arr</span>
 
-    <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;autosave:question:layout&quot;</span><span class="p">,</span> <span class="nf">-&gt;</span>
 
-        <span class="k">new</span> <span class="nx">AutoSave</span><span class="p">.</span><span class="nx">Controller</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;autosave:question:layout&quot;</span><span class="p">,</span> <span class="nf">-&gt;</span>
+      <span class="k">new</span> <span class="nx">AutoSave</span><span class="p">.</span><span class="nx">Controller</span>
 </pre></div>
         </td>
       </tr>

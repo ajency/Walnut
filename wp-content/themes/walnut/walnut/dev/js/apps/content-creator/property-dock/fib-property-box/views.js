@@ -16,7 +16,8 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
 
       PropertyView.prototype.ui = {
         marksTextbox: 'input#marks',
-        individualMarksCheckbox: 'input#check-individual-marks'
+        individualMarksCheckbox: 'input#check-individual-marks',
+        noOfBlanksDropdown: 'select#no-of-blanks'
       };
 
       PropertyView.prototype.events = {
@@ -24,7 +25,12 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
         'change select#fib-font': '_changeFont',
         'blur @ui.marksTextbox': '_changeMarks',
         'change select#fib-style': '_changeStyle',
-        'change @ui.individualMarksCheckbox': '_toggleIndividualMarks'
+        'change @ui.individualMarksCheckbox': '_toggleIndividualMarks',
+        'change @ui.noOfBlanksDropdown': '_changeNumberOfBlanks'
+      };
+
+      PropertyView.prototype.modelEvents = {
+        'change:numberOfBlanks': '_updateNoOfBlanks'
       };
 
       PropertyView.prototype.onShow = function(options) {
@@ -40,6 +46,10 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
           minimumResultsForSearch: -1
         });
         this.$el.find('#fib-font').select2('val', this.model.get('font'));
+        this.ui.noOfBlanksDropdown.select2({
+          minimumResultsForSearch: -1
+        });
+        this.ui.noOfBlanksDropdown.select2('val', this.model.get('numberOfBlanks'));
         this.$el.find('#fib-style').select2({
           minimumResultsForSearch: -1
         });
@@ -83,10 +93,9 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
       PropertyView.prototype._enableCalculateMarks = function() {
         this._updateMarks();
         this.$el.closest('#property-dock').on('blur', '#question-elements-property #individual-marks', (function(_this) {
-          return function(evt) {
-            return _this._updateMarks();
-          };
-        })(this));
+          return function(evt) {};
+        })(this), this._updateMarks());
+        this.listenTo(this.model.get('blanksArray'), 'change', this._updateMarks);
         this.listenTo(this.model.get('blanksArray'), 'add', this._updateMarks);
         return this.listenTo(this.model.get('blanksArray'), 'remove', this._updateMarks);
       };
@@ -121,6 +130,10 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
         return this.model.set('font', $(evt.target).val());
       };
 
+      PropertyView.prototype._changeNumberOfBlanks = function(evt) {
+        return this.model.set('numberOfBlanks', parseInt($(evt.target).val()));
+      };
+
       PropertyView.prototype._changeStyle = function(evt) {
         return this.model.set('style', $(evt.target).val());
       };
@@ -141,6 +154,10 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
         if (!isNaN($(evt.target).val())) {
           return this.model.set('marks', parseInt($(evt.target).val()));
         }
+      };
+
+      PropertyView.prototype._updateNoOfBlanks = function(model, numberOfBlanks) {
+        return this.ui.noOfBlanksDropdown.select2('val', numberOfBlanks);
       };
 
       PropertyView.prototype.onClose = function() {

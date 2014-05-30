@@ -38,17 +38,13 @@
 
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;jquery&#39;</span><span class="p">,</span> <span class="s">&#39;jqueryvalidate&#39;</span><span class="p">],</span> <span class="nf">($)-&gt;</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">validator</span><span class="p">.</span><span class="nx">setDefaults</span>
+        <span class="nv">errorElement: </span><span class="s">&#39;span&#39;</span>
+        <span class="nv">errorClass: </span><span class="s">&#39;error&#39;</span>
+        <span class="nv">focusInvalid: </span><span class="kc">false</span>
+        <span class="nv">ignore: </span><span class="p">[]</span>
+        <span class="nv">errorPlacement: </span><span class="nf">(error, element) -&gt;</span> <span class="c1"># // render error placement for each input type</span>
 
-  <span class="nx">$</span><span class="p">.</span><span class="nx">validator</span><span class="p">.</span><span class="nx">setDefaults</span>
-      <span class="nv">errorElement: </span><span class="s">&#39;span&#39;</span>
-      <span class="nv">errorClass: </span><span class="s">&#39;error&#39;</span>
-      <span class="nv">focusInvalid: </span><span class="kc">false</span>
-      <span class="nv">ignore: </span><span class="p">[]</span>
-      <span class="nv">errorPlacement: </span> <span class="nf">(error, element) -&gt;</span> <span class="c1"># // render error placement for each input type</span>
-        <span class="nv">icon = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">)</span>
-        <span class="nv">parent = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">)</span>
-        <span class="nx">icon</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;icon-ok&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;icon-exclamation&#39;</span><span class="p">)</span>  
-        <span class="nx">parent</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;success-control&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;error-control&#39;</span><span class="p">)</span>  
 
 </pre></div>
         </td>
@@ -58,15 +54,52 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
 </div>
+<p>Handling error classes for select2 dropdowns</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">prev</span> <span class="s">&#39;.select2-container&#39;</span>
+            <span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.select2-choice&#39;</span>
+            <span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;error&#39;</span>
+
+            <span class="nv">icon = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">)</span>
+            <span class="nv">parent = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">)</span>
+            <span class="nx">icon</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;icon-ok&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;icon-exclamation&#39;</span><span class="p">)</span>
+            <span class="nx">parent</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;success-control&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;error-control&#39;</span><span class="p">)</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
 <p>$('<span class="error"></span>').insertAfter(element).append(error)</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-      <span class="nv">success: </span><span class="nf">(label, element) -&gt;</span>
-        <span class="nv">icon = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">)</span>
-        <span class="nv">parent = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">)</span>
-        <span class="nx">icon</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;icon-exclamation&quot;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;icon-ok&#39;</span><span class="p">)</span>
-        <span class="nx">parent</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;error-control&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;success-control&#39;</span><span class="p">)</span>
+        <span class="nv">success: </span><span class="nf">(label, element) -&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>Handling error classes for select2 dropdowns</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">prev</span> <span class="s">&#39;.select2-container&#39;</span>
+            <span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.select2-choice&#39;</span>
+            <span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;error&#39;</span>
+
+            <span class="nv">icon = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">)</span>
+            <span class="nv">parent = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">parent</span><span class="p">(</span><span class="s">&#39;.input-with-icon&#39;</span><span class="p">)</span>
+            <span class="nx">icon</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;icon-exclamation&quot;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;icon-ok&#39;</span><span class="p">)</span>
+            <span class="nx">parent</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;error-control&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;success-control&#39;</span><span class="p">)</span>
        
 </pre></div>
         </td>
