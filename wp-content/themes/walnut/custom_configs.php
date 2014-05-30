@@ -1,5 +1,5 @@
 <?php
-for($i=1; $i<=12; $i++){
+for($i=1; $i<=15; $i++){
     $classids[$i]['id']=$i;
     if($i==1)
         $classids[$i]['label']='Nursery';

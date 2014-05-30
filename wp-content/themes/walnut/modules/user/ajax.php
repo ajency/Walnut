@@ -1,7 +1,6 @@
 <?php
 
 require_once 'functions.php';
-require_once "csv_export_tables.php";
 
 function get_user_data() {
     if(is_user_logged_in()){
@@ -38,13 +37,12 @@ function authenticate_app_login() {
 
         $blog_id= $login_details['blog_details']['blog_id'];
 
-        $login_details['exported_csv_url'] = export_tables_for_app($blog_id);
-
     }
 
     wp_send_json($login_details);
 
 }
+
 add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
 
 function ajax_fetch_users(){
@@ -54,4 +52,5 @@ function ajax_fetch_users(){
     wp_send_json($user_data);
 
 }
+
 add_action( 'wp_ajax_get-users', 'ajax_fetch_users' );

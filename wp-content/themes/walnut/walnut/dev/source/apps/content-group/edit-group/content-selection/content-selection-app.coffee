@@ -5,11 +5,11 @@ define ['app'
         class Controller.ContentSelectionController extends RegionController
 
             initialize: (opts) ->
+
                 @textbooksCollection = App.request "get:textbooks"
                 @contentPiecesCollection = App.request "get:content:pieces", content_type: ['teacher_question','content_piece']
-                {@model}= opts
 
-                @contentGroupCollection = App.request "get:content:pieces:of:group", @model
+                {@model,@contentGroupCollection}= opts
 
                 tableConfig =
                     'data': [
@@ -33,7 +33,7 @@ define ['app'
 
                 @view = view = @_getContentSelectionView(@contentPiecesCollection, tableConfig)
 
-                @show view, (loading: true, entities: [@textbooksCollection])
+                @show view, (loading: true, entities: [@textbooksCollection, @contentGroupCollection])
 
                 @listenTo @view, "fetch:chapters": (term_id) =>
                     chaptersCollection = App.request "get:chapters", ('parent': term_id)
@@ -54,10 +54,11 @@ define ['app'
                         @view.triggerMethod 'fetch:subsections:complete', allSections
 
                 @listenTo @view, "add:content:pieces": (contentIDs) =>
-                    groupContent = App.request "get:content:pieces:of:group", @model
 
                     _.each contentIDs, (ele, index)=>
-                        groupContent.add @contentPiecesCollection.get ele
+                        @contentGroupCollection.add @contentPiecesCollection.get ele
+
+                    console.log @contentGroupCollection
 
                 @listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPieceRemoved
 

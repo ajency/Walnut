@@ -33,7 +33,7 @@ define ['app'], (App)->
                         						                </div>
                         						                <div class="col-xs-4 b-grey b-r">
                         						                  <label class="form-label bold small-text">Type</label>
-                        											Difficult
+                        											          <span style="text-transform: capitalize">{{question_type}}</span>
                         						                </div>
                         						              </div>
                         				          			</div>

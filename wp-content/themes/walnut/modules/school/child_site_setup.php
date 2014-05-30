@@ -22,7 +22,9 @@ function setup_childsite($blog_id){
     setup_childsite_tables();
     
     setup_childsite_menus($current_blog, $blog_id);
-    
+
+    create_temporary_folders();
+
     switch_to_blog($current_blog);
     
 }
@@ -163,4 +165,19 @@ function setup_childsite_menus($current_blog, $blog_id){
            wp_update_nav_menu_item( $new_menu,0, $menu_data);
         }
     }
+}
+
+function create_temporary_folders(){
+
+    $uploads_dir=wp_upload_dir();
+
+    if(!file_exists($uploads_dir['basedir'].'/tmp/'))
+        mkdir($uploads_dir['basedir'].'/tmp',0777);
+
+    if(!file_exists($uploads_dir['basedir'].'/tmp/downsync'))
+        mkdir($uploads_dir['basedir'].'/tmp/downsync',0777);
+
+    if(!file_exists($uploads_dir['basedir'].'/tmp/upsync'))
+        mkdir($uploads_dir['basedir'].'/tmp/upsync',0777);
+
 }
