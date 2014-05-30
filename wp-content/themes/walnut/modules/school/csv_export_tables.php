@@ -15,6 +15,8 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
     switch_to_blog($blog_id);
 
+    global $wpdb;
+
     $tables_to_export= get_tables_to_export($blog_id, $last_sync, $user_id);
 
     $exported_tables= prepare_csvs_for_export($tables_to_export);
@@ -26,7 +28,13 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
     if(!file_exists($uploads_dir['basedir'].'/tmp/'))
         mkdir($uploads_dir['basedir'].'/tmp',0777);
 
-    $upload_path= '/tmp/csvs-'.$random.date('Ymdhis').'.zip';
+    if(!file_exists($uploads_dir['basedir'].'/tmp/downsync'))
+        mkdir($uploads_dir['basedir'].'/tmp/downsync',0777);
+
+    if(!file_exists($uploads_dir['basedir'].'/tmp/upsync'))
+        mkdir($uploads_dir['basedir'].'/tmp/upsync',0777);
+
+    $upload_path= '/tmp/downsync/csvs-'.$random.date('Ymdhis').'.zip';
 
     $result = create_zip($exported_tables, $uploads_dir['basedir'].$upload_path);
 
@@ -34,7 +42,10 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
     switch_to_blog($current_blog);
 
-    return $uploaded_url;
+    $export_details['exported_csv_url']=$uploaded_url;
+    $export_details['sync_time']=date('Y-m-d h:i:s');
+
+    return $export_details;
 }
 
 // this function takes an array of tablenames as argument and makes an array of csv data for each table
@@ -57,6 +68,8 @@ function prepare_csvs_for_export($tables_to_export){
 // this generated csv is then returned to prepare_csvs_for_export function.
 
 function export_table_to_csv($table){
+
+    $csv_file='';
 
     if(is_array($table)){
         $table_name= $table['table_name'];
@@ -293,7 +306,7 @@ function get_collection_ids_for_user($user_id){
 
     global $wpdb;
 
-    if(!user_id)
+    if(!$user_id)
         return false;
 
     $textbook_ids= get_user_meta($user_id, 'textbooks', true);
@@ -443,7 +456,7 @@ function create_zip($files = array(),$destination = '',$overwrite = false) {
     //add the files
 
     foreach($files as $file) {
-        if($file['name'] != '' && $file['data'] !='')
+        if(isset($file['name']) &&  ($file['name'] != '') && isset($file['data']) && ($file['data'] !=''))
             $zip->addFromString ($file['name'].'.csv',$file['data']);
 
     }

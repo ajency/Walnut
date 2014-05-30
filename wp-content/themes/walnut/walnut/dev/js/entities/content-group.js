@@ -102,6 +102,10 @@ define(["app", 'backbone'], function(App, Backbone) {
         var contentGroupItem;
         contentGroupItem = new ContentGroup.ItemModel(data);
         return contentGroupItem;
+      },
+      newContentGroup: function() {
+        var contentGroup;
+        return contentGroup = new ContentGroup.ItemModel;
       }
     };
     App.reqres.setHandler("get:content:groups", function(opt) {
@@ -110,8 +114,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:content:group:by:id", function(id) {
       return API.getContentGroupByID(id);
     });
-    return App.reqres.setHandler("save:content:group:details", function(data) {
+    App.reqres.setHandler("save:content:group:details", function(data) {
       return API.saveContentGroupDetails(data);
+    });
+    return App.reqres.setHandler("new:content:group", function() {
+      return API.newContentGroup();
     });
   });
 });

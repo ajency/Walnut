@@ -113,15 +113,13 @@ function get_content_pieces($args = array()) {
     foreach ($content_items as $id) {
         $content_pieces[]= get_single_content_piece($id);
     }
-
-
+    
     switch_to_blog($current_blog_id);
     
     return $content_pieces;
     
 }
 
-$posts = get_posts($args);
 
 function get_single_content_piece($id){
 
@@ -141,6 +139,8 @@ function get_single_content_piece($id){
 
     $content_piece_meta= maybe_unserialize($content_piece_meta_serialized);
 
+    extract($content_piece_meta);
+
     // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
 
@@ -148,30 +148,33 @@ function get_single_content_piece($id){
 
     $content_piece->question_type = get_post_meta($id, 'question_type', true);
 
-    $content_piece->post_tags = (isset($content_piece_meta['post_tags']))? $content_piece_meta['post_tags']: '';
+    $content_piece->post_tags = (isset($post_tags)) ? $post_tags : '';
 
-    $content_piece->instructions = (isset($content_piece_meta['instructions']))? $content_piece_meta['instructions']: '';
+    $content_piece->instructions = (isset($instructions)) ? $instructions : '';
 
-    $content_piece->duration = (isset($content_piece_meta['duration']))? (int) $content_piece_meta['duration']: '';
+    $content_piece->duration = (isset($duration)) ? $duration : '';
 
-    $last_modified_by = (isset($content_piece_meta['last_modified_by']))? $content_piece_meta['last_modified_by']: '';
+    $content_piece->last_modified_by='';
 
-    $last_modified_by_user= get_userdata($last_modified_by);
+    if(isset($last_modified_by)){
+        $last_modified_by_user=get_userdata($last_modified_by);
+        $content_piece->last_modified_by = $last_modified_by_user->display_name;
+    }
 
-    $content_piece->last_modified_by = $last_modified_by_user->display_name;
+    $content_piece->published_by = '';
 
-    $published_by = (isset($content_piece_meta['published_by']))? $content_piece_meta['published_by']: '';
+    if(isset($published_by)){
+        $published_by_user=get_userdata($published_by);
+        $content_piece->published_by = $published_by_user->display_name;
+    }
 
-    $published_by_user= get_userdata($published_by);
+    $content_piece->term_ids= array();
+    if(isset($term_ids)){
 
-    $content_piece->published_by = $published_by_user->display_name;
+        $term_ids = maybe_unserialize($term_ids);
 
-    $term_ids_array= (isset($content_piece_meta['term_ids']))? $content_piece_meta['term_ids']: '';
-
-    $term_ids = maybe_unserialize($term_ids_array);
-
-    $content_piece->term_ids = $term_ids;
-
+        $content_piece->term_ids = $term_ids;
+    }
     $content_layout= get_post_meta($id, 'layout_json', true);
 
     $content_layout = maybe_unserialize($content_layout);
@@ -315,7 +318,7 @@ function save_content_group($data = array()) {
 
     if (isset($data['id'])) {
         $content_group = $wpdb->update($wpdb->prefix . 'content_collection', $content_data, array('id' => $data['id']));
-        $group_id = $data['id'];
+        $group_id = (int) $data['id'];
     } else {
         $content_data['created_on'] = date('y-m-d H:i:s');
         $content_data['created_by'] = get_current_user_id();
@@ -441,9 +444,7 @@ function get_all_content_groups($args=array()){
         $query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
     
     $content_groups = $wpdb->get_results($query);
-
-
-
+    
     $content_data=array();
     switch_to_blog($current_blog);
     

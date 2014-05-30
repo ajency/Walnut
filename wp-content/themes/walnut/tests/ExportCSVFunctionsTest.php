@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../../../../bootstrap.php';
+
 class ExportCSVFunctionsTest extends WP_UnitTestCase {
 
     public function testIfTablesToExportArrayIsProper() {
@@ -62,6 +62,18 @@ class ExportCSVFunctionsTest extends WP_UnitTestCase {
         $this->assertInternalType('array', $content_pieces);
     }
 
+    public function testDownSync() {
+
+        $blog_id = 35;
+
+        $last_sync='2014-05-20 10:34:44';
+
+        $export_details = export_tables_for_app($blog_id,$last_sync);
+
+        print_r($export_details);
+
+        $this->assertInternalType('array', $export_details);
+    }
 
 
 }

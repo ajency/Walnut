@@ -43,7 +43,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                 @trigger "content:pieces:of:group:added", model
 
 
-        contentPiecesOfGroup = new ContentPiece.GroupItemCollection
 
         # API
         API =
@@ -62,6 +61,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         # get all content pieces belonging to particular group
             getContentPiecesOfGroup: (groupModel)->
+
+                contentPiecesOfGroup = new ContentPiece.GroupItemCollection
+
                 contentIDs = groupModel.get('content_pieces')
 
                 if contentIDs
