@@ -41,8 +41,4 @@ define [
   		'archive'
   		'json2csvparse'
   		'Zip'
-  		'zipchk'
-  		'FileSaver'
-  		'jszipUtils'
-  		'jszipLoad'
 		], ->

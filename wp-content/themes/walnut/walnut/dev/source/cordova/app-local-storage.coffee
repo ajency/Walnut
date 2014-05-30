@@ -49,13 +49,11 @@ define ['underscore', 'jquery'], (_, $)->
     _.getSynapseAssetsDirectoryPath =->
         window.localStorage.getItem("synapse_directory_path")
 
+    _.setFilePath =(path)->
+        window.localStorage.setItem("filepath", ""+path)
 
-    # save/get initial app sync flag
-    _.setInitialSyncFlag =(flag)->
-        window.localStorage.setItem("initial_sync_flag", ""+flag)
-
-    _.getInitialSyncFlag =->
-        window.localStorage.getItem("initial_sync_flag")   
+    _.getFilePath =->
+        window.localStorage.getItem("filepath")
 
 
     #save/get App sync dwnld time stamp
@@ -73,7 +71,7 @@ define ['underscore', 'jquery'], (_, $)->
     _.getDwnlduri =->
         window.localStorage.getItem("dwnldUri")   
 
-#save/get uri to upload from
+    #save/get uri to upload from
     _.setUploaduri =(uriValue)->
         window.localStorage.setItem("uploadUri", ""+uriValue)
 

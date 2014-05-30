@@ -82,7 +82,7 @@ define(['marionette'], function(Marionette) {
   });
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
-      var user;
+      var syncDetailsCount, user;
       if (typeof Pace !== 'undefined') {
         Pace.restart();
         $("#site_main_container").removeClass("showAll");
@@ -90,15 +90,19 @@ define(['marionette'], function(Marionette) {
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        if (_.getInitialSyncFlag() === null) {
-          App.navigate('sync1', {
-            trigger: true
-          });
-        } else {
-          App.navigate('teachers/dashboard', {
-            trigger: true
-          });
-        }
+        syncDetailsCount = _.getTotalSyncDetailsCount();
+        syncDetailsCount.done(function(count) {
+          console.log('Count: ' + count);
+          if (count === 0) {
+            return App.navigate('sync1', {
+              trigger: true
+            });
+          } else {
+            return App.navigate('teachers/dashboard', {
+              trigger: true
+            });
+          }
+        });
       } else {
         if (user_role[0] === 'administrator') {
           App.navigate('textbooks', {

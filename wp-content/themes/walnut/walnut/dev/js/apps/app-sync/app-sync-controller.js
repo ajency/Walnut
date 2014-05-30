@@ -382,6 +382,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
 
     SynchronizationController.prototype.dwnldUnZip = function() {
       var uri;
+      alert("yes");
       uri = encodeURI(_.getDwnlduri());
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
@@ -391,6 +392,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
           }, function(fileEntry) {
             var filePath, fileTransfer;
             filePath = fileEntry.toURL().replace("logs.zip", "");
+            _.setFilePath(filePath);
             fileEntry.remove();
             fileTransfer = new FileTransfer();
             return fileTransfer.download(uri, filePath + "logs.zip", function(file) {
@@ -443,15 +445,15 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
       console.log('Destination: ' + filePath);
       success = (function(_this) {
         return function() {
-          console.log('Files unzipped');
-          return _this.readUnzipFile1(filePath);
+          return console.log('Files unzipped');
         };
       })(this);
       return zip.unzip(fullpath, filePath, success);
     };
 
-    SynchronizationController.prototype.readUnzipFile1 = function(filePath) {
-      var file;
+    SynchronizationController.prototype.readUnzipFile1 = function() {
+      var file, filePath;
+      filePath = _.getFilePath();
       file = "SynapseAssets/" + _.getTblPrefix() + "class_divisions.csv";
       return this.sendParsedData1(file, filePath);
     };
@@ -855,24 +857,6 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
       }
     };
 
-    SynchronizationController.prototype.chkForFirstLogin = function() {
-      return _.db.transaction((function(_this) {
-        return function(tx) {
-          return tx.executeSql("SELECT * FROM sync_details ", [], function(tx, results) {
-            var valuesAll;
-            valuesAll = results.rows.length;
-            console.log(valuesAll);
-            if (valuesAll === 0) {
-              console.log("fisrt login");
-              return _.setFirstLogin(valuesAll);
-            } else {
-
-            }
-          }, _.transactionErrorhandler);
-        };
-      })(this));
-    };
-
     SynchronizationController.prototype.getLastTimeofDownSync = function() {
       return _.db.transaction((function(_this) {
         return function(tx) {
@@ -911,7 +895,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
     };
 
     SynchronizationController.prototype.getDownloadURL = function() {
-      return $.post(AJAXURL + '?action=get-sync-details', {
+      return $.post(AJAXURL + '?action=sync-database', {
         data: _.getDwnldTimeStamp()
       }, (function(_this) {
         return function(resp) {
@@ -920,8 +904,8 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
           if (resp.error) {
             return _this.onErrorResponse(resp.error);
           } else {
-            _.setDwnlduri(resp.login_details.ID);
-            _.setDwnldTimeStamp(resp.login_details.ID);
+            _.setDwnlduri(resp.exported_csv_url);
+            _.setDwnldTimeStamp(resp.sync_time);
             return _this.dwnldUnZip();
           }
         };
