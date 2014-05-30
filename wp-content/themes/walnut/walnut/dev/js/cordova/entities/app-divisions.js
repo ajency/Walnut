@@ -13,7 +13,7 @@ define(['underscore', 'unserialize'], function(_) {
         return function(tx, data) {
           var ids;
           ids = '';
-          if (data.results.length !== 0) {
+          if (data.rows.length !== 0) {
             ids = unserialize(unserialize(data.rows.item(0)['meta_value']));
           }
           return d.resolve(ids);
@@ -43,13 +43,70 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getStudentsCount transaction completed');
       }).fail(_.failureHandler);
     },
-    fetchSingleDivision: function(id) {},
+    fetchSingleDivision: function(id) {
+      var divisionData, onSuccess, runQuery;
+      divisionData = {
+        id: '',
+        division: '',
+        class_id: '',
+        class_label: '',
+        students_count: ''
+      };
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "class_divisions WHERE id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var row, studentsCount;
+          if (data.rows.length !== 0) {
+            row = data.rows.item(0);
+            studentsCount = _.getStudentsCount(row['id']);
+            return studentsCount.done(function(students_count) {
+              divisionData = {
+                id: row['id'],
+                division: row['division'],
+                class_id: row['class_id'],
+                class_label: CLASS_LABEL[row['class_id']],
+                students_count: students_count
+              };
+              return d.resolve(divisionData);
+            });
+          }
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('fetchSingleDivision transaction completed');
+      }).fail(_.failureHandler);
+    },
     getAllDivisions: function() {
-      var divisionIds;
-      divisionIds = _.getDivisionIds();
-      return divisionIds.done(function(ids) {
-        return console.log('');
-      });
+      var runFunc;
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          var divisionIds;
+          divisionIds = _.getDivisionIds();
+          return divisionIds.done(function(ids) {
+            var results;
+            results = [];
+            _.each(ids, function(id, i) {
+              return (function(id, i) {
+                var singleDivision;
+                singleDivision = _.fetchSingleDivision(id);
+                return singleDivision.done(function(data) {
+                  return results[i] = data;
+                });
+              })(id, i);
+            });
+            return d.resolve(results);
+          });
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log('getAllDivisions done');
+      }).fail(_.failureHandler);
     }
   });
 });

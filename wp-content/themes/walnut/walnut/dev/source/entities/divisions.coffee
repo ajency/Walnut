@@ -56,50 +56,18 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				#get divisions from local database
 				getDivisionsFromLocal:->
 
-					runQuery = ->
+					runFunc = ->
 						$.Deferred (d)->
-							_.db.transaction (tx)->
-								# userid hardcoded as 1
-								# meta_key='divisions'
-								console.log 'User id: '+_.getUserID()
-								tx.executeSql("SELECT meta_value FROM wp_usermeta 
-									WHERE user_id=? AND meta_key=?" , [_.getUserID(), 'divisions']
-									, onSuccess(d), _.deferredErrorHandler(d))
+							divisions = _.getAllDivisions()
+							divisions.done (result)->
 
-					onSuccess = (d)->
-						(tx, data)->
-							result = []
+								d.resolve result
 
-							ids = unserialize(unserialize(data.rows.item(0)['meta_value']))
-							ids = _.compact(ids)
+					$.when(runFunc()).done	->
+						console.log 'getDivisionsFromLocal done'
+					.fail _.failureHandler		
 
-							tx.executeSql('SELECT cd.id AS id, cd.division AS division, cd.class_id 
-								AS class_id, COUNT(um.umeta_id) AS students_count 
-								FROM '+_.getTblPrefix()+'class_divisions cd LEFT JOIN wp_usermeta um 
-								ON cd.id = meta_value AND meta_key="student_division" 
-								WHERE id in ('+ids+') GROUP BY cd.id', []
-
-									,(tx, data)->
-
-										for i in [0..data.rows.length-1] by 1
-
-											r = data.rows.item(i)
-
-											result[i] =
-												id:r['id']
-												division:r['division']
-												class_id:r['class_id']
-												class_label: CLASS_LABEL[r['class_id']]
-												students_count:r['students_count']
-
-										d.resolve(result)
-
-									,_.transactionErrorHandler)
-							
-
-					$.when(runQuery()).done (data)->
-						console.log 'getDivisionsFromLocal transaction completed'
-					.fail _.failureHandler
+					
 
 
 

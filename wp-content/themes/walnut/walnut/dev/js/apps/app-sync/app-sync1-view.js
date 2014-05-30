@@ -48,7 +48,8 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.events = {
         'click #JsonToCSV': 'startConversion',
         'click #syncNow': 'startSyncProcess',
-        'click #CSVupload': 'fileUpload'
+        'click #CSVupload': 'fileUpload',
+        'click #last5downloads': 'showlast5downloads'
       };
 
       AppSyncView.prototype.onShow = function() {
@@ -86,6 +87,12 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         $('#syncText').text('Syncing now...');
         syncController = App.request("get:sync:controller");
         return syncController.startSync();
+      };
+
+      AppSyncView.prototype.showlast5downloads = function() {
+        return App.navigate('sync2', {
+          trigger: true
+        });
       };
 
       return AppSyncView;

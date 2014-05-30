@@ -16,7 +16,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			onSuccess = (d)->
 				(tx, data)->
 					ids = ''
-					if data.results.length isnt 0
+					if data.rows.length isnt 0
 						ids = unserialize(unserialize(data.rows.item(0)['meta_value']))
 
 					d.resolve ids
@@ -49,16 +49,54 @@ define ['underscore', 'unserialize'], ( _) ->
 		
 		fetchSingleDivision	: (id)->
 
+			divisionData = id:'', division:'', class_id:'', class_label:'', students_count:''
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"class_divisions 
+							WHERE id=?", [id], onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+					if data.rows.length isnt 0
+						row = data.rows.item(0)
+
+						studentsCount = _.getStudentsCount(row['id'])
+						studentsCount.done (students_count)->
+						
+							divisionData = id: row['id'], division: row['division']
+											, class_id: row['class_id']
+											, class_label: CLASS_LABEL[row['class_id']]
+											, students_count: students_count	
+
+							d.resolve divisionData
+
+			$.when(runQuery()).done ->
+				console.log 'fetchSingleDivision transaction completed'
+			.fail _.failureHandler
 
 
 		getAllDivisions : ->
 
-			divisionIds = _.getDivisionIds()
-			divisionIds.done (ids)->
-				console.log ''
+			runFunc = ->
+				$.Deferred (d)->
 
-				
+					divisionIds = _.getDivisionIds()
+					divisionIds.done (ids)->
 
+						results = []
+						
+						_.each ids,(id, i)->
+							do(id, i)->
 
-
+								singleDivision = _.fetchSingleDivision(id)
+								singleDivision.done (data)->
 									
+									results[i] = data
+
+						d.resolve results
+
+			$.when(runFunc()).done ->
+				console.log 'getAllDivisions done'
+			.fail _.failureHandler	

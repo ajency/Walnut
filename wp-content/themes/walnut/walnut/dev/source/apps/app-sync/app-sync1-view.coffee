@@ -33,6 +33,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				'click #JsonToCSV' : 'startConversion'
 				'click #syncNow' : 'startSyncProcess'
 				'click #CSVupload' : 'fileUpload'
+				'click #last5downloads' : 'showlast5downloads'
 
 
 			onShow : ->
@@ -71,6 +72,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				syncController = App.request "get:sync:controller"
 				syncController.startSync()
+
+			showlast5downloads : ->
+				App.navigate('sync2', trigger: true)	
 
 
 				
