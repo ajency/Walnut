@@ -189,7 +189,6 @@
 }
 #toolbox .qstns ul li {
   width: 96px;
-  padding-top: 8%;
 }
 #toolbox .qstns ul li i {
   font-size: 17px;
@@ -209,6 +208,7 @@
 .dock .builder_actions {
   background: #e5e9ec;
   padding-bottom: 15px;
+  margin-top: -48px;
 }
 .dock .btn-cons2 {
   width: 108px;
@@ -809,7 +809,6 @@
 /*Media Manager*/
 #all-media-region .thumbnail {
   cursor: pointer;
-  height: 92px;
   background-color: #f3f3f3;
 }
 #all-media-region .thumbnail::after {
@@ -1333,7 +1332,7 @@ p.mcq-option-text {
 .listBox {
   margin-top: 60px;
 }
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
   .listBox {
     margin-top: 0;
   }
@@ -1608,9 +1607,9 @@ textarea.error,
   background-position: center;
 }
 .mainLogo img {
-  width: 128px;
-  height: 128px;
-  margin: 0 auto;
+  width: 85px;
+  height: 85px;
+  margin: 0 auto 15px;
   display: block;
 }
 .smallLogo {
@@ -1626,4 +1625,68 @@ textarea.error,
 * {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
   -webkit-focus-ring-color: #0090d9 !important;
+}
+.input-with-icon i {
+  margin: 11px 2px 4px 10px;
+  color: #9d9d9d;
+}
+/*Login Switch*/
+.switch {
+  position: relative;
+  margin: 0 auto;
+  height: 25px;
+  width: 120px;
+  background: #f2f2f2;
+  border-radius: 3px;
+}
+.switch-label {
+  position: relative;
+  z-index: 2;
+  float: left;
+  width: 60px;
+  line-height: 24px;
+  font-size: 13px;
+  color: #c3c3c3;
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+}
+.switch-label:active {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+}
+.switch-label-off {
+  padding-left: 2px;
+}
+.switch-label-on {
+  padding-right: 2px;
+}
+.switch-input {
+  display: none;
+}
+.switch-input:checked + .switch-label {
+  color: #ffffff;
+  -webkit-transition: 0.15s ease-out;
+  -moz-transition: 0.15s ease-out;
+  -o-transition: 0.15s ease-out;
+  transition: 0.15s ease-out;
+}
+.switch-input:checked + .switch-label-on ~ .switch-selection {
+  /* Note: left: 50% doesn't transition in WebKit */
+
+  left: 60px;
+}
+.switch-selection {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 25px;
+  background: #aaaaaa;
+  border-radius: 3px;
+  -webkit-transition: left 0.15s ease-out;
+  -moz-transition: left 0.15s ease-out;
+  -o-transition: left 0.15s ease-out;
+  transition: left 0.15s ease-out;
 }
