@@ -104,7 +104,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			resp = server_resp.blog_details
 			_.setDwnlduri(server_resp.exported_csv_url)
 
-			TimeStampValue=server_resp.exported_csv_url
+			TimeStampValue = server_resp.exported_csv_url
 
 			_.setDwnldTimeStamp(TimeStampValue)
 			

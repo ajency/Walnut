@@ -92,7 +92,7 @@ define ['marionette'], (Marionette)->
 		
 		if _.platform() is 'DEVICE'
 			if _.getInitialSyncFlag() is null
-				App.navigate('sync', trigger: true)
+				App.navigate('sync1', trigger: true)
 			else
 				App.navigate('teachers/dashboard', trigger: true)
 

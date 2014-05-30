@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
   return App.module("Entities.Divisions", function(Divisions, App, Backbone, Marionette, $, _) {
-    var API, DivisionCollection, DivisionModel, divisionCollection;
+    var API, DivisionCollection, DivisionModel;
     DivisionModel = (function(_super) {
       __extends(DivisionModel, _super);
 
@@ -46,12 +46,13 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       return DivisionCollection;
 
     })(Backbone.Collection);
-    divisionCollection = new DivisionCollection;
     API = {
       getDivisions: function(param) {
+        var divisionCollection;
         if (param == null) {
           param = {};
         }
+        divisionCollection = new DivisionCollection;
         if (!divisionCollection.length > 0) {
           divisionCollection.fetch({
             reset: true,
@@ -62,7 +63,9 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       },
       getDivisionByID: function(id) {
         var division;
-        division = divisionCollection.get(id);
+        if (typeof divisionCollection !== "undefined" && divisionCollection !== null) {
+          division = divisionCollection.get(id);
+        }
         if (!division) {
           division = new DivisionModel({
             'id': id
@@ -88,7 +91,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
             result = [];
             ids = unserialize(unserialize(data.rows.item(0)['meta_value']));
             ids = _.compact(ids);
-            console.log('ids: ' + ids);
             return tx.executeSql('SELECT cd.id AS id, cd.division AS division, cd.class_id AS class_id, COUNT(um.umeta_id) AS students_count FROM ' + _.getTblPrefix() + 'class_divisions cd LEFT JOIN wp_usermeta um ON cd.id = meta_value AND meta_key="student_division" WHERE id in (' + ids + ') GROUP BY cd.id', [], function(tx, data) {
               var i, r, _i, _ref;
               for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {

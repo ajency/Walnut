@@ -82,15 +82,24 @@ define ['app'
 				App.headerRegion.close()
 				App.mainContentRegion.close()
 				App.breadcrumbRegion.close()
+
 				App.navigate('app-login', trigger: true)
+
+				removeBackButtonEvent = ->
+					console.log 'removeBackButtonEvent'
+					document.removeEventListener("backbutton", removeBackButtonEvent, false)
+
 				
 				document.addEventListener("backbutton"
 					,->
 						if App.getCurrentRoute() is 'app-login'
 							navigator.app.exitApp()
-						else	
-							App.navigate('app-login', trigger: true)	
-
+						else 
+							if App.getCurrentRoute() is 'teachers/dashboard'
+								console.log 'Remove event'
+								removeBackButtonEvent()
+							else	
+								App.navigate('app-login', trigger: true)
 					, false)
 						
 

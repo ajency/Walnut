@@ -48,7 +48,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 						,"menu_item_link":"#teachers/dashboard","menu_id":null}]}
 						,{"ID":95,"menu-order":1,"post_title":"Data Synchronization","menu_item_link":"#"
 						,"menu_id":null,"submenu":[{"ID":96,"menu-order":2,"post_title":"Sync"
-						,"menu_item_link":"#sync","menu_id":null}]}]
+						,"menu_item_link":"#sync1","menu_id":null}]}]
 
 					data	
 					

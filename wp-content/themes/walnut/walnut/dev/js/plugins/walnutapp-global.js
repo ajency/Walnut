@@ -7,14 +7,17 @@
 
 	//CLASS_LABEL
 	var CLASS_LABEL = [];
-	for(var i =1; i<=12; i++){
+	for(var i =1; i<=13; i++){
 		if(i===1)
-			CLASS_LABEL[i] = "Junior KG";
+			CLASS_LABEL[i] = "Nursery";
 
 		else if(i===2)
+			CLASS_LABEL[i] = "Junior KG";
+
+		else if(i===3)
 			CLASS_LABEL[i] = "Senior KG";
 
-		else CLASS_LABEL[i] = 'Class '+(i-2);
+		else CLASS_LABEL[i] = 'Class '+(i-3);
 	}
 
 	//CHORUS_OPTIONS

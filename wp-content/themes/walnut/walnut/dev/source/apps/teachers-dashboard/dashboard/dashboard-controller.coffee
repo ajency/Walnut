@@ -76,6 +76,7 @@ define ['app'
 				navigator.splashscreen.hide()
 
 
+
 			loadDivisions:(class_id)=>
 
 				class_id = parseInt class_id

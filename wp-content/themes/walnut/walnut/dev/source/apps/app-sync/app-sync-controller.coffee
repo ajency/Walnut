@@ -204,7 +204,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 
 				for i in [0..data.length-1] by 1
 					row = data[i]
-					tx.executeSql("UPDATE "+_.getTblPrefix()+"_question_response_logs SET (sync) VALUES (?)", [1])
+					tx.executeSql("UPDATE "+_.getTblPrefix()+"_question_response_logs SET sync=?", [1])
 
 			,_.transactionErrorhandler
 			,(tx)=>
@@ -469,7 +469,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "jszipUtils", "
 					for i in [0..data.length-1] by 1
 						row = data[i]
 						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"training_logs ( division_id,collection_id, teacher_id, date,status) 
-							VALUES ( ?,?, ?, ?,?)", [ data[i][1],data[i][2],data[i][3],data[i][4]],data[i][5])
+							VALUES (?,?,?,?,?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5]])
 
 				,_.transactionErrorhandler
 				,(tx)=>

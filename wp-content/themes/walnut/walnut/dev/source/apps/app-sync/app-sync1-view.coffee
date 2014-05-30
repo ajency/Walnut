@@ -1,8 +1,8 @@
-define ['app', 'controllers/region-controller','text!apps/app-sync/templates/appsync.html'], (App, RegionController, AppSyncTpl)->
+define ['app', 'controllers/region-controller','text!apps/app-sync/templates/appsync1.html'], (App, RegionController, AppSyncTpl)->
 
 	App.module "AppSync.Controller", (Controller, App)->
 
-		class Controller.AppSyncController extends RegionController
+		class Controller.AppSync1Controller extends RegionController
 
 			initialize : ->
 
@@ -21,8 +21,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 			_getAppSyncView : ->
 				new AppSyncView
-					
-
 
 					
 

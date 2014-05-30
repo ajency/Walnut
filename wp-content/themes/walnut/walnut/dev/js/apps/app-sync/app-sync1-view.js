@@ -1,17 +1,17 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/appsync.html'], function(App, RegionController, AppSyncTpl) {
+define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/appsync1.html'], function(App, RegionController, AppSyncTpl) {
   return App.module("AppSync.Controller", function(Controller, App) {
     var AppSyncView;
-    Controller.AppSyncController = (function(_super) {
-      __extends(AppSyncController, _super);
+    Controller.AppSync1Controller = (function(_super) {
+      __extends(AppSync1Controller, _super);
 
-      function AppSyncController() {
-        return AppSyncController.__super__.constructor.apply(this, arguments);
+      function AppSync1Controller() {
+        return AppSync1Controller.__super__.constructor.apply(this, arguments);
       }
 
-      AppSyncController.prototype.initialize = function() {
+      AppSync1Controller.prototype.initialize = function() {
         var view;
         this.view = view = this._getAppSyncView();
         this.listenTo(view, 'close', function() {
@@ -29,11 +29,11 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         });
       };
 
-      AppSyncController.prototype._getAppSyncView = function() {
+      AppSync1Controller.prototype._getAppSyncView = function() {
         return new AppSyncView;
       };
 
-      return AppSyncController;
+      return AppSync1Controller;
 
     })(RegionController);
     return AppSyncView = (function(_super) {

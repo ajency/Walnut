@@ -159,6 +159,7 @@ define ['app'
                     students: studentCollection
 
             _showStudentsListView: (questionResponseModel)=>
+
                 App.execute "when:fetched", contentPiece, =>
                     question_type = contentPiece.get('question_type')
 

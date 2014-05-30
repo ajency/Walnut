@@ -239,7 +239,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
           _results = [];
           for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
             row = data[i];
-            _results.push(tx.executeSql("UPDATE " + _.getTblPrefix() + "_question_response_logs SET (sync) VALUES (?)", [1]));
+            _results.push(tx.executeSql("UPDATE " + _.getTblPrefix() + "_question_response_logs SET sync=?", [1]));
           }
           return _results;
         };
@@ -486,7 +486,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "jszipUtils", 
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs ( division_id,collection_id, teacher_id, date,status) VALUES ( ?,?, ?, ?,?)", [data[i][1], data[i][2], data[i][3], data[i][4]], data[i][5]));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs ( division_id,collection_id, teacher_id, date,status) VALUES (?,?,?,?,?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {

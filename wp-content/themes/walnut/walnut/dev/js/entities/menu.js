@@ -100,7 +100,7 @@ define(["app", 'backbone'], function(App, Backbone) {
                 "ID": 96,
                 "menu-order": 2,
                 "post_title": "Sync",
-                "menu_item_link": "#sync",
+                "menu_item_link": "#sync1",
                 "menu_id": null
               }
             ]

@@ -27,14 +27,13 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 				parse:(resp)->
 					resp.data
-
-
-			divisionCollection = new DivisionCollection
+			
 
 			# API 
 			API = 
 				# get all divisions
 				getDivisions:(param = {})->
+					divisionCollection = new DivisionCollection
 
 					if not divisionCollection.length >0
 						divisionCollection.fetch
@@ -45,7 +44,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 				getDivisionByID:(id)->
 					
-					division = divisionCollection.get id
+					division = divisionCollection.get id if divisionCollection?
 
 					if not division 
 						division = new DivisionModel ('id':id)
@@ -73,7 +72,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 							ids = unserialize(unserialize(data.rows.item(0)['meta_value']))
 							ids = _.compact(ids)
-							console.log 'ids: '+ids
 
 							tx.executeSql('SELECT cd.id AS id, cd.division AS division, cd.class_id 
 								AS class_id, COUNT(um.umeta_id) AS students_count 

@@ -40,9 +40,9 @@ define ['underscore', 'unserialize'], ( _) ->
 		getMetaValue : (content_piece_id)->
 
 			meta_value = 
-				question_type : ''
 				content_type : ''
 				layout_json : ''
+				question_type : ''
 				post_tags : ''
 				duration : ''
 				last_modified_by : ''
@@ -61,32 +61,25 @@ define ['underscore', 'unserialize'], ( _) ->
 					for i in [0..data.rows.length-1] by 1
 						row = data.rows.item(i)
 
-						if row['meta_key'] is 'question_type'
-							meta_value.question_type = row['meta_value']
-
 						if row['meta_key'] is 'content_type'
 							meta_value.content_type = row['meta_value']
 
 						if row['meta_key'] is 'layout_json'
 							meta_value.layout_json = unserialize(unserialize(row['meta_value']))
 
-						if row['meta_key'] is 'post_tags'
-							meta_value.post_tags = row['meta_value']
-						
-						if row['meta_key'] is 'duration'
-							meta_value.duration = row['meta_value']
+						if row['meta_key'] is 'question_type'
+							meta_value.question_type = row['meta_value']	
 
-						if row['meta_key'] is 'last_modified_by'
-							meta_value.last_modified_by = row['meta_value']
-							
-						if row['meta_key'] is 'published_by'
-							meta_value.published_by = row['meta_value']
-							
-						if row['meta_key'] is 'term_ids'
-							meta_value.term_ids = unserialize(unserialize(row['meta_value']))
+						if row['meta_key'] is 'content_piece_meta'
+							content_piece_meta = unserialize(unserialize(row['meta_value']))
 
-						if row['meta_key'] is 'instructions'
-							meta_value.instructions = row['meta_value']				
+							meta_value.post_tags = content_piece_meta.post_tags
+							meta_value.duration = content_piece_meta.duration
+							meta_value.last_modified_by = content_piece_meta.last_modified_by
+							meta_value.published_by = content_piece_meta.published_by
+							meta_value.term_ids = content_piece_meta.term_ids
+							meta_value.instructions = content_piece_meta.instructions
+								
 
 					d.resolve(meta_value)
 

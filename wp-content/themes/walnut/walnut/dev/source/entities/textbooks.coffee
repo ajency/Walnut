@@ -162,7 +162,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						
 						success = (d)->
 							(tx, data)->
-								ids = unserialize(data.rows.item(0)['meta_value'])
+								ids = unserialize(unserialize(data.rows.item(0)['meta_value']))
+								ids = _.compact ids
 								d.resolve ids
 
 						$.when(runQ()).done ->

@@ -91,7 +91,7 @@ define(['marionette'], function(Marionette) {
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
         if (_.getInitialSyncFlag() === null) {
-          App.navigate('sync', {
+          App.navigate('sync1', {
             trigger: true
           });
         } else {
