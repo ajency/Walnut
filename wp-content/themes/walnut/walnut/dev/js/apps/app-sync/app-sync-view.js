@@ -70,7 +70,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.fileUpload = function() {
         var syncController;
         syncController = App.request("get:sync:controller");
-        return syncController.fileReadZip();
+        return syncController.getuploadURL();
       };
 
       AppSyncView.prototype.startConversion = function() {

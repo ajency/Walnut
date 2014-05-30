@@ -90,7 +90,7 @@ define(['marionette'], function(Marionette) {
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        if (_.getInitialSyncFlag() === null) {
+        if (_.getFirstLogin() === null) {
           App.navigate('sync', {
             trigger: true
           });

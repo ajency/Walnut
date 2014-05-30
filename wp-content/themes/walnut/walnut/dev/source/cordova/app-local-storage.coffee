@@ -73,6 +73,13 @@ define ['underscore', 'jquery'], (_, $)->
     _.getDwnlduri =->
         window.localStorage.getItem("dwnldUri")   
 
+#save/get uri to upload from
+    _.setUploaduri =(uriValue)->
+        window.localStorage.setItem("uploadUri", ""+uriValue)
+
+    _.getUploaduri =->
+        window.localStorage.getItem("uploadUridwnldUri")   
+
 
     #save/get total records
     _.setTotalRecords =(total)->
@@ -80,4 +87,10 @@ define ['underscore', 'jquery'], (_, $)->
 
     _.getTotalRecords =->
         window.localStorage.getItem("total_records")   
+
+    _.setFirstLogin =(valuesAll)->
+        window.localStorage.setItem("loginValue", ""+valuesAll)
+
+    _.getFirstLogin =->
+         window.localStorage.getItem("loginValue") 
 
