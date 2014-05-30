@@ -9,17 +9,25 @@ define ['app'
         class ContentGroupRouter extends Marionette.AppRouter
 
             appRoutes:
-                'add-module': 'editGroup'
+                'add-module': 'addGroup'
                 'view-group/:id': 'viewGroup'
+                'edit-group/:id': 'editGroup'
                 'list-groups': 'groupsListing'
                 'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule'
                 'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule'
 
 
         Controller =
-            editGroup: ->
+            addGroup: ->
                 new ContentGroupApp.Edit.GroupController
                     region: App.mainContentRegion
+
+
+            editGroup:(id) ->
+                new ContentGroupApp.Edit.GroupController
+                    region: App.mainContentRegion
+                    group_id: id
+
 
             viewGroup: (id)->
                 @contentGroupModel = App.request "get:content:group:by:id", id

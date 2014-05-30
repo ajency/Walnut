@@ -145,7 +145,7 @@ function get_single_content_piece($id){
 
     $content_piece->content_type = ($content_type) ? $content_type : '--';
 
-    $content_piece->question_type = $content_piece_meta['question_type'];
+    $content_piece->question_type = get_post_meta($id, 'question_type', true);
 
     $content_piece->post_tags = $content_piece_meta['post_tags'];
 
@@ -565,8 +565,9 @@ function save_content_piece($data){
 
     update_post_meta ($content_id, 'content_type',$data['content_type']);
 
+    update_post_meta ($content_id, 'question_type',$data['question_type']);
+
     $content_piece_additional = array(
-        'question_type'     => $data['question_type'],
         'term_ids'          => $data['term_ids'],
         'duration'          => $data['duration'],
         'post_tags'         => $data['post_tags'],
@@ -574,10 +575,10 @@ function save_content_piece($data){
         'last_modified_by'  => $post_author
     );
 
-    $content_piece_meta= maybe_serialize($content_piece_additional);
-
     if($data['post_status']=='publish')
         $content_piece_additional['published_by']=$post_author;
+
+    $content_piece_meta= maybe_serialize($content_piece_additional);
 
     update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
 

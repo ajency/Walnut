@@ -921,7 +921,6 @@ p.mcq-option-text {
 }
 .fib-text:focus {
   outline: none;
-  border-bottom: 2px dashed #f3f3f3;
 }
 .fib-text .fibno {
   font-size: 15px;
@@ -992,6 +991,11 @@ p.mcq-option-text {
 }
 .fib-text input[type="text"].active {
   outline: 1px solid #0aa699;
+}
+.fib-simpletext {
+  min-width: 45px;
+  display: inline-block;
+  border: 1px dashed #f3f3f3;
 }
 .fibRightAns .fibAns {
   border-bottom: 2px solid #0aa699;
