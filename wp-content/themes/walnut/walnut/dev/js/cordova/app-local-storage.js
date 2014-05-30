@@ -53,10 +53,22 @@ define(['underscore', 'jquery'], function(_, $) {
   _.getDwnlduri = function() {
     return window.localStorage.getItem("dwnldUri");
   };
+  _.setUploaduri = function(uriValue) {
+    return window.localStorage.setItem("uploadUri", "" + uriValue);
+  };
+  _.getUploaduri = function() {
+    return window.localStorage.getItem("uploadUridwnldUri");
+  };
   _.setTotalRecords = function(total) {
     return window.localStorage.setItem("total_records", "" + total);
   };
-  return _.getTotalRecords = function() {
+  _.getTotalRecords = function() {
     return window.localStorage.getItem("total_records");
+  };
+  _.setFirstLogin = function(valuesAll) {
+    return window.localStorage.setItem("loginValue", "" + valuesAll);
+  };
+  return _.getFirstLogin = function() {
+    return window.localStorage.getItem("loginValue");
   };
 });

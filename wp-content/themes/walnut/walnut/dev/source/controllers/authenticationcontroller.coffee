@@ -75,6 +75,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				   	,
 				   	'json'	
 
+
+		
+
 		
 		# offline login for device
 		offlineDeviceAuth : ->

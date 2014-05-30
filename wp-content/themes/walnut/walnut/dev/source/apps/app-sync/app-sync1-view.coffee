@@ -56,7 +56,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 			fileUpload : ->
 				syncController = App.request "get:sync:controller"
-				syncController.fileReadZip()
+				syncController.getuploadURL()
 				
 			
 			startConversion : ->
