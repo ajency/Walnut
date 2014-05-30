@@ -82,7 +82,7 @@ function ajax_update_content_group() {
         }
     }
     
-    wp_send_json(array('code' => 'OK', 'data' => array('id'=> $_POST['id'])));
+    wp_send_json(array('code' => 'OK', 'data' => array('id'=> (int) $_POST['id'])));
 }
 
 add_action('wp_ajax_update-content-group', 'ajax_update_content_group');
