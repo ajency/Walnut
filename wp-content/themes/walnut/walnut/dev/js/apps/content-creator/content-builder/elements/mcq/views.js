@@ -60,6 +60,7 @@ define(['app'], function(App) {
       __extends(McqOptionView, _super);
 
       function McqOptionView() {
+        this.configureEditor = __bind(this.configureEditor, this);
         return McqOptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -80,6 +81,7 @@ define(['app'], function(App) {
       McqOptionView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-option-' + this.model.get('optionNo'));
         this.$el.find('.mcq-option-text').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
+        CKEDITOR.on('instanceCreated', this.configureEditor);
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('.mcq-option-text').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
         _.delay((function(_this) {
@@ -113,6 +115,17 @@ define(['app'], function(App) {
         } else {
           console.log('unchecked');
           return this.trigger('option:unchecked', this.model);
+        }
+      };
+
+      McqOptionView.prototype.configureEditor = function(event) {
+        var editor, element;
+        editor = event.editor;
+        element = editor.element;
+        if (element.getAttribute('id') === this.$el.find('.mcq-option-text').attr('id')) {
+          return editor.on('configLoaded', function() {
+            return editor.config.placeholder = 'Type option here..';
+          });
         }
       };
 
