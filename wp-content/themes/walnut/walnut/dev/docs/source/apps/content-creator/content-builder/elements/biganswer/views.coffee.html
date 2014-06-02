@@ -44,9 +44,9 @@
 
     <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">BigAnswerView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
 
-      <span class="nv">template : </span><span class="s">&#39;&lt;input  type=&quot;text&quot; maxlength=&quot;{{maxlength}}&quot;  style=&quot;</span>
+      <span class="nv">template : </span><span class="s">&#39;&lt;textarea  type=&quot;text&quot; maxlength=&quot;{{maxlength}}&quot;  style=&quot;</span>
 <span class="s">              font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; </span>
-<span class="s">               width:100%; height: 100%; line-height : inherit;&quot;&gt;&#39;</span>
+<span class="s">               max-width:100%; width :100%; height: 100%; line-height : inherit;&quot;&gt;&#39;</span>
 
       <span class="nv">onShow : </span><span class="nf">-&gt;</span>
 
@@ -129,7 +129,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="nx">_changeMaxLength</span><span class="o">:</span><span class="nf">(model,maxlength)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;maxLength&#39;</span><span class="p">,</span><span class="nb">parseInt</span> <span class="nx">maxlength</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;textarea&#39;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;maxLength&#39;</span><span class="p">,</span><span class="nb">parseInt</span> <span class="nx">maxlength</span>
 
 
 
@@ -145,7 +145,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="nx">_changeFont</span><span class="o">:</span><span class="nf">(model,font)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-family&#39;</span><span class="p">,</span><span class="nx">font</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;textarea&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-family&#39;</span><span class="p">,</span><span class="nx">font</span>
 
 
 
@@ -161,7 +161,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="nx">_changeSize</span><span class="o">:</span><span class="nf">(model,size)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-size&#39;</span><span class="p">,</span><span class="nx">size</span><span class="o">+</span><span class="s">&quot;px&quot;</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;textarea&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-size&#39;</span><span class="p">,</span><span class="nx">size</span><span class="o">+</span><span class="s">&quot;px&quot;</span>
 
 
 </pre></div>
@@ -176,7 +176,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="nx">_changeColor</span><span class="o">:</span><span class="nf">(model,color)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;color&#39;</span><span class="p">,</span> <span class="nx">color</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;textarea&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;color&#39;</span><span class="p">,</span> <span class="nx">color</span>
 
 
 </pre></div>
@@ -191,7 +191,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="nx">_changeBGColor</span><span class="o">:</span><span class="nf">(model,bgColor)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">convertHex</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;textarea&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">convertHex</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
 
 
 </pre></div>
@@ -219,7 +219,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
           <span class="k">if</span> <span class="nx">style</span> <span class="o">is</span> <span class="s">&#39;uline&#39;</span>
-            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;border&quot;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&quot;underline&quot;</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;textarea&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;border&quot;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&quot;underline&quot;</span>
 
 </pre></div>
         </td>
@@ -233,7 +233,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
           <span class="k">else</span> <span class="k">if</span> <span class="nx">style</span> <span class="o">is</span> <span class="s">&#39;box&#39;</span>
-            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;underline&quot;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&quot;border&quot;</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;textarea&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;underline&quot;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&quot;border&quot;</span>
 
 </pre></div>
         </td>
@@ -247,7 +247,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
           <span class="k">else</span> 
-             <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">removeClass</span> <span class="s">&quot;underline border&quot;</span>
+             <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;textarea&#39;</span><span class="p">).</span><span class="nx">removeClass</span> <span class="s">&quot;underline border&quot;</span>
 
       
           

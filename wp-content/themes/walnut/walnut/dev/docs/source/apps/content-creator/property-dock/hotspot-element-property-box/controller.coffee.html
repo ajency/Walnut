@@ -51,15 +51,41 @@
 
               
 
-              <span class="vi">@view = </span><span class="nx">@_getView</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">model</span><span class="p">)</span>
+              <span class="vi">@view = </span><span class="nx">@_getView</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
 
               <span class="nx">@show</span> <span class="nx">@view</span>
 
-            <span class="nx">_getView</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
-              <span class="nv">elementType = </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;type&#39;</span>
+            <span class="nx">_getView</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
+              <span class="nv">elementType = </span><span class="nx">options</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;type&#39;</span>
               <span class="nv">viewName = </span><span class="s">&quot;</span><span class="si">#{</span><span class="nx">elementType</span><span class="si">}</span><span class="s">View&quot;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>console.log viewName</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
               <span class="k">new</span> <span class="nx">HotspotElementPropertyBox</span><span class="p">.</span><span class="nx">Views</span><span class="p">[</span><span class="nx">viewName</span><span class="p">]</span>
-                  <span class="nv">model : </span><span class="nx">model</span>
+                  <span class="nv">model : </span><span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+                  <span class="nv">hotspotModel : </span><span class="nx">options</span><span class="p">.</span><span class="nx">hotspotModel</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>onClose:->
+@view.ui.individualMarksTextbox.trigger 'blur',</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 
 
           <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:hotspot:element:properties:box&quot;</span><span class="p">,</span><span class="nf">(options)-&gt;</span>
@@ -67,6 +93,7 @@
               <span class="k">new</span> <span class="nx">HotspotElementPropertyBoxController</span> 
                   <span class="nv">region : </span><span class="nx">options</span><span class="p">.</span><span class="nx">region</span>
                   <span class="nv">model : </span><span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+                  <span class="nv">hotspotModel : </span><span class="nx">options</span><span class="p">.</span><span class="nx">hotspotModel</span>
 </pre></div>
         </td>
       </tr>

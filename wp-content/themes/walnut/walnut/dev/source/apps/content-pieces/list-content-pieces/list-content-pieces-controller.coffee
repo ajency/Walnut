@@ -1,8 +1,11 @@
-define ['app', 'controllers/region-controller', 'apps/content-pieces/list-content-pieces/views'], (App, RegionController)->
+define ['app'
+        'controllers/region-controller'
+        'apps/content-pieces/list-content-pieces/views'], (App, RegionController)->
     App.module "ContentPiecesApp.ContentList", (ContentList, App)->
         class ContentList.ListController extends RegionController
 
             initialize: ->
+                console.log "list"
                 @contentPiecesCollection = App.request "get:content:pieces"
                 @textbooksCollection = App.request "get:textbooks"
 
@@ -15,14 +18,16 @@ define ['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-                App.execute "when:fetched", @contentPiecesCollection,=>
+                console.log @contentPiecesCollection
+                App.execute "when:fetched", @contentPiecesCollection, =>
+                    console.log @contentPiecesCollection
                     @fullCollection = @contentPiecesCollection.clone()
 
                     @view = view = @_getContentPiecesListView()
 
                     @show view,
                         loading: true
-                        entities: [@contentPiecesCollection, @textbooksCollection,@fullCollection]
+                        entities: [@contentPiecesCollection, @textbooksCollection, @fullCollection]
 
                     @listenTo @view, "fetch:chapters": (term_id) =>
                         chaptersCollection = App.request "get:chapters", ('parent': term_id)
@@ -38,12 +43,12 @@ define ['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
                             #all the other sections are listed as subsections
                             subsectionsList = _.difference(allSectionsCollection.models, sectionsList);
                             allSections =
-                                'sections': sectionsList, 'subsections': subsectionsList
+                                'sections': sectionsList
+                                'subsections': subsectionsList
 
                             @view.triggerMethod 'fetch:subsections:complete', allSections
 
-            _getContentPiecesListView:->
-
+            _getContentPiecesListView: ->
                 console.log @fullCollection
                 new ContentList.Views.ListView
                     collection: @contentPiecesCollection
@@ -52,7 +57,9 @@ define ['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
                         textbooksFilter: ()=>
                             textbooks = []
                             _.each(@textbooksCollection.models, (el, ind)->
-                                textbooks.push('name': el.get('name'), 'id': el.get('term_id'))
+                                textbooks.push
+                                    'name': el.get('name')
+                                    'id': el.get('term_id')
                             )
                             textbooks
 

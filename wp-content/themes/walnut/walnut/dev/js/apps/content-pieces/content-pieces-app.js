@@ -20,6 +20,7 @@ define(['app', 'apps/content-pieces/list-content-pieces/list-content-pieces-cont
     })(Marionette.AppRouter);
     Controller = {
       listContentPieces: function() {
+        console.log("content");
         return new ContentPiecesApp.ContentList.ListController({
           region: App.mainContentRegion
         });

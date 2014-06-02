@@ -72,8 +72,6 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
           <span class="nx">initialize</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">options</span>
-
             <span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">.</span><span class="nx">modelData</span><span class="p">,</span>
                       <span class="nv">element   : </span><span class="s">&#39;Row&#39;</span>
                       <span class="nv">columncount : </span><span class="mi">2</span>
@@ -100,6 +98,7 @@
             <span class="k">super</span><span class="p">()</span>
 
           <span class="nx">_getRowView</span><span class="o">:</span><span class="p">()</span><span class="nf">-&gt;</span>
+
             <span class="k">new</span> <span class="nx">Row</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">RowView</span>
                     <span class="nv">model : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
 

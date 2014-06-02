@@ -38,9 +38,8 @@
 
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&quot;app&quot;</span><span class="p">,</span> <span class="s">&#39;backbone&#39;</span><span class="p">],</span> <span class="nf">(App, Backbone) -&gt;</span>
-
     <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;Entities.Textbooks&quot;</span><span class="p">,</span> <span class="nf">(Textbooks, App, Backbone, Marionette, $, _)-&gt;</span>
-      
+
 
 
 </pre></div>
@@ -54,20 +53,21 @@
 <p>textbook model</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="k">class</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemModel</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span>
+        <span class="k">class</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemModel</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span>
 
-        <span class="nv">idAttribute : </span><span class="s">&#39;term_id&#39;</span>
+            <span class="nv">idAttribute: </span><span class="s">&#39;term_id&#39;</span>
 
-        <span class="nv">defaults:</span>
-          <span class="nv">name              : </span><span class="s">&#39;&#39;</span>
-          <span class="nv">slug          : </span><span class="s">&#39;&#39;</span>
-          <span class="nv">description         : </span><span class="s">&#39;&#39;</span>
-          <span class="nv">parent            : </span><span class="mi">0</span>
-          <span class="nv">term_order      : </span><span class="mi">0</span>
-          <span class="nv">count       : </span><span class="mi">0</span>
-          <span class="nv">chapter_count   : </span><span class="mi">0</span>
+            <span class="nv">defaults:</span>
+                <span class="nv">name: </span><span class="s">&#39;&#39;</span>
+                <span class="nv">slug: </span><span class="s">&#39;&#39;</span>
+                <span class="nv">description: </span><span class="s">&#39;&#39;</span>
+                <span class="nv">parent: </span><span class="mi">0</span>
+                <span class="nv">term_order: </span><span class="mi">0</span>
+                <span class="nv">count: </span><span class="mi">0</span>
+                <span class="nv">chapter_count: </span><span class="mi">0</span>
 
-        <span class="nv">name: </span><span class="s">&#39;textbook&#39;</span>
+            <span class="nv">name: </span><span class="s">&#39;textbook&#39;</span>
+
 
 
 </pre></div>
@@ -78,20 +78,15 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
-<p>textbooks collection class</p>
+<p>textbook model</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="k">class</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
-        <span class="nv">model : </span><span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemModel</span>
-        <span class="nv">comparator : </span><span class="s">&#39;term_order&#39;</span>
-        <span class="nx">url</span> <span class="o">:</span><span class="nf">-&gt;</span>
-           <span class="nx">AJAXURL</span> <span class="o">+</span> <span class="s">&#39;?action=get-textbooks&#39;</span>
-        
-        <span class="nx">parse</span><span class="o">:</span><span class="nf">(resp)-&gt;</span>
-          <span class="vi">@total = </span><span class="nx">resp</span><span class="p">.</span><span class="nx">count</span> 
-          <span class="nx">resp</span><span class="p">.</span><span class="nx">data</span>
+        <span class="k">class</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">NameModel</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span>
 
-      <span class="nv">textbookCollection = </span><span class="k">new</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemCollection</span>
+            <span class="nv">defaults:</span>
+                <span class="nv">name: </span><span class="s">&#39;&#39;</span>
+
+            <span class="nv">name: </span><span class="s">&#39;textbookName&#39;</span>
 
 
 </pre></div>
@@ -102,10 +97,20 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
-<p>API </p>
+<p>textbooks collection class</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nv">API = </span>
+        <span class="k">class</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+            <span class="nv">model: </span><span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemModel</span>
+            <span class="nv">comparator: </span><span class="s">&#39;term_order&#39;</span>
+            <span class="nv">url: </span><span class="nf">-&gt;</span>
+                <span class="nx">AJAXURL</span> <span class="o">+</span> <span class="s">&#39;?action=get-textbooks&#39;</span>
+
+            <span class="nv">parse: </span><span class="nf">(resp)-&gt;</span>
+                <span class="vi">@total = </span><span class="nx">resp</span><span class="p">.</span><span class="nx">count</span>
+                <span class="nx">resp</span><span class="p">.</span><span class="nx">data</span>
+
+
 
 </pre></div>
         </td>
@@ -115,25 +120,14 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
-<p>get all textbooks</p>
+<p>textbooks collection class</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">getTextbooks</span><span class="o">:</span><span class="nf">(param = {})-&gt;</span>
-          <span class="nx">textbookCollection</span><span class="p">.</span><span class="nx">fetch</span>
-                    <span class="nv">reset : </span><span class="kc">true</span>
-                    <span class="nv">data  : </span><span class="nx">param</span>
-
-          <span class="nx">textbookCollection</span>
-
-
-        <span class="nx">getTextBookByID</span><span class="o">:</span><span class="nf">(id)-&gt;</span>
-          <span class="nv">textbook = </span><span class="nx">textbookCollection</span><span class="p">.</span><span class="nx">get</span> <span class="nx">id</span>
-
-          <span class="k">if</span> <span class="o">not</span> <span class="nx">textbook</span> 
-            <span class="nv">textbook = </span><span class="k">new</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemModel</span> <span class="nv">term_id : </span><span class="nx">id</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">textbook</span>
-            <span class="nx">textbook</span><span class="p">.</span><span class="nx">fetch</span><span class="p">()</span>
-          <span class="nx">textbook</span>
+        <span class="k">class</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">NamesCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+            <span class="nv">model: </span><span class="nx">Textbooks</span><span class="p">.</span><span class="nx">NameModel</span>
+            <span class="nv">comparator: </span><span class="s">&#39;term_order&#39;</span>
+            <span class="nv">url: </span><span class="nf">-&gt;</span>
+                <span class="nx">AJAXURL</span> <span class="o">+</span> <span class="s">&#39;?action=get-textbook-names&#39;</span>
 
 
 
@@ -145,14 +139,85 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
+<p>API</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nv">API =</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>get all textbooks</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nv">getTextbooks: </span><span class="nf">(param = {})-&gt;</span>
+                <span class="nv">textbookCollection = </span><span class="k">new</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemCollection</span>
+                <span class="nx">textbookCollection</span><span class="p">.</span><span class="nx">fetch</span>
+                    <span class="nv">reset: </span><span class="kc">true</span>
+                    <span class="nv">data: </span><span class="nx">param</span>
+
+                <span class="nx">textbookCollection</span>
+
+
+            <span class="nv">getTextBookByID: </span><span class="nf">(id)-&gt;</span>
+                <span class="nv">textbook = </span><span class="nx">textbookCollection</span><span class="p">.</span><span class="nx">get</span> <span class="nx">id</span> <span class="k">if</span> <span class="nx">textbookCollection</span><span class="o">?</span>
+
+                <span class="k">if</span> <span class="o">not</span> <span class="nx">textbook</span>
+                    <span class="nv">textbook = </span><span class="k">new</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemModel</span> <span class="nv">term_id: </span><span class="nx">id</span>
+                    <span class="nx">textbook</span><span class="p">.</span><span class="nx">fetch</span><span class="p">()</span>
+                <span class="nx">textbook</span>
+
+            <span class="nv">getTextBookNameByID: </span><span class="nf">(id)-&gt;</span>
+                <span class="nv">textbook = </span><span class="nx">textbookCollection</span><span class="p">.</span><span class="nx">get</span> <span class="nx">id</span> <span class="k">if</span> <span class="nx">textbookCollection</span><span class="o">?</span>
+
+                <span class="k">if</span> <span class="o">not</span> <span class="nx">textbook</span>
+                    <span class="nv">textbook = </span><span class="k">new</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">ItemModel</span> <span class="nv">term_id: </span><span class="nx">id</span>
+                    <span class="nx">textbook</span><span class="p">.</span><span class="nx">fetch</span><span class="p">()</span>
+
+                <span class="nv">textbookName = </span><span class="nx">textbook</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
+
+                <span class="nx">textbookName</span>
+
+            <span class="nv">getTextBookNamesByIDs: </span><span class="nf">(ids)-&gt;</span>
+                <span class="nv">ids = </span><span class="nx">_</span><span class="p">.</span><span class="nx">compact</span> <span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span> <span class="nx">ids</span>
+                <span class="nv">textbookNamesCollection = </span><span class="k">new</span> <span class="nx">Textbooks</span><span class="p">.</span><span class="nx">NamesCollection</span>
+                <span class="nx">textbookNamesCollection</span><span class="p">.</span><span class="nx">fetch</span>
+                    <span class="nv">reset: </span><span class="kc">true</span>
+                    <span class="nv">data:</span>
+                        <span class="nv">term_ids: </span><span class="nx">ids</span>
+
+                <span class="nx">textbookNamesCollection</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
 <p>request handler to get all textbooks</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:textbooks&quot;</span><span class="p">,</span> <span class="nf">(opt) -&gt;</span>
-        <span class="nx">API</span><span class="p">.</span><span class="nx">getTextbooks</span><span class="p">(</span><span class="nx">opt</span><span class="p">)</span>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:textbooks&quot;</span><span class="p">,</span> <span class="nf">(opt) -&gt;</span>
+            <span class="nx">API</span><span class="p">.</span><span class="nx">getTextbooks</span><span class="p">(</span><span class="nx">opt</span><span class="p">)</span>
 
-      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:textbook:by:id&quot;</span><span class="p">,</span> <span class="nf">(id)-&gt;</span>
-        <span class="nx">API</span><span class="p">.</span><span class="nx">getTextBookByID</span> <span class="nx">id</span>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:textbook:by:id&quot;</span><span class="p">,</span> <span class="nf">(id)-&gt;</span>
+            <span class="nx">API</span><span class="p">.</span><span class="nx">getTextBookByID</span> <span class="nx">id</span>
+
+        <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:textbook:name:by:id&quot;</span><span class="p">,</span> <span class="nf">(id)-&gt;</span>
+            <span class="nx">API</span><span class="p">.</span><span class="nx">getTextBookNameByID</span> <span class="nx">id</span>
+
+
+        <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:textbook:names:by:ids&quot;</span><span class="p">,</span> <span class="nf">(ids)-&gt;</span>
+            <span class="nx">API</span><span class="p">.</span><span class="nx">getTextBookNamesByIDs</span> <span class="nx">ids</span>
 </pre></div>
         </td>
       </tr>

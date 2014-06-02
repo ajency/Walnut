@@ -108,7 +108,30 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
           <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
-            <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span> <span class="s">&#39;ele&#39;</span><span class="o">+</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;meta_id&#39;</span><span class="p">),</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">@model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">())</span>
+            <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&#39;save:fib:text&#39;</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span>
+            <span class="nv">models= </span><span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">models</span>
+
+            <span class="nv">elements= </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">models</span><span class="p">,</span> <span class="nf">(m)-&gt;</span> <span class="nx">m</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+
+            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;blanksArray&#39;</span><span class="o">:</span> <span class="nx">elements</span>
+
+            <span class="nx">@model</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+
+            <span class="nv">ElementCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:question:element:collection&quot;</span><span class="p">,</span> <span class="nx">models</span>
+            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;blanksArray&#39;</span><span class="p">,</span> <span class="nx">ElementCollection</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>localStorage.setItem 'ele'<a href='mailto:+@model.get'>+@model.get</a>('meta_id'), JSON.stringify(@model.toJSON())</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 
         <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:fib:properties&quot;</span><span class="p">,</span><span class="nf">(options)-&gt;</span>
             <span class="k">new</span> <span class="nx">FibPropertyBox</span><span class="p">.</span><span class="nx">Controller</span>

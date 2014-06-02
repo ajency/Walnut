@@ -69,7 +69,7 @@ define ['app'
                 @$el.find('#checking_login, #invalid_login').remove();
 
                 @$el.find('#login-form')
-                .before '<span id="invalid_login" class="btn btn-danger btn-cons">' + resp.error + '</span>';
+                .before '<div id="invalid_login" class="alert alert-error"><span class="fa fa-warning"></span> ' + resp.error + '</div>';
 
 
             onConnectionFail: ->
@@ -77,7 +77,7 @@ define ['app'
                 @$el.find('#checking_login, #invalid_login').remove();
 
                 @$el.find('#login-form')
-                .before '<span id="invalid_login" class="btn btn-danger btn-cons">' + error_msg + '</span>';
+                .before '<div id="invalid_login" class="alert alert-error">' + error_msg + '</div>';
 
 
 

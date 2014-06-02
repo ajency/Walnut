@@ -38,11 +38,10 @@
 
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
-    <span class="s">&#39;controllers/region-controller&#39;</span>
-    <span class="s">&#39;apps/content-creator/content-builder/elements/row/settings/views&#39;</span><span class="p">],</span>
-    <span class="nf">(App, AppController)-&gt;</span>
-
-      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.Row.Settings&#39;</span><span class="p">,</span> <span class="nf">(Settings, App, Backbone, Marionette, $, _)-&gt;</span>
+        <span class="s">&#39;controllers/region-controller&#39;</span>
+        <span class="s">&#39;apps/content-creator/content-builder/elements/row/settings/views&#39;</span><span class="p">],</span>
+<span class="nf">(App, AppController)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.Row.Settings&#39;</span><span class="p">,</span> <span class="nf">(Settings, App, Backbone, Marionette, $, _)-&gt;</span>
 
 
 </pre></div>
@@ -70,27 +69,11 @@
 <p>initialize controller</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">initialize</span><span class="o">:</span><span class="nf">(opt ={})-&gt;</span>
-            <span class="p">{</span> <span class="nx">@model</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">opt</span>
-            <span class="vi">@region = </span><span class="nx">App</span><span class="p">.</span><span class="nx">settingsRegion</span>
-            <span class="nv">model  = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:element:settings:options&quot;</span><span class="p">,</span> <span class="s">&#39;Row&#39;</span>
-            <span class="nv">view = </span><span class="nx">@_getSettingView</span> <span class="nx">model</span><span class="p">,</span><span class="nx">@model</span>
-
-            <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&#39;render&#39;</span><span class="p">,</span> <span class="o">=&gt;</span>
-                      <span class="nx">@region</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">css</span> <span class="s">&#39;top&#39;</span><span class="p">,</span><span class="mi">200</span>
-                      <span class="nx">@region</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">css</span> <span class="s">&#39;left&#39;</span><span class="p">,</span><span class="mi">400</span>
-
-            <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;element:style:changed&quot;</span><span class="p">,</span><span class="nf">(style)=&gt;</span>
-                            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&quot;style&quot;</span><span class="p">,</span> <span class="nx">style</span>
-
-            <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;element:draggable:changed&quot;</span><span class="p">,</span> <span class="nf">(draggable)=&gt;</span>
-                            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&quot;draggable&quot;</span><span class="p">,</span> <span class="nx">draggable</span> 
-
-            <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;element:column:count:changed&quot;</span><span class="p">,</span><span class="nf">(newCount)=&gt;</span>
-                            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&quot;columncount&quot;</span><span class="p">,</span> <span class="nx">newCount</span>
-
-            <span class="nx">@show</span> <span class="nx">view</span>
-
+            <span class="nv">initialize: </span><span class="nf">(opt = {})-&gt;</span>
+                <span class="p">{</span> <span class="nx">@model</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">opt</span>
+                <span class="vi">@region = </span><span class="nx">App</span><span class="p">.</span><span class="nx">settingsRegion</span>
+                <span class="nv">model = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:element:settings:options&quot;</span><span class="p">,</span> <span class="s">&#39;Row&#39;</span>
+                <span class="nv">view = </span><span class="nx">@_getSettingView</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">@model</span>
 
 
 </pre></div>
@@ -101,18 +84,54 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
+
+<div class="highlight"><pre><code>           <span class="err">@</span><span class="nx">listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="o">=&gt;</span>
+               <span class="err">@</span><span class="nx">region</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">css</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="mi">200</span>
+               <span class="err">@</span><span class="nx">region</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">css</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="mi">400</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&#39;show&#39;</span><span class="p">,</span> <span class="o">=&gt;</span>
+                    <span class="nx">@region</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">center</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+
+
+                <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;element:style:changed&quot;</span><span class="p">,</span> <span class="nf">(style)=&gt;</span>
+                    <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&quot;style&quot;</span><span class="p">,</span> <span class="nx">style</span>
+
+                <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;element:draggable:changed&quot;</span><span class="p">,</span> <span class="nf">(draggable)=&gt;</span>
+                    <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&quot;draggable&quot;</span><span class="p">,</span> <span class="nx">draggable</span>
+
+                <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;element:column:count:changed&quot;</span><span class="p">,</span> <span class="nf">(newCount)=&gt;</span>
+                    <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&quot;columncount&quot;</span><span class="p">,</span> <span class="nx">newCount</span>
+
+                <span class="nx">@show</span> <span class="nx">view</span>
+
+
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
 <p>get settigns view</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">_getSettingView</span><span class="o">:</span><span class="nf">(model,eleModel)-&gt;</span>
-            <span class="k">new</span> <span class="nx">Settings</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">SettingsView</span>
-                        <span class="nv">eleModel : </span><span class="nx">eleModel</span>
-                        <span class="nv">model    : </span><span class="nx">model</span>
+            <span class="nv">_getSettingView: </span><span class="nf">(model, eleModel)-&gt;</span>
+                <span class="k">new</span> <span class="nx">Settings</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">SettingsView</span>
+                    <span class="nv">eleModel: </span><span class="nx">eleModel</span>
+                    <span class="nv">model: </span><span class="nx">model</span>
 
 
         <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;show:row:settings:popup&quot;</span><span class="p">,</span> <span class="nf">(model)-&gt;</span>
-          <span class="k">new</span> <span class="nx">Settings</span><span class="p">.</span><span class="nx">Controller</span>
-                  <span class="nv">model : </span><span class="nx">model</span>
+            <span class="k">new</span> <span class="nx">Settings</span><span class="p">.</span><span class="nx">Controller</span>
+                <span class="nv">model: </span><span class="nx">model</span>
 
 
             
