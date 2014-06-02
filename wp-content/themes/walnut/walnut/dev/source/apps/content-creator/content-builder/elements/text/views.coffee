@@ -31,10 +31,20 @@ define ['app'], (App)->
             onShow: ->
                 console.log @model.get 'content'
                 @$el.attr('contenteditable', 'true').attr 'id', _.uniqueId 'text-'
-                # CKEDITOR.on 'instanceCreated', @configureEditor
+#                CKEDITOR.on 'instanceCreated', @configureEditor
                 @editor = CKEDITOR.inline document.getElementById @$el.attr 'id'
                 @editor.setData _.stripslashes @model.get 'content'
 
+
+
+#            configureEditor: (event) =>
+#                editor = event.editor
+#                element = editor.element
+#
+#                if element.getAttribute('id') is @$el.attr 'id'
+#                    editor.on 'configLoaded', ->
+#
+#                        editor.config.placeholder = 'Type your text here...';
 
 
             # destroy the Ckeditor instance to avoiid memory leaks on close of element
