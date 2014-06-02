@@ -15,7 +15,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.initialize = function(options) {
         _.defaults(options.modelData, {
           element: 'Text',
-          content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s'
+          content: ''
         });
         return Controller.__super__.initialize.call(this, options);
       };

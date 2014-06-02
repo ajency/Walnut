@@ -41,6 +41,9 @@ define(['app'], function(App) {
             }
           },
           update: function(e, ui) {
+            if (ui.item.find('form').find('input[name="element"]').val() === 'Row') {
+              ui.item.children('.element-markup').children().trigger('row:is:moved', ui.item.children('.element-markup').children().prop('id'));
+            }
             return $(e.target).removeClass('empty-column');
           }
         });
@@ -103,11 +106,18 @@ define(['app'], function(App) {
 
       RowView.prototype.onShow = function() {
         this.$el.attr('id', _.uniqueId('row-'));
-        return _.delay((function(_this) {
+        _.delay((function(_this) {
           return function() {
             return _this.setColumnResizer();
           };
         })(this), 400);
+        return this.$el.on('row:is:moved', (function(_this) {
+          return function(evt, id) {
+            if (_this.$el.attr('id') === id) {
+              return _this.setColumnResizer();
+            }
+          };
+        })(this));
       };
 
       RowView.prototype.onStyleChanged = function(newStyle, old) {
@@ -268,11 +278,12 @@ define(['app'], function(App) {
           return function(resizer) {
             var left, right, width;
             width = _this.$el.width();
+            console.log(width);
             left = _this.$el.offset().left + width / 24;
             if (typeof $(resizer).prev('.aj-imp-col-divider').position() !== 'undefined') {
               left = _this.$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + width / 24;
             }
-            right = _this.$el.offset().left + width - width / 18;
+            right = _this.$el.offset().left + width - width / 16;
             if (typeof $(resizer).next('.aj-imp-col-divider').position() !== 'undefined') {
               right = _this.$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - width / 24;
             }

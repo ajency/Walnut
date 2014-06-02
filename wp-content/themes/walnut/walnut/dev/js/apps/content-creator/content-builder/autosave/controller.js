@@ -36,7 +36,7 @@ define(['app'], function(App) {
             'ID': response.ID
           });
           $('#saved-successfully').remove();
-          return $(".creator").before('<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>');
+          return $(".page-title").before('<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>');
         }).fail(function(resp) {
           return console.log('error');
         });
