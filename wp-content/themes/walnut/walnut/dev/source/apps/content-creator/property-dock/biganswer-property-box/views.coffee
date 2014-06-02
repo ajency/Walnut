@@ -18,15 +18,15 @@ define ['app'],(App)->
 											</div>
 										</div> -->
 
-										<div >Max Characters
-											<input id="answer-max-length" type="type"  value="{{maxlength}}">											
+										<div class="checkbox check-success">
+											<input id="check-case-sensitive" type="checkbox" name="check-ind-marks"> <label for="check-case-sensitive">Case Sensitive</label>
 										</div>
 
-										<div>
-											<input id="check-case-sensitive" type="checkbox" name="check-ind-marks"> Case Sensitive
+										<div class="m-b-10">Max Characters
+											<input id="answer-max-length" type="text"  value="{{maxlength}}" >											
 										</div>
 										
-										<div>
+										<div class="m-b-10">
 											Font
 											<select class="font" id="biganswer-font">
 											  <option value="Arial">
@@ -100,14 +100,33 @@ define ['app'],(App)->
 											</select>
 										</div>
 
+										<div class="m-b-10 inline colors">
+											Font Color
+											<input type="hidden" id="font-color" class="color-picker" value="{{color}}">
+										</div>
+
 										<div class="">
 							        
 											<div class="textProp slider success">
-												Size 
+												Font Size 
 												<input type="text" id="biganswer-fontsize" class="fontSize" data-slider-max="60" data-slider-min="6" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before">
 
 											</div>
 
+										</div>					
+
+										<div class="m-b-10">
+											Blank Style
+											<select id="biganswer-style">
+												<option value="uline">Underline</option>
+												<option value="box">Box</option>
+												<option value="blank">Blank</option>		
+											</select>
+										</div>
+
+										<div class="form-group inline colors">
+											Blank Background
+											<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
 										</div>
 
 										<div>
@@ -116,26 +135,7 @@ define ['app'],(App)->
 												<option value="1">1</option>
 												<option value="2">2</option>	
 											</select>
-										</div>
-
-										
-										<div class="form-group inline">
-											Font-Color
-											<input type="hidden" id="font-color" class="color-picker" value="{{color}}">
-										</div>
-										<div class="form-group inline">
-											Background-Color
-											<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
-										</div>
-
-										<div>
-											Style
-											<select id="biganswer-style">
-												<option value="uline">Underline</option>
-												<option value="box">Box</option>
-												<option value="blank">Blank</option>		
-											</select>
-										</div>
+										</div>	
 									
 									</div>
 								</div>
