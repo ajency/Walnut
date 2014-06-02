@@ -10,6 +10,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				ID: 0
 				post_title: ''
 				post_author: ''
+				post_author_name: ''
 				post_modified: ''
 				post_date: ''
 				post_tags: ''
@@ -22,7 +23,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 			model: ContentPiece.ItemModel
 			comparator: 'ID'
 			name: 'content-piece'
-
 			url: ->
 				AJAXURL + '?action=get-content-pieces'
 
@@ -31,9 +31,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 		class ContentPiece.GroupItemCollection extends Backbone.Collection
 			model: ContentPiece.ItemModel
 			comparator: 'ID'
-			name: 'CONTENT-PIECE-NEW'
 
 			initialize: ->
+				console.log 'content piece '
 				@on('remove', @removedModel, @)
 				@on('add', @addedPieces, @)
 
@@ -44,7 +44,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 				@trigger "content:pieces:of:group:added", model
 
 
-		contentPiecesOfGroup = new ContentPiece.GroupItemCollection
 
 		# API
 		API =
@@ -53,12 +52,19 @@ define ["app", 'backbone'], (App, Backbone) ->
 				contentPieceCollection = new ContentPiece.ItemCollection
 				contentPieceCollection.fetch
 					reset: true
+					add: true
+					remove: false
 					data: param
-
+				console.log AJAXURL
+				console.log 'contentPieceCollection'
+				console.log contentPieceCollection
 				contentPieceCollection
 
 		# get all content pieces belonging to particular group
 			getContentPiecesOfGroup: (groupModel)->
+
+				contentPiecesOfGroup = new ContentPiece.GroupItemCollection
+
 				contentIDs = groupModel.get('content_pieces')
 
 				if contentIDs
@@ -91,8 +97,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 							ids: ids
 					contentPieces
 
-			
-		#get all content pieces from local database
+
+			#get all content pieces from local database
 			getContentPieceFromLocal:(ids)->
 
 				getPostAuthorName = (post_author_id) ->
@@ -196,15 +202,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				$.when(runMainQuery()).done (d)->
 					console.log 'getContentPieceFromLocal transaction completed'
-				.fail _.failureHandler        
+				.fail _.failureHandler
 
-		
-
+					   
 
 		# request handler to get all ContentPieces
 		App.reqres.setHandler "get:content:pieces", (opt) ->
 			API.getContentPieces(opt)
-
 
 		# request handler to get all ContentPieces
 		App.reqres.setHandler "get:content:pieces:of:group", (groupModel) ->

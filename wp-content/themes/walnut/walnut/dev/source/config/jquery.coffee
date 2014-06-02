@@ -21,24 +21,34 @@ define ['jquery', 'underscore'], ($, _)->
         else
             parent = window
 
+
+
         @css
             position: "fixed"
             top: ((($(parent).height() - @outerHeight()) / 2) + $(parent).scrollTop() + "px")
             left: ((($(parent).width() - @outerWidth()) / 2) + $(parent).scrollLeft() + "px")
 
-        $(window).on 'scroll',=>
-            console.log @
+
+        $(window).on 'scroll', =>
             @css
-              top: ((($(parent).height() - @outerHeight()) / 2) + $(parent).scrollTop() + "px")
+                top: ((($(parent).height() - @outerHeight()) / 2) + $(parent).scrollTop() + "px")
 
         this
 
+    #programatically select elements
+    $.fn.selectSelectableElements = (elementsToSelect)->
+        # remove the class ui-selected for the ones not selected
+        $(".ui-selected", @).not(elementsToSelect).
+        removeClass("ui-selected")
+        # add ui-selected class to the elements to select
+        $(elementsToSelect).not(".ui-selected").addClass("ui-selected")
+
 
     #    # scroll to top
-#    $.scrollTop = ->
-#        $('html, body').animate
-#            scrollTop: 0
-#        , 1000
+    #    $.scrollTop = ->
+    #        $('html, body').animate
+    #            scrollTop: 0
+    #        , 1000
 
     # adjust the dimesion of upper content and also the left section and right section
     # Uses jquery to get window dimensions and sets min-height css property so that if height

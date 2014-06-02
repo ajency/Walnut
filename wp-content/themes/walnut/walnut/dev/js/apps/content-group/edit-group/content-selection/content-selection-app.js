@@ -20,8 +20,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         this.contentPiecesCollection = App.request("get:content:pieces", {
           content_type: ['teacher_question', 'content_piece']
         });
-        this.model = opts.model;
-        this.contentGroupCollection = App.request("get:content:pieces:of:group", this.model);
+        this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
         tableConfig = {
           'data': [
             {
@@ -43,7 +42,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         this.view = view = this._getContentSelectionView(this.contentPiecesCollection, tableConfig);
         this.show(view, {
           loading: true,
-          entities: [this.textbooksCollection]
+          entities: [this.textbooksCollection, this.contentGroupCollection]
         });
         this.listenTo(this.view, {
           "fetch:chapters": (function(_this) {
@@ -83,11 +82,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         this.listenTo(this.view, {
           "add:content:pieces": (function(_this) {
             return function(contentIDs) {
-              var groupContent;
-              groupContent = App.request("get:content:pieces:of:group", _this.model);
-              return _.each(contentIDs, function(ele, index) {
-                return groupContent.add(_this.contentPiecesCollection.get(ele));
+              _.each(contentIDs, function(ele, index) {
+                return _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
               });
+              return console.log(_this.contentGroupCollection);
             };
           })(this)
         });

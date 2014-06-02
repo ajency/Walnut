@@ -44,7 +44,8 @@
         kineticresize		: 'plugins/kinetic.plugin.resize',
         checkbox			: 'plugins/flatui-checkbox',
         holder				: 'plugins/holder',
-        videojs				: 'plugins/video'
+        videojs				: 'plugins/video',
+        panzer: 'plugins/panzer'
     },
     shim: {
         underscore: {
@@ -83,6 +84,7 @@
         kineticresize : ['kinetic'],
         bridget : ['jquery'],
         isotope : ['jquery','bridget'],
+        panzer: ['jquery'],
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
     }
 })

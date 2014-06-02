@@ -49,14 +49,28 @@
 
             <span class="nx">initialize</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
 
-              <span class="vi">@view = </span><span class="nx">@_getView</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">model</span><span class="p">)</span>
+
+              <span class="vi">@view = </span><span class="nx">@_getView</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
 
               <span class="nx">@show</span> <span class="nx">@view</span>
 
-            <span class="nx">_getView</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
+            <span class="nx">_getView</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
 
               <span class="k">new</span> <span class="nx">FibElementPropertyBox</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">BlankElementView</span>
-                  <span class="nv">model : </span><span class="nx">model</span>
+                  <span class="nv">model : </span><span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+                  <span class="nv">fibModel : </span><span class="nx">options</span><span class="p">.</span><span class="nx">fibModel</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>blankNo: options.blankNo</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 
 
           <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:fib:element:properties:box&quot;</span><span class="p">,</span><span class="nf">(options)-&gt;</span>
@@ -64,6 +78,19 @@
               <span class="k">new</span> <span class="nx">FibElementPropertyBox</span><span class="p">.</span><span class="nx">Controller</span> 
                   <span class="nv">region : </span><span class="nx">options</span><span class="p">.</span><span class="nx">region</span>
                   <span class="nv">model : </span><span class="nx">options</span><span class="p">.</span><span class="nx">model</span>
+                  <span class="nv">fibModel : </span><span class="nx">options</span><span class="p">.</span><span class="nx">fibModel</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>blankNo : options.blankNo</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 </pre></div>
         </td>
       </tr>

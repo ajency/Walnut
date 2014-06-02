@@ -51,7 +51,7 @@
 
         <span class="vi">@view= </span><span class="nv">view = </span><span class="nx">@_getLeftNavView</span> <span class="nx">menuCollection</span>
 
-        <span class="nx">@show</span> <span class="nx">view</span>
+        <span class="nx">@show</span> <span class="nx">view</span><span class="p">,(</span><span class="nx">loading</span><span class="o">:</span><span class="kc">true</span><span class="p">)</span>
 
       <span class="nx">_getLeftNavView</span> <span class="o">:</span><span class="nf">(collection) -&gt;</span>
         <span class="k">new</span> <span class="nx">Controller</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">LeftNavView</span>

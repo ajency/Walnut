@@ -4,7 +4,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentPiece", function(ContentPiece, App, Backbone, Marionette, $, _) {
-    var API, contentPiecesOfGroup;
+    var API;
     ContentPiece.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -18,6 +18,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         ID: 0,
         post_title: '',
         post_author: '',
+        post_author_name: '',
         post_modified: '',
         post_date: '',
         post_tags: ''
@@ -61,9 +62,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       GroupItemCollection.prototype.comparator = 'ID';
 
-      GroupItemCollection.prototype.name = 'CONTENT-PIECE-NEW';
-
       GroupItemCollection.prototype.initialize = function() {
+        console.log('content piece ');
         this.on('remove', this.removedModel, this);
         return this.on('add', this.addedPieces, this);
       };
@@ -79,7 +79,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       return GroupItemCollection;
 
     })(Backbone.Collection);
-    contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
     API = {
       getContentPieces: function(param) {
         var contentPieceCollection;
@@ -89,12 +88,18 @@ define(["app", 'backbone'], function(App, Backbone) {
         contentPieceCollection = new ContentPiece.ItemCollection;
         contentPieceCollection.fetch({
           reset: true,
+          add: true,
+          remove: false,
           data: param
         });
+        console.log(AJAXURL);
+        console.log('contentPieceCollection');
+        console.log(contentPieceCollection);
         return contentPieceCollection;
       },
       getContentPiecesOfGroup: function(groupModel) {
-        var contentID, contentIDs, contentModel, _i, _len;
+        var contentID, contentIDs, contentModel, contentPiecesOfGroup, _i, _len;
+        contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
         contentIDs = groupModel.get('content_pieces');
         if (contentIDs) {
           for (_i = 0, _len = contentIDs.length; _i < _len; _i++) {

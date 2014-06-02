@@ -15,9 +15,14 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return GroupController.__super__.constructor.apply(this, arguments);
       }
 
-      GroupController.prototype.initialize = function() {
-        var breadcrumb_items, contentGroupCollection, layout;
-        contentGroupCollection = App.request("get:content:groups");
+      GroupController.prototype.initialize = function(options) {
+        var breadcrumb_items, group_id, layout;
+        group_id = options.group_id;
+        if (group_id) {
+          this.contentGroupModel = App.request("get:content:group:by:id", group_id);
+        } else {
+          this.contentGroupModel = App.request("new:content:group");
+        }
         breadcrumb_items = {
           'items': [
             {
@@ -39,15 +44,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         this.show(layout, {
           loading: true
         });
-        return this.listenTo(contentGroupCollection, 'add', this.newModelAdded, this);
+        return this.listenTo(this.contentGroupModel, 'change:id', this.newModelAdded, this);
       };
 
       GroupController.prototype.showContentGroupViews = function() {
-        var contentGroupModel;
-        contentGroupModel = App.request("save:content:group:details", '');
         return App.execute("show:editgroup:content:group:detailsapp", {
           region: this.layout.collectionDetailsRegion,
-          model: contentGroupModel
+          model: this.contentGroupModel
         });
       };
 
@@ -56,14 +59,24 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       GroupController.prototype.newModelAdded = function(model) {
-        App.execute("show:content:selectionapp", {
-          region: this.layout.contentSelectionRegion,
-          model: model
-        });
-        return App.execute("show:editgroup:content:displayapp", {
-          region: this.layout.contentDisplayRegion,
-          model: model
-        });
+        console.log(model.changedAttributes());
+        console.log('really? need to load again??');
+        this.contentGroupCollection = App.request("get:content:pieces:of:group", model);
+        return App.execute("when:fetched", this.contentGroupCollection, (function(_this) {
+          return function() {
+            console.log(_this.contentGroupCollection);
+            App.execute("show:content:selectionapp", {
+              region: _this.layout.contentSelectionRegion,
+              model: model,
+              contentGroupCollection: _this.contentGroupCollection
+            });
+            return App.execute("show:editgroup:content:displayapp", {
+              region: _this.layout.contentDisplayRegion,
+              model: model,
+              contentGroupCollection: _this.contentGroupCollection
+            });
+          };
+        })(this));
       };
 
       return GroupController;

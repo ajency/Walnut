@@ -14,7 +14,7 @@ define ['app'],(App)->
 
 										<div class="checkbox check-success">
 											<input id="check-individual-marks" type="checkbox" name="check-individual-marks"> 
-											<label for="check-individual-marks">Set marks for each blank</label>
+											<label for="check-individual-marks">Set marks for each hotspot</label>
 										</div>
 
 										<div class="m-b-10">

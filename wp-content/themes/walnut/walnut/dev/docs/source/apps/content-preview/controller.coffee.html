@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>controller.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "source\\apps\\content-preview\\controller.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>controller.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+        <span class="s">&#39;controllers/region-controller&#39;</span>
+        <span class="s">&#39;apps/content-preview/view&#39;</span>
+        <span class="s">&#39;apps/content-preview/content-board/controller&#39;</span>
+        <span class="s">&#39;apps/content-preview/top-panel/controller&#39;</span>
+<span class="p">],</span> <span class="nf">(App, RegionController)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentPreview&quot;</span><span class="p">,</span> <span class="nf">(ContentPreview, App, Backbone, Marionette, $, _)-&gt;</span>
+
+        <span class="k">class</span> <span class="nx">ContentPreviewRouter</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">AppRouter</span>
+
+            <span class="nv">appRoutes:</span>
+                <span class="s">&#39;content-piece/:contentID&#39;</span><span class="o">:</span> <span class="s">&#39;viewContentPieces&#39;</span>
+
+        <span class="nv">Controller =</span>
+            <span class="nx">viewContentPieces</span><span class="o">:</span><span class="nf">(id) -&gt;</span>
+
+                <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:content:preview&quot;</span><span class="p">,</span>
+                    <span class="nv">region                  : </span><span class="nx">App</span><span class="p">.</span><span class="nx">mainContentRegion</span>
+                    <span class="nv">contentID               : </span><span class="nx">id</span>
+                    <span class="nv">display_mode            : </span><span class="s">&#39;read-only&#39;</span>
+
+
+
+        <span class="k">class</span> <span class="nx">ContentPreview</span><span class="p">.</span><span class="nx">Controller</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+            <span class="nv">initialize: </span><span class="nf">(options)-&gt;</span>
+
+                <span class="p">{</span><span class="nx">contentID</span><span class="p">,</span> <span class="nx">@model</span><span class="p">,</span><span class="nx">@questionResponseModel</span><span class="p">,</span><span class="nx">@timerObject</span><span class="p">,</span> <span class="nx">@display_mode</span><span class="p">,</span><span class="nx">@students</span><span class="p">}</span> <span class="o">=</span> <span class="nx">options</span>
+
+                <span class="k">if</span> <span class="nx">contentID</span>
+                    <span class="vi">@model= </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:content:piece:by:id&quot;</span><span class="p">,</span> <span class="nx">contentID</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>get the main layout for the content preview</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="vi">@layout = </span><span class="nx">@_getContentPreviewLayout</span><span class="p">()</span>
+
+                <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;when:fetched&quot;</span><span class="p">,</span> <span class="nx">@model</span><span class="p">,</span> <span class="o">=&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>show the layout</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                    <span class="nx">@show</span> <span class="nx">@layout</span><span class="p">,</span> <span class="nx">loading</span><span class="o">:</span><span class="kc">true</span>
+
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>listen to "show" event of the layout and start the
+elementboxapp passing the region</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="nx">@listenTo</span> <span class="nx">@layout</span><span class="p">,</span> <span class="s">&#39;show&#39;</span><span class="p">,</span> <span class="o">=&gt;</span>
+                    <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:top:panel&quot;</span><span class="p">,</span>
+                        <span class="nv">region: </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">topPanelRegion</span>
+                        <span class="nv">model: </span><span class="nx">@model</span>
+                        <span class="nv">questionResponseModel: </span><span class="nx">@questionResponseModel</span>
+                        <span class="nv">timerObject : </span><span class="nx">@timerObject</span>
+                        <span class="nv">display_mode: </span><span class="nx">@display_mode</span>
+                        <span class="nv">students: </span><span class="nx">@students</span>
+
+
+                    <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:content:board&quot;</span><span class="p">,</span>
+                        <span class="nv">region: </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">contentBoardRegion</span>
+                        <span class="nv">model: </span><span class="nx">@model</span>
+
+            <span class="nv">_getContentPreviewLayout: </span><span class="o">=&gt;</span>
+                <span class="k">new</span> <span class="nx">ContentPreview</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">Layout</span>
+                    <span class="nv">model: </span><span class="nx">@model</span>
+
+        <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:content:preview&quot;</span><span class="p">,</span> <span class="nf">(options)-&gt;</span>
+            <span class="k">new</span> <span class="nx">ContentPreview</span><span class="p">.</span><span class="nx">Controller</span> <span class="nx">options</span>
+
+
+
+        <span class="nx">ContentPreview</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;start&quot;</span><span class="p">,</span> <span class="nf">-&gt;</span>
+            <span class="k">new</span> <span class="nx">ContentPreviewRouter</span>
+                <span class="nv">controller: </span><span class="nx">Controller</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

@@ -128,6 +128,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
             <span class="nx">@listenTo</span> <span class="nx">@layout</span><span class="p">,</span> <span class="s">&quot;delete:element&quot;</span><span class="p">,</span> <span class="nf">(model)=&gt;</span>
+                        
                         <span class="k">if</span> <span class="nx">confirm</span><span class="p">(</span><span class="s">&quot;Are you sure?&quot;</span><span class="p">)</span>
                           <span class="nx">@deleteElement</span> <span class="nx">model</span>
 
@@ -284,6 +285,10 @@ if @layout.$el.find('.element-markup > span').length > 0
           <span class="nx">deleteElement</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
             <span class="nx">model</span><span class="p">.</span><span class="nx">destroy</span> 
                 <span class="nv">wait : </span><span class="kc">true</span>
+
+
+
+
 
 
         

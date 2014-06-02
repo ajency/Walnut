@@ -38,12 +38,11 @@
 
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
-    <span class="s">&#39;apps/content-creator/content-builder/element/controller&#39;</span>
-    <span class="s">&#39;apps/content-creator/content-builder/elements/text/views&#39;</span>
-    <span class="s">&#39;apps/content-creator/content-builder/elements/text/settings/controller&#39;</span><span class="p">],</span>
-    <span class="nf">(App,Element)-&gt;</span>
-
-      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.Text&#39;</span><span class="p">,</span> <span class="nf">(Text, App, Backbone, Marionette, $, _)-&gt;</span>
+        <span class="s">&#39;apps/content-creator/content-builder/element/controller&#39;</span>
+        <span class="s">&#39;apps/content-creator/content-builder/elements/text/views&#39;</span>
+        <span class="s">&#39;apps/content-creator/content-builder/elements/text/settings/controller&#39;</span><span class="p">],</span>
+<span class="nf">(App, Element)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.Text&#39;</span><span class="p">,</span> <span class="nf">(Text, App, Backbone, Marionette, $, _)-&gt;</span>
 
 
 </pre></div>
@@ -71,17 +70,15 @@
 <p>intializer</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">initialize</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">options</span>
+            <span class="nv">initialize: </span><span class="nf">(options)-&gt;</span>
+                <span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">.</span><span class="nx">modelData</span><span class="p">,</span>
+                    <span class="nv">element: </span><span class="s">&#39;Text&#39;</span>
+                    <span class="nv">content: </span><span class="s">&#39;Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+<span class="s">                                                   Lorem Ipsum has been the industry\&#39;s standard dummy text ever since the 1500s&#39;</span>
 
-            <span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">.</span><span class="nx">modelData</span><span class="p">,</span>
-                      <span class="nv">element   : </span><span class="s">&#39;Text&#39;</span>
-                      <span class="nv">content   : </span><span class="s">&#39;Lorem Ipsum is simply dummy text of the printing and typesetting industry. </span>
-<span class="s">                               Lorem Ipsum has been the industry\&#39;s standard dummy text ever since the 1500s&#39;</span>
+                <span class="k">super</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
 
-            <span class="k">super</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
-            
-          <span class="nx">bindEvents</span><span class="o">:</span><span class="nf">-&gt;</span>
+            <span class="nv">bindEvents: </span><span class="nf">-&gt;</span>
 
 </pre></div>
         </td>
@@ -95,11 +92,12 @@
 @listenTo @layout.model, "change:content", @renderElement</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="k">super</span><span class="p">()</span>
+                <span class="k">super</span><span class="p">()</span>
 
-          <span class="nx">_getTextView</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
-            <span class="k">new</span> <span class="nx">Text</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">TextView</span>
-                    <span class="nv">model : </span><span class="nx">model</span>
+            <span class="nv">_getTextView: </span><span class="nf">(model)-&gt;</span>
+
+                <span class="k">new</span> <span class="nx">Text</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">TextView</span>
+                    <span class="nv">model: </span><span class="nx">model</span>
 
 
 </pre></div>
@@ -113,9 +111,9 @@
 <p>setup templates for the element</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">renderElement</span><span class="o">:</span><span class="p">()</span><span class="o">=&gt;</span>
-            <span class="nx">@removeSpinner</span><span class="p">()</span>
-            <span class="nv">view = </span><span class="nx">@_getTextView</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
+            <span class="nv">renderElement: </span><span class="p">()</span><span class="o">=&gt;</span>
+                <span class="nx">@removeSpinner</span><span class="p">()</span>
+                <span class="nv">view = </span><span class="nx">@_getTextView</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
 
 
 </pre></div>
@@ -128,13 +126,13 @@
 </div>
 <p>listen to "text:element:blur" event
 this will pass the current html for the text element.
-set it to the model. If it is a different markup it will 
+set it to the model. If it is a different markup it will
 change the model changed property to true
 save the new markup if the model is changed</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;text:element:blur&quot;</span><span class="p">,</span><span class="nf">(html) =&gt;</span>
-                <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">html</span><span class="si">}</span><span class="s">&quot;</span>
+                <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;text:element:blur&quot;</span><span class="p">,</span> <span class="nf">(html) =&gt;</span>
+                    <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">html</span><span class="si">}</span><span class="s">&quot;</span>
 
 </pre></div>
         </td>
@@ -161,11 +159,13 @@ save the new markup if the model is changed</p>
 <p>local...........TO BE DELETED</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-                <span class="k">if</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">hasChanged</span><span class="p">()</span>
-                  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;saving them&quot;</span>
-                  <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span> <span class="s">&#39;ele&#39;</span><span class="o">+</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;meta_id&#39;</span><span class="p">),</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">())</span>
+                    <span class="k">if</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">hasChanged</span><span class="p">()</span>
+                        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
+                        <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+                        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;saving them&quot;</span>
+                        <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span> <span class="s">&#39;ele&#39;</span> <span class="o">+</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;meta_id&#39;</span><span class="p">),</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">())</span>
 
-            <span class="nx">@layout</span><span class="p">.</span><span class="nx">elementRegion</span><span class="p">.</span><span class="nx">show</span> <span class="nx">view</span>
+                <span class="nx">@layout</span><span class="p">.</span><span class="nx">elementRegion</span><span class="p">.</span><span class="nx">show</span> <span class="nx">view</span>
 </pre></div>
         </td>
       </tr>

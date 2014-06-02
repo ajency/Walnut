@@ -30,8 +30,8 @@ define ['app'],(App)->
 											<input id="marks" type="text" value="{{marks}}" class="form-control" >
 										</div>
 
-										<div class="form-group inline">
-											Background-Color
+										<div class=" inline colors">
+											Background Color
 											<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
 										</div>
 
@@ -39,7 +39,7 @@ define ['app'],(App)->
 												Height 
 												<input type="text" id="sort-height" class="height" data-slider-max="100" data-slider-min="40" data-slider-step="5" data-slider-value="{{height}}" data-slider-orientation="horizontal" data-slider-selection="before">
 
-											</div>
+										</div>
 
 
 									</div>

@@ -65,6 +65,8 @@
                     <span class="nv">handle    : </span><span class="s">&#39;.aj-imp-drag-handle&#39;</span>
                     <span class="nv">helper    : </span><span class="s">&#39;clone&#39;</span>
                     <span class="nv">opacity   : </span><span class="p">.</span><span class="mi">65</span>
+                                                  
+                        
                     <span class="nv">receive   : </span><span class="nf">(evt, ui)=&gt;</span> 
 
 </pre></div>
@@ -78,9 +80,38 @@
 <p>trigger drop event if ui.item is Li tag</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
+
                       <span class="k">if</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s">&quot;tagName&quot;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;LI&#39;</span>
                         <span class="nv">type  = </span><span class="nx">ui</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-element&#39;</span>
+                        
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>if not $(evt.target).hasClass('teacher-question-row') and $(evt.target).not('.teacher-question-row div')
+console.log type</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
                         <span class="nx">@trigger</span> <span class="s">&quot;add:new:element&quot;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">),</span> <span class="nx">type</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>if ui.item.find('form').find('input[name="element"]').val() is 'Video'
+        App.execute "video:moved"</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
                         
 </pre></div>
         </td>

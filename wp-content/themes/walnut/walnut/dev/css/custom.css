@@ -189,7 +189,6 @@
 }
 #toolbox .qstns ul li {
   width: 96px;
-  padding-top: 8%;
 }
 #toolbox .qstns ul li i {
   font-size: 17px;
@@ -209,6 +208,7 @@
 .dock .builder_actions {
   background: #e5e9ec;
   padding-bottom: 15px;
+  margin-top: -48px;
 }
 .dock .btn-cons2 {
   width: 108px;
@@ -809,7 +809,6 @@
 /*Media Manager*/
 #all-media-region .thumbnail {
   cursor: pointer;
-  height: 92px;
   background-color: #f3f3f3;
 }
 #all-media-region .thumbnail::after {
@@ -908,7 +907,7 @@ p.mcq-option-text {
 	//clear: left;
 	float: left;
 }*/.style .select2-container {
-  width: 65%;
+  width: 60%;
 }
 .colors .minicolors-theme-default.minicolors {
   width: 30px;
@@ -1333,7 +1332,7 @@ p.mcq-option-text {
 .listBox {
   margin-top: 60px;
 }
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
   .listBox {
     margin-top: 0;
   }
@@ -1608,9 +1607,9 @@ textarea.error,
   background-position: center;
 }
 .mainLogo img {
-  width: 128px;
-  height: 128px;
-  margin: 0 auto;
+  width: 85px;
+  height: 85px;
+  margin: 0 auto 15px;
   display: block;
 }
 .smallLogo {
@@ -1621,13 +1620,4 @@ textarea.error,
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: left center;
-}
-/*App Highlight Color*/
-* {
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
-  -webkit-focus-ring-color: #0090d9 !important;
-}
-
-body{
-  height: 100%;
 }

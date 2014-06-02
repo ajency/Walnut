@@ -72,7 +72,7 @@
 
       <span class="nv">template  : </span><span class="nx">teachersDashboardTpl</span>
 
-      <span class="nv">className   : </span><span class="s">&#39;teacher-app&#39;</span>
+      <span class="nv">className   : </span><span class="s">&#39;row&#39;</span>
 
       <span class="nv">events    :</span>
         <span class="s">&#39;change #class&#39;</span> <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">@loadDivisions</span> <span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
@@ -112,8 +112,10 @@
 
       <span class="nx">loadDivisions</span><span class="o">:</span><span class="nf">(class_id)=&gt;</span>
 
+        <span class="nv">class_id = </span><span class="nb">parseInt</span> <span class="nx">class_id</span>
+
         <span class="nv">divs= </span><span class="nx">@collection</span><span class="p">.</span><span class="nx">where</span><span class="p">({</span><span class="s">&#39;class_id&#39;</span><span class="o">:</span><span class="nx">class_id</span><span class="p">})</span>
-        
+
         <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;#div&#39;</span>
         <span class="p">.</span><span class="nx">empty</span><span class="p">()</span>
         <span class="p">.</span><span class="nx">select2</span><span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">,</span> <span class="kc">null</span><span class="p">)</span>
@@ -128,7 +130,7 @@
         <span class="k">if</span> <span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">is</span> <span class="s">&#39;take-class&#39;</span>
           <span class="nv">class_id= </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#class&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
           <span class="nv">div_id= </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#div&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
-          <span class="nx">App</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s">&#39;teachers/take-class/&#39;</span><span class="o">+</span><span class="nx">class_id</span><span class="o">+</span><span class="s">&#39;-&#39;</span><span class="o">+</span><span class="nx">div_id</span><span class="p">,</span> <span class="nv">trigger: </span><span class="kc">true</span><span class="p">)</span>
+          <span class="nx">App</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s">&#39;teachers/take-class/&#39;</span><span class="o">+</span><span class="nx">class_id</span><span class="o">+</span><span class="s">&#39;/&#39;</span><span class="o">+</span><span class="nx">div_id</span><span class="p">,</span> <span class="nv">trigger: </span><span class="kc">true</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">is</span> <span class="s">&#39;start-training&#39;</span>
           <span class="nv">class_id= </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#class-training&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
