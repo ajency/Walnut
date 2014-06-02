@@ -18,6 +18,9 @@
     </div>
     <div id="tree"></div>
     <div id="headings">
+      <div class="heading h1">
+        <a href="#remove%20the%20event%20handler%20and%20add%20it%20again%20to%20prevent%20multiple%20event%20listeners">remove the event handler and add it again to prevent multiple event listeners</a>
+      </div>
     </div>
   </div>
   <div id="sidebar-toggle"></div>
@@ -37,14 +40,14 @@
 </div>
 
         </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span> <span class="nf">(App)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.ContentBuilder.Element.Fib.Views&quot;</span><span class="p">,</span>
+    <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
+        <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">FibView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
 
-  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.ContentBuilder.Element.Fib.Views&quot;</span><span class="p">,</span>
-  <span class="nf">(Views, App, Backbone, Marionette,$, _)-&gt;</span>
 
-    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">FibView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+            <span class="nv">className: </span><span class="s">&#39;fib-text&#39;</span>
 
-      <span class="nv">template : </span><span class="s">&#39;&lt;p class=&quot;fib-text&quot; &gt;&lt;/p&gt;&#39;</span>
 
 </pre></div>
         </td>
@@ -54,13 +57,23 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
 </div>
-<p><input  type="text"
- maxlength="{{maxlength}}" size="{{maxlength}}" placeholder="Answer" style="
-   font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; 
-     height: 100%; line-height : inherit; border-width : 5px;
-    border-style: none; float:left"></p>
+<p>listen to the model events</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
+            <span class="nv">modelEvents:</span>
+                <span class="s">&#39;change:font&#39;</span><span class="o">:</span> <span class="nf">(model, font)-&gt;</span>
+                    <span class="nx">@_changeFont</span> <span class="nx">font</span>
+                <span class="s">&#39;change:font_size&#39;</span><span class="o">:</span> <span class="nf">(model, fontSize)-&gt;</span>
+                    <span class="nx">@_changeFontSize</span> <span class="nx">fontSize</span>
+                <span class="s">&#39;change:color&#39;</span><span class="o">:</span> <span class="nf">(model, color)-&gt;</span>
+                    <span class="nx">@_changeColor</span> <span class="nx">color</span>
+                <span class="s">&#39;change:bg_color&#39;</span><span class="o">:</span> <span class="nf">(model, bg_color)-&gt;</span>
+                    <span class="nx">@_changeBGColor</span> <span class="nx">model</span>
+                <span class="s">&#39;change:bg_opacity&#39;</span><span class="o">:</span> <span class="nf">(model, bg_opacity)-&gt;</span>
+                    <span class="nx">@_changeBGColor</span> <span class="nx">model</span>
+                <span class="s">&#39;change:style&#39;</span><span class="o">:</span> <span class="nf">(model, style)-&gt;</span>
+                    <span class="nx">@_changeFibStyle</span> <span class="nx">style</span>
+                <span class="s">&#39;change:numberOfBlanks&#39;</span><span class="o">:</span> <span class="s">&#39;_changeNumberOfBlanks&#39;</span>
 
 
 </pre></div>
@@ -71,10 +84,21 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
-<p>listen to the model events </p>
+<p>avoid and anchor tag click events
+listen to blur event for the text element so that we can save the new edited markup
+to server. The element will triggger a text:element:blur event on blur and pass the
+current markupup as argument</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nv">modelEvents : </span>
+            <span class="nv">events:</span>
+                <span class="s">&#39;click a&#39;</span><span class="o">:</span> <span class="nf">(e)-&gt;</span>
+                    <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+                <span class="s">&#39;blur .fib-text&#39;</span><span class="o">:</span> <span class="s">&#39;onSaveText&#39;</span>
+
+            <span class="nv">initialize: </span><span class="nf">(options)-&gt;</span>
+
+            <span class="nv">onShow: </span><span class="nf">-&gt;</span>
+
 
 </pre></div>
         </td>
@@ -84,16 +108,12 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
-<p>'change:maxlength'  : '_changeMaxLength'</p>
+<p>setting of on click handler for showing of the property box for fib element</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="s">&#39;change:font&#39;</span> <span class="o">:</span> <span class="nf">(model,font)-&gt;</span> <span class="nx">@_changeFont</span> <span class="nx">font</span>
-          <span class="s">&#39;change:font_size&#39;</span> <span class="o">:</span> <span class="nf">(model,size)-&gt;</span><span class="nx">@_changeSize</span> <span class="nx">size</span>
-          <span class="s">&#39;change:color&#39;</span> <span class="o">:</span> <span class="nf">(model,color)-&gt;</span><span class="nx">@_changeColor</span> <span class="nx">color</span>
-          <span class="s">&#39;change:bg_color&#39;</span> <span class="o">:</span> <span class="nf">(model,bg_color)-&gt;</span><span class="nx">@_changeBGColor</span> <span class="nx">model</span>
-          <span class="s">&#39;change:bg_opacity&#39;</span> <span class="o">:</span> <span class="nf">(model,bg_opacity)-&gt;</span><span class="nx">@_changeBGColor</span> <span class="nx">model</span>
-          <span class="s">&#39;change:style&#39;</span> <span class="o">:</span> <span class="nf">(model,style)-&gt;</span><span class="nx">@_changeFibStyle</span> <span class="nx">style</span>
-
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">parent</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nf">(evt)=&gt;</span>
+                    <span class="nx">@trigger</span> <span class="s">&quot;show:this:fib:properties&quot;</span>
+                    <span class="nx">@trigger</span> <span class="s">&quot;close:question:element:properties&quot;</span>
 
 </pre></div>
         </td>
@@ -103,23 +123,10 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
-<p>avoid and anchor tag click events
-listen to blur event for the text element so that we can save the new edited markup
-to server. The element will triggger a text:element:blur event on blur and pass the 
-current markupup as argument</p>
+<p>stop propogation of click event</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nv">events:</span>
-        <span class="s">&#39;click a&#39;</span> <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
-        <span class="s">&#39;blur p&#39;</span>  <span class="o">:</span> <span class="s">&#39;_textBlur&#39;</span> 
-        <span class="s">&#39;DOMSubtreeModified p&#39;</span>  <span class="o">:</span> <span class="s">&#39;_updateInputProperties&#39;</span>
-
-      <span class="nx">initialize</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
-        <span class="vi">@blanksCollection = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;blanksArray&#39;</span>
-
-
-
-      <span class="nv">onShow : </span><span class="nf">-&gt;</span>
+                    <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
 
 
 </pre></div>
@@ -130,12 +137,13 @@ current markupup as argument</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
-<p>setting of on click handler for showing of the property box for fib element</p>
+<p>initialize ckeditor</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">parent</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)=&gt;</span>
-          <span class="nx">@trigger</span> <span class="s">&quot;show:this:fib:properties&quot;</span>
-          <span class="nx">@trigger</span> <span class="s">&quot;close:hotspot:element:properties&quot;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
+                <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
+                <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;text&#39;</span>
+
 
 </pre></div>
         </td>
@@ -145,13 +153,11 @@ current markupup as argument</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
 </div>
-<p>stop propogation of click event</p>
+<p>wait for CKEditor to be loaded</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+                <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="nx">@_afterCKEditorInitialization</span><span class="p">(),</span> <span class="mi">500</span>
 
-
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span><span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
 
 </pre></div>
         </td>
@@ -161,11 +167,24 @@ current markupup as argument</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
-<p>CKEDITOR.on 'instanceCreated', @configureEditor</p>
+<p>after initialization of ckeditor if</p>
+
+<ul>
+  <li>
+
+
+
+
+
+</ul>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
-        <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;text&#39;</span>
+            <span class="nx">_afterCKEditorInitialization</span><span class="o">:=&gt;</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">cke_</span><span class="si">#{</span><span class="nx">@editor</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="s">&quot;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nf">(evt)-&gt;</span>
+                    <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
+
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s">&#39;&lt;p class=\&quot;hidden-align-fix\&quot; contenteditable=\&quot;false\&quot;</span>
+<span class="s">                                                style=\&quot;display:none;\&quot;&gt;&lt;/p&gt;&#39;</span><span class="p">)</span>
 
 
 </pre></div>
@@ -176,16 +195,11 @@ current markupup as argument</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
-<p>wait for CKEditor to be loaded</p>
+<p>if the number of blanks is 0 add a blank</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
-          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#cke_&#39;</span><span class="o">+</span><span class="nx">@editor</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(evt)-&gt;</span>
-            <span class="nx">evt</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
-
-        <span class="p">,</span><span class="mi">500</span>
-        
-
+                <span class="k">if</span> <span class="o">not</span> <span class="nb">parseInt</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;numberOfBlanks&#39;</span>
+                    <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;numberOfBlanks&#39;</span><span class="p">,</span> <span class="mi">1</span>
 
 </pre></div>
         </td>
@@ -195,17 +209,74 @@ current markupup as argument</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
 </div>
-<p>set configuration for the Ckeditor
-configureEditor: (event) =>
-    editor = event.editor
-    element = editor.element
-    # Customize the editor configurations on "configLoaded" event,
-    # which is fired after the configuration file loading and
-    # execution. This makes it possible to change the
-    # configurations before the editor initialization takes place.
-    editor.on "configLoaded", -></p>
+
         </td>
         <td class="code highlight"><div class="highlight"><pre>
+                <span class="k">else</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">wrap</span><span class="p">(</span><span class="s">&#39;&lt;span contenteditable=&quot;false&quot;&gt;&lt;/span&gt;&#39;</span><span class="p">)</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">before</span><span class="p">(</span><span class="s">&#39;&lt;span class=&quot;fibno&quot;&gt;&lt;/span&gt;&#39;</span><span class="p">)</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;input&quot;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nx">@_onClickOfBlank</span>
+                    <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">each</span> <span class="nx">@_initializeEachBlank</span>
+
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;DOMSubtreeModified&#39;</span><span class="p">,</span> <span class="nx">@_updateInputProperties</span>
+                <span class="nx">@_updateInputProperties</span><span class="p">()</span>
+
+
+            <span class="nx">_initializeEachBlank</span><span class="o">:</span><span class="nf">(blanksModel)=&gt;</span>
+                <span class="nx">@_changeBlankSize</span> <span class="nx">blanksModel</span><span class="p">,</span><span class="nx">blanksModel</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;blank_size&#39;</span>
+                <span class="nx">@_changeCorrectAnswers</span> <span class="nx">blanksModel</span><span class="p">,</span><span class="nx">blanksModel</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;correct_answers&#39;</span>
+                <span class="nx">@listenTo</span> <span class="nx">blanksModel</span><span class="p">,</span> <span class="s">&#39;change:correct_answers&#39;</span><span class="p">,</span> <span class="nx">@_changeCorrectAnswers</span>
+                <span class="nx">@listenTo</span> <span class="nx">blanksModel</span><span class="p">,</span> <span class="s">&#39;change:blank_size&#39;</span><span class="p">,</span> <span class="nx">@_changeBlankSize</span>
+
+
+            <span class="nv">_changeNumberOfBlanks: </span><span class="nf">(model, numberOfBlanks)-&gt;</span>
+                <span class="k">if</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">isnt</span> <span class="nx">numberOfBlanks</span>
+
+                    <span class="k">if</span> <span class="nx">numberOfBlanks</span> <span class="o">&gt;</span> <span class="nx">model</span><span class="p">.</span><span class="nx">previous</span> <span class="s">&#39;numberOfBlanks&#39;</span>
+                        <span class="nv">noOfBlanksToAdd = </span><span class="nx">numberOfBlanks</span> <span class="o">-</span> <span class="nx">model</span><span class="p">.</span><span class="nx">previous</span> <span class="s">&#39;numberOfBlanks&#39;</span>
+                        <span class="nx">@_addBlanks</span> <span class="nx">noOfBlanksToAdd</span>
+                        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">noOfBlanksToAdd</span>
+                    <span class="k">else</span> <span class="k">if</span> <span class="nx">numberOfBlanks</span> <span class="o">&lt;</span> <span class="nx">model</span><span class="p">.</span><span class="nx">previous</span> <span class="s">&#39;numberOfBlanks&#39;</span>
+                        <span class="nv">noOfBlanksToRemove = </span><span class="nx">model</span><span class="p">.</span><span class="nx">previous</span><span class="p">(</span><span class="s">&#39;numberOfBlanks&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="nx">numberOfBlanks</span>
+                        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">noOfBlanksToRemove</span>
+                        <span class="nx">@_removeBlanks</span> <span class="nx">noOfBlanksToRemove</span>
+
+            <span class="nv">_removeBlanks: </span><span class="nf">(noOfBlanksToRemove)-&gt;</span>
+                <span class="k">until</span> <span class="nx">noOfBlanksToRemove</span> <span class="o">is</span> <span class="mi">0</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">last</span><span class="p">().</span><span class="nx">parent</span><span class="p">().</span><span class="nx">remove</span><span class="p">()</span>
+                    <span class="nx">noOfBlanksToRemove</span><span class="o">--</span>
+
+
+            <span class="nv">_addBlanks: </span><span class="nf">(noOfBlanksToAdd)-&gt;</span>
+                <span class="k">until</span> <span class="nx">noOfBlanksToAdd</span> <span class="o">is</span> <span class="mi">0</span>
+                    <span class="nv">inputId = </span><span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;input-&#39;</span>
+                    <span class="nv">inputNumber = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="nx">@trigger</span> <span class="s">&quot;create:new:fib:element&quot;</span><span class="p">,</span> <span class="nx">inputId</span>
+
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">first</span><span class="p">().</span><span class="nx">append</span> <span class="s">&quot;&lt;span contenteditable=&#39;false&#39;&gt;&lt;span class=&#39;fibno&#39;&gt;</span><span class="si">#{</span><span class="nx">inputNumber</span><span class="si">}</span><span class="s">&lt;/span&gt;</span>
+<span class="s">                                                    &lt;input type=&#39;text&#39; data-id=&#39;</span><span class="si">#{</span><span class="nx">inputId</span><span class="si">}</span><span class="s">&#39; data-cke-editable=&#39;1&#39; style=&#39; height :100%&#39;</span>
+<span class="s">                                                    contenteditable=&#39;false&#39;&gt;&lt;/span&gt;&quot;</span>
+
+                    <span class="nv">blanksModel = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="nx">inputId</span><span class="p">)</span>
+
+                    <span class="nx">@listenTo</span> <span class="nx">blanksModel</span><span class="p">,</span> <span class="s">&#39;change:correct_answers&#39;</span><span class="p">,</span> <span class="nx">@_changeCorrectAnswers</span>
+                    <span class="nx">@listenTo</span> <span class="nx">blanksModel</span><span class="p">,</span> <span class="s">&#39;change:blank_size&#39;</span><span class="p">,</span> <span class="nx">@_changeBlankSize</span>
+
+                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;input[data-id=&#39;</span><span class="si">#{</span><span class="nx">inputId</span><span class="si">}</span><span class="s">&#39;]&quot;</span><span class="p">)</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;input&quot;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nx">@_onClickOfBlank</span>
+
+                    <span class="nx">noOfBlanksToAdd</span><span class="o">--</span>
+
+            <span class="nx">_onClickOfBlank</span><span class="o">:</span><span class="nf">(e)=&gt;</span>
+                <span class="nv">inputId = </span><span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;data-id&#39;</span>
+                <span class="nv">blanksModel = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="nx">inputId</span><span class="p">)</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;data-id&#39;</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">toJSON</span><span class="p">()</span>
+                <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:fib:element:properties&quot;</span><span class="p">,</span>
+                    <span class="nv">model: </span><span class="nx">blanksModel</span>
+                    <span class="nv">fibModel: </span><span class="nx">@model</span>
+                <span class="nx">@trigger</span> <span class="s">&quot;show:this:fib:properties&quot;</span>
+                <span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
 
 
 </pre></div>
@@ -217,18 +288,25 @@ configureEditor: (event) =>
   <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
 </div>
 
-<div class="highlight"><pre><code>    <span class="err">#</span> <span class="nx">Rearrange</span> <span class="nx">the</span> <span class="nx">layout</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">toolbar</span><span class="p">.</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">editor</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">toolbar</span>
-    <span class="nx">editor</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">toolbar</span><span class="p">.</span><span class="nx">splice</span> <span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
-                <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;forms&#39;</span>
-                <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;TextField&#39;</span><span class="p">]</span> 
+<div class="highlight"><pre><code>       <span class="nx">configureEditor</span><span class="o">:</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span>
+           <span class="nx">editor</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">editor</span>
+           <span class="nx">element</span> <span class="o">=</span> <span class="nx">editor</span><span class="p">.</span><span class="nx">element</span>
+
+           <span class="k">if</span> <span class="nx">element</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="nx">is</span> <span class="err">@</span><span class="nx">$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s1">&#39;id&#39;</span>
+
+               <span class="nx">editor</span><span class="p">.</span><span class="nx">on</span> <span class="s1">&#39;configLoaded&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+                   <span class="nx">editor</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">toolbar</span><span class="p">.</span><span class="nx">splice</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                       <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;forms&#39;</span>
+                       <span class="nx">items</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;TextField&#39;</span><span class="p">]</span>
+                   <span class="nx">_</span><span class="p">.</span><span class="nx">uniq</span> <span class="nx">editor</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">toolbar</span>
 </code></pre></div>
 
 
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-              
-      
+
+
+
 
 </pre></div>
         </td>
@@ -241,8 +319,8 @@ configureEditor: (event) =>
 <p>on change of font property</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_changeFont</span><span class="o">:</span><span class="nf">(font)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-family&#39;</span><span class="p">,</span><span class="nx">font</span>
+            <span class="nv">_changeFont: </span><span class="nf">(font)-&gt;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-family&#39;</span><span class="p">,</span> <span class="nx">font</span>
 
 
 
@@ -257,8 +335,8 @@ configureEditor: (event) =>
 <p>on change of font_size property</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_changeSize</span><span class="o">:</span><span class="nf">(size)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-size&#39;</span><span class="p">,</span><span class="nx">size</span><span class="o">+</span><span class="s">&quot;px&quot;</span>
+            <span class="nv">_changeFontSize: </span><span class="nf">(fontSize)-&gt;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;font-size&#39;</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">fontSize</span><span class="si">}</span><span class="s">px&quot;</span>
 
 
 </pre></div>
@@ -272,8 +350,8 @@ configureEditor: (event) =>
 <p>on change of color property</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_changeColor</span><span class="o">:</span><span class="nf">(color)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;color&#39;</span><span class="p">,</span> <span class="nx">color</span>
+            <span class="nv">_changeColor: </span><span class="nf">(color)-&gt;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;color&#39;</span><span class="p">,</span> <span class="nx">color</span>
 
 
 </pre></div>
@@ -287,8 +365,8 @@ configureEditor: (event) =>
 <p>on change of bg_color property</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_changeBGColor</span><span class="o">:</span><span class="nf">(model)-&gt;</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">convertHex</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
+            <span class="nv">_changeBGColor: </span><span class="nf">(model)-&gt;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;background-color&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">convertHex</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_color&#39;</span><span class="p">),</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;bg_opacity&#39;</span><span class="p">)</span>
 
 
 </pre></div>
@@ -302,7 +380,7 @@ configureEditor: (event) =>
 <p>on change of style property</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_changeFibStyle</span><span class="o">:</span><span class="nf">(style)-&gt;</span>
+            <span class="nv">_changeFibStyle: </span><span class="nf">(style)-&gt;</span>
 
 </pre></div>
         </td>
@@ -315,8 +393,8 @@ configureEditor: (event) =>
 <p>if underline</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="k">if</span> <span class="nx">style</span> <span class="o">is</span> <span class="s">&#39;uline&#39;</span>
-            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;border&quot;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&quot;underline&quot;</span>
+                <span class="k">if</span> <span class="nx">style</span> <span class="o">is</span> <span class="s">&#39;uline&#39;</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;border&quot;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&quot;underline&quot;</span>
 
 </pre></div>
         </td>
@@ -329,8 +407,8 @@ configureEditor: (event) =>
 <p>if box</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="k">else</span> <span class="k">if</span> <span class="nx">style</span> <span class="o">is</span> <span class="s">&#39;box&#39;</span>
-            <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;underline&quot;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&quot;border&quot;</span>
+                <span class="k">else</span> <span class="k">if</span> <span class="nx">style</span> <span class="o">is</span> <span class="s">&#39;box&#39;</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;underline&quot;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&quot;border&quot;</span>
 
 </pre></div>
         </td>
@@ -343,9 +421,8 @@ configureEditor: (event) =>
 <p>if blank</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="k">else</span> 
-             <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">removeClass</span> <span class="s">&quot;underline border&quot;</span>
-
+                <span class="k">else</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">removeClass</span> <span class="s">&quot;underline border&quot;</span>
 
 
 </pre></div>
@@ -356,11 +433,12 @@ configureEditor: (event) =>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
 </div>
-<p>save the text field on blur</p>
+<p>when correct answers array changed fill the first correct answer in d blank</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_textBlur</span><span class="o">:</span><span class="nf">-&gt;</span>
-        <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;text&#39;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span>
+            <span class="nv">_changeCorrectAnswers: </span><span class="nf">(model, answerArray)-&gt;</span>
+                <span class="k">if</span> <span class="nx">answerArray</span><span class="p">.</span><span class="nx">length</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;input[data-id=</span><span class="si">#{</span><span class="nx">model</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="s">]&quot;</span><span class="p">).</span><span class="nx">val</span> <span class="nx">answerArray</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 
 </pre></div>
@@ -371,10 +449,13 @@ configureEditor: (event) =>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
 </div>
-<p>on modification of dom structure modification of p</p>
+<p>on change of the blank_size attr change the blank width</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">_updateInputProperties</span><span class="o">:</span><span class="nf">-&gt;</span>
+            <span class="nv">_changeBlankSize: </span><span class="nf">(model, blankSize)-&gt;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;input[data-id=</span><span class="si">#{</span><span class="nx">model</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="s">]&quot;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;size&#39;</span><span class="p">,</span> <span class="nx">blankSize</span>
+
+
 
 </pre></div>
         </td>
@@ -384,10 +465,19 @@ configureEditor: (event) =>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
 </div>
-<p>iterate thru all input tags in current view</p>
+<p>save the text field on blur</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">)</span> <span class="p">,</span><span class="nf">(blank)=&gt;</span>
+            <span class="nv">onSaveText: </span><span class="nf">-&gt;</span>
+                <span class="nv">formatedText = </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;p&#39;</span><span class="p">).</span><span class="nx">first</span><span class="p">().</span><span class="nx">clone</span><span class="p">()</span>
+                <span class="nx">$</span><span class="p">(</span><span class="nx">formatedText</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;value&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+                <span class="nx">$</span><span class="p">(</span><span class="nx">formatedText</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">unwrap</span><span class="p">()</span>
+                <span class="nx">$</span><span class="p">(</span><span class="nx">formatedText</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">).</span><span class="nx">prev</span><span class="p">().</span><span class="nx">remove</span><span class="p">()</span>
+                <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;text&#39;</span><span class="p">,</span> <span class="nx">formatedText</span><span class="p">.</span><span class="nx">html</span><span class="p">()</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">formatedText</span><span class="p">.</span><span class="nx">html</span><span class="p">()</span>
+
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span>
+
 
 </pre></div>
         </td>
@@ -397,10 +487,10 @@ configureEditor: (event) =>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
 </div>
-<p>if any input tag is without 'data-id' attr</p>
+<p>on modification of dom structure modification of p</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="k">if</span>  <span class="nx">_</span><span class="p">.</span><span class="nx">isUndefined</span> <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;data-id&#39;</span><span class="p">)</span>
+            <span class="nv">_updateInputProperties: </span><span class="o">=&gt;</span>
 
 </pre></div>
         </td>
@@ -410,10 +500,11 @@ configureEditor: (event) =>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
 </div>
-<p>a  random unique id to the input</p>
+<p>iterate thru all input tags in current view</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;data-id&#39;</span><span class="p">,</span><span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;input-&#39;</span>
+                <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">),</span> <span class="nf">(blank, index)=&gt;</span>
+
 
 </pre></div>
         </td>
@@ -423,13 +514,26 @@ configureEditor: (event) =>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
 </div>
-<p>wait for ckeditor to finish adding the input</p>
+<p>if any input tag is without 'data-id' attr
+                   if  _.isUndefined $(blank).attr('data-id')
+                       # a  random unique id to the input
+                       $(blank).attr 'data-id', _.uniqueId 'input-'</p>
+
+
+<div class="highlight"><pre><code>                   <span class="err">#</span> <span class="nx">wait</span> <span class="k">for</span> <span class="nx">ckeditor</span> <span class="nx">to</span> <span class="nx">finish</span> <span class="nx">adding</span> <span class="nx">the</span> <span class="nx">input</span>
+                   <span class="err">#</span> <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">-&gt;</span>
+                   <span class="err">#</span>     <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">prop</span> <span class="s1">&#39;maxLength&#39;</span><span class="p">,</span><span class="nb">parseInt</span> <span class="mi">12</span>
+                   <span class="err">#</span> <span class="p">,</span><span class="mi">100</span>
+
+                   <span class="err">#</span> <span class="nx">create</span> <span class="nx">a</span> <span class="nx">model</span> <span class="nx">and</span> <span class="nx">add</span> <span class="nx">to</span> <span class="nx">collection</span>
+                   <span class="err">@</span><span class="nx">trigger</span> <span class="s2">&quot;create:new:fib:element&quot;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">attr</span> <span class="s1">&#39;data-id&#39;</span>
+</code></pre></div>
+
+
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="nf">-&gt;</span>
-              <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;maxLength&#39;</span><span class="p">,</span><span class="nb">parseInt</span> <span class="mi">12</span>
-            <span class="p">,</span><span class="mi">100</span>
-            
+
+
 
 </pre></div>
         </td>
@@ -439,12 +543,11 @@ configureEditor: (event) =>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
 </div>
-<p>create a model and add to collection</p>
+<p>$(blank).before("<span contenteditable='false' unselectable='on' class='fibId' id='#{$(blank).attr('data-id')}'></span>")</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="nx">@trigger</span> <span class="s">&quot;create:new:fib:element&quot;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;data-id&#39;</span>
 
-          <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
+
 
 </pre></div>
         </td>
@@ -454,11 +557,19 @@ configureEditor: (event) =>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
 </div>
-<p>get a reference to the model</p>
+<p>get a reference to the model
+                       if $(blank).parent().prop('tagName') isnt 'SPAN'</p>
+
+
+<div class="highlight"><pre><code>                       <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">wrap</span><span class="p">(</span><span class="s1">&#39;&lt;span contenteditable=&quot;false&quot;&gt;&lt;/span&gt;&#39;</span><span class="p">)</span>
+                       <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">before</span><span class="p">(</span><span class="s1">&#39;&lt;span class=&quot;fibno&quot;&gt;&lt;/span&gt;&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="nv">blanksModel = </span><span class="nx">@blanksCollection</span><span class="p">.</span><span class="nx">get</span> <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;data-id&#39;</span>
-            
+                    <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
+                        <span class="nv">blanksModel = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">get</span> <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;data-id&#39;</span>
 
 </pre></div>
         </td>
@@ -468,33 +579,42 @@ configureEditor: (event) =>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
 </div>
-<p>remove the event handler and add it again to prevent multiple event listeners</p>
+<p>console.log _.indexOf(@blanksCollection.toArray(), blanksModel)+1</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="nx">blanksModel</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span><span class="s">&#39;change:maxlength&#39;</span><span class="p">)</span>
-            <span class="nx">blanksModel</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;change:maxlength&#39;</span><span class="p">,</span><span class="nf">(model,maxlength)=&gt;</span>
-              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input[data-id=&#39;</span><span class="o">+</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;]&#39;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;maxLength&#39;</span><span class="p">,</span><span class="nx">maxlength</span>
-            
+                        <span class="k">if</span> <span class="nx">blanksModel</span> <span class="o">isnt</span> <span class="kc">undefined</span>
+                            <span class="nx">blanksModel</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;blank_index&#39;</span><span class="p">,</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span>
+                        <span class="k">if</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">prev</span><span class="p">().</span><span class="nx">text</span><span class="p">())</span> <span class="o">isnt</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span>
+                            <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">prev</span><span class="p">().</span><span class="nx">text</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span>
+
+
+                    <span class="p">,</span><span class="mi">20</span>
 
 </pre></div>
         </td>
       </tr>
       <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
+        <td class="docs"><p>if not $(blank).hasClass "fib#{_.indexOf(@blanksCollection.toArray(), blanksModel)+1}"
+console.log 'xx'
+$(blank).removeClass 'fib1 fib2 fib3 fib4 fib5 fib6'
+$(blank).addClass "fib#{index+1}"
+@$el.find("span##{$(blank).attr('data-id')}").text _.indexOf(@blanksCollection.toArray(), blanksModel)+1</p>
+
+
+<div class="pilwrap" id="remove%20the%20event%20handler%20and%20add%20it%20again%20to%20prevent%20multiple%20event%20listeners">
+  <h1>
+    <a href="#remove%20the%20event%20handler%20and%20add%20it%20again%20to%20prevent%20multiple%20event%20listeners" name="remove%20the%20event%20handler%20and%20add%20it%20again%20to%20prevent%20multiple%20event%20listeners" class="pilcrow">&#182;</a>
+    remove the event handler and add it again to prevent multiple event listeners
+  </h1>
 </div>
-<p>remove all events
-on click of input show properties for it</p>
+
+
+<p>blanksModel.off('change:maxlength')
+blanksModel.on 'change:maxlength',(model,maxlength)=>
+    @$el.find('input[data-id='+model.get('id')+']').prop 'maxLength',maxlength</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">off</span><span class="p">()</span>
-            <span class="nx">$</span><span class="p">(</span><span class="nx">blank</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="nf">(e)=&gt;</span>
-              <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:fib:element:properties&quot;</span><span class="p">,</span>
-                <span class="nv">model : </span><span class="nx">blanksModel</span>
-              <span class="nx">@trigger</span> <span class="s">&quot;show:this:fib:properties&quot;</span>
-              <span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">()</span>
-          <span class="p">,</span><span class="mi">10</span>
+
 
 
 </pre></div>
@@ -509,15 +629,10 @@ on click of input show properties for it</p>
 loop thru the array, if 'input not found for it remove it from the array'</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
-          <span class="k">if</span> <span class="nx">@blanksCollection</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
-            <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@blanksCollection</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">(),</span> <span class="nf">(blank)=&gt;</span>
-              <span class="nv">blankFound = </span><span class="nx">_</span><span class="p">.</span><span class="nx">find</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">)</span> <span class="p">,</span><span class="nf">(blankUI)=&gt;</span>
-                        <span class="nx">@blanksCollection</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">blank</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="nx">$</span><span class="p">(</span><span class="nx">blankUI</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;data-id&#39;</span> 
-              <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isUndefined</span> <span class="nx">blankFound</span>
-                <span class="nx">@blanksCollection</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">blank</span>
-        <span class="p">,</span><span class="mi">100</span>
+                <span class="nx">_</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=&gt;</span>
+                    <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
+                        <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">each</span> <span class="nf">(blank)=&gt;</span>
 
 </pre></div>
         </td>
@@ -527,15 +642,14 @@ loop thru the array, if 'input not found for it remove it from the array'</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-31" id="section-31">&#182;</a>
 </div>
-<p>add style for the blanks</p>
+<p>console.log blank</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">@_changeFont</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;font&#39;</span>
-        <span class="nx">@_changeSize</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;font_size&#39;</span>
-        <span class="nx">@_changeColor</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;color&#39;</span>
-        <span class="nx">@_changeBGColor</span> <span class="nx">@model</span>
-        <span class="nx">@_changeFibStyle</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;style&#39;</span>
+                            <span class="nv">blankFound = </span><span class="nx">_</span><span class="p">.</span><span class="nx">find</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input&#39;</span><span class="p">),</span> <span class="nf">(blankUI)=&gt;</span>
+                                <span class="nx">blank</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="nx">$</span><span class="p">(</span><span class="nx">blankUI</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;data-id&#39;</span>
 
+                            <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isUndefined</span> <span class="nx">blankFound</span>
+                                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39; in remove&#39;</span>
 
 
 </pre></div>
@@ -546,15 +660,52 @@ loop thru the array, if 'input not found for it remove it from the array'</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-32" id="section-32">&#182;</a>
 </div>
+<p>@$el.find("span##{blank.id}").remove()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                                <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">remove</span> <span class="nx">blank</span>
+                                <span class="nx">@trigger</span> <span class="s">&#39;close:question:element:properties&#39;</span>
+                                <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;numberOfBlanks&#39;</span><span class="p">)</span>
+                                    <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;numberOfBlanks&#39;</span><span class="p">,</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;numberOfBlanks&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;blanksArray&#39;</span><span class="p">).</span><span class="nx">pluck</span> <span class="s">&#39;id&#39;</span>
+                <span class="p">,</span> <span class="mi">500</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-33" id="section-33">&#182;</a>
+</div>
+<p>add style for the blanks</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="nx">@_changeFont</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;font&#39;</span>
+                <span class="nx">@_changeFontSize</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;font_size&#39;</span>
+                <span class="nx">@_changeColor</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;color&#39;</span>
+                <span class="nx">@_changeBGColor</span> <span class="nx">@model</span>
+                <span class="nx">@_changeFibStyle</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;style&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-34" id="section-34">&#182;</a>
+</div>
 <p>destroy the Ckeditor instance to avoiid memory leaks on close of element
 this.editor will hold the reference to the editor instance
 Ckeditor has a destroy method to remove a editor instance</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
-        <span class="nx">@editor</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
+            <span class="nv">onClose: </span><span class="nf">-&gt;</span>
+                <span class="nx">@editor</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
     
-          
+        
 </pre></div>
         </td>
       </tr>

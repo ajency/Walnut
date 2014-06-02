@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>textview.jade</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../../doc-style.css" />
+  <script src="../../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../../", thisFile = "source\\apps\\content-creator\\property-dock\\hotspot-element-property-box\\templates\\textview.jade", defaultSidebar = true;
+  </script>
+  <script src="../../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>textview.jade</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nc">.tile-more-content.no-padding</span>
+  <span class="nc">.tiles.green</span>
+    <span class="nc">.tile-footer.drag</span>
+      | Hotspot
+      <span class="nt">i</span><span class="nc">.fa.fa-chevron-right</span>
+      <span class="nt">span</span><span class="nc">.semi-bold</span>
+        | Text Element
+    <span class="nc">.docket-body</span>
+      <span class="nc">.form-group</span>
+        <span class="nt">textarea</span><span class="nf">#hotspot-textelement-text</span><span class="nc">.textarea</span>(<span class="na">placeholder=</span><span class="s">&#39;Enter Text here&#39;</span>) {{getText}}
+      <span class="nc">.form-group</span>
+        <span class="nt">select</span><span class="nf">#hotspot-textelement-fontfamily</span><span class="nc">.font</span>
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Arial&#39;</span>)
+            | Arial
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Calibri&#39;</span>)
+            | Calibri
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Comic Sans MS&#39;</span>)
+            | Comic Sans MS
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Courier&#39;</span>)
+            | Courier
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Georgia&#39;</span>)
+            | Georgia
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Helvetica&#39;</span>)
+            | Helvetica
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Impact&#39;</span>)
+            | Impact
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Lucida Console&#39;</span>)
+            | Lucida Console
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Lucida Sans Unicode&#39;</span>)
+            | Lucida Sans Unicode
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Tahoma&#39;</span>)
+            | Tahoma
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Times New Roman&#39;</span>)
+            | Times New Roman
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Trebuchet MS&#39;</span>)
+            | Trebuchet MS
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Verdana&#39;</span>)
+            | Verdana
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Chelsea Market&#39;</span>)
+            | Chelsea Market
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Indie Flower&#39;</span>)
+            | Indie Flower
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Just Another Hand&#39;</span>)
+            | Just Another Hand
+          <span class="nt">option</span>(<span class="na">value=</span><span class="s">&#39;Sacramento&#39;</span>)
+            | Sacramento
+        <span class="nc">.textFormat</span>(<span class="na">data-toggle=</span><span class="s">&#39;buttons-checkbox&#39;</span>)
+          <span class="nf">#font-style</span><span class="nc">.btn-group</span>
+            <span class="nt">button</span><span class="nf">#bold-btn</span><span class="nc">.btn</span>
+              <span class="nt">i</span><span class="nc">.fa.fa-bold</span>
+            <span class="nt">button</span><span class="nf">#italic-btn</span><span class="nc">.btn</span>
+              <span class="nt">i</span><span class="nc">.fa.fa-italic</span>
+        <span class="nc">.slide-primary</span>
+          <span class="nt">input</span><span class="nc">.ios</span>(<span class="na">type=</span><span class="s">&#39;checkbox&#39;</span><span class="err">,</span> <span class="na">checked=</span><span class="s">&#39;checked&#39;</span><span class="err">,</span> <span class="na">name=</span><span class="s">&#39;switch&#39;</span><span class="err">,</span> <span class="na">style=</span><span class="s">&#39;display: none;&#39;</span>)
+      <span class="nt">div</span>
+        <span class="nc">.textProp.slider.success</span>
+          | Size
+          <span class="nt">input</span><span class="nf">#hotspot-textelement-fontsize</span><span class="nc">.fontSize</span>(<span class="na">type=</span><span class="s">&#39;text&#39;</span><span class="err">,</span> <span class="na">data-slider-max=</span><span class="s">&#39;80&#39;</span><span class="err">,</span> <span class="na">data-slider-step=</span><span class="s">&#39;1&#39;</span><span class="err">,</span> <span class="na">data-slider-value=</span><span class="s">&#39;{{fontSize}}&#39;</span><span class="err">,</span> <span class="na">data-slider-orientation=</span><span class="s">&#39;horizontal&#39;</span><span class="err">,</span> <span class="na">data-slider-selection=</span><span class="s">&#39;before&#39;</span>)
+      <span class="nc">.form-group.inline</span>
+        | Color
+        <span class="nt">input</span><span class="nf">#hidden-input</span><span class="nc">.fontColor</span>(<span class="na">type=</span><span class="s">&#39;hidden&#39;</span><span class="err">,</span> <span class="na">value=</span><span class="s">&#39;#1a45a1&#39;</span>)
+      <span class="nc">.form-group.inline.rotateCtrl</span>
+        | Rotate
+        <span class="nt">input</span><span class="nc">.dial</span>(<span class="na">type=</span><span class="s">&#39;text&#39;</span><span class="err">,</span> <span class="na">data-min=</span><span class="s">&#39;0&#39;</span><span class="err">,</span> <span class="na">data-max=</span><span class="s">&#39;360&#39;</span><span class="err">,</span> <span class="na">data-width=</span><span class="s">&#39;40&#39;</span><span class="err">,</span> <span class="na">data-height=</span><span class="s">&#39;40&#39;</span><span class="err">,</span> <span class="na">data-displayinput=</span><span class="s">&#39;false&#39;</span><span class="err">,</span> <span class="na">data-thickness=</span><span class="s">&#39;.7&#39;</span><span class="err">,</span> <span class="na">data-fgcolor=</span><span class="s">&#39;#0AA699&#39;</span><span class="err">,</span> <span class="na">data-bgcolor=</span><span class="s">&#39;#d1dade&#39;</span><span class="err">,</span> <span class="na">data-angleoffset=</span><span class="s">&#39;90&#39;</span><span class="err">,</span> <span class="na">data-cursor=</span><span class="s">&#39;true&#39;</span>)
+      <span class="nc">.text-right</span>
+        <span class="nt">a</span><span class="nf">#delete</span><span class="nc">.text-danger.small</span>(<span class="na">href=</span><span class="s">&#39;javascript:void(0)&#39;</span>)
+          <span class="nt">i</span><span class="nc">.fa.fa-trash-o</span>
+          | Delete
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

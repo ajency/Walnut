@@ -18,6 +18,12 @@
     </div>
     <div id="tree"></div>
     <div id="headings">
+      <div class="heading h1">
+        <a href="#on%20show%20disable%20all%20question%20elements%20in%20d%20element%20box">on show disable all question elements in d element box</a>
+      </div>
+      <div class="heading h1">
+        <a href="#on%20delete%20enable%20all%20question%20elements%20in%20d%20element%20box">on delete enable all question elements in d element box</a>
+      </div>
     </div>
   </div>
   <div id="sidebar-toggle"></div>
@@ -72,7 +78,18 @@
                 <span class="nv">case_sensitive : </span><span class="kc">false</span>
                 <span class="nv">marks: </span><span class="mi">2</span>
                 <span class="nv">style : </span><span class="s">&#39;blank&#39;</span>
-                <span class="nv">correct_answers : </span><span class="p">[]</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>correct_answers : []</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 
               <span class="k">super</span> <span class="nx">options</span>
 
@@ -84,7 +101,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
 <p>get the view </p>
         </td>
@@ -98,7 +115,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
 <p>listen to show event, and trigger show property box event
 listen to show property box event and show the property by passing the current model</p>
@@ -114,14 +131,18 @@ listen to show property box event and show the property by passing the current m
       </tr>
       <tr>
         <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+<div class="pilwrap" id="on%20show%20disable%20all%20question%20elements%20in%20d%20element%20box">
+  <h1>
+    <a href="#on%20show%20disable%20all%20question%20elements%20in%20d%20element%20box" name="on%20show%20disable%20all%20question%20elements%20in%20d%20element%20box" class="pilcrow">&#182;</a>
+    on show disable all question elements in d element box
+  </h1>
 </div>
-<p>on show disable all question elements in d element box</p>
+
+
+<p>@listenTo view, "show",=>
+    @eventObj.vent.trigger "question:dropped"</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-              <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;show&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
-                <span class="nx">@eventObj</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;question:dropped&quot;</span>
 
 
 </pre></div>
@@ -130,7 +151,7 @@ listen to show property box event and show the property by passing the current m
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
 </div>
 <p>show the view</p>
         </td>
@@ -150,13 +171,17 @@ listen to show property box event and show the property by passing the current m
       </tr>
       <tr>
         <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+<div class="pilwrap" id="on%20delete%20enable%20all%20question%20elements%20in%20d%20element%20box">
+  <h1>
+    <a href="#on%20delete%20enable%20all%20question%20elements%20in%20d%20element%20box" name="on%20delete%20enable%20all%20question%20elements%20in%20d%20element%20box" class="pilcrow">&#182;</a>
+    on delete enable all question elements in d element box
+  </h1>
 </div>
-<p>on delete enable all question elements in d element box</p>
+
+
+<p>@eventObj.vent.trigger "question:removed"</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-              <span class="nx">@eventObj</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;question:removed&quot;</span>
 </pre></div>
         </td>
       </tr>

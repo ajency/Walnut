@@ -85,14 +85,9 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
             }
             _this.$el.closest('.tab-content').siblings('.nav-tabs').find('.all-media-tab').find('a').trigger('click');
             imageView.$el.find('img').trigger('click');
-            return _this._selectSelectableElements(_this.$el.find('#selectable-images'), imageView.$el);
+            return _this.$el.find('#selectable-images').selectSelectableElements(imageView.$el);
           };
         })(this));
-      };
-
-      GridView.prototype._selectSelectableElements = function(selectableContainer, elementsToSelect) {
-        $(".ui-selected", selectableContainer).not(elementsToSelect).removeClass("ui-selected");
-        return $(elementsToSelect).not(".ui-selected").addClass("ui-selected");
       };
 
       GridView.prototype._changeChildClass = function(toType, evt) {

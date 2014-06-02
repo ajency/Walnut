@@ -61,6 +61,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       GroupItemCollection.prototype.comparator = 'ID';
 
       GroupItemCollection.prototype.initialize = function() {
+        console.log('content piece ');
         this.on('remove', this.removedModel, this);
         return this.on('add', this.addedPieces, this);
       };
@@ -89,6 +90,9 @@ define(["app", 'backbone'], function(App, Backbone) {
           remove: false,
           data: param
         });
+        console.log(AJAXURL);
+        console.log('contentPieceCollection');
+        console.log(contentPieceCollection);
         return contentPieceCollection;
       },
       getContentPiecesOfGroup: function(groupModel) {

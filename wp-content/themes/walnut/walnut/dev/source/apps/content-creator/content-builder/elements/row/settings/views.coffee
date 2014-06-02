@@ -40,12 +40,3 @@ define ['app'
                 'change input[name="draggable"]': (evt)->
                     @trigger "element:draggable:changed", $(evt.target).is(':checked')
 
-            onShow: ->
-                    $(window).on 'click', @_closeViewWhenClickedOutside
-
-            _closeViewWhenClickedOutside:=>
-                console.log 'window clicked closing setting'
-                @close()
-
-            onClose:->
-                $(window).off 'click',  @_closeViewWhenClickedOutside

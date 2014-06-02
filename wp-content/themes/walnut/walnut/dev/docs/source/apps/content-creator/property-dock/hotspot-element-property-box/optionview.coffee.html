@@ -37,58 +37,30 @@
 </div>
 
         </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;text!apps/content-creator/property-dock/hotspot-element-property-box/templates/optionview.html&#39;</span><span class="p">],</span>
+    <span class="nf">(App,Template)-&gt;</span>
 
-  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.PropertyDock.HotspotElementPropertyBox.Views&quot;</span><span class="p">,</span>
-    <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.PropertyDock.HotspotElementPropertyBox.Views&quot;</span><span class="p">,</span>
+        <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
 
-      <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">OptionView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+          <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">OptionView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
 
-        <span class="nv">template : </span><span class="s">&#39;&lt;div class=&quot;tile-more-content no-padding&quot;&gt;</span>
-<span class="s">                &lt;div class=&quot;tiles green&quot;&gt;</span>
-<span class="s">                  &lt;div class=&quot;tile-footer drag&quot;&gt;</span>
-<span class="s">                    Hotspot &lt;i class=&quot;fa fa-chevron-right&quot;&gt;&lt;/i&gt; &lt;span class=&quot;semi-bold&quot;&gt;{{shape}} Element&lt;/span&gt;</span>
-<span class="s">                  &lt;/div&gt;</span>
-<span class="s">                  &lt;div class=&quot;docket-body&quot;&gt;</span>
+            <span class="nv">template : </span><span class="nx">Template</span>
 
-<span class="s">                    &lt;div id=&quot;correct-answer&quot; class=&quot;radio radio-success&quot;&gt;Is this correct?</span>
-<span class="s">                      &lt;input id=&quot;yes&quot; type=&quot;radio&quot; name=&quot;optionyes&quot; value=&quot;yes&quot;&gt;</span>
-<span class="s">                      &lt;label for=&quot;yes&quot;&gt;Yes&lt;/label&gt;</span>
-<span class="s">                      &lt;input id=&quot;no&quot; type=&quot;radio&quot; name=&quot;optionyes&quot; value=&quot;no&quot; checked=&quot;checked&quot;&gt;</span>
-<span class="s">                      &lt;label for=&quot;no&quot;&gt;No&lt;/label&gt;</span>
-<span class="s">                    &lt;/div&gt;</span>
+            <span class="nv">ui :</span>
+              <span class="nv">individualMarksTextbox : </span><span class="s">&#39;#individual-marks&#39;</span>
 
-<span class="s">                    Marks   &lt;select class=&quot;marks&quot;&gt;</span>
-<span class="s">                          &lt;option value=&quot;1&quot;&gt;1&lt;/option&gt;</span>
-<span class="s">                          &lt;option value=&quot;2&quot;&gt;2&lt;/option&gt;</span>
-<span class="s">                        &lt;/select&gt;</span>
+            <span class="nv">events:</span>
+              <span class="s">&#39;blur @ui.individualMarksTextbox&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeIndividualMarks&#39;</span>
 
-<span class="s">                    &lt;div class=&quot;form-group&quot;&gt;</span>
-<span class="s">                      Color  &lt;input type=&quot;hidden&quot; id=&quot;hidden-input&quot; class=&quot;fontColor&quot; value=&quot;#1a45a1&quot;&gt;</span>
-<span class="s">                    &lt;/div&gt;</span>
+            <span class="nx">initialize</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
+              <span class="vi">@hotspotModel = </span><span class="nx">options</span><span class="p">.</span><span class="nx">hotspotModel</span>
 
-<span class="s">                    &lt;div id=&quot;transparency&quot; class=&quot;checkbox check-success&quot;&gt;</span>
-<span class="s">                      &lt;input id=&quot;checkbox3&quot; type=&quot;checkbox&quot; value=&quot;1&quot;&gt;</span>
-<span class="s">                      &lt;label for=&quot;checkbox3&quot;&gt;Set Transparent&lt;/label&gt;</span>
-<span class="s">                    &lt;/div&gt;</span>
-
-<span class="s">                    &lt;div id=&quot;knob&quot; class=&quot;form-group&quot;&gt;</span>
-<span class="s">                      Rotate &lt;input type=&quot;text&quot; class=&quot;dial&quot; data-min=&quot;0&quot; data-max=&quot;360&quot;</span>
-<span class="s">                       data-width=&quot;40&quot; data-height=&quot;40&quot; data-displayInput=false data-thickness=&quot;.5&quot;</span>
-<span class="s">                        data-fgColor=&quot;#0AA699&quot; data-angleOffset=&quot;90&quot; data-cursor=true&gt;</span>
-<span class="s">                    &lt;/div&gt;</span>
+            <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
 
 
-
-<span class="s">                    &lt;div class=&quot;form-group&quot;&gt;</span>
-<span class="s">                      &lt;button type=&quot;button&quot; id=&quot;delete&quot; class=&quot;btn btn-danger btn-small&quot;&gt;Delete&lt;/button&gt;</span>
-<span class="s">                    &lt;/div&gt;</span>
-
-<span class="s">                  &lt;/div&gt;</span>
-<span class="s">                &lt;/div&gt;</span>
-<span class="s">              &lt;/div&gt;&#39;</span>
-
-        <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
+            
 
 
 
@@ -100,12 +72,19 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
 </div>
-<p>TRANSPARENCY
-check model for Transparency and initialize checkbox</p>
+<p>COLOR
+initialize colorpicker and set the on change event</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;transparent&#39;</span>
-            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#transparency.checkbox #checkbox3&#39;</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span><span class="p">)</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.fontColor&#39;</span><span class="p">).</span><span class="nx">minicolors</span>
+                  <span class="nv">animationSpeed: </span><span class="mi">200</span>
+                  <span class="nv">animationEasing: </span><span class="s">&#39;swing&#39;</span>
+                  <span class="nv">control: </span><span class="s">&#39;hue&#39;</span>
+                  <span class="nv">position: </span><span class="s">&#39;top left&#39;</span>
+                  <span class="nv">showSpeed: </span><span class="mi">200</span>
+
+                  <span class="nx">change</span> <span class="o">:</span><span class="nf">(hex,opacity)=&gt;</span>
+                    <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;color&#39;</span><span class="p">,</span> <span class="nx">hex</span>
 
 
 </pre></div>
@@ -116,14 +95,10 @@ check model for Transparency and initialize checkbox</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
-<p>on click of checkbox set model transparent to true</p>
+<p>set the vale of color picker according to the current model</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#transparency.checkbox&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;change&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
-            <span class="k">if</span> <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#transparency.checkbox&#39;</span><span class="p">).</span><span class="nx">hasClass</span> <span class="s">&#39;checked&#39;</span>
-              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;transparent&#39;</span><span class="p">,</span> <span class="kc">true</span>
-            <span class="k">else</span>
-              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;transparent&#39;</span><span class="p">,</span><span class="kc">false</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.fontColor&#39;</span><span class="p">).</span><span class="nx">minicolors</span> <span class="s">&#39;value&#39;</span><span class="p">,</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;color&#39;</span>
 
 
 
@@ -135,19 +110,12 @@ check model for Transparency and initialize checkbox</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
-<p>COLOR
-initialize colorpicker and set the on change event</p>
+<p>DELETE</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.fontColor&#39;</span><span class="p">).</span><span class="nx">minicolors</span>
-              <span class="nv">animationSpeed: </span><span class="mi">200</span>
-              <span class="nv">animationEasing: </span><span class="s">&#39;swing&#39;</span>
-              <span class="nv">control: </span><span class="s">&#39;hue&#39;</span>
-              <span class="nv">position: </span><span class="s">&#39;top left&#39;</span>
-              <span class="nv">showSpeed: </span><span class="mi">200</span>
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#delete.text-danger&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
+                  <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;toDelete&#39;</span><span class="p">,</span> <span class="kc">true</span>
 
-              <span class="nx">change</span> <span class="o">:</span><span class="nf">(hex,opacity)=&gt;</span>
-                <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;color&#39;</span><span class="p">,</span> <span class="nx">hex</span>
 
 
 </pre></div>
@@ -158,10 +126,18 @@ initialize colorpicker and set the on change event</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
-<p>set the vale of color picker according to the current model</p>
+<p>Rect ROTATION
+initialize the knob</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.fontColor&#39;</span><span class="p">).</span><span class="nx">minicolors</span> <span class="s">&#39;value&#39;</span><span class="p">,</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;color&#39;</span>
+              <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;shape&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;Rect&#39;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.dial&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;angle&#39;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;.dial&quot;</span><span class="p">).</span><span class="nx">knob</span>
+                    <span class="nx">change</span> <span class="o">:</span><span class="nf">(val)=&gt;</span>
+                      <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&quot;angle&quot;</span><span class="p">,</span><span class="nx">val</span>
+
+              <span class="k">else</span> 
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#knob&#39;</span><span class="p">).</span><span class="nx">hide</span><span class="p">()</span>
 
 
 
@@ -173,13 +149,17 @@ initialize colorpicker and set the on change event</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
-<p>DELETE</p>
+<p>CORRECT ANSWER</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#delete.btn-danger&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
-              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;toDelete&#39;</span><span class="p">,</span> <span class="kc">true</span>
+              <span class="nx">@_initializeCorrectAnswer</span><span class="p">()</span>
+              
 
+              <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#correct-answer.radio input&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;change&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
 
+                  <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;correct&#39;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#correct-answer.radio input:checked&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span><span class="o">==</span><span class="s">&quot;yes&quot;</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span>
+                  <span class="nx">@_toggleMarks</span><span class="p">()</span>
+                      
 
 </pre></div>
         </td>
@@ -189,42 +169,52 @@ initialize colorpicker and set the on change event</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
 </div>
-<p>Rect ROTATION
-initialize the knob</p>
+<p>if not @hotspotModel.get 'enableIndividualMarks'
+    @_disableMarks()</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;shape&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;Rect&#39;</span>
-            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.dial&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;angle&#39;</span>
-            <span class="nx">$</span><span class="p">(</span><span class="s">&quot;.dial&quot;</span><span class="p">).</span><span class="nx">knob</span>
-                <span class="nx">change</span> <span class="o">:</span><span class="nf">(val)=&gt;</span>
-                  <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&quot;angle&quot;</span><span class="p">,</span><span class="nx">val</span>
 
-          <span class="k">else</span> 
-            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#knob&#39;</span><span class="p">).</span><span class="nx">hide</span><span class="p">()</span>
+              <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;change&#39;</span><span class="p">,</span><span class="nf">-&gt;</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;marks cxhanged&#39;</span>
 
 
 
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
-</div>
-<p>CORRECT ANSWER</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-          <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;correct&#39;</span>
-            <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">correct-answer.radio input</span><span class="err">#</span><span class="s">yes&quot;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span>
-          <span class="k">else</span>
-            <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">correct-answer.radio input</span><span class="err">#</span><span class="s">no&quot;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span>
+              <span class="nx">@_toggleMarks</span><span class="p">()</span>
 
-          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#correct-answer.radio input&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;change&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
+              <span class="nx">@listenTo</span> <span class="nx">@hotspotModel</span> <span class="p">,</span> <span class="s">&#39;change:enableIndividualMarks&#39;</span><span class="p">,</span><span class="nx">@_toggleMarks</span>
 
-              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;correct&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#correct-answer.radio input:checked&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span><span class="o">==</span><span class="s">&quot;yes&quot;</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span>
+            <span class="nx">_initializeCorrectAnswer</span><span class="o">:</span><span class="nf">-&gt;</span>
+              <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;correct&#39;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">correct-answer.radio input</span><span class="err">#</span><span class="s">yes&quot;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span>
+              <span class="k">else</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">correct-answer.radio input</span><span class="err">#</span><span class="s">no&quot;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span>
+                
+                
 
-                  
+            <span class="nx">_toggleMarks</span><span class="o">:</span><span class="nf">(model,enableIndividualMarks)-&gt;</span>
+
+              <span class="k">if</span> <span class="nx">@hotspotModel</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;enableIndividualMarks&#39;</span><span class="p">)</span> <span class="o">and</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;correct&#39;</span>
+                <span class="nx">@_enableMarks</span><span class="p">()</span>
+
+              <span class="k">else</span> 
+                <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;marks&#39;</span><span class="p">,</span><span class="mi">0</span>
+                <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&#39;change&#39;</span>             
+                <span class="nx">@_disableMarks</span><span class="p">()</span>
+
+            <span class="nx">_disableMarks</span><span class="o">:</span><span class="nf">-&gt;</span>
+              <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">val</span> <span class="mi">0</span>
+              <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">prop</span> <span class="s">&#39;disabled&#39;</span><span class="p">,</span><span class="kc">true</span>
+
+            <span class="nx">_enableMarks</span><span class="o">:</span><span class="nf">-&gt;</span>
+              <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">val</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;marks&#39;</span>
+              <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">prop</span> <span class="s">&#39;disabled&#39;</span><span class="p">,</span><span class="kc">false</span>
+
+            <span class="nx">_changeIndividualMarks</span><span class="o">:</span><span class="nf">(evt)-&gt;</span>
+              <span class="k">if</span> <span class="o">not</span> <span class="nb">isNaN</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+                  <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;marks&#39;</span><span class="p">,</span> <span class="nb">parseInt</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+
+            <span class="nx">onBeforeClose</span><span class="o">:</span><span class="nf">-&gt;</span>
+              <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&#39;blur&#39;</span>
 </pre></div>
         </td>
       </tr>

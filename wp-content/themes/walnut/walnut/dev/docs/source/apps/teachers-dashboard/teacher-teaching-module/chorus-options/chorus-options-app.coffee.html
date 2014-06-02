@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>chorus-options-app.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../doc-style.css" />
+  <script src="../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../", thisFile = "source\\apps\\teachers-dashboard\\teacher-teaching-module\\chorus-options\\chorus-options-app.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>chorus-options-app.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+        <span class="s">&#39;controllers/region-controller&#39;</span>
+        <span class="s">&#39;text!apps/teachers-dashboard/teacher-teaching-module/chorus-options/templates/chorus-options-template.html&#39;</span><span class="p">],</span> <span class="nf">(App, RegionController, chorusOptionsTemplate)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;SingleQuestionChorusOptionsApp&quot;</span><span class="p">,</span> <span class="nf">(ChorusOptions, App)-&gt;</span>
+        <span class="k">class</span> <span class="nx">ChorusOptionsController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+            <span class="nv">initialize: </span><span class="nf">(opts)-&gt;</span>
+                <span class="p">{</span><span class="nx">@questionResponseModel</span><span class="p">,</span><span class="nx">@display_mode</span><span class="p">,</span><span class="nx">@timerObject</span><span class="p">}</span> <span class="o">=</span> <span class="nx">opts</span>
+
+                <span class="vi">@view = </span><span class="nv">view = </span><span class="nx">@_showChorusOptionsView</span> <span class="nx">@questionResponseModel</span>
+
+                <span class="nx">@show</span> <span class="nx">view</span><span class="p">,</span> <span class="p">(</span><span class="nv">loading: </span><span class="kc">true</span><span class="p">)</span>
+
+                <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;save:question:response&quot;</span><span class="p">,</span> <span class="nx">@_saveQuestionResponse</span>
+
+                <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;question:completed&quot;</span><span class="p">,</span> <span class="nx">@_changeQuestion</span>
+
+            <span class="nv">_changeQuestion: </span><span class="nf">(resp)=&gt;</span>
+                <span class="nx">@_saveQuestionResponse</span> <span class="s">&#39;&#39;</span> <span class="k">if</span> <span class="nx">resp</span> <span class="o">is</span> <span class="s">&#39;no_answer&#39;</span>
+
+                <span class="nx">@region</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;goto:next:question&quot;</span><span class="p">,</span> <span class="nx">@questionResponseModel</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;content_piece_id&#39;</span>
+
+            <span class="nv">_showChorusOptionsView: </span><span class="nf">(model)=&gt;</span>
+                <span class="k">new</span> <span class="nx">ChorusOptionsView</span>
+                    <span class="nv">model: </span><span class="nx">model</span>
+                    <span class="nv">responsePercentage: </span><span class="nx">@questionResponseModel</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;question_response&#39;</span>
+                    <span class="nv">display_mode: </span><span class="nx">@display_mode</span>
+
+            <span class="nv">_saveQuestionResponse: </span><span class="nf">(studResponse)=&gt;</span>
+
+                <span class="nv">elapsedTime= </span><span class="nx">@timerObject</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:elapsed:time&quot;</span>
+
+                <span class="nx">@questionResponseModel</span><span class="p">.</span><span class="nx">set</span>
+                    <span class="s">&#39;question_response&#39;</span> <span class="o">:</span> <span class="nx">studResponse</span>
+                    <span class="s">&#39;status&#39;</span>            <span class="o">:</span> <span class="s">&#39;completed&#39;</span>
+                    <span class="s">&#39;time_taken&#39;</span>        <span class="o">:</span> <span class="nx">elapsedTime</span>
+
+                <span class="nx">@questionResponseModel</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+
+        <span class="k">class</span> <span class="nx">ChorusOptionsView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+            <span class="nv">className: </span><span class="s">&#39;studentList m-t-35&#39;</span>
+
+            <span class="nv">template: </span><span class="nx">chorusOptionsTemplate</span>
+
+            <span class="nv">events:</span>
+                <span class="s">&#39;click .tiles.single.selectable&#39;</span><span class="o">:</span> <span class="s">&#39;selectStudent&#39;</span>
+                <span class="s">&#39;click #question-done&#39;</span><span class="o">:</span> <span class="s">&#39;questionCompleted&#39;</span>
+
+            <span class="nv">onShow: </span><span class="nf">-&gt;</span>
+                <span class="k">if</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span><span class="p">(</span><span class="nx">@</span><span class="p">,</span> <span class="s">&#39;display_mode&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;class_mode&#39;</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="nx">ele</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&#39;selectable&#39;</span> <span class="k">for</span> <span class="nx">ele</span> <span class="k">in</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.tiles.single&#39;</span>
+
+                <span class="nv">responsePercentage = </span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span> <span class="nx">@</span><span class="p">,</span> <span class="s">&#39;responsePercentage&#39;</span>
+                <span class="k">if</span> <span class="nx">responsePercentage</span><span class="o">?</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;#&#39;</span> <span class="o">+</span> <span class="nx">responsePercentage</span>
+                    <span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.default&#39;</span>
+                        <span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;green&#39;</span>
+
+            <span class="nv">selectStudent: </span><span class="nf">(e)-&gt;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.green&#39;</span>
+                <span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;green&#39;</span>
+
+                <span class="nv">dataValue = </span><span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">closest</span> <span class="s">&#39;.tiles.single&#39;</span>
+                <span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
+
+                <span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">closest</span><span class="p">(</span><span class="s">&#39;.tiles.single&#39;</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.default&#39;</span>
+                    <span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;green&#39;</span>
+                        <span class="p">.</span><span class="nx">find</span> <span class="s">&#39;i&#39;</span>
+                            <span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;fa-minus-circle&#39;</span>
+                                <span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;fa-check-circle&#39;</span>
+
+                <span class="nx">@trigger</span> <span class="s">&quot;save:question:response&quot;</span><span class="p">,</span> <span class="nx">dataValue</span>
+
+            <span class="nv">questionCompleted: </span><span class="o">=&gt;</span>
+                <span class="nv">selectedAnswer = </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.tiles.single .green&#39;</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">selectedAnswer</span><span class="p">)</span> <span class="o">is</span> <span class="mi">0</span><span class="p">)</span> <span class="o">and</span> <span class="p">(</span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span><span class="p">(</span><span class="nx">@</span><span class="p">,</span> <span class="s">&#39;display_mode&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;class_mode&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nx">confirm</span> <span class="s">&#39;Are you sure no one answered correctly?&#39;</span>
+                        <span class="nx">@trigger</span> <span class="s">&quot;question:completed&quot;</span><span class="p">,</span> <span class="s">&quot;no_answer&quot;</span>
+                <span class="k">else</span>
+                    <span class="nx">@trigger</span> <span class="s">&quot;question:completed&quot;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>set handlers</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:single:question:chorus:options:app&quot;</span><span class="p">,</span> <span class="nf">(opt = {})-&gt;</span>
+            <span class="k">new</span> <span class="nx">ChorusOptionsController</span> <span class="nx">opt</span>
+        
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

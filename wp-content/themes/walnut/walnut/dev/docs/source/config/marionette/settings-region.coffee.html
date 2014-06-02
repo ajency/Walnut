@@ -38,8 +38,9 @@
 
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;marionette&#39;</span><span class="p">],</span> <span class="nf">(Marionette) -&gt;</span>
+    <span class="k">class</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Region</span><span class="p">.</span><span class="nx">Settings</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Region</span>
 
-  <span class="k">class</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Region</span><span class="p">.</span><span class="nx">Settings</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Region</span>
+
 
 
 </pre></div>
@@ -53,11 +54,17 @@
 <p>initiate modal on show</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">onShow</span> <span class="o">:</span><span class="nf">(view)-&gt;</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">draggable</span><span class="p">()</span>
+        <span class="nv">onShow: </span><span class="nf">(view)-&gt;</span>
+            <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nx">@_closeViewWhenClickedOutside</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">draggable</span><span class="p">()</span>
 
-    <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">draggable</span> <span class="s">&#39;destroy&#39;</span>
+        <span class="nv">onClose: </span><span class="nf">-&gt;</span>
+            <span class="nx">@$el</span><span class="p">.</span><span class="nx">draggable</span> <span class="s">&#39;destroy&#39;</span>
+            <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">off</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nx">@_closeViewWhenClickedOutside</span>
+
+
+        <span class="nv">_closeViewWhenClickedOutside: </span><span class="o">=&gt;</span>
+            <span class="nx">@close</span><span class="p">()</span>
 </pre></div>
         </td>
       </tr>

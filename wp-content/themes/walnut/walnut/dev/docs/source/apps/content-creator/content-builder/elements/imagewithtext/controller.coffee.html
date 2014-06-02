@@ -210,6 +210,9 @@ serialized data before render</p>
         <td class="code highlight"><div class="highlight"><pre>
                     <span class="nx">@stopListening</span> <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">,</span> <span class="s">&quot;media:manager:choosed:media&quot;</span>
 
+                  <span class="nx">@listenTo</span> <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">,</span>  <span class="s">&quot;stop:listening:to:media:manager&quot;</span><span class="p">,</span><span class="o">=&gt;</span>
+                      <span class="nx">@stopListening</span> <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">,</span> <span class="s">&quot;media:manager:choosed:media&quot;</span>
+
               <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&quot;text:element:blur&quot;</span><span class="p">,</span><span class="nf">(html) =&gt;</span>
                 <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">html</span><span class="si">}</span><span class="s">&quot;</span>
                 <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">hasChanged</span><span class="p">()</span>

@@ -45,12 +45,3 @@ define ['app'
                 'change select.spacing': (evt)->
                     @trigger "element:spacing:changed", $(evt.target).attr('name'), $(evt.target).val()
 
-            onShow: ->
-                $(window).on 'click', @_closeViewWhenClickedOutside
-
-            _closeViewWhenClickedOutside: =>
-                console.log 'window clicked closing setting'
-                @close()
-
-            onClose: ->
-                $(window).off 'click', @_closeViewWhenClickedOutside

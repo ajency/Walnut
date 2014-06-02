@@ -63,7 +63,30 @@
 
 
           <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
-            <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span> <span class="s">&#39;ele&#39;</span><span class="o">+</span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;meta_id&#39;</span><span class="p">),</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">@model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">())</span>
+            <span class="nv">models= </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;elements&#39;</span><span class="p">).</span><span class="nx">models</span>
+
+            <span class="nv">elements= </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">models</span><span class="p">,</span> <span class="nf">(m)-&gt;</span> <span class="nx">m</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">elements</span>
+            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;elements&#39;</span><span class="o">:</span> <span class="nx">elements</span>
+
+            <span class="nx">@model</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+
+            <span class="nv">optionCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:option:collection&quot;</span><span class="p">,</span> <span class="nx">models</span>
+            
+            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;elements&#39;</span><span class="p">,</span> <span class="nx">optionCollection</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>localStorage.setItem 'ele'<a href='mailto:+@model.get'>+@model.get</a>('meta_id'), JSON.stringify(@model.toJSON())</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 
 
         <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:sort:properties&quot;</span><span class="p">,</span><span class="nf">(options)-&gt;</span>

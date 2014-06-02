@@ -38,20 +38,16 @@
 
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
-    <span class="s">&#39;controllers/region-controller&#39;</span>
-    <span class="s">&#39;apps/content-creator/element-box/view&#39;</span>
-    
-    <span class="p">],</span><span class="nf">(App,RegionController)-&gt;</span>
+        <span class="s">&#39;controllers/region-controller&#39;</span>
+        <span class="s">&#39;apps/content-creator/element-box/view&#39;</span>
 
-      
-      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.ElementBox&quot;</span><span class="p">,</span> <span class="nf">(ElementBox,App, Backbone, Marionette, $, _)-&gt;</span>  
-
+<span class="p">],</span> <span class="nf">(App, RegionController)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentCreator.ElementBox&quot;</span><span class="p">,</span> <span class="nf">(ElementBox, App, Backbone, Marionette, $, _)-&gt;</span>
         <span class="k">class</span> <span class="nx">ElementBoxController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
 
-          <span class="nv">initialize : </span><span class="nf">(options)-&gt;</span>
+            <span class="nv">initialize: </span><span class="nf">(options)-&gt;</span>
+                <span class="p">{</span><span class="nx">contentType</span><span class="p">}</span> <span class="o">=</span> <span class="nx">options</span>
 
-            <span class="p">{</span><span class="nx">eventObj</span><span class="p">}</span> <span class="o">=</span> <span class="nx">options</span>
-            
 
 </pre></div>
         </td>
@@ -61,17 +57,9 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
 </div>
-<p>get the main view for the element box</p>
+<p>{eventObj} = options</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="vi">@view = </span><span class="nx">@_getElementBoxView</span><span class="p">()</span> 
-
-            
-            <span class="nx">@listenTo</span> <span class="nx">eventObj</span><span class="p">.</span><span class="nx">vent</span><span class="p">,</span> <span class="s">&quot;question:dropped&quot;</span><span class="p">,</span> <span class="o">=&gt;</span>
-              <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&quot;question:dropped&quot;</span>
-
-            <span class="nx">@listenTo</span> <span class="nx">eventObj</span><span class="p">.</span><span class="nx">vent</span><span class="p">,</span> <span class="s">&quot;question:removed&quot;</span><span class="p">,</span> <span class="o">=&gt;</span>
-              <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&quot;question:removed&quot;</span>
 
 
 </pre></div>
@@ -82,14 +70,11 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
-<p>show the view</p>
+<p>get the main view for the element box</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-            <span class="nx">@show</span> <span class="nx">@view</span>
+                <span class="vi">@view = </span><span class="nx">@_getElementBoxView</span> <span class="nx">contentType</span>
 
-          <span class="nx">_getElementBoxView</span><span class="o">:</span><span class="p">()</span><span class="nf">-&gt;</span>
-            <span class="k">new</span> <span class="nx">ElementBox</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">ElementBoxView</span>
-        
 
 
 </pre></div>
@@ -100,11 +85,10 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
-<p>create a command handler to start the element box controller</p>
+<p>@listenTo eventObj.vent, "question:dropped", =>
+    @view.triggerMethod "question:dropped"</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:element:box&quot;</span><span class="p">,</span> <span class="nf">(options)-&gt;</span>
-                <span class="k">new</span> <span class="nx">ElementBoxController</span> <span class="nx">options</span>
 
 
 </pre></div>
@@ -114,6 +98,54 @@
         <td class="docs">
 <div class="pilwrap">
   <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>@listenTo eventObj.vent, "question:removed", =>
+    @view.triggerMethod "question:removed"</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>show the view</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="nx">@show</span> <span class="nx">@view</span>
+
+            <span class="nv">_getElementBoxView: </span><span class="nf">(contentType)-&gt;</span>
+                <span class="k">new</span> <span class="nx">ElementBox</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">ElementBoxView</span>
+                    <span class="nv">contentType: </span><span class="nx">contentType</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>create a command handler to start the element box controller</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:element:box&quot;</span><span class="p">,</span> <span class="nf">(options)-&gt;</span>
+            <span class="k">new</span> <span class="nx">ElementBoxController</span> <span class="nx">options</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
 <p>App.commands.setHandler</p>
         </td>

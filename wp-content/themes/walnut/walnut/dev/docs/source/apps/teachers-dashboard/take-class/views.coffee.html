@@ -59,13 +59,6 @@
         <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-subjects&#39;</span><span class="p">,</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;subjects&#39;</span>
 
 
-        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#textbooks&#39;</span><span class="p">).</span><span class="nx">mixitup</span>
-          <span class="nv">layoutMode: </span><span class="s">&#39;list&#39;</span><span class="p">,</span> <span class="c1"># Start in list mode (display: block) by default</span>
-          <span class="nv">listClass: </span><span class="s">&#39;list&#39;</span><span class="p">,</span> <span class="c1"># Container class for when in list mode</span>
-          <span class="nv">gridClass: </span><span class="s">&#39;grid&#39;</span><span class="p">,</span> <span class="c1"># Container class for when in grid mode</span>
-          <span class="nv">effects: </span><span class="p">[</span><span class="s">&#39;fade&#39;</span><span class="p">,</span><span class="s">&#39;blur&#39;</span><span class="p">],</span> <span class="c1"># List of effects</span>
-          <span class="nv">listEffects: </span><span class="p">[</span><span class="s">&#39;fade&#39;</span><span class="p">,</span><span class="s">&#39;rotateX&#39;</span><span class="p">]</span> <span class="c1"># List of effects ONLY for list mode</span>
-
 
       <span class="nv">serializeData : </span><span class="nf">-&gt;</span>
         <span class="nv">data = </span><span class="k">super</span><span class="p">()</span>
@@ -79,6 +72,10 @@
             <span class="nx">subject_string</span> <span class="o">+=</span> <span class="s">&#39;, &#39;</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">last</span><span class="p">(</span><span class="nx">item_subjects</span><span class="p">)</span><span class="o">!=</span><span class="nx">subject</span>
 
           <span class="nv">data.subject_string= </span><span class="nx">subject_string</span><span class="p">;</span>
+
+        <span class="nv">route= </span><span class="nx">App</span><span class="p">.</span><span class="nx">getCurrentRoute</span><span class="p">()</span>
+
+        <span class="nv">data.url= </span><span class="s">&#39;#&#39;</span><span class="o">+</span><span class="nx">route</span><span class="o">+</span><span class="s">&#39;/textbook/&#39;</span><span class="o">+</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;term_id&#39;</span>
 
         <span class="nx">data</span>
 
@@ -100,6 +97,14 @@
       <span class="nv">itemViewContainer : </span><span class="s">&#39;ul.textbooks_list&#39;</span>
 
       <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
+
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#textbooks&#39;</span><span class="p">).</span><span class="nx">mixitup</span>
+          <span class="nv">layoutMode: </span><span class="s">&#39;list&#39;</span><span class="p">,</span> <span class="c1"># Start in list mode (display: block) by default</span>
+          <span class="nv">listClass: </span><span class="s">&#39;list&#39;</span><span class="p">,</span> <span class="c1"># Container class for when in list mode</span>
+          <span class="nv">gridClass: </span><span class="s">&#39;grid&#39;</span><span class="p">,</span> <span class="c1"># Container class for when in grid mode</span>
+          <span class="nv">effects: </span><span class="p">[</span><span class="s">&#39;fade&#39;</span><span class="p">,</span><span class="s">&#39;blur&#39;</span><span class="p">],</span> <span class="c1"># List of effects</span>
+          <span class="nv">listEffects: </span><span class="p">[</span><span class="s">&#39;fade&#39;</span><span class="p">,</span><span class="s">&#39;rotateX&#39;</span><span class="p">]</span> <span class="c1"># List of effects ONLY for list mode</span>
+
         <span class="vi">@dimensions = </span>
           <span class="nv">status: </span><span class="s">&#39;all&#39;</span>
 </pre></div>

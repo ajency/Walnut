@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>controller.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../../doc-style.css" />
+  <script src="../../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../../", thisFile = "source\\apps\\content-preview\\content-board\\elements\\hotspot\\controller.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>controller.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;apps/content-preview/content-board/element/controller&#39;</span>
+    <span class="s">&#39;apps/content-preview/content-board/elements/hotspot/view&#39;</span><span class="p">],</span>
+    <span class="nf">(App,Element)-&gt;</span>
+
+        <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;ContentPreview.ContentBoard.Element.Hotspot&quot;</span> <span class="p">,</span>
+        <span class="nf">(Hotspot, App, Backbone, Marionette,$, _)-&gt;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>menu controller</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="k">class</span> <span class="nx">Hotspot</span><span class="p">.</span><span class="nx">Controller</span> <span class="k">extends</span> <span class="nx">Element</span><span class="p">.</span><span class="nx">Controller</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>intializer</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="nx">initialize</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
+
+                    <span class="nv">answerData =</span>
+                        <span class="nv">answer : </span><span class="p">[]</span>
+                        <span class="nv">marks : </span><span class="mi">0</span>
+                        <span class="nv">comment : </span><span class="s">&#39;Not Attempted&#39;</span>
+                    <span class="vi">@answerModel = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:answer&quot;</span><span class="p">,</span><span class="nx">answerData</span>
+
+                    <span class="k">super</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+
+                <span class="nx">_getHotspotView</span><span class="o">:</span><span class="p">()</span><span class="nf">-&gt;</span>
+
+                    <span class="k">new</span> <span class="nx">Hotspot</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">HotspotView</span>
+                        <span class="nv">model : </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span>
+                        <span class="nv">answerModel: </span><span class="nx">@answerModel</span>
+
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>setup templates for the element</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="nx">renderElement</span><span class="o">:</span><span class="p">()</span><span class="o">=&gt;</span>
+                    <span class="vi">@optionCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element:collection&quot;</span><span class="p">,</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;optionCollection&#39;</span>
+                    <span class="vi">@textCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element:collection&quot;</span><span class="p">,</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;textCollection&#39;</span>
+                    <span class="vi">@imageCollection = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;create:new:hotspot:element:collection&quot;</span><span class="p">,</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;imageCollection&#39;</span>
+
+
+                    <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;optionCollection&#39;</span><span class="p">,</span><span class="nx">@optionCollection</span>
+                    <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;textCollection&#39;</span><span class="p">,</span><span class="nx">@textCollection</span>
+                    <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;imageCollection&#39;</span><span class="p">,</span><span class="nx">@imageCollection</span>
+
+
+
+                    <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:total:marks&quot;</span><span class="p">,</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;marks&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>@removeSpinner()
+get menu</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                    <span class="vi">@view = </span><span class="nx">@_getHotspotView</span><span class="p">()</span>
+
+                    <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;submit:answer&quot;</span><span class="p">,</span> <span class="nx">@_submitAnswer</span>
+
+                    <span class="nx">@layout</span><span class="p">.</span><span class="nx">elementRegion</span><span class="p">.</span><span class="nx">show</span> <span class="nx">@view</span><span class="p">,</span>
+                        <span class="nx">loading</span><span class="o">:</span><span class="kc">true</span>
+
+                <span class="nx">_submitAnswer</span><span class="o">:</span><span class="nf">-&gt;</span>
+                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@optionCollection</span>
+                    <span class="nv">correctOptions = </span><span class="nx">@optionCollection</span><span class="p">.</span><span class="nx">where</span> <span class="p">{</span><span class="nx">correct</span><span class="o">:</span><span class="kc">true</span><span class="p">}</span>
+                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">correctOptions</span>
+                    <span class="nv">correctOptionsIds = </span><span class="nx">_</span><span class="p">.</span><span class="nx">pluck</span> <span class="nx">correctOptions</span><span class="p">,</span><span class="s">&#39;id&#39;</span>
+                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">correctOptionsIds</span>
+                    <span class="nv">answerId = </span><span class="nx">_</span><span class="p">.</span><span class="nx">pluck</span> <span class="nx">@answerModel</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;answer&#39;</span><span class="p">),</span><span class="s">&#39;id&#39;</span>
+
+                    <span class="k">if</span> <span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;enableIndividualMarks&#39;</span>
+                        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">_</span><span class="p">.</span><span class="nx">difference</span><span class="p">(</span><span class="nx">answerId</span><span class="p">,</span><span class="nx">correctOptionsIds</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">difference</span><span class="p">(</span><span class="nx">answerId</span><span class="p">,</span><span class="nx">correctOptionsIds</span><span class="p">).</span><span class="nx">length</span>
+                            <span class="k">if</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">difference</span><span class="p">(</span><span class="nx">correctOptionsIds</span><span class="p">,</span><span class="nx">answerId</span><span class="p">).</span><span class="nx">length</span>
+                               <span class="nx">@answerModel</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;marks&#39;</span><span class="p">,</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;marks&#39;</span>
+                            <span class="k">else</span>
+                                <span class="nv">answersNotMarked = </span><span class="nx">_</span><span class="p">.</span><span class="nx">difference</span><span class="p">(</span><span class="nx">correctOptionsIds</span><span class="p">,</span><span class="nx">answerId</span><span class="p">)</span>
+                                <span class="nv">totalMarks = </span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;marks&#39;</span>
+                                <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">answersNotMarked</span><span class="p">,</span><span class="nf">(notMarked)=&gt;</span>
+                                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@optionCollection</span><span class="p">.</span><span class="nx">findWhere</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span><span class="nx">notMarked</span><span class="p">})</span>
+                                    <span class="nx">totalMarks</span> <span class="o">-=</span> <span class="nx">@optionCollection</span><span class="p">.</span><span class="nx">findWhere</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span><span class="nx">notMarked</span><span class="p">}).</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;marks&#39;</span><span class="p">)</span>
+                                <span class="nx">@answerModel</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;marks&#39;</span><span class="p">,</span><span class="nx">totalMarks</span>
+
+
+                    <span class="k">else</span>
+                        <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">difference</span><span class="p">(</span><span class="nx">answerId</span><span class="p">,</span><span class="nx">correctOptionsIds</span><span class="p">).</span><span class="nx">length</span> <span class="o">or</span> <span class="nx">_</span><span class="p">.</span><span class="nx">difference</span><span class="p">(</span><span class="nx">correctOptionsIds</span><span class="p">,</span><span class="nx">answerId</span><span class="p">).</span><span class="nx">length</span>
+                           <span class="nx">@answerModel</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;marks&#39;</span><span class="p">,</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;marks&#39;</span>
+
+
+
+                    <span class="nx">App</span><span class="p">.</span><span class="nx">execute</span> <span class="s">&quot;show:response&quot;</span><span class="p">,</span><span class="nx">@answerModel</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;marks&#39;</span><span class="p">),</span><span class="nx">@layout</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;marks&#39;</span><span class="p">)</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>if @answerModel.get('marks') &lt; @layout.model.get('marks')</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                    <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&#39;show:feedback&#39;</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>
