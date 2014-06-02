@@ -6,6 +6,14 @@
  * Time: 5:15 PM
  */
 
+/**
+ * @param string $blog_id
+ * @param string $last_sync if blank returns full data in the tables mentioned in get_tables_to_export function
+ * if mentioned, returns the data from that time forward
+ * @param string $user_id # todo: sync by textbook id. Its not going to be by user
+ * @return mixed
+ */
+
 function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
     if($blog_id=='')
@@ -43,7 +51,7 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
     switch_to_blog($current_blog);
 
     $export_details['exported_csv_url']=$uploaded_url;
-    $export_details['sync_time']=date('Y-m-d h:i:s');
+    $export_details['last_sync']=date('Y-m-d h:i:s');
 
     return $export_details;
 }
@@ -104,6 +112,7 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
         "{$wpdb->base_prefix}term_relationships",
         "{$wpdb->base_prefix}term_taxonomy",
         "{$wpdb->base_prefix}textbook_relationships",
+        "{$wpdb->base_prefix}usermeta",
 
         //CHILD SITE TABLE QUERIES
         "{$wpdb->prefix}class_divisions",
@@ -115,7 +124,7 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
 
     // USER AND USERMETA TABLES ARE CUSTOM QUERIED AND ONLY BLOG RELATED RECORDS ARE FETCHED
     $tables_list[]= get_user_table_query($blog_id);
-    $tables_list[]= get_usermeta_table_query($blog_id);
+    //$tables_list[]= get_usermeta_table_query($blog_id);
 
     // POST, POST META, COLLECCTION and COLLECTION META TABLES ARE FETCHED BASED ON LAST SYNCED
 
@@ -175,14 +184,9 @@ function get_usermeta_table_query($blog_id){
 
     global $wpdb;
 
-    if(!$blog_id)
-        $blog_id= get_current_blog_id();
-
     $user_meta_query = $wpdb->prepare(
         "SELECT * FROM
-            {$wpdb->base_prefix}usermeta um
-                WHERE um.meta_key=%s
-                    AND um.meta_value=%d",
+            {$wpdb->base_prefix}usermeta",
         array('primary_blog', $blog_id)
     );
 
@@ -205,9 +209,9 @@ function get_posts_table_query($last_sync='', $user_id=''){
         $user_content_pieces=get_content_pieces_for_user($user_id);
 
     $posts_table_query=$wpdb->prepare(
-            "SELECT * FROM {$wpdb->base_prefix}posts
+        "SELECT * FROM {$wpdb->base_prefix}posts
                 WHERE post_modified > '%s'",
-            $last_sync
+        $last_sync
     );
 
     $posts_table= array(
@@ -259,7 +263,7 @@ function get_collection_table_query($last_sync='', $user_id=''){
     $collection_table_query=$wpdb->prepare(
         "SELECT * FROM {$wpdb->base_prefix}content_collection
                 WHERE last_modified_on > '%s'"
-                .$collectionStr,
+        .$collectionStr,
         $last_sync
     );
 
@@ -290,7 +294,7 @@ function get_collectionmeta_table_query($last_sync='', $user_id=''){
         "SELECT cm.* FROM {$wpdb->base_prefix}content_collection c, {$wpdb->base_prefix}collection_meta cm
                 WHERE c.last_modified_on > '%s'
                 AND c.ID = cm.collection_id"
-                .$collectionStr,
+        .$collectionStr,
         $last_sync
     );
 
@@ -375,8 +379,8 @@ function get_content_pieces_for_user($user_id){
 function exportMysqlToCsv($table, $sql_query=''){
     $csv_terminated = "\n";
     $csv_separator = ",";
-    $csv_enclosed = '"';
-    $csv_escaped = "\\";
+    #$csv_enclosed = '"';
+    #$csv_escaped = "\\";
 
     //debug- see the list of tables being exported
     //echo $table; echo '<br><br>';
