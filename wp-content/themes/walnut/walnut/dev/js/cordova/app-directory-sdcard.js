@@ -6,7 +6,7 @@ define(['underscore'], function(_) {
         exclusive: false
       }, function(fileEntry) {
         $('#directory').text('Synapse Assets directory exists on SD Card');
-        _.setSynapseAssetsDirectoryPath(fileEntry.toURL() + 'SynapseImages/');
+        _.setSynapseAssetsDirectoryPath(fileEntry.toURL() + '/SynapseImages/');
         return console.log('Full path: ' + _.getSynapseAssetsDirectoryPath());
       }, function(error) {
         return $('#directory').text('Synapse Assets directory not found on SD Card');

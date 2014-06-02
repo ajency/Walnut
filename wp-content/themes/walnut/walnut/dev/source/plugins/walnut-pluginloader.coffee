@@ -40,5 +40,5 @@ define [
   		'csvparse'
   		'archive'
   		'json2csvparse'
-  		'Zip'
+  		'zip'
 		], ->

@@ -9,7 +9,7 @@ define ['underscore'], ( _) ->
                 fileSystem.root.getDirectory("SynapseAssets", {create: false, exclusive:false} 
                     ,(fileEntry)->
                         $('#directory').text('Synapse Assets directory exists on SD Card')
-                        _.setSynapseAssetsDirectoryPath(fileEntry.toURL()+'SynapseImages/')
+                        _.setSynapseAssetsDirectoryPath(fileEntry.toURL()+'/SynapseImages/')
                         console.log 'Full path: '+_.getSynapseAssetsDirectoryPath()
                     
                     ,(error)->

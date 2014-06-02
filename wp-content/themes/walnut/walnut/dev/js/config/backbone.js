@@ -132,8 +132,11 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'content-group') {
           data = App.reqres.request("save:update:" + modelname + ":local", model);
         }
-        if (modelname === 'schools') {
-          console.log('Schools local');
+        if (modelname === 'division') {
+          data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('id'));
+          data.done(function(d) {
+            return model.set(d);
+          });
         }
         if (modelname === 'textbook') {
           data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('term_id'));

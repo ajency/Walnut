@@ -200,7 +200,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 
-								pattern = '%"'+class_id+'"%'
+								pattern = '%"'+class_id+'"%' 
 
 								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 									LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 

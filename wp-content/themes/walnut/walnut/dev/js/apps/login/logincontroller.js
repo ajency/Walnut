@@ -95,9 +95,9 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         this.trigger("prepopulate:username");
         _.setMainLogo();
         if (_.isOnline()) {
-          $('#connectionStatus').text('Internet connection available');
+          $('#connectionStatus').text('Available');
         } else {
-          $('#connectionStatus').text('Internet connection not found');
+          $('#connectionStatus').text('Unavailable');
           $('#online').prop("disabled", true);
         }
         this.trigger("disable:offline:login:type");

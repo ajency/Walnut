@@ -1,4 +1,4 @@
-define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse", "Zip"], (Marionette, App, _, parse, getEntries) ->
+define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse", "zip"], (Marionette, App, _, parse, getEntries) ->
 
 	class SynchronizationController extends Marionette.Controller
 
@@ -6,7 +6,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 
 		startSync : ->
-			@getDownloadURL()
+			# @getDownloadURL()
 
 		
 		totalRecordsUpdate : =>
@@ -375,7 +375,6 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 # Download the zip file from the server and extract its contents
 		dwnldUnZip : ->
-			alert "yes"
 			uri = encodeURI(_.getDwnlduri())
 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
@@ -391,6 +390,13 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 							fileTransfer = new FileTransfer()
 							fileTransfer.download(uri, filePath+"logs.zip" 
 								,(file)=>
+									console.log 'Zip file downloaded'
+
+									#Update file download details
+									@updateDownloadTime()
+
+									$('#getFiles').find('*').prop('disabled',true)
+									$('#imprtFiles').find('*').prop('disabled',false)
 									
 									@fileUnZip filePath, file.toURL()
 								
@@ -402,17 +408,14 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 				, _.fileSystemErrorHandler)
 
 		chkReader : (file1)->
+			#deepak
 			read = ->
 				$.Deferred (d)->
 					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-
 						, (fileSystem)=>
-
 							fileSystem.root.getFile(file1, {create: false}
-
 								, (fileEntry)=>
 									fileEntry.file(
-
 										(file)=>
 											console.log "is"+file
 											reader = new FileReader()
@@ -423,16 +426,20 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 													header : false
 													dynamicTyping : false
 													})
-												
+
+												do(parsedData)->
+
+													for i in [0..parsedData.results.length-1] by 1
+
+														for j in [0..parsedData.results[i].length-1] by 1
+															parsedData.results[i][j] = parsedData.results[i][j].replace(/\\/g,'"')
+
 												d.resolve parsedData.results
 
 											reader.readAsText file
 
 										, _.fileErrorHandler)
-
-									
 								, _.fileErrorHandler)
-
 						, _.fileSystemErrorHandler)
 
 			$.when(read()).done ->
@@ -469,7 +476,8 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 			fileEntry=fileEntry
 			readData = @chkReader(file)
 			readData.done (data)=>
-				# console.log "parsed data"+data
+				console.log 'Divisions parsed data'
+				data
 
 				_.db.transaction( (tx)=>
 					tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
@@ -491,7 +499,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 
 		sendParsedData2 : (file1, fileEntry)=>
-			fileEntry=fileEntry
+			fileEntry = fileEntry
 			readData = @chkReader(file1)
 			readData.done (data)=>
 
@@ -501,7 +509,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 					for i in [0..data.length-1] by 1
 						row = data[i]
 						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response (content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date,status,sync) 
-							VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?)", [ data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8]],1)
+							VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?)", [ data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8],1])
 
 				,_.transactionErrorhandler
 				,(tx)=>
@@ -511,7 +519,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 				)
 		sendParsedData15 : (file14, fileEntry)=>
-			fileEntry=fileEntry
+			fileEntry = fileEntry
 			readData = @chkReader(file14)
 			readData.done (data)=>
 
@@ -520,7 +528,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 					for i in [0..data.length-1] by 1
 						row = data[i]
-						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response_logs (start_time) 
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response_logs (start_time, sync) 
 							VALUES ( ?,?)", [data[i][1],1])
 
 				,_.transactionErrorhandler
@@ -540,8 +548,8 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 					for i in [0..data.length-1] by 1
 						row = data[i]
-						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"training_logs ( division_id,collection_id, teacher_id, date,status) 
-							VALUES ( ?,?, ?, ?,?,?)", [ data[i][1],data[i][2],data[i][3],data[i][4]],data[i][5],1)
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"training_logs (division_id, collection_id, teacher_id, date, status, sync) 
+							VALUES (?,?,?,?,?,?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], 1])
 
 				,_.transactionErrorhandler
 				,(tx)=>
@@ -579,8 +587,8 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 					for i in [0..data.length-1] by 1
 						row = data[i]
-						tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on, created_by, last_modified_on,last_modified_by,published_on,published_by, status,type,term_ids,duration) 
-							VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9],data[i][10], data[i][11]])
+						tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on, created_by, last_modified_on,last_modified_by,published_on,published_by, status,type, term_ids, duration) 
+							VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10], data[i][11]])
 
 				,_.transactionErrorhandler
 				,(tx)=>
@@ -710,6 +718,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 		sendParsedData12 : (file11, fileEntry)=>
 			readData = @chkReader(file11)
 			readData.done (data)=>
+				
 				_.db.transaction( (tx)=>
 					tx.executeSql("DELETE FROM wp_textbook_relationships")
 
@@ -742,6 +751,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 					@sendParsedData14 file13 ,fileEntry
 
 				)
+		
 		sendParsedData14 : (file13, fileEntry)=>
 			readData = @chkReader(file13)
 			readData.done (data)=>
@@ -760,44 +770,27 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 					$('#JsonToCSV').removeAttr("disabled")
 					$('#CSVupload').attr("disabled","disabled")
 					$('#syncNow').attr("disabled","disabled")
-					App.execute "close:sync:view"
-					_.setInitialSyncFlag('sync')
-					# @updateDwnldTime()
+
+					# App.execute "close:sync1:view"
+					App.execute "close:sync3:view"
 
 				)
 
 
 		
-		updateDwnldTime :->
+		updateDownloadTime :->
+
 			timestamp = _.getDwnldTimeStamp()
-			if _.getInitialSyncFlag() is null
-			 
-				_.db.transaction( (tx)=>
 
-						# for i in [0..data.length-1] by 1
-						# 	row = data[i]
-						tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
-							VALUES (?, ?)", [ "DownZip",8:36 ])
+			_.db.transaction( (tx)->
+				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
+					VALUES (?,?)", ['file_download', timestamp])
 
-					,_.transactionErrorhandler
-					,(tx)=>
-						console.log 'Sync Data INSERTED successfully '
-						App.execute "close:sync:view"
-						_.setInitialSyncFlag('sync')
-						# @readValues
-					)
-			else
-				_.db.transaction( (tx)->
-						tx.executeSql("UPDATE sync_details SET (type_of_operation,time_stamp) VALUES (?,?)", ["DownZip", 8:36 ])
-
-				,_.transactionErrorhandler
-				,(tx)->
-					console.log 'Sync Data UPDATED successfully'
-					App.execute "close:sync:view"
-					_.setInitialSyncFlag('sync')
-					# @readValues
-				)
-
+			,_.transactionErrorhandler
+			,(tx)->
+				console.log 'Updated file download details'
+			)
+			
 
 
 #get the last 5 time for uploads from the local database
@@ -807,7 +800,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 					ORDER BY time_stamp DESC LIMIT 5 ", [] 
 
 					,(tx, results)=>
-						time stamp=results
+						time stamp = results
 					
 					,_.transactionErrorhandler)
 				)
@@ -845,26 +838,21 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 		getDownloadURL:->
 
-			$.post AJAXURL + '?action=sync-database',
-				data: _.getDwnldTimeStamp(),
+			data = 
+				blog_id: _.getBlogID()
+				last_sync: ''	
+
+			$.get AJAXURL + '?action=sync-database',
+					data,
 				   (resp)=>
 				   		console.log 'RESP'
 				   		console.log resp
-				   		if resp.error
-				   			@onErrorResponse(resp.error)	
-
-				   		else
-				   			# save logged in user id and username
-				   			_.setDwnlduri(resp.exported_csv_url)
-				   			_.setDwnldTimeStamp(resp.sync_time)
+				   		
+			   			_.setDwnlduri(resp.exported_csv_url)
+			   			_.setDwnldTimeStamp(resp.sync_time)
+			   			
+			   			@dwnldUnZip()
 				   			
-				   			# _.setUserName(@data.txtusername)
-
-				   			# if the blog id is null, then the app is installed
-				   			# for the first time.
-				   			@dwnldUnZip()
-				   			# if _.getBlogID() is null then @initialAppLogin(resp)
-				   			# else @authenticateUserBlogId(resp)
 				   	,
 				   	'json'	
 

@@ -35,9 +35,9 @@ define(['marionette'], function(Marionette) {
     }
     App.startHistory();
     if (_.platform() === 'DEVICE') {
-      if (_.getUserID() === null || _.getUserID() === 'null') {
+      if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
         this.rootRoute = 'app-login';
-        if (_.getBlogID() === null) {
+        if (_.isNull(_.getBlogID())) {
           this.rootRoute = 'login';
         }
         App.navigate(this.rootRoute, {

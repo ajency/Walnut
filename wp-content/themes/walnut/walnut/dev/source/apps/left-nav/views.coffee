@@ -91,17 +91,17 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     $('.arrow', li_target).removeClass("open");
                     li_target.parent().removeClass("active");
                     sub.slideUp 200, () ->
-                        @handleSidenarAndContentHeight();
+                        handleSidenarAndContentHeight();
                 else
                     $('.arrow', li_target).addClass("open");
                     li_target.parent().addClass("open");
                     sub.slideDown 200, ()->
-                        @handleSidenarAndContentHeight();
+                        handleSidenarAndContentHeight();
 
                 e.preventDefault();
 
 
-            handleSidenarAndContentHeight : ->
+            handleSidenarAndContentHeight = ->
                 content = $('.page-content');
                 sidebar = $('.page-sidebar');
                 if (!content.attr("data-height"))

@@ -14,6 +14,16 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSync3Controller.prototype.initialize = function() {
         var view;
         this.view = view = this._getAppSyncView();
+        this.listenTo(view, 'close', function() {
+          return App.navigate('teachers/dashboard', {
+            trigger: true
+          });
+        });
+        App.commands.setHandler("close:sync3:view", (function(_this) {
+          return function() {
+            return _this.view.close();
+          };
+        })(this));
         return this.show(view, {
           loading: true
         });
@@ -42,7 +52,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.onShow = function() {
         var syncDetailsCount;
-        navigator.splashscreen.hide();
+        App.breadcrumbRegion.close();
         syncDetailsCount = _.getTotalSyncDetailsCount();
         return syncDetailsCount.done(function(count) {
           if (count === 0) {
@@ -50,8 +60,8 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
             $('#progressBarDwnld').hide();
             $('#progressBarImprt').hide();
             $('#progressBarUpld').hide();
-            $("#imprtFiles *").attr("disabled", "disabled").off('click');
-            return $("#syncUpld3 *").attr("disabled", "disabled").off('click');
+            $("#syncUpld3 *").attr("disabled", "disabled").off('click');
+            return $('#imprtFiles').find('*').prop('disabled', true);
           } else {
             return App.navigate('teachers/dashboard', {
               trigger: true
@@ -63,7 +73,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.startDownload = function() {
         var syncController;
         syncController = App.request("get:sync:controller");
-        return syncController.dwnldUnZip();
+        return syncController.getDownloadURL();
       };
 
       AppSyncView.prototype.startImport = function() {

@@ -84,6 +84,8 @@ define ['underscore', 'unserialize'], ( _) ->
 
 					divisionIds = _.getDivisionIds()
 					divisionIds.done (ids)->
+						
+						ids = _.compact ids.reverse()
 
 						results = []
 						
@@ -99,4 +101,19 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			$.when(runFunc()).done ->
 				console.log 'getAllDivisions done'
-			.fail _.failureHandler	
+			.fail _.failureHandler
+
+
+		getDivisionById : (id)->
+
+			runFunc = ->
+				$.Deferred (d)->
+
+					division = _.fetchSingleDivision(id)
+					division.done (result)->
+
+						d.resolve result
+
+			$.when(runFunc()).done ->
+				console.log 'getDivisionById done'
+			.fail _.failureHandler

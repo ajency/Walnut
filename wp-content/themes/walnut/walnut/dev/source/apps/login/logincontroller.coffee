@@ -83,9 +83,9 @@ define ['app', 'controllers/region-controller','text!apps/login/templates/login.
 
 				_.setMainLogo()
 
-				if _.isOnline() then $('#connectionStatus').text('Internet connection available')
+				if _.isOnline() then $('#connectionStatus').text('Available')
 				else 
-					$('#connectionStatus').text('Internet connection not found')
+					$('#connectionStatus').text('Unavailable')
 					$('#online').prop("disabled",true)
 
 				@trigger "disable:offline:login:type"

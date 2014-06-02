@@ -77,7 +77,9 @@ define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
                 runMainQuery = ->
                     $.Deferred (d)->
                         _.db.transaction (tx)->
-                            tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
+                            tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"question_response 
+                                WHERE collection_id=? AND division=?", [collection_id, division]
+                                , onSuccess(d), _.deferredErrorHandler(d));
                     
                 onSuccess =(d)->
                     (tx,data)->

@@ -90,6 +90,7 @@ define(['underscore', 'unserialize'], function(_) {
           divisionIds = _.getDivisionIds();
           return divisionIds.done(function(ids) {
             var results;
+            ids = _.compact(ids.reverse());
             results = [];
             _.each(ids, function(id, i) {
               return (function(id, i) {
@@ -106,6 +107,21 @@ define(['underscore', 'unserialize'], function(_) {
       };
       return $.when(runFunc()).done(function() {
         return console.log('getAllDivisions done');
+      }).fail(_.failureHandler);
+    },
+    getDivisionById: function(id) {
+      var runFunc;
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          var division;
+          division = _.fetchSingleDivision(id);
+          return division.done(function(result) {
+            return d.resolve(result);
+          });
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log('getDivisionById done');
       }).fail(_.failureHandler);
     }
   });

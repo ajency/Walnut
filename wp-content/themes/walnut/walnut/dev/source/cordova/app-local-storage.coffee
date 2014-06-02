@@ -4,7 +4,7 @@ define ['underscore', 'jquery'], (_, $)->
 
     # save/get logged in user ID
     _.setUserID =(id)->
-        window.localStorage.setItem("user_id", ""+id)
+        window.localStorage.setItem("user_id", id)
 
     _.getUserID =->
         window.localStorage.getItem("user_id")
@@ -12,7 +12,7 @@ define ['underscore', 'jquery'], (_, $)->
 
     # save/get logged in username
     _.setUserName =(name)->
-        window.localStorage.setItem("user_name", ""+name)
+        window.localStorage.setItem("user_name", name)
 
     _.getUserName =->
         window.localStorage.getItem("user_name")    
@@ -20,7 +20,7 @@ define ['underscore', 'jquery'], (_, $)->
 
     # save/get blog id
     _.setBlogID =(id)->
-        window.localStorage.setItem("blog_id", ""+id)
+        window.localStorage.setItem("blog_id", id)
 
     _.getBlogID =->
         window.localStorage.getItem("blog_id")
@@ -28,7 +28,7 @@ define ['underscore', 'jquery'], (_, $)->
 
     # save/get blog name
     _.setBlogName =(name)->
-        window.localStorage.setItem("blog_name", ""+name)
+        window.localStorage.setItem("blog_name", name)
 
     _.getBlogName =->
         window.localStorage.getItem("blog_name")
@@ -36,7 +36,7 @@ define ['underscore', 'jquery'], (_, $)->
 
     # save/get school logo image source
     _.setSchoolLogoSrc =(src)->
-        window.localStorage.setItem("school_logo_src", ""+src)
+        window.localStorage.setItem("school_logo_src", src)
 
     _.getSchoolLogoSrc =->
         window.localStorage.getItem("school_logo_src")
@@ -44,10 +44,11 @@ define ['underscore', 'jquery'], (_, $)->
 
     # save/get Synapse assets directory path on SD Card
     _.setSynapseAssetsDirectoryPath =(path)->
-        window.localStorage.setItem("synapse_directory_path", ""+path)
+        window.localStorage.setItem("synapse_directory_path", path)
 
     _.getSynapseAssetsDirectoryPath =->
         window.localStorage.getItem("synapse_directory_path")
+        
 
     _.setFilePath =(path)->
         window.localStorage.setItem("filepath", ""+path)

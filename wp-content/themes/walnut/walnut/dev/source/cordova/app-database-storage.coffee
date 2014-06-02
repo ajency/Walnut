@@ -6,8 +6,8 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 
         db.transaction((tx)->
             #User table
-            tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY, user_id UNIQUE
-                , username, password, user_role)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY
+                , user_id UNIQUE, username, password, user_role)')
             
         ,_.transactionErrorHandler
         ,(tx)->
@@ -34,11 +34,11 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
         db.transaction((tx)->
 
             tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'training_logs 
-                (id INTEGER PRIMARY KEY, division_id INTEGER, collection_id INTEGER, teacher_id INTEGER
-                , date, status, sync INTEGER)')
+                (id INTEGER PRIMARY KEY, division_id INTEGER, collection_id INTEGER
+                , teacher_id INTEGER, date, status, sync INTEGER)')
 
-            tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'question_response (ref_id
-                , content_piece_id INTEGER, collection_id INTEGER, division INTEGER
+            tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'question_response 
+                (ref_id, content_piece_id INTEGER, collection_id INTEGER, division INTEGER
                 , question_response, time_taken, start_date, end_date, status, sync INTEGER)')
 
             tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'question_response_logs 
@@ -51,7 +51,3 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
         ,(tx)->
             console.log 'SUCCESS: Local db transaction completed'
         )
-
-    
-
-    

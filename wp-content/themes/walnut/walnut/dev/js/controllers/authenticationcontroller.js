@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["marionette", "app", "underscore"], function(Marionette, App, _) {
   var AuthenticationController;
-  return AuthenticationController = (function(_super) {
+  AuthenticationController = (function(_super) {
     __extends(AuthenticationController, _super);
 
     function AuthenticationController() {
@@ -33,6 +33,12 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       }
     };
 
+    AuthenticationController.prototype.onlineWebAuth = function() {
+      return $.post(this.url, {
+        data: this.data
+      }, this.success, 'json');
+    };
+
     AuthenticationController.prototype.deviceLogin = function() {
       if (this.isOfflineLoginEnabled()) {
         return this.offlineDeviceAuth();
@@ -43,12 +49,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           return this.onConnectionError();
         }
       }
-    };
-
-    AuthenticationController.prototype.onlineWebAuth = function() {
-      return $.post(this.url, {
-        data: this.data
-      }, this.success, 'json');
     };
 
     AuthenticationController.prototype.isOfflineLoginEnabled = function() {
@@ -69,10 +69,8 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           if (resp.error) {
             return _this.onErrorResponse(resp.error);
           } else {
-            _this.setUserModel();
-            _.setUserID(resp.login_details.ID);
-            _.setUserName(_this.data.txtusername);
-            if (_.getBlogID() === null) {
+            _this.onDeviceLoginSuccessOperation(resp.login_details.ID, _this.data.txtusername);
+            if (_.isNull(_.getBlogID())) {
               return _this.initialAppLogin(resp);
             } else {
               return _this.authenticateUserBlogId(resp);
@@ -89,9 +87,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         return function(user) {
           if (user.exists) {
             if (user.password === _this.data.txtpassword) {
-              _this.setUserModel();
-              _.setUserID(user.user_id);
-              _.setUserName(_this.data.txtusername);
+              _this.onDeviceLoginSuccessOperation(user.user_id, _this.data.txtusername);
               return _this.onSuccessResponse();
             } else {
               return _this.onErrorResponse('Invalid Password');
@@ -103,17 +99,19 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       })(this));
     };
 
+    AuthenticationController.prototype.onDeviceLoginSuccessOperation = function(id, username) {
+      this.setUserModel();
+      _.setUserID(id);
+      return _.setUserName(username);
+    };
+
     AuthenticationController.prototype.initialAppLogin = function(server_resp) {
-      var TimeStampValue, resp;
+      var resp;
       resp = server_resp.blog_details;
-      _.setDwnlduri(server_resp.exported_csv_url);
-      TimeStampValue = server_resp.exported_csv_url;
-      _.setDwnldTimeStamp(TimeStampValue);
       _.setBlogID(resp.blog_id);
       _.setBlogName(resp.blog_name);
       _.localDatabaseTransaction(_.db);
       _.downloadSchoolLogo(resp.blog_logo);
-      this.firstLoginDownload();
       this.saveUpdateUserDetails(server_resp);
       return this.onSuccessResponse();
     };
@@ -128,8 +126,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         return this.onSuccessResponse();
       }
     };
-
-    AuthenticationController.prototype.firstLoginDownload = function() {};
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
       var offlineUser;
@@ -201,11 +197,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       });
     };
 
-    App.reqres.setHandler("get:auth:controller", function(options) {
-      return new AuthenticationController(options);
-    });
-
     return AuthenticationController;
 
   })(Marionette.Controller);
+  return App.reqres.setHandler("get:auth:controller", function(options) {
+    return new AuthenticationController(options);
+  });
 });

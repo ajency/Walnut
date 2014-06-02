@@ -33,6 +33,8 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
     })(Marionette.ItemView);
     return Views.LeftNavView = (function(_super) {
+      var handleSidenarAndContentHeight;
+
       __extends(LeftNavView, _super);
 
       function LeftNavView() {
@@ -95,19 +97,19 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           $('.arrow', li_target).removeClass("open");
           li_target.parent().removeClass("active");
           sub.slideUp(200, function() {
-            return this.handleSidenarAndContentHeight();
+            return handleSidenarAndContentHeight();
           });
         } else {
           $('.arrow', li_target).addClass("open");
           li_target.parent().addClass("open");
           sub.slideDown(200, function() {
-            return this.handleSidenarAndContentHeight();
+            return handleSidenarAndContentHeight();
           });
         }
         return e.preventDefault();
       };
 
-      LeftNavView.prototype.handleSidenarAndContentHeight = function() {
+      handleSidenarAndContentHeight = function() {
         var content, sidebar;
         content = $('.page-content');
         sidebar = $('.page-sidebar');

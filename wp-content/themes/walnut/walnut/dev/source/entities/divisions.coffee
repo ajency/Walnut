@@ -54,7 +54,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 
 				#get divisions from local database
-				getDivisionsFromLocal:->
+				getDivisionsFromLocal : ->
 
 					runFunc = ->
 						$.Deferred (d)->
@@ -65,8 +65,22 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 					$.when(runFunc()).done	->
 						console.log 'getDivisionsFromLocal done'
-					.fail _.failureHandler		
+					.fail _.failureHandler
 
+				
+				#get division by id from local database
+				getDivisionByIdFromLocal : (id)->
+
+					runFunc = ->
+						$.Deferred (d)->
+							divisions = _.getDivisionById(id)
+							divisions.done (result)->
+
+								d.resolve result
+
+					$.when(runFunc()).done	->
+						console.log 'getDivisionByIdFromLocal done'
+					.fail _.failureHandler	
 					
 
 
@@ -81,4 +95,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 			# request handler to get all divisions from local database
 			App.reqres.setHandler "get:division:local", ->
-				API.getDivisionsFromLocal()	
+				API.getDivisionsFromLocal()
+
+			# request handler to get division by id
+			App.reqres.setHandler "get:division:by:id:local", (id)->
+				API.getDivisionByIdFromLocal(id)			

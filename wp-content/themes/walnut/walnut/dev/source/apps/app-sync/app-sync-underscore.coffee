@@ -1,11 +1,8 @@
 define ['underscore', 'unserialize'], ( _) ->
 
-	# Functions related to app sync
-
 	_.mixin
 
 		getTotalSyncDetailsCount : ->
-			console.log 'getTotalSyncDetailsCount'
 
 			runQuery = ->
 				$.Deferred (d)->

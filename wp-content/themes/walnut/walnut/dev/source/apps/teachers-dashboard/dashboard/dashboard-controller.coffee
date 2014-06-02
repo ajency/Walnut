@@ -71,9 +71,11 @@ define ['app'
 					$('#class, #div, #class-training')
 					.select2()
 
-				_.checkSynapseAssetsDirectory()
-				# Hide the splash screen image
-				navigator.splashscreen.hide()
+				if _.platform() is "DEVICE"
+					_.checkSynapseAssetsDirectory()
+					
+					# Hide the splash screen image
+					navigator.splashscreen.hide()
 
 
 

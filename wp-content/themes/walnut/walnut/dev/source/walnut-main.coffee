@@ -57,7 +57,7 @@ require.config
         serialize			: 'plugins/serialize'
         csvparse			: 'plugins/jquery.parse'
         json2csvparse       : 'plugins/json2csv'
-        Zip                 : 'plugins/jszip'
+        zip                 : 'plugins/jszip'
         archive             : 'plugins/archive'
         
 

@@ -84,8 +84,10 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         if (_.platform() === "BROWSER") {
           $('#class, #div, #class-training').select2();
         }
-        _.checkSynapseAssetsDirectory();
-        return navigator.splashscreen.hide();
+        if (_.platform() === "DEVICE") {
+          _.checkSynapseAssetsDirectory();
+          return navigator.splashscreen.hide();
+        }
       };
 
       TeachersDashboardView.prototype.loadDivisions = function(class_id) {

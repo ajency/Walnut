@@ -7,6 +7,13 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			initialize : ->
 
 				@view = view = @_getAppSyncView()
+
+				# listen to the close event of the view
+				@listenTo view, 'close', ->
+					App.navigate('teachers/dashboard', trigger: true)
+
+				App.commands.setHandler "close:sync3:view", =>
+					@view.close()
 				
 
 				@show view, (loading: true)
@@ -32,7 +39,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 
 			onShow : ->
-				navigator.splashscreen.hide()
+				App.breadcrumbRegion.close()
+
 				syncDetailsCount = _.getTotalSyncDetailsCount()
 				syncDetailsCount.done (count)->
 					if count is 0
@@ -40,8 +48,10 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 						$('#progressBarDwnld').hide();
 						$('#progressBarImprt').hide();
 						$('#progressBarUpld').hide();
-						$("#imprtFiles *").attr("disabled", "disabled").off('click')
+						# $("#imprtFiles *").attr("disabled", "disabled").off('click')
 						$("#syncUpld3 *").attr("disabled", "disabled").off('click')
+
+						$('#imprtFiles').find('*').prop('disabled',true)
 						 
 
 
@@ -54,7 +64,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				
 			startDownload : ->
 				syncController = App.request "get:sync:controller"
-				syncController.dwnldUnZip()
+				syncController.getDownloadURL()
 				
 			startImport : ->
 				syncController = App.request "get:sync:controller"

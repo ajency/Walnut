@@ -2,7 +2,6 @@ define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
     getTotalSyncDetailsCount: function() {
       var onSuccess, runQuery;
-      console.log('getTotalSyncDetailsCount');
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {

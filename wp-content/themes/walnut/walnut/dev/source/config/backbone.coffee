@@ -197,8 +197,10 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'content-group'
 					data = App.reqres.request "save:update:#{modelname}:local", model
 
-				if modelname is 'schools' #Not yet implemented
-					console.log 'Schools local'
+				if modelname is 'division'
+					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('id')
+					data.done (d)->
+						model.set d
 
 				if modelname is 'textbook'
 					#Get textbooks by textbook_id	

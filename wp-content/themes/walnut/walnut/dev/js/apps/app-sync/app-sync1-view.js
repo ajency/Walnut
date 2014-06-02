@@ -14,12 +14,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSync1Controller.prototype.initialize = function() {
         var view;
         this.view = view = this._getAppSyncView();
-        this.listenTo(view, 'close', function() {
-          return App.navigate('teachers/dashboard', {
-            trigger: true
-          });
-        });
-        App.commands.setHandler("close:sync:view", (function(_this) {
+        App.commands.setHandler("close:sync1:view", (function(_this) {
           return function() {
             return _this.view.close();
           };
@@ -54,6 +49,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.onShow = function() {
         var syncDetailsCount;
+        App.breadcrumbRegion.close();
         navigator.splashscreen.hide();
         syncDetailsCount = _.getTotalSyncDetailsCount();
         return syncDetailsCount.done(function(count) {
@@ -85,7 +81,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.startSyncProcess = function() {
         if (_.isOnline()) {
-          alert("go");
           return App.navigate('sync3', {
             trigger: true
           });

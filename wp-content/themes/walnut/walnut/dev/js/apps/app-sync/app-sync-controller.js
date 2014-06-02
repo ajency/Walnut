@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse", "Zip"], function(Marionette, App, _, parse, getEntries) {
+define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse", "zip"], function(Marionette, App, _, parse, getEntries) {
   var SynchronizationController;
   SynchronizationController = (function(_super) {
     __extends(SynchronizationController, _super);
@@ -34,9 +34,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
 
     SynchronizationController.prototype.initialize = function() {};
 
-    SynchronizationController.prototype.startSync = function() {
-      return this.getDownloadURL();
-    };
+    SynchronizationController.prototype.startSync = function() {};
 
     SynchronizationController.prototype.totalRecordsUpdate = function() {
       return _.db.transaction((function(_this) {
@@ -382,7 +380,6 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
 
     SynchronizationController.prototype.dwnldUnZip = function() {
       var uri;
-      alert("yes");
       uri = encodeURI(_.getDwnlduri());
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
@@ -396,6 +393,10 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
             fileEntry.remove();
             fileTransfer = new FileTransfer();
             return fileTransfer.download(uri, filePath + "logs.zip", function(file) {
+              console.log('Zip file downloaded');
+              _this.updateDownloadTime();
+              $('#getFiles').find('*').prop('disabled', true);
+              $('#imprtFiles').find('*').prop('disabled', false);
               return _this.fileUnZip(filePath, file.toURL());
             }, _.fileTransferErrorHandler, true);
           }, _.fileErrorHandler);
@@ -423,6 +424,21 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
                       header: false,
                       dynamicTyping: false
                     });
+                    (function(parsedData) {
+                      var i, j, _i, _ref, _results;
+                      _results = [];
+                      for (i = _i = 0, _ref = parsedData.results.length - 1; _i <= _ref; i = _i += 1) {
+                        _results.push((function() {
+                          var _j, _ref1, _results1;
+                          _results1 = [];
+                          for (j = _j = 0, _ref1 = parsedData.results[i].length - 1; _j <= _ref1; j = _j += 1) {
+                            _results1.push(parsedData.results[i][j] = parsedData.results[i][j].replace(/\\/g, '"'));
+                          }
+                          return _results1;
+                        })());
+                      }
+                      return _results;
+                    })(parsedData);
                     return d.resolve(parsedData.results);
                   };
                   return reader.readAsText(file);
@@ -464,6 +480,8 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
       readData = this.chkReader(file);
       return readData.done((function(_this) {
         return function(data) {
+          console.log('Divisions parsed data');
+          data;
           return _.db.transaction(function(tx) {
             var i, row, _i, _ref, _results;
             tx.executeSql("DELETE FROM " + _.getTblPrefix() + "class_divisions");
@@ -495,7 +513,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response (content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date,status,sync) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8]], 1));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response (content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date,status,sync) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], 1]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -520,7 +538,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response_logs (start_time) VALUES ( ?,?)", [data[i][1], 1]));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response_logs (start_time, sync) VALUES ( ?,?)", [data[i][1], 1]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -544,7 +562,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs ( division_id,collection_id, teacher_id, date,status) VALUES ( ?,?, ?, ?,?,?)", [data[i][1], data[i][2], data[i][3], data[i][4]], data[i][5], 1));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?,?,?,?,?,?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], 1]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -592,7 +610,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on, created_by, last_modified_on,last_modified_by,published_on,published_by, status,type,term_ids,duration) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10], data[i][11]]));
+              _results.push(tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on, created_by, last_modified_on,last_modified_by,published_on,published_by, status,type, term_ids, duration) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], data[i][10], data[i][11]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
@@ -816,45 +834,20 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
             $('#JsonToCSV').removeAttr("disabled");
             $('#CSVupload').attr("disabled", "disabled");
             $('#syncNow').attr("disabled", "disabled");
-            App.execute("close:sync:view");
-            return _.setInitialSyncFlag('sync');
+            return App.execute("close:sync3:view");
           });
         };
       })(this));
     };
 
-    SynchronizationController.prototype.updateDwnldTime = function() {
+    SynchronizationController.prototype.updateDownloadTime = function() {
       var timestamp;
       timestamp = _.getDwnldTimeStamp();
-      if (_.getInitialSyncFlag() === null) {
-        return _.db.transaction((function(_this) {
-          return function(tx) {
-            return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?, ?)", [
-              "DownZip", {
-                8: 36
-              }
-            ]);
-          };
-        })(this), _.transactionErrorhandler, (function(_this) {
-          return function(tx) {
-            console.log('Sync Data INSERTED successfully ');
-            App.execute("close:sync:view");
-            return _.setInitialSyncFlag('sync');
-          };
-        })(this));
-      } else {
-        return _.db.transaction(function(tx) {
-          return tx.executeSql("UPDATE sync_details SET (type_of_operation,time_stamp) VALUES (?,?)", [
-            "DownZip", {
-              8: 36
-            }
-          ]);
-        }, _.transactionErrorhandler, function(tx) {
-          console.log('Sync Data UPDATED successfully');
-          App.execute("close:sync:view");
-          return _.setInitialSyncFlag('sync');
-        });
-      }
+      return _.db.transaction(function(tx) {
+        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?,?)", ['file_download', timestamp]);
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Updated file download details');
+      });
     };
 
     SynchronizationController.prototype.getLastTimeofDownSync = function() {
@@ -895,19 +888,18 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
     };
 
     SynchronizationController.prototype.getDownloadURL = function() {
-      return $.post(AJAXURL + '?action=sync-database', {
-        data: _.getDwnldTimeStamp()
-      }, (function(_this) {
+      var data;
+      data = {
+        blog_id: _.getBlogID(),
+        last_sync: ''
+      };
+      return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
         return function(resp) {
           console.log('RESP');
           console.log(resp);
-          if (resp.error) {
-            return _this.onErrorResponse(resp.error);
-          } else {
-            _.setDwnlduri(resp.exported_csv_url);
-            _.setDwnldTimeStamp(resp.sync_time);
-            return _this.dwnldUnZip();
-          }
+          _.setDwnlduri(resp.exported_csv_url);
+          _.setDwnldTimeStamp(resp.sync_time);
+          return _this.dwnldUnZip();
         };
       })(this), 'json');
     };

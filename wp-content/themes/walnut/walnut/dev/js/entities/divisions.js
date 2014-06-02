@@ -89,6 +89,21 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return $.when(runFunc()).done(function() {
           return console.log('getDivisionsFromLocal done');
         }).fail(_.failureHandler);
+      },
+      getDivisionByIdFromLocal: function(id) {
+        var runFunc;
+        runFunc = function() {
+          return $.Deferred(function(d) {
+            var divisions;
+            divisions = _.getDivisionById(id);
+            return divisions.done(function(result) {
+              return d.resolve(result);
+            });
+          });
+        };
+        return $.when(runFunc()).done(function() {
+          return console.log('getDivisionByIdFromLocal done');
+        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:divisions", function(opt) {
@@ -97,8 +112,11 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     App.reqres.setHandler("get:division:by:id", function(id) {
       return API.getDivisionByID(id);
     });
-    return App.reqres.setHandler("get:division:local", function() {
+    App.reqres.setHandler("get:division:local", function() {
       return API.getDivisionsFromLocal();
+    });
+    return App.reqres.setHandler("get:division:by:id:local", function(id) {
+      return API.getDivisionByIdFromLocal(id);
     });
   });
 });

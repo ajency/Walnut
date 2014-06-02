@@ -21,12 +21,12 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
   };
   document.addEventListener("online", function() {
     console.log('Online');
-    $('#connectionStatus').text('Internet connection available');
+    $('#connectionStatus').text('Available');
     return $('#online').prop("disabled", false);
   }, false);
   document.addEventListener("offline", function() {
     console.log('Offline');
-    $('#connectionStatus').text('Internet connection not found');
+    $('#connectionStatus').text('Unavailable');
     $('#online').prop("disabled", true);
     $('#online').prop("checked", false);
     return $("#offline").prop("checked", true);
