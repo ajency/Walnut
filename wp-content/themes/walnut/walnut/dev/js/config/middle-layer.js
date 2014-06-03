@@ -27,10 +27,14 @@ define(['detect', 'jquery'], function(detect, $) {
     }
   };
   checkConnection = function() {
-    if (navigator.connection.type === Connection.NONE) {
-      return false;
-    } else {
+    if (_.isUndefined(navigator.connection)) {
       return true;
+    } else {
+      if (navigator.connection.type === Connection.NONE) {
+        return false;
+      } else {
+        return true;
+      }
     }
   };
   document.addEventListener("online", onOnline, false);
