@@ -1,66 +1,66 @@
 define ['app'
-		'controllers/region-controller'
-		'apps/content-creator/property-dock/hotspot-property-box/view']
-		,(App,RegionController)->
+        'controllers/region-controller'
+        'apps/content-creator/property-dock/hotspot-property-box/view']
+, (App, RegionController)->
+    App.module "ContentCreator.PropertyDock.HotspotPropertyBox",
+    (HotspotPropertyBox, App, Backbone, Marionette, $, _)->
+        class HotspotPropertyBox.Controller extends RegionController
 
-			App.module "ContentCreator.PropertyDock.HotspotPropertyBox",
-			(HotspotPropertyBox, App, Backbone, Marionette, $, _)->
+            initialize: (options)->
+                @model = options.model
 
-				class HotspotPropertyBox.Controller extends RegionController
+                # get property view
+                @layout = @_getView @model
 
-					initialize : (options)->
+                # show view
+                @show @layout
 
-						@model = options.model
-						
-						# get property view
-						@layout = @_getView @model
+            # function to get the property view
+            _getView: (model)->
+                new HotspotPropertyBox.Views.PropertyView
+                    model: model
 
-						# show view
-						@show @layout
+            # on close of property box save the model
+            onClose: ->
+                App.execute "save:hotspot:content"
+                console.log @model
 
-					# function to get the property view
-					_getView:(model)->
-						new HotspotPropertyBox.Views.PropertyView
-								model : model
+                collection_types = ['option', 'image', 'text']
 
-					# on close of property box save the model
-					onClose:->
-						App.execute "save:hotspot:content"
-						console.log @model
-						
-						collection_types= ['option','image','text']
-						
-						optionCollection= this.model.get('optionCollection').models
+                optionCollection = this.model.get('optionCollection').models
 
-						optionModels= _.map optionCollection, (m)-> m.toJSON()
+                optionModels = _.map optionCollection, (m)->
+                    m.toJSON()
 
-						@model.set 'optionCollection': optionModels
+                @model.set 'optionCollection': optionModels
 
-						imageCollection= this.model.get('imageCollection').models
+                imageCollection = this.model.get('imageCollection').models
 
-						imageModels= _.map imageCollection, (m)-> m.toJSON()
+                imageModels = _.map imageCollection, (m)->
+                    m.toJSON()
 
-						@model.set 'imageCollection': imageModels
-						
-						textCollection= this.model.get('textCollection').models
+                @model.set 'imageCollection': imageModels
 
-						textModels= _.map textCollection, (m)-> m.toJSON()
+                textCollection = this.model.get('textCollection').models
 
-						@model.set 'textCollection': textModels
+                textModels = _.map textCollection, (m)->
+                    m.toJSON()
 
-						@model.save()
+                @model.set 'textCollection': textModels
 
-						optionCollection = App.request "create:new:option:collection", optionCollection
-						imageCollection = App.request "create:new:option:collection", imageCollection
-						textCollection = App.request "create:new:option:collection", textCollection
-						
-						@model.set 
-							'optionCollection': optionCollection
-							'imageCollection': imageCollection
-							'textCollection': textCollection
+                @model.save()
+
+                optionCollection = App.request "create:new:hotspot:element:collection", optionCollection
+                imageCollection = App.request "create:new:hotspot:element:collection", imageCollection
+                textCollection = App.request "create:new:hotspot:element:collection", textCollection
+
+                @model.set
+                    'optionCollection': optionCollection
+                    'imageCollection': imageCollection
+                    'textCollection': textCollection
 
 
-				App.commands.setHandler "show:hotspot:properties",(options)->
-						new HotspotPropertyBox.Controller
-								region : options.region
-								model : options.model
+        App.commands.setHandler "show:hotspot:properties", (options)->
+            new HotspotPropertyBox.Controller
+                region: options.region
+                model: options.model

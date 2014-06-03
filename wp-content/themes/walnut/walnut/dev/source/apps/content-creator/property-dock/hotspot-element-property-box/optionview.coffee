@@ -20,10 +20,6 @@ define ['app'
 
 						onShow:->
 
-
-						
-
-
 							# COLOR
 							# initialize colorpicker and set the on change event
 							@$el.find('.fontColor').minicolors
