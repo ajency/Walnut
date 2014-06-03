@@ -11,6 +11,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       }
 
       Controller.prototype.initialize = function(options) {
+        App.execute("close:question:elements");
+        App.execute("close:question:element:properties");
         this.model = options.model;
         this.view = this._getView(this.model);
         return this.show(this.view);
