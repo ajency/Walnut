@@ -26,7 +26,6 @@ define ['app'
 					# on close of property box save the model
 					onClose:->
 						App.execute 'save:fib:text'
-						console.log @model
 						models= this.model.get('blanksArray').models
 
 						elements= _.map models, (m)-> m.toJSON()

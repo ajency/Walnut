@@ -25,7 +25,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         if (class_ids) {
           for (_i = 0, _len = class_ids.length; _i < _len; _i++) {
             class_id = class_ids[_i];
-            this.$el.addClass('class' + class_id);
+            this.$el.addClass(CLASS_LABEL[class_id]);
           }
         }
         subjects = this.model.get('subjects');
@@ -55,7 +55,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
           class_string = '';
           for (_i = 0, _len = item_classes.length; _i < _len; _i++) {
             class_id = item_classes[_i];
-            class_string += 'Class ' + class_id;
+            class_string += CLASS_LABEL[class_id];
             if (_.last(item_classes) !== class_id) {
               class_string += ', ';
             }
@@ -64,8 +64,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         }
         subjects = this.model.get('subjects');
         if (subjects) {
-          item_subjects = _.sortBy(subjects, function(num) {
-            return num;
+          item_subjects = _.sortBy(subjects, function(subject) {
+            return subject;
           });
           subject_string = '';
           for (_j = 0, _len1 = item_subjects.length; _j < _len1; _j++) {
@@ -114,14 +114,15 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       ListView.prototype.itemViewContainer = 'ul.textbooks_list';
 
       ListView.prototype.serializeData = function() {
-        var collection_classes, collection_subjects, data, data_classes, data_subjects;
+        var collection_classes, collection_subjects, data, data_subjects;
         data = ListView.__super__.serializeData.call(this);
         console.log(this.collection);
         collection_classes = this.collection.pluck('classes');
-        data_classes = _.union(_.flatten(collection_classes));
-        data.classes = _.compact(_.sortBy(data_classes, function(num) {
-          return num;
-        }));
+        data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
+          return parseInt(num);
+        }).map(function(m) {
+          return CLASS_LABEL[m];
+        }).value();
         collection_subjects = this.collection.pluck('subjects');
         data_subjects = _.union(_.flatten(collection_subjects));
         data.subjects = _.compact(_.sortBy(data_subjects, function(num) {

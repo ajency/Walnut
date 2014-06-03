@@ -42,7 +42,6 @@ define(['app', 'backbone'], function(App, Backbone) {
         }
         questionCollection = new QuestionElement.ElementCollection;
         questionCollection.set(data);
-        console.log(questionCollection);
         return questionCollection;
       }
     };

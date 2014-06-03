@@ -84,8 +84,10 @@ define ['underscore', 'unserialize'], ( _) ->
 
 					divisionIds = _.getDivisionIds()
 					divisionIds.done (ids)->
+						console.log 'divisionIds: '+ids
 						
-						ids = _.compact ids.reverse()
+						if _.isArray(ids)
+							ids = _.compact ids.reverse()
 
 						results = []
 						

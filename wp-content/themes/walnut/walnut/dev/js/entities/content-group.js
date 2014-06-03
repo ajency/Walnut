@@ -105,6 +105,10 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         contentGroupItem = new ContentGroup.ItemModel(data);
         return contentGroupItem;
       },
+      newContentGroup: function() {
+        var contentGroup;
+        return contentGroup = new ContentGroup.ItemModel;
+      },
       getContentGroupByIdFromLocal: function(id, division) {
         var onSuccess, runQuery;
         runQuery = function() {
@@ -232,6 +236,9 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     });
     App.reqres.setHandler("save:content:group:details", function(data) {
       return API.saveContentGroupDetails(data);
+    });
+    App.reqres.setHandler("new:content:group", function() {
+      return API.newContentGroup();
     });
     App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
       return API.getContentGroupByIdFromLocal(id, division);

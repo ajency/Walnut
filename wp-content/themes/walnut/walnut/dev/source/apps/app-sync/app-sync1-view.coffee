@@ -8,6 +8,10 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				@view = view = @_getAppSyncView()
 
+				# listen to the close event of the view
+				# @listenTo view, 'close', ->
+				# 	App.navigate('teachers/dashboard', trigger: true)
+
 				App.commands.setHandler "close:sync1:view", =>
 					@view.close()	
 

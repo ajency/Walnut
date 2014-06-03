@@ -91,6 +91,8 @@ define ['marionette'], (Marionette)->
 		
 		user_role= user.get "roles"
 		
+		console.log 'Router app: '+App.getCurrentRoute()
+
 		if _.platform() is 'DEVICE'
 			syncDetailsCount = _.getTotalSyncDetailsCount()
 			syncDetailsCount.done (count)->

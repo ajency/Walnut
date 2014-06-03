@@ -139,21 +139,21 @@ define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
                 
                 update_question_response =(q_resp) ->
 
-                        status = model.get('status')
-                        status = 'completed' if (model.get('status')) isnt 'paused'
+                    status = model.get('status')
+                    status = 'completed' if (model.get('status')) isnt 'paused'
 
-                        end_date = model.get('end_date')
-                        if status is 'completed'
-                            end_date = _.getCurrentDateTime(0)
+                    end_date = model.get('end_date')
+                    if status is 'completed'
+                        end_date = _.getCurrentDateTime(0)
 
-                        _.db.transaction((tx)->
-                            tx.executeSql('UPDATE '+_.getTblPrefix()+'question_response SET question_response=?, time_taken=?, status=?, end_date=?
-                                WHERE ref_id=?', [q_resp, model.get('time_taken'), status, end_date, model.get('ref_id')])
+                    _.db.transaction((tx)->
+                        tx.executeSql('UPDATE '+_.getTblPrefix()+'question_response SET question_response=?, time_taken=?, status=?, end_date=?
+                            WHERE ref_id=?', [q_resp, model.get('time_taken'), status, end_date, model.get('ref_id')])
 
-                        ,_.transactionErrorHandler
-                        ,(tx)->
-                            console.log 'SUCCESS: Updated record in wp_question_response'
-                        )     
+                    ,_.transactionErrorHandler
+                    ,(tx)->
+                        console.log 'SUCCESS: Updated record in wp_question_response'
+                    )     
                         
 
                 questionType = _.getMetaValue(model.get('content_piece_id'))

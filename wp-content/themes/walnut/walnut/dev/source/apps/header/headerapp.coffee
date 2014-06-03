@@ -95,11 +95,11 @@ define ['app'
 						if App.getCurrentRoute() is 'app-login'
 							navigator.app.exitApp()
 						else 
-							if App.getCurrentRoute() is 'teachers/dashboard'
-								console.log 'Remove event'
-								removeBackButtonEvent()
-							else	
-								App.navigate('app-login', trigger: true)
+							# if App.getCurrentRoute() is 'teachers/dashboard'
+							# 	console.log 'Remove event'
+							# 	removeBackButtonEvent()
+							# else	
+							App.navigate('app-login', trigger: true)
 					, false)
 						
 

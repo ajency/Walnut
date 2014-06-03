@@ -37,7 +37,7 @@ define ['app'
                                 hours = parseInt mins/60
                                 mins= parseInt mins%60
                             seconds = parseInt time%60
-                            display_time=''
+                            display_time = ''
 
                             if hours >0
                                 display_time= hours+'h '
