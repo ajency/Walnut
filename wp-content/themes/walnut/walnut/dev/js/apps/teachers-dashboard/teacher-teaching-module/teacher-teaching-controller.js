@@ -19,6 +19,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this._showQuestionDisplayView = __bind(this._showQuestionDisplayView, this);
         this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
         this._getOrCreateModel = __bind(this._getOrCreateModel, this);
+        this._gotoPreviousRoute = __bind(this._gotoPreviousRoute, this);
         this._changeQuestion = __bind(this._changeQuestion, this);
         return TeacherTeachingController.__super__.constructor.apply(this, arguments);
       }

@@ -82,7 +82,7 @@ define ['app'
                 else
                     @_gotoPreviousRoute()
 
-            _gotoPreviousRoute: ->
+            _gotoPreviousRoute: =>
                 if @display_mode is 'class_mode'
                     if questionResponseModel.get('status') isnt 'completed'
                         elapsedTime = @timerObject.request "get:elapsed:time"
