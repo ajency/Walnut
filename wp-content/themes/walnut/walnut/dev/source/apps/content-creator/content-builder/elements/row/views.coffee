@@ -75,7 +75,18 @@ define ['app'], (App)->
 
                 @$el.on 'row:is:moved',(evt,id)=>
                     if @$el.attr('id') is id
+                        console.log "#{id} is moved"
                         @setColumnResizer()
+
+                @$el.find('.column').on "class:changed",(e)=>
+                    e.stopPropagation()
+                    @$el.find('.row').trigger "adjust:resizer"
+
+                @$el.on "adjust:resizer",(e)=>
+                    e.stopPropagation()
+                    console.log 'column resizer set'
+                    @setColumnResizer()
+#
 
             # set new classes on style change
             onStyleChanged: (newStyle, old)->
