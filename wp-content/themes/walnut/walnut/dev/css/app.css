@@ -114,6 +114,7 @@ button {
 }
 .switch-input:checked + .switch-label {
   color: #ffffff;
+  -webkit-transform: translate3d(0px, 0px, 0px);
   -webkit-transition: 0.15s ease-out;
   -moz-transition: 0.15s ease-out;
   -o-transition: 0.15s ease-out;
@@ -132,8 +133,9 @@ button {
   left: 0;
   width: 60px;
   height: 25px;
-  background: #aaaaaa;
+  background: #0090d9;
   border-radius: 3px;
+  -webkit-transform: translate3d(0px, 0px, 0px);
   -webkit-transition: left 0.15s ease-out;
   -moz-transition: left 0.15s ease-out;
   -o-transition: left 0.15s ease-out;
