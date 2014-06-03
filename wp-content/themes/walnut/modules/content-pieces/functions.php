@@ -139,7 +139,8 @@ function get_single_content_piece($id){
 
     $content_piece_meta= maybe_unserialize($content_piece_meta_serialized);
 
-    extract($content_piece_meta);
+    if($content_piece_meta)
+        extract($content_piece_meta);
 
     // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
@@ -571,6 +572,8 @@ function save_content_piece($data){
     update_post_meta ($content_id, 'content_type',$data['content_type']);
 
     update_post_meta ($content_id, 'question_type',$data['question_type']);
+
+    update_post_meta ($content_id, 'textbook',$data['term_ids']['textbook']);
 
     $content_piece_additional = array(
         'term_ids'          => $data['term_ids'],

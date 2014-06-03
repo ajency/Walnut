@@ -23,6 +23,7 @@ define ['app'
 
                 # show fib element properties
                 App.commands.setHandler "show:fib:element:properties", (options)=>
+
                     @_getFibElementProperties options
 
                 App.commands.setHandler "close:question:element:properties", =>

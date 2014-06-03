@@ -27,9 +27,6 @@ define ['app'
 							questionCollection = new QuestionElement.ElementCollection
 							
 							questionCollection.set data
-							
-							console.log questionCollection
-
 
 							questionCollection 
 

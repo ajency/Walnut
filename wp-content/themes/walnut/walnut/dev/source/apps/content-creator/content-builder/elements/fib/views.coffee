@@ -30,7 +30,6 @@ define ['app'], (App)->
                     e.preventDefault()
                 'blur .fib-text': 'onSaveText'
 
-            initialize: (options)->
 
             onShow: ->
 
@@ -38,6 +37,7 @@ define ['app'], (App)->
                 @$el.parent().parent().on 'click', (evt)=>
                     @trigger "show:this:fib:properties"
                     @trigger "close:question:element:properties"
+                    @trigger "close:question:elements"
                     # stop propogation of click event
                     evt.stopPropagation()
 
@@ -47,7 +47,7 @@ define ['app'], (App)->
                 @editor.setData _.stripslashes @model.get 'text'
 
                 # wait for CKEditor to be loaded
-                _.delay @_afterCKEditorInitialization(), 500
+                _.delay @_afterCKEditorInitialization, 500
 
             # after initialization of ckeditor
             # add a p tag at the end to fix align issues
@@ -62,19 +62,19 @@ define ['app'], (App)->
 
                 if not parseInt @model.get 'numberOfBlanks'
                     @model.set 'numberOfBlanks', 1
-                    #
+
                 else
                     @$el.find('input').wrap('<span contenteditable="false"></span>')
                     @$el.find('input').before('<span class="fibno"></span>')
-                    @$el.find("input").on 'click', @_onClickOfBlank
+                    @$el.find("input").parent().on 'click', @_onClickOfBlank
                     @model.get('blanksArray').each @_initializeEachBlank
 
                 # enable the event to check if a blank was
-                #added or removed
+                # added or removed
                 @$el.on 'DOMSubtreeModified', @_updateInputProperties
                 @_updateInputProperties()
 
-            #do an initialization for a blank
+            # do an initialization for a blank
             # set the handler for change answer and change size
             _initializeEachBlank:(blanksModel)=>
                 @_changeBlankSize blanksModel,blanksModel.get 'blank_size'
@@ -89,10 +89,8 @@ define ['app'], (App)->
                     if numberOfBlanks > model.previous 'numberOfBlanks'
                         noOfBlanksToAdd = numberOfBlanks - model.previous 'numberOfBlanks'
                         @_addBlanks noOfBlanksToAdd
-                        console.log noOfBlanksToAdd
                     else if numberOfBlanks < model.previous 'numberOfBlanks'
                         noOfBlanksToRemove = model.previous('numberOfBlanks') - numberOfBlanks
-                        console.log noOfBlanksToRemove
                         @_removeBlanks noOfBlanksToRemove
 
             # remove n number of blanks from the end
@@ -111,23 +109,25 @@ define ['app'], (App)->
                     @$el.find('p').first().append "<span contenteditable='false'>
                         <span class='fibno'>#{inputNumber}</span><input type='text'
                         data-id='#{inputId}' data-cke-editable='1' style=' height :100%'
-                        contenteditable='false'></span>"
+                        contenteditable='false' ></span>&nbsp;&nbsp;"
 
                     blanksModel = @model.get('blanksArray').get(inputId)
 
                     @_initializeEachBlank blanksModel
 
-                    console.log @$el.find("input[data-id='#{inputId}']")
-                    @$el.find("input").on 'click', @_onClickOfBlank
+                    @$el.find("input").parent().on 'click', @_onClickOfBlank
 
                     noOfBlanksToAdd--
 
             #when a blank is clicked show the propertiers for that blank
             _onClickOfBlank:(e)=>
-                inputId = $(e.target).attr 'data-id'
+                if $(e.target).prop('class') is 'fibno'
+                    return
+                if $(e.target).prop('tagName') is 'INPUT'
+                    inputId = $(e.target).attr 'data-id'
+                else
+                    inputId = $(e.target).children('input').attr 'data-id'
                 blanksModel = @model.get('blanksArray').get(inputId)
-                console.log $(e.target).attr 'data-id'
-                console.log JSON.stringify @model.get('blanksArray').toJSON()
                 App.execute "show:fib:element:properties",
                     model: blanksModel
                     fibModel: @model
@@ -183,7 +183,6 @@ define ['app'], (App)->
                 @model.set 'text', formatedText.html()
                 console.log formatedText.html()
 
-                console.log @model
 
             # on modification of dom structure modification of p
             _updateInputProperties: =>
@@ -199,7 +198,7 @@ define ['app'], (App)->
                             $(blank).prev().text index + 1
 
 
-                    ,20
+                    , 20
 
 
                 # delay for .1 sec for everything to get initialized
@@ -220,7 +219,6 @@ define ['app'], (App)->
                                 @trigger 'close:question:element:properties'
                                 if @model.get('blanksArray').size() < @model.get('numberOfBlanks')
                                     @model.set 'numberOfBlanks', @model.get('numberOfBlanks') - 1
-                                console.log @model.get('blanksArray').pluck 'id'
                 , 500
 
                 # add style for the blanks

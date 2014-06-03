@@ -271,11 +271,15 @@ function get_book($book) {
 
     $classes = $wpdb->get_results("select class_id, tags from {$wpdb->prefix}textbook_relationships 
                 where textbook_id=" . $book_id, ARRAY_A);
+
     $book_dets->classes= maybe_unserialize($classes[0]['class_id']);
     $book_dets->subjects= maybe_unserialize($classes[0]['tags']);
     
-    $modules_count = $wpdb->get_results("SELECT count(id) as count FROM `wp_content_collection` where term_ids like '%\"".$book_id."\";%'");
+    $modules_count = $wpdb->get_results("SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection` where term_ids like '%\"".$book_id."\";%'");
     $book_dets->modules_count = $modules_count[0]->count;
+
+    $questions_count = $wpdb->get_results("SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='textbook' and meta_value=".$book_id);
+    $book_dets->questions_count = $questions_count[0]->count;
 
     $args = array('hide_empty' => false,
         'parent' => $book_id,
@@ -303,7 +307,7 @@ function get_textbooks_for_class($classid) {
     
     $txtbooks_assigned=get_assigned_textbooks();
     $txtbooks_assigned = __u::compact($txtbooks_assigned);
-    
+
     if($txtbooks_assigned){
         $tids=implode(',',$txtbooks_assigned);
         
@@ -327,8 +331,8 @@ function get_assigned_textbooks($user_id='') {
     
     if($user_id=='')
         $user_id=  get_current_user_id();
-    
-    $txtbooks_assigned=  get_usermeta($user_id, 'textbooks');
+
+    $txtbooks_assigned=  get_user_meta($user_id, 'textbooks', single);
     
     $txtbook_ids= maybe_unserialize($txtbooks_assigned);
     
@@ -346,7 +350,7 @@ function get_textbooks_for_user($user_id='') {
     $data=array();
     
     $txtbooks_assigned=get_assigned_textbooks($user_id);
-    
+
     if (is_array($txtbooks_assigned)) {
         foreach ($txtbooks_assigned as $book) {
             $bookdets = get_book($book->textbook_id);

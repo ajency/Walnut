@@ -1,6 +1,6 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
   return App.module("ContentCreator.ContentBuilder.Element.Sort.Views", function(Views, App, Backbone, Marionette, $, _) {
@@ -9,6 +9,7 @@ define(['app'], function(App) {
       __extends(OptionView, _super);
 
       function OptionView() {
+        this.configureEditor = __bind(this.configureEditor, this);
         return OptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -28,6 +29,7 @@ define(['app'], function(App) {
       OptionView.prototype.onShow = function() {
         this.$el.attr('id', 'sort-option-' + this.model.get('optionNo'));
         this.$el.find('.sort-option-text').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
+        CKEDITOR.on('instanceCreated', this.configureEditor);
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('.sort-option-text').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
         return _.delay((function(_this) {
@@ -37,6 +39,17 @@ define(['app'], function(App) {
             });
           };
         })(this), 500);
+      };
+
+      OptionView.prototype.configureEditor = function(event) {
+        var editor, element;
+        editor = event.editor;
+        element = editor.element;
+        if (element.getAttribute('id') === this.$el.find('.sort-option-text').attr('id')) {
+          return editor.on('configLoaded', function() {
+            return editor.config.placeholder = 'Type option here..';
+          });
+        }
       };
 
       OptionView.prototype.onClose = function() {
