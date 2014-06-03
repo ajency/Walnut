@@ -59,17 +59,6 @@ define ['app'
 
                 @listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
-                @listenTo @layout, "close", =>
-
-                    if questionResponseModel.get('status') isnt 'completed'
-                        elapsedTime = @timerObject.request "get:elapsed:time"
-
-                        questionResponseModel.set
-                            'time_taken': elapsedTime
-                            'status': 'paused'
-
-                        questionResponseModel.save()
-
             _changeQuestion: (current_question_id)=>
                 current_question_id = parseInt current_question_id
 
@@ -93,7 +82,17 @@ define ['app'
                 else
                     @_gotoPreviousRoute()
 
-            _gotoPreviousRoute: ->
+            _gotoPreviousRoute: =>
+                if @display_mode is 'class_mode'
+                    if questionResponseModel.get('status') isnt 'completed'
+                        elapsedTime = @timerObject.request "get:elapsed:time"
+
+                        questionResponseModel.set
+                            'time_taken': elapsedTime
+                            'status': 'paused'
+
+                        questionResponseModel.save()
+
                 currRoute = App.getCurrentRoute()
 
                 removeStr = _.str.strRightBack currRoute, '/'
