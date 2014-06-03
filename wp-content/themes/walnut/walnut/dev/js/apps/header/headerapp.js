@@ -112,14 +112,9 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
           if (App.getCurrentRoute() === 'app-login') {
             return navigator.app.exitApp();
           } else {
-            if (App.getCurrentRoute() === 'teachers/dashboard') {
-              console.log('Remove event');
-              return removeBackButtonEvent();
-            } else {
-              return App.navigate('app-login', {
-                trigger: true
-              });
-            }
+            return App.navigate('app-login', {
+              trigger: true
+            });
           }
         }, false);
       };

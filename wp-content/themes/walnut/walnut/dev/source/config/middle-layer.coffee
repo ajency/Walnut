@@ -55,7 +55,10 @@ define ['detect', 'jquery', 'underscore'], (detect, $, _)->
 				connected
 
 			when 'DEVICE'
-				if navigator.connection.type is Connection.NONE	then false else true
+				if _.isUndefined(navigator.connection)
+					connected
+				else
+					if navigator.connection.type is Connection.NONE	then false else true
 
 
 	# change main logo to school logo after initial user login

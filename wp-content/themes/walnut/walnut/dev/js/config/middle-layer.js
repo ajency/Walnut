@@ -36,10 +36,14 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
       case 'BROWSER':
         return connected;
       case 'DEVICE':
-        if (navigator.connection.type === Connection.NONE) {
-          return false;
+        if (_.isUndefined(navigator.connection)) {
+          return connected;
         } else {
-          return true;
+          if (navigator.connection.type === Connection.NONE) {
+            return false;
+          } else {
+            return true;
+          }
         }
     }
   };

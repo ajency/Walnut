@@ -89,6 +89,7 @@ define(['marionette'], function(Marionette) {
       }
       user = App.request("get:user:model");
       user_role = user.get("roles");
+      console.log('Router app: ' + App.getCurrentRoute());
       if (_.platform() === 'DEVICE') {
         syncDetailsCount = _.getTotalSyncDetailsCount();
         syncDetailsCount.done(function(count) {

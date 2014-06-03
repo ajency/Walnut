@@ -22,6 +22,7 @@ define(['app', 'apps/app-sync/app-sync1-view', 'apps/app-sync/app-sync2-view', '
     })(Marionette.AppRouter);
     Controller = {
       showAppSync1: function() {
+        console.log('Router: ' + App.getCurrentRoute());
         return new AppSync.Controller.AppSync1Controller({
           region: App.mainContentRegion
         });

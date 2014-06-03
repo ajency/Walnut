@@ -92,16 +92,19 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
 
       LoginView.prototype.onShow = function() {
         $('body').addClass('error-body no-top');
-        this.trigger("prepopulate:username");
-        _.setMainLogo();
-        if (_.isOnline()) {
-          $('#connectionStatus').text('Available');
-        } else {
-          $('#connectionStatus').text('Unavailable');
-          $('#online').prop("disabled", true);
+        $('.page-content').addClass('condensed');
+        if (_.platform() === 'DEVICE') {
+          this.trigger("prepopulate:username");
+          _.setMainLogo();
+          if (_.isOnline()) {
+            $('#connectionStatus').text('Available');
+          } else {
+            $('#connectionStatus').text('Unavailable');
+            $('#online').prop("disabled", true);
+          }
+          this.trigger("disable:offline:login:type");
+          return navigator.splashscreen.hide();
         }
-        this.trigger("disable:offline:login:type");
-        return navigator.splashscreen.hide();
       };
 
       LoginView.prototype.submitLogin = function(e) {
@@ -117,7 +120,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
 
       LoginView.prototype.onLoginFail = function(resp) {
         this.$el.find('#checking_login, #invalid_login').remove();
-        return this.$el.find('#login-form').before('<span id="invalid_login" class="btn btn-danger btn-cons">' + resp.error + '</span>');
+        return this.$el.find('#login-form').before('<div id="invalid_login" class="alert alert-error"><span class="fa fa-warning"></span> ' + resp.error + '</div>');
       };
 
       return LoginView;
