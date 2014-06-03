@@ -7,7 +7,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 		startSync : ->
 			# @getDownloadURL()
-
+			
 		
 		totalRecordsUpdate : =>
 
