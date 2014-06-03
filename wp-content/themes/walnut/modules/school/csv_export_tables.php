@@ -379,8 +379,8 @@ function get_content_pieces_for_user($user_id){
 function exportMysqlToCsv($table, $sql_query=''){
     $csv_terminated = "\n";
     $csv_separator = ",";
-    #$csv_enclosed = '"';
-    #$csv_escaped = "\\";
+    $csv_enclosed = '"';
+    $csv_escaped = "\\";
 
     //debug- see the list of tables being exported
     //echo $table; echo '<br><br>';

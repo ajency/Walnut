@@ -25,10 +25,7 @@ define ['app'], (App)->
 
 
 
-                # create layer collections
-                @textCollection = @model.get 'textCollection' #App.request "create:new:hotspot:element:collection", @contentObject.textData
-                @optionCollection = @model.get 'optionCollection' #App.request "create:new:hotspot:element:collection", @contentObject.optionData
-                @imageCollection = @model.get 'imageCollection' #App.request "create:new:hotspot:element:collection", @contentObject.imageData
+
 
                 #give a unique name to every hotspot canvas
                 @stageName = _.uniqueId('stage')
@@ -191,19 +188,18 @@ define ['app'], (App)->
 
 
             _drawExistingElements: ->
-                console.log @textCollection
 
-                @textCollection.each (model, i)=>
+                @model.get('textCollection').each (model, i)=>
                     @_addEachElements 'Hotspot-Text', model
 
-                @optionCollection.each (model, i)=>
+                @model.get('optionCollection').each (model, i)=>
                     if model.get('shape') is 'Rect'
                         @_addEachElements 'Hotspot-Rectangle', model
 
                     if model.get('shape') is 'Circle'
                         @_addEachElements 'Hotspot-Circle', model
 
-                @imageCollection.each (model, i)=>
+                @model.get('imageCollection').each (model, i)=>
                     @_addEachElements 'Hotspot-Image', model
 
                 @_updateDefaultLayer()
@@ -276,7 +272,8 @@ define ['app'], (App)->
                         marks: 1
 
                     hotspotElement = App.request "create:new:hotspot:element", modelData
-                    @optionCollection.add hotspotElement
+                    @model.get('optionCollection').add hotspotElement
+                    console.log @model.get('optionCollection')
 
                 self = @
 
@@ -325,7 +322,7 @@ define ['app'], (App)->
                 # delete element based on toDelete
                 hotspotElement.on "change:toDelete", =>
                     circleGrp.destroy()
-                    @optionCollection.remove hotspotElement
+                    @model.get('optionCollection').remove hotspotElement
 
                     @trigger "close:hotspot:element:properties"
                     @optionLayer.draw()
@@ -363,7 +360,10 @@ define ['app'], (App)->
 
 
                     hotspotElement = App.request "create:new:hotspot:element", modelData
-                    @optionCollection.add hotspotElement
+                    @model.get('optionCollection').add hotspotElement
+
+                    console.log @model.get('optionCollection')
+
 
 
                 self = @
@@ -422,7 +422,7 @@ define ['app'], (App)->
                 # delete element based on toDelete
                 hotspotElement.on "change:toDelete", =>
                     rectGrp.destroy()
-                    @optionCollection.remove hotspotElement
+                    @model.get('optionCollection').remove hotspotElement
                     @trigger "close:hotspot:element:properties"
                     @optionLayer.draw()
                     @_updateDefaultLayer()
@@ -457,7 +457,7 @@ define ['app'], (App)->
                         textAngle: 0
 
                     hotspotElement = App.request "create:new:hotspot:element", modelData
-                    @textCollection.add hotspotElement
+                    @model.get('textCollection').add hotspotElement
 
 
                 self = @
@@ -542,7 +542,7 @@ define ['app'], (App)->
                 # on change of toDelete property remove the text element from the canvas
                 hotspotElement.on "change:toDelete", =>
                     tooltip.destroy()
-                    @textCollection.remove hotspotElement
+                    @model.get('textCollection').remove hotspotElement
                     @trigger "close:hotspot:element:properties"
                     @textLayer.draw()
                     @_updateDefaultLayer()
@@ -575,7 +575,7 @@ define ['app'], (App)->
                         url: url
 
                     hotspotElement = App.request "create:new:hotspot:element", modelData
-                    @imageCollection.add hotspotElement
+                    @model.get('imageCollection').add hotspotElement
 
                 imageGrp = null
 
@@ -623,7 +623,7 @@ define ['app'], (App)->
                 # on change of toDelete property remove the image element from the canvas
                 hotspotElement.on "change:toDelete", =>
                     imageGrp.destroy()
-                    @imageCollection.remove hotspotElement
+                    @model.get('imageCollection').remove hotspotElement
                     @trigger "close:hotspot:element:properties"
                     @imageLayer.draw()
                     @_updateDefaultLayer()

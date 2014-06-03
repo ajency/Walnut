@@ -19,6 +19,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this._showQuestionDisplayView = __bind(this._showQuestionDisplayView, this);
         this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
         this._getOrCreateModel = __bind(this._getOrCreateModel, this);
+        this._gotoPreviousRoute = __bind(this._gotoPreviousRoute, this);
         this._changeQuestion = __bind(this._changeQuestion, this);
         return TeacherTeachingController.__super__.constructor.apply(this, arguments);
       }
@@ -47,20 +48,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
-        this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
-        return this.listenTo(this.layout, "close", (function(_this) {
-          return function() {
-            var elapsedTime;
-            if (questionResponseModel.get('status') !== 'completed') {
-              elapsedTime = _this.timerObject.request("get:elapsed:time");
-              questionResponseModel.set({
-                'time_taken': elapsedTime,
-                'status': 'paused'
-              });
-              return questionResponseModel.save();
-            }
-          };
-        })(this));
+        return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
       };
 
       TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
@@ -85,7 +73,17 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       TeacherTeachingController.prototype._gotoPreviousRoute = function() {
-        var currRoute, newRoute, removeStr;
+        var currRoute, elapsedTime, newRoute, removeStr;
+        if (this.display_mode === 'class_mode') {
+          if (questionResponseModel.get('status') !== 'completed') {
+            elapsedTime = this.timerObject.request("get:elapsed:time");
+            questionResponseModel.set({
+              'time_taken': elapsedTime,
+              'status': 'paused'
+            });
+            questionResponseModel.save();
+          }
+        }
         currRoute = App.getCurrentRoute();
         removeStr = _.str.strRightBack(currRoute, '/');
         newRoute = _.str.rtrim(currRoute, removeStr + '/');

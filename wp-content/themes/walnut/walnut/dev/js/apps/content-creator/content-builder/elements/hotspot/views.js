@@ -18,9 +18,6 @@ define(['app'], function(App) {
         if (opt == null) {
           opt = {};
         }
-        this.textCollection = this.model.get('textCollection');
-        this.optionCollection = this.model.get('optionCollection');
-        this.imageCollection = this.model.get('imageCollection');
         this.stageName = _.uniqueId('stage');
         this.imageLayer = new Kinetic.Layer({
           name: 'imageLayer'
@@ -173,13 +170,12 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._drawExistingElements = function() {
-        console.log(this.textCollection);
-        this.textCollection.each((function(_this) {
+        this.model.get('textCollection').each((function(_this) {
           return function(model, i) {
             return _this._addEachElements('Hotspot-Text', model);
           };
         })(this));
-        this.optionCollection.each((function(_this) {
+        this.model.get('optionCollection').each((function(_this) {
           return function(model, i) {
             if (model.get('shape') === 'Rect') {
               _this._addEachElements('Hotspot-Rectangle', model);
@@ -189,7 +185,7 @@ define(['app'], function(App) {
             }
           };
         })(this));
-        this.imageCollection.each((function(_this) {
+        this.model.get('imageCollection').each((function(_this) {
           return function(model, i) {
             return _this._addEachElements('Hotspot-Image', model);
           };
@@ -260,7 +256,8 @@ define(['app'], function(App) {
             marks: 1
           };
           hotspotElement = App.request("create:new:hotspot:element", modelData);
-          this.optionCollection.add(hotspotElement);
+          this.model.get('optionCollection').add(hotspotElement);
+          console.log(this.model.get('optionCollection'));
         }
         self = this;
         this.trigger("show:hotspot:element:properties", hotspotElement);
@@ -306,7 +303,7 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             circleGrp.destroy();
-            _this.optionCollection.remove(hotspotElement);
+            _this.model.get('optionCollection').remove(hotspotElement);
             _this.trigger("close:hotspot:element:properties");
             _this.optionLayer.draw();
             return _this._updateDefaultLayer();
@@ -340,7 +337,8 @@ define(['app'], function(App) {
             marks: 1
           };
           hotspotElement = App.request("create:new:hotspot:element", modelData);
-          this.optionCollection.add(hotspotElement);
+          this.model.get('optionCollection').add(hotspotElement);
+          console.log(this.model.get('optionCollection'));
         }
         self = this;
         this.trigger("show:hotspot:element:properties", hotspotElement);
@@ -396,7 +394,7 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             rectGrp.destroy();
-            _this.optionCollection.remove(hotspotElement);
+            _this.model.get('optionCollection').remove(hotspotElement);
             _this.trigger("close:hotspot:element:properties");
             _this.optionLayer.draw();
             return _this._updateDefaultLayer();
@@ -429,7 +427,7 @@ define(['app'], function(App) {
             textAngle: 0
           };
           hotspotElement = App.request("create:new:hotspot:element", modelData);
-          this.textCollection.add(hotspotElement);
+          this.model.get('textCollection').add(hotspotElement);
         }
         self = this;
         this.trigger("show:hotspot:element:properties", hotspotElement);
@@ -508,7 +506,7 @@ define(['app'], function(App) {
         hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             tooltip.destroy();
-            _this.textCollection.remove(hotspotElement);
+            _this.model.get('textCollection').remove(hotspotElement);
             _this.trigger("close:hotspot:element:properties");
             _this.textLayer.draw();
             return _this._updateDefaultLayer();
@@ -540,7 +538,7 @@ define(['app'], function(App) {
             url: url
           };
           hotspotElement = App.request("create:new:hotspot:element", modelData);
-          this.imageCollection.add(hotspotElement);
+          this.model.get('imageCollection').add(hotspotElement);
         }
         imageGrp = null;
         imageObject = new Image();
@@ -581,7 +579,7 @@ define(['app'], function(App) {
         return hotspotElement.on("change:toDelete", (function(_this) {
           return function() {
             imageGrp.destroy();
-            _this.imageCollection.remove(hotspotElement);
+            _this.model.get('imageCollection').remove(hotspotElement);
             _this.trigger("close:hotspot:element:properties");
             _this.imageLayer.draw();
             return _this._updateDefaultLayer();

@@ -56,7 +56,7 @@ define ['app'], (App)->
 
             template: '<span class="optionNo">{{optionNo}}</span><input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no">
 
-                        						<div class="mcq-option-text"></div>'
+                                    						<div class="mcq-option-text"></div>'
 
             # avoid and anchor tag click events
             # listen to blur event for the text element so that we can save the new edited markup
@@ -77,6 +77,7 @@ define ['app'], (App)->
             onShow: ->
                 @$el.attr 'id', 'mcq-option-' + @model.get 'optionNo'
                 @$el.find('.mcq-option-text').attr('contenteditable', 'true').attr 'id', _.uniqueId 'text-'
+                CKEDITOR.on 'instanceCreated', @configureEditor
                 @editor = CKEDITOR.inline document.getElementById @$el.find('.mcq-option-text').attr 'id'
                 @editor.setData _.stripslashes @model.get 'text'
 
@@ -109,6 +110,13 @@ define ['app'], (App)->
                 else
                     console.log 'unchecked'
                     @trigger 'option:unchecked', @model
+
+            configureEditor: (event) =>
+                editor = event.editor
+                element = editor.element
+                if element.getAttribute('id') is @$el.find('.mcq-option-text').attr 'id'
+                    editor.on 'configLoaded', ->
+                        editor.config.placeholder = 'Type option here..'
 
 
             onClickCheckbox: ()->

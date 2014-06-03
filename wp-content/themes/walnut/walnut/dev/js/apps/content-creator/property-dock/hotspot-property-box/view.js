@@ -28,6 +28,7 @@ define(['app'], function(App) {
       };
 
       PropertyView.prototype.onShow = function() {
+        console.log(this.model.get('optionCollection'));
         if (this.model.get('enableIndividualMarks')) {
           this.ui.individualMarksCheckbox.prop('checked', true);
           this.ui.marksTextbox.prop('disabled', true);
@@ -67,6 +68,7 @@ define(['app'], function(App) {
       PropertyView.prototype._delayUpdateTillMarksChange = function() {
         var totalMarks;
         totalMarks = 0;
+        console.log(this.model.get('optionCollection'));
         this.model.get('optionCollection').each((function(_this) {
           return function(option) {
             return totalMarks = totalMarks + parseInt(option.get('marks'));
