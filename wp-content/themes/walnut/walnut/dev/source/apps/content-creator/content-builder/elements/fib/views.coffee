@@ -65,12 +65,11 @@ define ['app'], (App)->
                 else
                     @$el.find('input').wrap('<span contenteditable="false"></span>')
                     @$el.find('input').before('<span class="fibno"></span>')
-                    @$el.find("input").on 'click', @_onClickOfBlank
+                    @$el.find("input").parent().on 'click', @_onClickOfBlank
                     @model.get('blanksArray').each @_initializeEachBlank
 
                 # enable the event to check if a blank was
                 # added or removed
-                console.log "now checking dom tree"
                 @$el.on 'DOMSubtreeModified', @_updateInputProperties
                 @_updateInputProperties()
 
@@ -89,10 +88,8 @@ define ['app'], (App)->
                     if numberOfBlanks > model.previous 'numberOfBlanks'
                         noOfBlanksToAdd = numberOfBlanks - model.previous 'numberOfBlanks'
                         @_addBlanks noOfBlanksToAdd
-                        console.log noOfBlanksToAdd
                     else if numberOfBlanks < model.previous 'numberOfBlanks'
                         noOfBlanksToRemove = model.previous('numberOfBlanks') - numberOfBlanks
-                        console.log noOfBlanksToRemove
                         @_removeBlanks noOfBlanksToRemove
 
             # remove n number of blanks from the end
@@ -111,19 +108,24 @@ define ['app'], (App)->
                     @$el.find('p').first().append "<span contenteditable='false'>
                         <span class='fibno'>#{inputNumber}</span><input type='text'
                         data-id='#{inputId}' data-cke-editable='1' style=' height :100%'
-                        contenteditable='false' disabled></span>&nbsp;&nbsp;"
+                        contenteditable='false' ></span>&nbsp;&nbsp;"
 
                     blanksModel = @model.get('blanksArray').get(inputId)
 
                     @_initializeEachBlank blanksModel
 
-                    @$el.find("input").on 'click', @_onClickOfBlank
+                    @$el.find("input").parent().on 'click', @_onClickOfBlank
 
                     noOfBlanksToAdd--
 
             #when a blank is clicked show the propertiers for that blank
             _onClickOfBlank:(e)=>
-                inputId = $(e.target).attr 'data-id'
+                if $(e.target).prop('class') is 'fibno'
+                    return
+                if $(e.target).prop('tagName') is 'INPUT'
+                    inputId = $(e.target).attr 'data-id'
+                else
+                    inputId = $(e.target).children('input').attr 'data-id'
                 blanksModel = @model.get('blanksArray').get(inputId)
                 App.execute "show:fib:element:properties",
                     model: blanksModel
@@ -180,7 +182,6 @@ define ['app'], (App)->
                 @model.set 'text', formatedText.html()
                 console.log formatedText.html()
 
-                console.log @model
 
             # on modification of dom structure modification of p
             _updateInputProperties: =>

@@ -70,10 +70,9 @@ define(['app'], function(App) {
         } else {
           this.$el.find('input').wrap('<span contenteditable="false"></span>');
           this.$el.find('input').before('<span class="fibno"></span>');
-          this.$el.find("input").on('click', this._onClickOfBlank);
+          this.$el.find("input").parent().on('click', this._onClickOfBlank);
           this.model.get('blanksArray').each(this._initializeEachBlank);
         }
-        console.log("now checking dom tree");
         this.$el.on('DOMSubtreeModified', this._updateInputProperties);
         return this._updateInputProperties();
       };
@@ -90,11 +89,9 @@ define(['app'], function(App) {
         if (this.$el.find('input').length !== numberOfBlanks) {
           if (numberOfBlanks > model.previous('numberOfBlanks')) {
             noOfBlanksToAdd = numberOfBlanks - model.previous('numberOfBlanks');
-            this._addBlanks(noOfBlanksToAdd);
-            return console.log(noOfBlanksToAdd);
+            return this._addBlanks(noOfBlanksToAdd);
           } else if (numberOfBlanks < model.previous('numberOfBlanks')) {
             noOfBlanksToRemove = model.previous('numberOfBlanks') - numberOfBlanks;
-            console.log(noOfBlanksToRemove);
             return this._removeBlanks(noOfBlanksToRemove);
           }
         }
@@ -117,10 +114,10 @@ define(['app'], function(App) {
           inputId = _.uniqueId('input-');
           inputNumber = this.model.get('blanksArray').size() + 1;
           this.trigger("create:new:fib:element", inputId);
-          this.$el.find('p').first().append("<span contenteditable='false'> <span class='fibno'>" + inputNumber + "</span><input type='text' data-id='" + inputId + "' data-cke-editable='1' style=' height :100%' contenteditable='false' disabled></span>&nbsp;&nbsp;");
+          this.$el.find('p').first().append("<span contenteditable='false'> <span class='fibno'>" + inputNumber + "</span><input type='text' data-id='" + inputId + "' data-cke-editable='1' style=' height :100%' contenteditable='false' ></span>&nbsp;&nbsp;");
           blanksModel = this.model.get('blanksArray').get(inputId);
           this._initializeEachBlank(blanksModel);
-          this.$el.find("input").on('click', this._onClickOfBlank);
+          this.$el.find("input").parent().on('click', this._onClickOfBlank);
           _results.push(noOfBlanksToAdd--);
         }
         return _results;
@@ -128,7 +125,14 @@ define(['app'], function(App) {
 
       FibView.prototype._onClickOfBlank = function(e) {
         var blanksModel, inputId;
-        inputId = $(e.target).attr('data-id');
+        if ($(e.target).prop('class') === 'fibno') {
+          return;
+        }
+        if ($(e.target).prop('tagName') === 'INPUT') {
+          inputId = $(e.target).attr('data-id');
+        } else {
+          inputId = $(e.target).children('input').attr('data-id');
+        }
         blanksModel = this.model.get('blanksArray').get(inputId);
         App.execute("show:fib:element:properties", {
           model: blanksModel,
@@ -181,8 +185,7 @@ define(['app'], function(App) {
         $(formatedText).find('input').unwrap();
         $(formatedText).find('input').prev().remove();
         this.model.set('text', formatedText.html());
-        console.log(formatedText.html());
-        return console.log(this.model);
+        return console.log(formatedText.html());
       };
 
       FibView.prototype._updateInputProperties = function() {

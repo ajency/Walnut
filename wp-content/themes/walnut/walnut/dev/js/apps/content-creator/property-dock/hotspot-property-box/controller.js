@@ -49,9 +49,9 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
           'textCollection': textModels
         });
         this.model.save();
-        optionCollection = App.request("create:new:option:collection", optionCollection);
-        imageCollection = App.request("create:new:option:collection", imageCollection);
-        textCollection = App.request("create:new:option:collection", textCollection);
+        optionCollection = App.request("create:new:hotspot:element:collection", optionCollection);
+        imageCollection = App.request("create:new:hotspot:element:collection", imageCollection);
+        textCollection = App.request("create:new:hotspot:element:collection", textCollection);
         return this.model.set({
           'optionCollection': optionCollection,
           'imageCollection': imageCollection,
