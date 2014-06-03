@@ -33,7 +33,6 @@
         <link href="./wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
-        <link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
 
 
         <!-- NEED TO WORK ON -->
@@ -67,7 +66,8 @@
         ?>
             <link href="./wp-content/themes/walnut/walnut/production/css/walnut.min.css?ver=<?php echo $ver?>" rel="stylesheet" type="text/css"/>
         <?php }?>
-            
+
+        <link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="">
