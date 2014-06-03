@@ -2,6 +2,7 @@
 	.mix{
 		background-color: @preview-grey;
 		cursor: pointer;
+		height: auto;
 	}
 	.mix:nth-child(2n+1){
 		//background-color: @color-white;
@@ -18,7 +19,7 @@
 		}
 	}	
 	.meta.name{
-		width: 30%;
+		width: 35%;
 	}
 	.meta.area{
 		width: 15%;
@@ -43,6 +44,20 @@
 		word-break: break-word;
 		h2{
 			letter-spacing: 1px;
+		}
+	}
+}
+
+@media (max-width:600px){
+	#textbooks.list{
+		.meta.name{
+			width: 60%;
+		}
+		.meta{
+			width: 40%;
+		}
+		.meta.area{
+			display: none;
 		}
 	}
 }

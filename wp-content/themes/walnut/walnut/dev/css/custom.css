@@ -1289,6 +1289,7 @@ p.mcq-option-text {
 #textbooks.list .mix {
   background-color: #f3f3f3;
   cursor: pointer;
+  height: auto;
 }
 #textbooks.list .mix:nth-child(2n+1) {
   background-color: #fbfbfb;
@@ -1304,7 +1305,7 @@ p.mcq-option-text {
   left: 2px;
 }
 #textbooks.list .meta.name {
-  width: 30%;
+  width: 35%;
 }
 #textbooks.list .meta.area {
   width: 15%;
@@ -1329,6 +1330,17 @@ p.mcq-option-text {
 #textbooks.list .titles h2 {
   letter-spacing: 1px;
 }
+@media (max-width: 600px) {
+  #textbooks.list .meta.name {
+    width: 60%;
+  }
+  #textbooks.list .meta {
+    width: 40%;
+  }
+  #textbooks.list .meta.area {
+    display: none;
+  }
+}
 .listBox {
   margin-top: 60px;
 }
@@ -1339,6 +1351,10 @@ p.mcq-option-text {
 }
 .user-description-box {
   min-height: 120px;
+}
+.cover-pic-wrapper img {
+  margin: 0 auto;
+  display: block;
 }
 .teacherCanvas {
   background-color: #ffffff !important;
@@ -1389,8 +1405,25 @@ h3.time {
 .studentList .students i {
   font-size: 20px;
 }
+.studentList .ln-letters {
+  display: table;
+  margin: auto;
+}
 .studentList .ln-letters a {
-  padding: 5px 11px;
+  padding: 5px 14px;
+  font-size: 1.5em;
+  border: 1px solid #c8d0d6;
+  border-right: 1px solid #c8d0d6;
+  margin-bottom: 5px;
+  margin-right: 4px;
+  background: #f3f3f3;
+}
+.studentList .ln-letters a.ln-disabled {
+  padding: 5px 5px 14px;
+  font-size: 0.7em;
+  margin-top: 10px;
+  border: none;
+  background: none;
 }
 .studentList .box2 {
   position: relative;
@@ -1620,4 +1653,13 @@ textarea.error,
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: left center;
+}
+.select2-results {
+  margin: 4px 4px 4px 0;
+}
+@media (max-width: 1024px) {
+  #main-menu-toggle-wrapper,
+  #portrait-chat-toggler {
+    display: block !important;
+  }
 }

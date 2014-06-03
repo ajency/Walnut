@@ -189,7 +189,6 @@
 }
 #toolbox .qstns ul li {
   width: 96px;
-  padding-top: 8%;
 }
 #toolbox .qstns ul li i {
   font-size: 17px;
@@ -209,6 +208,7 @@
 .dock .builder_actions {
   background: #e5e9ec;
   padding-bottom: 15px;
+  margin-top: -48px;
 }
 .dock .btn-cons2 {
   width: 108px;
@@ -809,7 +809,6 @@
 /*Media Manager*/
 #all-media-region .thumbnail {
   cursor: pointer;
-  height: 92px;
   background-color: #f3f3f3;
 }
 #all-media-region .thumbnail::after {
@@ -908,7 +907,7 @@ p.mcq-option-text {
 	//clear: left;
 	float: left;
 }*/.style .select2-container {
-  width: 65%;
+  width: 60%;
 }
 .colors .minicolors-theme-default.minicolors {
   width: 30px;
@@ -921,7 +920,6 @@ p.mcq-option-text {
 }
 .fib-text:focus {
   outline: none;
-  border-bottom: 2px dashed #f3f3f3;
 }
 .fib-text .fibno {
   font-size: 15px;
@@ -992,6 +990,11 @@ p.mcq-option-text {
 }
 .fib-text input[type="text"].active {
   outline: 1px solid #0aa699;
+}
+.fib-simpletext {
+  min-width: 45px;
+  display: inline-block;
+  border: 1px dashed #f3f3f3;
 }
 .fibRightAns .fibAns {
   border-bottom: 2px solid #0aa699;
@@ -1286,6 +1289,7 @@ p.mcq-option-text {
 #textbooks.list .mix {
   background-color: #f3f3f3;
   cursor: pointer;
+  height: auto;
 }
 #textbooks.list .mix:nth-child(2n+1) {
   background-color: #fbfbfb;
@@ -1301,7 +1305,7 @@ p.mcq-option-text {
   left: 2px;
 }
 #textbooks.list .meta.name {
-  width: 30%;
+  width: 35%;
 }
 #textbooks.list .meta.area {
   width: 15%;
@@ -1326,16 +1330,31 @@ p.mcq-option-text {
 #textbooks.list .titles h2 {
   letter-spacing: 1px;
 }
+@media (max-width: 600px) {
+  #textbooks.list .meta.name {
+    width: 60%;
+  }
+  #textbooks.list .meta {
+    width: 40%;
+  }
+  #textbooks.list .meta.area {
+    display: none;
+  }
+}
 .listBox {
   margin-top: 60px;
 }
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
   .listBox {
     margin-top: 0;
   }
 }
 .user-description-box {
   min-height: 120px;
+}
+.cover-pic-wrapper img {
+  margin: 0 auto;
+  display: block;
 }
 .teacherCanvas {
   background-color: #ffffff !important;
@@ -1386,8 +1405,25 @@ h3.time {
 .studentList .students i {
   font-size: 20px;
 }
+.studentList .ln-letters {
+  display: table;
+  margin: auto;
+}
 .studentList .ln-letters a {
-  padding: 5px 11px;
+  padding: 5px 14px;
+  font-size: 1.5em;
+  border: 1px solid #c8d0d6;
+  border-right: 1px solid #c8d0d6;
+  margin-bottom: 5px;
+  margin-right: 4px;
+  background: #f3f3f3;
+}
+.studentList .ln-letters a.ln-disabled {
+  padding: 5px 5px 14px;
+  font-size: 0.7em;
+  margin-top: 10px;
+  border: none;
+  background: none;
 }
 .studentList .box2 {
   position: relative;
@@ -1604,9 +1640,9 @@ textarea.error,
   background-position: center;
 }
 .mainLogo img {
-  width: 128px;
-  height: 128px;
-  margin: 0 auto;
+  width: 85px;
+  height: 85px;
+  margin: 0 auto 15px;
   display: block;
 }
 .smallLogo {
@@ -1618,8 +1654,78 @@ textarea.error,
   background-repeat: no-repeat;
   background-position: left center;
 }
-/*App Highlight Color*/
-* {
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
-  -webkit-focus-ring-color: #0090d9 !important;
+.select2-results {
+  margin: 4px 4px 4px 0;
+}
+/*Input Field Icon*/
+.input-with-icon i {
+  margin: 11px 2px 4px 10px;
+  color: #9d9d9d;
+}
+/*Login Switch*/
+.switch {
+  position: relative;
+  margin: 0 auto;
+  height: 25px;
+  width: 120px;
+  background: #f2f2f2;
+  border-radius: 3px;
+}
+.switch-label {
+  position: relative;
+  z-index: 2;
+  float: left;
+  width: 60px;
+  line-height: 24px;
+  font-size: 13px;
+  color: #c3c3c3;
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+}
+.switch-label:active {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+}
+.switch-label-off {
+  padding-left: 2px;
+}
+.switch-label-on {
+  padding-right: 2px;
+}
+.switch-input {
+  display: none;
+}
+.switch-input:checked + .switch-label {
+  color: #ffffff;
+  -webkit-transform: translate3d(0px, 0px, 0px);
+  -webkit-transition: 0.15s ease-out;
+  -moz-transition: 0.15s ease-out;
+  -o-transition: 0.15s ease-out;
+  transition: 0.15s ease-out;
+}
+.switch-input:checked + .switch-label-on ~ .switch-selection {
+  /* Note: left: 50% doesn't transition in WebKit */
+
+  left: 60px;
+}
+.switch-selection {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 25px;
+  background: #0090d9;
+  border-radius: 3px;
+  -webkit-transform: translate3d(0px, 0px, 0px);
+  -webkit-transition: left 0.15s ease-out;
+  -moz-transition: left 0.15s ease-out;
+  -o-transition: left 0.15s ease-out;
+  transition: left 0.15s ease-out;
+}
+@media (max-width: 1024px) {
+  #main-menu-toggle-wrapper {
+    display: block;
+  }
 }
