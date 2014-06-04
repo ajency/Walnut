@@ -53,7 +53,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.onShow = function() {
         var syncDetailsCount;
         App.breadcrumbRegion.close();
-        syncDetailsCount = _.getTotalSyncDetailsCount();
+        syncDetailsCount = _.getTotalSyncDetailsCount('file_import');
         return syncDetailsCount.done(function(count) {
           if (count === 0) {
             $('#dwnldDateTime').hide();

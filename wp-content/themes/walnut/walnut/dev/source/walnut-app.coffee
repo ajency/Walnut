@@ -92,7 +92,7 @@ define ['marionette'], (Marionette)->
 		user_role= user.get "roles"
 
 		if _.platform() is 'DEVICE'
-			syncDetailsCount = _.getTotalSyncDetailsCount()
+			syncDetailsCount = _.getTotalSyncDetailsCount('file_import')
 			syncDetailsCount.done (count)->
 				if count is 0
 					App.navigate('sync1', trigger: true)

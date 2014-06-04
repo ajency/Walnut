@@ -36,9 +36,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.template = AppSyncTpl;
 
       AppSyncView.prototype.events = {
-        'click #JsonToCSV': 'startConversion',
-        'click #syncNow': 'startSyncProcess',
-        'click #last5downloads': 'showlast5downloads'
+        'click #syncNow': 'startSyncProcess'
       };
 
       AppSyncView.prototype.onShow = function() {
@@ -53,17 +51,15 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
               $('#totalRecordsToBeSynced').text('Data already upto date');
               $('#lastSyncUploadDetails').css("display", "none");
               $('#last5uploads').css("display", "none");
-              return $('#downSync').css("display", "none");
+              return $('#upSync1').css("display", "none");
             default:
               $('#totalRecordsToBeSynced').text(count + ' record(s) to be synced');
               $('#last5uploads').css("display", "none");
-              $('#downSync').css("display", "block");
+              $('#upSync1').css("display", "block");
               return $('#lastSyncUploadDetails').css("display", "none");
           }
         });
       };
-
-      AppSyncView.prototype.startConversion = function() {};
 
       AppSyncView.prototype.startSyncProcess = function() {
         if (_.isOnline()) {
@@ -73,12 +69,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         } else {
           return $('#NetwrkCnctnDwnld').css("display", "block");
         }
-      };
-
-      AppSyncView.prototype.showlast5downloads = function() {
-        return App.navigate('sync2', {
-          trigger: true
-        });
       };
 
       return AppSyncView;

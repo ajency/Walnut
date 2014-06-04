@@ -90,7 +90,7 @@ define(['marionette'], function(Marionette) {
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        syncDetailsCount = _.getTotalSyncDetailsCount();
+        syncDetailsCount = _.getTotalSyncDetailsCount('file_import');
         syncDetailsCount.done(function(count) {
           if (count === 0) {
             return App.navigate('sync1', {

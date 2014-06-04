@@ -346,7 +346,7 @@ define ["marionette","app", "underscore", "csvparse" ,"json2csvparse", "zip"], (
 				   		console.log 'RESP'
 				   		console.log resp
 			   			
-			   			@dwnldUnZip(resp.exported_csv_url)
+			   			@dwnldUnZip(resp)
 				   			
 				   	,
 				   	'json'	
@@ -354,8 +354,8 @@ define ["marionette","app", "underscore", "csvparse" ,"json2csvparse", "zip"], (
 
 
 # Download the zip file from the server and extract its contents
-		dwnldUnZip : (file_download_url) ->
-			uri = encodeURI(file_download_url)
+		dwnldUnZip : (resp) ->
+			uri = encodeURI(resp.exported_csv_url)
 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
@@ -372,8 +372,8 @@ define ["marionette","app", "underscore", "csvparse" ,"json2csvparse", "zip"], (
 								,(file)=>
 									console.log 'Zip file downloaded'
 
-									#Update file download details
-									@updateDownloadTime()
+									#Update sync details
+									@updateSyncDetails('file_download', '')
 
 									$('#getFiles').find('*').prop('disabled',true)
 									$('#imprtFiles').find('*').prop('disabled',false)
@@ -752,6 +752,8 @@ define ["marionette","app", "underscore", "csvparse" ,"json2csvparse", "zip"], (
 					$('#CSVupload').attr("disabled","disabled")
 					$('#syncNow').attr("disabled","disabled")
 
+					@updateSyncDetails('file_import', _.getCurrentDateTime(2))
+
 					setTimeout(=>
 						App.execute "close:sync3:view"
 					
@@ -760,15 +762,15 @@ define ["marionette","app", "underscore", "csvparse" ,"json2csvparse", "zip"], (
 
 
 		
-		updateDownloadTime :->
+		updateSyncDetails :(operation, time_stamp)->
 
 			_.db.transaction( (tx)->
 				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
-					VALUES (?,?)", ['file_download', ''])
+					VALUES (?,?)", [operation, time_stamp])
 
 			,_.transactionErrorhandler
 			,(tx)->
-				console.log 'Updated file download details'
+				console.log 'Updated sync details'
 			)
 			
 

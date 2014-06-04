@@ -1,11 +1,11 @@
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
-    getTotalSyncDetailsCount: function() {
+    getTotalSyncDetailsCount: function(operation) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT COUNT(*) AS count FROM sync_details", [], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT COUNT(*) AS count FROM sync_details WHERE type_of_operation=?", [operation], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };

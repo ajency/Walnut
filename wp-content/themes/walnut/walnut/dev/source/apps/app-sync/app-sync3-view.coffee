@@ -39,7 +39,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			onShow : ->
 				App.breadcrumbRegion.close()
 
-				syncDetailsCount = _.getTotalSyncDetailsCount()
+				syncDetailsCount = _.getTotalSyncDetailsCount('file_import')
 				syncDetailsCount.done (count)->
 					if count is 0
 					
