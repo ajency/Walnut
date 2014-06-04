@@ -58,7 +58,6 @@ require.config
         csvparse			: 'plugins/jquery.parse'
         json2csvparse       : 'plugins/json2csv'
         zip                 : 'plugins/jszip'
-        archive             : 'plugins/archive'
         
 
 

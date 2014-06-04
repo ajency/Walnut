@@ -43,6 +43,9 @@ define ['app'
                 @listenTo view, "close:question:element:properties", ->
                     App.execute "close:question:element:properties"
 
+                @listenTo view, "close:question:elements", ->
+                    App.execute "close:question:elements"
+
                 App.commands.setHandler 'save:fib:text', ->
                     _.delay ->
                         view.triggerMethod 'save:text'

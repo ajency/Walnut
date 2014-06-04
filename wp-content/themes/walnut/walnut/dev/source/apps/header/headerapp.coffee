@@ -84,23 +84,6 @@ define ['app'
 				App.breadcrumbRegion.close()
 
 				App.navigate('app-login', trigger: true)
-
-				removeBackButtonEvent = ->
-					console.log 'removeBackButtonEvent'
-					document.removeEventListener("backbutton", removeBackButtonEvent, false)
-
-				
-				document.addEventListener("backbutton"
-					,->
-						if App.getCurrentRoute() is 'app-login'
-							navigator.app.exitApp()
-						else 
-							# if App.getCurrentRoute() is 'teachers/dashboard'
-							# 	console.log 'Remove event'
-							# 	removeBackButtonEvent()
-							# else	
-							App.navigate('app-login', trigger: true)
-					, false)
 						
 
 

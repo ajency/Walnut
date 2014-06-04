@@ -73,7 +73,7 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           elem.children('li.open').children('.sub-menu').slideUp(200);
           elem.children('li').removeClass('open');
         }
-        if (_.platform() === 'DEVICE') {
+        if ($(window).width() < 1025) {
           return $('#main-menu-toggle').sidr({
             name: 'main-menu',
             side: 'left'

@@ -57,7 +57,50 @@ and (min-width : 1824px) {
 	
 }
 
- 
+
+/*** Desktops & Laptops ***/
+ @media (min-width: 1025px) { 
+
+ 	/*** Page sidebar ***/
+ 	.page-sidebar {
+		display: inline-block;
+		float: left;
+		position: fixed;
+		width: 250px;
+		margin-top:58px;
+  	}
+	.page-sidebar.fixed{
+		position: fixed;
+	}	
+  	.page-sidebar ul{
+  		width: 250px;
+  	}
+
+  	/*** Page content ***/
+  	.page-content { 
+  		margin-left: 250px; 
+		min-height: 1200px;
+	}
+
+	.page-content.no-min-height {
+		min-height: auto;
+	}
+
+	.full-width-page .page-content {
+		margin-left: 0px !important;
+	}
+	
+	.inner-menu{
+		margin-left:50px;
+		padding-top: 60px;
+	}
+	/** Const size button for medium devices **/
+	.btn-cons-md{
+		  min-width: 120px;
+	}
+}
+
+
 
 @media (max-width: 1024px) { 	
 	

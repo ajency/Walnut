@@ -91,7 +91,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.appUserLogout = function() {
-        var removeBackButtonEvent, user;
+        var user;
         console.log('appUserLogout');
         _.setUserID(null);
         $.sidr('close', 'walnutProfile');
@@ -101,22 +101,9 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         App.headerRegion.close();
         App.mainContentRegion.close();
         App.breadcrumbRegion.close();
-        App.navigate('app-login', {
+        return App.navigate('app-login', {
           trigger: true
         });
-        removeBackButtonEvent = function() {
-          console.log('removeBackButtonEvent');
-          return document.removeEventListener("backbutton", removeBackButtonEvent, false);
-        };
-        return document.addEventListener("backbutton", function() {
-          if (App.getCurrentRoute() === 'app-login') {
-            return navigator.app.exitApp();
-          } else {
-            return App.navigate('app-login', {
-              trigger: true
-            });
-          }
-        }, false);
       };
 
       return HeaderView;

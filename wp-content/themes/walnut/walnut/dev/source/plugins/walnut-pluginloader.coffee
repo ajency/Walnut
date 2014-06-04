@@ -38,7 +38,6 @@ define [
   		'unserialize'
   		'serialize'
   		'csvparse'
-  		'archive'
   		'json2csvparse'
   		'zip'
 		], ->

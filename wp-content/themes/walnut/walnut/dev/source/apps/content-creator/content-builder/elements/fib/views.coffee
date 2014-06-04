@@ -37,6 +37,7 @@ define ['app'], (App)->
                 @$el.parent().parent().on 'click', (evt)=>
                     @trigger "show:this:fib:properties"
                     @trigger "close:question:element:properties"
+                    @trigger "close:question:elements"
                     # stop propogation of click event
                     evt.stopPropagation()
 

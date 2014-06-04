@@ -26,21 +26,15 @@
         <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <link href="./wp-content/themes/walnut/walnut/dev/css/listnav.css" rel="stylesheet" type="text/css">
         <meta content="" name="description" />
         <meta content="" name="author" />
+
+        <link href="./wp-content/themes/walnut/walnut/dev/css/listnav.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css"/>
         <link href="./wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
 
-
-        <!-- NEED TO WORK ON -->
-        <?php 
-        $ver = date('YmdHis');
-        if(ENV == 'dev'){
-        ?>
-        
         <link href="./wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
         <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
         <link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css" media="screen"/>
@@ -58,16 +52,7 @@
         <link href="./wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
         <link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
-        
 
-        <!-- END CSS TEMPLATE -->
-
-        <?php }
-        else {
-        ?>
-            <link href="./wp-content/themes/walnut/walnut/production/css/walnut.min.css?ver=<?php echo $ver?>" rel="stylesheet" type="text/css"/>
-        <?php }?>
-            
         <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="">

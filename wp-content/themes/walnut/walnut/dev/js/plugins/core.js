@@ -255,9 +255,9 @@ $(document).ready(function() {
 		distinct: true, 
 		breakpoints: [
 			320,
-			480,
-			768,
-			1024
+			480//,
+			//768,
+			//1024
 		] 
 	});   	
 	//Break point entry 

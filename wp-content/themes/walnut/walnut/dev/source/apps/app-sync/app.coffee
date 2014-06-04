@@ -18,7 +18,6 @@ define ['app'
 
             Controller =
                 showAppSync1: ->
-                    console.log 'Router: '+App.getCurrentRoute()
                     new AppSync.Controller.AppSync1Controller
                         region: App.mainContentRegion
 

@@ -1,39 +1,10 @@
-define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse", "zip"], (Marionette, App, _, parse, getEntries) ->
+define ["marionette","app", "underscore", "csvparse" ,"json2csvparse", "zip"], (Marionette, App, _, parse) ->
 
 	class SynchronizationController extends Marionette.Controller
 
 		initialize : ->
 
-
-		startSync : ->
-			# @getDownloadURL()
-			
 		
-		totalRecordsUpdate : =>
-
-			_.db.transaction( (tx)=>
-				tx.executeSql("SELECT SUM(rows) AS total FROM 
-					(SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"training_logs WHERE sync=? 
-					UNION ALL 
-					SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"question_response WHERE sync=? 
-					UNION ALL 
-					SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"question_response_logs WHERE sync=?)", [0,0,0]
-
-				,(tx, data)=>
-					totalRecords= data.rows.item(0)['total']
-					_.setTotalRecords(totalRecords)
-					$('#SyncRecords').text(data.rows.item(0)['total'])
-
-					@chkTotalrecords totalRecords
-
-				,_.transactionErrorhandler
-				)
-
-			_.transactionErrorhandler
-			,(tx)=>
-				console.log 'Fetched total records having sync flag=0'
-				
-			)
 
 		chkTotalrecords :(total) ->
 			if total is 0
@@ -300,7 +271,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 #This Function Will upload the zip file to the server
 
 		fileUpload: (fileEntry)=>
-			uri = encodeURI(_.getUploaduri())
+			uri = encodeURI('')
 			options = new FileUploadOptions();
 			options.fileKey = "file";
 			options.fileName = fileEntry.substr(fileEntry.lastIndexOf('/') + 1);
@@ -318,7 +289,6 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 					console.log "Code = " + r.responseCode
 					console.log "Response = " + r.response
 					console.log "Sent = " + r.bytesSent
-					@chkForNewRecords
 
 				, (error)->
 					alert "An error has occurred: Code = " + error.code
@@ -327,22 +297,13 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 				, options)
 
-		chkForNewRecords :->
-			if _.getTotalRecords() is null
-				$('#JsonToCSV').attr("disabled","disabled")
-				$('#CSVupload').attr("disabled","disabled")
-				$('#syncNow').removeAttr("disabled")
-				@updateUploadTime()
-			else
-				$('#JsonToCSV').removeAttr("disabled")
-				$('#CSVupload').attr("disabled","disabled")
-				$('#syncNow').attr("disabled","disabled")
+		
 
 
 
 #this updates the upload time
 		updateUploadTime :->
-			timestamp = _.getDwnldTimeStamp()
+			
 			if _.getInitialSyncFlag() is null
 			 
 				_.db.transaction( (tx)=>
@@ -372,10 +333,29 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 				)
 
 
+		
+		getDownloadURL:->
+
+			data = 
+				blog_id: _.getBlogID()
+				last_sync: ''	
+
+			$.get AJAXURL + '?action=sync-database',
+					data,
+				   (resp)=>
+				   		console.log 'RESP'
+				   		console.log resp
+			   			
+			   			@dwnldUnZip(resp.exported_csv_url)
+				   			
+				   	,
+				   	'json'	
+
+
 
 # Download the zip file from the server and extract its contents
-		dwnldUnZip : ->
-			uri = encodeURI(_.getDwnlduri())
+		dwnldUnZip : (file_download_url) ->
+			uri = encodeURI(file_download_url)
 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
@@ -418,6 +398,8 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 				, _.fileSystemErrorHandler)
 
+
+
 		chkReader : (file1)->
 			#deepak
 			read = ->
@@ -458,14 +440,13 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 			.fail _.failureHandler			
 
 		fileUnZip : (filePath, fullpath)->
-			filePath=filePath
-			fullpath=fullpath
+			filePath = filePath
+			fullpath = fullpath
 			console.log 'Source: '+fullpath
 			console.log 'Destination: '+filePath
 
 			success =()=>
 				console.log 'Files unzipped'
-				# @readUnzipFile1 filePath
 
 
 			zip.unzip(fullpath, filePath, success)
@@ -482,7 +463,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 
 
 		
-#14 insert functions
+#15 insert functions
 		sendParsedData1 : (file, fileEntry)=>
 			fileEntry=fileEntry
 			readData = @chkReader(file)
@@ -782,20 +763,19 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 					$('#CSVupload').attr("disabled","disabled")
 					$('#syncNow').attr("disabled","disabled")
 
-					# App.execute "close:sync1:view"
-					App.execute "close:sync3:view"
-
+					setTimeout(=>
+						App.execute "close:sync3:view"
+					
+					,3000)
 				)
 
 
 		
 		updateDownloadTime :->
 
-			timestamp = _.getDwnldTimeStamp()
-
 			_.db.transaction( (tx)->
 				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
-					VALUES (?,?)", ['file_download', timestamp])
+					VALUES (?,?)", ['file_download', ''])
 
 			,_.transactionErrorhandler
 			,(tx)->
@@ -829,44 +809,7 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 				)
 
 
-		getuploadURL:->
-
-			$.post AJAXURL + '?action=get-sync-details',
-				   (resp)=>
-				   		console.log 'RESP'
-				   		console.log resp
-				   		if resp.error
-				   			@onErrorResponse(resp.error)	
-
-				   		else
-				   			# save logged in user id and username
-				   			_.setUploaduri(resp.login_details.ID)
-				   			@fileReadZip()
-				   			
-				   	,
-				   	'json'	
-
-
-		getDownloadURL:->
-
-			data = 
-				blog_id: _.getBlogID()
-				last_sync: ''	
-
-			$.get AJAXURL + '?action=sync-database',
-					data,
-				   (resp)=>
-				   		console.log 'RESP'
-				   		console.log resp
-				   		
-			   			_.setDwnlduri(resp.exported_csv_url)
-			   			_.setDwnldTimeStamp(resp.sync_time)
-			   			
-			   			@dwnldUnZip()
-				   			
-				   	,
-				   	'json'	
-
+		
 
 
 	# request handler

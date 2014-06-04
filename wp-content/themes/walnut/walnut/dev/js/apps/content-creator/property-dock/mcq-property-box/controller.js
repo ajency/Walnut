@@ -12,6 +12,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
 
       Controller.prototype.initialize = function(options) {
         this.model = options.model;
+        App.execute("close:question:elements");
+        App.execute("close:question:element:properties");
         this.layout = this._getView(this.model);
         this.listenTo(this.layout, "change:option:number", (function(_this) {
           return function(number) {

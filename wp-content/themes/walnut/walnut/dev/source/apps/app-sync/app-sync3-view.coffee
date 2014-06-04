@@ -14,7 +14,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				App.commands.setHandler "close:sync3:view", =>
 					@view.close()
-				
 
 				@show view, (loading: true)
 
@@ -53,15 +52,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 						$("#syncUpld3 *").attr("disabled", "disabled").off('click')
 
 						$('#imprtFiles').find('*').prop('disabled',true)
-						 
-
-
-						# syncController = App.request "get:sync:controller"
-						# syncController.dwnldUnZip()
-						
-
-					else
-						App.navigate('teachers/dashboard', trigger: true)
+					
 				
 			startDownload : ->
 				syncController = App.request "get:sync:controller"

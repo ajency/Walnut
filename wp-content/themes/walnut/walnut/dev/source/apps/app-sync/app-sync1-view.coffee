@@ -8,20 +8,12 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				@view = view = @_getAppSyncView()
 
-				# listen to the close event of the view
-				# @listenTo view, 'close', ->
-				# 	App.navigate('teachers/dashboard', trigger: true)
-
-				App.commands.setHandler "close:sync1:view", =>
-					@view.close()	
-
 				@show view, (loading: true)
 
 
 
 			_getAppSyncView : ->
 				new AppSyncView
-
 					
 
 
@@ -32,51 +24,35 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			events :
 				'click #JsonToCSV' : 'startConversion'
 				'click #syncNow' : 'startSyncProcess'
-				'click #CSVupload' : 'fileUpload'
 				'click #last5downloads' : 'showlast5downloads'
 
 
 
 			onShow : ->
+				_.checkSynapseAssetsDirectory()
+				# Hide breadcrumb region 
 				App.breadcrumbRegion.close()
 
 				# Hide the splash screen image
 				navigator.splashscreen.hide()
-				
-				syncDetailsCount = _.getTotalSyncDetailsCount()
-				syncDetailsCount.done (count)->
-					if count is 0
-						$('#syncDateDwnld').text("--/--/--")
-						$('#syncTimeDwnld').text("--:--")
-						$('#syncDateUpld').text("--/--/--")
-						$('#syncTimeUpld').text("--:--")
-						$('#last5dwnlds').attr("disabled","disabled")
-						$("#UploadView *").attr("disabled", "disabled").off('click')
-						# syncController = App.request "get:sync:controller"
-						# syncController.totalRecordsUpdate()
-						
 
-					else
-						App.navigate('teachers/dashboard', trigger: true)
-				
-				# $('#syncText').text('')
-				# if _.getInitialSyncFlag() is null
-				# 	$('#JsonToCSV').attr("disabled","disabled")
-					syncController = App.request "get:sync:controller"
-					syncController.totalRecordsUpdate()
-
-				# else
-				# 	$('#JsonToCSV').removeAttr("disabled")
-				# 	$('#CSVupload').attr("disabled","disabled")
-				# 	$('#syncNow').attr("disabled","disabled")
-				# 	syncController = App.request "get:sync:controller"
-				# 	syncController.totalRecordsUpdate()
+				# Display total records to be synced for file upload
+				recordsToBeSynced = _.getTotalRecordsTobeSynced()
+				recordsToBeSynced.done (count)->
+					switch count
+						when 0
+							$('#totalRecordsToBeSynced').text('Data already upto date')
+							$('#lastSyncUploadDetails').css("display", "none")
+							$('#last5uploads').css("display", "none")
+							$('#downSync').css("display", "none")
+						else
+							$('#totalRecordsToBeSynced').text(count+' record(s) to be synced')
+							$('#last5uploads').css("display", "none") #for now
+							$('#downSync').css("display", "block")
+							$('#lastSyncUploadDetails').css("display", "none")
 
 				
-
-			fileUpload : ->
-				syncController = App.request "get:sync:controller"
-				syncController.getuploadURL()
+				
 				
 			
 			startConversion : ->
@@ -94,8 +70,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				# $('i').addClass('fa-spin')
 				# $('#syncText').text('Syncing now...')
 
-				# syncController = App.request "get:sync:controller"
-				# syncController.startSync()
 
 			showlast5downloads : ->
 				App.navigate('sync2', trigger: true)	
