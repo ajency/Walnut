@@ -1408,6 +1408,7 @@ h3.time {
 .studentList .ln-letters {
   display: table;
   margin: auto;
+  margin-top: 10px;
 }
 .studentList .ln-letters a {
   padding: 5px 14px;
@@ -1518,6 +1519,10 @@ h3.time {
   position: absolute;
   right: -140px;
   top: 12px;
+}
+.progress-bar {
+  color: #6a6a6a;
+  font-weight: bold;
 }
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
@@ -1661,5 +1666,55 @@ textarea.error,
   #main-menu-toggle-wrapper,
   #portrait-chat-toggler {
     display: block !important;
+  }
+}
+#breadcrumb-region {
+  display: none;
+}
+/*App Styles*/
+@media (max-width: 1024px) {
+  body {
+    font-size: 16px;
+  }
+  select {
+    font-weight: bold;
+    font-size: 15px;
+  }
+  button {
+    font-weight: bold;
+  }
+  .page-sidebar .page-sidebar-wrapper > ul > li > a {
+    font-size: 16px;
+  }
+  .page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu > li > a {
+    font-size: 15px;
+  }
+  select {
+    display: inline-block;
+    position: relative;
+    line-height: 1;
+    width: 200px;
+    padding: 10px;
+    background: #f3f3f3;
+    border: 1px solid #e5e9ec;
+    box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    color: #333333;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: left;
+    text-transform: none;
+    outline: 0;
+    outline-offset: -2px;
+    cursor: default;
+  }
+  select:after,
+  select:before {
+    content: "";
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    bottom: 10px;
+    border-left: 1px solid #e5e5e5;
   }
 }
