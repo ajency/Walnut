@@ -16,18 +16,27 @@ define(['app'], function(App) {
 
       VideoView.prototype.mixinTemplateHelpers = function(data) {
         data = VideoView.__super__.mixinTemplateHelpers.call(this, data);
-        data.video = true;
+        if (!this.model.get('video_id')) {
+          data.placeholder = true;
+        } else {
+          data.video = true;
+          data.videourl = '';
+        }
         return data;
       };
 
       VideoView.prototype.events = {
         'click': function(e) {
-          return e.stopPropagation();
+          e.stopPropagation();
+          return this.trigger("show:media:manager");
         }
       };
 
       VideoView.prototype.onShow = function() {
         var height, videoId, width;
+        if (!this.model.get('video_id')) {
+          return;
+        }
         this.$el.find('video').resize((function(_this) {
           return function() {
             return _this.triggerMethod('video:resized');
