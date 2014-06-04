@@ -27,18 +27,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name: 'content-group'
 
-
-            initialize: ->
-                @on('start:module', @startModule, @)
-                @on('stop:module', @stopModule, @)
-
-            startModule: (model)=>
-                @trigger "training:module:started", model
-
-            stopModule: (model)=>
-                @trigger "training:module:stopped", model
-
-
         # collection of group of content pieces eg. quizzes, teacher training modules etc.
         class ContentGroup.ItemCollection extends Backbone.Collection
             model: ContentGroup.ItemModel
@@ -80,6 +68,12 @@ define ["app", 'backbone'], (App, Backbone) ->
             newContentGroup:->
                 contentGroup = new ContentGroup.ItemModel
 
+            scheduleContentGroup:(data)->
+                questionResponseModel= App.request "save:question:response"
+
+                questionResponseModel.set data
+
+                questionResponseModel.save()
 
         # request handler to get all content groups
         App.reqres.setHandler "get:content:groups", (opt) ->
@@ -94,4 +88,6 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "new:content:group",->
             API.newContentGroup()
 
+        App.reqres.setHandler "schedule:content:group", (data)->
+            API.scheduleContentGroup data
 

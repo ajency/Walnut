@@ -116,9 +116,7 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
 
         //CHILD SITE TABLE QUERIES
         "{$wpdb->prefix}class_divisions",
-        "{$wpdb->prefix}question_response",
-        "{$wpdb->prefix}question_response_logs",
-        "{$wpdb->prefix}training_logs"
+        "{$wpdb->prefix}question_response"
 
     );
 

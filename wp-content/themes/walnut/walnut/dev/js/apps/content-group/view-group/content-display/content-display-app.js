@@ -92,6 +92,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           data.responseStatus = additionalData.responseStatus;
           data.timeTaken = additionalData.timeTaken;
           data.correctAnswer = additionalData.correctAnswer;
+          data.teacherName = additionalData.teacherName;
         }
         return data;
       };
@@ -147,6 +148,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
             additionalData.timeTaken = mins + 'm ' + seconds + 's';
             additionalData.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY");
             additionalData.correctAnswer = this.getResults(model, responseModel.get('question_response'));
+            additionalData.teacherName = responseModel.get('teacher_name');
           }
           console.log(additionalData);
         }
