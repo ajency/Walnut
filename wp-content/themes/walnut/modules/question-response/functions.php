@@ -18,8 +18,6 @@ function insert_question_response($data){
     $wpdb->insert($wpdb->prefix . 'question_response', $insert_data,
         array('%s','%d','%d','%d') );
 
-    update_question_response_logs($ref_id);
-
     return $ref_id;
 }
 
@@ -45,22 +43,6 @@ function update_question_response($data){
 
     $response = $wpdb->update($wpdb->prefix . 'question_response', $update_data,
             array('ref_id'=>$ref_id) );
-
     
     return $response;
-}
-
-
-function update_question_response_logs($ref_id){
-
-    global $wpdb;
-
-    $response= $wpdb->insert(
-                            $wpdb->prefix . 'question_response_logs',
-                            array('qr_ref_id'=>$ref_id),
-                            array('%s')
-                        );
-
-    return $response;
-
 }
