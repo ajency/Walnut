@@ -274,6 +274,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 							fileTransfer.onprogress = (progressEvent)=>
 								if progressEvent.lengthComputable
 									perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+									console.log perc
 									statusDom.innerHTML = perc + "% loaded...";
 								else
 									if progressBarDwnldDom.innerHTML is null
