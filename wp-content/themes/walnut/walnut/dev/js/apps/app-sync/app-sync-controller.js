@@ -374,6 +374,7 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
               var perc;
               if (progressEvent.lengthComputable) {
                 perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+                console.log(perc);
                 return statusDom.innerHTML = perc + "% loaded...";
               } else {
                 if (progressBarDwnldDom.innerHTML === null) {
