@@ -1408,6 +1408,7 @@ h3.time {
 .studentList .ln-letters {
   display: table;
   margin: auto;
+  margin-top: 10px;
 }
 .studentList .ln-letters a {
   padding: 5px 14px;
@@ -1518,6 +1519,10 @@ h3.time {
   position: absolute;
   right: -140px;
   top: 12px;
+}
+.progress-bar {
+  color: #6a6a6a;
+  font-weight: bold;
 }
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
@@ -1657,75 +1662,12 @@ textarea.error,
 .select2-results {
   margin: 4px 4px 4px 0;
 }
-/*Input Field Icon*/
-.input-with-icon i {
-  margin: 11px 2px 4px 10px;
-  color: #9d9d9d;
-}
-/*Login Switch*/
-.switch {
-  position: relative;
-  margin: 0 auto;
-  height: 25px;
-  width: 120px;
-  background: #f2f2f2;
-  border-radius: 3px;
-}
-.switch-label {
-  position: relative;
-  z-index: 2;
-  float: left;
-  width: 60px;
-  line-height: 24px;
-  font-size: 13px;
-  color: #c3c3c3;
-  text-align: center;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.45);
-  cursor: pointer;
-}
-.switch-label:active {
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
-}
-.switch-label-off {
-  padding-left: 2px;
-}
-.switch-label-on {
-  padding-right: 2px;
-}
-.switch-input {
-  display: none;
-}
-.switch-input:checked + .switch-label {
-  color: #ffffff;
-  -webkit-transform: translate3d(0px, 0px, 0px);
-  -webkit-transition: 0.15s ease-out;
-  -moz-transition: 0.15s ease-out;
-  -o-transition: 0.15s ease-out;
-  transition: 0.15s ease-out;
-}
-.switch-input:checked + .switch-label-on ~ .switch-selection {
-  /* Note: left: 50% doesn't transition in WebKit */
-
-  left: 60px;
-}
-.switch-selection {
-  display: block;
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: 60px;
-  height: 25px;
-  background: #0090d9;
-  border-radius: 3px;
-  -webkit-transform: translate3d(0px, 0px, 0px);
-  -webkit-transition: left 0.15s ease-out;
-  -moz-transition: left 0.15s ease-out;
-  -o-transition: left 0.15s ease-out;
-  transition: left 0.15s ease-out;
-}
 @media (max-width: 1024px) {
-  #main-menu-toggle-wrapper {
-    display: block;
+  #main-menu-toggle-wrapper,
+  #portrait-chat-toggler {
+    display: block !important;
   }
+}
+#breadcrumb-region {
+  display: none;
 }

@@ -54,8 +54,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             var view;
             view = _this._getImageView(imageModel);
             _this.listenTo(view, "show:media:manager", function() {
-              App.navigate("media-manager", {
-                trigger: true
+              App.execute("show:media:manager:app", {
+                region: App.dialogRegion,
+                mediaType: 'image'
               });
               _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
                 _this.layout.model.set('image_id', media.get('id'));
@@ -67,7 +68,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
             _this.listenTo(view, "image:size:selected", function(size) {
               _this.layout.model.set('size', size);
-              return _this.layout.model.save();
+              _this.layout.model.save();
+              localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
+              return console.log(localStorage.getItem('ele' + _this.layout.model.get('meta_id')));
             });
             return _this.layout.elementRegion.show(view);
           };

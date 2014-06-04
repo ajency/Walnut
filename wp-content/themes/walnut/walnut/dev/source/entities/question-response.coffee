@@ -49,18 +49,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 questionResponse
 
-            updateQuestionResponseLogs: (refID)->
-                #refID refers to the unique reference ID of the question response model
-                #this function logs the time whenever the teacher enters this particular question.
-
-                connection_resp = $.middle_layer(AJAXURL + '?action=update-question-response-logs'
-                    ref_id: refID
-                    (response) =>
-                        if response.error
-                            console.log 'some error occured while saving question logs for refID: '+refID
-                );
-
-
 
         # request handler to get all responses
         App.reqres.setHandler "get:question:response:collection", (params) ->
@@ -68,7 +56,3 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "save:question:response", (qID)->
             API.saveQuestionResponse qID
-
-        App.reqres.setHandler "update:question:response:logs", (refID)->
-            API.updateQuestionResponseLogs refID
-

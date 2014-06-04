@@ -59,16 +59,6 @@
 .p-t-60 {
   padding-top: 60px;
 }
-body {
-  font-size: 16px;
-}
-select {
-  font-weight: bold;
-  font-size: 15px;
-}
-button {
-  font-weight: bold;
-}
 /*App Highlight Color*/
 * {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;

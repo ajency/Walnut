@@ -41,13 +41,13 @@ define ['app'],(App)->
 
 			className: 'studentList m-t-35'
 				
-			template : '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
+			template : '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20">
 							<button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm">
 								<i class="fa fa-forward"></i> Next Question 
 							</button>
 						</div>
 						{{#class_mode}}
-						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-r-20">
+						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
 							<button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer">
 								<i class="fa fa-check-circle"></i> Right Answer
 							</button> 
