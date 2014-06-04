@@ -64,8 +64,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             var view;
             view = _this._getImageWithTextView(imageModel, _this.layout.model.get('style'));
             _this.listenTo(view, "show:media:manager", function() {
-              App.navigate("media-manager", {
-                trigger: true
+              App.execute("show:media:manager:app", {
+                region: App.dialogRegion,
+                mediaType: 'image'
               });
               _this.listenTo(App.vent, "media:manager:choosed:media", function(media, size) {
                 _this.layout.model.set('image_id', media.get('id'));

@@ -24,11 +24,18 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
 
       MediaView.prototype.mixinTemplateHelpers = function(data) {
         data = MediaView.__super__.mixinTemplateHelpers.call(this, data);
-        if (data.sizes && data.sizes.thumbnail && data.sizes.thumbnail.url) {
-          data.imagePreview = this.imagePreview = true;
-        } else {
-          data.imagePreview = this.imagePreview = false;
+        data.imagePreview = this.imagePreview = false;
+        data.videoPreview = this.videoPreview = false;
+        if (data.type === 'image') {
+          if (data.sizes && data.sizes.thumbnail && data.sizes.thumbnail.url) {
+            data.imagePreview = this.imagePreview = true;
+          }
         }
+        if (data.type === 'video') {
+          data.videoPreview = this.videoPreview = true;
+          data.title_excerpt = _.prune(data.title, 15);
+        }
+        console.log(data);
         return data;
       };
 
@@ -39,12 +46,6 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         media = $(e.target).hasClass('single-img') ? $(e.target) : $(e.target).closest('.single-img');
         this.trigger("media:element:selected");
         return console.log('media selected ' + media);
-      };
-
-      MediaView.prototype.onShow = function() {
-        if (!this.imagePreview) {
-          return this.$el.hide();
-        }
       };
 
       return MediaView;

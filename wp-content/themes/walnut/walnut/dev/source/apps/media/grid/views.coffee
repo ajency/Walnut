@@ -19,10 +19,18 @@ define ['app'
             #if no thumbnail thn dont show image
             mixinTemplateHelpers: (data)->
                 data = super data
-                if data.sizes and data.sizes.thumbnail and data.sizes.thumbnail.url
-                    data.imagePreview = @imagePreview = true
-                else
-                    data.imagePreview = @imagePreview = false
+                data.imagePreview = @imagePreview = false
+                data.videoPreview = @videoPreview = false
+
+                if data.type is 'image'
+                    if data.sizes and data.sizes.thumbnail and data.sizes.thumbnail.url
+                        data.imagePreview = @imagePreview = true
+
+                if data.type is 'video'
+                    data.videoPreview = @videoPreview = true
+                    data.title_excerpt= _.prune data.title, 15
+
+                console.log data
                 data
 
             _whenImageClicked: (e)->
@@ -37,9 +45,6 @@ define ['app'
 #                    @trigger "media:element:unselected"
 #                    console.log 'media unselected '+media
 
-            # in no image then hide the view
-            onShow: ->
-                if not @imagePreview then @$el.hide()
 
         # collection view
         class Views.GridView extends Marionette.CompositeView

@@ -1,6 +1,6 @@
 <?php 
 
-function get_site_media($query){
+function get_site_media($query, $media_type='image'){
 
 	if ( ! current_user_can( 'upload_files' ) )
 		return array('code' => 'ERROR','message' => 'Dont\'t have enough permission');
@@ -11,6 +11,7 @@ function get_site_media($query){
 	) ) );
 
 	$query['post_type'] = 'attachment';
+    $query['post_mime_type'] = $media_type;
 	$query['post_status'] = 'inherit';
 	if ( current_user_can( get_post_type_object( 'attachment' )->cap->read_private_posts ) )
 		$query['post_status'] .= ',private';

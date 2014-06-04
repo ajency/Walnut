@@ -18,7 +18,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           video_id: 0,
           height: 0,
           width: 0,
-          videoUrl: 'http://video-js.zencoder.com/oceans-clip.mp4'
+          videoUrl: ''
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -34,9 +34,34 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.renderElement = function() {
-        var view;
+        var videoModel, view;
         this.removeSpinner();
-        view = this._getVideoView();
+        videoModel = App.request("get:media:by:id", this.layout.model.get('video_id'));
+        view = this.view = this._getVideoView(videoModel);
+        this.listenTo(view, "show:media:manager", (function(_this) {
+          return function() {
+            return App.execute("show:media:manager:app", {
+              region: App.dialogRegion,
+              mediaType: 'video'
+            });
+          };
+        })(this));
+        this.listenTo(App.vent, "media:manager:choosed:media", (function(_this) {
+          return function(media) {
+            _this.layout.model.set({
+              'video_id': media.get('id'),
+              'videoUrl': media.get('url')
+            });
+            _this.layout.model.save();
+            _this.layout.elementRegion.show(_this.view);
+            return _this.stopListening(App.vent, "media:manager:choosed:media");
+          };
+        })(this));
+        this.listenTo(App.vent, "stop:listening:to:media:manager", (function(_this) {
+          return function() {
+            return _this.stopListening(App.vent, "media:manager:choosed:media");
+          };
+        })(this));
         App.commands.setHandler("video:moved", function() {
           return view.triggerMethod("video:moved");
         });

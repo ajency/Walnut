@@ -60,7 +60,10 @@ define ['app'
 
                     #trigger media manager popup and start listening to "media:manager:choosed:media" event
                     @listenTo view, "show:media:manager", =>
-                        App.navigate "media-manager", trigger: true
+                        App.execute "show:media:manager:app",
+                            region: App.dialogRegion
+                            mediaType: 'image'
+
                         @listenTo App.vent, "media:manager:choosed:media", (media, size)=>
                             @layout.model.set 'image_id', media.get 'id'
                             @layout.model.set 'size', size
