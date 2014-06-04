@@ -21,27 +21,30 @@ define ['app'
 						@choosedMedia = null
 					
 						@layout = layout = @_getLayout()
-						@show @layout
+						
 
 						
 						# start media manager apps. conditional strating of apps is possible
 						# each app needs a region as the argument. Each app will be functional only
 						# for that region
-						App.execute "start:media:upload:app", region : layout.uploadRegion
-						App.execute "start:media:grid:app", region : layout.gridRegion 
+						@listenTo @layout, "show", =>
+							App.execute "start:media:upload:app", region : layout.uploadRegion
+							App.execute "start:media:grid:app", region : layout.gridRegion 
+
+						@show @layout
 						
 						
 						@listenTo @layout.gridRegion, "media:element:selected",(media)=>
-																	@choosedMedia = media
-																	App.execute "show:edit:media", 
-																					media, 
-																					@layout.editMediaRegion
+								@choosedMedia = media
+								App.execute "show:edit:media", 
+												media, 
+												@layout.editMediaRegion
 
 
 						@listenTo @layout ,"media:selected", =>
-											if not _.isNull @choosedMedia
-												App.vent.trigger "media:manager:choosed:media", @choosedMedia
-												@region.closeDialog()
+								if not _.isNull @choosedMedia
+									App.vent.trigger "media:manager:choosed:media", @choosedMedia
+									@region.closeDialog()
 
 						# App.getRegion('elementsBoxRegion').hide()
 						
@@ -76,7 +79,7 @@ define ['app'
 
 					events: 
 						'click button.media-manager-select' : ->
-												@trigger "media:selected"
+								@trigger "media:selected"
 
 					onClose:->
 						#stop listening to event
@@ -87,8 +90,8 @@ define ['app'
 				API = 
 					show:()->
 						new ShowController
-									region 	: App.dialogRegion
-									statApp : 'all-media'
+								region 	: App.dialogRegion
+								statApp : 'all-media'
 
 					editMedia:(model, region)->
 						

@@ -111,11 +111,25 @@ define(['app'], function(App) {
             return _this.setColumnResizer();
           };
         })(this), 400);
-        return this.$el.on('row:is:moved', (function(_this) {
+        this.$el.on('row:is:moved', (function(_this) {
           return function(evt, id) {
             if (_this.$el.attr('id') === id) {
+              console.log("" + id + " is moved");
               return _this.setColumnResizer();
             }
+          };
+        })(this));
+        this.$el.find('.column').on("class:changed", (function(_this) {
+          return function(e) {
+            e.stopPropagation();
+            return _this.$el.find('.row').trigger("adjust:resizer");
+          };
+        })(this));
+        return this.$el.on("adjust:resizer", (function(_this) {
+          return function(e) {
+            e.stopPropagation();
+            console.log('column resizer set');
+            return _this.setColumnResizer();
           };
         })(this));
       };
