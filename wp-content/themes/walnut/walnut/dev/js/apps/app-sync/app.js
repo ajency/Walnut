@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'apps/app-sync/app-sync1-view', 'apps/app-sync/app-sync2-view', 'apps/app-sync/app-sync3-view', 'apps/app-sync/app-sync-controller', 'apps/app-sync/app-sync-underscore'], function(App) {
+define(['app', 'apps/app-sync/app-sync1-view', 'apps/app-sync/app-sync2-view', 'apps/app-sync/app-sync3-view', 'apps/app-sync/app-sync-controller', 'apps/app-sync/app-sync-underscore', 'apps/app-sync/app-sync-generate-file'], function(App) {
   return App.module("AppSync", function(AppSync, App) {
     var AppSyncRouter, Controller;
     AppSyncRouter = (function(_super) {

@@ -1,5 +1,5 @@
 function ConvertToCSV(objArray) {
-            alert("Json to csv");
+            
             var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
             var str = '';
  

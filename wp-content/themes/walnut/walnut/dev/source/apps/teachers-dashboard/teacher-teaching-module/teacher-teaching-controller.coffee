@@ -114,12 +114,8 @@ define ['app'
                 questionResponseModel = questionResponseCollection.findWhere
                     'content_piece_id': content_piece_id
 
-                if questionResponseModel
-                    if @display_mode is 'class_mode'
-                        App.request "update:question:response:logs", questionResponseModel.get 'ref_id'
-
                 #if model doesnt exist in collection setting default values
-                else
+                if not questionResponseModel
                     modelData= {
                         'collection_id': contentGroupModel.get 'id'
                         'content_piece_id': content_piece_id

@@ -20,6 +20,29 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getTotalSyncDetailsCount transaction completed');
       }).fail(_.failureHandler);
     },
+    getLastSyncTimeStamp: function(operation) {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT time_stamp FROM sync_details WHERE type_of_operation=? ORDER BY id DESC LIMIT 1", [operation], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var time_stamp;
+          time_stamp = '';
+          if (data.rows.length !== 0) {
+            time_stamp = data.rows.item(0)['time_stamp'];
+          }
+          return d.resolve(time_stamp);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getLastSyncTimeStamp transaction completed');
+      }).fail(_.failureHandler);
+    },
     getTotalRecordsTobeSynced: function() {
       var onSuccess, runQuery;
       runQuery = function() {
