@@ -370,6 +370,19 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
             _.setFilePath(filePath);
             fileEntry.remove();
             fileTransfer = new FileTransfer();
+            fileTransfer.onprogress = function(progressEvent) {
+              var perc;
+              if (progressEvent.lengthComputable) {
+                perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+                return statusDom.innerHTML = perc + "% loaded...";
+              } else {
+                if (progressBarDwnldDom.innerHTML === null) {
+                  return progressBarDwnldDom.innerHTML = "Loading";
+                } else {
+                  return progressBarDwnldDom.innerHTML += ".";
+                }
+              }
+            };
             return fileTransfer.download(uri, filePath + "logs.zip", function(file) {
               console.log('Zip file downloaded');
               _this.updateSyncDetails('file_download', '');
