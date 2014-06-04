@@ -26,25 +26,25 @@
 
                       </div>
 
-                      <div id="UploadView" class="col-sm-6">
+                      <div id="uploadView" class="col-sm-6">
                         <h3 class="semi-bold text-center">Sync Upload <span class="fa fa-upload"></span></h3>
                         <div class="row">
-                          <div class="col-sm-6 b-grey b-r">
+                          <div id="lastSyncUploadDetails" class="col-sm-6 b-grey b-r">
                             <h4 class="semi-bold text-center no-margin p-t-20">Last Sync</h4>
                             <div class="">
-                              <h2 id="syncDateUpld" class="m-b-0 semi-bold text-center text-success">21/06/14</h2>
-                              <h5 id="syncTimeUpld" class="m-t-0 text-center text-success">08:36 PM</h5>
+                              <h2 id="syncDateUpload" class="m-b-0 semi-bold text-center text-success">21/06/14</h2>
+                              <h5 id="syncTimeUpload" class="m-t-0 text-center text-success">08:36 PM</h5>
                             </div>
                           </div>
 
                           <div class="col-sm-6 b-grey text-center">
-                            <button type="button" class="btn btn-success btn-block btn-sm btn-small m-t-50"><i class="fa fa-eye"></i>&nbsp;&nbsp;<span class="bold">View last 5 uploads</span></button>
-                            <h5 class="m-t-10 bold text-center text-error">23 records to be synced</h5>
+                            <button id="last5uploads" type="button" class="btn btn-success btn-block btn-sm btn-small m-t-50"><i class="fa fa-eye"></i>&nbsp;&nbsp;<span class="bold">View last 5 uploads</span></button>
+                            <h5 id="totalRecordsToBeSynced" class="m-t-10 bold text-center text-error">23 records to be synced</h5>
                           </div>
                         </div>
-                        <button type="button" class="btn btn-primary btn-block m-t-10"> <span class="bold"><span class="fa fa-refresh"></span> Sync</span></button>
+                        <button id="downSync" type="button" class="btn btn-primary btn-block m-t-10"> <span class="bold"><span class="fa fa-refresh"></span> Sync</span></button>
 
-                        <div id="NetwrkCnctnUpld" style="display:none" class="alert alert-error m-t-10 m-b-0 text-center semi-bold animated bounceIn">
+                        <div id="networkConnectionUpload" style="display:none" class="alert alert-error m-t-10 m-b-0 text-center semi-bold animated bounceIn">
                           <span class="fa fa-exclamation-triangle"></span>&nbsp;&nbsp;No Internet Connection
                         </div>
 

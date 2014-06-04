@@ -14,6 +14,8 @@ define ['app'
                 @listenTo @view, "goto:previous:route", =>
                     @region.trigger "goto:previous:route"
 
+                  
+
 
             _showModuleDescriptionView: (model) =>
                 terms = model.get 'term_ids'
@@ -30,7 +32,7 @@ define ['app'
 
                     templateHelpers:
                         showPauseButton:=>
-                            pauseBtn='';
+                            pauseBtn = ''
                             if @display_mode is 'class_mode'
                                 pauseBtn= '<button type="button" id="pause-session" class="btn btn-white  action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>'
                             pauseBtn
@@ -49,7 +51,7 @@ define ['app'
                                 hours = parseInt mins/60
                                 mins= parseInt mins%60
                             seconds = parseInt time%60
-                            display_time=''
+                            display_time = ''
 
                             if hours >0
                                 display_time= hours+'h '
@@ -66,6 +68,29 @@ define ['app'
             events:
                 'click #back-to-module, #pause-session': ->
                     @trigger "goto:previous:route"
+
+
+            onShow : ->
+
+                #Changes for mobile
+                onBackbuttonClick = =>
+                    console.log 'Fired cordova back button event'
+                    @trigger "goto:previous:route"
+
+                    document.removeEventListener("backbutton", onBackbuttonClick, false)
+
+                if _.platform() is 'DEVICE'
+                    #Cordova backbutton event
+                    document.addEventListener("backbutton", onBackbuttonClick, false)
+
+                    #Cordova pause event
+                    document.addEventListener("pause"
+                        ,=>
+                            console.log 'Fired cordova pause event'
+                            @trigger "goto:previous:route"
+                        
+                        , false)
+
 
 
         # set handlers

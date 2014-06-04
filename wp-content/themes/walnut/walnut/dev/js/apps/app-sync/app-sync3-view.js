@@ -62,10 +62,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
             $('#progressBarUpld').hide();
             $("#syncUpld3 *").attr("disabled", "disabled").off('click');
             return $('#imprtFiles').find('*').prop('disabled', true);
-          } else {
-            return App.navigate('teachers/dashboard', {
-              trigger: true
-            });
           }
         });
       };

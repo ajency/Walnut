@@ -19,6 +19,26 @@ define(['underscore', 'unserialize'], function(_) {
       return $.when(runQuery()).done(function() {
         return console.log('getTotalSyncDetailsCount transaction completed');
       }).fail(_.failureHandler);
+    },
+    getTotalRecordsTobeSynced: function() {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT SUM(rows) AS total FROM (SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "training_logs WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response_logs WHERE sync=?)", [0, 0, 0], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var totalRecords;
+          totalRecords = data.rows.item(0)['total'];
+          return d.resolve(totalRecords);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getTotalRecordsTobeSynced transaction completed');
+      }).fail(_.failureHandler);
     }
   });
 });

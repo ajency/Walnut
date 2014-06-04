@@ -100,6 +100,26 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         }
       };
 
+      ModuleDescriptionView.prototype.onShow = function() {
+        var onBackbuttonClick;
+        onBackbuttonClick = (function(_this) {
+          return function() {
+            console.log('Fired cordova back button event');
+            _this.trigger("goto:previous:route");
+            return document.removeEventListener("backbutton", onBackbuttonClick, false);
+          };
+        })(this);
+        if (_.platform() === 'DEVICE') {
+          document.addEventListener("backbutton", onBackbuttonClick, false);
+          return document.addEventListener("pause", (function(_this) {
+            return function() {
+              console.log('Fired cordova pause event');
+              return _this.trigger("goto:previous:route");
+            };
+          })(this), false);
+        }
+      };
+
       return ModuleDescriptionView;
 
     })(Marionette.ItemView);

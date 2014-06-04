@@ -90,13 +90,10 @@ define ['marionette'], (Marionette)->
 		user = App.request "get:user:model"
 		
 		user_role= user.get "roles"
-		
-		console.log 'Router app: '+App.getCurrentRoute()
 
 		if _.platform() is 'DEVICE'
 			syncDetailsCount = _.getTotalSyncDetailsCount()
 			syncDetailsCount.done (count)->
-				console.log  'Count: '+count
 				if count is 0
 					App.navigate('sync1', trigger: true)
 				else

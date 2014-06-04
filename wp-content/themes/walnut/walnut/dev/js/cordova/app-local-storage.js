@@ -44,37 +44,7 @@ define(['underscore', 'jquery'], function(_, $) {
   _.setFilePath = function(path) {
     return window.localStorage.setItem("filepath", "" + path);
   };
-  _.getFilePath = function() {
+  return _.getFilePath = function() {
     return window.localStorage.getItem("filepath");
-  };
-  _.setDwnldTimeStamp = function(TimeStampValue) {
-    return window.localStorage.setItem("dwnld_time_stamp", "" + TimeStampValue);
-  };
-  _.getDwnldTimeStamp = function() {
-    return window.localStorage.getItem("dwnld_time_stamp");
-  };
-  _.setDwnlduri = function(uriValue) {
-    return window.localStorage.setItem("dwnldUri", "" + uriValue);
-  };
-  _.getDwnlduri = function() {
-    return window.localStorage.getItem("dwnldUri");
-  };
-  _.setUploaduri = function(uriValue) {
-    return window.localStorage.setItem("uploadUri", "" + uriValue);
-  };
-  _.getUploaduri = function() {
-    return window.localStorage.getItem("uploadUridwnldUri");
-  };
-  _.setTotalRecords = function(total) {
-    return window.localStorage.setItem("total_records", "" + total);
-  };
-  _.getTotalRecords = function() {
-    return window.localStorage.getItem("total_records");
-  };
-  _.setFirstLogin = function(valuesAll) {
-    return window.localStorage.setItem("loginValue", "" + valuesAll);
-  };
-  return _.getFirstLogin = function() {
-    return window.localStorage.getItem("loginValue");
   };
 });

@@ -14,11 +14,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSync1Controller.prototype.initialize = function() {
         var view;
         this.view = view = this._getAppSyncView();
-        App.commands.setHandler("close:sync1:view", (function(_this) {
-          return function() {
-            return _this.view.close();
-          };
-        })(this));
         return this.show(view, {
           loading: true
         });
@@ -43,38 +38,29 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.events = {
         'click #JsonToCSV': 'startConversion',
         'click #syncNow': 'startSyncProcess',
-        'click #CSVupload': 'fileUpload',
         'click #last5downloads': 'showlast5downloads'
       };
 
       AppSyncView.prototype.onShow = function() {
-        var syncDetailsCount;
+        var recordsToBeSynced;
+        _.checkSynapseAssetsDirectory();
         App.breadcrumbRegion.close();
         navigator.splashscreen.hide();
-        syncDetailsCount = _.getTotalSyncDetailsCount();
-        return syncDetailsCount.done(function(count) {
-          var syncController;
-          if (count === 0) {
-            $('#syncDateDwnld').text("--/--/--");
-            $('#syncTimeDwnld').text("--:--");
-            $('#syncDateUpld').text("--/--/--");
-            $('#syncTimeUpld').text("--:--");
-            $('#last5dwnlds').attr("disabled", "disabled");
-            $("#UploadView *").attr("disabled", "disabled").off('click');
-          } else {
-            App.navigate('teachers/dashboard', {
-              trigger: true
-            });
+        recordsToBeSynced = _.getTotalRecordsTobeSynced();
+        return recordsToBeSynced.done(function(count) {
+          switch (count) {
+            case 0:
+              $('#totalRecordsToBeSynced').text('Data already upto date');
+              $('#lastSyncUploadDetails').css("display", "none");
+              $('#last5uploads').css("display", "none");
+              return $('#downSync').css("display", "none");
+            default:
+              $('#totalRecordsToBeSynced').text(count + ' record(s) to be synced');
+              $('#last5uploads').css("display", "none");
+              $('#downSync').css("display", "block");
+              return $('#lastSyncUploadDetails').css("display", "none");
           }
-          syncController = App.request("get:sync:controller");
-          return syncController.totalRecordsUpdate();
         });
-      };
-
-      AppSyncView.prototype.fileUpload = function() {
-        var syncController;
-        syncController = App.request("get:sync:controller");
-        return syncController.getuploadURL();
       };
 
       AppSyncView.prototype.startConversion = function() {};

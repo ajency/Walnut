@@ -6,14 +6,13 @@ define ['underscore'], ( _) ->
 
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
             ,(fileSystem)->
-                fileSystem.root.getDirectory("SynapseAssets", {create: false, exclusive:false} 
+                fileSystem.root.getDirectory("SynapseAssets", {create: true, exclusive:false} 
                     ,(fileEntry)->
-                        $('#directory').text('Synapse Assets directory exists on SD Card')
                         _.setSynapseAssetsDirectoryPath(fileEntry.toURL()+'/SynapseImages/')
                         console.log 'Full path: '+_.getSynapseAssetsDirectoryPath()
                     
                     ,(error)->
-                        $('#directory').text('Synapse Assets directory not found on SD Card')
+                        console.log 'ERROR: '+error
                     )
 
             ,_.fileSystemErrorHandler)

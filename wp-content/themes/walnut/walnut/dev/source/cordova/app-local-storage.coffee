@@ -59,46 +59,10 @@ define ['underscore', 'jquery'], (_, $)->
 
         
 
+
+
     _.setFilePath =(path)->
         window.localStorage.setItem("filepath", ""+path)
 
     _.getFilePath =->
         window.localStorage.getItem("filepath")
-
-
-    #save/get App sync dwnld time stamp
-    _.setDwnldTimeStamp =(TimeStampValue)->
-        window.localStorage.setItem("dwnld_time_stamp", ""+TimeStampValue)
-
-    _.getDwnldTimeStamp =->
-        window.localStorage.getItem("dwnld_time_stamp")   
-
-
-    #save/get uri to dwnld from
-    _.setDwnlduri =(uriValue)->
-        window.localStorage.setItem("dwnldUri", ""+uriValue)
-
-    _.getDwnlduri =->
-        window.localStorage.getItem("dwnldUri")   
-
-    #save/get uri to upload from
-    _.setUploaduri =(uriValue)->
-        window.localStorage.setItem("uploadUri", ""+uriValue)
-
-    _.getUploaduri =->
-        window.localStorage.getItem("uploadUridwnldUri")   
-
-
-    #save/get total records
-    _.setTotalRecords =(total)->
-        window.localStorage.setItem("total_records", ""+total)
-
-    _.getTotalRecords =->
-        window.localStorage.getItem("total_records")   
-
-    _.setFirstLogin =(valuesAll)->
-        window.localStorage.setItem("loginValue", ""+valuesAll)
-
-    _.getFirstLogin =->
-         window.localStorage.getItem("loginValue") 
-

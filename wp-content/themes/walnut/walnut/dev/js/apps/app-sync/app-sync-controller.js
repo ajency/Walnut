@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse", "zip"], function(Marionette, App, _, parse, getEntries) {
+define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], function(Marionette, App, _, parse) {
   var SynchronizationController;
   SynchronizationController = (function(_super) {
     __extends(SynchronizationController, _super);
@@ -28,31 +28,10 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
       this.updateQuestRespnLogs = __bind(this.updateQuestRespnLogs, this);
       this.updateQuestRespn = __bind(this.updateQuestRespn, this);
       this.updateSync = __bind(this.updateSync, this);
-      this.totalRecordsUpdate = __bind(this.totalRecordsUpdate, this);
       return SynchronizationController.__super__.constructor.apply(this, arguments);
     }
 
     SynchronizationController.prototype.initialize = function() {};
-
-    SynchronizationController.prototype.startSync = function() {};
-
-    SynchronizationController.prototype.totalRecordsUpdate = function() {
-      return _.db.transaction((function(_this) {
-        return function(tx) {
-          return tx.executeSql("SELECT SUM(rows) AS total FROM (SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "training_logs WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response_logs WHERE sync=?)", [0, 0, 0], function(tx, data) {
-            var totalRecords;
-            totalRecords = data.rows.item(0)['total'];
-            _.setTotalRecords(totalRecords);
-            $('#SyncRecords').text(data.rows.item(0)['total']);
-            return _this.chkTotalrecords(totalRecords);
-          }, _.transactionErrorhandler);
-        };
-      })(this), _.transactionErrorhandler, (function(_this) {
-        return function(tx) {
-          return console.log('Fetched total records having sync flag=0');
-        };
-      })(this));
-    };
 
     SynchronizationController.prototype.chkTotalrecords = function(total) {
       if (total === 0) {
@@ -307,7 +286,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
 
     SynchronizationController.prototype.fileUpload = function(fileEntry) {
       var ft, options, params, uri;
-      uri = encodeURI(_.getUploaduri());
+      uri = encodeURI('');
       options = new FileUploadOptions();
       options.fileKey = "file";
       options.fileName = fileEntry.substr(fileEntry.lastIndexOf('/') + 1);
@@ -321,8 +300,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
         return function(r) {
           console.log("Code = " + r.responseCode);
           console.log("Response = " + r.response);
-          console.log("Sent = " + r.bytesSent);
-          return _this.chkForNewRecords;
+          return console.log("Sent = " + r.bytesSent);
         };
       })(this), function(error) {
         alert("An error has occurred: Code = " + error.code);
@@ -331,22 +309,7 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
       }, options);
     };
 
-    SynchronizationController.prototype.chkForNewRecords = function() {
-      if (_.getTotalRecords() === null) {
-        $('#JsonToCSV').attr("disabled", "disabled");
-        $('#CSVupload').attr("disabled", "disabled");
-        $('#syncNow').removeAttr("disabled");
-        return this.updateUploadTime();
-      } else {
-        $('#JsonToCSV').removeAttr("disabled");
-        $('#CSVupload').attr("disabled", "disabled");
-        return $('#syncNow').attr("disabled", "disabled");
-      }
-    };
-
     SynchronizationController.prototype.updateUploadTime = function() {
-      var timestamp;
-      timestamp = _.getDwnldTimeStamp();
       if (_.getInitialSyncFlag() === null) {
         return _.db.transaction((function(_this) {
           return function(tx) {
@@ -378,9 +341,24 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
       }
     };
 
-    SynchronizationController.prototype.dwnldUnZip = function() {
+    SynchronizationController.prototype.getDownloadURL = function() {
+      var data;
+      data = {
+        blog_id: _.getBlogID(),
+        last_sync: ''
+      };
+      return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
+        return function(resp) {
+          console.log('RESP');
+          console.log(resp);
+          return _this.dwnldUnZip(resp.exported_csv_url);
+        };
+      })(this), 'json');
+    };
+
+    SynchronizationController.prototype.dwnldUnZip = function(file_download_url) {
       var uri;
-      uri = encodeURI(_.getDwnlduri());
+      uri = encodeURI(file_download_url);
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
           return fileSystem.root.getFile("SynapseAssets/logs.zip", {
@@ -834,17 +812,17 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
             $('#JsonToCSV').removeAttr("disabled");
             $('#CSVupload').attr("disabled", "disabled");
             $('#syncNow').attr("disabled", "disabled");
-            return App.execute("close:sync3:view");
+            return setTimeout(function() {
+              return App.execute("close:sync3:view");
+            }, 3000);
           });
         };
       })(this));
     };
 
     SynchronizationController.prototype.updateDownloadTime = function() {
-      var timestamp;
-      timestamp = _.getDwnldTimeStamp();
       return _.db.transaction(function(tx) {
-        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?,?)", ['file_download', timestamp]);
+        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?,?)", ['file_download', '']);
       }, _.transactionErrorhandler, function(tx) {
         return console.log('Updated file download details');
       });
@@ -870,38 +848,6 @@ define(["marionette", "app", "underscore", "csvparse", "archive", "json2csvparse
           }, _.transactionErrorhandler);
         };
       })(this));
-    };
-
-    SynchronizationController.prototype.getuploadURL = function() {
-      return $.post(AJAXURL + '?action=get-sync-details', (function(_this) {
-        return function(resp) {
-          console.log('RESP');
-          console.log(resp);
-          if (resp.error) {
-            return _this.onErrorResponse(resp.error);
-          } else {
-            _.setUploaduri(resp.login_details.ID);
-            return _this.fileReadZip();
-          }
-        };
-      })(this), 'json');
-    };
-
-    SynchronizationController.prototype.getDownloadURL = function() {
-      var data;
-      data = {
-        blog_id: _.getBlogID(),
-        last_sync: ''
-      };
-      return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
-        return function(resp) {
-          console.log('RESP');
-          console.log(resp);
-          _.setDwnlduri(resp.exported_csv_url);
-          _.setDwnldTimeStamp(resp.sync_time);
-          return _this.dwnldUnZip();
-        };
-      })(this), 'json');
     };
 
     return SynchronizationController;
