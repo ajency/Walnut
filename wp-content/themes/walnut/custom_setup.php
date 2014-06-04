@@ -85,19 +85,17 @@ function create_custom_tables(){
     
     echo "{$wpdb->prefix}training_logs table created<br>";
     
-    $question_response_table = "CREATE TABLE  IF NOT EXISTS {$wpdb->prefix}question_response (
-        `id` INT NOT NULL AUTO_INCREMENT ,
-        `content_piece_id` INT NOT NULL ,
-        `collection_id` INT NOT NULL ,
-        `division` INT NOT NULL ,
-        `date_created` DATE NOT NULL ,
-        `date_modified` DATE NOT NULL ,
-        `total_time` VARCHAR( 255 ) NOT NULL ,
-        `question_response` VARCHAR( 255 ) NOT NULL ,
-        `time_started` TIMESTAMP NOT NULL ,
-        `time_completed` TIMESTAMP NOT NULL ,
-        PRIMARY KEY ( `id` )
-        )";
+    $question_response_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}question_response` (
+              `ref_id` varchar(255) NOT NULL,
+              `content_piece_id` int(11) NOT NULL,
+              `collection_id` int(11) NOT NULL,
+              `division` int(11) NOT NULL,
+              `question_response` varchar(255) NOT NULL,
+              `time_taken` varchar(255) NOT NULL DEFAULT '0',
+              `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              `end_date` datetime NOT NULL,
+              `status` varchar(50) NOT NULL
+            )";
     
     $wpdb->query($question_response_table);
     

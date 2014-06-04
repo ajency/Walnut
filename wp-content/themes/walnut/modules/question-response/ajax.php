@@ -83,17 +83,3 @@ function ajax_get_question_response(){
 
 
 add_action( 'wp_ajax_get-question-response', 'ajax_get_question_response' );
-
-
-function ajax_update_question_response_logs() {
-
-    global $wpdb;
-
-    $ref_id= $_POST['ref_id'];
-
-    $log_response= update_question_response_logs($ref_id);
-
-    wp_send_json($log_response);
-}
-
-add_action( 'wp_ajax_update-question-response-logs', 'ajax_update_question_response_logs' );

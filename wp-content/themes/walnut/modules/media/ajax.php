@@ -5,12 +5,15 @@ include_once 'functions.php';
 function query_attachments() {
 	
 	$query = array ();
+    $media_type= 'image';
+    if(isset($_REQUEST['mediaType']))
+        $media_type=$_REQUEST['mediaType'];
 	// $query['order'] = $_REQUEST['order'];
 	// $query['orderby'] = $_REQUEST['orderby'];
 	// $query['posts_per_page'] = $_REQUEST['posts_per_page'];
 	// $query['paged'] = $_REQUEST['paged'];
 	
-	$media = get_site_media ( $query );
+	$media = get_site_media ( $query, $media_type );
 	
 	wp_send_json ( array (
 			'code' => 'OK',
