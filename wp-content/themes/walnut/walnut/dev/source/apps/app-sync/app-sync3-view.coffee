@@ -18,7 +18,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				@show view, (loading: true)
 
 
-
 			_getAppSyncView : ->
 				new AppSyncView
 
@@ -43,6 +42,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				syncDetailsCount = _.getTotalSyncDetailsCount()
 				syncDetailsCount.done (count)->
 					if count is 0
+					
+						$('#dwnldDateTime').hide();
 						$('#imprtDateTime').hide();
 						$('#progressBarDwnld').hide();
 						$('#progressBarImprt').hide();
