@@ -39,7 +39,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'zip'], ( _) ->
 			questionResponseData.done (question_response_data)->
 						
 				csvData = ConvertToCSV JSON.stringify(question_response_data)
-				console.log "CSV Data" 
+				console.log "CSV Data"
 				console.log csvData
 
 				_.createZipFile(csvData)
