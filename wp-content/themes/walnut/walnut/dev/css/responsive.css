@@ -57,7 +57,50 @@ and (min-width : 1824px) {
 	
 }
 
- 
+
+/*** Desktops & Laptops ***/
+ @media (min-width: 1025px) { 
+
+ 	/*** Page sidebar ***/
+ 	.page-sidebar {
+		display: inline-block;
+		float: left;
+		position: fixed;
+		width: 250px;
+		margin-top:58px;
+  	}
+	.page-sidebar.fixed{
+		position: fixed;
+	}	
+  	.page-sidebar ul{
+  		width: 250px;
+  	}
+
+  	/*** Page content ***/
+  	.page-content { 
+  		margin-left: 250px; 
+		min-height: 1200px;
+	}
+
+	.page-content.no-min-height {
+		min-height: auto;
+	}
+
+	.full-width-page .page-content {
+		margin-left: 0px !important;
+	}
+	
+	.inner-menu{
+		margin-left:50px;
+		padding-top: 60px;
+	}
+	/** Const size button for medium devices **/
+	.btn-cons-md{
+		  min-width: 120px;
+	}
+}
+
+
 
 @media (max-width: 1024px) { 	
 	
@@ -386,22 +429,22 @@ and (min-width : 1824px) {
        only screen and (-o-min-device-pixel-ratio: 200/100),
        only screen and (min-device-pixel-ratio: 2.0) {
 		.grid.simple .grid-title .tools a{
-  			background: url('/images/icon/portlet-tray-2x.png');
+  			background: url('../images/icon/portlet-tray-2x.png');
 			background-size: 199px 57px;
 		} 	
 		.tiles .controller a{
 			position:relative;
-			background: url('/images/icon/portlet-tray-2x.png');
+			background: url('../images/icon/portlet-tray-2x.png');
 			background-size: 199px 57px;
 		}
 		.widget-item .controller a{
 			position:relative;
-			background: url('/images/icon/portlet-tray-2x.png');
+			background: url('../images/icon/portlet-tray-2x.png');
 			background-size: 199px 57px;
 		}
 	
 		.iconset{
-		background: url('/images/icon/top-trayx2.png'); 
+		background: url('../images/icon/top-trayx2.png'); 
 		background-size: 394px 29px;
 		}
 		

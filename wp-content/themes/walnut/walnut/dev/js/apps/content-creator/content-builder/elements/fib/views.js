@@ -51,6 +51,7 @@ define(['app'], function(App) {
           return function(evt) {
             _this.trigger("show:this:fib:properties");
             _this.trigger("close:question:element:properties");
+            _this.trigger("close:question:elements");
             return evt.stopPropagation();
           };
         })(this));

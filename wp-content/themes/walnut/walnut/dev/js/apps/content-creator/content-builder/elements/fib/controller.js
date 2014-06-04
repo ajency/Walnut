@@ -45,6 +45,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         this.listenTo(view, "close:question:element:properties", function() {
           return App.execute("close:question:element:properties");
         });
+        this.listenTo(view, "close:question:elements", function() {
+          return App.execute("close:question:elements");
+        });
         App.commands.setHandler('save:fib:text', function() {
           return _.delay(function() {
             return view.triggerMethod('save:text');

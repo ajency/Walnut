@@ -42,10 +42,10 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
 
             itemViewContainer: 'ul.menu-items'
 
+
             events:
                 'click li': 'clickMenu'
 
-            
             onShow: ->
 
                 #Auto close open menus in Condensed menu
@@ -66,13 +66,17 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     elem.children('li.open').children('.sub-menu').slideUp(200);
                     elem.children('li').removeClass('open');
 
-                # changes for mobile
-                if _.platform() is 'DEVICE'
-                    $('#main-menu-toggle').sidr({
-                        name : 'main-menu',
+                if $( window ).width()<1025
+                    $('#main-menu-toggle').sidr
+                        name : 'main-menu'
                         side: 'left'
-                    });
 
+                # changes for mobile
+                # if _.platform() is 'DEVICE'
+                #     $('#main-menu-toggle').sidr({
+                #         name : 'main-menu',
+                #         side: 'left'
+                #     })  
 
 
             clickMenu: (e)->
@@ -100,8 +104,7 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
 
                 e.preventDefault();
 
-
-            handleSidenarAndContentHeight = ->
+            handleSidenarAndContentHeight = ()->
                 content = $('.page-content');
                 sidebar = $('.page-sidebar');
                 if (!content.attr("data-height"))
@@ -111,3 +114,6 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     content.css("min-height", sidebar.height() + 120);
                 else
                     content.css("min-height", content.attr("data-height"));
+				
+
+
