@@ -118,16 +118,6 @@ function setup_childsite_tables(){
     $wpdb->query($question_response_table);
     
     echo "{$wpdb->prefix}question_response table created<br>";
-
-    $question_response_logs_table = "
-            CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}question_response_logs` (
-              `qr_ref_id` varchar(255) NOT NULL,
-              `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-            )";
-
-    $wpdb->query($question_response_logs_table);
-
-    echo "{$wpdb->prefix}question_response_logs table created<br>";
     
  }
 

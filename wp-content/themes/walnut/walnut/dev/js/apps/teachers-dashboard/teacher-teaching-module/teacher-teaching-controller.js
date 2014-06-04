@@ -101,11 +101,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         questionResponseModel = questionResponseCollection.findWhere({
           'content_piece_id': content_piece_id
         });
-        if (questionResponseModel) {
-          if (this.display_mode === 'class_mode') {
-            App.request("update:question:response:logs", questionResponseModel.get('ref_id'));
-          }
-        } else {
+        if (!questionResponseModel) {
           modelData = {
             'collection_id': contentGroupModel.get('id'),
             'content_piece_id': content_piece_id,
