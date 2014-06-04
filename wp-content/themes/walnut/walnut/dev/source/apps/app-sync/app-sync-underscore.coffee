@@ -2,13 +2,14 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	_.mixin
 
-		# Get total number of records from table "sync_details"
-		getTotalSyncDetailsCount : ->
+		# Get total number of records from table "sync_details" based on type_of_operation
+		getTotalSyncDetailsCount : (operation) ->
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT COUNT(*) AS count FROM sync_details", []
+						tx.executeSql("SELECT COUNT(*) AS count FROM sync_details 
+							WHERE type_of_operation=?", [operation]
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->

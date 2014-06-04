@@ -22,9 +22,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			template : AppSyncTpl
 
 			events :
-				'click #JsonToCSV' : 'startConversion'
 				'click #syncNow' : 'startSyncProcess'
-				'click #last5downloads' : 'showlast5downloads'
+				
 
 
 
@@ -44,21 +43,12 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 							$('#totalRecordsToBeSynced').text('Data already upto date')
 							$('#lastSyncUploadDetails').css("display", "none")
 							$('#last5uploads').css("display", "none")
-							$('#downSync').css("display", "none")
+							$('#upSync1').css("display", "none")
 						else
 							$('#totalRecordsToBeSynced').text(count+' record(s) to be synced')
 							$('#last5uploads').css("display", "none") #for now
-							$('#downSync').css("display", "block")
+							$('#upSync1').css("display", "block")
 							$('#lastSyncUploadDetails').css("display", "none")
-
-				
-				
-				
-			
-			startConversion : ->
-				# syncController = App.request "get:sync:controller"
-				# syncController.selectRecords()
-				
 
 					
 
@@ -67,12 +57,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 					App.navigate('sync3', trigger: true)
 				else
 					$('#NetwrkCnctnDwnld').css("display", "block");
-				# $('i').addClass('fa-spin')
-				# $('#syncText').text('Syncing now...')
+				
 
 
-			showlast5downloads : ->
-				App.navigate('sync2', trigger: true)	
 
 
 				

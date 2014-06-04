@@ -351,14 +351,14 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
         return function(resp) {
           console.log('RESP');
           console.log(resp);
-          return _this.dwnldUnZip(resp.exported_csv_url);
+          return _this.dwnldUnZip(resp);
         };
       })(this), 'json');
     };
 
-    SynchronizationController.prototype.dwnldUnZip = function(file_download_url) {
+    SynchronizationController.prototype.dwnldUnZip = function(resp) {
       var uri;
-      uri = encodeURI(file_download_url);
+      uri = encodeURI(resp.exported_csv_url);
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
           return fileSystem.root.getFile("SynapseAssets/logs.zip", {
@@ -386,7 +386,7 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
             };
             return fileTransfer.download(uri, filePath + "logs.zip", function(file) {
               console.log('Zip file downloaded');
-              _this.updateDownloadTime();
+              _this.updateSyncDetails('file_download', '');
               $('#getFiles').find('*').prop('disabled', true);
               $('#imprtFiles').find('*').prop('disabled', false);
               return _this.fileUnZip(filePath, file.toURL());
@@ -826,6 +826,7 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
             $('#JsonToCSV').removeAttr("disabled");
             $('#CSVupload').attr("disabled", "disabled");
             $('#syncNow').attr("disabled", "disabled");
+            _this.updateSyncDetails('file_import', _.getCurrentDateTime(2));
             return setTimeout(function() {
               return App.execute("close:sync3:view");
             }, 3000);
@@ -834,11 +835,11 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
       })(this));
     };
 
-    SynchronizationController.prototype.updateDownloadTime = function() {
+    SynchronizationController.prototype.updateSyncDetails = function(operation, time_stamp) {
       return _.db.transaction(function(tx) {
-        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?,?)", ['file_download', '']);
+        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?,?)", [operation, time_stamp]);
       }, _.transactionErrorhandler, function(tx) {
-        return console.log('Updated file download details');
+        return console.log('Updated sync details');
       });
     };
 
