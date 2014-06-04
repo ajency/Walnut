@@ -31,9 +31,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			events :
 				'click #DownloadNow' : 'startDownload'
 				'click #importNow' : 'startImport'
-
-
-			
+				'click #generateNow' : 'generateZipFile'
 
 
 			onShow : ->
@@ -47,10 +45,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 						$('#imprtDateTime').hide();
 						$('#progressBarDwnld').hide();
 						$('#progressBarImprt').hide();
-						$('#progressBarUpld').hide();
-						# $("#imprtFiles *").attr("disabled", "disabled").off('click')
-						$("#syncUpld3 *").attr("disabled", "disabled").off('click')
-
 						$('#imprtFiles').find('*').prop('disabled',true)
 					
 				
@@ -61,6 +55,12 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			startImport : ->
 				syncController = App.request "get:sync:controller"
 				syncController.readUnzipFile1()
+
+			generateZipFile : ->
+				$('#generateFileLoader').css("display", "block")
+
+				_.convertDataToCSV()
+					
 
 
 				

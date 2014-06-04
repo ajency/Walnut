@@ -40,8 +40,11 @@
                           <div class="col-sm-12  m-b-10">
                             <h5 class="semi-bold text-center p-t-20">Generate File</h5>
                             <div class="">
-                              <button type="button" class="btn btn-success h-center block"><span class="bold">Generate Now</span></button>
-                              <img src="images/loader.gif" class="h-center block m-t-5" height="20">
+                              <h5 class="m-t-5 semi-bold text-center text-success">Last Created: 13/05/2014 @ 08:36 PM</h5>
+                              <button id="generateNow" type="button" class="btn btn-success h-center block"><span class="bold">Generate Now</span></button>
+                              <img id="generateFileLoader" src="images/loader.gif" class="h-center block m-t-5" height="20" style="display:none">
+                              <h5 id="generateFileSuccess" class="m-t-5 semi-bold text-center text-success" style="display:none">File Successfully Generated</h5>
+                              <h5 id="generateFileError" class="m-t-5 semi-bold text-center text-error" style="display:none">An Error Occurred</h5>
                             </div>
                           </div>
                         </div>
@@ -50,6 +53,7 @@
                           <div class="col-sm-12  m-b-10">
                             <h5 class="semi-bold text-center  p-t-20">Upload File</h5>
                             <div class="">
+                              <h5 class="m-t-5 semi-bold text-center text-success">Last Upload: 13/05/2014 @ 08:36 PM</h5>
                               <button type="button" class="btn disabled h-center block"><span class="bold">Upload Now</span></button>
                               <div class="progress progress-striped active progress-small h-center m-t-5">
                                 <div id="progressBarUpld" data-percentage="0%" style="width: 45%;" class="progress-bar progress-bar-success"></div>

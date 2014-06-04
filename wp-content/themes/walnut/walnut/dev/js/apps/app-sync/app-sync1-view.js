@@ -36,7 +36,8 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.template = AppSyncTpl;
 
       AppSyncView.prototype.events = {
-        'click #syncNow': 'startSyncProcess'
+        'click #syncNow': 'startSyncProcess',
+        'click #upSync1': 'gotoSync3View'
       };
 
       AppSyncView.prototype.onShow = function() {
@@ -45,20 +46,22 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         App.breadcrumbRegion.close();
         navigator.splashscreen.hide();
         recordsToBeSynced = _.getTotalRecordsTobeSynced();
-        return recordsToBeSynced.done(function(count) {
-          switch (count) {
-            case 0:
-              $('#totalRecordsToBeSynced').text('Data already upto date');
-              $('#lastSyncUploadDetails').css("display", "none");
-              $('#last5uploads').css("display", "none");
-              return $('#upSync1').css("display", "none");
-            default:
-              $('#totalRecordsToBeSynced').text(count + ' record(s) to be synced');
-              $('#last5uploads').css("display", "none");
-              $('#upSync1').css("display", "block");
-              return $('#lastSyncUploadDetails').css("display", "none");
-          }
-        });
+        return recordsToBeSynced.done((function(_this) {
+          return function(count) {
+            switch (count) {
+              case 0:
+                $('#totalRecordsToBeSynced').text('Data already upto date');
+                $('#last5uploads').css("display", "none");
+                $('#upSync1').css("display", "none");
+                return $('#lastSyncUploadDetails').css("display", "none");
+              default:
+                $('#totalRecordsToBeSynced').text(count + ' record(s) to be synced');
+                $('#last5uploads').css("display", "none");
+                $('#upSync1').css("display", "block");
+                return _this.updateLastSyncUploadDetails();
+            }
+          };
+        })(this));
       };
 
       AppSyncView.prototype.startSyncProcess = function() {
@@ -69,6 +72,28 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         } else {
           return $('#NetwrkCnctnDwnld').css("display", "block");
         }
+      };
+
+      AppSyncView.prototype.gotoSync3View = function() {
+        if (_.isOnline()) {
+          return App.navigate('sync3', {
+            trigger: true
+          });
+        } else {
+          return $('#networkConnectionUpload').css("display", "block");
+        }
+      };
+
+      AppSyncView.prototype.updateLastSyncUploadDetails = function() {
+        var lastSyncTimeStamp;
+        $('#lastSyncUploadDetails').css("display", "block");
+        lastSyncTimeStamp = _.getLastSyncTimeStamp('file_upload');
+        return lastSyncTimeStamp.done(function(time_stamp) {
+          if (time_stamp === '') {
+            $('#syncDateUpload').text('-/-/-');
+            return $('#syncTimeUpload').text('-:-');
+          }
+        });
       };
 
       return AppSyncView;

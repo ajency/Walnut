@@ -23,7 +23,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 			events :
 				'click #syncNow' : 'startSyncProcess'
-				
+				'click #upSync1' : 'gotoSync3View'
+
 
 
 
@@ -37,18 +38,18 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				# Display total records to be synced for file upload
 				recordsToBeSynced = _.getTotalRecordsTobeSynced()
-				recordsToBeSynced.done (count)->
+				recordsToBeSynced.done (count)=>
 					switch count
 						when 0
-							$('#totalRecordsToBeSynced').text('Data already upto date')
-							$('#lastSyncUploadDetails').css("display", "none")
+							$('#totalRecordsToBeSynced').text('Data already upto date')							
 							$('#last5uploads').css("display", "none")
 							$('#upSync1').css("display", "none")
+							$('#lastSyncUploadDetails').css("display", "none")
 						else
 							$('#totalRecordsToBeSynced').text(count+' record(s) to be synced')
 							$('#last5uploads').css("display", "none") #for now
 							$('#upSync1').css("display", "block")
-							$('#lastSyncUploadDetails').css("display", "none")
+							@updateLastSyncUploadDetails()
 
 					
 
@@ -57,11 +58,20 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 					App.navigate('sync3', trigger: true)
 				else
 					$('#NetwrkCnctnDwnld').css("display", "block");
-				
 
 
+			gotoSync3View : ->
+				if _.isOnline()
+					App.navigate('sync3', trigger: true)
+				else
+					$('#networkConnectionUpload').css("display", "block")
 
 
-				
-				
+			updateLastSyncUploadDetails : ->
+				$('#lastSyncUploadDetails').css("display", "block")
 
+				lastSyncTimeStamp = _.getLastSyncTimeStamp('file_upload')
+				lastSyncTimeStamp.done (time_stamp)->
+					if time_stamp is ''
+						$('#syncDateUpload').text('-/-/-')
+						$('#syncTimeUpload').text('-:-')

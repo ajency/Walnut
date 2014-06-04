@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], function(Marionette, App, _, parse) {
+define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App, _, parse) {
   var SynchronizationController;
   SynchronizationController = (function(_super) {
     __extends(SynchronizationController, _super);
@@ -31,8 +31,6 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
       return SynchronizationController.__super__.constructor.apply(this, arguments);
     }
 
-    SynchronizationController.prototype.initialize = function() {};
-
     SynchronizationController.prototype.chkTotalrecords = function(total) {
       if (total === 0) {
         $('#JsonToCSV').attr("disabled", "disabled");
@@ -43,113 +41,6 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
         $('#CSVupload').attr("disabled", "disabled");
         return $('#syncNow').attr("disabled", "disabled");
       }
-    };
-
-    SynchronizationController.prototype.selectRecords = function() {
-      var valuesAll, valuesAll1, valuesAll2;
-      valuesAll = "";
-      valuesAll1 = "";
-      valuesAll2 = "";
-      return _.db.transaction((function(_this) {
-        return function(tx) {
-          tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "training_logs WHERE sync=0 ", [], function(tx, results) {
-            var data, i, row, training_data, _results;
-            valuesAll = results.rows.length;
-            console.log(valuesAll);
-            if (valuesAll === 0) {
-              return console.log("No user found");
-            } else {
-              i = 0;
-              _results = [];
-              while (i < valuesAll) {
-                row = results.rows.item(i);
-                data = row.id;
-                training_data = '{ "id": "' + row.id + '","division_id":"' + row.division_id + '", "collection_id": "' + row.collection_id + '", "teacher_id": "' + row.teacher_id + '", "date":"' + row.date + '", "status":"' + row.status + '"}';
-                console.log("1st data is :" + training_data);
-                _results.push(i++);
-              }
-              return _results;
-            }
-          }, _.transactionErrorhandler);
-          tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response WHERE sync=0 ", [], function(tx, results) {
-            var i, quest_resp_data, row, _results;
-            valuesAll1 = results.rows.length;
-            console.log(valuesAll1);
-            if (valuesAll === 0) {
-              return console.log("No user found");
-            } else {
-              i = 0;
-              _results = [];
-              while (i < valuesAll) {
-                row = results.rows.item(i);
-                quest_resp_data = '{ "ref id": "' + row.ref_id + '","content id":"' + row.content_piece_id + '", "collection id": "' + row.collection_id + '", "division": "' + row.division + '", "question response":"' + row.question_response + '", "time taken":"' + row.time_taken + '","start date":"' + row.start_date + '""end date":"' + row.end_date + '""status":"' + row.status + '""sync":"' + row.sync + '"}';
-                console.log("2n Data is " + quest_resp_data);
-                _results.push(i++);
-              }
-              return _results;
-            }
-          }, _.transactionErrorhandler);
-          return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response_logs WHERE sync=0 ", [], function(tx, results) {
-            var AllData, CSVdata, fullGrp, i, items, quesn_rep_logs, row;
-            valuesAll2 = results.rows.length;
-            console.log(valuesAll2);
-            if (valuesAll === 0) {
-              console.log("No user found");
-              items = [
-                {
-                  name: "Item 1",
-                  color: "Green",
-                  size: "X-Large"
-                }, {
-                  name: "Item 2",
-                  color: "Green",
-                  size: "X-Large"
-                }, {
-                  name: "Item 3",
-                  color: "Green",
-                  size: "X-Large"
-                }
-              ];
-              AllData = {
-                "group": {
-                  "training_data": items,
-                  "quest_resp_data": items,
-                  "quesn_rep_logs": items
-                }
-              };
-              fullGrp = JSON.stringify(items);
-              console.log("Ful Data is " + fullGrp);
-              CSVdata = ConvertToCSV(fullGrp);
-              console.log("CSV data is" + CSVdata);
-              return _this.writeToFile(CSVdata);
-            } else {
-              i = 0;
-              while (i < valuesAll) {
-                row = results.rows.item(i);
-                quesn_rep_logs = '{ "id": "' + row.qr_ref_id + '","collection_id": "' + row.start_time + '", "teacher_id": "' + row.sync + '"}';
-                console.log("3rd data is " + quesn_rep_logs);
-                i++;
-              }
-              AllData = training_data + quest_resp_data + quesn_rep_logs;
-              AllData = {
-                "group": {
-                  "training_data": training_data,
-                  "quest_resp_data": quest_resp_data,
-                  "quesn_rep_logs": quesn_rep_logs
-                }
-              };
-              fullGrp = JSON.stringify(AllData);
-              alert(fullGrp);
-              console.log("Ful Data is " + fullGrp);
-              CSVdata = ConvertToCSV(fullGrp);
-              console.log("CSV data is" + CSVdata);
-              return _this.writeToFile(CSVdata);
-            }
-          }, _.transactionErrorhandler);
-        };
-      })(this), _.transactionErrorhandler, function(tx) {
-        return console.log('Main transaction');
-      });
     };
 
     SynchronizationController.prototype.writeToFile = function(CSVdata) {
@@ -204,7 +95,6 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
       })(this), _.transactionErrorhandler, (function(_this) {
         return function(tx) {
           console.log('Data updated successfully');
-          $('#SyncRecords').text(0);
           $('#JsonToCSV').attr("disabled", "disabled");
           $('#CSVupload').removeAttr("disabled");
           $('#syncNow').attr("disabled", "disabled");
@@ -243,7 +133,6 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
       content = zip.generate({
         type: "text/plain"
       });
-      zip.file("csvread.txt").asText();
       return this.saveZipData(content);
     };
 
@@ -255,8 +144,6 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
             exclusive: false
           }, function(fileEntry) {
             return fileEntry.createWriter(function(writer) {
-              alert("file entry is" + fileEntry.toURL());
-              console.log("file entry is" + fileEntry.toURL());
               return writer.write(content);
             }, _.fileTransferErrorHandler);
           }, _.fileErrorHandler);
@@ -348,12 +235,8 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
         last_sync: ''
       };
       return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
-        return function(resp) {
-          console.log('RESP');
-          console.log(resp);
-          return _this.dwnldUnZip(resp);
-        };
-      })(this), 'json');
+        return function(resp) {};
+      })(this), console.log('RESP'), console.log(resp), this.dwnldUnZip(resp), 'json');
     };
 
     SynchronizationController.prototype.dwnldUnZip = function(resp) {

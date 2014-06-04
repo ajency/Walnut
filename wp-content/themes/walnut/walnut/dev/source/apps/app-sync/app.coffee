@@ -4,6 +4,7 @@ define ['app'
         'apps/app-sync/app-sync3-view'
         'apps/app-sync/app-sync-controller'
         'apps/app-sync/app-sync-underscore'
+        'apps/app-sync/app-sync-generate-file'
         ], (App)->
 
         App.module "AppSync", (AppSync, App)->

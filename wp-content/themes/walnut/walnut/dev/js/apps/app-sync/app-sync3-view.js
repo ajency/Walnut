@@ -47,7 +47,8 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.events = {
         'click #DownloadNow': 'startDownload',
-        'click #importNow': 'startImport'
+        'click #importNow': 'startImport',
+        'click #generateNow': 'generateZipFile'
       };
 
       AppSyncView.prototype.onShow = function() {
@@ -60,8 +61,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
             $('#imprtDateTime').hide();
             $('#progressBarDwnld').hide();
             $('#progressBarImprt').hide();
-            $('#progressBarUpld').hide();
-            $("#syncUpld3 *").attr("disabled", "disabled").off('click');
             return $('#imprtFiles').find('*').prop('disabled', true);
           }
         });
@@ -77,6 +76,11 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         var syncController;
         syncController = App.request("get:sync:controller");
         return syncController.readUnzipFile1();
+      };
+
+      AppSyncView.prototype.generateZipFile = function() {
+        $('#generateFileLoader').css("display", "block");
+        return _.convertDataToCSV();
       };
 
       return AppSyncView;
