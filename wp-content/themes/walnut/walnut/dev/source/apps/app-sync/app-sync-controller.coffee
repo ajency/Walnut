@@ -388,6 +388,17 @@ define ["marionette","app", "underscore", "csvparse" ,"archive", "json2csvparse"
 							_.setFilePath(filePath)
 							fileEntry.remove()
 							fileTransfer = new FileTransfer()
+
+							fileTransfer.onprogress = (progressEvent)=>
+								if progressEvent.lengthComputable
+									perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+									statusDom.innerHTML = perc + "% loaded...";
+								else
+									if progressBarDwnldDom.innerHTML is null
+										progressBarDwnldDom.innerHTML = "Loading"
+									else
+										progressBarDwnldDom.innerHTML += "."
+
 							fileTransfer.download(uri, filePath+"logs.zip" 
 								,(file)=>
 									console.log 'Zip file downloaded'

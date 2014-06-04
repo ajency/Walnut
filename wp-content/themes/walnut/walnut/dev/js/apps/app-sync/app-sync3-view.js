@@ -56,6 +56,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         syncDetailsCount = _.getTotalSyncDetailsCount();
         return syncDetailsCount.done(function(count) {
           if (count === 0) {
+            $('#dwnldDateTime').hide();
             $('#imprtDateTime').hide();
             $('#progressBarDwnld').hide();
             $('#progressBarImprt').hide();
