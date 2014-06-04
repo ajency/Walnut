@@ -69,8 +69,8 @@ define ['app'
 							@listenTo view, "image:size:selected", (size)=>
 								@layout.model.set 'size', size
 								@layout.model.save()
-								localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
-								console.log localStorage.getItem 'ele'+@layout.model.get('meta_id')
+#								localStorage.setItem 'ele'+@layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+#								console.log localStorage.getItem 'ele'+@layout.model.get('meta_id')
 
 
 							@layout.elementRegion.show view

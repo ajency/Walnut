@@ -67,9 +67,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             });
             _this.listenTo(view, "image:size:selected", function(size) {
               _this.layout.model.set('size', size);
-              _this.layout.model.save();
-              localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
-              return console.log(localStorage.getItem('ele' + _this.layout.model.get('meta_id')));
+              return _this.layout.model.save();
             });
             return _this.layout.elementRegion.show(view);
           };

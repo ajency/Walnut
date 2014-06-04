@@ -16,16 +16,11 @@ define(['app'], function(App) {
 
       ImageView.prototype.mixinTemplateHelpers = function(data) {
         data = ImageView.__super__.mixinTemplateHelpers.call(this, data);
-        data.imageurl = '';
+        data.imageurl = data.sizes[data.size].url;
         return data;
       };
 
-      ImageView.prototype.onShow = function() {
-        var image, width;
-        width = this.$el.width();
-        image = this.model.getBestFit(width);
-        return this.$el.find('img').attr('src', image.url);
-      };
+      ImageView.prototype.onShow = function() {};
 
       return ImageView;
 
