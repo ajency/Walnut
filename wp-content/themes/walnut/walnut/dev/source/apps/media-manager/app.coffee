@@ -1,6 +1,7 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/media-manager/templates/outer.html'], (App, AppController, outerTpl)->
+        'text!apps/media-manager/templates/outer.html'
+        ],(App, AppController, outerTpl)->
     App.module 'MediaManager', (MediaManager, App, Backbone, Marionette, $, _)->
 
         # defineall routers required for the app in MediaManager.Router class
@@ -26,9 +27,17 @@ define ['app'
                 # start media manager apps. conditional strating of apps is possible
                 # each app needs a region as the argument. Each app will be functional only
                 # for that region
-                App.execute "start:media:upload:app", region: layout.uploadRegion, mediaType: @mediaType
-                App.execute "start:media:grid:app", region: layout.gridRegion, mediaType: @mediaType
 
+                @listenTo @layout, "show", =>
+                    App.execute "start:media:upload:app",
+                        region: layout.uploadRegion
+                        mediaType: @mediaType
+
+                    App.execute "start:media:grid:app",
+                        region: layout.gridRegion
+                        mediaType: @mediaType
+
+                @show @layout
 
                 @listenTo @layout.gridRegion, "media:element:selected", (media)=>
                     @choosedMedia = media
@@ -53,7 +62,7 @@ define ['app'
             # gets the main login view
             _getLayout: ()=>
                 new OuterLayout
-                    mediaType:@mediaType
+                    mediaType: @mediaType
 
 
         # this is the outer layout for the media manager
@@ -103,7 +112,6 @@ define ['app'
         # stop listetning to media manager stop
         MediaManager.on "stop", ->
             App.vent.off "media:element:clicked"
-
 
 
         App.commands.setHandler "show:media:manager:app", (options)->

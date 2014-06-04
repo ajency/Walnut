@@ -30,7 +30,6 @@ define ['app'
                     data.videoPreview = @videoPreview = true
                     data.title_excerpt= _.prune data.title, 15
 
-                console.log data
                 data
 
             _whenImageClicked: (e)->

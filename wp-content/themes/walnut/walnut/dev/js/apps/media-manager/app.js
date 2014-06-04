@@ -36,14 +36,19 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
         this.mediaType = opt.mediaType;
         this.layout = layout = this._getLayout();
         this.show(this.layout);
-        App.execute("start:media:upload:app", {
-          region: layout.uploadRegion,
-          mediaType: this.mediaType
-        });
-        App.execute("start:media:grid:app", {
-          region: layout.gridRegion,
-          mediaType: this.mediaType
-        });
+        this.listenTo(this.layout, "show", (function(_this) {
+          return function() {
+            App.execute("start:media:upload:app", {
+              region: layout.uploadRegion,
+              mediaType: _this.mediaType
+            });
+            return App.execute("start:media:grid:app", {
+              region: layout.gridRegion,
+              mediaType: _this.mediaType
+            });
+          };
+        })(this));
+        this.show(this.layout);
         this.listenTo(this.layout.gridRegion, "media:element:selected", (function(_this) {
           return function(media) {
             _this.choosedMedia = media;
