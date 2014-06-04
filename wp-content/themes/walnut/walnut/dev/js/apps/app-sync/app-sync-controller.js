@@ -361,6 +361,9 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
       uri = encodeURI(resp.exported_csv_url);
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
+          var statusDom, statusDom1;
+          statusDom = document.querySelector('#progressBarDwnld');
+          statusDom1 = document.querySelector('#status');
           return fileSystem.root.getFile("SynapseAssets/logs.zip", {
             create: true,
             exclusive: false
@@ -370,17 +373,18 @@ define(["marionette", "app", "underscore", "csvparse", "json2csvparse", "zip"], 
             _.setFilePath(filePath);
             fileEntry.remove();
             fileTransfer = new FileTransfer();
+            $('#progressBarDwnld').show();
             fileTransfer.onprogress = function(progressEvent) {
               var perc;
               if (progressEvent.lengthComputable) {
                 perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-                console.log(perc);
-                return statusDom.innerHTML = perc + "% loaded...";
+                $('#status').text(perc);
+                return $("#progressBarDwnld").css("width", "" + perc + "%");
               } else {
-                if (progressBarDwnldDom.innerHTML === null) {
-                  return progressBarDwnldDom.innerHTML = "Loading";
+                if (statusDom.innerHTML === null) {
+                  return statusDom.innerHTML = "Loading";
                 } else {
-                  return progressBarDwnldDom.innerHTML += ".";
+                  return statusDom.innerHTML += ".";
                 }
               }
             };

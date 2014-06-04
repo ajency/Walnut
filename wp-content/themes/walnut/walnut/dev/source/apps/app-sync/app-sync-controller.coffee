@@ -5,7 +5,6 @@ define ["marionette","app", "underscore", "csvparse" ,"json2csvparse", "zip"], (
 		initialize : ->
 
 		
-
 		chkTotalrecords :(total) ->
 			if total is 0
 				$('#JsonToCSV').attr("disabled","disabled") 
@@ -360,6 +359,8 @@ define ["marionette","app", "underscore", "csvparse" ,"json2csvparse", "zip"], (
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>
+					statusDom = document.querySelector('#progressBarDwnld');
+					statusDom1 = document.querySelector('#status');
 
 					fileSystem.root.getFile("SynapseAssets/logs.zip", {create: true, exclusive: false}
 
@@ -368,17 +369,28 @@ define ["marionette","app", "underscore", "csvparse" ,"json2csvparse", "zip"], (
 							_.setFilePath(filePath)
 							fileEntry.remove()
 							fileTransfer = new FileTransfer()
+							$('#progressBarDwnld').show();
+
 
 							fileTransfer.onprogress = (progressEvent)=>
 								if progressEvent.lengthComputable
+
 									perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-									console.log perc
-									statusDom.innerHTML = perc + "% loaded...";
+
+									# statusDom.innerHTML = perc + "% loaded...";
+									# statusDom1.innerHTML = perc + "% loaded...";
+									$('#status').text(perc)
+									$("#progressBarDwnld").css("width", "#{perc}%")
+									# $("#progressBarDwnld").css("width", "60")
+
+
 								else
-									if progressBarDwnldDom.innerHTML is null
-										progressBarDwnldDom.innerHTML = "Loading"
+									if statusDom.innerHTML is null
+
+										statusDom.innerHTML = "Loading"
 									else
-										progressBarDwnldDom.innerHTML += "."
+
+										statusDom.innerHTML += "."
 
 							fileTransfer.download(uri, filePath+"logs.zip" 
 								,(file)=>
