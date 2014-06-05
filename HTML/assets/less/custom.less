@@ -57,7 +57,7 @@ body{
 	.page-sidebar-wrapper > ul > li{
 		&>a, &> a i, &> a .arrow, &> a .arrow.open:before{
 			color: @color-white !important;
-			font-size: 15px;
+			font-size: 16px;
 		}
 		&.open > a{
 			background-color: @color-primary !important;
@@ -232,17 +232,17 @@ textarea.error, .select2-choice.error {
 	margin: 4px 4px 4px 0;
 }
 
-@media (max-width:1024px){
-	#main-menu-toggle-wrapper, #portrait-chat-toggler{
-		display: block !important;
-	}
-}
-
 #breadcrumb-region{
 	display: none;
 }
 
+#main-content-region, #content-display-region{
+	&>.row{
+		margin: 0;
+	}
+}
 
+/*Theme Modifications*/
 body{
 	font-size: 18px;
 	font-weight: bold;
@@ -258,6 +258,16 @@ button{
 }
 label, input, button, select, textarea{
 	font-size: 16px;
+}
+
+.small-text {
+	font-size: 15px !important;
+}
+
+.label{
+	font-size: 13px;
+	display: inline-block;
+	padding: 6px 9px;
 }
 
 .btn{
@@ -308,20 +318,18 @@ select{
 	}
 }
 
-#main-content-region, #content-display-region{
-	&>.row{
-		margin: 0;
-	}
-}
-
-.small-text {
-	font-size: 15px !important;
-}
-
 @media (max-width:1024px){
+	#main-menu-toggle-wrapper, #portrait-chat-toggler{
+		display: block !important;
+	}
+
 	.page-content .content{
 		padding: 0;
 		padding-top: 60px;
+	}
+	.page-title, #Filters{
+		padding: 0 8px;
+		margin-bottom: 0;
 	}
 
 	.header{
