@@ -94,31 +94,36 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
       OptionsBarController.prototype._getOptionsBarView = function(model) {
         return new OptionsBar.Views.OptionsBarView({
           model: model,
-          templateHelpers: {
-            textbooksFilter: (function(_this) {
-              return function() {
-                var term_ids, textbook_id, textbooks;
-                textbooks = [];
-                term_ids = _this.contentPieceModel.get('term_ids');
-                if (term_ids != null) {
-                  textbook_id = term_ids['textbook'];
-                }
-                _.each(_this.textbooksCollection.models, function(el, ind) {
-                  var data;
-                  data = {
-                    'name': el.get('name'),
-                    'id': el.get('term_id')
-                  };
-                  if (textbook_id && textbook_id === el.get('term_id')) {
-                    data['selected'] = 'selected';
-                  }
-                  return textbooks.push(data);
-                });
-                return textbooks;
-              };
-            })(this)
-          }
+          templateHelpers: this._getTemplateHelpers()
         });
+      };
+
+      OptionsBarController.prototype._getTemplateHelpers = function() {
+        return {
+          textbooksFilter: (function(_this) {
+            return function() {
+              var term_ids, textbook_id, textbooks;
+              textbooks = new Array();
+              term_ids = _this.contentPieceModel.get('term_ids');
+              if (term_ids != null) {
+                textbook_id = term_ids['textbook'];
+              }
+              _this.textbooksCollection.each(function(el, ind) {
+                var data;
+                data = {
+                  'name': el.get('name'),
+                  'id': el.get('term_id')
+                };
+                if (textbook_id && textbook_id === el.get('term_id')) {
+                  data['selected'] = 'selected';
+                }
+                return textbooks.push(data);
+              });
+              return textbooks;
+            };
+          })(this),
+          studentQuestion: this.contentPieceModel.get('content_type') === 'student_question' ? true : false
+        };
       };
 
       return OptionsBarController;
