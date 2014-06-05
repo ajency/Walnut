@@ -2,7 +2,6 @@ define ['app'
         'apps/teachers-dashboard/dashboard/dashboard-controller'
         'apps/teachers-dashboard/take-class/take-class-controller'
         'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-controller'
-        'apps/teachers-dashboard/start-training/textbook-modules/textbook-modules-controller'
         'apps/content-group/view-group/group-view-controller'
 ], (App)->
     App.module "TeachersDashboardApp", (TeachersDashboardApp, App)->
