@@ -484,63 +484,71 @@ function get_single_content_group($id, $division=''){
         }
     }
     
-    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta 
+    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta
         WHERE collection_id=%d",$id);
-    
+
     $description= $wpdb->get_results($query_description);
-    
+
     $data->description=$data->content_pieces=array();
 
     foreach($description as $key=>$value){
        $meta_val = maybe_unserialize ($value->meta_value);
-       
+
        if ($value->meta_key=='description')
            $data->description= $meta_val;
-           
+
        if ($value->meta_key=='content_pieces' )
            $data->content_pieces= $meta_val;
-       
+
     }
 
     switch_to_blog($current_blog);
     
-    if($division !=''){
-        $training_logs_query = $wpdb->prepare("SELECT date FROM
-            {$wpdb->prefix}training_logs WHERE collection_id=%d AND 
-                division_id=%d order by id desc limit 1",
-                    $id, $division);
+    if($division){
+        $status_dets = get_content_group_status($id, $division,$data->content_pieces);
+        $data->status= $status_dets['status'];
+        $data->training_date= $status_dets['start_date'];
+    }
+    return $data;
+    
+}
 
-        $training_logs  = $wpdb->get_results($training_logs_query);
+function get_content_group_status($id, $division, $content_pieces){
 
-        if($training_logs){
-            $data->training_date= $training_logs[0]->date;
-            $data->status = 'scheduled';
-        }
+    global $wpdb;
+    $start_date='';
 
-        $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status FROM
+    $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status, start_date  FROM
             {$wpdb->prefix}question_response WHERE collection_id=%d AND
                 division=%d",
-            $id, $division);
+        $id, $division);
 
-        $module_responses  = $wpdb->get_results($check_responses_query);
-        if($module_responses)
-            $data->status='started';
+    $module_responses  = $wpdb->get_results($check_responses_query);
 
+    if(!$module_responses)
+        $status='not started';
+
+    if($module_responses){
+
+        $status=($module_responses[0]->status === 'scheduled')?'scheduled':'started';
+
+        $start_date= __u::last($module_responses)->start_date;
         $response_content_ids=array();
 
         foreach($module_responses as $response){
             if($response->status=='completed')
-            $response_content_ids[]= $response->content_piece_id;
+                $response_content_ids[]= $response->content_piece_id;
         }
 
-
-        if(__u::difference($data->content_pieces,$response_content_ids) == null)
-            $data->status='completed';
-
+        if(__u::difference($content_pieces,$response_content_ids) == null)
+            $status='completed';
     }
-    
-    return $data;
-    
+    $status_data=array(
+        'status'     => $status,
+        'start_date' => $start_date
+    );
+
+    return $status_data;
 }
 
 function save_content_piece($data){

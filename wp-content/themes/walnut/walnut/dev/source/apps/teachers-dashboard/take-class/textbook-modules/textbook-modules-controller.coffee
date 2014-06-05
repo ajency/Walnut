@@ -40,20 +40,21 @@ define ['app'
 
 
             _saveTrainingStatus: (id, date)=>
-                date = moment(date).format("YYYY-MM-DD")
-                @singleModule.set ('training_date': date)
 
                 singleModule = @contentGroupsCollection.get id
 
-                singleModule.set ('status': 'scheduled')
+                first_content_piece = _.first singleModule.get 'content_pieces'
 
-                opts =
-                    'changed': 'status'
-                    'division': @division
+                data=
+                    collection_id   : id
+                    content_piece_id: first_content_piece
+                    start_date      : date
+                    division        : @division
+                    status          : 'scheduled'
 
-                singleModule.save(opts, {wait: true})
+                App.request "schedule:content:group",data
 
-                @view.triggerMethod 'status:change', singleModule
+                @view.triggerMethod 'scheduled:module', id,date
 
             _getContentGroupsListingView: (collection)=>
                 new View.TakeClassTextbookModules.ContentGroupsView
@@ -90,9 +91,13 @@ define ['app'
                 'click .btn-primary': 'saveScheduledDate'
 
             onShow: ->
+                nowDate = new Date();
+                today= new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+
                 $('.input-append.date').datepicker
                     autoclose: true
                     todayHighlight: true
+                    startDate: today
 
 
             serializeData: ->

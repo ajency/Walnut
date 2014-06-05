@@ -89,22 +89,11 @@ function setup_childsite_tables(){
     $wpdb->query($class_divisions_table);
     
     echo "{$wpdb->prefix}class_divisions table created<br>";
-    
-    $training_logs_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}training_logs 
-             (`id` INT NOT NULL AUTO_INCREMENT, `division_id` INT NOT NULL, 
-             `collection_id` INT NOT NULL, 
-             `teacher_id` INT NOT NULL, 
-             `date` DATETIME NOT NULL, 
-             `status` VARCHAR(255) NOT NULL, 
-             PRIMARY KEY (`id`))";
 
-    $wpdb->query($training_logs_table);
-    
-    echo "{$wpdb->prefix}training_logs table created<br>";
-    
     $question_response_table = "
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}question_response` (
               `ref_id` varchar(255) NOT NULL,
+              `teacher_id` int(11) NOT NULL,
               `content_piece_id` int(11) NOT NULL,
               `collection_id` int(11) NOT NULL,
               `division` int(11) NOT NULL,

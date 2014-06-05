@@ -37,7 +37,7 @@ define ['app'
 
                 @questionResponseModel.set
                     'question_response' : studResponse
-                    'status'            : 'completed'
+                    'status'            : 'paused'
                     'time_taken'        : elapsedTime
 
                 @questionResponseModel.save()

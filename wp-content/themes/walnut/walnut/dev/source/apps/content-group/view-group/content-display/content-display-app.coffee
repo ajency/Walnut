@@ -62,6 +62,7 @@ define ['app'
                     data.responseStatus= additionalData.responseStatus
                     data.timeTaken = additionalData.timeTaken
                     data.correctAnswer = additionalData.correctAnswer
+                    data.teacherName = additionalData.teacherName
                 data
 
             onShow:->
@@ -110,6 +111,8 @@ define ['app'
 
                         additionalData.correctAnswer= @getResults model, responseModel.get 'question_response'
 
+                        additionalData.teacherName= responseModel.get 'teacher_name'
+
                     console.log additionalData
 
                 data=
@@ -126,7 +129,7 @@ define ['app'
                         correct_answer= CHORUS_OPTIONS[question_response]
                 else
                     for studID in question_response
-                        answeredCorrectly = studentCollection.where("ID":studID)
+                        answeredCorrectly = studentCollection.where("ID": studID)
                         name= ans.get('display_name') for ans in answeredCorrectly
                         names.push(name)
 

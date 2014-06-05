@@ -29,10 +29,10 @@ define ['app'
             _saveQuestionResponse: (studResponse)=>
 
                 elapsedTime= @timerObject.request "get:elapsed:time"
-
+                #status changes to completed only when we navigate to next question
                 @questionResponseModel.set
                     'question_response' : studResponse
-                    'status'            : 'completed'
+                    'status'            : 'paused'
                     'time_taken'        : elapsedTime
 
                 @questionResponseModel.save()
