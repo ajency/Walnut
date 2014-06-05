@@ -38,6 +38,7 @@ define ['app'], (App)->
                         						              </div>
                         				          			</div>
                         						        	<div class="col-sm-4">
+                                                <label style="text-align:center" class="form-label bold small-text">Content Piece Timer</label>
                         						        		<div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>
                                                  {{&getCompletedSummary}}
                         						    	</div>

@@ -78,11 +78,12 @@ define ['app'
                         parseInt m
                     answeredPieces = @questionResponseCollection.where "status": "completed"
 
-                    answeredIDs = _.chain answeredPieces
-                    .map (m)->
-                            m.toJSON()
-                            .pluck 'content_piece_id'
-                                .value()
+                    if answeredPieces
+                        answeredIDs = _.chain answeredPieces
+                                        .map (m)->m.toJSON()
+                                        .pluck 'content_piece_id'
+                                        .value()
+
 
                     answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
 
