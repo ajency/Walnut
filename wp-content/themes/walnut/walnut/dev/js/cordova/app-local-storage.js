@@ -35,12 +35,6 @@ define(['underscore', 'jquery'], function(_, $) {
   _.getSynapseAssetsDirectoryPath = function() {
     return window.localStorage.getItem("synapse_directory_path");
   };
-  _.setDeleteDataFromTablesFlag = function(flag) {
-    return window.localStorage.setItem("delete_tables_flag", flag);
-  };
-  _.getDeleteDataFromTablesFlag = function() {
-    return window.localStorage.getItem("delete_tables_flag");
-  };
   _.setFilePath = function(path) {
     return window.localStorage.setItem("filepath", "" + path);
   };

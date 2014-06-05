@@ -1,7 +1,5 @@
 define ['app'
-        'apps/app-sync/app-sync1-view'
-        'apps/app-sync/app-sync2-view'
-        'apps/app-sync/app-sync3-view'
+        'apps/app-sync/app-sync-view'
         'apps/app-sync/app-sync-controller'
         'apps/app-sync/app-sync-underscore'
         'apps/app-sync/app-sync-generate-file'
@@ -12,23 +10,13 @@ define ['app'
             class AppSyncRouter extends Marionette.AppRouter
 
                 appRoutes:
-                    'sync1': 'showAppSync1'
-                    'sync2': 'showAppSync2'
-                    'sync3': 'showAppSync3'
+                    'sync': 'showAppSync'
 
 
             Controller =
-                showAppSync1: ->
-                    new AppSync.Controller.AppSync1Controller
-                        region: App.mainContentRegion
-
-                showAppSync2: ->
-                    new AppSync.Controller.AppSync2Controller
-                        region: App.mainContentRegion
-                        
-                showAppSync3: ->
-                    new AppSync.Controller.AppSync3Controller
-                        region: App.mainContentRegion        
+                showAppSync: ->
+                    new AppSync.Controller.AppSyncController
+                        region: App.mainContentRegion    
 
 
 

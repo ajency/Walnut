@@ -1,4 +1,4 @@
-define ["app", 'backbone','unserialize'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 	App.module "Entities.ContentGroup", (ContentGroup, App, Backbone, Marionette, $, _)->
 
 
@@ -27,18 +27,6 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 
 			name: 'content-group'
 
-
-			initialize: ->
-				@on('start:module', @startModule, @)
-				@on('stop:module', @stopModule, @)
-
-			startModule: (model)=>
-				@trigger "training:module:started", model
-
-			stopModule: (model)=>
-				@trigger "training:module:stopped", model
-
-
 		# collection of group of content pieces eg. quizzes, teacher training modules etc.
 		class ContentGroup.ItemCollection extends Backbone.Collection
 			model: ContentGroup.ItemModel
@@ -52,6 +40,7 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 				resp.data
 
 
+		
 		contentGroupCollection = new ContentGroup.ItemCollection
 
 		# API
@@ -80,6 +69,13 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 
 			newContentGroup:->
 				contentGroup = new ContentGroup.ItemModel
+
+			scheduleContentGroup:(data)->
+				questionResponseModel= App.request "save:question:response"
+
+				questionResponseModel.set data
+
+				questionResponseModel.save()
 
 
 			# get content group from local
@@ -144,68 +140,7 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 					console.log 'Content-group-by-id transaction completed'
 				.fail _.failureHandler
 
-
-			saveOrUpdateContentGroupLocal:(model) ->
-				
-				#function to insert record in wp_training_logs
-				insertTrainingLogs =(data)->
-
-					_.db.transaction( (tx)->
-						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"training_logs (division_id, collection_id, teacher_id, date, status, sync) 
-							VALUES (?, ?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status, 0])
-						
-					,_.transactionErrorHandler
-					,(tx)->
-						console.log 'Success: Inserted new record in wp_training_logs'
-					)
-
-
-				#function to update status in wp_training_logs
-				updateTrainingLogs =(id, data)->
-					
-					_.db.transaction( (tx)->
-						tx.executeSql("UPDATE "+_.getTblPrefix()+"training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id])
-						
-					,_.transactionErrorHandler
-					,(tx)->
-						console.log 'Success: Updated record in wp_training_logs'
-					)
-
-				
-				data =
-					division_id: model.get('division')
-					collection_id: model.get('id')
-					teacher_id: _.getUserID() #teacher id hardcoded as 1 for now
-					date: _.getCurrentDateTime(	0)
-					status: model.get('status')
-
-				if model.get('status') is 'completed' or model.get('status') is 'scheduled'
-					if model.get('status') is 'scheduled'
-						data.date = model.get('training_date')
-					#insert new record in wp_training_logs
-					insertTrainingLogs(data)
-
-				else
-					#get last status
-					lastStatus = _.getLastDetails(model.get('id'), model.get('division'))
-					lastStatus.done (d)=>
-						console.log 'Last status: '+d.status
-						if d.status isnt ''
-							if d.status is 'started'
-								data.status = 'resumed'
-								insertTrainingLogs(data)
-
-							if d.status is 'scheduled'
-								data.status = 'started'
-								updateTrainingLogs(d.id, data)
-
-						else
-							data.status = 'started'
-							insertTrainingLogs(data)
-
-							
-
-
+		
 		# request handler to get all content groups
 		App.reqres.setHandler "get:content:groups", (opt) ->
 			API.getContentGroups(opt)
@@ -219,12 +154,11 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 		App.reqres.setHandler "new:content:group",->
 			API.newContentGroup()
 
+		App.reqres.setHandler "schedule:content:group", (data)->
+			API.scheduleContentGroup data
+
 
 		# request handler to get content group by id from local database
 		App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
 			API.getContentGroupByIdFromLocal id,division
-
-		App.reqres.setHandler "save:update:content-group:local", (model)->
-			API.saveOrUpdateContentGroupLocal model	   
-
 

@@ -69,7 +69,7 @@ define ['marionette'], (Marionette)->
 						if(resp.success)
 							console.log resp
 							user = App.request "get:user:model"
-							user.set resp.data
+							user.set resp.data.data
 							school = App.request "get:current:school"
 							App.execute "show:headerapp", region:App.headerRegion
 							App.execute "show:leftnavapp", region:App.leftNavRegion	
@@ -92,10 +92,10 @@ define ['marionette'], (Marionette)->
 		user_role= user.get "roles"
 
 		if _.platform() is 'DEVICE'
-			syncDetailsCount = _.getTotalSyncDetailsCount('file_import')
-			syncDetailsCount.done (count)->
-				if count is 0
-					App.navigate('sync1', trigger: true)
+			lastSyncOperation = _.getLastSyncOperation()
+			lastSyncOperation.done (typeOfOperation)->
+				if typeOfOperation is 'none' or typeOfOperation isnt 'file_import'
+					App.navigate('sync', trigger: true)
 				else
 					App.navigate('teachers/dashboard', trigger: true)
 					

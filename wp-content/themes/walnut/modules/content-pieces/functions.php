@@ -147,6 +147,13 @@ function get_single_content_piece($id){
 
     $content_piece->content_type = ($content_type) ? $content_type : '--';
 
+    //        get negative marks
+//    if( $content_type == 'student_question'){
+//        $negative_marks = get_post_meta($id,'negative_marks',true);
+//
+//        $content_piece->negative_marks = (int) $negative_marks;
+//    }
+
     $content_piece->question_type = get_post_meta($id, 'question_type', true);
 
     $content_piece->post_tags = (isset($post_tags)) ? $post_tags : '';
@@ -462,6 +469,7 @@ function get_all_content_groups($args=array()){
 }
 
 function get_single_content_group($id, $division=''){
+    
     global $wpdb;
     
     $current_blog= get_current_blog_id();
@@ -483,63 +491,71 @@ function get_single_content_group($id, $division=''){
         }
     }
     
-    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta 
+    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta
         WHERE collection_id=%d",$id);
-    
+
     $description= $wpdb->get_results($query_description);
-    
+
     $data->description=$data->content_pieces=array();
 
     foreach($description as $key=>$value){
        $meta_val = maybe_unserialize ($value->meta_value);
-       
+
        if ($value->meta_key=='description')
            $data->description= $meta_val;
-           
+
        if ($value->meta_key=='content_pieces' )
            $data->content_pieces= $meta_val;
-       
+
     }
 
     switch_to_blog($current_blog);
     
-    if($division !=''){
-        $training_logs_query = $wpdb->prepare("SELECT date FROM
-            {$wpdb->prefix}training_logs WHERE collection_id=%d AND 
-                division_id=%d order by id desc limit 1",
-                    $id, $division);
+    if($division){
+        $status_dets = get_content_group_status($id, $division,$data->content_pieces);
+        $data->status= $status_dets['status'];
+        $data->training_date= $status_dets['start_date'];
+    }
+    return $data;
+    
+}
 
-        $training_logs  = $wpdb->get_results($training_logs_query);
+function get_content_group_status($id, $division, $content_pieces){
 
-        if($training_logs){
-            $data->training_date = $training_logs[0]->date;
-            $data->status = 'scheduled';
-        }
+    global $wpdb;
+    $start_date='';
 
-        $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status FROM
+    $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status, start_date  FROM
             {$wpdb->prefix}question_response WHERE collection_id=%d AND
                 division=%d",
-            $id, $division);
+        $id, $division);
 
-        $module_responses  = $wpdb->get_results($check_responses_query);
-        if($module_responses)
-            $data->status='started';
+    $module_responses  = $wpdb->get_results($check_responses_query);
 
+    if(!$module_responses)
+        $status='not started';
+
+    if($module_responses){
+
+        $status=($module_responses[0]->status === 'scheduled')?'scheduled':'started';
+
+        $start_date= __u::last($module_responses)->start_date;
         $response_content_ids=array();
 
         foreach($module_responses as $response){
             if($response->status=='completed')
-            $response_content_ids[]= $response->content_piece_id;
+                $response_content_ids[]= $response->content_piece_id;
         }
 
-
-        if(__u::difference($data->content_pieces,$response_content_ids) == null)
-            $data->status='completed';
-
+        if(__u::difference($content_pieces,$response_content_ids) == null)
+            $status='completed';
     }
-    
-    return $data;
-    
+    $status_data=array(
+        'status'     => $status,
+        'start_date' => $start_date
+    );
+
+    return $status_data;
 }
 
 function save_content_piece($data){
@@ -574,6 +590,13 @@ function save_content_piece($data){
 
     update_post_meta ($content_id, 'textbook',$data['term_ids']['textbook']);
 
+//    negative marks for student question
+//    if($data['content_type'] == 'student_question'){
+//        update_post_meta ($content_id, 'negative_marks', $data['negative_marks']);
+//    }
+
+
+
     $content_piece_additional = array(
         'term_ids'          => $data['term_ids'],
         'duration'          => $data['duration'],
@@ -588,16 +611,6 @@ function save_content_piece($data){
     $content_piece_meta= maybe_serialize($content_piece_additional);
 
     update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
-
-    return $content_id;
-}
-
-function update_content_piece($content_id, $data){
-
-    $content_layout = maybe_serialize($data);
-
-    if($content_id)
-        update_post_meta ($content_id, 'layout_json',$content_layout);
 
     return $content_id;
 }

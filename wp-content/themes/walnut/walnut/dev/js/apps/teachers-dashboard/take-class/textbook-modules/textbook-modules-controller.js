@@ -67,23 +67,18 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
       };
 
       textbookModulesController.prototype._saveTrainingStatus = function(id, date) {
-        var opts, singleModule;
-        date = moment(date).format("YYYY-MM-DD");
-        this.singleModule.set({
-          'training_date': date
-        });
+        var data, first_content_piece, singleModule;
         singleModule = this.contentGroupsCollection.get(id);
-        singleModule.set({
-          'status': 'scheduled'
-        });
-        opts = {
-          'changed': 'status',
-          'division': this.division
+        first_content_piece = _.first(singleModule.get('content_pieces'));
+        data = {
+          collection_id: id,
+          content_piece_id: first_content_piece,
+          start_date: date,
+          division: this.division,
+          status: 'scheduled'
         };
-        singleModule.save(opts, {
-          wait: true
-        });
-        return this.view.triggerMethod('status:change', singleModule);
+        App.request("schedule:content:group", data);
+        return this.view.triggerMethod('scheduled:module', id, date);
       };
 
       textbookModulesController.prototype._getContentGroupsListingView = function(collection) {
@@ -123,9 +118,13 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
       };
 
       ScheduleModalView.prototype.onShow = function() {
+        var nowDate, today;
+        nowDate = new Date();
+        today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
         return $('.input-append.date').datepicker({
           autoclose: true,
-          todayHighlight: true
+          todayHighlight: true,
+          startDate: today
         });
       };
 

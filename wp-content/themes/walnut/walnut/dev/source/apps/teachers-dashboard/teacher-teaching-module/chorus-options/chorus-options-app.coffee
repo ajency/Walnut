@@ -15,9 +15,7 @@ define ['app'
 
                 @listenTo view, "question:completed", @_changeQuestion
 
-            _changeQuestion: (resp)=>
-                @_saveQuestionResponse '' if resp is 'no_answer'
-
+            _changeQuestion:=>
                 @region.trigger "goto:next:question", @questionResponseModel.get 'content_piece_id'
 
             _showChorusOptionsView: (model)=>
@@ -29,10 +27,10 @@ define ['app'
             _saveQuestionResponse: (studResponse)=>
 
                 elapsedTime= @timerObject.request "get:elapsed:time"
-
+                #status changes to completed only when we navigate to next question
                 @questionResponseModel.set
                     'question_response' : studResponse
-                    'status'            : 'completed'
+                    'status'            : 'paused'
                     'time_taken'        : elapsedTime
 
                 @questionResponseModel.save()

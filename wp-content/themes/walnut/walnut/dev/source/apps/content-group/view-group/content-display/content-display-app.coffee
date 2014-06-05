@@ -16,10 +16,11 @@ define ['app'
                     @region.trigger 'goto:question:readonly', questionID
 
             _getCollectionContentDisplayView: (model, collection, responseCollection) =>
-                timeTakenArray= responseCollection.pluck('time_taken');
-                totalTimeTakenForModule=0
-                if _.size(timeTakenArray)>0
-                    totalTimeTakenForModule =   _.reduce timeTakenArray, (memo, num)-> parseInt memo + parseInt num
+#                timeTakenArray= responseCollection.pluck('time_taken');
+#                totalTimeTakenForModule=0
+#                if _.size(timeTakenArray)>0
+#                    totalTimeTakenForModule =   _.reduce timeTakenArray, (memo, num)-> parseInt memo + parseInt num
+
 
                 new ContentDisplayView
                     model: model
@@ -28,22 +29,22 @@ define ['app'
                     studentCollection: @studentCollection
                     mode: @mode
 
-                    templateHelpers:
-                        showElapsedTime:=>
-                            hours=0
-                            time= totalTimeTakenForModule
-                            mins=parseInt totalTimeTakenForModule/60
-                            if mins >59
-                                hours = parseInt mins/60
-                                mins= parseInt mins%60
-                            seconds = parseInt time%60
-                            display_time = ''
-
-                            if hours >0
-                                display_time= hours+'h '
-
-                            display_time += mins + 'm '+ seconds+'s'
-                            display_time
+#                    templateHelpers:
+#                        showElapsedTime:=>
+#                            hours=0
+#                            time= totalTimeTakenForModule
+#                            mins=parseInt totalTimeTakenForModule/60
+#                            if mins >59
+#                                hours = parseInt mins/60
+#                                mins= parseInt mins%60
+#                            seconds = parseInt time%60
+#                            display_time=''
+#
+#                            if hours >0
+#                                display_time= hours+'h '
+#
+#                            display_time += mins + 'm '+ seconds+'s'
+#                            display_time
 
         class ContentItemView extends Marionette.ItemView
 
@@ -61,6 +62,7 @@ define ['app'
                     data.responseStatus= additionalData.responseStatus
                     data.timeTaken = additionalData.timeTaken
                     data.correctAnswer = additionalData.correctAnswer
+                    data.teacherName = additionalData.teacherName
                 data
 
             onShow:->
@@ -109,6 +111,8 @@ define ['app'
 
                         additionalData.correctAnswer= @getResults model, responseModel.get 'question_response'
 
+                        additionalData.teacherName= responseModel.get 'teacher_name'
+
                     console.log additionalData
 
                 data=
@@ -125,7 +129,7 @@ define ['app'
                         correct_answer= CHORUS_OPTIONS[question_response]
                 else
                     for studID in question_response
-                        answeredCorrectly = studentCollection.where("ID":studID)
+                        answeredCorrectly = studentCollection.where("ID": studID)
                         name= ans.get('display_name') for ans in answeredCorrectly
                         names.push(name)
 
@@ -170,7 +174,6 @@ define ['app'
                     .attr 'data-id'
 
                 @trigger "view:question:readonly", questionID
-                
 
 
 

@@ -57,56 +57,89 @@ define(["app", 'backbone'], function(App, Backbone) {
         return menuCollection;
       },
       getMenusFromLocal: function() {
-        var data;
-        data = [
-          {
-            "ID": 91,
-            "menu-order": 1,
-            "post_title": "Content Management",
-            "menu_item_link": "#",
-            "menu_id": null,
-            "submenu": [
-              {
-                "ID": 40,
-                "menu-order": 2,
-                "post_title": "Textbooks",
-                "menu_item_link": "#textbooks",
-                "menu_id": null
+        var runFunc;
+        runFunc = function() {
+          return $.Deferred(function(d) {
+            var lastSyncOperation;
+            lastSyncOperation = _.getLastSyncOperation();
+            return lastSyncOperation.done(function(typeOfOperation) {
+              var data;
+              if (typeOfOperation === 'file_import') {
+                data = [
+                  {
+                    "ID": 91,
+                    "menu-order": 1,
+                    "post_title": "Content Management",
+                    "menu_item_link": "#",
+                    "menu_id": null,
+                    "submenu": [
+                      {
+                        "ID": 40,
+                        "menu-order": 2,
+                        "post_title": "Textbooks",
+                        "menu_item_link": "#textbooks",
+                        "menu_id": null
+                      }
+                    ]
+                  }, {
+                    "ID": 92,
+                    "menu-order": 4,
+                    "post_title": "Training Module",
+                    "menu_item_link": "#",
+                    "menu_id": null,
+                    "submenu": [
+                      {
+                        "ID": 93,
+                        "menu-order": 6,
+                        "post_title": "Teacher Training",
+                        "menu_item_link": "#teachers/dashboard",
+                        "menu_id": null
+                      }
+                    ]
+                  }, {
+                    "ID": 95,
+                    "menu-order": 1,
+                    "post_title": "Data Synchronization",
+                    "menu_item_link": "#",
+                    "menu_id": null,
+                    "submenu": [
+                      {
+                        "ID": 96,
+                        "menu-order": 2,
+                        "post_title": "Sync",
+                        "menu_item_link": "#sync",
+                        "menu_id": null
+                      }
+                    ]
+                  }
+                ];
+              } else {
+                data = [
+                  {
+                    "ID": 95,
+                    "menu-order": 1,
+                    "post_title": "Data Synchronization",
+                    "menu_item_link": "#",
+                    "menu_id": null,
+                    "submenu": [
+                      {
+                        "ID": 96,
+                        "menu-order": 2,
+                        "post_title": "Sync",
+                        "menu_item_link": "#sync",
+                        "menu_id": null
+                      }
+                    ]
+                  }
+                ];
               }
-            ]
-          }, {
-            "ID": 92,
-            "menu-order": 4,
-            "post_title": "Training Module",
-            "menu_item_link": "#",
-            "menu_id": null,
-            "submenu": [
-              {
-                "ID": 93,
-                "menu-order": 6,
-                "post_title": "Teacher Training",
-                "menu_item_link": "#teachers/dashboard",
-                "menu_id": null
-              }
-            ]
-          }, {
-            "ID": 95,
-            "menu-order": 1,
-            "post_title": "Data Synchronization",
-            "menu_item_link": "#",
-            "menu_id": null,
-            "submenu": [
-              {
-                "ID": 96,
-                "menu-order": 2,
-                "post_title": "Sync",
-                "menu_item_link": "#sync1",
-                "menu_id": null
-              }
-            ]
-          }
-        ];
-        return data;
+              return d.resolve(data);
+            });
+          });
+        };
+        return $.when(runFunc()).done(function() {
+          return console.log('getMenusFromLocal done');
+        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:site:menus", function() {
