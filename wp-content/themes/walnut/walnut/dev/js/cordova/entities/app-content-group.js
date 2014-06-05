@@ -32,44 +32,12 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getContentPiecesAndDescription transaction completed');
       }).fail(_.failureHandler);
     },
-    getLastDetails: function(collection_id, division) {
-      var lastDetails, onSuccess, runQuery;
-      lastDetails = {
-        id: '',
-        date: '',
-        status: ''
-      };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT id, status, date FROM " + _.getTblPrefix() + "training_logs WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var row;
-          if (data.rows.length !== 0) {
-            row = data.rows.item(0);
-            lastDetails = {
-              id: row['id'],
-              date: row['date'],
-              status: row['status']
-            };
-          }
-          return d.resolve(lastDetails);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getLastDetails transaction completed');
-      }).fail(_.failureHandler);
-    },
-    getDataFromQuestionResponse: function(collection_id, division) {
+    getModuleResponses: function(collection_id, division) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT content_piece_id, status FROM " + _.getTblPrefix() + "question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT content_piece_id, status, start_date FROM " + _.getTblPrefix() + "question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -88,42 +56,42 @@ define(['underscore', 'unserialize'], function(_) {
       }).fail(_.failureHandler);
     },
     getDateAndStatus: function(collection_id, division, content_pieces) {
-      var runGetDateAndStatus;
-      runGetDateAndStatus = function() {
+      var runFunc;
+      runFunc = function() {
         return $.Deferred(function(d) {
-          var data, dateAndStatus;
+          var data, module_responses;
           data = {
-            date: '',
+            start_date: '',
             status: ''
           };
-          dateAndStatus = _.getLastDetails(collection_id, division);
-          return dateAndStatus.done(function(lastDetails) {
-            var quesResponse;
-            if (lastDetails.id !== '') {
-              data['date'] = lastDetails.date;
-              data['status'] = 'scheduled';
+          module_responses = _.getModuleResponses(collection_id, division);
+          return module_responses.done(function(module_responses) {
+            var response_content_ids;
+            if (_.isEmpty(module_responses)) {
+              data.status = 'not started';
             }
-            quesResponse = _.getDataFromQuestionResponse(collection_id, division);
-            return quesResponse.done(function(quesRes) {
-              var response_content_ids;
-              if (quesRes.length !== 0) {
-                data['status'] = 'started';
+            if (!_.isEmpty(module_responses)) {
+              if (_.first(module_responses).status === 'scheduled') {
+                data.status = 'scheduled';
+              } else {
+                data.status = 'started';
               }
+              data.start_date = _.last(module_responses).start_date;
               response_content_ids = [];
-              _.each(quesRes, function(response, key) {
+              _.each(module_responses, function(response, key) {
                 if (response.status === 'completed') {
                   return response_content_ids[key] = response.content_piece_id;
                 }
               });
               if ((content_pieces.length - response_content_ids.length) === 0) {
-                data['status'] = 'completed';
+                data.status = 'completed';
               }
-              return d.resolve(data);
-            });
+            }
+            return d.resolve(data);
           });
         });
       };
-      return $.when(runGetDateAndStatus()).done(function() {
+      return $.when(runFunc()).done(function() {
         return console.log('getDateAndStatus done');
       }).fail(_.failureHandler);
     },

@@ -30,41 +30,14 @@ define ['underscore', 'unserialize'], ( _) ->
 				console.log 'getContentPiecesAndDescription transaction completed'
 			.fail _.failureHandler
 
-		
-		
-		#Get last details i.e id, status and date from wp_training_logs
-		getLastDetails : (collection_id, division)->
 
-			lastDetails = id: '', date: '', status: ''
+		#Get content_piece_id, status, start_date from table 'wp_question_response'
+		getModuleResponses : (collection_id, division)->
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT id, status, date FROM "+_.getTblPrefix()+"training_logs 
-							WHERE collection_id=? AND division_id=? ORDER BY id DESC LIMIT 1"
-							, [collection_id, division], onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess =(d)->
-				(tx, data)->
-					if data.rows.length isnt 0
-						row = data.rows.item(0)
-
-						lastDetails = id : row['id'], date : row['date'], status : row['status']
-
-					d.resolve(lastDetails)
-
-			$.when(runQuery()).done ->
-				console.log 'getLastDetails transaction completed'
-			.fail _.failureHandler
-
-
-		
-		getDataFromQuestionResponse : (collection_id, division)->
-
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT content_piece_id, status 
+						tx.executeSql("SELECT content_piece_id, status, start_date 
 							FROM "+_.getTblPrefix()+"question_response WHERE collection_id=? 
 							AND division=?", [collection_id, division]
 							, onSuccess(d), _.deferredErrorHandler(d))
@@ -88,37 +61,38 @@ define ['underscore', 'unserialize'], ( _) ->
 		
 		getDateAndStatus : (collection_id, division, content_pieces)->
 
-			runGetDateAndStatus = ->
+			runFunc = ->
+
 				$.Deferred (d)->
 
-					data = date:'', status:''
+					data = start_date:'', status:''
 
-					dateAndStatus = _.getLastDetails(collection_id, division)
-					dateAndStatus.done (lastDetails)->
-						
-						if lastDetails.id isnt ''
-							data['date'] = lastDetails.date
-							data['status'] = 'scheduled'
+					module_responses = _.getModuleResponses(collection_id, division)
+					module_responses.done (module_responses)->
 
-						quesResponse = _.getDataFromQuestionResponse(collection_id, division)
-						quesResponse.done (quesRes)->
-							
-							if quesRes.length isnt 0
-								data['status'] = 'started'
+						if _.isEmpty module_responses
+							data.status = 'not started'
+
+						if not _.isEmpty module_responses
+							if _.first(module_responses).status is 'scheduled' 
+								data.status = 'scheduled'
+							else data.status = 'started'
+
+							data.start_date = _.last(module_responses).start_date
 
 							response_content_ids = []
 
-							_.each quesRes, (response, key)->
+							_.each module_responses, (response, key)->
 								if response.status is 'completed'
 									response_content_ids[key] = response.content_piece_id
 
 							if (content_pieces.length - response_content_ids.length) is 0
-								data['status'] = 'completed'
+								data.status = 'completed'
 
-							d.resolve(data)
+						d.resolve data
 
 			
-			$.when(runGetDateAndStatus()).done ->
+			$.when(runFunc()).done ->
 				console.log 'getDateAndStatus done'
 			.fail _.failureHandler
 

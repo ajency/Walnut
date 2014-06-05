@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
@@ -9,8 +8,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       __extends(ItemModel, _super);
 
       function ItemModel() {
-        this.stopModule = __bind(this.stopModule, this);
-        this.startModule = __bind(this.startModule, this);
         return ItemModel.__super__.constructor.apply(this, arguments);
       }
 
@@ -36,19 +33,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       };
 
       ItemModel.prototype.name = 'content-group';
-
-      ItemModel.prototype.initialize = function() {
-        this.on('start:module', this.startModule, this);
-        return this.on('stop:module', this.stopModule, this);
-      };
-
-      ItemModel.prototype.startModule = function(model) {
-        return this.trigger("training:module:started", model);
-      };
-
-      ItemModel.prototype.stopModule = function(model) {
-        return this.trigger("training:module:stopped", model);
-      };
 
       return ItemModel;
 
@@ -108,6 +92,12 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       newContentGroup: function() {
         var contentGroup;
         return contentGroup = new ContentGroup.ItemModel;
+      },
+      scheduleContentGroup: function(data) {
+        var questionResponseModel;
+        questionResponseModel = App.request("save:question:response");
+        questionResponseModel.set(data);
+        return questionResponseModel.save();
       },
       getContentGroupByIdFromLocal: function(id, division) {
         var onSuccess, runQuery;
@@ -176,56 +166,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return $.when(runQuery()).done(function(data) {
           return console.log('Content-group-by-id transaction completed');
         }).fail(_.failureHandler);
-      },
-      saveOrUpdateContentGroupLocal: function(model) {
-        var data, insertTrainingLogs, lastStatus, updateTrainingLogs;
-        insertTrainingLogs = function(data) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?, ?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status, 0]);
-          }, _.transactionErrorHandler, function(tx) {
-            return console.log('Success: Inserted new record in wp_training_logs');
-          });
-        };
-        updateTrainingLogs = function(id, data) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("UPDATE " + _.getTblPrefix() + "training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id]);
-          }, _.transactionErrorHandler, function(tx) {
-            return console.log('Success: Updated record in wp_training_logs');
-          });
-        };
-        data = {
-          division_id: model.get('division'),
-          collection_id: model.get('id'),
-          teacher_id: _.getUserID(),
-          date: _.getCurrentDateTime(0),
-          status: model.get('status')
-        };
-        if (model.get('status') === 'completed' || model.get('status') === 'scheduled') {
-          if (model.get('status') === 'scheduled') {
-            data.date = model.get('training_date');
-          }
-          return insertTrainingLogs(data);
-        } else {
-          lastStatus = _.getLastDetails(model.get('id'), model.get('division'));
-          return lastStatus.done((function(_this) {
-            return function(d) {
-              console.log('Last status: ' + d.status);
-              if (d.status !== '') {
-                if (d.status === 'started') {
-                  data.status = 'resumed';
-                  insertTrainingLogs(data);
-                }
-                if (d.status === 'scheduled') {
-                  data.status = 'started';
-                  return updateTrainingLogs(d.id, data);
-                }
-              } else {
-                data.status = 'started';
-                return insertTrainingLogs(data);
-              }
-            };
-          })(this));
-        }
       }
     };
     App.reqres.setHandler("get:content:groups", function(opt) {
@@ -240,11 +180,11 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     App.reqres.setHandler("new:content:group", function() {
       return API.newContentGroup();
     });
-    App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
-      return API.getContentGroupByIdFromLocal(id, division);
+    App.reqres.setHandler("schedule:content:group", function(data) {
+      return API.scheduleContentGroup(data);
     });
-    return App.reqres.setHandler("save:update:content-group:local", function(model) {
-      return API.saveOrUpdateContentGroupLocal(model);
+    return App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
+      return API.getContentGroupByIdFromLocal(id, division);
     });
   });
 });

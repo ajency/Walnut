@@ -34,8 +34,9 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
         db.transaction((tx)->
 
             tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'question_response 
-                (ref_id, content_piece_id INTEGER, collection_id INTEGER, division INTEGER
-                , question_response, time_taken, start_date, end_date, status, sync INTEGER)')
+                (ref_id, teacher_id INTEGER, content_piece_id INTEGER, collection_id INTEGER
+                , division INTEGER, question_response, time_taken, start_date, end_date, status
+                , sync INTEGER)')
            
 
             tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details

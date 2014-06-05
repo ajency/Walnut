@@ -140,66 +140,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 					console.log 'Content-group-by-id transaction completed'
 				.fail _.failureHandler
 
-
-			saveOrUpdateContentGroupLocal:(model) ->
-				
-				#function to insert record in wp_training_logs
-				insertTrainingLogs =(data)->
-
-					_.db.transaction( (tx)->
-						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"training_logs (division_id, collection_id, teacher_id, date, status, sync) 
-							VALUES (?, ?, ?, ?, ?, ?)", [data.division_id, data.collection_id, data.teacher_id, data.date, data.status, 0])
-						
-					,_.transactionErrorHandler
-					,(tx)->
-						console.log 'Success: Inserted new record in wp_training_logs'
-					)
-
-
-				#function to update status in wp_training_logs
-				updateTrainingLogs =(id, data)->
-					
-					_.db.transaction( (tx)->
-						tx.executeSql("UPDATE "+_.getTblPrefix()+"training_logs SET status=?, date=? WHERE id=?", [data.status, data.date, id])
-						
-					,_.transactionErrorHandler
-					,(tx)->
-						console.log 'Success: Updated record in wp_training_logs'
-					)
-
-				
-				data =
-					division_id: model.get('division')
-					collection_id: model.get('id')
-					teacher_id: _.getUserID() #teacher id hardcoded as 1 for now
-					date: _.getCurrentDateTime(	0)
-					status: model.get('status')
-
-				if model.get('status') is 'completed' or model.get('status') is 'scheduled'
-					if model.get('status') is 'scheduled'
-						data.date = model.get('training_date')
-					#insert new record in wp_training_logs
-					insertTrainingLogs(data)
-
-				else
-					#get last status
-					lastStatus = _.getLastDetails(model.get('id'), model.get('division'))
-					lastStatus.done (d)=>
-						console.log 'Last status: '+d.status
-						if d.status isnt ''
-							if d.status is 'started'
-								data.status = 'resumed'
-								insertTrainingLogs(data)
-
-							if d.status is 'scheduled'
-								data.status = 'started'
-								updateTrainingLogs(d.id, data)
-
-						else
-							data.status = 'started'
-							insertTrainingLogs(data)
-
-
 		
 		# request handler to get all content groups
 		App.reqres.setHandler "get:content:groups", (opt) ->
@@ -221,7 +161,4 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 		# request handler to get content group by id from local database
 		App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
 			API.getContentGroupByIdFromLocal id,division
-
-		App.reqres.setHandler "save:update:content-group:local", (model)->
-			API.saveOrUpdateContentGroupLocal model	
 

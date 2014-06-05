@@ -72,26 +72,6 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
         questionResponse = new QuestionResponseModel(data);
         return questionResponse;
       },
-      updateQuestionResponseLogs: function(refID) {
-        var connection_resp, options;
-        options = {
-          url: AJAXURL + '?action=update-question-response-logs',
-          data: refID,
-          success: (function(_this) {
-            return function(response) {
-              if (response.error) {
-                return console.log('some error occured while saving question logs for refID: ' + refID);
-              }
-            };
-          })(this)
-        };
-        connection_resp = App.request("get:auth:controller", options);
-        if (_.platform() === 'BROWSER') {
-          return connection_resp.authenticate();
-        } else {
-          return _.updateQuestionResponseLogs(refID);
-        }
-      },
       getQuestionResponseFromLocal: function(collection_id, division) {
         var onSuccess, runMainQuery;
         runMainQuery = function() {
@@ -140,50 +120,7 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
         }).fail(_.failureHandler);
       },
       saveUpdateQuestionResponseLocal: function(model) {
-        var insert_question_response, questionType, update_question_response;
-        insert_question_response = function(q_resp) {
-          var ref_id;
-          ref_id = 'CP' + model.get('content_piece_id') + 'C' + model.get('collection_id') + 'D' + model.get('division');
-          _.db.transaction(function(tx) {
-            return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response (ref_id, content_piece_id, collection_id, division, question_response, time_taken, start_date, end_date, status, sync) VALUES (?,?,?,?,?,?,?,?,?,?)', [ref_id, model.get('content_piece_id'), model.get('collection_id'), model.get('division'), q_resp, model.get('time_taken'), _.getCurrentDateTime(0), model.get('end_date'), 'started', 0]);
-          }, _.transactionErrorHandler, function(tx) {
-            return console.log('SUCCESS: Inserted record in wp_question_response');
-          });
-          _.updateQuestionResponseLogs(ref_id);
-          return model.set({
-            'ref_id': ref_id
-          });
-        };
-        update_question_response = function(q_resp) {
-          var end_date, status;
-          status = model.get('status');
-          if ((model.get('status')) !== 'paused') {
-            status = 'completed';
-          }
-          end_date = model.get('end_date');
-          if (status === 'completed') {
-            end_date = _.getCurrentDateTime(0);
-          }
-          return _.db.transaction(function(tx) {
-            return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET question_response=?, time_taken=?, status=?, end_date=? WHERE ref_id=?', [q_resp, model.get('time_taken'), status, end_date, model.get('ref_id')]);
-          }, _.transactionErrorHandler, function(tx) {
-            return console.log('SUCCESS: Updated record in wp_question_response');
-          });
-        };
-        questionType = _.getMetaValue(model.get('content_piece_id'));
-        return questionType.done(function(meta_value) {
-          var q_resp;
-          if (meta_value.question_type === 'individual') {
-            q_resp = serialize(model.get('question_response'));
-          } else {
-            q_resp = model.get('question_response');
-          }
-          if (model.has('ref_id')) {
-            return update_question_response(q_resp);
-          } else {
-            return insert_question_response(q_resp);
-          }
-        });
+        return _.saveUpdateQuestionResponse(model);
       }
     };
     App.reqres.setHandler("get:question:response:collection", function(params) {
@@ -191,9 +128,6 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
     });
     App.reqres.setHandler("save:question:response", function(qID) {
       return API.saveQuestionResponse(qID);
-    });
-    App.reqres.setHandler("update:question:response:logs", function(refID) {
-      return API.updateQuestionResponseLogs(refID);
     });
     App.reqres.setHandler("get:question-response:local", function(collection_id, division) {
       return API.getQuestionResponseFromLocal(collection_id, division);
