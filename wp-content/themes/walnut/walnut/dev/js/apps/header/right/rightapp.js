@@ -17,18 +17,7 @@ define(['app', 'controllers/region-controller', 'text!apps/header/right/template
         this.show(view);
         return this.listenTo(this.view, {
           "user:logout": function() {
-            return $.post(AJAXURL + '?action=logout_user', (function(_this) {
-              return function(response) {
-                var usermodel;
-                if (response.error) {
-                  return console.log(response);
-                } else {
-                  usermodel = App.request("get:user:model");
-                  usermodel.clear();
-                  return App.vent.trigger("show:login");
-                }
-              };
-            })(this));
+            return this.region.trigger("user:logout");
           }
         });
       };

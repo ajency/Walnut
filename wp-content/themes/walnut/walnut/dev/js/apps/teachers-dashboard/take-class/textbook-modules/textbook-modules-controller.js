@@ -118,9 +118,13 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
       };
 
       ScheduleModalView.prototype.onShow = function() {
+        var nowDate, today;
+        nowDate = new Date();
+        today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
         return $('.input-append.date').datepicker({
           autoclose: true,
-          todayHighlight: true
+          todayHighlight: true,
+          startDate: today
         });
       };
 

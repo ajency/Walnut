@@ -49,7 +49,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         elapsedTime = this.timerObject.request("get:elapsed:time");
         this.questionResponseModel.set({
           'question_response': studResponse,
-          'status': 'completed',
+          'status': 'paused',
           'time_taken': elapsedTime
         });
         return this.questionResponseModel.save();

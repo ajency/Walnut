@@ -118,8 +118,10 @@ function get_single_question_response($ref_id){
 
         if($question_type === 'individual'){
             $question_response_array= maybe_unserialize($resp->question_response);
-            foreach($question_response_array as $resp){
-                $qr[]= (int) $resp;
+            if($question_response_array){
+                foreach($question_response_array as $resp){
+                    $qr[]= (int) $resp;
+                }
             }
             $response_data['question_response']=$qr;
         }

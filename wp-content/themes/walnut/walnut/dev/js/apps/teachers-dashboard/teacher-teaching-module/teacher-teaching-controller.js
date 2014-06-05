@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app', 'apps/teachers-dashboard/teacher-teaching-module/question-display/question-display-app', 'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app', 'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app', 'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app', 'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'], function(App, RegionController) {
   return App.module("TeacherTeachingApp", function(View, App) {
     var SingleQuestionLayout, contentGroupModel, contentPiece, questionResponseCollection, questionResponseModel, questionsCollection, studentCollection;
     contentGroupModel = null;
@@ -52,7 +52,13 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       };
 
       TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
-        var contentPieces, nextQuestion, pieceIndex;
+        var contentPieces, elapsedTime, nextQuestion, pieceIndex;
+        elapsedTime = this.timerObject.request("get:elapsed:time");
+        questionResponseModel.set({
+          time_taken: elapsedTime,
+          status: 'completed'
+        });
+        questionResponseModel.save();
         current_question_id = parseInt(current_question_id);
         contentPieces = contentGroupModel.get('content_pieces');
         contentPieces = _.map(contentPieces, function(m) {
@@ -78,8 +84,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           if (questionResponseModel.get('status') !== 'completed') {
             elapsedTime = this.timerObject.request("get:elapsed:time");
             questionResponseModel.set({
-              'time_taken': elapsedTime,
-              'status': 'paused'
+              time_taken: elapsedTime,
+              status: 'paused'
             });
             questionResponseModel.save();
           }
@@ -103,9 +109,9 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         });
         if (!questionResponseModel) {
           modelData = {
-            'collection_id': contentGroupModel.get('id'),
-            'content_piece_id': content_piece_id,
-            'division': this.division
+            collection_id: contentGroupModel.get('id'),
+            content_piece_id: content_piece_id,
+            division: this.division
           };
           questionResponseModel = App.request("save:question:response", '');
           questionResponseModel.set(modelData);

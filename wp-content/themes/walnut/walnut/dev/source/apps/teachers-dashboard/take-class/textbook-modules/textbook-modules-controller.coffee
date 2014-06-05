@@ -91,9 +91,13 @@ define ['app'
                 'click .btn-primary': 'saveScheduledDate'
 
             onShow: ->
+                nowDate = new Date();
+                today= new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+
                 $('.input-append.date').datepicker
                     autoclose: true
                     todayHighlight: true
+                    startDate: today
 
 
             serializeData: ->
