@@ -60,7 +60,7 @@ define ['app'
 
             serializeData: ->
                 data = super()
-                data.logourl = SITEURL + '/wp-content/themes/walnut/images/walnutlearn.png'
+                data.logourl = SITEURL + '/wp-content/themes/walnut/images/synapse_logo.png'
                 data
 
             onShow: ->
