@@ -14,12 +14,16 @@
 
 function zipBlob(filename, blob, callback) {
   // use a zip.BlobWriter object to write zipped data into a Blob object
+
   zip.createWriter(new zip.BlobWriter("application/zip"), function(zipWriter) {
+
     // use a BlobReader object to read the data stored into blob variable
     zipWriter.add(filename, new zip.BlobReader(blob), function() {
+
       // close the writer and calls callback function
       zipWriter.getEntries(function(entries) {
          if (entries.length) {
+
 
            // get first entry content as text
            entries[0].getData(new zip.TextWriter(), function(text) {

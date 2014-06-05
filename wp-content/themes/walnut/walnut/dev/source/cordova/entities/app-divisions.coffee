@@ -90,15 +90,14 @@ define ['underscore', 'unserialize'], ( _) ->
 							ids = _.compact ids.reverse()
 
 						results = []
-						
+
+						abc = (id, i, results)->
+							singleDivision = _.fetchSingleDivision(id)
+							singleDivision.done (data)->
+								results[i] = data
+
 						_.each ids,(id, i)->
-							do(id, i)->
-
-								singleDivision = _.fetchSingleDivision(id)
-								singleDivision.done (data)->
-									
-									results[i] = data
-
+							abc id,i, results
 						d.resolve results
 
 			$.when(runFunc()).done ->

@@ -51,7 +51,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 							$('#upSync1').css("display", "block")
 							@updateLastSyncUploadDetails()
 
-					
+			
 
 			startSyncProcess : ->
 				if _.isOnline()

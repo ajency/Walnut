@@ -45,7 +45,8 @@ require.config({
     serialize: 'plugins/serialize',
     csvparse: 'plugins/jquery.parse',
     json2csvparse: 'plugins/json2csv',
-    zip: 'plugins/jszip'
+    zip: 'plugins/jszip',
+    zipjs: 'plugins/zip'
   },
   shim: {
     underscore: {
@@ -58,6 +59,9 @@ require.config({
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
+    },
+    zipjs: {
+      exports: 'zipBlob'
     },
     marionette: {
       deps: ['backbone'],

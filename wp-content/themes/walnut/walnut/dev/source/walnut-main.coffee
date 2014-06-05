@@ -58,7 +58,8 @@ require.config
         csvparse			: 'plugins/jquery.parse'
         json2csvparse       : 'plugins/json2csv'
         zip                 : 'plugins/jszip'
-        
+        zipjs               : 'plugins/zip'
+
 
 
     shim:
@@ -71,6 +72,8 @@ require.config
         backbone:
             deps: ['jquery', 'underscore']
             exports: 'Backbone'
+        zipjs:
+            exports: 'zipBlob'
         marionette:
             deps: ['backbone']
             exports: 'Marionette'

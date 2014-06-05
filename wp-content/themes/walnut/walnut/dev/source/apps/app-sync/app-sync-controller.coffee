@@ -1,4 +1,4 @@
-define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, parse) ->
+define ["marionette","app", "underscore", "csvparse" ,"zipjs", "zipjs1","zip"], (Marionette, App, _, parse,zipBlob) ->
 
 	class SynchronizationController extends Marionette.Controller
 
@@ -16,131 +16,6 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 		
 
-#This function Creates a file and writes into it the the record provided selectRecords function
-
-		writeToFile : (CSVdata)->
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-
-				, (fileSystem)=>
-
-					fileSystem.root.getFile("SynapseAssets/csvread.txt", {create: true, exclusive: false}
-
-						, (fileEntry)=>
-
-							fileEntry.createWriter(
-
-								(writer)=>
-									alert "file entry is" +fileEntry.toURL()
-									console.log "file entry is" +fileEntry.toURL()
-									writer.write(CSVdata)
-									@updateSync()
-									
-
-								, _.fileTransferErrorHandler)
-							
-						, _.fileErrorHandler)
-
-				, _.fileSystemErrorHandler)
-
-
-
-#This function will update the sync flag to 1 in the respective tables and disable the generate and download button and enable upload button
-		updateSync: =>
-
-			_.db.transaction( (tx)=>
-				tx.executeSql("UPDATE "+_.getTblPrefix()+"training_logs SET sync=1 WHERE sync=0")
-
-			,_.transactionErrorhandler
-			,(tx)=>
-				console.log 'Data updated successfully'
-				@updateQuestRespn()
-				# @readValues
-			)
-
-		updateQuestRespn: =>
-
-			_.db.transaction( (tx)=>
-				tx.executeSql("UPDATE "+_.getTblPrefix()+"question_response SET sync=1 WHERE sync=0")
-
-			,_.transactionErrorhandler
-			,(tx)=>
-				console.log 'Data updated successfully'
-				@updateQuestRespnLogs()
-				
-			)
-
-		updateQuestRespnLogs : =>
-
-			_.db.transaction( (tx)=>
-				tx.executeSql("UPDATE "+_.getTblPrefix()+"question_response_logs SET sync=1 WHERE sync=0")
-
-			,_.transactionErrorhandler
-			,(tx)=>
-				console.log 'Data updated successfully'
-				$('#JsonToCSV').attr("disabled","disabled")
-				$('#CSVupload').removeAttr("disabled")
-				$('#syncNow').attr("disabled","disabled")
-				@fileRead()
-				
-			)
-
-#This function reads the contents written in writetofile function
-
-		fileRead : ->
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-
-				, (fileSystem)=>
-
-					fileSystem.root.getFile("SynapseAssets/csvread.txt", {create: true, exclusive: false}
-
-						, (fileEntry)=>
-
-							fileEntry.file(
-
-								(file)=>
-									reader = new FileReader()
-									reader.onloadend = (evt)=>
-										csvData = evt.target.result
-										console.log "result" +evt.target.result
-										@ZipFile csvData
-
-									reader.readAsText file
-
-								, _.fileErrorHandler)
-
-						, _.fileErrorHandler)
-
-				, _.fileSystemErrorHandler)
-
-
-#Function to Zip the .csv File
-		ZipFile : (csvData)=>
-			zip = new JSZip();
-			zip.file("csvread.txt", csvData)
-			content = zip.generate({type:"text/plain"});
-			@saveZipData content
-
-
-		saveZipData : (content)->
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-
-				, (fileSystem)=>
-
-					fileSystem.root.getFile("SynapseAssets/hello.zip", {create: true, exclusive: false}
-
-						, (fileEntry)=>
-
-							fileEntry.createWriter(
-
-								(writer)=>
-									writer.write(content)
-
-
-								, _.fileTransferErrorHandler)
-							
-						, _.fileErrorHandler)
-
-				, _.fileSystemErrorHandler)
 
 
 #This function will be called when the upload button is clicked
@@ -245,10 +120,10 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 			$.get AJAXURL + '?action=sync-database',
 					data,
 				   (resp)=>
-						console.log 'RESP'
-						console.log resp
-						
-						@dwnldUnZip(resp)
+				   		console.log 'RESP'
+				   		console.log resp
+
+				   		@dwnldUnZip resp
 							
 					,
 					'json'	
@@ -282,7 +157,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 									# statusDom.innerHTML = perc + "% loaded...";
 									# statusDom1.innerHTML = perc + "% loaded...";
-									$('#status').text(perc)
+									# $('#status').text(perc)
 									$("#progressBarDwnld").css("width", "#{perc}%")
 									# $("#progressBarDwnld").css("width", "60")
 
@@ -300,6 +175,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 									console.log 'Zip file downloaded'
 
 									#Update sync details
+
 									@updateSyncDetails('file_download', '')
 
 									$('#getFiles').find('*').prop('disabled',true)
@@ -725,11 +601,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 					
 					,_.transactionErrorhandler)
 				)
-
-
 		
-
-
 	# request handler
 	App.reqres.setHandler "get:sync:controller", ->
 		new SynchronizationController

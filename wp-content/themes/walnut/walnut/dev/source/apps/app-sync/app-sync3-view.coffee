@@ -23,7 +23,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 					
 
-
 		class AppSyncView extends Marionette.ItemView
 
 			template : AppSyncTpl

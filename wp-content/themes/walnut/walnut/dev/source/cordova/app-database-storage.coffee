@@ -48,22 +48,22 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
                 (id INTEGER PRIMARY KEY, type_of_operation, time_stamp)')
 
             
-            if _.getDeleteDataFromTablesFlag() is null
-                tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
-                tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response")
-                tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response_logs")
-                tx.executeSql("DELETE FROM "+_.getTblPrefix()+"training_logs")
-                tx.executeSql("DELETE FROM wp_collection_meta")
-                tx.executeSql("DELETE FROM wp_content_collection")
-                tx.executeSql("DELETE FROM wp_options")
-                tx.executeSql("DELETE FROM wp_postmeta")
-                tx.executeSql("DELETE FROM wp_posts")
-                tx.executeSql("DELETE FROM wp_term_relationships")
-                tx.executeSql("DELETE FROM wp_term_taxonomy")
-                tx.executeSql("DELETE FROM wp_terms")
-                tx.executeSql("DELETE FROM wp_textbook_relationships")
-                tx.executeSql("DELETE FROM wp_usermeta")
-                tx.executeSql("DELETE FROM wp_users")
+            # if _.getDeleteDataFromTablesFlag() is null
+            #     tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
+            #     tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response")
+            #     tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response_logs")
+            #     tx.executeSql("DELETE FROM "+_.getTblPrefix()+"training_logs")
+            #     tx.executeSql("DELETE FROM wp_collection_meta")
+            #     tx.executeSql("DELETE FROM wp_content_collection")
+            #     tx.executeSql("DELETE FROM wp_options")
+            #     tx.executeSql("DELETE FROM wp_postmeta")
+            #     tx.executeSql("DELETE FROM wp_posts")
+            #     tx.executeSql("DELETE FROM wp_term_relationships")
+            #     tx.executeSql("DELETE FROM wp_term_taxonomy")
+            #     tx.executeSql("DELETE FROM wp_terms")
+            #     tx.executeSql("DELETE FROM wp_textbook_relationships")
+            #     tx.executeSql("DELETE FROM wp_usermeta")
+            #     tx.executeSql("DELETE FROM wp_users")
             
         ,_.transactionErrorHandler
         ,(tx)->
