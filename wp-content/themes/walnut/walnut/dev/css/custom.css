@@ -28,6 +28,11 @@
 .block {
   display: block;
 }
+@media (max-width: 1024px) {
+  .nonDevice {
+    display: none;
+  }
+}
 .overlap-left-15 {
   position: absolute;
   left: -15px;
@@ -58,6 +63,34 @@
 }
 .p-t-60 {
   padding-top: 60px;
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url('../fonts/OpenSans-Light.ttf') format('ttf');
+  src: local('Open Sans Light'), local('OpenSans-Light'), url('../fonts/OpenSans-Light.woff') format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url('../fonts/OpenSans-Regular.ttf') format('ttf');
+  src: local('Open Sans'), local('OpenSans'), url('../fonts/OpenSans-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url('../fonts/OpenSans-Semibold.ttf') format('ttf');
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url('../fonts/OpenSans-Semibold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../fonts/OpenSans-Bold.ttf') format('ttf');
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../fonts/OpenSans-Bold.woff') format('woff');
 }
 @font-face {
   font-family: 'Chelsea Market';
@@ -1344,6 +1377,11 @@ p.mcq-option-text {
 .listBox {
   margin-top: 60px;
 }
+@media (min-width: 992px) and (max-width: 1024px) {
+  .listBox {
+    margin-top: 50px;
+  }
+}
 @media (max-width: 991px) {
   .listBox {
     margin-top: 0;
@@ -1584,8 +1622,13 @@ body {
   color: #ffffff !important;
   font-size: 16px;
 }
+.page-sidebar .page-sidebar-wrapper > ul > li > a,
+.page-sidebar .page-sidebar-wrapper > ul > li > a:hover {
+  padding: 11.5px 16px;
+}
 .page-sidebar .page-sidebar-wrapper > ul > li.open > a {
   background-color: #0aa699 !important;
+  padding: 11.5px 16px;
 }
 .page-sidebar .page-sidebar-wrapper > ul > li:hover > a {
   background-color: #0aa699;

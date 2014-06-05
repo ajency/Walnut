@@ -9,8 +9,8 @@ define ['app'
             template:   '<td>{{post_excerpt}}</td>
                         <td>{{post_author_name}}</td>
                         <td>{{modified_date}}</td>
-                        <td><a target="_blank" href="{{view_url}}">View</a> |
-                            <a target="_blank" href="{{edit_url}}">Edit</a></td>'
+                        <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
+                            <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>'
 
             serializeData:->
                 data= super()
