@@ -70,38 +70,6 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       }, options);
     };
 
-    SynchronizationController.prototype.updateUploadTime = function() {
-      if (_.getInitialSyncFlag() === null) {
-        return _.db.transaction((function(_this) {
-          return function(tx) {
-            return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?, ?)", [
-              "UploadZip", {
-                8: 36
-              }
-            ]);
-          };
-        })(this), _.transactionErrorhandler, (function(_this) {
-          return function(tx) {
-            console.log('Sync Data INSERTED successfully ');
-            App.execute("close:sync:view");
-            return _.setInitialSyncFlag('sync');
-          };
-        })(this));
-      } else {
-        return _.db.transaction(function(tx) {
-          return tx.executeSql("UPDATE sync_details SET (type_of_operation,time_stamp) VALUES (?,?)", [
-            "UploadZip", {
-              8: 36
-            }
-          ]);
-        }, _.transactionErrorhandler, function(tx) {
-          console.log('Sync Data UPDATED successfully');
-          App.execute("close:sync:view");
-          return _.setInitialSyncFlag('sync');
-        });
-      }
-    };
-
     SynchronizationController.prototype.getDownloadURL = function() {
       var data;
       $('#syncSuccess').css("display", "block").text("Starting file download...");
@@ -124,6 +92,9 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       uri = encodeURI(resp.exported_csv_url);
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
+          var statusDom, statusDom1;
+          statusDom = document.querySelector('#progressBarDwnld');
+          statusDom1 = document.querySelector('#status');
           return fileSystem.root.getFile("SynapseAssets/logs.zip", {
             create: true,
             exclusive: false

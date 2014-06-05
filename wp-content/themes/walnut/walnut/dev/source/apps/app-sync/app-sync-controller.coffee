@@ -31,7 +31,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 				, _.fileSystemErrorHandler)
 
-#This Function Will upload the zip file to the server
+		#This Function Will upload the zip file to the server
 
 		fileUpload: (fileEntry)=>
 			uri = encodeURI('')
@@ -60,40 +60,6 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 				, options)
 
-		
-
-
-
-#this updates the upload time
-		updateUploadTime :->
-			
-			if _.getInitialSyncFlag() is null
-			 
-				_.db.transaction( (tx)=>
-
-						# for i in [0..data.length-1] by 1
-						# 	row = data[i]
-						tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
-							VALUES (?, ?)", [ "UploadZip",8:36 ])
-
-					,_.transactionErrorhandler
-					,(tx)=>
-						console.log 'Sync Data INSERTED successfully '
-						App.execute "close:sync:view"
-						_.setInitialSyncFlag('sync')
-						# @readValues
-					)
-			else
-				_.db.transaction( (tx)->
-						tx.executeSql("UPDATE sync_details SET (type_of_operation,time_stamp) VALUES (?,?)", ["UploadZip", 8:36 ])
-
-				,_.transactionErrorhandler
-				,(tx)->
-					console.log 'Sync Data UPDATED successfully'
-					App.execute "close:sync:view"
-					_.setInitialSyncFlag('sync')
-					# @readValues
-				)
 
 
 		
@@ -118,7 +84,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 
 
-# Download the zip file from the server and extract its contents
+		# Download the zip file from the server and extract its contents
 		dwnldUnZip : (resp) ->
 
 			$('#syncSuccess')
@@ -130,6 +96,8 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>
+					statusDom = document.querySelector('#progressBarDwnld');
+					statusDom1 = document.querySelector('#status');
 
 					fileSystem.root.getFile("SynapseAssets/logs.zip", {create: true, exclusive: false}
 
@@ -138,7 +106,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 							_.setFilePath(filePath)
 							fileEntry.remove()
 							fileTransfer = new FileTransfer()
-
+							
 							# fileTransfer.onprogress = (progressEvent)=>
 							# 	if progressEvent.lengthComputable
 							# 		perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
@@ -149,6 +117,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 							# 			progressBarDwnldDom.innerHTML = "Loading"
 							# 		else
 							# 			progressBarDwnldDom.innerHTML += "."
+
 
 							fileTransfer.download(uri, filePath+"logs.zip" 
 								,(file)=>
@@ -175,7 +144,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 
 		chkReader : (file1)->
-			#deepak
+			
 			read = ->
 				$.Deferred (d)->
 					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
@@ -213,6 +182,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 				console.log 'read done'
 			.fail _.failureHandler			
 
+		
 		fileUnZip : (filePath, fullpath)->
 
 			$('#syncSuccess').css("display","block")
@@ -248,7 +218,7 @@ define ["marionette","app", "underscore", "csvparse"], (Marionette, App, _, pars
 
 
 		
-#15 insert functions
+		#13 insert functions
 		sendParsedData1 : (file, fileEntry)=>
 			$('#syncSuccess')
 			.css("display","block")

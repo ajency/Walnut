@@ -23,7 +23,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'getLastSyncOperation transaction completed'
 			.fail _.failureHandler
-
+			
 
 		# Get total records from tables wp_training_logs, wp_question_response
 		# and wp_question_response_logs where sync=0 
