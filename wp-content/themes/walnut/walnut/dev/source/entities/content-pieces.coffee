@@ -54,9 +54,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                     add: true
                     remove: false
                     data: param
-                console.log AJAXURL
-                console.log 'contentPieceCollection'
-                console.log contentPieceCollection
                 contentPieceCollection
 
         # get all content pieces belonging to particular group
@@ -68,11 +65,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 if contentIDs
                     for contentID in contentIDs
-                        contentModel = contentPieceCollection.get contentID if contentPieceCollection?
-
-                        if not contentModel
-                            contentModel = new ContentPiece.ItemModel 'ID': contentID
-                            contentModel.fetch()
+                        contentModel = new ContentPiece.ItemModel 'ID': contentID
+                        contentModel.fetch()
 
                         contentPiecesOfGroup.add contentModel
 

@@ -614,13 +614,3 @@ function save_content_piece($data){
 
     return $content_id;
 }
-
-function update_content_piece($content_id, $data){
-
-    $content_layout = maybe_serialize($data);
-
-    if($content_id)
-        update_post_meta ($content_id, 'layout_json',$content_layout);
-
-    return $content_id;
-}

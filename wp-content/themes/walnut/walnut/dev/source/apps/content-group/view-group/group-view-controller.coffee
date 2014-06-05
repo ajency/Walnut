@@ -1,9 +1,8 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-group/edit-group/templates/content-group.html'
         'apps/content-group/view-group/group-details/details-app'
         'apps/content-group/view-group/content-display/content-display-app'
-], (App, RegionController, contentGroupTpl)->
+], (App, RegionController)->
     App.module "ContentGroupApp.View", (View, App)->
         class View.GroupController extends RegionController
 
@@ -97,7 +96,10 @@ define ['app'
 
         class ContentGroupViewLayout extends Marionette.Layout
 
-            template: contentGroupTpl
+            template: '<div class="teacher-app">
+                          <div id="collection-details-region"></div>
+                        </div>
+                        <div id="content-display-region"></div>'
 
             className: ''
 
