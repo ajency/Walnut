@@ -90,9 +90,6 @@ define(["app", 'backbone'], function(App, Backbone) {
           remove: false,
           data: param
         });
-        console.log(AJAXURL);
-        console.log('contentPieceCollection');
-        console.log(contentPieceCollection);
         return contentPieceCollection;
       },
       getContentPiecesOfGroup: function(groupModel) {
@@ -102,15 +99,10 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (contentIDs) {
           for (_i = 0, _len = contentIDs.length; _i < _len; _i++) {
             contentID = contentIDs[_i];
-            if (typeof contentPieceCollection !== "undefined" && contentPieceCollection !== null) {
-              contentModel = contentPieceCollection.get(contentID);
-            }
-            if (!contentModel) {
-              contentModel = new ContentPiece.ItemModel({
-                'ID': contentID
-              });
-              contentModel.fetch();
-            }
+            contentModel = new ContentPiece.ItemModel({
+              'ID': contentID
+            });
+            contentModel.fetch();
             contentPiecesOfGroup.add(contentModel);
           }
         }

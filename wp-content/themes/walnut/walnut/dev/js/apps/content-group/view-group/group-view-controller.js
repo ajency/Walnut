@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-group/templates/content-group.html', 'apps/content-group/view-group/group-details/details-app', 'apps/content-group/view-group/content-display/content-display-app'], function(App, RegionController, contentGroupTpl) {
+define(['app', 'controllers/region-controller', 'apps/content-group/view-group/group-details/details-app', 'apps/content-group/view-group/content-display/content-display-app'], function(App, RegionController) {
   return App.module("ContentGroupApp.View", function(View, App) {
     var ContentGroupViewLayout;
     View.GroupController = (function(_super) {
@@ -127,7 +127,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return ContentGroupViewLayout.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupViewLayout.prototype.template = contentGroupTpl;
+      ContentGroupViewLayout.prototype.template = '<div class="teacher-app"> <div id="collection-details-region"></div> </div> <div id="content-display-region"></div>';
 
       ContentGroupViewLayout.prototype.className = '';
 

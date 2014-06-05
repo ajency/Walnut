@@ -14,6 +14,7 @@ define [
     'syphon'
     'text'
     'jqueryvalidate'
+    'sidr'
     'bootstrap'
     'checkbox'
     'bootstrapslider'
@@ -26,4 +27,5 @@ define [
     'screwbuttons'
     'videojs'
     'panzer'
+
 ], ->

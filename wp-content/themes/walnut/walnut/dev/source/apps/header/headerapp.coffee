@@ -35,10 +35,12 @@ define ['app'
 
 
             _getHeaderView: =>
-                console.log '@school2'
-                console.log @school
                 new HeaderView
                     model: @school
+                    templateHelpers:
+                        show_user_name:->
+                            user_model= App.request "get:user:model"
+                            user_name= user_model.get 'display_name'
 
 
         class HeaderView extends Marionette.Layout
@@ -59,7 +61,6 @@ define ['app'
             serializeData: ->
                 data = super()
                 data.logourl = SITEURL + '/wp-content/themes/walnut/images/synapse_logo.png'
-                console.log SITEURL
                 data
 
             onShow: ->
