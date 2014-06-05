@@ -43,11 +43,22 @@ define ['app'], (App)->
 
                 # initialize ckeditor
                 @$el.attr('contenteditable', 'true').attr 'id', _.uniqueId 'text-'
+                CKEDITOR.on 'instanceCreated', @configureEditor
                 @editor = CKEDITOR.inline document.getElementById @$el.attr 'id'
                 @editor.setData _.stripslashes @model.get 'text'
 
                 # wait for CKEditor to be loaded
                 _.delay @_afterCKEditorInitialization, 500
+
+            configureEditor: (event) =>
+                editor = event.editor
+                element = editor.element
+
+                if element.getAttribute('id') is @$el.attr 'id'
+                    editor.on 'configLoaded', ->
+
+                        editor.config.placeholder = 'This is a Text Block. Use this to provide text…'
+
 
             # after initialization of ckeditor
             # add a p tag at the end to fix align issues
@@ -121,6 +132,7 @@ define ['app'], (App)->
 
             #when a blank is clicked show the propertiers for that blank
             _onClickOfBlank:(e)=>
+                console.log 'clicked'
                 if $(e.target).prop('class') is 'fibno'
                     return
                 if $(e.target).prop('tagName') is 'INPUT'
@@ -181,13 +193,22 @@ define ['app'], (App)->
                 $(formatedText).find('input').unwrap()
                 $(formatedText).find('input').prev().remove()
                 @model.set 'text', formatedText.html()
-                console.log formatedText.html()
+#                console.log formatedText.html()
 
 
             # on modification of dom structure modification of p
             _updateInputProperties: =>
                 # iterate thru all input tags in current view
                 _.each @$el.find('input'), (blank, index)=>
+
+#                    _.delay =>
+#                        inputId = $(blank).attr('data-id')
+#                        if @model.get('blanksArray').get(inputId) is undefined
+#                            console.log JSON.stringify @model.get('blanksArray').toJSON()
+#                            @trigger "create:new:fib:element", inputId
+#                            $(blank).parent().on 'click', @_onClickOfBlank
+#                    ,100
+
 
                     _.delay =>
                         blanksModel = @model.get('blanksArray').get $(blank).attr 'data-id'
@@ -206,16 +227,16 @@ define ['app'], (App)->
                 _.delay =>
                     if @model.get('blanksArray').size() > 0
 
-                        @model.get('blanksArray').each (blank)=>
+                        @model.get('blanksArray').each (blankModel)=>
                             # console.log blank
                             blankFound = _.find @$el.find('input'), (blankUI)=>
-                                blank.get('id') is $(blankUI).attr 'data-id'
+                                blankModel.get('id') is $(blankUI).attr 'data-id'
 
                             if _.isUndefined blankFound
                                 console.log ' in remove'
 
                                 # @$el.find("span##{blank.id}").remove()
-                                @model.get('blanksArray').remove blank
+                                @model.get('blanksArray').remove blankModel
                                 @trigger 'close:question:element:properties'
                                 if @model.get('blanksArray').size() < @model.get('numberOfBlanks')
                                     @model.set 'numberOfBlanks', @model.get('numberOfBlanks') - 1

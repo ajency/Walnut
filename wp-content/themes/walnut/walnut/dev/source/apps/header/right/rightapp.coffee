@@ -10,14 +10,7 @@ define ['app'
                 @show view
 
                 @listenTo @view, "user:logout": ->
-                    $.post AJAXURL + '?action=logout_user',
-                    (response) =>
-                        if response.error
-                            console.log response
-                        else
-                            usermodel = App.request "get:user:model"
-                            usermodel.clear()
-                            App.vent.trigger "show:login"
+                    @region.trigger "user:logout"
 
 
             _getRightHeaderView: ->

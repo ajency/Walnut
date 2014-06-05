@@ -57,6 +57,7 @@ body{
 	.page-sidebar-wrapper > ul > li{
 		&>a, &> a i, &> a .arrow, &> a .arrow.open:before{
 			color: @color-white !important;
+			font-size: 15px;
 		}
 		&.open > a{
 			background-color: @color-primary !important;
@@ -70,8 +71,35 @@ body{
 	.page-sidebar-wrapper > ul > li > ul.sub-menu{
 		background-color: @color-primary;
 
-		&> li > a:hover{
-			background-color: darken(@color-primary, 5%) !important;
+		&> li > a{
+			font-size: 15px;
+			&:hover{
+				background-color: darken(@color-primary, 5%) !important;
+			}
+		}
+	}
+}
+
+@media (max-width:1024px){
+	.page-sidebar{
+		background: @color-black !important;
+
+		.page-sidebar-wrapper > ul > li{
+			&.open > a{
+				background-color: darken(@color-grey, 20%) !important;
+			}
+		}
+
+		.page-sidebar-wrapper > ul > li:hover >a{
+			background-color: darken(@color-grey, 20%);
+		}
+
+		.page-sidebar-wrapper > ul > li > ul.sub-menu{
+			background-color: darken(@color-grey, 20%);
+
+			&> li > a:hover{
+				background-color: darken(@color-grey, 5%) !important;
+			}
 		}
 	}
 }
@@ -214,66 +242,91 @@ textarea.error, .select2-choice.error {
 	display: none;
 }
 
-/*App Styles*/
-@media(max-width:1024px){
-	body{
-		font-size: 16px;
-		//font-weight: bold;
+
+body{
+	font-size: 18px;
+	font-weight: bold;
+}
+
+select{
+	font-weight: bold;
+	font-size: 15px;
+}
+
+button{
+	font-weight: bold;
+}
+label, input, button, select, textarea{
+	font-size: 16px;
+}
+
+.btn{
+	padding: 10px 30px;
+	padding-top: 10px;
+	font-weight: bold;
+}
+
+.form-control{
+	height: 45px;
+	font-weight: bold;
+	font-size: 16px;
+	.select2-choice{
+		padding: 8px 9px;
+		height: 45px;
+		.select2-arrow b:before{
+			top: 6px;
+		}
+	}
+}
+
+select{
+	display: inline-block;
+	position: relative;
+	line-height: 1;
+	width: 100%;
+	min-height: 45px;
+	padding: 10px;
+	background: @preview-grey;
+	border: 1px solid @body-bg;
+	box-shadow: inset 0 -1px 2px rgba(0,0,0,.05);
+	border-radius: 3px;
+	color: @3-grey;
+	font-size: 16px;
+	font-weight: 700;
+	text-align: left;
+	text-transform: none;
+	outline: 0;
+	outline-offset: -2px;
+	cursor: default;
+	&:after, &:before{
+		content: "";
+		position: absolute;
+		right: 30px;
+		top: 10px;
+		bottom: 10px;
+		border-left: 1px solid #e5e5e5;
+	}
+}
+
+#main-content-region, #content-display-region{
+	&>.row{
+		margin: 0;
+	}
+}
+
+.small-text {
+	font-size: 15px !important;
+}
+
+@media (max-width:1024px){
+	.page-content .content{
+		padding: 0;
+		padding-top: 60px;
 	}
 
-	select{
-		font-weight: bold;
-		font-size: 15px;
-	}
-
-	button{
-		font-weight: bold;
-	}
-
-	.page-sidebar {
-	    .page-sidebar-wrapper {
-	        & > ul {
-	            & > li {
-	                & > a {
-	                    font-size: 16px;
-	                }
-	                & > ul.sub-menu {
-	                    & > li {
-	                        & > a {
-	                            font-size: 15px;
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	    }
-	}
-
-	select{
-		display: inline-block;
-		position: relative;
-		line-height: 1;
-		width: 200px;
-		padding: 10px;
-		background: @preview-grey;
-		border: 1px solid @body-bg;
-		box-shadow: inset 0 -1px 2px rgba(0,0,0,.05);
-		border-radius: 3px;
-		color: @3-grey;
-		font-size: 16px;
-		font-weight: 700;
-		text-align: left;
-		text-transform: none;
-		outline: 0;
-		outline-offset: -2px;
-		cursor: default;
-		&:after, &:before{
-			content: "";
-			position: absolute;
-			right: 30px;
-			top: 10px;
-			bottom: 10px;
-			border-left: 1px solid #e5e5e5;
+	.header{
+		.notifcation-center{
+			background: transparent;
 		}
 	}
 }

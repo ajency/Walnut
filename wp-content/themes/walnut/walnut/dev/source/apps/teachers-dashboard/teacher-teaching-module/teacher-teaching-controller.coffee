@@ -1,8 +1,6 @@
 define ['app'
         'controllers/region-controller'
-    #'text!apps/teachers-dashboard/take-class/templates/class-description.html'
         'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app'
-        'apps/teachers-dashboard/teacher-teaching-module/question-display/question-display-app'
         'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app'
         'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'
 ], (App, RegionController)->
@@ -60,6 +58,10 @@ define ['app'
                 @listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
             _changeQuestion: (current_question_id)=>
+
+                if @display_mode is 'class_mode'
+                    @_saveQuestionResponse "completed"
+
                 current_question_id = parseInt current_question_id
 
                 contentPieces = contentGroupModel.get 'content_pieces'
@@ -83,15 +85,8 @@ define ['app'
                     @_gotoPreviousRoute()
 
             _gotoPreviousRoute: =>
-                if @display_mode is 'class_mode'
-                    if questionResponseModel.get('status') isnt 'completed'
-                        elapsedTime = @timerObject.request "get:elapsed:time"
-
-                        questionResponseModel.set
-                            'time_taken': elapsedTime
-                            'status': 'paused'
-
-                        questionResponseModel.save()
+                if @display_mode is 'class_mode' and questionResponseModel.get('status') isnt 'completed'
+                    @_saveQuestionResponse "paused"
 
                 currRoute = App.getCurrentRoute()
 
@@ -104,6 +99,14 @@ define ['app'
                 App.execute "show:headerapp", region: App.headerRegion
                 App.execute "show:leftnavapp", region: App.leftNavRegion
 
+            _saveQuestionResponse:(status) =>
+                elapsedTime = @timerObject.request "get:elapsed:time"
+
+                questionResponseModel.set
+                    time_taken  : elapsedTime
+                    status      : status
+
+                questionResponseModel.save()
 
             _getOrCreateModel: (content_piece_id)=>
                 content_piece_id = content_piece_id.toString()
@@ -117,9 +120,9 @@ define ['app'
                 #if model doesnt exist in collection setting default values
                 if not questionResponseModel
                     modelData= {
-                        'collection_id': contentGroupModel.get 'id'
-                        'content_piece_id': content_piece_id
-                        'division': @division
+                        collection_id: contentGroupModel.get 'id'
+                        content_piece_id: content_piece_id
+                        division: @division
                     }
                     questionResponseModel = App.request "save:question:response", ''
                     questionResponseModel.set modelData

@@ -1,4 +1,4 @@
-define ["app", 'backbone','unserialize'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 	App.module "Entities.ContentGroup", (ContentGroup, App, Backbone, Marionette, $, _)->
 
 
@@ -27,18 +27,6 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 
 			name: 'content-group'
 
-
-			initialize: ->
-				@on('start:module', @startModule, @)
-				@on('stop:module', @stopModule, @)
-
-			startModule: (model)=>
-				@trigger "training:module:started", model
-
-			stopModule: (model)=>
-				@trigger "training:module:stopped", model
-
-
 		# collection of group of content pieces eg. quizzes, teacher training modules etc.
 		class ContentGroup.ItemCollection extends Backbone.Collection
 			model: ContentGroup.ItemModel
@@ -52,6 +40,7 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 				resp.data
 
 
+		
 		contentGroupCollection = new ContentGroup.ItemCollection
 
 		# API
@@ -80,6 +69,13 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 
 			newContentGroup:->
 				contentGroup = new ContentGroup.ItemModel
+
+			scheduleContentGroup:(data)->
+				questionResponseModel= App.request "save:question:response"
+
+				questionResponseModel.set data
+
+				questionResponseModel.save()
 
 
 			# get content group from local
@@ -203,9 +199,8 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 							data.status = 'started'
 							insertTrainingLogs(data)
 
-							
 
-
+		
 		# request handler to get all content groups
 		App.reqres.setHandler "get:content:groups", (opt) ->
 			API.getContentGroups(opt)
@@ -219,12 +214,14 @@ define ["app", 'backbone','unserialize'], (App, Backbone) ->
 		App.reqres.setHandler "new:content:group",->
 			API.newContentGroup()
 
+		App.reqres.setHandler "schedule:content:group", (data)->
+			API.scheduleContentGroup data
+
 
 		# request handler to get content group by id from local database
 		App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
 			API.getContentGroupByIdFromLocal id,division
 
 		App.reqres.setHandler "save:update:content-group:local", (model)->
-			API.saveOrUpdateContentGroupLocal model	   
-
+			API.saveOrUpdateContentGroupLocal model	
 

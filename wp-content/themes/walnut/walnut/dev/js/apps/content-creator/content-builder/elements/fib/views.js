@@ -12,6 +12,7 @@ define(['app'], function(App) {
         this._onClickOfBlank = __bind(this._onClickOfBlank, this);
         this._initializeEachBlank = __bind(this._initializeEachBlank, this);
         this._afterCKEditorInitialization = __bind(this._afterCKEditorInitialization, this);
+        this.configureEditor = __bind(this.configureEditor, this);
         return FibView.__super__.constructor.apply(this, arguments);
       }
 
@@ -56,9 +57,21 @@ define(['app'], function(App) {
           };
         })(this));
         this.$el.attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
+        CKEDITOR.on('instanceCreated', this.configureEditor);
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
         return _.delay(this._afterCKEditorInitialization, 500);
+      };
+
+      FibView.prototype.configureEditor = function(event) {
+        var editor, element;
+        editor = event.editor;
+        element = editor.element;
+        if (element.getAttribute('id') === this.$el.attr('id')) {
+          return editor.on('configLoaded', function() {
+            return editor.config.placeholder = 'This is a Text Block. Use this to provide text…';
+          });
+        }
       };
 
       FibView.prototype._afterCKEditorInitialization = function() {
@@ -126,6 +139,7 @@ define(['app'], function(App) {
 
       FibView.prototype._onClickOfBlank = function(e) {
         var blanksModel, inputId;
+        console.log('clicked');
         if ($(e.target).prop('class') === 'fibno') {
           return;
         }
@@ -185,8 +199,7 @@ define(['app'], function(App) {
         $(formatedText).find('input').attr('value', '');
         $(formatedText).find('input').unwrap();
         $(formatedText).find('input').prev().remove();
-        this.model.set('text', formatedText.html());
-        return console.log(formatedText.html());
+        return this.model.set('text', formatedText.html());
       };
 
       FibView.prototype._updateInputProperties = function() {
@@ -207,14 +220,14 @@ define(['app'], function(App) {
         _.delay((function(_this) {
           return function() {
             if (_this.model.get('blanksArray').size() > 0) {
-              return _this.model.get('blanksArray').each(function(blank) {
+              return _this.model.get('blanksArray').each(function(blankModel) {
                 var blankFound;
                 blankFound = _.find(_this.$el.find('input'), function(blankUI) {
-                  return blank.get('id') === $(blankUI).attr('data-id');
+                  return blankModel.get('id') === $(blankUI).attr('data-id');
                 });
                 if (_.isUndefined(blankFound)) {
                   console.log(' in remove');
-                  _this.model.get('blanksArray').remove(blank);
+                  _this.model.get('blanksArray').remove(blankModel);
                   _this.trigger('close:question:element:properties');
                   if (_this.model.get('blanksArray').size() < _this.model.get('numberOfBlanks')) {
                     return _this.model.set('numberOfBlanks', _this.model.get('numberOfBlanks') - 1);
