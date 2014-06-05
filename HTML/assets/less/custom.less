@@ -57,6 +57,7 @@ body{
 	.page-sidebar-wrapper > ul > li{
 		&>a, &> a i, &> a .arrow, &> a .arrow.open:before{
 			color: @color-white !important;
+			font-size: 15px;
 		}
 		&.open > a{
 			background-color: @color-primary !important;
@@ -70,8 +71,35 @@ body{
 	.page-sidebar-wrapper > ul > li > ul.sub-menu{
 		background-color: @color-primary;
 
-		&> li > a:hover{
-			background-color: darken(@color-primary, 5%) !important;
+		&> li > a{
+			font-size: 15px;
+			&:hover{
+				background-color: darken(@color-primary, 5%) !important;
+			}
+		}
+	}
+}
+
+@media (max-width:1024px){
+	.page-sidebar{
+		background: @color-black !important;
+
+		.page-sidebar-wrapper > ul > li{
+			&.open > a{
+				background-color: darken(@color-grey, 20%) !important;
+			}
+		}
+
+		.page-sidebar-wrapper > ul > li:hover >a{
+			background-color: darken(@color-grey, 20%);
+		}
+
+		.page-sidebar-wrapper > ul > li > ul.sub-menu{
+			background-color: darken(@color-grey, 20%);
+
+			&> li > a:hover{
+				background-color: darken(@color-grey, 5%) !important;
+			}
 		}
 	}
 }
@@ -251,25 +279,6 @@ label, input, button, select, textarea{
 	}
 }
 
-.page-sidebar {
-    .page-sidebar-wrapper {
-        & > ul {
-            & > li {
-                & > a {
-                    font-size: 15px;
-                }
-                & > ul.sub-menu {
-                    & > li {
-                        & > a {
-                            font-size: 15px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 select{
 	display: inline-block;
 	position: relative;
@@ -319,9 +328,5 @@ select{
 		.notifcation-center{
 			background: transparent;
 		}
-	}
-
-	.page-sidebar{
-		background: @color-black !important;
 	}
 }

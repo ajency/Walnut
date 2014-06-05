@@ -3,14 +3,14 @@
 	<div class="tools">
 		<a href="javascript:;" class="collapse"></a>
 	</div>
-	</div>
-	<div class="grid-body no-border" style="overflow: hidden; display: block;">
+</div>
+<div class="grid-body no-border" style="overflow: hidden; display: block;">
 	<div class="row ">
 		<div class="col-md-4">
 		    <div class="margin-bottom-20 ">
 				<label class="form-label">Objective</label>
 				{{description.objective}}
-				</div>
+			</div>
 		</div>
 		<div class="col-md-4">
 		    <div class="margin-bottom-20 ">
@@ -26,8 +26,8 @@
 		</div>												 
 	</div>
 	<div class="row ">
-			<div class="col-md-4">
-			   <div class="margin-bottom-20 ">
+		<div class="col-md-4">
+			<div class="margin-bottom-20 ">
 				<label class="form-label">Description</label>
 				{{description.description}}
 			</div>
@@ -46,13 +46,38 @@
 		</div>											 
 	</div>
 	<div class="row ">
-			<div class="col-md-4">
-			   <div class="margin-bottom-20 ">
+		<div class="col-md-4">
+		    <div class="margin-bottom-20 ">
 				<label class="form-label">Duration</label>
 				{{duration}} {{minshours}}
-			</div>
+		    </div>
 		</div>										 
 	</div>
+</div>
+<div class="row p-r-10">
+    <div class="col-sm-4">
+
+        <div class="tiles added-margin">
+            <div class="tiles-body">
+                <div class="tiles-title"> TRAINING MODULE TIME </div>
+                <div class="heading"> <span class="animate-number" data-animation-duration="1200">{{total_minutes}} mins</span> </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-4">
+
+    </div>
+    <div class="col-sm-4">
+
+        <div class="tiles white added-margin">
+            <div class="tiles-body">
+                <div class="tiles-title"> ELAPSED MODULE TIME </div>
+                <div class="heading"> <span class="animate-number" data-animation-duration="1200">{{showElapsedTime}}</span> </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 {{#takeClassModule}}
 <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
