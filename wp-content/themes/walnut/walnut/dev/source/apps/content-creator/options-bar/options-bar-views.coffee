@@ -27,7 +27,7 @@ define ['app',
                     @trigger "fetch:sections:subsections", $(e.target).val()
 
             onShow:->
-                $ "#subs, #chaps, #qType, #status, #secs, #subsecs"
+                $ "#subs, #chaps, #qType, #status, #secs, #subsecs "#,#negativeMarks"
                 .select2();
 
                 $('input.tagsinput').tagsinput()
@@ -42,6 +42,9 @@ define ['app',
 
                     postStatus= @model.get 'post_status'
                     $('#status').select2().select2('val',postStatus)
+
+#                    negativeMarks= parseInt @model.get 'negative_marks'
+#                    $('#negativeMarks').select2().select2('val',negativeMarks)
 
             onFetchChaptersComplete: (chaps, curr_chapter)->
                 if _.size(chaps) > 0

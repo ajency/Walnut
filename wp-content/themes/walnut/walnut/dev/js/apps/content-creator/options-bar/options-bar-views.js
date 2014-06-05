@@ -29,7 +29,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
 
       OptionsBarView.prototype.onShow = function() {
         var postStatus, qType;
-        $("#subs, #chaps, #qType, #status, #secs, #subsecs").select2();
+        $("#subs, #chaps, #qType, #status, #secs, #subsecs ").select2();
         $('input.tagsinput').tagsinput();
         $('#subProps a').click(function(e) {
           e.preventDefault();
