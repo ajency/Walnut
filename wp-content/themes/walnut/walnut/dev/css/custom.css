@@ -1672,8 +1672,8 @@ textarea.error,
   display: block;
 }
 .smallLogo {
-  background: url(../../../images/logo-synapse.png);
-  width: 35px;
+  background: url(../../../images/synapse-logo-main.png);
+  width: 97px;
   height: 35px;
   margin: 0 auto;
   background-size: 100%;
