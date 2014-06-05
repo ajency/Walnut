@@ -40,4 +40,5 @@ define [
   		'csvparse'
   		'json2csvparse'
   		'zip'
+  		'zipjs'
 		], ->

@@ -89,20 +89,21 @@ define(['underscore', 'unserialize'], function(_) {
           var divisionIds;
           divisionIds = _.getDivisionIds();
           return divisionIds.done(function(ids) {
-            var results;
+            var abc, results;
             console.log('divisionIds: ' + ids);
             if (_.isArray(ids)) {
               ids = _.compact(ids.reverse());
             }
             results = [];
+            abc = function(id, i, results) {
+              var singleDivision;
+              singleDivision = _.fetchSingleDivision(id);
+              return singleDivision.done(function(data) {
+                return results[i] = data;
+              });
+            };
             _.each(ids, function(id, i) {
-              return (function(id, i) {
-                var singleDivision;
-                singleDivision = _.fetchSingleDivision(id);
-                return singleDivision.done(function(data) {
-                  return results[i] = data;
-                });
-              })(id, i);
+              return abc(id, i, results);
             });
             return d.resolve(results);
           });
