@@ -1,8 +1,6 @@
 define ['app'
         'controllers/region-controller'
-    #'text!apps/teachers-dashboard/take-class/templates/class-description.html'
         'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app'
-        'apps/teachers-dashboard/teacher-teaching-module/question-display/question-display-app'
         'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app'
         'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'
 ], (App, RegionController)->
@@ -60,6 +58,15 @@ define ['app'
                 @listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
             _changeQuestion: (current_question_id)=>
+
+                elapsedTime = @timerObject.request "get:elapsed:time"
+
+                questionResponseModel.set
+                    time_taken    : elapsedTime
+                    status        : 'completed'
+
+                questionResponseModel.save()
+
                 current_question_id = parseInt current_question_id
 
                 contentPieces = contentGroupModel.get 'content_pieces'
@@ -88,8 +95,8 @@ define ['app'
                         elapsedTime = @timerObject.request "get:elapsed:time"
 
                         questionResponseModel.set
-                            'time_taken': elapsedTime
-                            'status': 'paused'
+                            time_taken  : elapsedTime
+                            status      : 'paused'
 
                         questionResponseModel.save()
 
@@ -112,9 +119,9 @@ define ['app'
                 #if model doesnt exist in collection setting default values
                 if not questionResponseModel
                     modelData= {
-                        'collection_id': contentGroupModel.get 'id'
-                        'content_piece_id': content_piece_id
-                        'division': @division
+                        collection_id: contentGroupModel.get 'id'
+                        content_piece_id: content_piece_id
+                        division: @division
                     }
                     questionResponseModel = App.request "save:question:response", ''
                     questionResponseModel.set modelData

@@ -10,7 +10,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
 
       function HeaderController() {
         this._getHeaderView = __bind(this._getHeaderView, this);
-        this.showLeftRightViews = __bind(this.showLeftRightViews, this);
+        this._showLeftRightViews = __bind(this._showLeftRightViews, this);
         return HeaderController.__super__.constructor.apply(this, arguments);
       }
 
@@ -18,13 +18,30 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         var layout;
         this.layout = layout = this._getHeaderView();
         this.school = App.request("get:current:school");
-        this.listenTo(layout, 'show', this.showLeftRightViews);
-        return this.show(layout, {
+        this.listenTo(layout, 'show', this._showLeftRightViews);
+        this.show(layout, {
           loading: true
         });
+        this.listenTo(this.layout.rightRegion, "user:logout", this._logoutCurrentUser);
+        return this.listenTo(layout, 'user:logout', this._logoutCurrentUser);
       };
 
-      HeaderController.prototype.showLeftRightViews = function() {
+      HeaderController.prototype._logoutCurrentUser = function() {
+        return $.post(AJAXURL + '?action=logout_user', (function(_this) {
+          return function(response) {
+            var usermodel;
+            if (response.error) {
+              return console.log(response);
+            } else {
+              usermodel = App.request("get:user:model");
+              usermodel.clear();
+              return App.vent.trigger("show:login");
+            }
+          };
+        })(this));
+      };
+
+      HeaderController.prototype._showLeftRightViews = function() {
         App.execute("show:leftheaderapp", {
           region: this.layout.leftRegion
         });
@@ -60,6 +77,13 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         rightRegion: '#header-right'
       };
 
+      HeaderView.prototype.events = {
+        'click #logout': function() {
+          $.sidr('close', 'walnutProfile');
+          return this.trigger("user:logout");
+        }
+      };
+
       HeaderView.prototype.serializeData = function() {
         var data;
         data = HeaderView.__super__.serializeData.call(this);
@@ -69,6 +93,11 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.onShow = function() {
+        this.$el.find('.right-menu').sidr({
+          name: 'walnutProfile',
+          side: 'right',
+          renaming: false
+        });
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
           return $(".header-seperation").css("display", "none");

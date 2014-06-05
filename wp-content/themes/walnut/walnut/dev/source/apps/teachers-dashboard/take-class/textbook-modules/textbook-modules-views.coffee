@@ -99,31 +99,14 @@ define ['app'], (App)->
                 currentRoute = App.getCurrentRoute()
                 App.navigate currentRoute + "/module/" + dataID, true
 
-            onStatusChange: (model)->
-                status = model.get 'status'
-
-                id = model.get 'id'
-
-                if status is 'started'
-                    @$el.find 'tr#row-' + id + ' .start-training'
-                    .empty()
-                    .html '<i class="fa fa-pause"></i> Resume'
-
-                    @$el.find 'tr#row-' + id + ' .status_label'
-                    .html '<span class="label label-info">In Progress</span>'
-
-                    @$el.find 'tr#row-' + id + ' .training-date'
-                    .html '<i class="fa fa-calendar"></i> ' + moment().format("Do MMM YYYY")
-
-                if status is 'scheduled'
-                    date = model.get 'training_date'
-                    @$el.find 'tr#row-' + id + ' .training-date'
-                    .html '<i class="fa fa-calendar"></i> ' + moment(date).format("Do MMM YYYY")
+            onScheduledModule: (id,date)->
+                @$el.find 'tr#row-' + id + ' .training-date'
+                .html '<i class="fa fa-calendar"></i> ' + moment(date).format("Do MMM YYYY")
 
             scheduleTraining: (e)->
                 dataID = $ e.target
                 .closest 'tr'
-                    .attr 'data-id'
+                .attr 'data-id'
 
                 @trigger "schedule:training", dataID
 

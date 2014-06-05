@@ -79,19 +79,8 @@ define(['app'], function(App) {
         return App.navigate(currentRoute + "/module/" + dataID, true);
       };
 
-      ContentGroupsView.prototype.onStatusChange = function(model) {
-        var date, id, status;
-        status = model.get('status');
-        id = model.get('id');
-        if (status === 'started') {
-          this.$el.find('tr#row-' + id + ' .start-training').empty().html('<i class="fa fa-pause"></i> Resume');
-          this.$el.find('tr#row-' + id + ' .status_label').html('<span class="label label-info">In Progress</span>');
-          this.$el.find('tr#row-' + id + ' .training-date').html('<i class="fa fa-calendar"></i> ' + moment().format("Do MMM YYYY"));
-        }
-        if (status === 'scheduled') {
-          date = model.get('training_date');
-          return this.$el.find('tr#row-' + id + ' .training-date').html('<i class="fa fa-calendar"></i> ' + moment(date).format("Do MMM YYYY"));
-        }
+      ContentGroupsView.prototype.onScheduledModule = function(id, date) {
+        return this.$el.find('tr#row-' + id + ' .training-date').html('<i class="fa fa-calendar"></i> ' + moment(date).format("Do MMM YYYY"));
       };
 
       ContentGroupsView.prototype.scheduleTraining = function(e) {
