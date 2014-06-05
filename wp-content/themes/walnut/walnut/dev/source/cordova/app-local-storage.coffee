@@ -50,12 +50,6 @@ define ['underscore', 'jquery'], (_, $)->
         window.localStorage.getItem("synapse_directory_path")
 
 
-    # save/get delete data from tables flag
-    _.setDeleteDataFromTablesFlag = (flag)->
-        window.localStorage.setItem("delete_tables_flag", flag)
-
-    _.getDeleteDataFromTablesFlag = ->
-        window.localStorage.getItem("delete_tables_flag")
 
         
 

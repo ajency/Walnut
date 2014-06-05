@@ -19,137 +19,11 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       this.sendParsedData6 = __bind(this.sendParsedData6, this);
       this.sendParsedData5 = __bind(this.sendParsedData5, this);
       this.sendParsedData4 = __bind(this.sendParsedData4, this);
-      this.sendParsedData3 = __bind(this.sendParsedData3, this);
-      this.sendParsedData15 = __bind(this.sendParsedData15, this);
       this.sendParsedData2 = __bind(this.sendParsedData2, this);
       this.sendParsedData1 = __bind(this.sendParsedData1, this);
       this.fileUpload = __bind(this.fileUpload, this);
-      this.ZipFile = __bind(this.ZipFile, this);
-      this.updateQuestRespnLogs = __bind(this.updateQuestRespnLogs, this);
-      this.updateQuestRespn = __bind(this.updateQuestRespn, this);
-      this.updateSync = __bind(this.updateSync, this);
       return SynchronizationController.__super__.constructor.apply(this, arguments);
     }
-
-    SynchronizationController.prototype.chkTotalrecords = function(total) {
-      if (total === 0) {
-        $('#JsonToCSV').attr("disabled", "disabled");
-        $('#CSVupload').attr("disabled", "disabled");
-        return $('#syncNow').removeAttr("disabled");
-      } else {
-        $('#JsonToCSV').removeAttr("disabled");
-        $('#CSVupload').attr("disabled", "disabled");
-        return $('#syncNow').attr("disabled", "disabled");
-      }
-    };
-
-    SynchronizationController.prototype.writeToFile = function(CSVdata) {
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
-        return function(fileSystem) {
-          return fileSystem.root.getFile("SynapseAssets/csvread.txt", {
-            create: true,
-            exclusive: false
-          }, function(fileEntry) {
-            return fileEntry.createWriter(function(writer) {
-              alert("file entry is" + fileEntry.toURL());
-              console.log("file entry is" + fileEntry.toURL());
-              writer.write(CSVdata);
-              return _this.updateSync();
-            }, _.fileTransferErrorHandler);
-          }, _.fileErrorHandler);
-        };
-      })(this), _.fileSystemErrorHandler);
-    };
-
-    SynchronizationController.prototype.updateSync = function() {
-      return _.db.transaction((function(_this) {
-        return function(tx) {
-          return tx.executeSql("UPDATE " + _.getTblPrefix() + "training_logs SET sync=1 WHERE sync=0");
-        };
-      })(this), _.transactionErrorhandler, (function(_this) {
-        return function(tx) {
-          console.log('Data updated successfully');
-          return _this.updateQuestRespn();
-        };
-      })(this));
-    };
-
-    SynchronizationController.prototype.updateQuestRespn = function() {
-      return _.db.transaction((function(_this) {
-        return function(tx) {
-          return tx.executeSql("UPDATE " + _.getTblPrefix() + "question_response SET sync=1 WHERE sync=0");
-        };
-      })(this), _.transactionErrorhandler, (function(_this) {
-        return function(tx) {
-          console.log('Data updated successfully');
-          return _this.updateQuestRespnLogs();
-        };
-      })(this));
-    };
-
-    SynchronizationController.prototype.updateQuestRespnLogs = function() {
-      return _.db.transaction((function(_this) {
-        return function(tx) {
-          return tx.executeSql("UPDATE " + _.getTblPrefix() + "question_response_logs SET sync=1 WHERE sync=0");
-        };
-      })(this), _.transactionErrorhandler, (function(_this) {
-        return function(tx) {
-          console.log('Data updated successfully');
-          $('#JsonToCSV').attr("disabled", "disabled");
-          $('#CSVupload').removeAttr("disabled");
-          $('#syncNow').attr("disabled", "disabled");
-          return _this.fileRead();
-        };
-      })(this));
-    };
-
-    SynchronizationController.prototype.fileRead = function() {
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
-        return function(fileSystem) {
-          return fileSystem.root.getFile("SynapseAssets/csvread.txt", {
-            create: true,
-            exclusive: false
-          }, function(fileEntry) {
-            return fileEntry.file(function(file) {
-              var reader;
-              reader = new FileReader();
-              reader.onloadend = function(evt) {
-                var csvData;
-                csvData = evt.target.result;
-                console.log("result" + evt.target.result);
-                return _this.ZipFile(csvData);
-              };
-              return reader.readAsText(file);
-            }, _.fileErrorHandler);
-          }, _.fileErrorHandler);
-        };
-      })(this), _.fileSystemErrorHandler);
-    };
-
-    SynchronizationController.prototype.ZipFile = function(csvData) {
-      var content, zip;
-      zip = new JSZip();
-      zip.file("csvread.txt", csvData);
-      content = zip.generate({
-        type: "text/plain"
-      });
-      return this.saveZipData(content);
-    };
-
-    SynchronizationController.prototype.saveZipData = function(content) {
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
-        return function(fileSystem) {
-          return fileSystem.root.getFile("SynapseAssets/hello.zip", {
-            create: true,
-            exclusive: false
-          }, function(fileEntry) {
-            return fileEntry.createWriter(function(writer) {
-              return writer.write(content);
-            }, _.fileTransferErrorHandler);
-          }, _.fileErrorHandler);
-        };
-      })(this), _.fileSystemErrorHandler);
-    };
 
     SynchronizationController.prototype.fileReadZip = function() {
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
@@ -230,17 +104,23 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
 
     SynchronizationController.prototype.getDownloadURL = function() {
       var data;
+      $('#syncSuccess').css("display", "block").text("Starting file download...");
       data = {
         blog_id: _.getBlogID(),
         last_sync: ''
       };
       return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
-        return function(resp) {};
-      })(this), console.log('RESP'), console.log(resp), this.dwnldUnZip(resp), 'json');
+        return function(resp) {
+          console.log('RESP');
+          console.log(resp);
+          return _this.dwnldUnZip(resp);
+        };
+      })(this), 'json');
     };
 
     SynchronizationController.prototype.dwnldUnZip = function(resp) {
       var uri;
+      $('#syncSuccess').css("display", "block").text("Downloading file...");
       uri = encodeURI(resp.exported_csv_url);
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
@@ -253,27 +133,14 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
             _.setFilePath(filePath);
             fileEntry.remove();
             fileTransfer = new FileTransfer();
-            fileTransfer.onprogress = function(progressEvent) {
-              var perc;
-              if (progressEvent.lengthComputable) {
-                perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-                console.log(perc);
-                return statusDom.innerHTML = perc + "% loaded...";
-              } else {
-                if (progressBarDwnldDom.innerHTML === null) {
-                  return progressBarDwnldDom.innerHTML = "Loading";
-                } else {
-                  return progressBarDwnldDom.innerHTML += ".";
-                }
-              }
-            };
             return fileTransfer.download(uri, filePath + "logs.zip", function(file) {
               console.log('Zip file downloaded');
-              _this.updateSyncDetails('file_download', '');
-              $('#getFiles').find('*').prop('disabled', true);
-              $('#imprtFiles').find('*').prop('disabled', false);
+              _this.updateSyncDetails('file_download', resp.last_sync);
               return _this.fileUnZip(filePath, file.toURL());
-            }, _.fileTransferErrorHandler, true);
+            }, function(error) {
+              $('#syncSuccess').css("display", "none");
+              return $('#syncError').css("display", "block").text("An error occurred during file download");
+            }, true);
           }, _.fileErrorHandler);
         };
       })(this), _.fileSystemErrorHandler);
@@ -330,13 +197,13 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
 
     SynchronizationController.prototype.fileUnZip = function(filePath, fullpath) {
       var success;
-      filePath = filePath;
-      fullpath = fullpath;
-      console.log('Source: ' + fullpath);
-      console.log('Destination: ' + filePath);
+      $('#syncSuccess').css("display", "block").text("File download completed");
       success = (function(_this) {
         return function() {
-          return console.log('Files unzipped');
+          console.log('Files unzipped successfully');
+          return setTimeout(function() {
+            return _this.readUnzipFile1();
+          }, 3000);
         };
       })(this);
       return zip.unzip(fullpath, filePath, success);
@@ -344,13 +211,19 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
 
     SynchronizationController.prototype.readUnzipFile1 = function() {
       var file, filePath;
+      $('#syncSuccess').css("display", "block").text("Starting file import...");
       filePath = _.getFilePath();
       file = "SynapseAssets/" + _.getTblPrefix() + "class_divisions.csv";
-      return this.sendParsedData1(file, filePath);
+      return setTimeout((function(_this) {
+        return function() {
+          return _this.sendParsedData1(file, filePath);
+        };
+      })(this), 3000);
     };
 
     SynchronizationController.prototype.sendParsedData1 = function(file, fileEntry) {
       var readData;
+      $('#syncSuccess').css("display", "block").text("Importing file...");
       fileEntry = fileEntry;
       readData = this.chkReader(file);
       return readData.done((function(_this) {
@@ -392,57 +265,8 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {
-            var file14;
-            console.log('Data inserted successfully2');
-            file14 = "SynapseAssets/" + _.getTblPrefix() + "question_response_logs.csv";
-            return _this.sendParsedData15(file14, fileEntry);
-          });
-        };
-      })(this));
-    };
-
-    SynchronizationController.prototype.sendParsedData15 = function(file14, fileEntry) {
-      var readData;
-      fileEntry = fileEntry;
-      readData = this.chkReader(file14);
-      return readData.done((function(_this) {
-        return function(data) {
-          return _.db.transaction(function(tx) {
-            var i, row, _i, _ref, _results;
-            tx.executeSql("DELETE FROM " + _.getTblPrefix() + "question_response_logs");
-            _results = [];
-            for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
-              row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response_logs (start_time, sync) VALUES ( ?,?)", [data[i][1], 1]));
-            }
-            return _results;
-          }, _.transactionErrorhandler, function(tx) {
-            var file2;
-            console.log('Data inserted successfully15');
-            file2 = "SynapseAssets/" + _.getTblPrefix() + "training_logs.csv";
-            return _this.sendParsedData3(file2, fileEntry);
-          });
-        };
-      })(this));
-    };
-
-    SynchronizationController.prototype.sendParsedData3 = function(file2, fileEntry) {
-      var readData;
-      readData = this.chkReader(file2);
-      return readData.done((function(_this) {
-        return function(data) {
-          return _.db.transaction(function(tx) {
-            var i, row, _i, _ref, _results;
-            tx.executeSql("DELETE FROM " + _.getTblPrefix() + "training_logs");
-            _results = [];
-            for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
-              row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "training_logs (division_id, collection_id, teacher_id, date, status, sync) VALUES (?,?,?,?,?,?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], 1]));
-            }
-            return _results;
-          }, _.transactionErrorhandler, function(tx) {
             var file3;
-            console.log('Data inserted successfully3');
+            console.log('Data inserted successfully2');
             file3 = "SynapseAssets/wp_collection_meta.csv";
             return _this.sendParsedData4(file3, fileEntry);
           });
@@ -706,12 +530,18 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
             return _results;
           }, _.transactionErrorhandler, function(tx) {
             console.log('Data inserted successfully14');
-            $('#JsonToCSV').removeAttr("disabled");
-            $('#CSVupload').attr("disabled", "disabled");
-            $('#syncNow').attr("disabled", "disabled");
             _this.updateSyncDetails('file_import', _.getCurrentDateTime(2));
+            $('#syncSuccess').css("display", "block").text("File import completed");
+            setTimeout(function() {
+              $('#syncSuccess').css("display", "block").text("Sync completed successfully");
+              return App.execute("show:leftnavapp", {
+                region: App.leftNavRegion
+              });
+            }, 2000);
             return setTimeout(function() {
-              return App.execute("close:sync3:view");
+              return App.navigate('teachers/dashboard', {
+                trigger: true
+              });
             }, 3000);
           });
         };
@@ -724,28 +554,6 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       }, _.transactionErrorhandler, function(tx) {
         return console.log('Updated sync details');
       });
-    };
-
-    SynchronizationController.prototype.getLastTimeofDownSync = function() {
-      return _.db.transaction((function(_this) {
-        return function(tx) {
-          return tx.executeSql("SELECT * FROM sync_details WHERE type_of_operation='DownZip' ORDER BY time_stamp DESC LIMIT 5 ", [], function(tx, results) {
-            var stamp;
-            return time(stamp = results);
-          }, _.transactionErrorhandler);
-        };
-      })(this));
-    };
-
-    SynchronizationController.prototype.getLastTimeofUpSync = function() {
-      return _.db.transaction((function(_this) {
-        return function(tx) {
-          return tx.executeSql("SELECT * FROM sync_details WHERE type_of_operation='UploadZip' ORDER BY time_stamp DESC LIMIT 5 ", [], function(tx, results) {
-            var stamp;
-            return time(stamp = results);
-          }, _.transactionErrorhandler);
-        };
-      })(this));
     };
 
     return SynchronizationController;

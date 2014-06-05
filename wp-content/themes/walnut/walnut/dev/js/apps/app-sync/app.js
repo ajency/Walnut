@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'apps/app-sync/app-sync1-view', 'apps/app-sync/app-sync2-view', 'apps/app-sync/app-sync3-view', 'apps/app-sync/app-sync-controller', 'apps/app-sync/app-sync-underscore', 'apps/app-sync/app-sync-generate-file'], function(App) {
+define(['app', 'apps/app-sync/app-sync-view', 'apps/app-sync/app-sync-controller', 'apps/app-sync/app-sync-underscore', 'apps/app-sync/app-sync-generate-file'], function(App) {
   return App.module("AppSync", function(AppSync, App) {
     var AppSyncRouter, Controller;
     AppSyncRouter = (function(_super) {
@@ -12,27 +12,15 @@ define(['app', 'apps/app-sync/app-sync1-view', 'apps/app-sync/app-sync2-view', '
       }
 
       AppSyncRouter.prototype.appRoutes = {
-        'sync1': 'showAppSync1',
-        'sync2': 'showAppSync2',
-        'sync3': 'showAppSync3'
+        'sync': 'showAppSync'
       };
 
       return AppSyncRouter;
 
     })(Marionette.AppRouter);
     Controller = {
-      showAppSync1: function() {
-        return new AppSync.Controller.AppSync1Controller({
-          region: App.mainContentRegion
-        });
-      },
-      showAppSync2: function() {
-        return new AppSync.Controller.AppSync2Controller({
-          region: App.mainContentRegion
-        });
-      },
-      showAppSync3: function() {
-        return new AppSync.Controller.AppSync3Controller({
+      showAppSync: function() {
+        return new AppSync.Controller.AppSyncController({
           region: App.mainContentRegion
         });
       }

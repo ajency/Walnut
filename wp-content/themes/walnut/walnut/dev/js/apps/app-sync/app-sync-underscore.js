@@ -1,23 +1,46 @@
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
-    getTotalSyncDetailsCount: function(operation) {
+    getLastSyncOperation: function() {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT COUNT(*) AS count FROM sync_details WHERE type_of_operation=?", [operation], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT type_of_operation FROM sync_details ORDER BY id DESC LIMIT 1", [], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var count;
-          count = data.rows.item(0)['count'];
-          return d.resolve(count);
+          var last_operation;
+          last_operation = 'none';
+          if (data.rows.length !== 0) {
+            last_operation = data.rows.item(0)['type_of_operation'];
+          }
+          return d.resolve(last_operation);
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('getTotalSyncDetailsCount transaction completed');
+        return console.log('getLastSyncOperation transaction completed');
+      }).fail(_.failureHandler);
+    },
+    getTotalRecordsTobeSynced: function() {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT COUNT(*) AS total FROM " + _.getTblPrefix() + "question_response WHERE sync=?", [0], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var totalRecords;
+          totalRecords = data.rows.item(0)['total'];
+          return d.resolve(totalRecords);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getTotalRecordsTobeSynced transaction completed');
       }).fail(_.failureHandler);
     },
     getLastSyncTimeStamp: function(operation) {
@@ -41,26 +64,6 @@ define(['underscore', 'unserialize'], function(_) {
       };
       return $.when(runQuery()).done(function() {
         return console.log('getLastSyncTimeStamp transaction completed');
-      }).fail(_.failureHandler);
-    },
-    getTotalRecordsTobeSynced: function() {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT SUM(rows) AS total FROM (SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "training_logs WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response_logs WHERE sync=?)", [0, 0, 0], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var totalRecords;
-          totalRecords = data.rows.item(0)['total'];
-          return d.resolve(totalRecords);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getTotalRecordsTobeSynced transaction completed');
       }).fail(_.failureHandler);
     }
   });
