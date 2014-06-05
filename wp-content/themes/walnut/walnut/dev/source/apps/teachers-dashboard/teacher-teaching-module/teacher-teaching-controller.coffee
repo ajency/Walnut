@@ -59,13 +59,8 @@ define ['app'
 
             _changeQuestion: (current_question_id)=>
 
-                elapsedTime = @timerObject.request "get:elapsed:time"
-
-                questionResponseModel.set
-                    time_taken    : elapsedTime
-                    status        : 'completed'
-
-                questionResponseModel.save()
+                if @display_mode is 'class_mode'
+                    @_saveQuestionResponse "completed"
 
                 current_question_id = parseInt current_question_id
 
@@ -90,15 +85,8 @@ define ['app'
                     @_gotoPreviousRoute()
 
             _gotoPreviousRoute: =>
-                if @display_mode is 'class_mode'
-                    if questionResponseModel.get('status') isnt 'completed'
-                        elapsedTime = @timerObject.request "get:elapsed:time"
-
-                        questionResponseModel.set
-                            time_taken  : elapsedTime
-                            status      : 'paused'
-
-                        questionResponseModel.save()
+                if @display_mode is 'class_mode' and questionResponseModel.get('status') isnt 'completed'
+                    @_saveQuestionResponse "paused"
 
                 currRoute = App.getCurrentRoute()
 
@@ -111,6 +99,14 @@ define ['app'
                 App.execute "show:headerapp", region: App.headerRegion
                 App.execute "show:leftnavapp", region: App.leftNavRegion
 
+            _saveQuestionResponse:(status) =>
+                elapsedTime = @timerObject.request "get:elapsed:time"
+
+                questionResponseModel.set
+                    time_taken  : elapsedTime
+                    status      : status
+
+                questionResponseModel.save()
 
             _getOrCreateModel: (content_piece_id)=>
                 questionResponseModel = questionResponseCollection.findWhere
