@@ -47,7 +47,7 @@ define(['marionette'], function(Marionette) {
         var school, user;
         if (resp.success) {
           user = App.request("get:user:model");
-          user.set(resp.data);
+          user.set(resp.data.data);
           school = App.request("get:current:school");
           App.vent.trigger("show:content:builder");
           return App.loginRegion.close();

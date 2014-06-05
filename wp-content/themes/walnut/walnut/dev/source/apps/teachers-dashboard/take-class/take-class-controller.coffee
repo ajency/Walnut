@@ -89,7 +89,4 @@ define ['app'
 
             template: classDescriptionTpl
 
-            onShow: ->
-                console.log 'on show'
-
 

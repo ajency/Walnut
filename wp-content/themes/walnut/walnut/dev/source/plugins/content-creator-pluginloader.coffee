@@ -26,4 +26,5 @@ define [
     'screwbuttons'
     'videojs'
     'panzer'
+    'sidr'
 ], ->

@@ -43,6 +43,7 @@ require.config
         screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
         videojs: 'plugins/video'
         panzer: 'plugins/panzer'
+        sidr: 'plugins/jquery.sidr.min'
 
 
     shim:
@@ -74,6 +75,7 @@ require.config
         tagsinput: ['jquery', 'bootstrap']
         screwbuttons: ['jquery']
         panzer: ['jquery']
+        sidr: ['jquery']
         app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
 
 
