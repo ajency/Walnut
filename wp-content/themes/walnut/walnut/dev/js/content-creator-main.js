@@ -46,6 +46,7 @@ require.config({
     jquerycolor: ['jquery'],
     jqueryknob: ['jquery'],
     kineticresize: ['kinetic'],
+    sidr: ['jquery'],
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
@@ -69,7 +70,6 @@ require.config({
     tagsinput: ['jquery', 'bootstrap'],
     screwbuttons: ['jquery'],
     panzer: ['jquery'],
-    sidr: ['jquery'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 });
