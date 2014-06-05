@@ -299,8 +299,29 @@ select{
 	}
 }
 
-#main-content-region{
+#main-content-region, #content-display-region{
 	&>.row{
 		margin: 0;
+	}
+}
+
+.small-text {
+	font-size: 15px !important;
+}
+
+@media (max-width:1024px){
+	.page-content .content{
+		padding: 0;
+		padding-top: 60px;
+	}
+
+	.header{
+		.notifcation-center{
+			background: transparent;
+		}
+	}
+
+	.page-sidebar{
+		background: @color-black !important;
 	}
 }
