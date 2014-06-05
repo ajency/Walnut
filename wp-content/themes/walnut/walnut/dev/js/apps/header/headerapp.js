@@ -51,10 +51,15 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderController.prototype._getHeaderView = function() {
-        console.log('@school2');
-        console.log(this.school);
         return new HeaderView({
-          model: this.school
+          model: this.school,
+          templateHelpers: {
+            show_user_name: function() {
+              var user_model, user_name;
+              user_model = App.request("get:user:model");
+              return user_name = user_model.get('display_name');
+            }
+          }
         });
       };
 
@@ -88,7 +93,6 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         var data;
         data = HeaderView.__super__.serializeData.call(this);
         data.logourl = SITEURL + '/wp-content/themes/walnut/images/walnutlearn.png';
-        console.log(SITEURL);
         return data;
       };
 
