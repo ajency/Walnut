@@ -16,10 +16,11 @@ define ['app'
                     @region.trigger 'goto:question:readonly', questionID
 
             _getCollectionContentDisplayView: (model, collection, responseCollection) =>
-                timeTakenArray= responseCollection.pluck('time_taken');
-                totalTimeTakenForModule=0
-                if _.size(timeTakenArray)>0
-                    totalTimeTakenForModule =   _.reduce timeTakenArray, (memo, num)-> parseInt memo + parseInt num
+#                timeTakenArray= responseCollection.pluck('time_taken');
+#                totalTimeTakenForModule=0
+#                if _.size(timeTakenArray)>0
+#                    totalTimeTakenForModule =   _.reduce timeTakenArray, (memo, num)-> parseInt memo + parseInt num
+
 
                 new ContentDisplayView
                     model: model
@@ -28,22 +29,22 @@ define ['app'
                     studentCollection: @studentCollection
                     mode: @mode
 
-                    templateHelpers:
-                        showElapsedTime:=>
-                            hours=0
-                            time= totalTimeTakenForModule
-                            mins=parseInt totalTimeTakenForModule/60
-                            if mins >59
-                                hours = parseInt mins/60
-                                mins= parseInt mins%60
-                            seconds = parseInt time%60
-                            display_time=''
-
-                            if hours >0
-                                display_time= hours+'h '
-
-                            display_time += mins + 'm '+ seconds+'s'
-                            display_time
+#                    templateHelpers:
+#                        showElapsedTime:=>
+#                            hours=0
+#                            time= totalTimeTakenForModule
+#                            mins=parseInt totalTimeTakenForModule/60
+#                            if mins >59
+#                                hours = parseInt mins/60
+#                                mins= parseInt mins%60
+#                            seconds = parseInt time%60
+#                            display_time=''
+#
+#                            if hours >0
+#                                display_time= hours+'h '
+#
+#                            display_time += mins + 'm '+ seconds+'s'
+#                            display_time
 
         class ContentItemView extends Marionette.ItemView
 
