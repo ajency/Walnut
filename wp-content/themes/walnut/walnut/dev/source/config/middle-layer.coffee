@@ -70,4 +70,4 @@ define ['detect', 'jquery', 'underscore'], (detect, $, _)->
 				if _.getSchoolLogoSrc() isnt null
 					$("#logo").attr('src', _.getSchoolLogoSrc())
 				else 
-					$("#logo").attr('src', '/images/logo-synapse.png')	
+					$("#logo").attr('src', '/images/synapse-logo-main.png')	

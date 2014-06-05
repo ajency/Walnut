@@ -113,7 +113,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 										dateAndStatus = _.getDateAndStatus(row['id'], division, content_pieces)
 										dateAndStatus.done (d)->
 											status = d.status
-											date = d.date
+											date = d.start_date
 
 											result[i] = 
 												id: row['id']

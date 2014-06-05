@@ -132,7 +132,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                   return dateAndStatus.done(function(d) {
                     var date, status;
                     status = d.status;
-                    date = d.date;
+                    date = d.start_date;
                     return result[i] = {
                       id: row['id'],
                       name: row['name'],

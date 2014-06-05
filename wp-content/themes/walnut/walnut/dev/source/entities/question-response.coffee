@@ -79,6 +79,7 @@ define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
 
 									result[i] = 
 										ref_id: r['ref_id']
+										teacher_id: r['teacher_id']
 										content_piece_id: r['content_piece_id']
 										collection_id: r['collection_id']
 										division: r['division']

@@ -1672,7 +1672,7 @@ textarea.error,
   display: block;
 }
 .smallLogo {
-  background: url(../../../images/synapse-logo-main.png);
+  background: url(/images/synapse-logo-main.png);
   width: 97px;
   height: 35px;
   margin: 0 auto;
