@@ -111,15 +111,9 @@ function ajax_save_content_piece() {
 
     unset($_POST['action']);
 
-    $content_id=$_POST['content_id'];
-
     $post_data =$_POST;
 
-    if($content_id and $content_id != NaN)
-        update_content_piece($content_id,$post_data);
-
-    else
-        $content_id = save_content_piece($post_data);
+    $content_id = save_content_piece($post_data);
 
     wp_send_json(array('ID'=>$content_id));
 

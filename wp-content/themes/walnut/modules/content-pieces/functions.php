@@ -147,6 +147,13 @@ function get_single_content_piece($id){
 
     $content_piece->content_type = ($content_type) ? $content_type : '--';
 
+    //        get negative marks
+//    if( $content_type == 'student_question'){
+//        $negative_marks = get_post_meta($id,'negative_marks',true);
+//
+//        $content_piece->negative_marks = (int) $negative_marks;
+//    }
+
     $content_piece->question_type = get_post_meta($id, 'question_type', true);
 
     $content_piece->post_tags = (isset($post_tags)) ? $post_tags : '';
@@ -583,6 +590,13 @@ function save_content_piece($data){
 
     update_post_meta ($content_id, 'textbook',$data['term_ids']['textbook']);
 
+//    negative marks for student question
+//    if($data['content_type'] == 'student_question'){
+//        update_post_meta ($content_id, 'negative_marks', $data['negative_marks']);
+//    }
+
+
+
     $content_piece_additional = array(
         'term_ids'          => $data['term_ids'],
         'duration'          => $data['duration'],
@@ -597,16 +611,6 @@ function save_content_piece($data){
     $content_piece_meta= maybe_serialize($content_piece_additional);
 
     update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
-
-    return $content_id;
-}
-
-function update_content_piece($content_id, $data){
-
-    $content_layout = maybe_serialize($data);
-
-    if($content_id)
-        update_post_meta ($content_id, 'layout_json',$content_layout);
 
     return $content_id;
 }

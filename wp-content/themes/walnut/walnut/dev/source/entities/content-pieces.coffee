@@ -23,6 +23,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			model: ContentPiece.ItemModel
 			comparator: 'ID'
 			name: 'content-piece'
+
 			url: ->
 				AJAXURL + '?action=get-content-pieces'
 
@@ -55,9 +56,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 					add: true
 					remove: false
 					data: param
-				console.log AJAXURL
-				console.log 'contentPieceCollection'
-				console.log contentPieceCollection
 				contentPieceCollection
 
 		# get all content pieces belonging to particular group
@@ -69,11 +67,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				if contentIDs
 					for contentID in contentIDs
-						contentModel = contentPieceCollection.get contentID if contentPieceCollection?
-
-						if not contentModel
-							contentModel = new ContentPiece.ItemModel 'ID': contentID
-							contentModel.fetch()
+						contentModel = new ContentPiece.ItemModel 'ID': contentID
+						contentModel.fetch()
 
 						contentPiecesOfGroup.add contentModel
 
@@ -89,6 +84,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					contentPiece.fetch()
 				contentPiece
 
+			
 			getContentPiecesByIDs: (ids = [])->
 				if _.size(ids) > 0
 					contentPieces = new ContentPiece.ItemCollection
@@ -204,11 +200,14 @@ define ["app", 'backbone'], (App, Backbone) ->
 					console.log 'getContentPieceFromLocal transaction completed'
 				.fail _.failureHandler
 
-					   
+
+
+				
 
 		# request handler to get all ContentPieces
 		App.reqres.setHandler "get:content:pieces", (opt) ->
 			API.getContentPieces(opt)
+
 
 		# request handler to get all ContentPieces
 		App.reqres.setHandler "get:content:pieces:of:group", (groupModel) ->
@@ -220,7 +219,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 		App.reqres.setHandler "get:content:pieces:by:ids", (ids)->
 			API.getContentPiecesByIDs ids
 
-
 		# request handler to get all ContentPieces from local database
 		App.reqres.setHandler "get:content-piece:local", (ids) ->
-			API.getContentPieceFromLocal ids    
+			API.getContentPieceFromLocal ids

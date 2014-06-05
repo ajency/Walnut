@@ -22,7 +22,7 @@ define ['app'
 
                 numOfQuestionsCompleted = _.size @questionResponseCollection.where "status": "completed"
                 totalNumofQuestions = _.size @model.get 'content_pieces'
-                
+
                 new CollectionDetailsView
                     model: @model
                     mode: @mode

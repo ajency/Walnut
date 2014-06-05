@@ -1,9 +1,8 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-group/edit-group/templates/content-group.html'
         'apps/content-group/edit-group/group-details/details-app'
         'apps/content-group/edit-group/content-selection/content-selection-app'
-        'apps/content-group/edit-group/content-display/content-display-app'], (App, RegionController, contentGroupTpl)->
+        'apps/content-group/edit-group/content-display/content-display-app'], (App, RegionController)->
     App.module "ContentGroupApp.Edit", (Edit, App)->
         class Edit.GroupController extends RegionController
 
@@ -27,11 +26,16 @@ define ['app'
 
                 @layout = layout = @_getContentGroupEditLayout()
 
+                App.execute "when:fetched", @contentGroupModel,=>
+                    @show layout, (loading: true)
+
                 @listenTo layout, 'show', @showContentGroupViews
 
-                @show layout, (loading: true)
+                @listenTo layout, 'show',=>
+                    if group_id
+                       @_showContentSelectionApp @contentGroupModel
 
-                @listenTo @contentGroupModel, 'change:id', @newModelAdded, @
+                @listenTo @contentGroupModel, 'change:id', @_showContentSelectionApp, @
 
             showContentGroupViews: =>
                 App.execute "show:editgroup:content:group:detailsapp",
@@ -41,9 +45,7 @@ define ['app'
             _getContentGroupEditLayout: =>
                 new ContentGroupEditLayout
 
-            newModelAdded: (model)=>
-                console.log model.changedAttributes()
-                console.log 'really? need to load again??'
+            _showContentSelectionApp: (model)=>
                 @contentGroupCollection = App.request "get:content:pieces:of:group", model
 
                 App.execute "when:fetched", @contentGroupCollection, =>
@@ -62,7 +64,11 @@ define ['app'
 
         class ContentGroupEditLayout extends Marionette.Layout
 
-            template: contentGroupTpl
+            template: '<div class="teacher-app">
+                          <div id="collection-details-region"></div>
+                          <div id="content-selection-region"></div>
+                        </div>
+                        <div id="content-display-region"></div>'
 
             className: ''
 

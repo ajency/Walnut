@@ -99,8 +99,8 @@ define ['app'
 
                     textbooks
 
-                studentQuestion: if @contentPieceModel.get('content_type') is 'student_question'
-                then true else false
+#                studentQuestion: if @contentPieceModel.get('content_type') is 'student_question'
+#                then true else false
 
 
         App.commands.setHandler "show:options:bar", (options)->
