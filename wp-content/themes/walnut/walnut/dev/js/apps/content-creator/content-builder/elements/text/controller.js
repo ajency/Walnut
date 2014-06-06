@@ -34,14 +34,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         var view;
         this.removeSpinner();
         view = this._getTextView(this.layout.model);
-        this.listenTo(view, "text:element:blur", (function(_this) {
+        this.listenTo(view, 'text:element:blur', (function(_this) {
           return function(html) {
             _this.layout.model.set('content', "" + html);
             if (_this.layout.model.hasChanged()) {
               console.log(_this.layout.model);
-              _this.layout.model.save();
-              console.log("saving them");
-              return localStorage.setItem('ele' + _this.layout.model.get('meta_id'), JSON.stringify(_this.layout.model.toJSON()));
+              return _this.layout.model.save();
             }
           };
         })(this));

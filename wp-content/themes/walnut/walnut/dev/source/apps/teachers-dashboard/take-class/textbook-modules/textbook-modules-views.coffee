@@ -66,7 +66,7 @@ define ['app'], (App)->
             							<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
             								<div class="row">
             									<div class="col-lg-12">
-            										<h4><span class="semi-bold">All</span> Modules</h4>
+            										<h4>{{&showModulesHeading}}</h4>
             										<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules">
             							                <thead>
             							                  <tr>

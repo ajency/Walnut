@@ -116,10 +116,6 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
 
       ClassDescriptionView.prototype.template = classDescriptionTpl;
 
-      ClassDescriptionView.prototype.onShow = function() {
-        return console.log('on show');
-      };
-
       return ClassDescriptionView;
 
     })(Marionette.ItemView);

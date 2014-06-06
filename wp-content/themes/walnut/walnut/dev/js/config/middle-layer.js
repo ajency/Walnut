@@ -53,7 +53,7 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
         if (_.getSchoolLogoSrc() !== null) {
           return $("#logo").attr('src', _.getSchoolLogoSrc());
         } else {
-          return $("#logo").attr('src', '/images/logo-synapse.png');
+          return $("#logo").attr('src', '/images/synapse-logo-main.png');
         }
     }
   };

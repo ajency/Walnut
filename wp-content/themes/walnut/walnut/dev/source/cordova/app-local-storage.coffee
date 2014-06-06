@@ -1,4 +1,4 @@
-define ['underscore', 'jquery'], (_, $)->
+define ['underscore'], ( _)->
 
 	# Cordova local storage functions
 

@@ -1,6 +1,6 @@
 {
-  "name": "Walnut",
-  "description": "Walnut App",
+  "name": "Synapse",
+  "description": "Synapse Android App",
   "version": "1",
   "permissions": ["<all_urls>", "storage", "unlimitedStorage"],
   "app": {
@@ -8,5 +8,11 @@
       "scripts": ["background.js"]
     }
   },
-  "icons": { "16": "logo-synapse-16.png", "128": "logo-synapse-128.png" }
+  "icons": {"16": "logo-synapse-16.png", 
+            "36": "logo-synapse-36.png",
+            "48": "logo-synapse-48.png",
+            "72": "logo-synapse-72.png",
+            "96": "logo-synapse-96.png",
+            "144": "logo-synapse-144.png",
+            "192": "logo-synapse-192.png"}
 }
