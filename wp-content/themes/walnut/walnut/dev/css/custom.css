@@ -244,7 +244,7 @@
   margin-top: -48px;
 }
 .dock .btn-cons2 {
-  width: 108px;
+  width: 106px;
 }
 .docket .tile-footer.drag {
   cursor: move;
@@ -821,7 +821,7 @@
 }
 /*Properties Bar*/
 #options-bar-region label {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 10px;
 }
 #subProps {
@@ -1841,6 +1841,12 @@ body {
 .page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu > li > a:hover {
   background-color: #e3391a !important;
 }
+.page-sidebar.mini .page-sidebar-wrapper > ul {
+  padding: 70px 0 0;
+}
+.page-sidebar.mini .page-sidebar-wrapper > ul > li > a {
+  padding: 11.5px 12px;
+}
 @media (max-width: 1024px) {
   .page-sidebar {
     background: #003d4f !important;
@@ -1955,13 +1961,11 @@ textarea {
   font-size: 15px !important;
 }
 .label {
-  font-size: 13px;
+  font-size: 15px;
   display: inline-block;
   padding: 6px 9px;
 }
 .btn {
-  padding: 10px 30px;
-  padding-top: 10px;
   font-weight: bold;
 }
 .form-control {
@@ -1975,6 +1979,9 @@ textarea {
 }
 .form-control .select2-choice .select2-arrow b:before {
   top: 6px;
+}
+.progress {
+  background: #d6dde1;
 }
 select {
   display: inline-block;

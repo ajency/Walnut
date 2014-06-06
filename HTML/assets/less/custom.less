@@ -82,6 +82,16 @@ body{
 			}
 		}
 	}
+
+	&.mini{
+		.page-sidebar-wrapper > ul{
+			padding: 70px 0 0;
+
+			&>li>a{
+				padding: 11.5px 12px;
+			}
+		}
+	}
 }
 
 @media (max-width:1024px){
@@ -269,14 +279,14 @@ label, input, button, select, textarea{
 }
 
 .label{
-	font-size: 13px;
+	font-size: 15px;
 	display: inline-block;
 	padding: 6px 9px;
 }
 
 .btn{
-	padding: 10px 30px;
-	padding-top: 10px;
+	//padding: 10px 30px;
+	//padding-top: 10px;
 	font-weight: bold;
 }
 
@@ -291,6 +301,10 @@ label, input, button, select, textarea{
 			top: 6px;
 		}
 	}
+}
+
+.progress{
+	background: darken(@body-bg, 5%)
 }
 
 select{

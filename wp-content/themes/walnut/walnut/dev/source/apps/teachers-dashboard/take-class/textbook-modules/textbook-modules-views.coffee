@@ -11,7 +11,7 @@ define ['app'], (App)->
             		               <td>
             			                <span class="muted status_label">{{&status_str}}</span>
 
-            			               	<button data-id="{{id}}" type="button" class="btn btn-white btn-small pull-right action start-training">
+            			               	<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
             			               		{{&action_str}}
             			               	</button>
             			               	{{&training_date}}
