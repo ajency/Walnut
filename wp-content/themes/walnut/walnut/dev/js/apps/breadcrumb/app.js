@@ -44,7 +44,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return BreadcrumbView.__super__.constructor.apply(this, arguments);
       }
 
-      BreadcrumbView.prototype.template = '{{#items}}<li><a href="{{link}}" class="{{active}}">{{label}}</a></li>{{/items}}';
+      BreadcrumbView.prototype.template = '{{#items}} <li> <a href="{{link}}" class="{{active}}">{{label}}</a> </li> {{/items}}';
 
       BreadcrumbView.prototype.tagName = 'ul';
 

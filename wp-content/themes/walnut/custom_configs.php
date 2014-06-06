@@ -1,17 +1,17 @@
 <?php
 for($i=1; $i<=15; $i++){
-    $classids[$i]['id']=$i;
+    $class_ids[$i]['id']=$i;
     if($i==1)
-        $classids[$i]['label']='Nursery';
+        $class_ids[$i]['label']='Nursery';
     elseif($i==2)
-        $classids[$i]['label']='Junior KG';
+        $class_ids[$i]['label']='Junior KG';
     elseif($i==3)
-        $classids[$i]['label']='Senior KG';
+        $class_ids[$i]['label']='Senior KG';
     else
-        $classids[$i]['label']='Class '.($i-3);
+        $class_ids[$i]['label']='Class '.($i-3);
 }
 
-$GLOBALS['class_ids']=$classids;
+$GLOBALS['classids']=$class_ids;
 
 $GLOBALS['all_subjects']=array('English',
     'Hindi',

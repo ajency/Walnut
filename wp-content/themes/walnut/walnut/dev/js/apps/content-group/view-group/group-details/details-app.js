@@ -116,7 +116,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
               answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
               unanswered = _.difference(allContentPieces, answeredIDs);
               if (_.size(unanswered) > 0 && _this.mode !== 'training') {
-                actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button>';
+                actionButtons = '<button type="button" id="start-module" class="btn btn-success action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button>';
               }
               return actionButtons;
             };
@@ -146,14 +146,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       CollectionDetailsView.prototype.serializeData = function() {
         var data;
         data = CollectionDetailsView.__super__.serializeData.call(this);
-        data.takeClassModule = this.mode;
-        data.isTraining = this.mode === 'training' ? true : false;
-        data.isClass = this.mode === 'take-class' ? true : false;
+        data.takeClassModule = Marionette.getOption(this, 'mode');
         return data;
-      };
-
-      CollectionDetailsView.prototype.initialize = function(options) {
-        return this.mode = Marionette.getOption(this, 'mode');
       };
 
       CollectionDetailsView.prototype.startModule = function() {

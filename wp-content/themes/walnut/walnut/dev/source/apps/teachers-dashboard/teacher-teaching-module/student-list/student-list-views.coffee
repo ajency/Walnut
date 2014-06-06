@@ -39,13 +39,13 @@ define ['app'], (App)->
             className: 'studentList m-t-35'
 
             template: '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20">
-            							<button type="button" id="question-done" class="btn btn-primary btn-xs btn-sm">
+            							<button type="button" id="question-done" class="btn btn-success btn-xs btn-sm">
             								<i class="fa fa-forward"></i> Next Question
             							</button>
             						</div>
             						{{#class_mode}}
             						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
-            							<button type="button" class="btn btn-primary btn-xs btn-sm m-r-10" id="right-answer">
+            							<button type="button" class="btn btn-success btn-xs btn-sm m-r-10" id="right-answer">
             								<i class="fa fa-check-circle"></i> Right Answer
             							</button>
             							<button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer">
@@ -54,7 +54,7 @@ define ['app'], (App)->
             						</div>
             						{{/class_mode}}
             						<div class="clearfix"></div>
-            						<div class="row students m-t-20" id="students-list"></div>'
+            						<div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>'
 
             itemViewContainer: '#students-list'
 
