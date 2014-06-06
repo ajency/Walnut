@@ -74,8 +74,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
                   "status": "completed"
                 });
                 answeredIDs = _.chain(answeredPieces).map(function(m) {
-                  return m.toJSON();
-                }).pluck('content_piece_id').value();
+                  return m.toJSON().pluck('content_piece_id').value();
+                });
                 answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
                 unanswered = _.difference(allContentPieces, answeredIDs);
                 if (_.size(unanswered) > 0 && _this.mode !== 'training') {

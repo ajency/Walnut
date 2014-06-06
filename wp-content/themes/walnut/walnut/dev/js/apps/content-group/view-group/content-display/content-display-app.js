@@ -198,8 +198,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           'status': 'completed'
         });
         responseQuestionIDs = _.chain(completedResponses).map(function(m) {
-          return m.toJSON();
-        }).pluck('content_piece_id').value();
+          return m.toJSON().pluck('content_piece_id').value();
+        });
         if (Marionette.getOption(this, 'mode') === 'training') {
           _ref = this.$el.find('.contentPiece');
           _results = [];

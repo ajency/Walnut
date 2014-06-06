@@ -42,12 +42,12 @@ abstract class WP_Ajax_UnitTestCase extends WP_UnitTestCase {
 		'oembed_cache', 'image-editor', 'delete-comment', 'delete-tag', 'delete-link',
 		'delete-meta', 'delete-post', 'trash-post', 'untrash-post', 'delete-page', 'dim-comment',
 		'add-link-category', 'add-tag', 'get-tagcloud', 'get-comments', 'replyto-comment',
-		'edit-comment', 'add-menu-item', 'add-meta', 'add-user', 'closed-postboxes',
+		'edit-comment', 'add-menu-item', 'add-meta', 'add-user', 'autosave', 'closed-postboxes',
 		'hidden-columns', 'update-welcome-panel', 'menu-get-metabox', 'wp-link-ajax',
 		'menu-locations-save', 'menu-quick-search', 'meta-box-order', 'get-permalink',
 		'sample-permalink', 'inline-save', 'inline-save-tax', 'find_posts', 'widgets-order',
 		'save-widget', 'set-post-thumbnail', 'date_format', 'time_format', 'wp-fullscreen-save-post',
-		'wp-remove-post-lock', 'dismiss-wp-pointer', 'heartbeat', 'nopriv_heartbeat',
+		'wp-remove-post-lock', 'dismiss-wp-pointer', 'nopriv_autosave'
 	);
 
 	/**
@@ -129,9 +129,9 @@ abstract class WP_Ajax_UnitTestCase extends WP_UnitTestCase {
 	 */
 	public function dieHandler( $message ) {
 		$this->_last_response .= ob_get_clean();
-
+		//ob_end_clean();
 		if ( '' === $this->_last_response ) {
-			if ( is_scalar( $message ) ) {
+			if ( is_scalar( $message) ) {
 				throw new WPAjaxDieStopException( (string) $message );
 			} else {
 				throw new WPAjaxDieStopException( '0' );
@@ -175,7 +175,7 @@ abstract class WP_Ajax_UnitTestCase extends WP_UnitTestCase {
 		do_action( 'wp_ajax_' . $_REQUEST['action'], null );
 
 		// Save the output
-		$buffer = ob_get_clean();
+        $buffer = ob_get_clean();
 		if ( !empty( $buffer ) )
 			$this->_last_response = $buffer;
 	}

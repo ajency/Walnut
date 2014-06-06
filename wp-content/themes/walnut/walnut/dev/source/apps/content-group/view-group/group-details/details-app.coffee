@@ -4,7 +4,7 @@ define ['app'
     App.module "CollecionDetailsApp.Controller", (Controller, App)->
         class Controller.ViewCollecionDetailsController extends RegionController
 
-            initialize: (opts)->
+            initialize : (opts)->
 
                 # for take-class module the template changes a bit
                 # so based on this value (@mode) we set the template additional stuff
@@ -12,48 +12,50 @@ define ['app'
 
                 @view = view = @_getCollectionDetailsView @model
 
-                @show view, (loading: true, entities: [@textbookNames])
+                @show view, (loading : true, entities : [@textbookNames])
 
                 @listenTo view, 'start:teaching:module', =>
                     @region.trigger "start:teaching:module"
 
-            _getCollectionDetailsView: (model)->
+            _getCollectionDetailsView : (model)->
                 terms = model.get 'term_ids'
 
-                numOfQuestionsCompleted = _.size @questionResponseCollection.where "status": "completed"
+                numOfQuestionsCompleted = _.size @questionResponseCollection.where "status" : "completed"
                 totalNumofQuestions = _.size model.get 'content_pieces'
 
                 new CollectionDetailsView
-                    model: model
-                    mode: @mode
+                    model : model
+                    mode : @mode
 
-                    templateHelpers:
-                        getProgressData:->
-                            numOfQuestionsCompleted + '/'+ totalNumofQuestions
+                    templateHelpers :
+                        getProgressData : ->
+                            numOfQuestionsCompleted + '/' + totalNumofQuestions
 
-                        getProgressPercentage:->
-                            parseInt (numOfQuestionsCompleted / totalNumofQuestions)*100
+                        getProgressPercentage : ->
+                            parseInt (numOfQuestionsCompleted / totalNumofQuestions) * 100
 
-                        getTextbookName: =>
+                        getTextbookName : =>
                             textbook = @textbookNames.get terms.textbook
                             texbookName = textbook.get 'name' if textbook?
 
-                        getChapterName: =>
+                        getChapterName : =>
                             chapter = @textbookNames.get terms.chapter
                             chapterName = chapter.get 'name' if chapter?
 
 
-                        startScheduleButton: =>
+                        startScheduleButton : =>
                             actionButtons = ''
 
                             allContentPieces = @model.get 'content_pieces'
-                            allContentPieces = _.map allContentPieces, (m)-> parseInt m
-                            answeredPieces= @questionResponseCollection.where "status":"completed"
+                            allContentPieces = _.map allContentPieces, (m)->
+                                parseInt m
+                            answeredPieces = @questionResponseCollection.where "status" : "completed"
 
                             answeredIDs = _.chain answeredPieces
-                                            .map (m)->m.toJSON()
-                                            .pluck 'content_piece_id'
-                                            .value()
+                            .map (m)->
+                                    m.toJSON()
+                                    .pluck 'content_piece_id'
+                                        .value()
 
                             answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
 
@@ -61,26 +63,26 @@ define ['app'
 
                             if _.size(unanswered) > 0 and @mode isnt 'training'
                                 actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
-                                									<i class="fa fa-play"></i> Start
-                                								</button>'
+                                                    <i class="fa fa-play"></i> Start
+                                                </button>'
                             actionButtons
 
 
         class CollectionDetailsView extends Marionette.ItemView
 
-            template: collectionDetailsTpl
+            template : collectionDetailsTpl
 
-            className: 'tiles white grid simple vertical green'
+            className : 'tiles white grid simple vertical green'
 
-            events:
-                'click #start-module': 'startModule'
+            events :
+                'click #start-module' : 'startModule'
 
-            serializeData: ->
+            serializeData : ->
                 data = super()
                 data.takeClassModule = Marionette.getOption @, 'mode'
                 data
 
-            startModule: =>
+            startModule : =>
                 currentRoute = App.getCurrentRoute()
                 App.navigate currentRoute + "/question"
 
@@ -90,4 +92,3 @@ define ['app'
         # set handlers
         App.commands.setHandler "show:viewgroup:content:group:detailsapp", (opt = {})->
             new Controller.ViewCollecionDetailsController opt
-

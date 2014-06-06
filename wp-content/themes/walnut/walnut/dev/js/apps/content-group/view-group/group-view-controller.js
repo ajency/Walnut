@@ -57,8 +57,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           "status": "completed"
         });
         responseQuestionIDs = _.chain(responseCollection).map(function(m) {
-          return m.toJSON();
-        }).pluck('content_piece_id').value();
+          return m.toJSON().pluck('content_piece_id').value();
+        });
         content_pieces = model.get('content_pieces');
         if (content_pieces) {
           content_piece_ids = _.map(content_pieces, function(m) {
