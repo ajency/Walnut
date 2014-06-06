@@ -4,7 +4,7 @@ define ['app'
     App.module "CollecionDetailsApp.Controller", (Controller, App)->
         class Controller.ViewCollecionDetailsController extends RegionController
 
-            initialize: (opts)->
+            initialize : (opts)->
 
                 # for take-class module the template changes a bit
                 # so based on this value (@mode) we set the template additional stuff
@@ -12,28 +12,28 @@ define ['app'
 
                 @view = view = @_getCollectionDetailsView()
 
-                @show view, (loading: true, entities: [@textbookNames])
+                @show view, (loading : true, entities : [@textbookNames])
 
                 @listenTo view, 'start:teaching:module', =>
                     @region.trigger "start:teaching:module"
 
-            _getCollectionDetailsView: ->
+            _getCollectionDetailsView : ->
                 terms = @model.get 'term_ids'
 
-                numOfQuestionsCompleted = _.size @questionResponseCollection.where "status": "completed"
+                numOfQuestionsCompleted = _.size @questionResponseCollection.where "status" : "completed"
                 totalNumofQuestions = _.size @model.get 'content_pieces'
 
                 new CollectionDetailsView
-                    model: @model
-                    mode: @mode
-                    templateHelpers: @_getTemplateHelpers
-                        terms: terms
-                        numOfQuestionsCompleted: numOfQuestionsCompleted
-                        totalNumofQuestions: totalNumofQuestions
+                    model : @model
+                    mode : @mode
+                    templateHelpers : @_getTemplateHelpers
+                        terms : terms
+                        numOfQuestionsCompleted : numOfQuestionsCompleted
+                        totalNumofQuestions : totalNumofQuestions
 
 
-            _getTemplateHelpers: (options)->
-                showElapsedTime: =>
+            _getTemplateHelpers : (options)->
+                showElapsedTime : =>
                     timeTakenArray = @questionResponseCollection.pluck('time_taken');
                     totalTimeTakenForModule = 0
                     if _.size(timeTakenArray) > 0
@@ -55,34 +55,35 @@ define ['app'
                     display_time += mins + 'm ' + seconds + 's'
                     display_time
 
-                getProgressData: ->
+                getProgressData : ->
                     options.numOfQuestionsCompleted + '/' + options.totalNumofQuestions
 
-                getProgressPercentage: ->
+                getProgressPercentage : ->
                     parseInt (options.numOfQuestionsCompleted / options.totalNumofQuestions) * 100
 
-                getTextbookName: =>
+                getTextbookName : =>
                     textbook = @textbookNames.get options.terms.textbook
                     texbookName = textbook.get 'name' if textbook?
 
-                getChapterName: =>
+                getChapterName : =>
                     chapter = @textbookNames.get options.terms.chapter
                     chapterName = chapter.get 'name' if chapter?
 
 
-                startScheduleButton: =>
+                startScheduleButton : =>
                     actionButtons = ''
 
                     allContentPieces = @model.get 'content_pieces'
                     allContentPieces = _.map allContentPieces, (m)->
                         parseInt m
-                    answeredPieces = @questionResponseCollection.where "status": "completed"
+                    answeredPieces = @questionResponseCollection.where "status" : "completed"
 
                     if answeredPieces
                         answeredIDs = _.chain answeredPieces
-                                        .map (m)->m.toJSON()
-                                        .pluck 'content_piece_id'
-                                        .value()
+                        .map (m)->
+                                m.toJSON()
+                        .pluck 'content_piece_id'
+                            .value()
 
 
                     answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
@@ -91,26 +92,31 @@ define ['app'
 
                     if _.size(unanswered) > 0 and @mode isnt 'training'
                         actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
-                                                                                                                                    <i class="fa fa-play"></i> Start
-                                                                                                                                </button>'
+                                                                                                                                                                                                                                    <i class="fa fa-play"></i> Start
+                                                                                                                                                                                                                                </button>'
                     actionButtons
 
 
         class CollectionDetailsView extends Marionette.ItemView
 
-            template: collectionDetailsTpl
+            template : collectionDetailsTpl
 
-            className: 'tiles white grid simple vertical green'
+            className : 'tiles white grid simple vertical green'
 
-            events:
-                'click #start-module': 'startModule'
+            events :
+                'click #start-module' : 'startModule'
 
-            serializeData: ->
+            serializeData : ->
                 data = super()
-                data.takeClassModule = Marionette.getOption @, 'mode'
+                data.takeClassModule = @mode
+                data.isTraining = if @mode is 'training' then true else false
+                data.isClass = if @mode is 'take-class' then true else false
                 data
 
-            startModule: =>
+            initialize : (options)->
+                @mode = Marionette.getOption @, 'mode'
+
+            startModule : =>
                 currentRoute = App.getCurrentRoute()
                 App.navigate currentRoute + "/question"
 

@@ -1,3 +1,9 @@
+{{#isTraining}}
+    <div class="well text-center">
+        <h4><span class="semi-bold">This is a practise mode.
+            It is designed to help you train for the class</span></h4>
+    </div>
+<div></div>{{/isTraining}}
 <div class="grid-title no-border">
     <h4 class="">{{name}}</h4>
 
@@ -78,8 +84,18 @@
             <div class="tiles white added-margin">
                 <div class="tiles-body">
                     <div class="tiles-title"> ELAPSED MODULE TIME</div>
-                    <div class="heading"><span class="animate-number"
-                                               data-animation-duration="1200">{{showElapsedTime}}</span></div>
+                    <div class="heading">
+                        <span class="animate-number" data-animation-duration="1200">
+                            {{#isClass}}{{showElapsedTime}}{{/isClass}}
+                            {{#isTraining}}
+                                <blockquote>
+                                    <p>This will display what is the elapsed module
+                                        time of the training module in class mode.</p>
+                                </blockquote>
+                            {{/isTraining}}
+
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -89,13 +105,20 @@
         <div class="col-sm-6">
             <div class="modProgress">
                 <p class="bold small-text m-t-10 m-b-5">Progress</p>
-
-                <div class="progress progress-large">
-                    <div data-percentage="{{getProgressPercentage}}%" style="width:{{getProgressPercentage}}%;"
-                         class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0"
-                         aria-valuemax="100">{{getProgressData}}
+                {{#isClass}}
+                    <div class="progress progress-large">
+                        <div data-percentage="{{getProgressPercentage}}%" style="width:{{getProgressPercentage}}%;"
+                             class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0"
+                             aria-valuemax="100">{{getProgressData}}
+                        </div>
                     </div>
-                </div>
+                {{/isClass}}
+                {{#isTraining}}
+                    <blockquote>
+                        <p> This will display the progress of training module in class mode.</p>
+                    </blockquote>
+                {{/isTraining}}
+
             </div>
         </div>
         <div class="col-sm-6">
