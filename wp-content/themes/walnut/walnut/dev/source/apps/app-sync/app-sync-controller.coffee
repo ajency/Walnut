@@ -1,8 +1,6 @@
-define ["marionette","app", "underscore", "csvparse" ,"zip"], (Marionette, App, _, parse) ->
+define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, parse) ->
 
 	class SynchronizationController extends Marionette.Controller
-
-
 
 
 		#This function will be called when the upload button is clicked
@@ -98,25 +96,30 @@ define ["marionette","app", "underscore", "csvparse" ,"zip"], (Marionette, App, 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>
-					statusDom = document.querySelector('#progressBarDwnld');
-					statusDom1 = document.querySelector('#status');
 
-					fileSystem.root.getFile("SynapseAssets/logs.zip", {create: true, exclusive: false}
+					fileSystem.root.getFile("SynapseAssets/file.zip", {create: true, exclusive: false}
 
 						,(fileEntry)=>
-							filePath = fileEntry.toURL().replace("logs.zip", "")
+							filePath = fileEntry.toURL().replace("file.zip", "")
 							_.setFilePath(filePath)
 							fileEntry.remove()
 							fileTransfer = new FileTransfer()
+							
+							# fileTransfer.onprogress = (progressEvent)=>
+							# 	if progressEvent.lengthComputable
+							# 		perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+							# 		console.log perc
+							# 		statusDom.innerHTML = perc + "% loaded...";
+							# 	else
+							# 		if progressBarDwnldDom.innerHTML is null
+							# 			progressBarDwnldDom.innerHTML = "Loading"
+							# 		else
+							# 			progressBarDwnldDom.innerHTML += "."
 
 
-
-							fileTransfer.download(uri, filePath+"logs.zip" 
+							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
 								,(file)=>
 									console.log 'Zip file downloaded'
-
-									#Update sync details
-
 									
 									@fileUnZip filePath, file.toURL()
 								
@@ -129,7 +132,6 @@ define ["marionette","app", "underscore", "csvparse" ,"zip"], (Marionette, App, 
 								, true)
 
 						,_.fileErrorHandler)
-
 
 				, _.fileSystemErrorHandler)
 

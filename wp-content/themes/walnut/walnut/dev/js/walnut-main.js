@@ -45,8 +45,8 @@ require.config({
     serialize: 'plugins/serialize',
     csvparse: 'plugins/jquery.parse',
     json2csvparse: 'plugins/json2csv',
-    zip: 'plugins/jszip',
-    zipjs: 'plugins/zip'
+    jszip: 'plugins/jszip',
+    fastclick: 'plugins/fastclick'
   },
   shim: {
     underscore: {
