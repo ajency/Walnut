@@ -88,7 +88,7 @@ define ['app'
             										  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
             										  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
             								  </div>
-            								  <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            								  <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
             						</div>
             					  </div>
             					</div>
