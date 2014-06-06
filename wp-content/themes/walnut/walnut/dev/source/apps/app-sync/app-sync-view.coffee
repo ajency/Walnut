@@ -96,6 +96,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 							
 							setTimeout(=>
 								$('#syncSuccess').css("display","block").text("Generating file...")
+								# _.generateZipFile()
 								syncController = App.request "get:sync:controller"
 								syncController.updateSyncDetails('file_generate', _.getCurrentDateTime(2))
 					

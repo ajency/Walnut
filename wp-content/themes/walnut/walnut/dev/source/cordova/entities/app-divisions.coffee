@@ -84,20 +84,18 @@ define ['underscore', 'unserialize'], ( _) ->
 
 					divisionIds = _.getDivisionIds()
 					divisionIds.done (ids)->
-						console.log 'divisionIds: '+ids
 						
 						if _.isArray(ids)
 							ids = _.compact ids.reverse()
 
 						results = []
 
-						abc = (id, i, results)->
-							singleDivision = _.fetchSingleDivision(id)
-							singleDivision.done (data)->
-								results[i] = data
-
 						_.each ids,(id, i)->
-							abc id,i, results
+							do(id, i)->
+								singleDivision = _.fetchSingleDivision(id)
+								singleDivision.done (data)->
+									results[i] = data
+						
 						d.resolve results
 
 			$.when(runFunc()).done ->

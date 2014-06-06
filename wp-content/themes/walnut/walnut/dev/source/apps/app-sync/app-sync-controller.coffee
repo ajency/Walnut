@@ -1,24 +1,6 @@
-define ["marionette","app", "underscore", "csvparse" ,"zipjs", "zipjs1","zip"], (Marionette, App, _, parse,zipBlob) ->
+define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, parse) ->
 
 	class SynchronizationController extends Marionette.Controller
-
-<<<<<<< HEAD
-		
-		chkTotalrecords :(total) ->
-			if total is 0
-				$('#JsonToCSV').attr("disabled","disabled") 
-				$('#CSVupload').attr("disabled","disabled") 
-				$('#syncNow').removeAttr("disabled")
-			else
-				$('#JsonToCSV').removeAttr("disabled")
-				$('#CSVupload').attr("disabled","disabled") 
-				$('#syncNow').attr("disabled","disabled")
-
-
-		
-
-=======
->>>>>>> f54144cfc34981166da4e7e453fa9684748241c0
 
 
 		#This function will be called when the upload button is clicked
@@ -94,12 +76,8 @@ define ["marionette","app", "underscore", "csvparse" ,"zipjs", "zipjs1","zip"], 
 				   (resp)=>
 				   		console.log 'RESP'
 				   		console.log resp
-<<<<<<< HEAD
 
 				   		@dwnldUnZip resp
-=======
-				   		@dwnldUnZip(resp)
->>>>>>> f54144cfc34981166da4e7e453fa9684748241c0
 							
 					,
 					'json'	
@@ -118,38 +96,14 @@ define ["marionette","app", "underscore", "csvparse" ,"zipjs", "zipjs1","zip"], 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 				, (fileSystem)=>
-					statusDom = document.querySelector('#progressBarDwnld');
-					statusDom1 = document.querySelector('#status');
 
-					fileSystem.root.getFile("SynapseAssets/logs.zip", {create: true, exclusive: false}
+					fileSystem.root.getFile("SynapseAssets/file.zip", {create: true, exclusive: false}
 
 						,(fileEntry)=>
-							filePath = fileEntry.toURL().replace("logs.zip", "")
+							filePath = fileEntry.toURL().replace("file.zip", "")
 							_.setFilePath(filePath)
 							fileEntry.remove()
 							fileTransfer = new FileTransfer()
-<<<<<<< HEAD
-							$('#progressBarDwnld').show();
-
-
-							fileTransfer.onprogress = (progressEvent)=>
-								if progressEvent.lengthComputable
-
-									perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-
-									# statusDom.innerHTML = perc + "% loaded...";
-									# statusDom1.innerHTML = perc + "% loaded...";
-									# $('#status').text(perc)
-									$("#progressBarDwnld").css("width", "#{perc}%")
-									# $("#progressBarDwnld").css("width", "60")
-
-
-								else
-									if statusDom.innerHTML is null
-
-										statusDom.innerHTML = "Loading"
-									else
-=======
 							
 							# fileTransfer.onprogress = (progressEvent)=>
 							# 	if progressEvent.lengthComputable
@@ -161,23 +115,11 @@ define ["marionette","app", "underscore", "csvparse" ,"zipjs", "zipjs1","zip"], 
 							# 			progressBarDwnldDom.innerHTML = "Loading"
 							# 		else
 							# 			progressBarDwnldDom.innerHTML += "."
->>>>>>> f54144cfc34981166da4e7e453fa9684748241c0
 
 
-							fileTransfer.download(uri, filePath+"logs.zip" 
+							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
 								,(file)=>
 									console.log 'Zip file downloaded'
-
-									#Update sync details
-<<<<<<< HEAD
-
-									@updateSyncDetails('file_download', '')
-
-									$('#getFiles').find('*').prop('disabled',true)
-									$('#imprtFiles').find('*').prop('disabled',false)
-=======
-									@updateSyncDetails('file_download', resp.last_sync)
->>>>>>> f54144cfc34981166da4e7e453fa9684748241c0
 									
 									@fileUnZip filePath, file.toURL()
 								
@@ -190,7 +132,6 @@ define ["marionette","app", "underscore", "csvparse" ,"zipjs", "zipjs1","zip"], 
 								, true)
 
 						,_.fileErrorHandler)
-
 
 				, _.fileSystemErrorHandler)
 
@@ -569,35 +510,7 @@ define ["marionette","app", "underscore", "csvparse" ,"zipjs", "zipjs1","zip"], 
 			,(tx)->
 				console.log 'Updated sync details'
 			)
-<<<<<<< HEAD
-			
 
-
-#get the last 5 time for uploads from the local database
-		getLastTimeofDownSync : ->
-			_.db.transaction((tx)=>
-				tx.executeSql("SELECT * FROM sync_details WHERE type_of_operation='DownZip' 
-					ORDER BY time_stamp DESC LIMIT 5 ", [] 
-
-					,(tx, results)=>
-						time stamp = results
-					
-					,_.transactionErrorhandler)
-				)
-
-
-#get the last 5 time for downloads from the local database
-		getLastTimeofUpSync : ->
-			_.db.transaction((tx)=>
-				tx.executeSql("SELECT * FROM sync_details WHERE type_of_operation='UploadZip' ORDER BY time_stamp DESC LIMIT 5 ", [] 
-
-					,(tx, results)=>
-						time stamp=results
-					
-					,_.transactionErrorhandler)
-				)
-=======
->>>>>>> f54144cfc34981166da4e7e453fa9684748241c0
 		
 	# request handler
 	App.reqres.setHandler "get:sync:controller", ->

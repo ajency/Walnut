@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["marionette", "app", "underscore", "csvparse", "zipjs", "zipjs1", "zip"], function(Marionette, App, _, parse, zipBlob) {
+define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App, _, parse) {
   var SynchronizationController;
   SynchronizationController = (function(_super) {
     __extends(SynchronizationController, _super);
@@ -25,21 +25,6 @@ define(["marionette", "app", "underscore", "csvparse", "zipjs", "zipjs1", "zip"]
       return SynchronizationController.__super__.constructor.apply(this, arguments);
     }
 
-<<<<<<< HEAD
-    SynchronizationController.prototype.chkTotalrecords = function(total) {
-      if (total === 0) {
-        $('#JsonToCSV').attr("disabled", "disabled");
-        $('#CSVupload').attr("disabled", "disabled");
-        return $('#syncNow').removeAttr("disabled");
-      } else {
-        $('#JsonToCSV').removeAttr("disabled");
-        $('#CSVupload').attr("disabled", "disabled");
-        return $('#syncNow').attr("disabled", "disabled");
-      }
-    };
-
-=======
->>>>>>> f54144cfc34981166da4e7e453fa9684748241c0
     SynchronizationController.prototype.fileReadZip = function() {
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
@@ -107,38 +92,17 @@ define(["marionette", "app", "underscore", "csvparse", "zipjs", "zipjs1", "zip"]
       uri = encodeURI(resp.exported_csv_url);
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
-          var statusDom, statusDom1;
-          statusDom = document.querySelector('#progressBarDwnld');
-          statusDom1 = document.querySelector('#status');
-          return fileSystem.root.getFile("SynapseAssets/logs.zip", {
+          return fileSystem.root.getFile("SynapseAssets/file.zip", {
             create: true,
             exclusive: false
           }, function(fileEntry) {
             var filePath, fileTransfer;
-            filePath = fileEntry.toURL().replace("logs.zip", "");
+            filePath = fileEntry.toURL().replace("file.zip", "");
             _.setFilePath(filePath);
             fileEntry.remove();
             fileTransfer = new FileTransfer();
-<<<<<<< HEAD
-            $('#progressBarDwnld').show();
-            fileTransfer.onprogress = function(progressEvent) {
-              var perc;
-              if (progressEvent.lengthComputable) {
-                perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-                return $("#progressBarDwnld").css("width", "" + perc + "%");
-              } else {
-                if (statusDom.innerHTML === null) {
-                  return statusDom.innerHTML = "Loading";
-                } else {
-                  return statusDom.innerHTML += ".";
-                }
-              }
-            };
-=======
->>>>>>> f54144cfc34981166da4e7e453fa9684748241c0
-            return fileTransfer.download(uri, filePath + "logs.zip", function(file) {
+            return fileTransfer.download(uri, filePath + "csv-synapse.zip", function(file) {
               console.log('Zip file downloaded');
-              _this.updateSyncDetails('file_download', resp.last_sync);
               return _this.fileUnZip(filePath, file.toURL());
             }, function(error) {
               $('#syncSuccess').css("display", "none");

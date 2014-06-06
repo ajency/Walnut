@@ -8,6 +8,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			questionType = _.getMetaValue(model.get('content_piece_id'))
 			questionType.done (meta_value)->
+
 				if meta_value.question_type is 'individual'
 					question_response = serialize(model.get('question_response'))
 				else
@@ -31,12 +32,20 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			if not model.get('start_date')
 				start_date = _.getCurrentDateTime(0)
-			else start_date = model.get('start_date')
+			else 
+				start_date = model.get('start_date')
 
 			record_exists = _.checkIfRecordExistsInQuestionResponse(ref_id)
 			record_exists.done (exists)->
 				if exists
-					_.updateQuestionResponse(model, question_response)
+					_.db.transaction((tx)->
+						tx.executeSql('UPDATE '+_.getTblPrefix()+'question_response 
+							SET start_date=? WHERE ref_id=?', [_.getCurrentDateTime(0)])
+
+					,_.transactionErrorHandler
+					,(tx)->
+						console.log 'SUCCESS: Record exists. Updated record in wp_question_response'
+					)  
 
 				else
 					_.db.transaction((tx)->
@@ -68,7 +77,7 @@ define ['underscore', 'unserialize'], ( _) ->
 					SET teacher_id=?, question_response=?, time_taken=?, status=?
 					, start_date=?, end_date=? WHERE ref_id=?'
 					, [_.getUserID(), question_response, model.get('time_taken')
-					, model.get('status'), model.get('start_date'), end_date, model.get('ref_id')])
+					, model.get('status'), _.getCurrentDateTime(0), end_date, model.get('ref_id')])
 
 			,_.transactionErrorHandler
 			,(tx)->

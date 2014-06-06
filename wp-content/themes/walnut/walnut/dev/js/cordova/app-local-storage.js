@@ -1,4 +1,4 @@
-define(['underscore', 'jquery'], function(_, $) {
+define(['underscore'], function(_) {
   _.setUserID = function(id) {
     return window.localStorage.setItem("user_id", id);
   };

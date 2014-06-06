@@ -31,7 +31,11 @@ define(['underscore', 'unserialize'], function(_) {
       record_exists = _.checkIfRecordExistsInQuestionResponse(ref_id);
       return record_exists.done(function(exists) {
         if (exists) {
-          _.updateQuestionResponse(model, question_response);
+          _.db.transaction(function(tx) {
+            return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET start_date=? WHERE ref_id=?', [_.getCurrentDateTime(0)]);
+          }, _.transactionErrorHandler, function(tx) {
+            return console.log('SUCCESS: Record exists. Updated record in wp_question_response');
+          });
         } else {
           _.db.transaction(function(tx) {
             return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response (ref_id, teacher_id, content_piece_id, collection_id, division , question_response, time_taken, start_date, end_date, status, sync) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [ref_id, _.getUserID(), model.get('content_piece_id'), model.get('collection_id'), model.get('division'), question_response, model.get('time_taken'), start_date, model.get('end_date'), model.get('status'), 0]);
@@ -51,7 +55,7 @@ define(['underscore', 'unserialize'], function(_) {
         end_date = _.getCurrentDateTime(0);
       }
       return _.db.transaction(function(tx) {
-        return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET teacher_id=?, question_response=?, time_taken=?, status=? , start_date=?, end_date=? WHERE ref_id=?', [_.getUserID(), question_response, model.get('time_taken'), model.get('status'), model.get('start_date'), end_date, model.get('ref_id')]);
+        return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET teacher_id=?, question_response=?, time_taken=?, status=? , start_date=?, end_date=? WHERE ref_id=?', [_.getUserID(), question_response, model.get('time_taken'), model.get('status'), _.getCurrentDateTime(0), end_date, model.get('ref_id')]);
       }, _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: Updated record in wp_question_response');
       });
