@@ -133,7 +133,7 @@ define ['app'], (App)->
 
                 template = '<div class="aj-imp-col-divider">
                                 <p title="Move">
-                                    <span class="bicon bicon-uniF140"></span>
+                                    <span class="fa fa-ellipsis-h"></span>
                                 </p>
                             </div>'
 

@@ -3,12 +3,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         #Media Model
         class Media.MediaModel extends Backbone.Model
-            idAttribute: 'id'
+            idAttribute : 'id'
 
-            name: 'media'
+            name : 'media'
 
             # function to calculate the best fit for the given size
-            getBestFit: (width)->
+            getBestFit : (width)->
                 sizes = @get 'sizes'
 
                 closest = null
@@ -19,8 +19,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                     val = if val < 0 then (-1 * val) else val
                     if val <= smallest
                         closest =
-                            url: size.url
-                            size: key
+                            url : size.url
+                            size : key
                         smallest = val
 
                 closest = sizes['full'] if _.isNull closest
@@ -44,15 +44,15 @@ define ["app", 'backbone'], (App, Backbone) ->
         #Media collection
         class Media.MediaCollection extends Backbone.Collection
 
-            filters:
-                order: 'DESC'
-                orderby: 'date'
-                paged: 1
-                posts_per_page: 40
+            filters :
+                order : 'DESC'
+                orderby : 'date'
+                paged : 1
+                posts_per_page : 40
 
-            model: Media.MediaModel
+            model : Media.MediaModel
 
-            parse: (resp)->
+            parse : (resp)->
                 return resp.data if resp.code is 'OK'
                 resp
 
@@ -62,42 +62,42 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         ##PUBLIC API FOR ENitity
         API =
-            fetchMedia: (params = {}, reset)->
+            fetchMedia : (params = {}, reset)->
 #
                 mediaCollection.url = "#{AJAXURL}?action=query_attachments"
 
                 _.defaults params, mediaCollection.filters
 
                 mediaCollection.fetch
-                    reset: reset
-                    data: params
+                    reset : reset
+                    data : params
 
                 mediaCollection
 
         #get a media
-            getMediaById: (mediaId)->
+            getMediaById : (mediaId)->
                 return API.getPlaceHolderMedia() if 0 is parseInt mediaId
 
                 # check if present
                 media = mediaCollection.get parseInt mediaId
 
                 if _.isUndefined media
-                    media = new Media.MediaModel id: mediaId
+                    media = new Media.MediaModel id : mediaId
                     mediaCollection.add media
                     media.fetch()
 
                 media
 
-            getEmptyMediaCollection: ->
+            getEmptyMediaCollection : ->
                 new Media.MediaCollection
 
         # this fucntion will return a placeholder media for the requesting element
         # this will be special purpose media model.
-            getPlaceHolderMedia: ->
+            getPlaceHolderMedia : ->
                 media = new Media.MediaModel
                 media
 
-            createNewMedia: (data)->
+            createNewMedia : (data)->
                 media = new Media.MediaModel data
                 mediaCollection.add media
                 media
@@ -107,7 +107,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "get:empty:media:collection", ->
             API.getEmptyMediaCollection()
 
-        App.reqres.setHandler "fetch:media", (params={}, shouldReset = true) ->
+        App.reqres.setHandler "fetch:media", (params = {}, shouldReset = true) ->
             API.fetchMedia params, shouldReset
 
         App.reqres.setHandler "get:media:by:id", (mediaId)->

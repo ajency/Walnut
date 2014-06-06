@@ -7,9 +7,7 @@ define ['app'
         #List of textbooks available to a teacher for training or to take a class
         class View.textbookModulesController extends RegionController
             initialize: (opts) ->
-                {textbookID} = opts
-                {@classID}   = opts
-                {@division}   = opts
+                {textbookID,@classID,@division,@mode} = opts
 
                 @textbook = App.request "get:textbook:by:id", textbookID
 
@@ -63,6 +61,15 @@ define ['app'
                         showTextbookName: =>
                             @textbook.get 'name'
 
+                        showModulesHeading:=>
+                            console.log @mode
+                            headingString='<span class="semi-bold">All</span> Modules'
+
+                            if @mode is 'training'
+                                headingString='<span class="semi-bold">Practice</span> Modules'
+
+                            headingString
+
             _showScheduleModal: (model)=>
                 new ScheduleModalView
                     model: model
@@ -81,7 +88,7 @@ define ['app'
             										  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
             										  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
             								  </div>
-            								  <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            								  <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
             						</div>
             					  </div>
             					</div>

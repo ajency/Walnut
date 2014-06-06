@@ -10,7 +10,7 @@ define(['app'], function(App) {
         return Layout.__super__.constructor.apply(this, arguments);
       }
 
-      Layout.prototype.template = '<div class="builder_actions"> <button type="button" class="btn btn-success btn-cons2" id="save-question"> <i class="fa fa-check"></i> Save</button> <button type="button" class="btn btn-success btn-cons2"> <i class="fa fa-eye"></i> Preview</button> </div> <div class="tiles green"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4> </div> </div> <div id="question-elements-property" class="docket"></div> <div id="question-property" class="docket"></div> <div id="question-elements" class="docket"></div>';
+      Layout.prototype.template = '<div class="builder_actions"> <button type="button" class="btn btn-info btn-cons2" id="save-question"> <i class="fa fa-check"></i> Save</button> <button type="button" class="btn btn-info btn-cons2"> <i class="fa fa-eye"></i> Preview</button> </div> <div class="tiles default"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4> </div> </div> <div id="question-elements-property" class="docket"></div> <div id="question-property" class="docket"></div> <div id="question-elements" class="docket"></div>';
 
       Layout.prototype.events = {
         'click  #save-question': function() {

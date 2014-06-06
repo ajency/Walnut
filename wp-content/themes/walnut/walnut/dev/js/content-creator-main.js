@@ -33,7 +33,8 @@ require.config({
     tagsinput: 'plugins/bootstrap-tagsinput.min',
     screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
     videojs: 'plugins/video',
-    panzer: 'plugins/panzer'
+    panzer: 'plugins/panzer',
+    sidr: 'plugins/jquery.sidr.min'
   },
   shim: {
     underscore: {
@@ -45,6 +46,7 @@ require.config({
     jquerycolor: ['jquery'],
     jqueryknob: ['jquery'],
     kineticresize: ['kinetic'],
+    sidr: ['jquery'],
     backbone: {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'

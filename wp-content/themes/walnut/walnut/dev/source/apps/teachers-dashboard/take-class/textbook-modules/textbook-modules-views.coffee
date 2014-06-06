@@ -11,7 +11,7 @@ define ['app'], (App)->
             		               <td>
             			                <span class="muted status_label">{{&status_str}}</span>
 
-            			               	<button data-id="{{id}}" type="button" class="btn btn-white btn-small pull-right action start-training">
+            			               	<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
             			               		{{&action_str}}
             			               	</button>
             			               	{{&training_date}}
@@ -66,7 +66,7 @@ define ['app'], (App)->
             							<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
             								<div class="row">
             									<div class="col-lg-12">
-            										<h4><span class="semi-bold">All</span> Modules</h4>
+            										<h4>{{&showModulesHeading}}</h4>
             										<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules">
             							                <thead>
             							                  <tr>

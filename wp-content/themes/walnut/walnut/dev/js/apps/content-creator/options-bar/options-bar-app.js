@@ -121,8 +121,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
               });
               return textbooks;
             };
-          })(this),
-          studentQuestion: this.contentPieceModel.get('content_type') === 'student_question' ? true : false
+          })(this)
         };
       };
 

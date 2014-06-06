@@ -49,7 +49,7 @@ define ['marionette'], (Marionette)->
             (resp)=>
                 if(resp.success)
                     user = App.request "get:user:model"
-                    user.set resp.data
+                    user.set resp.data.data
                     school = App.request "get:current:school"
                     App.vent.trigger "show:content:builder"
                     App.loginRegion.close()
