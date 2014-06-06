@@ -2875,9 +2875,6 @@ textarea[class*="span"] {
 .xsmall {
   width: 50px !important;
 }
-.small {
-  width: 120px !important;
-}
 .medium {
   width: 206px !important;
 }
@@ -4091,7 +4088,7 @@ form legend,
   margin-top: 3px;
 }
 .grid.box .grid-title .tools a {
-  background: url(../img/icon/portlet-tray.png) no-repeat;
+  background: url(../../../images/icon/portlet-tray.png) no-repeat;
   width: 23px;
   height: 23px;
 }
@@ -4287,8 +4284,8 @@ form legend,
 }
 .grid-title h4 {
   display: inline-block;
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 20px;
+  font-weight: 600;
   margin: 0;
   padding: 0;
   margin-bottom: 7px;
@@ -4449,7 +4446,7 @@ form legend,
 .grid.simple .grid-title .tools a,
 .grid.solid .grid-title .tools a {
   position: relative;
-  background: url('../img/icon/portlet-tray.png') no-repeat;
+  background: url('../../../images/icon/portlet-tray.png') no-repeat;
   transition: all 0.1s linear 0s;
 }
 .grid.simple .grid-title .tools > a.remove,
@@ -4526,7 +4523,7 @@ form legend,
 }
 .tiles .controller a {
   position: relative;
-  background: url('../img/icon/portlet-tray.png') no-repeat;
+  background: url('../../../images/icon/portlet-tray.png') no-repeat;
   transition: all 0.1s linear 0s;
   display: inline-block;
 }
@@ -4729,7 +4726,7 @@ form legend,
   background-color: #0090d9;
 }
 .tiles.green {
-  background-color: #e74c30;
+  background-color: #0aa699;
 }
 .tiles.black {
   background-color: #22262e;
@@ -4861,7 +4858,7 @@ form legend,
 }
 .widget-item .controller a {
   position: relative;
-  background: url('../img/icon/portlet-tray.png') no-repeat;
+  background: url('../../../images/icon/portlet-tray.png') no-repeat;
   transition: all 0.1s linear 0s;
   display: inline-block;
 }
@@ -4985,7 +4982,7 @@ form legend,
 }
 .widget .controller a {
   position: relative;
-  background: url('../img/icon/portlet-tray.png') no-repeat;
+  background: url('../../..images/icon/portlet-tray.png') no-repeat;
   transition: all 0.1s linear 0s;
   display: inline-block;
 }
@@ -5086,8 +5083,8 @@ form legend,
 }
 .btn {
   display: inline-block;
-  padding: 9px 12px;
-  padding-top: 7px;
+  padding: 10px 18px;
+  padding-top: 10px;
   margin-bottom: 0;
   font-size: 14px;
   line-height: 20px;
@@ -5262,8 +5259,8 @@ form legend,
   margin-top: 4px;
 }
 .btn-small {
-  padding: 3px 12px;
-  font-size: 11.9px;
+  padding: 8px 12px;
+  font-size: 13px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
@@ -5588,7 +5585,7 @@ code:hover {
 }
 .nav .tools a {
   position: relative;
-  background: url('../img/icon/portlet-tray.png') no-repeat;
+  background: url('../../../images/icon/portlet-tray.png') no-repeat;
   transition: all 0.1s linear 0s;
 }
 .nav > .disabled > a:hover,
