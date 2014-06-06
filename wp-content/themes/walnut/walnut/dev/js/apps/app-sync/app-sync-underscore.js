@@ -43,19 +43,19 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getTotalRecordsTobeSynced transaction completed');
       }).fail(_.failureHandler);
     },
-    getLastSyncTimeStamp: function(operation) {
+    getLastDownloadTimeStamp: function() {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT time_stamp FROM sync_details WHERE type_of_operation=? ORDER BY id DESC LIMIT 1", [operation], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT time_stamp FROM sync_details WHERE type_of_operation=? ORDER BY id DESC LIMIT 1", ['file_download'], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
       onSuccess = function(d) {
         return function(tx, data) {
           var time_stamp;
-          time_stamp = '';
+          time_stamp = 'none';
           if (data.rows.length !== 0) {
             time_stamp = data.rows.item(0)['time_stamp'];
           }
@@ -63,7 +63,7 @@ define(['underscore', 'unserialize'], function(_) {
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('getLastSyncTimeStamp transaction completed');
+        return console.log('getLastDownloadTimeStamp transaction completed');
       }).fail(_.failureHandler);
     }
   });

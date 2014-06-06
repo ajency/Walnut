@@ -334,12 +334,12 @@ $(document).ready(function() {
 		$('#main-menu').removeClass("sidr");	
 		$('#main-menu').removeClass("left");	
 	  }
-	  //else{
-		//$.sidr('close', 'main-menu');
-		//$.sidr('close', 'sidr');		
-		//$('#main-menu').removeClass("sidr");	
-		//$('#main-menu').removeClass("left");
-	//}
+	  else{
+		$.sidr('close', 'main-menu');
+		$.sidr('close', 'sidr');		
+		$('#main-menu').removeClass("sidr");	
+		$('#main-menu').removeClass("left");
+	}
 	
 	}
 	function rebuildSider(){

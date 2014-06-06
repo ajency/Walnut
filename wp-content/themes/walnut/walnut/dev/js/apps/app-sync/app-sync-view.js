@@ -42,6 +42,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.onShow = function() {
         var lastSyncOperation, totalRecordsTobeSynced;
         App.breadcrumbRegion.close();
+        navigator.splashscreen.hide();
         totalRecordsTobeSynced = _.getTotalRecordsTobeSynced();
         totalRecordsTobeSynced.done(function(totalRecords) {
           if (totalRecords === 0) {
@@ -70,6 +71,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.startContinueSyncProcess = function() {
         var lastSyncOperation;
+        $('#syncError').css("display", "none");
         lastSyncOperation = _.getLastSyncOperation();
         return lastSyncOperation.done(function(typeOfOperation) {
           switch (typeOfOperation) {

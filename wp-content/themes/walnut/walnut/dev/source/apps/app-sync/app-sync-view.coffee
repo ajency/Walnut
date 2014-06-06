@@ -33,7 +33,11 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 
 			onShow : ->
+				#Hide breadcrumb region
 				App.breadcrumbRegion.close()
+
+				# Hide the splash screen image
+				navigator.splashscreen.hide()
 
 				#Display total records to be synced
 				totalRecordsTobeSynced = _.getTotalRecordsTobeSynced()
@@ -71,6 +75,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 
 			startContinueSyncProcess : ->
+				#Hide error message
+				$('#syncError').css("display","none")
+
 				lastSyncOperation = _.getLastSyncOperation()
 				lastSyncOperation.done (typeOfOperation)->
 					switch typeOfOperation

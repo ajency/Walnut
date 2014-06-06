@@ -1,5 +1,5 @@
 	//Global declarations for walnut app
-	
+	//TODO: store the school domain as AJAX url.
 	var AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";
 
 	//var SITEURL = "http://www.walmiki.com/"

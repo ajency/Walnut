@@ -103,9 +103,12 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
             fileTransfer = new FileTransfer();
             return fileTransfer.download(uri, filePath + "csv-synapse.zip", function(file) {
               console.log('Zip file downloaded');
+              _this.updateSyncDetails('file_download', resp.last_sync);
               return _this.fileUnZip(filePath, file.toURL());
             }, function(error) {
               $('#syncSuccess').css("display", "none");
+              $('#syncStartContinue').css("display", "block");
+              $('#syncButtonText').text('Try again');
               return $('#syncError').css("display", "block").text("An error occurred during file download");
             }, true);
           }, _.fileErrorHandler);
@@ -195,14 +198,11 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       readData = this.chkReader(file);
       return readData.done((function(_this) {
         return function(data) {
-          console.log('Divisions parsed data');
-          data;
           return _.db.transaction(function(tx) {
-            var i, row, _i, _ref, _results;
+            var i, _i, _ref, _results;
             tx.executeSql("DELETE FROM " + _.getTblPrefix() + "class_divisions");
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
-              row = data[i];
               _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "class_divisions (id, division, class_id) VALUES (?, ?, ?)", [data[i][0], data[i][1], data[i][2]]));
             }
             return _results;
@@ -228,7 +228,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response (content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date,status,sync) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?)", [data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], 1]));
+              _results.push(tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response (ref_id, teacher_id, content_piece_id, collection_id, division ,question_response ,time_taken ,start_date ,end_date ,status ,sync) VALUES (?,?,?,?,?,?,?,?,?,?,?)", [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], 1]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {

@@ -5,7 +5,6 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		getTblPrefix : ->
 			'wp_'+_.getBlogID()+'_'
-
 		
 	
 		#Get all user details from local database

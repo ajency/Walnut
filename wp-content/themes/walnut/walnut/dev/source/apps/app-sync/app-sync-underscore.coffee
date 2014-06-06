@@ -47,24 +47,24 @@ define ['underscore', 'unserialize'], ( _) ->
 			.fail _.failureHandler
 
 
-		# Get last sync time_stamp based on type_of_operation
-		getLastSyncTimeStamp : (operation) ->
+		# Get last download time_stamp
+		getLastDownloadTimeStamp : ->
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT time_stamp FROM sync_details 
-							WHERE type_of_operation=? ORDER BY id DESC LIMIT 1", [operation]
-							, onSuccess(d), _.deferredErrorHandler(d))
+							WHERE type_of_operation=? ORDER BY id DESC LIMIT 1"
+							, ['file_download'], onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
 				(tx, data)->
-					time_stamp = ''
+					time_stamp = 'none'
 					if data.rows.length isnt 0
 						time_stamp = data.rows.item(0)['time_stamp']
 					
 					d.resolve time_stamp
 
 			$.when(runQuery()).done ->
-				console.log 'getLastSyncTimeStamp transaction completed'
+				console.log 'getLastDownloadTimeStamp transaction completed'
 			.fail _.failureHandler

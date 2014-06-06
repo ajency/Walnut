@@ -110,7 +110,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       resp = server_resp.blog_details;
       _.setBlogID(resp.blog_id);
       _.setBlogName(resp.blog_name);
-      _.createQuestionResponseTable(_.db);
+      _.createDataTables(_.db);
       _.downloadSchoolLogo(resp.blog_logo);
       this.saveUpdateUserDetails(server_resp);
       return this.onSuccessResponse();

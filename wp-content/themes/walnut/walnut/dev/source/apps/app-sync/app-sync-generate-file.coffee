@@ -33,7 +33,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
 				,(fileSystem)->
-					fileSystem.root.getFile("SynapseAssets/csv-export.zip"
+					fileSystem.root.getFile("SynapseAssets/csv-export-"+device.uuid+".zip"
 						, {create: true, exclusive: false}
 						
 						,(fileEntry)->

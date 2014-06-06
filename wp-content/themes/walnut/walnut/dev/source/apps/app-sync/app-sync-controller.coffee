@@ -67,10 +67,13 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			.css("display","block")
 			.text("Starting file download...")
 
+			# lastDownloadTimestamp = _.getLastDownloadTimeStamp()
+
 			data = 
 				blog_id: _.getBlogID()
 				last_sync: ''	
 
+			#TODO: Change action name for import
 			$.get AJAXURL + '?action=sync-database',
 					data,
 				   (resp)=>
@@ -80,8 +83,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 				   		@dwnldUnZip resp
 							
 					,
-					'json'	
-
+					'json'
 
 
 		# Download the zip file from the server and extract its contents
@@ -120,11 +122,16 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
 								,(file)=>
 									console.log 'Zip file downloaded'
+
+									@updateSyncDetails('file_download', resp.last_sync)
 									
 									@fileUnZip filePath, file.toURL()
 								
 								,(error)->
 									$('#syncSuccess').css("display","none")
+
+									$('#syncStartContinue').css("display","block")
+									$('#syncButtonText').text('Try again')
 
 									$('#syncError').css("display","block")
 									.text("An error occurred during file download")
@@ -194,21 +201,17 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			zip.unzip(fullpath, filePath, success)
 
 
-
-
 		readUnzipFile1 : ->
 			$('#syncSuccess').css("display","block")
 			.text("Starting file import...")
 
 			filePath = _.getFilePath()
-			file = 	 "SynapseAssets/"+_.getTblPrefix()+"class_divisions.csv"
+			file = "SynapseAssets/"+_.getTblPrefix()+"class_divisions.csv"
 
 			setTimeout(=>
 				@sendParsedData1 file ,filePath
 				
 			,3000)
-				
-				
 
 
 		
@@ -221,26 +224,21 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			fileEntry = fileEntry
 			readData = @chkReader(file)
 			readData.done (data)=>
-				console.log 'Divisions parsed data'
-				data
 
-				_.db.transaction( (tx)=>
+				_.db.transaction((tx)=>
 					tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
-
+					
 					for i in [0..data.length-1] by 1
-						row = data[i]
-						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions (id, division, class_id) 
-							VALUES (?, ?, ?)", [data[i][0], data[i][1], data[i][2]])
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions 
+							(id, division, class_id) VALUES (?, ?, ?)"
+								, [data[i][0], data[i][1], data[i][2]])
 
 				,_.transactionErrorhandler
 				,(tx)=>
 					console.log 'Data inserted successfully1'
 					file1 =  "SynapseAssets/"+_.getTblPrefix()+"question_response.csv"
 					@sendParsedData2 file1 ,fileEntry
-
 				)
-
-
 
 
 		sendParsedData2 : (file1, fileEntry)=>
@@ -253,8 +251,12 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 					for i in [0..data.length-1] by 1
 						row = data[i]
-						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response (content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date,status,sync) 
-							VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?)", [ data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8],1])
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response 
+							(ref_id, teacher_id, content_piece_id, collection_id, division 
+							,question_response ,time_taken ,start_date ,end_date ,status ,sync) 
+							VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+							, [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]
+							, data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], 1])
 
 				,_.transactionErrorhandler
 				,(tx)=>
