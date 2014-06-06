@@ -72,8 +72,6 @@ require.config
         backbone:
             deps: ['jquery', 'underscore']
             exports: 'Backbone'
-        zipjs:
-            exports: 'zipBlob'
         marionette:
             deps: ['backbone']
             exports: 'Marionette'
