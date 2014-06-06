@@ -40,11 +40,9 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
 
       MediaView.prototype._whenImageClicked = function(e) {
         var media;
-        console.log('clicked');
         console.log(e.target);
         media = $(e.target).hasClass('single-img') ? $(e.target) : $(e.target).closest('.single-img');
-        this.trigger("media:element:selected");
-        return console.log('media selected ' + media);
+        return this.trigger("media:element:selected");
       };
 
       return MediaView;
@@ -76,7 +74,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
       GridView.prototype.onShow = function() {
         this.$el.find('a#list.btn').on('click', _.bind(this._changeChildClass, this, 'List'));
         this.$el.find('a#grid.btn').on('click', _.bind(this._changeChildClass, this, 'Grid'));
-        return this.on('after:item:added', (function(_this) {
+        return this.listenTo(this, 'after:item:added', (function(_this) {
           return function(imageView) {
             if (_this.$el.find('.single-img:first').hasClass('col-sm-2')) {
               _this._changeChildClass('Grid');

@@ -18,10 +18,7 @@ require_once('../../../wp-admin/includes/plugin.php');
 function create_custom_tables(){
     global $wpdb;
     
-    echo '<br><br>Creating Tables<br>';
-    
-    
-    $textbook_class_relations_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}textbook_relationships 
+    $textbook_class_relations_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}textbook_relationships
              (`id` INT NOT NULL AUTO_INCREMENT, `textbook_id` INT NOT NULL, 
              `class_id` varchar(255) NOT NULL,
              `tags` varchar(255) NOT NULL, 
@@ -29,17 +26,13 @@ function create_custom_tables(){
 
     $wpdb->query($textbook_class_relations_table);
     
-    echo "{$wpdb->prefix}textbook_relationships table created<br>";
-    
-    $class_divisions_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}class_divisions 
+    $class_divisions_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}class_divisions
              (`id` INT NOT NULL AUTO_INCREMENT, 
              `division` varchar(255) NOT NULL,
              `class_id` INT NOT NULL, 
              PRIMARY KEY (`id`))";
 
     $wpdb->query($class_divisions_table);
-    
-    echo "{$wpdb->prefix}class_divisions table created<br>";
     
     $content_collection_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}content_collection` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -59,8 +52,6 @@ function create_custom_tables(){
 
     $wpdb->query($content_collection_table);
     
-    echo "{$wpdb->prefix}content_collection table created<br>";
-    
     $collection_meta = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}collection_meta` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `collection_id` int(11) NOT NULL,
@@ -71,9 +62,7 @@ function create_custom_tables(){
 
     $wpdb->query($collection_meta);
     
-    echo "{$wpdb->prefix}collection_meta table created<br>";
-
-    $training_logs_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}training_logs 
+    $training_logs_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}training_logs
              (`id` INT NOT NULL AUTO_INCREMENT, `division_id` INT NOT NULL, 
              `collection_id` INT NOT NULL, 
              `teacher_id` INT NOT NULL, 
@@ -83,7 +72,6 @@ function create_custom_tables(){
 
     $wpdb->query($training_logs_table);
 
-    echo "{$wpdb->prefix}question_response table created<br>";
 }
 create_custom_tables();
 /**

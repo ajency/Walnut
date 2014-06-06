@@ -4,12 +4,10 @@ require_once( ABSPATH . '/wp-includes/class-phpmailer.php' );
 class MockPHPMailer extends PHPMailer {
 	var $mock_sent = array();
 
-	/**
-	 * Override send() so mail isn't actually sent.
-	 */
-	function send() {
+	// override the Send function so it doesn't actually send anything
+	function Send() {
 		try {
-			if ( ! $this->preSend() )
+			if ( ! $this->PreSend() )
 				return false;
 
 			$this->mock_sent[] = array(

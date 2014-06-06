@@ -16,7 +16,7 @@ define(['app', 'controllers/region-controller', 'apps/media/grid/views'], functi
         data = {
           mediaType: mediaType
         };
-        mediaCollection = App.request("fetch:media", data);
+        mediaCollection = App.request("fetch:media", data, false);
         view = this._getView(mediaCollection);
         this.listenTo(view, "itemview:media:element:selected", (function(_this) {
           return function(iv) {
