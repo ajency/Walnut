@@ -1,57 +1,82 @@
 define ['app'
-		'controllers/region-controller'
-		'apps/header/left/leftapp'
-		'apps/header/right/rightapp'
-		'text!apps/header/templates/header.html'], (App, RegionController, LeftApp, RightApp,  headerTpl)->
+        'controllers/region-controller'
+        'apps/header/left/leftapp'
+        'apps/header/right/rightapp'
+        'text!apps/header/templates/header.html'], (App, RegionController, LeftApp, RightApp, headerTpl)->
+    App.module "HeaderApp.Controller", (Controller, App)->
+        class Controller.HeaderController extends RegionController
 
-	App.module "HeaderApp.Controller", (Controller, App)->
+            initialize: ->
+                @layout = layout = @_getHeaderView()
 
-		class Controller.HeaderController extends RegionController
+                @school = App.request "get:current:school"
 
-			initialize : ->
-				
-				@layout = layout = @_getHeaderView()
+                @listenTo layout, 'show', @_showLeftRightViews
 
-				@school = App.request "get:current:school"
+                @show layout, (loading: true)
 
-				@listenTo layout, 'show', @showLeftRightViews
-				@show layout, (loading:true)
+                @listenTo @layout.rightRegion, "user:logout", @_logoutCurrentUser
 
-			showLeftRightViews:=>
-				App.execute "show:leftheaderapp", region : @layout.leftRegion
-				App.execute "show:rightheaderapp", region : @layout.rightRegion
+                @listenTo layout, 'user:logout', @_logoutCurrentUser
+
+            _logoutCurrentUser:->
+                $.post AJAXURL + '?action=logout_user',
+                (response) =>
+                    if response.error
+                        console.log response
+                    else
+                        usermodel = App.request "get:user:model"
+                        usermodel.clear()
+                        App.vent.trigger "show:login"
+
+            _showLeftRightViews: =>
+                App.execute "show:leftheaderapp", region: @layout.leftRegion
+                App.execute "show:rightheaderapp", region: @layout.rightRegion
 
 
-			_getHeaderView : =>
-				console.log '@school2'
-				console.log @school
-				new HeaderView
-					model: @school
+            _getHeaderView: =>
+                new HeaderView
+                    model: @school
+                    templateHelpers:
+                        show_user_name:->
+                            user_model= App.request "get:user:model"
+                            user_name= user_model.get 'display_name'
 
 
-		class HeaderView extends Marionette.Layout
+        class HeaderView extends Marionette.Layout
 
-			template 	: headerTpl
+            template: headerTpl
 
-			className 	: 'header navbar navbar-inverse'
+            className: 'header navbar navbar-inverse'
 
-			regions:
-				leftRegion	: '#header-left'
-				rightRegion	: '#header-right'
+            regions:
+                leftRegion: '#header-left'
+                rightRegion: '#header-right'
 
-			serializeData : ->
-				data = super()
-				data.logourl= SITEURL+ '/wp-content/themes/walnut/images/walnutlearn.png'
-				console.log SITEURL
-				data
-				
-			onShow:->						
-				# || ($('.teacher-app').length>0)
-				if (($('.creator').length > 0)) 
-					$('.page-content').addClass('condensed');
-					$(".header-seperation").css("display","none");
+            events:
+                    'click #logout'   :->
+                        $.sidr 'close', 'walnutProfile'
+                        @trigger "user:logout"
 
-		# set handlers
-		App.commands.setHandler "show:headerapp", (opt = {})->
-			new Controller.HeaderController opt		
+            serializeData: ->
+                data = super()
+                data.logourl = SITEURL + '/wp-content/themes/walnut/images/synapse_logo.png'
+                data
+
+            onShow: ->
+
+                @$el.find('.right-menu').sidr
+                    name : 'walnutProfile'
+                    side: 'right'
+                    renaming: false
+
+                # || ($('.teacher-app').length>0)
+                if (($('.creator').length > 0))
+                    $('.page-content').addClass('condensed');
+                    $(".header-seperation").css("display", "none");
+
+
+        # set handlers
+        App.commands.setHandler "show:headerapp", (opt = {})->
+            new Controller.HeaderController opt
 

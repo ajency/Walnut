@@ -26,10 +26,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         return this.listenTo(view, "question:completed", this._changeQuestion);
       };
 
-      ChorusOptionsController.prototype._changeQuestion = function(resp) {
-        if (resp === 'no_answer') {
-          this._saveQuestionResponse('');
-        }
+      ChorusOptionsController.prototype._changeQuestion = function() {
         return this.region.trigger("goto:next:question", this.questionResponseModel.get('content_piece_id'));
       };
 
@@ -46,7 +43,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         elapsedTime = this.timerObject.request("get:elapsed:time");
         this.questionResponseModel.set({
           'question_response': studResponse,
-          'status': 'completed',
+          'status': 'paused',
           'time_taken': elapsedTime
         });
         return this.questionResponseModel.save();

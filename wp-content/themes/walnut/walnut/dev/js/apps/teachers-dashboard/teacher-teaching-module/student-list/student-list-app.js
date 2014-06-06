@@ -29,10 +29,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         return this.listenTo(view, "question:completed", this._changeQuestion);
       };
 
-      SingleQuestionStudentsController.prototype._changeQuestion = function(resp) {
-        if (resp === 'no_answer') {
-          this._saveQuestionResponse('');
-        }
+      SingleQuestionStudentsController.prototype._changeQuestion = function() {
         return this.region.trigger("goto:next:question", this.questionResponseModel.get('content_piece_id'));
       };
 
@@ -49,7 +46,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         elapsedTime = this.timerObject.request("get:elapsed:time");
         this.questionResponseModel.set({
           'question_response': studResponse,
-          'status': 'completed',
+          'status': 'paused',
           'time_taken': elapsedTime
         });
         return this.questionResponseModel.save();

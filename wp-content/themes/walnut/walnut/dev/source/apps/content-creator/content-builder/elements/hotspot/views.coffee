@@ -6,7 +6,7 @@ define ['app'], (App)->
         # Menu item view
         class Views.HotspotView extends Marionette.ItemView
 
-            className: 'stage'
+            className : 'stage'
 
             # template : '&nbsp;'
 
@@ -14,7 +14,7 @@ define ['app'], (App)->
             # 'mousedown' : -> @trigger "show:hotspot:elements"
             # 'focus'	: -> console.log "blur" #'updateModel'
 
-            initialize: (opt = {})->
+            initialize : (opt = {})->
                 # get the content if already exists
                 # if @model.get('content') isnt ''
 
@@ -32,24 +32,24 @@ define ['app'], (App)->
 
                 # create the canvas layers
                 @imageLayer = new Kinetic.Layer
-                    name: 'imageLayer'
+                    name : 'imageLayer'
                 @optionLayer = new Kinetic.Layer
-                    name: 'optionLayer'
+                    name : 'optionLayer'
                 @textLayer = new Kinetic.Layer
-                    name: 'textLayer'
+                    name : 'textLayer'
                 @defaultLayer = new Kinetic.Layer
-                    name: 'defaultLayer'
+                    name : 'defaultLayer'
 
-            onRender: ->
+            onRender : ->
                 @$el.attr 'id', @stageName
 
 
-            onShow: ()->
+            onShow : ->
                 # create a kinetic stage
                 @stage = new Kinetic.Stage
-                    container: @stageName
-                    width: @$el.parent().width()
-                    height: @$el.parent().height() + 80
+                    container : @stageName
+                    width : @$el.parent().width()
+                    height : @$el.parent().height() + 80
 
                 if @model.get('height') isnt 0
                     @stage.height @model.get('height')
@@ -78,39 +78,39 @@ define ['app'], (App)->
 
                 #make the hotspot canvas area dropable
                 @$el.find('.kineticjs-content').droppable
-                    accept: '.hotspotable'
-                    drop: (evt, ui)=>
-                        if ui.draggable.prop("tagName") is 'LI'
+                    accept : '.hotspotable'
+                    drop : (evt, ui)=>
+                        if ui.draggable.prop('tagName') is 'LI'
                             type = ui.draggable.attr 'data-element'
                             elementPos =
-                                left: evt.clientX - @$el.find('.kineticjs-content').offset().left
-                                top: evt.clientY - @$el.find('.kineticjs-content').offset().top + window.pageYOffset
+                                left : evt.clientX - @$el.find('.kineticjs-content').offset().left
+                                top : evt.clientY - @$el.find('.kineticjs-content').offset().top + window.pageYOffset
                             @triggerMethod "add:hotspot:element", type, elementPos
 
-            _initializeCanvasResizing: ->
+            _initializeCanvasResizing : ->
                 # on resize of the canvas height
                 @$el.resize @_setResizeHandler
                 @model.set 'height', @stage.height()
                 # set resize bottom handle
                 @$el.resizable
-                    handles: "s"
+                    handles : 's'
 
-            _setResizeHandler: =>
+            _setResizeHandler : =>
                 # console.log $('#'+@stageName+'.stage').width()
                 @stage.setSize
-                    width: @$el.width()
-                    height: @$el.height() - 5
+                    width : @$el.width()
+                    height : @$el.height() - 5
 
                 @model.set 'height', @stage.height()
                 # resize the default image
                 @_updateDefaultImageSize()
 
 
-            _setDefaultImage: ->
+            _setDefaultImage : ->
                 defaultImage = new Image()
-                defaultImage.onload = ()=>
+                defaultImage.onload = =>
                     @hotspotDefault = new Kinetic.Image
-                        image: defaultImage
+                        image : defaultImage
 
                     @defaultLayer.add @hotspotDefault
                     _.delay =>
@@ -118,19 +118,19 @@ define ['app'], (App)->
                     , 500
                     @_updateDefaultImageSize()
 
-                defaultImage.src = "../wp-content/themes/walnut/images/empty-hotspot.svg"
+                defaultImage.src = '../wp-content/themes/walnut/images/empty-hotspot.svg'
 
             # remove the default image from the layer if any hotspot elements are added
-            _updateDefaultLayer: ->
+            _updateDefaultLayer : ->
                 i = 1
                 isEmptyFlag = true
                 while i < @stage.getChildren().length
                     if i
                         if @stage.getChildren()[i].getChildren().length
                             @defaultLayer.removeChildren()
-                            console.log "remove default"
+                            console.log 'remove default'
                             isEmptyFlag = false
-                            break;
+                            break
                     i++
                 if isEmptyFlag
                     # console.log "in else"
@@ -141,28 +141,28 @@ define ['app'], (App)->
 
 
             # update the size of default image on change of stage
-            _updateDefaultImageSize: ->
+            _updateDefaultImageSize : ->
                 if @hotspotDefault
 
                     width = @stage.width()
                     height = @stage.height()
                     @hotspotDefault.setSize
-                        width: 336
-                        height: 200
+                        width : 336
+                        height : 200
 
                     if(width < 220)
                         @hotspotDefault.setSize
-                            width: width - 10
-                            height: (width - 10) / 1.68
+                            width : width - 10
+                            height : (width - 10) / 1.68
 
                     if(height < 160)
                         @hotspotDefault.setSize
-                            width: (height - 10) * 1.68
-                            height: height - 10
+                            width : (height - 10) * 1.68
+                            height : height - 10
 
                     @hotspotDefault.position
-                        x: @stage.width() / 2 - @hotspotDefault.width() / 2
-                        y: @stage.height() / 2 - @hotspotDefault.height() / 2
+                        x : @stage.width() / 2 - @hotspotDefault.width() / 2
+                        y : @stage.height() / 2 - @hotspotDefault.height() / 2
 
                     @defaultLayer.draw()
 
@@ -187,8 +187,7 @@ define ['app'], (App)->
 
 
 
-            _drawExistingElements: ->
-
+            _drawExistingElements : ->
                 @model.get('textCollection').each (model, i)=>
                     @_addEachElements 'Hotspot-Text', model
 
@@ -208,29 +207,29 @@ define ['app'], (App)->
                     @$el.trigger('mousedown')
                 , 10
 
-            _addEachElements: (type, model)->
-                @triggerMethod "add:hotspot:element",
-                    type
+            _addEachElements : (type, model)->
+                @triggerMethod 'add:hotspot:element',
+                  type
                 ,
-                    left: model.get 'x'
-                    top: model.get 'y'
+                    left : model.get 'x'
+                    top : model.get 'y'
                 ,
-                    model
+                  model
 
 
 
 
 
-            onAddHotspotElement: (type, elementPos, model)->
-                if(type == "Hotspot-Circle")
+            onAddHotspotElement : (type, elementPos, model)->
+                if(type == 'Hotspot-Circle')
                     @_addCircle elementPos, model
 
-                else if(type == "Hotspot-Rectangle")
+                else if(type == 'Hotspot-Rectangle')
                     @_addRectangle elementPos, model
 
-                else if(type == "Hotspot-Text")
+                else if(type == 'Hotspot-Text')
                     @_addTextElement elementPos, model
-                else if(type == "Hotspot-Image")
+                else if(type == 'Hotspot-Image')
                     # if model exists display it otherwise upload an image
                     if model
                         @_addImageElement elementPos, model.get('url'), model
@@ -242,55 +241,55 @@ define ['app'], (App)->
 
             # @optionLayer.draw()
 
-            _uploadImage: (elementPos)->
-                App.navigate "media-manager", trigger: true
-                @listenTo App.vent, "media:manager:choosed:media", (media)=>
+            _uploadImage : (elementPos)->
+                App.navigate 'media-manager', trigger : true
+                @listenTo App.vent, 'media:manager:choosed:media', (media)=>
                     # @layout.model.set 'image_id', media.get 'id'
                     @_addImageElement elementPos, media.toJSON().url
                     # @layout.model.save()
-                    @stopListening App.vent, "media:manager:choosed:media"
+                    @stopListening App.vent, 'media:manager:choosed:media'
 
-                @listenTo App.vent, "stop:listening:to:media:manager", =>
-                    @stopListening App.vent, "media:manager:choosed:media"
+                @listenTo App.vent, 'stop:listening:to:media:manager', =>
+                    @stopListening App.vent, 'media:manager:choosed:media'
 
 
-            _addCircle: (elementPos, model)->
+            _addCircle : (elementPos, model)->
                 if model
                     hotspotElement = model
 
                 else
                     modelData =
-                        id: _.uniqueId('option')
-                        type: 'Option'
-                        shape: 'Circle'
-                        x: elementPos.left
-                        y: elementPos.top
-                        radius: 20
-                        color: '#000000'
+                        id : _.uniqueId('option')
+                        type : 'Option'
+                        shape : 'Circle'
+                        x : elementPos.left
+                        y : elementPos.top
+                        radius : 20
+                        color : '#000000'
                     # transparent : false
-                        correct: false
-                        marks: 1
+                        correct : false
+                        marks : 1
 
-                    hotspotElement = App.request "create:new:hotspot:element", modelData
+                    hotspotElement = App.request 'create:new:hotspot:element', modelData
                     @model.get('optionCollection').add hotspotElement
                     console.log @model.get('optionCollection')
 
                 self = @
 
 
-                @trigger "show:hotspot:element:properties", hotspotElement
+                @trigger 'show:hotspot:element:properties', hotspotElement
 
 
                 circle = new Kinetic.Circle
-                    id: hotspotElement.get 'id'
-                    x: hotspotElement.get 'x'
-                    y: hotspotElement.get 'y'
-                    radius: hotspotElement.get 'radius'
-                    stroke: hotspotElement.get 'color'
-                    strokeWidth: 2
-                    dash: [6, 4 ]
-                    dashEnabled: @model.get 'transparent'
-                    fill: if hotspotElement.get("correct") then "rgba(12, 199, 55, 0.28)" else ""
+                    id : hotspotElement.get 'id'
+                    x : hotspotElement.get 'x'
+                    y : hotspotElement.get 'y'
+                    radius : hotspotElement.get 'radius'
+                    stroke : hotspotElement.get 'color'
+                    strokeWidth : 2
+                    dash : [6, 4 ]
+                    dashEnabled : @model.get 'transparent'
+                    fill : if hotspotElement.get("correct") then "rgba(12, 199, 55, 0.28)" else ""
 
                 circleGrp = resizeCircle circle, @optionLayer
 
@@ -300,17 +299,17 @@ define ['app'], (App)->
                     hotspotElement.set 'radius', circle.radius()
 
                 # on change of transparency redraw
-                @model.on "change:transparent", (model, transparent)=>
+                @model.on 'change:transparent', (model, transparent)=>
                     circle.dashEnabled transparent
                     @optionLayer.draw()
 
                 # on change of color redraw
-                hotspotElement.on "change:color", =>
+                hotspotElement.on 'change:color', =>
                     circle.stroke hotspotElement.get 'color'
                     @optionLayer.draw()
 
                 # on change of model correct shade the option
-                hotspotElement.on "change:correct", =>
+                hotspotElement.on 'change:correct', =>
                     if hotspotElement.get 'correct'
                         circle.fill 'rgba(12, 199, 55, 0.28)'
 
@@ -339,24 +338,24 @@ define ['app'], (App)->
                 @optionLayer.draw()
 
 
-            _addRectangle: (elementPos, model)->
+            _addRectangle : (elementPos, model)->
                 if model
                     hotspotElement = model
 
                 else
                     modelData =
-                        id: _.uniqueId('option')
-                        type: 'Option'
-                        shape: 'Rect'
-                        x: elementPos.left
-                        y: elementPos.top
-                        width: 30
-                        height: 30
-                        color: '#000000'
+                        id : _.uniqueId('option')
+                        type : 'Option'
+                        shape : 'Rect'
+                        x : elementPos.left
+                        y : elementPos.top
+                        width : 30
+                        height : 30
+                        color : '#000000'
                     # transparent : false
-                        angle: 0
-                        correct: false
-                        marks: 1
+                        angle : 0
+                        correct : false
+                        marks : 1
 
 
                     hotspotElement = App.request "create:new:hotspot:element", modelData
@@ -365,23 +364,22 @@ define ['app'], (App)->
                     console.log @model.get('optionCollection')
 
 
-
                 self = @
 
                 @trigger "show:hotspot:element:properties", hotspotElement
 
                 box = new Kinetic.Rect
-                    id: hotspotElement.get 'id'
+                    id : hotspotElement.get 'id'
                 # name : "rect2"
-                    x: hotspotElement.get 'x'
-                    y: hotspotElement.get 'y'
-                    width: hotspotElement.get 'width'
-                    height: hotspotElement.get 'height'
-                    stroke: hotspotElement.get 'color'
-                    strokeWidth: 2
-                    dash: [6, 4 ]
-                    dashEnabled: @model.get 'transparent'
-                    fill: if hotspotElement.get("correct") then "rgba(12, 199, 55, 0.28)" else ""
+                    x : hotspotElement.get 'x'
+                    y : hotspotElement.get 'y'
+                    width : hotspotElement.get 'width'
+                    height : hotspotElement.get 'height'
+                    stroke : hotspotElement.get 'color'
+                    strokeWidth : 2
+                    dash : [6, 4 ]
+                    dashEnabled : @model.get 'transparent'
+                    fill : if hotspotElement.get("correct") then "rgba(12, 199, 55, 0.28)" else ""
 
                 rectGrp = resizeRect box, @optionLayer
 
@@ -439,22 +437,22 @@ define ['app'], (App)->
 
 
 
-            _addTextElement: (elementPos, model)->
+            _addTextElement : (elementPos, model)->
                 if model
                     hotspotElement = model
 
                 else
                     modelData =
-                        x: elementPos.left
-                        y: elementPos.top
-                        type: 'Text'
-                        text: ''
-                        fontFamily: 'Arial'
-                        fontSize: '14'
-                        fontColor: '#000000'
-                        fontBold: ''
-                        fontItalics: ''
-                        textAngle: 0
+                        x : elementPos.left
+                        y : elementPos.top
+                        type : 'Text'
+                        text : ''
+                        fontFamily : 'Arial'
+                        fontSize : '14'
+                        fontColor : '#000000'
+                        fontBold : ''
+                        fontItalics : ''
+                        textAngle : 0
 
                     hotspotElement = App.request "create:new:hotspot:element", modelData
                     @model.get('textCollection').add hotspotElement
@@ -465,22 +463,22 @@ define ['app'], (App)->
                 @trigger "show:hotspot:element:properties", hotspotElement
 
                 tooltip = new Kinetic.Label
-                    x: hotspotElement.get 'x'
-                    y: hotspotElement.get 'y'
-                    width: 100
-                    draggable: true
-                    dragBoundFunc: (pos)->
+                    x : hotspotElement.get 'x'
+                    y : hotspotElement.get 'y'
+                    width : 100
+                    draggable : true
+                    dragBoundFunc : (pos)->
                         self._setBoundRegion(pos, @, self.stage)
 
                 canvasText = new Kinetic.Text
-                    text: 'CLICK TO ENTER TEXT'
-                    opacity: 0.3
-                    fontFamily: hotspotElement.get 'fontFamily'
-                    fontSize: hotspotElement.get 'fontSize'
-                    fill: hotspotElement.get 'fontColor'
-                    fontStyle: hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics')
-                    padding: 5
-                    rotation: hotspotElement.get 'textAngle'
+                    text : 'CLICK TO ENTER TEXT'
+                    opacity : 0.3
+                    fontFamily : hotspotElement.get 'fontFamily'
+                    fontSize : hotspotElement.get 'fontSize'
+                    fill : hotspotElement.get 'fontColor'
+                    fontStyle : hotspotElement.get('fontBold') + " " + hotspotElement.get('fontItalics')
+                    padding : 5
+                    rotation : hotspotElement.get 'textAngle'
 
                 tooltip.on 'dragend', (e)->
                     hotspotElement.set 'x', tooltip.getAbsolutePosition().x
@@ -560,19 +558,19 @@ define ['app'], (App)->
 
                 @textLayer.draw()
 
-            _addImageElement: (elementPos, url, model)->
+            _addImageElement : (elementPos, url, model)->
                 if model
                     hotspotElement = model
 
                 else
                     modelData =
-                        type: 'Image'
-                        x: elementPos.left
-                        y: elementPos.top
-                        width: 150
-                        height: 150
-                        angle: 0
-                        url: url
+                        type : 'Image'
+                        x : elementPos.left
+                        y : elementPos.top
+                        width : 150
+                        height : 150
+                        angle : 0
+                        url : url
 
                     hotspotElement = App.request "create:new:hotspot:element", modelData
                     @model.get('imageCollection').add hotspotElement
@@ -581,15 +579,15 @@ define ['app'], (App)->
 
                 imageObject = new Image()
                 imageObject.src = hotspotElement.get 'url'
-                imageObject.onload = ()=>
+                imageObject.onload = =>
                     @trigger "show:hotspot:element:properties", hotspotElement
 
                     imageElement = new Kinetic.Image
-                        image: imageObject
-                        x: hotspotElement.get 'x'
-                        y: hotspotElement.get 'y'
-                        width: hotspotElement.get 'width'
-                        height: hotspotElement.get 'height'
+                        image : imageObject
+                        x : hotspotElement.get 'x'
+                        y : hotspotElement.get 'y'
+                        width : hotspotElement.get 'width'
+                        height : hotspotElement.get 'height'
 
                     # @imageLayer.add imageGrp
 
@@ -635,14 +633,14 @@ define ['app'], (App)->
 
 
 
-            _setBoundRegion: (pos, inner, outer)->
-                height = inner.getHeight();
-                minX = outer.getX();
-                maxX = outer.getX() + outer.getWidth() - inner.getWidth();
-                minY = outer.getY();
-                maxY = outer.getY() + outer.getHeight() - inner.getHeight();
-                X = pos.x;
-                Y = pos.y;
+            _setBoundRegion : (pos, inner, outer)->
+                height = inner.getHeight()
+                minX = outer.getX()
+                maxX = outer.getX() + outer.getWidth() - inner.getWidth()
+                minY = outer.getY()
+                maxY = outer.getY() + outer.getHeight() - inner.getHeight()
+                X = pos.x
+                Y = pos.y
                 if(X < minX)
                     X = minX
 
@@ -655,16 +653,16 @@ define ['app'], (App)->
                 if(Y > maxY)
                     Y = maxY
 
-                x: X
-                y: Y
+                x : X
+                y : Y
 
-            updateModel: ->
+            updateModel : ->
                 @layout.model.set 'content', @_getHotspotData()
                 # @layout.model.save() if @layout.model.hasChanged()
 
                 console.log 'updatedmodel             ' + @layout.model
 
-            _getHotspotData: ->
+            _getHotspotData : ->
                 @stage.toJSON()
 
 			 

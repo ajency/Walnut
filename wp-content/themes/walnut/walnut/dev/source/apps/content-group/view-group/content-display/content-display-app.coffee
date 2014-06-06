@@ -5,71 +5,71 @@ define ['app'
     App.module "CollectionContentDisplayApp.Controller", (Controller, App)->
         class Controller.CollectionContentDisplayController extends RegionController
 
-            initialize : (opts)->
+            initialize: (opts)->
                 {model, @mode, questionResponseCollection,groupContentCollection, @studentCollection} = opts
 
                 @view = view = @_getCollectionContentDisplayView model, groupContentCollection, questionResponseCollection
 
-                @show view, (loading : true, entities : [groupContentCollection, questionResponseCollection])
+                @show view, (loading: true, entities: [groupContentCollection, questionResponseCollection])
 
                 @listenTo @view, 'view:question:readonly', (questionID)=>
                     @region.trigger 'goto:question:readonly', questionID
 
-            _getCollectionContentDisplayView : (model, collection, responseCollection) =>
-                timeTakenArray = responseCollection.pluck('time_taken');
-                totalTimeTakenForModule = 0
-                if _.size(timeTakenArray) > 0
-                    totalTimeTakenForModule = _.reduce timeTakenArray, (memo, num)->
-                        parseInt memo + parseInt num
+            _getCollectionContentDisplayView: (model, collection, responseCollection) =>
+#                timeTakenArray= responseCollection.pluck('time_taken');
+#                totalTimeTakenForModule=0
+#                if _.size(timeTakenArray)>0
+#                    totalTimeTakenForModule =   _.reduce timeTakenArray, (memo, num)-> parseInt memo + parseInt num
+
 
                 new ContentDisplayView
-                    model : model
-                    collection : collection
-                    responseCollection : responseCollection
-                    studentCollection : @studentCollection
-                    mode : @mode
+                    model: model
+                    collection: collection
+                    responseCollection: responseCollection
+                    studentCollection: @studentCollection
+                    mode: @mode
 
-                    templateHelpers :
-                        showElapsedTime : =>
-                            hours = 0
-                            time = totalTimeTakenForModule
-                            mins = parseInt totalTimeTakenForModule / 60
-                            if mins > 59
-                                hours = parseInt mins / 60
-                                mins = parseInt mins % 60
-                            seconds = parseInt time % 60
-                            display_time = ''
-
-                            if hours > 0
-                                display_time = hours + 'h '
-
-                            display_time += mins + 'm ' + seconds + 's'
-                            display_time
+#                    templateHelpers:
+#                        showElapsedTime:=>
+#                            hours=0
+#                            time= totalTimeTakenForModule
+#                            mins=parseInt totalTimeTakenForModule/60
+#                            if mins >59
+#                                hours = parseInt mins/60
+#                                mins= parseInt mins%60
+#                            seconds = parseInt time%60
+#                            display_time=''
+#
+#                            if hours >0
+#                                display_time= hours+'h '
+#
+#                            display_time += mins + 'm '+ seconds+'s'
+#                            display_time
 
         class ContentItemView extends Marionette.ItemView
 
-            template : contentDisplayItemTpl
+            template: contentDisplayItemTpl
 
-            tagName : 'li'
+            tagName: 'li'
 
-            className : ''
+            className: ''
 
-            mixinTemplateHelpers : (data)->
+            mixinTemplateHelpers:(data)->
                 additionalData = Marionette.getOption @, 'additionalData'
-                data.dateCompleted = additionalData.dateCompleted
-                data.question_type = _.str.capitalize data.question_type
+                data.dateCompleted= additionalData.dateCompleted
+                data.question_type= _.str.capitalize data.question_type
                 if additionalData.responseStatus
-                    data.responseStatus = additionalData.responseStatus
+                    data.responseStatus= additionalData.responseStatus
                     data.timeTaken = additionalData.timeTaken
                     data.correctAnswer = additionalData.correctAnswer
                     data.teacherName = additionalData.teacherName
                 data
 
-            onShow : ->
-                content_icon = 'fa-question'
+            onShow:->
+                content_icon= 'fa-question'
 
                 if @model.get 'content_type' is 'content_piece'
-                    content_icon = 'fa-youtube-play'
+                    content_icon= 'fa-youtube-play'
 
                 @$el.find '.cbp_tmicon .fa'
                 .addClass content_icon
@@ -77,83 +77,80 @@ define ['app'
 
         class ContentDisplayView extends Marionette.CompositeView
 
-            template : contentDisplayTpl
+            template: contentDisplayTpl
 
-            itemView : ContentItemView
+            itemView: ContentItemView
 
-            itemViewContainer : 'ul.cbp_tmtimeline'
+            itemViewContainer: 'ul.cbp_tmtimeline'
 
-            itemViewOptions : (model, index)->
+            itemViewOptions:(model, index)->
+                responseCollection= Marionette.getOption @, 'responseCollection'
 
-                responseCollection = Marionette.getOption @, 'responseCollection'
+                responseModelArray= responseCollection.where "content_piece_id": model.get 'ID'
 
-                responseModelArray = responseCollection.where "content_piece_id" : model.get 'ID'
+                responseModel= responseModel for responseModel in responseModelArray
 
-                responseModel = responseModel for responseModel in responseModelArray
+                additionalData={}
 
-                additionalData = {}
-
-                additionalData.dateCompleted = 'N/A'
+                additionalData.dateCompleted= 'N/A'
 
                 if responseModel
 
                     if responseModel.get('status') is 'completed'
-                        additionalData.responseStatus = responseModel.get 'status'
+                        additionalData.responseStatus= responseModel.get 'status'
 
-                        time = responseModel.get 'time_taken'
-                        mins = parseInt(time / 60)
-                        if mins > 59
-                            mins = parseInt mins % 60
-                        seconds = parseInt time % 60
+                        time= responseModel.get 'time_taken'
+                        mins=parseInt(time/60)
+                        if mins >59
+                            mins= parseInt mins%60
+                        seconds = parseInt time%60
 
-                        additionalData.timeTaken = mins + 'm ' + seconds + 's'
+                        additionalData.timeTaken = mins + 'm '+ seconds+'s'
 
-                        additionalData.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY")
+                        additionalData.dateCompleted= moment(responseModel.get('end_date')).format("Do MMM YYYY")
 
-                        additionalData.correctAnswer = @getResults model, responseModel.get 'question_response'
+                        additionalData.correctAnswer= @getResults model, responseModel.get 'question_response'
 
-                        additionalData.teacherName = responseModel.get 'teacher_name'
+                        additionalData.teacherName= responseModel.get 'teacher_name'
 
                     console.log additionalData
 
-                data =
+                data=
                     model : model
-                    additionalData : additionalData
+                    additionalData: additionalData
 
 
-            getResults : (model, question_response)=>
-
-                correct_answer = 'No One'
-                names = []
-                studentCollection = Marionette.getOption @, 'studentCollection'
+            getResults:(model,question_response)=>
+                correct_answer='No One'
+                names=[]
+                studentCollection= Marionette.getOption @, 'studentCollection'
                 if model.get('question_type') is 'chorus'
                     if question_response
-                        correct_answer = CHORUS_OPTIONS[question_response]
+                        correct_answer= CHORUS_OPTIONS[question_response]
                 else
                     for studID in question_response
-                        answeredCorrectly = studentCollection.where("ID" : studID)
-                        name = ans.get('display_name') for ans in answeredCorrectly
+                        answeredCorrectly = studentCollection.where("ID": studID)
+                        name= ans.get('display_name') for ans in answeredCorrectly
                         names.push(name)
 
-                    if _.size(names) > 0
-                        student_names = names.join(', ')
-                        correct_answer = _.size(names) + ' Students (' + student_names + ')'
+                    if _.size(names)>0
+                        student_names=names.join(', ')
+                        correct_answer= _.size(names)+ ' Students ('+ student_names+ ')'
 
                 correct_answer
 
-            events :
-                'click .cbp_tmlabel.completed' : 'viewQuestionReadOnly'
+            events:
+                'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
 
-            onShow : ->
+            onShow: ->
                 responseCollection = Marionette.getOption @, 'responseCollection'
 
-                completedResponses = responseCollection.where 'status' : 'completed'
+                completedResponses = responseCollection.where 'status': 'completed'
 
                 responseQuestionIDs = _.chain completedResponses
-                .map (m)->
-                        m.toJSON()
-                        .pluck 'content_piece_id'
-                            .value()
+                                        .map (m)->m.toJSON()
+                                        .pluck 'content_piece_id'
+                                        .value()
 
                 if Marionette.getOption(@, 'mode') is 'training'
                     for question in @$el.find '.contentPiece'
@@ -171,12 +168,13 @@ define ['app'
                                 .addClass 'done completed'
                                     .css 'cursor', 'pointer'
 
-            viewQuestionReadOnly : (e)=>
+            viewQuestionReadOnly: (e)=>
                 questionID = $ e.target
                 .closest '.contentPiece'
                     .attr 'data-id'
 
                 @trigger "view:question:readonly", questionID
+
 
 
         # set handlers

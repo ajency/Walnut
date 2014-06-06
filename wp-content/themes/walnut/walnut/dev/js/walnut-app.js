@@ -35,7 +35,7 @@ define(['marionette'], function(Marionette) {
         if (resp.success) {
           console.log(resp);
           user = App.request("get:user:model");
-          user.set(resp.data);
+          user.set(resp.data.data);
           school = App.request("get:current:school");
           App.execute("show:headerapp", {
             region: App.headerRegion

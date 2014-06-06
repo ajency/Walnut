@@ -118,7 +118,6 @@ function setup_childsite_tables() {
 
 function setup_childsite_menus( $current_blog, $blog_id ) {
 
-
     switch_to_blog( $current_blog );
 
     $parent_menus = wp_get_nav_menus();

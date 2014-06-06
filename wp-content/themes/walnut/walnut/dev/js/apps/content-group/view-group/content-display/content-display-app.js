@@ -29,41 +29,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       };
 
       CollectionContentDisplayController.prototype._getCollectionContentDisplayView = function(model, collection, responseCollection) {
-        var timeTakenArray, totalTimeTakenForModule;
-        timeTakenArray = responseCollection.pluck('time_taken');
-        totalTimeTakenForModule = 0;
-        if (_.size(timeTakenArray) > 0) {
-          totalTimeTakenForModule = _.reduce(timeTakenArray, function(memo, num) {
-            return parseInt(memo + parseInt(num));
-          });
-        }
         return new ContentDisplayView({
           model: model,
           collection: collection,
           responseCollection: responseCollection,
           studentCollection: this.studentCollection,
-          mode: this.mode,
-          templateHelpers: {
-            showElapsedTime: (function(_this) {
-              return function() {
-                var display_time, hours, mins, seconds, time;
-                hours = 0;
-                time = totalTimeTakenForModule;
-                mins = parseInt(totalTimeTakenForModule / 60);
-                if (mins > 59) {
-                  hours = parseInt(mins / 60);
-                  mins = parseInt(mins % 60);
-                }
-                seconds = parseInt(time % 60);
-                display_time = '';
-                if (hours > 0) {
-                  display_time = hours + 'h ';
-                }
-                display_time += mins + 'm ' + seconds + 's';
-                return display_time;
-              };
-            })(this)
-          }
+          mode: this.mode
         });
       };
 
@@ -198,8 +169,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
           'status': 'completed'
         });
         responseQuestionIDs = _.chain(completedResponses).map(function(m) {
-          return m.toJSON().pluck('content_piece_id').value();
-        });
+          return m.toJSON();
+        }).pluck('content_piece_id').value();
         if (Marionette.getOption(this, 'mode') === 'training') {
           _ref = this.$el.find('.contentPiece');
           _results = [];

@@ -7,17 +7,17 @@ define ['app'], (App)->
         # Menu item view
         class Views.ImageView extends Marionette.ItemView
 
-            className: 'image'
+            className : 'image'
 
-            template: '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%"/>
-            						<div class="clearfix"></div>
-            						'
+            template : '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%"/>
+                        						<div class="clearfix"></div>
+                        						'
 
             # override serializeData to set holder property for the view
-            mixinTemplateHelpers: (data)->
+            mixinTemplateHelpers : (data)->
                 data = super data
 
-                data.imageurl = data.sizes[data.size].url
+                data.imageurl = data.sizes[data.size].url if data.sizes?
 
                 data
 
@@ -26,5 +26,5 @@ define ['app'], (App)->
             # if present ignore else run the Holder.js to show a placeholder
             # after run remove the data-src attribute of the image to avoid
             # reloading placeholder image again
-            onShow: ->
+            onShow : ->
 
