@@ -32,7 +32,7 @@ function ajax_sync_database(){
 
     $last_sync= (isset($_GET['last_sync']))? $_GET['last_sync']: '';
 
-    $export_details= export_tables_for_app($blog_id, $last_sync);
+    $export_details = export_tables_for_app($blog_id, $last_sync);
 
     wp_send_json($export_details);
 
