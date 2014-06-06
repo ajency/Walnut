@@ -8,7 +8,7 @@ define ['app'], (App)->
                       					<button type="button" class="btn btn-info btn-cons2">
                       					<i class="fa fa-eye"></i> Preview</button>
                       				</div>
-            						<div class="tiles green">
+            						<div class="tiles default">
             							<div class="tiles-head">
             								<h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4>
             							</div>

@@ -4728,6 +4728,9 @@ form legend,
 .tiles.green {
   background-color: #0aa699;
 }
+.tiles.default {
+  background-color: #e74c30;
+}
 .tiles.black {
   background-color: #22262e;
 }
