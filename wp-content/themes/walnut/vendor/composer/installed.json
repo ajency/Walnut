@@ -1,0 +1,53 @@
+[
+    {
+        "name": "johnnyfreeman/coseva",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/johnnyfreeman/coseva.git",
+            "reference": "44712c2228959d2f04b8f9dd06ba5b1490046ff3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/johnnyfreeman/coseva/zipball/44712c2228959d2f04b8f9dd06ba5b1490046ff3",
+            "reference": "44712c2228959d2f04b8f9dd06ba5b1490046ff3",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3"
+        },
+        "time": "2014-01-21 19:45:48",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Coseva": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Johnny Freeman",
+                "email": "hello@johnnyfreeman.us",
+                "homepage": "http://johnnyfreeman.us",
+                "role": "Developer"
+            },
+            {
+                "name": "Jan-Marten de Boer",
+                "email": "github@johmanx.com",
+                "homepage": "https://github.com/johmanx10",
+                "role": "Developer"
+            }
+        ],
+        "description": "A friendly, object-oriented library for parsing and filtering CSV files with PHP.",
+        "homepage": "https://github.com/johnnyfreeman/coseva",
+        "keywords": [
+            "csv",
+            "parse"
+        ]
+    }
+]

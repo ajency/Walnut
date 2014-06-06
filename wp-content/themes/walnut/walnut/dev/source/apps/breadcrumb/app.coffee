@@ -1,35 +1,40 @@
 define ['app'
-		'controllers/region-controller'], (App, RegionController)->
+        'controllers/region-controller'], (App, RegionController)->
+    App.module "BreadcrumbApp.Controller", (Controller, App)->
+        class Controller.BreadcrumbController extends RegionController
 
-	App.module "BreadcrumbApp.Controller", (Controller, App)->
+            initialize : ->
+                breadcrumbItems = App.request "get:breadcrumb:model"
 
-		class Controller.BreadcrumbController extends RegionController
+                @listenTo breadcrumbItems, "change:items", @renderbreadcrumb
 
-			initialize : ->
-				breadcrumbItems= App.request "get:breadcrumb:model"
+                @renderbreadcrumb()
 
-				@listenTo breadcrumbItems, "change:items", @renderbreadcrumb
+            renderbreadcrumb : =>
+                breadcrumbItems = App.request "get:breadcrumb:model"
+                @view = view = @_getBreadcrumbView breadcrumbItems
+                @show view
 
-				@renderbreadcrumb()
+            _getBreadcrumbView : (items)->
+                console.log 'new breadcrumb view'
+                new BreadcrumbView
+                    model : items
 
-			renderbreadcrumb:=>
-				breadcrumbItems= App.request "get:breadcrumb:model"
-				@view= view = @_getBreadcrumbView breadcrumbItems
-				@show view
+        class BreadcrumbView extends Marionette.ItemView
 
-			_getBreadcrumbView : (items)->
-				console.log 'new breadcrumb view'
-				new BreadcrumbView
-					model: items
+            template : '{{#items}}
+                            <li>
+                                <a href="{{link}}" class="{{active}}">{{label}}</a>
+                            </li>
+                        {{/items}}'
 
-		class BreadcrumbView extends Marionette.ItemView
-			template 	: '{{#items}}<li><a href="{{link}}" class="{{active}}">{{label}}</a></li>{{/items}}'
-			tagName	 : 'ul'
-			className: 'breadcrumb'
+            tagName : 'ul'
 
-			onShow:->
-				@$el.append('<p></p>');
+            className : 'breadcrumb'
 
-		# set handlers
-		App.commands.setHandler "show:breadcrumbapp", (opt = {})->
-			new Controller.BreadcrumbController opt
+            onShow : ->
+                @$el.append('<p></p>');
+
+        # set handlers
+        App.commands.setHandler "show:breadcrumbapp", (opt = {})->
+            new Controller.BreadcrumbController opt
