@@ -41,8 +41,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
 
             tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details
                 (id INTEGER PRIMARY KEY, type_of_operation, time_stamp)')
-            
-<<<<<<< HEAD
+
             # if _.getDeleteDataFromTablesFlag() is null
             #     tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
             #     tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response")
@@ -58,8 +57,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
             #     tx.executeSql("DELETE FROM wp_terms")
             #     tx.executeSql("DELETE FROM wp_textbook_relationships")
             #     tx.executeSql("DELETE FROM wp_usermeta")
-            #     tx.executeSql("DELETE FROM wp_users")
-=======
+
             
             # tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
             # tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response")
@@ -74,7 +72,7 @@ define ['underscore', 'marionette', 'backbone','jquery'], (_, Marionette, Backbo
             # tx.executeSql("DELETE FROM wp_textbook_relationships")
             # tx.executeSql("DELETE FROM wp_usermeta")
             # tx.executeSql("DELETE FROM wp_users")
->>>>>>> f54144cfc34981166da4e7e453fa9684748241c0
+
             
         ,_.transactionErrorHandler
         ,(tx)->

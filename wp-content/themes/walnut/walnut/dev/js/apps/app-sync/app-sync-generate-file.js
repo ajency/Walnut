@@ -105,7 +105,7 @@ define(['underscore', 'unserialize', 'json2csvparse', 'zip'], function(_) {
       zip = new JSZip();
       zip.file('' + _.getTblPrefix() + 'question_response.csv', csvData);
       content = zip.generate({
-        type: "text/plain"
+        type: "blob"
       });
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
         return fileSystem.root.getFile("SynapseAssets/csv-export.zip", {

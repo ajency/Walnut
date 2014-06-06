@@ -107,7 +107,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'zip'], ( _) ->
 
 			zip = new JSZip()
 			zip.file(''+_.getTblPrefix()+'question_response.csv', csvData)
-			content = zip.generate({type:"text/plain"})
+			content = zip.generate({type:"blob"})
 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
 				,(fileSystem)->
