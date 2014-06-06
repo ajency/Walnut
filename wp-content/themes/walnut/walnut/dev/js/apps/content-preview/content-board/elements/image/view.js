@@ -16,7 +16,9 @@ define(['app'], function(App) {
 
       ImageView.prototype.mixinTemplateHelpers = function(data) {
         data = ImageView.__super__.mixinTemplateHelpers.call(this, data);
-        data.imageurl = data.sizes[data.size].url;
+        if (data.sizes != null) {
+          data.imageurl = data.sizes[data.size].url;
+        }
         return data;
       };
 
