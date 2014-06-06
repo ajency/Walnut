@@ -9,9 +9,11 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
             # initialize
             initialize: (opts)->
 
+
+
                 {mediaType}= opts
                 data= mediaType: mediaType
-                mediaCollection = App.request "fetch:media", data
+                mediaCollection = App.request "fetch:media", data,false
                 view = @_getView mediaCollection
 
                 @listenTo view, "itemview:media:element:selected", (iv) =>
