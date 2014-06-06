@@ -49,14 +49,19 @@ function sync_app_data_to_db( $sync_id ) {
 
 function change_zip_upload_path( $param ) {
 
+    $upsync_path = "/tmp/upsync";
+
+    $param['path'] = str_replace( $param['subdir'], $upsync_path, $param['path'] );
+    $param['url'] = str_replace( $param['subdir'], $upsync_path, $param['url'] );
+    $param['subdir'] = $upsync_path;
+
     return $param;
 }
 
-function add_zip_upload_mimes() {
+function add_zip_upload_mimes( $mime_types, $user ) {
 
-    $existing_mimes['zip'] = 'application/octet';
-
-    return $existing_mimes;
+    $mime_types['zip'] = 'application/octet';
+    return $mime_types;
 }
 
 
