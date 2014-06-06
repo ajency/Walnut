@@ -18,10 +18,12 @@ define(['app'], function(App) {
         data = ImageWithTextView.__super__.mixinTemplateHelpers.call(this, data);
         data.holder = '';
         data.imageurl = function() {
-          if (this.sizes['thumbnail']) {
-            return this.sizes['thumbnail'].url;
-          } else {
-            return this.sizes['full'].url;
+          if (this.sizes != null) {
+            if (this.sizes['thumbnail']) {
+              return this.sizes['thumbnail'].url;
+            } else {
+              return this.sizes['full'].url;
+            }
           }
         };
         data.alignclass = function() {

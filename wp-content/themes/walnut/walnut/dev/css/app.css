@@ -28,6 +28,11 @@
 .block {
   display: block;
 }
+@media (max-width: 1024px) {
+  .nonDevice {
+    display: none;
+  }
+}
 .overlap-left-15 {
   position: absolute;
   left: -15px;

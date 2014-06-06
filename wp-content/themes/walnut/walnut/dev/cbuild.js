@@ -38,7 +38,8 @@
         screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
         babysitter: 'plugins/backbone.babysitter.min',
         videojs: 'plugins/video',
-        panzer: 'plugins/panzer'
+        panzer: 'plugins/panzer',
+        sidr: 'plugins/jquery.sidr.min'
 
     },
     shim: {
@@ -73,6 +74,7 @@
         screwbuttons: ['jquery'],
         babysitter: ['backbone'],
         panzer: ['jquery'],
+        sidr: ['jquery'],
         app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
     }
 })

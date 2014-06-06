@@ -17,9 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
 
       textbookModulesController.prototype.initialize = function(opts) {
         var textbookID, view;
-        textbookID = opts.textbookID;
-        this.classID = opts.classID;
-        this.division = opts.division;
+        textbookID = opts.textbookID, this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
         this.textbook = App.request("get:textbook:by:id", textbookID);
         this.contentGroupsCollection = App.request("get:content:groups", {
           'textbook': textbookID,
@@ -88,6 +86,17 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
             showTextbookName: (function(_this) {
               return function() {
                 return _this.textbook.get('name');
+              };
+            })(this),
+            showModulesHeading: (function(_this) {
+              return function() {
+                var headingString;
+                console.log(_this.mode);
+                headingString = '<span class="semi-bold">All</span> Modules';
+                if (_this.mode === 'training') {
+                  headingString = '<span class="semi-bold">Practice</span> Modules';
+                }
+                return headingString;
               };
             })(this)
           }
