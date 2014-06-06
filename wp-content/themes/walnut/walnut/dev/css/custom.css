@@ -1006,7 +1006,7 @@ p.mcq-option-text {
 .fib-text input[type="text"].ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
   border: none;
-  border-bottom: 2px solid #e74c30;
+  border-bottom: 2px solid #0aa699;
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
@@ -1022,7 +1022,7 @@ p.mcq-option-text {
 
 }
 .fib-text input[type="text"].active {
-  outline: 1px solid #e74c30;
+  outline: 1px solid #0aa699;
 }
 .fib-simpletext {
   min-width: 45px;
@@ -1030,7 +1030,7 @@ p.mcq-option-text {
   border: 1px dashed #f3f3f3;
 }
 .fibRightAns .fibAns {
-  border-bottom: 2px solid #e74c30;
+  border-bottom: 2px solid #0aa699;
 }
 #mcq-container .element-wrapper {
   border: none;
@@ -1102,7 +1102,7 @@ p.mcq-option-text {
 }
 .mcq-option.ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
-  border-bottom: 2px solid #e74c30;
+  border-bottom: 2px solid #0aa699;
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
@@ -1208,7 +1208,7 @@ p.mcq-option-text {
 .sort-option.ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
   border: none;
-  border-bottom: 2px solid #e74c30;
+  border-bottom: 2px solid #0aa699;
   background-size: 25px;
   padding-right: 40px;
   -webkit-transition: all 0.3s ease-out;
@@ -1271,7 +1271,7 @@ p.mcq-option-text {
   cursor: pointer;
 }
 .qstnStatus {
-  color: #e74c30;
+  color: #0aa699;
   font-size: 25px;
 }
 .qstnStatus i {
@@ -1286,7 +1286,7 @@ p.mcq-option-text {
   margin: 2px 0 15px;
 }
 .answrMsg.alert-success h3 {
-  color: #b41900;
+  color: #007366;
 }
 .answrMsg.alert-error h3 {
   color: #c02625;
