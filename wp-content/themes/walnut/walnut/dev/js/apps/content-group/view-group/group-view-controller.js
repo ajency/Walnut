@@ -33,13 +33,10 @@ define(['app', 'controllers/region-controller', 'apps/content-group/view-group/g
           'role': 'student',
           'division': this.division
         });
-        App.execute("when:fetched", model, function() {
-          return groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
-        });
         this.layout = layout = this._getContentGroupViewLayout();
         this.show(layout, {
           loading: true,
-          entities: [model, this.questionResponseCollection, groupContentCollection, this.textbookNames, this.studentCollection]
+          entities: [model, this.questionResponseCollection, this.textbookNames, this.studentCollection]
         });
         this.listenTo(layout, 'show', this.showContentGroupViews);
         this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
@@ -57,8 +54,8 @@ define(['app', 'controllers/region-controller', 'apps/content-group/view-group/g
           "status": "completed"
         });
         responseQuestionIDs = _.chain(responseCollection).map(function(m) {
-          return m.toJSON();
-        }).pluck('content_piece_id').value();
+          return m.toJSON().pluck('content_piece_id').value();
+        });
         content_pieces = model.get('content_pieces');
         if (content_pieces) {
           content_piece_ids = _.map(content_pieces, function(m) {

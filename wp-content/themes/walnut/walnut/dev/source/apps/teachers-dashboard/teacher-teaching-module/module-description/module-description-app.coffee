@@ -67,7 +67,6 @@ define ['app'
             mixinTemplateHelpers :(data)->
                 data = super data
                 data.isTraining = if @mode is 'training' then true else false
-                data.isClass = if @mode is 'take-class' then true else false
                 data
 
             initialize : ->
