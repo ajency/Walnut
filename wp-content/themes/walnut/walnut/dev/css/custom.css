@@ -1896,6 +1896,11 @@ body {
 #walnutProfile .appLogout:hover {
   color: #b7b7b7;
 }
+@media (min-width: 1025px) {
+  #walnutProfile {
+    display: none;
+  }
+}
 tbody.rowlink td {
   cursor: pointer;
 }
