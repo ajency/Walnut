@@ -22,11 +22,6 @@ define ['app'], (App)->
                 # else
                 # 	@contentObject = new Object()
 
-
-
-
-
-
                 #give a unique name to every hotspot canvas
                 @stageName = _.uniqueId('stage')
 
@@ -242,7 +237,10 @@ define ['app'], (App)->
             # @optionLayer.draw()
 
             _uploadImage : (elementPos)->
-                App.navigate 'media-manager', trigger : true
+#                App.navigate 'media-manager', trigger : true
+                App.execute "show:media:manager:app",
+                    region: App.dialogRegion
+                    mediaType: 'image'
                 @listenTo App.vent, 'media:manager:choosed:media', (media)=>
                     # @layout.model.set 'image_id', media.get 'id'
                     @_addImageElement elementPos, media.toJSON().url
