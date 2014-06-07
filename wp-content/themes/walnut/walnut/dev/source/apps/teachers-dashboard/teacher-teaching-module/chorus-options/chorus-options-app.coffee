@@ -53,7 +53,9 @@ define ['app'
                 console.log @
                 responsePercentage = Marionette.getOption @, 'responsePercentage'
                 if responsePercentage?
-                    responsePercentage = if responsePercentage is '' then 'few' else responsePercentage
+                    if responsePercentage is '' or (_.isArray(responsePercentage) and responsePercentage.length is 0)
+                        responsePercentage =  'few'
+
                     @$el.find '#' + responsePercentage
                     .find '.default'
                         .removeClass 'default'

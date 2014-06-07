@@ -82,7 +82,9 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         console.log(this);
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
         if (responsePercentage != null) {
-          responsePercentage = responsePercentage === '' ? 'few' : responsePercentage;
+          if (responsePercentage === '' || (_.isArray(responsePercentage) && responsePercentage.length === 0)) {
+            responsePercentage = 'few';
+          }
           return this.$el.find('#' + responsePercentage).find('.default').removeClass('default').addClass('green');
         }
       };
