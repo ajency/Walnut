@@ -65,10 +65,15 @@ define ['app'
 
             onShow: ->
 
-                @$el.find('.right-menu').sidr
-                    name : 'walnutProfile'
-                    side: 'right'
-                    renaming: false
+                if $( window ).width()<1025
+                    $('#walnutProfile').mmenu
+                        position: 'right'
+                        zposition: 'front'
+
+                # @$el.find('.right-menu').sidr
+                #     name : 'walnutProfile'
+                #     side: 'right'
+                #     renaming: false
 
                 # || ($('.teacher-app').length>0)
                 if (($('.creator').length > 0))

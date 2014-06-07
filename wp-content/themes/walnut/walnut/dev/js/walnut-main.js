@@ -40,7 +40,8 @@ require.config({
     checkbox: 'plugins/flatui-checkbox',
     holder: 'plugins/holder',
     videojs: 'plugins/video',
-    panzer: 'plugins/panzer'
+    panzer: 'plugins/panzer',
+    mmenu: 'plugins/jquery.mmenu.min.all'
   },
   shim: {
     underscore: {
@@ -81,6 +82,7 @@ require.config({
     bridget: ['jquery'],
     isotope: ['jquery', 'bridget'],
     panzer: ['jquery'],
+    mmenu: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });
