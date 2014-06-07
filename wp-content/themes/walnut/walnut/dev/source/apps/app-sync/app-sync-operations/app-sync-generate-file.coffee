@@ -42,6 +42,8 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 							fileEntry.createWriter(
 								(writer)->
 									writer.write(content)
+									
+									_.setGeneratedZipFilePath fileEntry.toURL()
 
 									_.onFileGenerationSuccess()
 
@@ -54,8 +56,6 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 
 		
 		onFileGenerationSuccess : ->
-
-			_.setGeneratedZipFilePath fileEntry.toURL()
 
 			_.updateSyncDetails('file_generate', _.getCurrentDateTime(2))
 			
@@ -70,7 +70,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 
 			_.db.transaction((tx)->
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"question_response 
-					SET sync=? WHERE sync=", [1, 0])
+					SET sync=? WHERE sync=?", [1, 0])
 
 			,_.transactionErrorhandler
 			

@@ -54,13 +54,16 @@ define ['app'
                 rightRegion: '#header-right'
 
             events:
-                    'click #logout'   :->
-                        $.sidr 'close', 'walnutProfile'
-                        @trigger "user:logout"
+                'click #logout'   :->
+                    $.sidr 'close', 'walnutProfile'
+                    @trigger "user:logout"
+
+                'click #user_logout' : 'onAppLogout'
 
             serializeData: ->
                 data = super()
                 data.logourl = SITEURL + '/wp-content/themes/walnut/images/synapse_logo.png'
+                data.logourl = SITEURL + '/images/synapse_logo.png' if _.platform() is 'DEVICE'
                 data
 
             onShow: ->
@@ -83,8 +86,32 @@ define ['app'
                     $('.page-content').addClass('condensed');
                     $(".header-seperation").css("display", "none");
 
+                #Changes for mobile
+                # if _.platform() is 'DEVICE'
+                #      #display name of logged in user
+                #     @$el.find('#app_username').text('Hi '+_.getUserName()+',')
+
+
+            
+            onAppLogout : ->
+
+                console.log 'Synapse App Logout'
+                
+                _.setUserID(null)
+
+                user = App.request "get:user:model"
+                user.clear()
+
+                App.leftNavRegion.close()
+                App.headerRegion.close()
+                App.mainContentRegion.close()
+                App.breadcrumbRegion.close()
+
+                App.navigate('app-login', trigger: true)
+
+
+
 
         # set handlers
         App.commands.setHandler "show:headerapp", (opt = {})->
             new Controller.HeaderController opt
-

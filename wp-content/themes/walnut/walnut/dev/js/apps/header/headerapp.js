@@ -86,13 +86,17 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         'click #logout': function() {
           $.sidr('close', 'walnutProfile');
           return this.trigger("user:logout");
-        }
+        },
+        'click #user_logout': 'onAppLogout'
       };
 
       HeaderView.prototype.serializeData = function() {
         var data;
         data = HeaderView.__super__.serializeData.call(this);
         data.logourl = SITEURL + '/wp-content/themes/walnut/images/synapse_logo.png';
+        if (_.platform() === 'DEVICE') {
+          data.logourl = SITEURL + '/images/synapse_logo.png';
+        }
         return data;
       };
 
@@ -107,6 +111,21 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
           $('.page-content').addClass('condensed');
           return $(".header-seperation").css("display", "none");
         }
+      };
+
+      HeaderView.prototype.onAppLogout = function() {
+        var user;
+        console.log('Synapse App Logout');
+        _.setUserID(null);
+        user = App.request("get:user:model");
+        user.clear();
+        App.leftNavRegion.close();
+        App.headerRegion.close();
+        App.mainContentRegion.close();
+        App.breadcrumbRegion.close();
+        return App.navigate('app-login', {
+          trigger: true
+        });
       };
 
       return HeaderView;

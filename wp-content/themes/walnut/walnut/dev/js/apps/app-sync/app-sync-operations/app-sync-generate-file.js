@@ -30,20 +30,20 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
         }, function(fileEntry) {
           return fileEntry.createWriter(function(writer) {
             writer.write(content);
+            _.setGeneratedZipFilePath(fileEntry.toURL());
             return _.onFileGenerationSuccess();
           }, _.fileErrorHandler);
         }, _.fileErrorHandler);
       }, _.fileSystemErrorHandler);
     },
     onFileGenerationSuccess: function() {
-      _.setGeneratedZipFilePath(fileEntry.toURL());
       _.updateSyncDetails('file_generate', _.getCurrentDateTime(2));
       $('#syncSuccess').css("display", "block").text("File generation completed...");
       return _.updateQuestionResponseSyncFlag();
     },
     updateQuestionResponseSyncFlag: function() {
       return _.db.transaction(function(tx) {
-        return tx.executeSql("UPDATE " + _.getTblPrefix() + "question_response SET sync=? WHERE sync=", [1, 0]);
+        return tx.executeSql("UPDATE " + _.getTblPrefix() + "question_response SET sync=? WHERE sync=?", [1, 0]);
       }, _.transactionErrorhandler, function(tx) {
         setTimeout((function(_this) {
           return function() {
