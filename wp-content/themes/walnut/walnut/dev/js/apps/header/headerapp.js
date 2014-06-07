@@ -97,11 +97,11 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.onShow = function() {
+        if ($(window).width() > 1024) {
+          $("#gears-mob").remove();
+        }
         if ($(window).width() < 1025) {
-          $('#walnutProfile').mmenu({
-            position: 'right',
-            zposition: 'front'
-          });
+          $("#gears-pc").remove();
         }
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
