@@ -41,6 +41,8 @@
           media="screen"/>
     <link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css"
           media="screen"/>
+    <link href="./wp-content/themes/walnut/walnut/dev/css/jquery.mmenu.all.css" rel="stylesheet" type="text/css"
+          media="screen"/>
     <!-- BEGIN CORE CSS FRAMEWORK -->
     <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>

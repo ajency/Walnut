@@ -34,4 +34,5 @@ define [
     'screwbuttons'
     'videojs'
     'panzer'
+    'mmenu'
 ], ->

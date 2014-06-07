@@ -102,10 +102,16 @@ body{
 			&.open > a{
 				background-color: darken(@color-grey, 20%) !important;
 			}
+			a.mm-subopen{
+				position: absolute;
+			}
+			a .arrow{
+				display: none;
+			}
 		}
 
 		.page-sidebar-wrapper > ul > li:hover >a{
-			background-color: darken(@color-grey, 20%);
+			background-color: transparent;
 		}
 
 		.page-sidebar-wrapper > ul > li > ul.sub-menu{
@@ -115,25 +121,43 @@ body{
 				background-color: darken(@color-grey, 5%) !important;
 			}
 		}
+
+		.mm-list > li{
+			& > a, & > span{
+				font-family: 'Open Sans';
+				color: @color-white;
+				font-weight: 400;
+				font-size: 18px;
+			}
+		} 
 	}
 }
 
 #walnutProfile{
-	.user{
+	background: @color-black;
+		.user{
 		font-size: 20px;
 		color: @dash-grey;
-		padding: 20px 20px 5px;
+		//padding: 20px 20px 5px;
 	}
 	.appLogout{
 		padding: 5px 22px;
 		width: 100%;
 		display: block;
 		color: @color-white;
-		border-top: 1px solid lighten(@3-grey, 5%);
-		border-bottom: 1px solid lighten(@3-grey, 5%);
+		font-size: 18px;
+		font-family: 'Open Sans';
+		font-weight: 400;
+		// border-top: 1px solid lighten(@3-grey, 5%);
+		// border-bottom: 1px solid lighten(@3-grey, 5%);
 		&:hover{
 			color: lighten(@dash-grey, 5%);
 		}
+	}
+}
+@media(min-width:1025px){
+	#walnutProfile{
+		display: none;
 	}
 }
 

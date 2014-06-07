@@ -97,11 +97,12 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.onShow = function() {
-        this.$el.find('.right-menu').sidr({
-          name: 'walnutProfile',
-          side: 'right',
-          renaming: false
-        });
+        if ($(window).width() < 1025) {
+          $('#walnutProfile').mmenu({
+            position: 'right',
+            zposition: 'front'
+          });
+        }
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
           return $(".header-seperation").css("display", "none");
