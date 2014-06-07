@@ -44790,7 +44790,6 @@ define('apps/content-group/view-group/group-view-controller',['app', 'controller
       groupContentCollection = null;
 
       GroupController.prototype.initialize = function(opts) {
-        var layout;
         model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
@@ -44800,17 +44799,21 @@ define('apps/content-group/view-group/group-view-controller',['app', 'controller
           'role': 'student',
           'division': this.division
         });
-        this.layout = layout = this._getContentGroupViewLayout();
-        this.show(layout, {
-          loading: true,
-          entities: [model, this.questionResponseCollection, this.textbookNames, this.studentCollection]
-        });
-        this.listenTo(layout, 'show', this.showContentGroupViews);
-        this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
-        return this.listenTo(this.layout.contentDisplayRegion, 'goto:question:readonly', (function(_this) {
-          return function(questionID) {
-            App.navigate(App.getCurrentRoute() + '/question');
-            return _this.gotoTrainingModule(questionID, 'readonly');
+        return App.execute("when:fetched", model, (function(_this) {
+          return function() {
+            var layout;
+            groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
+            _this.layout = layout = _this._getContentGroupViewLayout();
+            _this.show(layout, {
+              loading: true,
+              entities: [model, _this.questionResponseCollection, groupContentCollection, _this.textbookNames, _this.studentCollection]
+            });
+            _this.listenTo(layout, 'show', _this.showContentGroupViews);
+            _this.listenTo(_this.layout.collectionDetailsRegion, 'start:teaching:module', _this.startTeachingModule);
+            return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:question:readonly', function(questionID) {
+              App.navigate(App.getCurrentRoute() + '/question');
+              return _this.gotoTrainingModule(questionID, 'readonly');
+            });
           };
         })(this));
       };
@@ -44821,8 +44824,8 @@ define('apps/content-group/view-group/group-view-controller',['app', 'controller
           "status": "completed"
         });
         responseQuestionIDs = _.chain(responseCollection).map(function(m) {
-          return m.toJSON().pluck('content_piece_id').value();
-        });
+          return m.toJSON();
+        }).pluck('content_piece_id').value();
         content_pieces = model.get('content_pieces');
         if (content_pieces) {
           content_piece_ids = _.map(content_pieces, function(m) {
