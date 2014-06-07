@@ -50,10 +50,9 @@ define ['app'
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
-                console.log @
                 responsePercentage = Marionette.getOption @, 'responsePercentage'
-                if responsePercentage?
-                    responsePercentage = if responsePercentage is '' then 'few' else responsePercentage
+
+                if _.isString(responsePercentage) and responsePercentage.length > 0
                     @$el.find '#' + responsePercentage
                     .find '.default'
                         .removeClass 'default'
@@ -64,16 +63,16 @@ define ['app'
                 .removeClass 'green'
                     .addClass 'default'
 
-                dataValue = $(e.target).closest '.tiles.single'
-                .attr 'id'
+                dataValue = $(e.currentTarget).closest '.tiles.single'
+                                                .attr 'id'
 
                 $(e.target).closest('.tiles.single')
-                .find '.default'
-                    .removeClass 'default'
-                    .addClass 'green'
-                        .find 'i'
-                            .removeClass 'fa-minus-circle'
-                                .addClass 'fa-check-circle'
+                            .find '.default'
+                                .removeClass 'default'
+                                .addClass 'green'
+                                    .find 'i'
+                                        .removeClass 'fa-minus-circle'
+                                            .addClass 'fa-check-circle'
 
                 @trigger "save:question:response", dataValue
 
