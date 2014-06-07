@@ -95,7 +95,7 @@ define ['app'], (App)->
 
 
             startTraining: (e)=>
-                dataID = $(e.target).attr 'data-id'
+                dataID = $(e.currentTarget).attr 'data-id'
                 currentRoute = App.getCurrentRoute()
                 App.navigate currentRoute + "/module/" + dataID, true
 

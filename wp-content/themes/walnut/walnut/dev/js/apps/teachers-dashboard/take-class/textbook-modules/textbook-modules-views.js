@@ -74,7 +74,7 @@ define(['app'], function(App) {
 
       ContentGroupsView.prototype.startTraining = function(e) {
         var currentRoute, dataID;
-        dataID = $(e.target).attr('data-id');
+        dataID = $(e.currentTarget).attr('data-id');
         currentRoute = App.getCurrentRoute();
         return App.navigate(currentRoute + "/module/" + dataID, true);
       };

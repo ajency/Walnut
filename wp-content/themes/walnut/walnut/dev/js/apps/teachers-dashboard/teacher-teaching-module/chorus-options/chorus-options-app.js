@@ -79,12 +79,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
             $(ele).addClass('selectable');
           }
         }
-        console.log(this);
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
-        if (responsePercentage != null) {
-          if (responsePercentage === '' || (_.isArray(responsePercentage) && responsePercentage.length === 0)) {
-            responsePercentage = 'few';
-          }
+        if (_.isString(responsePercentage) && responsePercentage.length > 0) {
           return this.$el.find('#' + responsePercentage).find('.default').removeClass('default').addClass('green');
         }
       };
@@ -92,7 +88,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ChorusOptionsView.prototype.selectStudent = function(e) {
         var dataValue;
         this.$el.find('.green').removeClass('green').addClass('default');
-        dataValue = $(e.target).closest('.tiles.single').attr('id');
+        dataValue = $(e.currentTarget).closest('.tiles.single').attr('id');
         $(e.target).closest('.tiles.single').find('.default').removeClass('default').addClass('green').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
         return this.trigger("save:question:response", dataValue);
       };
