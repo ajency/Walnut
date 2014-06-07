@@ -83,6 +83,10 @@ define ['app'
 
 
                 if _.platform() is 'DEVICE'
+
+                    #Create 'SynapseImages' directory inside 'SynapseAssets'
+                    _.createSynapseImagesDirectory()
+
                     @trigger "prepopulate:username"
 
                     _.setMainLogo()

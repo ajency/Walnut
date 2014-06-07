@@ -38,6 +38,26 @@ define ['underscore'], ( _) ->
                 ,_.fileSystemErrorHandler)
 
 
+        #Create 'SynapseImages' directory inside 'SynapseAssets'
+        createSynapseImagesDirectory : ->
+
+            _.createSynapseAssetsDirectory()
+
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+                ,(fileSystem)->
+                    fileSystem.root.getDirectory("SynapseAssets/SynapseImages"
+                        ,{create: true, exclusive:false} 
+                        
+                        ,(fileEntry)->
+                            console.log 'SynapseImages directory path: '+fileEntry.toURL()
+                        
+                        ,(error)->
+                            console.log 'ERROR: '+error.code
+                        )
+
+                ,_.fileSystemErrorHandler)
+
+
         
         #Create 'SynapseData' directory inside 'SynapseAssets' for file sync operations
         createSynapseDataDirectory : ->

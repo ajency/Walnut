@@ -94,6 +94,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         $('body').addClass('error-body no-top');
         $('.page-content').addClass('condensed');
         if (_.platform() === 'DEVICE') {
+          _.createSynapseImagesDirectory();
           this.trigger("prepopulate:username");
           _.setMainLogo();
           if (_.isOnline()) {
