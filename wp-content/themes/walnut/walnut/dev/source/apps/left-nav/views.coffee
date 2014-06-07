@@ -67,14 +67,10 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
 					elem.children('li').removeClass('open');
 
 				if $( window ).width()<1025
-				    $('#main-menu-toggle').sidr
-				        name : 'main-menu'
-				        side: 'left'
-
-				# if _.platform() is 'DEVICE'
-					
-				# 	$('#main-menu').mmenu
-				# 		position: 'left'
+					$('#main-menu').mmenu
+						position: 'left'
+						zposition: 'front'
+					$("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ")
 
 
 

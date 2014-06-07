@@ -137,17 +137,21 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionDetailsView.prototype.template = collectionDetailsTpl;
 
-      CollectionDetailsView.prototype.className = 'tiles white grid simple vertical green';
-
       CollectionDetailsView.prototype.events = {
         'click #start-module': 'startModule'
       };
 
-      CollectionDetailsView.prototype.serializeData = function() {
+      CollectionDetailsView.prototype.mixinTemplateHelpers = function() {
         var data;
-        data = CollectionDetailsView.__super__.serializeData.call(this);
-        data.takeClassModule = Marionette.getOption(this, 'mode');
+        data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this);
+        data.takeClassModule = this.mode;
+        data.isTraining = this.mode === 'training' ? true : false;
+        data.isClass = this.mode === 'take-class' ? true : false;
         return data;
+      };
+
+      CollectionDetailsView.prototype.initialize = function() {
+        return this.mode = Marionette.getOption(this, 'mode');
       };
 
       CollectionDetailsView.prototype.startModule = function() {

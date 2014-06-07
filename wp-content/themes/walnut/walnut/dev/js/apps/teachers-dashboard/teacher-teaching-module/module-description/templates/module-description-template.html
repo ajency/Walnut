@@ -1,3 +1,9 @@
+{{#isTraining}}
+    <div class="well text-center">
+        <h4><span class="semi-bold">This is a practise mode.
+                It is designed to help you train for the class</span></h4>
+    </div>
+{{/isTraining}}
 <div class="tiles white m-b-20">
 	<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
         <div class="row">
@@ -9,17 +15,21 @@
 
                 {{&showPauseButton}}
 
-                <div class="modProgress pull-right">
-                    <p class="bold small-text m-t-10 m-b-5">Progress</p>
-                    <div class="progress progress-large">
-                        <div data-percentage="{{getProgressPercentage}}%" style="width: {{getProgressPercentage}}%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">{{getProgressData}}</div>
+                {{#isClass}}
+                    <div class="modProgress pull-right">
+                        <p class="bold small-text m-t-10 m-b-5">Progress</p>
+                        <div class="progress progress-large">
+                            <div data-percentage="{{getProgressPercentage}}%" style="width: {{getProgressPercentage}}%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">{{getProgressData}}</div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="pull-right m-r-30">
-                    <p class="bold small-text"> Completed Time</p>
-                    <h4 class="text-grey m-t-0 m-b-0 semi-bold time"> <i class="fa fa-clock-o"></i> {{moduleTime}}</h4>
-                </div>
+                    <div class="pull-right m-r-30">
+                        <p class="bold small-text"> Completed Time</p>
+                        <h4 class="text-grey m-t-0 m-b-0 semi-bold time"> <i class="fa fa-clock-o"></i> {{moduleTime}}</h4>
+                    </div>
+                {{/isClass}}
+
+
 
             </div>
             <div class="clearfix"></div>
