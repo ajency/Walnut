@@ -37,10 +37,10 @@
                     {{#isTraining}}
                         <p>Visible in Class room mode</p>
                     {{/isTraining}}
-                    {{#isClass}}
+                    {{^isTraining}}
                         <div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>
                         {{&getCompletedSummary}}
-                    {{/isClass}}
+                    {{/isTraining}}
                 </div>
             </div>
         </div>

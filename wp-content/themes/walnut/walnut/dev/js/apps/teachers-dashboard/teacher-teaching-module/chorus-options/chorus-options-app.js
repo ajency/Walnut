@@ -31,6 +31,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       };
 
       ChorusOptionsController.prototype._showChorusOptionsView = function(model) {
+        console.log(JSON.stringify(this.questionResponseModel.toJSON()));
         return new ChorusOptionsView({
           model: model,
           responsePercentage: this.questionResponseModel.get('question_response'),
@@ -78,17 +79,19 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
             $(ele).addClass('selectable');
           }
         }
+        console.log(this);
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
         if (responsePercentage != null) {
-          return this.$el.find('#' + responsePercentage).find('.default').addClass('green');
+          responsePercentage = responsePercentage === '' ? 'few' : responsePercentage;
+          return this.$el.find('#' + responsePercentage).find('.default').removeClass('default').addClass('green');
         }
       };
 
       ChorusOptionsView.prototype.selectStudent = function(e) {
         var dataValue;
-        this.$el.find('.green').removeClass('green');
+        this.$el.find('.green').removeClass('green').addClass('default');
         dataValue = $(e.target).closest('.tiles.single').attr('id');
-        $(e.target).closest('.tiles.single').find('.default').addClass('green').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
+        $(e.target).closest('.tiles.single').find('.default').removeClass('default').addClass('green').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
         return this.trigger("save:question:response", dataValue);
       };
 
