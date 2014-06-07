@@ -51,6 +51,12 @@ define ['underscore'], ( _)->
 
 
 
+    # save/get Synapse assets directory path on SD Card
+    _.setGeneratedZipFlePath = (path)->
+        window.localStorage.setItem("gererated_zip_file_path", path)
+
+    _.getGeneratedZipFlePath =->
+        window.localStorage.getItem("gererated_zip_file_path")
         
 
 

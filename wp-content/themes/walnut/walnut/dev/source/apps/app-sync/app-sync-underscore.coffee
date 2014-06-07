@@ -59,7 +59,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			onSuccess = (d)->
 				(tx, data)->
-					time_stamp = 'none'
+					time_stamp = ''
 					if data.rows.length isnt 0
 						time_stamp = data.rows.item(0)['time_stamp']
 					
@@ -68,3 +68,17 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'getLastDownloadTimeStamp transaction completed'
 			.fail _.failureHandler
+
+
+		
+		#Update 'sync_details' table after every file operation
+		updateSyncDetails : (operation, time_stamp)->
+
+			_.db.transaction((tx)->
+				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
+					VALUES (?,?)", [operation, time_stamp])
+
+			,_.transactionErrorhandler
+			,(tx)->
+				console.log 'Updated sync details for '+operation
+			)

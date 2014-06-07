@@ -2,72 +2,11 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 	class SynchronizationController extends Marionette.Controller
 
-
-		#This function will be called when the upload button is clicked
-		#this function will read the file from the specified device path
-		fileReadZip : ->
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-
-				, (fileSystem)=>
-
-					fileSystem.root.getFile("SynapseAssets/hello.zip", null
-
-						, (fileEntry)=>
-
-							fileEntry.file(
-
-								(file)=>
-									reader = new FileReader()
-									reader.onloadend = (evt)=>
-										csvData = evt.target.result
-										console.log "result" +evt.target.result
-										@fileUpload fileEntry
-									reader.readAsText file
-
-								, _.fileErrorHandler)
-
-						, _.fileErrorHandler)
-
-				, _.fileSystemErrorHandler)
-
-		#This Function Will upload the zip file to the server
-
-		fileUpload: (fileEntry)=>
-			uri = encodeURI('')
-			options = new FileUploadOptions();
-			options.fileKey = "file";
-			options.fileName = fileEntry.substr(fileEntry.lastIndexOf('/') + 1);
-			options.mimeType = "text/csv;";
-			
-			params = {};
-			params.value1 = "test";
-			params.value2 = "param";
-
-			options.params = params;
-
-			ft = new FileTransfer();
-			ft.upload(fileEntry,uri
-				, (r)=>
-					console.log "Code = " + r.responseCode
-					console.log "Response = " + r.response
-					console.log "Sent = " + r.bytesSent
-
-				, (error)->
-					alert "An error has occurred: Code = " + error.code
-					console.log "upload error source " + error.source
-					console.log "upload error target " + error.target
-
-				, options)
-
-
-
 		
 		getDownloadURL:->
 			$('#syncSuccess')
 			.css("display","block")
 			.text("Starting file download...")
-
-			# lastDownloadTimestamp = _.getLastDownloadTimeStamp()
 
 			data = 
 				blog_id: _.getBlogID()
@@ -106,24 +45,12 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 							_.setFilePath(filePath)
 							fileEntry.remove()
 							fileTransfer = new FileTransfer()
-							
-							# fileTransfer.onprogress = (progressEvent)=>
-							# 	if progressEvent.lengthComputable
-							# 		perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-							# 		console.log perc
-							# 		statusDom.innerHTML = perc + "% loaded...";
-							# 	else
-							# 		if progressBarDwnldDom.innerHTML is null
-							# 			progressBarDwnldDom.innerHTML = "Loading"
-							# 		else
-							# 			progressBarDwnldDom.innerHTML += "."
-
 
 							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
 								,(file)=>
 									console.log 'Zip file downloaded'
 
-									@updateSyncDetails('file_download', resp.last_sync)
+									_.updateSyncDetails('file_download', resp.last_sync)
 									
 									@fileUnZip filePath, file.toURL()
 								
@@ -476,7 +403,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 				,(tx)=>
 					console.log 'Data inserted successfully14'
 
-					@updateSyncDetails('file_import', _.getCurrentDateTime(2))
+					_.updateSyncDetails('file_import', _.getCurrentDateTime(2))
 
 					$('#syncSuccess')
 					.css("display","block")
@@ -499,19 +426,6 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 					
 					,3000)
 				)
-
-
-		
-		updateSyncDetails :(operation, time_stamp)->
-
-			_.db.transaction( (tx)->
-				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
-					VALUES (?,?)", [operation, time_stamp])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Updated sync details'
-			)
 
 		
 	# request handler

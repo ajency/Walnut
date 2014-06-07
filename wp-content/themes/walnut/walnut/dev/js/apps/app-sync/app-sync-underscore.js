@@ -55,7 +55,7 @@ define(['underscore', 'unserialize'], function(_) {
       onSuccess = function(d) {
         return function(tx, data) {
           var time_stamp;
-          time_stamp = 'none';
+          time_stamp = '';
           if (data.rows.length !== 0) {
             time_stamp = data.rows.item(0)['time_stamp'];
           }
@@ -65,6 +65,13 @@ define(['underscore', 'unserialize'], function(_) {
       return $.when(runQuery()).done(function() {
         return console.log('getLastDownloadTimeStamp transaction completed');
       }).fail(_.failureHandler);
+    },
+    updateSyncDetails: function(operation, time_stamp) {
+      return _.db.transaction(function(tx) {
+        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?,?)", [operation, time_stamp]);
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Updated sync details for ' + operation);
+      });
     }
   });
 });

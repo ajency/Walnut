@@ -6,6 +6,8 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 
 		generateZipFile : ->
 
+			$('#syncSuccess').css("display","block").text("Generating file...")
+
 			questionResponseData = _.getDataFromQuestionResponse()
 			questionResponseData.done (question_response_data)->
 
@@ -41,15 +43,51 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 								(writer)->
 									writer.write(content)
 
+									_.onFileGenerationSuccess()
+
 								, _.fileErrorHandler)
 							
 						, _.fileErrorHandler)
 
 				, _.fileSystemErrorHandler)
+
+
+		
+		onFileGenerationSuccess : ->
+
+			_.setGeneratedZipFlePath fileEntry.toURL()
+
+			_.updateSyncDetails('file_generate', _.getCurrentDateTime(2))
+			
+			$('#syncSuccess').css("display","block").text("File generation completed...")
+			
+			_.updateQuestionResponseSyncFlag()
+
+
+		
+		#Update 'sync' field to 1 in 'wp_question_response' table after file generation.
+		updateQuestionResponseSyncFlag : ->
+
+			_.db.transaction((tx)->
+				tx.executeSql("UPDATE "+_.getTblPrefix()+"question_response 
+					SET sync=? WHERE sync=", [1, 0])
+
+			,_.transactionErrorhandler
+			
+			,(tx)->
+
+				setTimeout(=>
+					_.uploadGeneratedZipFile()
+		
+				,2000)
+
+				console.log 'updateQuestionResponseSyncFlag transaction completed'
+			)
 		
 		
 		#Get all data from wp_question_response where sync=0
 		getDataFromQuestionResponse : ->
+
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
@@ -67,7 +105,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 							question_response_data[i] = [row.ref_id, row.teacher_id
 									, row.content_piece_id, row.collection_id, row.division
 									, row.question_response, row.time_taken, row.start_date
-									, row.end_date, row.status, row.sync]
+									, row.end_date, row.status]
 
 					d.resolve question_response_data
 

@@ -16,3 +16,20 @@ define ['underscore'], ( _) ->
                     )
 
             ,_.fileSystemErrorHandler)
+
+
+    #Create 'SynapseAssets/SynapseData/' directory for file sync operations
+    _.createSynapseAssetsDataDirectory = ->
+
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+            ,(fileSystem)->
+                fileSystem.root.getDirectory("SynapseAssets", {create: true, exclusive:false} 
+                    ,(fileEntry)->
+                        _.setSynapseAssetsDirectoryPath(fileEntry.toURL()+'/SynapseImages/')
+                        console.log 'Full path: '+_.getSynapseAssetsDirectoryPath()
+                    
+                    ,(error)->
+                        console.log 'ERROR: '+error
+                    )
+
+            ,_.fileSystemErrorHandler)

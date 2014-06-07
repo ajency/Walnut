@@ -59,6 +59,8 @@ require.config
         json2csvparse       : 'plugins/json2csv'
         jszip               : 'plugins/jszip'
         fastclick           : 'plugins/fastclick'
+        mmenu               : 'plugins/jquery.mmenu.min.all'
+
 
 
 
@@ -100,6 +102,7 @@ require.config
         csvparse		: ['jquery']
         json2csvparse   : ['jquery']
         panzer          : ['jquery']
+        mmenu           : ['jquery']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
 
