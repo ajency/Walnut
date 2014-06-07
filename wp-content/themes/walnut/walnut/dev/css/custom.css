@@ -1854,8 +1854,14 @@ body {
   .page-sidebar .page-sidebar-wrapper > ul > li.open > a {
     background-color: #595e6c !important;
   }
+  .page-sidebar .page-sidebar-wrapper > ul > li a.mm-subopen {
+    position: absolute;
+  }
+  .page-sidebar .page-sidebar-wrapper > ul > li a .arrow {
+    display: none;
+  }
   .page-sidebar .page-sidebar-wrapper > ul > li:hover > a {
-    background-color: #595e6c;
+    background-color: transparent;
   }
   .page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu {
     background-color: #595e6c;
@@ -1863,19 +1869,29 @@ body {
   .page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu > li > a:hover {
     background-color: #7d8495 !important;
   }
+  .page-sidebar .mm-list > li > a,
+  .page-sidebar .mm-list > li > span {
+    font-family: 'Open Sans';
+    color: #ffffff;
+    font-weight: 400;
+    font-size: 18px;
+  }
+}
+#walnutProfile {
+  background: #003d4f;
 }
 #walnutProfile .user {
   font-size: 20px;
   color: #aaaaaa;
-  padding: 20px 20px 5px;
 }
 #walnutProfile .appLogout {
   padding: 5px 22px;
   width: 100%;
   display: block;
   color: #ffffff;
-  border-top: 1px solid #404040;
-  border-bottom: 1px solid #404040;
+  font-size: 18px;
+  font-family: 'Open Sans';
+  font-weight: 400;
 }
 #walnutProfile .appLogout:hover {
   color: #b7b7b7;
