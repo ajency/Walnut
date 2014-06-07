@@ -2033,6 +2033,9 @@ select:before {
   bottom: 10px;
   border-left: 1px solid #e5e5e5;
 }
+.header .notifcation-center {
+  display: none;
+}
 @media (max-width: 1024px) {
   #main-menu-toggle-wrapper,
   #portrait-chat-toggler {
@@ -2048,6 +2051,21 @@ select:before {
     margin-bottom: 0;
   }
   .header .notifcation-center {
+    background: transparent;
+    display: inline-block;
+  }
+  .header .notifcation-center li a {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .header .notifcation-center > li > a {
+    padding: 5px 20px 15px !important;
+    font-size: 28px;
+    color: white;
+  }
+  .header .nav .open > a,
+  .nav .open > a:hover,
+  .nav .open > a:focus {
     background: transparent;
   }
 }

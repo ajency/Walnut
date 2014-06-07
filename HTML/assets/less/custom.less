@@ -360,6 +360,10 @@ select{
 	}
 }
 
+.header .notifcation-center{
+	display: none;
+}
+
 @media (max-width:1024px){
 	#main-menu-toggle-wrapper, #portrait-chat-toggler{
 		display: block !important;
@@ -377,6 +381,23 @@ select{
 	.header{
 		.notifcation-center{
 			background: transparent;
+			display: inline-block;
+			li a{
+				font-size: 16px;
+				font-weight: bold;
+			}
+			& > li > a{
+				padding: 5px 20px 15px !important;
+				font-size: 28px;
+				color: white;
+			}
 		}
+		.quick-section2{
+
+		}
+	}
+
+	.header .nav .open > a, .nav .open > a:hover, .nav .open > a:focus{
+		background: transparent;
 	}
 }

@@ -64,11 +64,14 @@ define ['app'
                 data
 
             onShow: ->
+                if $( window ).width()>1024
+                    $( "#gears-mob" ).remove();
 
                 if $( window ).width()<1025
-                    $('#walnutProfile').mmenu
-                        position: 'right'
-                        zposition: 'front'
+                    $( "#gears-pc" ).remove();
+                    # $('#walnutProfile').mmenu
+                    #     position: 'right'
+                    #     zposition: 'front'
 
                 # @$el.find('.right-menu').sidr
                 #     name : 'walnutProfile'
