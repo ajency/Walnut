@@ -19,6 +19,7 @@
         marionette: 'plugins/backbone.marionette',
         text: 'plugins/text',
         mustache: 'plugins/mustache',
+
         holder: 'plugins/holder',
         app: 'content-creator-app',
         plupload: 'plugins/plupload.full',
@@ -39,7 +40,8 @@
         babysitter: 'plugins/backbone.babysitter.min',
         videojs: 'plugins/video',
         panzer: 'plugins/panzer',
-        sidr: 'plugins/jquery.sidr.min'
+        sidr: 'plugins/jquery.sidr.min',
+        mmenu: 'plugins/jquery.mmenu.min.all'
 
     },
     shim: {
@@ -65,6 +67,7 @@
             exports: 'plupload'
         },
         bootstrap: ['jquery'],
+        mmenu: ['jquery'],
         jqueryvalidate: ['jquery'],
         underscorestring: ['underscore'],
         syphon: ['backbone'],

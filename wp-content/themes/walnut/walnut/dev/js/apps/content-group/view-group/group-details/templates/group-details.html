@@ -85,13 +85,13 @@
                 <div class="tiles white added-margin">
                     <div class="tiles-body">
                         <div class="tiles-title"> ELAPSED MODULE TIME</div>
-                        {{#isClass}}
+                        {{^isTraining}}
                             <div class="heading">
                                 <span class="animate-number" data-animation-duration="1200">
                                     {{showElapsedTime}}
                                 </span>
                             </div>
-                        {{/isClass}}
+                        {{/isTraining}}
                         {{#isTraining}}
                             <p>This will display what is the elapsed module
                                 time of the training module in class mode.</p>
@@ -103,16 +103,16 @@
         </div>
         <div class="row no-margin p-t-10">
             <div class="col-sm-6">
-                <div class="{{#isClass}}modProgress{{/isClass}}" >
+                <div class="{{^isTraining}}modProgress{{/isTraining}}" >
                     <p class="bold small-text m-t-10 m-b-5">Progress</p>
-                    {{#isClass}}
+                    {{^isTraining}}
                         <div class="progress progress-large">
                             <div data-percentage="{{getProgressPercentage}}%" style="width:{{getProgressPercentage}}%;"
                                  class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0"
                                  aria-valuemax="100">{{getProgressData}}
                             </div>
                         </div>
-                    {{/isClass}}
+                    {{/isTraining}}
                     {{#isTraining}}
                             <p> This will display the progress of training module in class mode.</p>
                     {{/isTraining}}

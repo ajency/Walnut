@@ -95,13 +95,14 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
                 var classLabel, classes, classesArray, _i, _len;
                 classesArray = [];
                 classes = _this.textbookModel.get('classes');
-                if (classes) {
+                if (_.isArray(classes)) {
                   for (_i = 0, _len = classes.length; _i < _len; _i++) {
                     classLabel = classes[_i];
                     classesArray.push(CLASS_LABEL[classLabel]);
                   }
-                  return classesArray.join();
+                  classesArray.join();
                 }
+                return classesArray;
               };
             })(this),
             getTextbookName: (function(_this) {

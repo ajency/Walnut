@@ -75,10 +75,12 @@ define ['app'
                         getClass: =>
                             classesArray=[]
                             classes= @textbookModel.get 'classes'
-                            if classes
-                                classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
 
+                            if _.isArray classes
+                                classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
                                 classesArray.join()
+
+                            classesArray
 
                         getTextbookName: =>
                             textbook = @textbookNames.get terms.textbook

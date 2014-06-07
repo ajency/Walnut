@@ -15,7 +15,7 @@
 
                 {{&showPauseButton}}
 
-                {{#isClass}}
+                {{^isTraining}}
                     <div class="modProgress pull-right">
                         <p class="bold small-text m-t-10 m-b-5">Progress</p>
                         <div class="progress progress-large">
@@ -27,7 +27,7 @@
                         <p class="bold small-text"> Completed Time</p>
                         <h4 class="text-grey m-t-0 m-b-0 semi-bold time"> <i class="fa fa-clock-o"></i> {{moduleTime}}</h4>
                     </div>
-                {{/isClass}}
+                {{/isTraining}}
 
 
 

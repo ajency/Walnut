@@ -15,7 +15,6 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
       TopPanelView.prototype.mixinTemplateHelpers = function(data) {
         data = TopPanelView.__super__.mixinTemplateHelpers.call(this, data);
         data.isTraining = this.mode === 'training' ? true : false;
-        data.isClass = this.mode === 'take-class' ? true : false;
         return data;
       };
 

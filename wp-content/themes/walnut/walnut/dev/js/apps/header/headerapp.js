@@ -51,10 +51,15 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderController.prototype._getHeaderView = function() {
-        console.log('@school2');
-        console.log(this.school);
         return new HeaderView({
-          model: this.school
+          model: this.school,
+          templateHelpers: {
+            show_user_name: function() {
+              var user_model, user_name;
+              user_model = App.request("get:user:model");
+              return user_name = user_model.get('display_name');
+            }
+          }
         });
       };
 
@@ -78,51 +83,29 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.events = {
-        'click #logout': 'onLogout'
+        'click #logout': function() {
+          $.sidr('close', 'walnutProfile');
+          return this.trigger("user:logout");
+        }
       };
 
       HeaderView.prototype.serializeData = function() {
         var data;
         data = HeaderView.__super__.serializeData.call(this);
-        data.logourl = SITEURL + '/wp-content/themes/walnut/images/walnutlearn.png';
-        if (_.platform() === 'DEVICE') {
-          data.logourl = SITEURL + '/images/logo-synapse.png';
-        }
-        console.log(SITEURL);
+        data.logourl = SITEURL + '/wp-content/themes/walnut/images/synapse_logo.png';
         return data;
       };
 
       HeaderView.prototype.onShow = function() {
+        if ($(window).width() > 1024) {
+          $("#gears-mob").remove();
+        }
         if ($(window).width() < 1025) {
-          $('#walnutProfile').mmenu({
-            position: 'right'
-          });
+          $("#gears-pc").remove();
         }
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
-          $(".header-seperation").css("display", "none");
-        }
-        if (_.platform() === 'DEVICE') {
-          return this.$el.find('#app_username').text('Hi ' + _.getUserName() + ',');
-        }
-      };
-
-      HeaderView.prototype.onLogout = function() {
-        var user;
-        if (_.platform() === 'BROWSER') {
-          return this.trigger("user:logout");
-        } else {
-          console.log('Synapse App Logout');
-          _.setUserID(null);
-          user = App.request("get:user:model");
-          user.clear();
-          App.leftNavRegion.close();
-          App.headerRegion.close();
-          App.mainContentRegion.close();
-          App.breadcrumbRegion.close();
-          return App.navigate('app-login', {
-            trigger: true
-          });
+          return $(".header-seperation").css("display", "none");
         }
       };
 

@@ -110,7 +110,8 @@ function setup_childsite_tables() {
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `file_path` varchar(455) NOT NULL,
               `blog_id` int(11) NOT NULL,
-              `meta` TEXT NOT NULL
+              `meta` TEXT NOT NULL,
+              `status` VARCHAR(30) NOT NULL
             )";
 
     $wpdb->query( $sync_apps_data_query );

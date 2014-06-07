@@ -112,7 +112,6 @@ define ['app'
                 data = super()
                 data.takeClassModule = @mode
                 data.isTraining = if @mode is 'training' then true else false
-                data.isClass = if @mode is 'take-class' then true else false
                 data
 
             initialize : ->

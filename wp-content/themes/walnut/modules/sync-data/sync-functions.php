@@ -17,7 +17,8 @@ function insert_sync_request_record( $sync_data ) {
     $defaults = array(
         'blog_id' => get_current_blog_id(),
         'meta' => array(),
-        'file_path' => '' );
+        'file_path' => '',
+        'status' => 'pending');
 
     if (!is_array( $sync_data ))
         return new WP_Error('invalid_record_data', __( 'Invalid record data passed' ));

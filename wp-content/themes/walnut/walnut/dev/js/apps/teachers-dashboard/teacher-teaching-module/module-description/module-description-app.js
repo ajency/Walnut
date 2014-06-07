@@ -98,7 +98,6 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ModuleDescriptionView.prototype.mixinTemplateHelpers = function(data) {
         data = ModuleDescriptionView.__super__.mixinTemplateHelpers.call(this, data);
         data.isTraining = this.mode === 'training' ? true : false;
-        data.isClass = this.mode === 'take-class' ? true : false;
         return data;
       };
 
