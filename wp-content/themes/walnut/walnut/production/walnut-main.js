@@ -42569,7 +42569,7 @@ define('apps/header/left/leftapp',['app', 'controllers/region-controller', 'text
 });
 
 
-define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\n\t<!-- BEGIN HEADER NAV BUTTONS -->\n\t<ul class="nav quick-section2">\n\t\t<!-- BEGIN SETTINGS -->\n\t\t<li class="quicklinks"> \n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\n\t\t\t</a>\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\n\t\t\t\t<li><a href="#">My Account</a></li>\n\t\t\t\t<li class="divider"></li>                \n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<!-- END SETTINGS -->\n\t\t \n\t</ul>\n\t<!-- END HEADER NAV BUTTONS -->\n<!-- END HEADER RIGHT SIDE SECTION -->\n\n<ul class="nav pull-right notifcation-center">\n\n    <!-- BEGIN MOBILE CHAT TOGGLER -->\n    <li style="display:none" id="portrait-chat-toggler" class="dropdown">\n        <a class="chat-menu-toggle" href="#sidr">\n            <div class="iconset top-chat-white"></div>\n        </a>\n    </li>\n    <!-- END MOBILE CHAT TOGGLER -->\n</ul>';});
+define('text!apps/header/right/templates/right.html',[],function () { return '<!-- BEGIN HEADER RIGHT SIDE SECTION -->\n\t<!-- BEGIN HEADER NAV BUTTONS -->\n\t<ul class="nav quick-section2" id="gears-pc">\n\t\t<!-- BEGIN SETTINGS -->\n\t\t<li class="quicklinks"> \n\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\t\t\t\t\t\n\t\t\t\t<div class="iconset top-settings-dark"></div> \t\n\t\t\t</a>\n\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\n\t\t\t\t<li><a href="#">My Account</a></li>\n\t\t\t\t<li class="divider"></li>                \n\t\t\t\t<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<!-- END SETTINGS -->\n\t\t \n\t</ul>\n\t<!-- END HEADER NAV BUTTONS -->\n<!-- END HEADER RIGHT SIDE SECTION -->\n\n<ul class="nav pull-right notifcation-center">\n\n    <!-- BEGIN MOBILE CHAT TOGGLER -->\n    <li style="display:none" id="portrait-chat-toggler" class="dropdown">\n        <a class="chat-menu-toggle" href="#sidr">\n            <div class="iconset top-chat-white"></div>\n        </a>\n    </li>\n    <!-- END MOBILE CHAT TOGGLER -->\n</ul>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -42632,7 +42632,7 @@ define('apps/header/right/rightapp',['app', 'controllers/region-controller', 'te
 });
 
 
-define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \n\t<!-- BEGIN TOP NAVIGATION BAR -->\n\t<div class="navbar-inner">\n\t\t<!-- BEGIN NAVIGATION HEADER -->\n\t\t<div class="header-seperation"> \n\t\t\t<!-- BEGIN MOBILE HEADER -->\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\n\t\t\t\t<li class="dropdown">\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\n\t\t\t\t\t\t<div class="iconset top-menu-toggle-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\t\t \n\t\t\t</ul>\n\t\t\t<!-- END MOBILE HEADER -->\n\t\t\t<!-- BEGIN LOGO -->\t\n\t\t\t<a href="#">\n\t\t\t\t<img width="192" height="38" data-src-retina="{{logourl}}" data-src="{{logourl}}" alt="" class="logo" src="{{logourl}}">\n\t\t\t</a>\n\t\t\t<!-- END LOGO --> \n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\n\t\t\t<ul class="nav pull-right notifcation-center">\n\n\t\t\t\t<!-- BEGIN MOBILE CHAT TOGGLER -->\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\n\t\t\t\t\t<a class="chat-menu-toggle right-menu" href="#walnutProfile">\n\t\t\t\t\t\t<div class="iconset top-chat-white"></div>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t\t<!-- END MOBILE CHAT TOGGLER -->\n\t\t\t</ul>\n\t\t\t<!-- END LOGO NAV BUTTONS -->\n\t\t</div>\n\t\t<!-- END NAVIGATION HEADER -->\n\t\t<!-- BEGIN CONTENT HEADER -->\n\t\t<div class="header-quick-nav"> \n\t\t\t<div id="header-left"></div>\n\t\t\t<div id="header-right"></div>\n\t\t\t\n\t\t</div> \n\t\t<!-- END CONTENT HEADER --> \n\t</div>\n\t<!-- END TOP NAVIGATION BAR --> \n</div>\n\n\n<div id="walnutProfile">\n\t<div>\n\t    <div id="app_username" class="user">{{show_user_name}}</div>\n\t    <ul class="List">\n\t    \t<li><a id="logout" class="appLogout" href="javascript://" ><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t    </ul>\n\t</div>\n    \n</div>';});
+define('text!apps/header/templates/header.html',[],function () { return '<div class="header navbar navbar-inverse"> \n\t<!-- BEGIN TOP NAVIGATION BAR -->\n\t<div class="navbar-inner">\n\t\t<!-- BEGIN NAVIGATION HEADER -->\n\t\t<div class="header-seperation"> \n\t\t\t<!-- BEGIN MOBILE HEADER -->\n\n\t\t\t<!-- <ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\n\t\t\t\t<li class="dropdown">\n\t\t\t\t\t<a class="" href="#main-menu" id="main-menu-toggle">\n\t\t\t\t\t\t<span class="fa fa-bars"></span>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\t\t \n\t\t\t</ul> -->\n\n\t\t\t<ul style="display:none" id="main-menu-toggle-wrapper" class="nav pull-left notifcation-center">\t\n\t\t\t\t<li class="dropdown">\n\t\t\t\t\t<a class="" href="#teachers/dashboard" id="main-menu-toggle"><span class="small-text">Dashboard</span>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\t\t \n\t\t\t</ul>\n\n\n\t\t\t<!-- END MOBILE HEADER -->\n\t\t\t<!-- BEGIN LOGO -->\t\n\t\t\t<a href="#">\n\t\t\t\t<img width="192" height="38" data-src-retina="{{logourl}}" data-src="{{logourl}}" alt="" class="logo" src="{{logourl}}">\n\t\t\t</a>\n\t\t\t<!-- END LOGO --> \n\t\t\t<!-- BEGIN LOGO NAV BUTTONS -->\n\t\t\t<!-- <ul class="nav pull-right notifcation-center">\n\t\t\t\t<li style="display:none" id="portrait-chat-toggler" class="dropdown">\n\t\t\t\t\t<a class="chat-menu-toggle right-menu" href="#walnutProfile">\n\t\t\t\t\t\t<span class="bicon icon-uniF171"></span>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t</ul> -->\n\t\t\t<ul class="nav quick-section2 pull-right notifcation-center" id="gears-mob">\n\t\t\t\t<li class="quicklinks"> \n\t\t\t\t\t<a id="user-options" href="#" class="dropdown-toggle pull-right" data-toggle="dropdown">\t\n\t\t\t\t\t\t<span class="fa fa-gears"></span>\t\n\t\t\t\t\t</a>\n\t\t\t\t\t<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">\n\t\t\t\t\t\t<li><a href="#sync"><span class="fa fa-refresh"></span>&nbsp;&nbsp;Sync</a></li>\n\t\t\t\t\t\t<li class="divider"></li>                \n\t\t\t\t\t\t<li><a id="user_logout" href="javascript://"><span class="fa fa-power-off"></span>&nbsp;&nbsp;Log Out</a></li>\n\t\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t<!-- END LOGO NAV BUTTONS -->\n\t\t</div>\n\t\t<!-- END NAVIGATION HEADER -->\n\t\t<!-- BEGIN CONTENT HEADER -->\n\t\t<div class="header-quick-nav"> \n\t\t\t<div id="header-left"></div>\n\t\t\t<div id="header-right"></div>\n\t\t\t\n\t\t</div> \n\t\t<!-- END CONTENT HEADER --> \n\t</div>\n\t<!-- END TOP NAVIGATION BAR --> \n</div>\n\n\n<div id="walnutProfile">\n\t<div>\n\t    <div id="app_username" class="user">{{show_user_name}}</div>\n\t    <ul class="List">\n\t    \t<li><a id="logout" class="appLogout" href="javascript://" ><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>\n\t    </ul>\n\t</div>\n    \n</div>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -42733,11 +42733,11 @@ define('apps/header/headerapp',['app', 'controllers/region-controller', 'apps/he
       };
 
       HeaderView.prototype.onShow = function() {
+        if ($(window).width() > 1024) {
+          $("#gears-mob").remove();
+        }
         if ($(window).width() < 1025) {
-          $('#walnutProfile').mmenu({
-            position: 'right',
-            zposition: 'front'
-          });
+          $("#gears-pc").remove();
         }
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
@@ -42819,13 +42819,7 @@ define('apps/left-nav/views',['app', 'text!apps/left-nav/templates/leftnav.html'
 
       LeftNavView.prototype.onShow = function() {
         var elem;
-        if ($(window).width() < 1025) {
-          $('#main-menu').mmenu({
-            position: 'left',
-            zposition: 'front'
-          });
-          $("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ");
-        }
+        
         if ($('.creator').length > 0) {
           $("#main-menu").addClass("mini");
           $(".start").removeClass("active open");
@@ -42842,6 +42836,13 @@ define('apps/left-nav/views',['app', 'text!apps/left-nav/templates/leftnav.html'
           elem.children('li.open').children('.sub-menu').slideUp(200);
           return elem.children('li').removeClass('open');
         }
+        // if ($(window).width() < 1025) {
+        //   $('#main-menu').mmenu({
+        //     position: 'left',
+        //     zposition: 'front'
+        //   });
+        //   $("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ");
+        // }
       };
 
       LeftNavView.prototype.clickMenu = function(e) {
@@ -44790,7 +44791,6 @@ define('apps/content-group/view-group/group-view-controller',['app', 'controller
       groupContentCollection = null;
 
       GroupController.prototype.initialize = function(opts) {
-        var layout;
         model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
@@ -44800,17 +44800,22 @@ define('apps/content-group/view-group/group-view-controller',['app', 'controller
           'role': 'student',
           'division': this.division
         });
-        this.layout = layout = this._getContentGroupViewLayout();
-        this.show(layout, {
-          loading: true,
-          entities: [model, this.questionResponseCollection, this.textbookNames, this.studentCollection]
-        });
-        this.listenTo(layout, 'show', this.showContentGroupViews);
-        this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
-        return this.listenTo(this.layout.contentDisplayRegion, 'goto:question:readonly', (function(_this) {
-          return function(questionID) {
-            App.navigate(App.getCurrentRoute() + '/question');
-            return _this.gotoTrainingModule(questionID, 'readonly');
+        return App.execute("when:fetched", model, (function(_this) {
+          return function() {
+            var layout;
+            groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
+            console.log(model.get('content_pieces'));
+            _this.layout = layout = _this._getContentGroupViewLayout();
+            _this.show(layout, {
+              loading: true,
+              entities: [model, _this.questionResponseCollection, groupContentCollection, _this.textbookNames, _this.studentCollection]
+            });
+            _this.listenTo(layout, 'show', _this.showContentGroupViews);
+            _this.listenTo(_this.layout.collectionDetailsRegion, 'start:teaching:module', _this.startTeachingModule);
+            return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:question:readonly', function(questionID) {
+              App.navigate(App.getCurrentRoute() + '/question');
+              return _this.gotoTrainingModule(questionID, 'readonly');
+            });
           };
         })(this));
       };
@@ -44821,8 +44826,8 @@ define('apps/content-group/view-group/group-view-controller',['app', 'controller
           "status": "completed"
         });
         responseQuestionIDs = _.chain(responseCollection).map(function(m) {
-          return m.toJSON().pluck('content_piece_id').value();
-        });
+          return m.toJSON();
+        }).pluck('content_piece_id').value();
         content_pieces = model.get('content_pieces');
         if (content_pieces) {
           content_piece_ids = _.map(content_pieces, function(m) {
@@ -50665,15 +50670,15 @@ define('entities/content-pieces',["app", 'backbone'], function(App, Backbone) {
         if (ids == null) {
           ids = [];
         }
+        contentPieces = new ContentPiece.ItemCollection;
         if (_.size(ids) > 0) {
-          contentPieces = new ContentPiece.ItemCollection;
           contentPieces.fetch({
             data: {
               ids: ids
             }
           });
-          return contentPieces;
         }
+        return contentPieces;
       }
     };
     App.reqres.setHandler("get:content:pieces", function(opt) {
