@@ -27,6 +27,7 @@ define ['app'
 
                 new ModuleDescriptionView
                     model: model
+                    mode : @display_mode
 
                     templateHelpers:
                         showPauseButton:=>
@@ -62,6 +63,16 @@ define ['app'
             className: 'pieceWrapper'
 
             template: moduleDescriptionTemplate
+
+            mixinTemplateHelpers :(data)->
+                data = super data
+                data.isTraining = if @mode is 'training' then true else false
+                data.isClass = if @mode is 'take-class' then true else false
+                data
+
+            initialize : ->
+                @mode = Marionette.getOption @, 'mode'
+
 
             events:
                 'click #back-to-module, #pause-session': ->
