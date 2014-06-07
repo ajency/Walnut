@@ -83,12 +83,12 @@ define ["app", 'backbone'], (App, Backbone) ->
                 contentPiece
 
             getContentPiecesByIDs: (ids = [])->
+                contentPieces = new ContentPiece.ItemCollection
                 if _.size(ids) > 0
-                    contentPieces = new ContentPiece.ItemCollection
                     contentPieces.fetch
                         data:
                             ids: ids
-                    contentPieces
+                contentPieces
 
         # request handler to get all ContentPieces
         App.reqres.setHandler "get:content:pieces", (opt) ->

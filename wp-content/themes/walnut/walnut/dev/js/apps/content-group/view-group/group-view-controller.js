@@ -36,6 +36,7 @@ define(['app', 'controllers/region-controller', 'apps/content-group/view-group/g
           return function() {
             var layout;
             groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
+            console.log(model.get('content_pieces'));
             _this.layout = layout = _this._getContentGroupViewLayout();
             _this.show(layout, {
               loading: true,
