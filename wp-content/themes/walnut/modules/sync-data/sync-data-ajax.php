@@ -10,6 +10,10 @@ require 'sync-functions.php';
 
 function ajax_sync_app_data() {
 
+    $blog_id = $_REQUEST['blog_id'];
+
+    switch_to_blog( $blog_id );
+
     $file_id = '';
 
     if (empty($_FILES))
@@ -32,8 +36,9 @@ function ajax_sync_app_data() {
     if (is_wp_error( $sync_request_id ))
         wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Failed to create sync request. Please try again' ) ) );
 
-    wp_die( json_encode( array('code' => 'OK',  'sync_request_id' => $sync_request_id ) ) );
+    wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_request_id ) ) );
 }
+
 add_action( 'wp_ajax_nopriv_sync-app-data', 'ajax_sync_app_data' );
 add_action( 'wp_ajax_sync-app-data', 'ajax_sync_app_data' );
 
