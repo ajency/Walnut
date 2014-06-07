@@ -69,8 +69,9 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
 				if $( window ).width()<1025
 					$('#main-menu').mmenu
 						position: 'left'
-						zposition: 'front'
+					
 					$("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ")
+
 
 
 

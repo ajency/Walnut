@@ -35,11 +35,17 @@ define(['underscore'], function(_) {
   _.getSynapseAssetsDirectoryPath = function() {
     return window.localStorage.getItem("synapse_directory_path");
   };
-  _.setGeneratedZipFlePath = function(path) {
+  _.setGeneratedZipFilePath = function(path) {
     return window.localStorage.setItem("gererated_zip_file_path", path);
   };
-  _.getGeneratedZipFlePath = function() {
+  _.getGeneratedZipFilePath = function() {
     return window.localStorage.getItem("gererated_zip_file_path");
+  };
+  _.setDownloadedZipFilePath = function(path) {
+    return window.localStorage.setItem("downloaded_zip_file_path", path);
+  };
+  _.getDownloadedZipFilePath = function() {
+    return window.localStorage.getItem("downloaded_zip_file_path");
   };
   _.setFilePath = function(path) {
     return window.localStorage.setItem("filepath", "" + path);

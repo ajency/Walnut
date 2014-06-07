@@ -70,6 +70,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.startContinueSyncProcess = function() {
         var lastSyncOperation;
+        _.createSynapseDataDirectory();
         $('#syncError').css("display", "none");
         lastSyncOperation = _.getLastSyncOperation();
         return lastSyncOperation.done(function(typeOfOperation) {

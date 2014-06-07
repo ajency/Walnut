@@ -95,8 +95,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       HeaderView.prototype.onShow = function() {
         if ($(window).width() < 1025) {
           $('#walnutProfile').mmenu({
-            position: 'right',
-            zposition: 'front'
+            position: 'right'
           });
         }
         if ($('.creator').length > 0) {
@@ -110,7 +109,6 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
 
       HeaderView.prototype.onLogout = function() {
         var user;
-        $.sidr('close', 'walnutProfile');
         if (_.platform() === 'BROWSER') {
           return this.trigger("user:logout");
         } else {

@@ -8,7 +8,7 @@ define ['underscore'], ( _) ->
 
 			$('#syncSuccess').css("display","block").text("Starting file upload...")
 			
-			zipFilePath = _.getGeneratedZipFlePath()
+			zipFilePath = _.getGeneratedZipFilePath()
 
 			uploadURI = encodeURI(AJAXURL + '?action=sync-app-data')
 
@@ -64,4 +64,4 @@ define ['underscore'], ( _) ->
 			$('#syncButtonText').text('Try again')
 
 			$('#syncError').css("display","block")
-			.text("An error occurred during file download")
+			.text("An error occurred during file upload")

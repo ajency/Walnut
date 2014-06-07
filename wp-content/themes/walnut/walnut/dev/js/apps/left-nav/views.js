@@ -75,8 +75,7 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
         }
         if ($(window).width() < 1025) {
           $('#main-menu').mmenu({
-            position: 'left',
-            zposition: 'front'
+            position: 'left'
           });
           return $("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ");
         }

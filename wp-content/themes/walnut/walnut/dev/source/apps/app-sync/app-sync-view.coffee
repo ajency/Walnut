@@ -73,6 +73,10 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 
 			startContinueSyncProcess : ->
+
+				#Create 'SynapseData' directory inside 'SynapseAssets'
+				_.createSynapseDataDirectory()
+
 				#Hide error message
 				$('#syncError').css("display","none")
 

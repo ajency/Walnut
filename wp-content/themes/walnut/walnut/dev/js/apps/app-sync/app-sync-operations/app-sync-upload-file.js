@@ -3,7 +3,7 @@ define(['underscore'], function(_) {
     uploadGeneratedZipFile: function() {
       var fileTransfer, options, params, uploadURI, zipFilePath;
       $('#syncSuccess').css("display", "block").text("Starting file upload...");
-      zipFilePath = _.getGeneratedZipFlePath();
+      zipFilePath = _.getGeneratedZipFilePath();
       uploadURI = encodeURI(AJAXURL + '?action=sync-app-data');
       options = new FileUploadOptions();
       options.fileKey = "file";
@@ -40,7 +40,7 @@ define(['underscore'], function(_) {
       $('#syncSuccess').css("display", "none");
       $('#syncStartContinue').css("display", "block");
       $('#syncButtonText').text('Try again');
-      return $('#syncError').css("display", "block").text("An error occurred during file download");
+      return $('#syncError').css("display", "block").text("An error occurred during file upload");
     }
   });
 });

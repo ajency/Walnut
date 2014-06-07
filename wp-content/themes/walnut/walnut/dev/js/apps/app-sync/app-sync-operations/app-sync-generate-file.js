@@ -36,7 +36,7 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
       }, _.fileSystemErrorHandler);
     },
     onFileGenerationSuccess: function() {
-      _.setGeneratedZipFlePath(fileEntry.toURL());
+      _.setGeneratedZipFilePath(fileEntry.toURL());
       _.updateSyncDetails('file_generate', _.getCurrentDateTime(2));
       $('#syncSuccess').css("display", "block").text("File generation completed...");
       return _.updateQuestionResponseSyncFlag();

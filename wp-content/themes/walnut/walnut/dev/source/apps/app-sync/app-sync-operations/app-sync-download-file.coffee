@@ -30,34 +30,30 @@ define ['underscore'], ( _) ->
 
 			$('#syncSuccess').css("display","block").text("Downloading file...")
 
-			uri = encodeURI(resp.exported_csv_url)
+			uri = encodeURI resp.exported_csv_url
 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 				,(fileSystem)=>
-					fileSystem.root.getFile("SynapseAssets/file.zip", {create: true, exclusive: false}
+					fileSystem.root.getFile("SynapseAssets/SynapseData/csv-synapse.zip"
+						, {create: true, exclusive: false}
 
-						,(fileEntry)=>
-							filePath = fileEntry.toURL().replace("file.zip", "")
-							_.setFilePath(filePath)
+						,(fileEntry)->
+							filePath = fileEntry.toURL().replace("csv-synapse.zip", "")
 							fileEntry.remove()
+
 							fileTransfer = new FileTransfer()
 
 							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
-								,(file)=>
-									console.log 'Zip file downloaded'
+								,(file)->
 
-									@updateSyncDetails('file_download', resp.last_sync)
+									_.setDownloadedZipFilePath file.toURL()
 									
-									@fileUnZip filePath, file.toURL()
+									_.onFileDownloadSuccess resp.last_sync
+									
 								
 								,(error)->
-									$('#syncSuccess').css("display","none")
-
-									$('#syncStartContinue').css("display","block")
-									$('#syncButtonText').text('Try again')
-
-									$('#syncError').css("display","block")
-									.text("An error occurred during file download")
+									
+									_.onFileDownloadError error
 
 								, true)
 
@@ -66,6 +62,25 @@ define ['underscore'], ( _) ->
 				, _.fileSystemErrorHandler)
 
 
+		
+		onFileDownloadSuccess : (last_sync)->
+
+			_.updateSyncDetails('file_download', last_sync)
+
+			console.log 'Downloaded Zip file successfully'
+
+			
 
 
+		onFileDownloadError : (error)->
 
+			console.log 'ERROR: '+error.code
+
+			$('#syncSuccess').css("display","none")
+
+			$('#syncStartContinue').css("display","block")
+
+			$('#syncButtonText').text('Try again')
+
+			$('#syncError').css("display","block")
+			.text("An error occurred during file download")

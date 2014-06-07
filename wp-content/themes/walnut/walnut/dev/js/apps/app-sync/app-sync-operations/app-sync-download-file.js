@@ -25,28 +25,34 @@ define(['underscore'], function(_) {
       uri = encodeURI(resp.exported_csv_url);
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
         return function(fileSystem) {
-          return fileSystem.root.getFile("SynapseAssets/file.zip", {
+          return fileSystem.root.getFile("SynapseAssets/SynapseData/csv-synapse.zip", {
             create: true,
             exclusive: false
           }, function(fileEntry) {
             var filePath, fileTransfer;
-            filePath = fileEntry.toURL().replace("file.zip", "");
-            _.setFilePath(filePath);
+            filePath = fileEntry.toURL().replace("csv-synapse.zip", "");
             fileEntry.remove();
             fileTransfer = new FileTransfer();
             return fileTransfer.download(uri, filePath + "csv-synapse.zip", function(file) {
-              console.log('Zip file downloaded');
-              _this.updateSyncDetails('file_download', resp.last_sync);
-              return _this.fileUnZip(filePath, file.toURL());
+              _.setDownloadedZipFilePath(file.toURL());
+              return _.onFileDownloadSuccess(resp.last_sync);
             }, function(error) {
-              $('#syncSuccess').css("display", "none");
-              $('#syncStartContinue').css("display", "block");
-              $('#syncButtonText').text('Try again');
-              return $('#syncError').css("display", "block").text("An error occurred during file download");
+              return _.onFileDownloadError(error);
             }, true);
           }, _.fileErrorHandler);
         };
       })(this), _.fileSystemErrorHandler);
+    },
+    onFileDownloadSuccess: function(last_sync) {
+      _.updateSyncDetails('file_download', last_sync);
+      return console.log('Downloaded Zip file successfully');
+    },
+    onFileDownloadError: function(error) {
+      console.log('ERROR: ' + error.code);
+      $('#syncSuccess').css("display", "none");
+      $('#syncStartContinue').css("display", "block");
+      $('#syncButtonText').text('Try again');
+      return $('#syncError').css("display", "block").text("An error occurred during file download");
     }
   });
 });

@@ -55,7 +55,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 		
 		onFileGenerationSuccess : ->
 
-			_.setGeneratedZipFlePath fileEntry.toURL()
+			_.setGeneratedZipFilePath fileEntry.toURL()
 
 			_.updateSyncDetails('file_generate', _.getCurrentDateTime(2))
 			
