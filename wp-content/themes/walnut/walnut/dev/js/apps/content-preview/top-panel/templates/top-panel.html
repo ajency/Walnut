@@ -33,9 +33,9 @@
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <label style="text-align:center" class="form-label bold small-text">Content Piece Timer</label>
+                    <label class="form-label bold small-text text-center">Content Piece Timer</label>
                     {{#isTraining}}
-                        <p>Visible in Class room mode</p>
+                        <p class="small-text muted text-center">Visible in Class room mode</p>
                     {{/isTraining}}
                     {{^isTraining}}
                         <div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>
