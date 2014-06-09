@@ -27,6 +27,17 @@ define ['app'], (App)->
                     e.stopPropagation()
             # @trigger "show:media:manager"
 
+
+            # mixinTemplateHelpers:(data)->
+            #     data = super data
+            #     url = data.videoUrl
+            #     console.log 'url: '+url
+            #     mediaUrl = _.getSynapseAssetsDirectoryPath()+url.substr(url.indexOf("uploads/"))
+            #     console.log 'mediaUrl: '+mediaUrl
+            #     data.ur = mediaUrl
+
+            #     data
+
             # check if a valid image_id is set for the element
             # if present ignore else run the Holder.js to show a placeholder
             # after run remove the data-src attribute of the image to avoid
