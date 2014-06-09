@@ -126,15 +126,15 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (ids == null) {
           ids = [];
         }
+        contentPieces = new ContentPiece.ItemCollection;
         if (_.size(ids) > 0) {
-          contentPieces = new ContentPiece.ItemCollection;
           contentPieces.fetch({
             data: {
               ids: ids
             }
           });
-          return contentPieces;
         }
+        return contentPieces;
       }
     };
     App.reqres.setHandler("get:content:pieces", function(opt) {
