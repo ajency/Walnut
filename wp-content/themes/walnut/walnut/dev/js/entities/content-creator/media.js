@@ -58,6 +58,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       MediaCollection.prototype.model = Media.MediaModel;
 
+      MediaCollection.prototype.name = 'media';
+
       MediaCollection.prototype.parse = function(resp) {
         if (resp.code === 'OK') {
           return resp.data;
@@ -152,9 +154,15 @@ define(["app", 'backbone'], function(App, Backbone) {
               var mediaUrl, result, url;
               url = row['guid'];
               mediaUrl = _.getSynapseAssetsDirectoryPath() + url.substr(url.indexOf("uploads/"));
-              _.each(data.sizes, function(size) {
-                return size.url = mediaUrl;
-              });
+              console.log('ID: ' + id);
+              console.log('mediaUrl: ' + mediaUrl);
+              if (data.sizes) {
+                _.each(data.sizes, function(size) {
+                  return size.url = mediaUrl;
+                });
+              } else {
+                data.sizes = '';
+              }
               result = {
                 id: row['ID'],
                 filename: data.file,

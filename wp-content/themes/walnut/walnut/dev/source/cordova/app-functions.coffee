@@ -60,29 +60,30 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx, data)->
 					for i in [0..data.rows.length-1] by 1
 						row = data.rows.item(i)
+						
+						do(row)->
 
-						console.log 'meta_key: '+row['meta_key']
-						console.log 'meta_value'
-						console.log row['meta_value']
+							if row['meta_key'] is 'content_type'
+								meta_value.content_type = row['meta_value']
 
-						if row['meta_key'] is 'content_type'
-							meta_value.content_type = row['meta_value']
+							if row['meta_key'] is 'layout_json'
+								meta_value.layout_json = unserialize(unserialize(row['meta_value']))
 
-						if row['meta_key'] is 'layout_json'
-							meta_value.layout_json = unserialize(unserialize(row['meta_value']))
+							if row['meta_key'] is 'question_type'
+								meta_value.question_type = row['meta_value']	
 
-						if row['meta_key'] is 'question_type'
-							meta_value.question_type = row['meta_value']	
+							if row['meta_key'] is 'content_piece_meta'
+								if content_piece_id is 133
+									console.log 'meta_value'
+									console.log row['meta_value']
+								content_piece_meta = unserialize(unserialize(row['meta_value']))
 
-						if row['meta_key'] is 'content_piece_meta'
-							content_piece_meta = unserialize(unserialize(row['meta_value']))
-
-							meta_value.post_tags = content_piece_meta.post_tags
-							meta_value.duration = content_piece_meta.duration
-							meta_value.last_modified_by = content_piece_meta.last_modified_by
-							meta_value.published_by = content_piece_meta.published_by
-							meta_value.term_ids = content_piece_meta.term_ids
-							meta_value.instructions = content_piece_meta.instructions
+								meta_value.post_tags = content_piece_meta.post_tags
+								meta_value.duration = content_piece_meta.duration
+								meta_value.last_modified_by = content_piece_meta.last_modified_by
+								meta_value.published_by = content_piece_meta.published_by
+								meta_value.term_ids = content_piece_meta.term_ids
+								meta_value.instructions = content_piece_meta.instructions
 								
 
 					d.resolve(meta_value)

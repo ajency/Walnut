@@ -66,11 +66,11 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
 					elem.children('li.open').children('.sub-menu').slideUp(200);
 					elem.children('li').removeClass('open');
 
-				if $( window ).width()<1025
-					$('#main-menu').mmenu
-						position: 'left'
+				# if $( window ).width()<1025
+				# 	$('#main-menu').mmenu
+				# 		position: 'left'
 					
-					$("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ")
+				# 	$("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ")
 
 
 

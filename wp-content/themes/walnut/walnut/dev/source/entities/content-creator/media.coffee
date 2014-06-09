@@ -52,6 +52,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			model : Media.MediaModel
 
+			name : 'media'
+
 			parse : (resp)->
 				return resp.data if resp.code is 'OK'
 				resp
@@ -145,9 +147,14 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 							url = row['guid']
 							mediaUrl = _.getSynapseAssetsDirectoryPath()+url.substr(url.indexOf("uploads/"))
+							console.log 'ID: '+id
+							console.log 'mediaUrl: '+mediaUrl
 
-							_.each data.sizes, (size)->
-								size.url = mediaUrl
+							if data.sizes
+								_.each data.sizes, (size)->
+									size.url = mediaUrl
+							else
+								data.sizes = ''
 							
 							result = 
 								id: row['ID']

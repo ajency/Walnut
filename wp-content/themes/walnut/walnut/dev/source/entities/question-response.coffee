@@ -71,14 +71,8 @@ define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
 							r = data.rows.item(i)
 
 							do(r, i)->
-
-								console.log 'content_piece_id: '+content_piece_id
 								questionType = _.getMetaValue(r['content_piece_id'])
 								questionType.done (meta_value)->
-									# console.log 'meta_value'
-									# console.log meta_value
-									# console.log 'question_response'
-									# console.log r['question_response']
 
 									if meta_value.question_type is 'individual'
 										q_resp = unserialize(r['question_response'])

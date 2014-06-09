@@ -59,12 +59,9 @@ define(['underscore', 'unserialize'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var content_piece_meta, i, row, _i, _ref;
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            console.log('meta_key: ' + row['meta_key']);
-            console.log('meta_value');
-            console.log(row['meta_value']);
+          var i, row, _fn, _i, _ref;
+          _fn = function(row) {
+            var content_piece_meta;
             if (row['meta_key'] === 'content_type') {
               meta_value.content_type = row['meta_value'];
             }
@@ -75,14 +72,22 @@ define(['underscore', 'unserialize'], function(_) {
               meta_value.question_type = row['meta_value'];
             }
             if (row['meta_key'] === 'content_piece_meta') {
+              if (content_piece_id === 133) {
+                console.log('meta_value');
+                console.log(row['meta_value']);
+              }
               content_piece_meta = unserialize(unserialize(row['meta_value']));
               meta_value.post_tags = content_piece_meta.post_tags;
               meta_value.duration = content_piece_meta.duration;
               meta_value.last_modified_by = content_piece_meta.last_modified_by;
               meta_value.published_by = content_piece_meta.published_by;
               meta_value.term_ids = content_piece_meta.term_ids;
-              meta_value.instructions = content_piece_meta.instructions;
+              return meta_value.instructions = content_piece_meta.instructions;
             }
+          };
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            row = data.rows.item(i);
+            _fn(row);
           }
           return d.resolve(meta_value);
         };

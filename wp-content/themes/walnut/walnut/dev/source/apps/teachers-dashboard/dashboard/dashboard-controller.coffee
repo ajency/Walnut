@@ -77,6 +77,16 @@ define ['app'
 					# Hide the splash screen image
 					navigator.splashscreen.hide()
 
+					# onBackbuttonClick = =>
+					# 	console.log 'Fired cordova back button event'
+						
+					# 	navigator.app.exitApp()
+
+					# 	document.removeEventListener("backbutton", onBackbuttonClick, false)
+
+					# #Cordova backbutton event
+					# document.addEventListener("backbutton", onBackbuttonClick, false)
+
 
 
 			loadDivisions:(class_id)=>
@@ -108,12 +118,3 @@ define ['app'
 				if $(e.target).val() is 'start-training'
 					class_id= @$el.find('#class-training').val()
 					App.navigate('teachers/start-training/'+class_id, trigger: true)
-
-
-
-
-
-
-
-
-
