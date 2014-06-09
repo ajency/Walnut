@@ -65,9 +65,7 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
         })(this));
       };
 
-      ShowController.prototype.onClose = function() {
-        return App.navigate('');
-      };
+      ShowController.prototype.onClose = function() {};
 
       ShowController.prototype._getLayout = function() {
         return new OuterLayout({

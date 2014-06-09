@@ -29,6 +29,7 @@ define ['app'
                 if data.type is 'video'
                     data.videoPreview  = true
                     data.title_excerpt = _.prune data.title, 15
+                    data.title_show  = _.prune data.title , 50
 
                 data
 

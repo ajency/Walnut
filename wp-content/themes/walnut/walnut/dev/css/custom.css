@@ -1629,6 +1629,9 @@ h3.time {
     *width: 20%;
   }
 }
+input#duration {
+  max-width: 150px;
+}
 #myCanvas-miki .cbp_tmlabel a {
   color: #e74c30;
 }

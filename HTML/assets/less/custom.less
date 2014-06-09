@@ -331,6 +331,22 @@ label, input, button, select, textarea{
 	background: darken(@body-bg, 5%)
 }
 
+::-webkit-input-placeholder {
+   color: darken(@preview-grey, 15%);
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: darken(@preview-grey, 15%);  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: darken(@preview-grey, 15%);  
+}
+
+:-ms-input-placeholder {  
+   color: darken(@preview-grey, 15%);  
+}
+
 select{
 	display: inline-block;
 	position: relative;
