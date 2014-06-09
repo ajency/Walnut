@@ -43,6 +43,8 @@ define ['app'
                 # get logo attachment
                 videoModel = App.request "get:media:by:id", @layout.model.get 'video_id'
 
+#                console.log JSON.stringify videoModel.toJSON()
+
 
                 view = @view = @_getVideoView videoModel
 
