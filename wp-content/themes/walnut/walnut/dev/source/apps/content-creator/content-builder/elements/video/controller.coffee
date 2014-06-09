@@ -23,18 +23,11 @@ define ['app'
             bindEvents: ->
                 super()
 
-            # private etmplate helper function
-            # this function will get the necessary template helpers for the element
-            # template helper will return an object which will later get mixed with
-            # serialized data before render
-            # _getTemplateHelpers:->
-            # 		size 		: @layout.model.get 'size'
-            # 		alignment 	: @layout.model.get 'align'
+
 
             _getVideoView: (imageModel)->
                 new Video.Views.VideoView
                     model: @layout.model
-            # templateHelpers : @_getTemplateHelpers()
 
 
             # setup templates for the element
@@ -42,6 +35,8 @@ define ['app'
                 @removeSpinner()
                 # get logo attachment
                 videoModel = App.request "get:media:by:id", @layout.model.get 'video_id'
+
+#                console.log JSON.stringify videoModel.toJSON()
 
 
                 view = @view = @_getVideoView videoModel

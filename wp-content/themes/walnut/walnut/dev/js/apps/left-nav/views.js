@@ -57,7 +57,13 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
       LeftNavView.prototype.onShow = function() {
         var elem;
-        
+        if ($(window).width() < 1025) {
+          $('#main-menu').mmenu({
+            position: 'left',
+            zposition: 'front'
+          });
+          $("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ");
+        }
         if ($('.creator').length > 0) {
           $("#main-menu").addClass("mini");
           $(".start").removeClass("active open");
@@ -74,13 +80,6 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           elem.children('li.open').children('.sub-menu').slideUp(200);
           return elem.children('li').removeClass('open');
         }
-        // if ($(window).width() < 1025) {
-        //   $('#main-menu').mmenu({
-        //     position: 'left',
-        //     zposition: 'front'
-        //   });
-        //   $("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ");
-        // }
       };
 
       LeftNavView.prototype.clickMenu = function(e) {

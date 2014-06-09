@@ -141,9 +141,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         'click #start-module': 'startModule'
       };
 
-      CollectionDetailsView.prototype.mixinTemplateHelpers = function() {
-        var data;
-        data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this);
+      CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
+        data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
         data.takeClassModule = this.mode;
         data.isTraining = this.mode === 'training' ? true : false;
         return data;

@@ -19,16 +19,17 @@ define ['app'
             #if no thumbnail thn dont show image
             mixinTemplateHelpers : (data)->
                 data = super data
-                data.imagePreview = @imagePreview = false
-                data.videoPreview = @videoPreview = false
+                data.imagePreview  = false
+                data.videoPreview  = false
 
                 if data.type is 'image'
                     if data.sizes and data.sizes.thumbnail and data.sizes.thumbnail.url
-                        data.imagePreview = @imagePreview = true
+                        data.imagePreview  = true
 
                 if data.type is 'video'
-                    data.videoPreview = @videoPreview = true
+                    data.videoPreview  = true
                     data.title_excerpt = _.prune data.title, 15
+                    data.title_show  = _.prune data.title , 50
 
                 data
 
