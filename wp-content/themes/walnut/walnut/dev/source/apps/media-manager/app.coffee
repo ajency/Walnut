@@ -56,7 +56,7 @@ define ['app'
             onClose: ->
                 # navigate back to original route. do not trigger the router
                 # only navigate
-                App.navigate ''
+#                App.navigate ''
             # App.getRegion('elementsBoxRegion').unhide()
 
             # gets the main login view

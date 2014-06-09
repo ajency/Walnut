@@ -34,6 +34,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         if (data.type === 'video') {
           data.videoPreview = true;
           data.title_excerpt = _.prune(data.title, 15);
+          data.title_show = _.prune(data.title, 50);
         }
         return data;
       };
