@@ -31,7 +31,7 @@ function ajax_sync_app_data() {
     if (isset($file_data['error']))
         wp_die( json_encode( array( 'code' => 'ERROR', 'message' => $file_data['error'] ) ) );
 
-    $sync_request_id = insert_sync_request_record( array( 'file_path' => $file_data['url'] ) );
+    $sync_request_id = insert_sync_request_record( array( 'file_path' => $file_data['file'] ) );
 
     if (is_wp_error( $sync_request_id ))
         wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Failed to create sync request. Please try again' ) ) );
@@ -45,7 +45,26 @@ add_action( 'wp_ajax_sync-app-data', 'ajax_sync_app_data' );
 
 function cron_school_app_data_sync() {
 
-    sync_app_data_to_db( 4 );
+    $pending_sync_request_ids = get_pending_app_sync_requests();
+
+    if (empty($pending_sync_request_ids))
+        return false;
+
+    foreach ($pending_sync_request_ids as $sync_request_id)
+        sync_app_data_to_db( $sync_request_id );
 }
 
 add_action( 'school_app_data_sync', 'cron_school_app_data_sync' );
+
+
+function check_app_data_sync_completion() {
+
+    $sync_request_id = $_REQUEST['sync_request_id'];
+
+    $status = check_app_sync_data_completion( $sync_request_id );
+
+    wp_send_json( $status );
+}
+
+add_action( 'wp_ajax_check_app_data_sync_completion', 'check_app_data_sync_completion' );
+add_action( 'wp_ajax_nopriv_check-app-data-sync-completion', 'check_app_data_sync_completion' );

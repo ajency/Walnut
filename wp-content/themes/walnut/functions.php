@@ -1,4 +1,7 @@
 <?php
+// require the autoloader
+require 'vendor/autoload.php';
+
 if (!isset($content_width))
     $content_width = 604;
 
@@ -16,6 +19,7 @@ require_once 'custom_configs.php';
 
 
 add_theme_support( 'menus' );
+
 
 //add extra fields to custom taxonomy edit form callback function
 

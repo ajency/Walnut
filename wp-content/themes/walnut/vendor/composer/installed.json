@@ -1,28 +1,35 @@
 [
     {
-        "name": "johnnyfreeman/coseva",
+        "name": "goodby/csv",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/johnnyfreeman/coseva.git",
-            "reference": "44712c2228959d2f04b8f9dd06ba5b1490046ff3"
+            "url": "https://github.com/goodby/csv.git",
+            "reference": "01a337b0c7bc16a7fdf2561abfa36421137e56e5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/johnnyfreeman/coseva/zipball/44712c2228959d2f04b8f9dd06ba5b1490046ff3",
-            "reference": "44712c2228959d2f04b8f9dd06ba5b1490046ff3",
+            "url": "https://api.github.com/repos/goodby/csv/zipball/01a337b0c7bc16a7fdf2561abfa36421137e56e5",
+            "reference": "01a337b0c7bc16a7fdf2561abfa36421137e56e5",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.3"
+            "ext-mbstring": "*",
+            "php": ">=5.3.2"
         },
-        "time": "2014-01-21 19:45:48",
+        "require-dev": {
+            "mikey179/vfsstream": ">=1.1.0",
+            "mockery/mockery": ">=0.7.2",
+            "phpunit/phpunit": "3.7.*",
+            "suin/php-expose": ">=1.0"
+        },
+        "time": "2014-05-21 07:16:02",
         "type": "library",
         "installation-source": "source",
         "autoload": {
             "psr-0": {
-                "Coseva": "src"
+                "Goodby\\CSV": "src/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -31,23 +38,24 @@
         ],
         "authors": [
             {
-                "name": "Johnny Freeman",
-                "email": "hello@johnnyfreeman.us",
-                "homepage": "http://johnnyfreeman.us",
-                "role": "Developer"
+                "name": "suin",
+                "email": "suinyeze@gmail.com",
+                "homepage": "https://www.facebook.com/suinyeze",
+                "role": "Developer, Renaming Specialist"
             },
             {
-                "name": "Jan-Marten de Boer",
-                "email": "github@johmanx.com",
-                "homepage": "https://github.com/johmanx10",
+                "name": "reoring",
+                "email": "mori.reo@gmail.com",
+                "homepage": "https://www.facebook.com/reoring",
                 "role": "Developer"
             }
         ],
-        "description": "A friendly, object-oriented library for parsing and filtering CSV files with PHP.",
-        "homepage": "https://github.com/johnnyfreeman/coseva",
+        "description": "CSV import/export library",
+        "homepage": "https://github.com/goodby/csv",
         "keywords": [
             "csv",
-            "parse"
+            "export",
+            "import"
         ]
     }
 ]

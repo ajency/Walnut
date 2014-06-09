@@ -39,7 +39,7 @@ define ['app'
 
             startTeachingModule: =>
                 responseCollection= @questionResponseCollection.where "status":"completed"
-
+                window.f = responseCollection
                 responseQuestionIDs = _.chain responseCollection
                                     .map (m)->m.toJSON()
                                     .pluck 'content_piece_id'
