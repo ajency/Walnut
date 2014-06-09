@@ -106,8 +106,8 @@ define ['app'
             events :
                 'click #start-module' : 'startModule'
 
-            mixinTemplateHelpers : ->
-                data = super()
+            mixinTemplateHelpers : (data)->
+                data = super(data)
                 data.takeClassModule = @mode
                 data.isTraining = if @mode is 'training' then true else false
                 data

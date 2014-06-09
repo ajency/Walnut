@@ -223,8 +223,9 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._uploadImage = function(elementPos) {
-        App.navigate('media-manager', {
-          trigger: true
+        App.execute("show:media:manager:app", {
+          region: App.dialogRegion,
+          mediaType: 'image'
         });
         this.listenTo(App.vent, 'media:manager:choosed:media', (function(_this) {
           return function(media) {

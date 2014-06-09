@@ -24,15 +24,15 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
 
       MediaView.prototype.mixinTemplateHelpers = function(data) {
         data = MediaView.__super__.mixinTemplateHelpers.call(this, data);
-        data.imagePreview = this.imagePreview = false;
-        data.videoPreview = this.videoPreview = false;
+        data.imagePreview = false;
+        data.videoPreview = false;
         if (data.type === 'image') {
           if (data.sizes && data.sizes.thumbnail && data.sizes.thumbnail.url) {
-            data.imagePreview = this.imagePreview = true;
+            data.imagePreview = true;
           }
         }
         if (data.type === 'video') {
-          data.videoPreview = this.videoPreview = true;
+          data.videoPreview = true;
           data.title_excerpt = _.prune(data.title, 15);
         }
         return data;
