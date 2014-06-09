@@ -77,3 +77,88 @@ function get_user_by_id( $id ) {
     return $user_data;
 
 }
+
+
+function user_extend_profile_fields($user){
+
+    $user_textbooks = maybe_unserialize(get_user_meta( $user->ID, 'textbooks',true));
+ 
+      if(!is_array($user_textbooks)){
+
+            $user_textbooks = array();
+      }
+      else{
+         $user_textbooks = array_map('intval', $user_textbooks);
+      }
+    switch_to_blog(1);
+?> 
+    
+    <table class="form-table">
+
+    <tr>
+        <th><label for="tax_input[document_folders]">Textbooks</label></th>
+
+        <td>
+            <div>
+            <ul clsss="textbooks-list">
+    <?php
+
+
+    $args = array(
+        'orderby'    => 'name',
+        'hide_empty' => 0,
+        'parent' =>0, 
+        'hierarchical'  => true
+        ); 
+        $textbooks =  get_terms('textbook',  $args);
+        if(!is_null($textbooks)){
+        foreach($textbooks as $textbook):
+
+            $checked = "";
+ 
+            if(in_array($textbook->term_id,$user_textbooks)){
+
+                $checked = "checked";
+
+
+            }
+        ?> 
+                <li id="textbooks-<?php echo $textbook->term_id;?>">
+                    <label class="selectit">
+                        <input value="<?php echo $textbook->term_id;?>" type="checkbox" name="textbooks[]" id="textbooks-<?php echo $textbook->term_id;?>" <?php echo $checked; ?> /> <?php echo $textbook->name;?>
+                    </label>
+                </li>
+    <?php endforeach;
+  }?>
+            </ul>
+            </div>
+            <span class="description">Select the textbooks the current user has access to.</span>
+        </td>
+    </tr>
+
+</table>
+<?php
+restore_current_blog();
+}
+add_action( 'show_user_profile', 'user_extend_profile_fields' );
+
+add_action( 'edit_user_profile', 'user_extend_profile_fields' );
+
+//add_action( 'user_new_form', 'user_extend_profile_fields' );
+
+
+//update the user meta textbooks key
+
+function user_extend_profile_fields_save($user_id) {
+
+    if ( (!current_user_can( 'edit_user')) )
+        return false; 
+
+    update_user_meta( $user_id, 'textbooks', $_POST['textbooks'] );
+  
+}
+
+
+
+add_action( 'personal_options_update', 'user_extend_profile_fields_save' );
+add_action( 'edit_user_profile_update', 'user_extend_profile_fields_save' );
