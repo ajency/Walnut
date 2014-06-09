@@ -95,7 +95,7 @@ define ['app'
             				</div>'
 
             events:
-                'click .btn-primary': 'saveScheduledDate'
+                'click .btn-success': 'saveScheduledDate'
 
             onShow: ->
                 nowDate = new Date();
