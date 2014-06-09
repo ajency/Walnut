@@ -272,13 +272,15 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       readData = this.chkReader(file6);
       return readData.done((function(_this) {
         return function(data) {
+          console.log('wp_postmeta data');
+          console.log(data);
           return _.db.transaction(function(tx) {
             var i, row, _i, _ref, _results;
             tx.executeSql("DELETE FROM wp_postmeta");
             _results = [];
             for (i = _i = 0, _ref = data.length - 1; _i <= _ref; i = _i += 1) {
               row = data[i];
-              _results.push(tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key,meta_value) VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]]));
+              _results.push(tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key, meta_value) VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]]));
             }
             return _results;
           }, _.transactionErrorhandler, function(tx) {

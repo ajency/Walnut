@@ -20,7 +20,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				d.resolve(metaValue)
 
 		$.when(runQuery()).done ->
-			console.log 'getMetaValueFromMetaId transaction completed'
+			console.log 'getMetaValueFromMetaId: '+meta_id+' transaction completed'
 		.fail _.failureHandler	
 
 
@@ -30,8 +30,6 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		runFunc = ->
 			$.Deferred (d)->
-				# console.log JSON.stringify elements
-				# console.log JSON.stringify elements[0]
 				content = 
 					elements : elements
 					excerpt : new Array
@@ -62,6 +60,10 @@ define ['underscore', 'unserialize'], ( _) ->
 											content.excerpt.push meta.content
 										if element.element is 'Image'
 											element.image_id = parseInt element.image_id
+										if element.element is 'ImageWithText'
+											element.image_id = parseInt element.image_id
+										if element.element is 'Video'
+											element.video_id = parseInt element.video_id
 									
 									total--
 									if not total
@@ -104,9 +106,15 @@ define ['underscore', 'unserialize'], ( _) ->
 											content.excerpt.push element.content
 										if element.element is 'Image'
 											element.image_id = parseInt element.image_id
+										if element.element is 'ImageWithText'
+											element.image_id = parseInt element.image_id
+										if element.element is 'Video'
+											element.video_id = parseInt element.video_id
 									total--
 									if not total
 										d.resolve content
+					else
+						d.resolve content
 
 		$.when(runFunc()).done ->
 			console.log  "get getRowElements done"

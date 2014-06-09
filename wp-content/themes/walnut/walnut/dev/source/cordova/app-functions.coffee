@@ -61,6 +61,10 @@ define ['underscore', 'unserialize'], ( _) ->
 					for i in [0..data.rows.length-1] by 1
 						row = data.rows.item(i)
 
+						console.log 'meta_key: '+row['meta_key']
+						console.log 'meta_value'
+						console.log row['meta_value']
+
 						if row['meta_key'] is 'content_type'
 							meta_value.content_type = row['meta_value']
 

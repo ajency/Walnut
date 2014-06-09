@@ -256,13 +256,15 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 		sendParsedData7 : (file6, fileEntry)=>
 			readData = @chkReader(file6)
 			readData.done (data)=>
+				console.log 'wp_postmeta data'
+				console.log data
 
 				_.db.transaction( (tx)=>
 					tx.executeSql("DELETE FROM wp_postmeta")
 
 					for i in [0..data.length-1] by 1
 						row = data[i]
-						tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key,meta_value) 
+						tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key, meta_value) 
 							VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]])
 
 				,_.transactionErrorhandler

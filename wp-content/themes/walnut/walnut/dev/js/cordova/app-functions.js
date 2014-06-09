@@ -62,6 +62,9 @@ define(['underscore', 'unserialize'], function(_) {
           var content_piece_meta, i, row, _i, _ref;
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
             row = data.rows.item(i);
+            console.log('meta_key: ' + row['meta_key']);
+            console.log('meta_value');
+            console.log(row['meta_value']);
             if (row['meta_key'] === 'content_type') {
               meta_value.content_type = row['meta_value'];
             }

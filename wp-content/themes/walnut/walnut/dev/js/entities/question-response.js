@@ -87,6 +87,7 @@ define(["app", 'backbone', 'unserialize', 'serialize'], function(App, Backbone) 
             result = [];
             _fn = function(r, i) {
               var questionType;
+              console.log('content_piece_id: ' + content_piece_id);
               questionType = _.getMetaValue(r['content_piece_id']);
               return questionType.done(function(meta_value) {
                 var q_resp;

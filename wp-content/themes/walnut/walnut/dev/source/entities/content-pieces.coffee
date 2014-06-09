@@ -144,6 +144,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 											do(row, i, author_name, meta_value)->
 												if(meta_value.layout_json)
+													
 													contentElementsArray = _.getJsonToClone(meta_value.layout_json)
 													contentElementsArray.done (contentElements)->
 

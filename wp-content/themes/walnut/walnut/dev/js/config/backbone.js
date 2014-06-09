@@ -63,6 +63,8 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'question-response') {
         data = App.reqres.request("get:" + collection_name + ":local", opts.collection_id, opts.division);
         data.done(function(d) {
+          console.log('QR data');
+          console.log(d);
           return collection.set(d);
         });
       }
