@@ -19,19 +19,19 @@ define ['app'
 			
 					_getVideoView:(videoModel)->
 						new Video.Views.VideoView
-										model : videoModel
+										model : @layout.model
 												
 
 					# setup templates for the element
 					renderElement:()=>
 
                         # get logo attachment
-                        videoModel = App.request "get:media:by:id",@layout.model.get 'video_id'
+#                        videoModel = App.request "get:media:by:id",@layout.model.get 'video_id'
+#
+#
+#                        App.execute "when:fetched", videoModel, =>
 
+                        view = @_getVideoView()
 
-                        App.execute "when:fetched", videoModel, =>
-
-                            view = @_getVideoView videoModel
-
-                            @layout.elementRegion.show view
+                        @layout.elementRegion.show view
 							

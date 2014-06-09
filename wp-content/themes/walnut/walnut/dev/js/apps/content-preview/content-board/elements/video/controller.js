@@ -22,20 +22,14 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
 
       Controller.prototype._getVideoView = function(videoModel) {
         return new Video.Views.VideoView({
-          model: videoModel
+          model: this.layout.model
         });
       };
 
       Controller.prototype.renderElement = function() {
-        var videoModel;
-        videoModel = App.request("get:media:by:id", this.layout.model.get('video_id'));
-        return App.execute("when:fetched", videoModel, (function(_this) {
-          return function() {
-            var view;
-            view = _this._getVideoView(videoModel);
-            return _this.layout.elementRegion.show(view);
-          };
-        })(this));
+        var view;
+        view = this._getVideoView();
+        return this.layout.elementRegion.show(view);
       };
 
       return Controller;

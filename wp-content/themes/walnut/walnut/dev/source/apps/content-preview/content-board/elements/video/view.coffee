@@ -12,7 +12,7 @@ define ['app'], (App)->
             							<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
             								poster="http://www.eyespot.com/2013/wp-content/uploads/2013/04/video-clip.jpg"
             								data-setup="{}" controls>
-            								<source src="{{url}}" type="video/mp4" />
+            								<source src="{{videoUrl}}" type="video/mp4" />
 
 
             							</video>
