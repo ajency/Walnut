@@ -28,6 +28,9 @@
 .block {
   display: block;
 }
+.none {
+  display: none;
+}
 @media (max-width: 1024px) {
   .nonDevice {
     display: none;

@@ -15,6 +15,7 @@
 //@import "class.less";
 @import "training.less";
 @import "module.less";
+@import "quiz.less";
 @import "teacher.less";
 
 body{
@@ -327,6 +328,22 @@ label, input, button, select, textarea{
 	}
 }
 
+input[disabled].disabled{
+	cursor: not-allowed;
+	background-color: @body-bg;
+}
+
+.checkbox label{
+	font-size: 14px;
+}
+
+.nav-tabs > li > a{
+	font-size: 16px;
+}
+.table td{
+	font-size: 15px;
+}
+
 .progress{
 	background: darken(@body-bg, 5%)
 }
@@ -352,8 +369,8 @@ select{
 	position: relative;
 	line-height: 1;
 	width: 100%;
-	min-height: 45px;
-	padding: 10px;
+	min-height: 38px;
+	padding: 6px;
 	background: @preview-grey;
 	border: 1px solid @body-bg;
 	box-shadow: inset 0 -1px 2px rgba(0,0,0,.05);
