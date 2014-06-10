@@ -26,6 +26,9 @@
 .block {
   display: block;
 }
+.none {
+  display: none;
+}
 @media (max-width: 1024px) {
   .nonDevice {
     display: none;
@@ -5746,19 +5749,21 @@ code:hover {
   background-color: #D9E0E4;
   border-radius: 2px;
   box-shadow: none;
+  padding: 5px;
 }
 .panel-group {
   margin-bottom: 18px;
 }
 .panel-group .panel-heading + .panel-collapse .panel-body {
   border: 0;
+  padding: 5px 25px;
 }
 .panel-group .panel + .panel {
   margin-top: 2px;
 }
 .panel-title > a {
   color: #505458;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: normal;
   display: block;
 }
@@ -5774,7 +5779,7 @@ code:hover {
 .panel-heading .panel-title > a:after {
   font-family: 'FontAwesome';
   content: "\f056";
-  float: right;
+  float: left;
   color: #505458;
 }
 .panel-heading .panel-title > a.collapsed {
