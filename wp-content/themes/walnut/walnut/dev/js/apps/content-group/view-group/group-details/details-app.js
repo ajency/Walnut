@@ -16,15 +16,23 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         var view;
         this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
         this.view = view = this._getCollectionDetailsView();
-        this.show(view, {
-          loading: true,
-          entities: [this.textbookNames]
-        });
-        return this.listenTo(view, 'start:teaching:module', (function(_this) {
+        this.listenTo(view, 'start:teaching:module', (function(_this) {
           return function() {
             return _this.region.trigger("start:teaching:module");
           };
         })(this));
+        this.listenTo(view, 'goto:previous:route', this._gotoPreviousRoute);
+        return this.show(view, {
+          loading: true,
+          entities: [this.textbookNames]
+        });
+      };
+
+      ViewCollecionDetailsController.prototype._gotoPreviousRoute = function() {
+        var currRoute, newRoute;
+        currRoute = App.getCurrentRoute();
+        newRoute = _(currRoute).strLeft('/module');
+        return App.navigate(newRoute, true);
       };
 
       ViewCollecionDetailsController.prototype._getCollectionDetailsView = function() {
@@ -138,7 +146,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       CollectionDetailsView.prototype.template = collectionDetailsTpl;
 
       CollectionDetailsView.prototype.events = {
-        'click #start-module': 'startModule'
+        'click #start-module': 'startModule',
+        'click #go-back-button': function() {
+          return this.trigger("goto:previous:route");
+        }
       };
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
