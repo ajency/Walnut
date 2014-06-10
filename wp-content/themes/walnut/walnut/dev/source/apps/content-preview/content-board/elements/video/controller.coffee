@@ -17,7 +17,7 @@ define ['app'
 						super()
 
 			
-					_getVideoView:(imageModel)->
+					_getVideoView:(videoModel)->
 						new Video.Views.VideoView
 										model : @layout.model
 												
@@ -25,7 +25,13 @@ define ['app'
 					# setup templates for the element
 					renderElement:()=>
 
-						view = @_getVideoView()
+                        # get logo attachment
+#                        videoModel = App.request "get:media:by:id",@layout.model.get 'video_id'
+#
+#
+#                        App.execute "when:fetched", videoModel, =>
 
-						@layout.elementRegion.show view
+                        view = @_getVideoView()
+
+                        @layout.elementRegion.show view
 							

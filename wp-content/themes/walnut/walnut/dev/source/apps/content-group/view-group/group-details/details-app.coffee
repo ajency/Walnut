@@ -12,10 +12,25 @@ define ['app'
 
                 @view = view = @_getCollectionDetailsView()
 
-                @show view, (loading : true, entities : [@textbookNames])
-
                 @listenTo view, 'start:teaching:module', =>
                     @region.trigger "start:teaching:module"
+
+                @listenTo view, 'goto:previous:route', @_gotoPreviousRoute
+
+                @show view, (loading : true, entities : [@textbookNames])
+
+            _gotoPreviousRoute : ->
+
+                currRoute = App.getCurrentRoute()
+
+                newRoute = _(currRoute).strLeft '/module'
+
+#                newRoute = _.str.rtrim currRoute, removeStr + '/'
+
+                App.navigate newRoute, true
+
+#                App.execute "show:headerapp", region : App.headerRegion
+#                App.execute "show:leftnavapp", region : App.leftNavRegion
 
             _getCollectionDetailsView : ->
                 terms = @model.get 'term_ids'
@@ -92,8 +107,8 @@ define ['app'
 
                     if _.size(unanswered) > 0 and @mode isnt 'training'
                         actionButtons = '<button type="button" id="start-module" class="btn btn-success action pull-right m-t-10">
-                                                                                                                                                                                    <i class="fa fa-play"></i> Start
-                                                                                                                                                                                </button>'
+                                                                                                                                                                                                            <i class="fa fa-play"></i> Start
+                                                                                                                                                                                                        </button>'
                     actionButtons
 
 
@@ -105,6 +120,8 @@ define ['app'
 
             events :
                 'click #start-module' : 'startModule'
+                'click #go-back-button' : ->
+                    @trigger "goto:previous:route"
 
             mixinTemplateHelpers : (data)->
                 data = super(data)
