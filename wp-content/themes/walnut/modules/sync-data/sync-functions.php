@@ -268,7 +268,7 @@ function check_app_sync_data_completion( $sync_request_id ) {
 /**
  * @return array of pending sync request ids
  */
-function get_pending_app_sync_requests() {
+function get_pending_app_sync_request_ids() {
 
     global $wpdb;
 

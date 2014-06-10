@@ -5,7 +5,7 @@
  * Date: 05/06/14
  * Time: 6:28 PM
  */
-require 'sync-functions.php';
+require_once 'sync-functions.php';
 
 
 function ajax_sync_app_data() {
@@ -45,7 +45,7 @@ add_action( 'wp_ajax_sync-app-data', 'ajax_sync_app_data' );
 
 function cron_school_app_data_sync() {
 
-    $pending_sync_request_ids = get_pending_app_sync_requests();
+    $pending_sync_request_ids = get_pending_app_sync_request_ids();
 
     if (empty($pending_sync_request_ids))
         return false;
