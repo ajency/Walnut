@@ -34,7 +34,7 @@ define ['app'], (App)->
 
 					$('#saved-successfully').remove()
 
-					$ ".creator"
+					$ ".page-title"
 					.before '<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>'
 
 				.fail (resp)->

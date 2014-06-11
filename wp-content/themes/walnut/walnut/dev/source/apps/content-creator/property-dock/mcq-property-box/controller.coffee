@@ -10,6 +10,9 @@ define ['app'
             initialize: (options)->
                 @model = options.model
 
+                App.execute "close:question:elements"
+                App.execute "close:question:element:properties"
+
 
                 @layout = @_getView @model
 

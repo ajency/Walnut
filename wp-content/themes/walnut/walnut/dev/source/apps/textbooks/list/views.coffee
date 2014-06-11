@@ -14,7 +14,7 @@ define ['app'
                 @$el.attr 'data-name', @model.get 'name'
                 class_ids = @model.get 'classes'
                 if class_ids
-                    @$el.addClass 'class' + class_id for class_id in class_ids
+                    @$el.addClass CLASS_LABEL[class_id] for class_id in class_ids
 
                 subjects = @model.get 'subjects'
                 if subjects
@@ -37,7 +37,7 @@ define ['app'
                         num)
                     class_string = ''
                     for class_id in item_classes
-                        class_string += 'Class ' + class_id
+                        class_string += CLASS_LABEL[class_id]
                         class_string += ', ' if _.last(item_classes) != class_id
 
                     data.class_string = class_string;
@@ -45,8 +45,7 @@ define ['app'
 
                 subjects = @model.get 'subjects'
                 if subjects
-                    item_subjects = _.sortBy(subjects, (num)->
-                        num)
+                    item_subjects = _.sortBy subjects, (subject)->subject
                     subject_string = ''
                     for subject in item_subjects
                         subject_string += subject
@@ -77,10 +76,14 @@ define ['app'
                 data = super()
                 console.log @collection
                 collection_classes = @collection.pluck 'classes'
-                data_classes = _.union _.flatten collection_classes
-                data.classes = _.compact (_.sortBy(data_classes, (num)->
-                    num))
 
+                data.classes=   _.chain collection_classes
+                                    .flatten()
+                                    .union()
+                                    .compact()
+                                    .sortBy (num)-> parseInt num
+                                    .map (m)-> CLASS_LABEL[m]
+                                .value()
 
                 collection_subjects = @collection.pluck 'subjects'
                 data_subjects = _.union _.flatten collection_subjects

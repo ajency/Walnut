@@ -4,83 +4,135 @@ define ['app'
     App.module "CollecionDetailsApp.Controller", (Controller, App)->
         class Controller.ViewCollecionDetailsController extends RegionController
 
-            initialize: (opts)->
+            initialize : (opts)->
 
                 # for take-class module the template changes a bit
                 # so based on this value (@mode) we set the template additional stuff
                 {@model,@mode,@questionResponseCollection,@textbookNames}= opts
 
-                @view = view = @_getCollectionDetailsView @model
-
-                @show view, (loading: true, entities: [@textbookNames])
+                @view = view = @_getCollectionDetailsView()
 
                 @listenTo view, 'start:teaching:module', =>
                     @region.trigger "start:teaching:module"
 
-            _getCollectionDetailsView: (model)->
-                terms = model.get 'term_ids'
+                @listenTo view, 'goto:previous:route', @_gotoPreviousRoute
 
-                numOfQuestionsCompleted = _.size @questionResponseCollection.where "status": "completed"
-                totalNumofQuestions = _.size model.get 'content_pieces'
+                @show view, (loading : true, entities : [@textbookNames])
+
+            _gotoPreviousRoute : ->
+
+                currRoute = App.getCurrentRoute()
+
+                newRoute = _(currRoute).strLeft '/module'
+
+#                newRoute = _.str.rtrim currRoute, removeStr + '/'
+
+                App.navigate newRoute, true
+
+#                App.execute "show:headerapp", region : App.headerRegion
+#                App.execute "show:leftnavapp", region : App.leftNavRegion
+
+            _getCollectionDetailsView : ->
+                terms = @model.get 'term_ids'
+
+                numOfQuestionsCompleted = _.size @questionResponseCollection.where "status" : "completed"
+                totalNumofQuestions = _.size @model.get 'content_pieces'
 
                 new CollectionDetailsView
-                    model: model
-                    mode: @mode
-
-                    templateHelpers:
-                        getProgressData:->
-                            numOfQuestionsCompleted + '/'+ totalNumofQuestions
-
-                        getProgressPercentage:->
-                            parseInt (numOfQuestionsCompleted / totalNumofQuestions)*100
-
-                        getTextbookName: =>
-                            textbook = @textbookNames.get terms.textbook
-                            texbookName = textbook.get 'name' if textbook?
-
-                        getChapterName: =>
-                            chapter = @textbookNames.get terms.chapter
-                            chapterName = chapter.get 'name' if chapter?
+                    model : @model
+                    mode : @mode
+                    templateHelpers : @_getTemplateHelpers
+                        terms : terms
+                        numOfQuestionsCompleted : numOfQuestionsCompleted
+                        totalNumofQuestions : totalNumofQuestions
 
 
-                        startScheduleButton: =>
-                            actionButtons = ''
+            _getTemplateHelpers : (options)->
+                showElapsedTime : =>
+                    timeTakenArray = @questionResponseCollection.pluck('time_taken');
+                    totalTimeTakenForModule = 0
+                    if _.size(timeTakenArray) > 0
+                        totalTimeTakenForModule = _.reduce timeTakenArray, (memo, num)->
+                            parseInt memo + parseInt num
 
-                            allContentPieces = @model.get 'content_pieces'
-                            allContentPieces = _.map allContentPieces, (m)-> parseInt m
-                            answeredPieces= @questionResponseCollection.where "status":"completed"
+                    hours = 0
+                    time = totalTimeTakenForModule
+                    mins = parseInt totalTimeTakenForModule / 60
+                    if mins > 59
+                        hours = parseInt mins / 60
+                        mins = parseInt mins % 60
+                    seconds = parseInt time % 60
+                    display_time = ''
 
-                            answeredIDs = _.chain answeredPieces
-                                            .map (m)->m.toJSON()
-                                            .pluck 'content_piece_id'
-                                            .value()
+                    if hours > 0
+                        display_time = hours + 'h '
 
-                            answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
+                    display_time += mins + 'm ' + seconds + 's'
+                    display_time
 
-                            unanswered = _.difference allContentPieces, answeredIDs
+                getProgressData : ->
+                    options.numOfQuestionsCompleted + '/' + options.totalNumofQuestions
 
-                            if _.size(unanswered) > 0 and @mode isnt 'training'
-                                actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10">
-                                									<i class="fa fa-play"></i> Start
-                                								</button>'
-                            actionButtons
+                getProgressPercentage : ->
+                    parseInt (options.numOfQuestionsCompleted / options.totalNumofQuestions) * 100
+
+                getTextbookName : =>
+                    textbook = @textbookNames.get options.terms.textbook
+                    texbookName = textbook.get 'name' if textbook?
+
+                getChapterName : =>
+                    chapter = @textbookNames.get options.terms.chapter
+                    chapterName = chapter.get 'name' if chapter?
+
+
+                startScheduleButton : =>
+                    actionButtons = ''
+
+                    allContentPieces = @model.get 'content_pieces'
+                    allContentPieces = _.map allContentPieces, (m)->
+                        parseInt m
+                    answeredPieces = @questionResponseCollection.where "status" : "completed"
+
+                    if answeredPieces
+                        answeredIDs = _.chain answeredPieces
+                        .map (m)->
+                                m.toJSON()
+                        .pluck 'content_piece_id'
+                            .value()
+
+
+                    answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
+
+                    unanswered = _.difference allContentPieces, answeredIDs
+
+                    if _.size(unanswered) > 0 and @mode isnt 'training'
+                        actionButtons = '<button type="button" id="start-module" class="btn btn-success action pull-right m-t-10">
+                                                                                                                                                                                                            <i class="fa fa-play"></i> Start
+                                                                                                                                                                                                        </button>'
+                    actionButtons
 
 
         class CollectionDetailsView extends Marionette.ItemView
 
-            template: collectionDetailsTpl
+            template : collectionDetailsTpl
 
-            className: 'tiles white grid simple vertical green'
 
-            events:
-                'click #start-module': 'startModule'
 
-            serializeData: ->
-                data = super()
-                data.takeClassModule = Marionette.getOption @, 'mode'
+            events :
+                'click #start-module' : 'startModule'
+                'click #go-back-button' : ->
+                    @trigger "goto:previous:route"
+
+            mixinTemplateHelpers : (data)->
+                data = super(data)
+                data.takeClassModule = @mode
+                data.isTraining = if @mode is 'training' then true else false
                 data
 
-            startModule: =>
+            initialize : ->
+                @mode = Marionette.getOption @, 'mode'
+
+            startModule : =>
                 currentRoute = App.getCurrentRoute()
                 App.navigate currentRoute + "/question"
 

@@ -3,12 +3,12 @@ define ['app'], (App)->
         class Views.Layout extends Marionette.Layout
 
             template: '<div class="builder_actions">
-                      					<button type="button" class="btn btn-success btn-cons2" id="save-question">
+                      					<button type="button" class="btn btn-info btn-cons2" id="save-question">
                       					<i class="fa fa-check"></i> Save</button>
-                      					<button type="button" class="btn btn-success btn-cons2">
+                      					<button type="button" class="btn btn-info btn-cons2">
                       					<i class="fa fa-eye"></i> Preview</button>
                       				</div>
-            						<div class="tiles green">
+            						<div class="tiles default">
             							<div class="tiles-head">
             								<h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4>
             							</div>

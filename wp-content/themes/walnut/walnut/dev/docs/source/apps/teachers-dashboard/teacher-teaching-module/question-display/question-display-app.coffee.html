@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>question-display-app.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../doc-style.css" />
+  <script src="../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../", thisFile = "source\\apps\\teachers-dashboard\\teacher-teaching-module\\question-display\\question-display-app.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>question-display-app.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+        <span class="s">&#39;controllers/region-controller&#39;</span><span class="p">],</span> <span class="nf">(App, RegionController)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;SingleQuestionDisplayApp&quot;</span><span class="p">,</span> <span class="nf">(SingleQuestion, App)-&gt;</span>
+        <span class="k">class</span> <span class="nx">SingleQuestion</span><span class="p">.</span><span class="nx">SingleQuestionController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+            <span class="nv">initialize: </span><span class="nf">(opts)-&gt;</span>
+                <span class="p">{</span><span class="nx">model</span><span class="p">,</span><span class="nx">questionResponseModel</span><span class="p">,</span><span class="nx">@timerObject</span><span class="p">,</span> <span class="nx">@display_mode</span><span class="p">}</span> <span class="o">=</span> <span class="nx">opts</span>
+
+                <span class="vi">@durationInSeconds= </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;duration&#39;</span><span class="p">)</span><span class="o">*</span><span class="mi">60</span>
+
+                <span class="vi">@view = </span><span class="nv">view = </span><span class="nx">@_showQuestionView</span> <span class="nx">model</span><span class="p">,</span><span class="nx">questionResponseModel</span>
+
+                <span class="nx">@show</span> <span class="nx">view</span><span class="p">,</span> <span class="p">(</span><span class="nv">loading: </span><span class="kc">true</span><span class="p">)</span>
+
+                <span class="nx">@timerObject</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:elapsed:time&quot;</span><span class="p">,</span> <span class="p">()</span><span class="o">=&gt;</span>
+                    <span class="nv">timerTime= </span><span class="nx">$</span> <span class="nx">@view</span><span class="p">.</span><span class="nx">el</span>
+                                <span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.cpTimer&#39;</span>
+                                <span class="p">.</span><span class="nx">TimeCircles</span><span class="p">()</span>
+                                <span class="p">.</span><span class="nx">getTime</span><span class="p">()</span>
+
+                    <span class="nv">timeElapsed = </span><span class="nx">@durationInSeconds</span> <span class="o">-</span> <span class="nx">timerTime</span>
+
+                    <span class="nx">timeElapsed</span>
+
+
+            <span class="nv">_showQuestionView: </span><span class="nf">(model,questionResponseModel) =&gt;</span>
+                <span class="k">new</span> <span class="nx">QuestionDisplayView</span>
+                    <span class="nv">model: </span><span class="nx">model</span>
+                    <span class="nv">display_mode: </span><span class="nx">@display_mode</span>
+
+                    <span class="nv">templateHelpers:</span>
+                        <span class="nx">timeLeftOrElapsed</span><span class="o">:=&gt;</span>
+                            <span class="nv">timeTaken= </span><span class="nb">parseInt</span> <span class="nx">questionResponseModel</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;time_taken&#39;</span>
+                            <span class="nv">timer= </span><span class="nx">@durationInSeconds</span> <span class="o">-</span> <span class="nx">timeTaken</span>
+
+
+
+
+        <span class="k">class</span> <span class="nx">QuestionDisplayView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+            <span class="nv">template: </span><span class="s">&#39;&lt;div class=&quot;tiles white grid simple vertical blue m-b-0&quot;&gt;</span>
+<span class="s">                      &lt;div class=&quot;grid-body no-border&quot;&gt;</span>
+<span class="s">                          &lt;div class=&quot;p-t-10&quot;&gt;</span>
+<span class="s">                            &lt;div class=&quot;row&quot;&gt;</span>
+<span class="s">                              &lt;div class=&quot;col-sm-9&quot;&gt;</span>
+<span class="s">                                &lt;div class=&quot;row m-b-10&quot;&gt;</span>
+<span class="s">                                        &lt;div class=&quot;col-xs-4 b-grey b-r&quot;&gt;</span>
+<span class="s">                                          &lt;label class=&quot;form-label bold small-text&quot;&gt;Class&lt;/label&gt;</span>
+<span class="s">                                  4</span>
+<span class="s">                                        &lt;/div&gt;</span>
+<span class="s">                                        &lt;div class=&quot;col-xs-4 b-grey b-r&quot;&gt;</span>
+<span class="s">                                          &lt;label class=&quot;form-label bold small-text&quot;&gt;Subject&lt;/label&gt;</span>
+<span class="s">                                  Science</span>
+<span class="s">                                        &lt;/div&gt;</span>
+<span class="s">                                        &lt;div class=&quot;col-xs-4 b-grey b-r&quot;&gt;</span>
+<span class="s">                                          &lt;label class=&quot;form-label bold small-text&quot;&gt;Chapter&lt;/label&gt;</span>
+<span class="s">                                  Internal Organs of the Body</span>
+<span class="s">                                        &lt;/div&gt;</span>
+<span class="s">                                      &lt;/div&gt;</span>
+<span class="s">                                      &lt;div class=&quot;row&quot;&gt;</span>
+<span class="s">                                        &lt;div class=&quot;col-xs-4 b-grey b-r&quot;&gt;</span>
+<span class="s">                                          &lt;label class=&quot;form-label bold small-text&quot;&gt;Section&lt;/label&gt;</span>
+<span class="s">                                  Internal &amp; External</span>
+<span class="s">                                        &lt;/div&gt;</span>
+<span class="s">                                        &lt;div class=&quot;col-xs-4 b-grey b-r&quot;&gt;</span>
+<span class="s">                                          &lt;label class=&quot;form-label bold small-text&quot;&gt;Sub-Section&lt;/label&gt;</span>
+<span class="s">                                  -</span>
+<span class="s">                                        &lt;/div&gt;</span>
+<span class="s">                                        &lt;div class=&quot;col-xs-4 b-grey b-r&quot;&gt;</span>
+<span class="s">                                          &lt;label class=&quot;form-label bold small-text&quot;&gt;Type&lt;/label&gt;</span>
+<span class="s">                                  Difficult</span>
+<span class="s">                                        &lt;/div&gt;</span>
+<span class="s">                                      &lt;/div&gt;</span>
+<span class="s">                                    &lt;/div&gt;</span>
+<span class="s">                                  &lt;div class=&quot;col-sm-3&quot;&gt;</span>
+<span class="s">                                    &lt;div class=&quot;cpTimer&quot; data-timer=&quot;{{timeLeftOrElapsed}}&quot;&gt;&lt;/div&gt;</span>
+<span class="s">                                  &lt;/div&gt;</span>
+<span class="s">                              &lt;/div&gt;</span>
+<span class="s">                                &lt;/div&gt;</span>
+<span class="s">                            &lt;/div&gt;</span>
+<span class="s">                    &lt;/div&gt;</span>
+<span class="s">                    &lt;div class=&quot;tiles blue p-l-15 p-r-15&quot;&gt;</span>
+<span class="s">                      &lt;div class=&quot;tiles-body no-border&quot;&gt;</span>
+<span class="s">                        &lt;div class=&quot;row&quot;&gt;</span>
+<span class="s">                                &lt;div class=&quot;col-md-3 col-sm-3&quot;&gt;</span>
+<span class="s">                                  &lt;h3 class=&quot;text-white m-t-0 m-b-0 semi-bold time timedisplay&quot;&gt; &lt;i class=&quot;fa fa-clock-o&quot;&gt;&lt;/i&gt; &lt;/h3&gt;</span>
+<span class="s">                                &lt;/div&gt;</span>
+<span class="s">                                &lt;div class=&quot;col-md-3 col-sm-3 text-center&quot;&gt;</span>
+<span class="s">                                  &lt;a href=&quot;#&quot; class=&quot;hashtags transparent&quot;&gt; &lt;i class=&quot;fa fa-question&quot;&gt;&lt;/i&gt; View Info &lt;/a&gt;</span>
+<span class="s">                                &lt;/div&gt;</span>
+<span class="s">                                &lt;div class=&quot;col-md-3 col-sm-3 text-center&quot;&gt;</span>
+<span class="s">                                  &lt;a href=&quot;#&quot; class=&quot;hashtags transparent&quot;&gt; &lt;i class=&quot;fa fa-eye&quot;&gt;&lt;/i&gt; View Answer &lt;/a&gt;</span>
+<span class="s">                                &lt;/div&gt;</span>
+<span class="s">                                &lt;div class=&quot;col-md-3 col-sm-3 text-right&quot;&gt;</span>
+<span class="s">                                  &lt;a href=&quot;#&quot; class=&quot;hashtags transparent&quot;&gt; &lt;i class=&quot;fa fa-check&quot;&gt;&lt;/i&gt; Done &lt;/a&gt;</span>
+<span class="s">                                &lt;/div&gt;</span>
+<span class="s">                            &lt;/div&gt;</span>
+<span class="s">                        &lt;/div&gt;</span>
+<span class="s">                    &lt;/div&gt;</span>
+<span class="s">                    &lt;div class=&quot;teacherCanvas &quot;&gt;</span>
+<span class="s">                        &lt;div class=&quot;grid-body p-t-20 p-b-15 no-border&quot;&gt;&lt;/div&gt;</span>
+<span class="s">                      &lt;/div&gt;</span>
+
+<span class="s">                      &lt;div class=&quot;tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b&quot;&gt;</span>
+<span class="s">                          &lt;p class=&quot;bold small-text&quot;&gt;Question Info: &lt;/p&gt;</span>
+<span class="s">                          &lt;p class=&quot;&quot;&gt;{{post_title}}&lt;/p&gt;</span>
+<span class="s">                        &lt;/div&gt;&#39;</span>
+
+            <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span> <span class="nx">@</span><span class="p">,</span> <span class="s">&#39;display_mode&#39;</span>
+                <span class="k">if</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">getOption</span><span class="p">(</span><span class="nx">@</span><span class="p">,</span> <span class="s">&#39;display_mode&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;class_mode&#39;</span>
+                    <span class="nv">qTimer = </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;div.cpTimer&#39;</span>
+
+                    <span class="nv">qTime= </span><span class="nx">qTimer</span><span class="p">.</span><span class="nx">data</span> <span class="s">&#39;timer&#39;</span>
+                    <span class="nv">timerColor = </span><span class="s">&#39;#1ec711&#39;</span>
+
+                    <span class="k">if</span> <span class="nx">qTime</span> <span class="o">&lt;</span><span class="mi">10</span>
+                        <span class="nv">timerColor = </span><span class="s">&#39;#f8a616&#39;</span>
+
+                    <span class="k">if</span> <span class="nx">qTime</span> <span class="o">&lt;</span><span class="mi">0</span>
+                        <span class="nv">timerColor = </span><span class="s">&#39;#ea0d0d&#39;</span>
+
+                    <span class="nx">qTimer</span><span class="p">.</span><span class="nx">TimeCircles</span>
+                        <span class="nv">time:</span>
+                            <span class="nv">Days:</span>
+                                <span class="nx">show</span><span class="o">:</span><span class="kc">false</span>
+                            <span class="nv">Hours:</span>
+                                <span class="nx">show</span><span class="o">:</span><span class="kc">false</span>
+                            <span class="nv">Minutes:</span>
+                                <span class="nv">color: </span><span class="nx">timerColor</span>
+                            <span class="nv">Seconds:</span>
+                                <span class="nv">color: </span><span class="nx">timerColor</span>
+
+                        <span class="nv">circle_bg_color: </span><span class="s">&quot;</span><span class="err">#</span><span class="s">EBEEF1&quot;</span>
+                        <span class="nv">bg_width: </span><span class="mf">0.2</span>
+
+                    <span class="p">.</span><span class="nx">addListener</span> <span class="nf">(unit,value,total)-&gt;</span>
+                        <span class="k">if</span> <span class="nx">total</span> <span class="o">is</span> <span class="mi">10</span>
+                            <span class="nx">qTimer</span><span class="p">.</span><span class="nx">data</span> <span class="s">&#39;timer&#39;</span><span class="p">,</span><span class="mi">10</span>
+                            <span class="nx">qTimer</span><span class="p">.</span><span class="nx">TimeCircles</span>
+                                <span class="nv">time:</span>
+                                    <span class="nv">Days:</span>
+                                        <span class="nx">show</span><span class="o">:</span><span class="kc">false</span>
+                                    <span class="nv">Hours:</span>
+                                        <span class="nx">show</span><span class="o">:</span><span class="kc">false</span>
+                                    <span class="nv">Minutes:</span>
+                                        <span class="nv">color: </span><span class="s">&#39;#f8a616&#39;</span>
+                                    <span class="nv">Seconds:</span>
+                                        <span class="nv">color: </span><span class="s">&#39;#f8a616&#39;</span>
+                        <span class="k">else</span> <span class="k">if</span> <span class="nx">total</span> <span class="o">is</span> <span class="mi">5</span>
+                            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;The expected time for this question is almost over.&#39;</span>
+
+                        <span class="k">else</span> <span class="k">if</span> <span class="nx">total</span> <span class="o">is</span> <span class="o">-</span><span class="mi">1</span>
+                                <span class="nx">qTimer</span><span class="p">.</span><span class="nx">TimeCircles</span>
+                                    <span class="nv">time:</span>
+                                        <span class="nv">Days:</span>
+                                            <span class="nx">show</span><span class="o">:</span><span class="kc">false</span>
+                                        <span class="nv">Hours:</span>
+                                            <span class="nx">show</span><span class="o">:</span><span class="kc">false</span>
+                                        <span class="nv">Minutes:</span>
+                                            <span class="nv">color: </span><span class="s">&#39;#ea0d0d&#39;</span>
+                                        <span class="nv">Seconds:</span>
+                                            <span class="nv">color: </span><span class="s">&#39;#ea0d0d&#39;</span>
+
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>set handlers</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:single:question:app&quot;</span><span class="p">,</span> <span class="nf">(opt = {})-&gt;</span>
+            <span class="k">new</span> <span class="nx">SingleQuestion</span><span class="p">.</span><span class="nx">SingleQuestionController</span> <span class="nx">opt</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

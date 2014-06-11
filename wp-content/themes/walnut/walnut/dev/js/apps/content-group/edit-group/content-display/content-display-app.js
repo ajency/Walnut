@@ -16,20 +16,21 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       CollectionEditContentDisplayController.prototype.initialize = function(opts) {
         var view;
-        this.model = opts.model;
-        this.groupContentCollection = App.request("get:content:pieces:of:group", this.model);
-        this.view = view = this._getCollectionContentDisplayView(this.model, this.groupContentCollection);
+        this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
+        console.log('@contentGroupCollection');
+        console.log(this.contentGroupCollection);
+        this.view = view = this._getCollectionContentDisplayView(this.model, this.contentGroupCollection);
         this.show(view, {
           loading: true
         });
-        this.listenTo(this.groupContentCollection, 'content:pieces:of:group:added', this.contentPiecesChanged);
-        this.listenTo(this.groupContentCollection, 'content:pieces:of:group:removed', this.contentPiecesChanged);
+        this.listenTo(this.contentGroupCollection, 'content:pieces:of:group:added', this.contentPiecesChanged);
+        this.listenTo(this.contentGroupCollection, 'content:pieces:of:group:removed', this.contentPiecesChanged);
         return this.listenTo(view, 'changed:order', this.saveContentPieces);
       };
 
       CollectionEditContentDisplayController.prototype.contentPiecesChanged = function() {
         var contentIDs;
-        contentIDs = this.groupContentCollection.pluck('ID');
+        contentIDs = this.contentGroupCollection.pluck('ID');
         return this.saveContentPieces(contentIDs);
       };
 

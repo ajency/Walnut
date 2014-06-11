@@ -4,7 +4,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentPiece", function(ContentPiece, App, Backbone, Marionette, $, _) {
-    var API, contentPiecesOfGroup;
+    var API;
     ContentPiece.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -61,6 +61,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       GroupItemCollection.prototype.comparator = 'ID';
 
       GroupItemCollection.prototype.initialize = function() {
+        console.log('content piece ');
         this.on('remove', this.removedModel, this);
         return this.on('add', this.addedPieces, this);
       };
@@ -76,7 +77,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       return GroupItemCollection;
 
     })(Backbone.Collection);
-    contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
     API = {
       getContentPieces: function(param) {
         var contentPieceCollection;
@@ -93,20 +93,16 @@ define(["app", 'backbone'], function(App, Backbone) {
         return contentPieceCollection;
       },
       getContentPiecesOfGroup: function(groupModel) {
-        var contentID, contentIDs, contentModel, _i, _len;
+        var contentID, contentIDs, contentModel, contentPiecesOfGroup, _i, _len;
+        contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
         contentIDs = groupModel.get('content_pieces');
         if (contentIDs) {
           for (_i = 0, _len = contentIDs.length; _i < _len; _i++) {
             contentID = contentIDs[_i];
-            if (typeof contentPieceCollection !== "undefined" && contentPieceCollection !== null) {
-              contentModel = contentPieceCollection.get(contentID);
-            }
-            if (!contentModel) {
-              contentModel = new ContentPiece.ItemModel({
-                'ID': contentID
-              });
-              contentModel.fetch();
-            }
+            contentModel = new ContentPiece.ItemModel({
+              'ID': contentID
+            });
+            contentModel.fetch();
             contentPiecesOfGroup.add(contentModel);
           }
         }
@@ -130,15 +126,15 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (ids == null) {
           ids = [];
         }
+        contentPieces = new ContentPiece.ItemCollection;
         if (_.size(ids) > 0) {
-          contentPieces = new ContentPiece.ItemCollection;
           contentPieces.fetch({
             data: {
               ids: ids
             }
           });
-          return contentPieces;
         }
+        return contentPieces;
       }
     };
     App.reqres.setHandler("get:content:pieces", function(opt) {

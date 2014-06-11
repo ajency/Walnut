@@ -32,13 +32,16 @@ define(['jquery', 'underscore'], function($, _) {
     });
     $(window).on('scroll', (function(_this) {
       return function() {
-        console.log(_this);
         return _this.css({
           top: (($(parent).height() - _this.outerHeight()) / 2) + $(parent).scrollTop() + "px"
         });
       };
     })(this));
     return this;
+  };
+  $.fn.selectSelectableElements = function(elementsToSelect) {
+    $(".ui-selected", this).not(elementsToSelect).removeClass("ui-selected");
+    return $(elementsToSelect).not(".ui-selected").addClass("ui-selected");
   };
   adjustPageDim = _.debounce(function() {
     var height, minHeight;

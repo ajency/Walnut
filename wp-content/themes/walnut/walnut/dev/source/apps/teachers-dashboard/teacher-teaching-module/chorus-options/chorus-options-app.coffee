@@ -15,12 +15,11 @@ define ['app'
 
                 @listenTo view, "question:completed", @_changeQuestion
 
-            _changeQuestion: (resp)=>
-                @_saveQuestionResponse '' if resp is 'no_answer'
-
+            _changeQuestion:=>
                 @region.trigger "goto:next:question", @questionResponseModel.get 'content_piece_id'
 
             _showChorusOptionsView: (model)=>
+                console.log JSON.stringify @questionResponseModel.toJSON()
                 new ChorusOptionsView
                     model: model
                     responsePercentage: @questionResponseModel.get 'question_response'
@@ -29,10 +28,10 @@ define ['app'
             _saveQuestionResponse: (studResponse)=>
 
                 elapsedTime= @timerObject.request "get:elapsed:time"
-
+                #status changes to completed only when we navigate to next question
                 @questionResponseModel.set
                     'question_response' : studResponse
-                    'status'            : 'completed'
+                    'status'            : 'paused'
                     'time_taken'        : elapsedTime
 
                 @questionResponseModel.save()
@@ -52,24 +51,28 @@ define ['app'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
                 responsePercentage = Marionette.getOption @, 'responsePercentage'
-                if responsePercentage?
+
+                if _.isString(responsePercentage) and responsePercentage.length > 0
                     @$el.find '#' + responsePercentage
                     .find '.default'
+                        .removeClass 'default'
                         .addClass 'green'
 
             selectStudent: (e)->
                 @$el.find '.green'
                 .removeClass 'green'
+                    .addClass 'default'
 
-                dataValue = $(e.target).closest '.tiles.single'
-                .attr 'id'
+                dataValue = $(e.currentTarget).closest '.tiles.single'
+                                                .attr 'id'
 
                 $(e.target).closest('.tiles.single')
-                .find '.default'
-                    .addClass 'green'
-                        .find 'i'
-                            .removeClass 'fa-minus-circle'
-                                .addClass 'fa-check-circle'
+                            .find '.default'
+                                .removeClass 'default'
+                                .addClass 'green'
+                                    .find 'i'
+                                        .removeClass 'fa-minus-circle'
+                                            .addClass 'fa-check-circle'
 
                 @trigger "save:question:response", dataValue
 

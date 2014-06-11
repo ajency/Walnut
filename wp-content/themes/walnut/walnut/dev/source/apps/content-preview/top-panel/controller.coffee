@@ -75,9 +75,12 @@ define ['app'
                         getClass: =>
                             classesArray=[]
                             classes= @textbookModel.get 'classes'
-                            classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
 
-                            classesArray.join()
+                            if _.isArray classes
+                                classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
+                                classesArray.join()
+
+                            classesArray
 
                         getTextbookName: =>
                             textbook = @textbookNames.get terms.textbook
@@ -114,15 +117,16 @@ define ['app'
 
                         getCompletedSummary:=>
                             if questionResponseModel and questionResponseModel.get("status") is 'completed'
-
-                                time_taken_in_mins= parseInt questionResponseModel.get("time_taken") / 60
+                                minutes= parseInt questionResponseModel.get("time_taken") / 60
+                                seconds = parseInt questionResponseModel.get("time_taken") % 60
+                                time_taken_string= minutes + 'm '+seconds+'s'
                                 correct_answer= @getResults()
 
                                 '<div class="row">
                                       <div class="col-xs-6">
                                         <p>
                                           <label class="form-label bold small-text inline">Time Alloted:</label>'+model.get("duration")+'mins<br>
-                                          <label class="form-label bold small-text inline">Time Taken:</label>'+time_taken_in_mins+'mins
+                                          <label class="form-label bold small-text inline">Time Taken:</label>'+time_taken_string+'
                                         </p>
                                       </div>
                                       <div class="col-xs-6">

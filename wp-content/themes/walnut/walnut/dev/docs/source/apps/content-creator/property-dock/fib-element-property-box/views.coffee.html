@@ -54,25 +54,48 @@
 <span class="s">                    &lt;/i&gt;</span>
 <span class="s">                    </span>
 <span class="s">                    &lt;span class=&quot;semi-bold&quot;&gt;</span>
-<span class="s">                      Blank</span>
+<span class="s">                      Blank No : &lt;span id=&quot;blankPropertiesNo&quot;&gt;&lt;/span&gt;</span>
 <span class="s">                    &lt;/span&gt;</span>
 <span class="s">                    </span>
 <span class="s">                  &lt;/div&gt;</span>
 <span class="s">                  &lt;div class=&quot;docket-body&quot;&gt;</span>
-<span class="s">                    &lt;div &gt;Max Characters</span>
-<span class="s">                    &lt;input id=&quot;answer-max-length&quot; type=&quot;type&quot;  value=&quot;{{maxlength}}&quot;&gt;                     </span>
+<span class="s">          &lt;!--      &lt;div class=&quot;from-group&quot;&gt;Set maximum characters allowed to enter</span>
+<span class="s">                    &lt;input id=&quot;answer-max-length&quot; type=&quot;text&quot;  value=&quot;{{maxlength}}&quot;&gt;</span>
+
+<span class="s">                      </span>
+<span class="s">                  &lt;/div&gt;   --&gt;</span>
+
+<span class="s">                  &lt;div class=&quot;&quot;&gt;</span>
+<span class="s">                    Accepted answers</span>
+<span class="s">                      &lt;input id=&quot;correct-answers&quot;   value=&quot;{{correctanswersFn}}&quot; </span>
+<span class="s">                      type=&quot;text&quot; data-role=&quot;tagsinput&quot; placeholder=&quot;Type Answer and press Enter&quot; /&gt;</span>
 <span class="s">                  &lt;/div&gt;</span>
 
 <span class="s">                  &lt;div class=&quot;form-group&quot;&gt;</span>
-<span class="s">                    &lt;div class=&quot;bootstrap-tagsinput&quot;&gt; </span>
-<span class="s">                      &lt;input id=&quot;correct-answers&quot; value=&quot;{{correctanswersFn}}&quot; type=&quot;text&quot; data-role=&quot;tagsinput&quot; placeholder=&quot;Type Answer and press Enter&quot; /&gt;</span>
+<span class="s">                    </span>
+<span class="s">                    &lt;div class=&quot;textProp slider success&quot;&gt;</span>
+<span class="s">                      Size </span>
+<span class="s">                      &lt;input type=&quot;text&quot; id=&quot;fib-blanksize&quot; class=&quot;blankSize&quot; </span>
+<span class="s">                      data-slider-max=&quot;50&quot; data-slider-min=&quot;1&quot; data-slider-step=&quot;1&quot;</span>
+<span class="s">                      data-slider-value=&quot;{{blank_size}}&quot; data-slider-orientation=&quot;horizontal&quot;</span>
+<span class="s">                       data-slider-selection=&quot;before&quot;&gt;</span>
+
 <span class="s">                    &lt;/div&gt;</span>
+
+<span class="s">                  &lt;/div&gt;</span>
+
+<span class="s">                  &lt;div class=&quot;m-b-10&quot;&gt;</span>
+<span class="s">                    Marks</span>
+<span class="s">                    &lt;input id=&quot;individual-marks&quot; type=&quot;text&quot; value=&quot;{{marks}}&quot; </span>
+<span class="s">                    class=&quot;form-control&quot;&gt;</span>
 <span class="s">                  &lt;/div&gt;</span>
 
 <span class="s">                &lt;/div&gt;</span>
 <span class="s">                &lt;/div&gt;</span>
 <span class="s">              &lt;/div&gt;</span>
 <span class="s">                    &#39;</span>
+        <span class="nv">ui :</span>
+          <span class="nv">individualMarksTextbox : </span><span class="s">&#39;#individual-marks&#39;</span>
 
 
 </pre></div>
@@ -87,17 +110,6 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
         <span class="nv">events : </span>
-          <span class="s">&#39;blur #answer-max-length&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeMaxLength&#39;</span>
-          <span class="s">&#39;change input#correct-answers&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeCorrectAnswers&#39;</span>
-
-        <span class="nx">mixinTemplateHelpers</span><span class="o">:</span><span class="nf">(data)-&gt;</span>
-          <span class="nv">data.correctanswersFn = </span><span class="nf">-&gt;</span>
-            <span class="nx">@correct_answers</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
-          <span class="nx">data</span>
-
-        <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
-
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input#correct-answers&#39;</span><span class="p">).</span><span class="nx">tagsinput</span><span class="p">(</span><span class="s">&#39;refresh&#39;</span><span class="p">);</span>
 
 </pre></div>
         </td>
@@ -107,11 +119,19 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
-<p>@$el.find('input#correct-answers').tagsinput('input').val @model.get('correct_answers')</p>
+<p>'blur #answer-max-length' : '_changeMaxLength'</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
+          <span class="s">&#39;change input#correct-answers&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeCorrectAnswers&#39;</span>
+          <span class="s">&#39;blur @ui.individualMarksTextbox&#39;</span> <span class="o">:</span> <span class="s">&#39;_changeIndividualMarks&#39;</span>
 
+        <span class="nx">mixinTemplateHelpers</span><span class="o">:</span><span class="nf">(data)-&gt;</span>
+          <span class="nv">data.correctanswersFn = </span><span class="nf">-&gt;</span>
+            <span class="nx">@correct_answers</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+          <span class="nx">data</span>
 
+        <span class="nx">initialize</span><span class="o">:</span><span class="nf">(options)-&gt;</span>
+          <span class="vi">@fibModel = </span><span class="nx">options</span><span class="p">.</span><span class="nx">fibModel</span>
 
 </pre></div>
         </td>
@@ -121,11 +141,15 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
-<p>function for changing the correct answer array                        </p>
+<p>@blankNo = options.blankNo</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">_changeCorrectAnswers</span><span class="o">:</span><span class="nf">(evt)-&gt;</span>
-            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;correct_answers&#39;</span><span class="p">,</span><span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
+
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;input#correct-answers&#39;</span><span class="p">).</span><span class="nx">tagsinput</span><span class="p">(</span><span class="s">&#39;refresh&#39;</span><span class="p">);</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#blankPropertiesNo&#39;</span><span class="p">).</span><span class="nx">text</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;blank_index&#39;</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;blank_index&#39;</span>
 
 
 </pre></div>
@@ -136,10 +160,10 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
-<p>function for changing model on change of maxlength textbox</p>
+<p>initialize font size to use slider plugin</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">_changeMaxLength</span><span class="o">:</span><span class="nf">(evt)-&gt;</span> 
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.blankSize&#39;</span><span class="p">).</span><span class="nx">slider</span><span class="p">()</span>
 
 </pre></div>
         </td>
@@ -149,13 +173,84 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
-<p>check if the value is a number</p>
+<p>listen to slide event of slider
+on slide change the model</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-          <span class="k">if</span>  <span class="o">not</span> <span class="nb">isNaN</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
-              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span>
-              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;maxlength&#39;</span><span class="p">,</span><span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
-              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span>
+          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#fib-blanksize&#39;</span><span class="p">).</span><span class="nx">slider</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;slide&#39;</span><span class="p">,</span><span class="o">=&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>on click of slider , value set to null
+resolved with this</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+              <span class="nv">size = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;blank_size&#39;</span>
+              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;blank_size&#39;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.blankSize&#39;</span><span class="p">).</span><span class="nx">slider</span><span class="p">(</span><span class="s">&#39;getValue&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span><span class="o">||</span><span class="nx">size</span>
+
+          <span class="k">if</span> <span class="o">not</span> <span class="nx">@fibModel</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;enableIndividualMarks&#39;</span>
+            <span class="nx">@_disableMarks</span><span class="p">()</span>
+
+          <span class="nx">@listenTo</span> <span class="nx">@fibModel</span> <span class="p">,</span> <span class="s">&#39;change:enableIndividualMarks&#39;</span><span class="p">,</span><span class="nx">@_toggleMarks</span>
+
+        <span class="nx">_toggleMarks</span><span class="o">:</span><span class="nf">(model,enableIndividualMarks)-&gt;</span>
+          <span class="k">if</span> <span class="nx">enableIndividualMarks</span>
+            <span class="nx">@_enableMarks</span><span class="p">()</span>
+
+          <span class="k">else</span> 
+            <span class="nx">@_disableMarks</span><span class="p">()</span>
+
+        <span class="nx">_disableMarks</span><span class="o">:</span><span class="nf">-&gt;</span>
+          <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">val</span> <span class="mi">0</span>
+          <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">prop</span> <span class="s">&#39;disabled&#39;</span><span class="p">,</span><span class="kc">true</span>
+
+        <span class="nx">_enableMarks</span><span class="o">:</span><span class="nf">-&gt;</span>
+          <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">val</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;marks&#39;</span>
+          <span class="nx">@ui</span><span class="p">.</span><span class="nx">individualMarksTextbox</span><span class="p">.</span><span class="nx">prop</span> <span class="s">&#39;disabled&#39;</span><span class="p">,</span><span class="kc">false</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>function for changing the correct answer array                        </p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">_changeCorrectAnswers</span><span class="o">:</span><span class="nf">(evt)-&gt;</span>
+
+            <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;correct_answers&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>function for changing model on change of maxlength textbox
+_changeMaxLength:(evt)-> 
+    # check if the value is a number
+    if  not isNaN $(evt.target).val()
+            @model.set 'maxlength',parseInt $(evt.target).val()</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+        <span class="nx">_changeIndividualMarks</span><span class="o">:</span><span class="nf">(evt)-&gt;</span>
+          <span class="k">if</span> <span class="o">not</span> <span class="nb">isNaN</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+              <span class="nx">@model</span><span class="p">.</span><span class="nx">set</span> <span class="s">&#39;marks&#39;</span><span class="p">,</span> <span class="nb">parseInt</span> <span class="nx">$</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
 </pre></div>
         </td>
       </tr>

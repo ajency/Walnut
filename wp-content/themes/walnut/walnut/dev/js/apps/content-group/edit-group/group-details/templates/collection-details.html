@@ -10,13 +10,13 @@
 			<div class="col-md-4">
 			    <div class="margin-bottom-20 ">
 					<label class="form-label">Objective</label>
-					<textarea id="objective" name="description[objective]" required="required" class="form-control" placeholder="Enter Objective"></textarea>
+					<textarea id="objective" name="description[objective]" required="required" class="form-control" placeholder="Enter Objective">{{description.objective}}</textarea>
 					</div>
 			</div>
 			<div class="col-md-4">
 			    <div class="margin-bottom-20 ">
 					<label class="form-label">Physical Requirements</label>
-					<textarea name="description[physical_requirements]"  required="required" class="form-control" placeholder="Enter Physical Requirements"></textarea>
+					<textarea name="description[physical_requirements]" class="form-control" placeholder="Enter Physical Requirements">{{description.physical_requirements}}</textarea>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -35,13 +35,13 @@
 				<div class="col-md-4">
 				   <div class="margin-bottom-20 ">
 					<label class="form-label">Description</label>
-					<textarea id="description" name="description[description]" rows="4" class="form-control" placeholder="Enter Description">{{description}}</textarea>
+					<textarea id="description" name="description[description]" rows="4" class="form-control" placeholder="Enter Description">{{description.description}}</textarea>
 				</div>
 			</div>
 			<div class="col-md-4">
 			    <div class="margin-bottom-20 ">
 					<label class="form-label">Electronic Requirements</label>
-					<textarea id="electronic_requirements" name="description[electionic_requirements]" class="form-control" placeholder="Enter Electronic Requirements"></textarea>
+					<textarea id="electronic_requirements" name="description[electionic_requirements]" class="form-control" placeholder="Enter Electronic Requirements">{{description.electionic_requirements}}</textarea>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -76,7 +76,7 @@
 			    		<option value="hrs">hour(s)</option>
 		            </select>
 
-					<button type="submit" class="btn btn-success btn-cons2 right pull-right" id="save-content-collection"> <i class="fa fa-check"></i> Save</button>
+					<button type="submit" class="btn btn-success btn-cons2 right pull-right m-t-10" id="save-content-collection"> <i class="fa fa-check"></i> Save</button>
 				
 			</div>											 
 		</div>

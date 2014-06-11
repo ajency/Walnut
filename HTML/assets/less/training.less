@@ -64,9 +64,28 @@ h3.time{
 		}
 	} 
 
-	.ln-letters a{
-		padding: 5px 11px;
-	}
+	.ln-letters{
+		display: table;
+		margin: auto;
+		margin-top: 10px;
+		a{
+			padding: 5px 14px;
+			font-size: 1.5em;
+			border: 1px solid darken(@body-bg, 10%);
+			border-right: 1px solid darken(@body-bg, 10%);
+			margin-bottom: 5px;
+			margin-right: 4px;
+			background: @preview-grey;
+
+			&.ln-disabled{
+				padding: 5px 5px 14px;
+				font-size: 0.7em;
+				margin-top: 10px;
+				border: none;
+				background: none;
+			}
+		}
+	} 
 
 	.box2{
 		position: relative;

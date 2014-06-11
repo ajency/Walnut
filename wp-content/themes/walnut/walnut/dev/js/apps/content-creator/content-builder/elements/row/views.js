@@ -41,6 +41,9 @@ define(['app'], function(App) {
             }
           },
           update: function(e, ui) {
+            if (ui.item.find('form').find('input[name="element"]').val() === 'Row') {
+              ui.item.children('.element-markup').children().trigger('row:is:moved', ui.item.children('.element-markup').children().prop('id'));
+            }
             return $(e.target).removeClass('empty-column');
           }
         });
@@ -103,11 +106,32 @@ define(['app'], function(App) {
 
       RowView.prototype.onShow = function() {
         this.$el.attr('id', _.uniqueId('row-'));
-        return _.delay((function(_this) {
+        _.delay((function(_this) {
           return function() {
             return _this.setColumnResizer();
           };
         })(this), 400);
+        this.$el.on('row:is:moved', (function(_this) {
+          return function(evt, id) {
+            if (_this.$el.attr('id') === id) {
+              console.log("" + id + " is moved");
+              return _this.setColumnResizer();
+            }
+          };
+        })(this));
+        this.$el.find('.column').on("class:changed", (function(_this) {
+          return function(e) {
+            e.stopPropagation();
+            return _this.$el.find('.row').trigger("adjust:resizer");
+          };
+        })(this));
+        return this.$el.on("adjust:resizer", (function(_this) {
+          return function(e) {
+            e.stopPropagation();
+            console.log('column resizer set');
+            return _this.setColumnResizer();
+          };
+        })(this));
       };
 
       RowView.prototype.onStyleChanged = function(newStyle, old) {
@@ -171,7 +195,7 @@ define(['app'], function(App) {
         if (this.columnCount() === 1) {
           return;
         }
-        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="bicon bicon-uniF140"></span> </p> </div>';
+        template = '<div class="aj-imp-col-divider"> <p title="Move"> <span class="fa fa-ellipsis-h"></span> </p> </div>';
         numberOfResizers = this.columnCount() - 1;
         _.each(_.range(numberOfResizers), (function(_this) {
           return function(ele, index) {
@@ -268,11 +292,12 @@ define(['app'], function(App) {
           return function(resizer) {
             var left, right, width;
             width = _this.$el.width();
+            console.log(width);
             left = _this.$el.offset().left + width / 24;
             if (typeof $(resizer).prev('.aj-imp-col-divider').position() !== 'undefined') {
               left = _this.$el.offset().left + parseFloat($(resizer).prev('.aj-imp-col-divider').css('left')) + width / 24;
             }
-            right = _this.$el.offset().left + width - width / 18;
+            right = _this.$el.offset().left + width - width / 16;
             if (typeof $(resizer).next('.aj-imp-col-divider').position() !== 'undefined') {
               right = _this.$el.offset().left + parseFloat($(resizer).next('.aj-imp-col-divider').css('left')) - width / 24;
             }

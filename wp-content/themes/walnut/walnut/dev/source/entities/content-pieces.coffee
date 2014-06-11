@@ -32,6 +32,7 @@ define ["app", 'backbone'], (App, Backbone) ->
             comparator: 'ID'
 
             initialize: ->
+                console.log 'content piece '
                 @on('remove', @removedModel, @)
                 @on('add', @addedPieces, @)
 
@@ -42,7 +43,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                 @trigger "content:pieces:of:group:added", model
 
 
-        contentPiecesOfGroup = new ContentPiece.GroupItemCollection
 
         # API
         API =
@@ -54,20 +54,19 @@ define ["app", 'backbone'], (App, Backbone) ->
                     add: true
                     remove: false
                     data: param
-
                 contentPieceCollection
 
         # get all content pieces belonging to particular group
             getContentPiecesOfGroup: (groupModel)->
+
+                contentPiecesOfGroup = new ContentPiece.GroupItemCollection
+
                 contentIDs = groupModel.get('content_pieces')
 
                 if contentIDs
                     for contentID in contentIDs
-                        contentModel = contentPieceCollection.get contentID if contentPieceCollection?
-
-                        if not contentModel
-                            contentModel = new ContentPiece.ItemModel 'ID': contentID
-                            contentModel.fetch()
+                        contentModel = new ContentPiece.ItemModel 'ID': contentID
+                        contentModel.fetch()
 
                         contentPiecesOfGroup.add contentModel
 
@@ -84,12 +83,12 @@ define ["app", 'backbone'], (App, Backbone) ->
                 contentPiece
 
             getContentPiecesByIDs: (ids = [])->
+                contentPieces = new ContentPiece.ItemCollection
                 if _.size(ids) > 0
-                    contentPieces = new ContentPiece.ItemCollection
                     contentPieces.fetch
                         data:
                             ids: ids
-                    contentPieces
+                contentPieces
 
         # request handler to get all ContentPieces
         App.reqres.setHandler "get:content:pieces", (opt) ->

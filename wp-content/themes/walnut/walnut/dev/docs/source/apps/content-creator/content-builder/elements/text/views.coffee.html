@@ -37,7 +37,7 @@
 </div>
 
         </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span><span class="nf">(App)-&gt;</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">],</span> <span class="nf">(App)-&gt;</span>
 
 
 </pre></div>
@@ -51,7 +51,7 @@
 <p>Row views</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.Text.Views&#39;</span><span class="p">,</span> <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&#39;ContentCreator.ContentBuilder.Element.Text.Views&#39;</span><span class="p">,</span> <span class="nf">(Views, App, Backbone, Marionette, $, _)-&gt;</span>
 
 
 </pre></div>
@@ -65,13 +65,13 @@
 <p>Menu item view</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">TextView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+        <span class="k">class</span> <span class="nx">Views</span><span class="p">.</span><span class="nx">TextView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
 
-      <span class="nv">tagName : </span><span class="s">&#39;p&#39;</span>
+            <span class="nv">tagName: </span><span class="s">&#39;div&#39;</span>
 
-      <span class="nv">template : </span><span class="s">&#39;&#39;</span>
+            <span class="nv">template: </span><span class="s">&#39;&#39;</span>
 
-      <span class="nv">className: </span><span class="s">&#39;text&#39;</span>
+            <span class="nv">className: </span><span class="s">&#39;text&#39;</span>
 
 
 </pre></div>
@@ -84,14 +84,16 @@
 </div>
 <p>avoid and anchor tag click events
 listen to blur event for the text element so that we can save the new edited markup
-to server. The element will triggger a text:element:blur event on blur and pass the 
+to server. The element will triggger a text:element:blur event on blur and pass the
 current markupup as argument</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nv">events:</span>
-        <span class="s">&#39;click a&#39;</span> <span class="o">:</span> <span class="nf">(e)-&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
-        <span class="s">&#39;blur&#39;</span>    <span class="o">:</span> <span class="nf">-&gt;</span> <span class="nx">@trigger</span> <span class="s">&quot;text:element:blur&quot;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">html</span><span class="p">()</span>
-            
+            <span class="nv">events:</span>
+                <span class="s">&#39;click a&#39;</span><span class="o">:</span> <span class="nf">(e)-&gt;</span>
+                    <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+                <span class="s">&#39;blur&#39;</span><span class="o">:</span> <span class="nf">-&gt;</span>
+                    <span class="nx">@trigger</span> <span class="s">&quot;text:element:blur&quot;</span><span class="p">,</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">html</span><span class="p">()</span>
+
 
 
 </pre></div>
@@ -109,8 +111,9 @@ hold the editor instance as the element property so that
 we can destroy it on close of element</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span><span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
+            <span class="nv">onShow: </span><span class="nf">-&gt;</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;content&#39;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;contenteditable&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span> <span class="s">&#39;text-&#39;</span>
 
 </pre></div>
         </td>
@@ -123,8 +126,8 @@ we can destroy it on close of element</p>
 <p>CKEDITOR.on 'instanceCreated', @configureEditor</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
-        <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;content&#39;</span>
+                <span class="vi">@editor = </span><span class="nx">CKEDITOR</span><span class="p">.</span><span class="nx">inline</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
+                <span class="nx">@editor</span><span class="p">.</span><span class="nx">setData</span> <span class="nx">_</span><span class="p">.</span><span class="nx">stripslashes</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;content&#39;</span>
 
 
 
@@ -142,8 +145,8 @@ this.editor will hold the reference to the editor instance
 Ckeditor has a destroy method to remove a editor instance</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
-        <span class="nx">@editor</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
+            <span class="nv">onClose: </span><span class="nf">-&gt;</span>
+                <span class="nx">@editor</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
 </pre></div>
         </td>
       </tr>

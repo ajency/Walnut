@@ -43,6 +43,7 @@ define ['marionette'], (Marionette)->
         console.log 'start app Main'
         # start the content creator app
 
+        # TODO: Remove this ajax call.
         xhr = $.get "#{AJAXURL}?action=get-user-data",
           {},
         (resp)=>

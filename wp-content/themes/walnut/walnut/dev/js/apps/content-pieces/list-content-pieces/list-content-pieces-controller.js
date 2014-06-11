@@ -12,6 +12,7 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
 
       ListController.prototype.initialize = function() {
         var breadcrumb_items;
+        console.log("list");
         this.contentPiecesCollection = App.request("get:content:pieces");
         this.textbooksCollection = App.request("get:textbooks");
         breadcrumb_items = {
@@ -30,9 +31,11 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
+        console.log(this.contentPiecesCollection);
         return App.execute("when:fetched", this.contentPiecesCollection, (function(_this) {
           return function() {
             var view;
+            console.log(_this.contentPiecesCollection);
             _this.fullCollection = _this.contentPiecesCollection.clone();
             _this.view = view = _this._getContentPiecesListView();
             _this.show(view, {

@@ -37,15 +37,15 @@
 </div>
 
         </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span><span class="p">,</span> <span class="s">&#39;controllers/region-controller&#39;</span><span class="p">,</span><span class="s">&#39;text!apps/login/templates/login.html&#39;</span><span class="p">],</span> <span class="nf">(App, RegionController, loginTpl)-&gt;</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;controllers/region-controller&#39;</span>
+    <span class="s">&#39;text!apps/login/templates/login.html&#39;</span><span class="p">],</span> <span class="nf">(App, RegionController, loginTpl)-&gt;</span>
 
-  <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;LoginApp.Controller&quot;</span><span class="p">,</span> <span class="nf">(Controller, App)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;LoginApp.Controller&quot;</span><span class="p">,</span> <span class="nf">(Controller, App)-&gt;</span>
+        <span class="k">class</span> <span class="nx">Controller</span><span class="p">.</span><span class="nx">LoginController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
 
-    <span class="k">class</span> <span class="nx">Controller</span><span class="p">.</span><span class="nx">LoginController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
-
-      <span class="nv">initialize : </span><span class="nf">-&gt;</span>
-        
-        <span class="vi">@view= </span><span class="nv">view = </span><span class="nx">@_getLoginView</span><span class="p">()</span>
+            <span class="nv">initialize: </span><span class="nf">-&gt;</span>
+                <span class="vi">@view = </span><span class="nv">view = </span><span class="nx">@_getLoginView</span><span class="p">()</span>
 
 
 </pre></div>
@@ -59,7 +59,7 @@
 <p>listen to authenticate:user event from the view.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&#39;authenticate:user&#39;</span> <span class="p">,</span> <span class="nx">@authenticateUser</span>
+                <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&#39;authenticate:user&#39;</span><span class="p">,</span> <span class="nx">@authenticateUser</span>
 
 
 </pre></div>
@@ -73,67 +73,72 @@
 <p>listen to the close event of the view</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&#39;close&#39;</span><span class="p">,</span> <span class="nf">-&gt;</span>
-          <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&#39;show:dashboard&#39;</span>
+                <span class="nx">@listenTo</span> <span class="nx">view</span><span class="p">,</span> <span class="s">&#39;close&#39;</span><span class="p">,</span> <span class="nf">-&gt;</span>
+                    <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&#39;show:dashboard&#39;</span>
 
-        <span class="nx">@show</span> <span class="nx">view</span><span class="p">,</span> <span class="p">(</span><span class="nv">loading: </span><span class="kc">true</span><span class="p">)</span>
+                <span class="nx">@show</span> <span class="nx">view</span><span class="p">,</span> <span class="p">(</span><span class="nv">loading: </span><span class="kc">true</span><span class="p">)</span>
 
-      <span class="nv">_getLoginView : </span><span class="nf">-&gt;</span>
-        <span class="k">new</span> <span class="nx">LoginView</span>
-
-
-      <span class="nv">authenticateUser : </span><span class="nf">(data)=&gt;</span>
-        <span class="nv">connection_resp = </span><span class="nx">$</span><span class="p">.</span><span class="nx">middle_layer</span><span class="p">(</span><span class="nx">AJAXURL</span> <span class="o">+</span> <span class="s">&#39;?action=get-user-profile&#39;</span> 
-          <span class="nv">data: </span><span class="nx">data</span>
-          <span class="nf">(response) =&gt;</span>
-            <span class="k">if</span> <span class="nx">response</span><span class="p">.</span><span class="nx">error</span>
-              <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&#39;login:fail&#39;</span><span class="p">,</span> <span class="nx">response</span>
-            <span class="k">else</span>
-              <span class="nv">user = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:user:model&quot;</span>
-              <span class="nx">user</span><span class="p">.</span><span class="nx">set</span> <span class="nx">response</span>
-              <span class="nx">@view</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
-          <span class="p">);</span>
-
-        <span class="k">if</span><span class="p">(</span><span class="nx">connection_resp</span> <span class="o">is</span> <span class="s">&quot;connection_error&quot;</span><span class="p">)</span>
-          <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&#39;connection:fail&#39;</span>
+            <span class="nv">_getLoginView: </span><span class="nf">-&gt;</span>
+                <span class="k">new</span> <span class="nx">LoginView</span>
 
 
-    <span class="k">class</span> <span class="nx">LoginView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+            <span class="nv">authenticateUser: </span><span class="nf">(data)=&gt;</span>
+                <span class="nv">connection_resp = </span><span class="nx">$</span><span class="p">.</span><span class="nx">middle_layer</span><span class="p">(</span><span class="nx">AJAXURL</span> <span class="o">+</span> <span class="s">&#39;?action=get-user-profile&#39;</span>
+                    <span class="nv">data: </span><span class="nx">data</span>
+                    <span class="nf">(response) =&gt;</span>
+                        <span class="k">if</span> <span class="nx">response</span><span class="p">.</span><span class="nx">error</span>
+                            <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&#39;login:fail&#39;</span><span class="p">,</span> <span class="nx">response</span>
+                        <span class="k">else</span>
+                            <span class="nv">user = </span><span class="nx">App</span><span class="p">.</span><span class="nx">request</span> <span class="s">&quot;get:user:model&quot;</span>
+                            <span class="nx">user</span><span class="p">.</span><span class="nx">set</span> <span class="nx">response</span><span class="p">.</span><span class="nx">login_details</span>
 
-      <span class="nv">template : </span><span class="nx">loginTpl</span>
+                            <span class="k">if</span> <span class="nx">response</span><span class="p">.</span><span class="nx">blog_details</span><span class="p">.</span><span class="nx">site_url</span> <span class="o">isnt</span> <span class="nx">SITEURL</span>
+                                <span class="nb">window</span><span class="p">.</span><span class="nv">location= </span><span class="nx">response</span><span class="p">.</span><span class="nx">blog_details</span><span class="p">.</span><span class="nx">site_url</span>
 
-      <span class="nv">className : </span><span class="s">&#39;&#39;</span>
+                            <span class="nx">@view</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+                <span class="p">);</span>
 
-      <span class="nv">events: </span>
-        <span class="s">&#39;click #login-submit&#39;</span> <span class="o">:</span> <span class="s">&#39;submitLogin&#39;</span> 
-      
-      <span class="nx">onShow</span><span class="o">:</span><span class="nf">-&gt;</span>
-        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;body&#39;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&#39;error-body no-top&#39;</span>
-
-      <span class="nv">submitLogin: </span><span class="nf">(e)-&gt;</span>
-        <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;form&#39;</span><span class="p">).</span><span class="nx">valid</span><span class="p">()</span>
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#checking_login&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
-
-          <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;#login-submit&#39;</span> 
-          <span class="p">.</span><span class="nx">append</span> <span class="s">&#39;&lt;i id=&quot;checking_login&quot; class=&quot;fa fa-spinner fa fa-1x fa-spin&quot;&gt;&lt;/i&gt;&#39;</span>
-            
-          <span class="nv">data = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Syphon</span><span class="p">.</span><span class="nx">serialize</span> <span class="p">(</span><span class="nx">@</span><span class="p">)</span>
-          <span class="nx">@trigger</span> <span class="s">&quot;authenticate:user&quot;</span><span class="p">,</span><span class="nx">data</span>
-
-      <span class="nv">onLoginFail: </span><span class="nf">(resp) -&gt;</span>
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#checking_login, #invalid_login&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
-        
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#login-form&#39;</span><span class="p">)</span>
-        <span class="p">.</span><span class="nx">before</span> <span class="s">&#39;&lt;span id=&quot;invalid_login&quot; class=&quot;btn btn-danger btn-cons&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">resp</span><span class="p">.</span><span class="nx">error</span><span class="o">+</span><span class="s">&#39;&lt;/span&gt;&#39;</span><span class="p">;</span>
+                <span class="k">if</span><span class="p">(</span><span class="nx">connection_resp</span> <span class="o">is</span> <span class="s">&quot;connection_error&quot;</span><span class="p">)</span>
+                    <span class="nx">@view</span><span class="p">.</span><span class="nx">triggerMethod</span> <span class="s">&#39;connection:fail&#39;</span>
 
 
-      <span class="nv">onConnectionFail: </span><span class="nf">-&gt;</span>
-        <span class="nv">error_msg = </span><span class="s">&#39;Connection could not be established. Please try again.&#39;</span>
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#checking_login, #invalid_login&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
-        
-        <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#login-form&#39;</span><span class="p">)</span>
-        <span class="p">.</span><span class="nx">before</span> <span class="s">&#39;&lt;span id=&quot;invalid_login&quot; class=&quot;btn btn-danger btn-cons&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">error_msg</span><span class="o">+</span><span class="s">&#39;&lt;/span&gt;&#39;</span><span class="p">;</span>
+        <span class="k">class</span> <span class="nx">LoginView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+            <span class="nv">template: </span><span class="nx">loginTpl</span>
+
+            <span class="nv">className: </span><span class="s">&#39;&#39;</span>
+
+            <span class="nv">events:</span>
+                <span class="s">&#39;click #login-submit&#39;</span><span class="o">:</span> <span class="s">&#39;submitLogin&#39;</span>
+
+            <span class="nv">onShow: </span><span class="nf">-&gt;</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s">&#39;body&#39;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&#39;error-body no-top&#39;</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.page-content&#39;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&#39;condensed&#39;</span>
+
+            <span class="nv">submitLogin: </span><span class="nf">(e)-&gt;</span>
+                <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;form&#39;</span><span class="p">).</span><span class="nx">valid</span><span class="p">()</span>
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#checking_login&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+
+                    <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;#login-submit&#39;</span>
+                    <span class="p">.</span><span class="nx">append</span> <span class="s">&#39;&lt;i id=&quot;checking_login&quot; class=&quot;fa fa-spinner fa fa-1x fa-spin&quot;&gt;&lt;/i&gt;&#39;</span>
+
+                    <span class="nv">data = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Syphon</span><span class="p">.</span><span class="nx">serialize</span> <span class="p">(</span><span class="nx">@</span><span class="p">)</span>
+                    <span class="nx">@trigger</span> <span class="s">&quot;authenticate:user&quot;</span><span class="p">,</span> <span class="nx">data</span>
+
+            <span class="nv">onLoginFail: </span><span class="nf">(resp) -&gt;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#checking_login, #invalid_login&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#login-form&#39;</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">before</span> <span class="s">&#39;&lt;span id=&quot;invalid_login&quot; class=&quot;btn btn-danger btn-cons&quot;&gt;&#39;</span> <span class="o">+</span> <span class="nx">resp</span><span class="p">.</span><span class="nx">error</span> <span class="o">+</span> <span class="s">&#39;&lt;/span&gt;&#39;</span><span class="p">;</span>
+
+
+            <span class="nv">onConnectionFail: </span><span class="nf">-&gt;</span>
+                <span class="nv">error_msg = </span><span class="s">&#39;Connection could not be established. Please try again.&#39;</span>
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#checking_login, #invalid_login&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+
+                <span class="nx">@$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;#login-form&#39;</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">before</span> <span class="s">&#39;&lt;span id=&quot;invalid_login&quot; class=&quot;btn btn-danger btn-cons&quot;&gt;&#39;</span> <span class="o">+</span> <span class="nx">error_msg</span> <span class="o">+</span> <span class="s">&#39;&lt;/span&gt;&#39;</span><span class="p">;</span>
 </pre></div>
         </td>
       </tr>

@@ -9,8 +9,13 @@ function create_question_response(){
     $data = array(
         'collection_id'     => $collection_id,
         'content_piece_id'  => $content_piece_id,
-        'division'          => $division
+        'division'          => $division,
+        'status'            => $status,
+        'teacher_id'        => get_current_user_id()
     );
+
+    if(isset($start_date))
+        $data['start_date']= $start_date;
 
     $response_data = insert_question_response($data);
 
@@ -36,64 +41,16 @@ function ajax_update_question_response() {
 add_action( 'wp_ajax_update-question-response', 'ajax_update_question_response' );
 
 
-function ajax_get_question_response(){
-    global $wpdb;
-    
+function ajax_get_question_responses(){
+
     $collection_id= $_GET['collection_id'];
+
     $division =  $_GET['division'];
     
-    $question_response_qry=$wpdb->prepare("select * from {$wpdb->prefix}question_response
-        where collection_id=%d and division= %d ", array($collection_id, $division));
-
-    $question_response= $wpdb->get_results($question_response_qry);
-
-    $numeric_keys=array('collection_id','content_piece_id','division');
-
-    foreach($question_response as $k=> $resp){
-
-        foreach($resp as $key=> $val){
-
-            if(in_array($key, $numeric_keys))
-                $data[$k][$key] = (int) $val;
-            else
-                $data[$k][$key] = $val;
-
-            if($key=='question_response'){
-                $current_blog=  get_current_blog_id();
-                switch_to_blog(1);
-                $question_type= get_post_meta($resp->content_piece_id, 'question_type', true);
-                switch_to_blog($current_blog);
-
-                if($question_type=='individual'){
-                    $q_resp_arr=array();
-                    $qresponse = maybe_unserialize($val);
-
-                    if($qresponse)
-                        foreach($qresponse as $qres){
-                            $q_resp_arr[]= (int) $qres;
-                        }
-                       $data[$k]['question_response']=$q_resp_arr;
-                }
-            }
-        }
-    }
+    $data= get_question_responses($collection_id, $division);
 
     wp_send_json(array('data'=>$data, 'status'=>'OK'));
 }
 
 
-add_action( 'wp_ajax_get-question-response', 'ajax_get_question_response' );
-
-
-function ajax_update_question_response_logs() {
-
-    global $wpdb;
-
-    $ref_id= $_POST['ref_id'];
-
-    $log_response= update_question_response_logs($ref_id);
-
-    wp_send_json($log_response);
-}
-
-add_action( 'wp_ajax_update-question-response-logs', 'ajax_update_question_response_logs' );
+add_action( 'wp_ajax_get-question-response', 'ajax_get_question_responses' );

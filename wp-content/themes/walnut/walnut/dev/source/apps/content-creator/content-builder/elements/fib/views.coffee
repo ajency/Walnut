@@ -3,13 +3,10 @@ define ['app'], (App)->
     (Views, App, Backbone, Marionette, $, _)->
         class Views.FibView extends Marionette.ItemView
 
-
             className: 'fib-text'
-            # <input  type="text"
 
             # listen to the model events
             modelEvents:
-            # 'change:maxlength'  : '_changeMaxLength'
                 'change:font': (model, font)->
                     @_changeFont font
                 'change:font_size': (model, fontSize)->
@@ -22,6 +19,7 @@ define ['app'], (App)->
                     @_changeBGColor model
                 'change:style': (model, style)->
                     @_changeFibStyle style
+                'change:numberOfBlanks': '_changeNumberOfBlanks'
 
             # avoid and anchor tag click events
             # listen to blur event for the text element so that we can save the new edited markup
@@ -31,66 +29,122 @@ define ['app'], (App)->
                 'click a': (e)->
                     e.preventDefault()
                 'blur .fib-text': 'onSaveText'
-                'DOMSubtreeModified': '_updateInputProperties'
 
-            initialize: (options)->
-                @blanksCollection = @model.get 'blanksArray'
 
             onShow: ->
-                console.log 'html '
-                @$el.find('.hidden-align-fix').empty()
-                @$el.find('.hidden-align-fix').next('p').text('ff')
 
                 # setting of on click handler for showing of the property box for fib element
                 @$el.parent().parent().on 'click', (evt)=>
                     @trigger "show:this:fib:properties"
                     @trigger "close:question:element:properties"
+                    @trigger "close:question:elements"
                     # stop propogation of click event
                     evt.stopPropagation()
 
-
+                # initialize ckeditor
                 @$el.attr('contenteditable', 'true').attr 'id', _.uniqueId 'text-'
                 CKEDITOR.on 'instanceCreated', @configureEditor
                 @editor = CKEDITOR.inline document.getElementById @$el.attr 'id'
                 @editor.setData _.stripslashes @model.get 'text'
 
                 # wait for CKEditor to be loaded
-                _.delay =>
-                    $("#cke_#{@editor.name}").on 'click', (evt)->
-                        evt.stopPropagation()
-                    @$el.append('<p class=\"hidden-align-fix\" contenteditable=\"false\" style=\"display:none;\"></p>')
-
-
-                , 500
-
-
-            # set configuration for the Ckeditor
-            # configureEditor: (event) =>
-            # 	editor = event.editor
-            # 	element = editor.element
-            # 	# Customize the editor configurations on "configLoaded" event,
-            # 	# which is fired after the configuration file loading and
-            # 	# execution. This makes it possible to change the
-            # 	# configurations before the editor initialization takes place.
-            # 	editor.on "configLoaded", ->
-
-            # 		# Rearrange the layout of the toolbar.
-            # 		console.log editor.config.toolbar
-            #
-
+                _.delay @_afterCKEditorInitialization, 500
 
             configureEditor: (event) =>
                 editor = event.editor
                 element = editor.element
 
                 if element.getAttribute('id') is @$el.attr 'id'
-
                     editor.on 'configLoaded', ->
-                        editor.config.toolbar.splice 2, 0,
-                            name: 'forms'
-                            items: [ 'TextField']
-                        _.uniq editor.config.toolbar
 
+                        editor.config.placeholder = 'This is a Text Block. Use this to provide text…'
+
+
+            # after initialization of ckeditor
+            # add a p tag at the end to fix align issues
+            #there are no blanks then add a new blank
+            # otherwise format the existing blanks in proper format
+            _afterCKEditorInitialization:=>
+                $("#cke_#{@editor.name}").on 'click', (evt)->
+                    evt.stopPropagation()
+
+                @$el.append('<p class=\"hidden-align-fix\" contenteditable=\"false\"
+                                                style=\"display:none;\"></p>')
+
+                if not parseInt @model.get 'numberOfBlanks'
+                    @model.set 'numberOfBlanks', 1
+
+                else
+                    @$el.find('input').wrap('<span contenteditable="false"></span>')
+                    @$el.find('input').before('<span class="fibno"></span>')
+                    @$el.find("input").parent().on 'click', @_onClickOfBlank
+                    @model.get('blanksArray').each @_initializeEachBlank
+
+                # enable the event to check if a blank was
+                # added or removed
+                @$el.on 'DOMSubtreeModified', @_updateInputProperties
+                @_updateInputProperties()
+
+            # do an initialization for a blank
+            # set the handler for change answer and change size
+            _initializeEachBlank:(blanksModel)=>
+                @_changeBlankSize blanksModel,blanksModel.get 'blank_size'
+                @_changeCorrectAnswers blanksModel,blanksModel.get 'correct_answers'
+                @listenTo blanksModel, 'change:correct_answers', @_changeCorrectAnswers
+                @listenTo blanksModel, 'change:blank_size', @_changeBlankSize
+
+            #on change of the number of blanks from the dropdown
+            _changeNumberOfBlanks: (model, numberOfBlanks)->
+                if @$el.find('input').length isnt numberOfBlanks
+
+                    if numberOfBlanks > model.previous 'numberOfBlanks'
+                        noOfBlanksToAdd = numberOfBlanks - model.previous 'numberOfBlanks'
+                        @_addBlanks noOfBlanksToAdd
+                    else if numberOfBlanks < model.previous 'numberOfBlanks'
+                        noOfBlanksToRemove = model.previous('numberOfBlanks') - numberOfBlanks
+                        @_removeBlanks noOfBlanksToRemove
+
+            # remove n number of blanks from the end
+            _removeBlanks: (noOfBlanksToRemove)->
+                until noOfBlanksToRemove is 0
+                    @$el.find('input').last().parent().remove()
+                    noOfBlanksToRemove--
+
+            # add n number of blanks at the end
+            _addBlanks: (noOfBlanksToAdd)->
+                until noOfBlanksToAdd is 0
+                    inputId = _.uniqueId 'input-'
+                    inputNumber = @model.get('blanksArray').size() + 1
+                    @trigger "create:new:fib:element", inputId
+
+                    @$el.find('p').first().append "<span contenteditable='false'>
+                        <span class='fibno'>#{inputNumber}</span><input type='text'
+                        data-id='#{inputId}' data-cke-editable='1' style=' height :100%'
+                        contenteditable='false' ></span>&nbsp;&nbsp;"
+
+                    blanksModel = @model.get('blanksArray').get(inputId)
+
+                    @_initializeEachBlank blanksModel
+
+                    @$el.find("input").parent().on 'click', @_onClickOfBlank
+
+                    noOfBlanksToAdd--
+
+            #when a blank is clicked show the propertiers for that blank
+            _onClickOfBlank:(e)=>
+                console.log 'clicked'
+                if $(e.target).prop('class') is 'fibno'
+                    return
+                if $(e.target).prop('tagName') is 'INPUT'
+                    inputId = $(e.target).attr 'data-id'
+                else
+                    inputId = $(e.target).children('input').attr 'data-id'
+                blanksModel = @model.get('blanksArray').get(inputId)
+                App.execute "show:fib:element:properties",
+                    model: blanksModel
+                    fibModel: @model
+                @trigger "show:this:fib:properties"
+                e.stopPropagation()
 
 
             # on change of font property
@@ -139,90 +193,54 @@ define ['app'], (App)->
                 $(formatedText).find('input').unwrap()
                 $(formatedText).find('input').prev().remove()
                 @model.set 'text', formatedText.html()
-                console.log formatedText.html()
+#                console.log formatedText.html()
 
-                console.log @model
 
             # on modification of dom structure modification of p
-            _updateInputProperties: ->
+            _updateInputProperties: =>
                 # iterate thru all input tags in current view
                 _.each @$el.find('input'), (blank, index)=>
 
-                    # if any input tag is without 'data-id' attr
-                    if  _.isUndefined $(blank).attr('data-id')
-                        # a  random unique id to the input
-                        $(blank).attr 'data-id', _.uniqueId 'input-'
+#                    _.delay =>
+#                        inputId = $(blank).attr('data-id')
+#                        if @model.get('blanksArray').get(inputId) is undefined
+#                            console.log JSON.stringify @model.get('blanksArray').toJSON()
+#                            @trigger "create:new:fib:element", inputId
+#                            $(blank).parent().on 'click', @_onClickOfBlank
+#                    ,100
 
-
-                        # wait for ckeditor to finish adding the input
-                        # _.delay ->
-                        # 	$(blank).prop 'maxLength',parseInt 12
-                        # ,100
-
-                        # create a model and add to collection
-                        @trigger "create:new:fib:element", $(blank).attr 'data-id'
-
-
-                    # $(blank).before("<span contenteditable='false' unselectable='on' class='fibId' id='#{$(blank).attr('data-id')}'></span>")
 
                     _.delay =>
-                        # get a reference to the model
-                        if $(blank).parent().prop('tagName') isnt 'SPAN'
-
-                            $(blank).wrap('<span contenteditable="false"></span>')
-                            $(blank).before('<span class="fibno"></span>')
-
-
                         blanksModel = @model.get('blanksArray').get $(blank).attr 'data-id'
                         # console.log _.indexOf(@blanksCollection.toArray(), blanksModel)+1
-                        blanksModel.set 'blank_index', index + 1
+                        if blanksModel isnt undefined
+                            blanksModel.set 'blank_index', index + 1
                         if parseInt($(blank).prev().text()) isnt index + 1
                             $(blank).prev().text index + 1
 
-                        # if not $(blank).hasClass "fib#{_.indexOf(@blanksCollection.toArray(), blanksModel)+1}"
-                        # console.log 'xx'
-                        # $(blank).removeClass 'fib1 fib2 fib3 fib4 fib5 fib6'
-                        # $(blank).addClass "fib#{index+1}"
-                        # @$el.find("span##{$(blank).attr('data-id')}").text _.indexOf(@blanksCollection.toArray(), blanksModel)+1
-                        # # remove the event handler and add it again to prevent multiple event listeners
-                        # blanksModel.off('change:maxlength')
-                        # blanksModel.on 'change:maxlength',(model,maxlength)=>
-                        # 	@$el.find('input[data-id='+model.get('id')+']').prop 'maxLength',maxlength
-                        @listenTo blanksModel, 'change:correct_answers', @_changeCorrectAnswers
-                        @listenTo blanksModel, 'change:blank_size', @_changeBlankSize
 
-
-                        if blanksModel.get('correct_answers').length
-                            @$el.find("input[data-id=#{blanksModel.id}]").val blanksModel.get('correct_answers')[0]
-
-                        # remove all events
-                        # on click of input show properties for it
-                        $(blank).off()
-                        $(blank).on 'click', (e)=>
-                            console.log blanksModel
-                            App.execute "show:fib:element:properties",
-                                model: blanksModel
-                                fibModel: @model
-                            @trigger "show:this:fib:properties"
-                            e.stopPropagation()
                     , 20
+
 
                 # delay for .1 sec for everything to get initialized
                 # loop thru the array, if 'input not found for it remove it from the array'
                 _.delay =>
-                    if @blanksCollection.length > 0
+                    if @model.get('blanksArray').size() > 0
 
-                        @blanksCollection.each (blank)=>
+                        @model.get('blanksArray').each (blankModel)=>
                             # console.log blank
                             blankFound = _.find @$el.find('input'), (blankUI)=>
-                                blank.get('id') is $(blankUI).attr 'data-id'
+                                blankModel.get('id') is $(blankUI).attr 'data-id'
 
                             if _.isUndefined blankFound
                                 console.log ' in remove'
 
                                 # @$el.find("span##{blank.id}").remove()
-                                @blanksCollection.remove blank
-                , 1000
+                                @model.get('blanksArray').remove blankModel
+                                @trigger 'close:question:element:properties'
+                                if @model.get('blanksArray').size() < @model.get('numberOfBlanks')
+                                    @model.set 'numberOfBlanks', @model.get('numberOfBlanks') - 1
+                , 500
 
                 # add style for the blanks
                 @_changeFont @model.get 'font'
@@ -236,6 +254,3 @@ define ['app'], (App)->
             # Ckeditor has a destroy method to remove a editor instance
             onClose: ->
                 @editor.destroy()
-		
-				
-

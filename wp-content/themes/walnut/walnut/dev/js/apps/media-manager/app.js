@@ -1,5 +1,6 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'controllers/region-controller', 'text!apps/media-manager/templates/outer.html'], function(App, AppController, outerTpl) {
   return App.module('MediaManager', function(MediaManager, App, Backbone, Marionette, $, _) {
@@ -12,7 +13,7 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
       }
 
       Router.prototype.appRoutes = {
-        'media-manager': 'show'
+        'media-manager/:mediaType': 'show'
       };
 
       return Router;
@@ -22,6 +23,7 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
       __extends(ShowController, _super);
 
       function ShowController() {
+        this._getLayout = __bind(this._getLayout, this);
         return ShowController.__super__.constructor.apply(this, arguments);
       }
 
@@ -31,14 +33,22 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
           opt = {};
         }
         this.choosedMedia = null;
+        this.mediaType = opt.mediaType;
         this.layout = layout = this._getLayout();
         this.show(this.layout);
-        App.execute("start:media:upload:app", {
-          region: layout.uploadRegion
-        });
-        App.execute("start:media:grid:app", {
-          region: layout.gridRegion
-        });
+        this.listenTo(this.layout, "show", (function(_this) {
+          return function() {
+            App.execute("start:media:upload:app", {
+              region: layout.uploadRegion,
+              mediaType: _this.mediaType
+            });
+            return App.execute("start:media:grid:app", {
+              region: layout.gridRegion,
+              mediaType: _this.mediaType
+            });
+          };
+        })(this));
+        this.show(this.layout);
         this.listenTo(this.layout.gridRegion, "media:element:selected", (function(_this) {
           return function(media) {
             _this.choosedMedia = media;
@@ -55,12 +65,12 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
         })(this));
       };
 
-      ShowController.prototype.onClose = function() {
-        return App.navigate('');
-      };
+      ShowController.prototype.onClose = function() {};
 
       ShowController.prototype._getLayout = function() {
-        return new OuterLayout;
+        return new OuterLayout({
+          mediaType: this.mediaType
+        });
       };
 
       return ShowController;
@@ -100,10 +110,11 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
 
     })(Marionette.Layout);
     API = {
-      show: function() {
+      show: function(mediaType) {
         return new ShowController({
           region: App.dialogRegion,
-          statApp: 'all-media'
+          statApp: 'all-media',
+          mediaType: mediaType
         });
       },
       editMedia: function(model, region) {}
@@ -113,8 +124,11 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
         controller: API
       });
     });
-    return MediaManager.on("stop", function() {
+    MediaManager.on("stop", function() {
       return App.vent.off("media:element:clicked");
+    });
+    return App.commands.setHandler("show:media:manager:app", function(options) {
+      return new ShowController(options);
     });
   });
 });

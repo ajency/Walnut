@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>teacher-teaching-app.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../doc-style.css" />
+  <script src="../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../", thisFile = "source\\apps\\teachers-dashboard\\teacher-teaching-module\\teacher-teaching-app.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>teacher-teaching-app.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+    <span class="s">&#39;apps/teachers-dashboard/teacher-teaching-module/teacher-teaching-controller&#39;</span>
+    <span class="p">],</span> <span class="nf">(App)-&gt;</span>
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;TeacherTeachingApp&quot;</span><span class="p">,</span> <span class="nf">(TeacherTeachingApp, App)-&gt;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>startWithParent = false</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="k">class</span> <span class="nx">TeacherTeachingRouter</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">AppRouter</span>
+
+          <span class="nv">appRoutes : </span>
+            <span class="s">&#39;teachers/take-class/:classID/:div/textbook/:tID/module/:mID/:qID&#39;</span>  <span class="o">:</span> <span class="s">&#39;teacherTeachingModule&#39;</span>
+
+        <span class="nv">Controller = </span>
+
+          <span class="nv">teacherTeachingModule: </span><span class="nf">(classID,div,tID, mID, qID) -&gt;</span>
+
+            <span class="k">new</span> <span class="nx">TeacherTeachingApp</span><span class="p">.</span><span class="nx">TeacherTeachingController</span>
+              <span class="nv">region    : </span><span class="nx">App</span><span class="p">.</span><span class="nx">mainContentRegion</span>
+              <span class="nv">textbookID  : </span><span class="nx">tID</span>
+              <span class="nv">classID   : </span><span class="nx">classID</span>
+              <span class="nv">division  : </span><span class="nx">div</span>
+              <span class="nv">moduleID  : </span><span class="nx">mID</span>
+              <span class="nv">questionID  : </span><span class="nx">qID</span>
+  
+        <span class="nx">TeacherTeachingApp</span><span class="p">.</span><span class="nx">on</span> <span class="s">&quot;start&quot;</span><span class="p">,</span> <span class="nf">-&gt;</span>
+          <span class="k">new</span> <span class="nx">TeacherTeachingRouter</span>
+              <span class="nv">controller : </span><span class="nx">Controller</span> 
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>set handlers</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;start:teacher:teaching:app&quot;</span><span class="p">,</span> <span class="nf">(opt = {})-&gt;</span>
+        <span class="k">new</span> <span class="nx">App</span><span class="p">.</span><span class="nx">TeacherTeachingApp</span><span class="p">.</span><span class="nx">TeacherTeachingController</span> <span class="nx">opt</span>  
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

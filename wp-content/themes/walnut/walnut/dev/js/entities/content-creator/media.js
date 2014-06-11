@@ -115,11 +115,14 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:empty:media:collection", function() {
       return API.getEmptyMediaCollection();
     });
-    App.reqres.setHandler("fetch:media", function(shouldReset) {
+    App.reqres.setHandler("fetch:media", function(params, shouldReset) {
+      if (params == null) {
+        params = {};
+      }
       if (shouldReset == null) {
         shouldReset = true;
       }
-      return API.fetchMedia(shouldReset);
+      return API.fetchMedia(params, shouldReset);
     });
     App.reqres.setHandler("get:media:by:id", function(mediaId) {
       return API.getMediaById(mediaId);

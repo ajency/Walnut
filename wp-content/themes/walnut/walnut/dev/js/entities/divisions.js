@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Divisions", function(Divisions, App, Backbone, Marionette, $, _) {
-    var API, DivisionCollection, DivisionModel, divisionCollection;
+    var API, DivisionCollection, DivisionModel;
     DivisionModel = (function(_super) {
       __extends(DivisionModel, _super);
 
@@ -44,12 +44,13 @@ define(["app", 'backbone'], function(App, Backbone) {
       return DivisionCollection;
 
     })(Backbone.Collection);
-    divisionCollection = new DivisionCollection;
     API = {
       getDivisions: function(param) {
+        var divisionCollection;
         if (param == null) {
           param = {};
         }
+        divisionCollection = new DivisionCollection;
         if (!divisionCollection.length > 0) {
           divisionCollection.fetch({
             reset: true,
@@ -60,7 +61,9 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getDivisionByID: function(id) {
         var division;
-        division = divisionCollection.get(id);
+        if (typeof divisionCollection !== "undefined" && divisionCollection !== null) {
+          division = divisionCollection.get(id);
+        }
         if (!division) {
           division = new DivisionModel({
             'id': id

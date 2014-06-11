@@ -10,10 +10,6 @@ define(['app'], function(App) {
         return TextView.__super__.constructor.apply(this, arguments);
       }
 
-      TextView.prototype.tagName = 'p';
-
-      TextView.prototype.template = '';
-
       TextView.prototype.className = 'text';
 
       TextView.prototype.onShow = function() {

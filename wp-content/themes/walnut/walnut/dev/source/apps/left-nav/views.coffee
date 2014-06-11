@@ -47,6 +47,16 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                 'click li': 'clickMenu'
 
             onShow: ->
+                if $( window ).width()<1025
+                    $('#main-menu').mmenu
+                        position: 'left'
+                        zposition: 'front'
+                    $("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ")
+                    # $('#main-menu').find( 'li a' ).not( '.mm-subopen' ).not( '.mm-subclose' )
+                    # .bind('click.example', (e)->
+                    #     e.preventDefault()
+                    #     $('#main-menu').trigger('close')
+                    #     )
 
                 #Auto close open menus in Condensed menu
                 #|| ($('.teacher-app').length>0)
@@ -65,6 +75,13 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     elem.children('li.open').children('a').children('.arrow').removeClass('active');
                     elem.children('li.open').children('.sub-menu').slideUp(200);
                     elem.children('li').removeClass('open');
+
+                # if $( window ).width()<1025
+                #     $('#main-menu-toggle').sidr
+                #         name : 'main-menu'
+                #         side: 'left'
+
+                    
 
 
             clickMenu: (e)->

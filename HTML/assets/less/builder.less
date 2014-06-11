@@ -80,7 +80,7 @@
 				text-align: center;
 				padding: 0;
 				padding-top: 5%;
-				font-size: 12px;
+				font-size: 11px;
 				line-height: 14px;
 				&:hover{
 					background: @color-info;
@@ -102,7 +102,7 @@
 		ul{
 			li{
 				width: 96px;
-				padding-top: 8%;
+				//padding-top: 8%;
 				//height: 40px;
 				//font-weight: bold;
 				i{
@@ -129,11 +129,11 @@
 	.builder_actions{
 		background: @body-bg;
 		padding-bottom: 15px;
-		//margin-top: -48px;
+		margin-top: -48px;
 	}
 
 	.btn-cons2{
-		width: 108px;
+		width: 106px;
 		//border-radius: 0;
 	}
 }
@@ -187,8 +187,10 @@
 	label{
 		color: #777a80;
 	}
-	select.marks{
-		width: auto;
+	select{
+		&.marks, &.blanks{
+			width: auto;
+		}
 	}
 	.radio label{
 		margin-right: 6px;
@@ -554,9 +556,6 @@
 			float: right;
 		}
 	}
-	.modal-footer{
-		display: none;
-	}
 }
 
 .imagewithtext{
@@ -660,6 +659,12 @@
 }
 
 /*Properties Bar*/
+#options-bar-region{
+	label{
+		font-size: 15px;
+		line-height: 10px;
+	}
+}
 #subProps{
     background-color: @color-info;
     -webkit-border-radius: 4px;
@@ -680,7 +685,7 @@
 #all-media-region{
 	.thumbnail{
 		cursor: pointer;
-		height: 92px;
+		//height: 92px;
 		background-color: @preview-grey;
 		&::after{
 			clear: both;

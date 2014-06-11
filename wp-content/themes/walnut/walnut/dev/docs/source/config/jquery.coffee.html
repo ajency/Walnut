@@ -40,7 +40,7 @@
 </div>
 
         </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;jquery&#39;</span><span class="p">,</span><span class="s">&#39;underscore&#39;</span><span class="p">],</span> <span class="nf">($,_)-&gt;</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;jquery&#39;</span><span class="p">,</span> <span class="s">&#39;underscore&#39;</span><span class="p">],</span> <span class="nf">($, _)-&gt;</span>
 
 
 
@@ -55,8 +55,8 @@
 <p>define helper functions</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">isEmptyColumn</span><span class="o">=</span><span class="nf">(params = {})-&gt;</span>
-    <span class="nx">@children</span><span class="p">(</span><span class="s">&#39;.element-wrapper&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
+    <span class="nv">$.fn.isEmptyColumn = </span><span class="nf">(params = {})-&gt;</span>
+        <span class="nx">@children</span><span class="p">(</span><span class="s">&#39;.element-wrapper&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
 
 
 </pre></div>
@@ -70,14 +70,34 @@
 <p>check if a row is empty and can be deleted</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="nv">$.fn.canBeDeleted = </span><span class="p">()</span><span class="nf">-&gt;</span>
-    <span class="nv">columns = </span><span class="nx">@children</span><span class="p">(</span><span class="s">&#39;.column&#39;</span><span class="p">)</span>
-    <span class="nv">empty = </span><span class="kc">true</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">columns</span><span class="p">,</span> <span class="nf">(column, index)=&gt;</span> 
-      <span class="k">if</span> <span class="o">not</span> <span class="nx">$</span><span class="p">(</span><span class="nx">column</span><span class="p">).</span><span class="nx">isEmptyColumn</span><span class="p">()</span>
-        <span class="nv">empty = </span><span class="kc">false</span>
-        
-    <span class="nx">empty</span>
+    <span class="nv">$.fn.canBeDeleted = </span><span class="p">()</span><span class="nf">-&gt;</span>
+        <span class="nv">columns = </span><span class="nx">@children</span><span class="p">(</span><span class="s">&#39;.column&#39;</span><span class="p">)</span>
+        <span class="nv">empty = </span><span class="kc">true</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">columns</span><span class="p">,</span> <span class="nf">(column, index)=&gt;</span>
+            <span class="k">if</span> <span class="o">not</span> <span class="nx">$</span><span class="p">(</span><span class="nx">column</span><span class="p">).</span><span class="nx">isEmptyColumn</span><span class="p">()</span>
+                <span class="nv">empty = </span><span class="kc">false</span>
+
+        <span class="nx">empty</span>
+
+    <span class="nv">$.fn.center = </span><span class="nf">(parent) -&gt;</span>
+        <span class="k">if</span> <span class="nx">parent</span>
+            <span class="nv">parent = </span><span class="nx">@parent</span><span class="p">()</span>
+        <span class="k">else</span>
+            <span class="nv">parent = </span><span class="nb">window</span>
+
+
+
+        <span class="nx">@css</span>
+            <span class="nv">position: </span><span class="s">&quot;fixed&quot;</span>
+            <span class="nv">top: </span><span class="p">(((</span><span class="nx">$</span><span class="p">(</span><span class="nx">parent</span><span class="p">).</span><span class="nx">height</span><span class="p">()</span> <span class="o">-</span> <span class="nx">@outerHeight</span><span class="p">())</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nx">$</span><span class="p">(</span><span class="nx">parent</span><span class="p">).</span><span class="nx">scrollTop</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
+            <span class="nv">left: </span><span class="p">(((</span><span class="nx">$</span><span class="p">(</span><span class="nx">parent</span><span class="p">).</span><span class="nx">width</span><span class="p">()</span> <span class="o">-</span> <span class="nx">@outerWidth</span><span class="p">())</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nx">$</span><span class="p">(</span><span class="nx">parent</span><span class="p">).</span><span class="nx">scrollLeft</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
+
+
+        <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;scroll&#39;</span><span class="p">,</span> <span class="o">=&gt;</span>
+            <span class="nx">@css</span>
+                <span class="nv">top: </span><span class="p">(((</span><span class="nx">$</span><span class="p">(</span><span class="nx">parent</span><span class="p">).</span><span class="nx">height</span><span class="p">()</span> <span class="o">-</span> <span class="nx">@outerHeight</span><span class="p">())</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nx">$</span><span class="p">(</span><span class="nx">parent</span><span class="p">).</span><span class="nx">scrollTop</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
+
+        <span class="k">this</span>
 
 
 </pre></div>
@@ -88,24 +108,10 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
-<p>adjust the dimesion of upper content and also the left section and right section
-Uses jquery to get window dimensions and sets min-height css property so that if height 
-is greater it will not hide the content
-@uses underscore's _.debounce to avoid repeated function calls on window resize </p>
+<p>programatically select elements</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="nv">adjustPageDim = </span><span class="nx">_</span><span class="p">.</span><span class="nx">debounce</span> <span class="p">()</span><span class="nf">-&gt;</span>
-
-    <span class="nv">height = </span><span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">height</span><span class="p">()</span>
-
-    <span class="nv">minHeight = </span><span class="nx">height</span> <span class="o">-</span> <span class="mi">40</span>
-
-    <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.aj-upper-content&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;min-height&#39;</span><span class="p">,</span><span class="nx">minHeight</span>
-
-    <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.aj-upper-content&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">().</span><span class="nx">css</span> <span class="s">&#39;min-height&#39;</span><span class="p">,</span><span class="nx">minHeight</span>
-
-  <span class="p">,</span> <span class="mi">30</span>  
-
+    <span class="nv">$.fn.selectSelectableElements = </span><span class="nf">(elementsToSelect)-&gt;</span>
 
 </pre></div>
         </td>
@@ -115,13 +121,11 @@ is greater it will not hide the content
 <div class="pilwrap">
   <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
-<p>setup page initial dimesions</p>
+<p>remove the class ui-selected for the ones not selected</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="p">()</span><span class="nf">-&gt;</span>
-
-    <span class="nx">adjustPageDim</span><span class="p">()</span>
-    
+        <span class="nx">$</span><span class="p">(</span><span class="s">&quot;.ui-selected&quot;</span><span class="p">,</span> <span class="nx">@</span><span class="p">).</span><span class="o">not</span><span class="p">(</span><span class="nx">elementsToSelect</span><span class="p">).</span>
+        <span class="nx">removeClass</span><span class="p">(</span><span class="s">&quot;ui-selected&quot;</span><span class="p">)</span>
 
 </pre></div>
         </td>
@@ -131,10 +135,83 @@ is greater it will not hide the content
 <div class="pilwrap">
   <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
+<p>add ui-selected class to the elements to select</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">$</span><span class="p">(</span><span class="nx">elementsToSelect</span><span class="p">).</span><span class="o">not</span><span class="p">(</span><span class="s">&quot;.ui-selected&quot;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&quot;ui-selected&quot;</span><span class="p">)</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p># scroll to top
+   $.scrollTop = ->
+       $('html, body').animate
+           scrollTop: 0
+       , 1000</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>adjust the dimesion of upper content and also the left section and right section
+Uses jquery to get window dimensions and sets min-height css property so that if height
+is greater it will not hide the content
+@uses underscore's _.debounce to avoid repeated function calls on window resize</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nv">adjustPageDim = </span><span class="nx">_</span><span class="p">.</span><span class="nx">debounce</span> <span class="p">()</span><span class="nf">-&gt;</span>
+        <span class="nv">height = </span><span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">height</span><span class="p">()</span>
+
+        <span class="nv">minHeight = </span><span class="nx">height</span> <span class="o">-</span> <span class="mi">40</span>
+
+        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.aj-upper-content&#39;</span><span class="p">).</span><span class="nx">css</span> <span class="s">&#39;min-height&#39;</span><span class="p">,</span> <span class="nx">minHeight</span>
+
+        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.aj-upper-content&#39;</span><span class="p">).</span><span class="nx">children</span><span class="p">().</span><span class="nx">css</span> <span class="s">&#39;min-height&#39;</span><span class="p">,</span> <span class="nx">minHeight</span>
+
+    <span class="p">,</span> <span class="mi">30</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>setup page initial dimesions</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="p">()</span><span class="nf">-&gt;</span>
+        <span class="nx">adjustPageDim</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
 <p>adjust the page size and dimensions on resize</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">resize</span> <span class="nx">adjustPageDim</span>
+    <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">resize</span> <span class="nx">adjustPageDim</span>
 
 
 </pre></div>
@@ -162,7 +239,7 @@ is greater it will not hide the content
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
 </div>
 <p>window.__ = (key, opt = {})-></p>
         </td>
@@ -175,7 +252,7 @@ is greater it will not hide the content
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
 </div>
 
 <div class="highlight"><pre><code><span class="nx">pt</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">opt</span><span class="p">)</span>
@@ -186,12 +263,11 @@ is greater it will not hide the content
         <td class="code highlight"><div class="highlight"><pre>
 
 
-
-  <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">scroll</span> <span class="p">()</span><span class="nf">-&gt;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">@</span><span class="p">).</span><span class="nx">scrollTop</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span> 
-      <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.scrollup&#39;</span><span class="p">).</span><span class="nx">fadeIn</span><span class="p">();</span>
-    <span class="k">else</span> 
-      <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.scrollup&#39;</span><span class="p">).</span><span class="nx">fadeOut</span><span class="p">();</span>
+    <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">scroll</span> <span class="p">()</span><span class="nf">-&gt;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">@</span><span class="p">).</span><span class="nx">scrollTop</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.scrollup&#39;</span><span class="p">).</span><span class="nx">fadeIn</span><span class="p">();</span>
+        <span class="k">else</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.scrollup&#39;</span><span class="p">).</span><span class="nx">fadeOut</span><span class="p">();</span>
 </pre></div>
         </td>
       </tr>

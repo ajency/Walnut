@@ -12,6 +12,16 @@ define(['app', 'text!apps/media/edit-media/templates/form.html'], function(App, 
 
       EditMediaView.prototype.template = formTpl;
 
+      EditMediaView.prototype.events = {
+        'click #save-media-details': '_updateImageData'
+      };
+
+      EditMediaView.prototype._updateImageData = function() {
+        var data;
+        data = Backbone.Syphon.serialize(this);
+        return this.trigger('update:image:data', data);
+      };
+
       return EditMediaView;
 
     })(Marionette.ItemView);

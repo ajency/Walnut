@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Walnut Learn - Create Quiz</title>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+
+	<!-- NEED TO WORK ON -->
+
+	<link href="assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/bootstrap-spinedit.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen">
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
+
+	<link href="assets/plugins/jquery-datatable/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+	<link href="assets/plugins/datatables-responsive/css/datatables.responsive.css" rel="stylesheet" type="text/css" media="screen">
+
+
+	<!-- BEGIN CORE JS FRAMEWORK--> 
+	<script src="assets/plugins/jquery-1.8.3.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/boostrapv3/js/bootstrap.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/breakpoints.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript"></script> 
+	<!-- END CORE JS FRAMEWORK --> 
+	<!-- BEGIN PAGE LEVEL JS --> 	
+	<script src="assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript"></script> 	
+	<script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script> 
+	<script src="assets/plugins/pace/pace.min.js" type="text/javascript"></script>  
+	<script src="assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
+	<!-- END PAGE LEVEL PLUGINS -->
+	
+
+
+	<!-- BEGIN CORE TEMPLATE JS --> 
+	<script src="assets/js/core.js" type="text/javascript"></script> 
+	<script src="assets/js/chat.js" type="text/javascript"></script> 
+	<script src="assets/js/demo.js" type="text/javascript"></script> 
+	<!-- END CORE TEMPLATE JS --> 
+
+		<script src="assets/plugins/jquery-datatable/js/jquery.dataTables.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/jquery-datatable/extra/js/TableTools.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
+		<script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
+		<script type="text/javascript" src="assets/js/datatables.js"></script>
+
+		<script type="text/javascript" src="assets/js/row-link.js"></script>
+		<script type="text/javascript" src="assets/js/bootstrap-spinedit.js"></script>
+		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
+
+	<!-- END NEED TO WORK ON -->
+
+</head>
+<body class="">
+<!-- BEGIN HEADER -->
+<div class="header navbar navbar-inverse"> 
+	<!-- BEGIN TOP NAVIGATION BAR -->
+	<div class="navbar-inner">
+		<!-- BEGIN NAVIGATION HEADER -->
+		<div class="header-seperation" style="display:none"> 
+			<!-- BEGIN MOBILE HEADER -->
+			<ul class="nav pull-left notifcation-center" id="main-menu-toggle-wrapper" style="display:none">	
+				<li class="dropdown">
+					<a id="main-menu-toggle" href="#main-menu" class="">
+						<div class="iconset top-menu-toggle-white"></div>
+					</a>
+				</li>		 
+			</ul>
+			<!-- END MOBILE HEADER -->
+			<!-- BEGIN LOGO -->	
+			<a href="#">
+				<img src="assets/img/logo.png" class="logo" alt="" data-src="assets/img/walnutlearn.png" data-src-retina="assets/img/logo2x.png" width="106" height="21"/>
+			</a>
+			<!-- END LOGO --> 
+			<!-- BEGIN LOGO NAV BUTTONS -->
+			<ul class="nav pull-right notifcation-center">	
+				
+				<!-- BEGIN MOBILE CHAT TOGGLER -->
+				<li class="dropdown" id="portrait-chat-toggler" style="display:none">
+					<a href="#sidr" class="chat-menu-toggle">
+						<div class="iconset top-chat-white"></div>
+					</a>
+				</li>
+				<!-- END MOBILE CHAT TOGGLER -->				        
+			</ul>
+			<!-- END LOGO NAV BUTTONS -->
+		</div>
+		<!-- END NAVIGATION HEADER -->
+		<!-- BEGIN CONTENT HEADER -->
+		<div class="header-quick-nav"> 
+			<!-- BEGIN HEADER LEFT SIDE SECTION -->
+			<div class="pull-left"> 
+				<!-- BEGIN SLIM NAVIGATION TOGGLE -->
+				<ul class="nav quick-section">
+					<li class="quicklinks">
+						<a href="#" class="" id="layout-condensed-toggle">
+							<div class="iconset top-menu-toggle-dark"></div>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks"><a href="#" class=""><div class="iconset top-reload"></div></a></li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+					<li class="quicklinks dropdown">
+						<a href="#" class="dropdown-toggle">
+							<div class="iconset top-messages"></div>
+							<span class="badge" id="msgs-badge">2</span>
+						</a>
+					</li>
+					<li class="quicklinks"><span class="h-seperate"></span></li>
+				</ul>
+				<!-- END SLIM NAVIGATION TOGGLE -->
+				<div class="chat-toggler">	
+					<!-- BEGIN NOTIFICATION CENTER -->
+					<a href="#" class="dropdown-toggle" id="my-task-list" data-placement="bottom" data-content="" data-toggle="dropdown" data-original-title="Notifications">
+						<div class="user-details"> 
+							<div class="username">
+								Notifications	<span class="badge badge-important">3</span>								
+							</div>						
+						</div> 
+						<div class="iconset top-down-arrow"></div>
+					</a>	
+					<div id="notification-list" style="display:none">
+						<div style="width:300px">
+							<!-- BEGIN NOTIFICATION MESSAGE -->
+							<div class="notification-messages info">
+								<div class="user-profile">
+									<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+								</div>
+								<div class="message-wrapper">
+									<div class="heading">Title of Notification</div>
+									<div class="description">Description...</div>
+									<div class="date pull-left">A min ago</div>										
+								</div>
+								<div class="clearfix"></div>									
+							</div>
+							<!-- END NOTIFICATION MESSAGE -->	
+						</div>				
+					</div>
+					<!-- END NOTIFICATION CENTER -->
+				</div>
+				<!-- BEGIN HEADER QUICK LINKS -->
+				<ul class="nav quick-section">
+
+				</ul>
+				<!-- BEGIN HEADER QUICK LINKS -->
+									
+			</div>
+			<!-- END HEADER LEFT SIDE SECTION -->
+			<!-- BEGIN HEADER RIGHT SIDE SECTION -->
+			<div class="pull-right"> 
+			
+			<div class="chat-toggler">	
+	<!--	<div class="user-details">
+            <div class="username"><img src="assets/img/running.gif" alt=""  /> <span class="bold"> Online </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>-->
+		  
+		 
+			<!-- <div class="user-details">
+            <div class="username"><img src="assets/img/connecting.gif" /> <span class="bold"> Connecting </span>&nbsp;&nbsp;&nbsp;  
+			</div>
+          </div>-->
+					<!-- BEGIN PROFILE PICTURE -->
+					<div class="profile-pic"> 
+						<img src="assets/img/profiles/avatar_small.jpg" alt="" data-src="assets/img/profiles/avatar_small.jpg" data-src-retina="assets/img/profiles/avatar_small2x.jpg" width="35" height="35" /> 
+					</div>  
+					<!-- END PROFILE PICTURE -->     			
+				</div>
+				<!-- BEGIN HEADER NAV BUTTONS -->
+				<ul class="nav quick-section2">
+					<!-- BEGIN SETTINGS -->
+					<li class="quicklinks"> 
+						<a data-toggle="dropdown" class="dropdown-toggle pull-right" href="#" id="user-options">						
+							<div class="iconset top-settings-dark"></div> 	
+						</a>
+						<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="user-options">
+							<li><a href="#">My Account</a></li>
+							<li class="divider"></li>                
+							<li><a href="#"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+						</ul>
+					</li>
+					<!-- END SETTINGS -->
+					<li class="quicklinks"><span class="h-seperate"></span></li> 
+					<!-- BEGIN CHAT SIDEBAR TOGGLE -->
+					<li class="quicklinks"> 	
+						<a id="chat-menu-toggle" href="#sidr" class="chat-menu-toggle">
+							<div class="iconset top-chat-dark"><span class="badge badge-important hide" id="chat-message-count">1</span></div>
+						</a> 
+						<!-- BEGIN OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+						<div class="simple-chat-popup chat-menu-toggle hide">
+							<div class="simple-chat-popup-arrow"></div>
+							<div class="simple-chat-popup-inner">
+								<div style="width:100px">
+									<div class="semi-bold">Name</div>
+									<div class="message">Message...</div>
+								</div>
+							</div>
+						</div>
+						<!-- END OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
+					</li>
+					<!-- END CHAT SIDEBAR TOGGLE --> 
+				</ul>
+				<!-- END HEADER NAV BUTTONS -->
+			</div>
+			<!-- END HEADER RIGHT SIDE SECTION -->
+		</div> 
+		<!-- END CONTENT HEADER --> 
+	</div>
+	<!-- END TOP NAVIGATION BAR --> 
+</div>
+<!-- END HEADER -->
+	
+<!-- BEGIN CONTENT -->
+<div class="page-container row-fluid">
+	<!-- BEGIN SIDEBAR -->
+	<!-- BEGIN MENU -->
+	<div class="page-sidebar mini" id="main-menu">
+		  <div class="page-sidebar-wrapper" id="main-menu-wrapper">
+		
+		<!-- BEGIN SIDEBAR MENU -->	
+		<p class="menu-title">SCHOOL 1<span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
+		<ul>	
+   
+			<!-- BEGIN ONE LEVEL MENU -->
+			<li class="start">
+				<a href="javascript:;">
+					<i class="icon-custom-ui"></i>
+					<span class="title">Content Management</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Textbooks</a></li>
+					<li><a href="#">Add Question</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="javascript:;">
+					<i class="fa fa-pencil-square-o"></i>
+					<span class="title">Training Module</span>
+					<span class="arrow"></span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Teacher Training</a></li>
+					<li><a href="#">Student Training</a></li>
+				</ul>
+			</li>
+			<!-- END ONE LEVEL MENU -->
+		
+		</ul>
+		<!-- END SIDEBAR MENU -->
+		<!-- BEGIN SIDEBAR WIDGETS -->
+		<div class="side-bar-widgets">
+
+		</div>
+		<div class="clearfix"></div>
+		<!-- END SIDEBAR WIDGETS --> 
+	</div>
+	</div>
+	<!-- BEGIN SCROLL UP HOVER -->
+	<a href="#" class="scrollup">Scroll</a>
+	<!-- END SCROLL UP HOVER -->
+	<!-- END MENU -->
+	<!-- BEGIN SIDEBAR FOOTER WIDGET -->
+	<!--<div class="footer-widget">		
+
+		<div class="pull-right">
+			<a href="#">Logout <i class="fa fa-power-off"></i></a>
+		</div>
+	</div>-->
+	<!-- END SIDEBAR FOOTER WIDGET -->
+	<!-- END SIDEBAR --> 
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="page-content condensed"> 
+
+		<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="content-piece-config">
+	      <div class="modal-dialog">
+	        <div class="modal-content">
+	          <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	            <h4 class="modal-title">Content Piece Settings</h4>
+	          </div>
+	          <div class="modal-body">
+	            <label class="form-label">Some Text</label>
+	            <input name="" id="" type="text" class="form-control" placeholder="Enter some text">
+	          </div>
+	          <div class="modal-footer">
+	            <button type="button" class="btn btn-success">Save</button>
+	          </div>
+	        </div>
+	        <!-- /.modal-content -->
+	      </div>
+	      <!-- /.modal-dialog -->
+	    </div>
+
+		<div class="content">  
+			<ul class="breadcrumb">
+				<li>
+				  <p>Dashboard</p>
+				</li>
+				<li>
+				  <a href="#"> Content Management</a>
+				</li>
+				<li><a href="#" class="active">Add Question</a> </li>
+			 </ul>
+			<!-- BEGIN PAGE TITLE -->
+			<!--<div class="page-title"> 
+				<h3>Add <span class="semi-bold">Question</span></h3>
+			</div>-->
+			<!-- END PAGE TITLE -->
+
+			<!-- BEGIN PlACE PAGE CONTENT HERE -->
+			<div class="teacher-app">
+
+				<div class="tiles white grid simple vertical green">
+					<div class="grid-title no-border">
+						<input type="text" class="input-lg" placeholder="Quiz Name">
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+						</div>
+						</div>
+						<div class="grid-body no-border" style="overflow: hidden; display: block;">
+						<div class="row ">
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Quiz Type</label>
+									<select id="qType" class="form-control" >
+					                    <option value="practise">Practice</option>
+					                    <option value="test">Class Test</option>
+					                </select>
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Status</label>
+									<select id="status" class="form-control" >
+					                    <option value="review">Under Review</option>
+					                    <option value="John">John</option>
+					                    <option value="Lucy">Lucy</option>
+					                </select>
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									
+								</div>
+							</div>												 
+						</div>
+						<div class="row ">
+								<div class="col-md-4">
+								   <div class="margin-bottom-20 ">
+									<label class="form-label">Total No. of Questions</label>
+									<input id="" name="noQstns" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Expected Duration</label>
+									<input id="" name="duration" class="pull-left" placeholder="Enter Duration" type="text" required="required" />
+							    	<select name="minshours" id="" class="form-control pull-left durationSelect" >
+							    		<option value="mins" selected="selected">mins</option>
+							    		<option value="hrs">hr(s)</option>
+						            </select>
+						            <div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <!-- <div class="margin-bottom-20 ">
+							    	<label class="form-label">Total Duration</label>
+									<input id="" name="totalTime" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
+								</div> -->
+							</div>											 
+						</div>
+						<div class="row ">
+							<div class="col-md-4">
+								<div class="margin-bottom-20 ">
+									<label class="form-label">Total Marks</label>
+									<input id="" name="totalTime" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+							    	<label class="form-label">Expected Marks</label>
+									<input id="" name="duration" class="pull-left" placeholder="Enter Expected marks" type="text" required="required" />
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Negative Marks</label>
+									<div class="radio radio-info inline">
+				                        <input id="yes" type="radio" name="negMarks" value="yes" checked="checked">
+				                        <label for="yes">Yes</label>
+				                        <input id="no" type="radio" name="negMarks" value="no" >
+				                        <label for="no">No</label>
+				                    </div>
+				                    <div id="negPercent" class="input-with-icon right inline"> <input id="" name="duration" class="inline" placeholder="Set Negative marks" type="text" /> %</div>
+								</div>
+							</div>											 
+						</div>
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-toggle="collapse" id="accordion" class="panel-group">
+								  <div class="panel panel-default">
+									<div class="panel-heading">
+									  <h4 class="panel-title">
+										<a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="collapsed"> &nbsp; Permissions 
+										</a>
+									  </h4>
+									</div>
+									<div class="panel-collapse collapse" id="collapseOne">
+									  <div class="panel-body">
+										 <div class="row">
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="attempt" type="checkbox" value="1">
+							                      <label for="attempt">Single Attempt</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="random" type="checkbox" value="1">
+							                      <label for="random">Randomize Order</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="answer" type="checkbox" value="1">
+							                      <label for="answer">Display Answer</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="check" type="checkbox" value="1">
+							                      <label for="check">Teacher Check</label>
+							                    </div>
+										 	</div>
+										 </div>
+										 <div class="row">
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="skip" type="checkbox" value="1">
+							                      <label for="skip">Allow Skip</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="marks" type="checkbox" value="1">
+							                      <label for="marks">Show Marks Only</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="resubmit" type="checkbox" value="1">
+							                      <label for="resubmit">Allow Resubmit</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="print" type="checkbox" value="1">
+							                      <label for="print">Allow Answer Printing</label>
+							                    </div>
+										 	</div>
+										 </div>
+										 <div class="row">
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="hint" type="checkbox" value="1">
+							                      <label for="hint">Allow Hint</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="msgs" type="checkbox" value="1">
+							                      <label for="msgs">Customize Messages</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+
+										 	</div>
+										 	<div class="col-sm-3">
+	
+										 	</div>
+										 </div>
+									  </div>
+									</div>
+								  </div>
+								  <div class="panel panel-default none" id="customMsg">
+									<div class="panel-heading">
+									  <h4 class="panel-title">
+										<a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="collapsed"> &nbsp; Custom Messages 
+										</a>
+									  </h4>
+									</div>
+									<div class="panel-collapse collapse" id="collapseTwo">
+									  <div class="panel-body">
+									  	<div class="row">
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">End Quiz Popup</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Correct answer</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Incorrect answer</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Partial correct answers</a></div>
+										 	</div>
+										 </div>
+										 <div class="row m-t-15">
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Incomplete answer</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Submit without attempting</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 	</div>
+										 	<div class="col-sm-3">
+										 	</div>
+										 </div>
+
+										 <div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+						                    <div class="modal-dialog">
+						                      <div class="modal-content">
+						                        <div class="modal-header">
+						                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						                          <h4 id="" class="semi-bold text-white">Edit Message</h4>
+						                        </div>
+						                        <div class="modal-body">
+						                          <div class="row form-row">
+						                            <div class="col-md-12">
+						                              <input type="text" class="form-control" placeholder="Rich Text Editor will come here">
+						                            </div>
+						                          </div>
+						                        </div>
+						                        <div class="modal-footer">
+						                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						                          <button type="button" class="btn btn-success">Save changes</button>
+						                        </div>
+						                      </div>
+						                      <!-- /.modal-content -->
+						                    </div>
+						                    <!-- /.modal-dialog -->
+						                  </div>
+
+									  </div>
+									</div>
+								  </div>
+								</div>
+							</div>											 
+						</div>
+						<div class="row ">
+							<div class="col-md-4">
+								   
+							</div>
+							<div class="col-md-4">
+							   
+							</div>
+							<div class="col-md-4">
+								<button type="button" class="btn btn-success btn-cons2 pull-right" id="save-question"> <i class="fa fa-check"></i> Save</button>
+							</div>											 
+						</div>
+					</div>
+				</div>
+
+				<div class="tiles grey grid simple vertical blue">
+					<div class="grid-title no-border">
+						<h4 class="">Content <span class="semi-bold">Selection</span></h4>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+						</div>
+					</div>
+					<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="">
+									<div class="table-tools-actions">
+										<select class="form-control inline" id="" style="width:150px" tabindex="-1">
+											<option value="">Textbooks</option>
+										</select>
+										<select class="form-control inline" id="" style="width:150px" tabindex="-1">
+											<option value="">Chapters</option>
+										</select>
+										<select class="form-control inline" id="" style="width:150px" tabindex="-1">
+											<option value="">Sections</option>
+										</select>
+										<select class="form-control inline" id="" style="width:150px" tabindex="-1">
+											<option value="">Sub Sections</option>
+										</select>
+					                    <select class="form-control inline" id="" style="width:150px" tabindex="-1">
+					                        <option value="">All</option>
+					                        <option value="teacher_question">Teacher Question</option>
+					                        <option value="content_piece">Content Piece</option>
+					                    </select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row m-t-20">
+							<div class="col-md-12">
+					          <ul class="nav nav-tabs b-grey b-l b-r b-t" id="addContent">
+					            <li class=""><a href="#addQstn">Add Question</a></li>
+					            <li class="active"><a href="#addSet">Add Set</a></li>
+					            
+					            
+					          </ul>
+					          
+					          <div class="tab-content">
+					            <div class="tab-pane" id="addQstn">
+					              <div class="row">
+					                <div class="col-md-12">
+					                  <h3 class="semi-bold">List of content pieces appear here</h3>
+					                </div>
+					              </div>
+					            </div>
+					            <div class="tab-pane active" id="addSet">
+					              <div class="row">
+					                <div class="col-md-12">
+					                  <table class="table table-bordered table-flip-scroll cf">
+                                        <thead class="cf">
+                                            <tr>
+                                                <th>Total Questions</th>
+                                                <th>Level 1</th>
+                                                <th>Level 2</th>
+                                                <th>Level 3</th>
+                                                <th>Level 4</th>
+                                                <th>Level 5</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>15 <input type="text" class="spinedit disabled" disabled="disabled">
+                                                </td>
+                                                <td>3 <input type="text" id="lvl1" /></td>
+                                                <td>3 <input type="text" id="lvl2" /></td>
+                                                <td>3 <input type="text" id="lvl3" /></td>
+                                                <td>3 <input type="text" id="lvl4" /></td>
+                                                <td>3 <input type="text" id="lvl5" /></td>
+                                            </tr>
+                                        </tbody>
+                                    	</table>
+                                    <div class="checkbox check-info">
+				                      <input id="selectAll" type="checkbox" value="1">
+				                      <label for="selectAll" class="text-grey">Select All</label>
+				                    </div>
+					                <div class="pull-right">
+					                    <button type="button" class="btn btn-success btn-cons2"><i class="fa fa-plus"></i> Add</button>
+					                </div>
+					                </div>
+					              </div>
+					            </div>
+					            
+					          </div>
+					        </div>
+					    </div>
+					</div>
+				</div>
+
+				<!-- <div class="row p-r-10">
+					<div class="col-sm-4">
+						<div class="tiles added-margin">
+			              <div class="tiles-body">
+			                <div class="tiles-title"> TRAINING MODULE TIME </div>
+			                <div class="heading"> <span class="animate-number" data-animation-duration="1200">75 mins</span> </div>
+			              </div>
+			            </div>
+					</div>
+					<div class="col-sm-4">
+					</div>
+					<div class="col-sm-4">
+		                <div class="tiles white added-margin">
+			              <div class="tiles-body">
+			                <div class="tiles-title"> TOTAL CONTENT TIME </div>
+			                <div class="heading"> <span class="animate-number" data-animation-duration="1200">55 mins</span> </div>
+			              </div>
+			            </div>
+					</div>
+				</div> -->
+
+			</div>
+				
+			<div id="myCanvas-miki" class="col-md-10">
+
+					<ul class="cbp_tmtimeline">
+				        <li class="sortable setGroup">
+				        	<div class="contentPiece">
+					            <time class="cbp_tmtime" datetime="">
+					        	    <span class="time"><span class="semi-bold">Set 1</span></span>
+					            </time>
+					            <div class="cbp_tmicon info animated bounceIn"> <i class="fa fa-folder-open"></i> </div>
+					            <div class="cbp_tmlabel">
+					            	<div class="p-l-10 m-b-10">
+					                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+					                	<h5 class="m-t-5 m-b-5 bold pull-left"><span><span class="muted">Textbook:</span> ABC</span><span><span class="muted"> | Chapter:</span> XYZ</span><span><span class="muted"> | Section:</span> 123</span><span><span class="muted"> | Sub-Section:</span> 789</span></h5>
+					                	
+					                <div class="clearfix"></div>
+					                </div>
+
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20 b-b b-grey">
+					                	<h4 class="no-margin"><span class="text-info semi-bold">Level 2</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 2</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
+					                </div>
+					            </div>
+				            </div>
+				        </li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				              <time class="cbp_tmtime" datetime="">
+				                <span class="time">4.5 <span class="semi-bold">mins</span></span>
+				              </time>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 " >
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold ">Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
+				           
+				                </div>
+				                <div class="clearfix"></div>
+				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                  <div class="muted">Time Taken: 6 mins</div>
+				                  <div class="clearfix"></div>
+				                </div>
+				              </div>
+				            </div>
+				        </li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				              <time class="cbp_tmtime" datetime="">
+				                <span class="time">12 <span class="semi-bold">mins</span></span>
+				              </time>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
+				                </div>
+				                <div class="clearfix"></div>
+				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                   <div class="muted">Abc, xyz</div>
+				                  <div class="clearfix"></div>
+				                </div>
+				              </div>
+				            </div>
+				        </li>
+				        <li class="sortable setGroup">
+				        	<div class="contentPiece">
+					            <time class="cbp_tmtime" datetime="">
+					        	    <span class="time"><span class="semi-bold">Set 1</span></span>
+					            </time>
+					            <div class="cbp_tmicon info animated bounceIn"> <i class="fa fa-folder-open"></i> </div>
+					            <div class="cbp_tmlabel">
+					            	<div class="p-l-10 m-b-10">
+					                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+					                	<h5 class="m-t-5 m-b-5 bold pull-left"><span><span class="muted">Textbook:</span> DFGRTHY4TN</span><span><span class="muted"> | Chapter:</span> XYWERGBHTYHZ</span><span><span class="muted"> | Section:</span> ALL</span><span><span class="muted"> | Sub-Section:</span> ALL</span></h5>
+					                	
+					                <div class="clearfix"></div>
+					                </div>
+
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20 b-b b-grey">
+					                	<h4 class="no-margin"><span class="text-info semi-bold">Level 1</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 5</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 5</span> </h4>
+					                </div>
+					            </div>
+				            </div>
+				        </li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				              <time class="cbp_tmtime" datetime="">
+				                <span class="time">23 <span class="semi-bold">mins</span></span>
+				              </time>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 ">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold " >Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
+				           
+				                </div>
+				                <div class="clearfix"></div>
+				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                  <div class="muted">Tag one, Tag two</div>
+				                  <div class="clearfix"></div>
+				                </div>
+				              </div>
+				            </div>
+				        </li>
+				    </ul>
+		    		<div class="clearfix"></div>
+				</div>
+
+			</div>
+			<!-- END PLACE PAGE CONTENT HERE -->
+		</div>
+	</div>
+	<!-- END PAGE CONTAINER -->
+</div>
+<!-- END CONTENT --> 
+
+<!-- BEGIN CHAT --> 
+<div id="sidr" class="chat-window-wrapper">
+	<div id="main-chat-wrapper">
+		<div class="chat-window-wrapper fadeIn" id="chat-users">
+			<!-- BEGIN CHAT HEADER -->
+			<div class="chat-header">	
+				<!-- BEGIN CHAT SEARCH BAR -->
+				<div class="pull-left">
+					<input type="text" placeholder="search">
+				</div>
+				<!-- END CHAT SEARCH BAR -->
+				<!-- BEGIN CHAT QUICKLINKS -->		
+				<div class="pull-right">
+					<a href="#" class=""><div class="iconset top-settings-dark"></div></a>
+				</div>
+				<!-- END CHAT QUICKLINKS -->			
+			</div>
+			<!-- END CHAT HEADER -->	
+			<!-- BEGIN GROUP WIDGET -->
+			<div class="side-widget">
+				<div class="side-widget-title">group chats</div>
+				<div class="side-widget-content">
+					<div id="groups-list">
+						<ul class="groups">
+							<li><a href="#"><div class="status-icon green"></div>Group Chat 1</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END GROUP WIDGET -->
+			<!-- BEGIN FAVORITES WIDGET -->
+			<div class="side-widget fadeIn">
+				<div class="side-widget-title">favorites</div>
+				<div class="side-widget-content">
+					<!-- BEGIN SAMPLE CHAT -->
+					<div class="user-details-wrapper active" data-chat-status="online" data-chat-user-pic="assets/img/profiles/d.jpg" data-chat-user-pic-retina="assets/img/profiles/d2x.jpg" data-user-name="Jane Smith">
+						<!-- BEGIN PROFILE PIC -->
+						<div class="user-profile">
+								<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+							</div>
+						<!-- END PROFILE PIC -->
+						<!-- BEGIN MESSAGE -->
+						<div class="user-details">
+								<div class="user-name">Jane Smith</div>
+								<div class="user-more">Message...</div>
+							</div>
+						<!-- END MESSAGE -->
+						<!-- BEGIN MESSAGES BADGE -->
+						<div class="user-details-status-wrapper">
+								<span class="badge badge-important">3</span>
+							</div>
+						<!-- END MESSAGES BADGE -->
+						<!-- BEGIN STATUS -->
+						<div class="user-details-count-wrapper">
+								<div class="status-icon green"></div>
+							</div>
+						<!-- END STATUS -->
+						<div class="clearfix"></div>
+					</div>
+					<!-- END SAMPLE CHAT -->	
+				</div>
+			</div>
+			<!-- END FAVORITES WIDGET -->
+			<!-- BEGIN MORE FRIENDS WIDGET -->
+			<div class="side-widget">
+				<div class="side-widget-title">more friends</div>
+				<div class="side-widget-content" id="friends-list">
+					<!-- BEGIN SAMPLE CHAT -->
+					<div class="user-details-wrapper" data-chat-status="online" data-chat-user-pic="assets/img/profiles/d.jpg" data-chat-user-pic-retina="assets/img/profiles/d2x.jpg" data-user-name="Jane Smith">
+						<!-- BEGIN PROFILE PIC -->
+						<div class="user-profile">
+							<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+						</div>
+						<!-- END PROFILE PIC -->
+						<!-- BEGIN MESSAGE -->
+						<div class="user-details">
+							<div class="user-name">Jane Smith</div>
+							<div class="user-more">Message...</div>
+						</div>
+						<!-- END MESSAGE -->
+						<!-- BEGIN MESSAGES BADGE -->
+						<div class="user-details-status-wrapper">
+							<span class="badge badge-important">3</span>
+						</div>
+						<!-- END MESSAGES BADGE -->
+						<!-- BEGIN STATUS -->
+						<div class="user-details-count-wrapper">
+							<div class="status-icon green"></div>
+						</div>
+						<!-- END STATUS -->
+						<div class="clearfix"></div>
+					</div>
+					<!-- END SAMPLE CHAT -->
+				</div>		
+			</div>
+			<!-- END MORE FRIENDS WIDGET -->
+		</div>		
+		<!-- BEGIN DUMMY CHAT CONVERSATION -->
+		<div class="chat-window-wrapper fadeIn" id="messages-wrapper" style="display:none">
+			<!-- BEGIN CHAT HEADER BAR -->
+			<div class="chat-header">	
+				<!-- BEGIN SEARCH BAR -->
+				<div class="pull-left">
+					<input type="text" placeholder="search">
+				</div>		
+				<!-- END SEARCH BAR -->
+				<!-- BEGIN CLOSE TOGGLE -->
+				<div class="pull-right">
+					<a href="#" class=""><div class="iconset top-settings-dark"></div></a>
+				</div>	
+				<!-- END CLOSE TOGGLE -->				
+			</div>
+			<div class="clearfix"></div>
+			<!-- END CHAT HEADER BAR -->
+			<!-- BEGIN CHAT BODY -->
+			<div class="chat-messages-header">
+				<div class="status online"></div>
+				<span class="semi-bold">Jane Smith(Typing..)</span>
+				<a href="#" class="chat-back"><i class="icon-custom-cross"></i></a>
+			</div>
+			<!-- BEGIN CHAT MESSAGES CONTAINER -->
+			<div class="chat-messages">
+				<!-- BEGIN TIME STAMP EXAMPLE -->
+				<div class="sent_time">Yesterday 11:25pm</div>
+				<!-- END TIME STAMP EXAMPLE -->
+				<!-- BEGIN EXAMPLE CHAT MESSAGE -->
+				<div class="user-details-wrapper">
+					<!-- BEGIN MESSENGER PROFILE -->
+					<div class="user-profile">
+						<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
+					</div>
+					<!-- END MESSENGER PROFILE -->
+					<!-- BEGIN MESSENGER MESSAGE -->
+					<div class="user-details">
+						<div class="bubble">Hello, You there?</div>
+					</div>
+					<!-- END MESSENGER MESSAGE -->					
+					<div class="clearfix"></div>
+					<!-- BEGIN TIMESTAMP ON CLICK TOGGLE -->
+					<div class="sent_time off">Yesterday 11:25pm</div>
+					<!-- END TIMESTAMP ON CLICK TOGGLE -->
+				</div>
+				<!-- END EXAMPLE CHAT MESSAGE -->
+				<!-- BEGIN TIME STAMP EXAMPLE -->
+				<div class="sent_time">Today 11:25pm</div>
+				<!-- BEGIN TIME STAMP EXAMPLE -->				
+				<!-- BEGIN EXAMPLE CHAT MESSAGE (FROM SELF) -->
+				<div class="user-details-wrapper pull-right">
+					<!-- BEGIN MESSENGER MESSAGE -->
+					<div class="user-details">
+						<div class="bubble sender">Let me know when you free</div>
+					</div>					
+					<!-- END MESSENGER MESSAGE -->
+					<div class="clearfix"></div>
+					<!-- BEGIN TIMESTAMP ON CLICK TOGGLE -->
+					<div class="sent_time off">Sent On Tue, 2:45pm</div>
+					<!-- END TIMESTAMP ON CLICK TOGGLE -->
+				</div>	
+				<!-- END EXAMPLE CHAT MESSAGE (FROM SELF) -->	
+			</div>
+			<!-- END CHAT MESSAGES CONTAINER -->
+		</div>
+		<div class="chat-input-wrapper" style="display:none">
+			<textarea id="chat-message-input" rows="1" placeholder="Type your message"></textarea>
+		</div>
+		<div class="clearfix"></div>
+		<!-- END DUMMY CHAT CONVERSATION -->
+	</div>
+</div>
+<!-- END CHAT --> 
+<script>
+
+ 	$('input[name="negMarks"]').on('change', function(){
+	    if ($(this).val()=='yes') {
+	        $( "#negPercent" ).removeClass( "none" );
+	        $( "#negPercent" ).addClass( "inline" );
+	    } else  {
+	        $( "#negPercent" ).addClass( "none" );
+	        $( "#negPercent" ).removeClass( "inline" );
+	    }
+	});
+
+	$('#msgs').on("click", function() {
+	    if (this.checked) {
+	        $('#customMsg').show();
+	    }
+	    else {
+	        $('#customMsg').hide();
+	    }
+	});
+
+	$('#accordion .perm').click(function(e) {
+	    e.stopPropagation();
+	});
+
+	$('#addContent a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+	});
+
+	$('#lvl1').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
+	$('#lvl2').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
+	$('#lvl3').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
+	$('#lvl4').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
+	$('#lvl5').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
+
+ </script>
+</body>
+</html>

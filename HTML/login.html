@@ -1,0 +1,70 @@
+<div class="">
+  <div style="margin:40px 0 0" class="row login-container column-seperation">  
+    <div class="col-md-3">
+          
+    </div>
+    <div class="col-md-6">
+      <div class="well">
+        <div class="mainLogo"></div>
+        <!--<h2>Sign in to <span class="schoolName">School Name</span></h2>-->
+		  <form id="login-form" class="login-form" action="" method="post" novalidate="novalidate">
+  		 <div class="row">
+    		 <div class="col-md-12">
+                <div class="controls">
+          				<div class="input-with-icon">                                       
+          					<i class="fa fa-user"></i>
+          					<input type="text" required name="txtusername" id="txtusername" class="form-control" placeholder="Username">                                 
+          				</div>
+                </div>
+          </div>
+        </div>
+  		  <div class="row">
+            <div class="col-md-12">
+              <span class="help"></span>
+              <div class="controls">
+        				<div class="input-with-icon ">                                       
+        					<i class="fa fa-lock"></i>
+        					<input type="password"  required name="txtpassword" id="txtpassword" class="form-control" placeholder="Password">                                 
+        				</div>
+              </div>
+          </div>
+        </div>
+  		  <div class="row m-t-10">
+            <div class="control-group  col-xs-6 b-r b-grey">
+              <!--<div class="checkbox checkbox check-success"> 
+                <input type="checkbox" id="checkbox1" value="1">
+                <label for="checkbox1">Remember Me</label>
+              </div>-->
+              <!-- <a href="#">Trouble logging in?</a> -->
+
+              <h6 class=" m-b-5 text-center semi-bold">Login Type</h6>
+              <div class="switch">
+                <input id="online" class="switch-input" type="radio" name="optionyes" value="online">
+                <label for="online" class="switch-label switch-label-off">Online</label>
+                <input id="offline" class="switch-input" type="radio" name="optionyes" value="offline" checked="checked">
+                <label for="offline" class="switch-label switch-label-on">Offline</label>
+                <span class="switch-selection"></span>
+              </div>
+              
+            </div>
+            <div class="control-group  col-xs-6">
+              <h6 class=" m-b-5 text-center semi-bold">Internet Connection</h6>
+              <h5 class="text-center bold text-success m-t-10">Available</h5>
+              <!-- <h5 class="text-center bold text-error m-t-10">Not Available</h5> -->
+              
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 m-t-10">
+            <button id="login-submit" class="btn btn-primary btn-cons btn-block" type="submit"><span class="bold">Login</span> </button>
+          </div>
+        </div>
+		  </form>
+    </div>
+      <div class="text-center"><small>Powered by:</small></div>
+      <div class="smallLogo"></div>
+    </div>
+     
+    
+  </div>
+</div>

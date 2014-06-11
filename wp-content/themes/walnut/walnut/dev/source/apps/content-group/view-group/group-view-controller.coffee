@@ -1,9 +1,8 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-group/edit-group/templates/content-group.html'
         'apps/content-group/view-group/group-details/details-app'
         'apps/content-group/view-group/content-display/content-display-app'
-], (App, RegionController, contentGroupTpl)->
+], (App, RegionController)->
     App.module "ContentGroupApp.View", (View, App)->
         class View.GroupController extends RegionController
 
@@ -11,6 +10,11 @@ define ['app'
             groupContentCollection=null
 
             initialize: (opts) ->
+
+
+                App.execute "show:headerapp", region : App.headerRegion
+                App.execute "show:leftnavapp", region : App.leftNavRegion
+
                 #mode refers to "training" mode or "take-class" mode
                 {model,@classID, @mode, @division} = opts
 
@@ -21,26 +25,26 @@ define ['app'
 
                 @studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
-                App.execute "when:fetched", model, ->
+                App.execute "when:fetched", model, =>
                     groupContentCollection = App.request "get:content:pieces:by:ids", model.get 'content_pieces'
+                    console.log model.get 'content_pieces'
+                    @layout = layout = @_getContentGroupViewLayout()
 
-                @layout = layout = @_getContentGroupViewLayout()
+                    @show layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
+                                                             @textbookNames, @studentCollection])
 
-                @show layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
-                                                         @textbookNames, @studentCollection])
+                    @listenTo layout, 'show', @showContentGroupViews
 
-                @listenTo layout, 'show', @showContentGroupViews
+                    @listenTo @layout.collectionDetailsRegion, 'start:teaching:module', @startTeachingModule
 
-                @listenTo @layout.collectionDetailsRegion, 'start:teaching:module', @startTeachingModule
-
-                @listenTo @layout.contentDisplayRegion, 'goto:question:readonly', (questionID)=>
-                    App.navigate App.getCurrentRoute() + '/question'
-                    @gotoTrainingModule questionID, 'readonly'
+                    @listenTo @layout.contentDisplayRegion, 'goto:question:readonly', (questionID)=>
+                        App.navigate App.getCurrentRoute() + '/question'
+                        @gotoTrainingModule questionID, 'readonly'
 
 
             startTeachingModule: =>
                 responseCollection= @questionResponseCollection.where "status":"completed"
-
+                window.f = responseCollection
                 responseQuestionIDs = _.chain responseCollection
                                     .map (m)->m.toJSON()
                                     .pluck 'content_piece_id'
@@ -97,14 +101,16 @@ define ['app'
 
         class ContentGroupViewLayout extends Marionette.Layout
 
-            template: contentGroupTpl
+            template: '<div class="teacher-app">
+                          <div id="collection-details-region"></div>
+                        </div>
+                        <div id="content-display-region"></div>'
 
             className: ''
 
             regions:
                 collectionDetailsRegion: '#collection-details-region'
                 contentDisplayRegion: '#content-display-region'
-
 
             onShow:->
                 $('.page-content').removeClass 'expand-page'

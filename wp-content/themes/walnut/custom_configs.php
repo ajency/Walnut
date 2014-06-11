@@ -1,29 +1,31 @@
 <?php
-for($i=1; $i<=12; $i++){
-    $classids[$i]['id']=$i;
+for($i=1; $i<=15; $i++){
+    $class_ids[$i]['id']=$i;
     if($i==1)
-        $classids[$i]['label']='Junior KG';
+        $class_ids[$i]['label']='Nursery';
     elseif($i==2)
-        $classids[$i]['label']='Senior KG';
+        $class_ids[$i]['label']='Junior KG';
+    elseif($i==3)
+        $class_ids[$i]['label']='Senior KG';
     else
-        $classids[$i]['label']='Class '.($i-2);
+        $class_ids[$i]['label']='Class '.($i-3);
 }
-    
-$GLOBALS['class_ids']=$classids;
+
+$GLOBALS['classids']=$class_ids;
 
 $GLOBALS['all_subjects']=array('English',
-                                'Hindi',
-                                'Maths',
-                                'Physics',
-                                'Chemistry',
-                                'Biology',
-                                'History',
-                                'Geography',
-                                'Computers',
-                                'P.T',
-                                'Art',
-                                'Music',
-                                'Life Skill');
+    'Hindi',
+    'Maths',
+    'Physics',
+    'Chemistry',
+    'Biology',
+    'History',
+    'Geography',
+    'Computers',
+    'P.T',
+    'Art',
+    'Music',
+    'Life Skill');
 
 $GLOBALS['chorus_options']= array(
     'few'           =>'Very Few',

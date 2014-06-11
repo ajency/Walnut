@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-group/templates/content-group.html', 'apps/content-group/view-group/group-details/details-app', 'apps/content-group/view-group/content-display/content-display-app'], function(App, RegionController, contentGroupTpl) {
+define(['app', 'controllers/region-controller', 'apps/content-group/view-group/group-details/details-app', 'apps/content-group/view-group/content-display/content-display-app'], function(App, RegionController) {
   return App.module("ContentGroupApp.View", function(View, App) {
     var ContentGroupViewLayout;
     View.GroupController = (function(_super) {
@@ -23,7 +23,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       groupContentCollection = null;
 
       GroupController.prototype.initialize = function(opts) {
-        var layout;
+        App.execute("show:headerapp", {
+          region: App.headerRegion
+        });
+        App.execute("show:leftnavapp", {
+          region: App.leftNavRegion
+        });
         model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
@@ -33,20 +38,22 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           'role': 'student',
           'division': this.division
         });
-        App.execute("when:fetched", model, function() {
-          return groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
-        });
-        this.layout = layout = this._getContentGroupViewLayout();
-        this.show(layout, {
-          loading: true,
-          entities: [model, this.questionResponseCollection, groupContentCollection, this.textbookNames, this.studentCollection]
-        });
-        this.listenTo(layout, 'show', this.showContentGroupViews);
-        this.listenTo(this.layout.collectionDetailsRegion, 'start:teaching:module', this.startTeachingModule);
-        return this.listenTo(this.layout.contentDisplayRegion, 'goto:question:readonly', (function(_this) {
-          return function(questionID) {
-            App.navigate(App.getCurrentRoute() + '/question');
-            return _this.gotoTrainingModule(questionID, 'readonly');
+        return App.execute("when:fetched", model, (function(_this) {
+          return function() {
+            var layout;
+            groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
+            console.log(model.get('content_pieces'));
+            _this.layout = layout = _this._getContentGroupViewLayout();
+            _this.show(layout, {
+              loading: true,
+              entities: [model, _this.questionResponseCollection, groupContentCollection, _this.textbookNames, _this.studentCollection]
+            });
+            _this.listenTo(layout, 'show', _this.showContentGroupViews);
+            _this.listenTo(_this.layout.collectionDetailsRegion, 'start:teaching:module', _this.startTeachingModule);
+            return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:question:readonly', function(questionID) {
+              App.navigate(App.getCurrentRoute() + '/question');
+              return _this.gotoTrainingModule(questionID, 'readonly');
+            });
           };
         })(this));
       };
@@ -56,6 +63,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         responseCollection = this.questionResponseCollection.where({
           "status": "completed"
         });
+        window.f = responseCollection;
         responseQuestionIDs = _.chain(responseCollection).map(function(m) {
           return m.toJSON();
         }).pluck('content_piece_id').value();
@@ -127,7 +135,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return ContentGroupViewLayout.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupViewLayout.prototype.template = contentGroupTpl;
+      ContentGroupViewLayout.prototype.template = '<div class="teacher-app"> <div id="collection-details-region"></div> </div> <div id="content-display-region"></div>';
 
       ContentGroupViewLayout.prototype.className = '';
 

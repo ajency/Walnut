@@ -58,15 +58,65 @@
         <span class="nv">name: </span><span class="s">&#39;user&#39;</span>
 
         <span class="nv">defaults : </span><span class="nf">-&gt;</span>
-          <span class="nv">user_name     : </span><span class="s">&#39;&#39;</span>
           <span class="nv">display_name  : </span><span class="s">&#39;&#39;</span>
           <span class="nv">user_email    : </span><span class="s">&#39;&#39;</span>
-          <span class="nv">user_role     : </span><span class="p">[]</span>
+          <span class="nv">role      : </span><span class="p">[]</span>
+          <span class="nv">profile_pic   : </span><span class="s">&#39;&#39;</span>
 
       <span class="nv">user = </span><span class="k">new</span> <span class="nx">Users</span><span class="p">.</span><span class="nx">UserModel</span>
       
+
+      <span class="k">class</span> <span class="nx">UserCollection</span> <span class="k">extends</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span>
+
+        <span class="nv">model : </span><span class="nx">Users</span><span class="p">.</span><span class="nx">UserModel</span>
+
+        <span class="nv">url : </span><span class="nf">-&gt;</span> <span class="c1">#ajax call to return a list of all the users from the databse</span>
+          <span class="nx">AJAXURL</span> <span class="o">+</span> <span class="s">&#39;?action=get-users&#39;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>declare a user collection instance</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      
+      
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>API</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nv">API =</span>
+        <span class="nx">getUsers</span><span class="o">:</span><span class="nf">(params={})-&gt;</span> <span class="c1">#returns a collection of users</span>
+          <span class="nv">userCollection = </span><span class="k">new</span> <span class="nx">UserCollection</span>
+          <span class="nx">userCollection</span><span class="p">.</span><span class="nx">fetch</span>
+            <span class="nv">data : </span><span class="nx">params</span>
+
+          <span class="nx">userCollection</span>
+
+
+
+
       <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:user:model&quot;</span><span class="p">,</span> <span class="nf">-&gt;</span>
-        <span class="nx">user</span>    
+        <span class="nx">user</span>  
+
+      <span class="nx">App</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;get:user:collection&quot;</span><span class="p">,</span><span class="nf">(opts) -&gt;</span>
+        <span class="nx">API</span><span class="p">.</span><span class="nx">getUsers</span> <span class="nx">opts</span>
 </pre></div>
         </td>
       </tr>

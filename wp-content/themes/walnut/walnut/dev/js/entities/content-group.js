@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(["app", 'backbone'], function(App, Backbone) {
@@ -9,8 +8,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       __extends(ItemModel, _super);
 
       function ItemModel() {
-        this.stopModule = __bind(this.stopModule, this);
-        this.startModule = __bind(this.startModule, this);
         return ItemModel.__super__.constructor.apply(this, arguments);
       }
 
@@ -36,19 +33,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       ItemModel.prototype.name = 'content-group';
-
-      ItemModel.prototype.initialize = function() {
-        this.on('start:module', this.startModule, this);
-        return this.on('stop:module', this.stopModule, this);
-      };
-
-      ItemModel.prototype.startModule = function(model) {
-        return this.trigger("training:module:started", model);
-      };
-
-      ItemModel.prototype.stopModule = function(model) {
-        return this.trigger("training:module:stopped", model);
-      };
 
       return ItemModel;
 
@@ -102,6 +86,16 @@ define(["app", 'backbone'], function(App, Backbone) {
         var contentGroupItem;
         contentGroupItem = new ContentGroup.ItemModel(data);
         return contentGroupItem;
+      },
+      newContentGroup: function() {
+        var contentGroup;
+        return contentGroup = new ContentGroup.ItemModel;
+      },
+      scheduleContentGroup: function(data) {
+        var questionResponseModel;
+        questionResponseModel = App.request("save:question:response");
+        questionResponseModel.set(data);
+        return questionResponseModel.save();
       }
     };
     App.reqres.setHandler("get:content:groups", function(opt) {
@@ -110,8 +104,14 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:content:group:by:id", function(id) {
       return API.getContentGroupByID(id);
     });
-    return App.reqres.setHandler("save:content:group:details", function(data) {
+    App.reqres.setHandler("save:content:group:details", function(data) {
       return API.saveContentGroupDetails(data);
+    });
+    App.reqres.setHandler("new:content:group", function() {
+      return API.newContentGroup();
+    });
+    return App.reqres.setHandler("schedule:content:group", function(data) {
+      return API.scheduleContentGroup(data);
     });
   });
 });

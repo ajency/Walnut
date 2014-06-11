@@ -15,77 +15,121 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
         this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
-        this.view = view = this._getCollectionDetailsView(this.model);
-        this.show(view, {
-          loading: true,
-          entities: [this.textbookNames]
-        });
-        return this.listenTo(view, 'start:teaching:module', (function(_this) {
+        this.view = view = this._getCollectionDetailsView();
+        this.listenTo(view, 'start:teaching:module', (function(_this) {
           return function() {
             return _this.region.trigger("start:teaching:module");
           };
         })(this));
+        this.listenTo(view, 'goto:previous:route', this._gotoPreviousRoute);
+        return this.show(view, {
+          loading: true,
+          entities: [this.textbookNames]
+        });
       };
 
-      ViewCollecionDetailsController.prototype._getCollectionDetailsView = function(model) {
+      ViewCollecionDetailsController.prototype._gotoPreviousRoute = function() {
+        var currRoute, newRoute;
+        currRoute = App.getCurrentRoute();
+        newRoute = _(currRoute).strLeft('/module');
+        return App.navigate(newRoute, true);
+      };
+
+      ViewCollecionDetailsController.prototype._getCollectionDetailsView = function() {
         var numOfQuestionsCompleted, terms, totalNumofQuestions;
-        terms = model.get('term_ids');
+        terms = this.model.get('term_ids');
         numOfQuestionsCompleted = _.size(this.questionResponseCollection.where({
           "status": "completed"
         }));
-        totalNumofQuestions = _.size(model.get('content_pieces'));
+        totalNumofQuestions = _.size(this.model.get('content_pieces'));
         return new CollectionDetailsView({
-          model: model,
+          model: this.model,
           mode: this.mode,
-          templateHelpers: {
-            getProgressData: function() {
-              return numOfQuestionsCompleted + '/' + totalNumofQuestions;
-            },
-            getProgressPercentage: function() {
-              return parseInt((numOfQuestionsCompleted / totalNumofQuestions) * 100);
-            },
-            getTextbookName: (function(_this) {
-              return function() {
-                var texbookName, textbook;
-                textbook = _this.textbookNames.get(terms.textbook);
-                if (textbook != null) {
-                  return texbookName = textbook.get('name');
-                }
-              };
-            })(this),
-            getChapterName: (function(_this) {
-              return function() {
-                var chapter, chapterName;
-                chapter = _this.textbookNames.get(terms.chapter);
-                if (chapter != null) {
-                  return chapterName = chapter.get('name');
-                }
-              };
-            })(this),
-            startScheduleButton: (function(_this) {
-              return function() {
-                var actionButtons, allContentPieces, answeredIDs, answeredPieces, unanswered;
-                actionButtons = '';
-                allContentPieces = _this.model.get('content_pieces');
-                allContentPieces = _.map(allContentPieces, function(m) {
-                  return parseInt(m);
+          templateHelpers: this._getTemplateHelpers({
+            terms: terms,
+            numOfQuestionsCompleted: numOfQuestionsCompleted,
+            totalNumofQuestions: totalNumofQuestions
+          })
+        });
+      };
+
+      ViewCollecionDetailsController.prototype._getTemplateHelpers = function(options) {
+        return {
+          showElapsedTime: (function(_this) {
+            return function() {
+              var display_time, hours, mins, seconds, time, timeTakenArray, totalTimeTakenForModule;
+              timeTakenArray = _this.questionResponseCollection.pluck('time_taken');
+              totalTimeTakenForModule = 0;
+              if (_.size(timeTakenArray) > 0) {
+                totalTimeTakenForModule = _.reduce(timeTakenArray, function(memo, num) {
+                  return parseInt(memo + parseInt(num));
                 });
-                answeredPieces = _this.questionResponseCollection.where({
-                  "status": "completed"
-                });
+              }
+              hours = 0;
+              time = totalTimeTakenForModule;
+              mins = parseInt(totalTimeTakenForModule / 60);
+              if (mins > 59) {
+                hours = parseInt(mins / 60);
+                mins = parseInt(mins % 60);
+              }
+              seconds = parseInt(time % 60);
+              display_time = '';
+              if (hours > 0) {
+                display_time = hours + 'h ';
+              }
+              display_time += mins + 'm ' + seconds + 's';
+              return display_time;
+            };
+          })(this),
+          getProgressData: function() {
+            return options.numOfQuestionsCompleted + '/' + options.totalNumofQuestions;
+          },
+          getProgressPercentage: function() {
+            return parseInt((options.numOfQuestionsCompleted / options.totalNumofQuestions) * 100);
+          },
+          getTextbookName: (function(_this) {
+            return function() {
+              var texbookName, textbook;
+              textbook = _this.textbookNames.get(options.terms.textbook);
+              if (textbook != null) {
+                return texbookName = textbook.get('name');
+              }
+            };
+          })(this),
+          getChapterName: (function(_this) {
+            return function() {
+              var chapter, chapterName;
+              chapter = _this.textbookNames.get(options.terms.chapter);
+              if (chapter != null) {
+                return chapterName = chapter.get('name');
+              }
+            };
+          })(this),
+          startScheduleButton: (function(_this) {
+            return function() {
+              var actionButtons, allContentPieces, answeredIDs, answeredPieces, unanswered;
+              actionButtons = '';
+              allContentPieces = _this.model.get('content_pieces');
+              allContentPieces = _.map(allContentPieces, function(m) {
+                return parseInt(m);
+              });
+              answeredPieces = _this.questionResponseCollection.where({
+                "status": "completed"
+              });
+              if (answeredPieces) {
                 answeredIDs = _.chain(answeredPieces).map(function(m) {
                   return m.toJSON();
                 }).pluck('content_piece_id').value();
-                answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
-                unanswered = _.difference(allContentPieces, answeredIDs);
-                if (_.size(unanswered) > 0 && _this.mode !== 'training') {
-                  actionButtons = '<button type="button" id="start-module" class="btn btn-white btn-small action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button>';
-                }
-                return actionButtons;
-              };
-            })(this)
-          }
-        });
+              }
+              answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
+              unanswered = _.difference(allContentPieces, answeredIDs);
+              if (_.size(unanswered) > 0 && _this.mode !== 'training') {
+                actionButtons = '<button type="button" id="start-module" class="btn btn-success action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button>';
+              }
+              return actionButtons;
+            };
+          })(this)
+        };
       };
 
       return ViewCollecionDetailsController;
@@ -101,17 +145,22 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
 
       CollectionDetailsView.prototype.template = collectionDetailsTpl;
 
-      CollectionDetailsView.prototype.className = 'tiles white grid simple vertical green';
-
       CollectionDetailsView.prototype.events = {
-        'click #start-module': 'startModule'
+        'click #start-module': 'startModule',
+        'click #go-back-button': function() {
+          return this.trigger("goto:previous:route");
+        }
       };
 
-      CollectionDetailsView.prototype.serializeData = function() {
-        var data;
-        data = CollectionDetailsView.__super__.serializeData.call(this);
-        data.takeClassModule = Marionette.getOption(this, 'mode');
+      CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
+        data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
+        data.takeClassModule = this.mode;
+        data.isTraining = this.mode === 'training' ? true : false;
         return data;
+      };
+
+      CollectionDetailsView.prototype.initialize = function() {
+        return this.mode = Marionette.getOption(this, 'mode');
       };
 
       CollectionDetailsView.prototype.startModule = function() {

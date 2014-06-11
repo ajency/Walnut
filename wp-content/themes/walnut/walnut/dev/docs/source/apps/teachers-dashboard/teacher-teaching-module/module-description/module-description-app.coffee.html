@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>module-description-app.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../../doc-style.css" />
+  <script src="../../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../../", thisFile = "source\\apps\\teachers-dashboard\\teacher-teaching-module\\module-description\\module-description-app.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>module-description-app.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;app&#39;</span>
+        <span class="s">&#39;controllers/region-controller&#39;</span>
+        <span class="s">&#39;text!apps/teachers-dashboard/teacher-teaching-module/module-description/templates/module-description-template.html&#39;</span><span class="p">],</span> <span class="nf">(App, RegionController, moduleDescriptionTemplate)-&gt;</span>
+    <span class="nx">App</span><span class="p">.</span><span class="nx">module</span> <span class="s">&quot;TeacherTeachingApp.ModuleDescription&quot;</span><span class="p">,</span> <span class="nf">(ModuleDescription, App)-&gt;</span>
+        <span class="k">class</span> <span class="nx">ModuleDescriptionController</span> <span class="k">extends</span> <span class="nx">RegionController</span>
+
+            <span class="nv">initialize: </span><span class="nf">(opts)-&gt;</span>
+                <span class="p">{</span><span class="nx">model</span><span class="p">,</span><span class="nx">@questionResponseModel</span><span class="p">,</span><span class="nx">@questionResponseCollection</span><span class="p">,</span><span class="nx">@timerObject</span><span class="p">,</span><span class="nx">@display_mode</span><span class="p">}</span> <span class="o">=</span> <span class="nx">opts</span>
+
+                <span class="vi">@view = </span><span class="nv">view = </span><span class="nx">@_showModuleDescriptionView</span> <span class="nx">model</span>
+
+                <span class="nx">@show</span> <span class="nx">view</span><span class="p">,</span> <span class="p">(</span><span class="nv">loading: </span><span class="kc">true</span><span class="p">)</span>
+
+                <span class="nx">@listenTo</span> <span class="nx">@view</span><span class="p">,</span> <span class="s">&quot;goto:previous:route&quot;</span><span class="p">,</span> <span class="o">=&gt;</span>
+                    <span class="nx">@region</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;goto:previous:route&quot;</span>
+
+
+            <span class="nv">_showModuleDescriptionView: </span><span class="nf">(model) =&gt;</span>
+                <span class="nv">terms = </span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;term_ids&#39;</span>
+
+                <span class="nv">numOfQuestionsCompleted = </span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="nx">@questionResponseCollection</span><span class="p">.</span><span class="nx">where</span> <span class="s">&quot;status&quot;</span><span class="o">:</span> <span class="s">&quot;completed&quot;</span>
+                <span class="nv">totalNumofQuestions = </span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;content_pieces&#39;</span>
+                <span class="nv">timeTakenArray= </span><span class="nx">@questionResponseCollection</span><span class="p">.</span><span class="nx">pluck</span><span class="p">(</span><span class="s">&#39;time_taken&#39;</span><span class="p">);</span>
+                <span class="nx">totalTimeTakenForModule</span><span class="o">=</span><span class="mi">0</span>
+                <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">timeTakenArray</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span>
+                    <span class="nv">totalTimeTakenForModule = </span>  <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">timeTakenArray</span><span class="p">,</span> <span class="nf">(memo, num)-&gt;</span> <span class="nb">parseInt</span> <span class="nx">memo</span> <span class="o">+</span> <span class="nb">parseInt</span> <span class="nx">num</span>
+
+                <span class="k">new</span> <span class="nx">ModuleDescriptionView</span>
+                    <span class="nv">model: </span><span class="nx">model</span>
+
+                    <span class="nv">templateHelpers:</span>
+                        <span class="nx">showPauseButton</span><span class="o">:=&gt;</span>
+                            <span class="nx">pauseBtn</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">;</span>
+                            <span class="k">if</span> <span class="nx">@display_mode</span> <span class="o">is</span> <span class="s">&#39;class_mode&#39;</span>
+                                <span class="nv">pauseBtn= </span><span class="s">&#39;&lt;button type=&quot;button&quot; id=&quot;pause-session&quot; class=&quot;btn btn-white  action pull-right m-t-5 m-l-20&quot;&gt;&lt;i class=&quot;fa fa-pause&quot;&gt;&lt;/i&gt; Pause&lt;/button&gt;&#39;</span>
+                            <span class="nx">pauseBtn</span>
+
+                        <span class="nx">getProgressData</span><span class="o">:</span><span class="nf">-&gt;</span>
+                            <span class="nx">numOfQuestionsCompleted</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span><span class="o">+</span> <span class="nx">totalNumofQuestions</span>
+
+                        <span class="nx">getProgressPercentage</span><span class="o">:</span><span class="nf">-&gt;</span>
+                            <span class="nb">parseInt</span> <span class="p">(</span><span class="nx">numOfQuestionsCompleted</span> <span class="o">/</span> <span class="nx">totalNumofQuestions</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+
+                        <span class="nx">moduleTime</span><span class="o">:</span><span class="nf">-&gt;</span>
+                            <span class="nx">hours</span><span class="o">=</span><span class="mi">0</span>
+                            <span class="nv">time= </span><span class="nx">totalTimeTakenForModule</span>
+                            <span class="nx">mins</span><span class="o">=</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">time</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="nx">mins</span> <span class="o">&gt;</span><span class="mi">59</span>
+                                <span class="nv">hours = </span><span class="nb">parseInt</span> <span class="nx">mins</span><span class="o">/</span><span class="mi">60</span>
+                                <span class="nv">mins= </span><span class="nb">parseInt</span> <span class="nx">mins</span><span class="o">%</span><span class="mi">60</span>
+                            <span class="nv">seconds = </span><span class="nb">parseInt</span> <span class="nx">time</span><span class="o">%</span><span class="mi">60</span>
+                            <span class="nx">display_time</span><span class="o">=</span><span class="s">&#39;&#39;</span>
+
+                            <span class="k">if</span> <span class="nx">hours</span> <span class="o">&gt;</span><span class="mi">0</span>
+                                <span class="nv">display_time= </span><span class="nx">hours</span><span class="o">+</span><span class="s">&#39;h &#39;</span>
+
+                            <span class="nx">display_time</span> <span class="o">+=</span> <span class="nx">mins</span> <span class="o">+</span> <span class="s">&#39;m &#39;</span><span class="o">+</span> <span class="nx">seconds</span><span class="o">+</span><span class="s">&#39;s&#39;</span>
+
+
+        <span class="k">class</span> <span class="nx">ModuleDescriptionView</span> <span class="k">extends</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span>
+
+            <span class="nv">className: </span><span class="s">&#39;pieceWrapper&#39;</span>
+
+            <span class="nv">template: </span><span class="nx">moduleDescriptionTemplate</span>
+
+            <span class="nv">events:</span>
+                <span class="s">&#39;click #back-to-module, #pause-session&#39;</span><span class="o">:</span> <span class="nf">-&gt;</span>
+                    <span class="nx">@trigger</span> <span class="s">&quot;goto:previous:route&quot;</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>set handlers</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">App</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">setHandler</span> <span class="s">&quot;show:teacher:teaching:module:description&quot;</span><span class="p">,</span> <span class="nf">(opt = {})-&gt;</span>
+            <span class="k">new</span> <span class="nx">ModuleDescriptionController</span> <span class="nx">opt</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

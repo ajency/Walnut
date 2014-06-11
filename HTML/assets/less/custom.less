@@ -15,6 +15,7 @@
 //@import "class.less";
 @import "training.less";
 @import "module.less";
+@import "quiz.less";
 @import "teacher.less";
 
 body{
@@ -41,7 +42,7 @@ body{
 }
  
 .logo {
-	margin: 18px 32px;
+	margin: 10px 28px;
 }
 
 .header-seperation{
@@ -57,9 +58,14 @@ body{
 	.page-sidebar-wrapper > ul > li{
 		&>a, &> a i, &> a .arrow, &> a .arrow.open:before{
 			color: @color-white !important;
+			font-size: 16px;
+		}
+		&>a, &>a:hover{
+			padding: 11.5px 12px;
 		}
 		&.open > a{
 			background-color: @color-primary !important;
+			padding: 11.5px 12px;
 		}
 	}
 
@@ -70,28 +76,89 @@ body{
 	.page-sidebar-wrapper > ul > li > ul.sub-menu{
 		background-color: @color-primary;
 
-		&> li > a:hover{
-			background-color: darken(@color-primary, 5%) !important;
+		&> li > a{
+			font-size: 15px;
+			&:hover{
+				background-color: darken(@color-primary, 5%) !important;
+			}
+		}
+	}
+
+	&.mini{
+		.page-sidebar-wrapper > ul{
+			padding: 70px 0 0;
+
+			&>li>a{
+				padding: 11.5px 12px;
+			}
 		}
 	}
 }
 
+@media (max-width:1024px){
+	.page-sidebar{
+		background: @color-black !important;
+
+		.page-sidebar-wrapper > ul > li{
+			&.open > a{
+				background-color: darken(@color-grey, 20%) !important;
+			}
+			a.mm-subopen{
+				position: absolute;
+			}
+			a .arrow{
+				display: none;
+			}
+		}
+
+		.page-sidebar-wrapper > ul > li:hover >a{
+			background-color: transparent;
+		}
+
+		.page-sidebar-wrapper > ul > li > ul.sub-menu{
+			background-color: darken(@color-grey, 20%);
+
+			&> li > a:hover{
+				background-color: darken(@color-grey, 5%) !important;
+			}
+		}
+
+		.mm-list > li{
+			& > a, & > span{
+				font-family: 'Open Sans';
+				color: @color-white;
+				font-weight: 400;
+				font-size: 18px;
+			}
+		} 
+	}
+}
+
 #walnutProfile{
-	.user{
+	background: @color-black;
+		.user{
 		font-size: 20px;
 		color: @dash-grey;
-		padding: 20px 20px 5px;
+		//padding: 20px 20px 5px;
 	}
 	.appLogout{
 		padding: 5px 22px;
 		width: 100%;
 		display: block;
 		color: @color-white;
-		border-top: 1px solid lighten(@3-grey, 5%);
-		border-bottom: 1px solid lighten(@3-grey, 5%);
+		font-size: 18px;
+		font-family: 'Open Sans';
+		font-weight: 400;
+		// border-top: 1px solid lighten(@3-grey, 5%);
+		// border-bottom: 1px solid lighten(@3-grey, 5%);
 		&:hover{
 			color: lighten(@dash-grey, 5%);
 		}
+	}
+}
+@media(min-width:1025px){
+	#walnutProfile{
+		display: none;
 	}
 }
 
@@ -177,22 +244,22 @@ textarea.error, .select2-choice.error {
 }
 
 .mainLogo{
-	//background: url(../../../images/logo-synapse.png);
+	//background: url(../../../images/synapse-logo-main.png);
 	background-size: 80%;
 	background-repeat: no-repeat;
 	background-position: center;
 	img{
-		width: 128px;
-		height: 128px;
-		margin: 0 auto;
+		width: 210px;
+		height: 76px;
+		margin: 0 auto 15px;
 		display: block;
 	}
 }
 
 .smallLogo{
 	//background: url('../img/logo-synapse.png');
-	background: url(../../../images/logo-synapse.png);
-	width: 35px;
+	background: url(../../../images/synapse-logo-main.png);
+	width: 97px;
 	height: 35px;
 	margin: 0 auto;
 	background-size: 100%;
@@ -200,9 +267,174 @@ textarea.error, .select2-choice.error {
 	background-position: left center;
 }
 
-/*App Highlight Color*/
-* {
-    -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important; 
-    -webkit-focus-ring-color: @color-info !important; 
-    //outline: none !important;
-} 
+.select2-results{
+	margin: 4px 4px 4px 0;
+}
+
+#breadcrumb-region{
+	display: none;
+}
+
+#main-content-region, #content-display-region{
+	&>.row{
+		margin: 0;
+	}
+}
+
+/*Theme Modifications*/
+body{
+	font-size: 18px;
+	font-weight: bold;
+}
+
+select{
+	font-weight: bold;
+	font-size: 15px;
+}
+
+button{
+	font-weight: bold;
+}
+label, input, button, select, textarea{
+	font-size: 16px;
+}
+
+.small-text {
+	font-size: 15px !important;
+}
+
+.label{
+	font-size: 15px;
+	display: inline-block;
+	padding: 6px 9px;
+}
+
+.btn{
+	//padding: 10px 30px;
+	//padding-top: 10px;
+	font-weight: bold;
+}
+
+.form-control{
+	height: 45px;
+	font-weight: bold;
+	font-size: 16px;
+	.select2-choice{
+		padding: 8px 9px;
+		height: 45px;
+		.select2-arrow b:before{
+			top: 6px;
+		}
+	}
+}
+
+input[disabled].disabled{
+	cursor: not-allowed;
+	background-color: @body-bg;
+}
+
+.checkbox label{
+	font-size: 14px;
+}
+
+.nav-tabs > li > a{
+	font-size: 16px;
+}
+.table td{
+	font-size: 15px;
+}
+
+.progress{
+	background: darken(@body-bg, 5%)
+}
+
+::-webkit-input-placeholder {
+   color: darken(@preview-grey, 15%);
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: darken(@preview-grey, 15%);  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: darken(@preview-grey, 15%);  
+}
+
+:-ms-input-placeholder {  
+   color: darken(@preview-grey, 15%);  
+}
+
+select{
+	display: inline-block;
+	position: relative;
+	line-height: 1;
+	width: 100%;
+	min-height: 38px;
+	padding: 6px;
+	background: @preview-grey;
+	border: 1px solid @body-bg;
+	box-shadow: inset 0 -1px 2px rgba(0,0,0,.05);
+	border-radius: 3px;
+	color: @3-grey;
+	font-size: 16px;
+	font-weight: 700;
+	text-align: left;
+	text-transform: none;
+	outline: 0;
+	outline-offset: -2px;
+	cursor: default;
+	&:after, &:before{
+		content: "";
+		position: absolute;
+		right: 30px;
+		top: 10px;
+		bottom: 10px;
+		border-left: 1px solid #e5e5e5;
+	}
+}
+
+.header .notifcation-center{
+	display: none;
+}
+
+@media (max-width:1024px){
+	#main-menu-toggle-wrapper, #portrait-chat-toggler{
+		display: block !important;
+	}
+
+	.page-content .content{
+		padding: 0;
+		padding-top: 60px;
+	}
+	.page-title, #Filters{
+		padding: 0 8px;
+		margin-bottom: 0;
+	}
+
+	.header{
+		.notifcation-center{
+			background: transparent;
+			display: inline-block;
+			li a{
+				font-size: 16px;
+				font-weight: bold;
+			}
+			& > li > a{
+				padding: 5px 20px 15px !important;
+				font-size: 28px;
+				color: white;
+			}
+		}
+		.quick-section2{
+
+		}
+	}
+
+	.header .nav .open > a, .nav .open > a:hover, .nav .open > a:focus{
+		background: transparent;
+	}
+
+	.page-content{
+		min-height: 0;
+	}
+}

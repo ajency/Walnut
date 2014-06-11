@@ -80,9 +80,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       EditCollecionDetailsController.prototype.successFn = function(model) {
-        var contentGroupCollection;
-        contentGroupCollection = App.request("get:content:groups");
-        contentGroupCollection.add(model);
         return this.view.triggerMethod('saved:content:group', model);
       };
 

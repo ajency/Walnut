@@ -29,7 +29,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
 
       OptionsBarView.prototype.onShow = function() {
         var postStatus, qType;
-        $("#subs, #chaps, #qType, #status, #secs, #subsecs").select2();
+        $("#subs, #chaps, #qType, #status, #secs, #subsecs ").select2();
         $('input.tagsinput').tagsinput();
         $('#subProps a').click(function(e) {
           e.preventDefault();
@@ -39,7 +39,10 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           qType = this.model.get('question_type');
           $('#qType').select2().select2('val', qType);
           postStatus = this.model.get('post_status');
-          return $('#status').select2().select2('val', postStatus);
+          $('#status').select2().select2('val', postStatus);
+        }
+        if (this.model.get('content_type') === 'content_piece') {
+          return this.$el.find('#question_type_column').remove();
         }
       };
 

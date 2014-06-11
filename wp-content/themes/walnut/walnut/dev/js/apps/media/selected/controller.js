@@ -50,6 +50,8 @@ define(['app', 'controllers/region-controller'], function(App, AppController) {
       };
 
       SelectedSingle.prototype.onRender = function() {
+        console.log('media selected');
+        console.log(this.model);
         this.$el.width('50px').height('50px');
         return this.$el.attr('src', this.model.get('sizes').thumbnail.url);
       };

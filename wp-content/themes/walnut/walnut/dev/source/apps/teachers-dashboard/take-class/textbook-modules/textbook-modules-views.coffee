@@ -11,7 +11,7 @@ define ['app'], (App)->
             		               <td>
             			                <span class="muted status_label">{{&status_str}}</span>
 
-            			               	<button data-id="{{id}}" type="button" class="btn btn-white btn-small pull-right action start-training">
+            			               	<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
             			               		{{&action_str}}
             			               	</button>
             			               	{{&training_date}}
@@ -66,13 +66,13 @@ define ['app'], (App)->
             							<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
             								<div class="row">
             									<div class="col-lg-12">
-            										<h4><span class="semi-bold">All</span> Modules</h4>
+            										<h4>{{&showModulesHeading}}</h4>
             										<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules">
             							                <thead>
             							                  <tr>
             							                    <th style="width:50%">Name</th>
             							                    <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th>
-            							                    <th style="width:40%">Status</th>
+            							                    <th style="width:40%"><div id="status_header">Status</div></th>
             							                  </tr>
             							                </thead>
             							                <tbody>
@@ -95,39 +95,26 @@ define ['app'], (App)->
 
 
             startTraining: (e)=>
-                dataID = $(e.target).attr 'data-id'
+                dataID = $(e.currentTarget).attr 'data-id'
                 currentRoute = App.getCurrentRoute()
                 App.navigate currentRoute + "/module/" + dataID, true
 
-            onStatusChange: (model)->
-                status = model.get 'status'
-
-                id = model.get 'id'
-
-                if status is 'started'
-                    @$el.find 'tr#row-' + id + ' .start-training'
-                    .empty()
-                    .html '<i class="fa fa-pause"></i> Resume'
-
-                    @$el.find 'tr#row-' + id + ' .status_label'
-                    .html '<span class="label label-info">In Progress</span>'
-
-                    @$el.find 'tr#row-' + id + ' .training-date'
-                    .html '<i class="fa fa-calendar"></i> ' + moment().format("Do MMM YYYY")
-
-                if status is 'scheduled'
-                    date = model.get 'training_date'
-                    @$el.find 'tr#row-' + id + ' .training-date'
-                    .html '<i class="fa fa-calendar"></i> ' + moment(date).format("Do MMM YYYY")
+            onScheduledModule: (id,date)->
+                @$el.find 'tr#row-' + id + ' .training-date'
+                .html '<i class="fa fa-calendar"></i> ' + moment(date).format("Do MMM YYYY")
 
             scheduleTraining: (e)->
                 dataID = $ e.target
                 .closest 'tr'
-                    .attr 'data-id'
+                .attr 'data-id'
 
                 @trigger "schedule:training", dataID
 
             onShow: =>
+                if Marionette.getOption(@, 'mode') is 'training'
+                    @$el.find '.status_label, .training-date, #status_header'
+                    .hide();
+
                 @$el.find '#take-class-modules'
                 .tablesorter()
 

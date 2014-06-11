@@ -17,9 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
 
       textbookModulesController.prototype.initialize = function(opts) {
         var textbookID, view;
-        textbookID = opts.textbookID;
-        this.classID = opts.classID;
-        this.division = opts.division;
+        textbookID = opts.textbookID, this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
         this.textbook = App.request("get:textbook:by:id", textbookID);
         this.contentGroupsCollection = App.request("get:content:groups", {
           'textbook': textbookID,
@@ -67,32 +65,39 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
       };
 
       textbookModulesController.prototype._saveTrainingStatus = function(id, date) {
-        var opts, singleModule;
-        date = moment(date).format("YYYY-MM-DD");
-        this.singleModule.set({
-          'training_date': date
-        });
+        var data, first_content_piece, singleModule;
         singleModule = this.contentGroupsCollection.get(id);
-        singleModule.set({
-          'status': 'scheduled'
-        });
-        opts = {
-          'changed': 'status',
-          'division': this.division
+        first_content_piece = _.first(singleModule.get('content_pieces'));
+        data = {
+          collection_id: id,
+          content_piece_id: first_content_piece,
+          start_date: date,
+          division: this.division,
+          status: 'scheduled'
         };
-        singleModule.save(opts, {
-          wait: true
-        });
-        return this.view.triggerMethod('status:change', singleModule);
+        App.request("schedule:content:group", data);
+        return this.view.triggerMethod('scheduled:module', id, date);
       };
 
       textbookModulesController.prototype._getContentGroupsListingView = function(collection) {
         return new View.TakeClassTextbookModules.ContentGroupsView({
           collection: collection,
+          mode: this.mode,
           templateHelpers: {
             showTextbookName: (function(_this) {
               return function() {
                 return _this.textbook.get('name');
+              };
+            })(this),
+            showModulesHeading: (function(_this) {
+              return function() {
+                var headingString;
+                console.log(_this.mode);
+                headingString = '<span class="semi-bold">All</span> Modules';
+                if (_this.mode === 'training') {
+                  headingString = '<span class="semi-bold">Practice</span> Modules';
+                }
+                return headingString;
               };
             })(this)
           }
@@ -116,16 +121,20 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
         return ScheduleModalView.__super__.constructor.apply(this, arguments);
       }
 
-      ScheduleModalView.prototype.template = '<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> <h4 class="modal-title" id="myModalLabel">Schedule Module</h4> </div> <div class="modal-body"> <div data-date-format="yyyy-mm-dd" class="input-append success date"> <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12"> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </div> <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button> </div> </div> </div> </div>';
+      ScheduleModalView.prototype.template = '<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> <h4 class="modal-title" id="myModalLabel">Schedule Module</h4> </div> <div class="modal-body"> <div data-date-format="yyyy-mm-dd" class="input-append success date"> <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12"> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </div> <button type="button" class="btn btn-success" data-dismiss="modal">Save</button> </div> </div> </div> </div>';
 
       ScheduleModalView.prototype.events = {
-        'click .btn-primary': 'saveScheduledDate'
+        'click .btn-success': 'saveScheduledDate'
       };
 
       ScheduleModalView.prototype.onShow = function() {
+        var nowDate, today;
+        nowDate = new Date();
+        today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
         return $('.input-append.date').datepicker({
           autoclose: true,
-          todayHighlight: true
+          todayHighlight: true,
+          startDate: today
         });
       };
 

@@ -1,19 +1,14 @@
-define ['app'],(App)->
+define ['app'], (App)->
 
-	# Row views
-	App.module 'ContentPreview.ContentBoard.Element.Text.Views', (Views, App, Backbone, Marionette, $, _)->
+    # Row views
+    App.module 'ContentPreview.ContentBoard.Element.Text.Views', (Views, App, Backbone, Marionette, $, _)->
 
-		# Menu item view
-		class Views.TextView extends Marionette.ItemView
+        # Menu item view
+        class Views.TextView extends Marionette.ItemView
 
-			tagName : 'p'
+            className : 'text'
 
-			template : ''
-
-			className: 'text'
-
-			onShow:->
-				
-				@$el.append _.stripslashes @model.get 'content'
+            onShow : ->
+                @$el.append _.stripslashes @model.get 'content'
 
 

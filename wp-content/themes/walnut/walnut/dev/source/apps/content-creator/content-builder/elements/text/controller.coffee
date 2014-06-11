@@ -9,26 +9,26 @@ define ['app'
         class Text.Controller extends Element.Controller
 
             # intializer
-            initialize: (options)->
+            initialize : (options)->
                 _.defaults options.modelData,
-                    element: 'Text'
-                    content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    														   Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s'
+                    element : 'Text'
+                    content : ''
+                #Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                #                    		Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s'
 
                 super(options)
 
-            bindEvents: ->
+            bindEvents : ->
                 # start listening to model events
                 #@listenTo @layout.model, "change:content", @renderElement
                 super()
 
-            _getTextView: (model)->
-
+            _getTextView : (model)->
                 new Text.Views.TextView
-                    model: model
+                    model : model
 
             # setup templates for the element
-            renderElement: ()=>
+            renderElement : =>
                 @removeSpinner()
                 view = @_getTextView @layout.model
 
@@ -37,7 +37,7 @@ define ['app'
                 # set it to the model. If it is a different markup it will
                 # change the model changed property to true
                 # save the new markup if the model is changed
-                @listenTo view, "text:element:blur", (html) =>
+                @listenTo view, 'text:element:blur', (html) =>
                     @layout.model.set 'content', "#{html}"
                     # server side
                     # @layout.model.save() if @layout.model.hasChanged()
@@ -46,7 +46,7 @@ define ['app'
                     if @layout.model.hasChanged()
                         console.log @layout.model
                         @layout.model.save()
-                        console.log "saving them"
-                        localStorage.setItem 'ele' + @layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+#                        console.log 'saving them'
+#                        localStorage.setItem 'ele' + @layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
 
                 @layout.elementRegion.show view

@@ -11,6 +11,7 @@ define ['app'
 
         Controller =
             listContentPieces: ->
+                console.log "content"
                 new ContentPiecesApp.ContentList.ListController
                     region: App.mainContentRegion
 

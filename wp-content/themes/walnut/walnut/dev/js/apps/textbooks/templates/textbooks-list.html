@@ -6,7 +6,7 @@
 				<ul class="dropdown-menu">
 					<li class="active" data-filter="all" data-dimension="region"><a href="#">All</a></li>
 					{{#classes}}
-					<li class="" data-dimension="region" data-filter="class{{.}}"><a href="javascript://">Class {{.}}</a></li>
+					<li class="" data-dimension="region" data-filter="{{.}}"><a href="javascript://">{{.}}</a></li>
 					{{/classes}}
 				</ul>
 			</div>
@@ -27,9 +27,9 @@
 			<div class="list_header">
 				<div id="SortByName" class="meta name active desc"> Name &nbsp; <span data-order="desc" data-sort="data-name" class="sort anim150 asc active"></span> <span data-order="asc" data-sort="data-name" class="sort anim150 desc"></span> </div>
 				<div class="meta class">Class</div>
-				<div class="meta  rec">Subject</div>
+				<div class="meta area">Subject</div>
 				<div class="meta area">Chapters</div>
-				<div class="meta area"> Questions/Quizzes </div>
+				<div class="meta area">Questions</div>
 			</div>
 			<div class="fail_element anim250">Sorry &mdash; we could not find any Textbooks matching matching these criteria</div>
 			<!-- BEGIN LIST OF textbooks (MANY OF THESE ELEMENTS ARE VISIBLE ONLY IN LIST MODE)-->

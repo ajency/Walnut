@@ -23,7 +23,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           enableIndividualMarks: false,
           marks: 0,
           style: 'uline',
-          text: 'Add text here <input type=\"text\" data-cke-editable=\"1\" style=\" height :100%\" contenteditable=\"false\">',
+          text: 'Add text here',
+          numberOfBlanks: 0,
           blanksArray: []
         });
         return Controller.__super__.initialize.call(this, options);
@@ -43,6 +44,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         })(this));
         this.listenTo(view, "close:question:element:properties", function() {
           return App.execute("close:question:element:properties");
+        });
+        this.listenTo(view, "close:question:elements", function() {
+          return App.execute("close:question:elements");
         });
         App.commands.setHandler('save:fib:text', function() {
           return _.delay(function() {

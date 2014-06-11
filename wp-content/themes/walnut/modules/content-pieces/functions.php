@@ -120,7 +120,6 @@ function get_content_pieces($args = array()) {
     
 }
 
-$posts = get_posts($args);
 
 function get_single_content_piece($id){
 
@@ -140,37 +139,50 @@ function get_single_content_piece($id){
 
     $content_piece_meta= maybe_unserialize($content_piece_meta_serialized);
 
+    if($content_piece_meta)
+        extract($content_piece_meta);
+
     // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
 
     $content_piece->content_type = ($content_type) ? $content_type : '--';
 
-    $content_piece->question_type = $content_piece_meta['question_type'];
+    //        get negative marks
+//    if( $content_type == 'student_question'){
+//        $negative_marks = get_post_meta($id,'negative_marks',true);
+//
+//        $content_piece->negative_marks = (int) $negative_marks;
+//    }
 
-    $content_piece->post_tags = $content_piece_meta['post_tags'];
+    $content_piece->question_type = get_post_meta($id, 'question_type', true);
 
-    $content_piece->instructions = $content_piece_meta['instructions'];
+    $content_piece->post_tags = (isset($post_tags)) ? $post_tags : '';
 
-    $content_piece->duration = (int) $content_piece_meta['duration'];
+    $content_piece->instructions = (isset($instructions)) ? $instructions : '';
 
-    $last_modified_by = $content_piece_meta['last_modified_by'];
+    $content_piece->duration = (isset($duration)) ? $duration : '';
 
-    $last_modified_by_user= get_userdata($last_modified_by);
+    $content_piece->last_modified_by='';
 
-    $content_piece->last_modified_by = $last_modified_by_user->display_name;
+    if(isset($last_modified_by)){
+        $last_modified_by_user=get_userdata($last_modified_by);
+        $content_piece->last_modified_by = $last_modified_by_user->display_name;
+    }
 
-    $published_by = $content_piece_meta['published_by'];
+    $content_piece->published_by = '';
 
-    $published_by_user= get_userdata($published_by);
+    if(isset($published_by)){
+        $published_by_user=get_userdata($published_by);
+        $content_piece->published_by = $published_by_user->display_name;
+    }
 
-    $content_piece->published_by = $published_by_user->display_name;
+    $content_piece->term_ids= array();
+    if(isset($term_ids)){
 
-    $term_ids_array= $content_piece_meta['term_ids'];
+        $term_ids = maybe_unserialize($term_ids);
 
-    $term_ids = maybe_unserialize($term_ids_array);
-
-    $content_piece->term_ids = $term_ids;
-
+        $content_piece->term_ids = $term_ids;
+    }
     $content_layout= get_post_meta($id, 'layout_json', true);
 
     $content_layout = maybe_unserialize($content_layout);
@@ -181,8 +193,8 @@ function get_single_content_piece($id){
         $content_piece->layout = $content_elements['elements'];
         $excerpt_array= $content_elements['excerpt'];
         $excerpt_array = __u::flatten($excerpt_array);
-        $excerpt= implode('<span class="divider"> | </span>',$excerpt_array);
-        $excerpt = strip_tags($excerpt);
+        $excerpt= implode(' | ',$excerpt_array);
+        $excerpt = stripslashes(strip_tags($excerpt));
         $excerpt= substr($excerpt, 0, 150);
         $content_piece->post_excerpt =$excerpt.'...';
     }
@@ -314,7 +326,7 @@ function save_content_group($data = array()) {
 
     if (isset($data['id'])) {
         $content_group = $wpdb->update($wpdb->prefix . 'content_collection', $content_data, array('id' => $data['id']));
-        $group_id = $data['id'];
+        $group_id = (int) $data['id'];
     } else {
         $content_data['created_on'] = date('y-m-d H:i:s');
         $content_data['created_by'] = get_current_user_id();
@@ -479,63 +491,71 @@ function get_single_content_group($id, $division=''){
         }
     }
     
-    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta 
+    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta
         WHERE collection_id=%d",$id);
-    
+
     $description= $wpdb->get_results($query_description);
-    
+
     $data->description=$data->content_pieces=array();
 
     foreach($description as $key=>$value){
        $meta_val = maybe_unserialize ($value->meta_value);
-       
+
        if ($value->meta_key=='description')
            $data->description= $meta_val;
-           
+
        if ($value->meta_key=='content_pieces' )
            $data->content_pieces= $meta_val;
-       
+
     }
 
     switch_to_blog($current_blog);
     
-    if($division !=''){
-        $training_logs_query = $wpdb->prepare("SELECT date FROM
-            {$wpdb->prefix}training_logs WHERE collection_id=%d AND 
-                division_id=%d order by id desc limit 1",
-                    $id, $division);
+    if($division){
+        $status_dets = get_content_group_status($id, $division,$data->content_pieces);
+        $data->status= $status_dets['status'];
+        $data->training_date= $status_dets['start_date'];
+    }
+    return $data;
+    
+}
 
-        $training_logs  = $wpdb->get_results($training_logs_query);
+function get_content_group_status($id, $division, $content_pieces){
 
-        if($training_logs){
-            $data->training_date= $training_logs[0]->date;
-            $data->status = 'scheduled';
-        }
+    global $wpdb;
+    $start_date='';
 
-        $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status FROM
+    $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status, start_date  FROM
             {$wpdb->prefix}question_response WHERE collection_id=%d AND
                 division=%d",
-            $id, $division);
+        $id, $division);
 
-        $module_responses  = $wpdb->get_results($check_responses_query);
-        if($module_responses)
-            $data->status='started';
+    $module_responses  = $wpdb->get_results($check_responses_query);
 
+    if(!$module_responses)
+        $status='not started';
+
+    if($module_responses){
+
+        $status=($module_responses[0]->status === 'scheduled')?'scheduled':'started';
+
+        $start_date= __u::last($module_responses)->start_date;
         $response_content_ids=array();
 
         foreach($module_responses as $response){
             if($response->status=='completed')
-            $response_content_ids[]= $response->content_piece_id;
+                $response_content_ids[]= $response->content_piece_id;
         }
 
-
-        if(__u::difference($data->content_pieces,$response_content_ids) == null)
-            $data->status='completed';
-
+        if(__u::difference($content_pieces,$response_content_ids) == null)
+            $status='completed';
     }
-    
-    return $data;
-    
+    $status_data=array(
+        'status'     => $status,
+        'start_date' => $start_date
+    );
+
+    return $status_data;
 }
 
 function save_content_piece($data){
@@ -566,8 +586,18 @@ function save_content_piece($data){
 
     update_post_meta ($content_id, 'content_type',$data['content_type']);
 
+    update_post_meta ($content_id, 'question_type',$data['question_type']);
+
+    update_post_meta ($content_id, 'textbook',$data['term_ids']['textbook']);
+
+//    negative marks for student question
+//    if($data['content_type'] == 'student_question'){
+//        update_post_meta ($content_id, 'negative_marks', $data['negative_marks']);
+//    }
+
+
+
     $content_piece_additional = array(
-        'question_type'     => $data['question_type'],
         'term_ids'          => $data['term_ids'],
         'duration'          => $data['duration'],
         'post_tags'         => $data['post_tags'],
@@ -575,22 +605,12 @@ function save_content_piece($data){
         'last_modified_by'  => $post_author
     );
 
-    $content_piece_meta= maybe_serialize($content_piece_additional);
-
     if($data['post_status']=='publish')
         $content_piece_additional['published_by']=$post_author;
 
+    $content_piece_meta= maybe_serialize($content_piece_additional);
+
     update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
-
-    return $content_id;
-}
-
-function update_content_piece($content_id, $data){
-
-    $content_layout = maybe_serialize($data);
-
-    if($content_id)
-        update_post_meta ($content_id, 'layout_json',$content_layout);
 
     return $content_id;
 }

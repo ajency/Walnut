@@ -95,11 +95,14 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
                 var classLabel, classes, classesArray, _i, _len;
                 classesArray = [];
                 classes = _this.textbookModel.get('classes');
-                for (_i = 0, _len = classes.length; _i < _len; _i++) {
-                  classLabel = classes[_i];
-                  classesArray.push(CLASS_LABEL[classLabel]);
+                if (_.isArray(classes)) {
+                  for (_i = 0, _len = classes.length; _i < _len; _i++) {
+                    classLabel = classes[_i];
+                    classesArray.push(CLASS_LABEL[classLabel]);
+                  }
+                  classesArray.join();
                 }
-                return classesArray.join();
+                return classesArray;
               };
             })(this),
             getTextbookName: (function(_this) {
@@ -159,11 +162,13 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
             })(this),
             getCompletedSummary: (function(_this) {
               return function() {
-                var correct_answer, time_taken_in_mins;
+                var correct_answer, minutes, seconds, time_taken_string;
                 if (questionResponseModel && questionResponseModel.get("status") === 'completed') {
-                  time_taken_in_mins = parseInt(questionResponseModel.get("time_taken") / 60);
+                  minutes = parseInt(questionResponseModel.get("time_taken") / 60);
+                  seconds = parseInt(questionResponseModel.get("time_taken") % 60);
+                  time_taken_string = minutes + 'm ' + seconds + 's';
                   correct_answer = _this.getResults();
-                  return '<div class="row"> <div class="col-xs-6"> <p> <label class="form-label bold small-text inline">Time Alloted:</label>' + model.get("duration") + 'mins<br> <label class="form-label bold small-text inline">Time Taken:</label>' + time_taken_in_mins + 'mins </p> </div> <div class="col-xs-6"> <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed</div> </div> </div> <div class="row"> <div class="col-sm-12"> <p> <label class="form-label bold small-text inline">Correct Answer:</label>' + correct_answer + '</p> </div> </div> </div>';
+                  return '<div class="row"> <div class="col-xs-6"> <p> <label class="form-label bold small-text inline">Time Alloted:</label>' + model.get("duration") + 'mins<br> <label class="form-label bold small-text inline">Time Taken:</label>' + time_taken_string + '</p> </div> <div class="col-xs-6"> <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed</div> </div> </div> <div class="row"> <div class="col-sm-12"> <p> <label class="form-label bold small-text inline">Correct Answer:</label>' + correct_answer + '</p> </div> </div> </div>';
                 }
               };
             })(this)

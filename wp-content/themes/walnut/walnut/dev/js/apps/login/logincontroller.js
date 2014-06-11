@@ -89,14 +89,14 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
 
       LoginView.prototype.onLoginFail = function(resp) {
         this.$el.find('#checking_login, #invalid_login').remove();
-        return this.$el.find('#login-form').before('<span id="invalid_login" class="btn btn-danger btn-cons">' + resp.error + '</span>');
+        return this.$el.find('#login-form').before('<div id="invalid_login" class="alert alert-error"><span class="fa fa-warning"></span> ' + resp.error + '</div>');
       };
 
       LoginView.prototype.onConnectionFail = function() {
         var error_msg;
         error_msg = 'Connection could not be established. Please try again.';
         this.$el.find('#checking_login, #invalid_login').remove();
-        return this.$el.find('#login-form').before('<span id="invalid_login" class="btn btn-danger btn-cons">' + error_msg + '</span>');
+        return this.$el.find('#login-form').before('<div id="invalid_login" class="alert alert-error">' + error_msg + '</div>');
       };
 
       return LoginView;

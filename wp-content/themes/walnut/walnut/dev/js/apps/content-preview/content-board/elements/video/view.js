@@ -22,6 +22,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.onShow = function() {
         var height, videoId, width;
+        console.log(this.model);
         videoId = _.uniqueId('video-');
         this.$el.find('video').attr('id', videoId);
         this.videoElement = videojs(videoId);

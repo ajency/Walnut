@@ -209,12 +209,27 @@ set the modal title</p>
             <span class="nv">editMediaRegion : </span><span class="s">&#39;#edit-media-region&#39;</span>
 
           <span class="nv">dialogOptions : </span>
-            <span class="nv">modal_title : </span><span class="s">&#39;Media Manager&#39;</span>
+            <span class="nv">modal_title : </span><span class="s">&#39;Image Manager&#39;</span>
             <span class="nv">modal_size  : </span><span class="s">&#39;wide-modal&#39;</span>
 
           <span class="nv">events: </span>
             <span class="s">&#39;click button.media-manager-select&#39;</span> <span class="o">:</span> <span class="nf">-&gt;</span>
                         <span class="nx">@trigger</span> <span class="s">&quot;media:selected&quot;</span>
+
+          <span class="nx">onClose</span><span class="o">:</span><span class="nf">-&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>stop listening to event</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&quot;stop:listening:to:media:manager&quot;</span>
 
         
 
@@ -224,7 +239,7 @@ set the modal title</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
 </div>
 <p>public API</p>
         </td>
@@ -250,7 +265,7 @@ set the modal title</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
 </div>
 <p>stop listetning to media manager stop</p>
         </td>
