@@ -29,7 +29,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 			events :
 				'click #syncStartContinue' : 'startContinueSyncProcess'
-				
 
 
 			onShow : ->
