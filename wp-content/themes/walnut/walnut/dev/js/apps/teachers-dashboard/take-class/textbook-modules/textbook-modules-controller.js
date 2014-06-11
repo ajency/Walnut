@@ -82,6 +82,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
       textbookModulesController.prototype._getContentGroupsListingView = function(collection) {
         return new View.TakeClassTextbookModules.ContentGroupsView({
           collection: collection,
+          mode: this.mode,
           templateHelpers: {
             showTextbookName: (function(_this) {
               return function() {

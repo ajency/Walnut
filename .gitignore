@@ -4,3 +4,9 @@ wp-content/themes/walnut/walnut/dev/node_modules
 wp-content/uploads
 .idea
 .ssh
+.bash_history
+.gitconfig
+.viminfo
+composer.phar
+wp-content/themes/walnut/vendor
+wp-content/themes/walnut/csvupload

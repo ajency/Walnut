@@ -101,9 +101,6 @@ define ['app'
 
                 App.navigate newRoute, true
 
-                App.execute "show:headerapp", region : App.headerRegion
-                App.execute "show:leftnavapp", region : App.leftNavRegion
-
             _saveQuestionResponse : (status) =>
                 elapsedTime = @timerObject.request "get:elapsed:time"
 
