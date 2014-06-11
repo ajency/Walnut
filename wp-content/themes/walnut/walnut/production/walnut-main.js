@@ -44369,7 +44369,7 @@ define('apps/content-group/edit-group/group-edit-controller',['app', 'controller
 });
 
 
-define('text!apps/content-group/view-group/group-details/templates/group-details.html',[],function () { return '{{#isTraining}}\n    <div class="well text-center">\n        <h4><span class="bold">This is a practise mode.\n            It is designed to help you train for the class</span></h4>\n    </div>\n{{/isTraining}}\n<div class=\'tiles white grid simple vertical green\'>\n    <div class="grid-title no-border">\n        <h4 class="">{{name}}</h4>\n\n        <!-- <div class="tools">\n            <a href="javascript:;" class="collapse"></a>\n        </div> -->\n    </div>\n    <div class="grid-body no-border" style="overflow: hidden; display: block;">\n        <div class="row ">\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Objective</label>\n                    {{description.objective}}\n                </div>\n            </div>\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Physical Requirements</label>\n                    {{description.physical_requirements}}\n                </div>\n            </div>\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Textbook</label>\n                    {{getTextbookName}}\n                </div>\n            </div>\n        </div>\n        <div class="row ">\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Description</label>\n                    {{description.description}}\n                </div>\n            </div>\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Electronic Requirements</label>\n                    {{description.electionic_requirements}}\n                </div>\n            </div>\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Chapter</label>\n                    {{getChapterName}}\n                </div>\n            </div>\n        </div>\n        <div class="row ">\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Duration</label>\n                    {{duration}} {{minshours}}\n                </div>\n            </div>\n        </div>\n    </div>\n\n    {{#takeClassModule}}\n    <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">\n        <div class="row no-margin p-r-10">\n            <div class="col-sm-4">\n\n                <div class="tiles added-margin">\n                    <div class="tiles-body">\n                        <div class="tiles-title"> TRAINING MODULE TIME</div>\n                        <div class="heading"><span class="animate-number" data-animation-duration="1200">{{total_minutes}} mins</span>\n                        </div>\n                    </div>\n                </div>\n\n            </div>\n            <div class="col-sm-4">\n\n            </div>\n            <div class="col-sm-4">\n\n                <div class="tiles white added-margin">\n                    <div class="tiles-body">\n                        <div class="tiles-title"> ELAPSED MODULE TIME</div>\n                        {{^isTraining}}\n                            <div class="heading">\n                                <span class="animate-number" data-animation-duration="1200">\n                                    {{showElapsedTime}}\n                                </span>\n                            </div>\n                        {{/isTraining}}\n                        {{#isTraining}}\n                            <p class="small-text muted">This will display what is the elapsed module\n                                time of the training module in class mode.</p>\n                        {{/isTraining}}\n                    </div>\n                </div>\n\n            </div>\n        </div>\n        <div class="row no-margin p-t-10">\n            <div class="col-sm-6">\n                <div class="{{^isTraining}}modProgress{{/isTraining}}" >\n                    <p class="bold small-text m-t-10 m-b-5">Progress</p>\n                    {{^isTraining}}\n                        <div class="progress progress-large">\n                            <div data-percentage="{{getProgressPercentage}}%" style="width:{{getProgressPercentage}}%;"\n                                 class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0"\n                                 aria-valuemax="100">{{getProgressData}}\n                            </div>\n                        </div>\n                    {{/isTraining}}\n                    {{#isTraining}}\n                            <p class="small-text muted"> This will display the progress of training module in class mode.</p>\n                    {{/isTraining}}\n\n                </div>\n            </div>\n            <div class="col-sm-6">\n                <div class="timedisplay"></div>\n\n                {{&startScheduleButton}}\n\n\n            </div>\n        </div>\n    </div>\n    {{/takeClassModule}}\n</div>';});
+define('text!apps/content-group/view-group/group-details/templates/group-details.html',[],function () { return '<button type="button" id="go-back-button" class="btn btn-white btn-cons">\n    <h4 class="bold  text-info no-margin">\n        <i class="fa fa-chevron-left"></i>\n        List of Modules\n    </h4>\n</button>\n{{#isTraining}}\n    <div class="well text-center">\n        <h4><span class="bold">This is a practise mode.\n            It is designed to help you train for the class</span></h4>\n    </div>\n{{/isTraining}}\n<div class=\'tiles white grid simple vertical green\'>\n    <div class="grid-title no-border">\n        <h4 class="">{{name}}</h4>\n\n        <!-- <div class="tools">\n            <a href="javascript:;" class="collapse"></a>\n        </div> -->\n    </div>\n    <div class="grid-body no-border" style="overflow: hidden; display: block;">\n        <div class="row ">\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Objective</label>\n                    {{description.objective}}\n                </div>\n            </div>\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Physical Requirements</label>\n                    {{description.physical_requirements}}\n                </div>\n            </div>\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Textbook</label>\n                    {{getTextbookName}}\n                </div>\n            </div>\n        </div>\n        <div class="row ">\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Description</label>\n                    {{description.description}}\n                </div>\n            </div>\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Electronic Requirements</label>\n                    {{description.electionic_requirements}}\n                </div>\n            </div>\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Chapter</label>\n                    {{getChapterName}}\n                </div>\n            </div>\n        </div>\n        <div class="row ">\n            <div class="col-md-4">\n                <div class="margin-bottom-20 ">\n                    <label class="form-label">Duration</label>\n                    {{duration}} {{minshours}}\n                </div>\n            </div>\n        </div>\n    </div>\n\n    {{#takeClassModule}}\n    <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">\n        <div class="row no-margin p-r-10">\n            <div class="col-sm-4">\n\n                <div class="tiles added-margin">\n                    <div class="tiles-body">\n                        <div class="tiles-title"> TRAINING MODULE TIME</div>\n                        <div class="heading"><span class="animate-number" data-animation-duration="1200">{{total_minutes}} mins</span>\n                        </div>\n                    </div>\n                </div>\n\n            </div>\n            <div class="col-sm-4">\n\n            </div>\n            <div class="col-sm-4">\n\n                <div class="tiles white added-margin">\n                    <div class="tiles-body">\n                        <div class="tiles-title"> ELAPSED MODULE TIME</div>\n                        {{^isTraining}}\n                            <div class="heading">\n                                <span class="animate-number" data-animation-duration="1200">\n                                    {{showElapsedTime}}\n                                </span>\n                            </div>\n                        {{/isTraining}}\n                        {{#isTraining}}\n                            <p class="small-text muted">This will display what is the elapsed module\n                                time of the training module in class mode.</p>\n                        {{/isTraining}}\n                    </div>\n                </div>\n\n            </div>\n        </div>\n        <div class="row no-margin p-t-10">\n            <div class="col-sm-6">\n                <div class="{{^isTraining}}modProgress{{/isTraining}}" >\n                    <p class="bold small-text m-t-10 m-b-5">Progress</p>\n                    {{^isTraining}}\n                        <div class="progress progress-large">\n                            <div data-percentage="{{getProgressPercentage}}%" style="width:{{getProgressPercentage}}%;"\n                                 class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0"\n                                 aria-valuemax="100">{{getProgressData}}\n                            </div>\n                        </div>\n                    {{/isTraining}}\n                    {{#isTraining}}\n                            <p class="small-text muted"> This will display the progress of training module in class mode.</p>\n                    {{/isTraining}}\n\n                </div>\n            </div>\n            <div class="col-sm-6">\n                <div class="timedisplay"></div>\n\n                {{&startScheduleButton}}\n\n\n            </div>\n        </div>\n    </div>\n    {{/takeClassModule}}\n</div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -44389,15 +44389,23 @@ define('apps/content-group/view-group/group-details/details-app',['app', 'contro
         var view;
         this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
         this.view = view = this._getCollectionDetailsView();
-        this.show(view, {
-          loading: true,
-          entities: [this.textbookNames]
-        });
-        return this.listenTo(view, 'start:teaching:module', (function(_this) {
+        this.listenTo(view, 'start:teaching:module', (function(_this) {
           return function() {
             return _this.region.trigger("start:teaching:module");
           };
         })(this));
+        this.listenTo(view, 'goto:previous:route', this._gotoPreviousRoute);
+        return this.show(view, {
+          loading: true,
+          entities: [this.textbookNames]
+        });
+      };
+
+      ViewCollecionDetailsController.prototype._gotoPreviousRoute = function() {
+        var currRoute, newRoute;
+        currRoute = App.getCurrentRoute();
+        newRoute = _(currRoute).strLeft('/module');
+        return App.navigate(newRoute, true);
       };
 
       ViewCollecionDetailsController.prototype._getCollectionDetailsView = function() {
@@ -44511,7 +44519,10 @@ define('apps/content-group/view-group/group-details/details-app',['app', 'contro
       CollectionDetailsView.prototype.template = collectionDetailsTpl;
 
       CollectionDetailsView.prototype.events = {
-        'click #start-module': 'startModule'
+        'click #start-module': 'startModule',
+        'click #go-back-button': function() {
+          return this.trigger("goto:previous:route");
+        }
       };
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
@@ -44789,6 +44800,12 @@ define('apps/content-group/view-group/group-view-controller',['app', 'controller
       groupContentCollection = null;
 
       GroupController.prototype.initialize = function(opts) {
+        App.execute("show:headerapp", {
+          region: App.headerRegion
+        });
+        App.execute("show:leftnavapp", {
+          region: App.leftNavRegion
+        });
         model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
@@ -44823,6 +44840,7 @@ define('apps/content-group/view-group/group-view-controller',['app', 'controller
         responseCollection = this.questionResponseCollection.where({
           "status": "completed"
         });
+        window.f = responseCollection;
         responseQuestionIDs = _.chain(responseCollection).map(function(m) {
           return m.toJSON();
         }).pluck('content_piece_id').value();
@@ -45537,7 +45555,7 @@ define('apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-vie
         return ContentGroupsView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsView.prototype.template = '<div class="tiles white grid simple vertical blue"> <div class="grid-title no-border"> <h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4> <div class="tools"> <a href="javascript:;" class="collapse"></a> </div> </div> <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-lg-12"> <h4>{{&showModulesHeading}}</h4> <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules"> <thead> <tr> <th style="width:50%">Name</th> <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th> <th style="width:40%">Status</th> </tr> </thead> <tbody> </tbody> </table> </div> </div> </div> </div>';
+      ContentGroupsView.prototype.template = '<div class="tiles white grid simple vertical blue"> <div class="grid-title no-border"> <h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4> <div class="tools"> <a href="javascript:;" class="collapse"></a> </div> </div> <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-lg-12"> <h4>{{&showModulesHeading}}</h4> <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules"> <thead> <tr> <th style="width:50%">Name</th> <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th> <th style="width:40%"><div id="status_header">Status</div></th> </tr> </thead> <tbody> </tbody> </table> </div> </div> </div> </div>';
 
       ContentGroupsView.prototype.itemView = ContentGroupsItemView;
 
@@ -45569,6 +45587,9 @@ define('apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-vie
 
       ContentGroupsView.prototype.onShow = function() {
         var pagerDiv, pagerOptions;
+        if (Marionette.getOption(this, 'mode') === 'training') {
+          this.$el.find('.status_label, .training-date, #status_header').hide();
+        }
         this.$el.find('#take-class-modules').tablesorter();
         pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option value="25" selected>25</option> <option value="50">50</option> <option value="100">100</option> </select> </div>';
         this.$el.find('#take-class-modules').after(pagerDiv);
@@ -45670,6 +45691,7 @@ define('apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-con
       textbookModulesController.prototype._getContentGroupsListingView = function(collection) {
         return new View.TakeClassTextbookModules.ContentGroupsView({
           collection: collection,
+          mode: this.mode,
           templateHelpers: {
             showTextbookName: (function(_this) {
               return function() {
@@ -46167,7 +46189,7 @@ define('apps/teachers-dashboard/teacher-teaching-module/module-description/modul
                 var pauseBtn;
                 pauseBtn = '';
                 if (_this.display_mode === 'class_mode') {
-                  pauseBtn = '<button type="button" id="pause-session" class="btn btn-white  action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>';
+                  pauseBtn = '<button type="button" id="pause-session" class="btn btn-white action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>';
                 }
                 return pauseBtn;
               };
@@ -46454,13 +46476,7 @@ define('apps/teachers-dashboard/teacher-teaching-module/teacher-teaching-control
         currRoute = App.getCurrentRoute();
         removeStr = _.str.strRightBack(currRoute, '/');
         newRoute = _.str.rtrim(currRoute, removeStr + '/');
-        App.navigate(newRoute, true);
-        App.execute("show:headerapp", {
-          region: App.headerRegion
-        });
-        return App.execute("show:leftnavapp", {
-          region: App.leftNavRegion
-        });
+        return App.navigate(newRoute, true);
       };
 
       TeacherTeachingController.prototype._saveQuestionResponse = function(status) {

@@ -10,6 +10,11 @@ define ['app'
             groupContentCollection=null
 
             initialize: (opts) ->
+
+
+                App.execute "show:headerapp", region : App.headerRegion
+                App.execute "show:leftnavapp", region : App.leftNavRegion
+
                 #mode refers to "training" mode or "take-class" mode
                 {model,@classID, @mode, @division} = opts
 
@@ -106,7 +111,6 @@ define ['app'
             regions:
                 collectionDetailsRegion: '#collection-details-region'
                 contentDisplayRegion: '#content-display-region'
-
 
             onShow:->
                 $('.page-content').removeClass 'expand-page'
