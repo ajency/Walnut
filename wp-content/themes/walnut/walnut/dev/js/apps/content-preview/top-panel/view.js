@@ -24,7 +24,9 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
 
       TopPanelView.prototype.onShow = function() {
         var qTime, qTimer, timerColor;
-        console.log(this.mode);
+        if (this.model.get('content_type') === 'content_piece') {
+          this.$el.find('#question-type-col, #correct-answer-col').hide();
+        }
         if (this.mode === 'class_mode') {
           qTimer = this.$el.find('div.cpTimer');
           qTime = qTimer.data('timer');

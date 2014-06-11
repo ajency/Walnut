@@ -120,7 +120,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       CollectionDetailsView.prototype.template = collectionDetailsTpl;
 
-      CollectionDetailsView.prototype.className = 'tiles white grid simple vertical green';
+      CollectionDetailsView.prototype.className = 'tiles white grid simple vertical green animated slideInRight';
 
       CollectionDetailsView.prototype.events = {
         'change #textbooks': function(e) {

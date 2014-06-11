@@ -44,12 +44,15 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         });
         this.timerObject = new Backbone.Wreqr.RequestResponse();
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
-        if (this.display_mode !== 'training') {
-          this.listenTo(this.layout, "show", this._showStudentsListView(questionResponseModel));
-        }
-        if (this.display_mode === 'training') {
-          this.listenTo(this.layout, 'show', this._showTeacherTrainingFooter);
-        }
+        this.listenTo(this.layout, 'show', (function(_this) {
+          return function() {
+            if (_this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
+              return _this._showTeacherTrainingFooter();
+            } else {
+              return _this._showStudentsListView(questionResponseModel);
+            }
+          };
+        })(this));
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
@@ -72,10 +75,10 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
           this._showQuestionDisplayView(contentPiece);
-          if (this.display_mode !== 'training') {
-            return this._showStudentsListView(questionResponseModel);
-          } else if (this.display_mode === 'training') {
+          if (this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
             return this._showTeacherTrainingFooter();
+          } else {
+            return this._showStudentsListView(questionResponseModel);
           }
         } else {
           return this._gotoPreviousRoute();
