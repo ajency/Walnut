@@ -302,6 +302,8 @@
   background: #f3f3f3;
   padding: 15px 10px;
   color: #000;
+  font-size: 14px;
+  font-weight: normal;
 }
 .docket-body label {
   color: #777a80;
@@ -1948,6 +1950,13 @@ textarea.error,
 .select2-choice.error {
   border: 1px solid #f35958 !important;
 }
+.page-content.condensed {
+  overflow-y: visible;
+}
+.page-content {
+  min-height: 0;
+  overflow-x: hidden;
+}
 .mainLogo {
   background-size: 80%;
   background-repeat: no-repeat;
@@ -1967,6 +1976,12 @@ textarea.error,
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: left center;
+}
+.select2-results,
+.select2-container,
+.select2-container.form-control {
+  font-size: 15px;
+  font-weight: normal;
 }
 .select2-results {
   margin: 4px 4px 4px 0;
