@@ -45,10 +45,10 @@ define ['app'], (App)->
             						</div>
             						{{#class_mode}}
             						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
-            							<button type="button" class="btn btn-success btn-xs btn-sm m-r-10" id="right-answer">
+            							<button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer">
             								<i class="fa fa-check-circle"></i> Right Answer
             							</button>
-            							<button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer">
+            							<button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer">
             								<i class="fa fa-minus-circle"></i> Unselect Answer
             							</button>
             						</div>

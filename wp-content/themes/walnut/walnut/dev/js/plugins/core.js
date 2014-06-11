@@ -465,10 +465,10 @@ $(document).ready(function() {
         if (!jQuery().sortable) {
             return;
         }
-        $(".sortable").sortable({
+        $(".cbp_tmtimeline").sortable({
             connectWith: '.sortable',
             iframeFix: false,
-            items: 'div.grid',
+            items: '.sortable',
             opacity: 0.8,
             helper: 'original',
             revert: true,
