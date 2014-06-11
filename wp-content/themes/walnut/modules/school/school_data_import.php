@@ -35,22 +35,39 @@ function getDivisionCsvContent($csvJson) {
 
         $divisionTable = $wpdb->prefix .$blogId."_class_divisions";
         echo $divisionTable;
+		
+		//Check if $division_id is present in division table 
+		$queryDivision = $wpdb->get_row( "select * from $divisionTable where id = " . $division_id . "" );
+        
+		if ( $queryDivision != null ){
+		//Update division table
+			$wpdb->update($divisionTable, array(
+					'division' => $division,
+					'class_id' => $class_id
+					), array( 'id' => $division_id ) 
+			);
+			
+			echo "=> row updated with division ID:".$division_id."<br/>";
+		}
+		else{
+		//Insert into division table
+			$wpdb->insert($divisionTable, array(
+					'id' => $division_id,
+					'division' => $division,
+					'class_id' => $class_id
+				)
+			);
+			
+			echo "=> row inserted with division ID:".$division_id."<br/>";
+		}
 
-
-        //Insert into division table
-        $wpdb->insert($divisionTable, array(
-                'id' => $division_id,
-                'division' => $division,
-                'class_id' => $class_id
-            )
-        );
-
-        echo "=> row inserted with division ID:".$division_id."<br/>";
+        
         $i++;
     }
 }
 
 function getStudentCsvContent($csvJson){
+	global $wpdb;
     //Convert json object to an array as $csvData
     $csvData = json_decode($csvJson);
 
@@ -58,6 +75,7 @@ function getStudentCsvContent($csvJson){
     //While there is an entry in the CSV data
     $i=1;
     while ($i <= count($csvData)-1 ) {
+	    $user_table = $wpdb->prefix ."users";
         $user_pass = "ajency";
         $user_login = $csvData[$i][0];
         $meta_value_rollno = $csvData[$i][1];
@@ -65,30 +83,49 @@ function getStudentCsvContent($csvJson){
         $user_email = $csvData[$i][3];
         $meta_key_division = "student_division";
         $meta_key_rollno = "roll_no";
-        $meta_value_division = $csvData[$i][5];
+        $meta_value_division =(int) $csvData[$i][5];
         $role = "student";
 
-        $userdata = array(
-            'user_pass'     => $user_pass,
-            'user_login'    => $user_login,
-            'user_email'    => $user_email
+        //Check if $user_email is present in users table
+		$userEmailExists = $wpdb->get_row( "select * from $user_table where user_email like '%" . $user_email . "%'" );
+		
+		if( $userEmailExists != null ){ 
+		
+			$user_id = $userEmailExists->ID; 
+			$userdata = array(
+				'ID'			=> $user_id,
+				'user_pass'     => $user_pass,
+				'user_login'    => $user_login,
+				'user_email'    => $user_email
 
-        );
+			);
+			echo "<br/>Student updated : ". $user_id;			
 
-        $user_id = wp_insert_user( $userdata ) ;
+		}
+		else{
+				
+			$userdata = array(
+				'user_pass'     => $user_pass,
+				'user_login'    => $user_login,
+				'user_email'    => $user_email
 
-        //On success
-        if( !is_wp_error($user_id) ) {
-            echo "<br/>User created : ". $user_id;
-            //add user meta
-            add_user_meta( $user_id, $meta_key_division, $meta_value_division );
-            add_user_meta( $user_id, $meta_key_rollno, $meta_value_rollno);
-            //add student to blog
-            if(add_user_to_blog( $blogId, $user_id, $role )){
-                echo "<br/>Added user - ". $user_id." to blog ".$blogId." as a ".$role;
-            }
+			);
 
-        }
+			$user_id = wp_insert_user( $userdata ) ;
+			if( !is_wp_error($user_id) ) {
+				echo "<br/>Student created : ". $user_id;
+			}
+		}
+		
+		//Insert/Update user meta table
+		
+		update_user_meta( $user_id, $meta_key_division, $meta_value_division );
+		update_user_meta( $user_id, $meta_key_rollno, $meta_value_rollno);
+		
+		//add student to blog
+		if(add_user_to_blog( $blogId, $user_id, $role )){
+			echo "<br/>Added Student - ". $user_id." to blog ".$blogId." as a ".$role;
+		}
 
         $i++;
 
@@ -96,6 +133,7 @@ function getStudentCsvContent($csvJson){
 }
 
 function getTeacherCsvContent($csvJson){
+	global $wpdb;
     //Convert json object to an array as $csvData
     $csvData = json_decode($csvJson);
 
@@ -103,37 +141,53 @@ function getTeacherCsvContent($csvJson){
     //While there is an entry in the CSV data
     $i=1;
     while ($i <= count($csvData)-1 ) {
+		$user_table = $wpdb->prefix ."users";
         $user_pass = "ajency";
         $user_login = $csvData[$i][0];
         $user_email = $csvData[$i][1];
         $blogId = $csvData[$i][2];
         $meta_key = "divisions";
-        $divisionIdArray = array($csvData[$i][4],$csvData[$i][6],$csvData[$i][8],$csvData[$i][10]);
-        $meta_value = maybe_serialize($divisionIdArray);
+        $divisionIdArray = array((int)$csvData[$i][4],(int)$csvData[$i][6],(int)$csvData[$i][8],(int)$csvData[$i][10]);
+        //$meta_value = maybe_serialize($divisionIdArray);
         $role = "teacher";
 
-        echo "<br/>divisionIdArray=".$divisionIdArray;
+        //echo "<br/>divisionIdArray=".var_dump($divisionIdArray);
+		
+		//Check if $user_email is present in users table
+		$userEmailExists = $wpdb->get_row( "select * from $user_table where user_email like '%" . $user_email . "%'" );
+		
+		if( $userEmailExists != null ){ 
+			$user_id = $userEmailExists->ID; 
+			$userdata = array(
+				'ID'			=> $user_id,
+				'user_pass'     => $user_pass,
+				'user_login'    => $user_login,
+				'user_email'    => $user_email
 
-        $userdata = array(
-            'user_pass'     => $user_pass,
-            'user_login'    => $user_login,
-            'user_email'    => $user_email
+			);
+			echo "<br/>Teacher updated : ". $user_id;			
+		
+		}
+		else{
 
-        );
+			$userdata = array(
+				'user_pass'     => $user_pass,
+				'user_login'    => $user_login,
+				'user_email'    => $user_email
 
-        $user_id = wp_insert_user( $userdata ) ;
+			);
 
-        //On success
-        if( !is_wp_error($user_id) ) {
+			$user_id = wp_insert_user( $userdata ) ;
+			if( !is_wp_error($user_id) ) {
             echo "<br/>Teacher created : ". $user_id;
-            //add user meta
-            add_user_meta( $user_id, $meta_key, $meta_value);
+			}
+		}
 
-            //add teacher to blog
-            if(add_user_to_blog( $blogId, $user_id, $role )){
-                echo "<br/>Add user-". $user_id." to blog ".$blogId." as a ".$role;
-            }
+        update_user_meta( $user_id, $meta_key, $divisionIdArray);
 
+        //add teacher to blog
+        if(add_user_to_blog( $blogId, $user_id, $role )){
+            echo "<br/>Add teacher-". $user_id." to blog ".$blogId." as a ".$role;
         }
         $i++;
     }
@@ -192,7 +246,7 @@ function getTextbookCsvContent($csvJson){
         $textbookParent_term_id = 0;
         $textbookClassesArray = array($csvData[$i][7],$csvData[$i][9],$csvData[$i][11],$csvData[$i][13],$csvData[$i][15]);
         $textbookClasses = maybe_serialize($textbookClassesArray);
-        $attachmentId = $csvData[$i][4];
+        $attachmentId = (int)$csvData[$i][4];
         $subjectTags = maybe_serialize($csvData[$i][2]);
         $textbookAuthor = $csvData[$i][5];
 
