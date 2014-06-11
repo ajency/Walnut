@@ -17,6 +17,7 @@
 	<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/animate.min.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/mashmenu.css" rel="stylesheet" type="text/css"/>
+	<link href="assets/css/bootstrap-spinedit.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen">
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
@@ -57,6 +58,7 @@
 		<script type="text/javascript" src="assets/js/datatables.js"></script>
 
 		<script type="text/javascript" src="assets/js/row-link.js"></script>
+		<script type="text/javascript" src="assets/js/bootstrap-spinedit.js"></script>
 		<script src="assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
 		<script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
 
@@ -167,10 +169,7 @@
 			</div>
           </div>-->
 		  
-		 <div class="user-details">
-            <div class="username"><img src="assets/img/offline.gif" /> <span class="bold"> Offline </span>&nbsp;&nbsp;&nbsp;  
-			</div>
-          </div>
+		 
 			<!-- <div class="user-details">
             <div class="username"><img src="assets/img/connecting.gif" /> <span class="bold"> Connecting </span>&nbsp;&nbsp;&nbsp;  
 			</div>
@@ -339,7 +338,7 @@
 							    <div class="margin-bottom-20 ">
 									<label class="form-label">Quiz Type</label>
 									<select id="qType" class="form-control" >
-					                    <option value="practise">Practise</option>
+					                    <option value="practise">Practice</option>
 					                    <option value="test">Class Test</option>
 					                </select>
 								</div>
@@ -364,61 +363,221 @@
 								<div class="col-md-4">
 								   <div class="margin-bottom-20 ">
 									<label class="form-label">Total No. of Questions</label>
-									<input id="" name="noQstns" class="pull-left " placeholder="Enter No of Questions" type="text" required="required">
+									<input id="" name="noQstns" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
 								</div>
 							</div>
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
-							    	<label class="form-label">Duration</label>
+									<label class="form-label">Expected Duration</label>
 									<input id="" name="duration" class="pull-left" placeholder="Enter Duration" type="text" required="required" />
-							    	<select name="minshours" id="" class="form-control pull-left">
+							    	<select name="minshours" id="" class="form-control pull-left durationSelect" >
 							    		<option value="mins" selected="selected">mins</option>
-							    		<option value="hrs">hour(s)</option>
+							    		<option value="hrs">hr(s)</option>
 						            </select>
+						            <div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <!-- <div class="margin-bottom-20 ">
+							    	<label class="form-label">Total Duration</label>
+									<input id="" name="totalTime" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
+								</div> -->
+							</div>											 
+						</div>
+						<div class="row ">
+							<div class="col-md-4">
+								<div class="margin-bottom-20 ">
+									<label class="form-label">Total Marks</label>
+									<input id="" name="totalTime" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
 								</div>
 							</div>
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
-									<label class="form-label">Chapter <span class="muted small pull-right"> Select a Subject first</span></label>
-									<select id="chaps" class="form-control select2" >
-					                    <option value="Jim">Jim</option>
-					                    <option value="John">John</option>
-					                    <option value="Lucy">Lucy</option>
-					                </select>
+							    	<label class="form-label">Expected Marks</label>
+									<input id="" name="duration" class="pull-left" placeholder="Enter Expected marks" type="text" required="required" />
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Negative Marks</label>
+									<div class="radio radio-info inline">
+				                        <input id="yes" type="radio" name="negMarks" value="yes" checked="checked">
+				                        <label for="yes">Yes</label>
+				                        <input id="no" type="radio" name="negMarks" value="no" >
+				                        <label for="no">No</label>
+				                    </div>
+				                    <div id="negPercent" class="input-with-icon right inline"> <input id="" name="duration" class="inline" placeholder="Set Negative marks" type="text" /> %</div>
 								</div>
 							</div>											 
 						</div>
 						<div class="row ">
-								<div class="col-md-4">
-								   <div class="margin-bottom-20 ">
-									<label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>
-									<select id="secs" class="form-control select2" multiple="">
-					                    <option value="Jim">Jim</option>
-					                    <option value="John">John</option>
-					                    <option value="Lucy">Lucy</option>
-					                </select>
+							<div class="col-md-12">
+								<div data-toggle="collapse" id="accordion" class="panel-group">
+								  <div class="panel panel-default">
+									<div class="panel-heading">
+									  <h4 class="panel-title">
+										<a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="collapsed"> &nbsp; Permissions 
+										</a>
+									  </h4>
+									</div>
+									<div class="panel-collapse collapse" id="collapseOne">
+									  <div class="panel-body">
+										 <div class="row">
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="attempt" type="checkbox" value="1">
+							                      <label for="attempt">Single Attempt</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="random" type="checkbox" value="1">
+							                      <label for="random">Randomize Order</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="answer" type="checkbox" value="1">
+							                      <label for="answer">Display Answer</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="check" type="checkbox" value="1">
+							                      <label for="check">Teacher Check</label>
+							                    </div>
+										 	</div>
+										 </div>
+										 <div class="row">
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="skip" type="checkbox" value="1">
+							                      <label for="skip">Allow Skip</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="marks" type="checkbox" value="1">
+							                      <label for="marks">Show Marks Only</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="resumbit" type="checkbox" value="1">
+							                      <label for="resubmit">Allow Resubmit</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="print" type="checkbox" value="1">
+							                      <label for="print">Allow Answer Printing</label>
+							                    </div>
+										 	</div>
+										 </div>
+										 <div class="row">
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="hint" type="checkbox" value="1">
+							                      <label for="hint">Allow Hint</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="checkbox check-info checkbox-circle perm">
+							                      <input id="msgs" type="checkbox" value="1">
+							                      <label for="msgs">Customize Messages</label>
+							                    </div>
+										 	</div>
+										 	<div class="col-sm-3">
+
+										 	</div>
+										 	<div class="col-sm-3">
+	
+										 	</div>
+										 </div>
+									  </div>
+									</div>
+								  </div>
+								  <div class="panel panel-default none" id="customMsg">
+									<div class="panel-heading">
+									  <h4 class="panel-title">
+										<a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="collapsed"> &nbsp; Custom Messages 
+										</a>
+									  </h4>
+									</div>
+									<div class="panel-collapse collapse" id="collapseTwo">
+									  <div class="panel-body">
+									  	<div class="row">
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">End Quiz Popup</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Correct answer</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Incorrect answer</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Partial correct answers</a></div>
+										 	</div>
+										 </div>
+										 <div class="row m-t-15">
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Incomplete answer</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 		<div class="small-text"><a href="#msgModal" data-toggle="modal">Submit without attempting</a></div>
+										 	</div>
+										 	<div class="col-sm-3">
+										 	</div>
+										 	<div class="col-sm-3">
+										 	</div>
+										 </div>
+
+										 <div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+						                    <div class="modal-dialog">
+						                      <div class="modal-content">
+						                        <div class="modal-header">
+						                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						                          <h4 id="" class="semi-bold text-white">Edit Message</h4>
+						                        </div>
+						                        <div class="modal-body">
+						                          <div class="row form-row">
+						                            <div class="col-md-12">
+						                              <input type="text" class="form-control" placeholder="Rich Text Editor will come here">
+						                            </div>
+						                          </div>
+						                        </div>
+						                        <div class="modal-footer">
+						                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						                          <button type="button" class="btn btn-success">Save changes</button>
+						                        </div>
+						                      </div>
+						                      <!-- /.modal-content -->
+						                    </div>
+						                    <!-- /.modal-dialog -->
+						                  </div>
+
+									  </div>
+									</div>
+								  </div>
 								</div>
+							</div>											 
+						</div>
+						<div class="row ">
+							<div class="col-md-4">
+								   
 							</div>
 							<div class="col-md-4">
-							    <div class="margin-bottom-20 ">
-									<label class="form-label">Sub-Sections <span class="muted small pull-right"> Select a Chapter first</span></label>
-									<select id="subsecs" class="form-control select2" multiple="">
-					                    <option value="Jim">Jim</option>
-					                    <option value="John">John</option>
-					                    <option value="Lucy">Lucy</option>
-					                </select>
-								</div>
+							   
 							</div>
 							<div class="col-md-4">
-							    <div class="p-t-30 ">
-									<button type="button" class="btn btn-success btn-cons2 pull-right" id="save-question"> <i class="fa fa-check"></i> Save</button>
-								</div>
+								<button type="button" class="btn btn-success btn-cons2 pull-right" id="save-question"> <i class="fa fa-check"></i> Save</button>
 							</div>											 
 						</div>
 					</div>
 				</div>
 
-				<div class="tiles white grid simple vertical blue">
+				<div class="tiles grey grid simple vertical blue">
 					<div class="grid-title no-border">
 						<h4 class="">Content <span class="semi-bold">Selection</span></h4>
 						<div class="tools">
@@ -427,335 +586,141 @@
 					</div>
 					<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
 						<div class="row">
-							<div class="col-lg-6">
-										<h4><span class="semi-bold">All</span> Questions</h4>
-								              <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="questionsAll">
-					                <thead>
-					                  <tr>
-					                  	<th style="width:8%"><div class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
-					                        <input type="checkbox" value="1" id="checkbox1">
-					                        <label for="checkbox1"></label>
-					                      </div>
-					                  	</th>
-					                    <th style="width:52%">Question</th>
-					                    <th style="width:20%" data-hide="phone,tablet">Creator</th>
-					                    <th style="width:20%">Last Modified</th>
-					                  </tr>
-					                </thead>
-					                <tbody>
-					                  <tr >
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="2" id="checkbox2">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td class="v-align-middle"><a href="#"></a>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</td>
-					                    <td class="v-align-middle"><span class="muted">Admin</span></td>
-					                    <td><span class="muted">12th Dec 13</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox3">
-					                        <label for="checkbox3"></label>
-					                      </div>
-					                  	</td>
-					                    <td class="v-align-middle">es, but also the leap into electronic typesetting, remaining essentially unchanged. It was popul</td>
-					                    <td><span class="muted">Tom</span></td>
-					                    <td><span class="muted">4th Jan 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="4" id="checkbox4">
-					                        <label for="checkbox4"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock,</td>
-					                    <td class="v-align-middle"><span class="muted">Bob</span></td>
-					                    <td><span class="muted">9th May 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="5" id="checkbox5">
-					                        <label for="checkbox5"></label>
-					                      </div>
-					                  	</td>
-					                    <td>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it </td>
-					                    <td class="v-align-middle"><span class="muted">Tom</span></td>
-					                    <td><span class="muted">13th Apr 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox6">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up </td>
-					                    <td class="v-align-middle"><span class="muted">Author Name</span></td>
-					                    <td><span class="muted">25th Jan 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox7">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</td>
-					                    <td class="v-align-middle"><span class="muted">Robert</span></td>
-					                    <td><span class="muted">14th Feb 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox8">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus</td>
-					                    <td class="v-align-middle"><span class="muted">Mary</span></td>
-					                    <td><span class="muted">6th Mar 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox9">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
-					                    <td class="v-align-middle"><span class="muted">Peter</span></td>
-					                    <td><span class="muted">28th Apr 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox10">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
-					                    <td class="v-align-middle"><span class="muted">Zack</span></td>
-					                    <td><span class="muted">4th Jan 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox11">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
-					                    <td class="v-align-middle"><span class="muted">Chris</span></td>
-					                    <td><span class="muted">6th Jul 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox12">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
-					                    <td class="v-align-middle"><span class="muted">Jim</span></td>
-					                    <td><span class="muted">14th Feb 14</span></td>
-					                  </tr>
-					                </tbody>
-					              </table>
-							</div>
-							<div class="col-lg-6">
-								<h4><span class="semi-bold">My</span> Questions</h4>
-								               <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="questionsMY">
-					                <thead>
-					                  <tr>
-					                  	<th style="width:8%"><div class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
-					                        <input type="checkbox" value="1" id="checkbox1">
-					                        <label for="checkbox1"></label>
-					                      </div>
-					                  	</th>
-					                    <th style="width:52%">Question</th>
-					                    <th style="width:20%" data-hide="phone,tablet">Creator</th>
-					                    <th style="width:20%">Last Modified</th>
-					                  </tr>
-					                </thead>
-					                <tbody>
-					                  <tr >
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="2" id="checkbox2">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td class="v-align-middle"><a href="#"></a>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</td>
-					                    <td class="v-align-middle"><span class="muted">Admin</span></td>
-					                    <td><span class="muted">12th Dec 13</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox3">
-					                        <label for="checkbox3"></label>
-					                      </div>
-					                  	</td>
-					                    <td class="v-align-middle">es, but also the leap into electronic typesetting, remaining essentially unchanged. It was popul</td>
-					                    <td><span class="muted">Tom</span></td>
-					                    <td><span class="muted">4th Jan 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="4" id="checkbox4">
-					                        <label for="checkbox4"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock,</td>
-					                    <td class="v-align-middle"><span class="muted">Bob</span></td>
-					                    <td><span class="muted">9th May 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="5" id="checkbox5">
-					                        <label for="checkbox5"></label>
-					                      </div>
-					                  	</td>
-					                    <td>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it </td>
-					                    <td class="v-align-middle"><span class="muted">Tom</span></td>
-					                    <td><span class="muted">13th Apr 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox6">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up </td>
-					                    <td class="v-align-middle"><span class="muted">Author Name</span></td>
-					                    <td><span class="muted">25th Jan 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox7">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</td>
-					                    <td class="v-align-middle"><span class="muted">Robert</span></td>
-					                    <td><span class="muted">14th Feb 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox8">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus</td>
-					                    <td class="v-align-middle"><span class="muted">Mary</span></td>
-					                    <td><span class="muted">6th Mar 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox9">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
-					                    <td class="v-align-middle"><span class="muted">Peter</span></td>
-					                    <td><span class="muted">28th Apr 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox10">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
-					                    <td class="v-align-middle"><span class="muted">Zack</span></td>
-					                    <td><span class="muted">4th Jan 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox11">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in</td>
-					                    <td class="v-align-middle"><span class="muted">Chris</span></td>
-					                    <td><span class="muted">6th Jul 14</span></td>
-					                  </tr>
-					                  <tr>
-					                  	<td class="v-align-middle"><div class="checkbox check-default">
-					                        <input type="checkbox" value="3" id="checkbox12">
-					                        <label for="checkbox2"></label>
-					                      </div>
-					                  	</td>
-					                    <td>Many desktop publishing packages and web page editors now use Lorem</td>
-					                    <td class="v-align-middle"><span class="muted">Jim</span></td>
-					                    <td><span class="muted">14th Feb 14</span></td>
-					                  </tr>
-					                </tbody>
-					              </table>
+							<div class="col-xs-12">
+								<div class="">
+									<div class="table-tools-actions">
+										<select class="form-control inline" id="" style="width:150px" tabindex="-1">
+											<option value="">Textbooks</option>
+										</select>
+										<select class="form-control inline" id="" style="width:150px" tabindex="-1">
+											<option value="">Chapters</option>
+										</select>
+										<select class="form-control inline" id="" style="width:150px" tabindex="-1">
+											<option value="">Sections</option>
+										</select>
+										<select class="form-control inline" id="" style="width:200px" tabindex="-1">
+											<option value="">Sub Sections</option>
+										</select>
+					                    <select class="form-control inline" id="" style="width:200px" tabindex="-1">
+					                        <option value="">All</option>
+					                        <option value="teacher_question">Teacher Question</option>
+					                        <option value="content_piece">Content Piece</option>
+					                    </select>
+									</div>
+								</div>
 							</div>
 						</div>
-						<button type="button" class="btn btn-success btn-cons2 pull-right m-t-20 m-l-10" id="save-question"> <i class="fa fa-check"></i> Save</button> <button type="button" class="btn btn-success btn-cons2 pull-right m-t-20" id="save-question"> <i class="fa fa-plus"></i> Add</button>
+						<div class="row m-t-20">
+							<div class="col-md-12">
+					          <ul class="nav nav-tabs b-grey b-l b-r b-t" id="addContent">
+					            <li class=""><a href="#addQstn">Add Question</a></li>
+					            <li class="active"><a href="#addSet">Add Set</a></li>
+					            
+					            
+					          </ul>
+					          
+					          <div class="tab-content">
+					            <div class="tab-pane" id="addQstn">
+					              <div class="row">
+					                <div class="col-md-12">
+					                  <h3 class="semi-bold">List of content pieces appear here</h3>
+					                </div>
+					              </div>
+					            </div>
+					            <div class="tab-pane active" id="addSet">
+					              <div class="row">
+					                <div class="col-md-12">
+					                  <table class="table table-bordered table-flip-scroll cf">
+                                        <thead class="cf">
+                                            <tr>
+                                                <th>Total Questions</th>
+                                                <th>Level 1</th>
+                                                <th>Level 2</th>
+                                                <th>Level 3</th>
+                                                <th>Level 4</th>
+                                                <th>Level 5</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>15 <input type="text" class="spinedit disabled" disabled="disabled">
+                                                </td>
+                                                <td>3 <input type="text" id="lvl1" /></td>
+                                                <td>3 <input type="text" id="lvl2" /></td>
+                                                <td>3 <input type="text" id="lvl3" /></td>
+                                                <td>3 <input type="text" id="lvl4" /></td>
+                                                <td>3 <input type="text" id="lvl5" /></td>
+                                            </tr>
+                                        </tbody>
+                                    	</table>
+                                    <div class="checkbox check-info">
+				                      <input id="selectAll" type="checkbox" value="1">
+				                      <label for="selectAll" class="text-grey">Select All</label>
+				                    </div>
+					                <div class="pull-right">
+					                    <button type="button" class="btn btn-success btn-cons2"><i class="fa fa-plus"></i> Add</button>
+					                </div>
+					                </div>
+					              </div>
+					            </div>
+					            
+					          </div>
+					        </div>
+					    </div>
 					</div>
 				</div>
 
-				<div class="row p-r-10">
+				<!-- <div class="row p-r-10">
 					<div class="col-sm-4">
-
 						<div class="tiles added-margin">
 			              <div class="tiles-body">
 			                <div class="tiles-title"> TRAINING MODULE TIME </div>
 			                <div class="heading"> <span class="animate-number" data-animation-duration="1200">75 mins</span> </div>
 			              </div>
 			            </div>
-						 
 					</div>
 					<div class="col-sm-4">
-
-						<!--<div class="tiles added-margin">
-			              <div class="tiles-body">
-			                <div class="tiles-title"> TIME REMAINING</div>
-			                <div class="heading p-b-20"> <span class="animate-number" data-animation-duration="1200">55 mins</span> </div>
-			              </div>
-			            </div>-->
 					</div>
 					<div class="col-sm-4">
-
-						<!--<div class="alert alert-block  fade in">
-		                  <button type="button" class="close" data-dismiss="alert"></button>
-		                  
-		                  <p> Do you want your training module duration changed to <strong>55 mins</strong>? </p>
-		                  <div class="button-set p-b-10 p-t-5">
-		                    <button class="btn btn-warning btn-sm btn-small" type="button">Yes</button>
-		                    <button class="btn btn-white btn-sm btn-small" type="button">No</button>
-		                  </div>
-		                </div>-->
 		                <div class="tiles white added-margin">
 			              <div class="tiles-body">
 			                <div class="tiles-title"> TOTAL CONTENT TIME </div>
 			                <div class="heading"> <span class="animate-number" data-animation-duration="1200">55 mins</span> </div>
-			                <!-- <div class="progress progress-small no-radius">
-			                  <div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="75%" style="width: 75%;"></div>
-			                </div> -->
 			              </div>
 			            </div>
-			            
 					</div>
-				</div>
+				</div> -->
 
-				</div>
+			</div>
 				
-				<div id="myCanvas-miki" class="col-md-10">
+			<div id="myCanvas-miki" class="col-md-10">
 
 					<ul class="cbp_tmtimeline">
-				        <li class="sortable">
+				        <li class="sortable setGroup">
 				        	<div class="contentPiece">
-				            <time class="cbp_tmtime" datetime="">
-				        	    <span class="time">15 <span class="semi-bold">mins</span></span>
-				            </time>
-				            <div class="cbp_tmicon primary animated bounceIn"> <i class="fa fa-question"></i> </div>
-				              <div class="cbp_tmlabel">
-				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
-				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
-				                </div>
-				                <div class="clearfix"></div>
-				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
-				                   <div class="muted">Duration: 12 mins</div>
-				                  <div class="clearfix"></div>
-				                </div>
-				              </div>
+					            <time class="cbp_tmtime" datetime="">
+					        	    <span class="time"><span class="semi-bold">Set 1</span></span>
+					            </time>
+					            <div class="cbp_tmicon info animated bounceIn"> <i class="fa fa-folder-open"></i> </div>
+					            <div class="cbp_tmlabel abc">
+					                <div class="p-t-15 p-l-30 p-r-15 p-b-20">
+					                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 2</span> </h4>
+					                </div>
+					                <div class="clearfix"></div>
+					            </div>
+					            <div class="cbp_tmlabel abc">
+					                <div class="p-t-15 p-l-30 p-r-15 p-b-20">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 2</span> </h4>
+					                </div>
+					                <div class="clearfix"></div>
+					            </div>
+					            <div class="cbp_tmlabel abc">
+					                <div class="p-t-15 p-l-30 p-r-15 p-b-20">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
+					                </div>
+					                <div class="clearfix"></div>
+					            </div>
 				            </div>
 				        </li>
 				        <li class="sortable">
@@ -763,7 +728,7 @@
 				              <time class="cbp_tmtime" datetime="">
 				                <span class="time">4.5 <span class="semi-bold">mins</span></span>
 				              </time>
-				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-youtube-play"></i> </div>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
 				              <div class="cbp_tmlabel">
 				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 " >
 				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
@@ -783,7 +748,7 @@
 				              <time class="cbp_tmtime" datetime="">
 				                <span class="time">12 <span class="semi-bold">mins</span></span>
 				              </time>
-				              <div class="cbp_tmicon primary animated bounceIn"> <i class="fa fa-question"></i> </div>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
 				              <div class="cbp_tmlabel">
 				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
 				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
@@ -802,7 +767,7 @@
 				              <time class="cbp_tmtime" datetime="">
 				                <span class="time">23 <span class="semi-bold">mins</span></span>
 				              </time>
-				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-youtube-play"></i> </div>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
 				              <div class="cbp_tmlabel">
 				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 ">
 				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
@@ -1005,6 +970,60 @@
 //Multi Select
  	$("#secs").val([]).select2();
  	$("#subsecs").val([]).select2();
+
+ 	$('input[name="negMarks"]').on('change', function(){
+	    if ($(this).val()=='yes') {
+	        $( "#negPercent" ).removeClass( "none" );
+	        $( "#negPercent" ).addClass( "inline" );
+	    } else  {
+	        $( "#negPercent" ).addClass( "none" );
+	        $( "#negPercent" ).removeClass( "inline" );
+	    }
+	});
+
+	$('#msgs').on("click", function() {
+	    if (this.checked) {
+	        $('#customMsg').show();
+	    }
+	    else {
+	        $('#customMsg').hide();
+	    }
+	});
+
+	$('#accordion .perm').click(function(e) {
+	    e.stopPropagation();
+	});
+
+	$('#addContent a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+	});
+
+	$('#lvl1').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
+	$('#lvl2').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
+	$('#lvl3').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
+	$('#lvl4').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
+	$('#lvl5').spinedit({
+	    minimum: 0,
+	    maximum: 3,
+	    value: 0
+	});
  </script>
 </body>
 </html>

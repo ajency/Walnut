@@ -336,7 +336,7 @@ function get_assigned_textbooks( $user_id = '' ) {
     if ($user_id == '')
         $user_id = get_current_user_id();
 
-    $txtbooks_assigned = get_user_meta( $user_id, 'textbooks', single );
+    $txtbooks_assigned = get_user_meta( $user_id, 'textbooks', true );
 
     $txtbook_ids = maybe_unserialize( $txtbooks_assigned );
 
