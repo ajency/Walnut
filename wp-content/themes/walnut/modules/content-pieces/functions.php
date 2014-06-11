@@ -193,8 +193,8 @@ function get_single_content_piece($id){
         $content_piece->layout = $content_elements['elements'];
         $excerpt_array= $content_elements['excerpt'];
         $excerpt_array = __u::flatten($excerpt_array);
-        $excerpt= implode('<span class="divider"> | </span>',$excerpt_array);
-        $excerpt = strip_tags($excerpt);
+        $excerpt= implode(' | ',$excerpt_array);
+        $excerpt = stripslashes(strip_tags($excerpt));
         $excerpt= substr($excerpt, 0, 150);
         $content_piece->post_excerpt =$excerpt.'...';
     }
