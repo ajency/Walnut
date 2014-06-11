@@ -46,6 +46,10 @@ define ['app',
 #                    negativeMarks= parseInt @model.get 'negative_marks'
 #                    $('#negativeMarks').select2().select2('val',negativeMarks)
 
+                if @model.get('content_type') is 'content_piece'
+                    @$el.find '#question_type_column'
+                    .remove()
+
             onFetchChaptersComplete: (chaps, curr_chapter)->
                 if _.size(chaps) > 0
                     @$el.find('#chaps').html('');
