@@ -7,4 +7,9 @@ wp-content/uploads
 .bash_history
 .mysql_history
 .viminfo
-wp-content/themes/walnut/csvupload/
+.gitconfig
+.composer
+composer.phar
+wp-content/themes/walnut/vendor
+wp-content/themes/walnut/csvupload
+

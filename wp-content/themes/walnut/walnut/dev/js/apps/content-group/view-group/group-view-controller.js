@@ -57,6 +57,7 @@ define(['app', 'controllers/region-controller', 'apps/content-group/view-group/g
         responseCollection = this.questionResponseCollection.where({
           "status": "completed"
         });
+        window.f = responseCollection;
         responseQuestionIDs = _.chain(responseCollection).map(function(m) {
           return m.toJSON();
         }).pluck('content_piece_id').value();
