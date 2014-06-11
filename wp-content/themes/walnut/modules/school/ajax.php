@@ -21,7 +21,11 @@ function fetch_school(){
 function new_school_setup( $blog_id ){
 
     require_once 'child_site_setup.php';
-    setup_childsite($blog_id);
+
+    //additional details of blog from setup. eg. licence validity
+    $additional_details = $_POST['blog_additional'];
+
+    setup_childsite($blog_id, $additional_details);
 
 }
 add_action('wpmu_new_blog', 'new_school_setup');
