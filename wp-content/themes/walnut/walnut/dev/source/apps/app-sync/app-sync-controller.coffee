@@ -2,65 +2,6 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 	class SynchronizationController extends Marionette.Controller
 
-
-		#This function will be called when the upload button is clicked
-		#this function will read the file from the specified device path
-		fileReadZip : ->
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-
-				, (fileSystem)=>
-
-					fileSystem.root.getFile("SynapseAssets/hello.zip", null
-
-						, (fileEntry)=>
-
-							fileEntry.file(
-
-								(file)=>
-									reader = new FileReader()
-									reader.onloadend = (evt)=>
-										csvData = evt.target.result
-										console.log "result" +evt.target.result
-										@fileUpload fileEntry
-									reader.readAsText file
-
-								, _.fileErrorHandler)
-
-						, _.fileErrorHandler)
-
-				, _.fileSystemErrorHandler)
-
-		#This Function Will upload the zip file to the server
-
-		fileUpload: (fileEntry)=>
-			uri = encodeURI('')
-			options = new FileUploadOptions();
-			options.fileKey = "file";
-			options.fileName = fileEntry.substr(fileEntry.lastIndexOf('/') + 1);
-			options.mimeType = "text/csv;";
-			
-			params = {};
-			params.value1 = "test";
-			params.value2 = "param";
-
-			options.params = params;
-
-			ft = new FileTransfer();
-			ft.upload(fileEntry,uri
-				, (r)=>
-					console.log "Code = " + r.responseCode
-					console.log "Response = " + r.response
-					console.log "Sent = " + r.bytesSent
-
-				, (error)->
-					alert "An error has occurred: Code = " + error.code
-					console.log "upload error source " + error.source
-					console.log "upload error target " + error.target
-
-				, options)
-
-
-
 		
 		getDownloadURL:->
 			$('#syncSuccess')
@@ -71,6 +12,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 				blog_id: _.getBlogID()
 				last_sync: ''	
 
+			#TODO: Change action name for import
 			$.get AJAXURL + '?action=sync-database',
 					data,
 				   (resp)=>
@@ -80,8 +22,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 				   		@dwnldUnZip resp
 							
 					,
-					'json'	
-
+					'json'
 
 
 		# Download the zip file from the server and extract its contents
@@ -104,27 +45,20 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 							_.setFilePath(filePath)
 							fileEntry.remove()
 							fileTransfer = new FileTransfer()
-							
-							# fileTransfer.onprogress = (progressEvent)=>
-							# 	if progressEvent.lengthComputable
-							# 		perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-							# 		console.log perc
-							# 		statusDom.innerHTML = perc + "% loaded...";
-							# 	else
-							# 		if progressBarDwnldDom.innerHTML is null
-							# 			progressBarDwnldDom.innerHTML = "Loading"
-							# 		else
-							# 			progressBarDwnldDom.innerHTML += "."
-
 
 							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
 								,(file)=>
 									console.log 'Zip file downloaded'
+
+									_.updateSyncDetails('file_download', resp.last_sync)
 									
 									@fileUnZip filePath, file.toURL()
 								
 								,(error)->
 									$('#syncSuccess').css("display","none")
+
+									$('#syncStartContinue').css("display","block")
+									$('#syncButtonText').text('Try again')
 
 									$('#syncError').css("display","block")
 									.text("An error occurred during file download")
@@ -194,21 +128,17 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			zip.unzip(fullpath, filePath, success)
 
 
-
-
 		readUnzipFile1 : ->
 			$('#syncSuccess').css("display","block")
 			.text("Starting file import...")
 
 			filePath = _.getFilePath()
-			file = 	 "SynapseAssets/"+_.getTblPrefix()+"class_divisions.csv"
+			file = "SynapseAssets/"+_.getTblPrefix()+"class_divisions.csv"
 
 			setTimeout(=>
 				@sendParsedData1 file ,filePath
 				
 			,3000)
-				
-				
 
 
 		
@@ -221,26 +151,21 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			fileEntry = fileEntry
 			readData = @chkReader(file)
 			readData.done (data)=>
-				console.log 'Divisions parsed data'
-				data
 
-				_.db.transaction( (tx)=>
+				_.db.transaction((tx)=>
 					tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
-
+					
 					for i in [0..data.length-1] by 1
-						row = data[i]
-						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions (id, division, class_id) 
-							VALUES (?, ?, ?)", [data[i][0], data[i][1], data[i][2]])
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions 
+							(id, division, class_id) VALUES (?, ?, ?)"
+								, [data[i][0], data[i][1], data[i][2]])
 
 				,_.transactionErrorhandler
 				,(tx)=>
 					console.log 'Data inserted successfully1'
 					file1 =  "SynapseAssets/"+_.getTblPrefix()+"question_response.csv"
 					@sendParsedData2 file1 ,fileEntry
-
 				)
-
-
 
 
 		sendParsedData2 : (file1, fileEntry)=>
@@ -253,8 +178,12 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 					for i in [0..data.length-1] by 1
 						row = data[i]
-						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response (content_piece_id, collection_id, division,question_response,time_taken,start_date,end_date,status,sync) 
-							VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?)", [ data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6], data[i][7], data[i][8],1])
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response 
+							(ref_id, teacher_id, content_piece_id, collection_id, division 
+							,question_response ,time_taken ,start_date ,end_date ,status ,sync) 
+							VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+							, [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]
+							, data[i][5], data[i][6], data[i][7], data[i][8], data[i][9], 1])
 
 				,_.transactionErrorhandler
 				,(tx)=>
@@ -328,12 +257,12 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			readData = @chkReader(file6)
 			readData.done (data)=>
 
-				_.db.transaction( (tx)=>
+				_.db.transaction((tx)=>
 					tx.executeSql("DELETE FROM wp_postmeta")
 
 					for i in [0..data.length-1] by 1
 						row = data[i]
-						tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key,meta_value) 
+						tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id, meta_key, meta_value) 
 							VALUES (?, ?, ?, ?)", [data[i][0], data[i][1], data[i][2], data[i][3]])
 
 				,_.transactionErrorhandler
@@ -474,7 +403,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 				,(tx)=>
 					console.log 'Data inserted successfully14'
 
-					@updateSyncDetails('file_import', _.getCurrentDateTime(2))
+					_.updateSyncDetails('file_import', _.getCurrentDateTime(2))
 
 					$('#syncSuccess')
 					.css("display","block")
@@ -497,19 +426,6 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 					
 					,3000)
 				)
-
-
-		
-		updateSyncDetails :(operation, time_stamp)->
-
-			_.db.transaction( (tx)->
-				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
-					VALUES (?,?)", [operation, time_stamp])
-
-			,_.transactionErrorhandler
-			,(tx)->
-				console.log 'Updated sync details'
-			)
 
 		
 

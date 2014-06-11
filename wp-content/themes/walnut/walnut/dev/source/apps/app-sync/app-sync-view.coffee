@@ -1,4 +1,5 @@
-define ['app', 'controllers/region-controller','text!apps/app-sync/templates/appsync.html'], (App, RegionController, AppSyncTpl)->
+define ['app', 'controllers/region-controller','text!apps/app-sync/templates/appsync.html']
+		, (App, RegionController, AppSyncTpl)->
 
 	App.module "AppSync.Controller", (Controller, App)->
 
@@ -8,11 +9,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				@view = view = @_getAppSyncView()
 
-				# listen to the close event of the view
-				# @listenTo view, 'close', ->
-				# 	App.navigate('teachers/dashboard', trigger: true)
-
-				# App.commands.setHandler "close:sync3:view", =>
+				# App.commands.setHandler "close:sync:view", =>
 				# 	@show view, (loading: true)
 
 				@show view, (loading: true)
@@ -30,9 +27,16 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			events :
 				'click #syncStartContinue' : 'startContinueSyncProcess'
 
+				'click #syncMediaStartContinue' : 'startContinueMediaSyncProcess'
+				
+
 
 			onShow : ->
+				#Hide breadcrumb region
 				App.breadcrumbRegion.close()
+
+				# Hide the splash screen image
+				navigator.splashscreen.hide()
 
 				#Display total records to be synced
 				totalRecordsTobeSynced = _.getTotalRecordsTobeSynced()
@@ -40,13 +44,15 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 					if totalRecords is 0
 						$('#totalRecordsToBeSynced').text("Data already upto date")
 					else
-						$('#totalRecordsToBeSynced').text(""+totalRecords+" record(s) to be synced")
+						$('#totalRecordsToBeSynced')
+						.text(""+totalRecords+" record(s) to be synced")
 
 				
 				lastSyncOperation = _.getLastSyncOperation()
 				lastSyncOperation.done (typeOfOperation)->
-					console.log 'typeOfOperation: '+typeOfOperation
+
 					switch typeOfOperation
+
 						when 'none'
 							$('#syncButtonText').text('Start')
 
@@ -64,116 +70,97 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 						when 'file_upload'
 							$('#syncButtonText').text('Continue')
-							
 
 
 
 
 			startContinueSyncProcess : ->
+
+				#Create 'SynapseData' directory inside 'SynapseAssets'
+				_.createSynapseDataDirectory()
+
+				#Hide error message
+				$('#syncError').css("display","none")
+
 				lastSyncOperation = _.getLastSyncOperation()
 				lastSyncOperation.done (typeOfOperation)->
+					
 					switch typeOfOperation
+						
 						when 'none'
 							$('#syncStartContinue').css("display","none")
 							
-							$('#syncSuccess')
-							.css("display","block")
+							$('#syncSuccess').css("display","block")
 							.text("Started sync process...")
 							
 							setTimeout(=>
 								syncController = App.request "get:sync:controller"
 								syncController.getDownloadURL()
 					
-							,3000)
+							,2000)
 							
 						
 						when 'file_import'
 							$('#syncStartContinue').css("display","none")
 
-							$('#syncSuccess').css("display","block").text("Started sync process...")
+							$('#syncSuccess').css("display","block")
+							.text("Started sync process...")
 							
 							
 							setTimeout(=>
-								$('#syncSuccess').css("display","block").text("Generating file...")
-								# _.generateZipFile()
-								syncController = App.request "get:sync:controller"
-								syncController.updateSyncDetails('file_generate', _.getCurrentDateTime(2))
+								_.generateZipFile()
 					
 							,2000)
-
-							setTimeout(=>
-								syncController = App.request "get:sync:controller"
-								syncController.updateSyncDetails('file_generate', _.getCurrentDateTime(2))
-								$('#syncSuccess').css("display","block").text("File generation completed...")
-								
-					
-							,4000)
-
-							setTimeout(=>
-								$('#syncSuccess').css("display","block").text("Starting file upload...")
-								
-					
-							,6000)
-
-							setTimeout(=>
-								syncController = App.request "get:sync:controller"
-								syncController.updateSyncDetails('file_upload', _.getCurrentDateTime(2))
-								$('#syncSuccess').css("display","block").text("File upload completed...")
-								
-					
-							,8000)
-
-							setTimeout(=>
-								syncController = App.request "get:sync:controller"
-								syncController.getDownloadURL()
-					
-							,10000)
-
 						
 						
 						when 'file_download'
 							$('#syncStartContinue').css("display","none")
-							$('#syncSuccess').css("display","block").text("Resuming sync process...")
+
+							$('#syncSuccess').css("display","block")
+							.text("Resuming sync process...")
 
 							setTimeout(=>
 								syncController = App.request "get:sync:controller"
 								syncController.readUnzipFile1()
 					
-							,3000)
+							,2000)
 						
 						
 
 						when 'file_generate'
 							$('#syncStartContinue').css("display","none")
-							$('#syncSuccess').css("display","block").text("Resuming sync process...")
+
+							$('#syncSuccess').css("display","block")
+							.text("Resuming sync process...")
 							
 							setTimeout(=>
-								$('#syncSuccess').css("display","block").text("Starting file upload...")
-								
+								_.uploadGeneratedZipFile()
 					
-							,3000)
-
-							setTimeout(=>
-								syncController = App.request "get:sync:controller"
-								syncController.updateSyncDetails('file_upload', _.getCurrentDateTime(2))
-								$('#syncSuccess').css("display","block").text("File upload completed...")
-								
-					
-							,5000)
-
-							setTimeout(=>
-								syncController = App.request "get:sync:controller"
-								syncController.getDownloadURL()
-					
-							,7000)
+							,2000)
 							
 
 						when 'file_upload'
 							$('#syncStartContinue').css("display","none")
-							$('#syncSuccess').css("display","block").text("Resuming sync process...")
+
+							$('#syncSuccess').css("display","block")
+							.text("Resuming sync process...")
 
 							setTimeout(=>
 								syncController = App.request "get:sync:controller"
 								syncController.getDownloadURL()
 					
 							,3000)
+
+
+
+			startContinueMediaSyncProcess : ->
+				
+				$('#syncMediaStartContinue').css("display","none")
+				
+				$('#syncMediaSuccess').css("display","block")
+				.text("Started media sync process...")
+				
+				setTimeout(=>
+					_.getListOfMediaFilesFromServer()
+		
+				,2000)
