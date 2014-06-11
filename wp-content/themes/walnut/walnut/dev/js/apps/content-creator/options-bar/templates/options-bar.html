@@ -11,7 +11,7 @@
                     <select required name="term_ids[textbook]" id="subs" class="form-control select2" >
                         <option value="">--select textbook--</option>
                         {{#textbooksFilter}}
-                        <option value="{{id}}" {{#selected}} selected="selected" {{/selected}}>{{name}}</option>
+                        <option value="{{id}}" {{#selected}} selected="selected" {{/selected}}>{{&name}}</option>
                         {{/textbooksFilter}}
                     </select>
                 </div>
