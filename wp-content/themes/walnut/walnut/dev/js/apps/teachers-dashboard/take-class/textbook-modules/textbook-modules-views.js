@@ -59,7 +59,7 @@ define(['app'], function(App) {
         return ContentGroupsView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsView.prototype.template = '<div class="tiles white grid simple vertical blue"> <div class="grid-title no-border"> <h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4> <div class="tools"> <a href="javascript:;" class="collapse"></a> </div> </div> <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-lg-12"> <h4>{{&showModulesHeading}}</h4> <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules"> <thead> <tr> <th style="width:50%">Name</th> <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th> <th style="width:40%">Status</th> </tr> </thead> <tbody> </tbody> </table> </div> </div> </div> </div>';
+      ContentGroupsView.prototype.template = '<div class="tiles white grid simple vertical blue"> <div class="grid-title no-border"> <h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4> <div class="tools"> <a href="javascript:;" class="collapse"></a> </div> </div> <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-lg-12"> <h4>{{&showModulesHeading}}</h4> <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules"> <thead> <tr> <th style="width:50%">Name</th> <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th> <th style="width:40%"><div id="status_header">Status</div></th> </tr> </thead> <tbody> </tbody> </table> </div> </div> </div> </div>';
 
       ContentGroupsView.prototype.itemView = ContentGroupsItemView;
 
@@ -91,6 +91,9 @@ define(['app'], function(App) {
 
       ContentGroupsView.prototype.onShow = function() {
         var pagerDiv, pagerOptions;
+        if (Marionette.getOption(this, 'mode') === 'training') {
+          this.$el.find('.status_label, .training-date, #status_header').hide();
+        }
         this.$el.find('#take-class-modules').tablesorter();
         pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option value="25" selected>25</option> <option value="50">50</option> <option value="100">100</option> </select> </div>';
         this.$el.find('#take-class-modules').after(pagerDiv);

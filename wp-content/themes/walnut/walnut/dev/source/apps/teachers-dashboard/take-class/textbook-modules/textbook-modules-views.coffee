@@ -72,7 +72,7 @@ define ['app'], (App)->
             							                  <tr>
             							                    <th style="width:50%">Name</th>
             							                    <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th>
-            							                    <th style="width:40%">Status</th>
+            							                    <th style="width:40%"><div id="status_header">Status</div></th>
             							                  </tr>
             							                </thead>
             							                <tbody>
@@ -111,6 +111,10 @@ define ['app'], (App)->
                 @trigger "schedule:training", dataID
 
             onShow: =>
+                if Marionette.getOption(@, 'mode') is 'training'
+                    @$el.find '.status_label, .training-date, #status_header'
+                    .hide();
+
                 @$el.find '#take-class-modules'
                 .tablesorter()
 
