@@ -15,7 +15,10 @@ define ['app'
                 @mode = Marionette.getOption(@, 'display_mode')
 
             onShow:->
-                console.log @mode
+                if @model.get('content_type') is 'content_piece'
+                    @$el.find '#question-type-col, #correct-answer-col'
+                    .hide()
+
                 if @mode is 'class_mode'
                     qTimer = @$el.find 'div.cpTimer'
 
