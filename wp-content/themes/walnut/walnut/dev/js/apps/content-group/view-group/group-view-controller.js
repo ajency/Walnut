@@ -23,6 +23,12 @@ define(['app', 'controllers/region-controller', 'apps/content-group/view-group/g
       groupContentCollection = null;
 
       GroupController.prototype.initialize = function(opts) {
+        App.execute("show:headerapp", {
+          region: App.headerRegion
+        });
+        App.execute("show:leftnavapp", {
+          region: App.leftNavRegion
+        });
         model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,

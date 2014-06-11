@@ -57,6 +57,7 @@ define ['app'
             _getContentGroupsListingView: (collection)=>
                 new View.TakeClassTextbookModules.ContentGroupsView
                     collection: collection
+                    mode: @mode
                     templateHelpers:
                         showTextbookName: =>
                             @textbook.get 'name'

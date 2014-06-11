@@ -90,13 +90,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         currRoute = App.getCurrentRoute();
         removeStr = _.str.strRightBack(currRoute, '/');
         newRoute = _.str.rtrim(currRoute, removeStr + '/');
-        App.navigate(newRoute, true);
-        App.execute("show:headerapp", {
-          region: App.headerRegion
-        });
-        return App.execute("show:leftnavapp", {
-          region: App.leftNavRegion
-        });
+        return App.navigate(newRoute, true);
       };
 
       TeacherTeachingController.prototype._saveQuestionResponse = function(status) {
