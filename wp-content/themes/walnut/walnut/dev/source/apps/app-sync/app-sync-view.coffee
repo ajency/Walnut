@@ -26,6 +26,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 			events :
 				'click #syncStartContinue' : 'startContinueSyncProcess'
+
+				'click #syncMediaStartContinue' : 'startContinueMediaSyncProcess'
 				
 
 
@@ -68,6 +70,16 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 						when 'file_upload'
 							$('#syncButtonText').text('Continue')
+
+
+				
+				lastMediaSyncOperation = _.getLastMediaSyncOperation()
+				lastMediaSyncOperation.done (typeOfOperation)->
+
+					switch typeOfOperation
+
+						when 'none'
+							$('#syncMediaButtonText').text('Start')
 
 
 
@@ -148,3 +160,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 								syncController.getDownloadURL()
 					
 							,3000)
+
+
+
+			startContinueMediaSyncProcess : ->
+				console.log 'startContinueMediaSyncProcess'

@@ -1,7 +1,22 @@
-define(['underscore', 'unserialize'], function(_) {
+define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
   return _.mixin({
     getTblPrefix: function() {
       return 'wp_' + _.getBlogID() + '_';
+    },
+    appNavigation: function() {
+      return document.addEventListener("backbutton", _.onBackButtonClick, false);
+    },
+    onBackButtonClick: function() {
+      var currentRoute;
+      console.log('Fired cordova back button event');
+      currentRoute = App.getCurrentRoute();
+      console.log('currentRoute: ' + currentRoute);
+      if (currentRoute === 'teachers/dashboard' || currentRoute === 'app-login') {
+        navigator.app.exitApp();
+      } else {
+        Backbone.history.history.back();
+      }
+      return document.removeEventListener("backbutton", _.onBackButtonClick, false);
     },
     getUserDetails: function(username) {
       var onSuccess, runQuery, userData;
@@ -72,10 +87,6 @@ define(['underscore', 'unserialize'], function(_) {
               meta_value.question_type = row['meta_value'];
             }
             if (row['meta_key'] === 'content_piece_meta') {
-              if (content_piece_id === 133) {
-                console.log('meta_value');
-                console.log(row['meta_value']);
-              }
               content_piece_meta = unserialize(unserialize(row['meta_value']));
               meta_value.post_tags = content_piece_meta.post_tags;
               meta_value.duration = content_piece_meta.duration;
@@ -132,13 +143,6 @@ define(['underscore', 'unserialize'], function(_) {
       return $.when(runQuery()).done(function() {
         return console.log('getTextbookOptions transaction completed');
       }).fail(_.failureHandler);
-    },
-    updateQuestionResponseLogs: function(refID) {
-      return _.db.transaction(function(tx) {
-        return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_logs (qr_ref_id, start_time, sync) VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0]);
-      }, _.transactionErrorHandler, function(tx) {
-        return console.log('SUCCESS: Inserted new record in wp_question_response_logs');
-      });
     },
     getCurrentDateTime: function(bit) {
       var d, date, time;

@@ -67,7 +67,6 @@ define ['underscore'], ( _)->
 
 
 
-
     _.setFilePath =(path)->
         window.localStorage.setItem("filepath", ""+path)
 

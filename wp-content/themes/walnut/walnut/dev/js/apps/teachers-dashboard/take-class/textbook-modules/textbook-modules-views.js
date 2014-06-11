@@ -99,7 +99,10 @@ define(['app'], function(App) {
           container: $(".pager"),
           output: '{startRow} to {endRow} of {totalRows}'
         };
-        return $('#take-class-modules').tablesorterPager(pagerOptions);
+        $('#take-class-modules').tablesorterPager(pagerOptions);
+        if (_.platform() === 'DEVICE') {
+          return _.appNavigation();
+        }
       };
 
       return ContentGroupsView;

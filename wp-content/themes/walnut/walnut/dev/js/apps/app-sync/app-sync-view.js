@@ -36,11 +36,12 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.template = AppSyncTpl;
 
       AppSyncView.prototype.events = {
-        'click #syncStartContinue': 'startContinueSyncProcess'
+        'click #syncStartContinue': 'startContinueSyncProcess',
+        'click #syncMediaStartContinue': 'startContinueMediaSyncProcess'
       };
 
       AppSyncView.prototype.onShow = function() {
-        var lastSyncOperation, totalRecordsTobeSynced;
+        var lastMediaSyncOperation, lastSyncOperation, totalRecordsTobeSynced;
         App.breadcrumbRegion.close();
         navigator.splashscreen.hide();
         totalRecordsTobeSynced = _.getTotalRecordsTobeSynced();
@@ -52,7 +53,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
           }
         });
         lastSyncOperation = _.getLastSyncOperation();
-        return lastSyncOperation.done(function(typeOfOperation) {
+        lastSyncOperation.done(function(typeOfOperation) {
           switch (typeOfOperation) {
             case 'none':
               return $('#syncButtonText').text('Start');
@@ -64,6 +65,13 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
               return $('#syncButtonText').text('Continue');
             case 'file_upload':
               return $('#syncButtonText').text('Continue');
+          }
+        });
+        lastMediaSyncOperation = _.getLastMediaSyncOperation();
+        return lastMediaSyncOperation.done(function(typeOfOperation) {
+          switch (typeOfOperation) {
+            case 'none':
+              return $('#syncMediaButtonText').text('Start');
           }
         });
       };
@@ -123,6 +131,10 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
               })(this), 3000);
           }
         });
+      };
+
+      AppSyncView.prototype.startContinueMediaSyncProcess = function() {
+        return console.log('startContinueMediaSyncProcess');
       };
 
       return AppSyncView;

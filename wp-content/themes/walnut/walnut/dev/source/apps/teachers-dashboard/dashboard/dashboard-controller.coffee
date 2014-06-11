@@ -72,20 +72,15 @@ define ['app'
 					.select2()
 
 				if _.platform() is "DEVICE"
+
 					_.checkSynapseAssetsDirectory()
 					
 					# Hide the splash screen image
 					navigator.splashscreen.hide()
 
-					# onBackbuttonClick = =>
-					# 	console.log 'Fired cordova back button event'
-						
-					# 	navigator.app.exitApp()
+					# Cordova app navigation
+					_.appNavigation()
 
-					# 	document.removeEventListener("backbutton", onBackbuttonClick, false)
-
-					# #Cordova backbutton event
-					# document.addEventListener("backbutton", onBackbuttonClick, false)
 
 
 

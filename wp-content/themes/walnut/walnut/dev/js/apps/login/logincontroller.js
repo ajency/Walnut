@@ -95,6 +95,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         $('.page-content').addClass('condensed');
         if (_.platform() === 'DEVICE') {
           _.createSynapseImagesDirectory();
+          navigator.splashscreen.hide();
           this.trigger("prepopulate:username");
           _.setMainLogo();
           if (_.isOnline()) {
@@ -103,8 +104,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
             $('#connectionStatus').text('Unavailable');
             $('#online').prop("disabled", true);
           }
-          this.trigger("disable:offline:login:type");
-          return navigator.splashscreen.hide();
+          return this.trigger("disable:offline:login:type");
         }
       };
 

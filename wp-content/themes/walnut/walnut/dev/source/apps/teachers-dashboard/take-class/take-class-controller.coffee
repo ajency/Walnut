@@ -88,5 +88,3 @@ define ['app'
         class ClassDescriptionView extends Marionette.ItemView
 
             template: classDescriptionTpl
-
-

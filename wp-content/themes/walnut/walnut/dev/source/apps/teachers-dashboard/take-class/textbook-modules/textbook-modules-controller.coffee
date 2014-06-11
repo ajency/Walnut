@@ -63,10 +63,10 @@ define ['app'
 
                         showModulesHeading:=>
                             console.log @mode
-                            headingString='<span class="semi-bold">All</span> Modules'
+                            headingString = '<span class="semi-bold">All</span> Modules'
 
                             if @mode is 'training'
-                                headingString='<span class="semi-bold">Practice</span> Modules'
+                                headingString = '<span class="semi-bold">Practice</span> Modules'
 
                             headingString
 
@@ -99,7 +99,7 @@ define ['app'
 
             onShow: ->
                 nowDate = new Date();
-                today= new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+                today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
 
                 $('.input-append.date').datepicker
                     autoclose: true

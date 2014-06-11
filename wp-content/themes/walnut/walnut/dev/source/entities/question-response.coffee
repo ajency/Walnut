@@ -1,4 +1,4 @@
-define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 	App.module "Entities.QuestionResponse", (QuestionResponse, App, Backbone, Marionette, $, _)->
 
 
