@@ -162,7 +162,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						
 						success = (d)->
 							(tx, data)->
-								ids = unserialize(unserialize(data.rows.item(0)['meta_value']))
+								console.log 'meta_value: '+data.rows.item(0)['meta_value']
+								ids = unserialize(data.rows.item(0)['meta_value'])
 								ids = _.compact ids
 								d.resolve ids
 
@@ -282,7 +283,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
 								subjects = unserialize(row["tags"]) if row["tags"] isnt ''
 								
-								result[i] = 
+								result[i] =
 									term_id: row["term_id"]
 									name: row["name"]
 									slug: row["slug"]

@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '<video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="http://www.eyespot.com/2013/wp-content/uploads/2013/04/video-clip.jpg" data-setup="{}" controls> <source src="{{videoUrl}}" type="video/mp4" /> </video> <div class="clearfix"></div>';
+      VideoView.prototype.template = '<video class="video-js vjs-default-skin" poster="http://www.eyespot.com/2013/wp-content/uploads/2013/04/video-clip.jpg" width="100%" data-setup="{}" controls></video> <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click': function(e) {
@@ -21,13 +21,19 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype.onShow = function() {
-        var height, videoId, width;
-        videoId = _.uniqueId('video-');
+        var url, videoId, videoPath, videoUrl, videos;
+        console.log(this.model);
+        videoId = _.uniqueId('video_');
         this.$el.find('video').attr('id', videoId);
-        this.videoElement = videojs(videoId);
-        width = this.videoElement.width();
-        height = 9 * width / 16;
-        return this.videoElement.height(height);
+        if (_.platform() === 'DEVICE') {
+          url = this.model.get('videoUrl');
+          videoUrl = url.substr(url.indexOf("uploads/"));
+          videoPath = "SynapseAssets/SynapseImages/" + videoUrl;
+          videos = {};
+          videos[videoId] = videoPath;
+          window.plugins.html5Video.initialize(videos);
+          return window.plugins.html5Video.play(videoId);
+        }
       };
 
       return VideoView;

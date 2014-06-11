@@ -83,6 +83,13 @@ define ['app'
 
 
                 if _.platform() is 'DEVICE'
+
+                    #Create 'SynapseImages' directory inside 'SynapseAssets'
+                    _.createSynapseImagesDirectory()
+
+                    #Hide the splash screen image
+                    navigator.splashscreen.hide()
+
                     @trigger "prepopulate:username"
 
                     _.setMainLogo()
@@ -93,9 +100,7 @@ define ['app'
                         $('#online').prop("disabled",true)
 
                     @trigger "disable:offline:login:type"
-
-                    #Hide the splash screen image
-                    navigator.splashscreen.hide()
+                    
                     
 
             submitLogin: (e)->
@@ -108,6 +113,7 @@ define ['app'
 
                     data = Backbone.Syphon.serialize (@)
                     @trigger "authenticate:user", data
+
 
             onLoginFail: (resp) ->
                 @$el.find('#checking_login, #invalid_login').remove();

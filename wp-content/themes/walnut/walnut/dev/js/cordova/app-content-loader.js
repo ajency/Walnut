@@ -20,7 +20,7 @@ define(['underscore', 'unserialize'], function(_) {
       };
     };
     return $.when(runQuery()).done(function() {
-      return console.log('getMetaValueFromMetaId transaction completed');
+      return console.log('getMetaValueFromMetaId: ' + meta_id + ' transaction completed');
     }).fail(_.failureHandler);
   };
   _.getJsonToClone = function(elements) {
@@ -57,6 +57,12 @@ define(['underscore', 'unserialize'], function(_) {
                   }
                   if (element.element === 'Image') {
                     element.image_id = parseInt(element.image_id);
+                  }
+                  if (element.element === 'ImageWithText') {
+                    element.image_id = parseInt(element.image_id);
+                  }
+                  if (element.element === 'Video') {
+                    element.video_id = parseInt(element.video_id);
                   }
                 }
                 total--;
@@ -108,6 +114,12 @@ define(['underscore', 'unserialize'], function(_) {
                     if (element.element === 'Image') {
                       element.image_id = parseInt(element.image_id);
                     }
+                    if (element.element === 'ImageWithText') {
+                      element.image_id = parseInt(element.image_id);
+                    }
+                    if (element.element === 'Video') {
+                      element.video_id = parseInt(element.video_id);
+                    }
                   }
                   total--;
                   if (!total) {
@@ -116,6 +128,8 @@ define(['underscore', 'unserialize'], function(_) {
                 });
               }
             });
+          } else {
+            return d.resolve(content);
           }
         });
       });

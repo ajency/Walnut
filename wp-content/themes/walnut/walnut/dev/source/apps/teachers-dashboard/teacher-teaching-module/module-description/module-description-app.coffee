@@ -29,12 +29,14 @@ define ['app'
 
                 new ModuleDescriptionView
                     model: model
+                    mode : @display_mode
 
                     templateHelpers:
                         showPauseButton:=>
                             pauseBtn = ''
                             if @display_mode is 'class_mode'
-                                pauseBtn= '<button type="button" id="pause-session" class="btn btn-white  action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>'
+                                pauseBtn= '<button type="button" id="pause-session" class="btn btn-white
+                                    action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>'
                             pauseBtn
 
                         getProgressData:->
@@ -64,6 +66,15 @@ define ['app'
             className: 'pieceWrapper'
 
             template: moduleDescriptionTemplate
+
+            mixinTemplateHelpers :(data)->
+                data = super data
+                data.isTraining = if @mode is 'training' then true else false
+                data
+
+            initialize : ->
+                @mode = Marionette.getOption @, 'mode'
+
 
             events:
                 'click #back-to-module, #pause-session': ->

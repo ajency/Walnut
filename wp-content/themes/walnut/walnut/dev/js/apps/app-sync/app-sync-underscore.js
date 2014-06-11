@@ -43,12 +43,12 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getTotalRecordsTobeSynced transaction completed');
       }).fail(_.failureHandler);
     },
-    getLastSyncTimeStamp: function(operation) {
+    getLastDownloadTimeStamp: function() {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT time_stamp FROM sync_details WHERE type_of_operation=? ORDER BY id DESC LIMIT 1", [operation], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT time_stamp FROM sync_details WHERE type_of_operation=? ORDER BY id DESC LIMIT 1", ['file_download'], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -63,8 +63,15 @@ define(['underscore', 'unserialize'], function(_) {
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('getLastSyncTimeStamp transaction completed');
+        return console.log('getLastDownloadTimeStamp transaction completed');
       }).fail(_.failureHandler);
+    },
+    updateSyncDetails: function(operation, time_stamp) {
+      return _.db.transaction(function(tx) {
+        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?,?)", [operation, time_stamp]);
+      }, _.transactionErrorhandler, function(tx) {
+        return console.log('Updated sync details for ' + operation);
+      });
     }
   });
 });

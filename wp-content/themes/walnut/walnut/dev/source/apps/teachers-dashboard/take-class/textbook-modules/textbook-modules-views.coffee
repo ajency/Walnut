@@ -11,7 +11,7 @@ define ['app'], (App)->
             		               <td>
             			                <span class="muted status_label">{{&status_str}}</span>
 
-            			               	<button data-id="{{id}}" type="button" class="btn btn-white btn-small pull-right action start-training">
+            			               	<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
             			               		{{&action_str}}
             			               	</button>
             			               	{{&training_date}}
@@ -72,7 +72,7 @@ define ['app'], (App)->
             							                  <tr>
             							                    <th style="width:50%">Name</th>
             							                    <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th>
-            							                    <th style="width:40%">Status</th>
+            							                    <th style="width:40%"><div id="status_header">Status</div></th>
             							                  </tr>
             							                </thead>
             							                <tbody>
@@ -95,7 +95,7 @@ define ['app'], (App)->
 
 
             startTraining: (e)=>
-                dataID = $(e.target).attr 'data-id'
+                dataID = $(e.currentTarget).attr 'data-id'
                 currentRoute = App.getCurrentRoute()
                 App.navigate currentRoute + "/module/" + dataID, true
 
@@ -111,6 +111,10 @@ define ['app'], (App)->
                 @trigger "schedule:training", dataID
 
             onShow: =>
+                if Marionette.getOption(@, 'mode') is 'training'
+                    @$el.find '.status_label, .training-date, #status_header'
+                    .hide();
+
                 @$el.find '#take-class-modules'
                 .tablesorter()
 
@@ -131,6 +135,9 @@ define ['app'], (App)->
                     output: '{startRow} to {endRow} of {totalRows}'
 
                 $('#take-class-modules').tablesorterPager pagerOptions
+
+                # Cordova app navigation
+                _.appNavigation() if _.platform() is 'DEVICE'
 
 
 		

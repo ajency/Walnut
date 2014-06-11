@@ -109,7 +109,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
             _.setBlogName(resp.blog_name)
 
             # local transaction
-            _.createQuestionResponseTable(_.db)
+            _.createDataTables(_.db)
 
             # download school logo
             _.downloadSchoolLogo(resp.blog_logo)

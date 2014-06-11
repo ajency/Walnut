@@ -1,110 +1,138 @@
-<div class="grid-title no-border">
-    <h4 class="">{{name}}</h4>
+<button type="button" id="go-back-button" class="btn btn-white btn-cons">
+    <h4 class="bold  text-info no-margin">
+        <i class="fa fa-chevron-left"></i>
+        List of Modules
+    </h4>
+</button>
+{{#isTraining}}
+    <div class="well text-center">
+        <h4><span class="bold">This is a practise mode.
+            It is designed to help you train for the class</span></h4>
+    </div>
+{{/isTraining}}
+<div class='tiles white grid simple vertical green'>
+    <div class="grid-title no-border">
+        <h4 class="">{{name}}</h4>
 
-    <div class="tools">
-        <a href="javascript:;" class="collapse"></a>
+        <!-- <div class="tools">
+            <a href="javascript:;" class="collapse"></a>
+        </div> -->
     </div>
-</div>
-<div class="grid-body no-border" style="overflow: hidden; display: block;">
-    <div class="row ">
-        <div class="col-md-4">
-            <div class="margin-bottom-20 ">
-                <label class="form-label">Objective</label>
-                {{description.objective}}
+    <div class="grid-body no-border" style="overflow: hidden; display: block;">
+        <div class="row ">
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Objective</label>
+                    {{description.objective}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Physical Requirements</label>
+                    {{description.physical_requirements}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Textbook</label>
+                    {{getTextbookName}}
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="margin-bottom-20 ">
-                <label class="form-label">Physical Requirements</label>
-                {{description.physical_requirements}}
+        <div class="row ">
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Description</label>
+                    {{description.description}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Electronic Requirements</label>
+                    {{description.electionic_requirements}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Chapter</label>
+                    {{getChapterName}}
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="margin-bottom-20 ">
-                <label class="form-label">Textbook</label>
-                {{getTextbookName}}
+        <div class="row ">
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Duration</label>
+                    {{duration}} {{minshours}}
+                </div>
             </div>
         </div>
     </div>
-    <div class="row ">
-        <div class="col-md-4">
-            <div class="margin-bottom-20 ">
-                <label class="form-label">Description</label>
-                {{description.description}}
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="margin-bottom-20 ">
-                <label class="form-label">Electronic Requirements</label>
-                {{description.electionic_requirements}}
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="margin-bottom-20 ">
-                <label class="form-label">Chapter</label>
-                {{getChapterName}}
-            </div>
-        </div>
-    </div>
-    <div class="row ">
-        <div class="col-md-4">
-            <div class="margin-bottom-20 ">
-                <label class="form-label">Duration</label>
-                {{duration}} {{minshours}}
-            </div>
-        </div>
-    </div>
-</div>
 
-{{#takeClassModule}}
-<div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
-    <div class="row p-r-10">
-        <div class="col-sm-4">
+    {{#takeClassModule}}
+    <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
+        <div class="row no-margin p-r-10">
+            <div class="col-sm-4">
 
-            <div class="tiles added-margin">
-                <div class="tiles-body">
-                    <div class="tiles-title"> TRAINING MODULE TIME</div>
-                    <div class="heading"><span class="animate-number" data-animation-duration="1200">{{total_minutes}} mins</span>
+                <div class="tiles added-margin">
+                    <div class="tiles-body">
+                        <div class="tiles-title"> TRAINING MODULE TIME</div>
+                        <div class="heading"><span class="animate-number" data-animation-duration="1200">{{total_minutes}} mins</span>
+                        </div>
                     </div>
                 </div>
+
             </div>
+            <div class="col-sm-4">
 
-        </div>
-        <div class="col-sm-4">
-
-        </div>
-        <div class="col-sm-4">
-
-            <div class="tiles white added-margin">
-                <div class="tiles-body">
-                    <div class="tiles-title"> ELAPSED MODULE TIME</div>
-                    <div class="heading"><span class="animate-number"
-                                               data-animation-duration="1200">{{showElapsedTime}}</span></div>
-                </div>
             </div>
+            <div class="col-sm-4">
 
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="modProgress">
-                <p class="bold small-text m-t-10 m-b-5">Progress</p>
-
-                <div class="progress progress-large">
-                    <div data-percentage="{{getProgressPercentage}}%" style="width:{{getProgressPercentage}}%;"
-                         class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0"
-                         aria-valuemax="100">{{getProgressData}}
+                <div class="tiles white added-margin">
+                    <div class="tiles-body">
+                        <div class="tiles-title"> ELAPSED MODULE TIME</div>
+                        {{^isTraining}}
+                            <div class="heading">
+                                <span class="animate-number" data-animation-duration="1200">
+                                    {{showElapsedTime}}
+                                </span>
+                            </div>
+                        {{/isTraining}}
+                        {{#isTraining}}
+                            <p class="small-text muted">This will display what is the elapsed module
+                                time of the training module in class mode.</p>
+                        {{/isTraining}}
                     </div>
                 </div>
+
             </div>
         </div>
-        <div class="col-sm-6">
-            <div class="timedisplay"></div>
+        <div class="row no-margin p-t-10">
+            <div class="col-sm-6">
+                <div class="{{^isTraining}}modProgress{{/isTraining}}" >
+                    <p class="bold small-text m-t-10 m-b-5">Progress</p>
+                    {{^isTraining}}
+                        <div class="progress progress-large">
+                            <div data-percentage="{{getProgressPercentage}}%" style="width:{{getProgressPercentage}}%;"
+                                 class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0"
+                                 aria-valuemax="100">{{getProgressData}}
+                            </div>
+                        </div>
+                    {{/isTraining}}
+                    {{#isTraining}}
+                            <p class="small-text muted"> This will display the progress of training module in class mode.</p>
+                    {{/isTraining}}
 
-            {{&startScheduleButton}}
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="timedisplay"></div>
+
+                {{&startScheduleButton}}
 
 
+            </div>
         </div>
     </div>
+    {{/takeClassModule}}
 </div>
-{{/takeClassModule}}

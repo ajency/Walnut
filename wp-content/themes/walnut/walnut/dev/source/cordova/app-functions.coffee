@@ -1,11 +1,30 @@
-define ['underscore', 'unserialize'], ( _) ->
+define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 	# mixin to add additional functionality underscore
+
 	_.mixin
 
 		getTblPrefix : ->
 			'wp_'+_.getBlogID()+'_'
 
+
+		appNavigation : ->
+			#Cordova backbutton event
+			document.addEventListener("backbutton", _.onBackButtonClick, false) 
+
+		onBackButtonClick : ->
+			console.log 'Fired cordova back button event'
+			
+			currentRoute = App.getCurrentRoute()
+			console.log 'currentRoute: '+currentRoute
+
+			if currentRoute is 'teachers/dashboard' or currentRoute is 'app-login'
+				#Exit the application
+				navigator.app.exitApp()
+			else 
+				Backbone.history.history.back()
+
+			document.removeEventListener("backbutton", _.onBackButtonClick, false)
 		
 	
 		#Get all user details from local database
@@ -61,25 +80,27 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx, data)->
 					for i in [0..data.rows.length-1] by 1
 						row = data.rows.item(i)
+						
+						do(row)->
 
-						if row['meta_key'] is 'content_type'
-							meta_value.content_type = row['meta_value']
+							if row['meta_key'] is 'content_type'
+								meta_value.content_type = row['meta_value']
 
-						if row['meta_key'] is 'layout_json'
-							meta_value.layout_json = unserialize(unserialize(row['meta_value']))
+							if row['meta_key'] is 'layout_json'
+								meta_value.layout_json = unserialize(unserialize(row['meta_value']))
 
-						if row['meta_key'] is 'question_type'
-							meta_value.question_type = row['meta_value']	
+							if row['meta_key'] is 'question_type'
+								meta_value.question_type = row['meta_value']	
 
-						if row['meta_key'] is 'content_piece_meta'
-							content_piece_meta = unserialize(unserialize(row['meta_value']))
+							if row['meta_key'] is 'content_piece_meta'
+								content_piece_meta = unserialize(unserialize(row['meta_value']))
 
-							meta_value.post_tags = content_piece_meta.post_tags
-							meta_value.duration = content_piece_meta.duration
-							meta_value.last_modified_by = content_piece_meta.last_modified_by
-							meta_value.published_by = content_piece_meta.published_by
-							meta_value.term_ids = content_piece_meta.term_ids
-							meta_value.instructions = content_piece_meta.instructions
+								meta_value.post_tags = content_piece_meta.post_tags
+								meta_value.duration = content_piece_meta.duration
+								meta_value.last_modified_by = content_piece_meta.last_modified_by
+								meta_value.published_by = content_piece_meta.published_by
+								meta_value.term_ids = content_piece_meta.term_ids
+								meta_value.instructions = content_piece_meta.instructions
 								
 
 					d.resolve(meta_value)
@@ -123,21 +144,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'getTextbookOptions transaction completed'
 			.fail _.failureHandler	
-
-
-		#Insert new records in wp_question_response_logs
-		updateQuestionResponseLogs : (refID)->
-
-			_.db.transaction((tx)->
-				tx.executeSql('INSERT INTO '+_.getTblPrefix()+'question_response_logs 
-					(qr_ref_id, start_time, sync) VALUES (?,?,?)'
-					, [refID, _.getCurrentDateTime(2), 0])
-
-			,_.transactionErrorHandler
-            ,(tx)->
-                console.log 'SUCCESS: Inserted new record in wp_question_response_logs'
-            )	
-
+			
 
 
 		#Get current date

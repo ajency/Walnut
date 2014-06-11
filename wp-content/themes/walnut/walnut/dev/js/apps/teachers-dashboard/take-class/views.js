@@ -86,9 +86,12 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
           effects: ['fade', 'blur'],
           listEffects: ['fade', 'rotateX']
         });
-        return this.dimensions = {
+        this.dimensions = {
           status: 'all'
         };
+        if (_.platform() === 'DEVICE') {
+          return _.appNavigation();
+        }
       };
 
       return TextbooksListView;

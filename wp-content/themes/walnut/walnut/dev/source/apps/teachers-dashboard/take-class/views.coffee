@@ -68,3 +68,6 @@ define ['app'
 
 				@dimensions = 
 					status: 'all'
+				
+				# Cordova app navigation
+				_.appNavigation() if _.platform() is 'DEVICE'

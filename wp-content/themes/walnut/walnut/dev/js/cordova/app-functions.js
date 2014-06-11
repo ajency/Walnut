@@ -1,7 +1,22 @@
-define(['underscore', 'unserialize'], function(_) {
+define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
   return _.mixin({
     getTblPrefix: function() {
       return 'wp_' + _.getBlogID() + '_';
+    },
+    appNavigation: function() {
+      return document.addEventListener("backbutton", _.onBackButtonClick, false);
+    },
+    onBackButtonClick: function() {
+      var currentRoute;
+      console.log('Fired cordova back button event');
+      currentRoute = App.getCurrentRoute();
+      console.log('currentRoute: ' + currentRoute);
+      if (currentRoute === 'teachers/dashboard' || currentRoute === 'app-login') {
+        navigator.app.exitApp();
+      } else {
+        Backbone.history.history.back();
+      }
+      return document.removeEventListener("backbutton", _.onBackButtonClick, false);
     },
     getUserDetails: function(username) {
       var onSuccess, runQuery, userData;
@@ -59,9 +74,9 @@ define(['underscore', 'unserialize'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var content_piece_meta, i, row, _i, _ref;
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
+          var i, row, _fn, _i, _ref;
+          _fn = function(row) {
+            var content_piece_meta;
             if (row['meta_key'] === 'content_type') {
               meta_value.content_type = row['meta_value'];
             }
@@ -78,8 +93,12 @@ define(['underscore', 'unserialize'], function(_) {
               meta_value.last_modified_by = content_piece_meta.last_modified_by;
               meta_value.published_by = content_piece_meta.published_by;
               meta_value.term_ids = content_piece_meta.term_ids;
-              meta_value.instructions = content_piece_meta.instructions;
+              return meta_value.instructions = content_piece_meta.instructions;
             }
+          };
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            row = data.rows.item(i);
+            _fn(row);
           }
           return d.resolve(meta_value);
         };
@@ -124,13 +143,6 @@ define(['underscore', 'unserialize'], function(_) {
       return $.when(runQuery()).done(function() {
         return console.log('getTextbookOptions transaction completed');
       }).fail(_.failureHandler);
-    },
-    updateQuestionResponseLogs: function(refID) {
-      return _.db.transaction(function(tx) {
-        return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_logs (qr_ref_id, start_time, sync) VALUES (?,?,?)', [refID, _.getCurrentDateTime(2), 0]);
-      }, _.transactionErrorHandler, function(tx) {
-        return console.log('SUCCESS: Inserted new record in wp_question_response_logs');
-      });
     },
     getCurrentDateTime: function(bit) {
       var d, date, time;

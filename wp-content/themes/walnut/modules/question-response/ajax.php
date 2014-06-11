@@ -10,7 +10,8 @@ function create_question_response(){
         'collection_id'     => $collection_id,
         'content_piece_id'  => $content_piece_id,
         'division'          => $division,
-        'status'            => $status
+        'status'            => $status,
+        'teacher_id'        => get_current_user_id()
     );
 
     if(isset($start_date))
@@ -41,9 +42,9 @@ add_action( 'wp_ajax_update-question-response', 'ajax_update_question_response' 
 
 
 function ajax_get_question_responses(){
-    global $wpdb;
-    
+
     $collection_id= $_GET['collection_id'];
+
     $division =  $_GET['division'];
     
     $data= get_question_responses($collection_id, $division);

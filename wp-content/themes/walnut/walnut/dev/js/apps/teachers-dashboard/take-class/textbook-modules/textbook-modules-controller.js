@@ -82,6 +82,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
       textbookModulesController.prototype._getContentGroupsListingView = function(collection) {
         return new View.TakeClassTextbookModules.ContentGroupsView({
           collection: collection,
+          mode: this.mode,
           templateHelpers: {
             showTextbookName: (function(_this) {
               return function() {
@@ -120,10 +121,10 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/take-cl
         return ScheduleModalView.__super__.constructor.apply(this, arguments);
       }
 
-      ScheduleModalView.prototype.template = '<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> <h4 class="modal-title" id="myModalLabel">Schedule Module</h4> </div> <div class="modal-body"> <div data-date-format="yyyy-mm-dd" class="input-append success date"> <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12"> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </div> <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button> </div> </div> </div> </div>';
+      ScheduleModalView.prototype.template = '<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> <h4 class="modal-title" id="myModalLabel">Schedule Module</h4> </div> <div class="modal-body"> <div data-date-format="yyyy-mm-dd" class="input-append success date"> <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12"> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </div> <button type="button" class="btn btn-success" data-dismiss="modal">Save</button> </div> </div> </div> </div>';
 
       ScheduleModalView.prototype.events = {
-        'click .btn-primary': 'saveScheduledDate'
+        'click .btn-success': 'saveScheduledDate'
       };
 
       ScheduleModalView.prototype.onShow = function() {

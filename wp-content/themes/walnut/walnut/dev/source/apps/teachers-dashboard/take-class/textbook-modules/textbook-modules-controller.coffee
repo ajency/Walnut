@@ -57,16 +57,17 @@ define ['app'
             _getContentGroupsListingView: (collection)=>
                 new View.TakeClassTextbookModules.ContentGroupsView
                     collection: collection
+                    mode: @mode
                     templateHelpers:
                         showTextbookName: =>
                             @textbook.get 'name'
 
                         showModulesHeading:=>
                             console.log @mode
-                            headingString='<span class="semi-bold">All</span> Modules'
+                            headingString = '<span class="semi-bold">All</span> Modules'
 
                             if @mode is 'training'
-                                headingString='<span class="semi-bold">Practice</span> Modules'
+                                headingString = '<span class="semi-bold">Practice</span> Modules'
 
                             headingString
 
@@ -88,18 +89,18 @@ define ['app'
             										  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
             										  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
             								  </div>
-            								  <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            								  <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
             						</div>
             					  </div>
             					</div>
             				</div>'
 
             events:
-                'click .btn-primary': 'saveScheduledDate'
+                'click .btn-success': 'saveScheduledDate'
 
             onShow: ->
                 nowDate = new Date();
-                today= new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+                today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
 
                 $('.input-append.date').datepicker
                     autoclose: true

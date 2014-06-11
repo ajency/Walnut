@@ -84,14 +84,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 					contentPiece.fetch()
 				contentPiece
 
-			
 			getContentPiecesByIDs: (ids = [])->
+				contentPieces = new ContentPiece.ItemCollection
 				if _.size(ids) > 0
-					contentPieces = new ContentPiece.ItemCollection
 					contentPieces.fetch
 						data:
 							ids: ids
-					contentPieces
+				contentPieces
 
 
 			#get all content pieces from local database
@@ -145,6 +144,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 											do(row, i, author_name, meta_value)->
 												if(meta_value.layout_json)
+													
 													contentElementsArray = _.getJsonToClone(meta_value.layout_json)
 													contentElementsArray.done (contentElements)->
 
@@ -199,8 +199,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 				$.when(runMainQuery()).done (d)->
 					console.log 'getContentPieceFromLocal transaction completed'
 				.fail _.failureHandler
-
-
 
 				
 

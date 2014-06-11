@@ -88,7 +88,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
         navigator.splashscreen.hide();
         onBackbuttonClick = (function(_this) {
           return function() {
-            console.log('Fired cordova back button event');
+            console.log('Fired cordova back button event for login');
             if (App.getCurrentRoute() === 'app-login') {
               navigator.app.exitApp();
             } else {

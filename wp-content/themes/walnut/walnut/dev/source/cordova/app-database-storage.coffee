@@ -23,6 +23,9 @@ define ['underscore', 'jquery'], (_, $)->
 
 				tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details
 					(id INTEGER PRIMARY KEY, type_of_operation, time_stamp)')
+
+				tx.executeSql('CREATE TABLE IF NOT EXISTS sync_media_details 
+					(id INTEGER PRIMARY KEY, type_of_operation)')
 				
 			,_.transactionErrorHandler
 			,(tx)->
@@ -30,9 +33,12 @@ define ['underscore', 'jquery'], (_, $)->
 			)
 
 
-		createQuestionResponseTable : (db)->
+		createDataTables : (db)->
 
 			db.transaction((tx)->
+
+				tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'class_divisions 
+					(id INTEGER, division, class_id INTEGER)')
 
 				tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'question_response 
 					(ref_id, teacher_id INTEGER, content_piece_id INTEGER, collection_id INTEGER
@@ -42,5 +48,5 @@ define ['underscore', 'jquery'], (_, $)->
 				
 			,_.transactionErrorHandler
 			,(tx)->
-				console.log 'SUCCESS: createQuestionResponseTable transaction completed'
+				console.log 'SUCCESS: createDataTables transaction completed'
 			)

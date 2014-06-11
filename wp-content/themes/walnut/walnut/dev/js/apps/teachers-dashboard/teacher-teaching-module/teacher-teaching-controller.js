@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app', 'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app', 'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app', 'apps/teachers-dashboard/teacher-teaching-module/teacher-training-footer/training-footer-controller', 'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app', 'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'], function(App, RegionController) {
   return App.module("TeacherTeachingApp", function(View, App) {
     var SingleQuestionLayout, contentGroupModel, contentPiece, questionResponseCollection, questionResponseModel, questionsCollection, studentCollection;
     contentGroupModel = null;
@@ -15,6 +15,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       __extends(TeacherTeachingController, _super);
 
       function TeacherTeachingController() {
+        this._showTeacherTrainingFooter = __bind(this._showTeacherTrainingFooter, this);
         this._showStudentsListView = __bind(this._showStudentsListView, this);
         this._showQuestionDisplayView = __bind(this._showQuestionDisplayView, this);
         this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
@@ -46,6 +47,9 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         if (this.display_mode !== 'training') {
           this.listenTo(this.layout, "show", this._showStudentsListView(questionResponseModel));
         }
+        if (this.display_mode === 'training') {
+          this.listenTo(this.layout, 'show', this._showTeacherTrainingFooter);
+        }
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
@@ -70,6 +74,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
           this._showQuestionDisplayView(contentPiece);
           if (this.display_mode !== 'training') {
             return this._showStudentsListView(questionResponseModel);
+          } else if (this.display_mode === 'training') {
+            return this._showTeacherTrainingFooter();
           }
         } else {
           return this._gotoPreviousRoute();
@@ -84,13 +90,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         currRoute = App.getCurrentRoute();
         removeStr = _.str.strRightBack(currRoute, '/');
         newRoute = _.str.rtrim(currRoute, removeStr + '/');
-        App.navigate(newRoute, true);
-        App.execute("show:headerapp", {
-          region: App.headerRegion
-        });
-        return App.execute("show:leftnavapp", {
-          region: App.leftNavRegion
-        });
+        return App.navigate(newRoute, true);
       };
 
       TeacherTeachingController.prototype._saveQuestionResponse = function(status) {
@@ -105,10 +105,6 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
         var modelData;
-        content_piece_id = content_piece_id.toString();
-        if (_.platform() === 'DEVICE') {
-          content_piece_id = parseInt(content_piece_id);
-        }
         questionResponseModel = questionResponseCollection.findWhere({
           'content_piece_id': content_piece_id
         });
@@ -176,6 +172,21 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
                 timerObject: _this.timerObject
               });
             }
+          };
+        })(this));
+      };
+
+      TeacherTeachingController.prototype._showTeacherTrainingFooter = function() {
+        return App.execute("when:fetched", contentPiece, (function(_this) {
+          return function() {
+            var question_type;
+            question_type = contentPiece.get('question_type');
+            console.log(contentPiece.get('ID'));
+            return App.execute('show:teacher:training:footer:app', {
+              region: _this.layout.studentsListRegion,
+              contentPieceId: contentPiece.get('ID'),
+              question_type: question_type
+            });
           };
         })(this));
       };

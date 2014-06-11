@@ -36,12 +36,14 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.template = AppSyncTpl;
 
       AppSyncView.prototype.events = {
-        'click #syncStartContinue': 'startContinueSyncProcess'
+        'click #syncStartContinue': 'startContinueSyncProcess',
+        'click #syncMediaStartContinue': 'startContinueMediaSyncProcess'
       };
 
       AppSyncView.prototype.onShow = function() {
         var lastSyncOperation, totalRecordsTobeSynced;
         App.breadcrumbRegion.close();
+        navigator.splashscreen.hide();
         totalRecordsTobeSynced = _.getTotalRecordsTobeSynced();
         totalRecordsTobeSynced.done(function(totalRecords) {
           if (totalRecords === 0) {
@@ -52,7 +54,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         });
         lastSyncOperation = _.getLastSyncOperation();
         return lastSyncOperation.done(function(typeOfOperation) {
-          console.log('typeOfOperation: ' + typeOfOperation);
           switch (typeOfOperation) {
             case 'none':
               return $('#syncButtonText').text('Start');
@@ -70,6 +71,8 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.startContinueSyncProcess = function() {
         var lastSyncOperation;
+        _.createSynapseDataDirectory();
+        $('#syncError').css("display", "none");
         lastSyncOperation = _.getLastSyncOperation();
         return lastSyncOperation.done(function(typeOfOperation) {
           switch (typeOfOperation) {
@@ -82,46 +85,15 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
                   syncController = App.request("get:sync:controller");
                   return syncController.getDownloadURL();
                 };
-              })(this), 3000);
+              })(this), 2000);
             case 'file_import':
               $('#syncStartContinue').css("display", "none");
               $('#syncSuccess').css("display", "block").text("Started sync process...");
-              setTimeout((function(_this) {
-                return function() {
-                  var syncController;
-                  $('#syncSuccess').css("display", "block").text("Generating file...");
-                  syncController = App.request("get:sync:controller");
-                  return syncController.updateSyncDetails('file_generate', _.getCurrentDateTime(2));
-                };
-              })(this), 2000);
-              setTimeout((function(_this) {
-                return function() {
-                  var syncController;
-                  syncController = App.request("get:sync:controller");
-                  syncController.updateSyncDetails('file_generate', _.getCurrentDateTime(2));
-                  return $('#syncSuccess').css("display", "block").text("File generation completed...");
-                };
-              })(this), 4000);
-              setTimeout((function(_this) {
-                return function() {
-                  return $('#syncSuccess').css("display", "block").text("Starting file upload...");
-                };
-              })(this), 6000);
-              setTimeout((function(_this) {
-                return function() {
-                  var syncController;
-                  syncController = App.request("get:sync:controller");
-                  syncController.updateSyncDetails('file_upload', _.getCurrentDateTime(2));
-                  return $('#syncSuccess').css("display", "block").text("File upload completed...");
-                };
-              })(this), 8000);
               return setTimeout((function(_this) {
                 return function() {
-                  var syncController;
-                  syncController = App.request("get:sync:controller");
-                  return syncController.getDownloadURL();
+                  return _.generateZipFile();
                 };
-              })(this), 10000);
+              })(this), 2000);
             case 'file_download':
               $('#syncStartContinue').css("display", "none");
               $('#syncSuccess').css("display", "block").text("Resuming sync process...");
@@ -131,30 +103,15 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
                   syncController = App.request("get:sync:controller");
                   return syncController.readUnzipFile1();
                 };
-              })(this), 3000);
+              })(this), 2000);
             case 'file_generate':
               $('#syncStartContinue').css("display", "none");
               $('#syncSuccess').css("display", "block").text("Resuming sync process...");
-              setTimeout((function(_this) {
-                return function() {
-                  return $('#syncSuccess').css("display", "block").text("Starting file upload...");
-                };
-              })(this), 3000);
-              setTimeout((function(_this) {
-                return function() {
-                  var syncController;
-                  syncController = App.request("get:sync:controller");
-                  syncController.updateSyncDetails('file_upload', _.getCurrentDateTime(2));
-                  return $('#syncSuccess').css("display", "block").text("File upload completed...");
-                };
-              })(this), 5000);
               return setTimeout((function(_this) {
                 return function() {
-                  var syncController;
-                  syncController = App.request("get:sync:controller");
-                  return syncController.getDownloadURL();
+                  return _.uploadGeneratedZipFile();
                 };
-              })(this), 7000);
+              })(this), 2000);
             case 'file_upload':
               $('#syncStartContinue').css("display", "none");
               $('#syncSuccess').css("display", "block").text("Resuming sync process...");
@@ -167,6 +124,16 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
               })(this), 3000);
           }
         });
+      };
+
+      AppSyncView.prototype.startContinueMediaSyncProcess = function() {
+        $('#syncMediaStartContinue').css("display", "none");
+        $('#syncMediaSuccess').css("display", "block").text("Started media sync process...");
+        return setTimeout((function(_this) {
+          return function() {
+            return _.getListOfMediaFilesFromServer();
+          };
+        })(this), 2000);
       };
 
       return AppSyncView;

@@ -1,4 +1,4 @@
-define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
+define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 	App.module "Entities.QuestionResponse", (QuestionResponse, App, Backbone, Marionette, $, _)->
 
 
@@ -73,6 +73,7 @@ define ["app", 'backbone', 'unserialize', 'serialize'], (App, Backbone) ->
 							do(r, i)->
 								questionType = _.getMetaValue(r['content_piece_id'])
 								questionType.done (meta_value)->
+
 									if meta_value.question_type is 'individual'
 										q_resp = unserialize(r['question_response'])
 									else q_resp = r['question_response'] 

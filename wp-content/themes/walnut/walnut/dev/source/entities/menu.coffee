@@ -55,10 +55,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 											,{"ID":95,"menu-order":1,"post_title":"Data Synchronization","menu_item_link":"#"
 											,"menu_id":null,"submenu":[{"ID":96,"menu-order":2,"post_title":"Sync"
 											,"menu_item_link":"#sync","menu_id":null}]}]
+
 								else
 									data = [{"ID":95,"menu-order":1,"post_title":"Data Synchronization","menu_item_link":"#"
 											,"menu_id":null,"submenu":[{"ID":96,"menu-order":2,"post_title":"Sync"
 											,"menu_item_link":"#sync","menu_id":null}]}]
+
 
 								d.resolve data
 

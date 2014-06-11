@@ -43,13 +43,14 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         }
         return new ModuleDescriptionView({
           model: model,
+          mode: this.display_mode,
           templateHelpers: {
             showPauseButton: (function(_this) {
               return function() {
                 var pauseBtn;
                 pauseBtn = '';
                 if (_this.display_mode === 'class_mode') {
-                  pauseBtn = '<button type="button" id="pause-session" class="btn btn-white  action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>';
+                  pauseBtn = '<button type="button" id="pause-session" class="btn btn-white action pull-right m-t-5 m-l-20"><i class="fa fa-pause"></i> Pause</button>';
                 }
                 return pauseBtn;
               };
@@ -93,6 +94,16 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ModuleDescriptionView.prototype.className = 'pieceWrapper';
 
       ModuleDescriptionView.prototype.template = moduleDescriptionTemplate;
+
+      ModuleDescriptionView.prototype.mixinTemplateHelpers = function(data) {
+        data = ModuleDescriptionView.__super__.mixinTemplateHelpers.call(this, data);
+        data.isTraining = this.mode === 'training' ? true : false;
+        return data;
+      };
+
+      ModuleDescriptionView.prototype.initialize = function() {
+        return this.mode = Marionette.getOption(this, 'mode');
+      };
 
       ModuleDescriptionView.prototype.events = {
         'click #back-to-module, #pause-session': function() {

@@ -86,7 +86,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         }
         if (_.platform() === "DEVICE") {
           _.checkSynapseAssetsDirectory();
-          return navigator.splashscreen.hide();
+          navigator.splashscreen.hide();
+          return _.appNavigation();
         }
       };
 

@@ -1,4 +1,4 @@
-define(['underscore', 'unserialize'], function(_) {
+define(['underscore', 'serialize'], function(_) {
   return _.mixin({
     saveUpdateQuestionResponse: function(model) {
       var questionType;
@@ -32,7 +32,7 @@ define(['underscore', 'unserialize'], function(_) {
       return record_exists.done(function(exists) {
         if (exists) {
           _.db.transaction(function(tx) {
-            return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET start_date=? WHERE ref_id=?', [_.getCurrentDateTime(0)]);
+            return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET start_date=?, sync=? WHERE ref_id=?', [_.getCurrentDateTime(0), 0, ref_id]);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('SUCCESS: Record exists. Updated record in wp_question_response');
           });
@@ -55,7 +55,7 @@ define(['underscore', 'unserialize'], function(_) {
         end_date = _.getCurrentDateTime(0);
       }
       return _.db.transaction(function(tx) {
-        return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET teacher_id=?, question_response=?, time_taken=?, status=? , start_date=?, end_date=? WHERE ref_id=?', [_.getUserID(), question_response, model.get('time_taken'), model.get('status'), _.getCurrentDateTime(0), end_date, model.get('ref_id')]);
+        return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET teacher_id=?, question_response=?, time_taken=?, status=? , start_date=?, end_date=?, sync=? WHERE ref_id=?', [_.getUserID(), question_response, model.get('time_taken'), model.get('status'), _.getCurrentDateTime(0), end_date, 0, model.get('ref_id')]);
       }, _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: Updated record in wp_question_response');
       });

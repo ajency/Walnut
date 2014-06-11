@@ -41,4 +41,5 @@ define [
 	  		'json2csvparse'
 	  		'jszip'
 	  		'fastclick'
+	  		'mmenu'
 		], ->

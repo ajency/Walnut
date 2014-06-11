@@ -4,16 +4,12 @@
 .ease {
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .fadein {
   -webkit-transition: opacity 0.5s ease-in-out;
@@ -203,7 +199,7 @@
   text-align: center;
   padding: 0;
   padding-top: 5%;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 14px;
 }
 #toolbox .tools ul li:hover,
@@ -244,7 +240,7 @@
   margin-top: -48px;
 }
 .dock .btn-cons2 {
-  width: 108px;
+  width: 106px;
 }
 .docket .tile-footer.drag {
   cursor: move;
@@ -281,16 +277,12 @@
   background-color: #e74c30;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .docket ul li:hover a {
   color: #ffffff;
@@ -361,16 +353,12 @@
   margin: 4px 0 11px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls {
   position: relative;
@@ -402,32 +390,24 @@
   border: 2px solid #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls .aj-imp-drag-handle p:hover {
   background: #00acec;
   color: #ffffff;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls .aj-imp-delete-btn {
   right: -10px;
@@ -447,16 +427,12 @@
   background: #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls .aj-imp-delete-btn:hover span {
   color: #ffffff;
@@ -480,16 +456,12 @@
   background: #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls .aj-imp-settings-btn:hover span {
   color: #ffffff;
@@ -498,16 +470,12 @@
   border: 2px solid #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper.hover-class:hover > .element-controls .aj-imp-drag-handle,
 .element-wrapper.hover-class:hover > .element-controls .aj-imp-delete-btn,
@@ -516,16 +484,12 @@
   display: block;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper.hover-class:hover > .element-markup > .row > .column:last-child {
   border-right: 0;
@@ -633,16 +597,12 @@
   -o-transform: rotate(-90deg);
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .aj-imp-col-divider p:hover,
 .aj-imp-col-divider p:active {
@@ -651,16 +611,12 @@
   border-color: #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 #settings-region {
   position: absolute !important;
@@ -821,7 +777,7 @@
 }
 /*Properties Bar*/
 #options-bar-region label {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 10px;
 }
 #subProps {
@@ -939,7 +895,8 @@ p.mcq-option-text {
 	display: block;
 	//clear: left;
 	float: left;
-}*/.style .select2-container {
+}*/
+.style .select2-container {
   width: 60%;
 }
 .colors .minicolors-theme-default.minicolors {
@@ -979,10 +936,8 @@ p.mcq-option-text {
   border: 15px solid transparent;
   -webkit-border-image: url(../../../images/border.gif) 20 20 stretch;
   /* Safari 5 */
-
   -o-border-image: url(../../../images/border.gif) 20 20 stretch;
   /* Opera */
-
   border-image: url(../../../images/border.gif) 20 20 stretch;
 }
 .fib-text input[type="text"].ansWrong {
@@ -992,37 +947,29 @@ p.mcq-option-text {
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .fib-text input[type="text"].ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
   border: none;
-  border-bottom: 2px solid #e74c30;
+  border-bottom: 2px solid #0aa699;
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .fib-text input[type="text"].active {
-  outline: 1px solid #e74c30;
+  outline: 1px solid #0aa699;
 }
 .fib-simpletext {
   min-width: 45px;
@@ -1030,7 +977,7 @@ p.mcq-option-text {
   border: 1px dashed #f3f3f3;
 }
 .fibRightAns .fibAns {
-  border-bottom: 2px solid #e74c30;
+  border-bottom: 2px solid #0aa699;
 }
 #mcq-container .element-wrapper {
   border: none;
@@ -1073,49 +1020,37 @@ p.mcq-option-text {
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .mcq-option.ansFalse {
   opacity: 0.2;
   border-bottom: 2px solid #f35958;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .mcq-option.ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
-  border-bottom: 2px solid #e74c30;
+  border-bottom: 2px solid #0aa699;
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .mcq-option .mcq-option-select {
   float: left;
@@ -1194,35 +1129,27 @@ p.mcq-option-text {
   padding-right: 40px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .sort-option.ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
   border: none;
-  border-bottom: 2px solid #e74c30;
+  border-bottom: 2px solid #0aa699;
   background-size: 25px;
   padding-right: 40px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .sort-option .sort-option-text {
   margin: 0;
@@ -1271,7 +1198,7 @@ p.mcq-option-text {
   cursor: pointer;
 }
 .qstnStatus {
-  color: #e74c30;
+  color: #0aa699;
   font-size: 25px;
 }
 .qstnStatus i {
@@ -1286,7 +1213,7 @@ p.mcq-option-text {
   margin: 2px 0 15px;
 }
 .answrMsg.alert-success h3 {
-  color: #b41900;
+  color: #007366;
 }
 .answrMsg.alert-error h3 {
   color: #c02625;
@@ -1702,6 +1629,9 @@ h3.time {
     *width: 20%;
   }
 }
+input#duration {
+  max-width: 150px;
+}
 #myCanvas-miki .cbp_tmlabel a {
   color: #e74c30;
 }
@@ -1841,6 +1771,12 @@ body {
 .page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu > li > a:hover {
   background-color: #e3391a !important;
 }
+.page-sidebar.mini .page-sidebar-wrapper > ul {
+  padding: 70px 0 0;
+}
+.page-sidebar.mini .page-sidebar-wrapper > ul > li > a {
+  padding: 11.5px 12px;
+}
 @media (max-width: 1024px) {
   .page-sidebar {
     background: #003d4f !important;
@@ -1848,8 +1784,14 @@ body {
   .page-sidebar .page-sidebar-wrapper > ul > li.open > a {
     background-color: #595e6c !important;
   }
+  .page-sidebar .page-sidebar-wrapper > ul > li a.mm-subopen {
+    position: absolute;
+  }
+  .page-sidebar .page-sidebar-wrapper > ul > li a .arrow {
+    display: none;
+  }
   .page-sidebar .page-sidebar-wrapper > ul > li:hover > a {
-    background-color: #595e6c;
+    background-color: transparent;
   }
   .page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu {
     background-color: #595e6c;
@@ -1857,22 +1799,37 @@ body {
   .page-sidebar .page-sidebar-wrapper > ul > li > ul.sub-menu > li > a:hover {
     background-color: #7d8495 !important;
   }
+  .page-sidebar .mm-list > li > a,
+  .page-sidebar .mm-list > li > span {
+    font-family: 'Open Sans';
+    color: #ffffff;
+    font-weight: 400;
+    font-size: 18px;
+  }
+}
+#walnutProfile {
+  background: #003d4f;
 }
 #walnutProfile .user {
   font-size: 20px;
   color: #aaaaaa;
-  padding: 20px 20px 5px;
 }
 #walnutProfile .appLogout {
   padding: 5px 22px;
   width: 100%;
   display: block;
   color: #ffffff;
-  border-top: 1px solid #404040;
-  border-bottom: 1px solid #404040;
+  font-size: 18px;
+  font-family: 'Open Sans';
+  font-weight: 400;
 }
 #walnutProfile .appLogout:hover {
   color: #b7b7b7;
+}
+@media (min-width: 1025px) {
+  #walnutProfile {
+    display: none;
+  }
 }
 tbody.rowlink td {
   cursor: pointer;
@@ -1891,7 +1848,6 @@ tbody.rowlink td {
   .login-container {
     margin-top: 20px !important;
     /*For mobile app testing*/
-  
   }
 }
 .contentSelect select {
@@ -1914,7 +1870,7 @@ textarea.error,
   display: block;
 }
 .smallLogo {
-  background: url(/images/synapse-logo-main.png);
+  background: url(../../../images/synapse-logo-main.png);
   width: 97px;
   height: 35px;
   margin: 0 auto;
@@ -1955,13 +1911,11 @@ textarea {
   font-size: 15px !important;
 }
 .label {
-  font-size: 13px;
+  font-size: 15px;
   display: inline-block;
   padding: 6px 9px;
 }
 .btn {
-  padding: 10px 30px;
-  padding-top: 10px;
   font-weight: bold;
 }
 .form-control {
@@ -1975,6 +1929,9 @@ textarea {
 }
 .form-control .select2-choice .select2-arrow b:before {
   top: 6px;
+}
+.progress {
+  background: #d6dde1;
 }
 select {
   display: inline-block;
@@ -2005,6 +1962,9 @@ select:before {
   bottom: 10px;
   border-left: 1px solid #e5e5e5;
 }
+.header .notifcation-center {
+  display: none;
+}
 @media (max-width: 1024px) {
   #main-menu-toggle-wrapper,
   #portrait-chat-toggler {
@@ -2021,5 +1981,23 @@ select:before {
   }
   .header .notifcation-center {
     background: transparent;
+    display: inline-block;
+  }
+  .header .notifcation-center li a {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .header .notifcation-center > li > a {
+    padding: 5px 20px 15px !important;
+    font-size: 28px;
+    color: white;
+  }
+  .header .nav .open > a,
+  .nav .open > a:hover,
+  .nav .open > a:focus {
+    background: transparent;
+  }
+  .page-content {
+    min-height: 0;
   }
 }

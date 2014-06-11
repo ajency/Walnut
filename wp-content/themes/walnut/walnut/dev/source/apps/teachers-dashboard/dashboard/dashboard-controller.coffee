@@ -72,10 +72,15 @@ define ['app'
 					.select2()
 
 				if _.platform() is "DEVICE"
+
 					_.checkSynapseAssetsDirectory()
 					
 					# Hide the splash screen image
 					navigator.splashscreen.hide()
+
+					# Cordova app navigation
+					_.appNavigation()
+
 
 
 
@@ -108,12 +113,3 @@ define ['app'
 				if $(e.target).val() is 'start-training'
 					class_id= @$el.find('#class-training').val()
 					App.navigate('teachers/start-training/'+class_id, trigger: true)
-
-
-
-
-
-
-
-
-

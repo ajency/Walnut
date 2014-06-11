@@ -334,12 +334,12 @@ $(document).ready(function() {
 		$('#main-menu').removeClass("sidr");	
 		$('#main-menu').removeClass("left");	
 	  }
-	  //else{
-		//$.sidr('close', 'main-menu');
-		//$.sidr('close', 'sidr');		
-		//$('#main-menu').removeClass("sidr");	
-		//$('#main-menu').removeClass("left");
-	//}
+	  else{
+		$.sidr('close', 'main-menu');
+		$.sidr('close', 'sidr');		
+		$('#main-menu').removeClass("sidr");	
+		$('#main-menu').removeClass("left");
+	}
 	
 	}
 	function rebuildSider(){
@@ -465,10 +465,10 @@ $(document).ready(function() {
         if (!jQuery().sortable) {
             return;
         }
-        $(".sortable").sortable({
+        $(".cbp_tmtimeline").sortable({
             connectWith: '.sortable',
             iframeFix: false,
-            items: 'div.grid',
+            items: '.sortable',
             opacity: 0.8,
             helper: 'original',
             revert: true,

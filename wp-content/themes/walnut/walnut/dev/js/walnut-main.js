@@ -46,7 +46,8 @@ require.config({
     csvparse: 'plugins/jquery.parse',
     json2csvparse: 'plugins/json2csv',
     jszip: 'plugins/jszip',
-    fastclick: 'plugins/fastclick'
+    fastclick: 'plugins/fastclick',
+    mmenu: 'plugins/jquery.mmenu.min.all'
   },
   shim: {
     underscore: {
@@ -89,6 +90,7 @@ require.config({
     csvparse: ['jquery'],
     json2csvparse: ['jquery'],
     panzer: ['jquery'],
+    mmenu: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

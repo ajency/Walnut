@@ -20,7 +20,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         return Controller.__super__.bindEvents.call(this);
       };
 
-      Controller.prototype._getVideoView = function(imageModel) {
+      Controller.prototype._getVideoView = function(videoModel) {
         return new Video.Views.VideoView({
           model: this.layout.model
         });
