@@ -23,29 +23,6 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'getLastSyncOperation transaction completed'
 			.fail _.failureHandler
-
-
-		#Get the last media sync operation from table 'sync_media_details'
-		getLastMediaSyncOperation : ->
-
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT type_of_operation FROM sync_media_details 
-							ORDER BY id DESC LIMIT 1", []
-							, onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess = (d)->
-				(tx, data)->
-					last_operation = 'none'
-					if data.rows.length isnt 0
-						last_operation = data.rows.item(0)['type_of_operation']
-					
-					d.resolve last_operation
-
-			$.when(runQuery()).done ->
-				console.log 'getLastMediaSyncOperation transaction completed'
-			.fail _.failureHandler
 			
 
 		# Get total records from wp_question_response where sync=0 

@@ -41,7 +41,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       };
 
       AppSyncView.prototype.onShow = function() {
-        var lastMediaSyncOperation, lastSyncOperation, totalRecordsTobeSynced;
+        var lastSyncOperation, totalRecordsTobeSynced;
         App.breadcrumbRegion.close();
         navigator.splashscreen.hide();
         totalRecordsTobeSynced = _.getTotalRecordsTobeSynced();
@@ -53,7 +53,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
           }
         });
         lastSyncOperation = _.getLastSyncOperation();
-        lastSyncOperation.done(function(typeOfOperation) {
+        return lastSyncOperation.done(function(typeOfOperation) {
           switch (typeOfOperation) {
             case 'none':
               return $('#syncButtonText').text('Start');
@@ -65,13 +65,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
               return $('#syncButtonText').text('Continue');
             case 'file_upload':
               return $('#syncButtonText').text('Continue');
-          }
-        });
-        lastMediaSyncOperation = _.getLastMediaSyncOperation();
-        return lastMediaSyncOperation.done(function(typeOfOperation) {
-          switch (typeOfOperation) {
-            case 'none':
-              return $('#syncMediaButtonText').text('Start');
           }
         });
       };
@@ -134,7 +127,13 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       };
 
       AppSyncView.prototype.startContinueMediaSyncProcess = function() {
-        return console.log('startContinueMediaSyncProcess');
+        $('#syncMediaStartContinue').css("display", "none");
+        $('#syncMediaSuccess').css("display", "block").text("Started media sync process...");
+        return setTimeout((function(_this) {
+          return function() {
+            return _.getListOfMediaFilesFromServer();
+          };
+        })(this), 2000);
       };
 
       return AppSyncView;

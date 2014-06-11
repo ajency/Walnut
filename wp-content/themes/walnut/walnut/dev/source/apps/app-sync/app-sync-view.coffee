@@ -72,16 +72,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 							$('#syncButtonText').text('Continue')
 
 
-				
-				lastMediaSyncOperation = _.getLastMediaSyncOperation()
-				lastMediaSyncOperation.done (typeOfOperation)->
-
-					switch typeOfOperation
-
-						when 'none'
-							$('#syncMediaButtonText').text('Start')
-
-
 
 
 			startContinueSyncProcess : ->
@@ -164,4 +154,13 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 
 			startContinueMediaSyncProcess : ->
-				console.log 'startContinueMediaSyncProcess'
+				
+				$('#syncMediaStartContinue').css("display","none")
+				
+				$('#syncMediaSuccess').css("display","block")
+				.text("Started media sync process...")
+				
+				setTimeout(=>
+					_.getListOfMediaFilesFromServer()
+		
+				,2000)
