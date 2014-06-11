@@ -4600,13 +4600,13 @@ $.widget("ui.sortable", $.ui.mouse, {
 				for ( j = cur.length - 1; j >= 0; j--){
 					inst = $.data(cur[j], this.widgetFullName);
 					if(inst && inst !== this && !inst.options.disabled) {
-						queries.push([$.isFunction(inst.options.items) ? inst.options.items.call(inst.element) : $(inst.options.items, inst.element).not(".ui-sortable-helper").not(".ui-sortable-placeholder"), inst]);
+						queries.push([$.isFunction(inst.options.items) ? inst.options.items.call(inst.element) : $(inst.options.items, inst.element).not(".ui-sortable-helper").not(".sortable-box-placeholder"), inst]);
 					}
 				}
 			}
 		}
 
-		queries.push([$.isFunction(this.options.items) ? this.options.items.call(this.element, null, { options: this.options, item: this.currentItem }) : $(this.options.items, this.element).not(".ui-sortable-helper").not(".ui-sortable-placeholder"), this]);
+		queries.push([$.isFunction(this.options.items) ? this.options.items.call(this.element, null, { options: this.options, item: this.currentItem }) : $(this.options.items, this.element).not(".ui-sortable-helper").not(".sortable-box-placeholder"), this]);
 
 		for (i = queries.length - 1; i >= 0; i--){
 			queries[i][0].each(function() {
@@ -4732,7 +4732,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 					var nodeName = that.currentItem[0].nodeName.toLowerCase(),
 						element = $( "<" + nodeName + ">", that.document[0] )
-							.addClass(className || that.currentItem[0].className+" ui-sortable-placeholder")
+							.addClass(className || that.currentItem[0].className+" sortable-box-placeholder")
 							.removeClass("ui-sortable-helper");
 
 					if ( nodeName === "tr" ) {
@@ -4745,9 +4745,9 @@ $.widget("ui.sortable", $.ui.mouse, {
 						element.attr( "src", that.currentItem.attr( "src" ) );
 					}
 
-					if ( !className ) {
-						element.css( "visibility", "hidden" );
-					}
+					// if ( !className ) {
+					// 	element.css( "visibility", "hidden" );
+					// }
 
 					return element;
 				},
