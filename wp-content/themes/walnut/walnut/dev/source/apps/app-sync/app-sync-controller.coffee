@@ -430,6 +430,11 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 				)
 
 		
+
+
+
+
+
 	# request handler
 	App.reqres.setHandler "get:sync:controller", ->
 		new SynchronizationController

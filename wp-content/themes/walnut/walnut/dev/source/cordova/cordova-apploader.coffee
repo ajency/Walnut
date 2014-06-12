@@ -6,6 +6,7 @@ define ['cordova/app-error-handlers'
 		'cordova/app-directory-sdcard'
 		'cordova/app-content-loader'
 		'cordova/app-on-load'
+		'cordova/test'
 
 		#cordova app entities
 		'cordova/entities/app-content-group'
