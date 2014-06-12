@@ -152,9 +152,9 @@ add_action( 'edit_user_profile', 'user_extend_profile_fields' );
 function user_extend_profile_fields_save($user_id) {
 
     if ( (!current_user_can( 'edit_user')) )
-        return false; 
-
-    update_user_meta( $user_id, 'textbooks', $_POST['textbooks'] );
+        return false;
+    $textbooks= array_map('intval', $_POST['textbooks']);
+    update_user_meta( $user_id, 'textbooks', $textbooks );
   
 }
 
