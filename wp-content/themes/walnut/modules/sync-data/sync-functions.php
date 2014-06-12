@@ -68,9 +68,23 @@ function sync_app_data_to_db( $sync_request_id ) {
 
     //FIXME: handle deletion of .tmp folder
 
+    mark_sync_as_complete( $sync_request_id );
     $zip->close();
 }
 
+
+function mark_sync_as_complete( $sync_request_id ){
+    global $wpdb;
+
+    //TODO: add these table names to $wpdb; Implement DRY
+    $table_name = $wpdb->prefix . "sync_apps_data";
+
+    $wpdb->update( $table_name,
+                   array( 'status' => 'complete'),
+                   array( 'id' => $sync_request_id )
+    );
+
+}
 
 function read_csv_file( $file_path ) {
 
