@@ -14,8 +14,16 @@ define(['app'], function(App) {
 
       TrainingFooterView.prototype.mixinTemplateHelpers = function(data) {
         data = TrainingFooterView.__super__.mixinTemplateHelpers.call(this, data);
-        data.isChorus = this.question_type === 'chorus' ? true : false;
-        data.isIndividual = this.question_type === 'individual' ? true : false;
+        data.isChorus = data.isIndividual = false;
+        if (this.model.get('content_type') !== 'content_piece') {
+          if (this.model.get('question_type') === 'chorus') {
+            data.isChorus = true;
+          }
+          if (this.model.get('question_type') === 'individual') {
+            data.isIndividual = true;
+          }
+        }
+        console.log(data);
         return data;
       };
 

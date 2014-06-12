@@ -76,7 +76,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         }
         this.$el.find('.cbp_tmicon .fa').addClass(content_icon);
         if (this.model.get('content_type') === 'content_piece') {
-          return this.$el.find('#correct-answer-div, #question-type-div').remove();
+          return this.$el.find('#correct-answer-div, .question-type-div').remove();
         }
       };
 

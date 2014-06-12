@@ -97,11 +97,13 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         var selectedAnswer;
         selectedAnswer = this.$el.find('.tiles.single .green');
         if ((_.size(selectedAnswer) === 0) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
-          if (confirm('Are you sure no one answered correctly?')) {
+          if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
             return this.trigger("question:completed", "no_answer");
           }
         } else {
-          return this.trigger("question:completed");
+          if (confirm('This item will be marked as complete. Continue?')) {
+            return this.trigger("question:completed");
+          }
         }
       };
 

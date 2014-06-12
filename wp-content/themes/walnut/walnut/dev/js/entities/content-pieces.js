@@ -41,8 +41,6 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.comparator = 'order';
 
-      ItemCollection.prototype.name = 'content-piece';
-
       ItemCollection.prototype.url = function() {
         return AJAXURL + '?action=get-content-pieces';
       };

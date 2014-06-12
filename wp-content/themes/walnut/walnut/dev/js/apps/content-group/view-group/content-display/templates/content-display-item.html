@@ -11,9 +11,9 @@
 		<div class="clearfix"></div>
         <div class="tiles grey p-t-10 p-b-10 p-l-20">
             <div class="muted">
-                <div id="question-type-div">
-                    <span class="bold">Question Type:</span> {{question_type}}, <span class="bold">Date Completed:</span> {{dateCompleted}}
-                </div>
+                <span class="bold question-type-div">Question Type:</span> <span class="question-type-div"> {{question_type}},</span>
+                <span class="bold">Date Completed:</span> {{dateCompleted}}
+
                 {{#responseStatus}}
                 <div id="correct-answer-div">
                     <span class="bold">Correct Answer:</span> {{correctAnswer}}

@@ -23,8 +23,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 		class ContentPiece.ItemCollection extends Backbone.Collection
 			model: ContentPiece.ItemModel
 			comparator: 'order'
-			name: 'content-piece'
-
 			url: ->
 				AJAXURL + '?action=get-content-pieces'
 
@@ -91,10 +89,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 					contentPieces.fetch
 						data:
 							ids: ids
-
-#                    App.execute "when:fetched", contentPieces,=>
-#                      for model in contentPieces.models
-#                        model.set 'order': _.indexOf(ids,(model.id).toString())
 
 				contentPieces
 
@@ -207,12 +201,10 @@ define ["app", 'backbone'], (App, Backbone) ->
 					console.log 'getContentPieceFromLocal transaction completed'
 				.fail _.failureHandler
 
-
-
-
 		# request handler to get all ContentPieces
 		App.reqres.setHandler "get:content:pieces", (opt) ->
 			API.getContentPieces(opt)
+
 
 		# request handler to get all ContentPieces
 		App.reqres.setHandler "get:content:pieces:of:group", (groupModel) ->
