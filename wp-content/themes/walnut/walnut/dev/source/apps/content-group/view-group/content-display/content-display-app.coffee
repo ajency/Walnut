@@ -1,7 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-group/view-group/content-display/templates/content-display.html',
-        'text!apps/content-group/view-group/content-display/templates/content-display-item.html'], (App, RegionController, contentDisplayTpl, contentDisplayItemTpl)->
+        'text!apps/content-group/view-group/content-display/templates/content-display-item.html'], (App, RegionController, contentDisplayItemTpl)->
     App.module "CollectionContentDisplayApp.Controller", (Controller, App)->
         class Controller.CollectionContentDisplayController extends RegionController
 
@@ -74,10 +73,14 @@ define ['app'
                 @$el.find '.cbp_tmicon .fa'
                 .addClass content_icon
 
+                if @model.get('content_type') is 'content_piece'
+                    @$el.find '#correct-answer-div, #question-type-div'
+                    .remove()
+
 
         class ContentDisplayView extends Marionette.CompositeView
 
-            template: contentDisplayTpl
+            template: '<div id="myCanvas-miki" class="col-md-10"><ul class="cbp_tmtimeline"></ul></div>'
 
             itemView: ContentItemView
 
@@ -167,6 +170,8 @@ define ['app'
                             .find '.cbp_tmlabel'
                                 .addClass 'done completed'
                                     .css 'cursor', 'pointer'
+
+
 
             viewQuestionReadOnly: (e)=>
                 questionID = $ e.target
