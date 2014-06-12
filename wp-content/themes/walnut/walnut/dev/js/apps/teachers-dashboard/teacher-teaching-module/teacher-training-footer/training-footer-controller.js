@@ -10,11 +10,13 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
-      Controller.prototype.initialize = function() {
-        this.question_type = Marionette.getOption(this, 'question_type');
-        this.contentPieceId = Marionette.getOption(this, 'contentPieceId');
+      Controller.prototype.initialize = function(opts) {
+        var contentPiece;
+        contentPiece = opts.contentPiece;
+        this.question_type = contentPiece.get('question_type');
+        this.contentPieceId = contentPiece.get('ID');
         console.log(this.contentPieceId);
-        this.view = this._getFooterView();
+        this.view = this._getFooterView(contentPiece);
         this.listenTo(this.view, "next:question", this._changeQuestion);
         return this.show(this.view);
       };
@@ -23,9 +25,10 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         return this.region.trigger('goto:next:question', this.contentPieceId);
       };
 
-      Controller.prototype._getFooterView = function() {
+      Controller.prototype._getFooterView = function(contentPiece) {
         return new TeacherTrainingFooter.Views.TrainingFooterView({
-          question_type: this.question_type
+          question_type: this.question_type,
+          model: contentPiece
         });
       };
 

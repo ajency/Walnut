@@ -90,10 +90,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                         data:
                             ids: ids
 
-#                    App.execute "when:fetched", contentPieces,=>
-#                      for model in contentPieces.models
-#                        model.set 'order': _.indexOf(ids,(model.id).toString())
-
                 contentPieces
 
         # request handler to get all ContentPieces

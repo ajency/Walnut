@@ -44556,7 +44556,7 @@ define('apps/content-group/view-group/group-details/details-app',['app', 'contro
 });
 
 
-define('text!apps/content-group/view-group/content-display/templates/content-display-item.html',[],function () { return '\n<div class="contentPiece" data-id="{{ID}}">\n\t<time class="cbp_tmtime" datetime="">\n\t    <span class="time">{{duration}} <span class="semi-bold">mins</span></span>\n\t</time>\n\t<div class="cbp_tmicon primary animated bounceIn"> <i class="fa"></i> </div>\n\t<div class="cbp_tmlabel view" style="cursor:auto">\n\t\t<div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">\n\t\t  <h4 class="m-t-5 m-b-5"><a class="text-success semi-bold question_link">{{&post_excerpt}}</a> </h4>\n\t\t</div>\n\t\t<div class="clearfix"></div>\n        <div class="tiles grey p-t-10 p-b-10 p-l-20">\n            <div class="muted">\n                <div id="question-type-div">\n                    <span class="bold">Question Type:</span> {{question_type}}, <span class="bold">Date Completed:</span> {{dateCompleted}}\n                </div>\n                {{#responseStatus}}\n                <div id="correct-answer-div">\n                    <span class="bold">Correct Answer:</span> {{correctAnswer}}\n                </div>\n                <div>\n                    <span class="bold">Taken By:</span> {{teacherName}}\n                </div>\n                {{/responseStatus}}\n            </div>\n            <div class="clearfix"></div>\n        </div>\n\t</div>\n    {{#responseStatus}}\n    <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed\n        <div>\n            <label class="form-label small-text text-grey inline">Time Taken: <span class="bold">{{timeTaken}}</span></label></div>\n    </div>\n    {{/responseStatus}}\n</div>';});
+define('text!apps/content-group/view-group/content-display/templates/content-display-item.html',[],function () { return '\n<div class="contentPiece" data-id="{{ID}}">\n\t<time class="cbp_tmtime" datetime="">\n\t    <span class="time">{{duration}} <span class="semi-bold">mins</span></span>\n\t</time>\n\t<div class="cbp_tmicon primary animated bounceIn"> <i class="fa"></i> </div>\n\t<div class="cbp_tmlabel view" style="cursor:auto">\n\t\t<div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">\n\t\t  <h4 class="m-t-5 m-b-5"><a class="text-success semi-bold question_link">{{&post_excerpt}}</a> </h4>\n\t\t</div>\n\t\t<div class="clearfix"></div>\n        <div class="tiles grey p-t-10 p-b-10 p-l-20">\n            <div class="muted">\n                <span class="bold question-type-div">Question Type:</span> <span class="question-type-div"> {{question_type}},</span>\n                <span class="bold">Date Completed:</span> {{dateCompleted}}\n\n                {{#responseStatus}}\n                <div id="correct-answer-div">\n                    <span class="bold">Correct Answer:</span> {{correctAnswer}}\n                </div>\n                <div>\n                    <span class="bold">Taken By:</span> {{teacherName}}\n                </div>\n                {{/responseStatus}}\n            </div>\n            <div class="clearfix"></div>\n        </div>\n\t</div>\n    {{#responseStatus}}\n    <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed\n        <div>\n            <label class="form-label small-text text-grey inline">Time Taken: <span class="bold">{{timeTaken}}</span></label></div>\n    </div>\n    {{/responseStatus}}\n</div>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -44636,7 +44636,7 @@ define('apps/content-group/view-group/content-display/content-display-app',['app
         }
         this.$el.find('.cbp_tmicon .fa').addClass(content_icon);
         if (this.model.get('content_type') === 'content_piece') {
-          return this.$el.find('#correct-answer-div, #question-type-div').remove();
+          return this.$el.find('#correct-answer-div, .question-type-div').remove();
         }
       };
 
@@ -45886,7 +45886,7 @@ define('apps/teachers-dashboard/teacher-teaching-module/student-list/student-lis
 
       StudentsList.prototype.className = 'studentList m-t-35';
 
-      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20"> <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm"> <i class="fa fa-forward"></i> Next Question </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
+      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20"> <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm"> <i class="fa fa-forward"></i> Next </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
@@ -45971,11 +45971,13 @@ define('apps/teachers-dashboard/teacher-teaching-module/student-list/student-lis
 
       StudentsList.prototype.questionCompleted = function() {
         if ((_.size(this.correctAnswers) < 1) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
-          if (confirm('Are you sure no one answered correctly?')) {
+          if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
             return this.trigger("question:completed", "no_answer");
           }
         } else {
-          return this.trigger("question:completed");
+          if (confirm('This item will be marked as complete. Continue?')) {
+            return this.trigger("question:completed");
+          }
         }
       };
 
@@ -46067,8 +46069,16 @@ define('apps/teachers-dashboard/teacher-teaching-module/teacher-training-footer/
 
       TrainingFooterView.prototype.mixinTemplateHelpers = function(data) {
         data = TrainingFooterView.__super__.mixinTemplateHelpers.call(this, data);
-        data.isChorus = this.question_type === 'chorus' ? true : false;
-        data.isIndividual = this.question_type === 'individual' ? true : false;
+        data.isChorus = data.isIndividual = false;
+        if (this.model.get('content_type') !== 'content_piece') {
+          if (this.model.get('question_type') === 'chorus') {
+            data.isChorus = true;
+          }
+          if (this.model.get('question_type') === 'individual') {
+            data.isIndividual = true;
+          }
+        }
+        console.log(data);
         return data;
       };
 
@@ -46103,11 +46113,13 @@ define('apps/teachers-dashboard/teacher-teaching-module/teacher-training-footer/
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
-      Controller.prototype.initialize = function() {
-        this.question_type = Marionette.getOption(this, 'question_type');
-        this.contentPieceId = Marionette.getOption(this, 'contentPieceId');
+      Controller.prototype.initialize = function(opts) {
+        var contentPiece;
+        contentPiece = opts.contentPiece;
+        this.question_type = contentPiece.get('question_type');
+        this.contentPieceId = contentPiece.get('ID');
         console.log(this.contentPieceId);
-        this.view = this._getFooterView();
+        this.view = this._getFooterView(contentPiece);
         this.listenTo(this.view, "next:question", this._changeQuestion);
         return this.show(this.view);
       };
@@ -46116,9 +46128,10 @@ define('apps/teachers-dashboard/teacher-teaching-module/teacher-training-footer/
         return this.region.trigger('goto:next:question', this.contentPieceId);
       };
 
-      Controller.prototype._getFooterView = function() {
+      Controller.prototype._getFooterView = function(contentPiece) {
         return new TeacherTrainingFooter.Views.TrainingFooterView({
-          question_type: this.question_type
+          question_type: this.question_type,
+          model: contentPiece
         });
       };
 
@@ -46263,7 +46276,7 @@ define('apps/teachers-dashboard/teacher-teaching-module/module-description/modul
 });
 
 
-define('text!apps/teachers-dashboard/teacher-teaching-module/chorus-options/templates/chorus-options-template.html',[],function () { return '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">\n  <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm">\n    <i class="fa fa-forward"></i> Next Question \n  </button>\n</div>\n\n<div class="clearfix"></div>\n<div class="row students m-l-0 m-r-0 m-t-20">\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="few" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-l-5 p-r-5 p-b-10 semi-bold">Very<br/>Few</h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active"><h5 class="bold text-white text-center no-margin p-t-30 p-b-35"><5%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="one-fourth" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-b-10 p-l-5 p-r-5 semi-bold">1/4th of the Class</h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active">\n                <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">5-25%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="half" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-b-10 p-l-5 p-r-5 semi-bold">Half the Class</h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active">\n                <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">25-50%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="three-fourth" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-b-10 p-l-5 p-r-5 semi-bold">3/4 the Class </h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active">\n                   <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">50-75%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="full" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-b-10 p-l-5 p-r-5 semi-bold">Full<br/>Class</h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active">\n                <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">75-100%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n</div>';});
+define('text!apps/teachers-dashboard/teacher-teaching-module/chorus-options/templates/chorus-options-template.html',[],function () { return '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">\n  <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm">\n    <i class="fa fa-forward"></i> Next\n  </button>\n</div>\n\n<div class="clearfix"></div>\n<div class="row students m-l-0 m-r-0 m-t-20">\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="few" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-l-5 p-r-5 p-b-10 semi-bold">Very<br/>Few</h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active"><h5 class="bold text-white text-center no-margin p-t-30 p-b-35"><5%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="one-fourth" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-b-10 p-l-5 p-r-5 semi-bold">1/4th of the Class</h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active">\n                <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">5-25%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="half" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-b-10 p-l-5 p-r-5 semi-bold">Half the Class</h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active">\n                <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">25-50%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="three-fourth" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-b-10 p-l-5 p-r-5 semi-bold">3/4 the Class </h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active">\n                   <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">50-75%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n\t<div class="col-sm-2 m-b-20">\n\t\t<div id="full" class="row single tiles white no-margin">    \n            <div class="col-md-7 col-xs-7 no-padding">\n              <div class="text-center">\n                <h4 class="text-primary no-margin p-t-10 p-b-10 p-l-5 p-r-5 semi-bold">Full<br/>Class</h4>\n                <div class="clearfix"></div>\n              </div>\n            </div>\n\t\t\t <div class="col-md-5 col-xs-5 no-padding">\n              <div class="tiles default active">\n                <h5 class="bold text-white text-center no-margin p-t-30 p-b-35">75-100%</h5>\n              </div>\n            </div>\n        </div>\n\t</div>\n</div>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -46364,11 +46377,13 @@ define('apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-op
         var selectedAnswer;
         selectedAnswer = this.$el.find('.tiles.single .green');
         if ((_.size(selectedAnswer) === 0) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
-          if (confirm('Are you sure no one answered correctly?')) {
+          if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
             return this.trigger("question:completed", "no_answer");
           }
         } else {
-          return this.trigger("question:completed");
+          if (confirm('This item will be marked as complete. Continue?')) {
+            return this.trigger("question:completed");
+          }
         }
       };
 
@@ -46573,8 +46588,7 @@ define('apps/teachers-dashboard/teacher-teaching-module/teacher-teaching-control
             console.log(contentPiece.get('ID'));
             return App.execute('show:teacher:training:footer:app', {
               region: _this.layout.studentsListRegion,
-              contentPieceId: contentPiece.get('ID'),
-              question_type: question_type
+              contentPiece: contentPiece
             });
           };
         })(this));

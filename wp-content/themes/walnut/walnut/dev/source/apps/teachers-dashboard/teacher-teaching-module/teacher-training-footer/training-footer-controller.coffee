@@ -5,13 +5,14 @@ define ['app'
     App.module "TeacherTrainingFooter", (TeacherTrainingFooter, App)->
         class TeacherTrainingFooter.Controller extends RegionController
 
-            initialize:->
+            initialize:(opts)->
+                {contentPiece} = opts
 
-                @question_type = Marionette.getOption @,'question_type'
-                @contentPieceId = Marionette.getOption @,'contentPieceId'
+                @question_type = contentPiece.get 'question_type'
+                @contentPieceId = contentPiece.get 'ID'
 
                 console.log @contentPieceId
-                @view = @_getFooterView()
+                @view = @_getFooterView contentPiece
 
                 @listenTo @view, "next:question", @_changeQuestion
 
@@ -21,14 +22,11 @@ define ['app'
                 @region.trigger 'goto:next:question', @contentPieceId
 
 
-            _getFooterView : ->
+            _getFooterView :(contentPiece) ->
 
                 new TeacherTrainingFooter.Views.TrainingFooterView
                     question_type : @question_type
-
-
-
-
+                    model: contentPiece
 
 
         App.commands.setHandler "show:teacher:training:footer:app", (opt = {})->

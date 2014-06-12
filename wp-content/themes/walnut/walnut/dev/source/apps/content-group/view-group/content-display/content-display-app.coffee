@@ -74,7 +74,7 @@ define ['app'
                 .addClass content_icon
 
                 if @model.get('content_type') is 'content_piece'
-                    @$el.find '#correct-answer-div, #question-type-div'
+                    @$el.find '#correct-answer-div, .question-type-div'
                     .remove()
 
 

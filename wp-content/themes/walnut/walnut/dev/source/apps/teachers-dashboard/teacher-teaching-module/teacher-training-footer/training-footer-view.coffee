@@ -24,9 +24,15 @@ define ['app'], (App)->
             mixinTemplateHelpers:(data)->
                 data = super data
 
-                data.isChorus = if @question_type is 'chorus' then true else false
-                data.isIndividual = if @question_type is 'individual' then true else false
+                data.isChorus = data.isIndividual = false
 
+                if @model.get('content_type') isnt 'content_piece'
+                   if @model.get('question_type') is 'chorus'
+                       data.isChorus = true
+                   if @model.get('question_type') is 'individual'
+                       data.isIndividual =true
+
+                console.log data
                 data
 
             initialize :->
