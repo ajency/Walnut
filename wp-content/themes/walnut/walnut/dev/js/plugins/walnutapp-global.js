@@ -1,13 +1,18 @@
 	//Global declarations for walnut app
 	//TODO: store the school domain as AJAX url.
+
+	//Synapse Production
+	// var AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";
+
+	//Synapse Test
 	var AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";
 
-	//var SITEURL = "http://www.walmiki.com/"
+	
 	var SITEURL = "";
 
 	//CLASS_LABEL
 	var CLASS_LABEL = [];
-	for(var i =1; i<=13; i++){
+	for(var i =1; i<=15; i++){
 		if(i===1)
 			CLASS_LABEL[i] = "Nursery";
 

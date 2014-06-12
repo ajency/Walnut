@@ -390,6 +390,8 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 		sendParsedData14 : (file13, fileEntry)=>
 			readData = @chkReader(file13)
 			readData.done (data)=>
+				console.log 'wp_users data'
+				console.log data
 
 				_.db.transaction( (tx)=>
 					tx.executeSql("DELETE FROM wp_users")

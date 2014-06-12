@@ -14,7 +14,7 @@ define(['underscore', 'unserialize'], function(_) {
           var ids;
           ids = '';
           if (data.rows.length !== 0) {
-            ids = unserialize(unserialize(data.rows.item(0)['meta_value']));
+            ids = unserialize(data.rows.item(0)['meta_value']);
           }
           return d.resolve(ids);
         };

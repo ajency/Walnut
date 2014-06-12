@@ -17,7 +17,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx, data)->
 					ids = ''
 					if data.rows.length isnt 0
-						ids = unserialize(unserialize(data.rows.item(0)['meta_value']))
+						ids = unserialize(data.rows.item(0)['meta_value'])
 
 					d.resolve ids
 

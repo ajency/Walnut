@@ -440,6 +440,8 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       readData = this.chkReader(file13);
       return readData.done((function(_this) {
         return function(data) {
+          console.log('wp_users data');
+          console.log(data);
           return _.db.transaction(function(tx) {
             var i, row, _i, _ref, _results;
             tx.executeSql("DELETE FROM wp_users");

@@ -95,18 +95,26 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
                 } else {
                   q_resp = r['question_response'];
                 }
-                return result[i] = {
-                  ref_id: r['ref_id'],
-                  teacher_id: r['teacher_id'],
-                  content_piece_id: r['content_piece_id'],
-                  collection_id: r['collection_id'],
-                  division: r['division'],
-                  question_response: q_resp,
-                  time_taken: r['time_taken'],
-                  start_date: r['start_date'],
-                  end_date: r['end_date'],
-                  status: r['status']
-                };
+                return (function(r, i, q_resp) {
+                  var teacherName;
+                  teacherName = _.getTeacherName(r['teacher_id']);
+                  return teacherName.done(function(teacher_name) {
+                    console.log('teacher_name: ' + teacher_name);
+                    return result[i] = {
+                      ref_id: r['ref_id'],
+                      teacher_id: r['teacher_id'],
+                      teacher_name: teacher_name,
+                      content_piece_id: r['content_piece_id'],
+                      collection_id: r['collection_id'],
+                      division: r['division'],
+                      question_response: q_resp,
+                      time_taken: r['time_taken'],
+                      start_date: r['start_date'],
+                      end_date: r['end_date'],
+                      status: r['status']
+                    };
+                  });
+                })(r, i, q_resp);
               });
             };
             for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
