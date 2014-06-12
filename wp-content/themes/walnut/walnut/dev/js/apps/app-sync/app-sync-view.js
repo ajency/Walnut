@@ -132,15 +132,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         });
       };
 
-      AppSyncView.prototype.startContinueMediaSyncProcess = function() {
-        $('#syncMediaStartContinue').css("display", "none");
-        $('#syncMediaSuccess').css("display", "block").text("Started media sync process...");
-        return setTimeout((function(_this) {
-          return function() {
-            return _.getListOfMediaFilesFromLocalDirectory();
-          };
-        })(this), 2000);
-      };
+      AppSyncView.prototype.startContinueMediaSyncProcess = function() {};
 
       return AppSyncView;
 

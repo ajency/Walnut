@@ -164,12 +164,20 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				# directoryStructure.done ->
 				# 	console.log ''
 				
-				$('#syncMediaStartContinue').css("display","none")
+				# $('#syncMediaStartContinue').css("display","none")
 				
-				$('#syncMediaSuccess').css("display","block")
-				.text("Started media sync process...")
+				# $('#syncMediaSuccess').css("display","block")
+				# .text("Started media sync process...")
 				
-				setTimeout(=>
-					_.getListOfMediaFilesFromLocalDirectory()
+				# setTimeout(=>
+				# 	_.getListOfMediaFilesFromLocalDirectory()
 		
-				,2000)
+				# ,2000)
+
+				# decrypt.startDecryption('cdvfile://localhost/persistent/SynapseAssets/SynapseImages/', 'cdvfile://localhost/persistent/SynapseAssets/SynapseImages/'
+				# 	,(success)->
+				# 		console.log 'Success'
+
+				# 	,(error)->
+				# 		console.log 'Error: '+error
+				# )
