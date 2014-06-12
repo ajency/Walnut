@@ -161,6 +161,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				.text("Started media sync process...")
 				
 				setTimeout(=>
-					_.getListOfMediaFilesFromServer()
+					_.getListOfMediaFilesFromLocalDirectory()
 		
 				,2000)

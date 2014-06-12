@@ -1,19 +1,17 @@
-define ['underscore', 'jquery'], (_, $)->
-	
-	#SQLite database transaction based on HTML5 Web SQL database.
+define ['underscore'], ( _) ->
+
+	#Media sync 
 	DATADIR = ""
 	knownfiles = [];
 	_.mixin
-	#this two variables nid to be global
-	# DATADIR = ""
-	# knownfiles = []; 
-		
-		checkForFilesInFolder : ->
+
+
+		getListOfMediaFilesFromLocalDirectory : ->
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 
 					, (fileSystem)=>
 
-						fileSystem.root.getDirectory("SynapseAssets/images", {create: true, exclusive: false}
+						fileSystem.root.getDirectory("SynapseAssets/SynapseImages", {create: true, exclusive: false}
 
 							, (d)=>
 
@@ -27,6 +25,11 @@ define ['underscore', 'jquery'], (_, $)->
 
 					, _.fileSystemErrorHandler)
 
+			setTimeout(=>
+
+				_.downloadMediaFiles()
+	
+			,3000)
 
 		gotFiles : (entries)=>
 			for i in [0..entries.length-1] by 1
@@ -38,9 +41,11 @@ define ['underscore', 'jquery'], (_, $)->
 
 		renderPicture : (path)->
 			# alert "path is"+path
+			alert "entry"
 			console.log "your path is "+path
 
 		appReady :()->
+			alert "Appready"
 			listOfFiles = new Array();
 			listOfFiles ={
 				"fileImg" : ["1_2.jpg", 
@@ -1049,6 +1054,7 @@ define ['underscore', 'jquery'], (_, $)->
 			for i in [0..listOfFiles.fileImg.length-1] by 1
 				console.log "inside for "+listOfFiles.fileImg[i]
 				if knownfiles.indexOf(listOfFiles.fileImg[i]) is -1
+					alert "index of" +listOfFiles.fileImg[i]
 					console.log "known files are "+listOfFiles.fileImg[i]
 					
 
@@ -1059,21 +1065,7 @@ define ['underscore', 'jquery'], (_, $)->
 
 
 
+		downloadMediaFiles : ->
 
+			$('#syncMediaSuccess').css("display","block").text("Contacting server...")
 
-
-
-
-		# chkAllFiles :  ->
-		# 		alert "chk"
-		# 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
-		# 			,(fileSystem)->
-		# 				for i in [1..1000] by 1
-		# 					fileSystem.root.getFile("SynapseAssets/images/1'+i'.jpg"
-		# 						, {create: true, exclusive: false}
-		# 						,(fileEntry)->
-		# 						console.log "fileEntry"+fileEntry.toURL()
-		# 						console.log "done"+i
-		# 						, _.fileErrorHandler)
-		# 			, _.fileSystemErrorHandler)
-			

@@ -131,7 +131,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         $('#syncMediaSuccess').css("display", "block").text("Started media sync process...");
         return setTimeout((function(_this) {
           return function() {
-            return _.getListOfMediaFilesFromServer();
+            return _.getListOfMediaFilesFromLocalDirectory();
           };
         })(this), 2000);
       };
