@@ -1,5 +1,6 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'text!apps/media/grid/templates/media.html'], function(App, mediaTpl, layoutTpl) {
   return App.module('Media.Grid.Views', function(Views, App) {
@@ -33,7 +34,6 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         }
         if (data.type === 'video') {
           data.videoPreview = true;
-          data.title_excerpt = _.prune(data.title, 15);
           data.title_show = _.prune(data.title, 50);
         }
         return data;
@@ -41,7 +41,6 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
 
       MediaView.prototype._whenImageClicked = function(e) {
         var media;
-        console.log(e.target);
         media = $(e.target).hasClass('single-img') ? $(e.target) : $(e.target).closest('.single-img');
         return this.trigger("media:element:selected");
       };
@@ -53,6 +52,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
       __extends(GridView, _super);
 
       function GridView() {
+        this.searchMedia = __bind(this.searchMedia, this);
         return GridView.__super__.constructor.apply(this, arguments);
       }
 
@@ -61,6 +61,17 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
       GridView.prototype.itemView = MediaView;
 
       GridView.prototype.itemViewContainer = '#selectable-images';
+
+      GridView.prototype.events = {
+        'blur .mediaSearch': 'searchMedia'
+      };
+
+      GridView.prototype.onRender = function() {
+        if (Marionette.getOption(this, 'mediaType') === 'video') {
+          this.$el.find('#list, #grid').hide();
+          return this._changeChildClass('List');
+        }
+      };
 
       GridView.prototype.onCollectionRendered = function() {
         if (this.multiSelect) {
@@ -75,6 +86,10 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
       GridView.prototype.onShow = function() {
         this.$el.find('a#list.btn').on('click', _.bind(this._changeChildClass, this, 'List'));
         this.$el.find('a#grid.btn').on('click', _.bind(this._changeChildClass, this, 'Grid'));
+        if (Marionette.getOption(this, 'mediaType') === 'video') {
+          this.$el.find('#list, #grid').hide();
+          this._changeChildClass('List');
+        }
         return this.listenTo(this, 'after:item:added', (function(_this) {
           return function(imageView) {
             if (_this.$el.find('.single-img:first').hasClass('col-sm-2')) {
@@ -98,6 +113,14 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
           return child.$el.removeClass('col-sm-2').addClass('listView');
         } else if (type === 'Grid') {
           return child.$el.removeClass('listView').addClass('col-sm-2');
+        }
+      };
+
+      GridView.prototype.searchMedia = function(e) {
+        var searchStr;
+        searchStr = _.trim($(e.target).val());
+        if (searchStr) {
+          return this.trigger("search:media", searchStr);
         }
       };
 

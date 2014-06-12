@@ -27,6 +27,7 @@ define ['app'
 
                 App.execute "when:fetched", model, =>
                     groupContentCollection = App.request "get:content:pieces:by:ids", model.get 'content_pieces'
+
                     console.log model.get 'content_pieces'
                     @layout = layout = @_getContentGroupViewLayout()
 

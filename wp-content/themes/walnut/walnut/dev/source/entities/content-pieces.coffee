@@ -14,7 +14,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                 post_modified: ''
                 post_date: ''
                 post_tags: ''
-                order   : ''
 
             name: 'content-piece'
 
@@ -88,11 +87,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 if _.size(ids) > 0
                     contentPieces.fetch
                         data:
-#                            ids: ids
-#                    App.execute "when:fetched", contentPieces,=>
-#                      for model in contentPieces.models
-#                        model.set 'order': _.indexOf(ids,(model.id).toString())
-
+                            ids: ids
                 contentPieces
 
         # request handler to get all ContentPieces

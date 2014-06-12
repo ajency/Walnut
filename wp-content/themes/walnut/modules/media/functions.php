@@ -1,6 +1,8 @@
 <?php 
 
-function get_site_media($query, $media_type='image'){
+function get_site_media($query, $search_string=''){
+
+    global $wpdb;
 
 	if ( ! current_user_can( 'upload_files' ) )
 		return array('code' => 'ERROR','message' => 'Dont\'t have enough permission');
@@ -10,12 +12,27 @@ function get_site_media($query, $media_type='image'){
 		'post_parent', 'post__in', 'post__not_in',
 	) ) );
 
+    if(trim($search_string) != ''){
+        $post_ids_qry = $wpdb->prepare(
+            "SELECT ID from {$wpdb->base_prefix}posts where
+                post_mime_type like %s
+                and post_title like %s",
+            array(
+                "%".$query['post_mime_type']."%",
+                "%$search_string%"));
+
+        $post_ids = $wpdb->get_results($post_ids_qry, ARRAY_A);
+        $post_ids = __u::flatten($post_ids);
+        if(sizeof($post_ids>0)){
+            $query['post__in'] = $post_ids;
+        }
+    }
+
 	$query['post_type'] = 'attachment';
-    $query['post_mime_type'] = $media_type;
 	$query['post_status'] = 'inherit';
+
 	if ( current_user_can( get_post_type_object( 'attachment' )->cap->read_private_posts ) )
 		$query['post_status'] .= ',private';
-
 	
 	$query = apply_filters( 'ajax_query_attachments_args', $query );
 	$query = new WP_Query( $query );
@@ -25,8 +42,6 @@ function get_site_media($query, $media_type='image'){
 
 	return $posts;	
 }
-
-
 
 function update_media( $data, $media_id = 0 ) {
 

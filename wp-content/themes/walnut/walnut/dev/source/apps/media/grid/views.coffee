@@ -28,13 +28,11 @@ define ['app'
 
                 if data.type is 'video'
                     data.videoPreview  = true
-                    data.title_excerpt = _.prune data.title, 15
                     data.title_show  = _.prune data.title , 50
 
                 data
 
             _whenImageClicked : (e)->
-                console.log e.target
                 media = if $(e.target).hasClass('single-img') then $(e.target)
                 else $(e.target).closest('.single-img')
                 #                if $(media).hasClass('ui-selected')
@@ -56,7 +54,7 @@ define ['app'
                                                         <a id="grid" class="btn btn-default btn-sm btn-small">
                                                             <span class="glyphicon glyphicon-th"></span> Grid
                                                         </a>
-                                                    </div>
+                                                        </div>
                                                     <div class="input-with-icon right pull-right mediaSearch m-b-10">
                                                         <i class="fa fa-search"></i>
                                                         <input type="text" class="form-control" placeholder="Search">
@@ -72,6 +70,16 @@ define ['app'
 
             itemViewContainer : '#selectable-images'
 
+            events:
+                'blur .mediaSearch' : 'searchMedia'
+
+
+            onRender:->
+                if Marionette.getOption(@,'mediaType') is 'video'
+                    @$el.find '#list, #grid'
+                    .hide()
+                    @_changeChildClass 'List'
+
             onCollectionRendered : ->
                 if @multiSelect
                     @$el.find('#selectable-images').bind "mousedown", (e)->
@@ -83,6 +91,11 @@ define ['app'
             onShow : ->
                 @$el.find('a#list.btn').on 'click', _.bind @_changeChildClass, @, 'List'
                 @$el.find('a#grid.btn').on 'click', _.bind @_changeChildClass, @, 'Grid'
+
+                if Marionette.getOption(@,'mediaType') is 'video'
+                    @$el.find '#list, #grid'
+                    .hide()
+                    @_changeChildClass 'List'
 
                 # after showing the initial list
                 #  initialize the event
@@ -110,3 +123,8 @@ define ['app'
                 else if type is 'Grid'
                     child.$el.removeClass('listView')
                     .addClass('col-sm-2')
+
+            searchMedia:(e)=>
+                searchStr= _.trim $(e.target).val()
+                if searchStr
+                    @trigger "search:media", searchStr

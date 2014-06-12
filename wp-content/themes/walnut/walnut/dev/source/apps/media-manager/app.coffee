@@ -47,6 +47,9 @@ define ['app'
 
 
                 @listenTo @layout, "media:selected", =>
+                    console.log @choosedMedia
+                    console.log '@choosedMedia'
+
                     if not _.isNull @choosedMedia
                         App.vent.trigger "media:manager:choosed:media", @choosedMedia
                         @region.closeDialog()

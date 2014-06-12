@@ -49,6 +49,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 orderby : 'date'
                 paged : 1
                 posts_per_page : 40
+                searchStr: ''
 
             model : Media.MediaModel
 
@@ -56,8 +57,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                 return resp.data if resp.code is 'OK'
                 resp
 
-        # initialize a blank media collection
         mediaCollection = new Media.MediaCollection
+        # initialize a blank media collection
 
 
         ##PUBLIC API FOR ENitity
@@ -89,7 +90,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 media
 
             getEmptyMediaCollection : ->
-                new Media.MediaCollection
+                mediaCollection
 
         # this fucntion will return a placeholder media for the requesting element
         # this will be special purpose media model.

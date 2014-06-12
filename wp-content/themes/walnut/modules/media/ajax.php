@@ -8,12 +8,15 @@ function query_attachments() {
     $media_type= 'image';
     if(isset($_REQUEST['mediaType']))
         $media_type=$_REQUEST['mediaType'];
-	// $query['order'] = $_REQUEST['order'];
-	// $query['orderby'] = $_REQUEST['orderby'];
-	// $query['posts_per_page'] = $_REQUEST['posts_per_page'];
-	// $query['paged'] = $_REQUEST['paged'];
-	
-	$media = get_site_media ( $query, $media_type );
+	$query['order'] = $_REQUEST['order'];
+	$query['orderby'] = $_REQUEST['orderby'];
+	$query['posts_per_page'] = $_REQUEST['posts_per_page'];
+	$query['paged'] = $_REQUEST['paged'];
+    $query['post_mime_type'] = $media_type;
+
+    $search_string= $_REQUEST['searchStr'];
+
+	$media = get_site_media ( $query, $search_string );
 	
 	wp_send_json ( array (
 			'code' => 'OK',

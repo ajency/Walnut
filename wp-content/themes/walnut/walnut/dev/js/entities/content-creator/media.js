@@ -53,7 +53,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         order: 'DESC',
         orderby: 'date',
         paged: 1,
-        posts_per_page: 40
+        posts_per_page: 40,
+        searchStr: ''
       };
 
       MediaCollection.prototype.model = Media.MediaModel;
@@ -98,7 +99,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         return media;
       },
       getEmptyMediaCollection: function() {
-        return new Media.MediaCollection;
+        return mediaCollection;
       },
       getPlaceHolderMedia: function() {
         var media;
