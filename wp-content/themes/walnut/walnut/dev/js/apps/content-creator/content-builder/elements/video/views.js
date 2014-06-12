@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '{{#video}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="http://www.eyespot.com/2013/wp-content/uploads/2013/04/video-clip.jpg" data-setup="{}" controls> <source src="{{videoUrl}}" type="video/mp4" /> </video> <div class="clearfix"></div> {{/video}} {{#placeholder}} <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Video</div> {{/placeholder}}';
+      VideoView.prototype.template = '{{#video}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="http://www.eyespot.com/2013/wp-content/uploads/2013/04/video-clip.jpg" data-setup="{}" controls> <source src="{{videoUrl}}" type="video/mp4" /> </video> <div class="clearfix"></div> {{/video}} {{#placeholder}} <div class="video-placeholder"><span class="bicon icon-uniF11E"></span>Add Video</div> {{/placeholder}}';
 
       VideoView.prototype.mixinTemplateHelpers = function(data) {
         data = VideoView.__super__.mixinTemplateHelpers.call(this, data);

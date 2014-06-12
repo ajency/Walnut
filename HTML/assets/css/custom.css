@@ -302,6 +302,8 @@
   background: #f3f3f3;
   padding: 15px 10px;
   color: #000;
+  font-size: 14px;
+  font-weight: normal;
 }
 .docket-body label {
   color: #777a80;
@@ -759,7 +761,10 @@
 .imagewithtext p {
   margin: 0;
 }
-.image .image-placeholder {
+.image .image-placeholder,
+.video .image-placeholder,
+.image .video-placeholder,
+.video .video-placeholder {
   padding: 2% 0;
   text-align: center;
   cursor: pointer;
@@ -767,7 +772,10 @@
   z-index: 2;
   color: #aaaaaa;
 }
-.image .image-placeholder .bicon {
+.image .image-placeholder .bicon,
+.video .image-placeholder .bicon,
+.image .video-placeholder .bicon,
+.video .video-placeholder .bicon {
   font-size: 40px;
   display: block;
 }
@@ -1780,6 +1788,9 @@ input#duration {
   margin-bottom: 2px;
   padding: 10px;
 }
+.quizWrong {
+  font-size: 25px;
+}
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
   width: 50%;
@@ -1948,6 +1959,13 @@ textarea.error,
 .select2-choice.error {
   border: 1px solid #f35958 !important;
 }
+.page-content.condensed {
+  overflow: visible;
+}
+.page-content {
+  min-height: 0;
+  overflow-x: hidden;
+}
 .mainLogo {
   background-size: 80%;
   background-repeat: no-repeat;
@@ -1967,6 +1985,12 @@ textarea.error,
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: left center;
+}
+.select2-results,
+.select2-container,
+.select2-container.form-control {
+  font-size: 15px;
+  font-weight: normal;
 }
 .select2-results {
   margin: 4px 4px 4px 0;
@@ -2005,6 +2029,9 @@ textarea {
   display: inline-block;
   padding: 6px 9px;
 }
+.alert {
+  font-size: 14px;
+}
 .btn {
   font-weight: bold;
 }
@@ -2023,6 +2050,9 @@ textarea {
 input[disabled].disabled {
   cursor: not-allowed;
   background-color: #e5e9ec;
+}
+ol > li {
+  line-height: 35px;
 }
 .checkbox label {
   font-size: 14px;

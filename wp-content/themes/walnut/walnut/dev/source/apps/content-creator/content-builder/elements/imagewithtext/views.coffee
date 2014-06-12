@@ -13,7 +13,7 @@ define ['app'], (App)->
             							<img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive"/>
             						{{/image}}
             						{{#placeholder}}
-            							<div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Image</div>
+            							<div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Add Image</div>
             						{{/placeholder}}
             						<div class="editor"></div>
             						<div class="clearfix"></div>'

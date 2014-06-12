@@ -19,7 +19,7 @@ define ['app'], (App)->
             							<div class="clearfix"></div>
             						{{/video}}
             						{{#placeholder}}
-            							<div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Video</div>
+            							<div class="video-placeholder"><span class="bicon icon-uniF11E"></span>Add Video</div>
             						{{/placeholder}}'
 
 
