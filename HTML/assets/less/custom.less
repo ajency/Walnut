@@ -239,8 +239,13 @@ textarea.error, .select2-choice.error {
 	border:1px solid @color-danger !important;
 }
 
-.page-content .content{
-	//overflow-y: auto;
+.page-content.condensed{
+	overflow-y: visible;
+}
+
+.page-content{
+	min-height: 0;
+	overflow-x: hidden;
 }
 
 .mainLogo{
@@ -267,6 +272,10 @@ textarea.error, .select2-choice.error {
 	background-position: left center;
 }
 
+.select2-results, .select2-container, .select2-container.form-control{	
+	font-size: 15px;
+	font-weight: normal;
+}
 .select2-results{
 	margin: 4px 4px 4px 0;
 }
@@ -304,9 +313,13 @@ label, input, button, select, textarea{
 }
 
 .label{
-	font-size: 15px;
+	font-size: 14px;
 	display: inline-block;
 	padding: 6px 9px;
+}
+
+.alert{
+	font-size: 14px;
 }
 
 .btn{

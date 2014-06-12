@@ -48,9 +48,11 @@ define ['app'
 
                 @listenTo @layout, "show", @_showModuleDescriptionView
 
-                @listenTo @layout, "show", @_showStudentsListView questionResponseModel if @display_mode isnt 'training'
-
-                @listenTo @layout, 'show', @_showTeacherTrainingFooter  if @display_mode is 'training'
+                @listenTo @layout, 'show', =>
+                    if @display_mode is 'training'  or contentPiece.get('content_type') is 'content_piece'
+                        @_showTeacherTrainingFooter()
+                    else
+                        @_showStudentsListView questionResponseModel
 
                 @listenTo @layout, "show", @_showQuestionDisplayView contentPiece
 
@@ -81,10 +83,11 @@ define ['app'
 
                     @_showQuestionDisplayView contentPiece
 
-                    if @display_mode isnt 'training'
-                        @_showStudentsListView questionResponseModel
-                    else if @display_mode is 'training'
+                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
+
+                    else
+                        @_showStudentsListView questionResponseModel
 
                 else
                     @_gotoPreviousRoute()
@@ -100,9 +103,6 @@ define ['app'
                 newRoute = _.str.rtrim currRoute, removeStr + '/'
 
                 App.navigate newRoute, true
-
-                App.execute "show:headerapp", region : App.headerRegion
-                App.execute "show:leftnavapp", region : App.leftNavRegion
 
             _saveQuestionResponse : (status) =>
                 elapsedTime = @timerObject.request "get:elapsed:time"
@@ -192,8 +192,8 @@ define ['app'
         class SingleQuestionLayout extends Marionette.Layout
 
             template : '<div id="module-details-region"></div>
-                                                						<div id="question-details-region"></div>
-                                                						<div id="students-list-region"></div>'
+                        <div id="question-details-region"></div>
+                        <div id="students-list-region"></div>'
 
             regions :
                 moduleDetailsRegion : '#module-details-region'

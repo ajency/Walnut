@@ -1773,14 +1773,12 @@ input#duration {
 .panel-default > .panel-heading.collapsed {
   background-color: transparent;
 }
-li.setGroup {
+.cbp_tmtimeline li.setGroup {
   margin-bottom: 20px;
 }
-li.setGroup .abc {
+.cbp_tmtimeline li.setGroup .cbp_tmlabel {
   margin-bottom: 2px;
-}
-li.setGroup .abc:not(:first-child):after {
-  display: none;
+  padding: 10px;
 }
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
@@ -2003,7 +2001,7 @@ textarea {
   font-size: 15px !important;
 }
 .label {
-  font-size: 15px;
+  font-size: 14px;
   display: inline-block;
   padding: 6px 9px;
 }

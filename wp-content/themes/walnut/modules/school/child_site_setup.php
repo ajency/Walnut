@@ -1,14 +1,11 @@
 <?php
 
-function setup_childsite( $blog_id ) {
-    global $wpdb;
+function setup_childsite( $blog_id, $additional_details ) {
 
     //save the additional details of blog from setup. eg. licence validity
-    // FIXME: Bad idea to use super globals inside functions. Pass POST values as arguments to function
-    $blog_details = maybe_serialize( $_POST['blog_additional'] );
+    $blog_details = maybe_serialize( $additional_details );
     update_blog_option( $blog_id, 'blog_meta', $blog_details );
 
-    //echo '<br><br>Setting Theme and template<br>';
     //setup the template and stylesheet for child sites
     update_blog_option( $blog_id, 'template', 'walnut' );
     update_blog_option( $blog_id, 'stylesheet', 'schoolsite' );
@@ -32,7 +29,6 @@ function setup_childsite( $blog_id ) {
 
 function setup_childsite_roles() {
 
-    //echo '<br><br>Creating Childsite Roles<br>';
     global $wp_roles;
     if (get_role( 'subscriber' ) != NULL) remove_role( 'subscriber' ); //removes the subscriber role
     if (get_role( 'contributor' ) != NULL) remove_role( 'contributor' ); //removes the contributor role
@@ -55,7 +51,6 @@ function setup_childsite_roles() {
 
 function setup_childsite_custom_pages() {
 
-    //echo '<br><br>Creating Custom Pages<br>';
     if (!get_page_by_title( 'Dashboard' )) {
         $post = array();
         $post['post_type'] = 'page'; //could be 'page' for example
@@ -66,18 +61,14 @@ function setup_childsite_custom_pages() {
 
     }
     update_post_meta( $dashboard_id, '_wp_page_template', 'dashboard.php' );
-    //echo 'Dashboard Page Created<br>';
 
     update_option( 'page_on_front', $dashboard_id );
     update_option( 'show_on_front', 'page' );
-    //echo 'Dashboard Page set as front page<br>';
 
 }
 
 function setup_childsite_tables() {
     global $wpdb;
-
-    //echo '<br><br>Creating Tables<br>';
 
     $class_divisions_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}class_divisions
             (`id` varchar(255),
@@ -86,8 +77,6 @@ function setup_childsite_tables() {
              PRIMARY KEY (`id`))";
 
     $wpdb->query( $class_divisions_table );
-
-    //echo "{$wpdb->prefix}class_divisions table created<br>";
 
     $question_response_table = "
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}question_response` (
@@ -131,8 +120,6 @@ function setup_childsite_menus( $current_blog, $blog_id ) {
         switch_to_blog( $blog_id );
         $new_menu = wp_create_nav_menu( $p_menu->name );
 
-        echo $p_menu->name . ' created. <br>';
-
         foreach ($parent_menu_items as $p_item) {
             $p_item->post_status = 'publish';
             $post_id = wp_insert_post( $p_item );
@@ -145,7 +132,6 @@ function setup_childsite_menus( $current_blog, $blog_id ) {
                 'menu-item-title' => $p_item->title,
                 'menu-item-url' => $p_item->url,
                 'menu-item-status' => 'publish'
-
             );
             wp_update_nav_menu_item( $new_menu, 0, $menu_data );
         }
@@ -166,7 +152,6 @@ function create_temporary_folders() {
         mkdir( $uploads_dir['basedir'] . '/tmp/upsync', 0777 );
 
 }
-
 
 function school_delete_site( $blog_id, $drop ) {
 

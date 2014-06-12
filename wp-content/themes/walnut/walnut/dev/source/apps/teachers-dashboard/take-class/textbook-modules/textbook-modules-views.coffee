@@ -56,12 +56,10 @@ define ['app'], (App)->
 
         class TextbookModules.ContentGroupsView extends Marionette.CompositeView
 
-            template: '<div class="tiles white grid simple vertical blue">
+            template: '<div class="tiles white grid simple vertical blue animated slideInRight">
             							<div class="grid-title no-border">
             								<h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4>
-            								<div class="tools">
-            									<a href="javascript:;" class="collapse"></a>
-            								</div>
+            								
             							</div>
             							<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
             								<div class="row">
@@ -72,7 +70,7 @@ define ['app'], (App)->
             							                  <tr>
             							                    <th style="width:50%">Name</th>
             							                    <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th>
-            							                    <th style="width:40%">Status</th>
+            							                    <th style="width:40%"><div id="status_header">Status</div></th>
             							                  </tr>
             							                </thead>
             							                <tbody>
@@ -111,6 +109,10 @@ define ['app'], (App)->
                 @trigger "schedule:training", dataID
 
             onShow: =>
+                if Marionette.getOption(@, 'mode') is 'training'
+                    @$el.find '.status_label, .training-date, #status_header'
+                    .hide();
+
                 @$el.find '#take-class-modules'
                 .tablesorter()
 
