@@ -134,20 +134,6 @@ define(["app", 'backbone'], function(App, Backbone) {
               ids: ids
             }
           });
-          App.execute("when:fetched", contentPieces, (function(_this) {
-            return function() {
-              var model, _i, _len, _ref, _results;
-              _ref = contentPieces.models;
-              _results = [];
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                model = _ref[_i];
-                _results.push(model.set({
-                  'order': _.indexOf(ids, model.id.toString())
-                }));
-              }
-              return _results;
-            };
-          })(this));
         }
         return contentPieces;
       }

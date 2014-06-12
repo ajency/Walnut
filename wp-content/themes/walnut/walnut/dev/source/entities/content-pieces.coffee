@@ -88,7 +88,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                 if _.size(ids) > 0
                     contentPieces.fetch
                         data:
-#                            ids: ids
+                            ids: ids
+
 #                    App.execute "when:fetched", contentPieces,=>
 #                      for model in contentPieces.models
 #                        model.set 'order': _.indexOf(ids,(model.id).toString())
