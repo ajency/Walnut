@@ -106,3 +106,27 @@ define ['underscore', 'serialize'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'checkIfRecordExistsInQuestionResponse transaction completed'
 			.fail _.failureHandler
+
+
+
+
+		getTeacherName : (teacher_id)->
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?"
+							, [teacher_id], onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+					display_name = ''
+					if data.rows.length isnt 0
+						display_name = data.rows.item(0)['display_name']
+
+					d.resolve display_name
+
+			$.when(runQuery()).done ->
+				console.log 'getTeacherName transaction completed'
+			.fail _.failureHandler
+

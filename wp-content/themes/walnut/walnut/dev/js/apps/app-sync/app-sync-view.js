@@ -70,59 +70,62 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       };
 
       AppSyncView.prototype.startContinueSyncProcess = function() {
-        var lastSyncOperation;
-        _.createSynapseDataDirectory();
+        var synapseDataDirectory;
         $('#syncError').css("display", "none");
-        lastSyncOperation = _.getLastSyncOperation();
-        return lastSyncOperation.done(function(typeOfOperation) {
-          switch (typeOfOperation) {
-            case 'none':
-              $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Started sync process...");
-              return setTimeout((function(_this) {
-                return function() {
-                  var syncController;
-                  syncController = App.request("get:sync:controller");
-                  return syncController.getDownloadURL();
-                };
-              })(this), 2000);
-            case 'file_import':
-              $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Started sync process...");
-              return setTimeout((function(_this) {
-                return function() {
-                  return _.generateZipFile();
-                };
-              })(this), 2000);
-            case 'file_download':
-              $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Resuming sync process...");
-              return setTimeout((function(_this) {
-                return function() {
-                  var syncController;
-                  syncController = App.request("get:sync:controller");
-                  return syncController.readUnzipFile1();
-                };
-              })(this), 2000);
-            case 'file_generate':
-              $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Resuming sync process...");
-              return setTimeout((function(_this) {
-                return function() {
-                  return _.uploadGeneratedZipFile();
-                };
-              })(this), 2000);
-            case 'file_upload':
-              $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Resuming sync process...");
-              return setTimeout((function(_this) {
-                return function() {
-                  var syncController;
-                  syncController = App.request("get:sync:controller");
-                  return syncController.getDownloadURL();
-                };
-              })(this), 3000);
-          }
+        synapseDataDirectory = _.createSynapseDataDirectory();
+        return synapseDataDirectory.done(function() {
+          var lastSyncOperation;
+          lastSyncOperation = _.getLastSyncOperation();
+          return lastSyncOperation.done(function(typeOfOperation) {
+            switch (typeOfOperation) {
+              case 'none':
+                $('#syncStartContinue').css("display", "none");
+                $('#syncSuccess').css("display", "block").text("Started sync process...");
+                return setTimeout((function(_this) {
+                  return function() {
+                    var syncController;
+                    syncController = App.request("get:sync:controller");
+                    return syncController.getDownloadURL();
+                  };
+                })(this), 2000);
+              case 'file_import':
+                $('#syncStartContinue').css("display", "none");
+                $('#syncSuccess').css("display", "block").text("Started sync process...");
+                return setTimeout((function(_this) {
+                  return function() {
+                    return _.generateZipFile();
+                  };
+                })(this), 2000);
+              case 'file_download':
+                $('#syncStartContinue').css("display", "none");
+                $('#syncSuccess').css("display", "block").text("Resuming sync process...");
+                return setTimeout((function(_this) {
+                  return function() {
+                    var syncController;
+                    syncController = App.request("get:sync:controller");
+                    return syncController.readUnzipFile1();
+                  };
+                })(this), 2000);
+              case 'file_generate':
+                $('#syncStartContinue').css("display", "none");
+                $('#syncSuccess').css("display", "block").text("Resuming sync process...");
+                return setTimeout((function(_this) {
+                  return function() {
+                    return _.uploadGeneratedZipFile();
+                  };
+                })(this), 2000);
+              case 'file_upload':
+                $('#syncStartContinue').css("display", "none");
+                $('#syncSuccess').css("display", "block").text("Resuming sync process...");
+                return setTimeout((function(_this) {
+                  return function() {
+                    var syncController;
+                    syncController = App.request("get:sync:controller");
+                    return syncController.getDownloadURL();
+                  };
+                })(this), 3000);
+            }
+          });
         });
       };
 

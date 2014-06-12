@@ -1,5 +1,5 @@
 {
-  "name": "Synapse",
+  "name": "Synapse Staging",
   "description": "Synapse Android App",
   "version": "1",
   "permissions": ["<all_urls>", "storage", "unlimitedStorage"],

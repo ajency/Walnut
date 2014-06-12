@@ -76,19 +76,25 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 
 									if meta_value.question_type is 'individual'
 										q_resp = unserialize(r['question_response'])
-									else q_resp = r['question_response'] 
+									else q_resp = r['question_response']
 
-									result[i] = 
-										ref_id: r['ref_id']
-										teacher_id: r['teacher_id']
-										content_piece_id: r['content_piece_id']
-										collection_id: r['collection_id']
-										division: r['division']
-										question_response: q_resp
-										time_taken: r['time_taken']
-										start_date: r['start_date']
-										end_date: r['end_date']
-										status: r['status']
+									do(r, i, q_resp)->
+										teacherName = _.getTeacherName(r['teacher_id'])
+										teacherName.done (teacher_name)->
+											console.log 'teacher_name: '+teacher_name
+
+											result[i] = 
+												ref_id: r['ref_id']
+												teacher_id: r['teacher_id']
+												teacher_name: teacher_name
+												content_piece_id: r['content_piece_id']
+												collection_id: r['collection_id']
+												division: r['division']
+												question_response: q_resp
+												time_taken: r['time_taken']
+												start_date: r['start_date']
+												end_date: r['end_date']
+												status: r['status']
 		
 						d.resolve(result)           
 

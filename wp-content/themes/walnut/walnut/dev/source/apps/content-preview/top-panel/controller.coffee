@@ -133,7 +133,7 @@ define ['app'
                                             <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed</div>
                                       </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" id="correct-answer-col">
                                       <div class="col-sm-12">
                                         <p>
                                             <label class="form-label bold small-text inline">Correct Answer:</label>' +correct_answer+'

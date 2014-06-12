@@ -24,6 +24,9 @@
 .block {
   display: block;
 }
+.none {
+  display: none;
+}
 @media (max-width: 1024px) {
   .nonDevice {
     display: none;
@@ -291,6 +294,8 @@
   background: #f3f3f3;
   padding: 15px 10px;
   color: #000;
+  font-size: 14px;
+  font-weight: normal;
 }
 .docket-body label {
   color: #777a80;
@@ -686,9 +691,6 @@
 }
 .modal-content .modal-body button {
   float: right;
-}
-.modal-content .modal-footer {
-  display: none;
 }
 .imagewithtext .image-placeholder {
   float: left;
@@ -1632,6 +1634,9 @@ h3.time {
 input#duration {
   max-width: 150px;
 }
+.durationSelect {
+  width: 90px;
+}
 #myCanvas-miki .cbp_tmlabel a {
   color: #e74c30;
 }
@@ -1690,6 +1695,19 @@ input#duration {
 .progress-bar {
   color: #6a6a6a;
   font-weight: bold;
+}
+.panel-default > .panel-heading {
+  background-color: transparent;
+}
+.panel-default > .panel-heading.collapsed {
+  background-color: transparent;
+}
+.cbp_tmtimeline li.setGroup {
+  margin-bottom: 20px;
+}
+.cbp_tmtimeline li.setGroup .cbp_tmlabel {
+  margin-bottom: 2px;
+  padding: 10px;
 }
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
@@ -1858,6 +1876,13 @@ textarea.error,
 .select2-choice.error {
   border: 1px solid #f35958 !important;
 }
+.page-content.condensed {
+  overflow-y: visible;
+}
+.page-content {
+  min-height: 0;
+  overflow-x: hidden;
+}
 .mainLogo {
   background-size: 80%;
   background-repeat: no-repeat;
@@ -1877,6 +1902,12 @@ textarea.error,
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: left center;
+}
+.select2-results,
+.select2-container,
+.select2-container.form-control {
+  font-size: 15px;
+  font-weight: normal;
 }
 .select2-results {
   margin: 4px 4px 4px 0;
@@ -1911,9 +1942,12 @@ textarea {
   font-size: 15px !important;
 }
 .label {
-  font-size: 15px;
+  font-size: 14px;
   display: inline-block;
   padding: 6px 9px;
+}
+.alert {
+  font-size: 14px;
 }
 .btn {
   font-weight: bold;
@@ -1930,16 +1964,45 @@ textarea {
 .form-control .select2-choice .select2-arrow b:before {
   top: 6px;
 }
+input[disabled].disabled {
+  cursor: not-allowed;
+  background-color: #e5e9ec;
+}
+.checkbox label {
+  font-size: 14px;
+}
+.nav-tabs > li > a {
+  font-size: 16px;
+}
+.table td {
+  font-size: 15px;
+}
 .progress {
   background: #d6dde1;
+}
+::-webkit-input-placeholder {
+  color: #cdcdcd;
+}
+:-moz-placeholder {
+  /* Firefox 18- */
+
+  color: #cdcdcd;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+
+  color: #cdcdcd;
+}
+:-ms-input-placeholder {
+  color: #cdcdcd;
 }
 select {
   display: inline-block;
   position: relative;
   line-height: 1;
   width: 100%;
-  min-height: 45px;
-  padding: 10px;
+  min-height: 38px;
+  padding: 6px;
   background: #f3f3f3;
   border: 1px solid #e5e9ec;
   box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.05);

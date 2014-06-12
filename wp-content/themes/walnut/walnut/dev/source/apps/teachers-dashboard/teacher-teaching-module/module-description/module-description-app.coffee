@@ -83,16 +83,7 @@ define ['app'
 
             onShow : ->
 
-                #Changes for mobile
-                onBackbuttonClick = =>
-                    console.log 'Fired cordova back button event'
-                    @trigger "goto:previous:route"
-
-                    document.removeEventListener("backbutton", onBackbuttonClick, false)
-
                 if _.platform() is 'DEVICE'
-                    #Cordova backbutton event
-                    document.addEventListener("backbutton", onBackbuttonClick, false)
 
                     #Cordova pause event
                     document.addEventListener("pause"

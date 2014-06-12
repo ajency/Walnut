@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/content-group/view-group/content-display/templates/content-display.html', 'text!apps/content-group/view-group/content-display/templates/content-display-item.html'], function(App, RegionController, contentDisplayTpl, contentDisplayItemTpl) {
+define(['app', 'controllers/region-controller', 'text!apps/content-group/view-group/content-display/templates/content-display-item.html'], function(App, RegionController, contentDisplayItemTpl) {
   return App.module("CollectionContentDisplayApp.Controller", function(Controller, App) {
     var ContentDisplayView, ContentItemView;
     Controller.CollectionContentDisplayController = (function(_super) {
@@ -74,7 +74,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         if (this.model.get('content_type' === 'content_piece')) {
           content_icon = 'fa-youtube-play';
         }
-        return this.$el.find('.cbp_tmicon .fa').addClass(content_icon);
+        this.$el.find('.cbp_tmicon .fa').addClass(content_icon);
+        if (this.model.get('content_type') === 'content_piece') {
+          return this.$el.find('#correct-answer-div, #question-type-div').remove();
+        }
       };
 
       return ContentItemView;
@@ -89,7 +92,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/view-gr
         return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentDisplayView.prototype.template = contentDisplayTpl;
+      ContentDisplayView.prototype.template = '<div id="myCanvas-miki" class="col-md-10"><ul class="cbp_tmtimeline"></ul></div>';
 
       ContentDisplayView.prototype.itemView = ContentItemView;
 

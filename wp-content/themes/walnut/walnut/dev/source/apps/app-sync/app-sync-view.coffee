@@ -76,84 +76,88 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 			startContinueSyncProcess : ->
 
-				#Create 'SynapseData' directory inside 'SynapseAssets'
-				_.createSynapseDataDirectory()
-
 				#Hide error message
 				$('#syncError').css("display","none")
 
-				lastSyncOperation = _.getLastSyncOperation()
-				lastSyncOperation.done (typeOfOperation)->
-					
-					switch typeOfOperation
+				#Create 'SynapseData' directory inside 'SynapseAssets'
+				synapseDataDirectory = _.createSynapseDataDirectory()
+				synapseDataDirectory.done ->
+
+					lastSyncOperation = _.getLastSyncOperation()
+					lastSyncOperation.done (typeOfOperation)->
 						
-						when 'none'
-							$('#syncStartContinue').css("display","none")
+						switch typeOfOperation
 							
-							$('#syncSuccess').css("display","block")
-							.text("Started sync process...")
-							
-							setTimeout(=>
-								syncController = App.request "get:sync:controller"
-								syncController.getDownloadURL()
-					
-							,2000)
-							
+							when 'none'
+								$('#syncStartContinue').css("display","none")
+								
+								$('#syncSuccess').css("display","block")
+								.text("Started sync process...")
+								
+								setTimeout(=>
+									syncController = App.request "get:sync:controller"
+									syncController.getDownloadURL()
 						
-						when 'file_import'
-							$('#syncStartContinue').css("display","none")
+								,2000)
+								
+							
+							when 'file_import'
+								$('#syncStartContinue').css("display","none")
 
-							$('#syncSuccess').css("display","block")
-							.text("Started sync process...")
+								$('#syncSuccess').css("display","block")
+								.text("Started sync process...")
+								
+								
+								setTimeout(=>
+									_.generateZipFile()
+						
+								,2000)
 							
 							
-							setTimeout(=>
-								_.generateZipFile()
-					
-							,2000)
-						
-						
-						when 'file_download'
-							$('#syncStartContinue').css("display","none")
+							when 'file_download'
+								$('#syncStartContinue').css("display","none")
 
-							$('#syncSuccess').css("display","block")
-							.text("Resuming sync process...")
+								$('#syncSuccess').css("display","block")
+								.text("Resuming sync process...")
 
-							setTimeout(=>
-								syncController = App.request "get:sync:controller"
-								syncController.readUnzipFile1()
-					
-							,2000)
+								setTimeout(=>
+									syncController = App.request "get:sync:controller"
+									syncController.readUnzipFile1()
 						
-						
-
-						when 'file_generate'
-							$('#syncStartContinue').css("display","none")
-
-							$('#syncSuccess').css("display","block")
-							.text("Resuming sync process...")
+								,2000)
 							
-							setTimeout(=>
-								_.uploadGeneratedZipFile()
-					
-							,2000)
 							
 
-						when 'file_upload'
-							$('#syncStartContinue').css("display","none")
+							when 'file_generate'
+								$('#syncStartContinue').css("display","none")
 
-							$('#syncSuccess').css("display","block")
-							.text("Resuming sync process...")
+								$('#syncSuccess').css("display","block")
+								.text("Resuming sync process...")
+								
+								setTimeout(=>
+									_.uploadGeneratedZipFile()
+						
+								,2000)
+								
 
-							setTimeout(=>
-								syncController = App.request "get:sync:controller"
-								syncController.getDownloadURL()
-					
-							,3000)
+							when 'file_upload'
+								$('#syncStartContinue').css("display","none")
+
+								$('#syncSuccess').css("display","block")
+								.text("Resuming sync process...")
+
+								setTimeout(=>
+									syncController = App.request "get:sync:controller"
+									syncController.getDownloadURL()
+						
+								,3000)
 
 
 
 			startContinueMediaSyncProcess : ->
+				# directoryStructure = _.createDirectoryStructure("uploads/2013/06/image.jpg")
+				# directoryStructure.done ->
+				# 	console.log ''
 				
 				$('#syncMediaStartContinue').css("display","none")
 				

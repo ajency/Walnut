@@ -16774,13 +16774,13 @@ $.widget("ui.sortable", $.ui.mouse, {
 				for ( j = cur.length - 1; j >= 0; j--){
 					inst = $.data(cur[j], this.widgetFullName);
 					if(inst && inst !== this && !inst.options.disabled) {
-						queries.push([$.isFunction(inst.options.items) ? inst.options.items.call(inst.element) : $(inst.options.items, inst.element).not(".ui-sortable-helper").not(".ui-sortable-placeholder"), inst]);
+						queries.push([$.isFunction(inst.options.items) ? inst.options.items.call(inst.element) : $(inst.options.items, inst.element).not(".ui-sortable-helper").not(".sortable-box-placeholder"), inst]);
 					}
 				}
 			}
 		}
 
-		queries.push([$.isFunction(this.options.items) ? this.options.items.call(this.element, null, { options: this.options, item: this.currentItem }) : $(this.options.items, this.element).not(".ui-sortable-helper").not(".ui-sortable-placeholder"), this]);
+		queries.push([$.isFunction(this.options.items) ? this.options.items.call(this.element, null, { options: this.options, item: this.currentItem }) : $(this.options.items, this.element).not(".ui-sortable-helper").not(".sortable-box-placeholder"), this]);
 
 		for (i = queries.length - 1; i >= 0; i--){
 			queries[i][0].each(function() {
@@ -16906,7 +16906,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 					var nodeName = that.currentItem[0].nodeName.toLowerCase(),
 						element = $( "<" + nodeName + ">", that.document[0] )
-							.addClass(className || that.currentItem[0].className+" ui-sortable-placeholder")
+							.addClass(className || that.currentItem[0].className+" sortable-box-placeholder")
 							.removeClass("ui-sortable-helper");
 
 					if ( nodeName === "tr" ) {
@@ -16919,9 +16919,9 @@ $.widget("ui.sortable", $.ui.mouse, {
 						element.attr( "src", that.currentItem.attr( "src" ) );
 					}
 
-					if ( !className ) {
-						element.css( "visibility", "hidden" );
-					}
+					// if ( !className ) {
+					// 	element.css( "visibility", "hidden" );
+					// }
 
 					return element;
 				},
@@ -33008,10 +33008,10 @@ $(document).ready(function() {
         if (!jQuery().sortable) {
             return;
         }
-        $(".sortable").sortable({
+        $(".cbp_tmtimeline").sortable({
             connectWith: '.sortable',
             iframeFix: false,
-            items: 'div.grid',
+            items: '.sortable',
             opacity: 0.8,
             helper: 'original',
             revert: true,
@@ -43512,7 +43512,7 @@ define('apps/breadcrumb/app',['app', 'controllers/region-controller'], function(
 });
 
 
-define('text!apps/content-group/edit-group/group-details/templates/collection-details.html',[],function () { return '<form name="content-collection-form" id="content-collection-form">\n\t<div class="grid-title no-border">\n\t<input id="group_name" name="name" placeholder="Module Name" type="text" required="required" />\n\t<div class="tools">\n\t\t<a href="javascript:;" class="collapse"></a>\n\t</div>\n\t</div>\n\t<div class="grid-body no-border" style="overflow: hidden; display: block;">\n\t\t<div class="row ">\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Objective</label>\n\t\t\t\t\t<textarea id="objective" name="description[objective]" required="required" class="form-control" placeholder="Enter Objective">{{description.objective}}</textarea>\n\t\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Physical Requirements</label>\n\t\t\t\t\t<textarea name="description[physical_requirements]"  required="required" class="form-control" placeholder="Enter Physical Requirements">{{description.physical_requirements}}</textarea>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label required="required" class="form-label">Textbook</label>\n\t\t\t\t\t<select name="term_ids[textbook]" id="textbooks" class="form-control select2" >\n\t\t\t\t\t\t<option value="">--select textbook--</option>\n\t\t                {{#textbooksFilter}}\n\t\t                \t<option value="{{id}}">{{name}}</option>\n\t\t                {{/textbooksFilter}}\n\t\t            </select>\n\t\t\t\t</div>\n\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t \n\t\t</div>\n\t\t<div class="row ">\n\t\t\t\t<div class="col-md-4">\n\t\t\t\t   <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Description</label>\n\t\t\t\t\t<textarea id="description" name="description[description]" rows="4" class="form-control" placeholder="Enter Description">{{description.description}}</textarea>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Electronic Requirements</label>\n\t\t\t\t\t<textarea id="electronic_requirements" name="description[electionic_requirements]" class="form-control" placeholder="Enter Electronic Requirements">{{description.electionic_requirements}}</textarea>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Chapter <span class="muted small pull-right"> Select a Textbook first</span></label>\n\t\t\t\t\t<select name="term_ids[chapter]" id="chapters" class="form-control select2" >\n\t\t\t\t\t\t<option value="">--select chapters--</option>\n\t\t            </select>\n\t\t\t\t</div>\n\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t \n\t\t</div>\n\t\t<div class="row ">\n\t\t\t\t<div class="col-md-4">\n\t\t\t\t   <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>\n\t\t\t\t\t<select name="term_ids[sections][]" id="secs" class="form-control select2" multiple="">\n\t\t            </select>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Sub-Sections <span class="muted small pull-right"> Select a Chapter first</span></label>\n\t\t\t\t\t<select name="term_ids[subsections][]" id="subsecs" class="form-control select2" multiple="">\n\t\t            </select>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t\t<label class="form-label">Duration</label>\n\t\t\t    \t<input id="duration" name="duration" class="pull-left" placeholder="Enter Duration" type="text" required="required" />\n\t\t\t    \t<select style="width:120px; margin-left:10px" name="minshours" id="minshours" class="form-control select2 pull-left">\n\t\t\t    \t\t<option value="mins" selected="selected">mins</option>\n\t\t\t    \t\t<option value="hrs">hour(s)</option>\n\t\t            </select>\n\n\t\t\t\t\t<button type="submit" class="btn btn-success btn-cons2 right pull-right m-t-10" id="save-content-collection"> <i class="fa fa-check"></i> Save</button>\n\t\t\t\t\n\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t \n\t\t</div>\n\t</div>\n\n</form>';});
+define('text!apps/content-group/edit-group/group-details/templates/collection-details.html',[],function () { return '<form name="content-collection-form" id="content-collection-form">\n\t<div class="grid-title no-border">\n\t<input id="group_name" name="name" placeholder="Module Name" type="text" required="required" />\n\t<div class="tools">\n\t\t<a href="javascript:;" class="collapse"></a>\n\t</div>\n\t</div>\n\t<div class="grid-body no-border" style="overflow: hidden; display: block;">\n\t\t<div class="row ">\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Objective</label>\n\t\t\t\t\t<textarea id="objective" name="description[objective]" required="required" class="form-control" placeholder="Enter Objective">{{description.objective}}</textarea>\n\t\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Physical Requirements</label>\n\t\t\t\t\t<textarea name="description[physical_requirements]" class="form-control" placeholder="Enter Physical Requirements">{{description.physical_requirements}}</textarea>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label required="required" class="form-label">Textbook</label>\n\t\t\t\t\t<select name="term_ids[textbook]" id="textbooks" class="form-control select2" >\n\t\t\t\t\t\t<option value="">--select textbook--</option>\n\t\t                {{#textbooksFilter}}\n\t\t                \t<option value="{{id}}">{{name}}</option>\n\t\t                {{/textbooksFilter}}\n\t\t            </select>\n\t\t\t\t</div>\n\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t \n\t\t</div>\n\t\t<div class="row ">\n\t\t\t\t<div class="col-md-4">\n\t\t\t\t   <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Description</label>\n\t\t\t\t\t<textarea id="description" name="description[description]" rows="4" class="form-control" placeholder="Enter Description">{{description.description}}</textarea>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Electronic Requirements</label>\n\t\t\t\t\t<textarea id="electronic_requirements" name="description[electionic_requirements]" class="form-control" placeholder="Enter Electronic Requirements">{{description.electionic_requirements}}</textarea>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Chapter <span class="muted small pull-right"> Select a Textbook first</span></label>\n\t\t\t\t\t<select name="term_ids[chapter]" id="chapters" class="form-control select2" >\n\t\t\t\t\t\t<option value="">--select chapters--</option>\n\t\t            </select>\n\t\t\t\t</div>\n\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t \n\t\t</div>\n\t\t<div class="row ">\n\t\t\t\t<div class="col-md-4">\n\t\t\t\t   <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>\n\t\t\t\t\t<select name="term_ids[sections][]" id="secs" class="form-control select2" multiple="">\n\t\t            </select>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t    <div class="margin-bottom-20 ">\n\t\t\t\t\t<label class="form-label">Sub-Sections <span class="muted small pull-right"> Select a Chapter first</span></label>\n\t\t\t\t\t<select name="term_ids[subsections][]" id="subsecs" class="form-control select2" multiple="">\n\t\t            </select>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4">\n\t\t\t\t<label class="form-label">Duration</label>\n\t\t\t    \t<input id="duration" name="duration" class="pull-left" placeholder="Enter Duration" type="text" required="required" />\n\t\t\t    \t<select style="width:120px; margin-left:10px" name="minshours" id="minshours" class="form-control select2 pull-left">\n\t\t\t    \t\t<option value="mins" selected="selected">mins</option>\n\t\t\t    \t\t<option value="hrs">hour(s)</option>\n\t\t            </select>\n\n\t\t\t\t\t<button type="submit" class="btn btn-success btn-cons2 right pull-right m-t-10" id="save-content-collection"> <i class="fa fa-check"></i> Save</button>\n\t\t\t\t\n\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t \n\t\t</div>\n\t</div>\n\n</form>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -44556,16 +44556,13 @@ define('apps/content-group/view-group/group-details/details-app',['app', 'contro
 });
 
 
-define('text!apps/content-group/view-group/content-display/templates/content-display.html',[],function () { return '<!--<div class="row p-r-10">-->\n    <!--<div class="col-sm-4">-->\n\n        <!--<div class="tiles added-margin">-->\n            <!--<div class="tiles-body">-->\n                <!--<div class="tiles-title"> TRAINING MODULE TIME </div>-->\n                <!--<div class="heading"> <span class="animate-number" data-animation-duration="1200">{{total_minutes}} mins</span> </div>-->\n            <!--</div>-->\n        <!--</div>-->\n\n    <!--</div>-->\n    <!--<div class="col-sm-4">-->\n\n    <!--</div>-->\n    <!--<div class="col-sm-4">-->\n\n        <!--<div class="tiles white added-margin">-->\n            <!--<div class="tiles-body">-->\n                <!--<div class="tiles-title"> ELAPSED MODULE TIME </div>-->\n                <!--<div class="heading"> <span class="animate-number" data-animation-duration="1200">{{showElapsedTime}}</span> </div>-->\n            <!--</div>-->\n        <!--</div>-->\n\n    <!--</div>-->\n<!--</div>-->\n<div id="myCanvas-miki" class="col-md-10"><ul class="cbp_tmtimeline"></ul></div>';});
-
-
-define('text!apps/content-group/view-group/content-display/templates/content-display-item.html',[],function () { return '\n<div class="contentPiece" data-id="{{ID}}">\n\t<time class="cbp_tmtime" datetime="">\n\t    <span class="time">{{duration}} <span class="semi-bold">mins</span></span>\n\t</time>\n\t<div class="cbp_tmicon primary animated bounceIn"> <i class="fa"></i> </div>\n\t<div class="cbp_tmlabel view" style="cursor:auto">\n\t\t<div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">\n\t\t  <h4 class="m-t-5 m-b-5"><a class="text-success semi-bold question_link">{{&post_excerpt}}</a> </h4>\n\t\t</div>\n\t\t<div class="clearfix"></div>\n        <div class="tiles grey p-t-10 p-b-10 p-l-20">\n            <div class="muted">\n                <div>\n                    <span class="bold">Question Type:</span> {{question_type}}, <span class="bold">Date Completed:</span> {{dateCompleted}}\n                </div>\n                {{#responseStatus}}\n                <div>\n                    <span class="bold">Correct Answer:</span> {{correctAnswer}}\n                </div>\n                <div>\n                    <span class="bold">Taken By:</span> {{teacherName}}\n                </div>\n                {{/responseStatus}}\n            </div>\n            <div class="clearfix"></div>\n        </div>\n\t</div>\n    {{#responseStatus}}\n    <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed\n        <div>\n            <label class="form-label small-text text-grey inline">Time Taken: <span class="bold">{{timeTaken}}</span></label></div>\n    </div>\n    {{/responseStatus}}\n</div>';});
+define('text!apps/content-group/view-group/content-display/templates/content-display-item.html',[],function () { return '\n<div class="contentPiece" data-id="{{ID}}">\n\t<time class="cbp_tmtime" datetime="">\n\t    <span class="time">{{duration}} <span class="semi-bold">mins</span></span>\n\t</time>\n\t<div class="cbp_tmicon primary animated bounceIn"> <i class="fa"></i> </div>\n\t<div class="cbp_tmlabel view" style="cursor:auto">\n\t\t<div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">\n\t\t  <h4 class="m-t-5 m-b-5"><a class="text-success semi-bold question_link">{{&post_excerpt}}</a> </h4>\n\t\t</div>\n\t\t<div class="clearfix"></div>\n        <div class="tiles grey p-t-10 p-b-10 p-l-20">\n            <div class="muted">\n                <div id="question-type-div">\n                    <span class="bold">Question Type:</span> {{question_type}}, <span class="bold">Date Completed:</span> {{dateCompleted}}\n                </div>\n                {{#responseStatus}}\n                <div id="correct-answer-div">\n                    <span class="bold">Correct Answer:</span> {{correctAnswer}}\n                </div>\n                <div>\n                    <span class="bold">Taken By:</span> {{teacherName}}\n                </div>\n                {{/responseStatus}}\n            </div>\n            <div class="clearfix"></div>\n        </div>\n\t</div>\n    {{#responseStatus}}\n    <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed\n        <div>\n            <label class="form-label small-text text-grey inline">Time Taken: <span class="bold">{{timeTaken}}</span></label></div>\n    </div>\n    {{/responseStatus}}\n</div>';});
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define('apps/content-group/view-group/content-display/content-display-app',['app', 'controllers/region-controller', 'text!apps/content-group/view-group/content-display/templates/content-display.html', 'text!apps/content-group/view-group/content-display/templates/content-display-item.html'], function(App, RegionController, contentDisplayTpl, contentDisplayItemTpl) {
+define('apps/content-group/view-group/content-display/content-display-app',['app', 'controllers/region-controller', 'text!apps/content-group/view-group/content-display/templates/content-display-item.html'], function(App, RegionController, contentDisplayItemTpl) {
   return App.module("CollectionContentDisplayApp.Controller", function(Controller, App) {
     var ContentDisplayView, ContentItemView;
     Controller.CollectionContentDisplayController = (function(_super) {
@@ -44637,7 +44634,10 @@ define('apps/content-group/view-group/content-display/content-display-app',['app
         if (this.model.get('content_type' === 'content_piece')) {
           content_icon = 'fa-youtube-play';
         }
-        return this.$el.find('.cbp_tmicon .fa').addClass(content_icon);
+        this.$el.find('.cbp_tmicon .fa').addClass(content_icon);
+        if (this.model.get('content_type') === 'content_piece') {
+          return this.$el.find('#correct-answer-div, #question-type-div').remove();
+        }
       };
 
       return ContentItemView;
@@ -44652,7 +44652,7 @@ define('apps/content-group/view-group/content-display/content-display-app',['app
         return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentDisplayView.prototype.template = contentDisplayTpl;
+      ContentDisplayView.prototype.template = '<div id="myCanvas-miki" class="col-md-10"><ul class="cbp_tmtimeline"></ul></div>';
 
       ContentDisplayView.prototype.itemView = ContentItemView;
 
@@ -45886,7 +45886,7 @@ define('apps/teachers-dashboard/teacher-teaching-module/student-list/student-lis
 
       StudentsList.prototype.className = 'studentList m-t-35';
 
-      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20"> <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm"> <i class="fa fa-forward"></i> Next Question </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" class="btn btn-success btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-info btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
+      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20"> <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm"> <i class="fa fa-forward"></i> Next Question </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
@@ -46430,12 +46430,15 @@ define('apps/teachers-dashboard/teacher-teaching-module/teacher-teaching-control
         });
         this.timerObject = new Backbone.Wreqr.RequestResponse();
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
-        if (this.display_mode !== 'training') {
-          this.listenTo(this.layout, "show", this._showStudentsListView(questionResponseModel));
-        }
-        if (this.display_mode === 'training') {
-          this.listenTo(this.layout, 'show', this._showTeacherTrainingFooter);
-        }
+        this.listenTo(this.layout, 'show', (function(_this) {
+          return function() {
+            if (_this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
+              return _this._showTeacherTrainingFooter();
+            } else {
+              return _this._showStudentsListView(questionResponseModel);
+            }
+          };
+        })(this));
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
@@ -46458,10 +46461,10 @@ define('apps/teachers-dashboard/teacher-teaching-module/teacher-teaching-control
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
           this._showQuestionDisplayView(contentPiece);
-          if (this.display_mode !== 'training') {
-            return this._showStudentsListView(questionResponseModel);
-          } else if (this.display_mode === 'training') {
+          if (this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
             return this._showTeacherTrainingFooter();
+          } else {
+            return this._showStudentsListView(questionResponseModel);
           }
         } else {
           return this._gotoPreviousRoute();
@@ -49281,7 +49284,7 @@ define('apps/content-preview/content-board/controller',['app', 'controllers/regi
 });
 
 
-define('text!apps/content-preview/top-panel/templates/top-panel.html',[],function () { return '<div class="tiles white grid simple vertical blue m-b-0">\n    <div class="grid-body no-border">\n        <div class="p-t-10">\n            <div class="row">\n                <div class="col-sm-8">\n                    <div class="row m-b-10">\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Class</label>\n                            {{getClass}}\n                        </div>\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Textbook</label>\n                            {{getTextbookName}}\n                        </div>\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Chapter</label>\n                            {{getChapterName}}\n                        </div>\n                    </div>\n                    <div class="row">\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Section</label>\n                            {{getSectionsNames}}\n                        </div>\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Sub-Section</label>\n                            {{getSubSectionsNames}}\n                        </div>\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Type</label>\n                            <span style="text-transform: capitalize">{{question_type}}</span>\n                        </div>\n                    </div>\n                </div>\n                <div class="col-sm-4">\n                    <label class="form-label bold small-text text-center">Content Piece Timer</label>\n                    {{#isTraining}}\n                        <p class="small-text muted text-center">Visible in Class room mode</p>\n                    {{/isTraining}}\n                    {{^isTraining}}\n                        <div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>\n                        {{&getCompletedSummary}}\n                    {{/isTraining}}\n                </div>\n            </div>\n        </div>\n    </div>';});
+define('text!apps/content-preview/top-panel/templates/top-panel.html',[],function () { return '<div class="tiles white grid simple vertical blue m-b-0">\n    <div class="grid-body no-border">\n        <div class="p-t-10">\n            <div class="row">\n                <div class="col-sm-8">\n                    <div class="row m-b-10">\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Class</label>\n                            {{getClass}}\n                        </div>\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Textbook</label>\n                            {{getTextbookName}}\n                        </div>\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Chapter</label>\n                            {{getChapterName}}\n                        </div>\n                    </div>\n                    <div class="row">\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Section</label>\n                            {{getSectionsNames}}\n                        </div>\n                        <div class="col-xs-4 b-grey b-r">\n                            <label class="form-label bold small-text">Sub-Section</label>\n                            {{getSubSectionsNames}}\n                        </div>\n                        <div class="col-xs-4 b-grey b-r" id="question-type-col">\n                            <label class="form-label bold small-text">Type</label>\n                            <span style="text-transform: capitalize">{{question_type}}</span>\n                        </div>\n                    </div>\n                </div>\n                <div class="col-sm-4">\n                    <label class="form-label bold small-text text-center">Content Piece Timer</label>\n                    {{#isTraining}}\n                        <p class="small-text muted text-center">Visible in Class room mode</p>\n                    {{/isTraining}}\n                    {{^isTraining}}\n                        <div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>\n                        {{&getCompletedSummary}}\n                    {{/isTraining}}\n                </div>\n            </div>\n        </div>\n    </div>';});
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -49309,7 +49312,9 @@ define('apps/content-preview/top-panel/view',['app', 'text!apps/content-preview/
 
       TopPanelView.prototype.onShow = function() {
         var qTime, qTimer, timerColor;
-        console.log(this.mode);
+        if (this.model.get('content_type') === 'content_piece') {
+          this.$el.find('#question-type-col, #correct-answer-col').hide();
+        }
         if (this.mode === 'class_mode') {
           qTimer = this.$el.find('div.cpTimer');
           qTime = qTimer.data('timer');
@@ -49556,7 +49561,7 @@ define('apps/content-preview/top-panel/controller',['app', 'controllers/region-c
                   seconds = parseInt(questionResponseModel.get("time_taken") % 60);
                   time_taken_string = minutes + 'm ' + seconds + 's';
                   correct_answer = _this.getResults();
-                  return '<div class="row"> <div class="col-xs-6"> <p> <label class="form-label bold small-text inline">Time Alloted:</label>' + model.get("duration") + 'mins<br> <label class="form-label bold small-text inline">Time Taken:</label>' + time_taken_string + '</p> </div> <div class="col-xs-6"> <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed</div> </div> </div> <div class="row"> <div class="col-sm-12"> <p> <label class="form-label bold small-text inline">Correct Answer:</label>' + correct_answer + '</p> </div> </div> </div>';
+                  return '<div class="row"> <div class="col-xs-6"> <p> <label class="form-label bold small-text inline">Time Alloted:</label>' + model.get("duration") + 'mins<br> <label class="form-label bold small-text inline">Time Taken:</label>' + time_taken_string + '</p> </div> <div class="col-xs-6"> <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed</div> </div> </div> <div class="row" id="correct-answer-col"> <div class="col-sm-12"> <p> <label class="form-label bold small-text inline">Correct Answer:</label>' + correct_answer + '</p> </div> </div> </div>';
                 }
               };
             })(this)

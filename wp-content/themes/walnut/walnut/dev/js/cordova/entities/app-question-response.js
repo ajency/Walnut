@@ -82,6 +82,29 @@ define(['underscore', 'serialize'], function(_) {
       return $.when(runQuery()).done(function() {
         return console.log('checkIfRecordExistsInQuestionResponse transaction completed');
       }).fail(_.failureHandler);
+    },
+    getTeacherName: function(teacher_id) {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?", [teacher_id], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var display_name;
+          display_name = '';
+          if (data.rows.length !== 0) {
+            display_name = data.rows.item(0)['display_name'];
+          }
+          return d.resolve(display_name);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getTeacherName transaction completed');
+      }).fail(_.failureHandler);
     }
   });
 });
