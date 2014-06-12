@@ -108,30 +108,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			# get media from local database
 			getMediaByIdFromLocal : (id)->
 
-				# get meta_value from wp_postmeta having meta_key='_wp_attachment_metadata'
-				getAttachmentData = ->
-
-					runQuery = ->
-						$.Deferred (d)->
-							_.db.transaction (tx)->
-								tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_key=? 
-									AND post_id=?", ['_wp_attachment_metadata', id]
-									, success(d), _.deferredErrorHandler(d))
-
-					success = (d)->
-						(tx, data)->
-							meta_value = ''
-							if data.rows.length isnt 0
-								meta_value = unserialize(data.rows.item(0)['meta_value'])
-							
-							d.resolve(meta_value)
-
-					$.when(runQuery()).done ->
-						console.log 'getAttachmentData transaction completed'
-					.fail _.failureHandler
-					
-
-				runMainQuery = ->
+				runQuery = ->
 					$.Deferred (d)->
 						_.db.transaction (tx)->
 							tx.executeSql("SELECT * FROM wp_posts WHERE id=?", [id]
@@ -142,34 +119,40 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 						row = data.rows.item(0)
 
-						attacmentData = getAttachmentData()
-						attacmentData.done (data)->
+						do(row)->	
+							attachmentData = _.getAttachmentData id
+							attachmentData.done (data)->
 
-							url = row['guid']
-							mediaUrl = _.getSynapseAssetsDirectoryPath()+url.substr(url.indexOf("uploads/"))
-							console.log 'ID: '+id
-							console.log 'mediaUrl: '+mediaUrl
+								url = row['guid']
+								directoryPath = "cdvfile://localhost/persistent/SynapseAssets/SynapseImages/"
+								mediaUrl = directoryPath + url.substr(url.indexOf("uploads/"))
+								console.log 'mediaUrl: '+mediaUrl
 
-							if data.sizes
-								_.each data.sizes, (size)->
-									size.url = mediaUrl
-							else
-								data.sizes = ''
-							
-							result = 
-								id: row['ID']
-								filename: data.file
-								url: mediaUrl
-								mime: row['post_mime_type']
-								icon: ''
-								sizes: data.sizes
-								height: data.height
-								width: data.width
+								full = {
+									full: {}
+								}
+								_.extend(data.sizes, full)
 
-							d.resolve result    
+								if data.sizes
+									_.each data.sizes, (size)->
+										size.url = mediaUrl
+								else
+									data.sizes = ''
+								
+								result = 
+									id: row['ID']
+									filename: data.file
+									url: mediaUrl
+									mime: row['post_mime_type']
+									icon: ''
+									sizes: data.sizes
+									height: data.height
+									width: data.width
+
+								d.resolve result    
 
 				
-				$.when(runMainQuery()).done ->
+				$.when(runQuery()).done ->
 					console.log 'getMediaByIdFromLocal transaction completed'
 				.fail _.failureHandler
 

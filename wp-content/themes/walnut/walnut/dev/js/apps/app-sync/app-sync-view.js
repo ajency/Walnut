@@ -44,6 +44,9 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         var lastSyncOperation, totalRecordsTobeSynced;
         App.breadcrumbRegion.close();
         navigator.splashscreen.hide();
+        cordova.getAppVersion().then(function(version) {
+          return $('#app-version').text("Version: " + version);
+        });
         totalRecordsTobeSynced = _.getTotalRecordsTobeSynced();
         totalRecordsTobeSynced.done(function(totalRecords) {
           if (totalRecords === 0) {
@@ -123,7 +126,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
                     syncController = App.request("get:sync:controller");
                     return syncController.getDownloadURL();
                   };
-                })(this), 3000);
+                })(this), 2000);
             }
           });
         });

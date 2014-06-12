@@ -122,22 +122,28 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var attachmenturl, option_value, url;
+          var synapseImagesPath;
           if (data.rows.length !== 0) {
-            option_value = unserialize(data.rows.item(0)['option_value']);
-            url = option_value.attachmenturl;
-            if (url === 'false') {
-              attachmenturl = '';
-            } else {
-              attachmenturl = _.getSynapseAssetsDirectoryPath() + url.substr(url.indexOf("uploads/"));
-              attachmenturl = '<img src="' + attachmenturl + '">';
-            }
-            options = {
-              author: option_value.author,
-              attachmenturl: attachmenturl
-            };
+            synapseImagesPath = _.getSynapseImagesDirectoryPath();
+            return synapseImagesPath.done(function(directoryPath) {
+              var attachmenturl, option_value, url;
+              option_value = unserialize(data.rows.item(0)['option_value']);
+              url = option_value.attachmenturl;
+              if (url === 'false') {
+                attachmenturl = '';
+              } else {
+                attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"));
+                attachmenturl = '<img src="' + attachmenturl + '">';
+              }
+              options = {
+                author: option_value.author,
+                attachmenturl: attachmenturl
+              };
+              return d.resolve(options);
+            });
+          } else {
+            return d.resolve(options);
           }
-          return d.resolve(options);
         };
       };
       return $.when(runQuery()).done(function() {

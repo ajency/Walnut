@@ -152,6 +152,8 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'media') {
           data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('id'));
           data.done(function(d) {
+            console.log('Backbone media model');
+            console.log(d);
             return model.set(d);
           });
         }

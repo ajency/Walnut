@@ -38,6 +38,11 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				# Hide the splash screen image
 				navigator.splashscreen.hide()
 
+				#Display app version number
+				cordova.getAppVersion().then((version)-> 
+					$('#app-version').text("Version: "+version)
+				)
+
 				#Display total records to be synced
 				totalRecordsTobeSynced = _.getTotalRecordsTobeSynced()
 				totalRecordsTobeSynced.done (totalRecords)->
@@ -150,7 +155,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 									syncController = App.request "get:sync:controller"
 									syncController.getDownloadURL()
 						
-								,3000)
+								,2000)
 
 
 

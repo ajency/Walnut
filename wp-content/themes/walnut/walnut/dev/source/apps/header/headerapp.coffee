@@ -68,10 +68,10 @@ define ['app'
 
             onShow: ->
                 if $( window ).width()>1024
-                    $( "#gears-mob" ).remove();
+                    $( "#gears-mob" ).remove()
 
                 if $( window ).width()<1025
-                    $( "#gears-pc" ).remove();
+                    $( "#gears-pc" ).remove()
                     # $('#walnutProfile').mmenu
                     #     position: 'right'
                     #     zposition: 'front'

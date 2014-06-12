@@ -75,7 +75,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 								questionType.done (meta_value)->
 
 									if meta_value.question_type is 'individual'
-										q_resp = unserialize(r['question_response'])
+										q_resp = ''
+										q_resp = unserialize(r['question_response']) if r['question_response'] isnt ''
+									
 									else q_resp = r['question_response']
 
 									do(r, i, q_resp)->

@@ -42,14 +42,6 @@ define ['underscore'], ( _)->
         window.localStorage.getItem("school_logo_src")
 
 
-    # save/get Synapse assets directory path on SD Card
-    _.setSynapseAssetsDirectoryPath = (path)->
-        window.localStorage.setItem("synapse_directory_path", path)
-
-    _.getSynapseAssetsDirectoryPath = ->
-        window.localStorage.getItem("synapse_directory_path")
-
-
     # save/get generated zip file path
     _.setGeneratedZipFilePath = (path)->
         window.localStorage.setItem("gererated_zip_file_path", path)

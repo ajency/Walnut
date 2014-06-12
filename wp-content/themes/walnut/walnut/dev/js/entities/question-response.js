@@ -91,7 +91,10 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
               return questionType.done(function(meta_value) {
                 var q_resp;
                 if (meta_value.question_type === 'individual') {
-                  q_resp = unserialize(r['question_response']);
+                  q_resp = '';
+                  if (r['question_response'] !== '') {
+                    q_resp = unserialize(r['question_response']);
+                  }
                 } else {
                   q_resp = r['question_response'];
                 }

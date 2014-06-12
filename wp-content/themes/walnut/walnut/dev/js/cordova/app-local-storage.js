@@ -29,12 +29,6 @@ define(['underscore'], function(_) {
   _.getSchoolLogoSrc = function() {
     return window.localStorage.getItem("school_logo_src");
   };
-  _.setSynapseAssetsDirectoryPath = function(path) {
-    return window.localStorage.setItem("synapse_directory_path", path);
-  };
-  _.getSynapseAssetsDirectoryPath = function() {
-    return window.localStorage.getItem("synapse_directory_path");
-  };
   _.setGeneratedZipFilePath = function(path) {
     return window.localStorage.setItem("gererated_zip_file_path", path);
   };
