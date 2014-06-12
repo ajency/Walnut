@@ -107,7 +107,7 @@ function setup_childsite_tables() {
 
     $sync_apps_data_query = "
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_apps_data` (
-              `id` int(11) NOT NULL AUTO_INCREMENT,
+              `id` int(11) NOT NULL primary key AUTO_INCREMENT,
               `file_path` varchar(455) NOT NULL,
               `blog_id` int(11) NOT NULL,
               `meta` TEXT NOT NULL,
