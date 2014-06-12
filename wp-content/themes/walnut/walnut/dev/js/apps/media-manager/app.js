@@ -92,7 +92,7 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
       };
 
       OuterLayout.prototype.dialogOptions = {
-        modal_title: 'Image Manager',
+        modal_title: 'Media Manager',
         modal_size: 'wide-modal'
       };
 

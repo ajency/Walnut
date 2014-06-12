@@ -240,7 +240,7 @@ textarea.error, .select2-choice.error {
 }
 
 .page-content.condensed{
-	overflow-y: visible;
+	overflow: visible;
 }
 
 .page-content{
@@ -344,6 +344,12 @@ label, input, button, select, textarea{
 input[disabled].disabled{
 	cursor: not-allowed;
 	background-color: @body-bg;
+}
+
+ol {
+	&>li{
+		line-height: 35px;
+	}
 }
 
 .checkbox label{

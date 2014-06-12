@@ -14,7 +14,7 @@ define(['app'], function(App) {
 
       ImageWithTextView.prototype.className = 'imagewithtext';
 
-      ImageWithTextView.prototype.template = '{{#image}} <img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive"/> {{/image}} {{#placeholder}} <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Image</div> {{/placeholder}} <div class="editor"></div> <div class="clearfix"></div>';
+      ImageWithTextView.prototype.template = '{{#image}} <img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive"/> {{/image}} {{#placeholder}} <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Add Image</div> {{/placeholder}} <div class="editor"></div> <div class="clearfix"></div>';
 
       ImageWithTextView.prototype.mixinTemplateHelpers = function(data) {
         data = ImageWithTextView.__super__.mixinTemplateHelpers.call(this, data);

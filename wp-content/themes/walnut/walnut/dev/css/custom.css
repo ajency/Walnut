@@ -761,7 +761,10 @@
 .imagewithtext p {
   margin: 0;
 }
-.image .image-placeholder {
+.image .image-placeholder,
+.video .image-placeholder,
+.image .video-placeholder,
+.video .video-placeholder {
   padding: 2% 0;
   text-align: center;
   cursor: pointer;
@@ -769,7 +772,10 @@
   z-index: 2;
   color: #aaaaaa;
 }
-.image .image-placeholder .bicon {
+.image .image-placeholder .bicon,
+.video .image-placeholder .bicon,
+.image .video-placeholder .bicon,
+.video .video-placeholder .bicon {
   font-size: 40px;
   display: block;
 }
@@ -1951,7 +1957,7 @@ textarea.error,
   border: 1px solid #f35958 !important;
 }
 .page-content.condensed {
-  overflow-y: visible;
+  overflow: visible;
 }
 .page-content {
   min-height: 0;

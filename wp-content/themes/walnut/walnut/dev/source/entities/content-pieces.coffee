@@ -14,6 +14,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 post_modified: ''
                 post_date: ''
                 post_tags: ''
+                order   : ''
 
             name: 'content-piece'
 
@@ -21,7 +22,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         # ContentPiece collection class
         class ContentPiece.ItemCollection extends Backbone.Collection
             model: ContentPiece.ItemModel
-            comparator: 'ID'
+            comparator: 'order'
             url: ->
                 AJAXURL + '?action=get-content-pieces'
 
@@ -29,7 +30,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         # collection of content pieces in a content group. eg. questions in a quiz
         class ContentPiece.GroupItemCollection extends Backbone.Collection
             model: ContentPiece.ItemModel
-            comparator: 'ID'
+            comparator: 'order'
 
             initialize: ->
                 console.log 'content piece '
@@ -88,6 +89,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                     contentPieces.fetch
                         data:
                             ids: ids
+
                 contentPieces
 
         # request handler to get all ContentPieces
