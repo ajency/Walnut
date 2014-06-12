@@ -21,7 +21,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         post_author_name: '',
         post_modified: '',
         post_date: '',
-        post_tags: ''
+        post_tags: '',
+        order: ''
       };
 
       ItemModel.prototype.name = 'content-piece';
@@ -38,7 +39,7 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.model = ContentPiece.ItemModel;
 
-      ItemCollection.prototype.comparator = 'ID';
+      ItemCollection.prototype.comparator = 'order';
 
       ItemCollection.prototype.url = function() {
         return AJAXURL + '?action=get-content-pieces';
@@ -58,7 +59,7 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       GroupItemCollection.prototype.model = ContentPiece.ItemModel;
 
-      GroupItemCollection.prototype.comparator = 'ID';
+      GroupItemCollection.prototype.comparator = 'order';
 
       GroupItemCollection.prototype.initialize = function() {
         console.log('content piece ');
@@ -133,6 +134,20 @@ define(["app", 'backbone'], function(App, Backbone) {
               ids: ids
             }
           });
+          App.execute("when:fetched", contentPieces, (function(_this) {
+            return function() {
+              var model, _i, _len, _ref, _results;
+              _ref = contentPieces.models;
+              _results = [];
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                model = _ref[_i];
+                _results.push(model.set({
+                  'order': _.indexOf(ids, model.id.toString())
+                }));
+              }
+              return _results;
+            };
+          })(this));
         }
         return contentPieces;
       }
