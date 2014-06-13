@@ -3,10 +3,82 @@ define ['underscore','jquery'], ( _ , $) ->
 
 	_.mixin
 
+		downloadMediaFiles : ->
 
+			$('#syncMediaSuccess').css("display","block").text("Contacting server...")
+
+			localFiles = _.getListOfMediaFilesFromLocalDirectory()
+			localFiles.done (local_entries)->
+
+				console.log 'local_entries'
+				console.log local_entries
+				
+				filesOnServer = _.getListOfMediaFilesFromServer()
+				filesOnServer.done (files_on_server)->
+				
+					filesToBeDownloaded = _.compareFiles(local_entries, files_on_server)
+					filesToBeDownloaded.done (files_to_be_downloaded)->
+
+						$('#syncMediaSuccess').css("display","block").text("Downloading files...")
+
+						_.each files_to_be_downloaded, (file, i)->
+
+							directoryPath = file.substr(file.indexOf("uploads/"))
+
+							fileName = file.substr(file.lastIndexOf('/') + 1)
+
+							uri = encodeURI file
+
+							localPath = _.getSynapseImagesDirectoryPath() + directoryPath
+						
+							directoryStructure = _.createDirectoryStructure directoryPath
+							directoryStructure.done ->
+
+								fileTransfer = new FileTransfer()
+								fileTransfer.download(uri, localPath 
+									,(file)->
+										$('#syncMediaSuccess').css("display","block")
+										.text("Downloaded file "+fileName)
+
+									,(error)->
+										$('#syncMediaSuccess').css("display","none")
+										
+										$('#syncMediaError').css("display","block")
+										.text("An error occurred during file download.")
+
+
+									, true)
+
+
+		
+		compareFiles :(localEntries, serverEntries) ->
+
+			runFunc = ->
+				$.Deferred (d)->
+
+					if localEntries.length is 0
+						d.resolve serverEntries.fileImg
+
+					else
+						filesTobeDownloaded = []
+
+						_.each serverEntries.fileImg, (serverFile, i)->
+							fileName = serverFile[i].substr(serverFile[i].lastIndexOf('/') + 1)
+							if localEntries.indexOf(fileName) == -1
+								filesTobeDownloaded.push serverFile[i]
+
+						d.resolve filesTobeDownloaded
+
+
+			$.when(runFunc()).done ->
+				console.log 'compareFiles done'
+			.fail _.failureHandler
+
+
+		
 		getListOfMediaFilesFromLocalDirectory : ->
 
-			listOfPresentFilesInDirectory = ->
+			runFunc = ->
 				$.Deferred (d)->
 					fullDirectoryEntry = []
 
@@ -20,10 +92,8 @@ define ['underscore','jquery'], ( _ , $) ->
 									reader = directoryEnrty.createReader()
 									reader.readEntries ((directoryEnrty)->
 										for i in [0..directoryEnrty.length-1] by 1
-											console.log directoryEnrty[i].name+' dir? '+directoryEnrty[i].isDirectory
-											console.log "your path is "+directoryEnrty[i].toURL()
 											fullDirectoryEntry[i] = directoryEnrty[i].name
-										console.log "value is "+fullDirectoryEntry
+
 										d.resolve fullDirectoryEntry
 
 									)
@@ -33,90 +103,32 @@ define ['underscore','jquery'], ( _ , $) ->
 
 						, _.fileSystemErrorHandler)
 
-			$.when(listOfPresentFilesInDirectory()).done ->
-				console.log 'List of all files present in the directory'
+			$.when(runFunc()).done ->
+				console.log 'Got list of all files present in the local directory'
 			.fail _.failureHandler
-
-
-
-		chkDeferred : ->
-			directoryEntriesPresent = _.getListOfMediaFilesFromLocalDirectory()
-			directoryEntriesPresent.done (local_entries)->
-				if _.isArray local_entries
-					console.log "entries"+local_entries
-					# entries = JSON.stringify local_entries
-					# console.log "the local entries are"+entries
-				else
-					console.log "Error reading the directory entries array"
+		
 				
 
 		getListOfMediaFilesFromServer:->
-			alert "list of files"
-			listOfFiles = []
-			listOfFiles = 
-				fileImg : ["1_2.jpg", 
-				"1_2_2.jpg",
-				"1_2_3.jpg",
-				"1_2_4.jpg",
-				"1_2_5.jpg",
-				"1_2_6.jpg",
-				"1_2_7.jpg",
-				"1_2_8.jpg",
-				"1_2_9.jpg",
-				"1_2_10.jpg",
-				"1_2_11.jpg",
-				"1_3.jpg",
-				"1_3_2.jpg",
-				"1_3_3.jpg",
-				"1_3_4.jpg",
-				"1_3_5.jpg",
-				"1_90.jpg",
-				"1_90_2.jpg",
-				"1_90_3.jpg"]
-				
-			listOfFiles
 
-
-		compareFiles :(localEntries, serverEntries) ->
-			alert "last"
-			checkingTheFiles = ->
+			runFunc = ->
 				$.Deferred (d)->
-					filesTobeDownloaded = []
-					alert "image"+serverEntries.fileImg.length
-					for i in [0..serverEntries.fileImg.length-1] by 1
-						if localEntries.indexOf(serverEntries.fileImg[i]) == -1
-							filesTobeDownloaded.push serverEntries.fileImg[i]
-					
-					console.log "files needed to be dwnlded"+filesTobeDownloaded.length
-					d.resolve filesTobeDownloaded
+					listOfFiles = []
+					listOfFiles = 
+						fileImg : [ "http://synapsedu.info/wp-content/uploads/videos/oceans-clip.mp4"
+									"http://synapsedu.info/wp-content/uploads/2014/05/tux.png"
+									"http://synapsedu.info/wp-content/uploads/2014/05/Vertical-large.jpg"
+									"http://synapsedu.info/wp-content/uploads/2014/05/imag56es.jpg"
+									"http://synapsedu.info/wp-content/uploads/2014/05/girl1.jpg"
+									"http://synapsedu.info/wp-content/uploads/2014/05/tom_jerry.jpg"
+									"http://synapsedu.info/wp-content/uploads/2014/05/cover_pic1.png"
+									"http://synapsedu.info/wp-content/uploads/2014/06/Tulips.jpg"
+									"http://synapsedu.info/wp-content/uploads/2014/06/Jellyfish.jpg"
+									"http://synapsedu.info/wp-content/uploads/2014/06/Koala.jpg"
+									"http://synapsedu.info/wp-content/uploads/2014/06/Lighthouse.jpg"]
+				
+					d.resolve listOfFiles
 
-			$.when(checkingTheFiles()).done ->
-				console.log 'List of files which need to be downloaded'
+			$.when(runFunc()).done ->
+				console.log 'getListOfMediaFilesFromServer done'
 			.fail _.failureHandler
-
-
-		downloadMediaFiles : ->
-
-			$('#syncMediaSuccess').css("display","block").text("Contacting server...")
-
-
-			localFiles = _.getListOfMediaFilesFromLocalDirectory()
-			localFiles.done (local_entries)->
-				
-				filesOnServer = _.getListOfMediaFilesFromServer()
-				console.log "server list"+filesOnServer
-				
-				filesToBeDownloaded = _.compareFiles(local_entries, filesOnServer)
-				filesToBeDownloaded.done (filesTobeDownloaded)->
-					alert "needed to be downloaded are "+filesTobeDownloaded
-					
-					console.log "needed to be downloaded are "+filesTobeDownloaded
-
-					# ft = new FileTransfer()
-					# ft.download(uri, filePath 
-					# 	,(file)->
-					# 		$('#syncMediaSuccess').css("display","block").text("files to be downloaded are ")
-
-					# 	,_.fileTransferErrorHandler, true)
-
-

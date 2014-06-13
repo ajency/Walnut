@@ -2,10 +2,10 @@
 	//TODO: store the school domain as AJAX url.
 
 	//Synapse Production
-	var AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";
+	// var AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";
 
 	//Synapse Staging
-	// var AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";
+	var AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";
 
 	
 	var SITEURL = "";
