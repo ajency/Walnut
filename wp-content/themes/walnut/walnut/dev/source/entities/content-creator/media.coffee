@@ -119,37 +119,35 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 						row = data.rows.item(0)
 
-						do(row)->	
-							attachmentData = _.getAttachmentData id
-							attachmentData.done (data)->
+						attachmentData = _.getAttachmentData id
+						attachmentData.done (data)->
 
-								url = row['guid']
-								directoryPath = "cdvfile://localhost/persistent/SynapseAssets/SynapseImages/"
-								mediaUrl = directoryPath + url.substr(url.indexOf("uploads/"))
-								console.log 'mediaUrl: '+mediaUrl
+							url = row['guid']
+							mediaUrl = _.getSynapseImagesDirectoryPath() + url.substr(url.indexOf("uploads/"))
+							console.log 'mediaUrl: '+mediaUrl
 
-								full = {
-									full: {}
-								}
-								_.extend(data.sizes, full)
+							full = {
+								full: {}
+							}
+							_.extend(data.sizes, full)
 
-								if data.sizes
-									_.each data.sizes, (size)->
-										size.url = mediaUrl
-								else
-									data.sizes = ''
-								
-								result = 
-									id: row['ID']
-									filename: data.file
-									url: mediaUrl
-									mime: row['post_mime_type']
-									icon: ''
-									sizes: data.sizes
-									height: data.height
-									width: data.width
+							if data.sizes
+								_.each data.sizes, (size)->
+									size.url = mediaUrl
+							else
+								data.sizes = ''
+							
+							result = 
+								id: row['ID']
+								filename: data.file
+								url: mediaUrl
+								mime: row['post_mime_type']
+								icon: ''
+								sizes: data.sizes
+								height: data.height
+								width: data.width
 
-								d.resolve result    
+							d.resolve result    
 
 				
 				$.when(runQuery()).done ->

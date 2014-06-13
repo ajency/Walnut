@@ -79,6 +79,9 @@ define ['app'
 					# Cordova app navigation
 					_.appNavigation()
 
+					# Set 'SynapseImages' directory path to local storage
+					_.setSynapseImagesDirectoryPathToLocalStorage()
+
 
 
 

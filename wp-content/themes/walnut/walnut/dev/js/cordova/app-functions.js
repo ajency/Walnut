@@ -122,25 +122,22 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var synapseImagesPath;
+          var attachmenturl, directoryPath, option_value, url;
           if (data.rows.length !== 0) {
-            synapseImagesPath = _.getSynapseImagesDirectoryPath();
-            return synapseImagesPath.done(function(directoryPath) {
-              var attachmenturl, option_value, url;
-              option_value = unserialize(data.rows.item(0)['option_value']);
-              url = option_value.attachmenturl;
-              if (url === 'false') {
-                attachmenturl = '';
-              } else {
-                attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"));
-                attachmenturl = '<img src="' + attachmenturl + '">';
-              }
-              options = {
-                author: option_value.author,
-                attachmenturl: attachmenturl
-              };
-              return d.resolve(options);
-            });
+            option_value = unserialize(data.rows.item(0)['option_value']);
+            url = option_value.attachmenturl;
+            if (url === 'false') {
+              attachmenturl = '';
+            } else {
+              directoryPath = _.getSynapseImagesDirectoryPath();
+              attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"));
+              attachmenturl = '<img src="' + attachmenturl + '">';
+            }
+            options = {
+              author: option_value.author,
+              attachmenturl: attachmenturl
+            };
+            return d.resolve(options);
           } else {
             return d.resolve(options);
           }

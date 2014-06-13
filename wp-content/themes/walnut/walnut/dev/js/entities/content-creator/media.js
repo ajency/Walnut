@@ -124,41 +124,37 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var row;
+            var attachmentData, row;
             row = data.rows.item(0);
-            return (function(row) {
-              var attachmentData;
-              attachmentData = _.getAttachmentData(id);
-              return attachmentData.done(function(data) {
-                var directoryPath, full, mediaUrl, result, url;
-                url = row['guid'];
-                directoryPath = "cdvfile://localhost/persistent/SynapseAssets/SynapseImages/";
-                mediaUrl = directoryPath + url.substr(url.indexOf("uploads/"));
-                console.log('mediaUrl: ' + mediaUrl);
-                full = {
-                  full: {}
-                };
-                _.extend(data.sizes, full);
-                if (data.sizes) {
-                  _.each(data.sizes, function(size) {
-                    return size.url = mediaUrl;
-                  });
-                } else {
-                  data.sizes = '';
-                }
-                result = {
-                  id: row['ID'],
-                  filename: data.file,
-                  url: mediaUrl,
-                  mime: row['post_mime_type'],
-                  icon: '',
-                  sizes: data.sizes,
-                  height: data.height,
-                  width: data.width
-                };
-                return d.resolve(result);
-              });
-            })(row);
+            attachmentData = _.getAttachmentData(id);
+            return attachmentData.done(function(data) {
+              var full, mediaUrl, result, url;
+              url = row['guid'];
+              mediaUrl = _.getSynapseImagesDirectoryPath() + url.substr(url.indexOf("uploads/"));
+              console.log('mediaUrl: ' + mediaUrl);
+              full = {
+                full: {}
+              };
+              _.extend(data.sizes, full);
+              if (data.sizes) {
+                _.each(data.sizes, function(size) {
+                  return size.url = mediaUrl;
+                });
+              } else {
+                data.sizes = '';
+              }
+              result = {
+                id: row['ID'],
+                filename: data.file,
+                url: mediaUrl,
+                mime: row['post_mime_type'],
+                icon: '',
+                sizes: data.sizes,
+                height: data.height,
+                width: data.width
+              };
+              return d.resolve(result);
+            });
           };
         };
         return $.when(runQuery()).done(function() {

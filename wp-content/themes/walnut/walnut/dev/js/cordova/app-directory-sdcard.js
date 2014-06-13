@@ -1,25 +1,17 @@
 define(['underscore'], function(_) {
   return _.mixin({
-    getSynapseImagesDirectoryPath: function() {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-            return fileSystem.root.getDirectory("SynapseAssets/SynapseImages", {
-              create: false,
-              exclusive: false
-            }, function(fileEntry) {
-              console.log('SynapseImages directory path: ' + fileEntry.toURL() + '/');
-              return d.resolve(fileEntry.toURL() + '/');
-            }, function(error) {
-              return console.log('ERROR: ' + error.code);
-            });
-          }, _.fileSystemErrorHandler);
+    setSynapseImagesDirectoryPathToLocalStorage: function() {
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+        return fileSystem.root.getDirectory("SynapseAssets/SynapseImages", {
+          create: false,
+          exclusive: false
+        }, function(fileEntry) {
+          console.log('SynapseImages directory path: ' + fileEntry.toURL() + '/');
+          return _.setSynapseImagesDirectoryPath(fileEntry.toURL() + '/');
+        }, function(error) {
+          return console.log('ERROR: ' + error.code);
         });
-      };
-      return $.when(runFunc()).done(function() {
-        return console.log('getSynapseImagesDirectoryPath done');
-      }).fail(_.failureHandler);
+      }, _.fileSystemErrorHandler);
     },
     createSynapseAssetsDirectory: function() {
       var runFunc;
