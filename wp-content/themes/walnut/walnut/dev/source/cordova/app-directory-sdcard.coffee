@@ -3,29 +3,25 @@ define ['underscore'], ( _) ->
 
 	_.mixin
 
-		#Get 'SynapseImages' directory path
-		getSynapseImagesDirectoryPath : ->
+		#set 'SynapseImages' directory path to local storage
+		setSynapseImagesDirectoryPathToLocalStorage : ->
+			
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+				,(fileSystem)->
+					fileSystem.root.getDirectory("SynapseAssets/SynapseImages"
+						,{create: false, exclusive:false} 
+						
+						,(fileEntry)->
+							console.log 'SynapseImages directory path: '+fileEntry.toURL()+'/'
+							_.setSynapseImagesDirectoryPath fileEntry.toURL()+'/'
+						
+						,(error)->
+							console.log 'ERROR: '+error.code
+						)
 
-			runFunc = ->
-				$.Deferred (d)->
-					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
-						,(fileSystem)->
-							fileSystem.root.getDirectory("SynapseAssets/SynapseImages"
-								,{create: false, exclusive:false} 
-								
-								,(fileEntry)->
-									console.log 'SynapseImages directory path: '+fileEntry.toURL()+'/'
-									d.resolve fileEntry.toURL()+'/'
-								
-								,(error)->
-									console.log 'ERROR: '+error.code
-								)
+				,_.fileSystemErrorHandler)
 
-						,_.fileSystemErrorHandler)
-
-			$.when(runFunc()).done ->
-				console.log 'getSynapseImagesDirectoryPath done'
-			.fail _.failureHandler
+			
 
 
 		#Create 'SynapseAssets' directory

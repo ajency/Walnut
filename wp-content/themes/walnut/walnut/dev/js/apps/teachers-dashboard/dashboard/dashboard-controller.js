@@ -86,7 +86,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         }
         if (_.platform() === "DEVICE") {
           navigator.splashscreen.hide();
-          return _.appNavigation();
+          _.appNavigation();
+          return _.setSynapseImagesDirectoryPathToLocalStorage();
         }
       };
 

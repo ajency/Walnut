@@ -127,23 +127,21 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 				(tx, data)->
 					if data.rows.length isnt 0
 
-						synapseImagesPath = _.getSynapseImagesDirectoryPath()
-						synapseImagesPath.done (directoryPath)->
+						option_value = unserialize(data.rows.item(0)['option_value'])
 
-							option_value = unserialize(data.rows.item(0)['option_value'])
+						url = option_value.attachmenturl
+						if url is 'false'
+							attachmenturl = ''
+						else
+							directoryPath = _.getSynapseImagesDirectoryPath()
+							attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"))
+							attachmenturl = '<img src="'+attachmenturl+'">'
 
-							url = option_value.attachmenturl
-							if url is 'false'
-								attachmenturl = ''
-							else
-								attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"))
-								attachmenturl = '<img src="'+attachmenturl+'">'
+						options = 
+							author: option_value.author
+							attachmenturl: attachmenturl
 
-							options = 
-								author: option_value.author
-								attachmenturl: attachmenturl
-
-							d.resolve options
+						d.resolve options
 
 					else 
 						d.resolve options
@@ -167,4 +165,3 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			return date if bit is 0
 			return time if bit is 1
 			return date+' '+time if bit is 2
-			

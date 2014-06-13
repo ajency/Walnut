@@ -41,6 +41,12 @@ define(['underscore'], function(_) {
   _.getDownloadedZipFilePath = function() {
     return window.localStorage.getItem("downloaded_zip_file_path");
   };
+  _.setSynapseImagesDirectoryPath = function(path) {
+    return window.localStorage.setItem("synapse_images_directory_path", path);
+  };
+  _.getSynapseImagesDirectoryPath = function() {
+    return window.localStorage.getItem("synapse_images_directory_path");
+  };
   _.setFilePath = function(path) {
     return window.localStorage.setItem("filepath", "" + path);
   };
