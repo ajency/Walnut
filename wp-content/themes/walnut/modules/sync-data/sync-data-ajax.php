@@ -68,3 +68,19 @@ function check_app_data_sync_completion() {
 
 add_action( 'wp_ajax_check_app_data_sync_completion', 'check_app_data_sync_completion' );
 add_action( 'wp_ajax_nopriv_check-app-data-sync-completion', 'check_app_data_sync_completion' );
+
+
+function get_site_resources_data() {
+
+    switch_to_blog( 1 );
+
+    $resource_data = get_images_directory_json();
+
+    $resource_data = array_merge( $resource_data, get_videos_directory_json() );
+
+    wp_die( json_encode( $resource_data ) );
+
+}
+
+add_action( 'wp_ajax_get-site-resources-data', 'get_site_resources_data' );
+add_action( 'wp_ajax_nopriv_get-site-resources-data', 'get_site_resources_data' );
