@@ -28,6 +28,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				'click #syncStartContinue' : 'startContinueSyncProcess'
 
 				'click #syncMediaStartContinue' : 'startContinueMediaSyncProcess'
+
+				'click #syncCheckDeferred' : 'checkDeferredValue'
 				
 
 
@@ -168,3 +170,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 					_.getListOfMediaFilesFromLocalDirectory()
 		
 				,2000)
+
+
+			checkDeferredValue : ->
+				_.downloadMediaFiles()

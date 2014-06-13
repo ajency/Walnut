@@ -37,7 +37,8 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.events = {
         'click #syncStartContinue': 'startContinueSyncProcess',
-        'click #syncMediaStartContinue': 'startContinueMediaSyncProcess'
+        'click #syncMediaStartContinue': 'startContinueMediaSyncProcess',
+        'click #syncCheckDeferred': 'checkDeferredValue'
       };
 
       AppSyncView.prototype.onShow = function() {
@@ -137,6 +138,10 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
             return _.getListOfMediaFilesFromLocalDirectory();
           };
         })(this), 2000);
+      };
+
+      AppSyncView.prototype.checkDeferredValue = function() {
+        return _.downloadMediaFiles();
       };
 
       return AppSyncView;
