@@ -28,6 +28,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				'click #syncStartContinue' : 'startContinueSyncProcess'
 
 				'click #syncMediaStartContinue' : 'startContinueMediaSyncProcess'
+
+				'click #syncCheckDeferred' : 'checkDeferredValue'
 				
 
 
@@ -164,20 +166,13 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				# directoryStructure.done ->
 				# 	console.log ''
 				
-				# $('#syncMediaStartContinue').css("display","none")
+				$('#syncMediaStartContinue').css("display","none")
 				
-				# $('#syncMediaSuccess').css("display","block")
-				# .text("Started media sync process...")
+				$('#syncMediaSuccess').css("display","block")
+				.text("Started media sync process...")
 				
-				# setTimeout(=>
-				# 	_.getListOfMediaFilesFromLocalDirectory()
+				setTimeout(=>
+					_.downloadMediaFiles()
 		
-				# ,2000)
-
-				# decrypt.startDecryption('cdvfile://localhost/persistent/SynapseAssets/SynapseImages/', 'cdvfile://localhost/persistent/SynapseAssets/SynapseImages/'
-				# 	,(success)->
-				# 		console.log 'Success'
-
-				# 	,(error)->
-				# 		console.log 'Error: '+error
-				# )
+				,2000)
+				

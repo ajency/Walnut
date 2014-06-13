@@ -1,5 +1,35 @@
 define(['underscore', 'jquery'], function(_, $) {
   return _.mixin({
+    downloadMediaFiles: function() {
+      var localFiles;
+      $('#syncMediaSuccess').css("display", "block").text("Contacting server...");
+      localFiles = _.getListOfMediaFilesFromLocalDirectory();
+      return localFiles.done(function(local_entries) {
+        var filesOnServer, filesToBeDownloaded;
+        filesOnServer = _.getListOfMediaFilesFromServer();
+        filesToBeDownloaded = _.compareFiles(local_entries, filesOnServer);
+        return _.each(filesToBeDownloaded, function(file, i) {
+          var directoryPath, directoryStructure;
+          directoryPath = file.substr(file.indexOf("uploads/"));
+          directoryStructure = _.createDirectoryStructure(directoryPath);
+          return directoryStructure.done(function() {
+            return console.log('Directory successfully created');
+          });
+        });
+      });
+    },
+    compareFiles: function(localEntries, serverEntries) {
+      var filesTobeDownloaded;
+      filesTobeDownloaded = [];
+      _.each(serverEntries.fileImg, function(serverFile, i) {
+        var fileName;
+        fileName = serverFile[i].substr(serverFile[i].lastIndexOf('/') + 1);
+        if (localEntries.indexOf(fileName) === -1) {
+          return filesTobeDownloaded.push(serverFile[i]);
+        }
+      });
+      return filesTobeDownloaded;
+    },
     getListOfMediaFilesFromLocalDirectory: function() {
       var listOfPresentFilesInDirectory;
       listOfPresentFilesInDirectory = function() {
@@ -30,64 +60,16 @@ define(['underscore', 'jquery'], function(_, $) {
         });
       };
       return $.when(listOfPresentFilesInDirectory()).done(function() {
-        return console.log('List of all files present in the directory');
+        return console.log('Got list of all files present in the directory');
       }).fail(_.failureHandler);
-    },
-    chkDeferred: function() {
-      var directoryEntriesPresent;
-      directoryEntriesPresent = _.getListOfMediaFilesFromLocalDirectory();
-      return directoryEntriesPresent.done(function(local_entries) {
-        if (_.isArray(local_entries)) {
-          return console.log("entries" + local_entries);
-        } else {
-          return console.log("Error reading the directory entries array");
-        }
-      });
     },
     getListOfMediaFilesFromServer: function() {
       var listOfFiles;
-      alert("list of files");
       listOfFiles = [];
       listOfFiles = {
-        fileImg: ["1_2.jpg", "1_2_2.jpg", "1_2_3.jpg", "1_2_4.jpg", "1_2_5.jpg", "1_2_6.jpg", "1_2_7.jpg", "1_2_8.jpg", "1_2_9.jpg", "1_2_10.jpg", "1_2_11.jpg", "1_3.jpg", "1_3_2.jpg", "1_3_3.jpg", "1_3_4.jpg", "1_3_5.jpg", "1_90.jpg", "1_90_2.jpg", "1_90_3.jpg"]
+        fileImg: ["http://synapsedu.info/wp-content/uploads/videos/oceans-clip.mp4", "http://synapsedu.info/wp-content/uploads/2014/05/tux.png", "http://synapsedu.info/wp-content/uploads/2014/05/Vertical-large.jpg", "http://synapsedu.info/wp-content/uploads/2014/05/imag56es.jpg", "http://synapsedu.info/wp-content/uploads/2014/05/girl1.jpg", "http://synapsedu.info/wp-content/uploads/2014/05/tom_jerry.jpg", "http://synapsedu.info/wp-content/uploads/2014/05/cover_pic1.png", "http://synapsedu.info/wp-content/uploads/2014/06/Tulips.jpg", "http://synapsedu.info/wp-content/uploads/2014/06/Jellyfish.jpg", "http://synapsedu.info/wp-content/uploads/2014/06/Koala.jpg", "http://synapsedu.info/wp-content/uploads/2014/06/Lighthouse.jpg"]
       };
       return listOfFiles;
-    },
-    compareFiles: function(localEntries, serverEntries) {
-      var checkingTheFiles;
-      alert("last");
-      checkingTheFiles = function() {
-        return $.Deferred(function(d) {
-          var filesTobeDownloaded, i, _i, _ref;
-          filesTobeDownloaded = [];
-          alert("image" + serverEntries.fileImg.length);
-          for (i = _i = 0, _ref = serverEntries.fileImg.length - 1; _i <= _ref; i = _i += 1) {
-            if (localEntries.indexOf(serverEntries.fileImg[i]) === -1) {
-              filesTobeDownloaded.push(serverEntries.fileImg[i]);
-            }
-          }
-          console.log("files needed to be dwnlded" + filesTobeDownloaded.length);
-          return d.resolve(filesTobeDownloaded);
-        });
-      };
-      return $.when(checkingTheFiles()).done(function() {
-        return console.log('List of files which need to be downloaded');
-      }).fail(_.failureHandler);
-    },
-    downloadMediaFiles: function() {
-      var localFiles;
-      $('#syncMediaSuccess').css("display", "block").text("Contacting server...");
-      localFiles = _.getListOfMediaFilesFromLocalDirectory();
-      return localFiles.done(function(local_entries) {
-        var filesOnServer, filesToBeDownloaded;
-        filesOnServer = _.getListOfMediaFilesFromServer();
-        console.log("server list" + filesOnServer);
-        filesToBeDownloaded = _.compareFiles(local_entries, filesOnServer);
-        return filesToBeDownloaded.done(function(filesTobeDownloaded) {
-          alert("needed to be downloaded are " + filesTobeDownloaded);
-          return console.log("needed to be downloaded are " + filesTobeDownloaded);
-        });
-      });
     }
   });
 });
