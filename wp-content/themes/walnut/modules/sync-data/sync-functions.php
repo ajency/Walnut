@@ -298,13 +298,13 @@ function get_pending_app_sync_request_ids() {
 function get_images_directory_json() {
     $wp_upload_dir = wp_upload_dir();
 
-    $files = read_folder_directory( $wp_upload_dir['path'], $wp_upload_dir['baseurl'] . '/images');
+    $files = read_folder_directory( $wp_upload_dir['path'], $wp_upload_dir['baseurl']);
     return $files;
 }
 function get_videos_directory_json() {
     $wp_upload_dir = wp_upload_dir();
 
-    $files = read_folder_directory( $wp_upload_dir['path'] . '/../videos', $wp_upload_dir['baseurl'] . '/videos');
+    $files = read_folder_directory( str_replace("images", "videos", $wp_upload_dir['path']), str_replace("images", "videos", $wp_upload_dir['baseurl']));
     return $files;
 }
 
