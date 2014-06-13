@@ -80,10 +80,11 @@ define ['app'
                 selectedAnswer = @$el.find '.tiles.single .green'
 
                 if (_.size(selectedAnswer) is 0) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
-                    if confirm 'Are you sure no one answered correctly?'
+                    if confirm 'This item will be marked as complete. None of the options have been selected. Continue?'
                         @trigger "question:completed", "no_answer"
                 else
-                    @trigger "question:completed"
+                    if confirm 'This item will be marked as complete. Continue?'
+                        @trigger "question:completed"
 
         # set handlers
         App.commands.setHandler "show:single:question:chorus:options:app", (opt = {})->

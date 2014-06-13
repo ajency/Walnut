@@ -187,8 +187,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
             console.log(contentPiece.get('ID'));
             return App.execute('show:teacher:training:footer:app', {
               region: _this.layout.studentsListRegion,
-              contentPieceId: contentPiece.get('ID'),
-              question_type: question_type
+              contentPiece: contentPiece
             });
           };
         })(this));

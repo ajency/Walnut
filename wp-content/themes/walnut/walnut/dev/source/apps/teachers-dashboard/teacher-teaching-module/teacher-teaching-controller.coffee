@@ -182,8 +182,7 @@ define ['app'
 
                     App.execute 'show:teacher:training:footer:app',
                         region : @layout.studentsListRegion
-                        contentPieceId : contentPiece.get 'ID'
-                        question_type : question_type
+                        contentPiece : contentPiece
 
 
             _getTakeSingleQuestionLayout : ->

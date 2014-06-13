@@ -41,7 +41,7 @@ define(['app'], function(App) {
 
       StudentsList.prototype.className = 'studentList m-t-35';
 
-      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20"> <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm"> <i class="fa fa-forward"></i> Next Question </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
+      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20"> <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm"> <i class="fa fa-forward"></i> Next </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
@@ -126,11 +126,13 @@ define(['app'], function(App) {
 
       StudentsList.prototype.questionCompleted = function() {
         if ((_.size(this.correctAnswers) < 1) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
-          if (confirm('Are you sure no one answered correctly?')) {
+          if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
             return this.trigger("question:completed", "no_answer");
           }
         } else {
-          return this.trigger("question:completed");
+          if (confirm('This item will be marked as complete. Continue?')) {
+            return this.trigger("question:completed");
+          }
         }
       };
 

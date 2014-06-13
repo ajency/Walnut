@@ -111,7 +111,16 @@ function get_content_pieces($args = array()) {
     $content_pieces=array();
     
     foreach ($content_items as $id) {
-        $content_pieces[]= get_single_content_piece($id);
+        $cpiece=get_single_content_piece($id);
+        $cpiece->order=0;
+        if(isset($args['ids']) && sizeof($args['ids'])>0){
+            foreach($args['ids'] as $key=>$val){
+                if($val==$id){
+                    $cpiece->order=$key;
+                }
+            }
+        }
+        $content_pieces[]= $cpiece;
     }
     
     switch_to_blog($current_blog_id);

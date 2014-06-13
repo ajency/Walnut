@@ -64,7 +64,7 @@ define ['app'
                                                 </div>
                                                 <div class="clearfix"></div>
                                                 <div class="row">
-                                                    <div id="placeholder-video-txt" class="text-center m-t-40 m-b-40"><h4 class="semi-bold muted"> Looking for a video? Use the Search box above</h4><h1 class="semi-bold muted"><span class="fa fa-search"></span></h1></div>
+                                                    <!--<div id="placeholder-video-txt" class="text-center m-t-40 m-b-40"><h4 class="semi-bold muted"> Looking for a video? Use the Search box above</h4><h1 class="semi-bold muted"><span class="fa fa-search"></span></h1></div>-->
                                                     <div id="selectable-images"></div>
                                                 </div>'
 
