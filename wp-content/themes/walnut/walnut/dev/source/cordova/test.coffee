@@ -1060,6 +1060,21 @@ define ['underscore'], ( _) ->
 
 					
 				
+				                	# $.post AJAXURL + '?action=get-user-app-profile',
+				                	# 	data: @data,
+				                 #           (resp)=>
+				                 #                console.log 'RESP'
+				                 #                console.log resp
+				                 #                if resp.error
+				                 #                    _.onErrorResponse(resp.error)    
+
+				                 #                else
+				                 #                	resp = server_resp.server_files
+				                 #            ,
+				                 #            'json'
+					# onErrorResponse :(msg)->
+					# 		response = 
+				 #                error : ''+msg
 
 			
 

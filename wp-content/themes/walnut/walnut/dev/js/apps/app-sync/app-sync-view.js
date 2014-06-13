@@ -37,7 +37,8 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.events = {
         'click #syncStartContinue': 'startContinueSyncProcess',
-        'click #syncMediaStartContinue': 'startContinueMediaSyncProcess'
+        'click #syncMediaStartContinue': 'startContinueMediaSyncProcess',
+        'click #syncCheckDeferred': 'checkDeferredValue'
       };
 
       AppSyncView.prototype.onShow = function() {
@@ -133,6 +134,10 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       };
 
       AppSyncView.prototype.startContinueMediaSyncProcess = function() {};
+
+      AppSyncView.prototype.checkDeferredValue = function() {
+        return _.downloadMediaFiles();
+      };
 
       return AppSyncView;
 
