@@ -65,7 +65,6 @@ function change_uploads_directory( $uploads_dir ) {
 
     $uploads_dir['path'] = $uploads_dir['path'] . '/images';
     $uploads_dir['url'] = $uploads_dir['url'] . '/images';
-    $uploads_dir['subdir'] = '';
     $uploads_dir['basedir'] = $uploads_dir['basedir'] . '/images';
     $uploads_dir['baseurl'] = $uploads_dir['baseurl'] . '/images';
 
