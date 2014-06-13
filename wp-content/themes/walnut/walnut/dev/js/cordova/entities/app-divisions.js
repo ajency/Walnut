@@ -90,9 +90,6 @@ define(['underscore', 'unserialize'], function(_) {
           divisionIds = _.getDivisionIds();
           return divisionIds.done(function(ids) {
             var results;
-            if (_.isArray(ids)) {
-              ids = _.compact(ids.reverse());
-            }
             results = [];
             _.each(ids, function(id, i) {
               return (function(id, i) {

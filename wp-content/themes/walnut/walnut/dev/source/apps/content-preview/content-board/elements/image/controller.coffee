@@ -31,8 +31,7 @@ define ['app'
 					renderElement:()=>
 					
 						# get logo attachment
-						imageModel = App.request "get:media:by:id",@layout.model.get 'image_id'
-
+						imageModel = App.request "get:media:by:id", @layout.model.get 'image_id'
 						
 						App.execute "when:fetched", imageModel, =>
 							

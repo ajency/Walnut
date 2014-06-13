@@ -14,6 +14,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				post_modified: ''
 				post_date: ''
 				post_tags: ''
+				order   : ''
 
 			name: 'content-piece'
 
@@ -21,9 +22,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 		# ContentPiece collection class
 		class ContentPiece.ItemCollection extends Backbone.Collection
 			model: ContentPiece.ItemModel
-			comparator: 'ID'
+			comparator: 'order'
 			name: 'content-piece'
-
+			
 			url: ->
 				AJAXURL + '?action=get-content-pieces'
 
@@ -31,7 +32,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 		# collection of content pieces in a content group. eg. questions in a quiz
 		class ContentPiece.GroupItemCollection extends Backbone.Collection
 			model: ContentPiece.ItemModel
-			comparator: 'ID'
+			comparator: 'order'
 
 			initialize: ->
 				console.log 'content piece '
@@ -90,6 +91,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					contentPieces.fetch
 						data:
 							ids: ids
+
 				contentPieces
 
 
@@ -126,7 +128,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 								AND post_status = 'publish' AND ID in ("+ids+")", []
 								, onSuccess(d), _.deferredErrorHandler(d))
 
-				onSuccess =(d)->
+				onSuccess = (d)->
 					(tx,data)->
 						result = []
 
@@ -193,14 +195,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 															published_by: meta_value.published_by
 															term_ids: meta_value.term_ids
 															instructions: meta_value.instructions
+															order: _.indexOf(ids, row['ID'].toString())
 							
 						d.resolve(result)
 
 				$.when(runMainQuery()).done (d)->
 					console.log 'getContentPieceFromLocal transaction completed'
 				.fail _.failureHandler
-
-				
 
 		# request handler to get all ContentPieces
 		App.reqres.setHandler "get:content:pieces", (opt) ->

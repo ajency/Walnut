@@ -72,8 +72,6 @@ define ['app'
 					.select2()
 
 				if _.platform() is "DEVICE"
-
-					_.checkSynapseAssetsDirectory()
 					
 					# Hide the splash screen image
 					navigator.splashscreen.hide()

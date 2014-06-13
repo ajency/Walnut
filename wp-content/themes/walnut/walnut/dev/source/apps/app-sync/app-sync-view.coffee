@@ -28,8 +28,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				'click #syncStartContinue' : 'startContinueSyncProcess'
 
 				'click #syncMediaStartContinue' : 'startContinueMediaSyncProcess'
-
-				'click #syncCheckDeferred' : 'checkDeferredValue'
 				
 
 
@@ -39,6 +37,11 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				# Hide the splash screen image
 				navigator.splashscreen.hide()
+
+				#Display app version number
+				cordova.getAppVersion().then((version)-> 
+					$('#app-version').text("Version: "+version)
+				)
 
 				#Display total records to be synced
 				totalRecordsTobeSynced = _.getTotalRecordsTobeSynced()
@@ -152,7 +155,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 									syncController = App.request "get:sync:controller"
 									syncController.getDownloadURL()
 						
-								,3000)
+								,2000)
 
 
 
@@ -161,16 +164,20 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				# directoryStructure.done ->
 				# 	console.log ''
 				
-				$('#syncMediaStartContinue').css("display","none")
+				# $('#syncMediaStartContinue').css("display","none")
 				
-				$('#syncMediaSuccess').css("display","block")
-				.text("Started media sync process...")
+				# $('#syncMediaSuccess').css("display","block")
+				# .text("Started media sync process...")
 				
-				setTimeout(=>
-					_.getListOfMediaFilesFromLocalDirectory()
+				# setTimeout(=>
+				# 	_.getListOfMediaFilesFromLocalDirectory()
 		
-				,2000)
+				# ,2000)
 
+				# decrypt.startDecryption('cdvfile://localhost/persistent/SynapseAssets/SynapseImages/', 'cdvfile://localhost/persistent/SynapseAssets/SynapseImages/'
+				# 	,(success)->
+				# 		console.log 'Success'
 
-			checkDeferredValue : ->
-				_.downloadMediaFiles()
+				# 	,(error)->
+				# 		console.log 'Error: '+error
+				# )

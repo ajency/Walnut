@@ -215,6 +215,8 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'media'
 					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('id')
 					data.done (d)->
+						console.log 'Backbone media model'
+						console.log d
 						model.set d	
 
 			

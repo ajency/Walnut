@@ -80,7 +80,7 @@ function mark_sync_as_complete( $sync_request_id ){
     $table_name = $wpdb->prefix . "sync_apps_data";
 
     $wpdb->update( $table_name,
-                   array( 'status' => 'completed'),
+                   array( 'status' => 'complete'),
                    array( 'id' => $sync_request_id )
     );
 

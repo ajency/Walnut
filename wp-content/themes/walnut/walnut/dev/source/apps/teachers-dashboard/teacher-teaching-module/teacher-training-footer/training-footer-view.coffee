@@ -5,7 +5,7 @@ define ['app'], (App)->
 
             template : '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20">
                             <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm">
-                                <i class="fa fa-forward"></i> Next Question
+                                <i class="fa fa-forward"></i> Next
                             </button>
                         </div>
                         {{#isChorus}}
@@ -24,9 +24,15 @@ define ['app'], (App)->
             mixinTemplateHelpers:(data)->
                 data = super data
 
-                data.isChorus = if @question_type is 'chorus' then true else false
-                data.isIndividual = if @question_type is 'individual' then true else false
+                data.isChorus = data.isIndividual = false
 
+                if @model.get('content_type') isnt 'content_piece'
+                   if @model.get('question_type') is 'chorus'
+                       data.isChorus = true
+                   if @model.get('question_type') is 'individual'
+                       data.isIndividual =true
+
+                console.log data
                 data
 
             initialize :->

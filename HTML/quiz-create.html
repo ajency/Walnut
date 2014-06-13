@@ -325,7 +325,7 @@
 			<!-- BEGIN PlACE PAGE CONTENT HERE -->
 			<div class="teacher-app">
 
-				<div class="tiles white grid simple vertical green animated slideInRight">
+				<div class="tiles white grid simple vertical green">
 					<div class="grid-title no-border">
 						<input type="text" class="input-lg" placeholder="Quiz Name">
 						<div class="tools">
@@ -348,8 +348,8 @@
 									<label class="form-label">Status</label>
 									<select id="status" class="form-control" >
 					                    <option value="review">Under Review</option>
-					                    <option value="John">John</option>
-					                    <option value="Lucy">Lucy</option>
+					                    <option value="John">Published</option>
+					                    <option value="Lucy">Archived</option>
 					                </select>
 								</div>
 							</div>
@@ -360,45 +360,21 @@
 							</div>												 
 						</div>
 						<div class="row ">
-								<div class="col-md-4">
-								   <div class="margin-bottom-20 ">
-									<label class="form-label">Total No. of Questions</label>
-									<input id="" name="noQstns" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+							    	<label class="form-label">Marks</label>
+									<input id="" name="duration" class="pull-left" placeholder="Enter Marks" type="text" required="required" />
 								</div>
 							</div>
 							<div class="col-md-4">
 							    <div class="margin-bottom-20 ">
-									<label class="form-label">Expected Duration</label>
-									<input id="" name="duration" class="pull-left" placeholder="Enter Duration" type="text" required="required" />
-							    	<select name="minshours" id="" class="form-control pull-left durationSelect" >
-							    		<option value="mins" selected="selected">mins</option>
-							    		<option value="hrs">hr(s)</option>
-						            </select>
+									<label class="form-label">Duration</label>
+									<input id="" name="duration" class="pull-left" placeholder="Enter Duration" type="text" required="required" /> &nbsp;mins
 						            <div class="clearfix"></div>
 								</div>
 							</div>
 							<div class="col-md-4">
-							    <!-- <div class="margin-bottom-20 ">
-							    	<label class="form-label">Total Duration</label>
-									<input id="" name="totalTime" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
-								</div> -->
-							</div>											 
-						</div>
-						<div class="row ">
-							<div class="col-md-4">
 								<div class="margin-bottom-20 ">
-									<label class="form-label">Total Marks</label>
-									<input id="" name="totalTime" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
-								</div>
-							</div>
-							<div class="col-md-4">
-							    <div class="margin-bottom-20 ">
-							    	<label class="form-label">Expected Marks</label>
-									<input id="" name="duration" class="pull-left" placeholder="Enter Expected marks" type="text" required="required" />
-								</div>
-							</div>
-							<div class="col-md-4">
-							    <div class="margin-bottom-20 ">
 									<label class="form-label">Negative Marks</label>
 									<div class="radio radio-info inline">
 				                        <input id="yes" type="radio" name="negMarks" value="yes" checked="checked">
@@ -411,6 +387,26 @@
 							</div>											 
 						</div>
 						<div class="row ">
+							<div class="col-md-4">
+								<div class="margin-bottom-20 ">
+									<label class="form-label">Total Marks</label>
+									<input id="" name="totalTime" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+							    	<label class="form-label">Total Time </label>
+									<input id="" name="totalTime" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
+								</div>
+							</div>
+							<div class="col-md-4">
+							    <div class="margin-bottom-20 ">
+									<label class="form-label">Total No. of Questions</label>
+									<input id="" name="noQstns" class="disabled pull-left" placeholder="0" type="text" disabled="disabled">
+								</div>
+							</div>											 
+						</div>
+						<div class="row m-t-10">
 							<div class="col-md-12">
 								<div data-toggle="collapse" id="accordion" class="panel-group">
 								  <div class="panel panel-default">
@@ -692,128 +688,130 @@
 				</div> -->
 
 			</div>
-				
-			<div id="myCanvas-miki" class="col-md-10 ">
-				<ul class="cbp_tmtimeline">
-			        <li class="sortable setGroup">
-			        	<div class="contentPiece">
-				            <time class="cbp_tmtime" datetime="">
-				        	    <span class="time"><span class="semi-bold">Set 1</span></span>
-				            </time>
-				            <div class="cbp_tmicon info animated bounceIn"> <i class="fa fa-folder-open"></i> </div>
-				            <div class="cbp_tmlabel">
-				            	<div class="p-l-10 m-b-10">
-				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-				                	<h5 class="m-t-5 m-b-5 bold pull-left"><span><span class="muted">Textbook:</span> ABC</span><span><span class="muted"> | Chapter:</span> XYZ</span><span><span class="muted"> | Section:</span> 123</span><span><span class="muted"> | Sub-Section:</span> 789</span></h5>
-				                	
-				                <div class="clearfix"></div>
-				                </div>
+			
+			<div class="row">	
+				<div id="myCanvas-miki" class="col-md-10 ">
+					<ul class="cbp_tmtimeline">
+				        <li class="sortable setGroup">
+				        	<div class="contentPiece">
+					            <time class="cbp_tmtime" datetime="">
+					        	    <span class="time"><span class="semi-bold">Set 1</span></span>
+					            </time>
+					            <div class="cbp_tmicon info animated bounceIn"> <i class="fa fa-folder-open"></i> </div>
+					            <div class="cbp_tmlabel">
+					            	<div class="p-l-10 m-b-10">
+					                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+					                	<h5 class="m-t-5 m-b-5 bold pull-left"><span><span class="muted">Textbook:</span> ABC</span><span><span class="muted"> | Chapter:</span> XYZ</span><span><span class="muted"> | Section:</span> 123</span><span><span class="muted"> | Sub-Section:</span> 789</span></h5>
+					                	
+					                <div class="clearfix"></div>
+					                </div>
 
-				                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20 b-b b-grey">
-				                	<h4 class="no-margin"><span class="text-info semi-bold">Level 2</span> </h4>
-				                </div>
-				                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
-				                  <h4 class="no-margin"><span class="text-info semi-bold">Level 2</span> </h4>
-				                </div>
-				                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
-				                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
-				                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20 b-b b-grey">
+					                	<h4 class="no-margin"><span class="text-info semi-bold">Level 2</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 2</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
+					                </div>
+					            </div>
 				            </div>
-			            </div>
-			        </li>
-			        <li class="sortable">
-			        	<div class="contentPiece">
-			              <time class="cbp_tmtime" datetime="">
-			                <span class="time">4.5 <span class="semi-bold">mins</span></span>
-			              </time>
-			              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
-			              <div class="cbp_tmlabel">
-			                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 " >
-			                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-			                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold ">Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
-			           
-			                </div>
-			                <div class="clearfix"></div>
-			                <div class="tiles grey p-t-10 p-b-10 p-l-20">
-			                  <div class="muted">Time Taken: 6 mins</div>
-			                  <div class="clearfix"></div>
-			                </div>
-			              </div>
-			            </div>
-			        </li>
-			        <li class="sortable">
-			        	<div class="contentPiece">
-			              <time class="cbp_tmtime" datetime="">
-			                <span class="time">12 <span class="semi-bold">mins</span></span>
-			              </time>
-			              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
-			              <div class="cbp_tmlabel">
-			                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
-			                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-			                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
-			                </div>
-			                <div class="clearfix"></div>
-			               <div class="tiles grey p-t-10 p-b-10 p-l-20">
-			                   <div class="muted">Abc, xyz</div>
-			                  <div class="clearfix"></div>
-			                </div>
-			              </div>
-			            </div>
-			        </li>
-			        <li class="sortable setGroup">
-			        	<div class="contentPiece">
-				            <time class="cbp_tmtime" datetime="">
-				        	    <span class="time"><span class="semi-bold">Set 2</span></span>
-				            </time>
-				            <div class="cbp_tmicon info animated bounceIn"> <i class="fa fa-folder-open"></i> </div>
-				            <div class="cbp_tmlabel">
-				            	<div class="p-l-10 m-b-10">
+				        </li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				              <time class="cbp_tmtime" datetime="">
+				                <span class="time">4.5 <span class="semi-bold">mins</span></span>
+				              </time>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 " >
 				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-				                	<h5 class="m-t-5 m-b-5 bold pull-left"><span><span class="muted">Textbook:</span> DFGRTHY4TN</span><span><span class="muted"> | Chapter:</span> XYWERGBHTYHZ</span><span><span class="muted"> | Section:</span> ALL</span><span><span class="muted"> | Sub-Section:</span> ALL</span></h5>
-				                	
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold ">Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
+				           
+				                </div>
 				                <div class="clearfix"></div>
+				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                  <div class="muted">Time Taken: 6 mins</div>
+				                  <div class="clearfix"></div>
 				                </div>
-
-				                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20 b-b b-grey">
-				                	<h4 class="no-margin"><span class="text-info semi-bold">Level 1</span> </h4>
-				                </div>
-				                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
-				                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
-				                </div>
-				                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
-				                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
-				                </div>
-				                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
-				                  <h4 class="no-margin"><span class="text-info semi-bold">Level 5</span> </h4>
-				                </div>
-				                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
-				                  <h4 class="no-margin"><span class="text-info semi-bold">Level 5</span> </h4>
-				                </div>
+				              </div>
 				            </div>
-			            </div>
-			        </li>
-			        <li class="sortable">
-			        	<div class="contentPiece">
-			              <time class="cbp_tmtime" datetime="">
-			                <span class="time">23 <span class="semi-bold">mins</span></span>
-			              </time>
-			              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
-			              <div class="cbp_tmlabel">
-			                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 ">
-			                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
-			                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold " >Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
-			           
-			                </div>
-			                <div class="clearfix"></div>
-			                <div class="tiles grey p-t-10 p-b-10 p-l-20">
-			                  <div class="muted">Tag one, Tag two</div>
-			                  <div class="clearfix"></div>
-			                </div>
-			              </div>
-			            </div>
-			        </li>
-			    </ul>
-	    		<div class="clearfix"></div>
+				        </li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				              <time class="cbp_tmtime" datetime="">
+				                <span class="time">12 <span class="semi-bold">mins</span></span>
+				              </time>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">What is the name of the biggest part of the human brain?</span> </h4>
+				                </div>
+				                <div class="clearfix"></div>
+				               <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                   <div class="muted">Abc, xyz</div>
+				                  <div class="clearfix"></div>
+				                </div>
+				              </div>
+				            </div>
+				        </li>
+				        <li class="sortable setGroup">
+				        	<div class="contentPiece">
+					            <time class="cbp_tmtime" datetime="">
+					        	    <span class="time"><span class="semi-bold">Set 2</span></span>
+					            </time>
+					            <div class="cbp_tmicon info animated bounceIn"> <i class="fa fa-folder-open"></i> </div>
+					            <div class="cbp_tmlabel">
+					            	<div class="p-l-10 m-b-10">
+					                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+					                	<h5 class="m-t-5 m-b-5 bold pull-left"><span><span class="muted">Textbook:</span> DFGRTHY4TN</span><span><span class="muted"> | Chapter:</span> XYWERGBHTYHZ</span><span><span class="muted"> | Section:</span> ALL</span><span><span class="muted"> | Sub-Section:</span> ALL</span></h5>
+					                	
+					                <div class="clearfix"></div>
+					                </div>
+
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20 b-b b-grey">
+					                	<h4 class="no-margin"><span class="text-info semi-bold">Level 1</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 3</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 5</span> </h4>
+					                </div>
+					                <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20  b-b b-grey">
+					                  <h4 class="no-margin"><span class="text-info semi-bold">Level 5</span> </h4>
+					                </div>
+					            </div>
+				            </div>
+				        </li>
+				        <li class="sortable">
+				        	<div class="contentPiece">
+				              <time class="cbp_tmtime" datetime="">
+				                <span class="time">23 <span class="semi-bold">mins</span></span>
+				              </time>
+				              <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
+				              <div class="cbp_tmlabel">
+				                <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5 ">
+				                	<div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+				                  <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold " >Works with Evernote Business: Capture, browse, search, and share Business Notes and Business Notebooks from your smartphone or tablet.</span> </h4>
+				           
+				                </div>
+				                <div class="clearfix"></div>
+				                <div class="tiles grey p-t-10 p-b-10 p-l-20">
+				                  <div class="muted">Tag one, Tag two</div>
+				                  <div class="clearfix"></div>
+				                </div>
+				              </div>
+				            </div>
+				        </li>
+				    </ul>
+		    		<div class="clearfix"></div>
+				</div>
 			</div>
 
 			</div>

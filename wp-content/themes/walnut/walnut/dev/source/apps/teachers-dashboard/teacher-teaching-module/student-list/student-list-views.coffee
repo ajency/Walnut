@@ -40,7 +40,7 @@ define ['app'], (App)->
 
             template: '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20">
             							<button type="button" id="question-done" class="btn btn-success btn-xs btn-sm">
-            								<i class="fa fa-forward"></i> Next Question
+            								<i class="fa fa-forward"></i> Next
             							</button>
             						</div>
             						{{#class_mode}}
@@ -133,9 +133,10 @@ define ['app'], (App)->
 
             questionCompleted: ->
                 if (_.size(@correctAnswers) < 1) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
-                    if confirm 'Are you sure no one answered correctly?'
+                    if confirm 'This item will be marked as complete. None of the options have been selected. Continue?'
                         @trigger "question:completed", "no_answer"
                 else
-                    @trigger "question:completed"
+                    if confirm 'This item will be marked as complete. Continue?'
+                        @trigger "question:completed"
 
 

@@ -126,20 +126,27 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			onSuccess = (d)->
 				(tx, data)->
 					if data.rows.length isnt 0
-						option_value = unserialize(data.rows.item(0)['option_value'])
 
-						url = option_value.attachmenturl
-						if url is 'false'
-							attachmenturl = ''
-						else
-							attachmenturl = _.getSynapseAssetsDirectoryPath()+url.substr(url.indexOf("uploads/"))
-							attachmenturl = '<img src="'+attachmenturl+'">'
+						synapseImagesPath = _.getSynapseImagesDirectoryPath()
+						synapseImagesPath.done (directoryPath)->
 
-						options = 
-							author: option_value.author
-							attachmenturl: attachmenturl
+							option_value = unserialize(data.rows.item(0)['option_value'])
 
-					d.resolve options
+							url = option_value.attachmenturl
+							if url is 'false'
+								attachmenturl = ''
+							else
+								attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"))
+								attachmenturl = '<img src="'+attachmenturl+'">'
+
+							options = 
+								author: option_value.author
+								attachmenturl: attachmenturl
+
+							d.resolve options
+
+					else 
+						d.resolve options
 					
 			$.when(runQuery()).done ->
 				console.log 'getTextbookOptions transaction completed'
