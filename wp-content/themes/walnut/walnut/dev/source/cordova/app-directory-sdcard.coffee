@@ -3,23 +3,26 @@ define ['underscore'], ( _) ->
 
 	_.mixin
 
-		#set 'SynapseImages' directory path to local storage
-		setSynapseImagesDirectoryPathToLocalStorage : ->
+		#set 'SynapseMedia' directory path to local storage
+		setSynapseMediaDirectoryPathToLocalStorage : ->
 			
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
-				,(fileSystem)->
-					fileSystem.root.getDirectory("SynapseAssets/SynapseImages"
-						,{create: false, exclusive:false} 
-						
-						,(fileEntry)->
-							console.log 'SynapseImages directory path: '+fileEntry.toURL()+'/'
-							_.setSynapseImagesDirectoryPath fileEntry.toURL()+'/'
-						
-						,(error)->
-							console.log 'ERROR: '+error.code
-						)
+			synapseMediaDirectory = _.createSynapseMediaDirectory()
+			synapseMediaDirectory.done ->
+			
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+					,(fileSystem)->
+						fileSystem.root.getDirectory("SynapseAssets/SynapseMedia"
+							,{create: false, exclusive:false} 
+							
+							,(fileEntry)->
+								console.log 'SynapseMedia directory path: '+fileEntry.toURL()+'/'
+								_.setSynapseMediaDirectoryPath fileEntry.toURL()+'/'
+							
+							,(error)->
+								console.log 'ERROR: '+error.code
+							)
 
-				,_.fileSystemErrorHandler)
+					,_.fileSystemErrorHandler)
 
 			
 
@@ -48,9 +51,8 @@ define ['underscore'], ( _) ->
 			.fail _.failureHandler
 
 
-
-		#Create 'SynapseImages' directory inside 'SynapseAssets'
-		createSynapseImagesDirectory : ->
+		#Create 'SynapseMedia' directory inside 'SynapseAssets'
+		createSynapseMediaDirectory : ->
 
 			runFunc = ->
 				$.Deferred (d)->
@@ -59,11 +61,11 @@ define ['underscore'], ( _) ->
 
 						window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
 							,(fileSystem)->
-								fileSystem.root.getDirectory("SynapseAssets/SynapseImages"
+								fileSystem.root.getDirectory("SynapseAssets/SynapseMedia"
 									,{create: true, exclusive:false} 
 									
 									,(fileEntry)->
-										console.log 'SynapseImages directory path: '+fileEntry.toURL()
+										console.log 'SynapseMedia directory path: '+fileEntry.toURL()
 										d.resolve fileEntry
 									
 									,(error)->
@@ -74,11 +76,11 @@ define ['underscore'], ( _) ->
 
 
 			$.when(runFunc()).done ->
-				console.log 'createSynapseImagesDirectory done'
+				console.log 'createSynapseMediaDirectory done'
 			.fail _.failureHandler
 
 
-		
+
 		#Create 'SynapseData' directory inside 'SynapseAssets' for file sync operations
 		createSynapseDataDirectory : ->
 
@@ -105,19 +107,18 @@ define ['underscore'], ( _) ->
 			$.when(runFunc()).done ->
 				console.log 'createSynapseDataDirectory done'
 			.fail _.failureHandler
-
-
+			
 
 		
-		#Create directory structure inside 'SynapseImages' for media sync
+		# Create directory structure inside 'SynapseMedia' for media sync
 		createDirectoryStructure : (path)->
 
 			runFunc = ->
 				$.Deferred (d)->
 
-					directoryPath = "SynapseAssets/SynapseImages"
+					directoryPath = "SynapseAssets/SynapseMedia"
 
-					synapseImagesDirectory = _.createSynapseImagesDirectory()
+					synapseImagesDirectory = _.createSynapseMediaDirectory()
 					synapseImagesDirectory.done ->
 
 						directories = path.split('/')

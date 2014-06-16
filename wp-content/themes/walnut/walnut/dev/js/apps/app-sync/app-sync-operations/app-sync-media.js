@@ -1,55 +1,155 @@
 define(['underscore', 'jquery'], function(_, $) {
   return _.mixin({
-    downloadMediaFiles: function() {
-      var localFiles;
-      $('#syncMediaSuccess').css("display", "block").text("Contacting server...");
-      localFiles = _.getListOfMediaFilesFromLocalDirectory();
-      return localFiles.done(function(local_entries) {
-        var filesOnServer;
-        console.log('local_entries');
-        console.log(local_entries);
-        filesOnServer = _.getListOfMediaFilesFromServer();
-        return filesOnServer.done(function(files_on_server) {
-          var filesToBeDownloaded;
-          filesToBeDownloaded = _.compareFiles(local_entries, files_on_server);
-          return filesToBeDownloaded.done(function(files_to_be_downloaded) {
-            $('#syncMediaSuccess').css("display", "block").text("Downloading files...");
-            return _.each(files_to_be_downloaded, function(file, i) {
-              var directoryPath, directoryStructure, fileName, localPath, uri;
-              directoryPath = file.substr(file.indexOf("uploads/"));
-              fileName = file.substr(file.lastIndexOf('/') + 1);
-              uri = encodeURI(file);
-              localPath = _.getSynapseImagesDirectoryPath() + directoryPath;
-              directoryStructure = _.createDirectoryStructure(directoryPath);
-              return directoryStructure.done(function() {
-                var fileTransfer;
-                fileTransfer = new FileTransfer();
-                return fileTransfer.download(uri, localPath, function(file) {
-                  return $('#syncMediaSuccess').css("display", "block").text("Downloaded file " + fileName);
-                }, function(error) {
-                  $('#syncMediaSuccess').css("display", "none");
-                  return $('#syncMediaError').css("display", "block").text("An error occurred during file download.");
-                }, true);
-              });
-            });
+    startMediaSync: function() {
+      return _.syncFiles('Image');
+    },
+    syncFiles: function(file_type) {
+      var localImageFileList;
+      localImageFileList = _.getListOfFilesFromLocalDirectory(file_type);
+      return localImageFileList.done(function(localImageFilesList) {
+        var remoteImageFileList;
+        remoteImageFileList = _.getListOfMediaFilesFromServer(file_type);
+        return remoteImageFileList.done(function(remoteImageFilesList) {
+          var fileTobeDownloaded;
+          fileTobeDownloaded = _.getFilesToBeDownloaded(localImageFilesList, remoteImageFilesList);
+          return fileTobeDownloaded.done(function(files_to_be_downloaded) {
+            var downloadFiles;
+            if (files_to_be_downloaded.length > 0) {
+              $('#syncMediaSuccess').css("display", "block").text("Downloading " + file_type + " files...");
+              return downloadFiles = _.downloadMediaFiles(files_to_be_downloaded, 0, file_type);
+            } else {
+              $('#syncMediaSuccess').css("display", "block").text(file_type + " files already upto date");
+              if (file_type === 'Image') {
+                _.syncFiles('Video');
+              }
+              if (file_type === 'Video') {
+                return setTimeout((function(_this) {
+                  return function() {
+                    return App.navigate('teachers/dashboard', {
+                      trigger: true
+                    });
+                  };
+                })(this), 2000);
+              }
+            }
           });
         });
       });
     },
-    compareFiles: function(localEntries, serverEntries) {
+    downloadMediaFiles: function(filesTobeDownloaded, index, file_type) {
+      var directoryPath, directoryStructure, file, fileName, localPath, uri;
+      file = filesTobeDownloaded[index];
+      directoryPath = file.substr(file.indexOf("uploads/"));
+      fileName = file.substr(file.lastIndexOf('/') + 1);
+      uri = encodeURI(file);
+      localPath = _.getSynapseMediaDirectoryPath() + directoryPath;
+      directoryStructure = _.createDirectoryStructure(directoryPath);
+      return directoryStructure.done(function() {
+        var fileTransfer;
+        fileTransfer = new FileTransfer();
+        return fileTransfer.download(uri, localPath, function(file) {
+          if (index < filesTobeDownloaded.length - 1) {
+            $('#syncMediaSuccess').css("display", "block").text("Downloaded file: " + fileName);
+            return _.downloadMediaFiles(filesTobeDownloaded, index + 1, file_type);
+          } else {
+            $('#syncMediaSuccess').css("display", "block").text("Downloaded all " + file_type + " files");
+            if (file_type === 'Image') {
+              _.syncFiles('Video');
+            }
+            if (file_type === 'Video') {
+              return setTimeout((function(_this) {
+                return function() {
+                  return App.navigate('teachers/dashboard', {
+                    trigger: true
+                  });
+                };
+              })(this), 2000);
+            }
+          }
+        }, function(error) {
+          console.log('ERROR: ' + error.code);
+          $('#syncMediaSuccess').css("display", "none");
+          $('#syncMediaStart').css("display", "block");
+          $('syncMediaButtonText').text('Try again');
+          return $('syncMediaError').css("display", "block").text('An error occurred during file download');
+        }, true);
+      });
+    },
+    getListOfFilesFromLocalDirectory: function(file_type) {
+      var path, runFunc;
+      if (file_type === 'Image') {
+        path = 'images';
+      }
+      if (file_type === 'Video') {
+        path = 'videos';
+      }
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          var localFilesList;
+          localFilesList = [];
+          return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+            return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/" + path, {
+              create: false,
+              exclusive: false
+            }, function(directoryEntry) {
+              var reader;
+              reader = directoryEntry.createReader();
+              return reader.readEntries((function(entries) {
+                var i, _i, _ref;
+                for (i = _i = 0, _ref = entries.length - 1; _i <= _ref; i = _i += 1) {
+                  localFilesList[i] = entries[i].name;
+                }
+                return d.resolve(localFilesList);
+              }));
+            }, function(error) {
+              return d.resolve(localFilesList);
+            });
+          }, _.fileSystemErrorHandler);
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log('getListOfFilesFromLocalDirectory done');
+      }).fail(_.failureHandler);
+    },
+    getListOfMediaFilesFromServer: function(file_type) {
+      var runFunc;
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          var action, data;
+          if (file_type === 'Image') {
+            action = 'get-site-image-resources-data';
+          }
+          if (file_type === 'Video') {
+            action = 'get-site-video-resources-data';
+          }
+          data = '';
+          return $.get(AJAXURL + '?action=' + action, data, (function(_this) {
+            return function(resp) {
+              console.log('Download details response for ' + file_type);
+              console.log(resp);
+              return d.resolve(resp);
+            };
+          })(this), 'json');
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log('getListOfMediaFilesFromServer done');
+      }).fail(_.failureHandler);
+    },
+    getFilesToBeDownloaded: function(localEntries, serverEntries) {
       var runFunc;
       runFunc = function() {
         return $.Deferred(function(d) {
           var filesTobeDownloaded;
           if (localEntries.length === 0) {
-            return d.resolve(serverEntries.fileImg);
+            return d.resolve(serverEntries);
           } else {
             filesTobeDownloaded = [];
-            _.each(serverEntries.fileImg, function(serverFile, i) {
+            _.each(serverEntries, function(serverFile, i) {
               var fileName;
-              fileName = serverFile[i].substr(serverFile[i].lastIndexOf('/') + 1);
+              fileName = serverFile.substr(serverFile.lastIndexOf('/') + 1);
               if (localEntries.indexOf(fileName) === -1) {
-                return filesTobeDownloaded.push(serverFile[i]);
+                return filesTobeDownloaded.push(serverFile);
               }
             });
             return d.resolve(filesTobeDownloaded);
@@ -57,53 +157,7 @@ define(['underscore', 'jquery'], function(_, $) {
         });
       };
       return $.when(runFunc()).done(function() {
-        return console.log('compareFiles done');
-      }).fail(_.failureHandler);
-    },
-    getListOfMediaFilesFromLocalDirectory: function() {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          var fullDirectoryEntry;
-          fullDirectoryEntry = [];
-          return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-            return fileSystem.root.getDirectory("SynapseAssets/SynapseImages", {
-              create: false,
-              exclusive: false
-            }, function(directoryEnrty) {
-              var reader;
-              reader = directoryEnrty.createReader();
-              return reader.readEntries((function(directoryEnrty) {
-                var i, _i, _ref;
-                for (i = _i = 0, _ref = directoryEnrty.length - 1; _i <= _ref; i = _i += 1) {
-                  fullDirectoryEntry[i] = directoryEnrty[i].name;
-                }
-                return d.resolve(fullDirectoryEntry);
-              }));
-            }, function(error) {
-              return d.resolve(error);
-            });
-          }, _.fileSystemErrorHandler);
-        });
-      };
-      return $.when(runFunc()).done(function() {
-        return console.log('Got list of all files present in the local directory');
-      }).fail(_.failureHandler);
-    },
-    getListOfMediaFilesFromServer: function() {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          var listOfFiles;
-          listOfFiles = [];
-          listOfFiles = {
-            fileImg: ["http://synapsedu.info/wp-content/uploads/videos/oceans-clip.mp4", "http://synapsedu.info/wp-content/uploads/2014/05/tux.png", "http://synapsedu.info/wp-content/uploads/2014/05/Vertical-large.jpg", "http://synapsedu.info/wp-content/uploads/2014/05/imag56es.jpg", "http://synapsedu.info/wp-content/uploads/2014/05/girl1.jpg", "http://synapsedu.info/wp-content/uploads/2014/05/tom_jerry.jpg", "http://synapsedu.info/wp-content/uploads/2014/05/cover_pic1.png", "http://synapsedu.info/wp-content/uploads/2014/06/Tulips.jpg", "http://synapsedu.info/wp-content/uploads/2014/06/Jellyfish.jpg", "http://synapsedu.info/wp-content/uploads/2014/06/Koala.jpg", "http://synapsedu.info/wp-content/uploads/2014/06/Lighthouse.jpg"]
-          };
-          return d.resolve(listOfFiles);
-        });
-      };
-      return $.when(runFunc()).done(function() {
-        return console.log('getListOfMediaFilesFromServer done');
+        return console.log('getFilesToBeDownloaded done');
       }).fail(_.failureHandler);
     }
   });

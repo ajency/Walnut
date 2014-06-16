@@ -91,14 +91,10 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginView.prototype.onShow = function() {
-        var synapseImagesDirectory;
         $('body').addClass('error-body no-top');
         $('.page-content').addClass('condensed');
         if (_.platform() === 'DEVICE') {
-          synapseImagesDirectory = _.createSynapseImagesDirectory();
-          synapseImagesDirectory.done(function() {
-            return console.log('Created SynapseImages Directory');
-          });
+          _.setSynapseMediaDirectoryPathToLocalStorage();
           navigator.splashscreen.hide();
           this.trigger("prepopulate:username");
           _.setMainLogo();

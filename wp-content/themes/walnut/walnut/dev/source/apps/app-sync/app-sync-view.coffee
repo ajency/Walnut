@@ -27,9 +27,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			events :
 				'click #syncStartContinue' : 'startContinueSyncProcess'
 
-				'click #syncMediaStartContinue' : 'startContinueMediaSyncProcess'
-
-				'click #syncCheckDeferred' : 'checkDeferredValue'
+				'click #syncMediaStart' : 'startMediaSyncProcess'
 				
 
 
@@ -161,18 +159,18 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 
 
-			startContinueMediaSyncProcess : ->
-				# directoryStructure = _.createDirectoryStructure("uploads/2013/06/image.jpg")
-				# directoryStructure.done ->
-				# 	console.log ''
+			startMediaSyncProcess : ->
+
+				#Hide error message
+				$('#syncMediaError').css("display","none")
 				
-				$('#syncMediaStartContinue').css("display","none")
+				$('#syncMediaStart').css("display","none")
 				
 				$('#syncMediaSuccess').css("display","block")
 				.text("Started media sync process...")
 				
 				setTimeout(=>
-					_.downloadMediaFiles()
+					_.startMediaSync()
 		
 				,2000)
 				

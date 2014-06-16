@@ -72,16 +72,15 @@ define ['app'
 					.select2()
 
 				if _.platform() is "DEVICE"
+
+					# Set 'SynapseMedia' directory path to local storage
+					_.setSynapseMediaDirectoryPathToLocalStorage()
 					
 					# Hide the splash screen image
 					navigator.splashscreen.hide()
 
 					# Cordova app navigation
 					_.appNavigation()
-
-					# Set 'SynapseImages' directory path to local storage
-					_.setSynapseImagesDirectoryPathToLocalStorage()
-
 
 
 

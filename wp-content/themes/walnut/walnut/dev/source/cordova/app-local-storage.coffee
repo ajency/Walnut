@@ -58,12 +58,12 @@ define ['underscore'], ( _)->
         window.localStorage.getItem("downloaded_zip_file_path")
 
 
-    # save/get 'SynapseImages' directory path
-    _.setSynapseImagesDirectoryPath = (path)->
-        window.localStorage.setItem("synapse_images_directory_path", path)
+    # save/get 'SynapseMedia' directory path
+    _.setSynapseMediaDirectoryPath = (path)->
+        window.localStorage.setItem("synapse_media_directory_path", path)
 
-    _.getSynapseImagesDirectoryPath =->
-        window.localStorage.getItem("synapse_images_directory_path")
+    _.getSynapseMediaDirectoryPath =->
+        window.localStorage.getItem("synapse_media_directory_path")
 
 
 

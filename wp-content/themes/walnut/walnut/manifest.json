@@ -1,7 +1,7 @@
 {
-  "name": "Synapse Production",
+  "name": "Synapse Staging",
   "description": "Synapse Android App",
-  "version": "Production-0.5.0.02",
+  "version": "Staging-0.5.0.03",
   "permissions": ["<all_urls>", "storage", "unlimitedStorage"],
   "app": {
     "background": {
