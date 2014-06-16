@@ -330,7 +330,8 @@ function save_content_group($data = array()) {
         'term_ids'          => maybe_serialize($data['term_ids']),
         'last_modified_on'  => date('y-m-d H:i:s'),
         'last_modified_by'  => get_current_user_id(),
-        'duration'          => $duration
+        'duration'          => $duration,
+        'status'            => $data['status']
     );
 
     if (isset($data['id'])) {
