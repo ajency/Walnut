@@ -456,10 +456,10 @@ function get_all_content_groups($args=array()){
 
     global $wpdb;
     
-    $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection", null);
+    $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'publish'", null);
     
     if(isset($args['textbook']))
-        $query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
+        $query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "publish" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
     
     $content_groups = $wpdb->get_results($query);
     
