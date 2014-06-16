@@ -159,6 +159,7 @@
 #site-page-content-region {
   margin-left: 240px;
   margin-right: 240px;
+  margin-bottom: 100px;
   overflow-x: auto;
 }
 #myCanvas {
@@ -169,6 +170,7 @@
   margin: 0 auto;
   min-height: 500px !important;
   padding: 15px 10px;
+  font-weight: normal;
 }
 #myCanvas li.ui-sortable-placeholder {
   list-style: none;
@@ -1715,6 +1717,20 @@ input#duration {
   margin-bottom: 2px;
   padding: 10px;
 }
+.quizWrong {
+  font-size: 25px;
+}
+.quizTimer {
+  margin: 0 auto 0;
+}
+.quizActions {
+  max-width: 760px;
+}
+.timerBox,
+.quizProgress {
+  width: 250px;
+  background: #ffffff;
+}
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
   width: 50%;
@@ -1973,6 +1989,9 @@ textarea {
 input[disabled].disabled {
   cursor: not-allowed;
   background-color: #e5e9ec;
+}
+ol > li {
+  line-height: 35px;
 }
 .checkbox label {
   font-size: 14px;
