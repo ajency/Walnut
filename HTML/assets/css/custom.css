@@ -1804,6 +1804,17 @@ input#duration {
   width: 250px;
   background: #ffffff;
 }
+.quizSteps ul {
+  list-style-type: none;
+}
+.quizSteps ul:after {
+  clear: both;
+}
+.quizSteps ul li {
+  width: 33%;
+  float: left;
+  text-align: center;
+}
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
   width: 50%;

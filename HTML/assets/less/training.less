@@ -39,23 +39,23 @@ h3.time{
 
 	.students{
 		.tiles{
-			&.red, &.default, &.green{
+			&.red, &.default, &.green, &.unselected, &.blue{
 				-webkit-transition: all .2s ease-in-out;
 				   -moz-transition: all .2s ease-in-out;
 				   		transition: all .2s ease-in-out;
 				&:active{
-					-webkit-transform: scale(1.15);
-					   -moz-transform: scale(1.15);
-					   		transform: scale(1.15);
+					-webkit-transform: scale(1.3);
+					   -moz-transform: scale(1.3);
+					   		transform: scale(1.3);
 				}
 
 			}
 			&.single.selected{
 				.active{
-					background-color: @color-info;
-					-webkit-transform: scale(1.15);
-					   -moz-transform: scale(1.15);
-					   		transform: scale(1.15);
+					//background-color: @color-info;
+					-webkit-transform: scale(1.3);
+					   -moz-transform: scale(1.3);
+					   		transform: scale(1.3);
 				}
 			}
 		}
