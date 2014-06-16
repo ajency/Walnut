@@ -1631,23 +1631,26 @@ h3.time {
 }
 .studentList .students .tiles.red,
 .studentList .students .tiles.default,
-.studentList .students .tiles.green {
+.studentList .students .tiles.green,
+.studentList .students .tiles.unselected,
+.studentList .students .tiles.blue {
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
 .studentList .students .tiles.red:active,
 .studentList .students .tiles.default:active,
-.studentList .students .tiles.green:active {
-  -webkit-transform: scale(1.15);
-  -moz-transform: scale(1.15);
-  transform: scale(1.15);
+.studentList .students .tiles.green:active,
+.studentList .students .tiles.unselected:active,
+.studentList .students .tiles.blue:active {
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+  transform: scale(1.3);
 }
 .studentList .students .tiles.single.selected .active {
-  background-color: #0090d9;
-  -webkit-transform: scale(1.15);
-  -moz-transform: scale(1.15);
-  transform: scale(1.15);
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+  transform: scale(1.3);
 }
 .studentList .students i {
   font-size: 20px;
@@ -1803,6 +1806,17 @@ input#duration {
 .quizProgress {
   width: 250px;
   background: #ffffff;
+}
+.quizSteps ul {
+  list-style-type: none;
+}
+.quizSteps ul:after {
+  clear: both;
+}
+.quizSteps ul li {
+  width: 33%;
+  float: left;
+  text-align: center;
 }
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
