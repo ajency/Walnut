@@ -25,6 +25,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 				Backbone.history.history.back()
 
 			document.removeEventListener("backbutton", _.onBackButtonClick, false)
+			
 		
 	
 		#Get all user details from local database

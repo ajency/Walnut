@@ -8,9 +8,12 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			.css("display","block")
 			.text("Starting file download...")
 
+			# lastDownloadTimestamp = _.getLastDownloadTimeStamp()
+			# lastDownloadTimestamp.done (time_stamp)=>
+
 			data = 
 				blog_id: _.getBlogID()
-				last_sync: ''	
+				last_sync: ''#time_stamp
 
 			#TODO: Change action name for import
 			$.get AJAXURL + '?action=sync-database',

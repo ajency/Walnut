@@ -81,63 +81,16 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			# get content group from local
 			getContentGroupByIdFromLocal : (id, division)->
 
-				runQuery = ->
-
-					pattern = '%"'+id+'"%'
-
+				runFunc = ->
 					$.Deferred (d)->
-						_.db.transaction (tx)->
-							tx.executeSql("SELECT * FROM wp_content_collection 
-								WHERE term_ids LIKE '"+pattern+"'", []
-								, onSuccess(d), _.deferredErrorHandler(d))
+						contentGroupById = _.getContentGroupById(id, division)
+						contentGroupById.done (result)->
 
-				
-				onSuccess = (d)->
-					(tx, data)->
+							d.resolve result
 
-						result = []
 
-						for i in [0..data.rows.length-1] by 1
-
-							row = data.rows.item(i)
-
-							do (row, i, division)->
-								contentPiecesAndDescription = _.getContentPiecesAndDescription(row['id'])
-								contentPiecesAndDescription.done (d)->
-
-									content_pieces = description = ''
-									content_pieces = unserialize(d.content_pieces) if d.content_pieces isnt ''
-									description = unserialize(d.description) if d.description isnt ''
-
-									do (row, i, content_pieces, description)->
-										dateAndStatus = _.getDateAndStatus(row['id'], division, content_pieces)
-										dateAndStatus.done (d)->
-											status = d.status
-											date = d.start_date
-
-											result[i] = 
-												id: row['id']
-												name: row['name']
-												created_on: row['created_on']
-												created_by: row['created_by']
-												last_modified_on: row['last_modified_on']
-												last_modified_by: row['last_modified_by']
-												published_on: row['published_on']
-												published_by: row['published_by']
-												type: row['type']
-												term_ids: unserialize(row['term_ids'])
-												duration: _.getDuration(row['duration'])
-												minshours: _.getMinsHours(row['duration'])
-												total_minutes: row['duration']
-												status: status
-												training_date: date
-												content_pieces: content_pieces
-												description: description
-						
-						d.resolve(result)		
-
-				$.when(runQuery()).done (data)->
-					console.log 'Content-group-by-id transaction completed'
+				$.when(runFunc()).done ->
+					console.log 'getContentGroupByIdFromLocal done'
 				.fail _.failureHandler
 
 		

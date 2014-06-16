@@ -50,20 +50,20 @@ define ['underscore'], ( _)->
         window.localStorage.getItem("gererated_zip_file_path")
 
 
-    # save/get downloaded zip file path
-    _.setDownloadedZipFilePath = (path)->
-        window.localStorage.setItem("downloaded_zip_file_path", path)
-
-    _.getDownloadedZipFilePath =->
-        window.localStorage.getItem("downloaded_zip_file_path")
-
-
     # save/get 'SynapseMedia' directory path
     _.setSynapseMediaDirectoryPath = (path)->
         window.localStorage.setItem("synapse_media_directory_path", path)
 
     _.getSynapseMediaDirectoryPath =->
         window.localStorage.getItem("synapse_media_directory_path")
+
+    
+    # save/get 'SynapseData' directory path
+    _.setSynapseDataDirectoryPath = (path)->
+        window.localStorage.setItem("synapse_data_directory_path", path)
+
+    _.getSynapseDataDirectoryPath =->
+        window.localStorage.getItem("synapse_data_directory_path")
 
 
 

@@ -8,22 +8,22 @@ define ['underscore'], ( _) ->
 
 			$('#syncSuccess').css("display","block").text("Starting file download...")
 
-			lastDownloadTimestamp = _.getLastDownloadTimeStamp()
-			lastDownloadTimestamp.done (time_stamp)->
+			# lastDownloadTimestamp = _.getLastDownloadTimeStamp()
+			# lastDownloadTimestamp.done (time_stamp)->
 
-				data = blog_id: _.getBlogID(), last_sync: time_stamp
+			data = blog_id: _.getBlogID(), last_sync: ''#time_stamp
 
-				#TODO: Change action name for import.
-				$.get AJAXURL + '?action=sync-database',
-						data,
-						(resp)=>
-							console.log 'File download details response'
-							console.log resp
+			#TODO: Change action name for import.
+			$.get AJAXURL + '?action=sync-database',
+					data,
+					(resp)=>
+						console.log 'File download details response'
+						console.log resp
 
-							_.downloadZipFile resp
+						_.downloadZipFile resp
 
-						,
-						'json'
+					,
+					'json'
 
 
 		downloadZipFile : (resp)->
@@ -39,20 +39,19 @@ define ['underscore'], ( _) ->
 
 						,(fileEntry)->
 							filePath = fileEntry.toURL().replace("csv-synapse.zip", "")
+							
+							_.setSynapseDataDirectoryPath filePath
+
 							fileEntry.remove()
 
 							fileTransfer = new FileTransfer()
 
 							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
 								,(file)->
-
-									_.setDownloadedZipFilePath file.toURL()
-									
-									_.onFileDownloadSuccess resp.last_sync
+									_.onFileDownloadSuccess file.toURL() resp.last_sync
 									
 								
 								,(error)->
-									
 									_.onFileDownloadError error
 
 								, true)
@@ -63,12 +62,25 @@ define ['underscore'], ( _) ->
 
 
 		
-		onFileDownloadSuccess : (last_sync)->
-
-			_.updateSyncDetails('file_download', last_sync)
+		onFileDownloadSuccess : (downloadedZipFilePath, last_sync)->
 
 			console.log 'Downloaded Zip file successfully'
 
+			# Unzip downloaded file
+			onFileUnzipSuccess = ->
+
+				console.log 'Files unzipped successfully'
+
+				_.updateSyncDetails('file_download', last_sync)
+				
+				$('#syncSuccess').css("display","block").text("File download completed")
+				
+				setTimeout(=>
+					@readUnzipFile1()
+				,2000)
+
+							# Source				# Destination
+			zip.unzip downloadedZipFilePath _.getSynapseDataDirectoryPath() onFileUnzipSuccess
 			
 
 
