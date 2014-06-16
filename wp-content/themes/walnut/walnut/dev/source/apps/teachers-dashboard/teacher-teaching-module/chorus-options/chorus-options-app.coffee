@@ -54,22 +54,22 @@ define ['app'
 
                 if _.isString(responsePercentage) and responsePercentage.length > 0
                     @$el.find '#' + responsePercentage
-                    .find '.default'
-                        .removeClass 'default'
-                        .addClass 'green'
+                    .find '.unselected'
+                        .removeClass 'unselected'
+                        .addClass 'blue'
 
             selectStudent: (e)->
-                @$el.find '.green'
-                .removeClass 'green'
-                    .addClass 'default'
+                @$el.find '.blue'
+                .removeClass 'blue'
+                    .addClass 'unselected'
 
                 dataValue = $(e.currentTarget).closest '.tiles.single'
                                                 .attr 'id'
 
                 $(e.target).closest('.tiles.single')
-                            .find '.default'
-                                .removeClass 'default'
-                                .addClass 'green'
+                            .find '.unselected'
+                                .removeClass 'unselected'
+                                .addClass 'blue'
                                     .find 'i'
                                         .removeClass 'fa-minus-circle'
                                             .addClass 'fa-check-circle'
@@ -77,7 +77,7 @@ define ['app'
                 @trigger "save:question:response", dataValue
 
             questionCompleted: =>
-                selectedAnswer = @$el.find '.tiles.single .green'
+                selectedAnswer = @$el.find '.tiles.single .blue'
 
                 if (_.size(selectedAnswer) is 0) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
                     if confirm 'This item will be marked as complete. None of the options have been selected. Continue?'

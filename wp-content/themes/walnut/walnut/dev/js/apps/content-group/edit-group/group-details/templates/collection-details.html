@@ -54,12 +54,12 @@
 			</div>											 
 		</div>
 		<div class="row ">
-				<div class="col-md-4">
-				   <div class="margin-bottom-20 ">
-					<label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>
-					<select name="term_ids[sections][]" id="secs" class="form-control select2" multiple="">
-		            </select>
-				</div>
+            <div class="col-md-4">
+               <div class="margin-bottom-20 ">
+                <label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>
+                <select name="term_ids[sections][]" id="secs" class="form-control select2" multiple="">
+                </select>
+            </div>
 			</div>
 			<div class="col-md-4">
 			    <div class="margin-bottom-20 ">
@@ -80,6 +80,16 @@
 				
 			</div>											 
 		</div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="form-label">Status</label>
+                <select required name="status" id="status" class="form-control select2" >
+                    <option value="underreview">Under Review</option>
+                    <option value="publish">Published</option>
+                    <option value="archive">Archived</option>
+                </select>
+            </div>
+        </div>
 	</div>
 
 </form>

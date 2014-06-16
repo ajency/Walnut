@@ -330,7 +330,8 @@ function save_content_group($data = array()) {
         'term_ids'          => maybe_serialize($data['term_ids']),
         'last_modified_on'  => date('y-m-d H:i:s'),
         'last_modified_by'  => get_current_user_id(),
-        'duration'          => $duration
+        'duration'          => $duration,
+        'status'            => $data['status']
     );
 
     if (isset($data['id'])) {
@@ -455,10 +456,10 @@ function get_all_content_groups($args=array()){
 
     global $wpdb;
     
-    $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection", null);
+    $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'publish'", null);
     
     if(isset($args['textbook']))
-        $query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
+        $query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "publish" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
     
     $content_groups = $wpdb->get_results($query);
     
