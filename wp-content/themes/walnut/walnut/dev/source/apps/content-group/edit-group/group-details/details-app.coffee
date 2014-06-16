@@ -71,10 +71,10 @@ define ['app'
             events:
                 'change #textbooks': (e)->
                     @$el.find '#secs, #subsecs'
-                    .select2 'data', null
+                        .select2 'data', null
 
                     @$el.find '#chapters, #secs, #subsecs'
-                    .html ''
+                        .html ''
 
                     @trigger "fetch:chapters", $(e.target).val()
 
@@ -83,11 +83,48 @@ define ['app'
 
                 'click #save-content-collection': 'save_content'
 
+            mixinTemplateHelpers : (data)->
+
+                data = super data
+
+                # add status values
+                data.statusOptions = [
+                    (
+                        name : 'Under Review'
+                        value : 'underreview'
+                    )
+                    (
+                        name : 'Published'
+                        value : 'publish'
+                    )
+                    (
+                        name : 'Archived'
+                        value : 'archive'
+                    )
+                ]
+
+                data.textBookSelected = ->
+                    return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
+
+                data.statusSelected = ->
+                    return 'selected' if @value is data.status
+
+                console.log data
+
+                data
+
+
             onShow: ->
-                $("#textbooks, #chapters, #minshours").select2()
+                $("#textbooks, #chapters, #minshours, select").select2()
 
                 #Multi Select
                 $("#secs,#subsecs").val([]).select2()
+
+                if not @model.isNew()
+                    @prepolateDropDowns()
+
+            prepolateDropDowns : ->
+                @$el.find('#textbooks').trigger 'change'
 
             onFetchChaptersComplete: (chapters)->
                 if _.size(chapters) > 0
@@ -95,9 +132,17 @@ define ['app'
                     _.each chapters.models, (chap, index)=>
                         @$el.find '#chapters'
                         .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
+
+                    @setChapterValue()
                 else
                     @$el.find '#chapters'
                     .html '<option value="">No Chapters available</option>'
+
+            setChapterValue : ->
+                if @model.get('term_ids')['chapter']
+                    @$el.find('#chapters').val @model.get('term_ids')['chapter']
+                    @$el.find('#chapters').select2()
+                    @$el.find('#chapters').trigger 'change'
 
             onFetchSubsectionsComplete: (allsections)->
                 if _.size(allsections) > 0

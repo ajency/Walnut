@@ -134,21 +134,65 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         'click #save-content-collection': 'save_content'
       };
 
+      CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
+        data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
+        data.statusOptions = [
+          {
+            name: 'Under Review',
+            value: 'underreview'
+          }, {
+            name: 'Published',
+            value: 'publish'
+          }, {
+            name: 'Archived',
+            value: 'archive'
+          }
+        ];
+        data.textBookSelected = function() {
+          if (parseInt(this.id) === parseInt(data.term_ids['textbook'])) {
+            return 'selected';
+          }
+        };
+        data.statusSelected = function() {
+          if (this.value === data.status) {
+            return 'selected';
+          }
+        };
+        console.log(data);
+        return data;
+      };
+
       CollectionDetailsView.prototype.onShow = function() {
-        $("#textbooks, #chapters, #minshours").select2();
-        return $("#secs,#subsecs").val([]).select2();
+        $("#textbooks, #chapters, #minshours, select").select2();
+        $("#secs,#subsecs").val([]).select2();
+        if (!this.model.isNew()) {
+          return this.prepolateDropDowns();
+        }
+      };
+
+      CollectionDetailsView.prototype.prepolateDropDowns = function() {
+        return this.$el.find('#textbooks').trigger('change');
       };
 
       CollectionDetailsView.prototype.onFetchChaptersComplete = function(chapters) {
         if (_.size(chapters) > 0) {
           this.$el.find('#chapters').html('');
-          return _.each(chapters.models, (function(_this) {
+          _.each(chapters.models, (function(_this) {
             return function(chap, index) {
               return _this.$el.find('#chapters').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
             };
           })(this));
+          return this.setChapterValue();
         } else {
           return this.$el.find('#chapters').html('<option value="">No Chapters available</option>');
+        }
+      };
+
+      CollectionDetailsView.prototype.setChapterValue = function() {
+        if (this.model.get('term_ids')['chapter']) {
+          this.$el.find('#chapters').val(this.model.get('term_ids')['chapter']);
+          this.$el.find('#chapters').select2();
+          return this.$el.find('#chapters').trigger('change');
         }
       };
 
