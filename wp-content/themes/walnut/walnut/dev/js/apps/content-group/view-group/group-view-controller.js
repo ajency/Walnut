@@ -42,13 +42,12 @@ define(['app', 'controllers/region-controller', 'apps/content-group/view-group/g
           return function() {
             var layout;
             groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
-            console.log(model.get('content_pieces'));
             _this.layout = layout = _this._getContentGroupViewLayout();
-            _this.show(layout, {
+            _this.show(_this.layout, {
               loading: true,
               entities: [model, _this.questionResponseCollection, groupContentCollection, _this.textbookNames, _this.studentCollection]
             });
-            _this.listenTo(layout, 'show', _this.showContentGroupViews);
+            _this.listenTo(_this.layout, 'show', _this.showContentGroupViews);
             _this.listenTo(_this.layout.collectionDetailsRegion, 'start:teaching:module', _this.startTeachingModule);
             return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:question:readonly', function(questionID) {
               App.navigate(App.getCurrentRoute() + '/question');
@@ -74,7 +73,11 @@ define(['app', 'controllers/region-controller', 'apps/content-group/view-group/g
           });
         }
         nextQuestion = _.first(_.difference(content_piece_ids, responseQuestionIDs));
-        return this.gotoTrainingModule(nextQuestion, 'class_mode');
+        if (model.get('post_status') === 'archive') {
+          return this.gotoTrainingModule(nextQuestion, 'readonly');
+        } else {
+          return this.gotoTrainingModule(nextQuestion, 'class_mode');
+        }
       };
 
       GroupController.prototype.gotoTrainingModule = function(question, display_mode) {
