@@ -4,7 +4,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/group-details/details-app', 'apps/content-group/edit-group/content-selection/content-selection-app', 'apps/content-group/edit-group/content-display/content-display-app'], function(App, RegionController) {
   return App.module("ContentGroupApp.Edit", function(Edit, App) {
-    var ContentGroupEditLayout;
+    var ContentGroupEditLayout, NotEditView;
     Edit.GroupController = (function(_super) {
       __extends(GroupController, _super);
 
@@ -16,13 +16,26 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
       }
 
       GroupController.prototype.initialize = function(options) {
-        var breadcrumb_items, group_id, layout;
-        group_id = options.group_id;
-        if (group_id) {
-          this.contentGroupModel = App.request("get:content:group:by:id", group_id);
+        this.group_id = options.group_id;
+        if (this.group_id) {
+          this.contentGroupModel = App.request("get:content:group:by:id", this.group_id);
         } else {
           this.contentGroupModel = App.request("new:content:group");
         }
+        return App.execute("when:fetched", this.contentGroupModel, (function(_this) {
+          return function() {
+            if (_this.contentGroupModel.get('status') === 'underreview') {
+              return _this.showContentGroupView();
+            } else {
+              _this.noEditView = _this._getNotEditView(_this.contentGroupModel.get('status'));
+              return _this.show(_this.noEditView);
+            }
+          };
+        })(this));
+      };
+
+      GroupController.prototype.showContentGroupView = function() {
+        var breadcrumb_items, layout;
         breadcrumb_items = {
           'items': [
             {
@@ -40,22 +53,24 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
         this.layout = layout = this._getContentGroupEditLayout();
-        App.execute("when:fetched", this.contentGroupModel, (function(_this) {
-          return function() {
-            return _this.show(layout, {
-              loading: true
-            });
-          };
-        })(this));
         this.listenTo(layout, 'show', this.showContentGroupViews);
         this.listenTo(layout, 'show', (function(_this) {
           return function() {
-            if (group_id) {
+            if (_this.group_id) {
               return _this._showContentSelectionApp(_this.contentGroupModel);
             }
           };
         })(this));
-        return this.listenTo(this.contentGroupModel, 'change:id', this._showContentSelectionApp, this);
+        this.listenTo(this.contentGroupModel, 'change:id', this._showContentSelectionApp, this);
+        return this.show(layout, {
+          loading: true
+        });
+      };
+
+      GroupController.prototype._getNotEditView = function(status) {
+        return new NotEditView({
+          status: status
+        });
       };
 
       GroupController.prototype.showContentGroupViews = function() {
@@ -90,7 +105,7 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
       return GroupController;
 
     })(RegionController);
-    return ContentGroupEditLayout = (function(_super) {
+    ContentGroupEditLayout = (function(_super) {
       __extends(ContentGroupEditLayout, _super);
 
       function ContentGroupEditLayout() {
@@ -110,5 +125,33 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
       return ContentGroupEditLayout;
 
     })(Marionette.Layout);
+    return NotEditView = (function(_super) {
+      __extends(NotEditView, _super);
+
+      function NotEditView() {
+        return NotEditView.__super__.constructor.apply(this, arguments);
+      }
+
+      NotEditView.prototype.template = '<div class="teacher-app"> <div id="collection-details-region"> <div class="tiles white grid simple vertical green animated slideInRight"> <div class="grid-title no-border"> <h3>This module is not editable</h3> <p>Current Status: {{currentStatus}}</p> </div> </div> </div> </div>';
+
+      NotEditView.prototype.mixinTemplateHelpers = function(data) {
+        var status;
+        status = Marionette.getOption(this, 'status');
+        switch (status) {
+          case 'publish':
+            data.currentStatus = 'Published';
+            break;
+          case 'archive':
+            data.currentStatus = 'Archived';
+            break;
+          default:
+            data.currentStatus = 'Not specified!';
+        }
+        return data;
+      };
+
+      return NotEditView;
+
+    })(Marionette.ItemView);
   });
 });

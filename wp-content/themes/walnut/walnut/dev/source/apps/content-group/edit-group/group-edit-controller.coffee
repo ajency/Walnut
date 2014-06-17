@@ -8,12 +8,21 @@ define ['app'
 
             initialize:(options) ->
 
-                {group_id}= options
+                {@group_id}= options
 
-                if group_id
-                    @contentGroupModel = App.request "get:content:group:by:id", group_id
+                if @group_id
+                    @contentGroupModel = App.request "get:content:group:by:id", @group_id
                 else
                     @contentGroupModel = App.request "new:content:group"
+
+                App.execute "when:fetched", @contentGroupModel,=>
+                    if @contentGroupModel.get('status') is 'underreview'
+                        @showContentGroupView()
+                    else
+                        @noEditView = @_getNotEditView @contentGroupModel.get('status')
+                        @show @noEditView
+
+            showContentGroupView : ->
 
                 breadcrumb_items =
                     'items': [
@@ -23,19 +32,19 @@ define ['app'
                     ]
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
-
                 @layout = layout = @_getContentGroupEditLayout()
-
-                App.execute "when:fetched", @contentGroupModel,=>
-                    @show layout, (loading: true)
-
                 @listenTo layout, 'show', @showContentGroupViews
 
                 @listenTo layout, 'show',=>
-                    if group_id
-                       @_showContentSelectionApp @contentGroupModel
+                    if @group_id
+                        @_showContentSelectionApp @contentGroupModel
 
                 @listenTo @contentGroupModel, 'change:id', @_showContentSelectionApp, @
+                @show layout, (loading: true)
+
+            _getNotEditView : (status)->
+                new NotEditView
+                        status : status
 
             showContentGroupViews: =>
                 App.execute "show:editgroup:content:group:detailsapp",
@@ -75,4 +84,33 @@ define ['app'
                 collectionDetailsRegion: '#collection-details-region'
                 contentSelectionRegion: '#content-selection-region'
                 contentDisplayRegion: '#content-display-region'
+
+
+        class NotEditView extends Marionette.ItemView
+
+            template : '<div class="teacher-app">
+                            <div id="collection-details-region">
+                                <div class="tiles white grid simple vertical green animated slideInRight">
+                                    <div class="grid-title no-border">
+                                        <h3>This module is not editable</h3>
+                                        <p>Current Status: {{currentStatus}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>'
+
+            mixinTemplateHelpers : (data)->
+                status = Marionette.getOption @, 'status'
+                switch status
+                    when 'publish'
+                        data.currentStatus = 'Published'
+                    when 'archive'
+                        data.currentStatus = 'Archived'
+                    else
+                        data.currentStatus = 'Not specified!'
+                data
+
+
+
+
 
