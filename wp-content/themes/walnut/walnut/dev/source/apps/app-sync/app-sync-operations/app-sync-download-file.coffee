@@ -17,7 +17,7 @@ define ['underscore'], ( _) ->
 			$.get AJAXURL + '?action=sync-database',
 					data,
 					(resp)=>
-						console.log 'File download details response'
+						console.log 'getZipFileDownloadDetails response'
 						console.log resp
 
 						_.downloadZipFile resp
@@ -39,8 +39,6 @@ define ['underscore'], ( _) ->
 
 						,(fileEntry)->
 							filePath = fileEntry.toURL().replace("csv-synapse.zip", "")
-							
-							_.setSynapseDataDirectoryPath filePath
 
 							fileEntry.remove()
 
@@ -48,8 +46,7 @@ define ['underscore'], ( _) ->
 
 							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
 								,(file)->
-									_.onFileDownloadSuccess file.toURL() resp.last_sync
-									
+									_.onFileDownloadSuccess file.toURL() filePath resp.last_sync
 								
 								,(error)->
 									_.onFileDownloadError error
@@ -62,7 +59,7 @@ define ['underscore'], ( _) ->
 
 
 		
-		onFileDownloadSuccess : (downloadedZipFilePath, last_sync)->
+		onFileDownloadSuccess : (source, destination, last_sync)->
 
 			console.log 'Downloaded Zip file successfully'
 
@@ -76,11 +73,10 @@ define ['underscore'], ( _) ->
 				$('#syncSuccess').css("display","block").text("File download completed")
 				
 				setTimeout(=>
-					@readUnzipFile1()
+					_.startFileImport()
 				,2000)
-
-							# Source				# Destination
-			zip.unzip downloadedZipFilePath _.getSynapseDataDirectoryPath() onFileUnzipSuccess
+				
+			zip.unzip source destination onFileUnzipSuccess
 			
 
 

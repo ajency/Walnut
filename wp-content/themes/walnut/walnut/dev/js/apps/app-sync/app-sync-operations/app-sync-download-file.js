@@ -9,7 +9,7 @@ define(['underscore'], function(_) {
       };
       return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
         return function(resp) {
-          console.log('File download details response');
+          console.log('getZipFileDownloadDetails response');
           console.log(resp);
           return _.downloadZipFile(resp);
         };
@@ -27,11 +27,10 @@ define(['underscore'], function(_) {
           }, function(fileEntry) {
             var filePath, fileTransfer;
             filePath = fileEntry.toURL().replace("csv-synapse.zip", "");
-            _.setSynapseDataDirectoryPath(filePath);
             fileEntry.remove();
             fileTransfer = new FileTransfer();
             return fileTransfer.download(uri, filePath + "csv-synapse.zip", function(file) {
-              return _.onFileDownloadSuccess(file.toURL()(resp.last_sync));
+              return _.onFileDownloadSuccess(file.toURL()(filePath(resp.last_sync)));
             }, function(error) {
               return _.onFileDownloadError(error);
             }, true);
@@ -39,7 +38,7 @@ define(['underscore'], function(_) {
         };
       })(this), _.fileSystemErrorHandler);
     },
-    onFileDownloadSuccess: function(downloadedZipFilePath, last_sync) {
+    onFileDownloadSuccess: function(source, destination, last_sync) {
       var onFileUnzipSuccess;
       console.log('Downloaded Zip file successfully');
       onFileUnzipSuccess = function() {
@@ -48,11 +47,11 @@ define(['underscore'], function(_) {
         $('#syncSuccess').css("display", "block").text("File download completed");
         return setTimeout((function(_this) {
           return function() {
-            return _this.readUnzipFile1();
+            return _.startFileImport();
           };
         })(this), 2000);
       };
-      return zip.unzip(downloadedZipFilePath(_.getSynapseDataDirectoryPath()(onFileUnzipSuccess)));
+      return zip.unzip(source(destination(onFileUnzipSuccess)));
     },
     onFileDownloadError: function(error) {
       console.log('ERROR: ' + error.code);

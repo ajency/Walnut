@@ -13,7 +13,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids 
-							LIKE '"+pattern+"' ", []
+							LIKE '"+pattern+"' AND status IN ('publish', 'archive')", []
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 				
@@ -40,24 +40,29 @@ define ['underscore', 'unserialize'], ( _) ->
 										status = data.status
 										date = data.start_date
 
-										result[i] = 
-											id: row['id']
-											name: row['name']
-											created_on: row['created_on']
-											created_by: row['created_by']
-											last_modified_on: row['last_modified_on']
-											last_modified_by: row['last_modified_by']
-											published_on: row['published_on']
-											published_by: row['published_by']
-											type: row['type']
-											term_ids: unserialize(row['term_ids'])
-											duration: _.getDuration(row['duration'])
-											minshours: _.getMinsHours(row['duration'])
-											total_minutes: row['duration']
-											status: status
-											training_date: date
-											content_pieces: contentPieces
-											description: description
+										if not (row['status'] is 'archive' and status is 'not started')
+											
+											data = 
+												id: row['id']
+												name: row['name']
+												created_on: row['created_on']
+												created_by: row['created_by']
+												last_modified_on: row['last_modified_on']
+												last_modified_by: row['last_modified_by']
+												published_on: row['published_on']
+												published_by: row['published_by']
+												type: row['type']
+												term_ids: unserialize(row['term_ids'])
+												duration: _.getDuration(row['duration'])
+												minshours: _.getMinsHours(row['duration'])
+												total_minutes: row['duration']
+												status: status
+												training_date: date
+												content_pieces: contentPieces
+												description: description
+												post_status: row['status']
+
+											result.push data
 					
 					d.resolve result		
 

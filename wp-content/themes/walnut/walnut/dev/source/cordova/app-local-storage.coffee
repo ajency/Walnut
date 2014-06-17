@@ -6,7 +6,7 @@ define ['underscore'], ( _)->
     _.setUserID = (id)->
         window.localStorage.setItem("user_id", id)
 
-    _.getUserID =->
+    _.getUserID = ->
         window.localStorage.getItem("user_id")
 
 
@@ -22,7 +22,7 @@ define ['underscore'], ( _)->
     _.setBlogID = (id)->
         window.localStorage.setItem("blog_id", id)
 
-    _.getBlogID =->
+    _.getBlogID = ->
         window.localStorage.getItem("blog_id")
 
 
@@ -30,7 +30,7 @@ define ['underscore'], ( _)->
     _.setBlogName = (name)->
         window.localStorage.setItem("blog_name", name)
 
-    _.getBlogName =->
+    _.getBlogName = ->
         window.localStorage.getItem("blog_name")
 
 
@@ -38,7 +38,7 @@ define ['underscore'], ( _)->
     _.setSchoolLogoSrc = (src)->
         window.localStorage.setItem("school_logo_src", src)
 
-    _.getSchoolLogoSrc =->
+    _.getSchoolLogoSrc = ->
         window.localStorage.getItem("school_logo_src")
 
 
@@ -46,7 +46,7 @@ define ['underscore'], ( _)->
     _.setGeneratedZipFilePath = (path)->
         window.localStorage.setItem("gererated_zip_file_path", path)
 
-    _.getGeneratedZipFilePath =->
+    _.getGeneratedZipFilePath = ->
         window.localStorage.getItem("gererated_zip_file_path")
 
 
@@ -54,21 +54,21 @@ define ['underscore'], ( _)->
     _.setSynapseMediaDirectoryPath = (path)->
         window.localStorage.setItem("synapse_media_directory_path", path)
 
-    _.getSynapseMediaDirectoryPath =->
+    _.getSynapseMediaDirectoryPath = ->
         window.localStorage.getItem("synapse_media_directory_path")
 
-    
-    # save/get 'SynapseData' directory path
-    _.setSynapseDataDirectoryPath = (path)->
-        window.localStorage.setItem("synapse_data_directory_path", path)
 
-    _.getSynapseDataDirectoryPath =->
-        window.localStorage.getItem("synapse_data_directory_path")
+    # save/get sync request id
+    _.setSyncRequestId = (id)->
+        window.localStorage.setItem("sync_request_id", id)
+
+    _.getSyncRequestId = ->
+        window.localStorage.getItem("sync_request_id")
 
 
 
     _.setFilePath =(path)->
         window.localStorage.setItem("filepath", ""+path)
 
-    _.getFilePath =->
+    _.getFilePath = ->
         window.localStorage.getItem("filepath")

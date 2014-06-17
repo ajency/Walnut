@@ -7,7 +7,7 @@ define(['underscore', 'unserialize'], function(_) {
         pattern = '%"' + id + '"%';
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' ", [], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND status IN ('publish', 'archive')", [], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -34,25 +34,29 @@ define(['underscore', 'unserialize'], function(_) {
                   var date, status;
                   status = data.status;
                   date = data.start_date;
-                  return result[i] = {
-                    id: row['id'],
-                    name: row['name'],
-                    created_on: row['created_on'],
-                    created_by: row['created_by'],
-                    last_modified_on: row['last_modified_on'],
-                    last_modified_by: row['last_modified_by'],
-                    published_on: row['published_on'],
-                    published_by: row['published_by'],
-                    type: row['type'],
-                    term_ids: unserialize(row['term_ids']),
-                    duration: _.getDuration(row['duration']),
-                    minshours: _.getMinsHours(row['duration']),
-                    total_minutes: row['duration'],
-                    status: status,
-                    training_date: date,
-                    content_pieces: contentPieces,
-                    description: description
-                  };
+                  if (!(row['status'] === 'archive' && status === 'not started')) {
+                    data = {
+                      id: row['id'],
+                      name: row['name'],
+                      created_on: row['created_on'],
+                      created_by: row['created_by'],
+                      last_modified_on: row['last_modified_on'],
+                      last_modified_by: row['last_modified_by'],
+                      published_on: row['published_on'],
+                      published_by: row['published_by'],
+                      type: row['type'],
+                      term_ids: unserialize(row['term_ids']),
+                      duration: _.getDuration(row['duration']),
+                      minshours: _.getMinsHours(row['duration']),
+                      total_minutes: row['duration'],
+                      status: status,
+                      training_date: date,
+                      content_pieces: contentPieces,
+                      description: description,
+                      post_status: row['status']
+                    };
+                    return result.push(data);
+                  }
                 });
               })(row, i, contentPieces, description);
             });

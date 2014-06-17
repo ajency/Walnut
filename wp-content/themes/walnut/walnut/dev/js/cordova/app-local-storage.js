@@ -41,11 +41,11 @@ define(['underscore'], function(_) {
   _.getSynapseMediaDirectoryPath = function() {
     return window.localStorage.getItem("synapse_media_directory_path");
   };
-  _.setSynapseDataDirectoryPath = function(path) {
-    return window.localStorage.setItem("synapse_data_directory_path", path);
+  _.setSyncRequestId = function(id) {
+    return window.localStorage.setItem("sync_request_id", id);
   };
-  _.getSynapseDataDirectoryPath = function() {
-    return window.localStorage.getItem("synapse_data_directory_path");
+  _.getSyncRequestId = function() {
+    return window.localStorage.getItem("sync_request_id");
   };
   _.setFilePath = function(path) {
     return window.localStorage.setItem("filepath", "" + path);
