@@ -112,7 +112,7 @@ global $chorus_options; ?>
 
 ?>
     <script type="text/javascript"
-            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $ver ?>"></script>
+            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo VERSION ?>"></script>
 <?php } ?>
 
 </body>
