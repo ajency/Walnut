@@ -16,11 +16,11 @@ define ['app'
                     @contentGroupModel = App.request "new:content:group"
 
                 App.execute "when:fetched", @contentGroupModel,=>
-                    if @contentGroupModel.get('status') is 'underreview'
+#                    if @contentGroupModel.get('status') is 'underreview'
                         @showContentGroupView()
-                    else
-                        @noEditView = @_getNotEditView @contentGroupModel.get('status')
-                        @show @noEditView
+#                    else
+#                        @noEditView = @_getNotEditView @contentGroupModel.get('status')
+#                        @show @noEditView
 
             showContentGroupView : ->
 
@@ -72,7 +72,7 @@ define ['app'
 
         class ContentGroupEditLayout extends Marionette.Layout
 
-            template: '<div class="teacher-app">
+            template: '<div class="teacher-app" id="teacher-app">
                           <div id="collection-details-region"></div>
                           <div id="content-selection-region"></div>
                         </div>

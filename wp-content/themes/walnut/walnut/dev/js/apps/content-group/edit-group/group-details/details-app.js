@@ -134,6 +134,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         'click #save-content-collection': 'save_content'
       };
 
+      CollectionDetailsView.prototype.modelEvents = {
+        'change:status': 'statusChanged'
+      };
+
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
         data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
         data.statusOptions = [
@@ -165,7 +169,17 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         $("#textbooks, #chapters, #minshours, select").select2();
         $("#secs,#subsecs").val([]).select2();
         if (!this.model.isNew()) {
-          return this.prepolateDropDowns();
+          this.prepolateDropDowns();
+        }
+        return this.statusChanged();
+      };
+
+      CollectionDetailsView.prototype.statusChanged = function() {
+        var _ref;
+        if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
+          this.$el.closest('#teacher-app').find('input, textarea, select').prop('disabled', true);
+          this.$el.find('select#status').prop('disabled', false);
+          return this.$el.find('select#status option[value="underreview"]').prop('disabled', true);
         }
       };
 

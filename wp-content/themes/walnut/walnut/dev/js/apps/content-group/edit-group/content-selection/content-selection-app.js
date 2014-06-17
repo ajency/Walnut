@@ -99,6 +99,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return new DataContentTableView({
           collection: collection,
           tableConfig: tableConfig,
+          contentGroupModel: this.model,
           templateHelpers: {
             textbooksFilter: (function(_this) {
               return function() {
@@ -156,7 +157,16 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       DataContentTableView.prototype.onShow = function() {
         this.makeDataTable(this.collection.models, Marionette.getOption(this, 'tableConfig'));
-        return $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
+        $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
+        this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
+        return this.listenTo(this.contentGroupModel, 'change:status', this.onCheckStatus);
+      };
+
+      DataContentTableView.prototype.onCheckStatus = function() {
+        var _ref;
+        if ((_ref = this.contentGroupModel.get('status')) === 'publish' || _ref === 'archive') {
+          return this.$el.find('input, select').prop('disabled', true);
+        }
       };
 
       DataContentTableView.prototype.makeRow = function(item, index, tableData) {
@@ -196,6 +206,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             return _this.$el.find('#dataContentTable tbody').append(row);
           };
         })(this));
+        this.onCheckStatus;
         if (_.size(dataCollection) === 0) {
           colspan = _.size(tableData.data);
           if (tableData.selectbox) {
@@ -376,7 +387,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         row = this.makeRow(model, row_index, tableData);
         $row = $(row);
         this.$el.find('#dataContentTable tbody').append($row);
-        return this.$el.find("#dataContentTable").trigger('addRows', [$row, true]).trigger("updateCache");
+        this.$el.find("#dataContentTable").trigger('addRows', [$row, true]).trigger("updateCache");
+        return this.onCheckStatus;
       };
 
       return DataContentTableView;

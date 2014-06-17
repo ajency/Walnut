@@ -83,6 +83,9 @@ define ['app'
 
                 'click #save-content-collection': 'save_content'
 
+            modelEvents:
+                'change:status':'statusChanged'
+
             mixinTemplateHelpers : (data)->
 
                 data = super data
@@ -120,6 +123,24 @@ define ['app'
 
                 if not @model.isNew()
                     @prepolateDropDowns()
+
+                @statusChanged()
+
+
+
+
+            statusChanged:->
+                if @model.get('status') in ['publish','archive']
+                    @$el.closest('#teacher-app').find 'input, textarea, select'
+                    .prop 'disabled',true
+
+                    @$el.find 'select#status'
+                    .prop 'disabled',false
+
+                    @$el.find 'select#status option[value="underreview"]'
+                    .prop 'disabled',true
+
+
 
             prepolateDropDowns : ->
                 @$el.find('#textbooks').trigger 'change'

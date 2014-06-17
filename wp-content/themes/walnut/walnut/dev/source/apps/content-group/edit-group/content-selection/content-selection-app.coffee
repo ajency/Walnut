@@ -34,7 +34,6 @@ define ['app'
                 @view = view = @_getContentSelectionView(@contentPiecesCollection, tableConfig)
 
 
-
                 @show view, (loading: true, entities: [@textbooksCollection, @contentGroupCollection])
 
                 @listenTo @view, "fetch:chapters": (term_id) =>
@@ -71,6 +70,7 @@ define ['app'
                 new DataContentTableView
                     collection: collection
                     tableConfig: tableConfig
+                    contentGroupModel : @model
                     templateHelpers:
                         textbooksFilter: ()=>
                             textbooks = []
@@ -105,6 +105,15 @@ define ['app'
                 @makeDataTable(@collection.models, Marionette.getOption @, 'tableConfig')
                 $ "#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter"
                 .select2();
+
+                @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
+                @listenTo @contentGroupModel, 'change:status', @onCheckStatus
+
+
+            onCheckStatus : ->
+                if @contentGroupModel.get('status') in ['publish','archive']
+                    @$el.find 'input, select'
+                    .prop 'disabled',true
 
 
             makeRow: (item, index, tableData)->
@@ -148,6 +157,8 @@ define ['app'
                 _.each dataCollection, (item, index)=>
                     row = @makeRow item, index, tableData
                     @$el.find('#dataContentTable tbody').append(row)
+
+                @onCheckStatus
 
                 if _.size(dataCollection) is 0
                     colspan = _.size tableData.data
@@ -327,11 +338,13 @@ define ['app'
 
 
                 row = @makeRow model, row_index, tableData
+
                 $row = $(row)
                 @$el.find('#dataContentTable tbody').append($row)
 
                 @$el.find("#dataContentTable").trigger 'addRows', [$row, true]
                     .trigger "updateCache"
+                @onCheckStatus
 
 
         # set handlers

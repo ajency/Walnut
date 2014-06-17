@@ -65,6 +65,16 @@ define ['app'
             events:
                 'click .remove': 'removeItem'
 
+            modelEvents:
+                'change:status':'statusChanged'
+
+            statusChanged:(model,status)->
+                if status in ['publish','archive']
+                    @$el.find('.remove').hide()
+                else
+                    @$el.find('.remove').hide()
+
+
             onShow: ->
                 @$el.find(".cbp_tmtimeline").sortable()
 
@@ -74,6 +84,8 @@ define ['app'
                         .sortable "toArray"
 
                         @trigger "changed:order", sorted_order
+
+                @statusChanged @model,@model.get('status')
 
 
             removeItem: (e)=>

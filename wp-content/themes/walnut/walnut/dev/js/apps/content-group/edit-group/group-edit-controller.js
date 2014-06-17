@@ -24,12 +24,7 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
         }
         return App.execute("when:fetched", this.contentGroupModel, (function(_this) {
           return function() {
-            if (_this.contentGroupModel.get('status') === 'underreview') {
-              return _this.showContentGroupView();
-            } else {
-              _this.noEditView = _this._getNotEditView(_this.contentGroupModel.get('status'));
-              return _this.show(_this.noEditView);
-            }
+            return _this.showContentGroupView();
           };
         })(this));
       };
@@ -112,7 +107,7 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
         return ContentGroupEditLayout.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupEditLayout.prototype.template = '<div class="teacher-app"> <div id="collection-details-region"></div> <div id="content-selection-region"></div> </div> <div id="content-display-region"></div>';
+      ContentGroupEditLayout.prototype.template = '<div class="teacher-app" id="teacher-app"> <div id="collection-details-region"></div> <div id="content-selection-region"></div> </div> <div id="content-display-region"></div>';
 
       ContentGroupEditLayout.prototype.className = '';
 
