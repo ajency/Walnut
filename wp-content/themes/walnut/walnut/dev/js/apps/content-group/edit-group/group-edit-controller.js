@@ -73,7 +73,6 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
         this.contentGroupCollection = App.request("get:content:pieces:of:group", model);
         return App.execute("when:fetched", this.contentGroupCollection, (function(_this) {
           return function() {
-            console.log(_this.contentGroupCollection);
             App.execute("show:content:selectionapp", {
               region: _this.layout.contentSelectionRegion,
               model: model,

@@ -7,18 +7,20 @@ define ['app'
             initialize: (opts)->
                 {@model,@contentGroupCollection} = opts
 
-                console.log '@contentGroupCollection'
-                console.log @contentGroupCollection
-
                 @view = view = @_getCollectionContentDisplayView @model, @contentGroupCollection
-
-                @show view, (loading: true)
 
                 @listenTo @contentGroupCollection, 'content:pieces:of:group:added', @contentPiecesChanged
 
                 @listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPiecesChanged
 
                 @listenTo view, 'changed:order', @saveContentPieces
+
+                if @contentGroupCollection.length > 0
+                    App.execute "when:fetched", @contentGroupCollection.models , =>
+                        @show view, (loading: true)
+                else
+                    @show view, (loading: true)
+
 
 
 
@@ -44,7 +46,6 @@ define ['app'
 
             className: 'sortable'
 
-
             onShow: ->
                 @$el.attr 'id', @model.get 'ID'
 
@@ -68,7 +69,7 @@ define ['app'
                 @$el.find(".cbp_tmtimeline").sortable()
 
                 @$el.find ".cbp_tmtimeline"
-                .on "sortstop", (event, ui)=>
+                    .on "sortstop", (event, ui)=>
                         sorted_order = @$el.find(".cbp_tmtimeline")
                         .sortable "toArray"
 
@@ -77,10 +78,10 @@ define ['app'
 
             removeItem: (e)=>
                 id = $(e.target)
-                .closest '.contentPiece'
-                    .attr 'data-id'
+                        .closest '.contentPiece'
+                        .attr 'data-id'
 
-                @collection.remove id
+                @collection.remove parseInt id
 
 
         # set handlers

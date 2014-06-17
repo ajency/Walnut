@@ -27,6 +27,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name: 'content-group'
 
+
+
         # collection of group of content pieces eg. quizzes, teacher training modules etc.
         class ContentGroup.ItemCollection extends Backbone.Collection
             model: ContentGroup.ItemModel

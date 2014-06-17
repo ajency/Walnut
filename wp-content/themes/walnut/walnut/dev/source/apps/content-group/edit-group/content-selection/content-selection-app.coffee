@@ -33,6 +33,8 @@ define ['app'
 
                 @view = view = @_getContentSelectionView(@contentPiecesCollection, tableConfig)
 
+
+
                 @show view, (loading: true, entities: [@textbooksCollection, @contentGroupCollection])
 
                 @listenTo @view, "fetch:chapters": (term_id) =>
@@ -58,7 +60,6 @@ define ['app'
                     _.each contentIDs, (ele, index)=>
                         @contentGroupCollection.add @contentPiecesCollection.get ele
 
-                    console.log @contentGroupCollection
 
                 @listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPieceRemoved
 
@@ -66,6 +67,7 @@ define ['app'
                 @view.triggerMethod "content:piece:removed", model
 
             _getContentSelectionView: (collection, tableConfig)=>
+
                 new DataContentTableView
                     collection: collection
                     tableConfig: tableConfig
@@ -226,7 +228,7 @@ define ['app'
             changeTextbooks: (e)=>
 
                 @$el.find '#chapters-filter, #sections-filter, #subsections-filter'
-                .select2 'data', ''
+                    .select2 'data', ''
 
                 @trigger "fetch:chapters", $(e.target).val()
 
@@ -235,24 +237,24 @@ define ['app'
                 if _.size(chapters) > 0
 
                     $ '#chapters-filter'
-                    .select2 'data', {'text':'Select Chapter'}
+                        .select2 'data', {'text':'Select Chapter'}
 
                     _.each chapters.models, (chap, index)=>
                         @$el.find '#chapters-filter'
-                        .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
+                            .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
 
                 else
                     @$el.find '#chapters-filter,#sections-filter,#subsections-filter'
-                    .html ''
+                        .html ''
 
                     @$el.find '#chapters-filter'
-                    .select2 'data', 'text': 'No chapters'
+                        .select2 'data', 'text': 'No chapters'
 
                     @$el.find '#sections-filter'
-                    .select2 'data', 'text': 'No Sections'
+                        .select2 'data', 'text': 'No Sections'
 
                     @$el.find '#subsections-filter'
-                    .select2 'data', 'text': 'No Subsections'
+                        .select2 'data', 'text': 'No Subsections'
 
             onFetchSubsectionsComplete: (allsections)->
                 if _.size(allsections) > 0
@@ -260,12 +262,12 @@ define ['app'
                     if _.size(allsections.sections) > 0
 
                         $ '#sections-filter'
-                        .select2 'data', {'text':'Select Section'}
+                            .select2 'data', {'text':'Select Section'}
 
                         _.each allsections.sections, (section, index)=>
 
                             @$el.find '#sections-filter'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                                .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
 
                     else
                         $ '#sections-filter'
@@ -275,26 +277,26 @@ define ['app'
                     if _.size(allsections.subsections) > 0
 
                         $ '#subsections-filter'
-                        .select2 'data', {'text':'Select SubSection'}
+                            .select2 'data', {'text':'Select SubSection'}
 
                         _.each allsections.subsections, (section, index)=>
                             @$el.find '#subsections-filter'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                                .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
 
                     else
                         $ '#subsections-filter'
-                        .select2 'data', 'text': 'No Subsections'
+                            .select2 'data', 'text': 'No Subsections'
                             .html ''
 
                 else
                     $('#sections-filter,#subsections-filter')
-                    .html ''
+                        .html ''
 
                     $ '#sections-filter'
-                    .select2 'data', 'text': 'No Sections'
+                        .select2 'data', 'text': 'No Sections'
 
                     $ '#subsections-filter'
-                    .select2 'data', 'text': 'No Subsections'
+                        .select2 'data', 'text': 'No Subsections'
 
             addContentPieces: =>
                 content_pieces = _.pluck($('#dataContentTable .tab_checkbox:checked'), 'value')
@@ -313,12 +315,12 @@ define ['app'
                             @$el.find('#dataContentTable tbody').append('<td id="empty_row" colspan="' + colspan + '">No Data found</td>')
 
                         @$el.find "#dataContentTable"
-                        .trigger 'update'
-                            .trigger "updateCache"
+                            .trigger 'update'
+                                .trigger "updateCache"
 
             onContentPieceRemoved: (model)=>
                 @$el.find '#empty_row'
-                .remove()
+                    .remove()
 
                 tableData = Marionette.getOption @, 'tableConfig'
                 row_index = _.size @$el.find("#dataContentTable tbody tr")
@@ -329,7 +331,7 @@ define ['app'
                 @$el.find('#dataContentTable tbody').append($row)
 
                 @$el.find("#dataContentTable").trigger 'addRows', [$row, true]
-                .trigger "updateCache"
+                    .trigger "updateCache"
 
 
         # set handlers

@@ -109,8 +109,6 @@ define ['app'
                 data.statusSelected = ->
                     return 'selected' if @value is data.status
 
-                console.log data
-
                 data
 
 

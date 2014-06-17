@@ -158,7 +158,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             return 'selected';
           }
         };
-        console.log(data);
         return data;
       };
 
