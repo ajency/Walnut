@@ -61,7 +61,13 @@ function check_app_data_sync_completion() {
 
     $sync_request_id = $_REQUEST['sync_request_id'];
 
+    $blog_id = $_REQUEST['blog_id'];
+
+    switch_to_blog($blog_id);
+
     $status = check_app_sync_data_completion( $sync_request_id );
+
+    restore_current_blog();
 
     wp_send_json( $status );
 }

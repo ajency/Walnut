@@ -1,0 +1,26 @@
+{
+    "name": "walnut-grunt",
+    "version": "0.0.1",
+    "description": "Walnut grunt package",
+    "main": "Gruntfile.coffee",
+    "scripts": {
+        "test": "npm test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:ajency/Walnut.git"
+    },
+    "keywords": [
+        "Walnut"
+    ],
+    "author": "Team Ajency <team@ajency.in>",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ajency/Walnut/issues"
+    },
+    "homepage": "https://github.com/ajency/Walnut",
+    "devDependencies": {
+        "grunt": "~0.4.5",
+        "grunt-exec": "~0.4.5"
+    }
+}
