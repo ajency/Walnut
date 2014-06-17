@@ -201,7 +201,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             this.$el.find('#secs').html('');
             _.each(allsections.sections, (function(_this) {
               return function(section, index) {
-                return _this.$el.find('#secs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+                _this.$el.find('#secs').append('<option  value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+                return _this.markSelected('secs', 'sections');
               };
             })(this));
           } else {
@@ -211,7 +212,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             this.$el.find('#subsecs').html('');
             return _.each(allsections.subsections, (function(_this) {
               return function(section, index) {
-                return _this.$el.find('#subsecs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+                _this.$el.find('#subsecs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+                return _this.markSelected('subsecs', 'subsections');
               };
             })(this));
           } else {
@@ -221,6 +223,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           this.$el.find('#secs').html('<option value="">No Sections available</option>');
           return this.$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
         }
+      };
+
+      CollectionDetailsView.prototype.markSelected = function(element, sections) {
+        if (this.model.isNew()) {
+          return '';
+        }
+        return $("#" + element).val(this.model.get('term_ids')[sections]).select2();
       };
 
       CollectionDetailsView.prototype.save_content = function(e) {

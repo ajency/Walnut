@@ -143,12 +143,14 @@ define ['app'
                     @$el.find('#chapters').trigger 'change'
 
             onFetchSubsectionsComplete: (allsections)->
+
                 if _.size(allsections) > 0
                     if _.size(allsections.sections) > 0
                         @$el.find('#secs').html('');
                         _.each allsections.sections, (section, index)=>
                             @$el.find('#secs')
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                                .append '<option  value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                            @markSelected 'secs','sections'
                     else
                         @$el.find('#secs').html('<option value="">No Sections available</option>');
 
@@ -156,12 +158,17 @@ define ['app'
                         @$el.find('#subsecs').html('');
                         _.each allsections.subsections, (section, index)=>
                             @$el.find '#subsecs'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                                .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                            @markSelected 'subsecs','subsections'
                     else
                         @$el.find('#subsecs').html '<option>No Sub Sections available</option>'
                 else
                     @$el.find('#secs').html('<option value="">No Sections available</option>');
                     @$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
+
+            markSelected : (element, sections)->
+                return '' if @model.isNew()
+                $("#" + element).val(@model.get('term_ids')[sections]).select2()
 
 
             save_content: (e)->
