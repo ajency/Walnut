@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
+define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentGroup", function(ContentGroup, App, Backbone, Marionette, $, _) {
     var API, contentGroupCollection;
     ContentGroup.ItemModel = (function(_super) {
@@ -22,7 +22,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         last_modified_by: '',
         published_on: '',
         published_by: '',
-        status: '',
+        status: 'underreview',
         type: '',
         total_minutes: 0,
         duration: 0,
@@ -131,7 +131,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       return API.scheduleContentGroup(data);
     });
     return App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
-      return API.getContentGroupByIdFromLocal(id, division);
+      return API.getContentGroupByIdFromLocal(id(division));
     });
   });
 });

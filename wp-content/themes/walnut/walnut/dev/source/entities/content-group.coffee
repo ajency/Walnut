@@ -1,4 +1,4 @@
-define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
+define ["app", 'backbone'], (App, Backbone) ->
 	App.module "Entities.ContentGroup", (ContentGroup, App, Backbone, Marionette, $, _)->
 
 
@@ -16,7 +16,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				last_modified_by: ''
 				published_on: ''
 				published_by: ''
-				status: ''
+				status: 'underreview'
 				type: ''
 				total_minutes: 0
 				duration: 0
@@ -26,6 +26,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				training_date: ''
 
 			name: 'content-group'
+
+
 
 		# collection of group of content pieces eg. quizzes, teacher training modules etc.
 		class ContentGroup.ItemCollection extends Backbone.Collection
@@ -40,9 +42,9 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				resp.data
 
 
-		
 		contentGroupCollection = new ContentGroup.ItemCollection
 
+		
 		# API
 		API =
 		# get all content groups
@@ -110,8 +112,7 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 		App.reqres.setHandler "schedule:content:group", (data)->
 			API.scheduleContentGroup data
 
-
 		# request handler to get content group by id from local database
 		App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
-			API.getContentGroupByIdFromLocal id,division
+			API.getContentGroupByIdFromLocal id division
 

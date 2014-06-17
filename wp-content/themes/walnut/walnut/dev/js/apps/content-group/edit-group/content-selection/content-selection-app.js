@@ -82,10 +82,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         this.listenTo(this.view, {
           "add:content:pieces": (function(_this) {
             return function(contentIDs) {
-              _.each(contentIDs, function(ele, index) {
+              return _.each(contentIDs, function(ele, index) {
                 return _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
               });
-              return console.log(_this.contentGroupCollection);
             };
           })(this)
         });
