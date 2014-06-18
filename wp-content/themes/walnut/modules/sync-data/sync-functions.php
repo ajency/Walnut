@@ -228,11 +228,12 @@ function validate_file_exists( $sync_request_id ) {
 
 function change_zip_upload_path( $param ) {
 
-    $upsync_path = "/tmp/upsync";
-
-    $param['path'] = str_replace( $param['subdir'], $upsync_path, $param['path'] );
-    $param['url'] = str_replace( $param['subdir'], $upsync_path, $param['url'] );
-    $param['subdir'] = $upsync_path;
+    $upsync_path = "tmp/upsync";
+    $param['path'] = str_replace( 'images', $upsync_path, $param['path'] );
+    $param['url'] = str_replace( 'images', $upsync_path, $param['url'] );
+    $param['basedir'] = str_replace( 'images', $upsync_path, $param['basedir'] );
+    $param['baseurl'] = str_replace( 'images', $upsync_path, $param['baseurl'] );
+    $param['subdir'] = '';
 
     return $param;
 }
