@@ -134,21 +134,78 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         'click #save-content-collection': 'save_content'
       };
 
+      CollectionDetailsView.prototype.modelEvents = {
+        'change:status': 'statusChanged'
+      };
+
+      CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
+        data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
+        data.statusOptions = [
+          {
+            name: 'Under Review',
+            value: 'underreview'
+          }, {
+            name: 'Published',
+            value: 'publish'
+          }, {
+            name: 'Archived',
+            value: 'archive'
+          }
+        ];
+        data.textBookSelected = function() {
+          if (parseInt(this.id) === parseInt(data.term_ids['textbook'])) {
+            return 'selected';
+          }
+        };
+        data.statusSelected = function() {
+          if (this.value === data.status) {
+            return 'selected';
+          }
+        };
+        return data;
+      };
+
       CollectionDetailsView.prototype.onShow = function() {
-        $("#textbooks, #chapters, #minshours").select2();
-        return $("#secs,#subsecs").val([]).select2();
+        $("#textbooks, #chapters, #minshours, select").select2();
+        $("#secs,#subsecs").val([]).select2();
+        if (!this.model.isNew()) {
+          this.prepolateDropDowns();
+        }
+        return this.statusChanged();
+      };
+
+      CollectionDetailsView.prototype.statusChanged = function() {
+        var _ref;
+        if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
+          this.$el.closest('#teacher-app').find('input, textarea, select').prop('disabled', true);
+          this.$el.find('select#status').prop('disabled', false);
+          return this.$el.find('select#status option[value="underreview"]').prop('disabled', true);
+        }
+      };
+
+      CollectionDetailsView.prototype.prepolateDropDowns = function() {
+        return this.$el.find('#textbooks').trigger('change');
       };
 
       CollectionDetailsView.prototype.onFetchChaptersComplete = function(chapters) {
         if (_.size(chapters) > 0) {
           this.$el.find('#chapters').html('');
-          return _.each(chapters.models, (function(_this) {
+          _.each(chapters.models, (function(_this) {
             return function(chap, index) {
               return _this.$el.find('#chapters').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
             };
           })(this));
+          return this.setChapterValue();
         } else {
           return this.$el.find('#chapters').html('<option value="">No Chapters available</option>');
+        }
+      };
+
+      CollectionDetailsView.prototype.setChapterValue = function() {
+        if (this.model.get('term_ids')['chapter']) {
+          this.$el.find('#chapters').val(this.model.get('term_ids')['chapter']);
+          this.$el.find('#chapters').select2();
+          return this.$el.find('#chapters').trigger('change');
         }
       };
 
@@ -158,7 +215,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             this.$el.find('#secs').html('');
             _.each(allsections.sections, (function(_this) {
               return function(section, index) {
-                return _this.$el.find('#secs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+                _this.$el.find('#secs').append('<option  value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+                return _this.markSelected('secs', 'sections');
               };
             })(this));
           } else {
@@ -168,7 +226,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             this.$el.find('#subsecs').html('');
             return _.each(allsections.subsections, (function(_this) {
               return function(section, index) {
-                return _this.$el.find('#subsecs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+                _this.$el.find('#subsecs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
+                return _this.markSelected('subsecs', 'subsections');
               };
             })(this));
           } else {
@@ -178,6 +237,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           this.$el.find('#secs').html('<option value="">No Sections available</option>');
           return this.$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
         }
+      };
+
+      CollectionDetailsView.prototype.markSelected = function(element, sections) {
+        if (this.model.isNew()) {
+          return '';
+        }
+        return $("#" + element).val(this.model.get('term_ids')[sections]).select2();
       };
 
       CollectionDetailsView.prototype.save_content = function(e) {

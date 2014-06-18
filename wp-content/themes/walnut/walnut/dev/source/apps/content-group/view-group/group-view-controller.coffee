@@ -23,17 +23,19 @@ define ['app'
                     'collection_id': model.get 'id'
 
 
+
+
                 @studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
                 App.execute "when:fetched", model, =>
                     groupContentCollection = App.request "get:content:pieces:by:ids", model.get 'content_pieces'
-                    console.log model.get 'content_pieces'
+
                     @layout = layout = @_getContentGroupViewLayout()
 
-                    @show layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
+                    @show @layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
                                                              @textbookNames, @studentCollection])
 
-                    @listenTo layout, 'show', @showContentGroupViews
+                    @listenTo @layout, 'show', @showContentGroupViews
 
                     @listenTo @layout.collectionDetailsRegion, 'start:teaching:module', @startTeachingModule
 
@@ -56,7 +58,11 @@ define ['app'
 
                 nextQuestion = _.first _.difference content_piece_ids, responseQuestionIDs
 
-                @gotoTrainingModule nextQuestion, 'class_mode'
+                if model.get('post_status') is 'archive'
+                    @gotoTrainingModule nextQuestion, 'readonly'
+
+                else
+                    @gotoTrainingModule nextQuestion, 'class_mode'
 
             gotoTrainingModule: (question, display_mode)=>
                 display_mode = 'training' if @mode is 'training'

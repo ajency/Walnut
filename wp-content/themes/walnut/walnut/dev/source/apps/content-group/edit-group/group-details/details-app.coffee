@@ -71,10 +71,10 @@ define ['app'
             events:
                 'change #textbooks': (e)->
                     @$el.find '#secs, #subsecs'
-                    .select2 'data', null
+                        .select2 'data', null
 
                     @$el.find '#chapters, #secs, #subsecs'
-                    .html ''
+                        .html ''
 
                     @trigger "fetch:chapters", $(e.target).val()
 
@@ -83,11 +83,67 @@ define ['app'
 
                 'click #save-content-collection': 'save_content'
 
+            modelEvents:
+                'change:status':'statusChanged'
+
+            mixinTemplateHelpers : (data)->
+
+                data = super data
+
+                # add status values
+                data.statusOptions = [
+                    (
+                        name : 'Under Review'
+                        value : 'underreview'
+                    )
+                    (
+                        name : 'Published'
+                        value : 'publish'
+                    )
+                    (
+                        name : 'Archived'
+                        value : 'archive'
+                    )
+                ]
+
+                data.textBookSelected = ->
+                    return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
+
+                data.statusSelected = ->
+                    return 'selected' if @value is data.status
+
+                data
+
+
             onShow: ->
-                $("#textbooks, #chapters, #minshours").select2()
+                $("#textbooks, #chapters, #minshours, select").select2()
 
                 #Multi Select
                 $("#secs,#subsecs").val([]).select2()
+
+                if not @model.isNew()
+                    @prepolateDropDowns()
+
+                @statusChanged()
+
+
+
+
+            statusChanged:->
+                if @model.get('status') in ['publish','archive']
+                    @$el.closest('#teacher-app').find 'input, textarea, select'
+                    .prop 'disabled',true
+
+                    @$el.find 'select#status'
+                    .prop 'disabled',false
+
+                    @$el.find 'select#status option[value="underreview"]'
+                    .prop 'disabled',true
+
+
+
+            prepolateDropDowns : ->
+                @$el.find('#textbooks').trigger 'change'
 
             onFetchChaptersComplete: (chapters)->
                 if _.size(chapters) > 0
@@ -95,17 +151,27 @@ define ['app'
                     _.each chapters.models, (chap, index)=>
                         @$el.find '#chapters'
                         .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
+
+                    @setChapterValue()
                 else
                     @$el.find '#chapters'
                     .html '<option value="">No Chapters available</option>'
 
+            setChapterValue : ->
+                if @model.get('term_ids')['chapter']
+                    @$el.find('#chapters').val @model.get('term_ids')['chapter']
+                    @$el.find('#chapters').select2()
+                    @$el.find('#chapters').trigger 'change'
+
             onFetchSubsectionsComplete: (allsections)->
+
                 if _.size(allsections) > 0
                     if _.size(allsections.sections) > 0
                         @$el.find('#secs').html('');
                         _.each allsections.sections, (section, index)=>
                             @$el.find('#secs')
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                                .append '<option  value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                            @markSelected 'secs','sections'
                     else
                         @$el.find('#secs').html('<option value="">No Sections available</option>');
 
@@ -113,12 +179,17 @@ define ['app'
                         @$el.find('#subsecs').html('');
                         _.each allsections.subsections, (section, index)=>
                             @$el.find '#subsecs'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                                .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                            @markSelected 'subsecs','subsections'
                     else
                         @$el.find('#subsecs').html '<option>No Sub Sections available</option>'
                 else
                     @$el.find('#secs').html('<option value="">No Sections available</option>');
                     @$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
+
+            markSelected : (element, sections)->
+                return '' if @model.isNew()
+                $("#" + element).val(@model.get('term_ids')[sections]).select2()
 
 
             save_content: (e)->

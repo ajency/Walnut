@@ -17,15 +17,23 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       CollectionEditContentDisplayController.prototype.initialize = function(opts) {
         var view;
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
-        console.log('@contentGroupCollection');
-        console.log(this.contentGroupCollection);
         this.view = view = this._getCollectionContentDisplayView(this.model, this.contentGroupCollection);
-        this.show(view, {
-          loading: true
-        });
         this.listenTo(this.contentGroupCollection, 'content:pieces:of:group:added', this.contentPiecesChanged);
         this.listenTo(this.contentGroupCollection, 'content:pieces:of:group:removed', this.contentPiecesChanged);
-        return this.listenTo(view, 'changed:order', this.saveContentPieces);
+        this.listenTo(view, 'changed:order', this.saveContentPieces);
+        if (this.contentGroupCollection.length > 0) {
+          return App.execute("when:fetched", this.contentGroupCollection.models, (function(_this) {
+            return function() {
+              return _this.show(view, {
+                loading: true
+              });
+            };
+          })(this));
+        } else {
+          return this.show(view, {
+            loading: true
+          });
+        }
       };
 
       CollectionEditContentDisplayController.prototype.contentPiecesChanged = function() {
@@ -95,21 +103,34 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         'click .remove': 'removeItem'
       };
 
+      ContentDisplayView.prototype.modelEvents = {
+        'change:status': 'statusChanged'
+      };
+
+      ContentDisplayView.prototype.statusChanged = function(model, status) {
+        if (status === 'publish' || status === 'archive') {
+          return this.$el.find('.remove').hide();
+        } else {
+          return this.$el.find('.remove').hide();
+        }
+      };
+
       ContentDisplayView.prototype.onShow = function() {
         this.$el.find(".cbp_tmtimeline").sortable();
-        return this.$el.find(".cbp_tmtimeline").on("sortstop", (function(_this) {
+        this.$el.find(".cbp_tmtimeline").on("sortstop", (function(_this) {
           return function(event, ui) {
             var sorted_order;
             sorted_order = _this.$el.find(".cbp_tmtimeline").sortable("toArray");
             return _this.trigger("changed:order", sorted_order);
           };
         })(this));
+        return this.statusChanged(this.model, this.model.get('status'));
       };
 
       ContentDisplayView.prototype.removeItem = function(e) {
         var id;
         id = $(e.target).closest('.contentPiece').attr('data-id');
-        return this.collection.remove(id);
+        return this.collection.remove(parseInt(id));
       };
 
       return ContentDisplayView;

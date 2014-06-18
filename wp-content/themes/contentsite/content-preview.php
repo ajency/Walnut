@@ -94,7 +94,7 @@ var THEMEURL = '<?php echo get_template_directory_uri()?>';
 <script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-preview-main" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php } else { ?>
 
- <script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-preview-main.js"></script>
+ <script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-preview-main.js?<?php echo VERSION ?>"></script>
 <?php } ?>
 
 
