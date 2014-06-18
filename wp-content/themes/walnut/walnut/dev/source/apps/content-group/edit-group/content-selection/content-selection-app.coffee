@@ -70,7 +70,7 @@ define ['app'
                 new DataContentTableView
                     collection: collection
                     tableConfig: tableConfig
-                    contentGroupModel : @model
+#                    contentGroupModel : @model
                     templateHelpers:
                         textbooksFilter: ()=>
                             textbooks = []
@@ -101,19 +101,14 @@ define ['app'
                 data
 
 
+
             onShow: =>
                 @makeDataTable(@collection.models, Marionette.getOption @, 'tableConfig')
                 $ "#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter"
                 .select2();
 
-                @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
-                @listenTo @contentGroupModel, 'change:status', @onCheckStatus
 
 
-            onCheckStatus : ->
-                if @contentGroupModel.get('status') in ['publish','archive']
-                    @$el.find 'input, select'
-                    .prop 'disabled',true
 
 
             makeRow: (item, index, tableData)->
@@ -158,7 +153,6 @@ define ['app'
                     row = @makeRow item, index, tableData
                     @$el.find('#dataContentTable tbody').append(row)
 
-                @onCheckStatus
 
                 if _.size(dataCollection) is 0
                     colspan = _.size tableData.data
@@ -344,7 +338,6 @@ define ['app'
 
                 @$el.find("#dataContentTable").trigger 'addRows', [$row, true]
                     .trigger "updateCache"
-                @onCheckStatus
 
 
         # set handlers

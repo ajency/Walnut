@@ -69,11 +69,14 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               _this.model.set({
                 'changed': 'module_details'
               });
-              return _this.model.save(data, {
+              _this.model.save(data, {
                 wait: true,
                 success: _this.successFn,
                 error: _this.errorFn
               });
+              if (data.status !== 'underreview') {
+                return _this.region.trigger("close:content:selection:app");
+              }
             };
           })(this)
         });
@@ -177,7 +180,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       CollectionDetailsView.prototype.statusChanged = function() {
         var _ref;
         if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
-          this.$el.closest('#teacher-app').find('input, textarea, select').prop('disabled', true);
+          this.$el.find('input, textarea, select').prop('disabled', true);
           this.$el.find('select#status').prop('disabled', false);
           return this.$el.find('select#status option[value="underreview"]').prop('disabled', true);
         }

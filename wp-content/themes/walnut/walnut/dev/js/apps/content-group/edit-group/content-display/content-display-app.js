@@ -109,21 +109,24 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       ContentDisplayView.prototype.statusChanged = function(model, status) {
         if (status === 'publish' || status === 'archive') {
-          return this.$el.find('.remove').hide();
+          this.$el.find('.remove').hide();
+          return this.$el.find(".cbp_tmtimeline").sortable('disable');
         } else {
-          return this.$el.find('.remove').hide();
+          return this.$el.find('.remove').show();
         }
       };
 
       ContentDisplayView.prototype.onShow = function() {
-        this.$el.find(".cbp_tmtimeline").sortable();
-        this.$el.find(".cbp_tmtimeline").on("sortstop", (function(_this) {
-          return function(event, ui) {
-            var sorted_order;
-            sorted_order = _this.$el.find(".cbp_tmtimeline").sortable("toArray");
-            return _this.trigger("changed:order", sorted_order);
-          };
-        })(this));
+        this.$el.find(".cbp_tmtimeline").sortable({
+          stop: (function(_this) {
+            return function(event, ui) {
+              var sorted_order;
+              sorted_order = _this.$el.find(".cbp_tmtimeline").sortable("toArray");
+              console.log(sorted_order);
+              return _this.trigger("changed:order", sorted_order);
+            };
+          })(this)
+        });
         return this.statusChanged(this.model, this.model.get('status'));
       };
 

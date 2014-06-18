@@ -41,6 +41,7 @@ define ['app'
 
                     @model.set 'changed': 'module_details'
                     @model.save(data, {wait: true, success: @successFn, error: @errorFn})
+                    @region.trigger "close:content:selection:app" if data.status isnt 'underreview'
 
 
             successFn: (model)=>
@@ -131,7 +132,7 @@ define ['app'
 
             statusChanged:->
                 if @model.get('status') in ['publish','archive']
-                    @$el.closest('#teacher-app').find 'input, textarea, select'
+                    @$el.find 'input, textarea, select'
                     .prop 'disabled',true
 
                     @$el.find 'select#status'

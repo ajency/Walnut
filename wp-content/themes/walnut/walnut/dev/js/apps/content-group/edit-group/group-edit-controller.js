@@ -57,6 +57,12 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
           };
         })(this));
         this.listenTo(this.contentGroupModel, 'change:id', this._showContentSelectionApp, this);
+        this.listenTo(this.layout.collectionDetailsRegion, 'close:content:selection:app', (function(_this) {
+          return function() {
+            console.log('close:content:selection:app ');
+            return _this.layout.contentSelectionRegion.close();
+          };
+        })(this));
         return this.show(layout, {
           loading: true
         });
@@ -83,11 +89,13 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
         this.contentGroupCollection = App.request("get:content:pieces:of:group", model);
         return App.execute("when:fetched", this.contentGroupCollection, (function(_this) {
           return function() {
-            App.execute("show:content:selectionapp", {
-              region: _this.layout.contentSelectionRegion,
-              model: model,
-              contentGroupCollection: _this.contentGroupCollection
-            });
+            if (model.get('status') === 'underreview') {
+              App.execute("show:content:selectionapp", {
+                region: _this.layout.contentSelectionRegion,
+                model: model,
+                contentGroupCollection: _this.contentGroupCollection
+              });
+            }
             return App.execute("show:editgroup:content:displayapp", {
               region: _this.layout.contentDisplayRegion,
               model: model,
