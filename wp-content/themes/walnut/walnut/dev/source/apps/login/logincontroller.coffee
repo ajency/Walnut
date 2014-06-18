@@ -84,10 +84,8 @@ define ['app'
 
                 if _.platform() is 'DEVICE'
 
-                    #Create 'SynapseImages' directory inside 'SynapseAssets'
-                    synapseImagesDirectory = _.createSynapseImagesDirectory()
-                    synapseImagesDirectory.done ->
-                        console.log 'Created SynapseImages Directory'
+                    # Set 'SynapseMedia' directory path to local storage
+                    _.setSynapseMediaDirectoryPathToLocalStorage()
 
                     #Hide the splash screen image
                     navigator.splashscreen.hide()

@@ -123,7 +123,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 						attachmentData.done (data)->
 
 							url = row['guid']
-							mediaUrl = _.getSynapseImagesDirectoryPath() + url.substr(url.indexOf("uploads/"))
+							mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"))
 							console.log 'mediaUrl: '+mediaUrl
 
 							full = {

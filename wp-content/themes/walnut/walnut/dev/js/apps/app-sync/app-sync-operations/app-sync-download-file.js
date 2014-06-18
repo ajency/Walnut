@@ -1,23 +1,19 @@
 define(['underscore'], function(_) {
   return _.mixin({
     getZipFileDownloadDetails: function() {
-      var lastDownloadTimestamp;
+      var data;
       $('#syncSuccess').css("display", "block").text("Starting file download...");
-      lastDownloadTimestamp = _.getLastDownloadTimeStamp();
-      return lastDownloadTimestamp.done(function(time_stamp) {
-        var data;
-        data = {
-          blog_id: _.getBlogID(),
-          last_sync: time_stamp
+      data = {
+        blog_id: _.getBlogID(),
+        last_sync: ''
+      };
+      return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
+        return function(resp) {
+          console.log('getZipFileDownloadDetails response');
+          console.log(resp);
+          return _.downloadZipFile(resp);
         };
-        return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
-          return function(resp) {
-            console.log('File download details response');
-            console.log(resp);
-            return _.downloadZipFile(resp);
-          };
-        })(this), 'json');
-      });
+      })(this), 'json');
     },
     downloadZipFile: function(resp) {
       var uri;
@@ -34,8 +30,7 @@ define(['underscore'], function(_) {
             fileEntry.remove();
             fileTransfer = new FileTransfer();
             return fileTransfer.download(uri, filePath + "csv-synapse.zip", function(file) {
-              _.setDownloadedZipFilePath(file.toURL());
-              return _.onFileDownloadSuccess(resp.last_sync);
+              return _.onFileDownloadSuccess(file.toURL()(filePath(resp.last_sync)));
             }, function(error) {
               return _.onFileDownloadError(error);
             }, true);
@@ -43,9 +38,20 @@ define(['underscore'], function(_) {
         };
       })(this), _.fileSystemErrorHandler);
     },
-    onFileDownloadSuccess: function(last_sync) {
-      _.updateSyncDetails('file_download', last_sync);
-      return console.log('Downloaded Zip file successfully');
+    onFileDownloadSuccess: function(source, destination, last_sync) {
+      var onFileUnzipSuccess;
+      console.log('Downloaded Zip file successfully');
+      onFileUnzipSuccess = function() {
+        console.log('Files unzipped successfully');
+        _.updateSyncDetails('file_download', last_sync);
+        $('#syncSuccess').css("display", "block").text("File download completed");
+        return setTimeout((function(_this) {
+          return function() {
+            return _.startFileImport();
+          };
+        })(this), 2000);
+      };
+      return zip.unzip(source(destination(onFileUnzipSuccess)));
     },
     onFileDownloadError: function(error) {
       console.log('ERROR: ' + error.code);

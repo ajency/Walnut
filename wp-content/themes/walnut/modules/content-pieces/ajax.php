@@ -36,7 +36,9 @@ function ajax_create_content_group() {
         'description' => $_POST['description'],
         'term_ids' => $_POST['term_ids'],
         'duration' => $_POST['duration'],
-        'minshours' => $_POST['minshours']
+        'minshours' => $_POST['minshours'],
+//        save status
+        'status' => $_POST['status']
     );
 
     $id = save_content_group($data);
@@ -57,7 +59,9 @@ function ajax_update_content_group() {
             'description' => $_POST['description'],
             'term_ids' => $_POST['term_ids'],
             'duration' => $_POST['duration'],
-            'minshours' => $_POST['minshours']
+            'minshours' => $_POST['minshours'],
+            //        save status
+            'status'    => $_POST['status']
         );
         $content_group = save_content_group($data);
     }

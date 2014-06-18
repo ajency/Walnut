@@ -1,10 +1,8 @@
 define(['underscore', 'jquery', 'fastclick'], function(_, $, FastClick) {
-  return document.addEventListener("deviceready", (function(_this) {
-    return function() {
-      _.cordovaOpenPrepopulatedDatabase();
-      return $(function() {
-        return FastClick.attach(document.body);
-      });
-    };
-  })(this), false);
+  var onDeviceReady;
+  onDeviceReady = function() {
+    _.cordovaOpenPrepopulatedDatabase();
+    return FastClick.attach(document.body);
+  };
+  return document.addEventListener("deviceready", onDeviceReady, false);
 });

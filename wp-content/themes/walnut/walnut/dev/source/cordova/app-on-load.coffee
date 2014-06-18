@@ -1,17 +1,16 @@
 define ['underscore', 'jquery', 'fastclick'], (_, $, FastClick)->
 
     
-    #Cordova device ready event
+    # Cordova device ready event
 
-    document.addEventListener("deviceready", =>
+    onDeviceReady = ->
+
+    	# Open pre-populated SQLite database file.
+    	_.cordovaOpenPrepopulatedDatabase()
+
+    	# 'FastClick' helps to reduce the 400ms click delay.
+    	FastClick.attach(document.body)
        
-       #Open pre-populated SQLite database file.
-       _.cordovaOpenPrepopulatedDatabase()
 
-
-       #Plugin to avoid 300ms click delay
-       $(->
-       		FastClick.attach(document.body)
-       	)
-
-    ,false)
+    
+    document.addEventListener("deviceready", onDeviceReady, false)

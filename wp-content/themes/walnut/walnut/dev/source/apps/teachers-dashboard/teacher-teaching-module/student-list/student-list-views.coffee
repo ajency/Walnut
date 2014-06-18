@@ -12,7 +12,7 @@ define ['app'], (App)->
             			                  </div>
             			                </div>
             							 <div class="col-md-4 col-xs-4 no-padding">
-            			                  <div class="tiles default active">
+            			                  <div class="tiles unselected active">
             			                  	<div class="user-profile-pic text-left m-t-0 p-t-10">
             								<img data-src-retina="{{profile_pic}}" data-src="{{profile_pic}}" src="{{profile_pic}}" alt="">
             							  </div>
@@ -109,9 +109,9 @@ define ['app'], (App)->
 
             markAsCorrectAnswer: (student)->
                 $(student).removeClass 'selected'
-                .find '.default'
-                    .removeClass 'default'
-                        .addClass 'green'
+                .find '.unselected'
+                    .removeClass 'unselected'
+                        .addClass 'blue'
                             .find 'i'
                                 .removeClass 'fa-minus-circle'
                                     .addClass 'fa-check-circle'
@@ -122,9 +122,9 @@ define ['app'], (App)->
                 for student in selectedStudents
                     @correctAnswers = _.without @correctAnswers, parseInt $(student).attr 'data-id'
                     $(student).removeClass 'selected'
-                    .find '.green'
-                        .removeClass 'green'
-                            .addClass 'default'
+                    .find '.blue'
+                        .removeClass 'blue'
+                            .addClass 'unselected'
                                 .find 'i'
                                     .removeClass 'fa-check-circle'
                                         .addClass 'fa-minus-circle'

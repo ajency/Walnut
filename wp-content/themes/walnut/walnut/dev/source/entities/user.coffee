@@ -50,7 +50,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
 								tx.executeSql("SELECT * FROM wp_users u INNER JOIN wp_usermeta um 
-									ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?", [division], onSuccess(d), _.deferredErrorHandler(d));
+									ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?"
+									, [division], onSuccess(d), _.deferredErrorHandler(d));
 								
 
 					onSuccess =(d)->
@@ -88,7 +89,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 					runQuery =->
 						$.Deferred (d)->
 							_.db.transaction (tx)->
-								tx.executeSql("SELECT username FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d))
+								tx.executeSql("SELECT username FROM USERS", []
+									, onSuccess(d), _.deferredErrorHandler(d))
 
 					onSuccess =(d)->
 						(tx, data)->

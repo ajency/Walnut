@@ -81,21 +81,21 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         }
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
         if (_.isString(responsePercentage) && responsePercentage.length > 0) {
-          return this.$el.find('#' + responsePercentage).find('.default').removeClass('default').addClass('green');
+          return this.$el.find('#' + responsePercentage).find('.unselected').removeClass('unselected').addClass('blue');
         }
       };
 
       ChorusOptionsView.prototype.selectStudent = function(e) {
         var dataValue;
-        this.$el.find('.green').removeClass('green').addClass('default');
+        this.$el.find('.blue').removeClass('blue').addClass('unselected');
         dataValue = $(e.currentTarget).closest('.tiles.single').attr('id');
-        $(e.target).closest('.tiles.single').find('.default').removeClass('default').addClass('green').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
+        $(e.target).closest('.tiles.single').find('.unselected').removeClass('unselected').addClass('blue').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
         return this.trigger("save:question:response", dataValue);
       };
 
       ChorusOptionsView.prototype.questionCompleted = function() {
         var selectedAnswer;
-        selectedAnswer = this.$el.find('.tiles.single .green');
+        selectedAnswer = this.$el.find('.tiles.single .blue');
         if ((_.size(selectedAnswer) === 0) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
           if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
             return this.trigger("question:completed", "no_answer");

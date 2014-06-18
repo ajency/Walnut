@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
+define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentGroup", function(ContentGroup, App, Backbone, Marionette, $, _) {
     var API, contentGroupCollection;
     ContentGroup.ItemModel = (function(_super) {
@@ -22,7 +22,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         last_modified_by: '',
         published_on: '',
         published_by: '',
-        status: '',
+        status: 'underreview',
         type: '',
         total_minutes: 0,
         duration: 0,
@@ -100,71 +100,18 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return questionResponseModel.save();
       },
       getContentGroupByIdFromLocal: function(id, division) {
-        var onSuccess, runQuery;
-        runQuery = function() {
-          var pattern;
-          pattern = '%"' + id + '"%';
+        var runFunc;
+        runFunc = function() {
           return $.Deferred(function(d) {
-            return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], onSuccess(d), _.deferredErrorHandler(d));
+            var contentGroupById;
+            contentGroupById = _.getContentGroupById(id, division);
+            return contentGroupById.done(function(result) {
+              return d.resolve(result);
             });
           });
         };
-        onSuccess = function(d) {
-          return function(tx, data) {
-            var i, result, row, _fn, _i, _ref;
-            result = [];
-            _fn = function(row, i, division) {
-              var contentPiecesAndDescription;
-              contentPiecesAndDescription = _.getContentPiecesAndDescription(row['id']);
-              return contentPiecesAndDescription.done(function(d) {
-                var content_pieces, description;
-                content_pieces = description = '';
-                if (d.content_pieces !== '') {
-                  content_pieces = unserialize(d.content_pieces);
-                }
-                if (d.description !== '') {
-                  description = unserialize(d.description);
-                }
-                return (function(row, i, content_pieces, description) {
-                  var dateAndStatus;
-                  dateAndStatus = _.getDateAndStatus(row['id'], division, content_pieces);
-                  return dateAndStatus.done(function(d) {
-                    var date, status;
-                    status = d.status;
-                    date = d.start_date;
-                    return result[i] = {
-                      id: row['id'],
-                      name: row['name'],
-                      created_on: row['created_on'],
-                      created_by: row['created_by'],
-                      last_modified_on: row['last_modified_on'],
-                      last_modified_by: row['last_modified_by'],
-                      published_on: row['published_on'],
-                      published_by: row['published_by'],
-                      type: row['type'],
-                      term_ids: unserialize(row['term_ids']),
-                      duration: _.getDuration(row['duration']),
-                      minshours: _.getMinsHours(row['duration']),
-                      total_minutes: row['duration'],
-                      status: status,
-                      training_date: date,
-                      content_pieces: content_pieces,
-                      description: description
-                    };
-                  });
-                })(row, i, content_pieces, description);
-              });
-            };
-            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-              row = data.rows.item(i);
-              _fn(row, i, division);
-            }
-            return d.resolve(result);
-          };
-        };
-        return $.when(runQuery()).done(function(data) {
-          return console.log('Content-group-by-id transaction completed');
+        return $.when(runFunc()).done(function() {
+          return console.log('getContentGroupByIdFromLocal done');
         }).fail(_.failureHandler);
       }
     };
@@ -184,7 +131,7 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       return API.scheduleContentGroup(data);
     });
     return App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
-      return API.getContentGroupByIdFromLocal(id, division);
+      return API.getContentGroupByIdFromLocal(id(division));
     });
   });
 });

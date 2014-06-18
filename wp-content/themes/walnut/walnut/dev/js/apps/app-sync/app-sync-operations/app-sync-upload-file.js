@@ -15,6 +15,9 @@ define(['underscore'], function(_) {
       options.params = params;
       fileTransfer = new FileTransfer();
       return fileTransfer.upload(zipFilePath, uploadURI, function(success) {
+        var response;
+        response = JSON.parse(success.response);
+        _.setSyncRequestId(response.sync_request_id);
         _.onFileUploadSuccess();
         console.log("CODE: " + success.responseCode);
         console.log("RESPONSE: " + success.response);
@@ -35,6 +38,28 @@ define(['underscore'], function(_) {
           return syncController.getDownloadURL();
         };
       })(this), 2000);
+    },
+    checkIfServerImportOperationCompleted: function() {
+      $('#syncSuccess').css("display", "block").text("Please wait...");
+      return setTimeout((function(_this) {
+        return function() {
+          var data;
+          data = {
+            blog_id: _.getBlogID()
+          };
+          return $.get(AJAXURL + '?action=check-app-data-sync-completion&sync_request_id=' + _.getSyncRequestId(), data, function(resp) {
+            var syncController;
+            console.log('Sync completion response');
+            console.log(resp);
+            if (!resp) {
+              return _.checkIfServerImportOperationCompleted();
+            } else {
+              syncController = App.request("get:sync:controller");
+              return syncController.getDownloadURL();
+            }
+          }, 'json');
+        };
+      })(this), 5000);
     },
     onFileUploadError: function() {
       $('#syncSuccess').css("display", "none");

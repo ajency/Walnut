@@ -85,9 +85,9 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
           $('#class, #div, #class-training').select2();
         }
         if (_.platform() === "DEVICE") {
+          _.setSynapseMediaDirectoryPathToLocalStorage();
           navigator.splashscreen.hide();
-          _.appNavigation();
-          return _.setSynapseImagesDirectoryPathToLocalStorage();
+          return _.appNavigation();
         }
       };
 

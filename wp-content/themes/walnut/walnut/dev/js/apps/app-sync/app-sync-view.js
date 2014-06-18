@@ -37,7 +37,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.events = {
         'click #syncStartContinue': 'startContinueSyncProcess',
-        'click #syncMediaStartContinue': 'startContinueMediaSyncProcess'
+        'click #syncMediaStart': 'startMediaSyncProcess'
       };
 
       AppSyncView.prototype.onShow = function() {
@@ -132,12 +132,13 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         });
       };
 
-      AppSyncView.prototype.startContinueMediaSyncProcess = function() {
-        $('#syncMediaStartContinue').css("display", "none");
+      AppSyncView.prototype.startMediaSyncProcess = function() {
+        $('#syncMediaError').css("display", "none");
+        $('#syncMediaStart').css("display", "none");
         $('#syncMediaSuccess').css("display", "block").text("Started media sync process...");
         return setTimeout((function(_this) {
           return function() {
-            return _.downloadMediaFiles();
+            return _.startMediaSync();
           };
         })(this), 2000);
       };

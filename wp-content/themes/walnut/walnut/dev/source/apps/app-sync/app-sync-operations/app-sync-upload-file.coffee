@@ -27,6 +27,9 @@ define ['underscore'], ( _) ->
 				
 				, (success)->
 
+					response = JSON.parse success.response
+					_.setSyncRequestId response.sync_request_id
+
 					_.onFileUploadSuccess()
 
 					console.log "CODE: " + success.responseCode
@@ -50,10 +53,37 @@ define ['underscore'], ( _) ->
 			$('#syncSuccess').css("display","block").text("File upload completed...")
 
 			setTimeout(=>
+				# _.checkIfServerImportOperationCompleted()
 				syncController = App.request "get:sync:controller"
 				syncController.getDownloadURL()
-	
 			,2000)
+
+
+		checkIfServerImportOperationCompleted : ->
+
+			$('#syncSuccess').css("display","block").text("Please wait...")
+
+			setTimeout(=>
+
+				data = blog_id : _.getBlogID()
+
+				$.get AJAXURL + '?action=check-app-data-sync-completion&sync_request_id='+_.getSyncRequestId(),
+					data,
+					(resp)=>
+						console.log 'Sync completion response'
+						console.log resp
+
+						if not resp
+							_.checkIfServerImportOperationCompleted()
+						else
+							syncController = App.request "get:sync:controller"
+							syncController.getDownloadURL()
+
+					,
+					'json'
+	
+			,5000)
+
 
 
 		onFileUploadError : ->

@@ -28,7 +28,7 @@ define(['app'], function(App) {
         if (_.platform() === 'DEVICE') {
           url = this.model.get('videoUrl');
           videoUrl = url.substr(url.indexOf("uploads/"));
-          videoPath = "SynapseAssets/SynapseImages/" + videoUrl;
+          videoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
           videos = {};
           videos[videoId] = videoPath;
           window.plugins.html5Video.initialize(videos);

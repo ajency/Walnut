@@ -129,7 +129,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
             if (url === 'false') {
               attachmenturl = '';
             } else {
-              directoryPath = _.getSynapseImagesDirectoryPath();
+              directoryPath = _.getSynapseMediaDirectoryPath();
               attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"));
               attachmenturl = '<img src="' + attachmenturl + '">';
             }

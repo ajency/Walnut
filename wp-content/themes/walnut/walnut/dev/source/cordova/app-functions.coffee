@@ -25,6 +25,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 				Backbone.history.history.back()
 
 			document.removeEventListener("backbutton", _.onBackButtonClick, false)
+			
 		
 	
 		#Get all user details from local database
@@ -133,7 +134,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 						if url is 'false'
 							attachmenturl = ''
 						else
-							directoryPath = _.getSynapseImagesDirectoryPath()
+							directoryPath = _.getSynapseMediaDirectoryPath()
 							attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"))
 							attachmenturl = '<img src="'+attachmenturl+'">'
 

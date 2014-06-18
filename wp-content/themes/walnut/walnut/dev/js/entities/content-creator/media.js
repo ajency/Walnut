@@ -130,7 +130,7 @@ define(["app", 'backbone'], function(App, Backbone) {
             return attachmentData.done(function(data) {
               var full, mediaUrl, result, url;
               url = row['guid'];
-              mediaUrl = _.getSynapseImagesDirectoryPath() + url.substr(url.indexOf("uploads/"));
+              mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"));
               console.log('mediaUrl: ' + mediaUrl);
               full = {
                 full: {}

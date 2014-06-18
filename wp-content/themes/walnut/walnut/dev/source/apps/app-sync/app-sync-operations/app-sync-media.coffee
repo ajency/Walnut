@@ -1,134 +1,178 @@
-define ['underscore','jquery'], ( _ , $) ->
+define ['underscore', 'jquery'], ( _ , $) ->
 
 
 	_.mixin
 
-		downloadMediaFiles : ->
 
-			$('#syncMediaSuccess').css("display","block").text("Contacting server...")
+		startMediaSync : ->
 
-			localFiles = _.getListOfMediaFilesFromLocalDirectory()
-			localFiles.done (local_entries)->
+			_.syncFiles 'Image'
 
-				console.log 'local_entries'
-				console.log local_entries
+
+
+		syncFiles : (file_type)->
+
+			localImageFileList = _.getListOfFilesFromLocalDirectory file_type
+			localImageFileList.done (localImageFilesList)->
+
+				remoteImageFileList = _.getListOfMediaFilesFromServer file_type
+				remoteImageFileList.done (remoteImageFilesList)->
+
+						fileTobeDownloaded = _.getFilesToBeDownloaded(localImageFilesList, remoteImageFilesList)
+						fileTobeDownloaded.done (files_to_be_downloaded)->
+
+							if files_to_be_downloaded.length > 0
+
+								$('#syncMediaSuccess').css("display","block")
+								.text("Downloading "+file_type+" files...")
+
+								downloadFiles = _.downloadMediaFiles(files_to_be_downloaded, 0, file_type)
+
+							else
+								$('#syncMediaSuccess').css("display","block")
+								.text(file_type+" files already upto date")
+
+								_.syncFiles 'Video' if file_type is 'Image'
+
+								if file_type is 'Video'
+									setTimeout(=>
+										App.navigate('teachers/dashboard', trigger: true)
+									,2000)
+
+
+
+		downloadMediaFiles : (filesTobeDownloaded, index, file_type)->
+			
+			file = filesTobeDownloaded[index]		 
+			directoryPath = file.substr(file.indexOf("uploads/"))
+			fileName = file.substr(file.lastIndexOf('/') + 1)
+
+			uri = encodeURI file
+			localPath = _.getSynapseMediaDirectoryPath() + directoryPath
+
+			directoryStructure = _.createDirectoryStructure directoryPath
+			directoryStructure.done ->
+
+				fileTransfer = new FileTransfer()
+				fileTransfer.download(uri, localPath 
+					,(file)->
+						if index < filesTobeDownloaded.length-1
+							$('#syncMediaSuccess').css("display","block")
+							.text("Downloaded file: "+fileName)
+
+							_.downloadMediaFiles(filesTobeDownloaded, (index + 1), file_type)
+						else
+							$('#syncMediaSuccess').css("display","block")
+							.text("Downloaded all "+file_type+" files")
+
+							_.syncFiles 'Video' if file_type is 'Image'
+
+							if file_type is 'Video'
+								setTimeout(=>
+									App.navigate('teachers/dashboard', trigger: true)
+								,2000)
+
+
+					,(error)->
+						console.log 'ERROR: '+error.code
+						$('#syncMediaSuccess').css("display","none")
+
+						$('#syncMediaStart').css("display","block")
+
+						$('syncMediaButtonText').text('Try again')
+
+						$('syncMediaError').css("display","block")
+						.text('An error occurred during file download')
+
+					, true)
+
 				
-				filesOnServer = _.getListOfMediaFilesFromServer()
-				filesOnServer.done (files_on_server)->
-				
-					filesToBeDownloaded = _.compareFiles(local_entries, files_on_server)
-					filesToBeDownloaded.done (files_to_be_downloaded)->
-
-						$('#syncMediaSuccess').css("display","block").text("Downloading files...")
-
-						_.each files_to_be_downloaded, (file, i)->
-
-							directoryPath = file.substr(file.indexOf("uploads/"))
-
-							fileName = file.substr(file.lastIndexOf('/') + 1)
-
-							uri = encodeURI file
-
-							localPath = _.getSynapseImagesDirectoryPath() + directoryPath
-						
-							directoryStructure = _.createDirectoryStructure directoryPath
-							directoryStructure.done ->
-
-								fileTransfer = new FileTransfer()
-								fileTransfer.download(uri, localPath 
-									,(file)->
-										$('#syncMediaSuccess').css("display","block")
-										.text("Downloaded file "+fileName)
-
-									,(error)->
-										$('#syncMediaSuccess').css("display","none")
-										
-										$('#syncMediaError').css("display","block")
-										.text("An error occurred during file download.")
-
-
-									, true)
 
 
 		
-		compareFiles :(localEntries, serverEntries) ->
+		getListOfFilesFromLocalDirectory : (file_type)->
+
+			path = 'images' if file_type is 'Image'
+			path = 'videos' if file_type is 'Video'
 
 			runFunc = ->
 				$.Deferred (d)->
 
-					if localEntries.length is 0
-						d.resolve serverEntries.fileImg
-
-					else
-						filesTobeDownloaded = []
-
-						_.each serverEntries.fileImg, (serverFile, i)->
-							fileName = serverFile[i].substr(serverFile[i].lastIndexOf('/') + 1)
-							if localEntries.indexOf(fileName) == -1
-								filesTobeDownloaded.push serverFile[i]
-
-						d.resolve filesTobeDownloaded
-
-
-			$.when(runFunc()).done ->
-				console.log 'compareFiles done'
-			.fail _.failureHandler
-
-
-		
-		getListOfMediaFilesFromLocalDirectory : ->
-
-			runFunc = ->
-				$.Deferred (d)->
-					fullDirectoryEntry = []
+					localFilesList = []
 
 					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
 						, (fileSystem)->
-							fileSystem.root.getDirectory("SynapseAssets/SynapseImages"
+							fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/"+path
 								, {create: false, exclusive: false}
 
 								, (directoryEntry)->
-									
 									reader = directoryEntry.createReader()
-									reader.readEntries ((directoryEntry)->
-										for i in [0..directoryEntry.length-1] by 1
-											fullDirectoryEntry[i] = directoryEntry[i].name
+									reader.readEntries ((entries)->
+										for i in [0..entries.length-1] by 1
+											localFilesList[i] = entries[i].name
 
-										d.resolve fullDirectoryEntry
-
+										d.resolve localFilesList
 									)
+								
 								, (error)->
-									d.resolve error
+									d.resolve localFilesList
 								)
 
 						, _.fileSystemErrorHandler)
 
 			$.when(runFunc()).done ->
-				console.log 'Got list of all files present in the local directory'
+				console.log 'getListOfFilesFromLocalDirectory done'
 			.fail _.failureHandler
-		
 				
 
-		getListOfMediaFilesFromServer:->
+		
+		getListOfMediaFilesFromServer : (file_type)->
 
 			runFunc = ->
 				$.Deferred (d)->
-					listOfFiles = []
-					listOfFiles = 
-						fileImg : [ "http://synapsedu.info/wp-content/uploads/videos/oceans-clip.mp4"
-									"http://synapsedu.info/wp-content/uploads/2014/05/tux.png"
-									"http://synapsedu.info/wp-content/uploads/2014/05/Vertical-large.jpg"
-									"http://synapsedu.info/wp-content/uploads/2014/05/imag56es.jpg"
-									"http://synapsedu.info/wp-content/uploads/2014/05/girl1.jpg"
-									"http://synapsedu.info/wp-content/uploads/2014/05/tom_jerry.jpg"
-									"http://synapsedu.info/wp-content/uploads/2014/05/cover_pic1.png"
-									"http://synapsedu.info/wp-content/uploads/2014/06/Tulips.jpg"
-									"http://synapsedu.info/wp-content/uploads/2014/06/Jellyfish.jpg"
-									"http://synapsedu.info/wp-content/uploads/2014/06/Koala.jpg"
-									"http://synapsedu.info/wp-content/uploads/2014/06/Lighthouse.jpg"]
-				
-					d.resolve listOfFiles
+
+					if file_type is 'Image'
+						action = 'get-site-image-resources-data'
+					if file_type is 'Video'
+						action = 'get-site-video-resources-data'
+					
+					data = ''
+					$.get AJAXURL + '?action='+action,
+						data,
+						(resp)=>
+							console.log 'Download details response for '+file_type
+							console.log resp
+
+							d.resolve resp
+						,
+						'json'
+
 
 			$.when(runFunc()).done ->
 				console.log 'getListOfMediaFilesFromServer done'
+			.fail _.failureHandler
+
+
+
+		getFilesToBeDownloaded :(localEntries, serverEntries) ->
+
+			runFunc = ->
+				$.Deferred (d)->
+
+					if localEntries.length is 0
+						d.resolve serverEntries
+
+					else
+						filesTobeDownloaded = []
+
+						_.each serverEntries, (serverFile, i)->
+							fileName = serverFile.substr(serverFile.lastIndexOf('/') + 1)
+							
+							if localEntries.indexOf(fileName) == -1
+								filesTobeDownloaded.push serverFile
+
+						d.resolve filesTobeDownloaded
+
+			$.when(runFunc()).done ->
+				console.log 'getFilesToBeDownloaded done'
 			.fail _.failureHandler

@@ -4,7 +4,74 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	_.mixin
 
+		getContentGroupById : (id, division)->
 
+			runQuery = ->
+
+				pattern = '%"'+id+'"%'
+
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids 
+							LIKE '"+pattern+"' AND status IN ('publish', 'archive')", []
+							, onSuccess(d), _.deferredErrorHandler(d))
+
+				
+			onSuccess = (d)->
+				(tx, data)->
+
+					result = []
+
+					for i in [0..data.rows.length-1] by 1
+
+						row = data.rows.item(i)
+
+						do (row, i, division)->
+							contentPiecesAndDescription = _.getContentPiecesAndDescription(row['id'])
+							contentPiecesAndDescription.done (data)->
+
+								contentPieces = description = ''
+								contentPieces = unserialize(data.content_pieces) if data.content_pieces isnt ''
+								description = unserialize(data.description) if data.description isnt ''
+
+								do (row, i, contentPieces, description)->
+									dateAndStatus = _.getDateAndStatus(row['id'], division, contentPieces)
+									dateAndStatus.done (data)->
+										status = data.status
+										date = data.start_date
+
+										if not (row['status'] is 'archive' and status is 'not started')
+											
+											data = 
+												id: row['id']
+												name: row['name']
+												created_on: row['created_on']
+												created_by: row['created_by']
+												last_modified_on: row['last_modified_on']
+												last_modified_by: row['last_modified_by']
+												published_on: row['published_on']
+												published_by: row['published_by']
+												type: row['type']
+												term_ids: unserialize(row['term_ids'])
+												duration: _.getDuration(row['duration'])
+												minshours: _.getMinsHours(row['duration'])
+												total_minutes: row['duration']
+												status: status
+												training_date: date
+												content_pieces: contentPieces
+												description: description
+												post_status: row['status']
+
+											result.push data
+					
+					d.resolve result		
+
+			$.when(runQuery()).done (data)->
+				console.log 'getContentGroupById transaction completed'
+			.fail _.failureHandler
+
+
+		
 		getDateAndStatus : (collection_id, division, content_pieces)->
 
 			runFunc = ->
@@ -66,7 +133,7 @@ define ['underscore', 'unserialize'], ( _) ->
 					d.resolve(result)
 
 			$.when(runQuery()).done ->
-				console.log 'getDataFromQuestionResponse transaction completed'
+				console.log 'getModuleResponses transaction completed'
 			.fail _.failureHandler
 
 		
@@ -79,7 +146,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?"
-									,[collection_id], onSuccess(d), _.deferredErrorHandler(d))
+							,[collection_id], onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess =(d)->
 				(tx,data)->

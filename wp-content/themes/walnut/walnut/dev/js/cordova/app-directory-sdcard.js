@@ -1,17 +1,21 @@
 define(['underscore'], function(_) {
   return _.mixin({
-    setSynapseImagesDirectoryPathToLocalStorage: function() {
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-        return fileSystem.root.getDirectory("SynapseAssets/SynapseImages", {
-          create: false,
-          exclusive: false
-        }, function(fileEntry) {
-          console.log('SynapseImages directory path: ' + fileEntry.toURL() + '/');
-          return _.setSynapseImagesDirectoryPath(fileEntry.toURL() + '/');
-        }, function(error) {
-          return console.log('ERROR: ' + error.code);
-        });
-      }, _.fileSystemErrorHandler);
+    setSynapseMediaDirectoryPathToLocalStorage: function() {
+      var synapseMediaDirectory;
+      synapseMediaDirectory = _.createSynapseMediaDirectory();
+      return synapseMediaDirectory.done(function() {
+        return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+          return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia", {
+            create: false,
+            exclusive: false
+          }, function(fileEntry) {
+            console.log('SynapseMedia directory path: ' + fileEntry.toURL() + '/');
+            return _.setSynapseMediaDirectoryPath(fileEntry.toURL() + '/');
+          }, function(error) {
+            return console.log('ERROR: ' + error.code);
+          });
+        }, _.fileSystemErrorHandler);
+      });
     },
     createSynapseAssetsDirectory: function() {
       var runFunc;
@@ -34,7 +38,7 @@ define(['underscore'], function(_) {
         return console.log('createSynapseAssetsDirectory done');
       }).fail(_.failureHandler);
     },
-    createSynapseImagesDirectory: function() {
+    createSynapseMediaDirectory: function() {
       var runFunc;
       runFunc = function() {
         return $.Deferred(function(d) {
@@ -42,11 +46,11 @@ define(['underscore'], function(_) {
           synapseAssetsDirectory = _.createSynapseAssetsDirectory();
           return synapseAssetsDirectory.done(function() {
             return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-              return fileSystem.root.getDirectory("SynapseAssets/SynapseImages", {
+              return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia", {
                 create: true,
                 exclusive: false
               }, function(fileEntry) {
-                console.log('SynapseImages directory path: ' + fileEntry.toURL());
+                console.log('SynapseMedia directory path: ' + fileEntry.toURL());
                 return d.resolve(fileEntry);
               }, function(error) {
                 return console.log('ERROR: ' + error.code);
@@ -56,7 +60,7 @@ define(['underscore'], function(_) {
         });
       };
       return $.when(runFunc()).done(function() {
-        return console.log('createSynapseImagesDirectory done');
+        return console.log('createSynapseMediaDirectory done');
       }).fail(_.failureHandler);
     },
     createSynapseDataDirectory: function() {
@@ -89,8 +93,8 @@ define(['underscore'], function(_) {
       runFunc = function() {
         return $.Deferred(function(d) {
           var directoryPath, synapseImagesDirectory;
-          directoryPath = "SynapseAssets/SynapseImages";
-          synapseImagesDirectory = _.createSynapseImagesDirectory();
+          directoryPath = "SynapseAssets/SynapseMedia";
+          synapseImagesDirectory = _.createSynapseMediaDirectory();
           return synapseImagesDirectory.done(function() {
             var directories;
             directories = path.split('/');

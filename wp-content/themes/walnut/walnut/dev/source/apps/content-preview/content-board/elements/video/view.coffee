@@ -46,7 +46,7 @@ define ['app'], (App)->
 
 					url = @model.get('videoUrl')
 					videoUrl = url.substr(url.indexOf("uploads/"))
-					videoPath = "SynapseAssets/SynapseImages/"+videoUrl
+					videoPath = "SynapseAssets/SynapseMedia/"+videoUrl
 					
 					videos = {}
 					videos[videoId] = videoPath

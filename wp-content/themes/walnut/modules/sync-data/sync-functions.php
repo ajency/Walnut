@@ -73,15 +73,15 @@ function sync_app_data_to_db( $sync_request_id ) {
 }
 
 
-function mark_sync_as_complete( $sync_request_id ){
+function mark_sync_as_complete( $sync_request_id ) {
     global $wpdb;
 
     //TODO: add these table names to $wpdb; Implement DRY
     $table_name = $wpdb->prefix . "sync_apps_data";
 
     $wpdb->update( $table_name,
-                   array( 'status' => 'complete'),
-                   array( 'id' => $sync_request_id )
+        array( 'status' => 'complete' ),
+        array( 'id' => $sync_request_id )
     );
 
 }
@@ -144,16 +144,16 @@ function convert_csv_row_to_question_response_format( $question_response_data ) 
     $question_response = sanitize_question_response( $question_response_data[5] );
 
     return array(
-        'ref_id'            => $question_response_data[0],
-        'teacher_id'        => $question_response_data[1],
-        'content_piece_id'  => $question_response_data[2],
-        'collection_id'     => $question_response_data[3],
-        'division'          => $question_response_data[4],
+        'ref_id' => $question_response_data[0],
+        'teacher_id' => $question_response_data[1],
+        'content_piece_id' => $question_response_data[2],
+        'collection_id' => $question_response_data[3],
+        'division' => $question_response_data[4],
         'question_response' => $question_response,
-        'time_taken'        => $question_response_data[6],
-        'start_date'        => $question_response_data[7],
-        'end_date'          => $question_response_data[8],
-        'status'            => $question_response_data[9]
+        'time_taken' => $question_response_data[6],
+        'start_date' => $question_response_data[7],
+        'end_date' => $question_response_data[8],
+        'status' => $question_response_data[9]
     );
 }
 
@@ -294,3 +294,41 @@ function get_pending_app_sync_request_ids() {
 
     return $sync_request_ids;
 }
+
+function get_images_directory_json() {
+    $wp_upload_dir = wp_upload_dir();
+
+    $files = read_folder_directory( $wp_upload_dir['path'], $wp_upload_dir['baseurl']);
+    return $files;
+}
+function get_videos_directory_json() {
+    $wp_upload_dir = wp_upload_dir();
+
+    $files = read_folder_directory( str_replace("images", "videos", $wp_upload_dir['path']), str_replace("images", "videos", $wp_upload_dir['baseurl']));
+    return $files;
+}
+
+function read_folder_directory( $dir, $base_URL = '' ) {
+
+    $listDir = array();
+    if ($handler = opendir( $dir )) {
+        while (($sub = readdir( $handler )) !== FALSE) {
+
+            if ($sub != "." && $sub != ".." && $sub != "Thumb.db" && $sub !== ".DS_Store") {
+
+                if (is_file( $dir . "/" . $sub )) {
+
+                    $listDir[] = $base_URL . '/' . $sub;
+
+                } elseif (is_dir( $dir . "/" . $sub )) {
+
+                    $listDir[$sub] = read_folder_directory( $dir . "/" . $sub );
+                }
+
+            }
+        }
+        closedir( $handler );
+    }
+    return $listDir;
+}
+

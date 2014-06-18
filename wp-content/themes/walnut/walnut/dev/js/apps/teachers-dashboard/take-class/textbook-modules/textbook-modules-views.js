@@ -31,18 +31,25 @@ define(['app'], function(App) {
           training_date = moment(training_date).format("Do MMM YYYY");
         }
         status = this.model.get('status');
-        if (status === 'started' || status === 'resumed') {
+        if ((this.model.get('post_status') != null) && this.model.get('post_status') === 'archive') {
+          console.log('im here');
           data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
-          data.status_str = '<span class="label label-info">In Progress</span>';
-          data.action_str = '<i class="fa fa-pause"></i> Resume';
-        } else if (status === 'completed') {
-          data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
-          data.status_str = '<span class="label label-success">Completed</span>';
+          data.status_str = '<span class="label label-success">Archived</span>';
           data.action_str = '<i class="fa fa-repeat"></i> Replay';
         } else {
-          data.status_str = '<span class="label label-important">Not Started</span>';
-          data.action_str = '<i class="fa fa-play"></i> Start';
-          data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-right m-r-10 training-date"> <i class="fa fa-calendar"></i> ' + training_date + '</button>';
+          if (status === 'started' || status === 'resumed') {
+            data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
+            data.status_str = '<span class="label label-info">In Progress</span>';
+            data.action_str = '<i class="fa fa-pause"></i> Resume';
+          } else if (status === 'completed') {
+            data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
+            data.status_str = '<span class="label label-success">Completed</span>';
+            data.action_str = '<i class="fa fa-repeat"></i> Replay';
+          } else {
+            data.status_str = '<span class="label label-important">Not Started</span>';
+            data.action_str = '<i class="fa fa-play"></i> Start';
+            data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-right m-r-10 training-date"> <i class="fa fa-calendar"></i> ' + training_date + '</button>';
+          }
         }
         return data;
       };
