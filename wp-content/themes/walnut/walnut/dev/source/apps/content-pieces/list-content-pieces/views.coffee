@@ -164,7 +164,7 @@ define ['app'
 
                 $("#content-pieces-table").trigger "updateCache"
                 pagerOptions =
-                    container: $(".pager"),
+                    container: $(".pager")
                     output: '{startRow} to {endRow} of {totalRows}'
 
                 $('#content-pieces-table').tablesorterPager pagerOptions

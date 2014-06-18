@@ -65,7 +65,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return this.listenTo(this.view, {
           "save:content:collection:details": (function(_this) {
             return function(data) {
-              App.navigate("edit-module");
               _this.model.set({
                 'changed': 'module_details'
               });
@@ -83,6 +82,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       EditCollecionDetailsController.prototype.successFn = function(model) {
+        App.navigate("edit-module" + (model.get('id')));
         return this.view.triggerMethod('saved:content:group', model);
       };
 
