@@ -70,13 +70,13 @@ define(['underscore', 'jquery'], function(_, $) {
             return fileSystem.root.getDirectory("SynapseAssets/SynapseImages", {
               create: false,
               exclusive: false
-            }, function(directoryEnrty) {
+            }, function(directoryEntry) {
               var reader;
-              reader = directoryEnrty.createReader();
-              return reader.readEntries((function(directoryEnrty) {
+              reader = directoryEntry.createReader();
+              return reader.readEntries((function(directoryEntry) {
                 var i, _i, _ref;
-                for (i = _i = 0, _ref = directoryEnrty.length - 1; _i <= _ref; i = _i += 1) {
-                  fullDirectoryEntry[i] = directoryEnrty[i].name;
+                for (i = _i = 0, _ref = directoryEntry.length - 1; _i <= _ref; i = _i += 1) {
+                  fullDirectoryEntry[i] = directoryEntry[i].name;
                 }
                 return d.resolve(fullDirectoryEntry);
               }));

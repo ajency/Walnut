@@ -42,7 +42,7 @@ define ['underscore'], ( _) ->
 							fileEntry.remove()
 
 							fileTransfer = new FileTransfer()
-
+							
 							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
 								,(file)->
 

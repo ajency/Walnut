@@ -87,12 +87,12 @@ define ['underscore','jquery'], ( _ , $) ->
 							fileSystem.root.getDirectory("SynapseAssets/SynapseImages"
 								, {create: false, exclusive: false}
 
-								, (directoryEnrty)->
+								, (directoryEntry)->
 									
-									reader = directoryEnrty.createReader()
-									reader.readEntries ((directoryEnrty)->
-										for i in [0..directoryEnrty.length-1] by 1
-											fullDirectoryEntry[i] = directoryEnrty[i].name
+									reader = directoryEntry.createReader()
+									reader.readEntries ((directoryEntry)->
+										for i in [0..directoryEntry.length-1] by 1
+											fullDirectoryEntry[i] = directoryEntry[i].name
 
 										d.resolve fullDirectoryEntry
 

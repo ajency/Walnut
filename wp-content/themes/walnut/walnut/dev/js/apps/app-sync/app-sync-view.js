@@ -37,8 +37,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.events = {
         'click #syncStartContinue': 'startContinueSyncProcess',
-        'click #syncMediaStartContinue': 'startContinueMediaSyncProcess',
-        'click #syncCheckDeferred': 'checkDeferredValue'
+        'click #syncMediaStartContinue': 'startContinueMediaSyncProcess'
       };
 
       AppSyncView.prototype.onShow = function() {

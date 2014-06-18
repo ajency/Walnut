@@ -1,5 +1,6 @@
 define ['underscore', 'unserialize'], ( _) ->
 
+	
 	_.mixin
 
 		#Get the last sync operation from table 'sync_details'
@@ -81,3 +82,34 @@ define ['underscore', 'unserialize'], ( _) ->
 			,(tx)->
 				console.log 'Updated sync details for '+operation
 			)
+
+
+		#This method decrypts the encrpted file and saves it in the path specified
+		decryptTheEncryptedFile :(encryptPathValue, decryptPathValue) ->
+			#This will decrypt the encrypted path
+			decrypt.startDecryption(encryptPathValue, decryptPathValue
+				, ->
+					alert "The file was Successfully Decrypted"
+
+				, (message) ->
+					alert "Error! " + message
+			)
+
+
+		#This method deletes the decrypted file
+		deleteTheDecryptedFile : (decryptPathValue)->
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
+				,(fileSystem)=>
+					fileSystem.root.getFile(decryptPathValue
+						, {create: false, exclusive: false}
+
+						,(fileEntry)->
+							fileEntry.remove(
+								(fileEntry)->
+									console.log "Deleted Successfully"
+								,(error)->
+									console.log "error"
+							)
+						,_.fileErrorHandler)
+
+				, _.fileSystemErrorHandler)
