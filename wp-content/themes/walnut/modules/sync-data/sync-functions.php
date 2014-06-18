@@ -57,7 +57,7 @@ function sync_app_data_to_db( $sync_request_id ) {
         return;
 
     $uploads_path = wp_upload_dir();
-    $extract_path = $uploads_path['path'] . '/.tmp';
+    $extract_path = str_replace('/images', '', $uploads_path['path']) . '/.tmp';
 
     $zip->extractTo( $extract_path );
 
