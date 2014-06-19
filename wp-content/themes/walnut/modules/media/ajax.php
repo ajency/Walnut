@@ -66,10 +66,14 @@ add_filter( 'option_uploads_use_yearmonth_folders', 'change_uploads_use_yearmont
 
 function change_uploads_directory( $uploads_dir ) {
 
-    $uploads_dir['path'] = $uploads_dir['path'] . '/images';
-    $uploads_dir['url'] = $uploads_dir['url'] . '/images';
-    $uploads_dir['basedir'] = $uploads_dir['basedir'] . '/images';
-    $uploads_dir['baseurl'] = $uploads_dir['baseurl'] . '/images';
+    $folder_name = '/images';
+    if($_GET['page'] =='mediafromftp')
+        $folder_name= '/videos-web';
+
+    $uploads_dir['path'] = $uploads_dir['path'] . $folder_name;
+    $uploads_dir['url'] = $uploads_dir['url'] . $folder_name;
+    $uploads_dir['basedir'] = $uploads_dir['basedir'] . $folder_name;
+    $uploads_dir['baseurl'] = $uploads_dir['baseurl'] . $folder_name;
 
     return $uploads_dir;
 }
