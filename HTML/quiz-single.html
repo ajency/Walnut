@@ -64,6 +64,8 @@
 		<script type="text/javascript" src="assets/js/jquery.knob.js"></script>
 		<script type="text/javascript" src="assets/js/jquery-listnav.js"></script>
 		<script type="text/javascript" src="assets/js/TimeCircles.js"></script>
+	    
+	    <script src="assets/js/jPages.min.js" type="text/javascript"></script>
 
 	<!-- END NEED TO WORK ON -->
 
@@ -132,42 +134,58 @@
 
 				</div>
 
-				<div class="timerBox pull-left m-l-20">
-					<div class="bold small-text text-center p-t-10"> Quiz Time</div>
-					<div class="quizTimer"></div>
-				</div>
+				<div class="sidebarContainer">
+					<div class="timerBox">
+						<div class="bold small-text text-center p-t-10"> Quiz Time</div>
+						<div class="quizTimer"></div>
 
-				<div class="quizProgress pull-right m-r-20">
-					<div class="modProgress h-center">
-						<p class="bold small-text m-b-5 p-t-10 text-center">Progress</p>
-		       			<div class="progress progress-large">
-		            		<div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">4/10</div>
-		        		</div>
-	        		</div>
-	        		<div class="quizSteps">
-	        			<ul>
-						    <li class="skip"><a href="#">1</a></li>
-						    <li class="right"><a href="#">2</a></li>
-						    <li><a href="#">3</a></li>
-						    <li><a href="#">4</a></li>
-						    <li class="wrong"><a href="#">5</a></li>
-						    <li><a href="#">6</a></li>
-						    <li><a href="#">7</a></li>
-						    <li><a href="#">8</a></li>
-						    <li><a href="#">9</a></li>
-						    <li><a href="#">10</a></li>
-						    <li><a href="#">11</a></li>
-						    <li><a href="#">12</a></li>
-						    <li><a href="#">13</a></li>
-						    <li><a href="#">14</a></li>
-						    <li><a href="#">15</a></li>
-						    <div class="clearfix"></div>
-						</ul>
 					</div>
-	        	</div>
+
+					<div class="quizProgress pull-right">
+						<div class="modProgress h-center">
+							<p class="bold small-text m-b-5 p-t-10 text-center">Questions Answered</p>
+			       			<div class="progress progress-large m-b-10">
+			            		<div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">4/18</div>
+			        		</div>
+		        		</div>
+		        		<div class="text-center small-text p-t-10 m-t-5 p-b-10 b-grey b-t skipped">
+		        			Questions Skipped: 2
+		        		</div>
+		        		<div class="quizSteps">
+		        			<ul id="quiz-steps">
+							    <li class="skip"><a href="#">1</a></li>
+							    <li class="right"><a href="#">2</a></li>
+							    <li class="current"><a href="#">3</a></li>
+							    <li><a href="#">4</a></li>
+							    <li class="wrong"><a href="#">5</a></li>
+							    <li><a href="#">6</a></li>
+							    <li><a href="#">7</a></li>
+							    <li><a href="#">8</a></li>
+							    <li><a href="#">9</a></li>
+							    <li><a href="#">10</a></li>
+							    <li><a href="#">11</a></li>
+							    <li><a href="#">12</a></li>
+							    <li><a href="#">13</a></li>
+							    <li><a href="#">14</a></li>
+							    <li><a href="#">15</a></li>
+							    <li><a href="#">16</a></li>
+							    <li><a href="#">17</a></li>
+							    <li><a href="#">18</a></li>
+							</ul>
+							<div class="clearfix"></div>
+						</div>
+						<div class="customButtons">
+							<span class="fa fa-chevron-left pull-left"></span>
+							<span class="fa fa-chevron-right pull-right"></span>
+							<div class="holder">
+	        				</div>
+						</div>
+						
+		        	</div>
+		        </div>
 
 
-				<div id="content-board no-margin">
+				<div id="content-board" class="quizContent no-margin">
 					<div id="myCanvas" class=" ">
 						<div class="grid-body p-t-20 p-b-15 no-border">
 
@@ -215,6 +233,18 @@
 	$( ".tiles.single" ).click(function() {
 	  $( this ).toggleClass( "selected" );
 	});
+
+	$("div.holder").jPages({
+        containerID: "quiz-steps",
+        perPage: 9,
+        keyBrowse: true,
+        //scrollBrowse: true,
+        animation: "fadeIn",
+        previous: ".fa-chevron-left",
+        next: ".fa-chevron-right",
+        midRange: 15,
+        links : "blank"
+    });
 
 	$( document ).ready(function() {
 		var qTimer = $('.quizTimer',window.parent.document);
