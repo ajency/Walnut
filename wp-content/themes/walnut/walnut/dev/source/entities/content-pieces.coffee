@@ -7,14 +7,14 @@ define ["app", 'backbone'], (App, Backbone) ->
             idAttribute: 'ID'
 
             defaults:
-                ID: 0
-                post_title: ''
-                post_author: ''
+                ID              : 0
+                post_title      : ''
+                post_author     : ''
                 post_author_name: ''
-                post_modified: ''
-                post_date: ''
-                post_tags: ''
-                order   : ''
+                post_modified   : ''
+                post_date       : ''
+                post_tags       : ''
+                order           : ''
 
             name: 'content-piece'
 
@@ -89,7 +89,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                     contentPieces.fetch
                         data:
                             ids: ids
-
                 contentPieces
 
         # request handler to get all ContentPieces
