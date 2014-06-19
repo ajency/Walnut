@@ -22,9 +22,6 @@ define ['app'
                     'division': @division
                     'collection_id': model.get 'id'
 
-
-
-
                 @studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
                 App.execute "when:fetched", model, =>

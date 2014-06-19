@@ -53,7 +53,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         order: 'DESC',
         orderby: 'date',
         paged: 1,
-        posts_per_page: 40
+        posts_per_page: 40,
+        searchStr: ''
       };
 
       MediaCollection.prototype.model = Media.MediaModel;
@@ -98,7 +99,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         return media;
       },
       getEmptyMediaCollection: function() {
-        return new Media.MediaCollection;
+        return mediaCollection = new Media.MediaCollection;
       },
       getPlaceHolderMedia: function() {
         var media;
@@ -120,7 +121,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         params = {};
       }
       if (shouldReset == null) {
-        shouldReset = true;
+        shouldReset = false;
       }
       return API.fetchMedia(params, shouldReset);
     });
