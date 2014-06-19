@@ -1,49 +1,69 @@
 define ['app'
         'controllers/region-controller'
-], (App, RegionController, contentGroupTpl)->
-    App.module "ContentGroupApp.ListingView", (ListingView, App)->
-        class ListingView.GroupController extends RegionController
+        'apps/content-group/groups-listing/group-listing-views'
+], (App, RegionController)->
+    App.module "ContentGroupApp.GroupListing", (GroupListing, App, Backbone, Marionette, $, _)->
+        class GroupListing.Controller extends RegionController
 
-            initialize: ->
+            initialize : ->
+                @contentGroupCollection = App.request "get:content:groups"
+                @textbooksCollection = App.request "get:textbooks"
+
                 breadcrumb_items =
-                    'items': [
-                        {'label': 'Dashboard', 'link': 'javascript://'},
-                        {'label': 'Content Management', 'link': 'javascript:;'},
-                        {'label': 'View All Content Groups', 'link': 'javascript:;', 'active': 'active'}
+                    'items' : [
+                        { 'label' : 'Dashboard', 'link' : 'javascript://' },
+                        { 'label' : 'Content Management', 'link' : 'javascript:;' },
+                        { 'label' : 'View All Content Groups', 'link' : 'javascript:;', 'active' : 'active' }
                     ]
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-
-                @view = view = @_getContentGroupsListingView()
-
-                @show view, (loading: true)
-
-            _getContentGroupsListingView: =>
-                new ContentGroupsListingView
+                App.execute "when:fetched", [@contentGroupCollection, @textbooksCollection], =>
+                    @fullCollection = @contentGroupCollection.clone()
 
 
-        class ContentGroupsListingView extends Marionette.ItemView
+                    @view = view = @_getContentGroupsListingView()
 
-            template: '<div class="grid-title no-border">
-            							<div class="row">
-            								<div class="col-lg-12">
-            									<h4><span class="semi-bold">All</span> Groups</h4>
-            									<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="dataContentTable">
-            										<thead>
-            											<td>Test</td>
-            										</thead>
-            										<tbody>
-            										</tbody>
-            								  	</table>
+                    @listenTo @view, "fetch:chapters", (term_id) =>
+                        chaptersCollection = App.request "get:chapters", ('parent' : term_id)
+                        App.execute "when:fetched", chaptersCollection, =>
+                            chapterList = chaptersCollection.where 'parent':term_id
+                            @view.triggerMethod 'fetch:chapters:complete', chapterList
 
-            								</div>
-            							</div>
-            						</div>'
+                    @listenTo @view, "fetch:sections", (term_id) =>
+                        console.log 'in fetch sections'
+                        allSectionsCollection = App.request "get:subsections:by:chapter:id", ('child_of' : term_id)
+                        App.execute "when:fetched", allSectionsCollection, =>
+                            #make list of sections directly belonging to chapter ie. parent=term_id
+                            sectionsList = allSectionsCollection.where 'parent' : term_id
 
-            className: 'tiles white grid simple vertical green'
+                            #all the other sections are listed as subsections
+                            @subSectionsList = _.difference(allSectionsCollection.models, sectionsList);
+                            #                            allSections =
+                            #                                'sections': sectionsList
+                            #                                'subsections': subsectionsList
+
+                            @view.triggerMethod 'fetch:sections:complete', sectionsList
+
+                    @listenTo @view, "fetch:subsections", (term_id)=>
+                        subSectionList = null
+                        subSectionList = _.filter @subSectionsList, (subSection)->
+                            subSection.get('parent') is term_id
+                        #                        subSectionList = _.where @subSectionsList, 'parent':"#{term_id}"
+                        console.log @subSectionsList
+                        console.log subSectionList
+                        @view.triggerMethod 'fetch:subsections:complete', subSectionList
+
+                    @show view,
+                        loading : true
+                        entities : [@contentGroupCollection, @textbooksCollection, @fullCollection]
+
+            _getContentGroupsListingView : =>
+                new GroupListing.Views.GroupsListingView
+                    collection : @contentGroupCollection
+                    fullCollection : @fullCollection
+                    textbooksCollection : @textbooksCollection
 
 
-            onShow: ->
-                console.log 'test listing view'
+
 

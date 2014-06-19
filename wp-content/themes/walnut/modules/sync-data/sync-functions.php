@@ -57,7 +57,7 @@ function sync_app_data_to_db( $sync_request_id ) {
         return;
 
     $uploads_path = wp_upload_dir();
-    $extract_path = $uploads_path['path'] . '/.tmp';
+    $extract_path = str_replace('/images', '', $uploads_path['path']) . '/.tmp';
 
     $zip->extractTo( $extract_path );
 
@@ -228,11 +228,12 @@ function validate_file_exists( $sync_request_id ) {
 
 function change_zip_upload_path( $param ) {
 
-    $upsync_path = "/tmp/upsync";
-
-    $param['path'] = str_replace( $param['subdir'], $upsync_path, $param['path'] );
-    $param['url'] = str_replace( $param['subdir'], $upsync_path, $param['url'] );
-    $param['subdir'] = $upsync_path;
+    $upsync_path = "tmp/upsync";
+    $param['path'] = str_replace( 'images', $upsync_path, $param['path'] );
+    $param['url'] = str_replace( 'images', $upsync_path, $param['url'] );
+    $param['basedir'] = str_replace( 'images', $upsync_path, $param['basedir'] );
+    $param['baseurl'] = str_replace( 'images', $upsync_path, $param['baseurl'] );
+    $param['subdir'] = '';
 
     return $param;
 }
