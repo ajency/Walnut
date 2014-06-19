@@ -10,8 +10,7 @@ define(['underscore', 'jquery'], function(_, $) {
     createLocalTables: function(db) {
       return db.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY , user_id UNIQUE, username, password, user_role)');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details (id INTEGER PRIMARY KEY, type_of_operation, time_stamp)');
-        return tx.executeSql('CREATE TABLE IF NOT EXISTS sync_media_details (id INTEGER PRIMARY KEY, type_of_operation)');
+        return tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details (id INTEGER PRIMARY KEY, type_of_operation, time_stamp)');
       }, _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: createLocalTables transaction completed');
       });

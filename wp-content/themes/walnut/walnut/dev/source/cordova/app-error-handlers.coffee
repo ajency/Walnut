@@ -35,6 +35,12 @@ define ['underscore'], ( _) ->
 			console.log 'FILE SYSTEM ERROR: '+evt.target.error.code
 
 		
+		#Directory error handler
+		directoryErrorHandler : (error)->
+
+			console.log 'DIRECTORY ERROR: '+error.code
+
+		
 		#File transfer error handler
 		fileTransferErrorHandler : (error)->
 

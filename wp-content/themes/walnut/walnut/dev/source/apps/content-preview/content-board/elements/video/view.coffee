@@ -46,10 +46,20 @@ define ['app'], (App)->
 
 					url = @model.get('videoUrl')
 					videoUrl = url.substr(url.indexOf("uploads/"))
-					videoPath = "SynapseAssets/SynapseMedia/"+videoUrl
-					
-					videos = {}
-					videos[videoId] = videoPath
 
-					window.plugins.html5Video.initialize videos
-					window.plugins.html5Video.play videoId
+					encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
+
+					videosWebUrl = videoUrl.replace("videos", "videos-web")
+					decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+
+					videosWebDirectory = _.createVideosWebDirectory()
+					videosWebDirectory.done ->
+
+						decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
+						decryptFile.done (videoPath)-> 
+					
+							videos = {}
+							videos[videoId] = videoPath
+
+							window.plugins.html5Video.initialize videos
+							window.plugins.html5Video.play videoId

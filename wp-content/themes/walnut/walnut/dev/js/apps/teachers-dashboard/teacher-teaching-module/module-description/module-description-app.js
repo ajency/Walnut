@@ -107,6 +107,9 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ModuleDescriptionView.prototype.events = {
         'click #back-to-module, #pause-session': function() {
+          if (_.platform() === 'DEVICE') {
+            _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
+          }
           return this.trigger("goto:previous:route");
         }
       };
@@ -116,6 +119,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
           return document.addEventListener("pause", (function(_this) {
             return function() {
               console.log('Fired cordova pause event');
+              _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
               return _this.trigger("goto:previous:route");
             };
           })(this), false);

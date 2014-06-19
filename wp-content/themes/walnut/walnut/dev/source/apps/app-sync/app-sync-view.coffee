@@ -152,9 +152,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 								.text("Resuming sync process...")
 
 								setTimeout(=>
-									# _.checkIfServerImportOperationCompleted()
-									syncController = App.request "get:sync:controller"
-									syncController.getDownloadURL()
+									_.checkIfServerImportOperationCompleted()
+									# syncController = App.request "get:sync:controller"
+									# syncController.getDownloadURL()
 						
 								,2000)
 

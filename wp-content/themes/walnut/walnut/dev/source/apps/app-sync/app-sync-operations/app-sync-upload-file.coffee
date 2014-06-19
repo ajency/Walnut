@@ -53,9 +53,9 @@ define ['underscore'], ( _) ->
 			$('#syncSuccess').css("display","block").text("File upload completed...")
 
 			setTimeout(=>
-				# _.checkIfServerImportOperationCompleted()
-				syncController = App.request "get:sync:controller"
-				syncController.getDownloadURL()
+				_.checkIfServerImportOperationCompleted()
+				# syncController = App.request "get:sync:controller"
+				# syncController.getDownloadURL()
 			,2000)
 
 
@@ -82,7 +82,7 @@ define ['underscore'], ( _) ->
 					,
 					'json'
 	
-			,5000)
+			,10000)
 
 
 

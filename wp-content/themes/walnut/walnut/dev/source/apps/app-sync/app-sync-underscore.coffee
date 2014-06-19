@@ -81,3 +81,43 @@ define ['underscore', 'unserialize'], ( _) ->
 			,(tx)->
 				console.log 'Updated sync details for '+operation
 			)
+
+
+		# Decrypt the encrypted video file
+		decryptVideoFile : (source, destination)->
+
+			runFunc = ->
+				$.Deferred (d)->
+
+					decrypt.startDecryption(source, destination
+						, ->
+							d.resolve destination
+
+						, (message) ->
+							console.log 'ERROR: '+message
+					)
+
+			$.when(runFunc()).done ->
+				console.log 'Decrypted video file at location: '+destination 
+			.fail _.failureHandler
+
+
+		deleteAllDecryptedVideoFilesFromVideosWebDirectory : ->
+			# Delete all video files from 'videos-web' folder
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
+				fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/videos-web"
+					, {create: false, exclusive: false}
+
+					, (directoryEntry)->
+						reader = directoryEntry.createReader()
+						reader.readEntries(
+							(entries)->
+								for i in [0..entries.length-1] by 1
+									entries[i].remove()
+
+									if i is entries.length-1
+										console.log 'Deleted all video files from videos-web directory'
+
+							,_.directoryErrorHandler)
+					, _.directoryErrorHandler)
+			, _.fileSystemErrorHandler)

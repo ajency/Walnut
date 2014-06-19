@@ -122,9 +122,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
                 $('#syncSuccess').css("display", "block").text("Resuming sync process...");
                 return setTimeout((function(_this) {
                   return function() {
-                    var syncController;
-                    syncController = App.request("get:sync:controller");
-                    return syncController.getDownloadURL();
+                    return _.checkIfServerImportOperationCompleted();
                   };
                 })(this), 2000);
             }

@@ -33,9 +33,7 @@ define(['underscore'], function(_) {
       $('#syncSuccess').css("display", "block").text("File upload completed...");
       return setTimeout((function(_this) {
         return function() {
-          var syncController;
-          syncController = App.request("get:sync:controller");
-          return syncController.getDownloadURL();
+          return _.checkIfServerImportOperationCompleted();
         };
       })(this), 2000);
     },
@@ -59,7 +57,7 @@ define(['underscore'], function(_) {
             }
           }, 'json');
         };
-      })(this), 5000);
+      })(this), 10000);
     },
     onFileUploadError: function() {
       $('#syncSuccess').css("display", "none");

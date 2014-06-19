@@ -88,6 +88,27 @@ define(['underscore'], function(_) {
         return console.log('createSynapseDataDirectory done');
       }).fail(_.failureHandler);
     },
+    createVideosWebDirectory: function() {
+      var runFunc;
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+            return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/videos-web", {
+              create: true,
+              exclusive: false
+            }, function(fileEntry) {
+              console.log('videos-web directory path: ' + fileEntry.toURL());
+              return d.resolve(fileEntry);
+            }, function(error) {
+              return console.log('ERROR: ' + error.code);
+            });
+          }, _.fileSystemErrorHandler);
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log('createVideosWebDirectory done');
+      }).fail(_.failureHandler);
+    },
     createDirectoryStructure: function(path) {
       var runFunc;
       runFunc = function() {
