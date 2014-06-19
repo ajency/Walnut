@@ -43,7 +43,7 @@ define ['app'
 
 
             successFn : (model)=>
-                App.navigate "edit-module#{model.get('id')}"
+                App.navigate "edit-module/#{model.get('id')}"
                 @view.triggerMethod 'saved:content:group', model
 
             errorFn : ->

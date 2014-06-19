@@ -82,7 +82,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       EditCollecionDetailsController.prototype.successFn = function(model) {
-        App.navigate("edit-module" + (model.get('id')));
+        App.navigate("edit-module/" + (model.get('id')));
         return this.view.triggerMethod('saved:content:group', model);
       };
 
