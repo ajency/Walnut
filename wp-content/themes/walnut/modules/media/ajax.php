@@ -67,7 +67,12 @@ add_filter( 'option_uploads_use_yearmonth_folders', 'change_uploads_use_yearmont
 function change_uploads_directory( $uploads_dir ) {
 
     $folder_name = '/images';
-    if($_GET['page'] =='mediafromftp')
+
+    // Change the default uploads path to videos-web folder if
+    // current page is mediafromftp (the plugin)
+    // or if requested mediatype is video
+
+    if($_GET['page'] =='mediafromftp' || $_REQUEST['mediaType'] == 'video')
         $folder_name= '/videos-web';
 
     $uploads_dir['path'] = $uploads_dir['path'] . $folder_name;
