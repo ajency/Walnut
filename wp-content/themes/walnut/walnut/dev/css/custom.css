@@ -1620,6 +1620,9 @@ h4.modName a {
 h3.time {
   line-height: 20px;
 }
+.closeEval {
+  cursor: pointer;
+}
 .studentList h4 span {
   display: block;
 }
