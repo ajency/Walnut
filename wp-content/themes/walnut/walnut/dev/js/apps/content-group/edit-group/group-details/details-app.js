@@ -65,21 +65,24 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return this.listenTo(this.view, {
           "save:content:collection:details": (function(_this) {
             return function(data) {
-              App.navigate("edit-module");
               _this.model.set({
                 'changed': 'module_details'
               });
-              return _this.model.save(data, {
+              _this.model.save(data, {
                 wait: true,
                 success: _this.successFn,
                 error: _this.errorFn
               });
+              if (data.status !== 'underreview') {
+                return _this.region.trigger("close:content:selection:app");
+              }
             };
           })(this)
         });
       };
 
       EditCollecionDetailsController.prototype.successFn = function(model) {
+        App.navigate("edit-module/" + (model.get('id')));
         return this.view.triggerMethod('saved:content:group', model);
       };
 
@@ -177,7 +180,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       CollectionDetailsView.prototype.statusChanged = function() {
         var _ref;
         if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
-          this.$el.closest('#teacher-app').find('input, textarea, select').prop('disabled', true);
+          this.$el.find('input, textarea, select').prop('disabled', true);
           this.$el.find('select#status').prop('disabled', false);
           return this.$el.find('select#status option[value="underreview"]').prop('disabled', true);
         }

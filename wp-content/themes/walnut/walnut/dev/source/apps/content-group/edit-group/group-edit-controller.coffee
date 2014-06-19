@@ -6,8 +6,7 @@ define ['app'
     App.module "ContentGroupApp.Edit", (Edit, App)->
         class Edit.GroupController extends RegionController
 
-            initialize:(options) ->
-
+            initialize : (options) ->
                 {@group_id}= options
 
                 if @group_id
@@ -15,89 +14,93 @@ define ['app'
                 else
                     @contentGroupModel = App.request "new:content:group"
 
-                App.execute "when:fetched", @contentGroupModel,=>
+                App.execute "when:fetched", @contentGroupModel, =>
 #                    if @contentGroupModel.get('status') is 'underreview'
-                        @showContentGroupView()
+                    @showContentGroupView()
 #                    else
 #                        @noEditView = @_getNotEditView @contentGroupModel.get('status')
 #                        @show @noEditView
 
             showContentGroupView : ->
-
                 breadcrumb_items =
-                    'items': [
-                        {'label': 'Dashboard', 'link': 'javascript://'},
-                        {'label': 'Content Management', 'link': 'javascript:;'},
-                        {'label': 'Create Content Group', 'link': 'javascript:;', 'active': 'active'}
+                    'items' : [
+                        { 'label' : 'Dashboard', 'link' : 'javascript://' },
+                        { 'label' : 'Content Management', 'link' : 'javascript:;' },
+                        { 'label' : 'Create Content Group', 'link' : 'javascript:;', 'active' : 'active' }
                     ]
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
                 @layout = layout = @_getContentGroupEditLayout()
                 @listenTo layout, 'show', @showContentGroupViews
 
-                @listenTo layout, 'show',=>
+                @listenTo layout, 'show', =>
                     if @group_id
                         @_showContentSelectionApp @contentGroupModel
 
                 @listenTo @contentGroupModel, 'change:id', @_showContentSelectionApp, @
-                @show layout, (loading: true)
+
+                @listenTo @layout.collectionDetailsRegion, 'close:content:selection:app', =>
+                    console.log 'close:content:selection:app '
+                    @layout.contentSelectionRegion.close()
+
+                @show layout, (loading : true)
 
             _getNotEditView : (status)->
                 new NotEditView
-                        status : status
+                    status : status
 
-            showContentGroupViews: =>
+            showContentGroupViews : =>
                 App.execute "show:editgroup:content:group:detailsapp",
-                    region: @layout.collectionDetailsRegion
-                    model: @contentGroupModel
+                    region : @layout.collectionDetailsRegion
+                    model : @contentGroupModel
 
-            _getContentGroupEditLayout: =>
+            _getContentGroupEditLayout : =>
                 new ContentGroupEditLayout
 
-            _showContentSelectionApp: (model)=>
+            _showContentSelectionApp : (model)=>
                 @contentGroupCollection = App.request "get:content:pieces:of:group", model
 
                 App.execute "when:fetched", @contentGroupCollection, =>
-
-                    App.execute "show:content:selectionapp",
-                        region: @layout.contentSelectionRegion
-                        model: model
-                        contentGroupCollection: @contentGroupCollection
+                    if model.get('status') is 'underreview'
+                        App.execute "show:content:selectionapp",
+                            region : @layout.contentSelectionRegion
+                            model : model
+                            contentGroupCollection : @contentGroupCollection
 
                     App.execute "show:editgroup:content:displayapp",
-                        region: @layout.contentDisplayRegion
-                        model: model
-                        contentGroupCollection: @contentGroupCollection
+                        region : @layout.contentDisplayRegion
+                        model : model
+                        contentGroupCollection : @contentGroupCollection
 
 
         class ContentGroupEditLayout extends Marionette.Layout
 
-            template: '<div class="teacher-app" id="teacher-app">
-                          <div id="collection-details-region"></div>
-                          <div id="content-selection-region"></div>
-                        </div>
-                        <div id="content-display-region"></div>'
+            template : '<div class="teacher-app" id="teacher-app">
+                                      <div id="collection-details-region"></div>
+                                      <div id="content-selection-region"></div>
+                                    </div>
+                                    <div id="content-display-region"></div>'
 
-            className: ''
+            className : ''
 
-            regions:
-                collectionDetailsRegion: '#collection-details-region'
-                contentSelectionRegion: '#content-selection-region'
-                contentDisplayRegion: '#content-display-region'
+            regions :
+                collectionDetailsRegion : '#collection-details-region'
+                contentSelectionRegion : '#content-selection-region'
+                contentDisplayRegion : '#content-display-region'
 
 
         class NotEditView extends Marionette.ItemView
 
             template : '<div class="teacher-app">
-                            <div id="collection-details-region">
-                                <div class="tiles white grid simple vertical green animated slideInRight">
-                                    <div class="grid-title no-border">
-                                        <h3>This module is not editable</h3>
-                                        <p>Current Status: {{currentStatus}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>'
+                                        <div id="collection-details-region">
+                                            <div class="tiles white grid simple vertical green animated slideInRight">
+                                                <div class="grid-title no-border">
+                                                    <h3>This module is not editable</h3>
+                                                    <p>Current Status: {{currentStatus}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>'
 
             mixinTemplateHelpers : (data)->
                 status = Marionette.getOption @, 'status'

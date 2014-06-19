@@ -12,7 +12,7 @@ define ['app'
                 'add-module': 'addGroup'
                 'view-group/:id': 'viewGroup'
                 'edit-module/:id': 'editGroup'
-                'list-groups': 'groupsListing'
+                'module-list': 'groupsListing'
                 'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule'
                 'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule'
 
@@ -46,7 +46,7 @@ define ['app'
                     model: @contentGroupModel
 
             groupsListing: ->
-                new ContentGroupApp.ListingView.GroupController
+                new ContentGroupApp.GroupListing.Controller
                     region: App.mainContentRegion
 
             takeClassSingleModule: (classID, div, tID, mID)->

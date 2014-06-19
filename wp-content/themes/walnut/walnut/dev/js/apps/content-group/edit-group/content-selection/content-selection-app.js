@@ -105,7 +105,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               return function() {
                 var textbooks;
                 textbooks = [];
-                _.each(_this.textbooksCollection.models, function(el, ind) {
+                _.each(_this.textbooksCollection.models, function(el) {
                   return textbooks.push({
                     'name': el.get('name'),
                     'id': el.get('term_id')
@@ -157,16 +157,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       DataContentTableView.prototype.onShow = function() {
         this.makeDataTable(this.collection.models, Marionette.getOption(this, 'tableConfig'));
-        $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
-        this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
-        return this.listenTo(this.contentGroupModel, 'change:status', this.onCheckStatus);
-      };
-
-      DataContentTableView.prototype.onCheckStatus = function() {
-        var _ref;
-        if ((_ref = this.contentGroupModel.get('status')) === 'publish' || _ref === 'archive') {
-          return this.$el.find('input, select').prop('disabled', true);
-        }
+        return $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
       };
 
       DataContentTableView.prototype.makeRow = function(item, index, tableData) {
@@ -179,7 +170,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         if (tableData.selectbox) {
           row += '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="' + item.get(td_ID) + '" id="checkbox' + index + '"> <label for="checkbox' + index + '"></label> </div> </td>';
         }
-        _.each(tableData.data, function(el, ind) {
+        _.each(tableData.data, function(el) {
           var el_value, slug;
           if (el.value) {
             el_value = item.get(el.value);
@@ -196,9 +187,20 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         return row;
       };
 
-      DataContentTableView.prototype.makeDataTable = function(dataCollection, tableData) {
-        var colspan, pagerDiv, pagerOptions;
+      DataContentTableView.prototype.makeDataTable = function(dataCollectionFull, tableData) {
+        var colspan, contentGroupModel, contentPieceIds, dataCollection, pagerDiv, pagerOptions;
         this.$el.find('#dataContentTable tbody').empty();
+        contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
+        contentPieceIds = _.map(contentGroupModel.get('content_pieces'), function(id) {
+          return parseInt(id);
+        });
+        dataCollection = dataCollectionFull.filter(function(dataModel) {
+          if (_.indexOf(contentPieceIds, parseInt(dataModel.get('ID'))) === -1) {
+            return true;
+          } else {
+            return false;
+          }
+        });
         _.each(dataCollection, (function(_this) {
           return function(item, index) {
             var row;
@@ -206,7 +208,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             return _this.$el.find('#dataContentTable tbody').append(row);
           };
         })(this));
-        this.onCheckStatus;
         if (_.size(dataCollection) === 0) {
           colspan = _.size(tableData.data);
           if (tableData.selectbox) {
@@ -214,7 +215,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
           }
           this.$el.find('#dataContentTable tbody').append('<td id="empty_row" colspan="' + colspan + '">No Data found</td>');
         }
-        $('#dataContentTable').tablesorter();
+        this.$el.find('#dataContentTable').tablesorter();
         if (tableData.pagination) {
           $("#dataContentTable").trigger("updateCache");
           this.$el.find('#pager').remove();
@@ -237,9 +238,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         }
       };
 
-      DataContentTableView.prototype.filterTableData = function(e) {
+      DataContentTableView.prototype.filterTableData = function() {
         var content_type, filter_ids, filtered_data, filtered_models;
-        filter_ids = _.map(this.$el.find('select.textbook-filter'), function(ele, index) {
+        filter_ids = _.map(this.$el.find('select.textbook-filter'), function(ele) {
           var item;
           item = '';
           if (!isNaN(ele.value)) {
@@ -297,7 +298,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             'text': 'Select Chapter'
           });
           return _.each(chapters.models, (function(_this) {
-            return function(chap, index) {
+            return function(chap) {
               return _this.$el.find('#chapters-filter').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
             };
           })(this));
@@ -322,7 +323,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               'text': 'Select Section'
             });
             _.each(allsections.sections, (function(_this) {
-              return function(section, index) {
+              return function(section) {
                 return _this.$el.find('#sections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
               };
             })(this));
@@ -336,7 +337,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
               'text': 'Select SubSection'
             });
             return _.each(allsections.subsections, (function(_this) {
-              return function(section, index) {
+              return function(section) {
                 return _this.$el.find('#subsections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
               };
             })(this));
@@ -358,7 +359,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       DataContentTableView.prototype.addContentPieces = function() {
         var colspan, content_id, content_pieces, tableData, _i, _len, _results;
-        content_pieces = _.pluck($('#dataContentTable .tab_checkbox:checked'), 'value');
+        content_pieces = _.pluck(this.$el.find('#dataContentTable .tab_checkbox:checked'), 'value');
         if (content_pieces) {
           this.trigger("add:content:pieces", content_pieces);
           _results = [];
@@ -387,8 +388,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         row = this.makeRow(model, row_index, tableData);
         $row = $(row);
         this.$el.find('#dataContentTable tbody').append($row);
-        this.$el.find("#dataContentTable").trigger('addRows', [$row, true]).trigger("updateCache");
-        return this.onCheckStatus;
+        return this.$el.find("#dataContentTable").trigger('addRows', [$row, true]).trigger("updateCache");
       };
 
       return DataContentTableView;

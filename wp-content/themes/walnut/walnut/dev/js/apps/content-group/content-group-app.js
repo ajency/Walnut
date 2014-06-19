@@ -15,7 +15,7 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
         'add-module': 'addGroup',
         'view-group/:id': 'viewGroup',
         'edit-module/:id': 'editGroup',
-        'list-groups': 'groupsListing',
+        'module-list': 'groupsListing',
         'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule',
         'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule'
       };
@@ -60,7 +60,7 @@ define(['app', 'apps/content-group/edit-group/group-edit-controller', 'apps/cont
         });
       },
       groupsListing: function() {
-        return new ContentGroupApp.ListingView.GroupController({
+        return new ContentGroupApp.GroupListing.Controller({
           region: App.mainContentRegion
         });
       },
