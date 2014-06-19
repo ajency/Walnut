@@ -23,7 +23,6 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
                     @show @view, loading: true
 
                 @listenTo @view, "itemview:media:element:selected", (iv) =>
-                    console.log 'listening to itemview:media:element:selected '
                     # trigger "media:element:clicked" event on the region. the main app controller will
                     # listen to this event and get the clicked model and pass it on to edit media app
                     Marionette.triggerMethod.call(@region,
@@ -44,12 +43,13 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
                     searchStr: searchStr
 
                 @mediaCollection = App.request "fetch:media", data
+                App.execute "when:fetched", @mediaCollection, =>
+                    @view.triggerMethod "search:complete"
 
 
 
             # gets the main login view
             _getView: (@mediaCollection)->
-                console.log @mediaCollection
                 new Grid.Views.GridView
                     collection: @mediaCollection
                     mediaType: @mediaType

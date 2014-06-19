@@ -63,29 +63,19 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
       GridView.prototype.itemViewContainer = '#selectable-images';
 
       GridView.prototype.events = {
-        'blur .mediaSearch': 'searchMedia'
+        'keypress .mediaSearch': 'searchMedia',
+        'click a#list.btn': function() {
+          return this._changeChildClass('List');
+        },
+        'click a#grid.btn': function() {
+          return this._changeChildClass('Grid');
+        }
       };
 
       GridView.prototype.onRender = function() {
-        if (Marionette.getOption(this, 'mediaType') === 'video') {
-          this.$el.find('#list, #grid').hide();
-          return this._changeChildClass('List');
+        if ((this.collection.length > 0) || Marionette.getOption(this, 'mediaType') !== 'video') {
+          this.$el.find("#placeholder-video-txt").hide();
         }
-      };
-
-      GridView.prototype.onCollectionRendered = function() {
-        if (this.multiSelect) {
-          return this.$el.find('#selectable-images').bind("mousedown", function(e) {
-            return e.metaKey = true;
-          }).selectable();
-        } else {
-          return this.$el.find('#selectable-images').selectable();
-        }
-      };
-
-      GridView.prototype.onShow = function() {
-        this.$el.find('a#list.btn').on('click', _.bind(this._changeChildClass, this, 'List'));
-        this.$el.find('a#grid.btn').on('click', _.bind(this._changeChildClass, this, 'Grid'));
         if (Marionette.getOption(this, 'mediaType') === 'video') {
           this.$el.find('#list, #grid').hide();
           this._changeChildClass('List');
@@ -104,6 +94,16 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         })(this));
       };
 
+      GridView.prototype.onCollectionRendered = function() {
+        if (this.multiSelect) {
+          return this.$el.find('#selectable-images').bind("mousedown", function(e) {
+            return e.metaKey = true;
+          }).selectable();
+        } else {
+          return this.$el.find('#selectable-images').selectable();
+        }
+      };
+
       GridView.prototype._changeChildClass = function(toType, evt) {
         return this.children.each(_.bind(this._changeClassOfEachChild, this, toType));
       };
@@ -117,11 +117,18 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
       };
 
       GridView.prototype.searchMedia = function(e) {
-        var searchStr;
-        searchStr = _.trim($(e.target).val());
-        if (searchStr) {
-          return this.trigger("search:media", searchStr);
+        var p, searchStr;
+        p = e.which;
+        if (p === 13) {
+          searchStr = _.trim($(e.target).val());
+          if (searchStr) {
+            return this.trigger("search:media", searchStr);
+          }
         }
+      };
+
+      GridView.prototype.onSearchComplete = function() {
+        return this.render();
       };
 
       return GridView;

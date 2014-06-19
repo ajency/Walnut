@@ -33,7 +33,6 @@ define(['app', 'controllers/region-controller', 'apps/media/grid/views'], functi
         })(this));
         this.listenTo(this.view, "itemview:media:element:selected", (function(_this) {
           return function(iv) {
-            console.log('listening to itemview:media:element:selected ');
             return Marionette.triggerMethod.call(_this.region, "media:element:selected", Marionette.getOption(iv, 'model'));
           };
         })(this));
@@ -51,12 +50,16 @@ define(['app', 'controllers/region-controller', 'apps/media/grid/views'], functi
           mediaType: this.mediaType,
           searchStr: searchStr
         };
-        return this.mediaCollection = App.request("fetch:media", data);
+        this.mediaCollection = App.request("fetch:media", data);
+        return App.execute("when:fetched", this.mediaCollection, (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("search:complete");
+          };
+        })(this));
       };
 
       Controller.prototype._getView = function(mediaCollection) {
         this.mediaCollection = mediaCollection;
-        console.log(this.mediaCollection);
         return new Grid.Views.GridView({
           collection: this.mediaCollection,
           mediaType: this.mediaType

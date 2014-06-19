@@ -13,6 +13,7 @@ function get_site_media($query, $search_string=''){
 	) ) );
 
     if(trim($search_string) != ''){
+
         $post_ids_qry = $wpdb->prepare(
             "SELECT ID from {$wpdb->base_prefix}posts where
                 post_mime_type like %s
@@ -23,8 +24,11 @@ function get_site_media($query, $search_string=''){
 
         $post_ids = $wpdb->get_results($post_ids_qry, ARRAY_A);
         $post_ids = __u::flatten($post_ids);
-        if(sizeof($post_ids>0)){
+        if(sizeof($post_ids)>0){
             $query['post__in'] = $post_ids;
+        }
+        else{
+           return false;
         }
     }
 
@@ -35,6 +39,7 @@ function get_site_media($query, $search_string=''){
 		$query['post_status'] .= ',private';
 	
 	$query = apply_filters( 'ajax_query_attachments_args', $query );
+
 	$query = new WP_Query( $query );
 
 	$posts = array_map( 'wp_prepare_attachment_for_js', $query->posts );

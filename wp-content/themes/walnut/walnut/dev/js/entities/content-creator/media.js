@@ -99,7 +99,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         return media;
       },
       getEmptyMediaCollection: function() {
-        return mediaCollection;
+        return mediaCollection = new Media.MediaCollection;
       },
       getPlaceHolderMedia: function() {
         var media;
@@ -121,7 +121,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         params = {};
       }
       if (shouldReset == null) {
-        shouldReset = true;
+        shouldReset = false;
       }
       return API.fetchMedia(params, shouldReset);
     });

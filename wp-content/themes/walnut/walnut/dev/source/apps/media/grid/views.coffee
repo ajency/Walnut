@@ -71,26 +71,15 @@ define ['app'
             itemViewContainer : '#selectable-images'
 
             events:
-                'blur .mediaSearch' : 'searchMedia'
+                'keypress .mediaSearch' : 'searchMedia'
+                'click a#list.btn'  :-> @_changeChildClass 'List'
+                'click a#grid.btn'  :-> @_changeChildClass 'Grid'
 
 
             onRender:->
-                if Marionette.getOption(@,'mediaType') is 'video'
-                    @$el.find '#list, #grid'
+                if (@collection.length>0) or Marionette.getOption(@,'mediaType') isnt 'video'
+                    @$el.find "#placeholder-video-txt"
                     .hide()
-                    @_changeChildClass 'List'
-
-            onCollectionRendered : ->
-                if @multiSelect
-                    @$el.find('#selectable-images').bind "mousedown", (e)->
-                        e.metaKey = true;
-                    .selectable()
-                else
-                    @$el.find('#selectable-images').selectable()
-
-            onShow : ->
-                @$el.find('a#list.btn').on 'click', _.bind @_changeChildClass, @, 'List'
-                @$el.find('a#grid.btn').on 'click', _.bind @_changeChildClass, @, 'Grid'
 
                 if Marionette.getOption(@,'mediaType') is 'video'
                     @$el.find '#list, #grid'
@@ -112,6 +101,14 @@ define ['app'
                     imageView.$el.find('img').trigger 'click'
                     @$el.find('#selectable-images').selectSelectableElements imageView.$el
 
+            onCollectionRendered : ->
+                if @multiSelect
+                    @$el.find('#selectable-images').bind "mousedown", (e)->
+                        e.metaKey = true;
+                    .selectable()
+                else
+                    @$el.find('#selectable-images').selectable()
+
 
             _changeChildClass : (toType, evt)->
                 @children.each _.bind @_changeClassOfEachChild, @, toType
@@ -125,6 +122,11 @@ define ['app'
                     .addClass('col-sm-2')
 
             searchMedia:(e)=>
-                searchStr= _.trim $(e.target).val()
-                if searchStr
-                    @trigger "search:media", searchStr
+                p = e.which
+                if p is 13
+                    searchStr= _.trim $(e.target).val()
+                    if searchStr
+                        @trigger "search:media", searchStr
+
+            onSearchComplete:->
+                @render()
