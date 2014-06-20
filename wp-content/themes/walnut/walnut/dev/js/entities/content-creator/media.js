@@ -77,6 +77,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
         mediaCollection.url = "" + AJAXURL + "?action=query_attachments";
         _.defaults(params, mediaCollection.filters);
+        mediaCollection.filters = params;
         mediaCollection.fetch({
           reset: reset,
           data: params

@@ -64,6 +64,7 @@ define ['app'
                                                             <div class="row">
                                                                 <div id="placeholder-video-txt" class="text-center m-t-40 m-b-40"><h4 class="semi-bold muted"> Looking for a video? Use the Search box above</h4><h1 class="semi-bold muted"><span class="fa fa-search"></span></h1></div>
                                                                 <div id="selectable-images"></div>
+                                                                <div id="no-results-div"></div>
                                                             </div>'
 
             itemView : MediaView
@@ -77,16 +78,10 @@ define ['app'
 
 
             onShow:->
-                console.log @collection
-                if (@collection.length>0) or Marionette.getOption(@,'mediaType') isnt 'video'
-                    @$el.find "#placeholder-video-txt"
-                    .hide()
+                @$el.find '#no-results-div'
+                .hide()
 
-                if Marionette.getOption(@,'mediaType') is 'video'
-                    @$el.find '#list, #grid'
-                    .hide()
-                    @_changeChildClass 'List'
-
+                mediaType= Marionette.getOption(@,'mediaType')
                 # after showing the initial list
                 #  initialize the event
                 @listenTo @, 'after:item:added', (imageView)=>
@@ -100,6 +95,25 @@ define ['app'
                     .find('.all-media-tab').find('a').trigger 'click'
                     #trigger the selectable to point to the newly added image
                     imageView.$el.find('img').trigger 'click'
+
+                if not @collection.isEmpty() or mediaType isnt 'video'
+                    @$el.find "#placeholder-video-txt"
+                    .hide()
+
+                if mediaType is 'video'
+                    @$el.find '#list, #grid'
+                    .hide()
+                    @_changeChildClass 'List'
+
+                if @collection.isEmpty() and _.trim(@collection.filters.searchStr) isnt ''
+                    @$el.find "#placeholder-video-txt"
+                    .hide()
+
+                    @$el.find '#no-results-div'
+                    .show()
+                    .html 'No media files were found for your search: '+ @collection.filters.searchStr +
+                        '<br>Add a part of the media title in search.'
+                    @collection.filters.searchStr = ''
             # @$el.find('#selectable-images').selectSelectableElements imageView.$el
 
             onCollectionRendered : ->
@@ -123,10 +137,7 @@ define ['app'
                     .addClass('col-sm-2')
 
             searchMedia:(e)=>
-                console.log e.which
                 p = e.which
                 if p is 13
                     searchStr= _.trim $(e.target).val()
-                    if searchStr
-                        @trigger "search:media", searchStr
-
+                    @trigger("search:media", searchStr) if searchStr
