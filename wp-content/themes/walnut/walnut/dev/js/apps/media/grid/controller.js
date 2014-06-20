@@ -53,7 +53,7 @@ define(['app', 'controllers/region-controller', 'apps/media/grid/views'], functi
         this.mediaCollection = App.request("fetch:media", data);
         return App.execute("when:fetched", this.mediaCollection, (function(_this) {
           return function() {
-            return _this.view.triggerMethod("search:complete");
+            return _this.show(_this.view);
           };
         })(this));
       };

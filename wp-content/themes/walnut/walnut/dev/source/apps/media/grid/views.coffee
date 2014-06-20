@@ -37,7 +37,7 @@ define ['app'
                 else $(e.target).closest('.single-img')
                 #                if $(media).hasClass('ui-selected')
                 @trigger "media:element:selected"
-#                console.log 'media selected ' + media
+        #                console.log 'media selected ' + media
         #                else
         #                    @trigger "media:element:unselected"
         #                    console.log 'media unselected '+media
@@ -47,24 +47,24 @@ define ['app'
         class Views.GridView extends Marionette.CompositeView
 
             template : '<div class="row b-b b-grey m-b-10">
-                                                    <div class="btn-group">
-                                                        <a id="list" class="btn btn-default btn-sm btn-small">
-                                                            <span class="glyphicon glyphicon-th-list"></span> List
-                                                        </a>
-                                                        <a id="grid" class="btn btn-default btn-sm btn-small">
-                                                            <span class="glyphicon glyphicon-th"></span> Grid
-                                                        </a>
-                                                        </div>
-                                                    <div class="input-with-icon right pull-right mediaSearch m-b-10">
-                                                        <i class="fa fa-search"></i>
-                                                        <input type="text" class="form-control" placeholder="Search">
-                                                    </div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                                <div class="row">
-                                                    <div id="placeholder-video-txt" class="text-center m-t-40 m-b-40"><h4 class="semi-bold muted"> Looking for a video? Use the Search box above</h4><h1 class="semi-bold muted"><span class="fa fa-search"></span></h1></div>
-                                                    <div id="selectable-images"></div>
-                                                </div>'
+                                                                <div class="btn-group">
+                                                                    <a id="list" class="btn btn-default btn-sm btn-small">
+                                                                        <span class="glyphicon glyphicon-th-list"></span> List
+                                                                    </a>
+                                                                    <a id="grid" class="btn btn-default btn-sm btn-small">
+                                                                        <span class="glyphicon glyphicon-th"></span> Grid
+                                                                    </a>
+                                                                    </div>
+                                                                <div class="input-with-icon right pull-right mediaSearch m-b-10">
+                                                                    <i class="fa fa-search"></i>
+                                                                    <input type="text" class="form-control" placeholder="Search">
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                            <div class="row">
+                                                                <div id="placeholder-video-txt" class="text-center m-t-40 m-b-40"><h4 class="semi-bold muted"> Looking for a video? Use the Search box above</h4><h1 class="semi-bold muted"><span class="fa fa-search"></span></h1></div>
+                                                                <div id="selectable-images"></div>
+                                                            </div>'
 
             itemView : MediaView
 
@@ -76,7 +76,7 @@ define ['app'
                 'click a#grid.btn'  :-> @_changeChildClass 'Grid'
 
 
-            onRender:->
+            onShow:->
                 console.log @collection
                 if (@collection.length>0) or Marionette.getOption(@,'mediaType') isnt 'video'
                     @$el.find "#placeholder-video-txt"
@@ -100,7 +100,7 @@ define ['app'
                     .find('.all-media-tab').find('a').trigger 'click'
                     #trigger the selectable to point to the newly added image
                     imageView.$el.find('img').trigger 'click'
-                    @$el.find('#selectable-images').selectSelectableElements imageView.$el
+            # @$el.find('#selectable-images').selectSelectableElements imageView.$el
 
             onCollectionRendered : ->
                 if @multiSelect
@@ -123,11 +123,10 @@ define ['app'
                     .addClass('col-sm-2')
 
             searchMedia:(e)=>
+                console.log e.which
                 p = e.which
                 if p is 13
                     searchStr= _.trim $(e.target).val()
                     if searchStr
                         @trigger "search:media", searchStr
 
-            onSearchComplete:->
-                @render()

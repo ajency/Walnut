@@ -72,7 +72,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         }
       };
 
-      GridView.prototype.onRender = function() {
+      GridView.prototype.onShow = function() {
         console.log(this.collection);
         if ((this.collection.length > 0) || Marionette.getOption(this, 'mediaType') !== 'video') {
           this.$el.find("#placeholder-video-txt").hide();
@@ -89,8 +89,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
               _this._changeChildClass('List');
             }
             _this.$el.closest('.tab-content').siblings('.nav-tabs').find('.all-media-tab').find('a').trigger('click');
-            imageView.$el.find('img').trigger('click');
-            return _this.$el.find('#selectable-images').selectSelectableElements(imageView.$el);
+            return imageView.$el.find('img').trigger('click');
           };
         })(this));
       };
@@ -119,6 +118,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
 
       GridView.prototype.searchMedia = function(e) {
         var p, searchStr;
+        console.log(e.which);
         p = e.which;
         if (p === 13) {
           searchStr = _.trim($(e.target).val());
@@ -126,10 +126,6 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
             return this.trigger("search:media", searchStr);
           }
         }
-      };
-
-      GridView.prototype.onSearchComplete = function() {
-        return this.render();
       };
 
       return GridView;
