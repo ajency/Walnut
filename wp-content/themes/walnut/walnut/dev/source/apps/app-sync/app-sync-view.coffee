@@ -52,6 +52,20 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 						$('#totalRecordsToBeSynced')
 						.text(""+totalRecords+" record(s) to be synced")
 
+				#display last downloaded timestamp
+				lastDownloadTimeStamp = _.getLastDownloadTimeStamp()
+				lastDownloadTimeStamp.done (time_stamp)->
+					if time_stamp is ""
+						$('#totalRecords').hide();
+						$('#lastDownload').hide();
+						
+
+					else
+						escaped = $('<div>').text(" Data was last downloaded at \n"+time_stamp+"").text();
+						$('#lastDownloadTimeStamp').html(escaped.replace(/\n/g, '<br />'));
+					
+
+
 				
 				lastSyncOperation = _.getLastSyncOperation()
 				lastSyncOperation.done (typeOfOperation)->

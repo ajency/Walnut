@@ -41,7 +41,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       };
 
       AppSyncView.prototype.onShow = function() {
-        var lastSyncOperation, totalRecordsTobeSynced;
+        var lastDownloadTimeStamp, lastSyncOperation, totalRecordsTobeSynced;
         App.breadcrumbRegion.close();
         navigator.splashscreen.hide();
         cordova.getAppVersion().then(function(version) {
@@ -53,6 +53,17 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
             return $('#totalRecordsToBeSynced').text("Data already upto date");
           } else {
             return $('#totalRecordsToBeSynced').text("" + totalRecords + " record(s) to be synced");
+          }
+        });
+        lastDownloadTimeStamp = _.getLastDownloadTimeStamp();
+        lastDownloadTimeStamp.done(function(time_stamp) {
+          var escaped;
+          if (time_stamp === "") {
+            $('#totalRecords').hide();
+            return $('#lastDownload').hide();
+          } else {
+            escaped = $('<div>').text(" Data was last downloaded at \n" + time_stamp + "").text();
+            return $('#lastDownloadTimeStamp').html(escaped.replace(/\n/g, '<br />'));
           }
         });
         lastSyncOperation = _.getLastSyncOperation();
