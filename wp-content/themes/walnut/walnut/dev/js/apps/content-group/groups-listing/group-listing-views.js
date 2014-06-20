@@ -9,7 +9,8 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
       __extends(ListItemView, _super);
 
       function ListItemView() {
-        this.successFn = __bind(this.successFn, this);
+        this.successUpdateFn = __bind(this.successUpdateFn, this);
+        this.successSaveFn = __bind(this.successSaveFn, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -17,10 +18,10 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{textbookName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank" id="cloneModule" class="nonDevice">Clone</a>{{/archivedModule}}</td>';
+      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{textbookName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
 
       ListItemView.prototype.serializeData = function() {
-        var data;
+        var data, _ref;
         data = ListItemView.__super__.serializeData.call(this);
         data.view_url = SITEURL + ("/#view-group/" + data.id);
         data.edit_url = SITEURL + ("/#edit-module/" + data.id);
@@ -50,10 +51,14 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
             return '<span class="label label-success">Archived</span>';
           }
         };
-        if (data.status === 'archive') {
+        if ((_ref = data.status) === 'publish' || _ref === 'archive') {
           data.archivedModule = true;
         }
         return data;
+      };
+
+      ListItemView.prototype.events = {
+        'click a.cloneModule': 'cloneModule'
       };
 
       ListItemView.prototype.initialize = function(options) {
@@ -61,37 +66,40 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
         return console.log(options);
       };
 
-      ListItemView.prototype.onShow = function() {
-        if (this.model.get('status') === 'archive') {
-          return this.$el.find('td a#cloneModule').on('click', (function(_this) {
-            return function() {
-              var groupData;
-              if (confirm("Are you sure you want to clone '" + (_this.model.get('name')) + "' ?") === true) {
-                _this.cloneModel = App.request("new:content:group");
-                groupData = _this.model.toJSON();
-                _this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
-                _this.clonedData.name = "" + _this.clonedData.name + " clone";
-                _this.clonedData.status = "underreview";
-                return App.execute("when:fetched", _this.cloneModel, function() {
-                  return _this.cloneModel.save(_this.clonedData, {
-                    wait: true,
-                    success: _this.successFn,
-                    error: _this.errorFn
-                  });
+      ListItemView.prototype.cloneModule = function() {
+        var groupData, _ref;
+        if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
+          if (confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?") === true) {
+            this.cloneModel = App.request("new:content:group");
+            groupData = this.model.toJSON();
+            this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
+            this.clonedData.name = "" + this.clonedData.name + " clone";
+            this.clonedData.status = "underreview";
+            return App.execute("when:fetched", this.cloneModel, (function(_this) {
+              return function() {
+                return _this.cloneModel.save(_this.clonedData, {
+                  wait: true,
+                  success: _this.successSaveFn,
+                  error: _this.errorFn
                 });
-              }
-            };
-          })(this));
+              };
+            })(this));
+          }
         }
       };
 
-      ListItemView.prototype.successFn = function(model) {
+      ListItemView.prototype.successSaveFn = function(model) {
         model.set('content_pieces', this.clonedData.content_pieces);
-        model.save({
+        return model.save({
           'changed': 'content_pieces'
         }, {
-          wait: true
+          wait: true,
+          success: this.successUpdateFn,
+          error: this.errorFn
         });
+      };
+
+      ListItemView.prototype.successUpdateFn = function(model) {
         return App.navigate("edit-module/" + (model.get('id')), {
           trigger: true
         });

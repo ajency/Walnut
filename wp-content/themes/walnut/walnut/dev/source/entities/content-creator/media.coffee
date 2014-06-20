@@ -69,6 +69,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 _.defaults params, mediaCollection.filters
 
+                mediaCollection.filters = params
+
                 mediaCollection.fetch
                     reset : reset
                     data : params

@@ -13,7 +13,7 @@ define ['app'
                                     <td>{{&statusMessage}}</td>
                                     <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
                                         <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a>
-                                    {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank" id="cloneModule" class="nonDevice">Clone</a>{{/archivedModule}}</td>'
+                                    {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>'
 
             serializeData : ->
                 data = super()
@@ -38,34 +38,41 @@ define ['app'
                     else if data.status is 'archive'
                         return '<span class="label label-success">Archived</span>'
 
-                data.archivedModule = true if data.status is 'archive'
+                data.archivedModule = true if data.status in ['publish', 'archive']
 
                 data
+
+            events:
+                'click a.cloneModule' : 'cloneModule'
 
             initialize : (options)->
                 @textbooks = options.textbooksCollection
                 console.log options
 
-            onShow : ->
-                if @model.get('status') is 'archive'
-                    @$el.find('td a#cloneModule').on 'click', =>
-                        if confirm("Are you sure you want to clone '#{@model.get('name')}' ?") is true
-                            @cloneModel = App.request "new:content:group"
-                            groupData = @model.toJSON()
-                            @clonedData = _.omit groupData,
-                              ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
-                            @clonedData.name = "#{@clonedData.name} clone"
-                            @clonedData.status = "underreview"
+            cloneModule :->
+                if @model.get('status') in ['publish','archive']
+                    if confirm("Are you sure you want to clone '#{@model.get('name')}' ?") is true
+                        @cloneModel = App.request "new:content:group"
+                        groupData = @model.toJSON()
+                        @clonedData = _.omit groupData,
+                          ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
+                        @clonedData.name = "#{@clonedData.name} clone"
+                        @clonedData.status = "underreview"
 
-                            App.execute "when:fetched", @cloneModel, =>
-                                @cloneModel.save @clonedData,
-                                    wait : true
-                                    success : @successFn
-                                    error : @errorFn
+                        App.execute "when:fetched", @cloneModel, =>
+                            @cloneModel.save @clonedData,
+                                wait : true
+                                success : @successSaveFn
+                                error : @errorFn
 
-            successFn : (model)=>
+            successSaveFn : (model)=>
                 model.set('content_pieces', @clonedData.content_pieces)
-                model.save({ 'changed' : 'content_pieces' }, { wait : true })
+                model.save 'changed' : 'content_pieces' ,
+                    wait : true
+                    success : @successUpdateFn
+                    error : @errorFn
+
+            successUpdateFn : (model)=>
                 App.navigate "edit-module/#{model.get('id')}",
                     trigger : true
 

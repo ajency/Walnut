@@ -26,13 +26,13 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
                     # trigger "media:element:clicked" event on the region. the main app controller will
                     # listen to this event and get the clicked model and pass it on to edit media app
                     Marionette.triggerMethod.call(@region,
-                    "media:element:selected",
-                    Marionette.getOption(iv, 'model'));
+                      "media:element:selected",
+                      Marionette.getOption(iv, 'model'));
 
                 @listenTo @view, "itemview:media:element:unselected", (iv) =>
                     Marionette.triggerMethod.call(@region,
-                    "media:element:unselected",
-                    Marionette.getOption(iv, 'model'));
+                      "media:element:unselected",
+                      Marionette.getOption(iv, 'model'));
 
                 @listenTo @view, "search:media", @_searchMedia
 
@@ -43,8 +43,9 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
                     searchStr: searchStr
 
                 @mediaCollection = App.request "fetch:media", data
+
                 App.execute "when:fetched", @mediaCollection, =>
-                    @view.triggerMethod "search:complete"
+                    @show @view
 
 
 

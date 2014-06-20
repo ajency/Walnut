@@ -56,7 +56,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         return GridView.__super__.constructor.apply(this, arguments);
       }
 
-      GridView.prototype.template = '<div class="row b-b b-grey m-b-10"> <div class="btn-group"> <a id="list" class="btn btn-default btn-sm btn-small"> <span class="glyphicon glyphicon-th-list"></span> List </a> <a id="grid" class="btn btn-default btn-sm btn-small"> <span class="glyphicon glyphicon-th"></span> Grid </a> </div> <div class="input-with-icon right pull-right mediaSearch m-b-10"> <i class="fa fa-search"></i> <input type="text" class="form-control" placeholder="Search"> </div> </div> <div class="clearfix"></div> <div class="row"> <div id="placeholder-video-txt" class="text-center m-t-40 m-b-40"><h4 class="semi-bold muted"> Looking for a video? Use the Search box above</h4><h1 class="semi-bold muted"><span class="fa fa-search"></span></h1></div> <div id="selectable-images"></div> </div>';
+      GridView.prototype.template = '<div class="row b-b b-grey m-b-10"> <div class="btn-group"> <a id="list" class="btn btn-default btn-sm btn-small"> <span class="glyphicon glyphicon-th-list"></span> List </a> <a id="grid" class="btn btn-default btn-sm btn-small"> <span class="glyphicon glyphicon-th"></span> Grid </a> </div> <div class="input-with-icon right pull-right mediaSearch m-b-10"> <i class="fa fa-search"></i> <input type="text" class="form-control" placeholder="Search"> </div> </div> <div class="clearfix"></div> <div class="row"> <div id="placeholder-video-txt" class="text-center m-t-40 m-b-40"><h4 class="semi-bold muted"> Looking for a video? Use the Search box above</h4><h1 class="semi-bold muted"><span class="fa fa-search"></span></h1></div> <div id="selectable-images"></div> <div id="no-results-div"></div> </div>';
 
       GridView.prototype.itemView = MediaView;
 
@@ -72,16 +72,11 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         }
       };
 
-      GridView.prototype.onRender = function() {
-        console.log(this.collection);
-        if ((this.collection.length > 0) || Marionette.getOption(this, 'mediaType') !== 'video') {
-          this.$el.find("#placeholder-video-txt").hide();
-        }
-        if (Marionette.getOption(this, 'mediaType') === 'video') {
-          this.$el.find('#list, #grid').hide();
-          this._changeChildClass('List');
-        }
-        return this.listenTo(this, 'after:item:added', (function(_this) {
+      GridView.prototype.onShow = function() {
+        var mediaType;
+        this.$el.find('#no-results-div').hide();
+        mediaType = Marionette.getOption(this, 'mediaType');
+        this.listenTo(this, 'after:item:added', (function(_this) {
           return function(imageView) {
             if (_this.$el.find('.single-img:first').hasClass('col-sm-2')) {
               _this._changeChildClass('Grid');
@@ -89,10 +84,21 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
               _this._changeChildClass('List');
             }
             _this.$el.closest('.tab-content').siblings('.nav-tabs').find('.all-media-tab').find('a').trigger('click');
-            imageView.$el.find('img').trigger('click');
-            return _this.$el.find('#selectable-images').selectSelectableElements(imageView.$el);
+            return imageView.$el.find('img').trigger('click');
           };
         })(this));
+        if (!this.collection.isEmpty() || mediaType !== 'video') {
+          this.$el.find("#placeholder-video-txt").hide();
+        }
+        if (mediaType === 'video') {
+          this.$el.find('#list, #grid').hide();
+          this._changeChildClass('List');
+        }
+        if (this.collection.isEmpty() && _.trim(this.collection.filters.searchStr) !== '') {
+          this.$el.find("#placeholder-video-txt").hide();
+          this.$el.find('#no-results-div').show().html('No media files were found for your search: ' + this.collection.filters.searchStr + '<br>Add a part of the media title in search.');
+          return this.collection.filters.searchStr = '';
+        }
       };
 
       GridView.prototype.onCollectionRendered = function() {
@@ -126,10 +132,6 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
             return this.trigger("search:media", searchStr);
           }
         }
-      };
-
-      GridView.prototype.onSearchComplete = function() {
-        return this.render();
       };
 
       return GridView;
