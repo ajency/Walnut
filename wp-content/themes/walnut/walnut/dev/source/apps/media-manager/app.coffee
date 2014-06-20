@@ -90,7 +90,10 @@ define ['app'
                 'click button.media-manager-select': ->
                     @trigger "media:selected"
 
-
+            onShow:->
+                if Marionette.getOption(@,'mediaType') is 'video'
+                    @$el.find '.upload-tab'
+                    .hide()
 
             onClose: ->
                 #stop listening to event

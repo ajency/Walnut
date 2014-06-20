@@ -104,6 +104,12 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
         }
       };
 
+      OuterLayout.prototype.onShow = function() {
+        if (Marionette.getOption(this, 'mediaType') === 'video') {
+          return this.$el.find('.upload-tab').hide();
+        }
+      };
+
       OuterLayout.prototype.onClose = function() {
         return App.vent.trigger("stop:listening:to:media:manager");
       };
