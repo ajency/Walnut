@@ -191,17 +191,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       CollectionDetailsView.prototype.onFetchChaptersComplete = function(chapters) {
-        if (_.size(chapters) > 0) {
-          this.$el.find('#chapters').html('');
-          _.each(chapters.models, (function(_this) {
-            return function(chap, index) {
-              return _this.$el.find('#chapters').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
-            };
-          })(this));
-          return this.setChapterValue();
-        } else {
-          return this.$el.find('#chapters').html('<option value="">No Chapters available</option>');
-        }
+        var chapterElement, currentChapter, termIDs;
+        chapterElement = this.$el.find('#chapters');
+        termIDs = this.model.get('term_ids');
+        currentChapter = termIDs['chapter'];
+        return $.populateChapters(chapters, chapterElement, currentChapter);
       };
 
       CollectionDetailsView.prototype.setChapterValue = function() {
@@ -213,33 +207,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       CollectionDetailsView.prototype.onFetchSubsectionsComplete = function(allsections) {
-        if (_.size(allsections) > 0) {
-          if (_.size(allsections.sections) > 0) {
-            this.$el.find('#secs').html('');
-            _.each(allsections.sections, (function(_this) {
-              return function(section, index) {
-                _this.$el.find('#secs').append('<option  value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-                return _this.markSelected('secs', 'sections');
-              };
-            })(this));
-          } else {
-            this.$el.find('#secs').html('<option value="">No Sections available</option>');
-          }
-          if (_.size(allsections.subsections) > 0) {
-            this.$el.find('#subsecs').html('');
-            return _.each(allsections.subsections, (function(_this) {
-              return function(section, index) {
-                _this.$el.find('#subsecs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-                return _this.markSelected('subsecs', 'subsections');
-              };
-            })(this));
-          } else {
-            return this.$el.find('#subsecs').html('<option>No Sub Sections available</option>');
-          }
-        } else {
-          this.$el.find('#secs').html('<option value="">No Sections available</option>');
-          return this.$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
+        var sectionIDs, sectionsElement, subSectionIDs, subsectionsEleemnt, term_ids;
+        term_ids = this.model.get('term_ids');
+        if (term_ids != null) {
+          sectionIDs = term_ids['sections'];
         }
+        if (term_ids != null) {
+          subSectionIDs = term_ids['subsections'];
+        }
+        sectionsElement = this.$el.find('#secs');
+        subsectionsEleemnt = this.$el.find('#subsecs');
+        $.populateSections(allsections.sections, sectionsElement, sectionIDs);
+        return $.populateSubSections(allsections.subsections, subsectionsEleemnt, subSectionIDs);
       };
 
       CollectionDetailsView.prototype.markSelected = function(element, sections) {

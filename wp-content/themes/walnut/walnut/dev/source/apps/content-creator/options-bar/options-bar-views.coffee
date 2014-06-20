@@ -69,7 +69,6 @@ define ['app',
 
                 subSectionIDs = term_ids['subsections'] if term_ids?
 
-
                 if _.size(allsections) > 0
                     if _.size(allsections.sections) > 0
                         @$el.find('#secs').html('');
