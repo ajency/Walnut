@@ -147,16 +147,12 @@ define ['app'
                 @$el.find('#textbooks').trigger 'change'
 
             onFetchChaptersComplete : (chapters)->
-                if _.size(chapters) > 0
-                    @$el.find('#chapters').html('');
-                    _.each chapters.models, (chap, index)=>
-                        @$el.find '#chapters'
-                        .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
 
-                    @setChapterValue()
-                else
-                    @$el.find '#chapters'
-                    .html '<option value="">No Chapters available</option>'
+                chapterElement= @$el.find '#chapters'
+                termIDs= @model.get 'term_ids'
+                currentChapter= termIDs['chapter']
+
+                $.populateChapters(chapters,chapterElement, currentChapter);
 
             setChapterValue : ->
                 if @model.get('term_ids')['chapter']
@@ -165,27 +161,18 @@ define ['app'
                     @$el.find('#chapters').trigger 'change'
 
             onFetchSubsectionsComplete : (allsections)->
-                if _.size(allsections) > 0
-                    if _.size(allsections.sections) > 0
-                        @$el.find('#secs').html('');
-                        _.each allsections.sections, (section, index)=>
-                            @$el.find('#secs')
-                            .append '<option  value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-                            @markSelected 'secs', 'sections'
-                    else
-                        @$el.find('#secs').html('<option value="">No Sections available</option>');
 
-                    if _.size(allsections.subsections) > 0
-                        @$el.find('#subsecs').html('');
-                        _.each allsections.subsections, (section, index)=>
-                            @$el.find '#subsecs'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-                            @markSelected 'subsecs', 'subsections'
-                    else
-                        @$el.find('#subsecs').html '<option>No Sub Sections available</option>'
-                else
-                    @$el.find('#secs').html('<option value="">No Sections available</option>');
-                    @$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
+                term_ids= @model.get 'term_ids'
+
+                sectionIDs = term_ids['sections'] if term_ids?
+
+                subSectionIDs = term_ids['subsections'] if term_ids?
+
+                sectionsElement     = @$el.find '#secs'
+                subsectionsEleemnt  = @$el.find '#subsecs'
+
+                $.populateSections(allsections.sections,sectionsElement, sectionIDs);
+                $.populateSubSections(allsections.subsections,subsectionsEleemnt, subSectionIDs);
 
             markSelected : (element, sections)->
                 return '' if @model.isNew()
