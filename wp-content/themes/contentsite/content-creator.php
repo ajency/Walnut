@@ -80,6 +80,7 @@ Template Name: Content Creator
 <script type="text/javascript">
 
 var SITEURL = '<?php echo site_url();?>'
+THEMEURL = '<?php echo get_template_directory_uri()?>';
 AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
 var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE    = '<?php echo wp_create_nonce('media-form');?>';
