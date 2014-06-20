@@ -41,117 +41,24 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       };
 
       AppSyncView.prototype.onShow = function() {
-        var lastDownloadTimeStamp, lastSyncOperation, totalRecordsTobeSynced;
         App.breadcrumbRegion.close();
         navigator.splashscreen.hide();
         cordova.getAppVersion().then(function(version) {
           return $('#app-version').text("Version: " + version);
         });
-        totalRecordsTobeSynced = _.getTotalRecordsTobeSynced();
-        totalRecordsTobeSynced.done(function(totalRecords) {
-          if (totalRecords === 0) {
-            return $('#totalRecordsToBeSynced').text("Data already upto date");
-          } else {
-            return $('#totalRecordsToBeSynced').text("" + totalRecords + " record(s) to be synced");
-          }
-        });
-        lastDownloadTimeStamp = _.getLastDownloadTimeStamp();
-        lastDownloadTimeStamp.done(function(time_stamp) {
-          var escaped;
-          if (time_stamp === "") {
-            $('#totalRecords').hide();
-            return $('#lastDownload').hide();
-          } else {
-            escaped = $('<div>').text(" Data was last downloaded at \n" + time_stamp + "").text();
-            return $('#lastDownloadTimeStamp').html(escaped.replace(/\n/g, '<br />'));
-          }
-        });
-        lastSyncOperation = _.getLastSyncOperation();
-        return lastSyncOperation.done(function(typeOfOperation) {
-          switch (typeOfOperation) {
-            case 'none':
-              return $('#syncButtonText').text('Start');
-            case 'file_import':
-              return $('#syncButtonText').text('Start');
-            case 'file_download':
-              return $('#syncButtonText').text('Continue');
-            case 'file_generate':
-              return $('#syncButtonText').text('Continue');
-            case 'file_upload':
-              return $('#syncButtonText').text('Continue');
-          }
-        });
+        return App.request("get:sync:controller");
       };
 
       AppSyncView.prototype.startContinueSyncProcess = function() {
-        var synapseDataDirectory;
-        $('#syncError').css("display", "none");
-        synapseDataDirectory = _.createSynapseDataDirectory();
-        return synapseDataDirectory.done(function() {
-          var lastSyncOperation;
-          lastSyncOperation = _.getLastSyncOperation();
-          return lastSyncOperation.done(function(typeOfOperation) {
-            switch (typeOfOperation) {
-              case 'none':
-                $('#syncStartContinue').css("display", "none");
-                $('#syncSuccess').css("display", "block").text("Started sync process...");
-                return setTimeout((function(_this) {
-                  return function() {
-                    var syncController;
-                    syncController = App.request("get:sync:controller");
-                    return syncController.getDownloadURL();
-                  };
-                })(this), 2000);
-              case 'file_import':
-                $('#syncStartContinue').css("display", "none");
-                $('#syncSuccess').css("display", "block").text("Started sync process...");
-                return setTimeout((function(_this) {
-                  return function() {
-                    return _.generateZipFile();
-                  };
-                })(this), 2000);
-              case 'file_download':
-                $('#syncStartContinue').css("display", "none");
-                $('#syncSuccess').css("display", "block").text("Resuming sync process...");
-                return setTimeout((function(_this) {
-                  return function() {
-                    var syncController;
-                    syncController = App.request("get:sync:controller");
-                    return syncController.readUnzipFile1();
-                  };
-                })(this), 2000);
-              case 'file_generate':
-                $('#syncStartContinue').css("display", "none");
-                $('#syncSuccess').css("display", "block").text("Resuming sync process...");
-                return setTimeout((function(_this) {
-                  return function() {
-                    return _.uploadGeneratedZipFile();
-                  };
-                })(this), 2000);
-              case 'file_upload':
-                $('#syncStartContinue').css("display", "none");
-                $('#syncSuccess').css("display", "block").text("Resuming sync process...");
-                return setTimeout((function(_this) {
-                  return function() {
-                    var syncController;
-                    syncController = App.request("get:sync:controller");
-                    return syncController.getDownloadURL();
-                  };
-                })(this), 2000);
-            }
-          });
-        });
+        var syncController;
+        syncController = App.request("get:sync:controller");
+        return syncController.startContinueDataSyncProcess();
       };
 
       AppSyncView.prototype.startMediaSyncProcess = function() {
-        $('#syncMediaError').css("display", "none");
-        $('#syncMediaStart').css("display", "none");
-        $('#syncMediaSuccess').css("display", "block").text("Started media sync process...");
-        return setTimeout((function(_this) {
-          return function() {
-            return _.startMediaSync();
-          };
-        })(this), 2000);
+        var syncController;
+        syncController = App.request("get:sync:controller");
+        return syncController.startMediaSyncProcess();
       };
 
       return AppSyncView;

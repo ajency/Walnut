@@ -1,14 +1,14 @@
-	//Global declarations for walnut app
+	//Global declarations for Synapse app
 	//TODO: store the school domain as AJAX url.
 
-	//Synapse Production
-	// var AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";
-
-	//Synapse Staging
-	var AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";
-
+	//Synapse AJAXURL $ SITEURL
+	var AJAXURL = "";
 	
 	var SITEURL = "";
+
+	//'videos' is initialized globally as 'html5Video' plugin loses scope of 
+	// video source incase of more than 1 video.
+	var videos = {};
 
 	//CLASS_LABEL
 	var CLASS_LABEL = [];
@@ -33,5 +33,3 @@
 		'three-fourth' : '3/4 the Class',
 		'full' : 'Full Class'
 	};
-
-

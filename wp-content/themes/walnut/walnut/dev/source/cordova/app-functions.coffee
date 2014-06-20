@@ -8,10 +8,13 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			'wp_'+_.getBlogID()+'_'
 
 
+		
 		appNavigation : ->
 			#Cordova backbutton event
 			document.addEventListener("backbutton", _.onBackButtonClick, false) 
 
+		
+		
 		onBackButtonClick : ->
 			console.log 'Fired cordova back button event'
 			
@@ -57,6 +60,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			.fail _.failureHandler
 
 
+		
 		#Get meta_value from wp_postmeta
 		getMetaValue : (content_piece_id)->
 
@@ -111,6 +115,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			.fail _.failureHandler
 
 
+		
 		#Get additional textbook options
 		getTextbookOptions : (id)->
 
@@ -149,7 +154,49 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 					
 			$.when(runQuery()).done ->
 				console.log 'getTextbookOptions transaction completed'
-			.fail _.failureHandler	
+			.fail _.failureHandler
+
+
+		
+		# Decrypt the encrypted video file
+		decryptVideoFile : (source, destination)->
+
+			runFunc = ->
+				$.Deferred (d)->
+
+					decrypt.startDecryption(source, destination
+						, ->
+							d.resolve destination
+
+						, (message) ->
+							console.log 'ERROR: '+message
+					)
+
+			$.when(runFunc()).done ->
+				console.log 'Decrypted video file at location: '+destination 
+			.fail _.failureHandler
+
+
+		
+		deleteAllDecryptedVideoFilesFromVideosWebDirectory : ->
+			# Delete all video files from 'videos-web' folder
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
+				fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/videos-web"
+					, {create: false, exclusive: false}
+
+					, (directoryEntry)->
+						reader = directoryEntry.createReader()
+						reader.readEntries(
+							(entries)->
+								for i in [0..entries.length-1] by 1
+									entries[i].remove()
+
+									if i is entries.length-1
+										console.log 'Deleted all video files from videos-web directory'
+
+							,_.directoryErrorHandler)
+					, _.directoryErrorHandler)
+			, _.fileSystemErrorHandler)
 			
 
 

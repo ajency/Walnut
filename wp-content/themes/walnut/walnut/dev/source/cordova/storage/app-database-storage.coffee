@@ -4,9 +4,10 @@ define ['underscore', 'jquery'], (_, $)->
 
 	_.mixin
 
+		
 		cordovaOpenPrepopulatedDatabase : ->
 
-			_.db = window.sqlitePlugin.openDatabase({name: "walnutapp"})
+			_.db = window.sqlitePlugin.openDatabase({name: "synapseAppData"})
 
 			console.log 'Local database object: '+_.db
 
@@ -23,9 +24,6 @@ define ['underscore', 'jquery'], (_, $)->
 
 				tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details
 					(id INTEGER PRIMARY KEY, type_of_operation, time_stamp)')
-
-				tx.executeSql('CREATE TABLE IF NOT EXISTS sync_media_details 
-					(id INTEGER PRIMARY KEY, type_of_operation)')
 				
 			,_.transactionErrorHandler
 			,(tx)->
@@ -33,6 +31,7 @@ define ['underscore', 'jquery'], (_, $)->
 			)
 
 
+		
 		createDataTables : (db)->
 
 			db.transaction((tx)->

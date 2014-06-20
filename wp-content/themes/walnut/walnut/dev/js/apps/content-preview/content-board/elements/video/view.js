@@ -21,18 +21,26 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype.onShow = function() {
-        var url, videoId, videoPath, videoUrl, videos;
+        var decryptedVideoPath, encryptedVideoPath, url, videoId, videoUrl, videosWebDirectory, videosWebUrl;
         console.log(this.model);
         videoId = _.uniqueId('video_');
         this.$el.find('video').attr('id', videoId);
         if (_.platform() === 'DEVICE') {
           url = this.model.get('videoUrl');
-          videoUrl = url.substr(url.indexOf("uploads/"));
-          videoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
-          videos = {};
-          videos[videoId] = videoPath;
-          window.plugins.html5Video.initialize(videos);
-          return window.plugins.html5Video.play(videoId);
+          videosWebUrl = url.substr(url.indexOf("uploads/"));
+          videoUrl = videosWebUrl.replace("videos-web", "videos");
+          encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
+          decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+          videosWebDirectory = _.createVideosWebDirectory();
+          return videosWebDirectory.done(function() {
+            var decryptFile;
+            decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath);
+            return decryptFile.done(function(videoPath) {
+              videos[videoId] = videoPath;;
+              window.plugins.html5Video.initialize(videos);
+              return window.plugins.html5Video.play(videoId);
+            });
+          });
         }
       };
 

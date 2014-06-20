@@ -4,6 +4,49 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	_.mixin
 
+		getAllDivisions : ->
+
+			runFunc = ->
+				$.Deferred (d)->
+
+					divisionIds = _.getDivisionIds()
+					divisionIds.done (ids)->
+						
+						# if _.isArray(ids)
+						# 	ids = _.compact ids.reverse()
+
+						results = []
+
+						_.each ids,(id, i)->
+							do(id, i)->
+								singleDivision = _.fetchSingleDivision(id)
+								singleDivision.done (data)->
+									results[i] = data
+						
+						d.resolve results
+
+			$.when(runFunc()).done ->
+				console.log 'getAllDivisions done'
+			.fail _.failureHandler
+
+
+
+		getDivisionById : (id)->
+
+			runFunc = ->
+				$.Deferred (d)->
+
+					division = _.fetchSingleDivision(id)
+					division.done (result)->
+
+						d.resolve result
+
+			$.when(runFunc()).done ->
+				console.log 'getDivisionById done'
+			.fail _.failureHandler
+
+
+
 		getDivisionIds : ->
 
 			runQuery = ->
@@ -26,27 +69,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			.fail _.failureHandler
 
 
-		
-		getStudentsCount : (id)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT COUNT(umeta_id) AS students_count FROM wp_usermeta 
-							WHERE meta_key=? AND meta_value=?", ['student_division', id]
-							,onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess = (d)->
-				(tx, data)->
-					students_count = data.rows.item(0)['students_count']
-					d.resolve students_count
-
-			$.when(runQuery()).done ->
-				console.log 'getStudentsCount transaction completed'
-			.fail _.failureHandler
-
-
-		
 		fetchSingleDivision	: (id)->
 
 			divisionData = id:'', division:'', class_id:'', class_label:'', students_count:''
@@ -77,42 +100,25 @@ define ['underscore', 'unserialize'], ( _) ->
 			.fail _.failureHandler
 
 
-		getAllDivisions : ->
+		
+		getStudentsCount : (id)->
 
-			runFunc = ->
+			runQuery = ->
 				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT COUNT(umeta_id) AS students_count FROM wp_usermeta 
+							WHERE meta_key=? AND meta_value=?", ['student_division', id]
+							,onSuccess(d), _.deferredErrorHandler(d))
 
-					divisionIds = _.getDivisionIds()
-					divisionIds.done (ids)->
-						
-						# if _.isArray(ids)
-						# 	ids = _.compact ids.reverse()
+			onSuccess = (d)->
+				(tx, data)->
+					students_count = data.rows.item(0)['students_count']
+					d.resolve students_count
 
-						results = []
-
-						_.each ids,(id, i)->
-							do(id, i)->
-								singleDivision = _.fetchSingleDivision(id)
-								singleDivision.done (data)->
-									results[i] = data
-						
-						d.resolve results
-
-			$.when(runFunc()).done ->
-				console.log 'getAllDivisions done'
+			$.when(runQuery()).done ->
+				console.log 'getStudentsCount transaction completed'
 			.fail _.failureHandler
 
 
-		getDivisionById : (id)->
-
-			runFunc = ->
-				$.Deferred (d)->
-
-					division = _.fetchSingleDivision(id)
-					division.done (result)->
-
-						d.resolve result
-
-			$.when(runFunc()).done ->
-				console.log 'getDivisionById done'
-			.fail _.failureHandler
+		
+		

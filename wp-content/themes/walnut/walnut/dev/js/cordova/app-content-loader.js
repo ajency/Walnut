@@ -12,9 +12,12 @@ define(['underscore', 'unserialize'], function(_) {
     onSuccess = function(d) {
       return function(tx, data) {
         var metaValue, row;
-        row = data.rows.item(0);
-        if (row['meta_key'] === 'content_element') {
-          metaValue = row['meta_value'];
+        metaValue = null;
+        if (data.rows.length !== 0) {
+          row = data.rows.item(0);
+          if (row['meta_key'] === 'content_element') {
+            metaValue = row['meta_value'];
+          }
         }
         return d.resolve(metaValue);
       };
@@ -146,11 +149,12 @@ define(['underscore', 'unserialize'], function(_) {
         meta = getMetaValueFromMetaId(element.meta_id);
         return meta.done(function(metaData) {
           var ele;
-          if (!metaData) {
-            return false;
+          if (metaData) {
+            ele = unserialize(metaData);
+            ele.meta_id = element.meta_id;
+          } else {
+            ele = element;
           }
-          ele = unserialize(metaData);
-          ele.meta_id = element.meta_id;
           return d.resolve(ele);
         });
       });

@@ -456,20 +456,25 @@ function get_all_content_groups($args=array()){
 
     global $wpdb;
 
+    $published_groups = $archived_groups = $all_content_groups = null;
+
 
     if(isset($args['textbook'])){
-        $query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "publish" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
+        $published_query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "publish" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
         $archived_query =  $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "archive" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
+        $published_groups = $wpdb->get_results($published_query);
+        $archived_groups = $wpdb->get_results($archived_query);
+
     }
     else{
-        $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'publish'", null);
-        $archived_query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'archive'", null);
+//        $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'publish'", null);
+//        $archived_query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'archive'", null);
+        $all_query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection", null);
+        $all_content_groups = $wpdb->get_results($all_query);
     }
 
 
 
-    $content_groups = $wpdb->get_results($query);
-    $archived_groups = $wpdb->get_results($archived_query);
 
     $content_data=array();
     switch_to_blog($current_blog);
@@ -479,14 +484,20 @@ function get_all_content_groups($args=array()){
     if(isset($args['division']))
         $division = $args['division'];
 
-    foreach($content_groups as $item)
-        $content_data[]=  get_single_content_group($item->id, $division , 'publish');
+    if( !is_null($published_groups))
+        foreach($published_groups as $item)
+            $content_data[]=  get_single_content_group($item->id, $division , 'publish');
 
-    foreach($archived_groups as $item){
-        $archived_data = get_single_content_group($item->id, $division, 'archive');
-        if($archived_data)
-            $content_data[] = $archived_data;
-    }
+    if( !is_null($all_content_groups))
+        foreach($all_content_groups as $item)
+            $content_data[]=  get_single_content_group($item->id);
+
+    if( !is_null($archived_groups))
+        foreach($archived_groups as $item){
+            $archived_data = get_single_content_group($item->id, $division, 'archive');
+            if($archived_data)
+                $content_data[] = $archived_data;
+        }
 
     switch_to_blog($current_blog);
     return $content_data;

@@ -54,7 +54,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
 			$('#syncSuccess').css("display","block").text("Importing file...")
 
-			getParsedData = parseCSVToJSON _.getTblPrefix()+'class_divisions.csv'
+			getParsedData = _.parseCSVToJSON _.getTblPrefix()+'class_divisions.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
@@ -72,7 +72,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
 		insertIntoWpQuestionResponse : ->
 
-			getParsedData = parseCSVToJSON _.getTblPrefix()+'question_response.csv'
+			getParsedData = _.parseCSVToJSON _.getTblPrefix()+'question_response.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response")
@@ -93,7 +93,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
 		insertIntoWpCollectionMeta : ->
 
-			getParsedData = parseCSVToJSON 'wp_collection_meta.csv'
+			getParsedData = _.parseCSVToJSON 'wp_collection_meta.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM wp_collection_meta")
@@ -111,7 +111,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 		
 		insertIntoWpContentCollection : ->
 
-			getParsedData = parseCSVToJSON 'wp_content_collection.csv'
+			getParsedData = _.parseCSVToJSON 'wp_content_collection.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM wp_content_collection")
@@ -126,13 +126,13 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 				,_.transactionErrorhandler
 				,(tx)->
 					console.log 'Inserted data in wp_content_collection'
-					@sendParsedData6 file5 ,fileEntry
+					_.insertIntoWpOptions()
 				)
 
 
 		insertIntoWpOptions : ->
 
-			getParsedData = parseCSVToJSON 'wp_options.csv'
+			getParsedData = _.parseCSVToJSON 'wp_options.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM wp_options")
@@ -150,7 +150,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
 		insertIntoWpPostMeta : ->
 
-			getParsedData = parseCSVToJSON 'wp_postmeta.csv'
+			getParsedData = _.parseCSVToJSON 'wp_postmeta.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM wp_postmeta")
@@ -168,7 +168,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
 		insertIntoWpPosts : ->
 
-			getParsedData = parseCSVToJSON 'wp_posts.csv'
+			getParsedData = _.parseCSVToJSON 'wp_posts.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM wp_posts")
@@ -193,7 +193,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 		
 		insertIntoWpTermRelationships : ->
 
-			getParsedData = parseCSVToJSON 'wp_term_relationships.csv'
+			getParsedData = _.parseCSVToJSON 'wp_term_relationships.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM wp_term_relationships")
@@ -211,7 +211,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
 		insertIntoWpTermTaxonomy : ->
 
-			getParsedData = parseCSVToJSON 'wp_term_taxonomy.csv'
+			getParsedData = _.parseCSVToJSON 'wp_term_taxonomy.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM wp_term_taxonomy")
@@ -230,7 +230,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
 		insertIntoWpTerms : ->
 
-			getParsedData = parseCSVToJSON 'wp_terms.csv'
+			getParsedData = _.parseCSVToJSON 'wp_terms.csv'
 			getParsedData.done (data)->
 				_.db.transaction((tx)->
 					tx.executeSql("DELETE FROM wp_terms")
@@ -248,22 +248,73 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
 		insertIntoWpTextbookRelationships : ->
 
-			
+			getParsedData = _.parseCSVToJSON 'wp_textbook_relationships.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_textbook_relationships")
+
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_textbook_relationships 
+							(id, textbook_id, class_id, tags) VALUES (?,?,?,?)"
+							, [row[0], row[1], row[2], row[3]])
+
+				,_.transactionErrorhandler
+				,(tx)->
+					console.log 'Inserted data in wp_textbook_relationships'
+					_.insertIntoWpUserMeta()
+				)
 
 
+		insertIntoWpUserMeta : ->
+
+			getParsedData = _.parseCSVToJSON 'wp_usermeta.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_usermeta")
+
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) 
+							VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
+
+				,_.transactionErrorhandler
+				,(tx)->
+					console.log 'Inserted data in wp_usermeta'
+					_.insertIntoWpUsers()
+				)
 
 
+		insertIntoWpUsers : ->
+
+			getParsedData = _.parseCSVToJSON 'wp_users.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_users")
+
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename
+							, user_email, user_url, user_registered, user_activation_key, user_status
+							, display_name, spam,deleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+							, [row[0], row[1], row[2], row[3], row[4], row[5]
+							, row[6], row[7], row[8], row[9], row[10], row[11]])
+
+				,_.transactionErrorhandler
+				,(tx)->
+					console.log 'Inserted data in wp_users'
+					_.onFileImportSuccess()
+				)
 
 
+		onFileImportSuccess : ->
 
+			_.updateSyncDetails('file_import', _.getCurrentDateTime(2))
 
+			$('#syncSuccess').css("display","block").text("File import completed")
 
+			setTimeout(=>
+				$('#syncSuccess').css("display","block").text("Sync completed successfully")
+				App.execute "show:leftnavapp", region:App.leftNavRegion	
+			,2000)
 
-
-
-
-
-
-		
-			
-
+			setTimeout(=>
+				App.navigate('teachers/dashboard', trigger: true)
+			,2000)

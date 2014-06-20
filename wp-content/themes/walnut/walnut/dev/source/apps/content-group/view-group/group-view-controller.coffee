@@ -121,6 +121,9 @@ define ['app'
             onShow:->
                 $('.page-content').removeClass 'expand-page'
 
+                #Changes for app
+                _.deleteAllDecryptedVideoFilesFromVideosWebDirectory() if _.platform() is 'DEVICE'
+
 
 
 

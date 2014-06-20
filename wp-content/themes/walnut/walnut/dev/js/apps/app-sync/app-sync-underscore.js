@@ -72,29 +72,6 @@ define(['underscore', 'unserialize'], function(_) {
       }, _.transactionErrorhandler, function(tx) {
         return console.log('Updated sync details for ' + operation);
       });
-    },
-    decryptTheEncryptedFile: function(encryptPathValue, decryptPathValue) {
-      return decrypt.startDecryption(encryptPathValue, decryptPathValue, function() {
-        return alert("The file was Successfully Decrypted");
-      }, function(message) {
-        return alert("Error! " + message);
-      });
-    },
-    deleteTheDecryptedFile: function(decryptPathValue) {
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(_this) {
-        return function(fileSystem) {
-          return fileSystem.root.getFile(decryptPathValue, {
-            create: false,
-            exclusive: false
-          }, function(fileEntry) {
-            return fileEntry.remove(function(fileEntry) {
-              return console.log("Deleted Successfully");
-            }, function(error) {
-              return console.log("error");
-            });
-          }, _.fileErrorHandler);
-        };
-      })(this), _.fileSystemErrorHandler);
     }
   });
 });

@@ -17,6 +17,9 @@ define(['underscore'], function(_) {
     fileSystemErrorHandler: function(evt) {
       return console.log('FILE SYSTEM ERROR: ' + evt.target.error.code);
     },
+    directoryErrorHandler: function(error) {
+      return console.log('DIRECTORY ERROR: ' + error.code);
+    },
     fileTransferErrorHandler: function(error) {
       var err_msg;
       switch (error.code) {

@@ -131,7 +131,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       return API.scheduleContentGroup(data);
     });
     return App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
-      return API.getContentGroupByIdFromLocal(id(division));
+      return API.getContentGroupByIdFromLocal(id, division);
     });
   });
 });

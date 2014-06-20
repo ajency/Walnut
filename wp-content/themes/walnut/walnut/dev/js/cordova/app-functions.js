@@ -147,6 +147,45 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return console.log('getTextbookOptions transaction completed');
       }).fail(_.failureHandler);
     },
+    decryptVideoFile: function(source, destination) {
+      var runFunc;
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          return decrypt.startDecryption(source, destination, function() {
+            return d.resolve(destination);
+          }, function(message) {
+            return console.log('ERROR: ' + message);
+          });
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log('Decrypted video file at location: ' + destination);
+      }).fail(_.failureHandler);
+    },
+    deleteAllDecryptedVideoFilesFromVideosWebDirectory: function() {
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+        return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/videos-web", {
+          create: false,
+          exclusive: false
+        }, function(directoryEntry) {
+          var reader;
+          reader = directoryEntry.createReader();
+          return reader.readEntries(function(entries) {
+            var i, _i, _ref, _results;
+            _results = [];
+            for (i = _i = 0, _ref = entries.length - 1; _i <= _ref; i = _i += 1) {
+              entries[i].remove();
+              if (i === entries.length - 1) {
+                _results.push(console.log('Deleted all video files from videos-web directory'));
+              } else {
+                _results.push(void 0);
+              }
+            }
+            return _results;
+          }, _.directoryErrorHandler);
+        }, _.directoryErrorHandler);
+      }, _.fileSystemErrorHandler);
+    },
     getCurrentDateTime: function(bit) {
       var d, date, time;
       d = new Date();

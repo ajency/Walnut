@@ -49,7 +49,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
     insertIntoWpClassDivisions: function() {
       var getParsedData;
       $('#syncSuccess').css("display", "block").text("Importing file...");
-      getParsedData = parseCSVToJSON(_.getTblPrefix() + 'class_divisions.csv');
+      getParsedData = _.parseCSVToJSON(_.getTblPrefix() + 'class_divisions.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM " + _.getTblPrefix() + "class_divisions");
@@ -64,7 +64,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
     },
     insertIntoWpQuestionResponse: function() {
       var getParsedData;
-      getParsedData = parseCSVToJSON(_.getTblPrefix() + 'question_response.csv');
+      getParsedData = _.parseCSVToJSON(_.getTblPrefix() + 'question_response.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM " + _.getTblPrefix() + "question_response");
@@ -79,7 +79,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
     },
     insertIntoWpCollectionMeta: function() {
       var getParsedData;
-      getParsedData = parseCSVToJSON('wp_collection_meta.csv');
+      getParsedData = _.parseCSVToJSON('wp_collection_meta.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM wp_collection_meta");
@@ -94,7 +94,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
     },
     insertIntoWpContentCollection: function() {
       var getParsedData;
-      getParsedData = parseCSVToJSON('wp_content_collection.csv');
+      getParsedData = _.parseCSVToJSON('wp_content_collection.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM wp_content_collection");
@@ -103,13 +103,13 @@ define(['underscore', 'csvparse'], function(_, parse) {
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_content_collection');
-          return this.sendParsedData6(file5, fileEntry);
+          return _.insertIntoWpOptions();
         });
       });
     },
     insertIntoWpOptions: function() {
       var getParsedData;
-      getParsedData = parseCSVToJSON('wp_options.csv');
+      getParsedData = _.parseCSVToJSON('wp_options.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM wp_options");
@@ -124,7 +124,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
     },
     insertIntoWpPostMeta: function() {
       var getParsedData;
-      getParsedData = parseCSVToJSON('wp_postmeta.csv');
+      getParsedData = _.parseCSVToJSON('wp_postmeta.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM wp_postmeta");
@@ -139,7 +139,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
     },
     insertIntoWpPosts: function() {
       var getParsedData;
-      getParsedData = parseCSVToJSON('wp_posts.csv');
+      getParsedData = _.parseCSVToJSON('wp_posts.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM wp_posts");
@@ -154,7 +154,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
     },
     insertIntoWpTermRelationships: function() {
       var getParsedData;
-      getParsedData = parseCSVToJSON('wp_term_relationships.csv');
+      getParsedData = _.parseCSVToJSON('wp_term_relationships.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM wp_term_relationships");
@@ -169,7 +169,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
     },
     insertIntoWpTermTaxonomy: function() {
       var getParsedData;
-      getParsedData = parseCSVToJSON('wp_term_taxonomy.csv');
+      getParsedData = _.parseCSVToJSON('wp_term_taxonomy.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM wp_term_taxonomy");
@@ -184,7 +184,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
     },
     insertIntoWpTerms: function() {
       var getParsedData;
-      getParsedData = parseCSVToJSON('wp_terms.csv');
+      getParsedData = _.parseCSVToJSON('wp_terms.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM wp_terms");
@@ -199,6 +199,69 @@ define(['underscore', 'csvparse'], function(_, parse) {
         })(this));
       });
     },
-    insertIntoWpTextbookRelationships: function() {}
+    insertIntoWpTextbookRelationships: function() {
+      var getParsedData;
+      getParsedData = _.parseCSVToJSON('wp_textbook_relationships.csv');
+      return getParsedData.done(function(data) {
+        return _.db.transaction(function(tx) {
+          tx.executeSql("DELETE FROM wp_textbook_relationships");
+          return _.each(data, function(row, i) {
+            return tx.executeSql("INSERT INTO wp_textbook_relationships (id, textbook_id, class_id, tags) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+          });
+        }, _.transactionErrorhandler, function(tx) {
+          console.log('Inserted data in wp_textbook_relationships');
+          return _.insertIntoWpUserMeta();
+        });
+      });
+    },
+    insertIntoWpUserMeta: function() {
+      var getParsedData;
+      getParsedData = _.parseCSVToJSON('wp_usermeta.csv');
+      return getParsedData.done(function(data) {
+        return _.db.transaction(function(tx) {
+          tx.executeSql("DELETE FROM wp_usermeta");
+          return _.each(data, function(row, i) {
+            return tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+          });
+        }, _.transactionErrorhandler, function(tx) {
+          console.log('Inserted data in wp_usermeta');
+          return _.insertIntoWpUsers();
+        });
+      });
+    },
+    insertIntoWpUsers: function() {
+      var getParsedData;
+      getParsedData = _.parseCSVToJSON('wp_users.csv');
+      return getParsedData.done(function(data) {
+        return _.db.transaction(function(tx) {
+          tx.executeSql("DELETE FROM wp_users");
+          return _.each(data, function(row, i) {
+            return tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename , user_email, user_url, user_registered, user_activation_key, user_status , display_name, spam,deleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11]]);
+          });
+        }, _.transactionErrorhandler, function(tx) {
+          console.log('Inserted data in wp_users');
+          return _.onFileImportSuccess();
+        });
+      });
+    },
+    onFileImportSuccess: function() {
+      _.updateSyncDetails('file_import', _.getCurrentDateTime(2));
+      $('#syncSuccess').css("display", "block").text("File import completed");
+      setTimeout((function(_this) {
+        return function() {
+          $('#syncSuccess').css("display", "block").text("Sync completed successfully");
+          return App.execute("show:leftnavapp", {
+            region: App.leftNavRegion
+          });
+        };
+      })(this), 2000);
+      return setTimeout((function(_this) {
+        return function() {
+          return App.navigate('teachers/dashboard', {
+            trigger: true
+          });
+        };
+      })(this), 2000);
+    }
   });
 });

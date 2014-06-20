@@ -31,11 +31,14 @@ define ['app'
                     'selectbox': true
                     'pagination': true
 
+
+
                 @view = view = @_getContentSelectionView(@contentPiecesCollection, tableConfig)
 
 
-
-                @show view, (loading: true, entities: [@textbooksCollection, @contentGroupCollection])
+                @show view,
+                    loading: true
+                    entities: [@textbooksCollection, @contentGroupCollection]
 
                 @listenTo @view, "fetch:chapters": (term_id) =>
                     chaptersCollection = App.request "get:chapters", ('parent': term_id)
@@ -71,12 +74,15 @@ define ['app'
                 new DataContentTableView
                     collection: collection
                     tableConfig: tableConfig
+                    contentGroupModel : @model
                     templateHelpers:
                         textbooksFilter: ()=>
                             textbooks = []
-                            _.each(@textbooksCollection.models, (el, ind)->
-                                textbooks.push('name': el.get('name'), 'id': el.get('term_id'))
-                            )
+                            _.each @textbooksCollection.models, (el)->
+                                textbooks.push
+                                    'name': el.get('name')
+                                    'id': el.get('term_id')
+
                             textbooks
 
         class DataContentTableView extends Marionette.ItemView
@@ -101,10 +107,14 @@ define ['app'
                 data
 
 
+
             onShow: =>
                 @makeDataTable(@collection.models, Marionette.getOption @, 'tableConfig')
                 $ "#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter"
                 .select2();
+
+
+
 
 
             makeRow: (item, index, tableData)->
@@ -122,7 +132,7 @@ define ['app'
                     						  </div>
                     						</td>'
 
-                _.each tableData.data, (el, ind)->
+                _.each tableData.data, (el)->
                     if el.value
                         el_value = item.get el.value
 
@@ -142,12 +152,25 @@ define ['app'
                 row
 
 
-            makeDataTable: (dataCollection, tableData)->
+            makeDataTable: (dataCollectionFull, tableData)->
                 @$el.find('#dataContentTable tbody').empty()
+
+                contentGroupModel = Marionette.getOption @,'contentGroupModel'
+
+                contentPieceIds = _.map contentGroupModel.get('content_pieces'),(id)->
+                    parseInt id
+
+
+#                return content pieces not already in the module
+                dataCollection = dataCollectionFull.filter (dataModel)->
+                    if _.indexOf(contentPieceIds,parseInt(dataModel.get('ID'))) is -1
+                        return true
+                    else return false
 
                 _.each dataCollection, (item, index)=>
                     row = @makeRow item, index, tableData
                     @$el.find('#dataContentTable tbody').append(row)
+
 
                 if _.size(dataCollection) is 0
                     colspan = _.size tableData.data
@@ -155,7 +178,7 @@ define ['app'
                         colspan++
                     @$el.find('#dataContentTable tbody').append('<td id="empty_row" colspan="' + colspan + '">No Data found</td>')
 
-                $('#dataContentTable').tablesorter();
+                @$el.find('#dataContentTable').tablesorter();
 
                 if tableData.pagination
                     $("#dataContentTable").trigger("updateCache");
@@ -184,11 +207,11 @@ define ['app'
                 else
                     @$el.find('#dataContentTable .tab_checkbox').removeAttr('checked')
 
-            filterTableData: (e)=>
+            filterTableData: =>
 
                 #filter_ids = @$el.find('.textbook-filter').val()
 
-                filter_ids=_.map @$el.find('select.textbook-filter'), (ele,index)->
+                filter_ids=_.map @$el.find('select.textbook-filter'), (ele)->
                                         item = ''
                                         if not isNaN ele.value
                                             item= ele.value
@@ -239,7 +262,7 @@ define ['app'
                     $ '#chapters-filter'
                         .select2 'data', {'text':'Select Chapter'}
 
-                    _.each chapters.models, (chap, index)=>
+                    _.each chapters.models, (chap)=>
                         @$el.find '#chapters-filter'
                             .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
 
@@ -264,7 +287,7 @@ define ['app'
                         $ '#sections-filter'
                             .select2 'data', {'text':'Select Section'}
 
-                        _.each allsections.sections, (section, index)=>
+                        _.each allsections.sections, (section)=>
 
                             @$el.find '#sections-filter'
                                 .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
@@ -279,7 +302,7 @@ define ['app'
                         $ '#subsections-filter'
                             .select2 'data', {'text':'Select SubSection'}
 
-                        _.each allsections.subsections, (section, index)=>
+                        _.each allsections.subsections, (section)=>
                             @$el.find '#subsections-filter'
                                 .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
 
@@ -299,13 +322,13 @@ define ['app'
                         .select2 'data', 'text': 'No Subsections'
 
             addContentPieces: =>
-                content_pieces = _.pluck($('#dataContentTable .tab_checkbox:checked'), 'value')
+                content_pieces = _.pluck(@$el.find('#dataContentTable .tab_checkbox:checked'), 'value')
                 if content_pieces
                     @trigger "add:content:pieces", content_pieces
 
                     for content_id in content_pieces
 
-                        @$el.find("#dataContentTable tr#row_" + content_id).remove()
+                        @$el.find("#dataContentTable tr#row_#{content_id}").remove()
 
                         tableData = Marionette.getOption @, 'tableConfig'
                         if _.size(@$el.find("#dataContentTable tbody tr")) is 0
@@ -327,6 +350,7 @@ define ['app'
 
 
                 row = @makeRow model, row_index, tableData
+
                 $row = $(row)
                 @$el.find('#dataContentTable tbody').append($row)
 

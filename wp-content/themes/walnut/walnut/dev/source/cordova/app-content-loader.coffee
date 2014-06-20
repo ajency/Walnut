@@ -11,11 +11,13 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		onSuccess = (d)->
 			(tx, data)->
+				metaValue = null
 
-				row = data.rows.item(0)
+				if data.rows.length isnt 0
+					row = data.rows.item(0)
 
-				if row['meta_key'] is 'content_element'
-					metaValue = row['meta_value']
+					if row['meta_key'] is 'content_element'
+						metaValue = row['meta_value']
 
 				d.resolve(metaValue)
 
@@ -129,13 +131,22 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.Deferred (d)->
 				meta = getMetaValueFromMetaId element.meta_id
 				meta.done (metaData)->
-					if (!metaData)
-						return false;
-		
-					ele  =  unserialize metaData
-					ele.meta_id = element.meta_id
+					if metaData
+						ele  =  unserialize metaData
+						ele.meta_id = element.meta_id
+						# return false
+
+					else ele = element
 				
 					d.resolve ele
+
+					# if (!metaData)
+					# 	return false
+
+					# ele  =  unserialize metaData
+					# ele.meta_id = element.meta_id
+
+					# d.resolve ele
 
 		$.when(runFunc()).done ->
 			console.log "get getElementMetaValues done"

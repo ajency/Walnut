@@ -30,7 +30,7 @@ define(['underscore'], function(_) {
             fileEntry.remove();
             fileTransfer = new FileTransfer();
             return fileTransfer.download(uri, filePath + "csv-synapse.zip", function(file) {
-              return _.onFileDownloadSuccess(file.toURL()(filePath(resp.last_sync)));
+              return _.onFileDownloadSuccess(file.toURL(), filePath, resp.last_sync);
             }, function(error) {
               return _.onFileDownloadError(error);
             }, true);
@@ -51,7 +51,7 @@ define(['underscore'], function(_) {
           };
         })(this), 2000);
       };
-      return zip.unzip(source(destination(onFileUnzipSuccess)));
+      return zip.unzip(source, destination, onFileUnzipSuccess);
     },
     onFileDownloadError: function(error) {
       console.log('ERROR: ' + error.code);

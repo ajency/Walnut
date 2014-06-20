@@ -24,12 +24,7 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
         }
         return App.execute("when:fetched", this.contentGroupModel, (function(_this) {
           return function() {
-            if (_this.contentGroupModel.get('status') === 'underreview') {
-              return _this.showContentGroupView();
-            } else {
-              _this.noEditView = _this._getNotEditView(_this.contentGroupModel.get('status'));
-              return _this.show(_this.noEditView);
-            }
+            return _this.showContentGroupView();
           };
         })(this));
       };
@@ -62,6 +57,12 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
           };
         })(this));
         this.listenTo(this.contentGroupModel, 'change:id', this._showContentSelectionApp, this);
+        this.listenTo(this.layout.collectionDetailsRegion, 'close:content:selection:app', (function(_this) {
+          return function() {
+            console.log('close:content:selection:app ');
+            return _this.layout.contentSelectionRegion.close();
+          };
+        })(this));
         return this.show(layout, {
           loading: true
         });
@@ -88,11 +89,13 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
         this.contentGroupCollection = App.request("get:content:pieces:of:group", model);
         return App.execute("when:fetched", this.contentGroupCollection, (function(_this) {
           return function() {
-            App.execute("show:content:selectionapp", {
-              region: _this.layout.contentSelectionRegion,
-              model: model,
-              contentGroupCollection: _this.contentGroupCollection
-            });
+            if (model.get('status') === 'underreview') {
+              App.execute("show:content:selectionapp", {
+                region: _this.layout.contentSelectionRegion,
+                model: model,
+                contentGroupCollection: _this.contentGroupCollection
+              });
+            }
             return App.execute("show:editgroup:content:displayapp", {
               region: _this.layout.contentDisplayRegion,
               model: model,
@@ -112,7 +115,7 @@ define(['app', 'controllers/region-controller', 'apps/content-group/edit-group/g
         return ContentGroupEditLayout.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupEditLayout.prototype.template = '<div class="teacher-app"> <div id="collection-details-region"></div> <div id="content-selection-region"></div> </div> <div id="content-display-region"></div>';
+      ContentGroupEditLayout.prototype.template = '<div class="teacher-app" id="teacher-app"> <div id="collection-details-region"></div> <div id="content-selection-region"></div> </div> <div id="content-display-region"></div>';
 
       ContentGroupEditLayout.prototype.className = '';
 

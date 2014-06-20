@@ -114,5 +114,5 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 		# request handler to get content group by id from local database
 		App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
-			API.getContentGroupByIdFromLocal id division
+			API.getContentGroupByIdFromLocal(id, division)
 

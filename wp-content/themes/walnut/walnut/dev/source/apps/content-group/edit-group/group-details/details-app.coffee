@@ -4,87 +4,91 @@ define ['app'
     App.module "CollecionDetailsApp.Controller", (Controller, App)->
         class Controller.EditCollecionDetailsController extends RegionController
 
-            initialize: (opts)->
+            initialize : (opts)->
                 {@model}= opts
 
                 @textbooksCollection = App.request "get:textbooks"
 
                 App.execute "when:fetched", [@textbooksCollection], @showView
 
-            showView: =>
+            showView : =>
                 @view = view = @_getCollectionDetailsView @model
 
-                @show view, (loading: true, entities: [@textbooksCollection])
+                @show view, (loading : true, entities : [@textbooksCollection])
 
-                @listenTo @view, "fetch:chapters": (term_id) =>
-                    chaptersCollection = App.request "get:chapters", ('parent': term_id)
+                @listenTo @view, "fetch:chapters" : (term_id) =>
+                    chaptersCollection = App.request "get:chapters", ('parent' : term_id)
                     App.execute "when:fetched", chaptersCollection, =>
                         @view.triggerMethod 'fetch:chapters:complete', chaptersCollection
 
-                @listenTo @view, "fetch:sections:subsections": (term_id) ->
-                    allSectionsCollection = App.request "get:subsections:by:chapter:id", ('child_of': term_id)
+                @listenTo @view, "fetch:sections:subsections" : (term_id) ->
+                    allSectionsCollection = App.request "get:subsections:by:chapter:id", ('child_of' : term_id)
                     App.execute "when:fetched", allSectionsCollection, =>
                         #make list of sections directly belonging to chapter ie. parent=term_id
-                        sectionsList = allSectionsCollection.where 'parent': term_id
+                        sectionsList = allSectionsCollection.where 'parent' : term_id
 
                         #all the other sections are listed as subsections
                         subsectionsList = _.difference(allSectionsCollection.models, sectionsList);
                         allSections =
-                            'sections': sectionsList, 'subsections': subsectionsList
+                            'sections' : sectionsList
+                            'subsections' : subsectionsList
 
                         @view.triggerMethod 'fetch:subsections:complete', allSections
 
 
-                @listenTo @view, "save:content:collection:details": (data) =>
-
-                    App.navigate "edit-module"
-
-                    @model.set 'changed': 'module_details'
-                    @model.save(data, {wait: true, success: @successFn, error: @errorFn})
+                @listenTo @view, "save:content:collection:details" : (data) =>
+                    @model.set 'changed' : 'module_details'
+                    @model.save(data, { wait : true, success : @successFn, error : @errorFn })
+                    @region.trigger "close:content:selection:app" if data.status isnt 'underreview'
 
 
-            successFn: (model)=>
+            successFn : (model)=>
+                App.navigate "edit-module/#{model.get('id')}"
                 @view.triggerMethod 'saved:content:group', model
 
-            errorFn: ->
+            errorFn : ->
                 console.log 'error'
 
 
-            _getCollectionDetailsView: (model)->
+            _getCollectionDetailsView : (model)->
                 new CollectionDetailsView
-                    model: model
-                    templateHelpers:
-                        textbooksFilter: =>
+                    model : model
+                    templateHelpers :
+                        textbooksFilter : =>
                             textbooks = []
-                            _.each(@textbooksCollection.models, (el, ind)->
-                                textbooks.push('name': el.get('name'), 'id': el.get('term_id'))
-                            )
+                            _.each @textbooksCollection.models, (el, ind)->
+                                textbooks.push
+                                    'name' : el.get('name')
+                                    'id' : el.get('term_id')
+
                             textbooks
 
 
         class CollectionDetailsView extends Marionette.ItemView
 
-            template: collectionDetailsTpl
+            template : collectionDetailsTpl
 
-            className: 'tiles white grid simple vertical green animated slideInRight'
+            className : 'tiles white grid simple vertical green animated slideInRight'
 
-            events:
-                'change #textbooks': (e)->
+            events :
+                'change #textbooks' : (e)->
                     @$el.find '#secs, #subsecs'
-                        .select2 'data', null
+                    .select2 'data', null
 
                     @$el.find '#chapters, #secs, #subsecs'
-                        .html ''
+                    .html ''
 
                     @trigger "fetch:chapters", $(e.target).val()
 
-                'change #chapters': (e)->
+                'change #chapters' : (e)->
                     @trigger "fetch:sections:subsections", $(e.target).val()
 
-                'click #save-content-collection': 'save_content'
+                'click #save-content-collection' : 'save_content'
+
+            modelEvents :
+                'change:status' : 'statusChanged'
 
             mixinTemplateHelpers : (data)->
-
                 data = super data
 
                 # add status values
@@ -112,7 +116,7 @@ define ['app'
                 data
 
 
-            onShow: ->
+            onShow : ->
                 $("#textbooks, #chapters, #minshours, select").select2()
 
                 #Multi Select
@@ -121,10 +125,28 @@ define ['app'
                 if not @model.isNew()
                     @prepolateDropDowns()
 
+                @statusChanged()
+
+
+
+
+            statusChanged : ->
+                if @model.get('status') in ['publish', 'archive']
+                    @$el.find 'input, textarea, select'
+                    .prop 'disabled', true
+
+                    @$el.find 'select#status'
+                    .prop 'disabled', false
+
+                    @$el.find 'select#status option[value="underreview"]'
+                    .prop 'disabled', true
+
+
+
             prepolateDropDowns : ->
                 @$el.find('#textbooks').trigger 'change'
 
-            onFetchChaptersComplete: (chapters)->
+            onFetchChaptersComplete : (chapters)->
                 if _.size(chapters) > 0
                     @$el.find('#chapters').html('');
                     _.each chapters.models, (chap, index)=>
@@ -142,15 +164,14 @@ define ['app'
                     @$el.find('#chapters').select2()
                     @$el.find('#chapters').trigger 'change'
 
-            onFetchSubsectionsComplete: (allsections)->
-
+            onFetchSubsectionsComplete : (allsections)->
                 if _.size(allsections) > 0
                     if _.size(allsections.sections) > 0
                         @$el.find('#secs').html('');
                         _.each allsections.sections, (section, index)=>
                             @$el.find('#secs')
-                                .append '<option  value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-                            @markSelected 'secs','sections'
+                            .append '<option  value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                            @markSelected 'secs', 'sections'
                     else
                         @$el.find('#secs').html('<option value="">No Sections available</option>');
 
@@ -158,8 +179,8 @@ define ['app'
                         @$el.find('#subsecs').html('');
                         _.each allsections.subsections, (section, index)=>
                             @$el.find '#subsecs'
-                                .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-                            @markSelected 'subsecs','subsections'
+                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
+                            @markSelected 'subsecs', 'subsections'
                     else
                         @$el.find('#subsecs').html '<option>No Sub Sections available</option>'
                 else
@@ -171,7 +192,7 @@ define ['app'
                 $("#" + element).val(@model.get('term_ids')[sections]).select2()
 
 
-            save_content: (e)->
+            save_content : (e)->
                 e.preventDefault()
 
                 $('#s2id_textbooks .select2-choice')
@@ -188,7 +209,7 @@ define ['app'
                     @trigger "save:content:collection:details", data
 
 
-            onSavedContentGroup: (model) ->
+            onSavedContentGroup : (model) ->
                 @$el.find('#saved-success').remove();
 
                 @$el.find '.grid-title'

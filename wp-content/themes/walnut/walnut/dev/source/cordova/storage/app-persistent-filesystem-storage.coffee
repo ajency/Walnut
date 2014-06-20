@@ -107,6 +107,32 @@ define ['underscore'], ( _) ->
 			$.when(runFunc()).done ->
 				console.log 'createSynapseDataDirectory done'
 			.fail _.failureHandler
+
+
+		
+		#Create 'videos-web' directory inside 'uploads' for saving decrypted files
+		createVideosWebDirectory : ->
+
+			runFunc = ->
+				$.Deferred (d)->
+					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+						,(fileSystem)->
+							fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/videos-web"
+								,{create: true, exclusive:false} 
+								
+								,(fileEntry)->
+									console.log 'videos-web directory path: '+fileEntry.toURL()
+									d.resolve fileEntry
+								
+								,(error)->
+									console.log 'ERROR: '+error.code
+								)
+
+						,_.fileSystemErrorHandler)
+
+			$.when(runFunc()).done ->
+				console.log 'createVideosWebDirectory done'
+			.fail _.failureHandler
 			
 
 		
