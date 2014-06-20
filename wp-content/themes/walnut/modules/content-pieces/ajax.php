@@ -42,7 +42,7 @@ function ajax_create_content_group() {
     );
 
     $id = save_content_group($data);
-    
+
     wp_send_json(array('code' => 'OK', 'data' => array('id'=> $id)));
 }
 

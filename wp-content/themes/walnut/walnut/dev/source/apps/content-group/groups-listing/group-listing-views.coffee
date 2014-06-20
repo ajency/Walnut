@@ -8,11 +8,12 @@ define ['app'
             className : 'gradeX odd'
 
             template : '<td>{{name}}</td>
-                        <td>{{textbookName}}</td>
-                        <td>{{durationRounded}} {{minshours}}</td>
-                        <td>{{&statusMessage}}</td>
-                        <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
-                            <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>'
+                                    <td>{{textbookName}}</td>
+                                    <td>{{durationRounded}} {{minshours}}</td>
+                                    <td>{{&statusMessage}}</td>
+                                    <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
+                                        <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a>
+                                    {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank" id="cloneModule" class="nonDevice">Clone</a>{{/archivedModule}}</td>'
 
             serializeData : ->
                 data = super()
@@ -25,9 +26,9 @@ define ['app'
 
                 data.durationRounded = ->
                     if data.minshours is 'hrs'
-                        _.numberFormat parseFloat(data.duration),2
+                        _.numberFormat parseFloat(data.duration), 2
                     else
-                       data.duration
+                        data.duration
 
                 data.statusMessage = ->
                     if data.status is 'underreview'
@@ -37,11 +38,40 @@ define ['app'
                     else if data.status is 'archive'
                         return '<span class="label label-success">Archived</span>'
 
+                data.archivedModule = true if data.status is 'archive'
+
                 data
 
-            initialize:(options)->
+            initialize : (options)->
                 @textbooks = options.textbooksCollection
                 console.log options
+
+            onShow : ->
+                if @model.get('status') is 'archive'
+                    @$el.find('td a#cloneModule').on 'click', =>
+                        if confirm("Are you sure you want to clone '#{@model.get('name')}' ?") is true
+                            @cloneModel = App.request "new:content:group"
+                            groupData = @model.toJSON()
+                            @clonedData = _.omit groupData,
+                              ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
+                            @clonedData.name = "#{@clonedData.name} clone"
+                            @clonedData.status = "underreview"
+
+                            App.execute "when:fetched", @cloneModel, =>
+                                @cloneModel.save @clonedData,
+                                    wait : true
+                                    success : @successFn
+                                    error : @errorFn
+
+            successFn : (model)=>
+                model.set('content_pieces', @clonedData.content_pieces)
+                model.save({ 'changed' : 'content_pieces' }, { wait : true })
+                App.navigate "edit-module/#{model.get('id')}",
+                    trigger : true
+
+            errorFn : ->
+                console.log 'error'
+
 
         class EmptyView extends Marionette.ItemView
 
@@ -129,7 +159,6 @@ define ['app'
                         .append "<option value='#{chap.get('term_id')}'>#{chap.get('name')}</option>"
 
                 else
-
                     @$el.find '#chapters-filter'
                     .select2 'data', 'text' : 'No chapters'
                         .html '<option value="">All Chapters</option>'

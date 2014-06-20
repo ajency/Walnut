@@ -1,6 +1,6 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-group/groups-listing/templates/content-group-list-tmpl.html'], function(App, contentListTpl) {
   return App.module("ContentGroupApp.GroupListing.Views", function(Views, App, Backbone, Marionette, $, _) {
@@ -9,6 +9,7 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
       __extends(ListItemView, _super);
 
       function ListItemView() {
+        this.successFn = __bind(this.successFn, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -16,7 +17,7 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{textbookName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>';
+      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{textbookName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank" id="cloneModule" class="nonDevice">Clone</a>{{/archivedModule}}</td>';
 
       ListItemView.prototype.serializeData = function() {
         var data;
@@ -49,12 +50,55 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
             return '<span class="label label-success">Archived</span>';
           }
         };
+        if (data.status === 'archive') {
+          data.archivedModule = true;
+        }
         return data;
       };
 
       ListItemView.prototype.initialize = function(options) {
         this.textbooks = options.textbooksCollection;
         return console.log(options);
+      };
+
+      ListItemView.prototype.onShow = function() {
+        if (this.model.get('status') === 'archive') {
+          return this.$el.find('td a#cloneModule').on('click', (function(_this) {
+            return function() {
+              var groupData;
+              if (confirm("Are you sure you want to clone '" + (_this.model.get('name')) + "' ?") === true) {
+                _this.cloneModel = App.request("new:content:group");
+                groupData = _this.model.toJSON();
+                _this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
+                _this.clonedData.name = "" + _this.clonedData.name + " clone";
+                _this.clonedData.status = "underreview";
+                return App.execute("when:fetched", _this.cloneModel, function() {
+                  return _this.cloneModel.save(_this.clonedData, {
+                    wait: true,
+                    success: _this.successFn,
+                    error: _this.errorFn
+                  });
+                });
+              }
+            };
+          })(this));
+        }
+      };
+
+      ListItemView.prototype.successFn = function(model) {
+        model.set('content_pieces', this.clonedData.content_pieces);
+        model.save({
+          'changed': 'content_pieces'
+        }, {
+          wait: true
+        });
+        return App.navigate("edit-module/" + (model.get('id')), {
+          trigger: true
+        });
+      };
+
+      ListItemView.prototype.errorFn = function() {
+        return console.log('error');
       };
 
       return ListItemView;
