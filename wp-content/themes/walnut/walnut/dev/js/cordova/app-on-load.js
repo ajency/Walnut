@@ -2,6 +2,7 @@ define(['underscore', 'jquery', 'fastclick'], function(_, $, FastClick) {
   var onDeviceReady;
   onDeviceReady = function() {
     _.cordovaOpenPrepopulatedDatabase();
+    _.cordovaLocalStorage();
     FastClick.attach(document.body);
     return cordova.getAppVersion().then(function(version) {
       if (version.indexOf('Production') === 0) {

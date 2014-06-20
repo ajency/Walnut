@@ -6,7 +6,9 @@
 	
 	var SITEURL = "";
 
-
+	//'videos' is initialized globally as 'html5Video' plugin loses scope of 
+	// video source incase of more than 1 video.
+	var videos = {};
 
 	//CLASS_LABEL
 	var CLASS_LABEL = [];

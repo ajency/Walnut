@@ -46,7 +46,7 @@ define ['underscore'], ( _) ->
 							
 							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
 								,(file)->
-									_.onFileDownloadSuccess file.toURL() filePath resp.last_sync
+									_.onFileDownloadSuccess(file.toURL(), filePath, resp.last_sync)
 								
 								,(error)->
 									_.onFileDownloadError error
@@ -76,7 +76,7 @@ define ['underscore'], ( _) ->
 					_.startFileImport()
 				,2000)
 				
-			zip.unzip source destination onFileUnzipSuccess
+			zip.unzip(source, destination, onFileUnzipSuccess)
 			
 
 

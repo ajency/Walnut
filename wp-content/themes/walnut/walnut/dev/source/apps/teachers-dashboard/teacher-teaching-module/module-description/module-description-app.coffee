@@ -99,6 +99,18 @@ define ['app'
 						
 						, false)
 
+					onBackbuttonClick = =>
+						console.log 'Fired cordova back button event'
+
+						_.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
+
+						Backbone.history.history.back()
+
+						document.removeEventListener("backbutton", onBackbuttonClick, false)
+
+					#Cordova backbutton event
+					document.addEventListener("backbutton", onBackbuttonClick, false) 
+
 
 
 		# set handlers

@@ -8,6 +8,9 @@ define ['underscore', 'jquery', 'fastclick'], (_, $, FastClick)->
 		# Open pre-populated SQLite database file.
 		_.cordovaOpenPrepopulatedDatabase()
 
+		# Cordova local storage
+		_.cordovaLocalStorage()
+
 		# 'FastClick' helps to reduce the 400ms click delay.
 		FastClick.attach(document.body)
 

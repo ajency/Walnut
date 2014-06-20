@@ -148,7 +148,10 @@ define(['app', 'controllers/region-controller', 'apps/content-group/view-group/g
       };
 
       ContentGroupViewLayout.prototype.onShow = function() {
-        return $('.page-content').removeClass('expand-page');
+        $('.page-content').removeClass('expand-page');
+        if (_.platform() === 'DEVICE') {
+          return _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
+        }
       };
 
       return ContentGroupViewLayout;

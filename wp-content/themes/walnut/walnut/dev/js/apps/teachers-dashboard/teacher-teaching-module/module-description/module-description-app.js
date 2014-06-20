@@ -115,14 +115,24 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       };
 
       ModuleDescriptionView.prototype.onShow = function() {
+        var onBackbuttonClick;
         if (_.platform() === 'DEVICE') {
-          return document.addEventListener("pause", (function(_this) {
+          document.addEventListener("pause", (function(_this) {
             return function() {
               console.log('Fired cordova pause event');
               _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
               return _this.trigger("goto:previous:route");
             };
           })(this), false);
+          onBackbuttonClick = (function(_this) {
+            return function() {
+              console.log('Fired cordova back button event');
+              _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
+              Backbone.history.history.back();
+              return document.removeEventListener("backbutton", onBackbuttonClick, false);
+            };
+          })(this);
+          return document.addEventListener("backbutton", onBackbuttonClick, false);
         }
       };
 

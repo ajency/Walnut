@@ -4,9 +4,10 @@ define ['underscore', 'jquery'], (_, $)->
 
 	_.mixin
 
+		
 		cordovaOpenPrepopulatedDatabase : ->
 
-			_.db = window.sqlitePlugin.openDatabase({name: "walnutapp"})
+			_.db = window.sqlitePlugin.openDatabase({name: "synapseAppData"})
 
 			console.log 'Local database object: '+_.db
 
@@ -30,6 +31,7 @@ define ['underscore', 'jquery'], (_, $)->
 			)
 
 
+		
 		createDataTables : (db)->
 
 			db.transaction((tx)->

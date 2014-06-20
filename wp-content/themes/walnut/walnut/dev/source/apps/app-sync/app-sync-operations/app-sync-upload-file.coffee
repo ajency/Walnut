@@ -46,6 +46,7 @@ define ['underscore'], ( _) ->
 				, options)
 
 
+		
 		onFileUploadSuccess : ->
 
 			_.updateSyncDetails('file_upload', _.getCurrentDateTime(2))
@@ -54,11 +55,10 @@ define ['underscore'], ( _) ->
 
 			setTimeout(=>
 				_.checkIfServerImportOperationCompleted()
-				# syncController = App.request "get:sync:controller"
-				# syncController.getDownloadURL()
 			,2000)
 
 
+		
 		checkIfServerImportOperationCompleted : ->
 
 			$('#syncSuccess').css("display","block").text("Please wait...")
@@ -76,9 +76,7 @@ define ['underscore'], ( _) ->
 						if not resp
 							_.checkIfServerImportOperationCompleted()
 						else
-							syncController = App.request "get:sync:controller"
-							syncController.getDownloadURL()
-
+							_.getZipFileDownloadDetails()
 					,
 					'json'
 	

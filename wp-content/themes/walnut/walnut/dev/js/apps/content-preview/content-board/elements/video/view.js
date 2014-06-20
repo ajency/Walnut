@@ -27,18 +27,16 @@ define(['app'], function(App) {
         this.$el.find('video').attr('id', videoId);
         if (_.platform() === 'DEVICE') {
           url = this.model.get('videoUrl');
-          videoUrl = url.substr(url.indexOf("uploads/"));
+          videosWebUrl = url.substr(url.indexOf("uploads/"));
+          videoUrl = videosWebUrl.replace("videos-web", "videos");
           encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
-          videosWebUrl = videoUrl.replace("videos", "videos-web");
           decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
           videosWebDirectory = _.createVideosWebDirectory();
           return videosWebDirectory.done(function() {
             var decryptFile;
             decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath);
             return decryptFile.done(function(videoPath) {
-              var videos;
-              videos = {};
-              videos[videoId] = videoPath;
+              videos[videoId] = videoPath;;
               window.plugins.html5Video.initialize(videos);
               return window.plugins.html5Video.play(videoId);
             });

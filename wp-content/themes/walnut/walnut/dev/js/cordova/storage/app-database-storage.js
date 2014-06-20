@@ -2,7 +2,7 @@ define(['underscore', 'jquery'], function(_, $) {
   return _.mixin({
     cordovaOpenPrepopulatedDatabase: function() {
       _.db = window.sqlitePlugin.openDatabase({
-        name: "walnutapp"
+        name: "synapseAppData"
       });
       console.log('Local database object: ' + _.db);
       return _.createLocalTables(_.db);

@@ -64,7 +64,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         data: this.data
       }, (function(_this) {
         return function(resp) {
-          console.log('RESP');
+          console.log('Login Response');
           console.log(resp);
           if (resp.error) {
             return _this.onErrorResponse(resp.error);

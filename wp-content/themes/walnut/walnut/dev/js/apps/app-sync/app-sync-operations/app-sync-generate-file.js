@@ -24,7 +24,7 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
         type: "blob"
       });
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-        return fileSystem.root.getFile("SynapseAssets/csv-export-" + device.uuid + ".zip", {
+        return fileSystem.root.getFile("SynapseAssets/SynapseData/csv-export-" + device.uuid + ".zip", {
           create: true,
           exclusive: false
         }, function(fileEntry) {

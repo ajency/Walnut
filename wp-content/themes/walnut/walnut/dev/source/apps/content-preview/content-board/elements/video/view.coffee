@@ -45,21 +45,21 @@ define ['app'], (App)->
 				if _.platform() is 'DEVICE'
 
 					url = @model.get('videoUrl')
-					videoUrl = url.substr(url.indexOf("uploads/"))
+					videosWebUrl = url.substr(url.indexOf("uploads/"))
 
+					videoUrl = videosWebUrl.replace("videos-web", "videos")
 					encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
-
-					videosWebUrl = videoUrl.replace("videos", "videos-web")
+					
 					decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
 
 					videosWebDirectory = _.createVideosWebDirectory()
 					videosWebDirectory.done ->
 
 						decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
-						decryptFile.done (videoPath)-> 
-					
-							videos = {}
-							videos[videoId] = videoPath
+						decryptFile.done (videoPath)->
+							
+							#'videos' is initialized globally inside 'plugins/walnut-app.js'
+							`videos[videoId] = videoPath;`
 
 							window.plugins.html5Video.initialize videos
 							window.plugins.html5Video.play videoId
