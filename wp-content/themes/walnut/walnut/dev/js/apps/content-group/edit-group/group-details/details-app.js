@@ -10,6 +10,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       function EditCollecionDetailsController() {
         this.successFn = __bind(this.successFn, this);
+        this._fetchSubsections = __bind(this._fetchSubsections, this);
+        this._fetchSections = __bind(this._fetchSections, this);
+        this._fetchChapters = __bind(this._fetchChapters, this);
         this.showView = __bind(this.showView, this);
         return EditCollecionDetailsController.__super__.constructor.apply(this, arguments);
       }
@@ -21,47 +24,39 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       };
 
       EditCollecionDetailsController.prototype.showView = function() {
-        var view;
+        var term_ids, view;
         this.view = view = this._getCollectionDetailsView(this.model);
         this.show(view, {
           loading: true,
           entities: [this.textbooksCollection]
         });
-        this.listenTo(this.view, {
-          "fetch:chapters": (function(_this) {
-            return function(term_id) {
-              var chaptersCollection;
-              chaptersCollection = App.request("get:chapters", {
-                'parent': term_id
-              });
-              return App.execute("when:fetched", chaptersCollection, function() {
-                return _this.view.triggerMethod('fetch:chapters:complete', chaptersCollection);
-              });
-            };
-          })(this)
-        });
-        this.listenTo(this.view, {
-          "fetch:sections:subsections": function(term_id) {
-            var allSectionsCollection;
-            allSectionsCollection = App.request("get:subsections:by:chapter:id", {
-              'child_of': term_id
-            });
-            return App.execute("when:fetched", allSectionsCollection, (function(_this) {
-              return function() {
-                var allSections, sectionsList, subsectionsList;
-                sectionsList = allSectionsCollection.where({
-                  'parent': term_id
-                });
-                subsectionsList = _.difference(allSectionsCollection.models, sectionsList);
-                allSections = {
-                  'sections': sectionsList,
-                  'subsections': subsectionsList
-                };
-                return _this.view.triggerMethod('fetch:subsections:complete', allSections);
-              };
-            })(this));
-          }
-        });
+        term_ids = this.model.get('term_ids');
+        this.listenTo(this.view, "show", (function(_this) {
+          return function() {
+            var chapter_id, section_ids, textbook_id;
+            if (term_ids) {
+              textbook_id = term_ids['textbook'];
+              if (term_ids['chapter'] != null) {
+                chapter_id = term_ids['chapter'];
+              }
+              if (term_ids['sections'] != null) {
+                section_ids = _.flatten(term_ids['sections']);
+              }
+              if (textbook_id != null) {
+                _this._fetchChapters(textbook_id, chapter_id);
+              }
+              if (chapter_id != null) {
+                _this._fetchSections(chapter_id);
+              }
+              if (section_ids != null) {
+                return _this._fetchSubsections(section_ids);
+              }
+            }
+          };
+        })(this));
+        this.listenTo(this.view, "fetch:chapters", this._fetchChapters);
+        this.listenTo(this.view, "fetch:sections", this._fetchSections);
+        this.listenTo(this.view, "fetch:subsections", this._fetchSubsections);
         return this.listenTo(this.view, {
           "save:content:collection:details": (function(_this) {
             return function(data) {
@@ -79,6 +74,48 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
             };
           })(this)
         });
+      };
+
+      EditCollecionDetailsController.prototype._fetchChapters = function(term_id, current_chapter) {
+        var chaptersCollection;
+        chaptersCollection = App.request("get:chapters", {
+          'parent': term_id
+        });
+        return App.execute("when:fetched", chaptersCollection, (function(_this) {
+          return function() {
+            return _this.view.triggerMethod('fetch:chapters:complete', chaptersCollection, current_chapter);
+          };
+        })(this));
+      };
+
+      EditCollecionDetailsController.prototype._fetchSections = function(term_id) {
+        this.subSectionsList = null;
+        this.allSectionsCollection = App.request("get:subsections:by:chapter:id", {
+          'child_of': term_id
+        });
+        return App.execute("when:fetched", this.allSectionsCollection, (function(_this) {
+          return function() {
+            var sectionsList;
+            sectionsList = _this.allSectionsCollection.where({
+              'parent': term_id
+            });
+            _this.subSectionsList = _.difference(_this.allSectionsCollection.models, sectionsList);
+            return _this.view.triggerMethod('fetch:sections:complete', sectionsList);
+          };
+        })(this));
+      };
+
+      EditCollecionDetailsController.prototype._fetchSubsections = function(term_id) {
+        return App.execute("when:fetched", this.allSectionsCollection, (function(_this) {
+          return function() {
+            var subSectionList;
+            subSectionList = null;
+            subSectionList = _.filter(_this.subSectionsList, function(subSection) {
+              return _.contains(term_id, subSection.get('parent'));
+            });
+            return _this.view.triggerMethod('fetch:subsections:complete', subSectionList);
+          };
+        })(this));
       };
 
       EditCollecionDetailsController.prototype.successFn = function(model) {
@@ -127,12 +164,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       CollectionDetailsView.prototype.events = {
         'change #textbooks': function(e) {
-          this.$el.find('#secs, #subsecs').select2('data', null);
-          this.$el.find('#chapters, #secs, #subsecs').html('');
           return this.trigger("fetch:chapters", $(e.target).val());
         },
         'change #chapters': function(e) {
-          return this.trigger("fetch:sections:subsections", $(e.target).val());
+          return this.trigger("fetch:sections", $(e.target).val());
+        },
+        'change #secs': function(e) {
+          return this.trigger("fetch:subsections", $(e.target).val());
         },
         'click #save-content-collection': 'save_content'
       };
@@ -171,9 +209,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       CollectionDetailsView.prototype.onShow = function() {
         $("#textbooks, #chapters, #minshours, select").select2();
         $("#secs,#subsecs").val([]).select2();
-        if (!this.model.isNew()) {
-          this.prepolateDropDowns();
-        }
         return this.statusChanged();
       };
 
@@ -186,16 +221,14 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         }
       };
 
-      CollectionDetailsView.prototype.prepolateDropDowns = function() {
-        return this.$el.find('#textbooks').trigger('change');
-      };
-
       CollectionDetailsView.prototype.onFetchChaptersComplete = function(chapters) {
         var chapterElement, currentChapter, termIDs;
+        this.$el.find('#chapters, #secs, #subsecs').select2('data', null);
+        this.$el.find('#chapters, #secs, #subsecs').html('');
         chapterElement = this.$el.find('#chapters');
         termIDs = this.model.get('term_ids');
         currentChapter = termIDs['chapter'];
-        return $.populateChapters(chapters, chapterElement, currentChapter);
+        return $.populateChaptersOrSections(chapters, chapterElement, currentChapter);
       };
 
       CollectionDetailsView.prototype.setChapterValue = function() {
@@ -206,19 +239,26 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         }
       };
 
-      CollectionDetailsView.prototype.onFetchSubsectionsComplete = function(allsections) {
-        var sectionIDs, sectionsElement, subSectionIDs, subsectionsEleemnt, term_ids;
+      CollectionDetailsView.prototype.onFetchSectionsComplete = function(sections) {
+        var sectionIDs, sectionsElement, term_ids;
+        this.$el.find('#secs, #subsecs').select2('data', null);
+        this.$el.find('#secs, #subsecs').html('');
         term_ids = this.model.get('term_ids');
         if (term_ids != null) {
           sectionIDs = term_ids['sections'];
         }
+        sectionsElement = this.$el.find('#secs');
+        return $.populateChaptersOrSections(sections, sectionsElement, sectionIDs);
+      };
+
+      CollectionDetailsView.prototype.onFetchSubsectionsComplete = function(subsections) {
+        var subSectionIDs, subsectionsElemnet, term_ids;
+        term_ids = this.model.get('term_ids');
         if (term_ids != null) {
           subSectionIDs = term_ids['subsections'];
         }
-        sectionsElement = this.$el.find('#secs');
-        subsectionsEleemnt = this.$el.find('#subsecs');
-        $.populateSections(allsections.sections, sectionsElement, sectionIDs);
-        return $.populateSubSections(allsections.subsections, subsectionsEleemnt, subSectionIDs);
+        subsectionsElemnet = this.$el.find('#subsecs');
+        return $.populateChaptersOrSections(subsections, subsectionsElemnet, subSectionIDs);
       };
 
       CollectionDetailsView.prototype.markSelected = function(element, sections) {
