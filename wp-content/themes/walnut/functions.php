@@ -1,6 +1,6 @@
 <?php
 // require the autoloader
-require 'vendor/autoload.php';
+//require 'vendor/autoload.php';
 
 if (!isset($content_width))
     $content_width = 604;

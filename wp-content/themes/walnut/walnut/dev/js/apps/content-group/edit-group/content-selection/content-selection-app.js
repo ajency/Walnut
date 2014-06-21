@@ -4,7 +4,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-group/content-selection/templates/content-selection.html'], function(App, RegionController, contentSelectionTpl) {
   return App.module("ContentSelectionApp.Controller", function(Controller, App) {
-    var DataContentTableView;
+    var DataContentItemView, DataContentTableView, NoDataItemView;
     Controller.ContentSelectionController = (function(_super) {
       __extends(ContentSelectionController, _super);
 
@@ -15,122 +15,100 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
       }
 
       ContentSelectionController.prototype.initialize = function(opts) {
-        var tableConfig, view;
         this.textbooksCollection = App.request("get:textbooks");
         this.contentPiecesCollection = App.request("get:content:pieces", {
           content_type: ['teacher_question', 'content_piece']
         });
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
-        tableConfig = {
-          'data': [
-            {
-              'label': 'Question',
-              'value': 'post_excerpt'
-            }, {
-              'label': 'Author',
-              'value': 'post_author_name'
-            }, {
-              'label': 'Last Modified',
-              'value': 'post_modified',
-              'dateField': true
+        return App.execute("when:fetched", [this.contentPiecesCollection, this.contentGroupCollection, this.textbooksCollection], (function(_this) {
+          return function() {
+            var model, view, _i, _len, _ref;
+            _ref = _this.contentGroupCollection.models;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              model = _ref[_i];
+              _this.contentPiecesCollection.remove(model);
             }
-          ],
-          'idAttribute': 'ID',
-          'selectbox': true,
-          'pagination': true
-        };
-        this.view = view = this._getContentSelectionView(this.contentPiecesCollection, tableConfig);
-        this.show(view, {
-          loading: true,
-          entities: [this.textbooksCollection, this.contentGroupCollection]
-        });
-        this.listenTo(this.view, {
-          "fetch:chapters": (function(_this) {
-            return function(term_id) {
-              var chaptersCollection;
-              chaptersCollection = App.request("get:chapters", {
-                'parent': term_id
-              });
-              return App.execute("when:fetched", chaptersCollection, function() {
-                return _this.view.triggerMethod('fetch:chapters:complete', chaptersCollection);
-              });
-            };
-          })(this)
-        });
-        this.listenTo(this.view, {
-          "fetch:sections:subsections": function(term_id) {
-            var allSectionsCollection;
-            allSectionsCollection = App.request("get:subsections:by:chapter:id", {
-              'child_of': term_id
+            _this.view = view = _this._getContentSelectionView(_this.contentPiecesCollection);
+            _this.show(_this.view, {
+              loading: true
             });
-            return App.execute("when:fetched", allSectionsCollection, (function(_this) {
-              return function() {
-                var allSections, sectionsList, subsectionsList;
-                sectionsList = allSectionsCollection.where({
-                  'parent': term_id
-                });
-                subsectionsList = _.difference(allSectionsCollection.models, sectionsList);
-                allSections = {
-                  'sections': sectionsList,
-                  'subsections': subsectionsList
-                };
-                return _this.view.triggerMethod('fetch:subsections:complete', allSections);
-              };
-            })(this));
-          }
-        });
-        this.listenTo(this.view, {
-          "add:content:pieces": (function(_this) {
-            return function(contentIDs) {
-              return _.each(contentIDs, function(ele, index) {
-                return _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
+            _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
+              var chaptersOrSections;
+              chaptersOrSections = App.request("get:chapters", {
+                'parent': parentID
               });
-            };
-          })(this)
-        });
-        return this.listenTo(this.contentGroupCollection, 'content:pieces:of:group:removed', this.contentPieceRemoved);
+              return App.execute("when:fetched", chaptersOrSections, function() {
+                return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
+              });
+            });
+            _this.listenTo(_this.view, {
+              "add:content:pieces": function(contentIDs) {
+                return _.each(contentIDs, function(ele, index) {
+                  _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
+                  return _this.contentPiecesCollection.remove(ele);
+                });
+              }
+            });
+            return _this.listenTo(_this.contentGroupCollection, 'content:pieces:of:group:removed', _this.contentPieceRemoved);
+          };
+        })(this));
       };
 
       ContentSelectionController.prototype.contentPieceRemoved = function(model) {
+        this.contentPiecesCollection.add(model);
         return this.view.triggerMethod("content:piece:removed", model);
       };
 
-      ContentSelectionController.prototype._getContentSelectionView = function(collection, tableConfig) {
+      ContentSelectionController.prototype._getContentSelectionView = function(collection) {
         return new DataContentTableView({
           collection: collection,
-          tableConfig: tableConfig,
+          fullCollection: collection.clone(),
           contentGroupModel: this.model,
-          templateHelpers: {
-            textbooksFilter: (function(_this) {
-              return function() {
-                var textbooks;
-                textbooks = [];
-                _.each(_this.textbooksCollection.models, function(el) {
-                  return textbooks.push({
-                    'name': el.get('name'),
-                    'id': el.get('term_id')
-                  });
-                });
-                return textbooks;
-              };
-            })(this)
-          }
+          textbooksCollection: this.textbooksCollection
         });
       };
 
       return ContentSelectionController;
 
     })(RegionController);
+    DataContentItemView = (function(_super) {
+      __extends(DataContentItemView, _super);
+
+      function DataContentItemView() {
+        return DataContentItemView.__super__.constructor.apply(this, arguments);
+      }
+
+      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td>{{post_excerpt}}</td> <td>{{post_author_name}}</td> <td>{{post_modified}}</td>';
+
+      DataContentItemView.prototype.tagName = 'tr';
+
+      return DataContentItemView;
+
+    })(Marionette.ItemView);
+    NoDataItemView = (function(_super) {
+      __extends(NoDataItemView, _super);
+
+      function NoDataItemView() {
+        return NoDataItemView.__super__.constructor.apply(this, arguments);
+      }
+
+      NoDataItemView.prototype.template = 'No Content Available';
+
+      NoDataItemView.prototype.tagName = 'td';
+
+      NoDataItemView.prototype.onShow = function() {
+        return this.$el.attr('colspan', 4);
+      };
+
+      return NoDataItemView;
+
+    })(Marionette.ItemView);
     DataContentTableView = (function(_super) {
       __extends(DataContentTableView, _super);
 
       function DataContentTableView() {
         this.onContentPieceRemoved = __bind(this.onContentPieceRemoved, this);
         this.addContentPieces = __bind(this.addContentPieces, this);
-        this.changeTextbooks = __bind(this.changeTextbooks, this);
-        this.filterContentType = __bind(this.filterContentType, this);
-        this.filterTableData = __bind(this.filterTableData, this);
-        this.onShow = __bind(this.onShow, this);
         return DataContentTableView.__super__.constructor.apply(this, arguments);
       }
 
@@ -138,96 +116,55 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
 
       DataContentTableView.prototype.className = 'tiles white grid simple vertical green';
 
+      DataContentTableView.prototype.emptyView = NoDataItemView;
+
+      DataContentTableView.prototype.itemView = DataContentItemView;
+
+      DataContentTableView.prototype.itemViewContainer = '#dataContentTable tbody';
+
       DataContentTableView.prototype.events = {
-        'change #check_all_div': 'checkAll',
-        'change .filters': 'filterTableData',
-        'change #textbooks-filter': 'changeTextbooks',
-        'change #chapters-filter': function(e) {
-          return this.trigger("fetch:sections:subsections", $(e.target).val());
+        'change .filters': function(e) {
+          return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         },
+        'change #check_all_div': 'checkAll',
         'click #add-content-pieces': 'addContentPieces'
       };
 
-      DataContentTableView.prototype.serializeData = function() {
-        var data;
-        data = DataContentTableView.__super__.serializeData.call(this);
-        data.tableData = Marionette.getOption(this, 'tableConfig');
-        return data;
-      };
-
       DataContentTableView.prototype.onShow = function() {
-        this.makeDataTable(this.collection.models, Marionette.getOption(this, 'tableConfig'));
-        return $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
+        var pagerOptions, textbookFiltersHTML;
+        this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
+        this.fullCollection = Marionette.getOption(this, 'fullCollection');
+        textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
+        this.$el.find('#textbook-filters').html(textbookFiltersHTML);
+        $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
+        $('#dataContentTable').tablesorter();
+        pagerOptions = {
+          container: $(".pager"),
+          output: '{startRow} to {endRow} of {totalRows}'
+        };
+        return $('#dataContentTable').tablesorterPager(pagerOptions);
       };
 
-      DataContentTableView.prototype.makeRow = function(item, index, tableData) {
-        var row, td_ID;
-        td_ID = 'id';
-        if (tableData.idAttribute) {
-          td_ID = tableData.idAttribute;
+      DataContentTableView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
+        var filtered_data, pagerOptions;
+        switch (filterType) {
+          case 'textbooks-filter':
+            $.populateChapters(filteredCollection, this.$el);
+            break;
+          case 'chapters-filter':
+            $.populateSections(filteredCollection, this.$el);
+            break;
+          case 'sections-filter':
+            $.populateSubSections(filteredCollection, this.$el);
         }
-        row = '<tr id="row_' + item.get(td_ID) + '">';
-        if (tableData.selectbox) {
-          row += '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="' + item.get(td_ID) + '" id="checkbox' + index + '"> <label for="checkbox' + index + '"></label> </div> </td>';
-        }
-        _.each(tableData.data, function(el) {
-          var el_value, slug;
-          if (el.value) {
-            el_value = item.get(el.value);
-          } else {
-            slug = _.str.underscored(el.label);
-            el_value = item.get(slug);
-          }
-          if (el.dateField) {
-            el_value = moment(el_value).format("Do MMM YYYY");
-          }
-          return row += '<td> ' + el_value + ' </td>';
-        });
-        row += '</tr>';
-        return row;
-      };
-
-      DataContentTableView.prototype.makeDataTable = function(dataCollectionFull, tableData) {
-        var colspan, contentGroupModel, contentPieceIds, dataCollection, pagerDiv, pagerOptions;
-        this.$el.find('#dataContentTable tbody').empty();
-        contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
-        contentPieceIds = _.map(contentGroupModel.get('content_pieces'), function(id) {
-          return parseInt(id);
-        });
-        dataCollection = dataCollectionFull.filter(function(dataModel) {
-          if (_.indexOf(contentPieceIds, parseInt(dataModel.get('ID'))) === -1) {
-            return true;
-          } else {
-            return false;
-          }
-        });
-        _.each(dataCollection, (function(_this) {
-          return function(item, index) {
-            var row;
-            row = _this.makeRow(item, index, tableData);
-            return _this.$el.find('#dataContentTable tbody').append(row);
-          };
-        })(this));
-        if (_.size(dataCollection) === 0) {
-          colspan = _.size(tableData.data);
-          if (tableData.selectbox) {
-            colspan++;
-          }
-          this.$el.find('#dataContentTable tbody').append('<td id="empty_row" colspan="' + colspan + '">No Data found</td>');
-        }
-        this.$el.find('#dataContentTable').tablesorter();
-        if (tableData.pagination) {
-          $("#dataContentTable").trigger("updateCache");
-          this.$el.find('#pager').remove();
-          pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option selected value="25">25</option> <option value="50">50</option> <option value="100">100</option> </select> </div>';
-          this.$el.find('#dataContentTable').after(pagerDiv);
-          pagerOptions = {
-            totalRows: _.size(dataCollection),
-            container: $(".pager"),
-            output: '{startRow} to {endRow} of {totalRows}'
-          };
-          return $('#dataContentTable').tablesorterPager(pagerOptions);
-        }
+        filtered_data = $.filterTableByTextbooks(this);
+        this.collection.set(filtered_data);
+        $("#dataContentTable").trigger("updateCache");
+        pagerOptions = {
+          container: $(".pager"),
+          output: '{startRow} to {endRow} of {totalRows}'
+        };
+        return $('#dataContentTable').tablesorterPager(pagerOptions);
       };
 
       DataContentTableView.prototype.checkAll = function() {
@@ -238,162 +175,27 @@ define(['app', 'controllers/region-controller', 'text!apps/content-group/edit-gr
         }
       };
 
-      DataContentTableView.prototype.filterTableData = function() {
-        var content_type, filter_ids, filtered_data, filtered_models;
-        filter_ids = _.map(this.$el.find('select.textbook-filter'), function(ele) {
-          var item;
-          item = '';
-          if (!isNaN(ele.value)) {
-            item = ele.value;
-          }
-          return item;
-        });
-        filter_ids = _.compact(filter_ids);
-        content_type = this.$el.find('#content-type-filter').val();
-        filtered_models = this.collection.models;
-        if (content_type !== '') {
-          filtered_models = this.collection.where({
-            'content_type': content_type
-          });
-        }
-        if (_.size(filter_ids) > 0) {
-          filtered_data = _.filter(filtered_models, (function(_this) {
-            return function(item) {
-              var filtered_item, term_ids;
-              filtered_item = '';
-              term_ids = _.flatten(item.get('term_ids'));
-              if (_.size(_.intersection(term_ids, filter_ids)) === _.size(filter_ids)) {
-                filtered_item = item;
-              }
-              return filtered_item;
-            };
-          })(this));
-        } else {
-          filtered_data = filtered_models;
-        }
-        return this.makeDataTable(filtered_data, Marionette.getOption(this, 'tableConfig'));
-      };
-
-      DataContentTableView.prototype.filterContentType = function(e) {
-        var content_type, filtered_data;
-        content_type = $(e.target).val();
-        if (content_type) {
-          filtered_data = this.collection.where({
-            'content_type': content_type
-          });
-        } else {
-          filtered_data = this.collection.models;
-        }
-        return this.makeDataTable(filtered_data, Marionette.getOption(this, 'tableConfig'));
-      };
-
-      DataContentTableView.prototype.changeTextbooks = function(e) {
-        this.$el.find('#chapters-filter, #sections-filter, #subsections-filter').select2('data', '');
-        return this.trigger("fetch:chapters", $(e.target).val());
-      };
-
-      DataContentTableView.prototype.onFetchChaptersComplete = function(chapters) {
-        if (_.size(chapters) > 0) {
-          $('#chapters-filter').select2('data', {
-            'text': 'Select Chapter'
-          });
-          return _.each(chapters.models, (function(_this) {
-            return function(chap) {
-              return _this.$el.find('#chapters-filter').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
-            };
-          })(this));
-        } else {
-          this.$el.find('#chapters-filter,#sections-filter,#subsections-filter').html('');
-          this.$el.find('#chapters-filter').select2('data', {
-            'text': 'No chapters'
-          });
-          this.$el.find('#sections-filter').select2('data', {
-            'text': 'No Sections'
-          });
-          return this.$el.find('#subsections-filter').select2('data', {
-            'text': 'No Subsections'
-          });
-        }
-      };
-
-      DataContentTableView.prototype.onFetchSubsectionsComplete = function(allsections) {
-        if (_.size(allsections) > 0) {
-          if (_.size(allsections.sections) > 0) {
-            $('#sections-filter').select2('data', {
-              'text': 'Select Section'
-            });
-            _.each(allsections.sections, (function(_this) {
-              return function(section) {
-                return _this.$el.find('#sections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-              };
-            })(this));
-          } else {
-            $('#sections-filter').select2('data', {
-              'text': 'No Sections'
-            }).html('');
-          }
-          if (_.size(allsections.subsections) > 0) {
-            $('#subsections-filter').select2('data', {
-              'text': 'Select SubSection'
-            });
-            return _.each(allsections.subsections, (function(_this) {
-              return function(section) {
-                return _this.$el.find('#subsections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-              };
-            })(this));
-          } else {
-            return $('#subsections-filter').select2('data', {
-              'text': 'No Subsections'
-            }).html('');
-          }
-        } else {
-          $('#sections-filter,#subsections-filter').html('');
-          $('#sections-filter').select2('data', {
-            'text': 'No Sections'
-          });
-          return $('#subsections-filter').select2('data', {
-            'text': 'No Subsections'
-          });
-        }
-      };
-
       DataContentTableView.prototype.addContentPieces = function() {
-        var colspan, content_id, content_pieces, tableData, _i, _len, _results;
+        var content_pieces, id, _i, _len, _results;
         content_pieces = _.pluck(this.$el.find('#dataContentTable .tab_checkbox:checked'), 'value');
         if (content_pieces) {
           this.trigger("add:content:pieces", content_pieces);
           _results = [];
           for (_i = 0, _len = content_pieces.length; _i < _len; _i++) {
-            content_id = content_pieces[_i];
-            this.$el.find("#dataContentTable tr#row_" + content_id).remove();
-            tableData = Marionette.getOption(this, 'tableConfig');
-            if (_.size(this.$el.find("#dataContentTable tbody tr")) === 0) {
-              colspan = _.size(tableData.data);
-              if (tableData.selectbox) {
-                colspan++;
-              }
-              this.$el.find('#dataContentTable tbody').append('<td id="empty_row" colspan="' + colspan + '">No Data found</td>');
-            }
-            _results.push(this.$el.find("#dataContentTable").trigger('update').trigger("updateCache"));
+            id = content_pieces[_i];
+            _results.push(this.fullCollection.remove(id));
           }
           return _results;
         }
       };
 
       DataContentTableView.prototype.onContentPieceRemoved = function(model) {
-        var $row, row, row_index, tableData;
-        this.$el.find('#empty_row').remove();
-        tableData = Marionette.getOption(this, 'tableConfig');
-        row_index = _.size(this.$el.find("#dataContentTable tbody tr"));
-        row = this.makeRow(model, row_index, tableData);
-        $row = $(row);
-        this.$el.find('#dataContentTable tbody').append($row);
-        return this.$el.find("#dataContentTable").trigger('addRows', [$row, true]).trigger("updateCache");
+        return this.fullCollection.add(model);
       };
 
       return DataContentTableView;
 
-    })(Marionette.ItemView);
+    })(Marionette.CompositeView);
     return App.commands.setHandler("show:content:selectionapp", function(opt) {
       if (opt == null) {
         opt = {};

@@ -37,47 +37,18 @@ define(['app', 'controllers/region-controller', 'apps/content-group/groups-listi
             var view;
             _this.fullCollection = _this.contentGroupCollection.clone();
             _this.view = view = _this._getContentGroupsListingView();
-            _this.listenTo(_this.view, "fetch:chapters", function(term_id) {
-              var chaptersCollection;
-              chaptersCollection = App.request("get:chapters", {
-                'parent': term_id
-              });
-              return App.execute("when:fetched", chaptersCollection, function() {
-                var chapterList;
-                chapterList = chaptersCollection.where({
-                  'parent': term_id
-                });
-                return _this.view.triggerMethod('fetch:chapters:complete', chapterList);
-              });
-            });
-            _this.listenTo(_this.view, "fetch:sections", function(term_id) {
-              var allSectionsCollection;
-              console.log('in fetch sections');
-              allSectionsCollection = App.request("get:subsections:by:chapter:id", {
-                'child_of': term_id
-              });
-              return App.execute("when:fetched", allSectionsCollection, function() {
-                var sectionsList;
-                sectionsList = allSectionsCollection.where({
-                  'parent': term_id
-                });
-                _this.subSectionsList = _.difference(allSectionsCollection.models, sectionsList);
-                return _this.view.triggerMethod('fetch:sections:complete', sectionsList);
-              });
-            });
-            _this.listenTo(_this.view, "fetch:subsections", function(term_id) {
-              var subSectionList;
-              subSectionList = null;
-              subSectionList = _.filter(_this.subSectionsList, function(subSection) {
-                return subSection.get('parent') === term_id;
-              });
-              console.log(_this.subSectionsList);
-              console.log(subSectionList);
-              return _this.view.triggerMethod('fetch:subsections:complete', subSectionList);
-            });
-            return _this.show(view, {
+            _this.show(view, {
               loading: true,
               entities: [_this.contentGroupCollection, _this.textbooksCollection, _this.fullCollection]
+            });
+            return _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
+              var chaptersOrSections;
+              chaptersOrSections = App.request("get:chapters", {
+                'parent': parentID
+              });
+              return App.execute("when:fetched", chaptersOrSections, function() {
+                return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
+              });
             });
           };
         })(this));
