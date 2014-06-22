@@ -57,14 +57,15 @@ define ["app", 'backbone'], (App, Backbone) ->
                 return resp.data if resp.code is 'OK'
                 resp
 
-        mediaCollection = new Media.MediaCollection
         # initialize a blank media collection
 
 
         ##PUBLIC API FOR ENitity
         API =
+
             fetchMedia : (params = {}, reset)->
 #
+                mediaCollection = new Media.MediaCollection
                 mediaCollection.url = "#{AJAXURL}?action=query_attachments"
 
                 _.defaults params, mediaCollection.filters
@@ -81,13 +82,8 @@ define ["app", 'backbone'], (App, Backbone) ->
             getMediaById : (mediaId)->
                 return API.getPlaceHolderMedia() if 0 is parseInt mediaId
 
-                # check if present
-                media = mediaCollection.get parseInt mediaId
-
-                if _.isUndefined media
-                    media = new Media.MediaModel id : mediaId
-                    mediaCollection.add media
-                    media.fetch()
+                media = new Media.MediaModel id : mediaId
+                media.fetch()
 
                 media
 
@@ -102,7 +98,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             createNewMedia : (data)->
                 media = new Media.MediaModel data
-                mediaCollection.add media
                 media
 
 
