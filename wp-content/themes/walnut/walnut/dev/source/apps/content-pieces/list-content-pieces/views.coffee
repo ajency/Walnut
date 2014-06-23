@@ -6,7 +6,7 @@ define ['app'
             tagName : 'tr'
             className: 'gradeX odd'
 
-            template:   '<td>{{post_excerpt}}</td>
+            template:   '<td>{{&post_excerpt}}</td>
                         <td>{{post_author_name}}</td>
                         <td>{{modified_date}}</td>
                         <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
