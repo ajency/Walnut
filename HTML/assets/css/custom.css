@@ -1833,7 +1833,7 @@ input#duration {
 .timerBox,
 .quizProgress {
   width: 235px;
-  background: #ffffff;
+  background: #cdcdcd;
   margin: 0 1.5%;
 }
 .quizProgress {
