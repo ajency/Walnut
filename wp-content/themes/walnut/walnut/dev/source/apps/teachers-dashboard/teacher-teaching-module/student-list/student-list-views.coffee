@@ -79,6 +79,10 @@ define ['app'], (App)->
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
+                if not Marionette.getOption(@, 'nextItemID')
+                    @$el.find "#question-done"
+                    .html '<i class="fa fa-forward"></i> Finish Module'
+
                 $ ".students"
                 .listnav
                 #filterSelector: '.last-name'
@@ -132,11 +136,14 @@ define ['app'], (App)->
                 @trigger "save:question:response", @correctAnswers
 
             questionCompleted: ->
-                if (_.size(@correctAnswers) < 1) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
-                    if confirm 'This item will be marked as complete. None of the options have been selected. Continue?'
-                        @trigger "question:completed", "no_answer"
-                else
-                    if confirm 'This item will be marked as complete. Continue?'
-                        @trigger "question:completed"
+                if Marionette.getOption(@, 'display_mode') is 'class_mode'
+                    if (_.size(@correctAnswers) < 1)
+                        if confirm 'This item will be marked as complete. None of the options have been selected. Continue?'
+                            @trigger "question:completed", "no_answer"
+                    else
+                        if confirm 'This item will be marked as complete. Continue?'
+                            @trigger "question:completed"
+
+                else @trigger "question:completed"
 
 

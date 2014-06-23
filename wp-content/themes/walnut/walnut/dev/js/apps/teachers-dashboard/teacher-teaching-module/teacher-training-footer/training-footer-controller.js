@@ -12,7 +12,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       Controller.prototype.initialize = function(opts) {
         var contentPiece;
-        contentPiece = opts.contentPiece;
+        contentPiece = opts.contentPiece, this.nextItemID = opts.nextItemID;
         this.question_type = contentPiece.get('question_type');
         this.contentPieceId = contentPiece.get('ID');
         console.log(this.contentPieceId);
@@ -28,7 +28,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       Controller.prototype._getFooterView = function(contentPiece) {
         return new TeacherTrainingFooter.Views.TrainingFooterView({
           question_type: this.question_type,
-          model: contentPiece
+          model: contentPiece,
+          nextItemID: this.nextItemID
         });
       };
 

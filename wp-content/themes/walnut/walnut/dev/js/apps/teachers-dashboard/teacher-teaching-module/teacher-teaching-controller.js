@@ -59,18 +59,12 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
       };
 
-      TeacherTeachingController.prototype._changeQuestion = function(current_question_id) {
-        var contentPieces, nextQuestion, pieceIndex;
+      TeacherTeachingController.prototype._changeQuestion = function() {
+        var nextQuestion;
         if (this.display_mode === 'class_mode') {
           this._saveQuestionResponse("completed");
         }
-        current_question_id = parseInt(current_question_id);
-        contentPieces = contentGroupModel.get('content_pieces');
-        contentPieces = _.map(contentPieces, function(m) {
-          return parseInt(m);
-        });
-        pieceIndex = _.indexOf(contentPieces, current_question_id);
-        nextQuestion = parseInt(contentPieces[pieceIndex + 1]);
+        nextQuestion = this._getNextItemID();
         if (nextQuestion) {
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
@@ -83,6 +77,20 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         } else {
           return this._gotoPreviousRoute();
         }
+      };
+
+      TeacherTeachingController.prototype._getNextItemID = function() {
+        var contentPieces, nextQuestion, pieceIndex;
+        contentPieces = contentGroupModel.get('content_pieces');
+        contentPieces = _.map(contentPieces, function(m) {
+          return parseInt(m);
+        });
+        pieceIndex = _.indexOf(contentPieces, contentPiece.id);
+        nextQuestion = parseInt(contentPieces[pieceIndex + 1]);
+        if (!nextQuestion) {
+          nextQuestion = false;
+        }
+        return nextQuestion;
       };
 
       TeacherTeachingController.prototype._gotoPreviousRoute = function() {
@@ -165,14 +173,16 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
                 questionResponseModel: questionResponseModel,
                 studentCollection: studentCollection,
                 display_mode: _this.display_mode,
-                timerObject: _this.timerObject
+                timerObject: _this.timerObject,
+                nextItemID: _this._getNextItemID()
               });
             } else if (question_type === 'chorus') {
               return App.execute("show:single:question:chorus:options:app", {
                 region: _this.layout.studentsListRegion,
                 questionResponseModel: questionResponseModel,
                 display_mode: _this.display_mode,
-                timerObject: _this.timerObject
+                timerObject: _this.timerObject,
+                nextItemID: _this._getNextItemID()
               });
             }
           };
@@ -187,7 +197,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
             console.log(contentPiece.get('ID'));
             return App.execute('show:teacher:training:footer:app', {
               region: _this.layout.studentsListRegion,
-              contentPiece: contentPiece
+              contentPiece: contentPiece,
+              nextItemID: _this._getNextItemID()
             });
           };
         })(this));

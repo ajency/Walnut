@@ -62,18 +62,12 @@ define ['app'
 
                 @listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
-            _changeQuestion : (current_question_id)=>
+            _changeQuestion :=>
+
                 if @display_mode is 'class_mode'
                     @_saveQuestionResponse "completed"
 
-                current_question_id = parseInt current_question_id
-
-                contentPieces = contentGroupModel.get 'content_pieces'
-                contentPieces = _.map contentPieces, (m)->
-                    parseInt m
-                pieceIndex = _.indexOf(contentPieces, current_question_id)
-
-                nextQuestion = parseInt contentPieces[pieceIndex + 1]
+                nextQuestion = @_getNextItemID()
 
                 if nextQuestion
 
@@ -91,6 +85,20 @@ define ['app'
 
                 else
                     @_gotoPreviousRoute()
+
+            _getNextItemID:->
+                contentPieces = contentGroupModel.get 'content_pieces'
+                contentPieces = _.map contentPieces, (m)->
+                    parseInt m
+
+                pieceIndex = _.indexOf(contentPieces, contentPiece.id)
+
+                nextQuestion = parseInt contentPieces[pieceIndex + 1]
+
+                if not nextQuestion
+                    nextQuestion = false
+
+                nextQuestion
 
             _gotoPreviousRoute : =>
                 if @display_mode is 'class_mode' and questionResponseModel.get('status') isnt 'completed'
@@ -156,6 +164,7 @@ define ['app'
                     students : studentCollection
 
             _showStudentsListView : (questionResponseModel)=>
+
                 App.execute "when:fetched", contentPiece, =>
                     question_type = contentPiece.get('question_type')
 
@@ -166,6 +175,7 @@ define ['app'
                             studentCollection : studentCollection
                             display_mode : @display_mode
                             timerObject : @timerObject
+                            nextItemID: @_getNextItemID()
 
                     else if question_type is 'chorus'
                         App.execute "show:single:question:chorus:options:app",
@@ -173,6 +183,7 @@ define ['app'
                             questionResponseModel : questionResponseModel
                             display_mode : @display_mode
                             timerObject : @timerObject
+                            nextItemID: @_getNextItemID()
 
             _showTeacherTrainingFooter : =>
                 App.execute "when:fetched", contentPiece, =>
@@ -183,6 +194,7 @@ define ['app'
                     App.execute 'show:teacher:training:footer:app',
                         region : @layout.studentsListRegion
                         contentPiece : contentPiece
+                        nextItemID: @_getNextItemID()
 
 
             _getTakeSingleQuestionLayout : ->

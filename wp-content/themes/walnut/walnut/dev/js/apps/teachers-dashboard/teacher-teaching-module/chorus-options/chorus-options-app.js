@@ -17,7 +17,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
 
       ChorusOptionsController.prototype.initialize = function(opts) {
         var view;
-        this.questionResponseModel = opts.questionResponseModel, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
+        this.questionResponseModel = opts.questionResponseModel, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject, this.nextItemID = opts.nextItemID;
         this.view = view = this._showChorusOptionsView(this.questionResponseModel);
         this.show(view, {
           loading: true
@@ -35,7 +35,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
         return new ChorusOptionsView({
           model: model,
           responsePercentage: this.questionResponseModel.get('question_response'),
-          display_mode: this.display_mode
+          display_mode: this.display_mode,
+          nextItemID: this.nextItemID
         });
       };
 
@@ -79,6 +80,9 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
             $(ele).addClass('selectable');
           }
         }
+        if (!Marionette.getOption(this, 'nextItemID')) {
+          this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
+        }
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
         if (_.isString(responsePercentage) && responsePercentage.length > 0) {
           return this.$el.find('#' + responsePercentage).find('.unselected').removeClass('unselected').addClass('blue');
@@ -96,14 +100,18 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/te
       ChorusOptionsView.prototype.questionCompleted = function() {
         var selectedAnswer;
         selectedAnswer = this.$el.find('.tiles.single .blue');
-        if ((_.size(selectedAnswer) === 0) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
-          if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
-            return this.trigger("question:completed", "no_answer");
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          if (_.size(selectedAnswer) === 0) {
+            if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
+              return this.trigger("question:completed", "no_answer");
+            }
+          } else {
+            if (confirm('This item will be marked as complete. Continue?')) {
+              return this.trigger("question:completed");
+            }
           }
         } else {
-          if (confirm('This item will be marked as complete. Continue?')) {
-            return this.trigger("question:completed");
-          }
+          return this.trigger("question:completed");
         }
       };
 

@@ -17,7 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
 
       SingleQuestionStudentsController.prototype.initialize = function(opts) {
         var division, studentCollection, view;
-        this.questionResponseModel = opts.questionResponseModel, studentCollection = opts.studentCollection, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
+        this.questionResponseModel = opts.questionResponseModel, studentCollection = opts.studentCollection, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject, this.nextItemID = opts.nextItemID;
         division = this.questionResponseModel.get('division');
         console.log(this.questionResponseModel);
         this.view = view = this._showStudentsListView(studentCollection);
@@ -37,7 +37,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         return new Students.Views.StudentsList({
           collection: collection,
           correctAnswers: this.questionResponseModel.get('question_response'),
-          display_mode: this.display_mode
+          display_mode: this.display_mode,
+          nextItemID: this.nextItemID
         });
       };
 
