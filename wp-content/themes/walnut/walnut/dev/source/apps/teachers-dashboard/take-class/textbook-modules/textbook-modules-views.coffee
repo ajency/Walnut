@@ -118,8 +118,8 @@ define ['app'], (App)->
 
             onShow : =>
                 if Marionette.getOption(@, 'mode') is 'training'
-                    @$el.find '.status_label, .training-date, #status_header'
-                    .hide();
+                    @$el.find '.status_label, .training-date, #status_header, .dateInfo'
+                    .remove();
 
                 @$el.find '#take-class-modules'
                 .tablesorter()
