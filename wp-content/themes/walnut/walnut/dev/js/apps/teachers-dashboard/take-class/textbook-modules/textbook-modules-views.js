@@ -99,7 +99,7 @@ define(['app'], function(App) {
       ContentGroupsView.prototype.onShow = function() {
         var pagerDiv, pagerOptions;
         if (Marionette.getOption(this, 'mode') === 'training') {
-          this.$el.find('.status_label, .training-date, #status_header, .dateInfo').remove();
+          this.$el.find('.status_label, .training-date, #status_header').hide();
         }
         this.$el.find('#take-class-modules').tablesorter();
         pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option value="25" selected>25</option> <option value="50">50</option> <option value="100">100</option> </select> </div>';
