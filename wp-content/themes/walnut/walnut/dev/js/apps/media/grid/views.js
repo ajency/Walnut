@@ -52,6 +52,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
       __extends(GridView, _super);
 
       function GridView() {
+        this.onMediaCollectionFetched = __bind(this.onMediaCollectionFetched, this);
         this.searchMedia = __bind(this.searchMedia, this);
         return GridView.__super__.constructor.apply(this, arguments);
       }
@@ -72,7 +73,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         }
       };
 
-      GridView.prototype.onShow = function() {
+      GridView.prototype.onRender = function() {
         var mediaType;
         this.$el.find('#no-results-div').hide();
         mediaType = Marionette.getOption(this, 'mediaType');
@@ -132,6 +133,11 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
             return this.trigger("search:media", searchStr);
           }
         }
+      };
+
+      GridView.prototype.onMediaCollectionFetched = function(coll) {
+        this.collection = coll;
+        return this.render();
       };
 
       return GridView;

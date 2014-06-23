@@ -77,7 +77,7 @@ define ['app'
                 'click a#grid.btn'  :-> @_changeChildClass 'Grid'
 
 
-            onShow:->
+            onRender:->
                 @$el.find '#no-results-div'
                 .hide()
 
@@ -115,7 +115,6 @@ define ['app'
                         '<br>Add a part of the media title in search.'
                     @collection.filters.searchStr = ''
             # @$el.find('#selectable-images').selectSelectableElements imageView.$el
-
             onCollectionRendered : ->
                 if @multiSelect
                     @$el.find('#selectable-images').bind "mousedown", (e)->
@@ -123,7 +122,6 @@ define ['app'
                     .selectable()
                 else
                     @$el.find('#selectable-images').selectable()
-
 
             _changeChildClass : (toType, evt)->
                 @children.each _.bind @_changeClassOfEachChild, @, toType
@@ -141,3 +139,7 @@ define ['app'
                 if p is 13
                     searchStr= _.trim $(e.target).val()
                     @trigger("search:media", searchStr) if searchStr
+
+            onMediaCollectionFetched:(coll)=>
+                @collection =coll
+                @render()
