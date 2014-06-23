@@ -4,16 +4,12 @@
 .ease {
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .fadein {
   -webkit-transition: opacity 0.5s ease-in-out;
@@ -291,16 +287,12 @@
   background-color: #e74c30;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .docket ul li:hover a {
   color: #ffffff;
@@ -373,16 +365,12 @@
   margin: 4px 0 11px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls {
   position: relative;
@@ -414,32 +402,24 @@
   border: 2px solid #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls .aj-imp-drag-handle p:hover {
   background: #00acec;
   color: #ffffff;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls .aj-imp-delete-btn {
   right: -10px;
@@ -459,16 +439,12 @@
   background: #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls .aj-imp-delete-btn:hover span {
   color: #ffffff;
@@ -492,16 +468,12 @@
   background: #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper .element-controls .aj-imp-settings-btn:hover span {
   color: #ffffff;
@@ -510,16 +482,12 @@
   border: 2px solid #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper.hover-class:hover > .element-controls .aj-imp-drag-handle,
 .element-wrapper.hover-class:hover > .element-controls .aj-imp-delete-btn,
@@ -528,16 +496,12 @@
   display: block;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .element-wrapper.hover-class:hover > .element-markup > .row > .column:last-child {
   border-right: 0;
@@ -645,16 +609,12 @@
   -o-transform: rotate(-90deg);
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .aj-imp-col-divider p:hover,
 .aj-imp-col-divider p:active {
@@ -663,16 +623,12 @@
   border-color: #00acec;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 #settings-region {
   position: absolute !important;
@@ -954,7 +910,8 @@ p.mcq-option-text {
 	display: block;
 	//clear: left;
 	float: left;
-}*/.style .select2-container {
+}*/
+.style .select2-container {
   width: 60%;
 }
 .colors .minicolors-theme-default.minicolors {
@@ -994,10 +951,8 @@ p.mcq-option-text {
   border: 15px solid transparent;
   -webkit-border-image: url(../../../images/border.gif) 20 20 stretch;
   /* Safari 5 */
-
   -o-border-image: url(../../../images/border.gif) 20 20 stretch;
   /* Opera */
-
   border-image: url(../../../images/border.gif) 20 20 stretch;
 }
 .fib-text input[type="text"].ansWrong {
@@ -1007,16 +962,12 @@ p.mcq-option-text {
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .fib-text input[type="text"].ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
@@ -1025,16 +976,12 @@ p.mcq-option-text {
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .fib-text input[type="text"].active {
   outline: 1px solid #0aa699;
@@ -1088,32 +1035,24 @@ p.mcq-option-text {
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .mcq-option.ansFalse {
   opacity: 0.2;
   border-bottom: 2px solid #f35958;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .mcq-option.ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
@@ -1121,16 +1060,12 @@ p.mcq-option-text {
   background-size: 25px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .mcq-option .mcq-option-select {
   float: left;
@@ -1209,16 +1144,12 @@ p.mcq-option-text {
   padding-right: 40px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .sort-option.ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
@@ -1228,16 +1159,12 @@ p.mcq-option-text {
   padding-right: 40px;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .sort-option .sort-option-text {
   margin: 0;
@@ -2151,7 +2078,6 @@ tbody.rowlink td {
   .login-container {
     margin-top: 20px !important;
     /*For mobile app testing*/
-  
   }
 }
 .contentSelect select {
@@ -2275,12 +2201,10 @@ ol > li {
 }
 :-moz-placeholder {
   /* Firefox 18- */
-
   color: #cdcdcd;
 }
 ::-moz-placeholder {
   /* Firefox 19+ */
-
   color: #cdcdcd;
 }
 :-ms-input-placeholder {
@@ -2354,3 +2278,4 @@ select:before {
     min-height: 0;
   }
 }
+/*# sourceMappingURL=custom.css.map */
