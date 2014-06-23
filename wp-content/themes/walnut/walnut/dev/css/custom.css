@@ -168,8 +168,6 @@
 }
 #myCanvas {
   background: #ffffff;
-  left: 260px;
-  top: 0;
   max-width: 760px;
   margin: 0 auto;
   min-height: 500px !important;
@@ -181,6 +179,13 @@
   padding: 20px 0;
   background: #d0d0d0;
   border: none;
+}
+.createParameters {
+  background: #ffffff;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 15px 10px;
+  margin-top: 30px;
 }
 #toolbox {
   width: 220px;
@@ -1623,6 +1628,9 @@ h3.time {
 .closeEval {
   cursor: pointer;
 }
+.parameters:focus {
+  outline: none;
+}
 .studentList h4 span {
   display: block;
 }
@@ -1805,24 +1813,36 @@ input#duration {
 .quizWrong {
   font-size: 25px;
 }
+.practiceNote {
+  position: fixed;
+  width: 100%;
+  z-index: 2;
+}
+.practiceNote + div {
+  padding-top: 80px;
+}
 .quizTimer {
   margin: 0 auto 0;
 }
 .quizActions {
   max-width: 760px;
 }
+.timerBox {
+  float: left;
+}
 .timerBox,
 .quizProgress {
-  width: 250px;
-  background: #ffffff;
+  width: 235px;
+  background: #cdcdcd;
+  margin: 0 1.5%;
+}
+.quizProgress {
+  float: right;
 }
 .quizSteps ul {
   list-style-type: none;
   padding: 0;
   margin-bottom: 0;
-}
-.quizSteps ul:after {
-  clear: both;
 }
 .quizSteps ul li {
   text-align: center;
@@ -1832,23 +1852,147 @@ input#duration {
   padding: 30px 0;
   width: 33.3%;
   float: left;
+  position: relative;
   border: 1px solid #f3f3f3;
   background: #e6e6e6;
+  font-size: 24px;
 }
 .quizSteps ul li a:hover {
   background: #f3f3f3;
+}
+.quizSteps ul li a:before {
+  position: absolute;
+  font-family: 'FontAwesome';
+  font-size: 20px;
+  font-weight: normal;
 }
 .quizSteps ul li.right a {
   background: #0aa699;
   color: #ffffff;
 }
+.quizSteps ul li.right a:hover {
+  background: #07766d;
+}
+.quizSteps ul li.right a:before {
+  content: "\f00c";
+  bottom: 6px;
+  right: 6px;
+}
 .quizSteps ul li.wrong a {
   background: #f35958;
   color: #ffffff;
 }
+.quizSteps ul li.wrong a:hover {
+  background: #f02a28;
+}
+.quizSteps ul li.wrong a:before {
+  content: "\f00d";
+  bottom: 6px;
+  right: 6px;
+}
 .quizSteps ul li.skip a {
   background: #0090d9;
   color: #ffffff;
+}
+.quizSteps ul li.skip a:hover {
+  background: #006ea6;
+}
+.quizSteps ul li.skip a:before {
+  content: "\f021";
+  bottom: 6px;
+  right: 8px;
+  font-size: 18px;
+}
+.quizSteps ul li.current a {
+  box-shadow: inset 0 0 0 10px #a6a6a6;
+}
+.quizSteps ul li.current a:before {
+  color: #a6a6a6;
+  font-size: 28px;
+  content: "\f0d8";
+  bottom: 4px;
+  left: 40%;
+}
+.customButtons {
+  padding: 15px 15px 20px;
+}
+.customButtons span {
+  cursor: pointer;
+  font-size: 24px;
+}
+.customButtons .jp-disabled {
+  opacity: 0.5;
+}
+.holder {
+  margin: 0 auto;
+  text-align: center;
+  line-height: 18px;
+}
+.holder a {
+  background-color: #e5e9ec;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 6px;
+  padding: 5px 15px;
+}
+.holder a:hover {
+  background-color: #e5e9ec;
+}
+.holder a.jp-current {
+  background-color: #0090d9;
+}
+.holder a.jp-current:hover {
+  background-color: #0090d9;
+}
+.holder a.jp-disabled {
+  background-color: #e5e9ec;
+}
+.holder a.jp-disabled:hover {
+  background-color: #c8d0d6;
+}
+@media (min-width: 1020px) and (max-width: 1295px) {
+  .timerBox,
+  .quizProgress {
+    margin: 0;
+    right: 0;
+    position: absolute;
+  }
+  .timerBox {
+    top: 420px;
+  }
+  .quizContent #myCanvas {
+    margin: 0;
+  }
+  .quizActions {
+    margin: 0;
+  }
+  .sidebarContainer {
+    position: relative;
+  }
+  .qstnInfo {
+    margin-top: 100px;
+  }
+}
+@media (max-width: 1019px) {
+  .sidebarContainer {
+    position: absolute;
+    bottom: 0;
+    z-index: 999;
+    width: 100%;
+  }
+  .sidebarContainer .timerBox {
+    float: left;
+    width: 35%;
+    margin: 0;
+  }
+  .sidebarContainer .quizProgress {
+    float: left;
+    width: 65%;
+    margin: 0;
+  }
+  .sidebarContainer .quizProgress .quizSteps ul li a {
+    width: 15%;
+  }
 }
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
