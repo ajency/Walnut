@@ -6,22 +6,7 @@
         <div class="col-xs-12">
             <div class="filters">
                 <div class="table-tools-actions">
-                    <select class="terms-filter" id="textbooks-filter" style="width:150px">
-                        <option value="">All Textbooks</option>
-                        {{#textbooksFilter}}
-                        <option value="{{id}}">{{name}}</option>
-                        {{/textbooksFilter}}
-                    </select>
-                    <select class="terms-filter" id="chapters-filter" style="width:150px">
-                        <option value="">All Chapters</option>
-                    </select>
-                    <select class="terms-filter" id="sections-filter" style="width:150px">
-                        <option value="">All Sections</option>
-                    </select>
-                    <select class="terms-filter" id="subsections-filter" style="width:200px">
-                        <option value="">All Sub Sections</option>
-                    </select>
-
+                    <div id="textbook-filters"></div>
                 </div>
             </div>
         </div>

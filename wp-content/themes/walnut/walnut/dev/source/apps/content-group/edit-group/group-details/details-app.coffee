@@ -16,30 +16,74 @@ define ['app'
 
                 @show view, (loading : true, entities : [@textbooksCollection])
 
-                @listenTo @view, "fetch:chapters" : (term_id) =>
-                    chaptersCollection = App.request "get:chapters", ('parent' : term_id)
-                    App.execute "when:fetched", chaptersCollection, =>
-                        @view.triggerMethod 'fetch:chapters:complete', chaptersCollection
+                term_ids = @model.get 'term_ids'
 
-                @listenTo @view, "fetch:sections:subsections" : (term_id) ->
-                    allSectionsCollection = App.request "get:subsections:by:chapter:id", ('child_of' : term_id)
-                    App.execute "when:fetched", allSectionsCollection, =>
-                        #make list of sections directly belonging to chapter ie. parent=term_id
-                        sectionsList = allSectionsCollection.where 'parent' : term_id
+                @listenTo @view, "show",=>
+                    if term_ids
+                        textbook_id = term_ids['textbook']
 
-                        #all the other sections are listed as subsections
-                        subsectionsList = _.difference(allSectionsCollection.models, sectionsList);
-                        allSections =
-                            'sections' : sectionsList
-                            'subsections' : subsectionsList
+                        chapter_id = term_ids['chapter'] if term_ids['chapter']?
 
-                        @view.triggerMethod 'fetch:subsections:complete', allSections
+                        section_ids = _.flatten(term_ids['sections']) if term_ids['sections']?
 
+                        #fetch chapters based on the current content piece's textbook
+                        @_fetchChapters(textbook_id, chapter_id) if textbook_id?
+
+                        #fetch sections based on chapter id
+                        @_fetchSections(chapter_id) if chapter_id?
+
+                        #fetch sections based on chapter id
+                        @_fetchSubsections(section_ids) if section_ids?
+
+
+                ## end of fetching of edit content piece
+
+                ## listening to change in textbook to fetch new list of chapters
+                # and sections
+                @listenTo @view, "fetch:chapters", @_fetchChapters
+
+                @listenTo @view, "fetch:sections", @_fetchSections
+
+                @listenTo @view, "fetch:subsections", @_fetchSubsections
 
                 @listenTo @view, "save:content:collection:details" : (data) =>
                     @model.set 'changed' : 'module_details'
                     @model.save(data, { wait : true, success : @successFn, error : @errorFn })
                     @region.trigger "close:content:selection:app" if data.status isnt 'underreview'
+
+            ##fetch chapters based on textbook id, current_chapter refers to the chapter to be selected by default
+            _fetchChapters: (term_id, current_chapter)=>
+                chaptersCollection = App.request "get:chapters", ('parent': term_id)
+
+                App.execute "when:fetched", chaptersCollection, =>
+                    @view.triggerMethod 'fetch:chapters:complete',
+                        chaptersCollection, current_chapter
+
+            #fetch all sections beloging to the chapter id passed as term_id
+            _fetchSections: (term_id)=>
+                @subSectionsList = null
+                @allSectionsCollection = App.request "get:subsections:by:chapter:id",
+                    ('child_of': term_id)
+
+                App.execute "when:fetched", @allSectionsCollection, =>
+                    #make list of sections directly belonging to chapter ie. parent=term_id
+                    sectionsList = @allSectionsCollection.where 'parent': term_id
+
+                    #all the other sections are listed as subsections
+                    @subSectionsList = _.difference(@allSectionsCollection.models, sectionsList);
+
+                    @view.triggerMethod 'fetch:sections:complete', sectionsList
+
+
+            #fetch all sub sections beloging to the section id passed as term_id
+            _fetchSubsections: (term_id)=>
+                App.execute "when:fetched", @allSectionsCollection, =>
+                    subSectionList = null
+                    subSectionList = _.filter @subSectionsList, (subSection)->
+                        _.contains term_id, subSection.get 'parent'
+
+                    @view.triggerMethod 'fetch:subsections:complete', subSectionList
+
 
 
             successFn : (model)=>
@@ -72,16 +116,13 @@ define ['app'
 
             events :
                 'change #textbooks' : (e)->
-                    @$el.find '#secs, #subsecs'
-                    .select2 'data', null
-
-                    @$el.find '#chapters, #secs, #subsecs'
-                    .html ''
-
                     @trigger "fetch:chapters", $(e.target).val()
 
                 'change #chapters' : (e)->
-                    @trigger "fetch:sections:subsections", $(e.target).val()
+                    @trigger "fetch:sections", $(e.target).val()
+
+                'change #secs' : (e)->
+                    @trigger "fetch:subsections", $(e.target).val()
 
                 'click #save-content-collection' : 'save_content'
 
@@ -122,13 +163,7 @@ define ['app'
                 #Multi Select
                 $("#secs,#subsecs").val([]).select2()
 
-                if not @model.isNew()
-                    @prepolateDropDowns()
-
                 @statusChanged()
-
-
-
 
             statusChanged : ->
                 if @model.get('status') in ['publish', 'archive']
@@ -141,22 +176,19 @@ define ['app'
                     @$el.find 'select#status option[value="underreview"]'
                     .prop 'disabled', true
 
-
-
-            prepolateDropDowns : ->
-                @$el.find('#textbooks').trigger 'change'
-
             onFetchChaptersComplete : (chapters)->
-                if _.size(chapters) > 0
-                    @$el.find('#chapters').html('');
-                    _.each chapters.models, (chap, index)=>
-                        @$el.find '#chapters'
-                        .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
 
-                    @setChapterValue()
-                else
-                    @$el.find '#chapters'
-                    .html '<option value="">No Chapters available</option>'
+                @$el.find '#chapters, #secs, #subsecs'
+                .select2 'data', null
+
+                @$el.find '#chapters, #secs, #subsecs'
+                .html ''
+
+                chapterElement= @$el.find '#chapters'
+                termIDs= @model.get 'term_ids'
+                currentChapter= termIDs['chapter']
+
+                $.populateChaptersOrSections(chapters,chapterElement, currentChapter);
 
             setChapterValue : ->
                 if @model.get('term_ids')['chapter']
@@ -164,28 +196,30 @@ define ['app'
                     @$el.find('#chapters').select2()
                     @$el.find('#chapters').trigger 'change'
 
-            onFetchSubsectionsComplete : (allsections)->
-                if _.size(allsections) > 0
-                    if _.size(allsections.sections) > 0
-                        @$el.find('#secs').html('');
-                        _.each allsections.sections, (section, index)=>
-                            @$el.find('#secs')
-                            .append '<option  value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-                            @markSelected 'secs', 'sections'
-                    else
-                        @$el.find('#secs').html('<option value="">No Sections available</option>');
+            onFetchSectionsComplete : (sections)->
 
-                    if _.size(allsections.subsections) > 0
-                        @$el.find('#subsecs').html('');
-                        _.each allsections.subsections, (section, index)=>
-                            @$el.find '#subsecs'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-                            @markSelected 'subsecs', 'subsections'
-                    else
-                        @$el.find('#subsecs').html '<option>No Sub Sections available</option>'
-                else
-                    @$el.find('#secs').html('<option value="">No Sections available</option>');
-                    @$el.find('#subsecs').html('<option value="">No Sub Sections available</option>');
+                @$el.find '#secs, #subsecs'
+                .select2 'data', null
+
+                @$el.find '#secs, #subsecs'
+                .html ''
+
+                term_ids= @model.get 'term_ids'
+
+                sectionIDs = term_ids['sections'] if term_ids?
+
+                sectionsElement     = @$el.find '#secs'
+
+                $.populateChaptersOrSections(sections,sectionsElement, sectionIDs);
+
+            onFetchSubsectionsComplete : (subsections)->
+
+                term_ids= @model.get 'term_ids'
+
+                subSectionIDs = term_ids['subsections'] if term_ids?
+
+                subsectionsElemnet  = @$el.find '#subsecs'
+                $.populateChaptersOrSections(subsections,subsectionsElemnet, subSectionIDs);
 
             markSelected : (element, sections)->
                 return '' if @model.isNew()

@@ -45,9 +45,7 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
                 @mediaCollection = App.request "fetch:media", data
 
                 App.execute "when:fetched", @mediaCollection, =>
-                    @show @view
-
-
+                    @view.triggerMethod "media:collection:fetched", @mediaCollection
 
             # gets the main login view
             _getView: (@mediaCollection)->

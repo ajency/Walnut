@@ -32,7 +32,6 @@ define ['app'], (App)->
                    if @model.get('question_type') is 'individual'
                        data.isIndividual =true
 
-                console.log data
                 data
 
             initialize :->
@@ -41,6 +40,12 @@ define ['app'], (App)->
 
             events :
                 'click #question-done' : '_changeQuestion'
+
+            onShow:->
+
+                if not Marionette.getOption(@, 'nextItemID')
+                    @$el.find "#question-done"
+                    .html '<i class="fa fa-forward"></i> Finish Module'
 
             _changeQuestion : ->
                 @trigger 'next:question'

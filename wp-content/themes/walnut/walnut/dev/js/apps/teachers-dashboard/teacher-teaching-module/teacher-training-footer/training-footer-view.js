@@ -23,7 +23,6 @@ define(['app'], function(App) {
             data.isIndividual = true;
           }
         }
-        console.log(data);
         return data;
       };
 
@@ -34,6 +33,12 @@ define(['app'], function(App) {
 
       TrainingFooterView.prototype.events = {
         'click #question-done': '_changeQuestion'
+      };
+
+      TrainingFooterView.prototype.onShow = function() {
+        if (!Marionette.getOption(this, 'nextItemID')) {
+          return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
+        }
       };
 
       TrainingFooterView.prototype._changeQuestion = function() {

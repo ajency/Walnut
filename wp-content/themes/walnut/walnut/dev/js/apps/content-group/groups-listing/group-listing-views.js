@@ -9,7 +9,8 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
       __extends(ListItemView, _super);
 
       function ListItemView() {
-        this.successFn = __bind(this.successFn, this);
+        this.successUpdateFn = __bind(this.successUpdateFn, this);
+        this.successSaveFn = __bind(this.successSaveFn, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -17,17 +18,16 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{textbookName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank" id="cloneModule" class="nonDevice">Clone</a>{{/archivedModule}}</td>';
+      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{textbookName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
 
       ListItemView.prototype.serializeData = function() {
-        var data;
+        var data, _ref;
         data = ListItemView.__super__.serializeData.call(this);
         data.view_url = SITEURL + ("/#view-group/" + data.id);
         data.edit_url = SITEURL + ("/#edit-module/" + data.id);
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
-            console.log(_this.textbooks);
             textbook = _.findWhere(_this.textbooks, {
               "id": data.term_ids.textbook
             });
@@ -50,48 +50,54 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
             return '<span class="label label-success">Archived</span>';
           }
         };
-        if (data.status === 'archive') {
+        if ((_ref = data.status) === 'publish' || _ref === 'archive') {
           data.archivedModule = true;
         }
         return data;
       };
 
-      ListItemView.prototype.initialize = function(options) {
-        this.textbooks = options.textbooksCollection;
-        return console.log(options);
+      ListItemView.prototype.events = {
+        'click a.cloneModule': 'cloneModule'
       };
 
-      ListItemView.prototype.onShow = function() {
-        if (this.model.get('status') === 'archive') {
-          return this.$el.find('td a#cloneModule').on('click', (function(_this) {
-            return function() {
-              var groupData;
-              if (confirm("Are you sure you want to clone '" + (_this.model.get('name')) + "' ?") === true) {
-                _this.cloneModel = App.request("new:content:group");
-                groupData = _this.model.toJSON();
-                _this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
-                _this.clonedData.name = "" + _this.clonedData.name + " clone";
-                _this.clonedData.status = "underreview";
-                return App.execute("when:fetched", _this.cloneModel, function() {
-                  return _this.cloneModel.save(_this.clonedData, {
-                    wait: true,
-                    success: _this.successFn,
-                    error: _this.errorFn
-                  });
+      ListItemView.prototype.initialize = function(options) {
+        return this.textbooks = options.textbooksCollection;
+      };
+
+      ListItemView.prototype.cloneModule = function() {
+        var groupData, _ref;
+        if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
+          if (confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?") === true) {
+            this.cloneModel = App.request("new:content:group");
+            groupData = this.model.toJSON();
+            this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
+            this.clonedData.name = "" + this.clonedData.name + " clone";
+            this.clonedData.status = "underreview";
+            return App.execute("when:fetched", this.cloneModel, (function(_this) {
+              return function() {
+                return _this.cloneModel.save(_this.clonedData, {
+                  wait: true,
+                  success: _this.successSaveFn,
+                  error: _this.errorFn
                 });
-              }
-            };
-          })(this));
+              };
+            })(this));
+          }
         }
       };
 
-      ListItemView.prototype.successFn = function(model) {
+      ListItemView.prototype.successSaveFn = function(model) {
         model.set('content_pieces', this.clonedData.content_pieces);
-        model.save({
+        return model.save({
           'changed': 'content_pieces'
         }, {
-          wait: true
+          wait: true,
+          success: this.successUpdateFn,
+          error: this.errorFn
         });
+      };
+
+      ListItemView.prototype.successUpdateFn = function(model) {
         return App.navigate("edit-module/" + (model.get('id')), {
           trigger: true
         });
@@ -111,7 +117,13 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
         return EmptyView.__super__.constructor.apply(this, arguments);
       }
 
-      EmptyView.prototype.template = 'No content pieces available';
+      EmptyView.prototype.template = 'No Content Available';
+
+      EmptyView.prototype.tagName = 'td';
+
+      EmptyView.prototype.onShow = function() {
+        return this.$el.attr('colspan', 3);
+      };
 
       return EmptyView;
 
@@ -120,10 +132,6 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
       __extends(GroupsListingView, _super);
 
       function GroupsListingView() {
-        this.filterTableData = __bind(this.filterTableData, this);
-        this.changeSection = __bind(this.changeSection, this);
-        this.changeChapter = __bind(this.changeChapter, this);
-        this.changeTextbook = __bind(this.changeTextbook, this);
         return GroupsListingView.__super__.constructor.apply(this, arguments);
       }
 
@@ -144,10 +152,9 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
       };
 
       GroupsListingView.prototype.events = {
-        'change .filters': 'filterTableData',
-        'change #textbooks-filter': 'changeTextbook',
-        'change #chapters-filter': 'changeChapter',
-        'change #sections-filter': 'changeSection'
+        'change .filters': function(e) {
+          return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
+        }
       };
 
       GroupsListingView.prototype.mixinTemplateHelpers = function(data) {
@@ -157,10 +164,9 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
       };
 
       GroupsListingView.prototype.initialize = function() {
-        var textbooksCollection;
-        textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
+        this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
         this.textbooks = new Array();
-        textbooksCollection.each((function(_this) {
+        return this.textbooksCollection.each((function(_this) {
           return function(textbookModel, ind) {
             return _this.textbooks.push({
               'name': textbookModel.get('name'),
@@ -168,11 +174,13 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
             });
           };
         })(this));
-        return console.log(this.textbooks);
       };
 
       GroupsListingView.prototype.onShow = function() {
-        var pagerOptions;
+        var pagerOptions, textbookFiltersHTML;
+        textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
+        this.fullCollection = Marionette.getOption(this, 'fullCollection');
+        this.$el.find('#textbook-filters').html(textbookFiltersHTML);
         this.$el.find("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter").select2();
         $('#content-pieces-table').tablesorter();
         pagerOptions = {
@@ -182,111 +190,20 @@ define(['app', 'text!apps/content-group/groups-listing/templates/content-group-l
         return $('#content-pieces-table').tablesorterPager(pagerOptions);
       };
 
-      GroupsListingView.prototype.changeTextbook = function(e) {
-        this.$el.find('#chapters-filter, #sections-filter, #subsections-filter').select2('data', '');
-        return this.trigger("fetch:chapters", $(e.target).val());
-      };
-
-      GroupsListingView.prototype.changeChapter = function(e) {
-        console.log('in change chapter');
-        this.$el.find('#sections-filter, #subsections-filter').select2('data', '');
-        return this.trigger("fetch:sections", $(e.target).val());
-      };
-
-      GroupsListingView.prototype.changeSection = function(e) {
-        this.$el.find(' #subsections-filter').select2('data', '');
-        return this.trigger("fetch:subsections", $(e.target).val());
-      };
-
-      GroupsListingView.prototype.onFetchChaptersComplete = function(chapterCollection) {
-        if (_.size(chapterCollection) > 0) {
-          this.$el.find('#chapters-filter').select2('data', {
-            'text': 'Select Chapter'
-          });
-          return _.each(chapterCollection, (function(_this) {
-            return function(chap, index) {
-              return _this.$el.find('#chapters-filter').append("<option value='" + (chap.get('term_id')) + "'>" + (chap.get('name')) + "</option>");
-            };
-          })(this));
-        } else {
-          this.$el.find('#chapters-filter').select2('data', {
-            'text': 'No chapters'
-          }).html('<option value="">All Chapters</option>');
-          this.$el.find('#sections-filter').select2('data', {
-            'text': 'No Sections'
-          }).html('<option value="">All Sections</option>');
-          return this.$el.find('#subsections-filter').select2('data', {
-            'text': 'No Subsections'
-          }).html('<option value="">All Sub Sections</option>');
+      GroupsListingView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
+        var filtered_data, pagerOptions;
+        switch (filterType) {
+          case 'textbooks-filter':
+            $.populateChapters(filteredCollection, this.$el);
+            break;
+          case 'chapters-filter':
+            $.populateSections(filteredCollection, this.$el);
+            break;
+          case 'sections-filter':
+            $.populateSubSections(filteredCollection, this.$el);
         }
-      };
-
-      GroupsListingView.prototype.onFetchSectionsComplete = function(sectionList) {
-        if (_.size(sectionList) > 0) {
-          this.$el.find('#sections-filter').select2('data', {
-            'text': 'Select Section'
-          });
-          return _.each(sectionList, (function(_this) {
-            return function(section, index) {
-              return _this.$el.find('#sections-filter').append("<option value='" + (section.get('term_id')) + "'>" + (section.get('name')) + "</option>");
-            };
-          })(this));
-        } else {
-          this.$el.find('#sections-filter').select2('data', {
-            'text': 'No Sections'
-          }).html('<option value="">All Sections</option>');
-          return this.$el.find('#subsections-filter').select2('data', {
-            'text': 'No Subsections'
-          }).html('<option value="">All Sub Sections</option>');
-        }
-      };
-
-      GroupsListingView.prototype.onFetchSubsectionsComplete = function(subSectionList) {
-        if (_.size(subSectionList) > 0) {
-          this.$el.find('#subsections-filter').select2('data', {
-            'text': 'Select Subsection'
-          });
-          return _.each(subSectionList, (function(_this) {
-            return function(subSection) {
-              return _this.$el.find('#subsections-filter').append("<option value='" + (subSection.get('term_id')) + "'>" + (subSection.get('name')) + "</option>");
-            };
-          })(this));
-        } else {
-          return this.$el.find('#subsections-filter').select2('data', {
-            'text': 'No Subsections'
-          }).html('<option value="">All Sub Sections</option>');
-        }
-      };
-
-      GroupsListingView.prototype.filterTableData = function(e) {
-        var filter_ids, filtered_data, fullCollection, pagerOptions;
-        filter_ids = _.map(this.$el.find('select.terms-filter'), function(ele, index) {
-          var item;
-          item = '';
-          if (!isNaN(ele.value)) {
-            item = ele.value;
-          }
-          return item;
-        });
-        filter_ids = _.compact(filter_ids);
-        fullCollection = Marionette.getOption(this, 'fullCollection');
-        filtered_data = fullCollection.models;
-        if (_.size(filter_ids) > 0) {
-          filtered_data = _.filter(filtered_data, (function(_this) {
-            return function(item) {
-              var filtered_item, term_ids;
-              filtered_item = '';
-              term_ids = _.flatten(item.get('term_ids'));
-              console.log(term_ids);
-              if (_.size(_.intersection(term_ids, filter_ids)) === _.size(filter_ids)) {
-                filtered_item = item;
-              }
-              return filtered_item;
-            };
-          })(this));
-        }
+        filtered_data = $.filterTableByTextbooks(this);
         this.collection.set(filtered_data);
-        console.log(this.collection);
         $("#content-pieces-table").trigger("updateCache");
         pagerOptions = {
           container: $(".pager"),

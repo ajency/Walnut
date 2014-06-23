@@ -10,7 +10,7 @@ define ['app'], (App)->
 
             template: '{{#video}}
             							<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
-            								poster="'+THEMEURL+'/images/video-poster.jpg"
+            								poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
             								data-setup="{}" controls>
             								<source src="{{videoUrl}}" type="video/mp4" />
 

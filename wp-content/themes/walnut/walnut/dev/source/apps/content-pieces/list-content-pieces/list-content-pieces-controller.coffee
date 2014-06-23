@@ -18,9 +18,7 @@ define ['app'
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-                console.log @contentPiecesCollection
-                App.execute "when:fetched", @contentPiecesCollection, =>
-                    console.log @contentPiecesCollection
+                App.execute "when:fetched", [@contentPiecesCollection,@textbooksCollection ], =>
                     @fullCollection = @contentPiecesCollection.clone()
 
                     @view = view = @_getContentPiecesListView()
@@ -29,39 +27,16 @@ define ['app'
                         loading: true
                         entities: [@contentPiecesCollection, @textbooksCollection, @fullCollection]
 
-                    @listenTo @view, "fetch:chapters": (term_id) =>
-                        chaptersCollection = App.request "get:chapters", ('parent': term_id)
-                        App.execute "when:fetched", chaptersCollection, =>
-                            @view.triggerMethod 'fetch:chapters:complete', chaptersCollection
-
-                    @listenTo @view, "fetch:sections:subsections": (term_id) ->
-                        allSectionsCollection = App.request "get:subsections:by:chapter:id", ('child_of': term_id)
-                        App.execute "when:fetched", allSectionsCollection, =>
-                            #make list of sections directly belonging to chapter ie. parent=term_id
-                            sectionsList = allSectionsCollection.where 'parent': term_id
-
-                            #all the other sections are listed as subsections
-                            subsectionsList = _.difference(allSectionsCollection.models, sectionsList);
-                            allSections =
-                                'sections': sectionsList
-                                'subsections': subsectionsList
-
-                            @view.triggerMethod 'fetch:subsections:complete', allSections
+                    @listenTo @view, "fetch:chapters:or:sections", (parentID, filterType) =>
+                        chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
+                        App.execute "when:fetched", chaptersOrSections, =>
+                            @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType
 
             _getContentPiecesListView: ->
                 console.log @fullCollection
                 new ContentList.Views.ListView
                     collection: @contentPiecesCollection
                     fullCollection: @fullCollection
-                    templateHelpers:
-                        textbooksFilter: ()=>
-                            textbooks = []
-                            _.each(@textbooksCollection.models, (el, ind)->
-                                textbooks.push
-                                    'name': el.get('name')
-                                    'id': el.get('term_id')
-                            )
-                            textbooks
-
+                    textbooksCollection: @textbooksCollection
 
 

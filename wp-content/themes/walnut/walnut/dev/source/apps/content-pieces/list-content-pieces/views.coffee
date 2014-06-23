@@ -6,7 +6,7 @@ define ['app'
             tagName : 'tr'
             className: 'gradeX odd'
 
-            template:   '<td>{{post_excerpt}}</td>
+            template:   '<td>{{&post_excerpt}}</td>
                         <td>{{post_author_name}}</td>
                         <td>{{modified_date}}</td>
                         <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
@@ -21,7 +21,12 @@ define ['app'
 
         class EmptyView extends Marionette.ItemView
 
-            template: 'No content pieces available'
+            template: 'No Content Available'
+
+            tagName: 'td'
+
+            onShow:->
+                @$el.attr 'colspan',3
 
         class Views.ListView extends Marionette.CompositeView
 
@@ -36,12 +41,16 @@ define ['app'
             itemViewContainer: '#list-content-pieces'
 
             events:
-                'change .filters': 'filterTableData'
-                'change #textbooks-filter': 'changeTextbooks'
-                'change #chapters-filter': (e)->
-                    @trigger "fetch:sections:subsections", $(e.target).val()
+                'change .filters' :(e)->
+                    @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
             onShow:->
+                @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
+                @fullCollection = Marionette.getOption @, 'fullCollection'
+                textbookFiltersHTML= $.showTextbookFilters @textbooksCollection
+                @$el.find '#textbook-filters'
+                .html textbookFiltersHTML
+
                 $ "#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter"
                 .select2();
 
@@ -53,119 +62,20 @@ define ['app'
 
                 $('#content-pieces-table').tablesorterPager pagerOptions
 
+            onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
-            changeTextbooks: (e)=>
+                switch filterType
+                    when 'textbooks-filter' then $.populateChapters filteredCollection, @$el
+                    when 'chapters-filter' then $.populateSections filteredCollection, @$el
+                    when 'sections-filter' then $.populateSubSections filteredCollection, @$el
 
-                @$el.find '#chapters-filter, #sections-filter, #subsections-filter'
-                .select2 'data', ''
-
-                @trigger "fetch:chapters", $(e.target).val()
-
-            onFetchChaptersComplete: (chapters)->
-
-                if _.size(chapters) > 0
-
-                    $ '#chapters-filter'
-                    .select2 'data', {'text':'Select Chapter'}
-
-                    _.each chapters.models, (chap, index)=>
-                        @$el.find '#chapters-filter'
-                        .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
-
-                else
-                    @$el.find '#chapters-filter,#sections-filter,#subsections-filter'
-                    .html ''
-
-                    @$el.find '#chapters-filter'
-                    .select2 'data', 'text': 'No chapters'
-
-                    @$el.find '#sections-filter'
-                    .select2 'data', 'text': 'No Sections'
-
-                    @$el.find '#subsections-filter'
-                    .select2 'data', 'text': 'No Subsections'
-
-            onFetchSubsectionsComplete: (allsections)->
-                if _.size(allsections) > 0
-
-                    if _.size(allsections.sections) > 0
-
-                        $ '#sections-filter'
-                        .select2 'data', {'text':'Select Section'}
-
-                        _.each allsections.sections, (section, index)=>
-
-                            @$el.find '#sections-filter'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-
-                    else
-                        $ '#sections-filter'
-                        .select2 'data', 'text': 'No Sections'
-                        .html ''
-
-                    if _.size(allsections.subsections) > 0
-
-                        $ '#subsections-filter'
-                        .select2 'data', {'text':'Select SubSection'}
-
-                        _.each allsections.subsections, (section, index)=>
-                            @$el.find '#subsections-filter'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-
-                    else
-                        $ '#subsections-filter'
-                        .select2 'data', 'text': 'No Subsections'
-                        .html ''
-
-                else
-                    $('#sections-filter,#subsections-filter')
-                    .html ''
-
-                    $ '#sections-filter'
-                    .select2 'data', 'text': 'No Sections'
-
-                    $ '#subsections-filter'
-                    .select2 'data', 'text': 'No Subsections'
-
-
-
-            filterTableData: (e)=>
-
-                filter_ids=_.map @$el.find('select.textbook-filter'), (ele,index)->
-                    item = ''
-                    if not isNaN ele.value
-                        item= ele.value
-                    item
-                filter_ids= _.compact filter_ids
-
-                content_type = @$el.find('#content-type-filter').val()
-
-                fullCollection= Marionette.getOption @,'fullCollection'
-
-                filtered_data= fullCollection.models
-
-                if content_type isnt ''
-                    filtered_data = fullCollection.where 'content_type': content_type
-
-                if _.size(filter_ids)>0
-                    filtered_data = _.filter filtered_data, (item)=>
-                        filtered_item=''
-                        term_ids= _.flatten item.get 'term_ids'
-                        if _.size(_.intersection(term_ids, filter_ids)) == _.size(filter_ids)
-                            filtered_item=item
-                        filtered_item
-
-
-
+                filtered_data= $.filterTableByTextbooks(@)
 
                 @collection.set filtered_data
-                console.log @collection
-
 
                 $("#content-pieces-table").trigger "updateCache"
                 pagerOptions =
-                    container: $(".pager")
-                    output: '{startRow} to {endRow} of {totalRows}'
+                    container : $(".pager")
+                    output : '{startRow} to {endRow} of {totalRows}'
 
                 $('#content-pieces-table').tablesorterPager pagerOptions
-

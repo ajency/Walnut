@@ -74,6 +74,9 @@ define(['app'], function(App) {
             $(ele).addClass('selectable');
           }
         }
+        if (!Marionette.getOption(this, 'nextItemID')) {
+          this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
+        }
         $(".students").listnav({
           includeNums: false
         });
@@ -125,14 +128,18 @@ define(['app'], function(App) {
       };
 
       StudentsList.prototype.questionCompleted = function() {
-        if ((_.size(this.correctAnswers) < 1) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
-          if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
-            return this.trigger("question:completed", "no_answer");
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          if (_.size(this.correctAnswers) < 1) {
+            if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
+              return this.trigger("question:completed", "no_answer");
+            }
+          } else {
+            if (confirm('This item will be marked as complete. Continue?')) {
+              return this.trigger("question:completed");
+            }
           }
         } else {
-          if (confirm('This item will be marked as complete. Continue?')) {
-            return this.trigger("question:completed");
-          }
+          return this.trigger("question:completed");
         }
       };
 
