@@ -4,6 +4,7 @@ define ['app'
         'apps/teachers-dashboard/teacher-teaching-module/teacher-training-footer/training-footer-controller'
         'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app'
         'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'
+        'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/multiple-evaluation-controller'
 ], (App, RegionController)->
     App.module "TeacherTeachingApp", (View, App)->
 
@@ -49,7 +50,7 @@ define ['app'
                 @listenTo @layout, "show", @_showModuleDescriptionView
 
                 @listenTo @layout, 'show', =>
-                    if @display_mode is 'training'  or contentPiece.get('content_type') is 'content_piece'
+                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
                     else
                         @_showStudentsListView questionResponseModel
@@ -173,6 +174,51 @@ define ['app'
                             questionResponseModel : questionResponseModel
                             display_mode : @display_mode
                             timerObject : @timerObject
+
+                    else if question_type is 'multiple_eval'
+
+                        demoParams = [
+
+                            param : "Posture"
+                            attr : [
+                                "Confident"
+                                "Straight"
+                                "Slumped"
+                                "Unprepared"
+                            ]
+                        ,
+                            param : "Behaviour"
+                            attr : [
+                                "Polite"
+                                "Perky"
+                                "Bored"
+                                "Unprepared"
+                            ]
+                        ,
+                            param : "Speech"
+                            attr : [
+                                "Confident"
+                                "Straight"
+                                "Slumped"
+                                "Unprepared"
+                            ]
+                        ,
+                            param : "Confidence"
+                            attr : [
+                                "Confident"
+                                "Straight"
+                                "Slumped"
+                                "Unprepared"
+                            ]
+                        ]
+
+                        App.execute "show:single:question:multiple:evaluation:app",
+                            region : @layout.studentsListRegion
+                            questionResponseModel : questionResponseModel
+                            studentCollection : studentCollection
+                            display_mode : @display_mode
+                            timerObject : @timerObject
+                            evaluationParams : demoParams
 
             _showTeacherTrainingFooter : =>
                 App.execute "when:fetched", contentPiece, =>

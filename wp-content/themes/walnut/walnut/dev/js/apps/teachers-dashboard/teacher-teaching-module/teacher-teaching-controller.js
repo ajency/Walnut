@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app', 'apps/teachers-dashboard/teacher-teaching-module/teacher-training-footer/training-footer-controller', 'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app', 'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher-teaching-module/student-list/student-list-app', 'apps/teachers-dashboard/teacher-teaching-module/teacher-training-footer/training-footer-controller', 'apps/teachers-dashboard/teacher-teaching-module/module-description/module-description-app', 'apps/teachers-dashboard/teacher-teaching-module/chorus-options/chorus-options-app', 'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController) {
   return App.module("TeacherTeachingApp", function(View, App) {
     var SingleQuestionLayout, contentGroupModel, contentPiece, questionResponseCollection, questionResponseModel, questionsCollection, studentCollection;
     contentGroupModel = null;
@@ -157,7 +157,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       TeacherTeachingController.prototype._showStudentsListView = function(questionResponseModel) {
         return App.execute("when:fetched", contentPiece, (function(_this) {
           return function() {
-            var question_type;
+            var demoParams, question_type;
             question_type = contentPiece.get('question_type');
             if (question_type === 'individual') {
               return App.execute("show:single:question:student:list:app", {
@@ -173,6 +173,30 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
                 questionResponseModel: questionResponseModel,
                 display_mode: _this.display_mode,
                 timerObject: _this.timerObject
+              });
+            } else if (question_type === 'multiple_eval') {
+              demoParams = [
+                {
+                  param: "Posture",
+                  attr: ["Confident", "Straight", "Slumped", "Unprepared"]
+                }, {
+                  param: "Behaviour",
+                  attr: ["Polite", "Perky", "Bored", "Unprepared"]
+                }, {
+                  param: "Speech",
+                  attr: ["Confident", "Straight", "Slumped", "Unprepared"]
+                }, {
+                  param: "Confidence",
+                  attr: ["Confident", "Straight", "Slumped", "Unprepared"]
+                }
+              ];
+              return App.execute("show:single:question:multiple:evaluation:app", {
+                region: _this.layout.studentsListRegion,
+                questionResponseModel: questionResponseModel,
+                studentCollection: studentCollection,
+                display_mode: _this.display_mode,
+                timerObject: _this.timerObject,
+                evaluationParams: demoParams
               });
             }
           };
