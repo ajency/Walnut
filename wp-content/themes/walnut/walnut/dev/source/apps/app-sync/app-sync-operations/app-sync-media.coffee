@@ -42,10 +42,16 @@ define ['underscore', 'jquery'], ( _ , $) ->
 
 
 		downloadMediaFiles : (filesTobeDownloaded, index, file_type)->
+
+			# $('#syncMediaProgress').css("display","none")
 			
 			file = filesTobeDownloaded[index]		 
 			directoryPath = file.substr(file.indexOf("uploads/"))
 			fileName = file.substr(file.lastIndexOf('/') + 1)
+
+			$('#syncMediaSuccess').css("display","block").text("Downloading file: \n"+fileName)
+			# $('#syncMediaProgress').css("display","block")
+			# $('#mediaProgressUpdate').css("width","0%")
 
 			uri = encodeURI file
 			localPath = _.getSynapseMediaDirectoryPath() + directoryPath
@@ -54,13 +60,20 @@ define ['underscore', 'jquery'], ( _ , $) ->
 			directoryStructure.done ->
 
 				fileTransfer = new FileTransfer()
+
+				# fileTransfer.onprogress = (progressEvent)->
+				# 	if progressEvent.lengthComputable
+				# 		percentage = Math.floor(progressEvent.loaded / progressEvent.total * 100)
+				# 		$('#mediaProgressUpdate').css("width",""+percentage+"%")
+				# 	else
+				# 		$('#mediaProgressUpdate').css("width","100%")
+
+
 				fileTransfer.download(uri, localPath 
 					,(file)->
 						if index < filesTobeDownloaded.length-1
-							$('#syncMediaSuccess').css("display","block")
-							.text("Downloaded file: "+fileName)
-
 							_.downloadMediaFiles(filesTobeDownloaded, (index + 1), file_type)
+
 						else
 							$('#syncMediaSuccess').css("display","block")
 							.text("Downloaded all "+file_type+" files")

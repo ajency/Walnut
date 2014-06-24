@@ -41,6 +41,7 @@ define(['underscore', 'jquery'], function(_, $) {
       file = filesTobeDownloaded[index];
       directoryPath = file.substr(file.indexOf("uploads/"));
       fileName = file.substr(file.lastIndexOf('/') + 1);
+      $('#syncMediaSuccess').css("display", "block").text("Downloading file: \n" + fileName);
       uri = encodeURI(file);
       localPath = _.getSynapseMediaDirectoryPath() + directoryPath;
       directoryStructure = _.createDirectoryStructure(directoryPath);
@@ -49,7 +50,6 @@ define(['underscore', 'jquery'], function(_, $) {
         fileTransfer = new FileTransfer();
         return fileTransfer.download(uri, localPath, function(file) {
           if (index < filesTobeDownloaded.length - 1) {
-            $('#syncMediaSuccess').css("display", "block").text("Downloaded file: " + fileName);
             return _.downloadMediaFiles(filesTobeDownloaded, index + 1, file_type);
           } else {
             $('#syncMediaSuccess').css("display", "block").text("Downloaded all " + file_type + " files");

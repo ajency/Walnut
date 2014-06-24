@@ -46,7 +46,7 @@
         checkbox			: 'plugins/flatui-checkbox',
         holder				: 'plugins/holder',
         videojs				: 'plugins/video',
-        panzer: 'plugins/panzer'
+        panzer              : 'plugins/panzer'
     },
     shim: {
         underscore: {
