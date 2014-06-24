@@ -24,7 +24,8 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           this.$el.find('#secs, #subsecs').select2('data', null);
           this.$el.find('#secs, #subsecs').html('');
           return this.trigger("fetch:sections:subsections", $(e.target).val());
-        }
+        },
+        'change #qType': '_changeOfQuestionType'
       };
 
       OptionsBarView.prototype.onShow = function() {
@@ -94,6 +95,14 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           }
         } else {
           return $('#subsecs,#secs').select2().select2('data', null);
+        }
+      };
+
+      OptionsBarView.prototype._changeOfQuestionType = function(e) {
+        if ($(e.target).val() === 'multiple_eval') {
+          return this.trigger('show:grading:parameter');
+        } else {
+          return this.trigger('close:grading:parameter');
         }
       };
 
