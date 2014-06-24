@@ -5,5 +5,4 @@ define ['config/marionette'
 		'config/middle-layer'
 		'config/jquery'
     'config/textbook-filters'
-		#'config/app-storage'
 		], ->

@@ -208,6 +208,21 @@ function get_single_content_piece($id){
         $content_piece->post_excerpt =$excerpt.'...';
     }
 
+    $allParams = $wpdb->get_results( "SELECT * FROM {$wpdb->base_prefix}postmeta WHERE post_id = $id
+    AND meta_key LIKE 'parameter_%'",ARRAY_A);
+    $grading_params = array();
+    foreach ($allParams as $params){
+        $paramObj = array();
+        $paramObj['id'] = $params['meta_id'];
+        $paramObj['parameter'] = ltrim($params['meta_key'],'parameter_');
+        $paramObj['attributes'] = maybe_unserialize($params['meta_value']);
+        array_push($grading_params,$paramObj);
+    }
+    $content_piece->grading_params = $grading_params;
+
+
+
+
     switch_to_blog($current_blog_id);
 
     return $content_piece;
@@ -599,6 +614,7 @@ function get_content_group_status($id, $division, $content_pieces){
 }
 
 function save_content_piece($data){
+    global $wpdb;
 
     // only if post_author is set we will update it. else the current user will be set as post_author
 
@@ -634,6 +650,27 @@ function save_content_piece($data){
 //    if($data['content_type'] == 'student_question'){
 //        update_post_meta ($content_id, 'negative_marks', $data['negative_marks']);
 //    }
+    $preventDelete = array();
+    foreach($data['grading_params'] as $grading_parameter){
+        if($grading_parameter['parameter'] == '' || sizeOf($grading_parameter['attributes']) == 0)
+            continue;
+        else{
+            $meta_key = "parameter_" . $grading_parameter['parameter'];
+            $meta_value = $grading_parameter['attributes'];
+            update_post_meta ($content_id, $meta_key,$meta_value);
+            array_push($preventDelete,$meta_key);
+        }
+    }
+//    get all params for this content piece
+    $allParams = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->base_prefix}postmeta WHERE post_id = $content_id AND meta_key LIKE 'parameter_%'",ARRAY_N);
+    // delete it if absent from current update
+    foreach ($allParams as $params){
+        if (in_array($params[0],$preventDelete ))
+            continue;
+        else
+            delete_post_meta ($content_id,$params[0]);
+
+    }
 
 
 
