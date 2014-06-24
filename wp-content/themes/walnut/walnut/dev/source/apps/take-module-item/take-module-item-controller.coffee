@@ -4,6 +4,7 @@ define ['app'
         'apps/take-module-item/teacher-training-footer/training-footer-controller'
         'apps/take-module-item/module-description/module-description-app'
         'apps/take-module-item/chorus-options/chorus-options-app'
+        'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'
 ], (App, RegionController)->
     App.module "TeacherTeachingApp", (View, App)->
 
@@ -49,7 +50,7 @@ define ['app'
                 @listenTo @layout, "show", @_showModuleDescriptionView
 
                 @listenTo @layout, 'show', =>
-                    if @display_mode is 'training'  or contentPiece.get('content_type') is 'content_piece'
+                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
                     else
                         @_showStudentsListView questionResponseModel
@@ -62,8 +63,7 @@ define ['app'
 
                 @listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
-            _changeQuestion :=>
-
+            _changeQuestion : =>
                 if @display_mode is 'class_mode'
                     @_saveQuestionResponse "completed"
 
@@ -86,7 +86,7 @@ define ['app'
                 else
                     @_gotoPreviousRoute()
 
-            _getNextItemID:->
+            _getNextItemID : ->
                 contentPieces = contentGroupModel.get 'content_pieces'
                 contentPieces = _.map contentPieces, (m)->
                     parseInt m
@@ -164,7 +164,6 @@ define ['app'
                     students : studentCollection
 
             _showStudentsListView : (questionResponseModel)=>
-
                 App.execute "when:fetched", contentPiece, =>
                     question_type = contentPiece.get('question_type')
 
@@ -175,7 +174,7 @@ define ['app'
                             studentCollection : studentCollection
                             display_mode : @display_mode
                             timerObject : @timerObject
-                            nextItemID: @_getNextItemID()
+                            nextItemID : @_getNextItemID()
 
                     else if question_type is 'chorus'
                         App.execute "show:single:question:chorus:options:app",
@@ -183,7 +182,20 @@ define ['app'
                             questionResponseModel : questionResponseModel
                             display_mode : @display_mode
                             timerObject : @timerObject
-                            nextItemID: @_getNextItemID()
+                            nextItemID : @_getNextItemID()
+
+                    else if question_type is 'multiple_eval'
+
+                        App.execute "show:single:question:multiple:evaluation:app",
+                            region : @layout.studentsListRegion
+                            questionResponseModel : questionResponseModel
+                            studentCollection : studentCollection
+                            display_mode : @display_mode
+                            timerObject : @timerObject
+                            evaluationParams : contentPiece.get 'grading_params'
+                            nextItemID : @_getNextItemID()
+
+
 
             _showTeacherTrainingFooter : =>
                 App.execute "when:fetched", contentPiece, =>
@@ -194,7 +206,7 @@ define ['app'
                     App.execute 'show:teacher:training:footer:app',
                         region : @layout.studentsListRegion
                         contentPiece : contentPiece
-                        nextItemID: @_getNextItemID()
+                        nextItemID : @_getNextItemID()
 
 
             _getTakeSingleQuestionLayout : ->
@@ -203,8 +215,8 @@ define ['app'
         class SingleQuestionLayout extends Marionette.Layout
 
             template : '<div id="module-details-region"></div>
-                        <div id="question-details-region"></div>
-                        <div id="students-list-region"></div>'
+                                    <div id="question-details-region"></div>
+                                    <div id="students-list-region"></div>'
 
             regions :
                 moduleDetailsRegion : '#module-details-region'
