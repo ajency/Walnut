@@ -142,7 +142,7 @@ define(['jquery', 'underscore'], function($, _) {
     }
   };
   return $.filterTableByTextbooks = function(_this) {
-    var content_type, filter_elements, filter_ids, filtered_data, filtered_models, fullCollection;
+    var content_status, content_type, filter_elements, filter_ids, filtered_data, filtered_models, fullCollection;
     filter_elements = _this.$el.find('select.textbook-filter');
     fullCollection = _this.fullCollection;
     filter_ids = _.map(filter_elements, function(ele, index) {
@@ -155,10 +155,16 @@ define(['jquery', 'underscore'], function($, _) {
     });
     filter_ids = _.compact(filter_ids);
     content_type = _this.$el.find('#content-type-filter').val();
+    content_status = _this.$el.find('#content-status-filter').val();
     filtered_models = fullCollection.models;
-    if (content_type !== '') {
+    if (content_type) {
       filtered_models = fullCollection.where({
         'content_type': content_type
+      });
+    }
+    if (content_status) {
+      filtered_models = fullCollection.where({
+        'status': content_status
       });
     }
     if (_.size(filter_ids) > 0) {

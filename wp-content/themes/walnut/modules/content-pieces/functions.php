@@ -490,7 +490,7 @@ function get_all_content_groups($args=array()){
 
     if( !is_null($all_content_groups))
         foreach($all_content_groups as $item)
-            $content_data[]=  get_single_content_group($item->id);
+            $content_data[]=  get_single_content_group($item->id, $division);
 
     if( !is_null($archived_groups))
         foreach($archived_groups as $item){
