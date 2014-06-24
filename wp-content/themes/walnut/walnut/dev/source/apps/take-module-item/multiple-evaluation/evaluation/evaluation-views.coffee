@@ -4,10 +4,22 @@ define ['app'], (App)->
 
             className : 'row m-l-0 m-r-0 m-t-10 b-grey b-b'
 
-            template : '<div class="col-sm-4"><h4 class="semi-bold m-t-5 p-b-5">{{param}}</h4></div>
-                                                    {{#attr}}
-                                                       <div class="col-sm-2"><button id="{{.}}" type="button" class="btn btn-white btn-sm btn-small h-center block">{{.}}</button></div>
-                                                    {{/attr}}'
+            template : '<div class="col-sm-4"><h4 class="semi-bold m-t-5 p-b-5">{{parameter}}</h4></div>
+                                                    {{#attributesArray}}
+                                                       <div class="col-sm-2"><button id="{{index}}" type="button" class="btn btn-white btn-sm btn-small h-center block">{{attr}}</button></div>
+                                                    {{/attributesArray}}'
+
+            mixinTemplateHelpers :(data)->
+                data = super data
+                attrbutesArray = new Array()
+                _.each data.attributes,(attr,index)->
+                    attrbutesArray.push
+                        attr : attr
+                        index : index
+
+                data.attributesArray = attrbutesArray
+
+                data
 
             events :
                 'click button' : '_buttonClicked'
@@ -16,8 +28,8 @@ define ['app'], (App)->
                 @responseObj = options.responseObj
 
             onShow : ->
-                if @responseObj[@model.get('param')]?
-                    @$el.find("##{@responseObj[@model.get('param')]}").removeClass('btn-white').addClass('btn-primary')
+                if @responseObj[@model.get('id')]?
+                    @$el.find("button##{@responseObj[@model.get('id')]}").removeClass('btn-white').addClass('btn-primary')
 
             _buttonClicked : (e)->
                 if $(e.target).closest('button').hasClass('btn-primary')
@@ -25,7 +37,7 @@ define ['app'], (App)->
                 else
                     @$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white')
                     $(e.target).closest('button').removeClass('btn-white').addClass('btn-primary')
-                    @responseObj[@model.get('param')] = $(e.target).attr('id')
+                    @responseObj[@model.get('id')] = $(e.target).attr('id')
                     console.log @responseObj
 
 

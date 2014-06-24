@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/multiple-evaluation-views', 'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/student-list/student-list-controller', 'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/evaluation/evaluation-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-views', 'apps/take-module-item/multiple-evaluation/student-list/student-list-controller', 'apps/take-module-item/multiple-evaluation/evaluation/evaluation-controller'], function(App, RegionController) {
   return App.module("SingleQuestionMultipleEvaluationApp", function(MultipleEval, App) {
     var MultipleEvalLayout, SingleQuestionMultipleEvalController;
     SingleQuestionMultipleEvalController = (function(_super) {
@@ -22,6 +22,7 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         this.listenTo(this.layout, "question:completed", this._changeQuestion);
         this.listenTo(this.layout.studentListRegion, 'student:selected', this.studentSelected);
         this.listenTo(this.layout.evalParametersRegion, 'save:eval:parameters', this._saveEvalParameters);
+        console.log(opts);
         return this.show(this.layout, {
           loading: true
         });
@@ -30,7 +31,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
       SingleQuestionMultipleEvalController.prototype.studentSelected = function(id) {
         var evaluationCollection, responseObj;
         id = parseInt(id);
-        evaluationCollection = App.request("get:demo:collection", this.evaluationParams);
+        evaluationCollection = App.request("get:grading:parameter:collection", this.evaluationParams);
+        console.log(evaluationCollection);
         responseObj = _.findWhere(this.questionResponseArray, {
           id: id
         });
@@ -66,7 +68,8 @@ define(['app', 'controllers/region-controller', 'apps/teachers-dashboard/teacher
         }
         console.log(this.questionResponseArray);
         this.questionResponseModel.set('question_response', this.questionResponseArray);
-        return console.log(this.questionResponseModel);
+        console.log(this.questionResponseModel);
+        return this.layout.studentListRegion.trigger('student:answer:saved', responseObj.id);
       };
 
       SingleQuestionMultipleEvalController.prototype._changeQuestion = function() {

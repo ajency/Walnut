@@ -78,8 +78,13 @@ define(['app'], function(App) {
       };
 
       StudentsListView.prototype.selectStudent = function(e) {
-        $(e.target).closest('.tiles.single').toggleClass("selected");
+        this.$el.find('.tiles.single').removeClass('selected');
+        $(e.target).closest('.tiles.single').addClass("selected");
         return this.trigger('student:selected', $(e.target).closest('.tiles.single').attr('data-id'));
+      };
+
+      StudentsListView.prototype.onStudentAnswerSaved = function(id) {
+        return this.$el.find(".tiles.single[data-id='" + id + "']").find('.unselected').removeClass('unselected').addClass('blue').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
       };
 
       return StudentsListView;

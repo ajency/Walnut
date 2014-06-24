@@ -1,6 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/student-list/student-list-views'
+        'apps/take-module-item/multiple-evaluation/student-list/student-list-views'
 ],(App,RegionController)->
     App.module 'SingleQuestionMultipleEvaluationApp.StudentList',(StudentList,App)->
         class StudentList.Controller extends RegionController
@@ -12,6 +12,9 @@ define ['app'
                 @view = @_getStudentListView()
 
                 @listenTo @view,  'student:selected' ,@studentSelected
+
+                @listenTo @region, 'student:answer:saved', (id)=>
+                    @view.triggerMethod 'student:answer:saved',id
 
                 @show @view,
                     loading : true

@@ -65,17 +65,14 @@ function update_question_response($data)
         if ($question_type == 'multiple_eval'){
             foreach($question_response as $single_student_response){
                 $student_id = $single_student_response['id'];
-                foreach ($single_student_response as $key => $value){
-                    if ($key != 'id'){
-                        $response_meta = array(
-                            'qr_ref_id'     => $ref_id,
-                            'student_id'    => $student_id,
-                            'meta_key'      => $key,
-                            'meta_value'    => $value
-                        );
-                        $wpdb->replace($wpdb->prefix .'question_response_meta',$response_meta);
-                    }
-                }
+
+                unset ($single_student_response['id']);
+                $response_meta = array(
+                    'qr_ref_id'     => $ref_id,
+                    'meta_key'      => $student_id,
+                    'meta_value'    => maybe_serialize($single_student_response)
+                );
+                $wpdb->replace($wpdb->prefix .'question_response_meta',$response_meta);
 
             }
 

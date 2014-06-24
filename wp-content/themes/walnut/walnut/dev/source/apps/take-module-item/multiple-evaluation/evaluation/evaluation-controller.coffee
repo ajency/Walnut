@@ -1,6 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/evaluation/evaluation-views'
+        'apps/take-module-item/multiple-evaluation/evaluation/evaluation-views'
 ],(App, RegionController)->
     App.module "SingleQuestionMultipleEvaluationApp.EvaluationApp",(EvaluationApp,App)->
 

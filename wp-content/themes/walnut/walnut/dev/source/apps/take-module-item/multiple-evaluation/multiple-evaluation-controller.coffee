@@ -1,8 +1,8 @@
 define ['app'
         'controllers/region-controller'
-        'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/multiple-evaluation-views'
-        'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/student-list/student-list-controller'
-        'apps/teachers-dashboard/teacher-teaching-module/multiple-evaluation/evaluation/evaluation-controller'
+        'apps/take-module-item/multiple-evaluation/multiple-evaluation-views'
+        'apps/take-module-item/multiple-evaluation/student-list/student-list-controller'
+        'apps/take-module-item/multiple-evaluation/evaluation/evaluation-controller'
 ], (App, RegionController)->
     App.module "SingleQuestionMultipleEvaluationApp", (MultipleEval, App)->
         class SingleQuestionMultipleEvalController extends RegionController
@@ -25,13 +25,17 @@ define ['app'
 
                 @listenTo @layout.evalParametersRegion , 'save:eval:parameters', @_saveEvalParameters
 
+                console.log opts
+
                 @show @layout,
                     loading : true
 
             studentSelected : (id)->
                 id = parseInt id
 
-                evaluationCollection = App.request "get:demo:collection", @evaluationParams
+                evaluationCollection = App.request "get:grading:parameter:collection", @evaluationParams
+
+                console.log evaluationCollection
 
                 responseObj = _.findWhere @questionResponseArray, id : id
 
@@ -58,6 +62,8 @@ define ['app'
                 @questionResponseModel.set 'question_response',@questionResponseArray
 
                 console.log @questionResponseModel
+
+                @layout.studentListRegion.trigger 'student:answer:saved',responseObj.id
 
 
 

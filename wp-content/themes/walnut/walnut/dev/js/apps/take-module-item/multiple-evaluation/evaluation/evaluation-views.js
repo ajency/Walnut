@@ -13,7 +13,21 @@ define(['app'], function(App) {
 
       EvaluationItemView.prototype.className = 'row m-l-0 m-r-0 m-t-10 b-grey b-b';
 
-      EvaluationItemView.prototype.template = '<div class="col-sm-4"><h4 class="semi-bold m-t-5 p-b-5">{{param}}</h4></div> {{#attr}} <div class="col-sm-2"><button id="{{.}}" type="button" class="btn btn-white btn-sm btn-small h-center block">{{.}}</button></div> {{/attr}}';
+      EvaluationItemView.prototype.template = '<div class="col-sm-4"><h4 class="semi-bold m-t-5 p-b-5">{{parameter}}</h4></div> {{#attributesArray}} <div class="col-sm-2"><button id="{{index}}" type="button" class="btn btn-white btn-sm btn-small h-center block">{{attr}}</button></div> {{/attributesArray}}';
+
+      EvaluationItemView.prototype.mixinTemplateHelpers = function(data) {
+        var attrbutesArray;
+        data = EvaluationItemView.__super__.mixinTemplateHelpers.call(this, data);
+        attrbutesArray = new Array();
+        _.each(data.attributes, function(attr, index) {
+          return attrbutesArray.push({
+            attr: attr,
+            index: index
+          });
+        });
+        data.attributesArray = attrbutesArray;
+        return data;
+      };
 
       EvaluationItemView.prototype.events = {
         'click button': '_buttonClicked'
@@ -24,8 +38,8 @@ define(['app'], function(App) {
       };
 
       EvaluationItemView.prototype.onShow = function() {
-        if (this.responseObj[this.model.get('param')] != null) {
-          return this.$el.find("#" + this.responseObj[this.model.get('param')]).removeClass('btn-white').addClass('btn-primary');
+        if (this.responseObj[this.model.get('id')] != null) {
+          return this.$el.find("button#" + this.responseObj[this.model.get('id')]).removeClass('btn-white').addClass('btn-primary');
         }
       };
 
@@ -35,7 +49,7 @@ define(['app'], function(App) {
         } else {
           this.$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white');
           $(e.target).closest('button').removeClass('btn-white').addClass('btn-primary');
-          this.responseObj[this.model.get('param')] = $(e.target).attr('id');
+          this.responseObj[this.model.get('id')] = $(e.target).attr('id');
           return console.log(this.responseObj);
         }
       };
