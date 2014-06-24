@@ -4,9 +4,9 @@ define [
     'apps/left-nav/leftnavapp'
     'apps/textbooks/app'
     #'apps/breadcrumb/app'
-    'apps/content-group/content-group-app'
+    'apps/content-modules/content-modules-app'
     'apps/teachers-dashboard/teachers-dashboard-app'
-    'apps/teachers-dashboard/teacher-teaching-module/teacher-teaching-app'
+    'apps/take-module-item/take-module-item-app'
     'apps/content-preview/controller'
     'apps/content-pieces/content-pieces-app'
 ], ->
