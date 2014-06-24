@@ -1,0 +1,23 @@
+{
+  "name": "Synapse",
+  "description": "Synapse Chrome App",
+  
+  "version": "0.1",
+  "manifest_version": 2,
+  
+  "permissions": ["<all_urls>", "storage", "unlimitedStorage", "fileSystem"],
+  
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  
+  "icons": {"16": "logo/logo-synapse-16.png", 
+            "36": "logo/logo-synapse-36.png",
+            "48": "logo/logo-synapse-48.png",
+            "72": "logo/logo-synapse-72.png",
+            "96": "logo/logo-synapse-96.png",
+            "144": "logo/logo-synapse-144.png",
+            "192": "logo/logo-synapse-192.png"}
+}

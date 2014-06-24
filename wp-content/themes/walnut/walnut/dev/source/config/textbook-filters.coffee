@@ -6,16 +6,16 @@ define ['jquery', 'underscore'], ($, _)->
         textbooks.each (t) ->
             textbookItems += '<option value='+t.get('term_id')+'>'+t.get('name')+'</option>'
 
-        divHtml= '<select class="textbook-filter" id="textbooks-filter" style="width:150px">
+        divHtml= '<select class="textbook-filter select2-filters" id="textbooks-filter" style="width:150px">
                     <option value="">All Textbooks</option>'+textbookItems +
                 '</select>
-                <select class="textbook-filter" id="chapters-filter" style="width:150px">
+                <select class="textbook-filter select2-filters" id="chapters-filter" style="width:150px">
                     <option value="">All Chapters</option>
                 </select>
-                <select class="textbook-filter" id="sections-filter" style="width:150px">
+                <select class="textbook-filter select2-filters" id="sections-filter" style="width:150px">
                     <option value="">All Sections</option>
                 </select>
-                <select class="textbook-filter" id="subsections-filter" style="width:200px">
+                <select class="textbook-filter select2-filters" id="subsections-filter" style="width:200px">
                     <option value="">All Sub Sections</option>
                 </select>'
 

@@ -5,7 +5,7 @@ define(['jquery', 'underscore'], function($, _) {
     textbooks.each(function(t) {
       return textbookItems += '<option value=' + t.get('term_id') + '>' + t.get('name') + '</option>';
     });
-    return divHtml = '<select class="textbook-filter" id="textbooks-filter" style="width:150px"> <option value="">All Textbooks</option>' + textbookItems + '</select> <select class="textbook-filter" id="chapters-filter" style="width:150px"> <option value="">All Chapters</option> </select> <select class="textbook-filter" id="sections-filter" style="width:150px"> <option value="">All Sections</option> </select> <select class="textbook-filter" id="subsections-filter" style="width:200px"> <option value="">All Sub Sections</option> </select>';
+    return divHtml = '<select class="textbook-filter select2-filters" id="textbooks-filter" style="width:150px"> <option value="">All Textbooks</option>' + textbookItems + '</select> <select class="textbook-filter select2-filters" id="chapters-filter" style="width:150px"> <option value="">All Chapters</option> </select> <select class="textbook-filter select2-filters" id="sections-filter" style="width:150px"> <option value="">All Sections</option> </select> <select class="textbook-filter select2-filters" id="subsections-filter" style="width:200px"> <option value="">All Sub Sections</option> </select>';
   };
   $.populateChapters = function(items, ele, curr_item) {
     var chapterElement, selectedTextbook, txt;

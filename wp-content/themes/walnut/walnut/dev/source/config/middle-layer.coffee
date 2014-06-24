@@ -64,12 +64,3 @@ define ['detect', 'jquery'], (detect, $)->
                     $.post url, data, response, 'json'
                 else
                     return 'connection_error'
-       
-
-            
-
-
-
-
-
-
