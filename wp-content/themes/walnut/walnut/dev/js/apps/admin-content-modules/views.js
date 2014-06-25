@@ -232,9 +232,9 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         }
       };
 
-      ModulesView.prototype.onNewCollectionFetched = function(newCollection) {
-        this.collection = newCollection;
-        return this.fullCollection = newCollection;
+      ModulesView.prototype.onNewCollectionFetched = function(newCollection, fullCollection) {
+        this.collection.reset(newCollection.models);
+        return this.fullCollection = fullCollection;
       };
 
       ModulesView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {

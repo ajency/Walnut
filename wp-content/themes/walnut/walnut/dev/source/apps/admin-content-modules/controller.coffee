@@ -46,7 +46,8 @@ define ['app'
                             @listenTo @view, "division:changed", (division)=>
                                 newModulesCollection = App.request "get:content:groups", ('division': division)
                                 App.execute "when:fetched", newModulesCollection, =>
-                                    @view.triggerMethod "new:collection:fetched", newModulesCollection
+                                    fullCollection = newModulesCollection.clone()
+                                    @view.triggerMethod "new:collection:fetched", newModulesCollection,fullCollection
 
 
             _getContentGroupsListingView: (collection)=>

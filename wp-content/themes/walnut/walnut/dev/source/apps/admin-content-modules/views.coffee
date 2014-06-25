@@ -216,9 +216,9 @@ define ['app',
                     @$el.find '#take-class-modules .tab_checkbox'
                     .removeAttr 'checked'
 
-            onNewCollectionFetched: (newCollection)=>
-                @collection= newCollection
-                @fullCollection = newCollection
+            onNewCollectionFetched: (newCollection,fullCollection)=>
+                @collection.reset newCollection.models
+                @fullCollection = fullCollection
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
