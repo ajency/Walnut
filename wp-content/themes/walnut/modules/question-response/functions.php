@@ -133,7 +133,7 @@ function get_single_question_response($ref_id)
 
     $numeric_keys = array('teacher_id', 'collection_id', 'content_piece_id', 'division', 'time_taken');
 
-    $response_data = $qr = array();
+    $response_data = $qr = $list = array();
 
     foreach ($question_response as $resp) {
         foreach ($resp as $key => $value) {
@@ -158,6 +158,16 @@ function get_single_question_response($ref_id)
                 }
             }
             $response_data['question_response'] = $qr;
+        }
+        else if ($question_type === 'multiple_eval'){
+            $multiple_eval_query = $wpdb->prepare("SELECT meta_key FROM {$wpdb->prefix}question_response_meta WHERE qr_ref_id = %s",$ref_id);
+            $student_list = $wpdb->get_col($multiple_eval_query);
+            if ($student_list) {
+                foreach ($student_list as $student) {
+                    $list[] = (int)$student;
+                }
+            }
+            $response_data['question_response'] = $list;
         }
     }
 
