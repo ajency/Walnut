@@ -51,7 +51,9 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
                     'division': division
                   });
                   return App.execute("when:fetched", newModulesCollection, function() {
-                    return _this.view.triggerMethod("new:collection:fetched", newModulesCollection);
+                    var fullCollection;
+                    fullCollection = newModulesCollection.clone();
+                    return _this.view.triggerMethod("new:collection:fetched", newModulesCollection, fullCollection);
                   });
                 });
               });

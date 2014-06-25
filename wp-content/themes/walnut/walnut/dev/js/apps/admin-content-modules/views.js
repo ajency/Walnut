@@ -5,7 +5,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'], function(App, adminContentModulesTpl) {
   return App.module("AdminContentModulesApp.View.AdminModulesView", function(AdminModulesView, App) {
-    var ModulesItemView;
+    var ModulesEmptyView, ModulesItemView;
     ModulesItemView = (function(_super) {
       __extends(ModulesItemView, _super);
 
@@ -84,6 +84,24 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
       return ModulesItemView;
 
     })(Marionette.ItemView);
+    ModulesEmptyView = (function(_super) {
+      __extends(ModulesEmptyView, _super);
+
+      function ModulesEmptyView() {
+        return ModulesEmptyView.__super__.constructor.apply(this, arguments);
+      }
+
+      ModulesEmptyView.prototype.template = 'No items to display';
+
+      ModulesEmptyView.prototype.tagName = 'td';
+
+      ModulesEmptyView.prototype.onShow = function() {
+        return this.$el.attr('colspan', 6);
+      };
+
+      return ModulesEmptyView;
+
+    })(Marionette.ItemView);
     return AdminModulesView.ModulesView = (function(_super) {
       __extends(ModulesView, _super);
 
@@ -99,6 +117,8 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
       ModulesView.prototype.itemView = ModulesItemView;
 
       ModulesView.prototype.itemViewContainer = 'tbody';
+
+      ModulesView.prototype.emptyView = ModulesEmptyView;
 
       ModulesView.prototype.itemViewOptions = function() {
         return {
@@ -212,8 +232,9 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         }
       };
 
-      ModulesView.prototype.onNewCollectionFetched = function(newCollection) {
-        return this.collection = newCollection;
+      ModulesView.prototype.onNewCollectionFetched = function(newCollection, fullCollection) {
+        this.collection.reset(newCollection.models);
+        return this.fullCollection = fullCollection;
       };
 
       ModulesView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {

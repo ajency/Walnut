@@ -40,13 +40,13 @@ define ["app", 'backbone'], (App, Backbone) ->
             parse: (resp)->
                 resp.data
 
-
-        contentGroupCollection = new ContentGroup.ItemCollection
-
         # API
         API =
         # get all content groups
             getContentGroups: (param = {})->
+
+                contentGroupCollection = new ContentGroup.ItemCollection
+
                 contentGroupCollection.fetch
                     reset: true
                     data: param

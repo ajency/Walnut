@@ -84,6 +84,15 @@ define ['app',
                 @textbooks = options.textbooksCollection
                 @chapters = options.chaptersCollection
 
+        class ModulesEmptyView extends Marionette.ItemView
+
+            template: 'No items to display'
+
+            tagName : 'td'
+
+            onShow:->
+                @$el.attr 'colspan', 6
+
         class AdminModulesView.ModulesView extends Marionette.CompositeView
 
             template : adminContentModulesTpl
@@ -91,6 +100,8 @@ define ['app',
             itemView : ModulesItemView
 
             itemViewContainer : 'tbody'
+
+            emptyView: ModulesEmptyView
 
             itemViewOptions : ->
                 textbooksCollection : @textbooks
@@ -205,8 +216,9 @@ define ['app',
                     @$el.find '#take-class-modules .tab_checkbox'
                     .removeAttr 'checked'
 
-            onNewCollectionFetched: (newCollection)=>
-                @collection= newCollection
+            onNewCollectionFetched: (newCollection,fullCollection)=>
+                @collection.reset newCollection.models
+                @fullCollection = fullCollection
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
