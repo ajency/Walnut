@@ -46,8 +46,8 @@ define ['app'], (App)->
                 'click .tiles.single.selectable' : 'selectStudent'
 
             onShow : ->
-                if Marionette.getOption(@, 'display_mode') is 'class_mode'
-                    $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
+#                if Marionette.getOption(@, 'display_mode') is 'class_mode'
+                $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
                 $ ".students"
                 .listnav
@@ -66,6 +66,15 @@ define ['app'], (App)->
                     eleValue = parseInt($(ele).attr('data-id'))
                     if _.contains(@correctAnswers, eleValue)
                         @markAsCorrectAnswer ele
+
+            markAsCorrectAnswer: (student)->
+                $(student).removeClass 'selected'
+                .find '.unselected'
+                    .removeClass 'unselected'
+                        .addClass 'blue'
+                            .find 'i'
+                                .removeClass 'fa-minus-circle'
+                                    .addClass 'fa-check-circle'
 
             selectStudent : (e)->
                 @$el.find('.tiles.single').removeClass 'selected'

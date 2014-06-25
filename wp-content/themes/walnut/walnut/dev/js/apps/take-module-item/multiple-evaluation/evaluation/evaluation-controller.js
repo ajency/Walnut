@@ -14,6 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
         this.evaluationCollection = Marionette.getOption(this, 'evaluationCollection');
         this.studentModel = Marionette.getOption(this, 'studentModel');
         this.responseObj = Marionette.getOption(this, 'responseObj');
+        this.display_mode = Marionette.getOption(this, 'display_mode');
         this.view = this._showEvaluationView();
         this.listenTo(this.view, 'save:eval:parameters', this._saveEvalParameters);
         return this.show(this.view);
@@ -23,7 +24,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
         return new EvaluationApp.Views.EvaluationView({
           collection: this.evaluationCollection,
           studentModel: this.studentModel,
-          responseObj: this.responseObj
+          responseObj: this.responseObj,
+          display_mode: this.dispaly_mode
         });
       };
 

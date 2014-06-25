@@ -56,6 +56,8 @@ define ['app'
             mixinTemplateHelpers:(data)->
                 additionalData = Marionette.getOption @, 'additionalData'
                 data.dateCompleted= additionalData.dateCompleted
+                if data.question_type is 'multiple_eval'
+                    data.question_type = 'multiple Evaluation'
                 data.question_type= _.str.capitalize data.question_type
                 if additionalData.responseStatus
                     data.responseStatus= additionalData.responseStatus
@@ -130,7 +132,7 @@ define ['app'
                 if model.get('question_type') is 'chorus'
                     if question_response
                         correct_answer= CHORUS_OPTIONS[question_response]
-                else
+                else if model.get('question_type') is 'individual'
                     for studID in question_response
                         answeredCorrectly = studentCollection.where("ID": studID)
                         name= ans.get('display_name') for ans in answeredCorrectly
@@ -139,6 +141,9 @@ define ['app'
                     if _.size(names)>0
                         student_names=names.join(', ')
                         correct_answer= _.size(names)+ ' Students ('+ student_names+ ')'
+
+                else
+                     correct_answer = _.size(_.pluck(question_response, 'id')) + ' Students'
 
                 correct_answer
 

@@ -10,6 +10,7 @@ define ['app'
                 @evaluationCollection = Marionette.getOption @,'evaluationCollection'
                 @studentModel = Marionette.getOption @,'studentModel'
                 @responseObj = Marionette.getOption @, 'responseObj'
+                @display_mode =  Marionette.getOption(@, 'display_mode')
 
                 @view = @_showEvaluationView()
 
@@ -23,6 +24,7 @@ define ['app'
                     collection : @evaluationCollection
                     studentModel : @studentModel
                     responseObj : @responseObj
+                    display_mode : @dispaly_mode
 
             _saveEvalParameters : ->
                 @region.trigger 'save:eval:parameters', @responseObj

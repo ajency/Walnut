@@ -16,13 +16,11 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
       SingleQuestionMultipleEvalController.prototype.initialize = function(opts) {
         this.questionResponseModel = opts.questionResponseModel, this.studentCollection = opts.studentCollection, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject, this.evaluationParams = opts.evaluationParams;
         this.questionResponseArray = this.questionResponseModel.get('question_response');
-        console.log(this.questionResponseArray);
         this.layout = this._getMultipleEvaluationLayout();
         this.listenTo(this.layout, 'show', this._onShowOfLayout);
         this.listenTo(this.layout, "question:completed", this._changeQuestion);
         this.listenTo(this.layout.studentListRegion, 'student:selected', this.studentSelected);
         this.listenTo(this.layout.evalParametersRegion, 'save:eval:parameters', this._saveEvalParameters);
-        console.log(opts);
         return this.show(this.layout, {
           loading: true
         });
@@ -32,7 +30,6 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
         var evaluationCollection, responseObj;
         id = parseInt(id);
         evaluationCollection = App.request("get:grading:parameter:collection", this.evaluationParams);
-        console.log(evaluationCollection);
         responseObj = _.findWhere(this.questionResponseArray, {
           id: id
         });
@@ -47,13 +44,13 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
           studentModel: this.studentCollection.findWhere({
             ID: id
           }),
-          responseObj: responseObj
+          responseObj: responseObj,
+          display_mode: this.display_mode
         });
       };
 
       SingleQuestionMultipleEvalController.prototype._saveEvalParameters = function(responseObj) {
         var index, responseObjOld;
-        console.log(responseObj);
         responseObjOld = _.findWhere(this.questionResponseArray, {
           id: responseObj.id
         });
@@ -66,9 +63,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
           }
           this.questionResponseArray.push(responseObj);
         }
-        console.log(this.questionResponseArray);
         this.questionResponseModel.set('question_response', this.questionResponseArray);
-        console.log(this.questionResponseModel);
         return this.layout.studentListRegion.trigger('student:answer:saved', responseObj.id);
       };
 

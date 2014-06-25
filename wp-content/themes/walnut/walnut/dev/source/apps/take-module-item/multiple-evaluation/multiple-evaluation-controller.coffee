@@ -11,7 +11,6 @@ define ['app'
                 {@questionResponseModel,@studentCollection, @display_mode,@timerObject,@evaluationParams} = opts
 
                 @questionResponseArray = @questionResponseModel.get 'question_response'
-                console.log @questionResponseArray
 
                 @layout = @_getMultipleEvaluationLayout()
 
@@ -25,8 +24,6 @@ define ['app'
 
                 @listenTo @layout.evalParametersRegion , 'save:eval:parameters', @_saveEvalParameters
 
-                console.log opts
-
                 @show @layout,
                     loading : true
 
@@ -34,8 +31,6 @@ define ['app'
                 id = parseInt id
 
                 evaluationCollection = App.request "get:grading:parameter:collection", @evaluationParams
-
-                console.log evaluationCollection
 
                 responseObj = _.findWhere @questionResponseArray, id : id
 
@@ -46,9 +41,9 @@ define ['app'
                     evaluationCollection : evaluationCollection
                     studentModel : @studentCollection.findWhere ID : id
                     responseObj : responseObj
+                    display_mode : @display_mode
 
             _saveEvalParameters : (responseObj)->
-                console.log responseObj
                 responseObjOld = _.findWhere @questionResponseArray, id : responseObj.id
                 if responseObjOld?
                     index = _.indexOf @questionResponseArray,responseObjOld
@@ -57,11 +52,9 @@ define ['app'
                     @questionResponseArray = new Array() if @questionResponseArray is ''
                     @questionResponseArray.push responseObj
 
-                console.log @questionResponseArray
 
                 @questionResponseModel.set 'question_response',@questionResponseArray
 
-                console.log @questionResponseModel
 
                 @layout.studentListRegion.trigger 'student:answer:saved',responseObj.id
 
