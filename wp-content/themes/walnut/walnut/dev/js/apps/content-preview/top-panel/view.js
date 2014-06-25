@@ -52,7 +52,7 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
                 color: timerColor
               }
             },
-            circle_bg_color: "#EBEEF1",
+            circle_bg_color: "#d6d5d4",
             bg_width: 0.2
           }).addListener(function(unit, value, total) {
             if (total === 10) {

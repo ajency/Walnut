@@ -3,10 +3,20 @@
 	font-size: 13px;
 }
 
+.moduleInfo{
+	background: @preview-grey;
+	border-bottom: 1px solid lighten(@dash-grey, 10%);
+	// box-shadow: darken(@preview-grey, 10%) 0 0 0 3px inset;
+	.btn{
+		white-space: normal;
+	}
+}
+
 .cpTimer{
-	max-width: 190px;
+	//max-width: 190px;
 	//height: 100px;
 	margin: 10px auto 0;
+	// color: @color-white;
 	.textDiv_Seconds{
 		span{
 			opacity: 0.3;
@@ -27,7 +37,7 @@
 }
 
 #content-board{
-	margin-top: 30px;
+	margin-top: 15px;
 	.element-wrapper{
 		border: none;
 		padding: 0 7px;
@@ -35,6 +45,38 @@
 	}
 }
 
+.contentTime{
+	float: left;
+}
+
+.contentInfo{
+	float: right;
+	padding: 20px;
+}
+
+.contentTime, .contentInfo{
+	width: 235px;
+	// background: darken(@preview-grey, 15%);
+	background: @preview-grey;
+	border: 1px solid lighten(@dash-grey, 10%);
+	box-shadow: darken(@preview-grey, 10%) 0 0 0 3px inset;
+	margin: 0 1.5%;
+}
+
+@media (min-width: 1020px) and (max-width:1295px){
+	#myCanvas{
+		margin: 0;
+		margin-left: auto;
+	}
+	.contentTime, .contentInfo{
+		margin: 0;
+		left: 5px;
+		position: absolute;
+	}
+	.contentInfo{
+		top: 325px;
+	}
+}
 .answrMsg{
 	&.alert-success{
 		h3{

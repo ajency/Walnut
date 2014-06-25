@@ -36,7 +36,7 @@ define ['app'], (App)->
 
         class Views.StudentsList extends Marionette.CompositeView
 
-            className: 'studentList m-t-35'
+            className: 'studentList m-t-10'
 
             template: '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20">
             							<button type="button" id="question-done" class="btn btn-success btn-xs btn-sm">

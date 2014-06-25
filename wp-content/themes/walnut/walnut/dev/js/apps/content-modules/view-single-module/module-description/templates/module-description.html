@@ -72,8 +72,7 @@
     {{#takeClassModule}}
     <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
         <div class="row no-margin p-r-10">
-            <div class="col-sm-4">
-
+            <div class="col-sm-3">
                 <div class="tiles added-margin">
                     <div class="tiles-body">
                         <div class="tiles-title"> TRAINING MODULE TIME</div>
@@ -81,34 +80,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-            <div class="col-sm-4">
-
-            </div>
-            <div class="col-sm-4">
-
-                <div class="tiles white added-margin">
-                    <div class="tiles-body">
-                        <div class="tiles-title"> ELAPSED MODULE TIME</div>
-                        {{^isTraining}}
-                        <div class="heading">
-                                <span class="animate-number" data-animation-duration="1200">
-                                    {{showElapsedTime}}
-                                </span>
-                        </div>
-                        {{/isTraining}}
-                        {{#isTraining}}
-                        <p class="small-text muted">This will display what is the elapsed module
-                            time of the training module in class mode.</p>
-                        {{/isTraining}}
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <div class="row no-margin p-t-10">
-            <div class="col-sm-6">
+            <div class="col-sm-3">
                 <div class="{{^isTraining}}modProgress{{/isTraining}}" >
                     <p class="bold small-text m-t-10 m-b-5">Progress</p>
                     {{^isTraining}}
@@ -125,10 +98,36 @@
 
                 </div>
             </div>
+            <div class="col-sm-3">
+                <div class="tiles white added-margin">
+                    <div class="tiles-body">
+                        <div class="tiles-title"> ELAPSED MODULE TIME</div>
+                        {{^isTraining}}
+                        <div class="heading">
+                            <span class="animate-number" data-animation-duration="1200">
+                                {{showElapsedTime}}
+                            </span>
+                        </div>
+                        {{/isTraining}}
+                        {{#isTraining}}
+                        <p class="small-text muted">This will display what is the elapsed module
+                            time of the training module in class mode.</p>
+                        {{/isTraining}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                {{&startScheduleButton}}
+            </div>
+        </div>
+        <div class="row no-margin p-t-10">
+            <div class="col-sm-6">
+                
+            </div>
             <div class="col-sm-6">
                 <div class="timedisplay"></div>
 
-                {{&startScheduleButton}}
+                
 
 
             </div>

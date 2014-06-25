@@ -42,7 +42,7 @@ define ['app'
                             Seconds:
                                 color: timerColor
 
-                        circle_bg_color: "#EBEEF1"
+                        circle_bg_color: "#d6d5d4"
                         bg_width: 0.2
 
                     .addListener (unit,value,total)->
