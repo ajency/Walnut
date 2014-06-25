@@ -60,8 +60,9 @@ define ['underscore', 'csvparse'], ( _, parse) ->
                     tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
                     
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions (id, division, class_id) 
-                            VALUES (?,?,?)", [row[0], row[1], row[2]])
+                        tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions (id
+                            , division, class_id) VALUES (?,?,?)"
+                            , [row[0], row[1], row[2]])
 
                 ,_.transactionErrorhandler
                 ,(tx)->
@@ -98,8 +99,9 @@ define ['underscore', 'csvparse'], ( _, parse) ->
                 _.db.transaction((tx)->
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT OR REPLACE INTO wp_collection_meta (id, collection_id, meta_key, meta_value) 
-                            VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
+                        tx.executeSql("INSERT OR REPLACE INTO wp_collection_meta (id, collection_id
+                            , meta_key, meta_value) VALUES (?,?,?,?)"
+                            , [row[0], row[1], row[2], row[3]])
 
                 ,_.transactionErrorhandler
                 ,(tx)->
@@ -115,11 +117,11 @@ define ['underscore', 'csvparse'], ( _, parse) ->
                 _.db.transaction((tx)->
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT OR REPLACE INTO wp_content_collection (id, name, created_on, created_by
-                            , last_modified_on, last_modified_by, published_on, published_by, status, type
-                            , term_ids, duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]
-                            , row[10], row[11]])
+                        tx.executeSql("INSERT OR REPLACE INTO wp_content_collection (id, name, created_on
+                            , created_by, last_modified_on, last_modified_by, published_on, published_by
+                            , status, type, term_ids, duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+                            , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
+                            , row[9], row[10], row[11]])
 
                 ,_.transactionErrorhandler
                 ,(tx)->
@@ -136,8 +138,9 @@ define ['underscore', 'csvparse'], ( _, parse) ->
                     tx.executeSql("DELETE FROM wp_options")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_options (option_id, option_name, option_value, autoload) 
-                            VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
+                        tx.executeSql("INSERT INTO wp_options (option_id, option_name
+                            , option_value, autoload) VALUES (?,?,?,?)"
+                            , [row[0], row[1], row[2], row[3]])
 
                 ,_.transactionErrorhandler
                 ,(tx)->
@@ -153,8 +156,9 @@ define ['underscore', 'csvparse'], ( _, parse) ->
                 _.db.transaction((tx)->
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id, meta_key, meta_value) 
-                            VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
+                        tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
+                            , meta_key, meta_value) VALUES (?,?,?,?)"
+                            , [row[0], row[1], row[2], row[3]])
 
                 ,_.transactionErrorhandler
                 ,(tx)->
@@ -170,15 +174,15 @@ define ['underscore', 'csvparse'], ( _, parse) ->
                 _.db.transaction((tx)->
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date, post_date_gmt
-                            , post_content, post_title, post_excerpt, post_status, comment_status
-                            , ping_status, post_password, post_name, to_ping, pinged, post_modified
-                            , post_modified_gmt, post_content_filtered, post_parent, guid, menu_order
-                            , post_type, post_mime_type, comment_count) 
+                        tx.executeSql("INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date
+                            , post_date_gmt, post_content, post_title, post_excerpt, post_status
+                            , comment_status, ping_status, post_password, post_name, to_ping, pinged
+                            , post_modified, post_modified_gmt, post_content_filtered, post_parent
+                            , guid, menu_order, post_type, post_mime_type, comment_count) 
                             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]
-                            , row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18]
-                            , row[19], row[20], row[21], row[22]])
+                            , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
+                            , row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]
+                            , row[17], row[18], row[19], row[20], row[21], row[22]])
 
                 ,_.transactionErrorhandler
                 ,(tx)->
