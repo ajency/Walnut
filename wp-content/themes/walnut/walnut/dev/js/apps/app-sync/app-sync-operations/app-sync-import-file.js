@@ -69,7 +69,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
         return _.db.transaction(function(tx) {
           tx.executeSql("DELETE FROM " + _.getTblPrefix() + "question_response");
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response (ref_id, teacher_id , content_piece_id, collection_id, division , question_response , time_taken , start_date, end_date, status, sync) VALUES (?,?,?,?,?,?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], 1]);
+            return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response (ref_id , teacher_id, content_piece_id, collection_id, division , question_response , time_taken , start_date, end_date, status, sync) VALUES (?,?,?,?,?,?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], 1]);
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in ' + _.getTblPrefix() + 'question_response');
