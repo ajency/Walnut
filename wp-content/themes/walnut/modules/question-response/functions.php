@@ -48,8 +48,12 @@ function update_question_response($data)
     global $wpdb;
 
     extract($data);
+    $current_blog = get_current_blog_id();
+    switch_to_blog( 1 );
 
     $question_type = get_post_meta($content_piece_id, 'question_type', true);
+
+    switch_to_blog( $current_blog );
 
     $update_data = array(
         'teacher_id' => get_current_user_id(),
