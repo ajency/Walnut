@@ -62,8 +62,8 @@ define ['underscore', 'jquery'], (_, $)->
                 #     , last_modified_by INTEGER, published_on TEXT, published_by INTEGER, status TEXT
                 #     , type TEXT, term_ids TEXT, duration INTEGER)')
 
-                tx.executeSql('CREATE TABLE IF NOT EXISTS wp_collection_meta (id INTEGER PRIMARY KEY
-                    , collection_id INTEGER, meta_key TEXT, meta_value TEXT)')
+                # tx.executeSql('CREATE TABLE IF NOT EXISTS wp_collection_meta (id INTEGER PRIMARY KEY
+                #     , collection_id INTEGER, meta_key TEXT, meta_value TEXT)')
 
                 
             ,_.transactionErrorHandler
