@@ -57,6 +57,8 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
         })(this));
         return this.listenTo(this.layout, "media:selected", (function(_this) {
           return function() {
+            console.log(_this.choosedMedia);
+            console.log('@choosedMedia');
             if (!_.isNull(_this.choosedMedia)) {
               App.vent.trigger("media:manager:choosed:media", _this.choosedMedia);
               return _this.region.closeDialog();
@@ -99,6 +101,12 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
       OuterLayout.prototype.events = {
         'click button.media-manager-select': function() {
           return this.trigger("media:selected");
+        }
+      };
+
+      OuterLayout.prototype.onShow = function() {
+        if (Marionette.getOption(this, 'mediaType') === 'video') {
+          return this.$el.find('.upload-tab').hide();
         }
       };
 

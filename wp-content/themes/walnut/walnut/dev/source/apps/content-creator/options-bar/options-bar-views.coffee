@@ -26,6 +26,10 @@ define ['app',
 
                     @trigger "fetch:sections:subsections", $(e.target).val()
 
+                'change #qType' : '_changeOfQuestionType'
+
+
+
             onShow:->
                 $ "#subs, #chaps, #qType, #status, #secs, #subsecs "#,#negativeMarks"
                 .select2();
@@ -69,7 +73,6 @@ define ['app',
 
                 subSectionIDs = term_ids['subsections'] if term_ids?
 
-
                 if _.size(allsections) > 0
                     if _.size(allsections.sections) > 0
                         @$el.find('#secs').html('');
@@ -93,7 +96,11 @@ define ['app',
                 else
                     $('#subsecs,#secs').select2().select2 'data', null
 
-
+            _changeOfQuestionType : (e)->
+                if $(e.target).val() is 'multiple_eval'
+                    @trigger 'show:grading:parameter'
+                else
+                    @trigger 'close:grading:parameter'
 
             onSaveQuestionSettings:->
                 if @$el.find('form').valid()

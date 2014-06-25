@@ -35,31 +35,28 @@ define ['app'
                 @removeSpinner()
                 # get logo attachment
                 videoModel = App.request "get:media:by:id", @layout.model.get 'video_id'
+                App.execute "when:fetched", videoModel, =>
+                    view = @view = @_getVideoView videoModel
 
-#                console.log JSON.stringify videoModel.toJSON()
+                    #trigger media manager popup and start listening to "media:manager:choosed:media" event
+                    @listenTo view, "show:media:manager", =>
+                        App.execute "show:media:manager:app",
+                            region: App.dialogRegion
+                            mediaType: 'video'
 
+                        @listenTo App.vent, "media:manager:choosed:media", (media)=>
+                            @layout.model.set
+                                'video_id': media.get 'id'
+                                'videoUrl': media.get 'url'
+                            @layout.model.save()
+                            @layout.elementRegion.show @view
+                            @stopListening App.vent, "media:manager:choosed:media"
 
-                view = @view = @_getVideoView videoModel
+                        @listenTo App.vent, "stop:listening:to:media:manager", =>
+                            @stopListening App.vent, "media:manager:choosed:media"
 
-                #trigger media manager popup and start listening to "media:manager:choosed:media" event
-                @listenTo view, "show:media:manager", =>
-                    App.execute "show:media:manager:app",
-                        region: App.dialogRegion
-                        mediaType: 'video'
+                    App.commands.setHandler "video:moved", ->
+                        view.triggerMethod "video:moved"
 
-                @listenTo App.vent, "media:manager:choosed:media", (media)=>
-                    @layout.model.set
-                        'video_id': media.get 'id'
-                        'videoUrl': media.get 'url'
-                    @layout.model.save()
-                    @layout.elementRegion.show @view
-                    @stopListening App.vent, "media:manager:choosed:media"
-
-                @listenTo App.vent, "stop:listening:to:media:manager", =>
-                    @stopListening App.vent, "media:manager:choosed:media"
-
-                App.commands.setHandler "video:moved", ->
-                    view.triggerMethod "video:moved"
-
-                @layout.elementRegion.show view
+                    @layout.elementRegion.show view
 							

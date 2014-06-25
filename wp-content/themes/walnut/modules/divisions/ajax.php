@@ -3,8 +3,11 @@
 require_once 'functions.php';
 
 function fetch_divisions() {
-    
-    $user_id= get_current_user_id();
+
+    if(isset($_REQUEST['user_id']))
+        $user_id= $_REQUEST['user_id'];
+    else
+        $user_id= get_current_user_id();
     
     $data=  get_all_divisions($user_id);
     

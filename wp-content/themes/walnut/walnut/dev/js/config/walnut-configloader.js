@@ -1,1 +1,1 @@
-define(['config/marionette', 'config/backbone', 'config/jquery-validate', 'config/underscore', 'config/jquery', 'config/middle-layer'], function() {});
+define(['config/marionette', 'config/backbone', 'config/jquery-validate', 'config/underscore', 'config/middle-layer', 'config/jquery', 'config/textbook-filters'], function() {});

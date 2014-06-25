@@ -80,6 +80,7 @@ Template Name: Content Creator
 <script type="text/javascript">
 
 var SITEURL = '<?php echo site_url();?>'
+THEMEURL = '<?php echo get_template_directory_uri()?>';
 AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
 var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE    = '<?php echo wp_create_nonce('media-form');?>';
@@ -104,7 +105,7 @@ CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
 <script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main.js?ver=<?php echo $ver?>" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php } else { ?>
 
- <script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js?ver=<?php echo VERSION?>"></script>
+ <script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js?ver=<?php echo $ver?>"></script>
 <?php } ?>
 
 

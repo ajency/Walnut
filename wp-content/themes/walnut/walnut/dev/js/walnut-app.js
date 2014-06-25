@@ -28,11 +28,6 @@ define(['marionette'], function(Marionette) {
   });
   App.on("initialize:after", function(options) {
     var user, xhr;
-    if (typeof Pace !== 'undefined') {
-      Pace.on('hide', function() {
-        return $("#site_main_container").addClass("showAll");
-      });
-    }
     App.startHistory();
     if (_.platform() === 'DEVICE') {
       if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
@@ -83,10 +78,6 @@ define(['marionette'], function(Marionette) {
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
       var lastSyncOperation, user;
-      if (typeof Pace !== 'undefined') {
-        Pace.restart();
-        $("#site_main_container").removeClass("showAll");
-      }
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {

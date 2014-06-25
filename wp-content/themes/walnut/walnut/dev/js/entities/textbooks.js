@@ -53,9 +53,9 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
 
       ItemCollection.prototype.model = Textbooks.ItemModel;
 
-      ItemCollection.prototype.name = 'textbook';
-
       ItemCollection.prototype.comparator = 'term_order';
+
+      ItemCollection.prototype.name = 'textbook';
 
       ItemCollection.prototype.url = function() {
         return AJAXURL + '?action=get-textbooks';
@@ -64,6 +64,13 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
       ItemCollection.prototype.parse = function(resp) {
         this.total = resp.count;
         return resp.data;
+      };
+
+      ItemCollection.prototype.fetchChaptersOrSections = function(parentID) {
+        var chaptersOrSectionsCollection;
+        return chaptersOrSectionsCollection = App.request("get:chapters", {
+          'parent': parentID
+        });
       };
 
       return ItemCollection;
@@ -78,9 +85,9 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
 
       NamesCollection.prototype.model = Textbooks.NameModel;
 
-      NamesCollection.prototype.name = 'textbookName';
-
       NamesCollection.prototype.comparator = 'term_order';
+
+      NamesCollection.prototype.name = 'textbookName';
 
       NamesCollection.prototype.url = function() {
         return AJAXURL + '?action=get-textbook-names';

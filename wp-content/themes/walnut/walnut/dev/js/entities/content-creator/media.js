@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Media", function(Media, App, Backbone, Marionette, $, _) {
-    var API, mediaCollection;
+    var API;
     Media.MediaModel = (function(_super) {
       __extends(MediaModel, _super);
 
@@ -53,7 +53,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         order: 'DESC',
         orderby: 'date',
         paged: 1,
-        posts_per_page: 40
+        posts_per_page: 40,
+        searchStr: ''
       };
 
       MediaCollection.prototype.model = Media.MediaModel;
@@ -70,14 +71,16 @@ define(["app", 'backbone'], function(App, Backbone) {
       return MediaCollection;
 
     })(Backbone.Collection);
-    mediaCollection = new Media.MediaCollection;
     API = {
       fetchMedia: function(params, reset) {
+        var mediaCollection;
         if (params == null) {
           params = {};
         }
+        mediaCollection = new Media.MediaCollection;
         mediaCollection.url = "" + AJAXURL + "?action=query_attachments";
         _.defaults(params, mediaCollection.filters);
+        mediaCollection.filters = params;
         mediaCollection.fetch({
           reset: reset,
           data: params
@@ -89,18 +92,15 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (0 === parseInt(mediaId)) {
           return API.getPlaceHolderMedia();
         }
-        media = mediaCollection.get(parseInt(mediaId));
-        if (_.isUndefined(media)) {
-          media = new Media.MediaModel({
-            id: mediaId
-          });
-          mediaCollection.add(media);
-          media.fetch();
-        }
+        media = new Media.MediaModel({
+          id: mediaId
+        });
+        media.fetch();
         return media;
       },
       getEmptyMediaCollection: function() {
-        return new Media.MediaCollection;
+        var mediaCollection;
+        return mediaCollection = new Media.MediaCollection;
       },
       getPlaceHolderMedia: function() {
         var media;
@@ -110,7 +110,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       createNewMedia: function(data) {
         var media;
         media = new Media.MediaModel(data);
-        mediaCollection.add(media);
         return media;
       },
       getMediaByIdFromLocal: function(id) {
@@ -170,7 +169,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         params = {};
       }
       if (shouldReset == null) {
-        shouldReset = true;
+        shouldReset = false;
       }
       return API.fetchMedia(params, shouldReset);
     });
