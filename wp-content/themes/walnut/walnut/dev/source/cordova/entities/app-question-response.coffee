@@ -26,33 +26,72 @@ define ['underscore', 'serialize'], ( _) ->
 							questionType = _.getMetaValue(row['content_piece_id'])
 							questionType.done (meta_value)->
 
-								if meta_value.question_type is 'individual'
-									question_response = _.unserialize(row['question_response'])
-								
-								else question_response = row['question_response']
+								do(row, i, meta_value)->
+									questionResponseMeta = _.getDataFromQuestionResponseMeta(row['ref_id'])
+									questionResponseMeta.done (multipleEvalQuestionResponse)->
 
-								do(row, i, question_response)->
-									teacherName = _.getTeacherName(row['teacher_id'])
-									teacherName.done (teacher_name)->
-										console.log 'teacher_name: '+teacher_name
+										if meta_value.question_type is 'individual'
+											question_response = _.unserialize(row['question_response'])
+										
+										else if meta_value.question_type is 'chorus'
+											question_response = row['question_response']
 
-										result[i] = 
-											ref_id: row['ref_id']
-											teacher_id: row['teacher_id']
-											teacher_name: teacher_name
-											content_piece_id: row['content_piece_id']
-											collection_id: row['collection_id']
-											division: row['division']
-											question_response: question_response
-											time_taken: row['time_taken']
-											start_date: row['start_date']
-											end_date: row['end_date']
-											status: row['status']
+										else
+											# when question_type is 'multiple_eval'
+											question_response = multipleEvalQuestionResponse
+
+										do(row, i, question_response)->
+											teacherName = _.getTeacherName(row['teacher_id'])
+											teacherName.done (teacher_name)->
+												console.log 'teacher_name: '+teacher_name
+
+												result[i] = 
+													ref_id: row['ref_id']
+													teacher_id: row['teacher_id']
+													teacher_name: teacher_name
+													content_piece_id: row['content_piece_id']
+													collection_id: row['collection_id']
+													division: row['division']
+													question_response: question_response
+													time_taken: row['time_taken']
+													start_date: row['start_date']
+													end_date: row['end_date']
+													status: row['status']
 	
 					d.resolve result          
 
 			$.when(runQuery()).done (data)->
 				console.log 'getQuestionResponse transaction completed'
+			.fail _.failureHandler
+
+
+
+		getDataFromQuestionResponseMeta : (ref_id)->
+
+			question_response = ''
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql('SELECT * FROM '+_.getTblPrefix()+'question_response_meta 
+							WHERE qr_ref_id=?', [ref_id], onSuccess(d), _.deferredErrorHandler(d))
+
+
+			onSuccess = (d)->
+				(tx, data)->
+
+					if data.rows.length isnt 0
+						row = data.rows.item(0)
+
+						meta_key = row['meta_key']
+						meta_value = _.unserialize(row['meta_value'])
+
+						question_response = _.extend(meta_value, 'id':meta_key)
+
+					d.resolve question_response
+
+			$.when(runQuery()).done ->
+				console.log 'getDataFromQuestionResponseMeta transaction completed'
 			.fail _.failureHandler
 
 
@@ -164,13 +203,12 @@ define ['underscore', 'serialize'], ( _) ->
 						student_id = qR['id']
 
 						qR = _.omit(qR, 'id')
-						meta_key = qR['meta_key']
 						meta_value = serialize(qR['meta_value'])
 
 						_.db.transaction((tx)->
 							tx.executeSql('INSERT INTO '+_.getTblPrefix()+'question_response_meta 
 								(qr_ref_id, meta_key, meta_value) VALUES (?,?,?)'
-								, [model.get('ref_id'), meta_key, meta_value])
+								, [model.get('ref_id'), student_id, meta_value])
 
 						,_.transactionErrorHandler
 						,(tx)->

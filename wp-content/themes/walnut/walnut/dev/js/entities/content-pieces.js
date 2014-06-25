@@ -63,6 +63,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       GroupItemCollection.prototype.comparator = 'order';
 
+      GroupItemCollection.prototype.name = 'content-piece';
+
       GroupItemCollection.prototype.initialize = function() {
         console.log('content piece ');
         this.on('remove', this.removedModel, this);

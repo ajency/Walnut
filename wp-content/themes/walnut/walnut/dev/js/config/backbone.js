@@ -131,9 +131,6 @@ define(["backbone"], function(Backbone) {
       } else {
         modelname = model.name;
         console.log('Model name: ' + modelname);
-        if (modelname === 'content-group') {
-          data = App.reqres.request("save:update:" + modelname + ":local", model);
-        }
         if (modelname === 'division') {
           data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('id'));
           data.done(function(d) {

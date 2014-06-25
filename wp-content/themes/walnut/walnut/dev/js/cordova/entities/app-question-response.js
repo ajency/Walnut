@@ -17,32 +17,40 @@ define(['underscore', 'serialize'], function(_) {
             var questionType;
             questionType = _.getMetaValue(row['content_piece_id']);
             return questionType.done(function(meta_value) {
-              var question_response;
-              if (meta_value.question_type === 'individual') {
-                question_response = _.unserialize(row['question_response']);
-              } else {
-                question_response = row['question_response'];
-              }
-              return (function(row, i, question_response) {
-                var teacherName;
-                teacherName = _.getTeacherName(row['teacher_id']);
-                return teacherName.done(function(teacher_name) {
-                  console.log('teacher_name: ' + teacher_name);
-                  return result[i] = {
-                    ref_id: row['ref_id'],
-                    teacher_id: row['teacher_id'],
-                    teacher_name: teacher_name,
-                    content_piece_id: row['content_piece_id'],
-                    collection_id: row['collection_id'],
-                    division: row['division'],
-                    question_response: question_response,
-                    time_taken: row['time_taken'],
-                    start_date: row['start_date'],
-                    end_date: row['end_date'],
-                    status: row['status']
-                  };
+              return (function(row, i, meta_value) {
+                var questionResponseMeta;
+                questionResponseMeta = _.getDataFromQuestionResponseMeta(row['ref_id']);
+                return questionResponseMeta.done(function(multipleEvalQuestionResponse) {
+                  var question_response;
+                  if (meta_value.question_type === 'individual') {
+                    question_response = _.unserialize(row['question_response']);
+                  } else if (meta_value.question_type === 'chorus') {
+                    question_response = row['question_response'];
+                  } else {
+                    question_response = multipleEvalQuestionResponse;
+                  }
+                  return (function(row, i, question_response) {
+                    var teacherName;
+                    teacherName = _.getTeacherName(row['teacher_id']);
+                    return teacherName.done(function(teacher_name) {
+                      console.log('teacher_name: ' + teacher_name);
+                      return result[i] = {
+                        ref_id: row['ref_id'],
+                        teacher_id: row['teacher_id'],
+                        teacher_name: teacher_name,
+                        content_piece_id: row['content_piece_id'],
+                        collection_id: row['collection_id'],
+                        division: row['division'],
+                        question_response: question_response,
+                        time_taken: row['time_taken'],
+                        start_date: row['start_date'],
+                        end_date: row['end_date'],
+                        status: row['status']
+                      };
+                    });
+                  })(row, i, question_response);
                 });
-              })(row, i, question_response);
+              })(row, i, meta_value);
             });
           };
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
@@ -54,6 +62,34 @@ define(['underscore', 'serialize'], function(_) {
       };
       return $.when(runQuery()).done(function(data) {
         return console.log('getQuestionResponse transaction completed');
+      }).fail(_.failureHandler);
+    },
+    getDataFromQuestionResponseMeta: function(ref_id) {
+      var onSuccess, question_response, runQuery;
+      question_response = '';
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql('SELECT * FROM ' + _.getTblPrefix() + 'question_response_meta WHERE qr_ref_id=?', [ref_id], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var meta_key, meta_value, row;
+          if (data.rows.length !== 0) {
+            row = data.rows.item(0);
+            meta_key = row['meta_key'];
+            meta_value = _.unserialize(row['meta_value']);
+            question_response = _.extend(meta_value, {
+              'id': meta_key
+            });
+          }
+          return d.resolve(question_response);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getDataFromQuestionResponseMeta transaction completed');
       }).fail(_.failureHandler);
     },
     getTeacherName: function(teacher_id) {
@@ -135,13 +171,12 @@ define(['underscore', 'serialize'], function(_) {
         multiple_eval_questionResponse = model.get('question_response');
         if (!_.isEmpty(multiple_eval_questionResponse)) {
           _.each(multiple_eval_questionResponse, function(qR, i) {
-            var meta_key, meta_value, student_id;
+            var meta_value, student_id;
             student_id = qR['id'];
             qR = _.omit(qR, 'id');
-            meta_key = qR['meta_key'];
             meta_value = serialize(qR['meta_value']);
             return _.db.transaction(function(tx) {
-              return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_meta (qr_ref_id, meta_key, meta_value) VALUES (?,?,?)', [model.get('ref_id'), meta_key, meta_value]);
+              return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_meta (qr_ref_id, meta_key, meta_value) VALUES (?,?,?)', [model.get('ref_id'), student_id, meta_value]);
             }, _.transactionErrorHandler, function(tx) {
               return console.log('SUCCESS: Inserted record in wp_question_response_meta');
             });

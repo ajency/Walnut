@@ -195,9 +195,6 @@ define ["backbone"], (Backbone) ->
 				modelname = model.name
 				console.log 'Model name: '+modelname
 
-				if modelname is 'content-group'
-					data = App.reqres.request "save:update:#{modelname}:local", model
-
 				if modelname is 'division'
 					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('id')
 					data.done (d)->
