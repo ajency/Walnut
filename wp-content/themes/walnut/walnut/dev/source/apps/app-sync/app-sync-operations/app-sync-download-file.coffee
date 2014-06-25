@@ -8,10 +8,10 @@ define ['underscore'], ( _) ->
 
 			$('#syncSuccess').css("display","block").text("Starting file download...")
 
-			# lastDownloadTimestamp = _.getLastDownloadTimeStamp()
-			# lastDownloadTimestamp.done (time_stamp)->
+			lastDownloadTimestamp = _.getLastDownloadTimeStamp()
+			lastDownloadTimestamp.done (time_stamp)->
 
-			data = blog_id: _.getBlogID(), last_sync: ''#time_stamp
+			data = blog_id: _.getBlogID(), last_sync: time_stamp
 
 			#TODO: Change action name for import.
 			$.get AJAXURL + '?action=sync-database',
