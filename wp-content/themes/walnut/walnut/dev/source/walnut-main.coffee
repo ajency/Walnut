@@ -10,7 +10,7 @@ require.config
 
     # baseUrl: './wp-content/themes/walnut/walnut/dev/js'
 
-    # baseUrl for walnut app
+    # baseUrl for synapse app
     baseUrl : '/dev/js'
 
     paths:
