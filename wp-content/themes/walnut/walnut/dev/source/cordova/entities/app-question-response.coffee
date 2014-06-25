@@ -4,6 +4,83 @@ define ['underscore', 'serialize'], ( _) ->
 
 	_.mixin
 
+		# Question response get functions
+		getQuestionResponse : (collection_id, division)->
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"question_response 
+							WHERE collection_id=? AND division=?", [collection_id, division]
+							, onSuccess(d), _.deferredErrorHandler(d));
+					
+			onSuccess = (d)->
+				(tx, data)->
+
+					result = []
+
+					for i in [0..data.rows.length-1] by 1
+						row = data.rows.item(i)
+
+						do(row, i)->
+							questionType = _.getMetaValue(row['content_piece_id'])
+							questionType.done (meta_value)->
+
+								if meta_value.question_type is 'individual'
+									question_response = _.unserialize(row['question_response'])
+								
+								else question_response = row['question_response']
+
+								do(row, i, question_response)->
+									teacherName = _.getTeacherName(row['teacher_id'])
+									teacherName.done (teacher_name)->
+										console.log 'teacher_name: '+teacher_name
+
+										result[i] = 
+											ref_id: row['ref_id']
+											teacher_id: row['teacher_id']
+											teacher_name: teacher_name
+											content_piece_id: row['content_piece_id']
+											collection_id: row['collection_id']
+											division: row['division']
+											question_response: question_response
+											time_taken: row['time_taken']
+											start_date: row['start_date']
+											end_date: row['end_date']
+											status: row['status']
+	
+					d.resolve result          
+
+			$.when(runQuery()).done (data)->
+				console.log 'getQuestionResponse transaction completed'
+			.fail _.failureHandler
+
+
+
+		getTeacherName : (teacher_id)->
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?"
+							, [teacher_id], onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+					display_name = ''
+					if data.rows.length isnt 0
+						display_name = data.rows.item(0)['display_name']
+
+					d.resolve display_name
+
+			$.when(runQuery()).done ->
+				console.log 'getTeacherName transaction completed'
+			.fail _.failureHandler
+
+
+
+
+		# Question response save functions
 		saveUpdateQuestionResponse : (model)->
 
 			questionType = _.getMetaValue(model.get('content_piece_id'))
@@ -11,14 +88,20 @@ define ['underscore', 'serialize'], ( _) ->
 
 				if meta_value.question_type is 'individual'
 					question_response = serialize(model.get('question_response'))
-				else
+
+				else if meta_value.question_type is 'chorus'
 					question_response = model.get('question_response')
+				
+				else
+					# when question_type is 'multiple_eval'
+					question_response = ''
 
+				
 				if model.has('ref_id')
-					_.updateQuestionResponse(model, question_response)
+					_.updateQuestionResponse(model, question_response, meta_value.question_type)
 
 				else
-					_.insertQuestionResponse(model, question_response) 
+					_.insertQuestionResponse(model, question_response)
 
 
 
@@ -68,7 +151,32 @@ define ['underscore', 'serialize'], ( _) ->
 				model.set 'ref_id': ref_id
 
 
-		updateQuestionResponse : (model, question_response)->
+
+		updateQuestionResponse : (model, question_response, question_type)->
+
+			if question_type is 'multiple_eval'
+				multiple_eval_questionResponse = model.get('question_response')
+				
+				if not _.isEmpty(multiple_eval_questionResponse)
+					
+					_.each multiple_eval_questionResponse, (qR, i)->
+						
+						student_id = qR['id']
+
+						qR = _.omit(qR, 'id')
+						meta_key = qR['meta_key']
+						meta_value = serialize(qR['meta_value'])
+
+						_.db.transaction((tx)->
+							tx.executeSql('INSERT INTO '+_.getTblPrefix()+'question_response_meta 
+								(qr_ref_id, meta_key, meta_value) VALUES (?,?,?)'
+								, [model.get('ref_id'), meta_key, meta_value])
+
+						,_.transactionErrorHandler
+						,(tx)->
+							console.log 'SUCCESS: Inserted record in wp_question_response_meta'
+						)
+
 
 			end_date = model.get('end_date')			
 			end_date = _.getCurrentDateTime(0) if model.get('status') is 'completed'
@@ -106,27 +214,3 @@ define ['underscore', 'serialize'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'checkIfRecordExistsInQuestionResponse transaction completed'
 			.fail _.failureHandler
-
-
-
-
-		getTeacherName : (teacher_id)->
-
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?"
-							, [teacher_id], onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess = (d)->
-				(tx, data)->
-					display_name = ''
-					if data.rows.length isnt 0
-						display_name = data.rows.item(0)['display_name']
-
-					d.resolve display_name
-
-			$.when(runQuery()).done ->
-				console.log 'getTeacherName transaction completed'
-			.fail _.failureHandler
-

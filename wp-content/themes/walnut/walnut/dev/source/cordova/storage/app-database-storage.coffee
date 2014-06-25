@@ -44,6 +44,9 @@ define ['underscore', 'jquery'], (_, $)->
 					, division INTEGER, question_response, time_taken, start_date, end_date, status
 					, sync INTEGER)')
 
+				tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'question_response_meta 
+					(qr_ref_id, meta_key, meta_value)')
+
 				
 			,_.transactionErrorHandler
 			,(tx)->

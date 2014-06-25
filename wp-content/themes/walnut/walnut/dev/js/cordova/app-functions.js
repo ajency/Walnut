@@ -18,6 +18,13 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       }
       return document.removeEventListener("backbutton", _.onBackButtonClick, false);
     },
+    unserialize: function(string) {
+      if (string === '') {
+        return string;
+      } else {
+        return unserialize(string);
+      }
+    },
     getUserDetails: function(username) {
       var onSuccess, runQuery, userData;
       userData = {

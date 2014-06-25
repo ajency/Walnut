@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
+define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.QuestionResponse", function(QuestionResponse, App, Backbone, Marionette, $, _) {
     var API, QuestionResponseCollection, QuestionResponseModel;
     QuestionResponseModel = (function(_super) {
@@ -73,62 +73,18 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         return questionResponse;
       },
       getQuestionResponseFromLocal: function(collection_id, division) {
-        var onSuccess, runMainQuery;
-        runMainQuery = function() {
+        var runFunc;
+        runFunc = function() {
           return $.Deferred(function(d) {
-            return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
+            var questionResponse;
+            questionResponse = _.getQuestionResponse(collection_id, division);
+            return questionResponse.done(function(result) {
+              return d.resolve(result);
             });
           });
         };
-        onSuccess = function(d) {
-          return function(tx, data) {
-            var i, r, result, _fn, _i, _ref;
-            result = [];
-            _fn = function(r, i) {
-              var questionType;
-              questionType = _.getMetaValue(r['content_piece_id']);
-              return questionType.done(function(meta_value) {
-                var q_resp;
-                if (meta_value.question_type === 'individual') {
-                  q_resp = '';
-                  if (r['question_response'] !== '') {
-                    q_resp = unserialize(r['question_response']);
-                  }
-                } else {
-                  q_resp = r['question_response'];
-                }
-                return (function(r, i, q_resp) {
-                  var teacherName;
-                  teacherName = _.getTeacherName(r['teacher_id']);
-                  return teacherName.done(function(teacher_name) {
-                    console.log('teacher_name: ' + teacher_name);
-                    return result[i] = {
-                      ref_id: r['ref_id'],
-                      teacher_id: r['teacher_id'],
-                      teacher_name: teacher_name,
-                      content_piece_id: r['content_piece_id'],
-                      collection_id: r['collection_id'],
-                      division: r['division'],
-                      question_response: q_resp,
-                      time_taken: r['time_taken'],
-                      start_date: r['start_date'],
-                      end_date: r['end_date'],
-                      status: r['status']
-                    };
-                  });
-                })(r, i, q_resp);
-              });
-            };
-            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-              r = data.rows.item(i);
-              _fn(r, i);
-            }
-            return d.resolve(result);
-          };
-        };
-        return $.when(runMainQuery()).done(function(data) {
-          return console.log('getQuestionResponseFromLocal transaction completed');
+        return $.when(runFunc()).done(function() {
+          return console.log('getQuestionResponseFromLocal done');
         }).fail(_.failureHandler);
       },
       saveUpdateQuestionResponseLocal: function(model) {

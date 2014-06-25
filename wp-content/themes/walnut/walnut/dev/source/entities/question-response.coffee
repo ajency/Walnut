@@ -1,4 +1,4 @@
-define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
+define ["app", 'backbone'], (App, Backbone) ->
 	App.module "Entities.QuestionResponse", (QuestionResponse, App, Backbone, Marionette, $, _)->
 
 
@@ -55,53 +55,15 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			# get question response from local database
 			getQuestionResponseFromLocal:(collection_id, division)->
 
-				runMainQuery = ->
+				runFunc = ->
 					$.Deferred (d)->
-						_.db.transaction (tx)->
-							tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"question_response 
-								WHERE collection_id=? AND division=?", [collection_id, division]
-								, onSuccess(d), _.deferredErrorHandler(d));
-					
-				onSuccess =(d)->
-					(tx,data)->
-						result = []
+						questionResponse = _.getQuestionResponse(collection_id, division)
+						questionResponse.done (result)->
 
-						for i in [0..data.rows.length-1] by 1
-							
-							r = data.rows.item(i)
+							d.resolve result
 
-							do(r, i)->
-								questionType = _.getMetaValue(r['content_piece_id'])
-								questionType.done (meta_value)->
-
-									if meta_value.question_type is 'individual'
-										q_resp = ''
-										q_resp = unserialize(r['question_response']) if r['question_response'] isnt ''
-									
-									else q_resp = r['question_response']
-
-									do(r, i, q_resp)->
-										teacherName = _.getTeacherName(r['teacher_id'])
-										teacherName.done (teacher_name)->
-											console.log 'teacher_name: '+teacher_name
-
-											result[i] = 
-												ref_id: r['ref_id']
-												teacher_id: r['teacher_id']
-												teacher_name: teacher_name
-												content_piece_id: r['content_piece_id']
-												collection_id: r['collection_id']
-												division: r['division']
-												question_response: q_resp
-												time_taken: r['time_taken']
-												start_date: r['start_date']
-												end_date: r['end_date']
-												status: r['status']
-		
-						d.resolve(result)           
-
-				$.when(runMainQuery()).done (data)->
-					console.log 'getQuestionResponseFromLocal transaction completed'
+				$.when(runFunc()).done ->
+					console.log 'getQuestionResponseFromLocal done'
 				.fail _.failureHandler
 				
 			
