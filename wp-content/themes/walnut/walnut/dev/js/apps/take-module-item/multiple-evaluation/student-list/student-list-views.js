@@ -49,12 +49,10 @@ define(['app'], function(App) {
 
       StudentsListView.prototype.onShow = function() {
         var ele, eleValue, _i, _j, _len, _len1, _ref, _ref1, _results;
-        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
-          _ref = this.$el.find('.tiles.single');
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            ele = _ref[_i];
-            $(ele).addClass('selectable');
-          }
+        _ref = this.$el.find('.tiles.single');
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          ele = _ref[_i];
+          $(ele).addClass('selectable');
         }
         $(".students").listnav({
           includeNums: false
@@ -75,6 +73,10 @@ define(['app'], function(App) {
           }
         }
         return _results;
+      };
+
+      StudentsListView.prototype.markAsCorrectAnswer = function(student) {
+        return $(student).removeClass('selected').find('.unselected').removeClass('unselected').addClass('blue').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
       };
 
       StudentsListView.prototype.selectStudent = function(e) {

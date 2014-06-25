@@ -41,14 +41,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 			parse: (resp)->
 				resp.data
 
-
-		contentGroupCollection = new ContentGroup.ItemCollection
-
-		
 		# API
 		API =
 		# get all content groups
 			getContentGroups: (param = {})->
+
+				contentGroupCollection = new ContentGroup.ItemCollection
+
 				contentGroupCollection.fetch
 					reset: true
 					data: param
@@ -95,7 +94,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 					console.log 'getContentGroupByIdFromLocal done'
 				.fail _.failureHandler
 
-		
+
+				
+
 		# request handler to get all content groups
 		App.reqres.setHandler "get:content:groups", (opt) ->
 			API.getContentGroups(opt)
@@ -112,7 +113,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 		App.reqres.setHandler "schedule:content:group", (data)->
 			API.scheduleContentGroup data
 
+
 		# request handler to get content group by id from local database
 		App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
 			API.getContentGroupByIdFromLocal(id, division)
-

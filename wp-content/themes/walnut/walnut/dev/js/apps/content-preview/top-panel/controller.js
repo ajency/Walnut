@@ -50,7 +50,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
           if (response) {
             correct_answer = CHORUS_OPTIONS[response];
           }
-        } else {
+        } else if (this.model.get('question_type') === 'individual') {
           for (_i = 0, _len = response.length; _i < _len; _i++) {
             studID = response[_i];
             answeredCorrectly = this.students.where({
@@ -66,6 +66,8 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
             student_names = names.join(', ');
             correct_answer = _.size(names) + ' Students (' + student_names + ')';
           }
+        } else {
+          correct_answer = false;
         }
         return correct_answer;
       };
