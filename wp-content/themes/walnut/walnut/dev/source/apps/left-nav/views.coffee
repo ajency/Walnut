@@ -47,11 +47,12 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                 'click li': 'clickMenu'
 
             onShow: ->
-                if $( window ).width()<1025
-                    $('#main-menu').mmenu
-                        position: 'left'
-                        zposition: 'front'
-                    $("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ")
+                # if $( window ).width()<1025
+                #     $('#main-menu').mmenu
+                #         position: 'left'
+                #         zposition: 'front'
+                #     $("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ")
+                    
                     # $('#main-menu').find( 'li a' ).not( '.mm-subopen' ).not( '.mm-subclose' )
                     # .bind('click.example', (e)->
                     #     e.preventDefault()

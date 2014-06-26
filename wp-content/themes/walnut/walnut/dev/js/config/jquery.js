@@ -53,12 +53,5 @@ define(['jquery', 'underscore'], function($, _) {
   $(document).ready(function() {
     return adjustPageDim();
   });
-  $(window).resize(adjustPageDim);
-  return $(window).scroll(function() {
-    if ($(this).scrollTop() > 100) {
-      return $('.scrollup').fadeIn();
-    } else {
-      return $('.scrollup').fadeOut();
-    }
-  });
+  return $(window).resize(adjustPageDim);
 });
