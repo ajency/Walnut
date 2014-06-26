@@ -393,3 +393,31 @@ function get_chapter_subsections( $args = array() ) {
 
     return $sections;
 }
+
+
+function get_textbook_subject($textbook_id){
+
+    global $wpdb;
+
+    if(!$textbook_id)
+        return false;
+
+    $textbook_relationships_table = $wpdb->base_prefix . "textbook_relationships";
+
+    $module_subject_query = $wpdb->prepare(
+        "SELECT tags FROM $textbook_relationships_table
+                WHERE textbook_id = %d",
+        $textbook_id
+    );
+
+    $subject=$wpdb->get_var($module_subject_query);
+
+    $subject = maybe_unserialize($subject);
+    $subject = __u::flatten($subject);
+
+    if($subject)
+        $subject = join(',', $subject);
+
+    return $subject;
+
+}

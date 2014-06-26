@@ -708,3 +708,98 @@ function save_content_piece($data){
 
     return $content_id;
 }
+
+function get_module_taken_by($module_id, $blog_id){
+
+    global $wpdb;
+
+    switch_to_blog($blog_id);
+
+    $teachers = '';
+
+    $question_response_table = $wpdb->prefix . "question_response";
+
+    $taken_by_query = $wpdb->prepare(
+        "SELECT teacher_id FROM $question_response_table
+                WHERE collection_id = %d",
+        array($module_id)
+    );
+
+    $taken_by_result=$wpdb->get_results($taken_by_query, ARRAY_A);
+
+    if(sizeof($taken_by_result>0)){
+        $taken_by= (__u::unique(__u::flatten($taken_by_result)));
+
+        foreach($taken_by as $teacher){
+            $teacher_data = get_userdata($teacher);
+            $teachers[]= $teacher_data->display_name;
+        }
+        $teachers= join(',', $teachers);
+    }
+
+    switch_to_blog(1);
+
+    return $teachers;
+}
+
+
+function get_module_end_date($module_id, $blog_id){
+
+    global $wpdb;
+
+    switch_to_blog($blog_id);
+
+    $question_response_table = $wpdb->prefix . "question_response";
+
+    $completed_date_query = $wpdb->prepare(
+        "SELECT max(end_date) FROM $question_response_table
+                WHERE collection_id = %d",
+        array($module_id)
+    );
+
+    $end_date=$wpdb->get_var($completed_date_query);
+
+    $end_date = date('d M Y', strtotime($end_date));
+
+    switch_to_blog(1);
+
+    return $end_date;
+
+}
+
+function get_module_textbook($module_id){
+
+    global $wpdb;
+
+    $collection_meta_table = $wpdb->base_prefix . "collection_meta";
+
+    $module_textbook_query = $wpdb->prepare(
+        "SELECT meta_value FROM $collection_meta_table
+                WHERE collection_id = %d
+                AND meta_key LIKE %s",
+        array($module_id, 'textbook')
+    );
+
+    $textbook_id=$wpdb->get_var($module_textbook_query);
+
+    return $textbook_id;
+
+}
+
+function get_module_name($module_id){
+
+    global $wpdb;
+
+    $content_collection_table = $wpdb->base_prefix . "content_collection";
+
+    $module_name_query = $wpdb->prepare(
+        "SELECT name FROM $content_collection_table
+                WHERE id=%d",
+        $module_id
+    );
+
+    $module_name=$wpdb->get_var($module_name_query);
+
+    return $module_name;
+
+}
