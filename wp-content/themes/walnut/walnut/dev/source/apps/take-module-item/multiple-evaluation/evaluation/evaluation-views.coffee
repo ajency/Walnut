@@ -26,19 +26,21 @@ define ['app'], (App)->
 
             initialize : (options)->
                 @responseObj = options.responseObj
+                @display_mode = options.display_mode
 
             onShow : ->
                 if @responseObj[@model.get('id')]?
                     @$el.find("button##{@responseObj[@model.get('id')]}").removeClass('btn-white').addClass('btn-primary')
 
             _buttonClicked : (e)->
-                if $(e.target).closest('button').hasClass('btn-primary')
-                    return
-                else
-                    @$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white')
-                    $(e.target).closest('button').removeClass('btn-white').addClass('btn-primary')
-                    @responseObj[@model.get('id')] = $(e.target).attr('id')
-                    console.log @responseObj
+                if @display_mode is 'class_mode'
+                    if $(e.target).closest('button').hasClass('btn-primary')
+                        return
+                    else
+                        @$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white')
+                        $(e.target).closest('button').removeClass('btn-white').addClass('btn-primary')
+                        @responseObj[@model.get('id')] = $(e.target).attr('id')
+                        console.log @responseObj
 
 
         class Views.EvaluationView extends Marionette.CompositeView
@@ -55,10 +57,12 @@ define ['app'], (App)->
                                                     </div>
                                                     <div id="evaluation-collection">
                                                     </div>
+                                                    {{#class_mode}}
                                                     <div class="row m-r-0 m-l-0 p-t-10">
                                                         <button class="btn btn-info h-center block" id="saveEval">Save</button>
                                                     </div>
-                                                </div>'
+                                                    {{/class_mode}}
+                                                    </div>'
 
             itemView : EvaluationItemView
 
@@ -66,9 +70,11 @@ define ['app'], (App)->
 
             itemViewOptions : ->
                 responseObj : @responseObj
+                display_mode : Marionette.getOption(@, 'display_mode')
 
             mixinTemplateHelpers : (data)->
                 data = super data
+                data.class_mode = true if Marionette.getOption(@, 'display_mode') is 'class_mode'
                 data.studentName = @studentModel.get 'display_name'
                 data
 
@@ -80,7 +86,8 @@ define ['app'], (App)->
                 @responseObj = Marionette.getOption @, 'responseObj'
 
             _saveEvalParameters : ->
-                @trigger "save:eval:parameters"
+                if _.size(@responseObj) > 1
+                    @trigger "save:eval:parameters"
 
 
 

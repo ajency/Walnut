@@ -41,7 +41,7 @@ define ['app'
                 if @model.get('question_type') is 'chorus'
                     if response
                         correct_answer= CHORUS_OPTIONS[response]
-                else
+                else if @model.get('question_type') is 'individual'
                     for studID in response
                         answeredCorrectly = @students.where("ID":studID)
                         name= ans.get('display_name') for ans in answeredCorrectly
@@ -51,11 +51,15 @@ define ['app'
                         student_names=names.join(', ')
                         correct_answer=  _.size(names)+ ' Students ('+ student_names+ ')'
 
+                else
+                    correct_answer = false
+
                 correct_answer
 
             _showView:(model,questionResponseModel) =>
 
                 terms = model.get 'term_ids'
+
 
                 new TopPanel.Views.TopPanelView
                     model: model
