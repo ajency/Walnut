@@ -481,6 +481,19 @@ function get_all_content_groups($args=array()){
         $archived_groups = $wpdb->get_results($archived_query);
 
     }
+    if(isset($args['class_id'])){
+
+        $textbooks=get_textbooks_for_class($args['class_id']);
+        $textbook_ids=array();
+        foreach($textbooks as $book)
+            $textbook_ids[]=$book->term_id;
+
+        $textbook_ids = join(',',$textbook_ids);
+        $all_query = $wpdb->prepare("SELECT collection_id FROM {$wpdb->prefix}collection_meta
+            WHERE meta_key like %s AND meta_value in ($textbook_ids)", 'textbook');
+        $all_content_groups = $wpdb->get_results($all_query);
+    }
+
     else{
 //        $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'publish'", null);
 //        $archived_query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'archive'", null);
@@ -504,8 +517,12 @@ function get_all_content_groups($args=array()){
             $content_data[]=  get_single_content_group($item->id, $division , 'publish');
 
     if( !is_null($all_content_groups))
-        foreach($all_content_groups as $item)
-            $content_data[]=  get_single_content_group($item->id, $division);
+        foreach($all_content_groups as $item){
+            $id=$item->id;
+            if ($id == 0)
+                $id = $item->collection_id;
+            $content_data[]=  get_single_content_group($id, $division);
+        }
 
     if( !is_null($archived_groups))
         foreach($archived_groups as $item){
