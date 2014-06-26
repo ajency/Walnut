@@ -145,11 +145,15 @@ define ['jquery', 'underscore'], ($, _)->
         filter_ids= _.compact filter_ids
 
         content_type = _this.$el.find('#content-type-filter').val()
+        content_status = _this.$el.find('#content-status-filter').val()
 
         filtered_models= fullCollection.models
 
-        if content_type isnt ''
+        if content_type
             filtered_models =  fullCollection.where 'content_type': content_type
+
+        if content_status
+            filtered_models =  fullCollection.where 'status': content_status
 
         if _.size(filter_ids) > 0
             filtered_data = _.filter filtered_models, (item)=>
