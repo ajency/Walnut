@@ -10,7 +10,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			
 			runQuery = ->
 				$.Deferred (d)->
-					_.db.trasnaction (tx)->
+					_.db.transaction (tx)->
 						tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?" 
 							, [post_author_id], success(d), _.deferredErrorHandler(d))
 

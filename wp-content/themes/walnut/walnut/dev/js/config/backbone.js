@@ -43,7 +43,7 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'content-group') {
-        data = App.reqres.request("get:" + collection_name + ":by:id:local", opts.textbook, opts.division);
+        data = App.reqres.request("get:" + collection_name + ":by:textbookid:and:division:local", opts.textbook, opts.division);
         data.done(function(d) {
           return collection.set(d);
         });
@@ -63,6 +63,8 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'question-response') {
         data = App.reqres.request("get:" + collection_name + ":local", opts.collection_id, opts.division);
         data.done(function(d) {
+          console.log('QR data');
+          console.log(d);
           return collection.set(d);
         });
       }
@@ -143,14 +145,18 @@ define(["backbone"], function(Backbone) {
             return model.set(d);
           });
         }
+        if (modelname === 'content-group') {
+          data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('id'));
+          data.done(function(d) {
+            return model.set(d);
+          });
+        }
         if (modelname === 'question-response') {
           data = App.reqres.request("save:" + modelname + ":local", model);
         }
         if (modelname === 'media') {
           data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('id'));
           data.done(function(d) {
-            console.log('Backbone media model');
-            console.log(d);
             return model.set(d);
           });
         }

@@ -5,7 +5,7 @@ define(['underscore', 'unserialize'], function(_) {
       postAuthorName = '';
       runQuery = function() {
         return $.Deferred(function(d) {
-          return _.db.trasnaction(function(tx) {
+          return _.db.transaction(function(tx) {
             return tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?", [post_author_id], success(d), _.deferredErrorHandler(d));
           });
         });

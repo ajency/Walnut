@@ -100,12 +100,27 @@ define(["app", 'backbone'], function(App, Backbone) {
         questionResponseModel.set(data);
         return questionResponseModel.save();
       },
-      getContentGroupByIdFromLocal: function(id, division) {
+      getContentGroupByTextbookIdAndDivisionFromLocal: function(textbookId, division) {
+        var runFunc;
+        runFunc = function() {
+          return $.Deferred(function(d) {
+            var contentGroup;
+            contentGroup = _.getContentGroupByTextbookIdAndDivision(textbookId, division);
+            return contentGroup.done(function(result) {
+              return d.resolve(result);
+            });
+          });
+        };
+        return $.when(runFunc()).done(function() {
+          return console.log('getContentGroupByTextbookIdAndDivisionFromLocal done');
+        }).fail(_.failureHandler);
+      },
+      getContentGroupByIdFromLocal: function(id) {
         var runFunc;
         runFunc = function() {
           return $.Deferred(function(d) {
             var contentGroupById;
-            contentGroupById = _.getContentGroupById(id, division);
+            contentGroupById = _.getContentGroupById(id);
             return contentGroupById.done(function(result) {
               return d.resolve(result);
             });
@@ -131,8 +146,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("schedule:content:group", function(data) {
       return API.scheduleContentGroup(data);
     });
-    return App.reqres.setHandler("get:content-group:by:id:local", function(id, division) {
-      return API.getContentGroupByIdFromLocal(id, division);
+    App.reqres.setHandler("get:content-group:by:textbookid:and:division:local", function(textbookId, division) {
+      return API.getContentGroupByTextbookIdAndDivisionFromLocal(textbookId, division);
+    });
+    return App.reqres.setHandler("get:content-group:by:id:local", function(id) {
+      return API.getContentGroupByIdFromLocal(id);
     });
   });
 });

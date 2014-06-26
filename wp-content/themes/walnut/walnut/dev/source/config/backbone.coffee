@@ -45,7 +45,7 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'content-group'
-				data = App.reqres.request "get:#{collection_name}:by:id:local", opts.textbook, opts.division
+				data = App.reqres.request "get:#{collection_name}:by:textbookid:and:division:local", opts.textbook, opts.division
 				data.done (d)->
 					collection.set d
 
@@ -62,6 +62,8 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'question-response'
 				data = App.reqres.request "get:#{collection_name}:local", opts.collection_id, opts.division
 				data.done (d)->
+					console.log 'QR data'
+					console.log d
 					collection.set d
 
 			if collection_name is 'textbookName'
@@ -206,14 +208,17 @@ define ["backbone"], (Backbone) ->
 					data.done (d)->
 						model.set d	
 
+				if modelname is 'content-group'
+					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('id')
+					data.done (d)->
+						model.set d
+
 				if modelname is 'question-response'
 					data = App.reqres.request "save:#{modelname}:local", model
 
 				if modelname is 'media'
 					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('id')
 					data.done (d)->
-						console.log 'Backbone media model'
-						console.log d
 						model.set d	
 
 			

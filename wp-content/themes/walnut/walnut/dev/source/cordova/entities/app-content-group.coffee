@@ -4,11 +4,11 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	_.mixin
 
-		getContentGroupById : (id, division)->
+		getContentGroupByTextbookIdAndDivision : (textbookId, division)->
 
 			runQuery = ->
 
-				pattern = '%"'+id+'"%'
+				pattern = '%"'+textbookId+'"%'
 
 				$.Deferred (d)->
 					_.db.transaction (tx)->
@@ -67,8 +67,58 @@ define ['underscore', 'unserialize'], ( _) ->
 					d.resolve result		
 
 			$.when(runQuery()).done (data)->
+				console.log 'getContentGroupByTextbookIdAndDivision transaction completed'
+			.fail _.failureHandler
+
+
+		
+		getContentGroupById : (id)->
+
+			runQuery = ->
+
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT * FROM wp_content_collection WHERE id=?", [id]
+							, onSuccess(d), _.deferredErrorHandler(d))
+
+				
+			onSuccess = (d)->
+				(tx, data)->
+
+					row = data.rows.item(0)
+
+					do (row)->
+						contentPiecesAndDescription = _.getContentPiecesAndDescription(row['id'])
+						contentPiecesAndDescription.done (data)->
+							
+							contentPieces = description = ''
+							contentPieces = unserialize(data.content_pieces) if data.content_pieces isnt ''
+							description = unserialize(data.description) if data.description isnt ''
+
+							result = 
+								id: row['id']
+								name: row['name']
+								created_on: row['created_on']
+								created_by: row['created_by']
+								last_modified_on: row['last_modified_on']
+								last_modified_by: row['last_modified_by']
+								published_on: row['published_on']
+								published_by: row['published_by']
+								type: row['type']
+								term_ids: unserialize(row['term_ids'])
+								duration: _.getDuration(row['duration'])
+								minshours: _.getMinsHours(row['duration'])
+								total_minutes: row['duration']
+								status: row['status']
+								content_pieces: contentPieces
+								description: description
+					
+							d.resolve result		
+
+			$.when(runQuery()).done (data)->
 				console.log 'getContentGroupById transaction completed'
 			.fail _.failureHandler
+
 
 
 		

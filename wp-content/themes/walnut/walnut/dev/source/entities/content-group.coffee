@@ -79,12 +79,27 @@ define ["app", 'backbone'], (App, Backbone) ->
 				questionResponseModel.save()
 
 
-			# get content group from local
-			getContentGroupByIdFromLocal : (id, division)->
+			# get content group by textbook id and division from local
+			getContentGroupByTextbookIdAndDivisionFromLocal : (textbookId, division)->
 
 				runFunc = ->
 					$.Deferred (d)->
-						contentGroupById = _.getContentGroupById(id, division)
+						contentGroup = _.getContentGroupByTextbookIdAndDivision(textbookId, division)
+						contentGroup.done (result)->
+
+							d.resolve result
+
+
+				$.when(runFunc()).done ->
+					console.log 'getContentGroupByTextbookIdAndDivisionFromLocal done'
+				.fail _.failureHandler
+
+
+			getContentGroupByIdFromLocal : (id)->
+
+				runFunc = ->
+					$.Deferred (d)->
+						contentGroupById = _.getContentGroupById(id)
 						contentGroupById.done (result)->
 
 							d.resolve result
@@ -114,6 +129,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 			API.scheduleContentGroup data
 
 
-		# request handler to get content group by id from local database
-		App.reqres.setHandler "get:content-group:by:id:local", (id, division) ->
-			API.getContentGroupByIdFromLocal(id, division)
+		# request handler to get content group by textbook id and division from local database
+		App.reqres.setHandler "get:content-group:by:textbookid:and:division:local", (textbookId, division) ->
+			API.getContentGroupByTextbookIdAndDivisionFromLocal(textbookId, division)
+
+		App.reqres.setHandler "get:content-group:by:id:local", (id) ->
+			API.getContentGroupByIdFromLocal(id)

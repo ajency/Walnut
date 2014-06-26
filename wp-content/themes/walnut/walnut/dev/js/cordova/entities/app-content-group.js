@@ -1,10 +1,10 @@
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
-    getContentGroupById: function(id, division) {
+    getContentGroupByTextbookIdAndDivision: function(textbookId, division) {
       var onSuccess, runQuery;
       runQuery = function() {
         var pattern;
-        pattern = '%"' + id + '"%';
+        pattern = '%"' + textbookId + '"%';
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
             return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND status IN ('publish', 'archive')", [], onSuccess(d), _.deferredErrorHandler(d));
@@ -66,6 +66,58 @@ define(['underscore', 'unserialize'], function(_) {
             _fn(row, i, division);
           }
           return d.resolve(result);
+        };
+      };
+      return $.when(runQuery()).done(function(data) {
+        return console.log('getContentGroupByTextbookIdAndDivision transaction completed');
+      }).fail(_.failureHandler);
+    },
+    getContentGroupById: function(id) {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT * FROM wp_content_collection WHERE id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var row;
+          row = data.rows.item(0);
+          return (function(row) {
+            var contentPiecesAndDescription;
+            contentPiecesAndDescription = _.getContentPiecesAndDescription(row['id']);
+            return contentPiecesAndDescription.done(function(data) {
+              var contentPieces, description, result;
+              contentPieces = description = '';
+              if (data.content_pieces !== '') {
+                contentPieces = unserialize(data.content_pieces);
+              }
+              if (data.description !== '') {
+                description = unserialize(data.description);
+              }
+              result = {
+                id: row['id'],
+                name: row['name'],
+                created_on: row['created_on'],
+                created_by: row['created_by'],
+                last_modified_on: row['last_modified_on'],
+                last_modified_by: row['last_modified_by'],
+                published_on: row['published_on'],
+                published_by: row['published_by'],
+                type: row['type'],
+                term_ids: unserialize(row['term_ids']),
+                duration: _.getDuration(row['duration']),
+                minshours: _.getMinsHours(row['duration']),
+                total_minutes: row['duration'],
+                status: row['status'],
+                content_pieces: contentPieces,
+                description: description
+              };
+              return d.resolve(result);
+            });
+          })(row);
         };
       };
       return $.when(runQuery()).done(function(data) {
