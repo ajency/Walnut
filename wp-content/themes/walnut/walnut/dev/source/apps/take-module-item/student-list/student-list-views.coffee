@@ -38,13 +38,12 @@ define ['app'], (App)->
 
             className: 'studentList m-t-10'
 
-            template: '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20">
-            							<button type="button" id="question-done" class="btn btn-success btn-xs btn-sm">
+            template: '
+            							<button type="button" id="question-done" class="btn btn-success btn-xs btn-sm pull-right">
             								<i class="fa fa-forward"></i> Next
             							</button>
-            						</div>
             						{{#class_mode}}
-            						<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
+            						<div class="studentActions p-t-10 p-b-10">
             							<button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer">
             								<i class="fa fa-check-circle"></i> Right Answer
             							</button>

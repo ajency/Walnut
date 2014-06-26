@@ -41,7 +41,7 @@ define(['app'], function(App) {
 
       StudentsList.prototype.className = 'studentList m-t-10';
 
-      StudentsList.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20"> <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm"> <i class="fa fa-forward"></i> Next </button> </div> {{#class_mode}} <div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
+      StudentsList.prototype.template = '<button type="button" id="question-done" class="btn btn-success btn-xs btn-sm pull-right"> <i class="fa fa-forward"></i> Next </button> {{#class_mode}} <div class="studentActions p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
