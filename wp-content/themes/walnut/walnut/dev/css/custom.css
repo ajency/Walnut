@@ -1274,8 +1274,14 @@ p.mcq-option-text {
 .hashtags {
   font-size: 13px;
 }
+.moduleInfo {
+  background: #f3f3f3;
+  border-bottom: 1px solid #c3c3c3;
+}
+.moduleInfo .btn {
+  white-space: normal;
+}
 .cpTimer {
-  max-width: 190px;
   margin: 10px auto 0;
 }
 .cpTimer .textDiv_Seconds span {
@@ -1293,12 +1299,42 @@ p.mcq-option-text {
   font-size: 22px;
 }
 #content-board {
-  margin-top: 30px;
+  margin-top: 15px;
 }
 #content-board .element-wrapper {
   border: none;
   padding: 0 7px;
   margin: 2px 0 15px;
+}
+.contentTime {
+  float: left;
+}
+.contentInfo {
+  float: right;
+  padding: 20px;
+}
+.contentTime,
+.contentInfo {
+  width: 235px;
+  background: #f3f3f3;
+  border: 1px solid #c3c3c3;
+  box-shadow: #dadada 0 0 0 3px inset;
+  margin: 0 1.5%;
+}
+@media (min-width: 1020px) and (max-width: 1295px) {
+  #myCanvas {
+    margin: 0;
+    margin-left: auto;
+  }
+  .contentTime,
+  .contentInfo {
+    margin: 0;
+    left: 5px;
+    position: absolute;
+  }
+  .contentInfo {
+    top: 280px;
+  }
 }
 .answrMsg.alert-success h3 {
   color: #007366;
