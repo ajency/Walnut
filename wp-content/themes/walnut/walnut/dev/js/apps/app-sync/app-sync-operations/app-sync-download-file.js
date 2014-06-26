@@ -1,13 +1,11 @@
 define(['underscore'], function(_) {
   return _.mixin({
     getZipFileDownloadDetails: function() {
-      var data, lastDownloadTimestamp;
+      var data;
       $('#syncSuccess').css("display", "block").text("Starting file download...");
-      lastDownloadTimestamp = _.getLastDownloadTimeStamp();
-      lastDownloadTimestamp.done(function(time_stamp) {});
       data = {
         blog_id: _.getBlogID(),
-        last_sync: time_stamp
+        last_sync: ''
       };
       return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
         return function(resp) {
