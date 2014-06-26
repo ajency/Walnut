@@ -1,6 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'apps/teachers-dashboard/take-class/textbook-modules/textbook-modules-views'
+        'apps/teaching-modules/textbook-modules-views'
 ], (App, RegionController)->
     App.module "TeachersDashboardApp.View", (View, App)->
 

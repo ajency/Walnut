@@ -9,4 +9,5 @@ define [
     'apps/take-module-item/take-module-item-app'
     'apps/content-preview/controller'
     'apps/content-pieces/content-pieces-app'
+    'apps/admin-content-modules/app'
 ], ->

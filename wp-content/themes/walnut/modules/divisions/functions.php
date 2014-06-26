@@ -29,7 +29,10 @@ function fetch_single_division($id){
 function get_all_divisions($user_id=''){
     
     global $wpdb;
-    
+    global $wp_roles;
+
+    $admin=false;
+
     if($user_id=='')
         $user_id= get_current_user_id();
     
@@ -41,8 +44,19 @@ function get_all_divisions($user_id=''){
 
     if($division_ids)
         $division_str = implode(',',$division_ids);
-    
-    $divisions_qry="select id from {$wpdb->prefix}class_divisions where id in (".$division_str.")";
+
+    foreach ( $wp_roles->role_names as $role => $name ) :
+
+        if ( current_user_can( 'school-admin' ) || current_user_can( 'administrator' )  )
+            $admin=true;
+
+    endforeach;
+
+    $search_str ='';
+    if(!$admin)
+        $search_str= "where id in (".$division_str.")";
+
+    $divisions_qry="select id from {$wpdb->prefix}class_divisions ".$search_str;
 
     $divisions = $wpdb->get_results($divisions_qry);
 

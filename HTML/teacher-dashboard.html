@@ -121,34 +121,7 @@
 					<li class="quicklinks"><span class="h-seperate"></span></li>
 				</ul>
 				<!-- END SLIM NAVIGATION TOGGLE -->
-				<div class="chat-toggler">	
-					<!-- BEGIN NOTIFICATION CENTER -->
-					<a href="#" class="dropdown-toggle" id="my-task-list" data-placement="bottom" data-content="" data-toggle="dropdown" data-original-title="Notifications">
-						<div class="user-details"> 
-							<div class="username">
-								Notifications	<span class="badge badge-important">3</span>								
-							</div>						
-						</div> 
-						<div class="iconset top-down-arrow"></div>
-					</a>	
-					<div id="notification-list" style="display:none">
-						<div style="width:300px">
-							<!-- BEGIN NOTIFICATION MESSAGE -->
-							<div class="notification-messages info">
-								<div class="user-profile">
-									<img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35">
-								</div>
-								<div class="message-wrapper">
-									<div class="heading">Title of Notification</div>
-									<div class="description">Description...</div>
-									<div class="date pull-left">A min ago</div>										
-								</div>
-								<div class="clearfix"></div>									
-							</div>
-							<!-- END NOTIFICATION MESSAGE -->	
-						</div>				
-					</div>
-					<!-- END NOTIFICATION CENTER -->
+				<div class="chat-toggler">
 				</div>
 				<!-- BEGIN HEADER QUICK LINKS -->
 				<ul class="nav quick-section">
@@ -158,66 +131,6 @@
 									
 			</div>
 			<!-- END HEADER LEFT SIDE SECTION -->
-			<!-- BEGIN HEADER RIGHT SIDE SECTION -->
-			<div class="pull-right"> 
-			
-			<div class="chat-toggler">	
-	<!--	<div class="user-details">
-            <div class="username"><img src="assets/img/running.gif" alt=""  /> <span class="bold"> Online </span>&nbsp;&nbsp;&nbsp;  
-			</div>
-          </div>-->
-		  
-		 <div class="user-details">
-            <div class="username"><img src="assets/img/offline.gif" /> <span class="bold"> Offline </span>&nbsp;&nbsp;&nbsp;  
-			</div>
-          </div>
-			<!-- <div class="user-details">
-            <div class="username"><img src="assets/img/connecting.gif" /> <span class="bold"> Connecting </span>&nbsp;&nbsp;&nbsp;  
-			</div>
-          </div>-->
-					<!-- BEGIN PROFILE PICTURE -->
-					<div class="profile-pic"> 
-						<img src="assets/img/profiles/avatar_small.jpg" alt="" data-src="assets/img/profiles/avatar_small.jpg" data-src-retina="assets/img/profiles/avatar_small2x.jpg" width="35" height="35" /> 
-					</div>  
-					<!-- END PROFILE PICTURE -->     			
-				</div>
-				<!-- BEGIN HEADER NAV BUTTONS -->
-				<ul class="nav quick-section2">
-					<!-- BEGIN SETTINGS -->
-					<li class="quicklinks"> 
-						<a data-toggle="dropdown" class="dropdown-toggle pull-right" href="#" id="user-options">						
-							<div class="iconset top-settings-dark"></div> 	
-						</a>
-						<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="user-options">
-							<li><a href="#">My Account</a></li>
-							<li class="divider"></li>                
-							<li><a href="#"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
-						</ul>
-					</li>
-					<!-- END SETTINGS -->
-					<li class="quicklinks"><span class="h-seperate"></span></li> 
-					<!-- BEGIN CHAT SIDEBAR TOGGLE -->
-					<li class="quicklinks"> 	
-						<a id="chat-menu-toggle" href="#sidr" class="chat-menu-toggle">
-							<div class="iconset top-chat-dark"><span class="badge badge-important hide" id="chat-message-count">1</span></div>
-						</a> 
-						<!-- BEGIN OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
-						<div class="simple-chat-popup chat-menu-toggle hide">
-							<div class="simple-chat-popup-arrow"></div>
-							<div class="simple-chat-popup-inner">
-								<div style="width:100px">
-									<div class="semi-bold">Name</div>
-									<div class="message">Message...</div>
-								</div>
-							</div>
-						</div>
-						<!-- END OPTIONAL RECENT CHAT POP UP NOTIFICATION -->
-					</li>
-					<!-- END CHAT SIDEBAR TOGGLE --> 
-				</ul>
-				<!-- END HEADER NAV BUTTONS -->
-			</div>
-			<!-- END HEADER RIGHT SIDE SECTION -->
 		</div> 
 		<!-- END CONTENT HEADER --> 
 	</div>
@@ -275,21 +188,55 @@
 	<!-- END SIDEBAR --> 
 	<!-- BEGIN PAGE CONTAINER-->
 	<div class="page-content condensed"> 
-		<div class="content">  
-			<ul class="breadcrumb">
-				<li>
-				  <p><a href="#" class="active">Dashboard</a></p>
-				</li>
-			 </ul>
-			<!-- BEGIN PAGE TITLE -->
-			<!--<div class="page-title"> 
-				<h3>Add <span class="semi-bold">Question</span></h3>
-			</div>-->
-			<!-- END PAGE TITLE -->
+		<div class="content">
 
 			<!-- BEGIN PlACE PAGE CONTENT HERE -->
 			<div class="teacher-app">
-				<div class="row">  
+				<div id="teacherOptns">
+					<h3 class=""><a href="#takeClass">Take a Class</a></h3>
+					<h3 class=""><a href="#training">Start Traning</a></h3>
+					<h3 class=""><a href="#progress">Class Progress</a></h3>
+				</div>
+
+				<div id="takeClass" class="animated fadeInUp">
+					<h1 class="text-center muted m-b-20">Select a <span class="bold">class</span> to begin</h1>
+					<ul class="classes">
+						<li><a href="#"><div class="classesWrap">1 A</div></a></li>
+						<li><a href="#"><div class="classesWrap">1 B</div></a></li>
+						<li><a href="#"><div class="classesWrap">1 C</div></a></li>
+						<li><a href="#"><div class="classesWrap">2 A</div></a></li>
+						<li><a href="#"><div class="classesWrap">2 B</div></a></li>
+						<li><a href="#"><div class="classesWrap">3 A</div></a></li>
+						<li><a href="#"><div class="classesWrap">3 B</div></a></li>
+						<li><a href="#"><div class="classesWrap">3 C</div></a></li>
+						<li><a href="#"><div class="classesWrap">3 D</div></a></li>
+						<li><a href="#"><div class="classesWrap">4 A</div></a></li>
+						<li><a href="#"><div class="classesWrap">4 B</div></a></li>
+						<li><a href="#"><div class="classesWrap">4 C</div></a></li>
+						<li><a href="#"><div class="classesWrap">5 A</div></a></li>
+						<li><a href="#"><div class="classesWrap">5 B</div></a></li>
+					</ul>
+				</div>
+
+				<div id="training" class="animated fadeInUp">
+					<h1 class="text-center muted m-b-20">Select a <span class="bold">class</span> to begin</h1>
+					<ul class="classes">
+						<li><a href="#"><div class="classesWrap">1</div></a></li>
+						<li><a href="#"><div class="classesWrap">2</div></a></li>
+						<li><a href="#"><div class="classesWrap">3</div></a></li>
+						<li><a href="#"><div class="classesWrap">4</div></a></li>
+						<li><a href="#"><div class="classesWrap">5</div></a></li>
+						<li><a href="#"><div class="classesWrap">6</div></a></li>
+					</ul>
+				</div>
+
+				<div id="progress" class="animated fadeInUp">
+					<h1 class="text-center muted m-b-20">Coming <span class="bold">Soon</span>...</h1>
+				</div>
+				
+
+				<div class="clearfix"></div>
+				<!-- <div class="row">  
 			        <div class="col-md-3">
 			        </div>
 			        <div class="col-md-6">
@@ -350,7 +297,7 @@
 			        </div>
 			     
 			    
-			  </div>
+			  	</div> -->
 			</div>
 			<!-- END PLACE PAGE CONTENT HERE -->
 		</div>
@@ -381,6 +328,42 @@
 		customClass: "custom",
     	customID:    "custom"
 	});
+
+	 $('#teacherOptns').each(function(){
+	    // For each set of tabs, we want to keep track of
+	    // which tab is active and it's associated content
+	    var $active, $content, $links = $(this).find('a');
+
+	    // If the location.hash matches one of the links, use that as the active tab.
+	    // If no match is found, use the first link as the initial active tab.
+	    $active = $($links.filter('[href="'+location.hash+'"]')[0] || $links[0]);
+	    $active.addClass('active');
+
+	    $content = $($active[0].hash);
+
+	    // Hide the remaining content
+	    $links.not($active).each(function () {
+	      $(this.hash).hide();
+	    });
+
+	    // Bind the click event handler
+	    $(this).on('click', 'a', function(e){
+	      // Make the old tab inactive.
+	      $active.removeClass('active');
+	      $content.hide();
+
+	      // Update the variables with the new link and content
+	      $active = $(this);
+	      $content = $(this.hash);
+
+	      // Make the tab active.
+	      $active.addClass('active');
+	      $content.show();
+
+	      // Prevent the anchor's default click action
+	      e.preventDefault();
+	    });
+	  });
 </script>
 </body>
 </html>

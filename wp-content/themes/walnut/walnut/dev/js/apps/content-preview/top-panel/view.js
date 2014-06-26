@@ -14,6 +14,9 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
 
       TopPanelView.prototype.mixinTemplateHelpers = function(data) {
         data = TopPanelView.__super__.mixinTemplateHelpers.call(this, data);
+        if (data.question_type === 'multiple_eval') {
+          data.question_type = 'multiple Evaluation';
+        }
         data.isTraining = this.mode === 'training' ? true : false;
         return data;
       };
@@ -24,6 +27,9 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
 
       TopPanelView.prototype.onShow = function() {
         var qTime, qTimer, timerColor;
+        if (this.model.get('question_type') === 'multiple_eval') {
+          this.$el.find('#correct-answer-col').hide();
+        }
         if (this.model.get('content_type') === 'content_piece') {
           this.$el.find('#question-type-col, #correct-answer-col').hide();
         }
@@ -52,7 +58,7 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
                 color: timerColor
               }
             },
-            circle_bg_color: "#EBEEF1",
+            circle_bg_color: "#d6d5d4",
             bg_width: 0.2
           }).addListener(function(unit, value, total) {
             if (total === 10) {
