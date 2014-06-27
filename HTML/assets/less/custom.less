@@ -323,6 +323,7 @@ label, input, button, select, textarea{
 
 .alert{
 	font-size: 14px;
+	border-radius: 0;
 }
 
 .btn{
@@ -332,7 +333,7 @@ label, input, button, select, textarea{
 	font-family: "Roboto";
 	border-radius: 0;
 	text-transform: uppercase;
-	box-shadow: 0 2px 4px 0 rgba(0,0,0,.12);
+	box-shadow: 0 2px 5px 0 rgba(0,0,0,.2);
 }
 
 .form-control{
@@ -371,7 +372,13 @@ ol {
 }
 
 .progress{
-	background: darken(@body-bg, 5%)
+	border-radius: 0;
+	background: darken(@body-bg, 5%);
+	.progress-bar{
+		//color: darken(@dash-grey, 25%);
+		//font-weight: bold;
+		border-radius: 0;
+	}
 }
 
 ::-webkit-input-placeholder {

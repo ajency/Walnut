@@ -6,7 +6,7 @@
 {{/isTraining}}
 <div class="moduleInfo m-b-20">
 	<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
-            <div class="modTime">
+            <div class="modTime pause">
                 <a id="back-to-module" class="btn btn-small btn-block btn-white m-t-10"><h4 class="semi-bold text-info no-margin"><span class="fa fa-pause"></span> {{name}}</h4></a>
                 
                 <!-- {{&showPauseButton}} -->
@@ -34,13 +34,13 @@
                     <div class="modProgress h-center">
                         <p class="bold small-text muted">Progress</p>
                         <div class="progress progress-large w100 m-b-0">
-                            <div data-percentage="{{getProgressPercentage}}%" style="width: {{getProgressPercentage}}%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">{{getProgressData}}</div>
+                            <div data-percentage="{{getProgressPercentage}}%" style="width: {{getProgressPercentage}}%;" class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0" aria-valuemax="100">{{getProgressData}}</div>
                         </div>
                     </div>
                 {{/isTraining}}
             </div>
             <div class="modTime next">
-                <button type="button" id="" class="btn  btn-success m-t-10 pull-right">
+                <button type="button" id="" class="btn btn-block btn-success m-t-10 pull-right">
                     <i class="fa fa-forward"></i> Next
                 </button>
             </div>
