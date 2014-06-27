@@ -48,6 +48,7 @@ define(['app'], function(App) {
       };
 
       FibView.prototype.onShow = function() {
+        console.log(this.model);
         this.$el.parent().parent().on('click', (function(_this) {
           return function(evt) {
             _this.trigger("show:this:fib:properties");
