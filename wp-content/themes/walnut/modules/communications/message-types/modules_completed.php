@@ -7,6 +7,8 @@
  */
 
 function send_modules_completed_mail($comm_id, $recipients, $blog_id){
+
+
     $modules_data = get_data_required_for_modules_completed_mail($comm_id, $blog_id);
 
     foreach($recipients as $user){
@@ -56,6 +58,7 @@ function send_modules_completed_parent_mail($comm_id, $parentdata, $blog_id, $mo
 
 
 }
+
 
 function send_modules_completed_student_mail($comm_id, $studentdata, $blog_id, $modules){
 
@@ -109,11 +112,11 @@ function get_data_required_for_modules_completed_mail($comm_id, $blog_id){
 
         $textbook_id = get_module_textbook($module_id);
 
-        $module_data['textbook_name'] = get_term_field('name', $textbook_id, 'textbook');
+        #$module_data['textbook_name'] = get_term_field('name', $textbook_id, 'textbook');
 
         $module_data['taken_by'] = get_module_taken_by($module_id, $blog_id);
 
-        $module_data['subject_name'] = get_textbook_subject($textbook_id);
+        #$module_data['subject_name'] = get_textbook_subject($textbook_id);
 
         $modules[]= $module_data;
     }

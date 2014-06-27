@@ -49,7 +49,7 @@ function save_modules_completed_communications($data){
         mode            => $communication_mode
     );
 
-    $communication= $wpdb->insert($wpdb->prefix . 'comm_module', $content_data);
+    $communication= $wpdb->insert($wpdb->base_prefix . 'comm_module', $content_data);
 
     if($communication){
         $communication_id = $wpdb->insert_id;
@@ -60,7 +60,7 @@ function save_modules_completed_communications($data){
             meta_value=> maybe_serialize($module_ids)
         );
 
-        $wpdb->insert($wpdb->prefix . 'comm_module_meta', $mdata);
+        $wpdb->insert($wpdb->base_prefix . 'comm_module_meta', $mdata);
     }
 
     $communication_id=$communication_id;
