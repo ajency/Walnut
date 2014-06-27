@@ -15,6 +15,7 @@ require_once 'modules/media/ajax.php';
 require_once 'modules/divisions/ajax.php';
 require_once 'modules/question-response/ajax.php';
 require_once 'modules/sync-data/sync-data-ajax.php';
+require_once 'modules/communications/ajax.php';
 require_once 'custom_configs.php';
 
 

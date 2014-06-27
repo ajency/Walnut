@@ -81,9 +81,9 @@ define ['jquery', 'underscore'], ($, _)->
     # 	pt.t(key, opt)
 
 
-    $(window).scroll ()->
-        if ($(@).scrollTop() > 100)
-            $('.scrollup').fadeIn();
-        else
-            $('.scrollup').fadeOut();
+    # $(window).scroll ()->
+    #     if ($(@).scrollTop() > 100)
+    #         $('.scrollup').fadeIn();
+    #     else
+    #         $('.scrollup').fadeOut();
 

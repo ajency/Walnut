@@ -8,17 +8,17 @@ define ['app',
             # kept hidden coz the display doesnt need it. only tablesorter does
 
             template : '<td class="v-align-middle"><div class="checkbox check-default">
-                            <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}">
-                            <label for="checkbox{{id}}"></label>
-                          </div>
-                        </td>
-                        <td class="v-align-middle"><a href="#"></a>{{name}}</td>
-                        <td>{{textbookName}}</td>
-                        <td>{{chapterName}}</td>
-                        <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
-                       <td>
-                          <span class="muted status_label">{{&status_str}}</span>
-                        </td>'
+                                        <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}">
+                                        <label for="checkbox{{id}}"></label>
+                                      </div>
+                                    </td>
+                                    <td class="v-align-middle"><a href="#"></a>{{name}}</td>
+                                    <td>{{textbookName}}</td>
+                                    <td>{{chapterName}}</td>
+                                    <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
+                                   <td>
+                                      <span class="muted status_label">{{&status_str}}</span>
+                                    </td>'
 
             tagName : 'tr'
 
@@ -35,14 +35,16 @@ define ['app',
             serializeData : ->
                 data = super()
                 data.textbookName = =>
-                    textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
-                    textbook.name
+                    textbook = @textbooks.get data.term_ids.textbook
+                    .get 'name'
+
+                    textbook
 
                 data.chapterName = =>
                     chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
-                            .pluck 'name'
-                            .compact()
-                            .value()
+                    .pluck 'name'
+                        .compact()
+                        .value()
                     chapter
 
                 training_date = @model.get 'training_date'
@@ -75,7 +77,7 @@ define ['app',
                         data.status_str = '<span class="label label-important">Not Started</span>'
                         data.action_str = '<i class="fa fa-play"></i> Start'
                         data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-right m-r-10 training-date">
-                                                                        <i class="fa fa-calendar"></i> ' + training_date + '</button>'
+                                                                                                <i class="fa fa-calendar"></i> ' + training_date + '</button>'
 
                 data
 
@@ -104,15 +106,18 @@ define ['app',
             emptyView: ModulesEmptyView
 
             itemViewOptions : ->
-                textbooksCollection : @textbooks
+                textbooksCollection : Marionette.getOption @, 'textbooksCollection'
                 chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
 
             className : 'teacher-app moduleList'
 
             events :
-                'click .start-training' : 'startTraining'
-                'click .training-date' : 'scheduleTraining'
+                'click .start-training'     : 'startTraining'
+                'click .training-date'      : 'scheduleTraining'
                 'change #check_all_div'     : 'checkAll'
+                'change .tab_checkbox,#check_all_div '       : 'showSubmitButton'
+                'click #send-email, #send-sms'  : 'saveCommunications'
+
                 'change #divisions-filter'  :(e)->
                     @trigger "division:changed", $(e.target).val()
 
@@ -180,15 +185,15 @@ define ['app',
                 $("#pager").remove()
 
                 pagerDiv = '<div id="pager" class="pager">
-                                              <i class="fa fa-chevron-left prev"></i>
-                                              <span style="padding:0 15px"  class="pagedisplay"></span>
-                                              <i class="fa fa-chevron-right next"></i>
-                                              <select class="pagesize">
-                                                  <option value="25" selected>25</option>
-                                                  <option value="50">50</option>
-                                                  <option value="100">100</option>
-                                              </select>
-                                            </div>'
+                                                              <i class="fa fa-chevron-left prev"></i>
+                                                              <span style="padding:0 15px"  class="pagedisplay"></span>
+                                                              <i class="fa fa-chevron-right next"></i>
+                                                              <select class="pagesize">
+                                                                  <option value="25" selected>25</option>
+                                                                  <option value="50">50</option>
+                                                                  <option value="100">100</option>
+                                                              </select>
+                                                            </div>'
                 @$el.find('#take-class-modules').after(pagerDiv)
                 pagerOptions =
                     container : $(".pager"),
@@ -201,8 +206,8 @@ define ['app',
             checkAll: ->
 
                 completedModules= _.chain @collection.where 'status': 'completed'
-                                .pluck 'id'
-                                .value()
+                .pluck 'id'
+                    .value()
 
                 if @$el.find '#check_all'
                 .is ':checked'
@@ -210,15 +215,24 @@ define ['app',
                     for checkbox in checkboxes
                         if checkbox.value in completedModules
                             $(checkbox).trigger 'click'
-                                .prop 'checked', true
+                            .prop 'checked', true
 
                 else
                     @$el.find '#take-class-modules .tab_checkbox'
                     .removeAttr 'checked'
 
-            onNewCollectionFetched: (newCollection,fullCollection)=>
+            onNewCollectionFetched: (newCollection,fullCollection,textbooks)=>
+                @textbooksCollection.reset textbooks.models
                 @collection.reset newCollection.models
-                @fullCollection = fullCollection
+                @fullCollection.reset fullCollection.models
+                $("#take-class-modules").trigger "updateCache"
+                pagerOptions =
+                    container : $(".pager")
+                    output : '{startRow} to {endRow} of {totalRows}'
+
+                $('#take-class-modules').tablesorterPager pagerOptions
+
+                @onShow()
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
@@ -241,3 +255,41 @@ define ['app',
                     output : '{startRow} to {endRow} of {totalRows}'
 
                 $('#take-class-modules').tablesorterPager pagerOptions
+
+            showSubmitButton:->
+                if @$el.find '.tab_checkbox'
+                .is ':checked'
+                    @$el.find '#send-email, #send-sms'
+                    .show()
+
+                else
+                    @$el.find '#send-email, #send-sms'
+                    .hide()
+
+            saveCommunications:(e)->
+
+                data = []
+                data.moduleIDs= _.chain @$el.find('.tab_checkbox')
+                                .map (checkbox)->
+                                    if $(checkbox).is ':checked'
+                                        $(checkbox).val()
+                                .compact()
+                                .value()
+
+                data.division = @$el.find '#divisions-filter'
+                        .val()
+
+                if e.target.id is 'send-email'
+                    data.communication_mode = 'email'
+                else
+                    data.communication_mode = 'sms'
+
+                if data.moduleIDs
+                    @trigger "save:communications", data
+
+                    @$el.find '#communication_sent'
+                    .remove()
+
+                    @$el.find '#send-sms'
+                    .after '<span class="m-l-40 small" id="communication_sent">
+                            Your '+data.communication_mode+' has been queued successfully</span>'

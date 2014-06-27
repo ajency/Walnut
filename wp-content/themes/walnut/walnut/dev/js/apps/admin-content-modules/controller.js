@@ -16,16 +16,21 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
         this.contentGroupsCollection = null;
         this.fullCollection = null;
         this.allChaptersCollection = null;
-        this.textbooksCollection = App.request("get:textbooks");
+        this.textbooksCollection = null;
         this.divisionsCollection = App.request("get:divisions");
         return App.execute("when:fetched", this.divisionsCollection, (function(_this) {
           return function() {
-            var division;
+            var class_id, division;
             division = _this.divisionsCollection.first().get('id');
+            class_id = _this.divisionsCollection.first().get('class_id');
             _this.contentGroupsCollection = App.request("get:content:groups", {
-              'division': division
+              division: division,
+              class_id: class_id
             });
-            return App.execute("when:fetched", _this.contentGroupsCollection, function() {
+            _this.textbooksCollection = App.request("get:textbooks", {
+              'class_id': class_id
+            });
+            return App.execute("when:fetched", [_this.contentGroupsCollection, _this.textbooksCollection], function() {
               var chapter_ids;
               chapter_ids = _.chain(_this.contentGroupsCollection.pluck('term_ids')).pluck('chapter').unique().compact().value();
               _this.allChaptersCollection = App.request("get:textbook:names:by:ids", chapter_ids);
@@ -45,16 +50,34 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
                     return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
                   });
                 });
-                return _this.listenTo(_this.view, "division:changed", function(division) {
+                _this.listenTo(_this.view, "division:changed", function(division) {
                   var newModulesCollection;
+                  class_id = _this.divisionsCollection.findWhere({
+                    'id': division
+                  }).get('class_id');
                   newModulesCollection = App.request("get:content:groups", {
-                    'division': division
+                    division: division,
+                    class_id: class_id
                   });
-                  return App.execute("when:fetched", newModulesCollection, function() {
+                  _this.textbooksCollection = App.request("get:textbooks", {
+                    'class_id': class_id
+                  });
+                  return App.execute("when:fetched", [newModulesCollection, _this.textbooksCollection], function() {
                     var fullCollection;
                     fullCollection = newModulesCollection.clone();
-                    return _this.view.triggerMethod("new:collection:fetched", newModulesCollection, fullCollection);
+                    return _this.view.triggerMethod("new:collection:fetched", newModulesCollection, fullCollection, _this.textbooksCollection);
                   });
+                });
+                return _this.listenTo(_this.view, "save:communications", function(data) {
+                  data = {
+                    message_type: 'modules_completed',
+                    communication_mode: data.communication_mode,
+                    additional_data: {
+                      module_ids: data.moduleIDs,
+                      division: data.division
+                    }
+                  };
+                  return App.request("save:communications", data);
                 });
               });
             });

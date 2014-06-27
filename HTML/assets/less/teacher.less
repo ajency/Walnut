@@ -1,3 +1,72 @@
+/*Dashboard*/
+.teacher-app{
+	max-width: 1164px;
+	margin: 0 auto;
+	
+}
+
+#teacherOptns{
+	text-align: center;
+	margin-bottom: 30px;
+	h3{
+		display: inline-block;
+		// border-right: 1px solid lighten(@dash-grey, 10%);
+		// border-bottom: 1px solid lighten(@dash-grey, 10%);
+		&:last-child{
+			border-right: none;
+		}
+		a{
+			padding: 0 20px;
+			&.active, &:hover{
+				border-bottom: 4px solid @color-info;
+			}
+			&.active{
+				font-weight: 600;
+			}
+		}
+	}
+}
+
+ul.classes{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	& > li{
+		width: 15.2%;
+		height: 88px;
+		float: left;
+		margin-right: 1.5%;
+		margin-bottom: 20px;
+	}
+	& > li:nth-child(6n){
+		margin-right:0;
+	}
+	a{
+		background: @preview-grey;
+		border: 1px solid lighten(@dash-grey, 10%);
+		box-shadow: darken(@preview-grey, 10%) 0 0 0 3px inset;
+		display: table;
+		height: 100%;
+		width: 100%;
+		padding: 10px;
+		font-size: 21px;
+		// color: darken(@color-info, 10%);
+		color: darken(@preview-grey, 40%);
+		&:hover{
+			border: 3px solid darken(@preview-grey, 10%);
+			background: @color-info;
+			color: @color-white;
+			box-shadow: darken(@preview-grey, 10%) 0 0 0 0;
+			padding: 8px;
+		}
+	}
+	.classesWrap{
+		display: table-cell;
+		vertical-align: middle;
+		text-align: center;
+	}
+}
+
 
 /*Take Class*/
 #textbooks.list.takeClass{
