@@ -2,7 +2,7 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['app', 'text!apps/media/grid/templates/media.html'], function(App, mediaTpl, layoutTpl) {
+define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/grid/templates/layout-tpl.html'], function(App, mediaTpl, layoutTpl) {
   return App.module('Media.Grid.Views', function(Views, App) {
     var MediaView;
     MediaView = (function(_super) {
@@ -27,6 +27,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         data = MediaView.__super__.mixinTemplateHelpers.call(this, data);
         data.imagePreview = false;
         data.videoPreview = false;
+        data.audioPreview = false;
         if (data.type === 'image') {
           if (data.sizes && data.sizes.thumbnail && data.sizes.thumbnail.url) {
             data.imagePreview = true;
@@ -34,6 +35,10 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         }
         if (data.type === 'video') {
           data.videoPreview = true;
+          data.title_show = _.prune(data.title, 50);
+        }
+        if (data.type === 'audio') {
+          data.audioPreview = true;
           data.title_show = _.prune(data.title, 50);
         }
         return data;
@@ -57,7 +62,7 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         return GridView.__super__.constructor.apply(this, arguments);
       }
 
-      GridView.prototype.template = '<div class="row b-b b-grey m-b-10"> <div class="btn-group"> <a id="list" class="btn btn-default btn-sm btn-small"> <span class="glyphicon glyphicon-th-list"></span> List </a> <a id="grid" class="btn btn-default btn-sm btn-small"> <span class="glyphicon glyphicon-th"></span> Grid </a> </div> <div class="input-with-icon right pull-right mediaSearch m-b-10"> <i class="fa fa-search"></i> <input type="text" class="form-control" placeholder="Search"> </div> </div> <div class="clearfix"></div> <div class="row"> <div id="placeholder-video-txt" class="text-center m-t-40 m-b-40"><h4 class="semi-bold muted"> Looking for a video? Use the Search box above</h4><h1 class="semi-bold muted"><span class="fa fa-search"></span></h1></div> <div id="selectable-images"></div> <div id="no-results-div"></div> </div>';
+      GridView.prototype.template = layoutTpl;
 
       GridView.prototype.itemView = MediaView;
 
@@ -71,6 +76,18 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
         'click a#grid.btn': function() {
           return this._changeChildClass('Grid');
         }
+      };
+
+      GridView.prototype.mixinTemplateHelpers = function(data) {
+        data = GridView.__super__.mixinTemplateHelpers.call(this, data);
+        data.audio = data.video = false;
+        if (Marionette.getOption(this, 'mediaType') === 'video') {
+          data.video = true;
+        }
+        if (Marionette.getOption(this, 'mediaType') === 'audio') {
+          data.audio = true;
+        }
+        return data;
       };
 
       GridView.prototype.onRender = function() {
@@ -88,10 +105,10 @@ define(['app', 'text!apps/media/grid/templates/media.html'], function(App, media
             return imageView.$el.find('img').trigger('click');
           };
         })(this));
-        if (!this.collection.isEmpty() || mediaType !== 'video') {
+        if (!this.collection.isEmpty() || mediaType === 'image') {
           this.$el.find("#placeholder-video-txt").hide();
         }
-        if (mediaType === 'video') {
+        if (mediaType === 'video' || mediaType === 'audio') {
           this.$el.find('#list, #grid').hide();
           this._changeChildClass('List');
         }

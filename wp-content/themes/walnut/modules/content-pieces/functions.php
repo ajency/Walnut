@@ -15,7 +15,7 @@ function create_content_piece_post_type() {
         ),
         'public' => true,
         'has_archive' => true,
-        'supports' => array('title', 'editor', 'comments', 'thumbnail','custom-fields', 'revisions')
+        'supports' => array('title', 'editor', 'comments', 'thumbnail','custom-fields')
             )
     );
 
@@ -668,14 +668,16 @@ function save_content_piece($data){
 //        update_post_meta ($content_id, 'negative_marks', $data['negative_marks']);
 //    }
     $preventDelete = array();
-    foreach($data['grading_params'] as $grading_parameter){
-        if($grading_parameter['parameter'] == '' || sizeOf($grading_parameter['attributes']) == 0)
-            continue;
-        else{
-            $meta_key = "parameter_" . $grading_parameter['parameter'];
-            $meta_value = $grading_parameter['attributes'];
-            update_post_meta ($content_id, $meta_key,$meta_value);
-            array_push($preventDelete,$meta_key);
+    if (isset($data['grading_params'])){
+        foreach($data['grading_params'] as $grading_parameter){
+            if($grading_parameter['parameter'] == '' || sizeOf($grading_parameter['attributes']) == 0)
+                continue;
+            else{
+                $meta_key = "parameter_" . $grading_parameter['parameter'];
+                $meta_value = $grading_parameter['attributes'];
+                update_post_meta ($content_id, $meta_key,$meta_value);
+                array_push($preventDelete,$meta_key);
+            }
         }
     }
 //    get all params for this content piece

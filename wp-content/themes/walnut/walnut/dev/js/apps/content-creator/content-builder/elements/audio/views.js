@@ -16,13 +16,19 @@ define(['app'], function(App) {
 
       AudioView.prototype.mixinTemplateHelpers = function(data) {
         data = AudioView.__super__.mixinTemplateHelpers.call(this, data);
-        data.audio = true;
+        if (!this.model.get('audio_id')) {
+          data.placeholder = true;
+        } else {
+          data.audio = true;
+          data.audioUrl = this.model.get('audioUrl');
+        }
         return data;
       };
 
       AudioView.prototype.events = {
         'click': function(e) {
-          return e.stopPropagation();
+          e.stopPropagation();
+          return this.trigger("show:media:manager");
         }
       };
 
