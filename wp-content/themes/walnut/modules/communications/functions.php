@@ -25,6 +25,8 @@ function save_modules_completed_communications($data){
 
     global $wpdb;
 
+    $communication_id=0;
+
     $message_type       = $data['message_type'];
     $communication_mode = $data['communication_mode'];
     $moduleids         = $data['additional_data']['module_ids'];
@@ -62,8 +64,6 @@ function save_modules_completed_communications($data){
 
         $wpdb->insert($wpdb->base_prefix . 'comm_module_meta', $mdata);
     }
-
-    $communication_id=$communication_id;
 
     return $communication_id;
 
