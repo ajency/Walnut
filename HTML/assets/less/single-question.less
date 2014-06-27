@@ -74,7 +74,7 @@
 		position: absolute;
 	}
 	.contentInfo{
-		top: 280px;
+		top: 175px;
 	}
 }
 .answrMsg{
@@ -100,6 +100,34 @@
 	.content{
 		padding: 0;
 	}
+}
+
+#module-details-region{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 2;
+	&.condensed{
+		.moduleInfo > div{
+			padding: 0;
+			.modTime{
+				display: none;
+			}
+			.modTime.next{
+				display: block;
+				float: right;
+				padding: 0 10px 5px;
+				button{
+					margin-top: 5px;
+				}
+			}
+		}
+	}
+}
+
+#question-details-region{
+	margin-top: 90px;
 }
 
 

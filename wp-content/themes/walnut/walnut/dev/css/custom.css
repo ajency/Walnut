@@ -1333,7 +1333,7 @@ p.mcq-option-text {
     position: absolute;
   }
   .contentInfo {
-    top: 280px;
+    top: 175px;
   }
 }
 .answrMsg.alert-success h3 {
@@ -1350,6 +1350,30 @@ p.mcq-option-text {
 }
 .page-content.expand-page .content {
   padding: 0;
+}
+#module-details-region {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+}
+#module-details-region.condensed .moduleInfo > div {
+  padding: 0;
+}
+#module-details-region.condensed .moduleInfo > div .modTime {
+  display: none;
+}
+#module-details-region.condensed .moduleInfo > div .modTime.next {
+  display: block;
+  float: right;
+  padding: 0 10px 5px;
+}
+#module-details-region.condensed .moduleInfo > div .modTime.next button {
+  margin-top: 5px;
+}
+#question-details-region {
+  margin-top: 90px;
 }
 /*.answrRight{
 	background: url(../../../images/answer.png) no-repeat;

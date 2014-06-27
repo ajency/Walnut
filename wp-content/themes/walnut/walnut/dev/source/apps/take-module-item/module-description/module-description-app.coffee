@@ -78,6 +78,18 @@ define ['app'
                 'click #back-to-module, #pause-session': ->
                     @trigger "goto:previous:route"
 
+            onShow: () ->
+                stickyHeaderTop = $("#module-details-region").height()
+                $(window).scroll ->
+                    if $(window).scrollTop() > stickyHeaderTop
+                      $("#module-details-region").addClass "condensed"
+                    else
+                      $("#module-details-region").removeClass "condensed"
+                    return
+
+                  return
+
+
 
         # set handlers
         App.commands.setHandler "show:teacher:teaching:module:description", (opt = {})->

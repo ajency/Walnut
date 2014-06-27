@@ -111,6 +111,18 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         }
       };
 
+      ModuleDescriptionView.prototype.onShow = function() {
+        var stickyHeaderTop;
+        stickyHeaderTop = $("#module-details-region").height();
+        $(window).scroll(function() {
+          if ($(window).scrollTop() > stickyHeaderTop) {
+            $("#module-details-region").addClass("condensed");
+          } else {
+            $("#module-details-region").removeClass("condensed");
+          }
+        });
+      };
+
       return ModuleDescriptionView;
 
     })(Marionette.ItemView);
