@@ -472,7 +472,7 @@ function get_all_content_groups($args=array()){
     global $wpdb;
 
     $published_groups = $archived_groups = $all_content_groups = null;
-
+    $id=0;
 
     if(isset($args['textbook'])){
         $published_query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "publish" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');

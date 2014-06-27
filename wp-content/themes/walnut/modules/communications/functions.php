@@ -25,6 +25,7 @@ function save_modules_completed_communications($data){
 
     global $wpdb;
 
+    $communication_id=0;
     $message_type       = $data['message_type'];
     $communication_mode = $data['communication_mode'];
     $moduleids         = $data['additional_data']['module_ids'];
@@ -40,30 +41,35 @@ function save_modules_completed_communications($data){
 
     $recipients= array_merge($student_ids,$parent_ids );
 
+    $recipients =maybe_serialize($recipients);
+
+    $blog_id = get_current_blog_id();
     //$parent_emails= get_parent_emails_by_division($division);
 
-    $content_data=array(
-        message_type    => $message_type,
-        recipients      => maybe_serialize($recipients),
-        blog            => get_current_blog_id(),
-        mode            => $communication_mode
+    $communication_query= $wpdb->prepare("INSERT INTO {$wpdb->base_prefix}comm_module
+		(message_type, recipients, blog, mode)
+		values (%s,%s,%d,%s)",
+        array(
+            $message_type,
+            $recipients,
+            $blog_id,
+            $communication_mode
+        )
     );
-
-    $communication= $wpdb->insert($wpdb->base_prefix . 'comm_module', $content_data);
+    
+    $communication= $wpdb->query($communication_query);
 
     if($communication){
         $communication_id = $wpdb->insert_id;
+        $module_ids = maybe_serialize($module_ids);
 
-        $mdata= array(
-            comm_module_id=> $communication_id,
-            meta_key=> 'module_ids',
-            meta_value=> maybe_serialize($module_ids)
+        $comm_meta= $wpdb->prepare("INSERT INTO {$wpdb->base_prefix}comm_module_meta values
+        	(%d,%s,%s)",
+            array($communication_id, 'module_ids', $module_ids)
         );
+        $wpdb->query($comm_meta);
 
-        $wpdb->insert($wpdb->base_prefix . 'comm_module_meta', $mdata);
     }
-
-    $communication_id=$communication_id;
 
     return $communication_id;
 
