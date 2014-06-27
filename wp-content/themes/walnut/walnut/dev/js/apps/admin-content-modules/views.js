@@ -31,10 +31,8 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
-            textbook = _.findWhere(_this.textbooks, {
-              "id": data.term_ids.textbook
-            });
-            return textbook.name;
+            textbook = _this.textbooks.get(data.term_ids.textbook).get('name');
+            return textbook;
           };
         })(this);
         data.chapterName = (function(_this) {
@@ -122,7 +120,7 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
 
       ModulesView.prototype.itemViewOptions = function() {
         return {
-          textbooksCollection: this.textbooks,
+          textbooksCollection: Marionette.getOption(this, 'textbooksCollection'),
           chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
         };
       };
@@ -133,6 +131,8 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         'click .start-training': 'startTraining',
         'click .training-date': 'scheduleTraining',
         'change #check_all_div': 'checkAll',
+        'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
+        'click #send-email, #send-sms': 'saveCommunications',
         'change #divisions-filter': function(e) {
           return this.trigger("division:changed", $(e.target).val());
         },
@@ -232,9 +232,18 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         }
       };
 
-      ModulesView.prototype.onNewCollectionFetched = function(newCollection, fullCollection) {
+      ModulesView.prototype.onNewCollectionFetched = function(newCollection, fullCollection, textbooks) {
+        var pagerOptions;
+        this.textbooksCollection.reset(textbooks.models);
         this.collection.reset(newCollection.models);
-        return this.fullCollection = fullCollection;
+        this.fullCollection.reset(fullCollection.models);
+        $("#take-class-modules").trigger("updateCache");
+        pagerOptions = {
+          container: $(".pager"),
+          output: '{startRow} to {endRow} of {totalRows}'
+        };
+        $('#take-class-modules').tablesorterPager(pagerOptions);
+        return this.onShow();
       };
 
       ModulesView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
@@ -261,6 +270,35 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
           output: '{startRow} to {endRow} of {totalRows}'
         };
         return $('#take-class-modules').tablesorterPager(pagerOptions);
+      };
+
+      ModulesView.prototype.showSubmitButton = function() {
+        if (this.$el.find('.tab_checkbox').is(':checked')) {
+          return this.$el.find('#send-email, #send-sms').show();
+        } else {
+          return this.$el.find('#send-email, #send-sms').hide();
+        }
+      };
+
+      ModulesView.prototype.saveCommunications = function(e) {
+        var data;
+        data = [];
+        data.moduleIDs = _.chain(this.$el.find('.tab_checkbox')).map(function(checkbox) {
+          if ($(checkbox).is(':checked')) {
+            return $(checkbox).val();
+          }
+        }).compact().value();
+        data.division = this.$el.find('#divisions-filter').val();
+        if (e.target.id === 'send-email') {
+          data.communication_mode = 'email';
+        } else {
+          data.communication_mode = 'sms';
+        }
+        if (data.moduleIDs) {
+          this.trigger("save:communications", data);
+          this.$el.find('#communication_sent').remove();
+          return this.$el.find('#send-sms').after('<span class="m-l-40 small" id="communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
+        }
       };
 
       return ModulesView;
