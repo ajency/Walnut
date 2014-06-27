@@ -1311,7 +1311,7 @@ p.mcq-option-text {
 }
 .contentInfo {
   float: right;
-  padding: 20px;
+  padding: 20px 20px 10px;
 }
 .contentTime,
 .contentInfo {
@@ -1326,14 +1326,16 @@ p.mcq-option-text {
     margin: 0;
     margin-left: auto;
   }
+  #top-panel {
+    float: left;
+    margin-left: 2px;
+  }
+  .contentTime {
+    margin-bottom: 8px;
+  }
   .contentTime,
   .contentInfo {
-    margin: 0;
-    left: 5px;
-    position: absolute;
-  }
-  .contentInfo {
-    top: 175px;
+    float: none;
   }
 }
 .answrMsg.alert-success h3 {
@@ -2387,7 +2389,10 @@ textarea {
   font-size: 14px;
 }
 .btn {
-  font-weight: bold;
+  font-family: "Roboto";
+  border-radius: 0;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
 }
 .form-control {
   height: 45px;
