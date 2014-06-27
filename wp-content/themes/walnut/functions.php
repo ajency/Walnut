@@ -10,6 +10,7 @@ require_once 'modules/school/ajax.php';
 require_once 'modules/content-pieces/ajax.php';
 require_once 'modules/textbooks/ajax.php';
 require_once 'modules/menus/ajax.php';
+require_once 'modules/divisions/wpadmin-custom-menus.php';
 require_once 'modules/user/ajax.php';
 require_once 'modules/media/ajax.php';
 require_once 'modules/divisions/ajax.php';
