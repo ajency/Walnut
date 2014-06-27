@@ -72,8 +72,8 @@ function change_uploads_directory( $uploads_dir ) {
     // current page is mediafromftp (the plugin)
     // or if requested mediatype is video
 
-    if($_GET['page'] =='mediafromftp' || $_REQUEST['mediaType'] == 'video')
-        $folder_name= '/videos-web';
+    if($_GET['page'] =='mediafromftp' || $_REQUEST['mediaType'] == 'video' || $_REQUEST['mediaType'] == 'audio')
+        $folder_name= '/media-web';
 
     $uploads_dir['path'] = $uploads_dir['path'] . $folder_name;
     $uploads_dir['url'] = $uploads_dir['url'] . $folder_name;
