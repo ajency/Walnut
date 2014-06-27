@@ -303,6 +303,19 @@ function get_meta_values($element, $create = FALSE)
         return FALSE;
 
     $ele            = maybe_unserialize($meta->meta_value);
+
+    if ($element['element'] == 'Mcq'){
+        $allElements = &$element['elements'];
+        if($allElements){
+            foreach ($allElements as &$optionElements){
+                foreach ($optionElements as &$optionElement){
+                    $optionElement = get_meta_values($optionElement);
+                }
+            }
+        }
+        $ele['elements'] = $element['elements'];
+    }
+
     $ele['meta_id'] = $create ? create_new_record($ele) : $element['meta_id'];
     validate_element($ele);
 
@@ -313,7 +326,7 @@ function get_meta_values($element, $create = FALSE)
 
 function validate_element(&$element)
 {
-    $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id');
+    $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id', 'marks','columncount','optioncount');
     $boolkey = array('draggable', 'justified');
 
     if (!is_array($element) && !is_object($element))

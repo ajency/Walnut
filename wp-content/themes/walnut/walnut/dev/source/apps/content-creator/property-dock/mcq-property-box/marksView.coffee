@@ -40,6 +40,7 @@ define ['app'], (App)->
                 console.log @mcqModel
                 # totalMarks = @mcqModel.get('marks')
                 # totalMarks = 0
+
                 _.each @mcqModel.get('correct_answer'), (option)=>
                     @$el.find('input[data-id="' + option + '"]').prop 'disabled', false
                 # totalMarks = totalMarks + parseInt @mcqModel.get('elements').get(option).get('marks')
