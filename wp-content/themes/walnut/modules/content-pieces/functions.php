@@ -2,49 +2,49 @@
 
 function create_content_piece_post_type() {
     register_post_type('content-piece', array(
-        'labels' => array(
-            'name' => __('Content Piece'),
-            'singular_name' => __('Content Piece'),
-            'add_new_item' => 'Add New Content Piece',
-            'edit_item' => 'Edit Content Piece',
-            'new item' => 'New Content Piece',
-            'view_item' => 'View Content Pieces',
-            'not_found' => 'No Content Piece found',
-            'not_found_in_trash' => 'No Content Pieces found in the trash',
-            'search_items' => 'Search Content Pieces'
-        ),
-        'public' => true,
-        'has_archive' => true,
-        'supports' => array('title', 'editor', 'comments', 'thumbnail','custom-fields')
-            )
+            'labels' => array(
+                'name' => __('Content Piece'),
+                'singular_name' => __('Content Piece'),
+                'add_new_item' => 'Add New Content Piece',
+                'edit_item' => 'Edit Content Piece',
+                'new item' => 'New Content Piece',
+                'view_item' => 'View Content Pieces',
+                'not_found' => 'No Content Piece found',
+                'not_found_in_trash' => 'No Content Pieces found in the trash',
+                'search_items' => 'Search Content Pieces'
+            ),
+            'public' => true,
+            'has_archive' => true,
+            'supports' => array('title', 'editor', 'comments', 'thumbnail','custom-fields')
+        )
     );
 
     register_taxonomy('textbook', 'content-piece', array('labels' => array(
-            'name' => 'Textbook',
-            'singular_name' => 'Textbook',
-            'add_new_item' => 'Add New Textbook',
-            'edit_item' => 'Edit Textbook',
-            'new item' => 'New Textbook',
-            'view_item' => 'View Textbooks',
-            'not_found' => 'No Textbook found',
-            'not_found_in_trash' => 'No Textbooks found in the trash',
-            'search_items' => 'Search Textbooks'
-        ), 'public' => true,
+        'name' => 'Textbook',
+        'singular_name' => 'Textbook',
+        'add_new_item' => 'Add New Textbook',
+        'edit_item' => 'Edit Textbook',
+        'new item' => 'New Textbook',
+        'view_item' => 'View Textbooks',
+        'not_found' => 'No Textbook found',
+        'not_found_in_trash' => 'No Textbooks found in the trash',
+        'search_items' => 'Search Textbooks'
+    ), 'public' => true,
         'hierarchical' => true,
         'show_ui' => true,
         'query_var' => true));
 
     register_taxonomy('content-piece-tags', 'content-piece', array('labels' => array(
-            'name' => 'Content Piece Tags',
-            'singular_name' => 'Content Piece Tag',
-            'add_new_item' => 'Add New Tag',
-            'edit_item' => 'Edit Tag',
-            'new item' => 'New Tag',
-            'view_item' => 'View Tag',
-            'not_found' => 'No Tag found',
-            'not_found_in_trash' => 'No Tag found in the trash',
-            'search_items' => 'Search Content Piece Tag'
-        ), 'public' => true,
+        'name' => 'Content Piece Tags',
+        'singular_name' => 'Content Piece Tag',
+        'add_new_item' => 'Add New Tag',
+        'edit_item' => 'Edit Tag',
+        'new item' => 'New Tag',
+        'view_item' => 'View Tag',
+        'not_found' => 'No Tag found',
+        'not_found_in_trash' => 'No Tag found in the trash',
+        'search_items' => 'Search Content Piece Tag'
+    ), 'public' => true,
         'show_ui' => true,
         'query_var' => true));
 }
@@ -99,11 +99,12 @@ function get_content_pieces($args = array()) {
 
             );
 
-      #  print_r($args['meta_query']); exit;
+        #  print_r($args['meta_query']); exit;
     }
 
     $args['numberposts'] = -1;
     $args['fields'] = 'ids';
+    $args['post_status'] = 'any';
 
     $content_items = get_posts($args);
 
@@ -196,17 +197,19 @@ function get_single_content_piece($id){
 
     $content_layout = maybe_unserialize($content_layout);
 
-    $content_elements=array();
+    $excerpt = '';
+
     if($content_layout){
         $content_elements = get_json_to_clone($content_layout);
         $content_piece->layout = $content_elements['elements'];
-        $excerpt_array= $content_elements['excerpt'];
-        $excerpt_array = __u::flatten($excerpt_array);
-        $excerpt= implode(' | ',$excerpt_array);
-        $excerpt = stripslashes(strip_tags($excerpt));
-        $excerpt= substr($excerpt, 0, 150);
-        $content_piece->post_excerpt =$excerpt.'...';
+        $excerpt = prettify_content_piece_excerpt($content_elements['excerpt']);
     }
+    if(strlen(trim($excerpt))==0)
+        $excerpt='No excerpt';
+    else
+        $excerpt.='...';
+
+    $content_piece->post_excerpt =$excerpt;
 
     $allParams = $wpdb->get_results( "SELECT * FROM {$wpdb->base_prefix}postmeta WHERE post_id = $id
     AND meta_key LIKE 'parameter_%'",ARRAY_A);
@@ -219,9 +222,6 @@ function get_single_content_piece($id){
         array_push($grading_params,$paramObj);
     }
     $content_piece->grading_params = $grading_params;
-
-
-
 
     switch_to_blog($current_blog_id);
 
@@ -295,6 +295,28 @@ function get_row_elements($element)
     return $element;
 }
 
+function prettify_content_piece_excerpt($excerpt_array){
+
+    $excerpt_array = __u::flatten($excerpt_array);
+
+    $excerpt_length =0;
+    $excerpt = '';
+
+    foreach($excerpt_array as $excerpt_item){
+        $ex = trim(stripslashes(strip_tags($excerpt_item)));
+
+        if(strlen($ex)>0){
+            $excerpt.=$ex;
+            $excerpt_length += strlen($ex);
+            $excerpt.=' | ';
+        }
+    }
+    $excerpt = substr($excerpt,0,-3);
+
+    return $excerpt;
+
+}
+
 function get_meta_values($element, $create = FALSE)
 {
     $meta = get_metadata_by_mid('post', $element['meta_id']);
@@ -303,17 +325,28 @@ function get_meta_values($element, $create = FALSE)
         return FALSE;
 
     $ele            = maybe_unserialize($meta->meta_value);
+
+    if ($element['element'] == 'Mcq'){
+        $allElements = &$element['elements'];
+        if($allElements){
+            foreach ($allElements as &$optionElements){
+                foreach ($optionElements as &$optionElement){
+                    $optionElement = get_meta_values($optionElement);
+                }
+            }
+        }
+        $ele['elements'] = $element['elements'];
+    }
+
     $ele['meta_id'] = $create ? create_new_record($ele) : $element['meta_id'];
     validate_element($ele);
 
     return $ele;
 }
 
-
-
 function validate_element(&$element)
 {
-    $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id');
+    $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id', 'marks','columncount','optioncount');
     $boolkey = array('draggable', 'justified');
 
     if (!is_array($element) && !is_object($element))
@@ -397,13 +430,13 @@ function update_group_content_pieces($data= array()){
     if($exists){
         $content_pieces_qry = $wpdb->prepare("UPDATE {$wpdb->prefix}collection_meta SET
             meta_value=%s WHERE collection_id=%d AND meta_key=%s",
-                $content_pieces,$data['id'],'content_pieces' );
+            $content_pieces,$data['id'],'content_pieces' );
     }
 
     else{
         $content_pieces_qry = $wpdb->prepare("INSERT into {$wpdb->prefix}collection_meta 
             (collection_id, meta_key, meta_value) VALUES (%d,%s,%s)",
-                $data['id'],'content_pieces',$content_pieces );
+            $data['id'],'content_pieces',$content_pieces );
     }
 
     $wpdb->query($content_pieces_qry);
@@ -444,13 +477,13 @@ function update_training_module_status($args=array()){
         if($chk_logs){
             foreach($chk_logs as $log){
                 if($log->status=='started'){
-                   $data['status'] = 'resumed';
-                   $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
+                    $data['status'] = 'resumed';
+                    $content_group = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
                 }
 
                 if($log->status=='scheduled'){
-                   $data['status'] = 'started';
-                   $content_group = $wpdb->update($wpdb->prefix . 'training_logs', $data, array('id'=>$log->id));
+                    $data['status'] = 'started';
+                    $content_group = $wpdb->update($wpdb->prefix . 'training_logs', $data, array('id'=>$log->id));
                 }
             }
         }
@@ -567,13 +600,13 @@ function get_single_content_group($id, $division='', $post_status=''){
     $data->description=$data->content_pieces=array();
 
     foreach($description as $key=>$value){
-       $meta_val = maybe_unserialize ($value->meta_value);
+        $meta_val = maybe_unserialize ($value->meta_value);
 
-       if ($value->meta_key=='description')
-           $data->description= $meta_val;
+        if ($value->meta_key=='description')
+            $data->description= $meta_val;
 
-       if ($value->meta_key=='content_pieces' )
-           $data->content_pieces= $meta_val;
+        if ($value->meta_key=='content_pieces' )
+            $data->content_pieces= $meta_val;
 
     }
 

@@ -26,7 +26,6 @@ define(['app'], function(App) {
         data = contentPieceModel.toJSON();
         data.action = 'save-content-piece-json';
         data.json = _json;
-        console.log(data);
         options = {
           type: 'POST',
           url: AJAXURL,
