@@ -13,11 +13,21 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name: 'element'
 
+        class Elements.ElementCollection extends Backbone.Collection
+
+            model : Elements.ElementModel
+
+        elementsCollection = new Elements.ElementCollection
+
         # PUBLIC API FOR ENitity
         API =
             createElement: (data = {})->
-                element = new Elements.ElementModel
-                element.set data
+                if data.meta_id? and data.element isnt 'Row' and  elementsCollection.get(data.meta_id)?
+                    element = elementsCollection.get(data.meta_id)
+                else
+                    element = new Elements.ElementModel
+#
+                    element.set data
 
                 if element.get('element') isnt 'Row' and element.get('element') isnt 'Column'
 
@@ -25,9 +35,12 @@ define ["app", 'backbone'], (App, Backbone) ->
                         element.save null,
                             wait: true
 
+                elementsCollection.add element
+
                 element
 
 
         # REQUEST HANDLERS
         App.reqres.setHandler "create:new:element", (data) ->
+            elementsCollection
             API.createElement data
