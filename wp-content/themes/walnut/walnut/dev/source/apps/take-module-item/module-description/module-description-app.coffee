@@ -5,15 +5,41 @@ define ['app'
         class ModuleDescriptionController extends RegionController
 
             initialize: (opts)->
-                {model,@questionResponseModel,@questionResponseCollection,@timerObject,@display_mode} = opts
+                {@model,@questionResponseModel,@questionResponseCollection,@timerObject,@display_mode} = opts
 
-                @view = view = @_showModuleDescriptionView model
+                @currentItemID = @questionResponseModel.get 'content_piece_id'
 
-                @show view, (loading: true)
+                @nextItemID = @_getNextItemID(@currentItemID)
+
+                @view = view = @_showModuleDescriptionView @model
+
+                @show view,
+                    loading: true
+                    entities: [@model,@questionResponseModel]
 
                 @listenTo @view, "goto:previous:route", =>
                     @region.trigger "goto:previous:route"
 
+                @listenTo view, "question:completed", @_changeQuestion
+
+            _changeQuestion:=>
+                @region.trigger "goto:next:question"
+                @nextItemID= @_getNextItemID @nextItemID
+                @view.triggerMethod "question:changed", @nextItemID
+
+            _getNextItemID :(item_id) =>
+                contentPieces = @model.get 'content_pieces'
+                contentPieces = _.map contentPieces, (m)->
+                    parseInt m
+
+                pieceIndex = _.indexOf(contentPieces, item_id)
+
+                nextItemID = parseInt contentPieces[pieceIndex + 1]
+
+                if not nextItemID
+                    nextItemID = false
+
+                nextItemID
 
             _showModuleDescriptionView: (model) =>
                 terms = model.get 'term_ids'
@@ -26,8 +52,9 @@ define ['app'
                     totalTimeTakenForModule =   _.reduce timeTakenArray, (memo, num)-> parseInt memo + parseInt num
 
                 new ModuleDescriptionView
-                    model: model
-                    mode : @display_mode
+                    model           : model
+                    display_mode    : @display_mode
+                    nextItemID      : @nextItemID
 
                     templateHelpers:
                         showPauseButton:=>
@@ -67,16 +94,38 @@ define ['app'
 
             mixinTemplateHelpers :(data)->
                 data = super data
-                data.isTraining = if @mode is 'training' then true else false
+                data.isTraining = if @display_mode is 'training' then true else false
                 data
 
             initialize : ->
-                @mode = Marionette.getOption @, 'mode'
+                @display_mode = Marionette.getOption @, 'display_mode'
 
 
             events:
                 'click #back-to-module, #pause-session': ->
                     @trigger "goto:previous:route"
+
+                'click #question-done': 'questionCompleted'
+
+            onShow:->
+                if not Marionette.getOption(@, 'nextItemID')
+                    @$el.find "#question-done"
+                    .html '<i class="fa fa-forward"></i> Finish Module'
+
+            questionCompleted: =>
+
+                if Marionette.getOption(@, 'display_mode') is 'class_mode'
+                    if confirm 'This item will be marked as complete. Continue?'
+                            @trigger "question:completed"
+
+                else @trigger "question:completed"
+
+            onQuestionChanged: (nextItemID)->
+
+                if not nextItemID
+                    @$el.find "#question-done"
+                    .html '<i class="fa fa-forward"></i> Finish Module'
+
 
 
         # set handlers

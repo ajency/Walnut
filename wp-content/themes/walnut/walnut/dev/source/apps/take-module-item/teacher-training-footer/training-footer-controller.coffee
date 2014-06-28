@@ -6,28 +6,20 @@ define ['app'
         class TeacherTrainingFooter.Controller extends RegionController
 
             initialize:(opts)->
-                {contentPiece, @nextItemID} = opts
+                {contentPiece} = opts
 
                 @question_type = contentPiece.get 'question_type'
                 @contentPieceId = contentPiece.get 'ID'
 
-                console.log @contentPieceId
                 @view = @_getFooterView contentPiece
 
-                @listenTo @view, "next:question", @_changeQuestion
-
                 @show @view
-
-            _changeQuestion : ->
-                @region.trigger 'goto:next:question', @contentPieceId
-
 
             _getFooterView :(contentPiece) ->
 
                 new TeacherTrainingFooter.Views.TrainingFooterView
                     question_type : @question_type
                     model: contentPiece
-                    nextItemID: @nextItemID
 
 
         App.commands.setHandler "show:teacher:training:footer:app", (opt = {})->

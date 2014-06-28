@@ -41,7 +41,7 @@ define(['app'], function(App) {
 
       StudentsList.prototype.className = 'studentList m-t-10';
 
-      StudentsList.prototype.template = '<button type="button" id="question-done" class="btn btn-success btn-xs btn-sm pull-right"> <i class="fa fa-forward"></i> Next </button> {{#class_mode}} <div class="studentActions p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
+      StudentsList.prototype.template = '{{#class_mode}} <div style="display:none" class="studentActions p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
@@ -52,8 +52,7 @@ define(['app'], function(App) {
       StudentsList.prototype.events = {
         'click .tiles.single.selectable': 'selectStudent',
         'click #right-answer': 'addToCorrectList',
-        'click #wrong-answer': 'removeFromCorrectList',
-        'click #question-done': 'questionCompleted'
+        'click #wrong-answer': 'removeFromCorrectList'
       };
 
       StudentsList.prototype.serializeData = function() {
@@ -97,6 +96,7 @@ define(['app'], function(App) {
       };
 
       StudentsList.prototype.selectStudent = function(e) {
+        this.$el.find('.studentActions').show();
         return $(e.target).closest('.tiles.single').toggleClass("selected");
       };
 
@@ -125,22 +125,6 @@ define(['app'], function(App) {
           $(student).removeClass('selected').find('.blue').removeClass('blue').addClass('unselected').find('i').removeClass('fa-check-circle').addClass('fa-minus-circle');
         }
         return this.trigger("save:question:response", this.correctAnswers);
-      };
-
-      StudentsList.prototype.questionCompleted = function() {
-        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
-          if (_.size(this.correctAnswers) < 1) {
-            if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
-              return this.trigger("question:completed", "no_answer");
-            }
-          } else {
-            if (confirm('This item will be marked as complete. Continue?')) {
-              return this.trigger("question:completed");
-            }
-          }
-        } else {
-          return this.trigger("question:completed");
-        }
       };
 
       return StudentsList;

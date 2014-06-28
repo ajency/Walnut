@@ -11,26 +11,19 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       function SingleQuestionStudentsController() {
         this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
         this._showStudentsListView = __bind(this._showStudentsListView, this);
-        this._changeQuestion = __bind(this._changeQuestion, this);
         return SingleQuestionStudentsController.__super__.constructor.apply(this, arguments);
       }
 
       SingleQuestionStudentsController.prototype.initialize = function(opts) {
         var division, studentCollection, view;
-        this.questionResponseModel = opts.questionResponseModel, studentCollection = opts.studentCollection, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject, this.nextItemID = opts.nextItemID;
+        this.questionResponseModel = opts.questionResponseModel, studentCollection = opts.studentCollection, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
         division = this.questionResponseModel.get('division');
-        console.log(this.questionResponseModel);
         this.view = view = this._showStudentsListView(studentCollection);
         this.show(view, {
           loading: true,
           entities: [studentCollection]
         });
-        this.listenTo(view, "save:question:response", this._saveQuestionResponse);
-        return this.listenTo(view, "question:completed", this._changeQuestion);
-      };
-
-      SingleQuestionStudentsController.prototype._changeQuestion = function() {
-        return this.region.trigger("goto:next:question", this.questionResponseModel.get('content_piece_id'));
+        return this.listenTo(view, "save:question:response", this._saveQuestionResponse);
       };
 
       SingleQuestionStudentsController.prototype._showStudentsListView = function(collection) {
