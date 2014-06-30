@@ -29,7 +29,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
 
       Controller.prototype.renderElement = function() {
         var optionCollection, optionsObj, shuffleFlag;
-        optionsObj = this.layout.model.get('elements');
+        optionsObj = this.layout.model.get('options');
+        this._parseOptions(optionsObj);
         shuffleFlag = true;
         _.each(optionsObj, (function(_this) {
           return function(option) {
@@ -39,15 +40,40 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           };
         })(this));
         if (shuffleFlag) {
+          console.log('shuffle');
           optionsObj = _.shuffle(optionsObj);
         }
         optionCollection = App.request("create:new:option:collection", optionsObj);
-        this.layout.model.set('elements', optionCollection);
+        this.layout.model.set('options', optionCollection);
+        console.log(optionCollection.pluck('optionNo'));
+        this.layout.model.set('correct_answer', _.map(this.layout.model.get('correct_answer'), function(ans) {
+          return parseInt(ans);
+        }));
         App.execute("show:total:marks", this.layout.model.get('marks'));
-        this.view = this._getMcqView(optionCollection);
+        this.view = this._getMcqView();
         this.listenTo(this.view, "create:row:structure", this.createRowStructure);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
         return this.layout.elementRegion.show(this.view);
+      };
+
+      Controller.prototype._getMcqView = function() {
+        return new Mcq.Views.McqView({
+          model: this.layout.model
+        });
+      };
+
+      Controller.prototype._parseOptions = function(optionsObj) {
+        return _.each(optionsObj, function(option) {
+          if (option.marks != null) {
+            option.marks = parseInt(option.marks);
+          }
+          if (option.optionNo != null) {
+            option.optionNo = parseInt(option.optionNo);
+          }
+          if (option['class'] != null) {
+            return option["class"] = parseInt(option['class']);
+          }
+        });
       };
 
       Controller.prototype._submitAnswer = function() {
@@ -61,7 +87,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
               this.answerModel.set('marks', this.layout.model.get('marks'));
             }
           } else {
-            console.log('inhere');
             if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
               if (!_.difference(this.layout.model.get('correct_answer'), this.answerModel.get('answer')).length) {
                 this.answerModel.set('marks', this.layout.model.get('marks'));
@@ -70,7 +95,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                 totalMarks = this.layout.model.get('marks');
                 _.each(answersNotMarked, (function(_this) {
                   return function(notMarked) {
-                    return totalMarks -= _this.layout.model.get('elements').get(notMarked).get('marks');
+                    return totalMarks -= _this.layout.model.get('options').get(notMarked).get('marks');
                   };
                 })(this));
                 this.answerModel.set('marks', totalMarks);
@@ -83,61 +108,100 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       };
 
       Controller.prototype.createRowStructure = function(options) {
-        var columnCounter, columnElement, columnElements, elements, numberOfColumns, numberOfOptions, numberOfRows, optionsInMcqCounter, remainingClass, remainingColumns;
-        numberOfColumns = this.layout.model.get('columncount');
-        numberOfOptions = this.layout.model.get('optioncount');
-        optionsInMcqCounter = 0;
-        numberOfRows = Math.ceil(numberOfOptions / numberOfColumns);
-        while (!!numberOfRows) {
-          columnCounter = 1;
-          columnElements = new Array();
-          remainingClass = 12;
-          remainingColumns = numberOfColumns;
-          while (!(columnCounter > numberOfColumns)) {
-            if (optionsInMcqCounter < numberOfOptions) {
-              columnElement = {
-                position: columnCounter,
-                element: 'Column',
-                className: this.layout.model.get('elements').at(optionsInMcqCounter).get('class'),
-                elements: this.layout.model.get('elements').at(optionsInMcqCounter)
-              };
-              columnElements.push(columnElement);
-              remainingClass = remainingClass - columnElement.className;
-              remainingColumns = numberOfColumns - columnCounter;
-              optionsInMcqCounter++;
-            } else {
-              columnElement = {
-                position: columnCounter,
-                element: 'Column',
-                className: remainingClass / remainingColumns,
-                elements: []
-              };
-              columnElements.push(columnElement);
-            }
-            columnCounter++;
+        var columnCount, columnElement, columnElements, controller, num, optionsInCurrentRow, rowElements, rowNumber, totalOptionsinMcq, _i, _results;
+        columnCount = parseInt(this.layout.model.get('columncount')) + 1;
+        columnElements = (function() {
+          var _results;
+          _results = [];
+          while (columnCount -= 1) {
+            columnElement = {
+              position: this.layout.model.get('columncount') - columnCount + 1,
+              element: 'Column',
+              className: 12 / this.layout.model.get('columncount'),
+              elements: []
+            };
+            _results.push(columnElement);
           }
-          elements = {
-            element: 'Row',
-            elements: columnElements
-          };
-          this._createMcqRow(elements, options.container);
-          numberOfRows--;
+          return _results;
+        }).call(this);
+        rowElements = {
+          element: 'Row',
+          columncount: this.layout.model.get('columncount'),
+          elements: columnElements
+        };
+        totalOptionsinMcq = this.layout.model.get('optioncount');
+        rowNumber = 1;
+        _results = [];
+        while (totalOptionsinMcq > 0) {
+          optionsInCurrentRow = totalOptionsinMcq > this.layout.model.get('columncount') ? this.layout.model.get('columncount') : totalOptionsinMcq;
+          this._setColumnClassForRow(rowElements, rowNumber, optionsInCurrentRow);
+          controller = App.request("add:new:element", options.container, 'Row', rowElements);
+          for (num = _i = 1; 1 <= optionsInCurrentRow ? _i <= optionsInCurrentRow : _i >= optionsInCurrentRow; num = 1 <= optionsInCurrentRow ? ++_i : --_i) {
+            this._iterateThruOptions(controller, rowNumber, num);
+          }
+          totalOptionsinMcq -= this.layout.model.get('columncount');
+          _results.push(rowNumber += 1);
         }
-        return this.view.triggerMethod('preTickAnswers');
+        return _results;
       };
 
-      Controller.prototype._createMcqRow = function(elements, container) {
-        var controller;
-        controller = App.request("add:new:element", container, 'Row', elements);
-        return _.each(elements.elements, (function(_this) {
-          return function(column, index) {
-            if (column.elements.length === 0) {
-              return;
+      Controller.prototype._setColumnClassForRow = function(rowElements, rowNumber, optionsInCurrentRow) {
+        var classRemaining, num, optionNumbers;
+        optionNumbers = (function() {
+          var _i, _ref, _results;
+          _results = [];
+          for (num = _i = 1, _ref = this.layout.model.get('columncount'); 1 <= _ref ? _i <= _ref : _i >= _ref; num = 1 <= _ref ? ++_i : --_i) {
+            _results.push((rowNumber - 1) * this.layout.model.get('columncount') + num);
+          }
+          return _results;
+        }).call(this);
+        classRemaining = 12;
+        return _.each(optionNumbers, (function(_this) {
+          return function(optionNumber, index) {
+            if (_this.layout.model.get('options').at(optionNumber - 1)) {
+              classRemaining -= _this.layout.model.get('options').at(optionNumber - 1).get('class');
+              return rowElements.elements[index].className = _this.layout.model.get('options').at(optionNumber - 1).get('class');
+            } else {
+              rowElements.elements[index].className = Math.floor(classRemaining / (_this.layout.model.get('columncount') - optionsInCurrentRow));
+              classRemaining -= Math.floor(classRemaining / (_this.layout.model.get('columncount') - optionsInCurrentRow));
+              return optionsInCurrentRow++;
             }
-            container = controller.layout.elementRegion.currentView.$el.children().eq(index);
-            return _this._addMcqOption(container, column.elements);
           };
         })(this));
+      };
+
+      Controller.prototype._iterateThruOptions = function(controller, rowNumber, index) {
+        var columnCount, container, idx, optionElements, optionNumber, optionRowContainer, optionRowController;
+        columnCount = this.layout.model.get('columncount');
+        optionNumber = (rowNumber - 1) * this.layout.model.get('columncount') + index;
+        idx = index - 1;
+        container = controller.layout.elementRegion.currentView.$el.children().eq(idx);
+        $(container).attr('data-option', optionNumber);
+        optionElements = {
+          element: 'Row',
+          columncount: 1,
+          elements: [
+            {
+              position: 1,
+              element: 'Column',
+              className: 12,
+              elements: []
+            }
+          ]
+        };
+        optionRowController = App.request("add:new:element", container, 'Row', optionElements);
+        optionRowContainer = optionRowController.layout.elementRegion.currentView.$el.children().eq(0);
+        return this._fillOptionRowWithElements(optionRowContainer, optionNumber);
+      };
+
+      Controller.prototype._fillOptionRowWithElements = function(optionRowContainer, optionNumber) {
+        var thisOptionElementsArray;
+        this._addMcqOption(optionRowContainer, this.layout.model.get('options').at(optionNumber - 1));
+        optionNumber = this.layout.model.get('options').at(optionNumber - 1).get('optionNo');
+        thisOptionElementsArray = this.layout.model.get('elements')[optionNumber - 1];
+        return _.each(thisOptionElementsArray, function(ele) {
+          return App.request("add:new:element", optionRowContainer, ele.element, ele);
+        });
       };
 
       Controller.prototype._addMcqOption = function(container, model) {
@@ -182,12 +246,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       Controller.prototype._getMcqOptionView = function(model) {
         return new Mcq.Views.McqOptionView({
           model: model
-        });
-      };
-
-      Controller.prototype._getMcqView = function(optionCollection) {
-        return new Mcq.Views.McqView({
-          model: this.layout.model
         });
       };
 
