@@ -1412,8 +1412,9 @@ p.mcq-option-text {
 }
 .fail_element {
   position: absolute;
+  margin: auto;
   opacity: 0;
-  top: 100px;
+  top: 70px;
   text-align: center;
   width: 50%;
   left: 25%;
@@ -1428,7 +1429,6 @@ p.mcq-option-text {
 #textbooks.list .list_header {
   height: 38px;
   line-height: 38px;
-  background: #c8d0d6;
   text-align: right;
   color: #59514c;
   -webkit-border-radius: 3px;
@@ -1455,6 +1455,7 @@ p.mcq-option-text {
   text-align: left;
   width: auto;
   border-left: 0 none;
+  padding: 0 2% 0 0;
 }
 #textbooks.list .list_header .meta.name {
   padding-left: 15px;
@@ -1503,7 +1504,7 @@ p.mcq-option-text {
 #textbooks.list .mix {
   display: none;
   opacity: 0;
-  padding: 18px 0 14px;
+  padding: 0;
   border-bottom: 1px solid #d1d3d9;
   text-align: right;
   height: 127px;
@@ -1513,7 +1514,7 @@ p.mcq-option-text {
   font-weight: 300;
 }
 #textbooks.list .mix .meta * {
-  line-height: 1;
+  line-height: 1.2;
 }
 #textbooks.list .mix .meta p,
 #textbooks.list .mix .meta ul {
@@ -1535,16 +1536,9 @@ p.mcq-option-text {
   display: inline-block;
   vertical-align: middle;
 }
-#textbooks.list .titles h2 {
-  font-weight: 700;
-  font-size: 17px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 3px;
-  line-height: 1.2 !important;
-}
-#textbooks.list .titles p {
-  text-indent: -2px;
+#textbooks.list .titles h3 {
+  margin-bottom: 5px;
+  margin-top: 15px;
 }
 #textbooks.grid {
   text-align: justify;
@@ -1605,12 +1599,39 @@ p.mcq-option-text {
   padding-left: 0;
 }
 #textbooks.list .mix {
-  background-color: #f3f3f3;
-  cursor: pointer;
-  height: auto;
-}
-#textbooks.list .mix:nth-child(2n+1) {
   background-color: #fbfbfb;
+  cursor: pointer;
+  height: 120px;
+  margin-bottom: 10px;
+  border-bottom: none;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
+}
+#textbooks.list .mix:hover {
+  background-color: #f3f3f3;
+  -webkit-transition: all 0.3s ease-out;
+  /* Chrome 1-25, Safari 3.2+ */
+
+  -moz-transition: all 0.3s ease-out;
+  /* Firefox 4-15 */
+
+  -o-transition: all 0.3s ease-out;
+  /* Opera 10.50–12.00 */
+
+  transition: all 0.3s ease-out;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+
 }
 #textbooks.list .list_header .meta {
   margin-top: 0;
@@ -1634,18 +1655,21 @@ p.mcq-option-text {
   float: left;
 }
 #textbooks.list .img_wrapper {
-  width: 40%;
-  float: left;
-  height: 65px;
+  width: 20%;
+  height: 100%;
   margin-right: 10px;
+}
+#textbooks.list .img_wrapper img {
+  height: auto;
+  width: auto;
+  left: -40%;
 }
 #textbooks.list .titles {
   vertical-align: top;
-  width: 54%;
-  float: left;
+  width: 70%;
   word-break: break-word;
 }
-#textbooks.list .titles h2 {
+#textbooks.list .titles h3 {
   letter-spacing: 1px;
 }
 @media (max-width: 600px) {
