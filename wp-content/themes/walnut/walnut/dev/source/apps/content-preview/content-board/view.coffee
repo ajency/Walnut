@@ -25,6 +25,19 @@ define ['app'], (App)->
             onRender: ->
                 @$el.find('#feedback-area div').hide()
 
+            onShowResponse : (marks,total)->
+                @$el.find('.total-marks').text total
+                @$el.find('.marks').text marks
+
+                if marks is 0
+                    @$el.find('#wrong').show()
+
+                if marks is total
+                    @$el.find('#correct').show()
+
+                if marks > 0 and marks < total
+                    @$el.find('#partially-correct').show()
+
 
 			
 

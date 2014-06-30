@@ -30,9 +30,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.renderElement = function() {
-        var view;
-        this.blanksCollection = App.request("create:new:question:element:collection", this.layout.model.get('blanksArray'));
+        var blanksArray, view;
+        blanksArray = this.layout.model.get('blanksArray');
+        this._parseOptions(blanksArray);
+        this.blanksCollection = App.request("create:new:question:element:collection", blanksArray);
         this.layout.model.set('blanksArray', this.blanksCollection);
+        console.log(this.blanksCollection);
         view = this._getFibView(this.layout.model);
         this.listenTo(view, 'show show:this:fib:properties', (function(_this) {
           return function() {
@@ -67,6 +70,20 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         return this.layout.elementRegion.show(view, {
           loading: true,
           entities: [this.layout.model]
+        });
+      };
+
+      Controller.prototype._parseOptions = function(blanksArray) {
+        return _.each(blanksArray, function(blank) {
+          if (blank.blank_index != null) {
+            blank.blank_index = parseInt(blank.blank_index);
+          }
+          if (blank.blank_size != null) {
+            blank.blank_size = parseInt(blank.blank_size);
+          }
+          if (blank.marks != null) {
+            return blank.marks = parseInt(blank.marks);
+          }
         });
       };
 

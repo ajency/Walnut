@@ -103,6 +103,11 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
         }
       };
 
+      TopPanelView.prototype.onShowTotalMarks = function(marks) {
+        console.log(marks);
+        return console.log(this.$el.find('#total-marks span').text(marks));
+      };
+
       return TopPanelView;
 
     })(Marionette.ItemView);

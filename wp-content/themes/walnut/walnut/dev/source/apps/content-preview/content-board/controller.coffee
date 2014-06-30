@@ -23,12 +23,13 @@ define ['app'
                 @listenTo @view, 'dependencies:fetched', =>
                     @startFillingElements()
 
-                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
+#                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
 
                 App.commands.setHandler "show:response", (marks, total)=>
                     answerData.marks += parseInt marks
                     answerData.total += parseInt total
-                    triggerOnce()
+#                    triggerOnce()
+                    @triggerShowResponse answerData
 
                 @show @view,
                     loading: true

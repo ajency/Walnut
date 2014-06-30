@@ -16,7 +16,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData, triggerOnce;
+        var answerData;
         this.model = options.model;
         answerData = {
           marks: 0,
@@ -31,12 +31,11 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
             return _this.startFillingElements();
           };
         })(this));
-        triggerOnce = _.once(_.bind(this.triggerShowResponse, this, answerData));
         App.commands.setHandler("show:response", (function(_this) {
           return function(marks, total) {
             answerData.marks += parseInt(marks);
             answerData.total += parseInt(total);
-            return triggerOnce();
+            return _this.triggerShowResponse(answerData);
           };
         })(this));
         return this.show(this.view, {
