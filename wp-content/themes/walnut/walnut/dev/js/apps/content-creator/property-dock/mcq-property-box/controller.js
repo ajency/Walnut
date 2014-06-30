@@ -43,23 +43,26 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
 
       Controller.prototype._getMarksView = function(model) {
         return new McqPropertyBox.Views.MarksView({
-          collection: model.get('elements'),
+          collection: model.get('options'),
           mcq_model: model
         });
       };
 
       Controller.prototype.onClose = function() {
-        var elements, models, optionCollection;
-        models = this.model.get('elements').models;
+        var elements, models, optionCollection, optionElements;
+        models = this.model.get('options').models;
         elements = _.map(models, function(m) {
           return m.toJSON();
         });
         this.model.set({
-          'elements': elements
+          'options': elements
         });
+        optionElements = this.model.get('elements');
+        this.model.unset('elements');
         this.model.save();
+        this.model.set('elements', optionElements);
         optionCollection = App.request("create:new:option:collection", models);
-        return this.model.set('elements', optionCollection);
+        return this.model.set('options', optionCollection);
       };
 
       return Controller;

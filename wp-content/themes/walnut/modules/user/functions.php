@@ -213,7 +213,7 @@ function get_students_by_division($division){
 
     global $wpdb;
 
-    $students_query= $wpdb->prepare("SELECT user_id FROM {$wpdb->prefix}usermeta
+    $students_query= $wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
         WHERE meta_key LIKE %s
         AND meta_value = %d",
         array('student_division',$division)

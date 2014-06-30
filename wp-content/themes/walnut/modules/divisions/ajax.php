@@ -1,6 +1,7 @@
 <?php
 
 require_once 'functions.php';
+require_once 'wpadmin-custom-menus.php';
 
 function fetch_divisions() {
 

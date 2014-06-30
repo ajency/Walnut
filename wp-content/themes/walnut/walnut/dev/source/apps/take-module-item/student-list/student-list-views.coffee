@@ -25,7 +25,7 @@ define ['app'], (App)->
         class StudentsEmptyView extends Marionette.ItemView
 
             template: '<div class="row no-margin">
-            			                <div class="col-md-8 col-xs-8 no-padding">
+            			                <div class="col-md-12 no-padding">
             			                  <div class="text-center">
             			                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">No Students in Class</h4>
             			                    <div class="clearfix"></div>
@@ -38,12 +38,8 @@ define ['app'], (App)->
 
             className: 'studentList m-t-10'
 
-            template: '
-            							<button type="button" id="question-done" class="btn btn-success btn-xs btn-sm pull-right">
-            								<i class="fa fa-forward"></i> Next
-            							</button>
-            						{{#class_mode}}
-            						<div class="studentActions p-t-10 p-b-10">
+            template: '{{#class_mode}}
+            						<div style="display:none" class="studentActions p-t-10 p-b-10">
             							<button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer">
             								<i class="fa fa-check-circle"></i> Right Answer
             							</button>
@@ -65,7 +61,6 @@ define ['app'], (App)->
                 'click .tiles.single.selectable': 'selectStudent'
                 'click #right-answer': 'addToCorrectList'
                 'click #wrong-answer': 'removeFromCorrectList'
-                'click #question-done': 'questionCompleted'
 
             serializeData: ->
                 data = super()
@@ -98,6 +93,10 @@ define ['app'], (App)->
                         @markAsCorrectAnswer ele
 
             selectStudent: (e)->
+
+                @$el.find '.studentActions'
+                .show()
+
                 $(e.target).closest('.tiles.single').toggleClass "selected"
 
             addToCorrectList: =>
@@ -133,16 +132,5 @@ define ['app'], (App)->
                                         .addClass 'fa-minus-circle'
 
                 @trigger "save:question:response", @correctAnswers
-
-            questionCompleted: ->
-                if Marionette.getOption(@, 'display_mode') is 'class_mode'
-                    if (_.size(@correctAnswers) < 1)
-                        if confirm 'This item will be marked as complete. None of the options have been selected. Continue?'
-                            @trigger "question:completed", "no_answer"
-                    else
-                        if confirm 'This item will be marked as complete. Continue?'
-                            @trigger "question:completed"
-
-                else @trigger "question:completed"
 
 

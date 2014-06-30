@@ -10,21 +10,47 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       function ModuleDescriptionController() {
         this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
+        this._getNextItemID = __bind(this._getNextItemID, this);
+        this._changeQuestion = __bind(this._changeQuestion, this);
         return ModuleDescriptionController.__super__.constructor.apply(this, arguments);
       }
 
       ModuleDescriptionController.prototype.initialize = function(opts) {
-        var model, view;
-        model = opts.model, this.questionResponseModel = opts.questionResponseModel, this.questionResponseCollection = opts.questionResponseCollection, this.timerObject = opts.timerObject, this.display_mode = opts.display_mode;
-        this.view = view = this._showModuleDescriptionView(model);
+        var view;
+        this.model = opts.model, this.questionResponseModel = opts.questionResponseModel, this.questionResponseCollection = opts.questionResponseCollection, this.timerObject = opts.timerObject, this.display_mode = opts.display_mode;
+        this.currentItemID = this.questionResponseModel.get('content_piece_id');
+        this.nextItemID = this._getNextItemID(this.currentItemID);
+        this.view = view = this._showModuleDescriptionView(this.model);
         this.show(view, {
-          loading: true
+          loading: true,
+          entities: [this.model, this.questionResponseModel]
         });
-        return this.listenTo(this.view, "goto:previous:route", (function(_this) {
+        this.listenTo(this.view, "goto:previous:route", (function(_this) {
           return function() {
             return _this.region.trigger("goto:previous:route");
           };
         })(this));
+        return this.listenTo(view, "question:completed", this._changeQuestion);
+      };
+
+      ModuleDescriptionController.prototype._changeQuestion = function() {
+        this.region.trigger("goto:next:question");
+        this.nextItemID = this._getNextItemID(this.nextItemID);
+        return this.view.triggerMethod("question:changed", this.nextItemID);
+      };
+
+      ModuleDescriptionController.prototype._getNextItemID = function(item_id) {
+        var contentPieces, nextItemID, pieceIndex;
+        contentPieces = this.model.get('content_pieces');
+        contentPieces = _.map(contentPieces, function(m) {
+          return parseInt(m);
+        });
+        pieceIndex = _.indexOf(contentPieces, item_id);
+        nextItemID = parseInt(contentPieces[pieceIndex + 1]);
+        if (!nextItemID) {
+          nextItemID = false;
+        }
+        return nextItemID;
       };
 
       ModuleDescriptionController.prototype._showModuleDescriptionView = function(model) {
@@ -43,7 +69,8 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         }
         return new ModuleDescriptionView({
           model: model,
-          mode: this.display_mode,
+          display_mode: this.display_mode,
+          nextItemID: this.nextItemID,
           templateHelpers: {
             showPauseButton: (function(_this) {
               return function() {
@@ -88,6 +115,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       __extends(ModuleDescriptionView, _super);
 
       function ModuleDescriptionView() {
+        this.questionCompleted = __bind(this.questionCompleted, this);
         return ModuleDescriptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -97,17 +125,40 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.mixinTemplateHelpers = function(data) {
         data = ModuleDescriptionView.__super__.mixinTemplateHelpers.call(this, data);
-        data.isTraining = this.mode === 'training' ? true : false;
+        data.isTraining = this.display_mode === 'training' ? true : false;
         return data;
       };
 
       ModuleDescriptionView.prototype.initialize = function() {
-        return this.mode = Marionette.getOption(this, 'mode');
+        return this.display_mode = Marionette.getOption(this, 'display_mode');
       };
 
       ModuleDescriptionView.prototype.events = {
         'click #back-to-module, #pause-session': function() {
           return this.trigger("goto:previous:route");
+        },
+        'click #question-done': 'questionCompleted'
+      };
+
+      ModuleDescriptionView.prototype.onShow = function() {
+        if (!Marionette.getOption(this, 'nextItemID')) {
+          return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
+        }
+      };
+
+      ModuleDescriptionView.prototype.questionCompleted = function() {
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          if (confirm('This item will be marked as complete. Continue?')) {
+            return this.trigger("question:completed");
+          }
+        } else {
+          return this.trigger("question:completed");
+        }
+      };
+
+      ModuleDescriptionView.prototype.onQuestionChanged = function(nextItemID) {
+        if (!nextItemID) {
+          return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
       };
 

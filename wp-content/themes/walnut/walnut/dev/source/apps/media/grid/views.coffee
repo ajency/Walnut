@@ -1,5 +1,6 @@
 define ['app'
         'text!apps/media/grid/templates/media.html'
+        'text!apps/media/grid/templates/layout-tpl.html'
 ], (App, mediaTpl, layoutTpl)->
     App.module 'Media.Grid.Views', (Views, App)->
 
@@ -21,6 +22,7 @@ define ['app'
                 data = super data
                 data.imagePreview  = false
                 data.videoPreview  = false
+                data.audioPreview  = false
 
                 if data.type is 'image'
                     if data.sizes and data.sizes.thumbnail and data.sizes.thumbnail.url
@@ -28,6 +30,10 @@ define ['app'
 
                 if data.type is 'video'
                     data.videoPreview  = true
+                    data.title_show  = _.prune data.title , 50
+
+                if data.type is 'audio'
+                    data.audioPreview  = true
                     data.title_show  = _.prune data.title , 50
 
                 data
@@ -46,26 +52,7 @@ define ['app'
         # collection view
         class Views.GridView extends Marionette.CompositeView
 
-            template : '<div class="row b-b b-grey m-b-10">
-                                                                <div class="btn-group">
-                                                                    <a id="list" class="btn btn-default btn-sm btn-small">
-                                                                        <span class="glyphicon glyphicon-th-list"></span> List
-                                                                    </a>
-                                                                    <a id="grid" class="btn btn-default btn-sm btn-small">
-                                                                        <span class="glyphicon glyphicon-th"></span> Grid
-                                                                    </a>
-                                                                    </div>
-                                                                <div class="input-with-icon right pull-right mediaSearch m-b-10">
-                                                                    <i class="fa fa-search"></i>
-                                                                    <input type="text" class="form-control" placeholder="Search">
-                                                                </div>
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                            <div class="row">
-                                                                <div id="placeholder-video-txt" class="text-center m-t-40 m-b-40"><h4 class="semi-bold muted"> Looking for a video? Use the Search box above</h4><h1 class="semi-bold muted"><span class="fa fa-search"></span></h1></div>
-                                                                <div id="selectable-images"></div>
-                                                                <div id="no-results-div"></div>
-                                                            </div>'
+            template : layoutTpl
 
             itemView : MediaView
 
@@ -76,6 +63,17 @@ define ['app'
                 'click a#list.btn'  :-> @_changeChildClass 'List'
                 'click a#grid.btn'  :-> @_changeChildClass 'Grid'
 
+            mixinTemplateHelpers : (data)->
+                data = super data
+
+                data.audio = data.video = false
+
+                if Marionette.getOption(@,'mediaType') is 'video'
+                    data.video = true
+                if Marionette.getOption(@,'mediaType') is 'audio'
+                    data.audio = true
+
+                data
 
             onRender:->
                 @$el.find '#no-results-div'
@@ -96,11 +94,11 @@ define ['app'
                     #trigger the selectable to point to the newly added image
                     imageView.$el.find('img').trigger 'click'
 
-                if not @collection.isEmpty() or mediaType isnt 'video'
+                if not @collection.isEmpty() or mediaType is 'image'
                     @$el.find "#placeholder-video-txt"
                     .hide()
 
-                if mediaType is 'video'
+                if mediaType in ['video', 'audio']
                     @$el.find '#list, #grid'
                     .hide()
                     @_changeChildClass 'List'
@@ -114,6 +112,7 @@ define ['app'
                     .html 'No media files were found for your search: '+ @collection.filters.searchStr +
                         '<br>Add a part of the media title in search.'
                     @collection.filters.searchStr = ''
+
             # @$el.find('#selectable-images').selectSelectableElements imageView.$el
             onCollectionRendered : ->
                 if @multiSelect

@@ -28,6 +28,10 @@ define ['app',
 
                 'change #qType' : '_changeOfQuestionType'
 
+                'click  #save-question': 'saveQuestionSettings'
+
+                'click #preview-question' : 'previewQuestion'
+
 
 
             onShow:->
@@ -50,7 +54,7 @@ define ['app',
 #                    negativeMarks= parseInt @model.get 'negative_marks'
 #                    $('#negativeMarks').select2().select2('val',negativeMarks)
 
-                if @model.get('content_type') is 'content_piece'
+                if @model.get('content_type') in ['content_piece','student_question']
                     @$el.find '#question_type_column'
                     .remove()
 
@@ -102,7 +106,12 @@ define ['app',
                 else
                     @trigger 'close:grading:parameter'
 
-            onSaveQuestionSettings:->
+            saveQuestionSettings:->
                 if @$el.find('form').valid()
                     data = Backbone.Syphon.serialize (@)
                     @trigger "save:data:to:model", data
+                    @$el.find '#preview-question'
+                    .show()
+
+            previewQuestion:->
+                window.open SITEURL + "/#content-piece/"+@model.id, 'target':'blank'

@@ -75,7 +75,7 @@ define(['app'], function(App) {
         this.$el.attr('id', 'mcq-option-' + this.model.get('optionNo'));
         this.$el.find('p').append(_.stripslashes(this.model.get('text')));
         return this.$el.find('input:checkbox').screwDefaultButtons({
-          image: 'url("../wp-content/themes/walnut/images/csscheckbox.png")',
+          image: 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")',
           width: 32,
           height: 26
         });

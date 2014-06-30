@@ -5,21 +5,15 @@ define ['app'
         class SingleQuestionStudentsController extends RegionController
 
             initialize: (opts)->
-                {@questionResponseModel,studentCollection, @display_mode,@timerObject, @nextItemID} = opts
+                {@questionResponseModel,studentCollection, @display_mode,@timerObject} = opts
 
                 division = @questionResponseModel.get 'division'
 
-                console.log @questionResponseModel
                 @view = view = @_showStudentsListView studentCollection
 
                 @show view, (loading: true, entities: [studentCollection])
 
                 @listenTo view, "save:question:response", @_saveQuestionResponse
-
-                @listenTo view, "question:completed", @_changeQuestion
-
-            _changeQuestion:=>
-                @region.trigger "goto:next:question", @questionResponseModel.get 'content_piece_id'
 
 
             _showStudentsListView: (collection) =>

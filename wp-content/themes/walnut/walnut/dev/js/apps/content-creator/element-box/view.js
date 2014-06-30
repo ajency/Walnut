@@ -25,6 +25,9 @@ define(['app', 'text!apps/content-creator/element-box/templates/toolbox.html'], 
         contentType = Marionette.getOption(this, 'contentType');
         if (contentType === 'teacher_question') {
           elementSet = ['Row', 'TeacherQuestion', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio'];
+        } else if (contentType === 'content_piece') {
+          elementSet = ['Row', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio'];
+          this.$el.find('#questions_elements_label').hide();
         } else {
           elementSet = ['Row', 'Hotspot', 'Mcq', 'Fib', 'BigAnswer', 'Sort', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio'];
         }

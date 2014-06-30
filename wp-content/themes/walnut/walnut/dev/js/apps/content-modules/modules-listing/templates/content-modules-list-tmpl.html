@@ -6,21 +6,15 @@
         <div class="col-xs-12">
             <div class="filters">
                 <div class="table-tools-actions">
-                    <!--<select class="select2-filters" id="divisions-filter" style="width:150px">
-                        <option value="">All Divisions</option>
-                        {{#divisionsFilter}}
-                            <option value={{id}}>{{division}}</option>
-                        {{/divisionsFilter}}
-                    </select>-->
 
                     <span id="textbook-filters"></span>
 
-                    <!--<select class="select2-filters" id="status-filter" style="width:150px">
+                    <select class="select2-filters" id="content-status-filter" style="width:150px">
                         <option value="">All Status</option>
-                        <option value="">Under Review</option>
-                        <option value="">Published</option>
-                        <option value="">Archived</option>
-                    </select>-->
+                        <option value="underreview">Under Review</option>
+                        <option value="publish">Published</option>
+                        <option value="archive">Archived</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -39,7 +33,8 @@
                         <label for="check_all"></label>
                     </div>-->
                     <th style="width:40%">Name</th>
-                    <th>Textbook Name</th>
+                    <th>Textbook</th>
+                    <th>Chapter</th>
                     <th>Duration</th>
                     <th>Status</th>
                     <th>Action</th>

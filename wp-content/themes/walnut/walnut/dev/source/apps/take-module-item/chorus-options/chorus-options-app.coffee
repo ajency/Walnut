@@ -5,7 +5,7 @@ define ['app'
         class ChorusOptionsController extends RegionController
 
             initialize: (opts)->
-                {@questionResponseModel,@display_mode,@timerObject, @nextItemID} = opts
+                {@questionResponseModel,@display_mode,@timerObject} = opts
 
                 @view = view = @_showChorusOptionsView @questionResponseModel
 
@@ -13,18 +13,11 @@ define ['app'
 
                 @listenTo view, "save:question:response", @_saveQuestionResponse
 
-                @listenTo view, "question:completed", @_changeQuestion
-
-            _changeQuestion:=>
-                @region.trigger "goto:next:question", @questionResponseModel.get 'content_piece_id'
-
             _showChorusOptionsView: (model)=>
-                console.log JSON.stringify @questionResponseModel.toJSON()
                 new ChorusOptionsView
                     model: model
                     responsePercentage: @questionResponseModel.get 'question_response'
                     display_mode: @display_mode
-                    nextItemID: @nextItemID
 
             _saveQuestionResponse: (studResponse)=>
 
@@ -45,15 +38,10 @@ define ['app'
 
             events:
                 'click .tiles.single.selectable': 'selectStudent'
-                'click #question-done': 'questionCompleted'
 
             onShow: ->
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
-
-                if not Marionette.getOption(@, 'nextItemID')
-                    @$el.find "#question-done"
-                    .html '<i class="fa fa-forward"></i> Finish Module'
 
                 responsePercentage = Marionette.getOption @, 'responsePercentage'
 
@@ -80,19 +68,6 @@ define ['app'
                                             .addClass 'fa-check-circle'
 
                 @trigger "save:question:response", dataValue
-
-            questionCompleted: =>
-                selectedAnswer = @$el.find '.tiles.single .blue'
-
-                if Marionette.getOption(@, 'display_mode') is 'class_mode'
-                    if _.size(selectedAnswer) is 0
-                        if confirm 'This item will be marked as complete. None of the options have been selected. Continue?'
-                            @trigger "question:completed", "no_answer"
-                    else
-                        if confirm 'This item will be marked as complete. Continue?'
-                            @trigger "question:completed"
-
-                else @trigger "question:completed"
 
         # set handlers
         App.commands.setHandler "show:single:question:chorus:options:app", (opt = {})->

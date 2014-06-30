@@ -211,6 +211,7 @@ function get_textbooks( $args = array() ) {
         'class_id' => ''
     );
 
+    $count_total=0;
     $args = wp_parse_args( $args, $defaults );
     extract( $args );
 
@@ -254,12 +255,12 @@ function get_book( $book ) {
     $current_blog = get_current_blog_id();
     switch_to_blog( 1 );
 
-    if (is_numeric( $book->term_id )) {
-        $book_id = $book->term_id;
-        $book_dets = $book;
-    } else if (is_numeric( $book )) {
+    if (is_numeric( $book )) {
         $book_id = $book;
         $book_dets = get_term( $book, 'textbook' );
+    } else if (is_numeric( $book->term_id )) {
+        $book_id = $book->term_id;
+        $book_dets = $book;
 
     } else {
         return false;

@@ -11,7 +11,7 @@ function send_pending_communications() {
 
     global $wpdb;
 
-    $comm_table = $wpdb->prefix . "comm_module";
+    $comm_table = $wpdb->base_prefix . "comm_module";
 
     $pending_comms_query = $wpdb->prepare(
             "SELECT * FROM $comm_table

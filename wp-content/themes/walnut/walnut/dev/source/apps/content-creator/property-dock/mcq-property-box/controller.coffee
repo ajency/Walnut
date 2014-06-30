@@ -34,21 +34,24 @@ define ['app'
 
             _getMarksView: (model)->
                 new McqPropertyBox.Views.MarksView
-                    collection: model.get 'elements'
+                    collection: model.get 'options'
                     mcq_model: model
 
             onClose: ->
-                    models= this.model.get('elements').models
+                    models= this.model.get('options').models
 
                     elements= _.map models, (m)-> m.toJSON()
 
-                    @model.set 'elements': elements
+                    @model.set 'options': elements
+                    optionElements = @model.get 'elements'
+                    @model.unset 'elements'
 
                     @model.save()
 
+                    @model.set 'elements',optionElements
 
                     optionCollection = App.request "create:new:option:collection", models
-                    @model.set 'elements', optionCollection
+                    @model.set 'options', optionCollection
 
         App.commands.setHandler "show:mcq:properties", (options)->
             new McqPropertyBox.Controller
