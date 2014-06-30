@@ -79,7 +79,7 @@ define(['app'], function(App) {
           return evt.stopPropagation();
         });
         this.$el.append('<p class=\"hidden-align-fix\" contenteditable=\"false\" style=\"display:none;\"></p>');
-        if (!parseInt(this.model.get('numberOfBlanks'))) {
+        if (!this.model.get('numberOfBlanks')) {
           this.model.set('numberOfBlanks', 1);
         } else {
           this.$el.find('input').wrap('<span contenteditable="false"></span>');

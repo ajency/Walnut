@@ -35,7 +35,7 @@ define ['app'
 
 
 
-                # eventObj = App.createEventObject()
+                eventObj = App.createEventObject()
 
                 # listen to "show" event of the layout and start the
                 # elementboxapp passing the region
@@ -48,10 +48,12 @@ define ['app'
                     App.execute "show:element:box",
                         region : @layout.elementBoxRegion
                         contentType : @contentPieceModel.get 'content_type'
+                        eventObj : eventObj
 
                     App.execute "show:content:builder",
                         region : @layout.contentBuilderRegion
                         contentPieceModel : @contentPieceModel
+                        eventObj : eventObj
 
                     App.execute "show:property:dock",
                         region : @layout.PropertyRegion

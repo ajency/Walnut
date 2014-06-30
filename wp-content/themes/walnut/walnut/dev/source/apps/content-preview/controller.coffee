@@ -16,18 +16,19 @@ define ['app'
                     region : App.mainContentRegion
                     contentID : id
                     display_mode : 'read-only'
+                    content_preview : true
 
 
         class ContentPreview.Controller extends RegionController
 
             initialize : (options)->
-                {contentID, @model,@questionResponseModel,@timerObject, @display_mode,@students} = options
+                {contentID, @model,@questionResponseModel,@timerObject, @display_mode,@students, content_preview} = options
 
                 if contentID
                     @model = App.request "get:content:piece:by:id", contentID
 
                 # get the main layout for the content preview
-                @layout = @_getContentPreviewLayout()
+                @layout = @_getContentPreviewLayout(content_preview)
 
                 App.execute "when:fetched", @model, =>
                     # show the layout
@@ -50,11 +51,14 @@ define ['app'
                         region : @layout.contentBoardRegion
                         model : @model
 
-            _getContentPreviewLayout : =>
+            _getContentPreviewLayout : (content_preview)=>
                 new ContentPreview.Views.Layout
                     model : @model
+                    content_preview :content_preview
 
         App.commands.setHandler "show:content:preview", (options)->
+            if not options.content_preview?
+                options.content_preview = false
             new ContentPreview.Controller options
 
 
