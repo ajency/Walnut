@@ -231,7 +231,7 @@ function get_single_content_module($id, $division=''){
             $data->duration     = $duration/60;
             $data->minshours    ='hrs';
         }
-        $data->post_status = $item->status;
+        $data->status = $item->status;
     }
 
     $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta
@@ -259,7 +259,7 @@ function get_single_content_module($id, $division=''){
         $data->status= $status_dets['status'];
         $data->training_date= $status_dets['start_date'];
     }
-    if($post_status == 'archive'){
+    if($item->status == 'archive'){
         if($data->status == 'not started')
             return false;
     }
