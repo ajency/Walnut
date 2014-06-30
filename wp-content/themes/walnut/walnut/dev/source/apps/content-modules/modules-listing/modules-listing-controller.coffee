@@ -8,7 +8,7 @@ define ['app'
             initialize : ->
                 @contentGroupCollection = App.request "get:content:groups"
                 @textbooksCollection = App.request "get:textbooks"
-                @divisionsCollection = App.request "get:divisions"
+                @allChaptersCollection = null
 
                 breadcrumb_items =
                     'items' : [
@@ -19,26 +19,36 @@ define ['app'
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-                App.execute "when:fetched", [@contentGroupCollection,@divisionsCollection, @textbooksCollection], =>
+                App.execute "when:fetched", [@contentGroupCollection, @textbooksCollection], =>
+                    chapter_ids= _.chain @contentGroupCollection.pluck 'term_ids'
+                    .pluck 'chapter'
+                        .unique()
+                        .compact()
+                        .value()
+
+                    #all chapter names in this set of contentgroupscollection
+                    @allChaptersCollection = App.request "get:textbook:names:by:ids", chapter_ids
+
                     @fullCollection = @contentGroupCollection.clone()
 
-                    @view = view = @_getContentGroupsListingView()
+                    App.execute "when:fetched", @allChaptersCollection, =>
+                        @view = view = @_getContentGroupsListingView()
 
-                    @show view,
-                        loading : true
-                        entities : [@contentGroupCollection, @textbooksCollection, @fullCollection]
+                        @show view,
+                            loading : true
+                            entities : [@contentGroupCollection, @textbooksCollection, @fullCollection]
 
-                    @listenTo @view, "fetch:chapters:or:sections", (parentID, filterType) =>
-                        chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
-                        App.execute "when:fetched", chaptersOrSections, =>
-                            @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType
+                        @listenTo @view, "fetch:chapters:or:sections", (parentID, filterType) =>
+                            chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
+                            App.execute "when:fetched", chaptersOrSections, =>
+                                @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType
 
             _getContentGroupsListingView : =>
                 new GroupListing.Views.GroupsListingView
                     collection          : @contentGroupCollection
                     fullCollection      : @fullCollection
                     textbooksCollection : @textbooksCollection
-                    divisionsCollection :@divisionsCollection
+                    chaptersCollection  : @allChaptersCollection
 
 
 

@@ -16,7 +16,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
         var breadcrumb_items;
         this.contentGroupCollection = App.request("get:content:groups");
         this.textbooksCollection = App.request("get:textbooks");
-        this.divisionsCollection = App.request("get:divisions");
+        this.allChaptersCollection = null;
         breadcrumb_items = {
           'items': [
             {
@@ -33,22 +33,27 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
-        return App.execute("when:fetched", [this.contentGroupCollection, this.divisionsCollection, this.textbooksCollection], (function(_this) {
+        return App.execute("when:fetched", [this.contentGroupCollection, this.textbooksCollection], (function(_this) {
           return function() {
-            var view;
+            var chapter_ids;
+            chapter_ids = _.chain(_this.contentGroupCollection.pluck('term_ids')).pluck('chapter').unique().compact().value();
+            _this.allChaptersCollection = App.request("get:textbook:names:by:ids", chapter_ids);
             _this.fullCollection = _this.contentGroupCollection.clone();
-            _this.view = view = _this._getContentGroupsListingView();
-            _this.show(view, {
-              loading: true,
-              entities: [_this.contentGroupCollection, _this.textbooksCollection, _this.fullCollection]
-            });
-            return _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
-              var chaptersOrSections;
-              chaptersOrSections = App.request("get:chapters", {
-                'parent': parentID
+            return App.execute("when:fetched", _this.allChaptersCollection, function() {
+              var view;
+              _this.view = view = _this._getContentGroupsListingView();
+              _this.show(view, {
+                loading: true,
+                entities: [_this.contentGroupCollection, _this.textbooksCollection, _this.fullCollection]
               });
-              return App.execute("when:fetched", chaptersOrSections, function() {
-                return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
+              return _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
+                var chaptersOrSections;
+                chaptersOrSections = App.request("get:chapters", {
+                  'parent': parentID
+                });
+                return App.execute("when:fetched", chaptersOrSections, function() {
+                  return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
+                });
               });
             });
           };
@@ -60,7 +65,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
           collection: this.contentGroupCollection,
           fullCollection: this.fullCollection,
           textbooksCollection: this.textbooksCollection,
-          divisionsCollection: this.divisionsCollection
+          chaptersCollection: this.allChaptersCollection
         });
       };
 

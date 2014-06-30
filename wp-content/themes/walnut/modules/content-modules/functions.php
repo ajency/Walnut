@@ -210,7 +210,7 @@ function get_all_content_modules($args=array()){
     return $content_data;
 }
 
-function get_single_content_module($id, $division='', $post_status=''){
+function get_single_content_module($id, $division=''){
 
     global $wpdb;
 
@@ -231,7 +231,7 @@ function get_single_content_module($id, $division='', $post_status=''){
             $data->duration     = $duration/60;
             $data->minshours    ='hrs';
         }
-        $data->post_status = $post_status;
+        $data->post_status = $item->status;
     }
 
     $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta
