@@ -19,6 +19,12 @@ define(['app'], function(App) {
         topPanelRegion: '#top-panel'
       };
 
+      Layout.prototype.mixinTemplateHelpers = function(data) {
+        data = Layout.__super__.mixinTemplateHelpers.call(this, data);
+        data.content_preview = Marionette.getOption(this, 'content_preview');
+        return data;
+      };
+
       return Layout;
 
     })(Marionette.Layout);
