@@ -2552,3 +2552,8 @@ select:before {
     min-height: 0;
   }
 }
+/*Panzer Audio Player*/
+.panzer-light .player {
+  background: #f3f3f3;
+  border: none;
+}
