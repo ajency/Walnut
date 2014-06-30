@@ -210,7 +210,7 @@ function get_all_content_modules($args=array()){
     return $content_data;
 }
 
-function get_single_content_module($id, $division=''){
+function get_single_content_module($id, $division='', $post_status=''){
 
     global $wpdb;
 
@@ -231,7 +231,7 @@ function get_single_content_module($id, $division=''){
             $data->duration     = $duration/60;
             $data->minshours    ='hrs';
         }
-        $data->status = $item->status;
+        $data->post_status = $post_status;
     }
 
     $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta
@@ -259,7 +259,7 @@ function get_single_content_module($id, $division=''){
         $data->status= $status_dets['status'];
         $data->training_date= $status_dets['start_date'];
     }
-    if($item->status == 'archive'){
+    if($post_status == 'archive'){
         if($data->status == 'not started')
             return false;
     }
