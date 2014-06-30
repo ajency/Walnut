@@ -82,18 +82,32 @@ function get_user_by_id( $id ) {
 function user_extend_profile_fields($user){
 
     $user_textbooks = maybe_unserialize(get_user_meta( $user->ID, 'textbooks',true));
+    $user_divisions = maybe_unserialize(get_user_meta( $user->ID, 'divisions',true));
+    $user_student_division = maybe_unserialize(get_user_meta( $user->ID, 'student_division',true));
+    $user_student_rollno = get_user_meta( $user->ID, 'student_rollno',true);
+    $user_student_parentemail1 = get_user_meta( $user->ID, 'parent_email1',true);
+    $user_student_parentemail2 = get_user_meta( $user->ID, 'parent_email2',true);
+    $user_student_parentemail3 = get_user_meta( $user->ID, 'parent_email3',true);
+    $user_student_parentphone1 = get_user_meta( $user->ID, 'parent_phone1',true);
+    $user_student_parentphone2 = get_user_meta( $user->ID, 'parent_phone2',true);
  
       if(!is_array($user_textbooks)){
-
             $user_textbooks = array();
       }
       else{
          $user_textbooks = array_map('intval', $user_textbooks);
       }
-    switch_to_blog(1);
+      
+       if(!is_array($user_divisions)){
+            $user_divisions = array();
+      }
+      else{
+         $user_divisions = array_map('intval', $user_divisions);
+      }     
+      switch_to_blog(1);
 ?> 
     
-    <table class="form-table">
+    <table class="form-table visible-teacher" style="display:none">
 
     <tr>
         <th><label for="tax_input[document_folders]">Textbooks</label></th>
@@ -125,7 +139,9 @@ function user_extend_profile_fields($user){
         ?> 
                 <li id="textbooks-<?php echo $textbook->term_id;?>">
                     <label class="selectit">
-                        <input value="<?php echo $textbook->term_id;?>" type="checkbox" name="textbooks[]" id="textbooks-<?php echo $textbook->term_id;?>" <?php echo $checked; ?> /> <?php echo $textbook->name;?>
+                        <input value="<?php echo $textbook->term_id;?>" type="checkbox" name="textbooks[]" 
+                               id="textbooks-<?php echo $textbook->term_id;?>" <?php echo $checked; ?> /> 
+                                   <?php echo $textbook->name;?>
                     </label>
                 </li>
     <?php endforeach;
@@ -137,6 +153,135 @@ function user_extend_profile_fields($user){
     </tr>
 
 </table>
+<table class="form-table visible-teacher" style="display:none">
+
+    <tr>
+        <th><label for="teacher-divisions">Divisions</label></th>
+
+        <td>
+            <div>
+            <ul clsss="divisions-list">
+    <?php
+
+        $divisions =  get_class_divisions();
+        if(!is_null($divisions)){
+        foreach($divisions as $key => $value):
+
+            $checked = "";
+ 
+            if(in_array($key,$user_divisions)){
+
+                $checked = "checked";
+
+
+            }
+        ?> 
+                <li id="textbooks-<?php echo $key;?>">
+                    <label class="selectit">
+                        <input value="<?php echo $key;?>" type="checkbox" name="divisions[]" 
+                               id="textbooks-<?php echo $key;?>" <?php echo $checked; ?> /> <?php echo $value;?>
+                    </label>
+                </li>
+    <?php endforeach;
+  }?>
+            </ul>
+            </div>
+            <span class="description">Select the Divisions the current user has access to.</span>
+        </td>
+    </tr>
+
+</table>
+
+<table class="form-table visible-student" style="display:none">
+    <tr class="form-field form-required">
+        <th><label for="student-division">Division <span class="description"><?php _e('(required)'); ?></span></label>
+        </th>
+
+        <td> 
+            <div>
+                <select id="student_division" name="student_division">
+                    <option value=""></option>
+                    <?php
+                    foreach($divisions as $key => $value):
+                    $selected = ''; 
+                    if($key == $user_student_division){
+                        $selected = "selected";
+                    }
+                    ?>
+                    <option value="<?php echo $key;?>" <?php echo $selected;?>><?php echo $value;?></option>
+                    <?php
+                    endforeach;
+                    ?>
+                </select>
+            </div>
+            <span class="description">Select the Division for the current user.</span>
+        </td>
+    </tr>
+</table>
+<table class="form-table visible-student" style="display:none">
+    <tr class="form-field form-required">
+        <th><label for="student-rollno">Roll No. <span class="description"><?php _e('(required)'); ?></span></label></th>
+
+        <td> 
+            <div>
+                <input type="text" aria-required="true" value="<?php echo $user_student_rollno;?>" id="student_rollno" 
+                       name="student_rollno">
+            </div>
+        </td>
+    </tr>
+</table>
+<table class="form-table visible-student" style="display:none">
+    <tr class="form-field form-required">
+        <th><label>Parent email id 1 <span class="description"><?php _e('(required)'); ?></span></label></th>
+
+        <td> 
+            <div>
+                <input type="text" aria-required="true" value="<?php echo $user_student_parentemail1;?>" 
+                       id="parent_email_1" name="parent_email_1">
+            </div>
+        </td>
+    </tr>
+    <tr class="form-field">
+        <th><label>Parent email id 2 </label></th>
+
+        <td> 
+            <div>
+                <input type="text" value="<?php echo $user_student_parentemail2;?>" id="parent_email_2" 
+                       name="parent_email_2" />
+            </div>
+        </td>
+    </tr>
+    <tr class="form-field">
+        <th><label>Parent email id 3 </label></th>
+
+        <td> 
+            <div>
+                <input type="text" value="<?php echo $user_student_parentemail3;?>" id="parent_email_3" 
+                       name="parent_email_3" />
+            </div>
+        </td>
+    </tr>
+   <tr class="form-field form-required">
+        <th><label>Parent mobile no 1 <span class="description"><?php _e('(required)'); ?></span></label></th>
+
+        <td> 
+            <div>
+                <input type="text" aria-required="true" value="<?php echo $user_student_parentphone1;?>" 
+                       id="parent_mobile_1" name="parent_mobile_1" />
+            </div>
+        </td>
+    </tr>
+   <tr class="form-field">
+        <th><label>Parent mobile no 2 </label></th>
+
+        <td> 
+            <div>
+                <input type="text" value="<?php echo $user_student_parentphone2;?>" 
+                       id="parent_mobile_2" name="parent_mobile_2"/>
+            </div>
+        </td>
+    </tr>
+</table>
 <?php
 restore_current_blog();
 }
@@ -144,7 +289,7 @@ add_action( 'show_user_profile', 'user_extend_profile_fields' );
 
 add_action( 'edit_user_profile', 'user_extend_profile_fields' );
 
-//add_action( 'user_new_form', 'user_extend_profile_fields' );
+add_action( 'user_new_form', 'user_extend_profile_fields' );
 
 
 //update the user meta textbooks key
@@ -153,13 +298,60 @@ function user_extend_profile_fields_save($user_id) {
 
     if ( (!current_user_can( 'edit_user')) )
         return false;
-    $textbooks= array_map('intval', $_POST['textbooks']);
-    update_user_meta( $user_id, 'textbooks', $textbooks );
+    if(isset($_POST['textbooks']) && !empty($_POST['textbooks'])){
+        $textbooks= array_map('intval', $_POST['textbooks']);
+        update_user_meta( $user_id, 'textbooks', $textbooks );
+    }
+    
+    if(isset($_POST['divisions']) && !empty($_POST['divisions'])){
+        $divisions = array_map('intval', $_POST['divisions']);
+        update_user_meta( $user_id, 'divisions', $divisions );
+    }
   
+    if(isset($_POST['student_division']) && $_POST['student_division'] !=''){
+        update_user_meta( $user_id, 'student_division', $_POST['student_division'] );
+    }
+    
+    if(isset($_POST['student_rollno']) && $_POST['student_rollno'] !=''){
+        update_user_meta( $user_id, 'student_rollno', $_POST['student_rollno'] );
+    }
+   
+    for($i=1;$i<=3;$i++){
+             if(isset($_POST['parent_email_'.$i]) && $_POST['parent_email_'.$i] !=''){
+                 if( $parent_id = email_exists( $_POST['parent_email_'.$i] )) {
+                     update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
+                     update_user_meta( $parent_id, 'parent_of', $user_id );
+                    }
+                 elseif(is_email($_POST['parent_email_'.$i])){
+                     $password = wp_generate_password( 12, true );
+                     $email_address =$_POST['parent_email_'.$i]; 
+                     $new_parent_id = wp_create_user ( $email_address, $password, $email_address);
+                     wp_update_user( array(
+                                      'ID'       => $new_parent_id,
+                                      'nickname' => $email_address
+                                    )
+                                  );
+                     $parent_user = new WP_User( $new_parent_id );
+                     
+                     $parent_user->set_role( 'parent' );
+                     update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
+                     update_user_meta( $new_parent_id, 'parent_of', $user_id );
+
+                 }             
+            }  
+    }
+    
+    for($i=1;$i<=2;$i++){
+             if(isset($_POST['parent_mobile_'.$i]) && $_POST['parent_mobile_'.$i] !=''){
+                update_user_meta( $user_id, 'parent_phone'.$i, $_POST['parent_mobile_'.$i] );
+            }  
+    }
+    
 }
 
 add_action( 'personal_options_update', 'user_extend_profile_fields_save' );
 add_action( 'edit_user_profile_update', 'user_extend_profile_fields_save' );
+add_action( 'wpmu_new_user', 'user_extend_profile_fields_save' );
 
 function get_parents_by_division($division){
 
@@ -228,3 +420,29 @@ function get_students_by_division($division){
 
     return $ids;
 }
+
+function get_class_divisions(){
+    global $wpdb;
+    $divisions_query= "SELECT id,division FROM {$wpdb->base_prefix}class_divisions";
+
+    $division_ids = $wpdb->get_results($divisions_query);
+
+    $divisions= array();
+
+    foreach($division_ids as $division)
+        $divisions[(int)$division->id]= $division->division;
+    
+    return $divisions;
+}
+
+/**
+ * wp admin dashboard custom menus and functions
+ */
+
+function admin_scripts_users($hook) {
+    if( 'user-new.php' != $hook && 'user-edit.php' != $hook )
+        return;
+    wp_enqueue_script( 'admin_users', get_template_directory_uri() .
+            '/modules/user/js/admin_users.js', array(), false, true );
+}
+add_action( 'admin_enqueue_scripts', 'admin_scripts_users',100 );
