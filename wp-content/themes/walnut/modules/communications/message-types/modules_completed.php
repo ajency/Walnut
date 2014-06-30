@@ -43,14 +43,14 @@ function send_modules_completed_parent_mail($comm_id, $parentdata, $blog_id, $mo
 
         $subject = $blog_name ." Training module completed";
 
-        $text = "{$student->display_name} has successfully completed the following training modules<br><br><br><br>";
+        $text = "<p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 20px;text-align: center;font-weight: bold;'>{$student->display_name} has successfully completed the following training modules</p><br>";
 
-        $text .= "Name: {$module['module_name']}<br><br>
-                    Class: $division<br><br>
-                    Subject: {$module['subject_name']}<br><br>
-                    Textbook: {$module['textbook_name']}<br><br>
-                    Date completed:  {$module['end_date']}<br><br>
-                    Taken by: {$module['taken_by']}<br><br><br><br>
+        $text .= "<p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Name:</strong> {$module['module_name']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Class:</strong> $division</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Subject:</strong> {$module['subject_name']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Textbook:</strong> {$module['textbook_name']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Date completed:</strong>  {$module['end_date']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Taken by:</strong> {$module['taken_by']}</p>
                 ";
 
         $text .= get_communications_footer($blog_id);
@@ -70,13 +70,13 @@ function send_modules_completed_student_mail($comm_id, $studentdata, $blog_id, $
         echo $studentdata->user_email;
         $subject = $blog_name ." Training module completed";
 
-        $text = "You have successfully completed the following training modules<br><br><br><br>";
+        $text = "<p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 20px;text-align: center;font-weight: bold;'>You have successfully completed the following training modules:</p><br>";
 
-        $text .= "Name: {$module['module_name']}<br><br>
-                    Subject: {$module['subject_name']}<br><br>
-                    Textbook: {$module['textbook_name']}<br><br>
-                    Date completed:  {$module['end_date']}<br><br>
-                    Taken by: {$module['taken_by']}<br><br><br><br>";
+        $text .= "<p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Name:</strong> {$module['module_name']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Subject:</strong> {$module['subject_name']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Textbook:</strong> {$module['textbook_name']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Date completed:</strong>  {$module['end_date']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Taken by:</strong> {$module['taken_by']}</p>";
 
         $text .= get_communications_footer($blog_id);
 

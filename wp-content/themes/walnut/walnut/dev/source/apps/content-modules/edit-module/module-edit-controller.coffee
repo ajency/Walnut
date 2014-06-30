@@ -93,7 +93,7 @@ define ['app'
 
             template : '<div class="teacher-app">
                                         <div id="collection-details-region">
-                                            <div class="tiles white grid simple vertical green animated slideInRight">
+                                            <div class="tiles white grid simple vertical green animated fadeIn">
                                                 <div class="grid-title no-border">
                                                     <h3>This module is not editable</h3>
                                                     <p>Current Status: {{currentStatus}}</p>
