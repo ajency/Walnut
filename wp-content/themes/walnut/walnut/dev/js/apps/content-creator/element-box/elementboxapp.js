@@ -12,9 +12,20 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       }
 
       ElementBoxController.prototype.initialize = function(options) {
-        var contentType;
-        contentType = options.contentType;
+        var contentType, eventObj;
+        contentType = options.contentType, eventObj = options.eventObj;
+        console.log(eventObj);
         this.view = this._getElementBoxView(contentType);
+        this.listenTo(eventObj.vent, "question:element:added", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("question:element:added");
+          };
+        })(this));
+        this.listenTo(eventObj.vent, "question:element:removed", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("question:element:removed");
+          };
+        })(this));
         return this.show(this.view);
       };
 

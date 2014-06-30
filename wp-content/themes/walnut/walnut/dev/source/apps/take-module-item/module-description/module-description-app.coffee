@@ -126,6 +126,17 @@ define ['app'
                     @$el.find "#question-done"
                     .html '<i class="fa fa-forward"></i> Finish Module'
 
+            onShow: ->
+                stickyHeaderTop = $("#module-details-region").height()
+                $(window).scroll ->
+                    if $(window).scrollTop() > stickyHeaderTop
+                      $("#module-details-region").addClass "condensed"
+                    else
+                      $("#module-details-region").removeClass "condensed"
+                    return
+
+                  return
+
 
 
         # set handlers

@@ -31,11 +31,9 @@ define ['app'
                 # then dont shuffle the option else shuffle
                 shuffleFlag = true
 
-
                 _.each optionsObj, (option)=>
                     if parseInt(option.class) isnt 12 / @layout.model.get 'columncount'
                         shuffleFlag = false
-                # break
 
                 if shuffleFlag
                     console.log 'shuffle'
@@ -44,12 +42,8 @@ define ['app'
                 optionCollection = App.request "create:new:option:collection", optionsObj
                 @layout.model.set 'options', optionCollection
 
-                console.log optionCollection.pluck 'optionNo'
 
-                @layout.model.set 'correct_answer', _.map @layout.model.get('correct_answer'), (ans)->
-                    parseInt ans
-
-                App.execute "show:total:marks", @layout.model.get 'marks'
+#                App.execute "show:total:marks", @layout.model.get 'marks'
 
                 # get the view
                 @view = @_getMcqView()
@@ -72,6 +66,9 @@ define ['app'
                     option.marks = parseInt option.marks if option.marks?
                     option.optionNo = parseInt option.optionNo if option.optionNo?
                     option.class = parseInt option['class'] if option['class']?
+
+                @layout.model.set 'correct_answer', _.map @layout.model.get('correct_answer'), (ans)->
+                    parseInt ans
 
             _submitAnswer : =>
                 if not @answerModel.get('answer').length
@@ -178,6 +175,7 @@ define ['app'
                         className : 12
                         elements : []
                     ]
+
                 optionRowController = App.request "add:new:element", container, 'Row', optionElements
 
                 optionRowContainer = optionRowController.layout.elementRegion.currentView.$el.children().eq(0)

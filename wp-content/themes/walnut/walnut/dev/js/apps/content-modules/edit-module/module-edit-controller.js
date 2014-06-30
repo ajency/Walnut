@@ -135,7 +135,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
         return NotEditView.__super__.constructor.apply(this, arguments);
       }
 
-      NotEditView.prototype.template = '<div class="teacher-app"> <div id="collection-details-region"> <div class="tiles white grid simple vertical green animated slideInRight"> <div class="grid-title no-border"> <h3>This module is not editable</h3> <p>Current Status: {{currentStatus}}</p> </div> </div> </div> </div>';
+      NotEditView.prototype.template = '<div class="teacher-app"> <div id="collection-details-region"> <div class="tiles white grid simple vertical green animated fadeIn"> <div class="grid-title no-border"> <h3>This module is not editable</h3> <p>Current Status: {{currentStatus}}</p> </div> </div> </div> </div>';
 
       NotEditView.prototype.mixinTemplateHelpers = function(data) {
         var status;

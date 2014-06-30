@@ -24,7 +24,8 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
         return App.execute("show:content:preview", {
           region: App.mainContentRegion,
           contentID: id,
-          display_mode: 'read-only'
+          display_mode: 'read-only',
+          content_preview: true
         });
       }
     };
@@ -37,12 +38,12 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
       }
 
       Controller.prototype.initialize = function(options) {
-        var contentID;
-        contentID = options.contentID, this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.students = options.students;
+        var contentID, content_preview;
+        contentID = options.contentID, this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.students = options.students, content_preview = options.content_preview;
         if (contentID) {
           this.model = App.request("get:content:piece:by:id", contentID);
         }
-        this.layout = this._getContentPreviewLayout();
+        this.layout = this._getContentPreviewLayout(content_preview);
         App.execute("when:fetched", this.model, (function(_this) {
           return function() {
             return _this.show(_this.layout, {
@@ -68,9 +69,10 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
         })(this));
       };
 
-      Controller.prototype._getContentPreviewLayout = function() {
+      Controller.prototype._getContentPreviewLayout = function(content_preview) {
         return new ContentPreview.Views.Layout({
-          model: this.model
+          model: this.model,
+          content_preview: content_preview
         });
       };
 
@@ -78,6 +80,9 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
 
     })(RegionController);
     App.commands.setHandler("show:content:preview", function(options) {
+      if (options.content_preview == null) {
+        options.content_preview = false;
+      }
       return new ContentPreview.Controller(options);
     });
     return ContentPreview.on("start", function() {

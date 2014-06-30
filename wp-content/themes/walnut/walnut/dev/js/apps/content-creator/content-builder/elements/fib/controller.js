@@ -11,7 +11,6 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       }
 
       Controller.prototype.initialize = function(options) {
-        this.eventObj = options.eventObj;
         _.defaults(options.modelData, {
           element: 'Fib',
           font: 'Arial',
@@ -80,7 +79,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.deleteElement = function(model) {
         model.set('blanksArray', '');
         delete model.get('blanksArray');
-        model.destroy();
+        Controller.__super__.deleteElement.call(this, model);
         App.execute("close:question:properties");
         return App.execute("close:question:element:properties");
       };

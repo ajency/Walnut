@@ -6,7 +6,6 @@ define ['app'
         class Fib.Controller extends Element.Controller
 
             initialize: (options)->
-                @eventObj = options.eventObj
 
                 # set defaults for the model
                 _.defaults options.modelData,
@@ -49,9 +48,7 @@ define ['app'
                 App.commands.setHandler 'save:fib:text', ->
                     view.triggerMethod 'save:text'
 
-                # # on show disable all question elements in d element box
-                # @listenTo view, "show",=>
-                # 		@eventObj.vent.trigger "question:dropped"
+
 
                 # listen to create fib element  event from view
                 @listenTo view, "create:new:fib:element", (blankId)=>
@@ -85,8 +82,9 @@ define ['app'
                 # and delete it
                 model.set('blanksArray', '')
                 delete model.get 'blanksArray'
-                model.destroy()
+
+                super model
+
                 App.execute "close:question:properties"
                 App.execute "close:question:element:properties"
-# # on delete enable all question elements in d element box
-# @eventObj.vent.trigger "question:removed"
+
