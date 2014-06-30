@@ -69,6 +69,8 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
             ele = _ref[_i];
             $(ele).addClass('selectable');
           }
+        } else {
+          this.$el.find('#select-an-item').hide();
         }
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
         if (_.isString(responsePercentage) && responsePercentage.length > 0) {
@@ -78,6 +80,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
 
       ChorusOptionsView.prototype.selectStudent = function(e) {
         var dataValue;
+        this.$el.find('#select-an-item').remove();
         this.$el.find('.blue').removeClass('blue').addClass('unselected');
         dataValue = $(e.currentTarget).closest('.tiles.single').attr('id');
         $(e.target).closest('.tiles.single').find('.unselected').removeClass('unselected').addClass('blue').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');

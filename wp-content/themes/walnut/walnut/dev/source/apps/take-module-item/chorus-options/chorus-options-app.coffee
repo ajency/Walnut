@@ -43,6 +43,10 @@ define ['app'
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
+                else
+                    @$el.find '#select-an-item'
+                    .hide()
+
                 responsePercentage = Marionette.getOption @, 'responsePercentage'
 
                 if _.isString(responsePercentage) and responsePercentage.length > 0
@@ -52,6 +56,10 @@ define ['app'
                         .addClass 'blue'
 
             selectStudent: (e)->
+
+                @$el.find '#select-an-item'
+                .remove()
+
                 @$el.find '.blue'
                 .removeClass 'blue'
                     .addClass 'unselected'
