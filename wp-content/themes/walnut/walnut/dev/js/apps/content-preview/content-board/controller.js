@@ -11,17 +11,11 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
 
       function Controller() {
         this._getContentBoardView = __bind(this._getContentBoardView, this);
-        this.triggerShowResponse = __bind(this.triggerShowResponse, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData;
         this.model = options.model;
-        answerData = {
-          marks: 0,
-          total: 0
-        };
         this.view = this._getContentBoardView();
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
@@ -33,19 +27,14 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
         })(this));
         App.commands.setHandler("show:response", (function(_this) {
           return function(marks, total) {
-            answerData.marks += parseInt(marks);
-            answerData.total += parseInt(total);
-            return _this.triggerShowResponse(answerData);
+            console.log("" + marks + "   " + total);
+            return _this.view.triggerMethod('show:response', parseInt(marks), parseInt(total));
           };
         })(this));
         return this.show(this.view, {
           loading: true,
           entities: [this.elements]
         });
-      };
-
-      Controller.prototype.triggerShowResponse = function(answerData) {
-        return this.view.triggerMethod('show:response', answerData.marks, answerData.total);
       };
 
       Controller.prototype._getContentBoardView = function() {

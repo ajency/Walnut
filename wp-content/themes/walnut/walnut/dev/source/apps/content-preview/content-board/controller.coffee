@@ -7,12 +7,8 @@ define ['app'
     App.module "ContentPreview.ContentBoard", (ContentBoard, App, Backbone, Marionette, $, _)->
         class ContentBoard.Controller extends RegionController
 
-            initialize: (options)->
+            initialize : (options)->
                 {@model}=options
-
-                answerData =
-                    marks: 0
-                    total: 0
 
 
                 @view = @_getContentBoardView()
@@ -23,27 +19,24 @@ define ['app'
                 @listenTo @view, 'dependencies:fetched', =>
                     @startFillingElements()
 
-#                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
+                #                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
 
                 App.commands.setHandler "show:response", (marks, total)=>
-                    answerData.marks += parseInt marks
-                    answerData.total += parseInt total
-#                    triggerOnce()
-                    @triggerShowResponse answerData
+                    console.log "#{marks}   #{total}"
+                    @view.triggerMethod 'show:response', parseInt(marks), parseInt(total)
 
                 @show @view,
-                    loading: true
-                    entities: [@elements]
+                    loading : true
+                    entities : [@elements]
 
-            triggerShowResponse: (answerData)=>
-                @view.triggerMethod 'show:response', answerData.marks, answerData.total
 
-            _getContentBoardView: =>
+
+            _getContentBoardView : =>
                 new ContentBoard.Views.ContentBoardView
-                    model: @model
+                    model : @model
 
             # start filling elements
-            startFillingElements: ()->
+            startFillingElements : ()->
                 section = @view.model.get 'layout'
 
 
@@ -55,7 +48,7 @@ define ['app'
                         App.request "add:new:element", container, element.element, element
 
 
-            addNestedElements: (container, element)->
+            addNestedElements : (container, element)->
                 controller = App.request "add:new:element", container, element.element, element
                 _.each element.elements, (column, index)=>
                     return if not column.elements
@@ -69,12 +62,12 @@ define ['app'
 
             API =
             # add a new element to the builder region
-                addNewElement: (container, type, modelData)->
+                addNewElement : (container, type, modelData)->
                     console.log type
 
                     new ContentBoard.Element[type].Controller
-                        container: container
-                        modelData: modelData
+                        container : container
+                        modelData : modelData
 
 
             App.commands.setHandler 'show:content:board', (options)->
