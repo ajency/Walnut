@@ -14,6 +14,7 @@ define ['app'
                         </td>-->
                         <td>{{name}}</td>
                         <td>{{textbookName}}</td>
+                        <td>{{chapterName}}</td>
                         <td>{{durationRounded}} {{minshours}}</td>
                         <td>{{&statusMessage}}</td>
                         <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
@@ -27,6 +28,13 @@ define ['app'
                 data.textbookName = =>
                     textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
                     textbook.name
+
+                data.chapterName = =>
+                    chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
+                    .pluck 'name'
+                        .compact()
+                        .value()
+                    chapter
 
                 data.durationRounded = ->
                     if data.minshours is 'hrs'
@@ -51,6 +59,7 @@ define ['app'
 
             initialize : (options)->
                 @textbooks = options.textbooksCollection
+                @chapters = options.chaptersCollection
 
             cloneModule :->
                 if @model.get('status') in ['publish','archive']
@@ -106,25 +115,14 @@ define ['app'
 
             itemViewOptions : ->
                 textbooksCollection : @textbooks
+                chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
 
             events :
-                'change .filters' :(e)->
+                'change .textbook-filter' :(e)->
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
                 'change #check_all_div'     : 'checkAll'
-
-            mixinTemplateHelpers : (data)->
-                data = super data
-                divisionsCollection = Marionette.getOption @, 'divisionsCollection'
-                divisionOptions = []
-                divisionsCollection.each (model)->
-                                    d=[]
-                                    d.id= model.get 'id'
-                                    d.division = model.get 'division'
-                                    divisionOptions.push d
-
-                data.divisionsFilter = divisionOptions
-                data
+                'change #content-status-filter'  : 'setFilteredContent'
 
             initialize : ->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
@@ -159,6 +157,11 @@ define ['app'
                     when 'textbooks-filter' then $.populateChapters filteredCollection, @$el
                     when 'chapters-filter' then $.populateSections filteredCollection, @$el
                     when 'sections-filter' then $.populateSubSections filteredCollection, @$el
+
+                @setFilteredContent()
+
+
+            setFilteredContent:->
 
                 filtered_data= $.filterTableByTextbooks(@)
 
