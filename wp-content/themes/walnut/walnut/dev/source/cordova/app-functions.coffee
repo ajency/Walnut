@@ -119,7 +119,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 				console.log 'getMetaValue transaction completed'
 			.fail _.failureHandler
 
-
 		
 		#Get additional textbook options
 		getTextbookOptions : (id)->

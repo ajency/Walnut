@@ -9,8 +9,8 @@ define(['underscore'], function(_) {
             create: false,
             exclusive: false
           }, function(fileEntry) {
-            console.log('SynapseMedia directory path: ' + fileEntry.toURL() + '/');
-            return _.setSynapseMediaDirectoryPath(fileEntry.toURL() + '/');
+            console.log('SynapseMedia directory path: ' + fileEntry.toURL());
+            return _.setSynapseMediaDirectoryPath(fileEntry.toURL());
           }, function(error) {
             return console.log('ERROR: ' + error.code);
           });

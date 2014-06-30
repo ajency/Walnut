@@ -37,14 +37,14 @@ define ['app'], (App)->
 				# @videoElement = videojs @$el.find('video').attr('id')
 
 
-				# set height according to the aspect ratio of 16:9
+				# set height according to the asp ect ratio of 16:9
 				# width = @videoElement.width()
 				# height = 9 * width / 16
 				# @videoElement.height height
 
 				if _.platform() is 'DEVICE'
 
-					url = @model.get('videoUrl')
+					url = @model.get('videoUrl').replace("media-web/","")
 					videosWebUrl = url.substr(url.indexOf("uploads/"))
 
 					videoUrl = videosWebUrl.replace("videos-web", "videos")

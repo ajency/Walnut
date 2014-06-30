@@ -15,8 +15,8 @@ define ['underscore'], ( _) ->
 							,{create: false, exclusive:false} 
 							
 							,(fileEntry)->
-								console.log 'SynapseMedia directory path: '+fileEntry.toURL()+'/'
-								_.setSynapseMediaDirectoryPath fileEntry.toURL()+'/'
+								console.log 'SynapseMedia directory path: '+fileEntry.toURL()#+'/'
+								_.setSynapseMediaDirectoryPath fileEntry.toURL()#+'/'
 							
 							,(error)->
 								console.log 'ERROR: '+error.code

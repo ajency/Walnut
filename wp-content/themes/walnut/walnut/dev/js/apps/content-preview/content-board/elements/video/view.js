@@ -26,7 +26,7 @@ define(['app'], function(App) {
         videoId = _.uniqueId('video_');
         this.$el.find('video').attr('id', videoId);
         if (_.platform() === 'DEVICE') {
-          url = this.model.get('videoUrl');
+          url = this.model.get('videoUrl').replace("media-web/", "");
           videosWebUrl = url.substr(url.indexOf("uploads/"));
           videoUrl = videosWebUrl.replace("videos-web", "videos");
           encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
