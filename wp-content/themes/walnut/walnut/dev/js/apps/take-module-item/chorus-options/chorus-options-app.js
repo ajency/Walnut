@@ -11,32 +11,24 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
       function ChorusOptionsController() {
         this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
         this._showChorusOptionsView = __bind(this._showChorusOptionsView, this);
-        this._changeQuestion = __bind(this._changeQuestion, this);
         return ChorusOptionsController.__super__.constructor.apply(this, arguments);
       }
 
       ChorusOptionsController.prototype.initialize = function(opts) {
         var view;
-        this.questionResponseModel = opts.questionResponseModel, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject, this.nextItemID = opts.nextItemID;
+        this.questionResponseModel = opts.questionResponseModel, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
         this.view = view = this._showChorusOptionsView(this.questionResponseModel);
         this.show(view, {
           loading: true
         });
-        this.listenTo(view, "save:question:response", this._saveQuestionResponse);
-        return this.listenTo(view, "question:completed", this._changeQuestion);
-      };
-
-      ChorusOptionsController.prototype._changeQuestion = function() {
-        return this.region.trigger("goto:next:question", this.questionResponseModel.get('content_piece_id'));
+        return this.listenTo(view, "save:question:response", this._saveQuestionResponse);
       };
 
       ChorusOptionsController.prototype._showChorusOptionsView = function(model) {
-        console.log(JSON.stringify(this.questionResponseModel.toJSON()));
         return new ChorusOptionsView({
           model: model,
           responsePercentage: this.questionResponseModel.get('question_response'),
-          display_mode: this.display_mode,
-          nextItemID: this.nextItemID
+          display_mode: this.display_mode
         });
       };
 
@@ -58,7 +50,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
       __extends(ChorusOptionsView, _super);
 
       function ChorusOptionsView() {
-        this.questionCompleted = __bind(this.questionCompleted, this);
         return ChorusOptionsView.__super__.constructor.apply(this, arguments);
       }
 
@@ -67,8 +58,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
       ChorusOptionsView.prototype.template = chorusOptionsTemplate;
 
       ChorusOptionsView.prototype.events = {
-        'click .tiles.single.selectable': 'selectStudent',
-        'click #question-done': 'questionCompleted'
+        'click .tiles.single.selectable': 'selectStudent'
       };
 
       ChorusOptionsView.prototype.onShow = function() {
@@ -79,9 +69,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
             ele = _ref[_i];
             $(ele).addClass('selectable');
           }
-        }
-        if (!Marionette.getOption(this, 'nextItemID')) {
-          this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
         if (_.isString(responsePercentage) && responsePercentage.length > 0) {
@@ -95,24 +82,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
         dataValue = $(e.currentTarget).closest('.tiles.single').attr('id');
         $(e.target).closest('.tiles.single').find('.unselected').removeClass('unselected').addClass('blue').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
         return this.trigger("save:question:response", dataValue);
-      };
-
-      ChorusOptionsView.prototype.questionCompleted = function() {
-        var selectedAnswer;
-        selectedAnswer = this.$el.find('.tiles.single .blue');
-        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
-          if (_.size(selectedAnswer) === 0) {
-            if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
-              return this.trigger("question:completed", "no_answer");
-            }
-          } else {
-            if (confirm('This item will be marked as complete. Continue?')) {
-              return this.trigger("question:completed");
-            }
-          }
-        } else {
-          return this.trigger("question:completed");
-        }
       };
 
       return ChorusOptionsView;

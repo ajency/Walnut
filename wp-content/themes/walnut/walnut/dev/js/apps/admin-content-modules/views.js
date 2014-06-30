@@ -136,9 +136,7 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         'change #divisions-filter': function(e) {
           return this.trigger("division:changed", $(e.target).val());
         },
-        'change #content-status-filter': function() {
-          return this.setFilteredContent();
-        },
+        'change #content-status-filter': 'setFilteredContent',
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         }

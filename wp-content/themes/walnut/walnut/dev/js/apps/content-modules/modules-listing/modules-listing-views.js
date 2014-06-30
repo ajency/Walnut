@@ -18,7 +18,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<!--<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td>--> <td>{{name}}</td> <td>{{textbookName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
+      ListItemView.prototype.template = '<!--<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td>--> <td>{{name}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
 
       ListItemView.prototype.serializeData = function() {
         var data, _ref;
@@ -32,6 +32,15 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
               "id": data.term_ids.textbook
             });
             return textbook.name;
+          };
+        })(this);
+        data.chapterName = (function(_this) {
+          return function() {
+            var chapter;
+            chapter = _.chain(_this.chapters.findWhere({
+              "id": data.term_ids.chapter
+            })).pluck('name').compact().value();
+            return chapter;
           };
         })(this);
         data.durationRounded = function() {
@@ -61,7 +70,8 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.initialize = function(options) {
-        return this.textbooks = options.textbooksCollection;
+        this.textbooks = options.textbooksCollection;
+        return this.chapters = options.chaptersCollection;
       };
 
       ListItemView.prototype.cloneModule = function() {
@@ -147,31 +157,17 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       GroupsListingView.prototype.itemViewOptions = function() {
         return {
-          textbooksCollection: this.textbooks
+          textbooksCollection: this.textbooks,
+          chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
         };
       };
 
       GroupsListingView.prototype.events = {
-        'change .filters': function(e) {
+        'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         },
-        'change #check_all_div': 'checkAll'
-      };
-
-      GroupsListingView.prototype.mixinTemplateHelpers = function(data) {
-        var divisionOptions, divisionsCollection;
-        data = GroupsListingView.__super__.mixinTemplateHelpers.call(this, data);
-        divisionsCollection = Marionette.getOption(this, 'divisionsCollection');
-        divisionOptions = [];
-        divisionsCollection.each(function(model) {
-          var d;
-          d = [];
-          d.id = model.get('id');
-          d.division = model.get('division');
-          return divisionOptions.push(d);
-        });
-        data.divisionsFilter = divisionOptions;
-        return data;
+        'change #check_all_div': 'checkAll',
+        'change #content-status-filter': 'setFilteredContent'
       };
 
       GroupsListingView.prototype.initialize = function() {
@@ -202,7 +198,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       GroupsListingView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
-        var filtered_data, pagerOptions;
         switch (filterType) {
           case 'textbooks-filter':
             $.populateChapters(filteredCollection, this.$el);
@@ -213,6 +208,11 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
           case 'sections-filter':
             $.populateSubSections(filteredCollection, this.$el);
         }
+        return this.setFilteredContent();
+      };
+
+      GroupsListingView.prototype.setFilteredContent = function() {
+        var filtered_data, pagerOptions;
         filtered_data = $.filterTableByTextbooks(this);
         this.collection.set(filtered_data);
         $("#content-pieces-table").trigger("updateCache");

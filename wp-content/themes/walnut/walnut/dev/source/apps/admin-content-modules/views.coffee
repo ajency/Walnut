@@ -121,8 +121,7 @@ define ['app',
                 'change #divisions-filter'  :(e)->
                     @trigger "division:changed", $(e.target).val()
 
-                'change #content-status-filter'  :->
-                    @setFilteredContent()
+                'change #content-status-filter'  : 'setFilteredContent'
 
                 'change .textbook-filter' :(e)->
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id

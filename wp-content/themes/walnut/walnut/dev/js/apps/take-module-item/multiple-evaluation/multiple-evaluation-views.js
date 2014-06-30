@@ -26,7 +26,7 @@ define(['app'], function(App) {
         return StudentsEmptyView.__super__.constructor.apply(this, arguments);
       }
 
-      StudentsEmptyView.prototype.template = '<div class="row no-margin"> <div class="col-md-12 no-padding"> <div class="text-center"> <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">No Students in Class</h4> <div class="clearfix"></div> </div> </div> </div>';
+      StudentsEmptyView.prototype.template = '<div class="row no-margin"> <div class="col-md-8 col-xs-8 no-padding"> <div class="text-center"> <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">No Students in Class</h4> <div class="clearfix"></div> </div> </div> </div>';
 
       return StudentsEmptyView;
 
@@ -39,9 +39,9 @@ define(['app'], function(App) {
         return StudentsList.__super__.constructor.apply(this, arguments);
       }
 
-      StudentsList.prototype.className = 'studentList m-t-10';
+      StudentsList.prototype.className = 'studentList m-t-35';
 
-      StudentsList.prototype.template = '{{#class_mode}} <div style="display:none" class="studentActions p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
+      StudentsList.prototype.template = '{{#class_mode}} <div style="display: none" class="student-actions m-t-10 well pull-right m-b-10 p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
@@ -52,7 +52,8 @@ define(['app'], function(App) {
       StudentsList.prototype.events = {
         'click .tiles.single.selectable': 'selectStudent',
         'click #right-answer': 'addToCorrectList',
-        'click #wrong-answer': 'removeFromCorrectList'
+        'click #wrong-answer': 'removeFromCorrectList',
+        'click #question-done': 'questionCompleted'
       };
 
       StudentsList.prototype.serializeData = function() {
@@ -72,9 +73,6 @@ define(['app'], function(App) {
             ele = _ref[_i];
             $(ele).addClass('selectable');
           }
-        }
-        if (!Marionette.getOption(this, 'nextItemID')) {
-          this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
         $(".students").listnav({
           includeNums: false
@@ -96,7 +94,7 @@ define(['app'], function(App) {
       };
 
       StudentsList.prototype.selectStudent = function(e) {
-        this.$el.find('.studentActions').show();
+        this.$el.find('.student-actions').show();
         return $(e.target).closest('.tiles.single').toggleClass("selected");
       };
 
@@ -125,6 +123,18 @@ define(['app'], function(App) {
           $(student).removeClass('selected').find('.blue').removeClass('blue').addClass('unselected').find('i').removeClass('fa-check-circle').addClass('fa-minus-circle');
         }
         return this.trigger("save:question:response", this.correctAnswers);
+      };
+
+      StudentsList.prototype.questionCompleted = function() {
+        if ((_.size(this.correctAnswers) < 1) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
+          if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
+            return this.trigger("question:completed", "no_answer");
+          }
+        } else {
+          if (confirm('This item will be marked as complete. Continue?')) {
+            return this.trigger("question:completed");
+          }
+        }
       };
 
       return StudentsList;

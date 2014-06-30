@@ -5,51 +5,51 @@ define ['app'], (App)->
             className: 'col-sm-3 m-b-20'
 
             template: '<div class="row single tiles white no-margin" data-id="{{ID}}">
-            			                <div class="col-md-8 col-xs-8 no-padding">
-            			                  <div class="text-center">
-            			                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">{{display_name}}</span> </h4>
-            			                    <div class="clearfix"></div>
-            			                  </div>
-            			                </div>
-            							 <div class="col-md-4 col-xs-4 no-padding">
-            			                  <div class="tiles unselected active">
-            			                  	<div class="user-profile-pic text-left m-t-0 p-t-10">
-            								<img data-src-retina="{{profile_pic}}" data-src="{{profile_pic}}" src="{{profile_pic}}" alt="">
-            							  </div>
-            			                    <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-minus-circle"></i></div>
-            			                  </div>
-            			                </div>
-            			            </div>'
+                            <div class="col-md-8 col-xs-8 no-padding">
+                              <div class="text-center">
+                                <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">{{display_name}}</span> </h4>
+                                <div class="clearfix"></div>
+                              </div>
+                            </div>
+                             <div class="col-md-4 col-xs-4 no-padding">
+                              <div class="tiles unselected active">
+                                <div class="user-profile-pic text-left m-t-0 p-t-10">
+                                <img data-src-retina="{{profile_pic}}" data-src="{{profile_pic}}" src="{{profile_pic}}" alt="">
+                              </div>
+                                <div class="bold text-white text-center p-t-5 p-b-5"><i class="fa fa-minus-circle"></i></div>
+                              </div>
+                            </div>
+                        </div>'
 
 
         class StudentsEmptyView extends Marionette.ItemView
 
             template: '<div class="row no-margin">
-            			                <div class="col-md-12 no-padding">
-            			                  <div class="text-center">
-            			                    <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">No Students in Class</h4>
-            			                    <div class="clearfix"></div>
-            			                  </div>
-            			                </div>
-            			            </div>'
+                            <div class="col-md-8 col-xs-8 no-padding">
+                              <div class="text-center">
+                                <h4 class="text-primary no-margin p-t-20 p-b-20 p-l-5 p-r-5"><span class="semi-bold">No Students in Class</h4>
+                                <div class="clearfix"></div>
+                              </div>
+                            </div>
+                        </div>'
 
 
         class Views.StudentsList extends Marionette.CompositeView
 
-            className: 'studentList m-t-10'
+            className: 'studentList m-t-35'
 
             template: '{{#class_mode}}
-            						<div style="display:none" class="studentActions p-t-10 p-b-10">
-            							<button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer">
-            								<i class="fa fa-check-circle"></i> Right Answer
-            							</button>
-            							<button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer">
-            								<i class="fa fa-minus-circle"></i> Unselect Answer
-            							</button>
-            						</div>
-            						{{/class_mode}}
-            						<div class="clearfix"></div>
-            						<div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>'
+                        <div style="display: none" class="student-actions m-t-10 well pull-right m-b-10 p-t-10 p-b-10">
+                            <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer">
+                                <i class="fa fa-check-circle"></i> Right Answer
+                            </button>
+                            <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer">
+                                <i class="fa fa-minus-circle"></i> Unselect Answer
+                            </button>
+                        </div>
+                        {{/class_mode}}
+                        <div class="clearfix"></div>
+                        <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>'
 
             itemViewContainer: '#students-list'
 
@@ -61,6 +61,7 @@ define ['app'], (App)->
                 'click .tiles.single.selectable': 'selectStudent'
                 'click #right-answer': 'addToCorrectList'
                 'click #wrong-answer': 'removeFromCorrectList'
+                'click #question-done': 'questionCompleted'
 
             serializeData: ->
                 data = super()
@@ -72,10 +73,6 @@ define ['app'], (App)->
             onShow: ->
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
-
-                if not Marionette.getOption(@, 'nextItemID')
-                    @$el.find "#question-done"
-                    .html '<i class="fa fa-forward"></i> Finish Module'
 
                 $ ".students"
                 .listnav
@@ -93,8 +90,7 @@ define ['app'], (App)->
                         @markAsCorrectAnswer ele
 
             selectStudent: (e)->
-
-                @$el.find '.studentActions'
+                @$el.find '.student-actions'
                 .show()
 
                 $(e.target).closest('.tiles.single').toggleClass "selected"
@@ -132,5 +128,13 @@ define ['app'], (App)->
                                         .addClass 'fa-minus-circle'
 
                 @trigger "save:question:response", @correctAnswers
+
+            questionCompleted: ->
+                if (_.size(@correctAnswers) < 1) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
+                    if confirm 'This item will be marked as complete. None of the options have been selected. Continue?'
+                        @trigger "question:completed", "no_answer"
+                else
+                    if confirm 'This item will be marked as complete. Continue?'
+                        @trigger "question:completed"
 
 

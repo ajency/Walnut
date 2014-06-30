@@ -16,14 +16,13 @@ define(['app'], function(App) {
 
       McqView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-container');
-        this.$el.parent().parent().off('click', this._showProperties);
-        this.$el.parent().parent().on('click', this._showProperties);
+        this.$el.closest('.element-wrapper').off('click', this._showProperties);
+        this.$el.closest('.element-wrapper').on('click', this._showProperties);
         this.trigger("create:row:structure", {
           container: this.$el
         });
-        this.$el.find('.aj-imp-drag-handle').remove();
-        this.$el.find('.aj-imp-delete-btn').remove();
-        return this.$el.find('.aj-imp-settings-btn').remove();
+        this.$el.find('.row').closest('.element-wrapper').children('.element-controls').find('.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-delete-btn').remove();
+        return this.$el.children('.element-wrapper').children('.element-markup').children('.row').children('.column').sortable('disable');
       };
 
       McqView.prototype._showProperties = function(evt) {
@@ -53,6 +52,26 @@ define(['app'], function(App) {
         return _.each(unselectedOptions, _.bind(this._tickToggleOption, this, false));
       };
 
+      McqView.prototype.onGetAllOptionElements = function() {
+        var elements, elementsArray;
+        elements = this.$el.children('.element-wrapper').children('.element-markup').children('.row').children('.column').find('.row').find('.element-wrapper');
+        elementsArray = new Array();
+        console.log(elementsArray);
+        _.each(elements, function(element, index) {
+          var optionNo;
+          optionNo = parseInt($(element).closest('.column[data-option]').attr('data-option'));
+          console.log(elementsArray[optionNo - 1]);
+          elementsArray[optionNo - 1] = elementsArray[optionNo - 1] != null ? elementsArray[optionNo - 1] : new Array();
+          console.log(elementsArray[optionNo - 1]);
+          return elementsArray[optionNo - 1].push({
+            element: $(element).find('form input[name="element"]').val(),
+            meta_id: parseInt($(element).find('form input[name="meta_id"]').val())
+          });
+        });
+        this.model.set('elements', elementsArray);
+        return console.log(JSON.stringify(this.model.get('elements')));
+      };
+
       return McqView;
 
     })(Marionette.ItemView);
@@ -60,7 +79,6 @@ define(['app'], function(App) {
       __extends(McqOptionView, _super);
 
       function McqOptionView() {
-        this.configureEditor = __bind(this.configureEditor, this);
         return McqOptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -68,44 +86,24 @@ define(['app'], function(App) {
 
       McqOptionView.prototype.tagName = 'div';
 
-      McqOptionView.prototype.template = '<span class="optionNo">{{optionNo}}</span><input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no"> <div class="mcq-option-text"></div>';
+      McqOptionView.prototype.template = '<span class="optionNo">{{optionNo}}</span> <input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no">';
 
       McqOptionView.prototype.events = {
-        'click a': function(e) {
-          return e.preventDefault();
-        },
-        'blur .mcq-option-text': '_onBlur',
         'change input:checkbox': '_onClickOfCheckbox'
       };
 
       McqOptionView.prototype.onShow = function() {
-        this.$el.attr('id', 'mcq-option-' + this.model.get('optionNo'));
-        this.$el.find('.mcq-option-text').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
-        CKEDITOR.on('instanceCreated', this.configureEditor);
-        this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('.mcq-option-text').attr('id')));
-        this.editor.setData(_.stripslashes(this.model.get('text')));
-        _.delay((function(_this) {
-          return function() {
-            return $('#cke_' + _this.editor.name).on('click', function(evt) {
-              return evt.stopPropagation();
-            });
-          };
-        })(this), 500);
         this.$el.find('input:checkbox').screwDefaultButtons({
           image: 'url("../wp-content/themes/walnut/images/csscheckbox-correct.png")',
           width: 32,
           height: 26
         });
-        this.$el.parent().on("class:changed", (function(_this) {
+        return this.$el.closest('.row').closest('.column').on("class:changed", (function(_this) {
           return function() {
-            return _this.model.set('class', parseInt(_this.$el.parent().attr('data-class')));
+            _this.model.set('class', parseInt(_this.$el.closest('.row').closest('.column').attr('data-class')));
+            return console.log(_this.model.get('class'));
           };
         })(this));
-        return this.$el.parent().sortable('disable');
-      };
-
-      McqOptionView.prototype._onBlur = function() {
-        return this.model.set('text', this.$el.find('.mcq-option-text').html());
       };
 
       McqOptionView.prototype._onClickOfCheckbox = function(evt) {
@@ -116,26 +114,6 @@ define(['app'], function(App) {
           console.log('unchecked');
           return this.trigger('option:unchecked', this.model);
         }
-      };
-
-      McqOptionView.prototype.configureEditor = function(event) {
-        var editor, element;
-        editor = event.editor;
-        element = editor.element;
-        if (element.getAttribute('id') === this.$el.find('.mcq-option-text').attr('id')) {
-          return editor.on('configLoaded', function() {
-            return editor.config.placeholder = 'Type option here..';
-          });
-        }
-      };
-
-      McqOptionView.prototype.onClickCheckbox = function() {
-        this.$el.find('input:checkbox').attr('checked', true);
-        return this.$el.find('input:checkbox').parent().css('background-position', '0px -26px');
-      };
-
-      McqOptionView.prototype.onClose = function() {
-        return this.editor.destroy();
       };
 
       return McqOptionView;

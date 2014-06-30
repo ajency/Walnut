@@ -10,7 +10,7 @@ define(['app'], function(App) {
         return TrainingFooterView.__super__.constructor.apply(this, arguments);
       }
 
-      TrainingFooterView.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20"> <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm"> <i class="fa fa-forward"></i> Next </button> </div> {{#isChorus}} <h4 class="text-primary semi-bold  p-t-15 p-b-20 p-l-5 p-r-5 "> In a chorus question you will be marking a group of students in the class mode </h4> {{/isChorus}} {{#isIndividual}} <h4 class="text-primary semi-bold  p-t-15 p-b-20 p-l-5 p-r-5 "> Your individual class students will be displayed in the class mode for marking </h4> {{/isIndividual}}';
+      TrainingFooterView.prototype.template = '{{#isChorus}} <h4 class="text-primary semi-bold  p-t-15 p-b-20 p-l-5 p-r-5 "> In a chorus question you will be marking a group of students in the class mode </h4> {{/isChorus}} {{#isIndividual}} <h4 class="text-primary semi-bold  p-t-15 p-b-20 p-l-5 p-r-5 "> Your individual class students will be displayed in the class mode for marking </h4> {{/isIndividual}}';
 
       TrainingFooterView.prototype.mixinTemplateHelpers = function(data) {
         data = TrainingFooterView.__super__.mixinTemplateHelpers.call(this, data);
@@ -24,25 +24,6 @@ define(['app'], function(App) {
           }
         }
         return data;
-      };
-
-      TrainingFooterView.prototype.initialize = function() {
-        console.log('view ');
-        return this.question_type = Marionette.getOption(this, 'question_type');
-      };
-
-      TrainingFooterView.prototype.events = {
-        'click #question-done': '_changeQuestion'
-      };
-
-      TrainingFooterView.prototype.onShow = function() {
-        if (!Marionette.getOption(this, 'nextItemID')) {
-          return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
-        }
-      };
-
-      TrainingFooterView.prototype._changeQuestion = function() {
-        return this.trigger('next:question');
       };
 
       return TrainingFooterView;

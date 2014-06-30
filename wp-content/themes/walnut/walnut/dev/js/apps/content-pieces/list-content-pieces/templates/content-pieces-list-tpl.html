@@ -7,8 +7,14 @@
             <div class="filters">
                 <div class="table-tools-actions">
                     <span id="textbook-filters"></span>
-                    <select class="content-type-filter" id="content-type-filter" style="width:200px">
-                        <option value="">All</option>
+                    <select class="select2-filters" id="content-post-status-filter" style="width:150px">
+                        <option value="">All Status</option>
+                        <option value="pending">Under Review</option>
+                        <option value="publish">Published</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                    <select class="content-type-filter select2-filters" id="content-type-filter" style="width:200px">
+                        <option value="">All Types</option>
                         <option value="teacher_question">Teacher Question</option>
                         <option value="student_question">Student Question</option>
                         <option value="content_piece">Content Piece</option>

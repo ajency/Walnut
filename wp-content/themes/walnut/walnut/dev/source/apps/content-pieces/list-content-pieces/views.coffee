@@ -7,10 +7,10 @@ define ['app'
             className: 'gradeX odd'
 
             template:   '<td>{{&post_excerpt}}</td>
-                        <td>{{post_author_name}}</td>
-                        <td>{{modified_date}}</td>
-                        <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
-                            <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>'
+                                    <td>{{post_author_name}}</td>
+                                    <td>{{modified_date}}</td>
+                                    <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
+                                        <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>'
 
             serializeData:->
                 data= super()
@@ -41,7 +41,10 @@ define ['app'
             itemViewContainer: '#list-content-pieces'
 
             events:
-                'change .filters' :(e)->
+                'change #content-post-status-filter, .content-type-filter'  :->
+                    @setFilteredContent()
+
+                'change .textbook-filter' :(e)->
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
             onShow:->
@@ -51,8 +54,8 @@ define ['app'
                 @$el.find '#textbook-filters'
                 .html textbookFiltersHTML
 
-                $ "#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter"
-                .select2();
+                @$el.find ".select2-filters"
+                .select2()
 
                 $('#content-pieces-table').tablesorter();
 
@@ -69,11 +72,15 @@ define ['app'
                     when 'chapters-filter' then $.populateSections filteredCollection, @$el
                     when 'sections-filter' then $.populateSubSections filteredCollection, @$el
 
+                @setFilteredContent()
+
+
+            setFilteredContent:->
                 filtered_data= $.filterTableByTextbooks(@)
 
                 @collection.set filtered_data
 
-                $("#content-pieces-table").trigger "updateCache"
+                $('#content-pieces-table').trigger "updateCache"
                 pagerOptions =
                     container : $(".pager")
                     output : '{startRow} to {endRow} of {totalRows}'

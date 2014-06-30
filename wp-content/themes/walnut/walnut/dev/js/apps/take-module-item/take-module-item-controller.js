@@ -56,6 +56,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
+        this.listenTo(this.layout.moduleDetailsRegion, "goto:next:question", this._changeQuestion);
         return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
       };
 
@@ -173,16 +174,14 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
                 questionResponseModel: questionResponseModel,
                 studentCollection: studentCollection,
                 display_mode: _this.display_mode,
-                timerObject: _this.timerObject,
-                nextItemID: _this._getNextItemID()
+                timerObject: _this.timerObject
               });
             } else if (question_type === 'chorus') {
               return App.execute("show:single:question:chorus:options:app", {
                 region: _this.layout.studentsListRegion,
                 questionResponseModel: questionResponseModel,
                 display_mode: _this.display_mode,
-                timerObject: _this.timerObject,
-                nextItemID: _this._getNextItemID()
+                timerObject: _this.timerObject
               });
             } else if (question_type === 'multiple_eval') {
               return App.execute("show:single:question:multiple:evaluation:app", {
@@ -191,8 +190,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
                 studentCollection: studentCollection,
                 display_mode: _this.display_mode,
                 timerObject: _this.timerObject,
-                evaluationParams: contentPiece.get('grading_params'),
-                nextItemID: _this._getNextItemID()
+                evaluationParams: contentPiece.get('grading_params')
               });
             }
           };

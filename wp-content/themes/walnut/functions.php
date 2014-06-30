@@ -8,6 +8,7 @@ if (!isset($content_width))
 require_once 'underscore.php';
 require_once 'modules/school/ajax.php';
 require_once 'modules/content-pieces/ajax.php';
+require_once 'modules/content-modules/ajax.php';
 require_once 'modules/textbooks/ajax.php';
 require_once 'modules/menus/ajax.php';
 require_once 'modules/user/ajax.php';

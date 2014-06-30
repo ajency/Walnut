@@ -21,12 +21,6 @@ define ['app'
                     if not @contentPieceModel.get 'ID'
                         @contentPieceModel.set 'content_type' : @contentType
 
-                #command to help trigger of Options/Meta settings save to model
-                #when save button is clicked from property dock
-                #save needs to happen only after meta settings are set to model
-
-                @saveModelCommand = new Backbone.Wreqr.Commands();
-
                 breadcrumb_items =
                     'items' : [
                         { 'label' : 'Dashboard', 'link' : 'javascript://' },
@@ -50,7 +44,6 @@ define ['app'
                         region : @layout.optionsBarRegion
                         contentType : @contentType
                         contentPieceModel : @contentPieceModel
-                        saveModelCommand : @saveModelCommand
 
                     App.execute "show:element:box",
                         region : @layout.elementBoxRegion
@@ -62,7 +55,7 @@ define ['app'
 
                     App.execute "show:property:dock",
                         region : @layout.PropertyRegion
-                        saveModelCommand : @saveModelCommand
+                        contentPieceModel : @contentPieceModel
 
                     if @contentPieceModel.get('question_type')? and
                     @contentPieceModel.get('question_type') is 'multiple_eval'
@@ -96,9 +89,6 @@ define ['app'
             className : 'content-creator-layout'
 
             template : '<div id="options-bar-region"></div>
-                                    <div class="page-title">
-                                      <h3>Add <span class="semi-bold">Question</span></h3>
-                                    </div>
                                     <div class="creator">
                                     <div class="tiles" id="toolbox"></div>
                                     <div class="" id="content-builder"></div>
