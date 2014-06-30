@@ -15,15 +15,54 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{&post_excerpt}}</td> <td>{{post_author_name}}</td> <td>{{modified_date}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>';
+      ListItemView.prototype.template = '<td>{{&post_excerpt}}</td> <td>{{post_author_name}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{modified_date}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> {{&edit_link}}</td>';
 
       ListItemView.prototype.serializeData = function() {
-        var data;
+        var data, edit_url, _ref;
         data = ListItemView.__super__.serializeData.call(this);
-        data.modified_date = moment(this.model.get('post_modified')).format("Do MMM YYYY");
-        data.view_url = SITEURL + '/#content-piece/' + this.model.get('ID');
-        data.edit_url = SITEURL + '/content-creator/#edit-content/' + this.model.get('ID');
+        data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
+        data.view_url = SITEURL + '/#content-piece/' + data.ID;
+        edit_url = SITEURL + '/content-creator/#edit-content/' + data.ID;
+        data.edit_link = '';
+        if (data.post_status === 'pending') {
+          data.edit_link = ' <span class="nonDevice">|</span> <a target="_blank" href="' + edit_url + '" class="nonDevice">Edit</a>';
+        }
+        data.textbookName = (function(_this) {
+          return function() {
+            var textbook;
+            textbook = _.findWhere(_this.textbooks, {
+              "id": data.term_ids.textbook
+            });
+            return textbook.name;
+          };
+        })(this);
+        data.chapterName = (function(_this) {
+          return function() {
+            var chapter;
+            chapter = _.chain(_this.chapters.findWhere({
+              "id": data.term_ids.chapter
+            })).pluck('name').compact().value();
+            return chapter;
+          };
+        })(this);
+        data.statusMessage = function() {
+          if (data.post_status === 'pending') {
+            return '<span class="label label-important">Under Review</span>';
+          } else if (data.post_status === 'publish') {
+            return '<span class="label label-info">Published</span>';
+          } else if (data.post_status === 'archive') {
+            return '<span class="label label-success">Archived</span>';
+          }
+        };
+        if ((_ref = data.status) === 'publish' || _ref === 'archive') {
+          data.archivedModule = true;
+        }
         return data;
+      };
+
+      ListItemView.prototype.initialize = function(options) {
+        this.textbooks = options.textbooksCollection;
+        return this.chapters = options.chaptersCollection;
       };
 
       return ListItemView;
@@ -64,6 +103,13 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListView.prototype.itemViewContainer = '#list-content-pieces';
 
+      ListView.prototype.itemViewOptions = function() {
+        return {
+          textbooksCollection: this.textbooks,
+          chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
+        };
+      };
+
       ListView.prototype.events = {
         'change #content-post-status-filter, .content-type-filter': function() {
           return this.setFilteredContent();
@@ -71,6 +117,19 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         }
+      };
+
+      ListView.prototype.initialize = function() {
+        this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
+        this.textbooks = new Array();
+        return this.textbooksCollection.each((function(_this) {
+          return function(textbookModel, ind) {
+            return _this.textbooks.push({
+              'name': textbookModel.get('name'),
+              'id': textbookModel.get('term_id')
+            });
+          };
+        })(this));
       };
 
       ListView.prototype.onShow = function() {
