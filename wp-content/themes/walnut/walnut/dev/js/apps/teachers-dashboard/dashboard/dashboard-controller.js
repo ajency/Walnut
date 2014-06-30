@@ -49,7 +49,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
 
       TeachersDashboardView.prototype.template = teachersDashboardTpl;
 
-      TeachersDashboardView.prototype.className = 'row';
+      TeachersDashboardView.prototype.className = 'teacher-app';
 
       TeachersDashboardView.prototype.events = {
         'change #class': function(e) {
@@ -58,9 +58,16 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         'click .submit-btn': 'onSubmitClicked'
       };
 
+      TeachersDashboardView.prototype.mixinTemplateHelpers = function() {
+        var data;
+        data = TeachersDashboardView.__super__.mixinTemplateHelpers.call(this, data);
+        data.divisions = _.chain(this.collection.toJSON()).groupBy('class_id').toArray().value();
+        data.class_ids = _.unique(this.collection.pluck('class_id'));
+        return data;
+      };
+
       TeachersDashboardView.prototype.onShow = function() {
         var c, c_id, class_ids, classes_dropdown, unique_classes, _i, _j, _len, _len1;
-        console.log(this.collection);
         class_ids = this.collection.pluck('class_id');
         class_ids = _.uniq(class_ids);
         unique_classes = [];

@@ -12,24 +12,17 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/teacher-t
 
       Controller.prototype.initialize = function(opts) {
         var contentPiece;
-        contentPiece = opts.contentPiece, this.nextItemID = opts.nextItemID;
+        contentPiece = opts.contentPiece;
         this.question_type = contentPiece.get('question_type');
         this.contentPieceId = contentPiece.get('ID');
-        console.log(this.contentPieceId);
         this.view = this._getFooterView(contentPiece);
-        this.listenTo(this.view, "next:question", this._changeQuestion);
         return this.show(this.view);
-      };
-
-      Controller.prototype._changeQuestion = function() {
-        return this.region.trigger('goto:next:question', this.contentPieceId);
       };
 
       Controller.prototype._getFooterView = function(contentPiece) {
         return new TeacherTrainingFooter.Views.TrainingFooterView({
           question_type: this.question_type,
-          model: contentPiece,
-          nextItemID: this.nextItemID
+          model: contentPiece
         });
       };
 

@@ -65,7 +65,10 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       ListView.prototype.itemViewContainer = '#list-content-pieces';
 
       ListView.prototype.events = {
-        'change .filters': function(e) {
+        'change #content-post-status-filter, .content-type-filter': function() {
+          return this.setFilteredContent();
+        },
+        'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         }
       };
@@ -76,7 +79,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
-        $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
+        this.$el.find(".select2-filters").select2();
         $('#content-pieces-table').tablesorter();
         pagerOptions = {
           container: $(".pager"),
@@ -86,7 +89,6 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
-        var filtered_data, pagerOptions;
         switch (filterType) {
           case 'textbooks-filter':
             $.populateChapters(filteredCollection, this.$el);
@@ -97,9 +99,14 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
           case 'sections-filter':
             $.populateSubSections(filteredCollection, this.$el);
         }
+        return this.setFilteredContent();
+      };
+
+      ListView.prototype.setFilteredContent = function() {
+        var filtered_data, pagerOptions;
         filtered_data = $.filterTableByTextbooks(this);
         this.collection.set(filtered_data);
-        $("#content-pieces-table").trigger("updateCache");
+        $('#content-pieces-table').trigger("updateCache");
         pagerOptions = {
           container: $(".pager"),
           output: '{startRow} to {endRow} of {totalRows}'

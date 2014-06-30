@@ -9,7 +9,8 @@ define ['app'], (App)->
             template : '<div class="preview">
                             <div class="" id="top-panel"></div>
                             <div class="" id="content-board"></div>
-                            <div class="tiles grey text-grey b-grey b-b m-t-20">
+                            <input type="button" class="btn-primary" id="submit-answer-button" value="submit">
+                            <!--<div class="tiles grey text-grey b-grey b-b m-t-20">
                                 <div class="grid simple m-b-0 transparent">
                                     <div class="grid-title no-border qstnInfo">
                                         <p class="bold small-text inline text-grey"><i class="fa fa-question"></i> Additional Information </p>
@@ -19,7 +20,7 @@ define ['app'], (App)->
                                         <p class="">{{instructions}}</p>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>'
 
             regions :

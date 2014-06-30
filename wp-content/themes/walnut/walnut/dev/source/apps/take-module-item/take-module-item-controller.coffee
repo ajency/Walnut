@@ -61,6 +61,8 @@ define ['app'
 
                 @listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoPreviousRoute
 
+                @listenTo @layout.moduleDetailsRegion, "goto:next:question", @_changeQuestion
+
                 @listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
             _changeQuestion : =>
@@ -174,7 +176,6 @@ define ['app'
                             studentCollection : studentCollection
                             display_mode : @display_mode
                             timerObject : @timerObject
-                            nextItemID : @_getNextItemID()
 
                     else if question_type is 'chorus'
                         App.execute "show:single:question:chorus:options:app",
@@ -182,7 +183,6 @@ define ['app'
                             questionResponseModel : questionResponseModel
                             display_mode : @display_mode
                             timerObject : @timerObject
-                            nextItemID : @_getNextItemID()
 
                     else if question_type is 'multiple_eval'
 
@@ -193,7 +193,6 @@ define ['app'
                             display_mode : @display_mode
                             timerObject : @timerObject
                             evaluationParams : contentPiece.get 'grading_params'
-                            nextItemID : @_getNextItemID()
 
 
 

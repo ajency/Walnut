@@ -56,7 +56,7 @@ define(['app'], function(App) {
         elements = $element.children('.element-wrapper');
         _.each(elements, (function(_this) {
           return function(element, index) {
-            var ele;
+            var ele, elementsArray;
             ele = {
               element: $(element).find('form input[name="element"]').val(),
               meta_id: parseInt($(element).find('form input[name="meta_id"]').val())
@@ -90,6 +90,24 @@ define(['app'], function(App) {
                 };
                 return ele.elements.push(col);
               });
+            }
+            if (ele.element === 'Mcq') {
+              elements = $(element).find('.mcq').children('.element-wrapper').children('.element-markup').children('.row').children('.column').find('.row').find('.element-wrapper');
+              elementsArray = new Array();
+              console.log(elementsArray);
+              _.each(elements, function(element, index) {
+                var optionNo;
+                optionNo = parseInt($(element).closest('.column[data-option]').attr('data-option'));
+                console.log(elementsArray[optionNo - 1]);
+                elementsArray[optionNo - 1] = elementsArray[optionNo - 1] != null ? elementsArray[optionNo - 1] : new Array();
+                console.log(elementsArray[optionNo - 1]);
+                return elementsArray[optionNo - 1].push({
+                  element: $(element).find('form input[name="element"]').val(),
+                  meta_id: parseInt($(element).find('form input[name="meta_id"]').val())
+                });
+              });
+              console.log(JSON.stringify(elementsArray));
+              ele.elements = elementsArray;
             }
             return arr.push(ele);
           };

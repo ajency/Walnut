@@ -9,18 +9,22 @@ define ['app'
         class View.AdminModulesController extends RegionController
             initialize: ->
 
-                @contentGroupsCollection =null
-                @fullCollection= null
-                @allChaptersCollection = null
-                @textbooksCollection = App.request "get:textbooks"
+                @contentGroupsCollection    = null
+                @fullCollection             = null
+                @allChaptersCollection      = null
+                @textbooksCollection        = null
 
                 @divisionsCollection = App.request "get:divisions"
 
                 App.execute "when:fetched", @divisionsCollection, =>
                     division= @divisionsCollection.first().get 'id'
-                    @contentGroupsCollection = App.request "get:content:groups", 'division': division
+                    class_id= @divisionsCollection.first().get 'class_id'
+                    @contentGroupsCollection = App.request "get:content:groups",
+                        division: division
+                        class_id: class_id
 
-                    App.execute "when:fetched", @contentGroupsCollection, =>
+                    @textbooksCollection = App.request "get:textbooks", ('class_id': class_id)
+                    App.execute "when:fetched", [@contentGroupsCollection,@textbooksCollection], =>
                         #division= @textbooksCollection.first().get 'id'
                         chapter_ids= _.chain @contentGroupsCollection.pluck 'term_ids'
                                     .pluck 'chapter'
@@ -44,10 +48,27 @@ define ['app'
                                     @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType
 
                             @listenTo @view, "division:changed", (division)=>
-                                newModulesCollection = App.request "get:content:groups", ('division': division)
-                                App.execute "when:fetched", newModulesCollection, =>
+                                class_id = @divisionsCollection.findWhere 'id': division
+                                .get 'class_id'
+
+                                newModulesCollection = App.request "get:content:groups",
+                                    division    : division
+                                    class_id    : class_id
+
+                                @textbooksCollection = App.request "get:textbooks", ('class_id': class_id)
+                                App.execute "when:fetched", [newModulesCollection,@textbooksCollection ], =>
                                     fullCollection = newModulesCollection.clone()
-                                    @view.triggerMethod "new:collection:fetched", newModulesCollection,fullCollection
+                                    @view.triggerMethod "new:collection:fetched", newModulesCollection,fullCollection,@textbooksCollection
+
+                            @listenTo @view, "save:communications", (data)=>
+                                data=
+                                    message_type        : 'modules_completed'
+                                    communication_mode  : data.communication_mode
+                                    additional_data:
+                                        module_ids      : data.moduleIDs
+                                        division        : data.division
+
+                                App.request "save:communications",data
 
 
             _getContentGroupsListingView: (collection)=>

@@ -18,7 +18,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           audio_id: 0,
           height: 0,
           width: 0,
-          audioUrl: 'http://www.jplayer.org/audio/ogg/Miaow-04-Lismore.ogg'
+          audioUrl: ''
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -34,10 +34,35 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.renderElement = function() {
-        var view;
+        var audioModel, view;
         this.removeSpinner();
-        view = this._getAudioView();
-        return this.layout.elementRegion.show(view);
+        view = this.view = this._getAudioView();
+        this.layout.elementRegion.show(view);
+        audioModel = App.request("get:media:by:id", this.layout.model.get('audio_id'));
+        return App.execute("when:fetched", audioModel, (function(_this) {
+          return function() {
+            view = _this.view = _this._getAudioView(audioModel);
+            _this.listenTo(view, "show:media:manager", function() {
+              App.execute("show:media:manager:app", {
+                region: App.dialogRegion,
+                mediaType: 'audio'
+              });
+              _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
+                _this.layout.model.set({
+                  'audio_id': media.get('id'),
+                  'audioUrl': media.get('url')
+                });
+                _this.layout.model.save();
+                _this.layout.elementRegion.show(_this.view);
+                return _this.stopListening(App.vent, "media:manager:choosed:media");
+              });
+              return _this.listenTo(App.vent, "stop:listening:to:media:manager", function() {
+                return _this.stopListening(App.vent, "media:manager:choosed:media");
+              });
+            });
+            return _this.layout.elementRegion.show(_this.view);
+          };
+        })(this));
       };
 
       return Controller;

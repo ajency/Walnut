@@ -47,9 +47,7 @@ define ['app'
                     App.execute "close:question:elements"
 
                 App.commands.setHandler 'save:fib:text', ->
-                    _.delay ->
-                        view.triggerMethod 'save:text'
-                    , 500
+                    view.triggerMethod 'save:text'
 
                 # # on show disable all question elements in d element box
                 # @listenTo view, "show",=>
@@ -74,7 +72,9 @@ define ['app'
                 # @layout.model.set 'marks',@layout.model.get('marks')+1
 
                 # show the view
-                @layout.elementRegion.show view, (loading: true)
+                @layout.elementRegion.show view,
+                    loading: true
+                    entities: [@layout.model]
 
             _getFibView: (model)->
                 new Fib.Views.FibView

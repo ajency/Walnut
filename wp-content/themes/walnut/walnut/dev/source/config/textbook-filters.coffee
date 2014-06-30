@@ -7,17 +7,17 @@ define ['jquery', 'underscore'], ($, _)->
             textbookItems += '<option value='+t.get('term_id')+'>'+t.get('name')+'</option>'
 
         divHtml= '<select class="textbook-filter select2-filters" id="textbooks-filter" style="width:150px">
-                    <option value="">All Textbooks</option>'+textbookItems +
-                '</select>
-                <select class="textbook-filter select2-filters" id="chapters-filter" style="width:150px">
-                    <option value="">All Chapters</option>
-                </select>
-                <select class="textbook-filter select2-filters" id="sections-filter" style="width:150px">
-                    <option value="">All Sections</option>
-                </select>
-                <select class="textbook-filter select2-filters" id="subsections-filter" style="width:200px">
-                    <option value="">All Sub Sections</option>
-                </select>'
+                            <option value="">All Textbooks</option>'+textbookItems +
+        '</select>
+                        <select class="textbook-filter select2-filters" id="chapters-filter" style="width:150px">
+                            <option value="">All Chapters</option>
+                        </select>
+                        <select class="textbook-filter select2-filters" id="sections-filter" style="width:150px">
+                            <option value="">All Sections</option>
+                        </select>
+                        <select class="textbook-filter select2-filters" id="subsections-filter" style="width:200px">
+                            <option value="">All Sub Sections</option>
+                        </select>'
 
     # populate chapters/sections/subsections
     # items is either the collection or individual models
@@ -147,6 +147,8 @@ define ['jquery', 'underscore'], ($, _)->
         content_type = _this.$el.find('#content-type-filter').val()
         content_status = _this.$el.find('#content-status-filter').val()
 
+        content_post_status = _this.$el.find('#content-post-status-filter').val()
+
         filtered_models= fullCollection.models
 
         if content_type
@@ -154,6 +156,9 @@ define ['jquery', 'underscore'], ($, _)->
 
         if content_status
             filtered_models =  fullCollection.where 'status': content_status
+
+        if content_post_status
+            filtered_models =  fullCollection.where 'post_status': content_post_status
 
         if _.size(filter_ids) > 0
             filtered_data = _.filter filtered_models, (item)=>
