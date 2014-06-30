@@ -49,7 +49,9 @@ define ['app'], (App)->
             						</div>
             						{{/class_mode}}
             						<div class="clearfix"></div>
-            						<div class="row students m-l-0 m-r-0 m-t-20" id="students-list"></div>'
+            						<div class="row students m-l-0 m-r-0 m-t-20" id="students-list">
+                            <h3 id="select-an-item" class="no-margin semi-bold muted">Select a student to grade</h3>
+                        </div>'
 
             itemViewContainer: '#students-list'
 
@@ -73,6 +75,10 @@ define ['app'], (App)->
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
+                else
+                    @$el.find '#select-an-item'
+                    .hide()
+
                 if not Marionette.getOption(@, 'nextItemID')
                     @$el.find "#question-done"
                     .html '<i class="fa fa-forward"></i> Finish Module'
@@ -93,6 +99,9 @@ define ['app'], (App)->
                         @markAsCorrectAnswer ele
 
             selectStudent: (e)->
+
+                @$el.find '#select-an-item'
+                .remove()
 
                 @$el.find '.studentActions'
                 .show()
