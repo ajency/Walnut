@@ -34,6 +34,7 @@ define(['app'], function(App) {
 
       AudioView.prototype.onShow = function() {
         return this.$el.find('audio').panzer({
+          theme: 'light',
           layout: 'big',
           expanded: true,
           showduration: true

@@ -112,7 +112,7 @@ define ['app'
 
             template : collectionDetailsTpl
 
-            className : 'tiles white grid simple vertical green animated slideInRight'
+            className : 'tiles white grid simple vertical green animated fadeIn'
 
             events :
                 'change #textbooks' : (e)->

@@ -41,6 +41,7 @@ define ['app'], (App)->
 
             onShow: ->
                 @$el.find('audio').panzer
+                    theme: 'light'
                     layout: 'big'
                     expanded: true
                     showduration: true
