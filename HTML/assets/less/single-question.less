@@ -51,7 +51,7 @@
 
 .contentInfo{
 	float: right;
-	padding: 20px;
+	padding: 20px 20px 10px;
 }
 
 .contentTime, .contentInfo{
@@ -68,13 +68,21 @@
 		margin: 0;
 		margin-left: auto;
 	}
+	#top-panel{
+		float: left;
+		margin-left: 2px;
+	}
+	.contentTime{
+		margin-bottom: 8px;
+	}
 	.contentTime, .contentInfo{
-		margin: 0;
-		left: 5px;
-		position: absolute;
+		// margin: 0;
+		// left: 5px;
+		// position: absolute;
+		float: none;
 	}
 	.contentInfo{
-		top: 280px;
+		// top: 175px;
 	}
 }
 .answrMsg{
@@ -100,6 +108,41 @@
 	.content{
 		padding: 0;
 	}
+}
+
+#module-details-region{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 2;
+	&.condensed{
+		.moduleInfo > div{
+			padding: 0;
+			.modTime{
+				display: none;
+			}
+			.modTime.next, .modTime.pause{
+				display: block;
+				float: right;
+				padding: 0 10px 5px;
+				.btn{
+					margin-top: 5px;
+				}
+			}
+			.modTime.pause{
+				float: left;
+				h4{
+					font-size: 17px;
+					line-height: 22px;
+				}
+			}
+		}
+	}
+}
+
+#question-details-region{
+	margin-top: 90px;
 }
 
 

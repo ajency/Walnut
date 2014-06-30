@@ -9,9 +9,10 @@ define ['app'], (App)->
             template : '<div class="preview">
                             <div class="" id="top-panel"></div>
                             <div class="" id="content-board"></div>
-                            {{#content_preview}}
+                             {{#content_preview}}
                             <input type="button" class="btn btn-info btn-cons2" id="submit-answer-button" value="submit">
                             {{/content_preview}}
+                            <div class="clearfix"></div>
                             <!--<div class="tiles grey text-grey b-grey b-b m-t-20">
                                 <div class="grid simple m-b-0 transparent">
                                     <div class="grid-title no-border qstnInfo">
@@ -28,8 +29,3 @@ define ['app'], (App)->
             regions :
                 contentBoardRegion : '#content-board'
                 topPanelRegion : '#top-panel'
-
-            mixinTemplateHelpers : (data)->
-                data = super data
-                data.content_preview = Marionette.getOption @, 'content_preview'
-                data

@@ -170,7 +170,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
                   seconds = parseInt(questionResponseModel.get("time_taken") % 60);
                   time_taken_string = minutes + 'm ' + seconds + 's';
                   correct_answer = _this.getResults();
-                  return '<div class="row"> <div class="col-xs-6"> <p> <label class="form-label bold small-text inline">Time Alloted:</label>' + model.get("duration") + 'mins<br> <label class="form-label bold small-text inline">Time Taken:</label>' + time_taken_string + '</p> </div> <div class="col-xs-6"> <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed</div> </div> </div> <div class="row" id="correct-answer-col"> <div class="col-sm-12"> <p> <label class="form-label bold small-text inline">Correct Answer:</label>' + correct_answer + '</p> </div> </div> </div>';
+                  return '<div class="p-r-20 p-b-10 p-l-20"> <div class="b-grey b-b m-b-10 p-b-5"> <div class="qstnStatus"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="b-grey b-b m-b-10 p-b-5"> <label class="form-label bold small-text muted no-margin">Time Alloted:</label>' + model.get("duration") + ' mins<br> </div> <div class="b-grey b-b m-b-10 p-b-5"> <label class="form-label bold small-text muted no-margin">Time Taken:</label>' + time_taken_string + '</div> <div id="correct-answer-col"> <div class="b-grey b-b m-b-10 p-b-5"> <label class="form-label bold small-text muted no-margin">Correct Answer:</label>' + correct_answer + '</div> </div> </div>';
                 }
               };
             })(this)

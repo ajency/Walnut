@@ -12,17 +12,11 @@ define(['app'], function(App) {
 
       Layout.prototype.className = '';
 
-      Layout.prototype.template = '<div class="preview"> <div class="" id="top-panel"></div> <div class="" id="content-board"></div> {{#content_preview}} <input type="button" class="btn btn-info btn-cons2" id="submit-answer-button" value="submit"> {{/content_preview}} <!--<div class="tiles grey text-grey b-grey b-b m-t-20"> <div class="grid simple m-b-0 transparent"> <div class="grid-title no-border qstnInfo"> <p class="bold small-text inline text-grey"><i class="fa fa-question"></i> Additional Information </p> <div class="tools"> <a href="javascript:;" class="arrow expand"></a> </div> </div> <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20"> <p class="">{{instructions}}</p> </div> </div> </div>--> </div>';
+      Layout.prototype.template = '<div class="preview"> <div class="" id="top-panel"></div> <div class="" id="content-board"></div> {{#content_preview}} <input type="button" class="btn btn-info btn-cons2" id="submit-answer-button" value="submit"> {{/content_preview}} <div class="clearfix"></div> <!--<div class="tiles grey text-grey b-grey b-b m-t-20"> <div class="grid simple m-b-0 transparent"> <div class="grid-title no-border qstnInfo"> <p class="bold small-text inline text-grey"><i class="fa fa-question"></i> Additional Information </p> <div class="tools"> <a href="javascript:;" class="arrow expand"></a> </div> </div> <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20"> <p class="">{{instructions}}</p> </div> </div> </div>--> </div>';
 
       Layout.prototype.regions = {
         contentBoardRegion: '#content-board',
         topPanelRegion: '#top-panel'
-      };
-
-      Layout.prototype.mixinTemplateHelpers = function(data) {
-        data = Layout.__super__.mixinTemplateHelpers.call(this, data);
-        data.content_preview = Marionette.getOption(this, 'content_preview');
-        return data;
       };
 
       return Layout;

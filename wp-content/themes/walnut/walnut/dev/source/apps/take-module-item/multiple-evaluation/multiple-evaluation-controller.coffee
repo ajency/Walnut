@@ -1,6 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'apps/take-module-item/multiple-evaluation/multiple-evaluation-views'
+        # 'apps/take-module-item/multiple-evaluation/multiple-evaluation-views'
         'apps/take-module-item/multiple-evaluation/student-list/student-list-controller'
         'apps/take-module-item/multiple-evaluation/evaluation/evaluation-controller'
 ], (App, RegionController)->
