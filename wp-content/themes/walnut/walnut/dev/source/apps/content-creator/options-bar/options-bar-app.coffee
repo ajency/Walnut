@@ -7,7 +7,7 @@ define ['app'
         class OptionsBarController extends RegionController
 
             initialize: (options)->
-                {saveModelCommand, @contentPieceModel}= options
+                {@contentPieceModel}= options
 
                 @view = @_getOptionsBarView @contentPieceModel
 
@@ -15,12 +15,11 @@ define ['app'
 
                 App.execute "when:fetched", [@textbooksCollection, @contentPieceModel], @showView
 
-                saveModelCommand.setHandler "save:model:data", =>
-                    @view.triggerMethod "save:question:settings"
-
                 @listenTo @view, "save:data:to:model", (data)=>
                     @contentPieceModel.set data
                     App.execute "save:question"
+
+
 
             showView: =>
                 @show @view, (loading: true, entities: [@textbooksCollection])
@@ -55,12 +54,12 @@ define ['app'
 
                 App.execute "when:fetched", chaptersCollection, =>
                     @view.triggerMethod 'fetch:chapters:complete',
-                        chaptersCollection, current_chapter
+                      chaptersCollection, current_chapter
 
             #fetch all sections and subsections beloging to the chapter id passed as term_id
             _fetchSections: (term_id)=>
                 allSectionsCollection = App.request "get:subsections:by:chapter:id",
-                    ('child_of': term_id)
+                  ('child_of': term_id)
 
                 App.execute "when:fetched", allSectionsCollection, =>
                     #make list of sections directly belonging to chapter ie. parent=term_id
@@ -99,8 +98,8 @@ define ['app'
 
                     textbooks
 
-#                studentQuestion: if @contentPieceModel.get('content_type') is 'student_question'
-#                then true else false
+        #                studentQuestion: if @contentPieceModel.get('content_type') is 'student_question'
+        #                then true else false
 
 
         App.commands.setHandler "show:options:bar", (options)->

@@ -211,6 +211,7 @@ function get_textbooks( $args = array() ) {
         'class_id' => ''
     );
 
+    $count_total=0;
     $args = wp_parse_args( $args, $defaults );
     extract( $args );
 
@@ -254,12 +255,12 @@ function get_book( $book ) {
     $current_blog = get_current_blog_id();
     switch_to_blog( 1 );
 
-    if (is_numeric( $book->term_id )) {
-        $book_id = $book->term_id;
-        $book_dets = $book;
-    } else if (is_numeric( $book )) {
+    if (is_numeric( $book )) {
         $book_id = $book;
         $book_dets = get_term( $book, 'textbook' );
+    } else if (is_numeric( $book->term_id )) {
+        $book_id = $book->term_id;
+        $book_dets = $book;
 
     } else {
         return false;
@@ -392,4 +393,32 @@ function get_chapter_subsections( $args = array() ) {
     $sections['count'] = $count_total;
 
     return $sections;
+}
+
+
+function get_textbook_subject($textbook_id){
+
+    global $wpdb;
+
+    if(!$textbook_id)
+        return false;
+
+    $textbook_relationships_table = $wpdb->base_prefix . "textbook_relationships";
+
+    $module_subject_query = $wpdb->prepare(
+        "SELECT tags FROM $textbook_relationships_table
+                WHERE textbook_id = %d",
+        $textbook_id
+    );
+
+    $subject=$wpdb->get_var($module_subject_query);
+
+    $subject = maybe_unserialize($subject);
+    $subject = __u::flatten($subject);
+
+    if($subject)
+        $subject = join(',', $subject);
+
+    return $subject;
+
 }

@@ -103,7 +103,10 @@ global $chorus_options; ?>
         document.getElementById("site_main_container").setAttribute('class', 'showAll');
     })
 </script>
-<?php if (ENV == 'dev') { ?>
+<?php
+$ver = date('YmdHis');
+if (ENV == 'dev') {
+    ?>
     <script type="text/javascript"
             data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo $ver ?>"
             src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
@@ -112,7 +115,7 @@ global $chorus_options; ?>
 
 ?>
     <script type="text/javascript"
-            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo VERSION ?>"></script>
+            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $ver ?>"></script>
 <?php } ?>
 
 </body>

@@ -1,6 +1,5 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html'], function(App, contentListTpl, listitemTpl, notextbooksTpl) {
   return App.module("ContentPiecesApp.ContentList.Views", function(Views, App) {
@@ -16,7 +15,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{post_excerpt}}</td> <td>{{post_author_name}}</td> <td>{{modified_date}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>';
+      ListItemView.prototype.template = '<td>{{&post_excerpt}}</td> <td>{{post_author_name}}</td> <td>{{modified_date}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>';
 
       ListItemView.prototype.serializeData = function() {
         var data;
@@ -37,7 +36,13 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         return EmptyView.__super__.constructor.apply(this, arguments);
       }
 
-      EmptyView.prototype.template = 'No content pieces available';
+      EmptyView.prototype.template = 'No Content Available';
+
+      EmptyView.prototype.tagName = 'td';
+
+      EmptyView.prototype.onShow = function() {
+        return this.$el.attr('colspan', 3);
+      };
 
       return EmptyView;
 
@@ -46,8 +51,6 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       __extends(ListView, _super);
 
       function ListView() {
-        this.filterTableData = __bind(this.filterTableData, this);
-        this.changeTextbooks = __bind(this.changeTextbooks, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
 
@@ -62,16 +65,21 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       ListView.prototype.itemViewContainer = '#list-content-pieces';
 
       ListView.prototype.events = {
-        'change .filters': 'filterTableData',
-        'change #textbooks-filter': 'changeTextbooks',
-        'change #chapters-filter': function(e) {
-          return this.trigger("fetch:sections:subsections", $(e.target).val());
+        'change #content-post-status-filter, .content-type-filter': function() {
+          return this.setFilteredContent();
+        },
+        'change .textbook-filter': function(e) {
+          return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         }
       };
 
       ListView.prototype.onShow = function() {
-        var pagerOptions;
-        $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
+        var pagerOptions, textbookFiltersHTML;
+        this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
+        this.fullCollection = Marionette.getOption(this, 'fullCollection');
+        textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
+        this.$el.find('#textbook-filters').html(textbookFiltersHTML);
+        this.$el.find(".select2-filters").select2();
         $('#content-pieces-table').tablesorter();
         pagerOptions = {
           container: $(".pager"),
@@ -80,111 +88,25 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         return $('#content-pieces-table').tablesorterPager(pagerOptions);
       };
 
-      ListView.prototype.changeTextbooks = function(e) {
-        this.$el.find('#chapters-filter, #sections-filter, #subsections-filter').select2('data', '');
-        return this.trigger("fetch:chapters", $(e.target).val());
+      ListView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
+        switch (filterType) {
+          case 'textbooks-filter':
+            $.populateChapters(filteredCollection, this.$el);
+            break;
+          case 'chapters-filter':
+            $.populateSections(filteredCollection, this.$el);
+            break;
+          case 'sections-filter':
+            $.populateSubSections(filteredCollection, this.$el);
+        }
+        return this.setFilteredContent();
       };
 
-      ListView.prototype.onFetchChaptersComplete = function(chapters) {
-        if (_.size(chapters) > 0) {
-          $('#chapters-filter').select2('data', {
-            'text': 'Select Chapter'
-          });
-          return _.each(chapters.models, (function(_this) {
-            return function(chap, index) {
-              return _this.$el.find('#chapters-filter').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
-            };
-          })(this));
-        } else {
-          this.$el.find('#chapters-filter,#sections-filter,#subsections-filter').html('');
-          this.$el.find('#chapters-filter').select2('data', {
-            'text': 'No chapters'
-          });
-          this.$el.find('#sections-filter').select2('data', {
-            'text': 'No Sections'
-          });
-          return this.$el.find('#subsections-filter').select2('data', {
-            'text': 'No Subsections'
-          });
-        }
-      };
-
-      ListView.prototype.onFetchSubsectionsComplete = function(allsections) {
-        if (_.size(allsections) > 0) {
-          if (_.size(allsections.sections) > 0) {
-            $('#sections-filter').select2('data', {
-              'text': 'Select Section'
-            });
-            _.each(allsections.sections, (function(_this) {
-              return function(section, index) {
-                return _this.$el.find('#sections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-              };
-            })(this));
-          } else {
-            $('#sections-filter').select2('data', {
-              'text': 'No Sections'
-            }).html('');
-          }
-          if (_.size(allsections.subsections) > 0) {
-            $('#subsections-filter').select2('data', {
-              'text': 'Select SubSection'
-            });
-            return _.each(allsections.subsections, (function(_this) {
-              return function(section, index) {
-                return _this.$el.find('#subsections-filter').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-              };
-            })(this));
-          } else {
-            return $('#subsections-filter').select2('data', {
-              'text': 'No Subsections'
-            }).html('');
-          }
-        } else {
-          $('#sections-filter,#subsections-filter').html('');
-          $('#sections-filter').select2('data', {
-            'text': 'No Sections'
-          });
-          return $('#subsections-filter').select2('data', {
-            'text': 'No Subsections'
-          });
-        }
-      };
-
-      ListView.prototype.filterTableData = function(e) {
-        var content_type, filter_ids, filtered_data, fullCollection, pagerOptions;
-        filter_ids = _.map(this.$el.find('select.textbook-filter'), function(ele, index) {
-          var item;
-          item = '';
-          if (!isNaN(ele.value)) {
-            item = ele.value;
-          }
-          return item;
-        });
-        filter_ids = _.compact(filter_ids);
-        content_type = this.$el.find('#content-type-filter').val();
-        fullCollection = Marionette.getOption(this, 'fullCollection');
-        filtered_data = fullCollection.models;
-        if (content_type !== '') {
-          filtered_data = fullCollection.where({
-            'content_type': content_type
-          });
-        }
-        if (_.size(filter_ids) > 0) {
-          filtered_data = _.filter(filtered_data, (function(_this) {
-            return function(item) {
-              var filtered_item, term_ids;
-              filtered_item = '';
-              term_ids = _.flatten(item.get('term_ids'));
-              if (_.size(_.intersection(term_ids, filter_ids)) === _.size(filter_ids)) {
-                filtered_item = item;
-              }
-              return filtered_item;
-            };
-          })(this));
-        }
+      ListView.prototype.setFilteredContent = function() {
+        var filtered_data, pagerOptions;
+        filtered_data = $.filterTableByTextbooks(this);
         this.collection.set(filtered_data);
-        console.log(this.collection);
-        $("#content-pieces-table").trigger("updateCache");
+        $('#content-pieces-table').trigger("updateCache");
         pagerOptions = {
           container: $(".pager"),
           output: '{startRow} to {endRow} of {totalRows}'

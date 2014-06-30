@@ -158,7 +158,73 @@ function user_extend_profile_fields_save($user_id) {
   
 }
 
-
-
 add_action( 'personal_options_update', 'user_extend_profile_fields_save' );
 add_action( 'edit_user_profile_update', 'user_extend_profile_fields_save' );
+
+function get_parents_by_division($division){
+
+    global $wpdb;
+
+    $student_ids= get_students_by_division($division);
+
+    $students_str = join(',',$student_ids);
+    $students_str = "(".$students_str.")";
+
+    $parents_query =$wpdb->prepare("SELECT user_id FROM {$wpdb->prefix}usermeta
+        WHERE meta_key LIKE %s
+        AND meta_value in $students_str",
+        array('parent_of')
+    );
+
+    $parent_ids= $wpdb->get_results($parents_query, ARRAY_A);
+
+    $ids= array();
+
+    foreach($parent_ids as $id)
+        $ids[]= (int) $id->user_id;
+
+    return $ids;
+}
+
+function get_parents_by_student_ids($student_ids){
+
+    global $wpdb;
+
+    $students_str = join(',',$student_ids);
+    $students_str = "(".$students_str.")";
+
+    $parents_query =$wpdb->prepare("SELECT user_id FROM {$wpdb->prefix}usermeta
+        WHERE meta_key LIKE %s
+        AND meta_value in $students_str",
+        array('parent_of')
+    );
+
+    $parent_ids= $wpdb->get_results($parents_query);
+
+    $ids= array();
+
+    foreach($parent_ids as $id)
+        $ids[]= (int) $id->user_id;
+
+    return $ids;
+}
+
+function get_students_by_division($division){
+
+    global $wpdb;
+
+    $students_query= $wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
+        WHERE meta_key LIKE %s
+        AND meta_value = %d",
+        array('student_division',$division)
+    );
+
+    $student_ids = $wpdb->get_results($students_query);
+
+    $ids= array();
+
+    foreach($student_ids as $id)
+        $ids[]= (int) $id->user_id;
+
+    return $ids;
+}

@@ -58,7 +58,7 @@ define ['app'
 				
 				totalMarks = 0
 				_.each @model.get('correct_answer') ,(option)=>
-					totalMarks = totalMarks + parseInt @model.get('elements').get(option).get('marks')
+					totalMarks = totalMarks + parseInt @model.get('options').get(option).get('marks')
 				@model.set 'marks',totalMarks
 				@ui.marksTextbox.val totalMarks
 

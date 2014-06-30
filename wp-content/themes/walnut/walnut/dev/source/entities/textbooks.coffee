@@ -38,6 +38,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                 @total = resp.count
                 resp.data
 
+            fetchChaptersOrSections: (parentID)->
+                chaptersOrSectionsCollection = App.request "get:chapters", ('parent' : parentID)
+
 
         # textbooks collection class
         class Textbooks.NamesCollection extends Backbone.Collection

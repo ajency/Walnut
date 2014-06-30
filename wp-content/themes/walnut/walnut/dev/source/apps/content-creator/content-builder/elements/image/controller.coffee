@@ -22,8 +22,8 @@ define ['app'
             bindEvents: ->
                 # start listening to model events
                 @listenTo @layout.model, "change:image_id", @renderElement
-                @listenTo @layout.model, "change:size", @renderElement
-                @listenTo @layout.model, "change:align", @renderElement
+#                @listenTo @layout.model, "change:size", @renderElement
+#                @listenTo @layout.model, "change:align", @renderElement
                 super()
 
             # private etmplate helper function
@@ -47,7 +47,7 @@ define ['app'
                 imageModel = App.request "get:media:by:id", @layout.model.get 'image_id'
 
                 console.log "imageModel "
-                console.log imageModel
+#                console.log imageModel
 
                 App.execute "when:fetched", imageModel, =>
                     view = @_getImageView imageModel
@@ -69,8 +69,8 @@ define ['app'
                     @listenTo view, "image:size:selected", (size)=>
                         @layout.model.set 'size', size
                         @layout.model.save()
-                        localStorage.setItem 'ele' + @layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
-                        console.log localStorage.getItem 'ele' + @layout.model.get('meta_id')
+#                        localStorage.setItem 'ele' + @layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+#                        console.log localStorage.getItem 'ele' + @layout.model.get('meta_id')
 
 
                     @layout.elementRegion.show view

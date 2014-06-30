@@ -68,28 +68,28 @@
   padding-top: 60px;
 }
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 300;
   src: local('Open Sans Light'), local('OpenSans-Light'), url('../fonts/OpenSans-Light.ttf') format('ttf');
   src: local('Open Sans Light'), local('OpenSans-Light'), url('../fonts/OpenSans-Light.woff') format('woff');
 }
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
   src: local('Open Sans'), local('OpenSans'), url('../fonts/OpenSans-Regular.ttf') format('ttf');
   src: local('Open Sans'), local('OpenSans'), url('../fonts/OpenSans-Regular.woff') format('woff');
 }
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 600;
   src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url('../fonts/OpenSans-Semibold.ttf') format('ttf');
   src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url('../fonts/OpenSans-Semibold.woff') format('woff');
 }
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 700;
   src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../fonts/OpenSans-Bold.ttf') format('ttf');
@@ -168,8 +168,6 @@
 }
 #myCanvas {
   background: #ffffff;
-  left: 260px;
-  top: 0;
   max-width: 760px;
   margin: 0 auto;
   min-height: 500px !important;
@@ -181,6 +179,13 @@
   padding: 20px 0;
   background: #d0d0d0;
   border: none;
+}
+.createParameters {
+  background: #ffffff;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 15px 10px;
+  margin-top: 30px;
 }
 #toolbox {
   width: 220px;
@@ -1269,8 +1274,14 @@ p.mcq-option-text {
 .hashtags {
   font-size: 13px;
 }
+.moduleInfo {
+  background: #f3f3f3;
+  border-bottom: 1px solid #c3c3c3;
+}
+.moduleInfo .btn {
+  white-space: normal;
+}
 .cpTimer {
-  max-width: 190px;
   margin: 10px auto 0;
 }
 .cpTimer .textDiv_Seconds span {
@@ -1288,12 +1299,42 @@ p.mcq-option-text {
   font-size: 22px;
 }
 #content-board {
-  margin-top: 30px;
+  margin-top: 15px;
 }
 #content-board .element-wrapper {
   border: none;
   padding: 0 7px;
   margin: 2px 0 15px;
+}
+.contentTime {
+  float: left;
+}
+.contentInfo {
+  float: right;
+  padding: 20px;
+}
+.contentTime,
+.contentInfo {
+  width: 235px;
+  background: #f3f3f3;
+  border: 1px solid #c3c3c3;
+  box-shadow: #dadada 0 0 0 3px inset;
+  margin: 0 1.5%;
+}
+@media (min-width: 1020px) and (max-width: 1295px) {
+  #myCanvas {
+    margin: 0;
+    margin-left: auto;
+  }
+  .contentTime,
+  .contentInfo {
+    margin: 0;
+    left: 5px;
+    position: absolute;
+  }
+  .contentInfo {
+    top: 280px;
+  }
 }
 .answrMsg.alert-success h3 {
   color: #007366;
@@ -1608,11 +1649,8 @@ p.mcq-option-text {
   position: relative;
   min-height: 200px;
 }
-h4.modName a {
-  color: #0090d9;
-}
 .modProgress {
-  width: 200px;
+  width: 100%;
 }
 .modProgress .progress {
   width: 100%;
@@ -1622,6 +1660,26 @@ h3.time {
 }
 .closeEval {
   cursor: pointer;
+}
+.parameters:focus {
+  outline: none;
+}
+#question-details-region {
+  min-height: 530px;
+}
+@media (max-width: 1295px) {
+  #question-details-region {
+    min-height: 585px;
+  }
+}
+.studentActions {
+  display: table;
+  margin: 0 auto;
+  border-bottom: 1px solid #c3c3c3;
+}
+.studentList {
+  margin: 0 5px;
+  position: relative;
 }
 .studentList h4 span {
   display: block;
@@ -1649,6 +1707,9 @@ h3.time {
   -webkit-transform: scale(1.3);
   -moz-transform: scale(1.3);
   transform: scale(1.3);
+}
+.studentList .students .tiles.white {
+  background-color: #f3f3f3;
 }
 .studentList .students .tiles.single.light {
   opacity: 0.2;
@@ -1789,6 +1850,16 @@ input#duration {
   color: #6a6a6a;
   font-weight: bold;
 }
+.modTimes > div {
+  width: 25%;
+  float: left;
+  padding: 0 10px;
+}
+.moduleInfo .modTime {
+  width: 20%;
+  float: left;
+  padding: 0 10px 10px;
+}
 .panel-default > .panel-heading {
   background-color: transparent;
 }
@@ -1805,24 +1876,36 @@ input#duration {
 .quizWrong {
   font-size: 25px;
 }
+.practiceNote {
+  position: fixed;
+  width: 100%;
+  z-index: 2;
+}
+.practiceNote + div {
+  padding-top: 80px;
+}
 .quizTimer {
   margin: 0 auto 0;
 }
 .quizActions {
   max-width: 760px;
 }
+.timerBox {
+  float: right;
+}
 .timerBox,
 .quizProgress {
-  width: 250px;
-  background: #ffffff;
+  width: 235px;
+  background: #cdcdcd;
+  margin: 0 1.5%;
+}
+.quizProgress {
+  float: left;
 }
 .quizSteps ul {
   list-style-type: none;
   padding: 0;
   margin-bottom: 0;
-}
-.quizSteps ul:after {
-  clear: both;
 }
 .quizSteps ul li {
   text-align: center;
@@ -1832,23 +1915,208 @@ input#duration {
   padding: 30px 0;
   width: 33.3%;
   float: left;
+  position: relative;
   border: 1px solid #f3f3f3;
   background: #e6e6e6;
+  font-size: 24px;
 }
 .quizSteps ul li a:hover {
   background: #f3f3f3;
+}
+.quizSteps ul li a:before {
+  position: absolute;
+  font-family: 'FontAwesome';
+  font-size: 20px;
+  font-weight: normal;
 }
 .quizSteps ul li.right a {
   background: #0aa699;
   color: #ffffff;
 }
+.quizSteps ul li.right a:hover {
+  background: #07766d;
+}
+.quizSteps ul li.right a:before {
+  content: "\f00c";
+  bottom: 6px;
+  right: 6px;
+}
 .quizSteps ul li.wrong a {
   background: #f35958;
   color: #ffffff;
 }
+.quizSteps ul li.wrong a:hover {
+  background: #f02a28;
+}
+.quizSteps ul li.wrong a:before {
+  content: "\f00d";
+  bottom: 6px;
+  right: 6px;
+}
 .quizSteps ul li.skip a {
   background: #0090d9;
   color: #ffffff;
+}
+.quizSteps ul li.skip a:hover {
+  background: #006ea6;
+}
+.quizSteps ul li.skip a:before {
+  content: "\f021";
+  bottom: 6px;
+  right: 8px;
+  font-size: 18px;
+}
+.quizSteps ul li.current a {
+  box-shadow: inset 0 0 0 10px #a6a6a6;
+}
+.quizSteps ul li.current a:before {
+  color: #a6a6a6;
+  font-size: 28px;
+  content: "\f0d8";
+  bottom: 4px;
+  left: 40%;
+}
+.customButtons {
+  padding: 15px 15px 20px;
+}
+.customButtons span {
+  cursor: pointer;
+  font-size: 24px;
+}
+.customButtons .jp-disabled {
+  opacity: 0.5;
+}
+.holder {
+  margin: 0 auto;
+  text-align: center;
+  line-height: 18px;
+}
+.holder a {
+  background-color: #e5e9ec;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 6px;
+  padding: 5px 15px;
+}
+.holder a:hover {
+  background-color: #e5e9ec;
+}
+.holder a.jp-current {
+  background-color: #0090d9;
+}
+.holder a.jp-current:hover {
+  background-color: #0090d9;
+}
+.holder a.jp-disabled {
+  background-color: #e5e9ec;
+}
+.holder a.jp-disabled:hover {
+  background-color: #c8d0d6;
+}
+@media (min-width: 1020px) and (max-width: 1295px) {
+  .timerBox,
+  .quizProgress {
+    margin: 0;
+    left: 0;
+    position: absolute;
+  }
+  .timerBox {
+    top: 420px;
+  }
+  .quizActions {
+    margin: 0;
+    margin-left: auto;
+  }
+  .sidebarContainer {
+    position: relative;
+  }
+  .qstnInfo {
+    margin-top: 100px;
+  }
+}
+@media (max-width: 1019px) {
+  .sidebarContainer {
+    position: absolute;
+    bottom: 0;
+    z-index: 999;
+    width: 100%;
+  }
+  .sidebarContainer .timerBox {
+    float: left;
+    width: 35%;
+    margin: 0;
+  }
+  .sidebarContainer .quizProgress {
+    float: left;
+    width: 65%;
+    margin: 0;
+  }
+  .sidebarContainer .quizProgress .quizSteps ul li a {
+    width: 15%;
+  }
+}
+/*Dashboard*/
+.teacher-app {
+  max-width: 1164px;
+  margin: 0 auto;
+}
+#teacherOptns {
+  text-align: center;
+  margin-bottom: 30px;
+}
+#teacherOptns h3 {
+  display: inline-block;
+}
+#teacherOptns h3:last-child {
+  border-right: none;
+}
+#teacherOptns h3 a {
+  padding: 0 20px;
+}
+#teacherOptns h3 a.active,
+#teacherOptns h3 a:hover {
+  border-bottom: 4px solid #0090d9;
+}
+#teacherOptns h3 a.active {
+  font-weight: 600;
+}
+ul.classes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+ul.classes > li {
+  width: 15.2%;
+  height: 88px;
+  float: left;
+  margin-right: 1.5%;
+  margin-bottom: 20px;
+}
+ul.classes > li:nth-child(6n) {
+  margin-right: 0;
+}
+ul.classes a {
+  background: #f3f3f3;
+  border: 1px solid #c3c3c3;
+  box-shadow: #dadada 0 0 0 3px inset;
+  display: table;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  font-size: 21px;
+  color: #8d8d8d;
+}
+ul.classes a:hover {
+  border: 3px solid #dadada;
+  background: #0090d9;
+  color: #ffffff;
+  box-shadow: #dadada 0 0 0 0;
+  padding: 8px;
+}
+ul.classes .classesWrap {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
 }
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
@@ -1874,6 +2142,7 @@ body {
   background-color: #e5e9ec;
   overflow-y: scroll;
   height: 100%;
+  -webkit-text-stroke: 0.1px;
 }
 #site_main_container {
   opacity: 0;
@@ -1999,6 +2268,7 @@ tbody.rowlink td {
 .scrollup {
   left: auto;
   right: 50px;
+  display: none !important;
 }
 .tiles-head {
   padding: 10px 18px 5px 24px;
@@ -2024,7 +2294,7 @@ textarea.error,
 .page-content {
   min-height: 0;
   overflow-x: hidden;
-  padding-bottom: 80px;
+  padding-bottom: 50px;
 }
 .mainLogo {
   background-size: 80%;

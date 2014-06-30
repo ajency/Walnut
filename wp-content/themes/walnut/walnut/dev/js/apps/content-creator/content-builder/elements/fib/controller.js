@@ -49,9 +49,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           return App.execute("close:question:elements");
         });
         App.commands.setHandler('save:fib:text', function() {
-          return _.delay(function() {
-            return view.triggerMethod('save:text');
-          }, 500);
+          return view.triggerMethod('save:text');
         });
         this.listenTo(view, "create:new:fib:element", (function(_this) {
           return function(blankId) {
@@ -68,7 +66,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           };
         })(this));
         return this.layout.elementRegion.show(view, {
-          loading: true
+          loading: true,
+          entities: [this.layout.model]
         });
       };
 

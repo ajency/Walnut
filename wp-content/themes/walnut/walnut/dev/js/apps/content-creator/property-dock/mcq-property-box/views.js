@@ -61,7 +61,7 @@ define(['app', 'text!apps/content-creator/property-dock/mcq-property-box/templat
         totalMarks = 0;
         _.each(this.model.get('correct_answer'), (function(_this) {
           return function(option) {
-            return totalMarks = totalMarks + parseInt(_this.model.get('elements').get(option).get('marks'));
+            return totalMarks = totalMarks + parseInt(_this.model.get('options').get(option).get('marks'));
           };
         })(this));
         this.model.set('marks', totalMarks);

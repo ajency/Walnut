@@ -8,6 +8,7 @@ if (!isset($content_width))
 require_once 'underscore.php';
 require_once 'modules/school/ajax.php';
 require_once 'modules/content-pieces/ajax.php';
+require_once 'modules/content-modules/ajax.php';
 require_once 'modules/textbooks/ajax.php';
 require_once 'modules/menus/ajax.php';
 require_once 'modules/divisions/wpadmin-custom-menus.php';
@@ -16,6 +17,7 @@ require_once 'modules/media/ajax.php';
 require_once 'modules/divisions/ajax.php';
 require_once 'modules/question-response/ajax.php';
 require_once 'modules/sync-data/sync-data-ajax.php';
+require_once 'modules/communications/ajax.php';
 require_once 'custom_configs.php';
 
 

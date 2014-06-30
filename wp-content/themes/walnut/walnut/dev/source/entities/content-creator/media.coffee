@@ -49,6 +49,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 orderby : 'date'
                 paged : 1
                 posts_per_page : 40
+                searchStr: ''
 
             model : Media.MediaModel
 
@@ -57,16 +58,19 @@ define ["app", 'backbone'], (App, Backbone) ->
                 resp
 
         # initialize a blank media collection
-        mediaCollection = new Media.MediaCollection
 
 
         ##PUBLIC API FOR ENitity
         API =
+
             fetchMedia : (params = {}, reset)->
 #
+                mediaCollection = new Media.MediaCollection
                 mediaCollection.url = "#{AJAXURL}?action=query_attachments"
 
                 _.defaults params, mediaCollection.filters
+
+                mediaCollection.filters = params
 
                 mediaCollection.fetch
                     reset : reset
@@ -78,18 +82,13 @@ define ["app", 'backbone'], (App, Backbone) ->
             getMediaById : (mediaId)->
                 return API.getPlaceHolderMedia() if 0 is parseInt mediaId
 
-                # check if present
-                media = mediaCollection.get parseInt mediaId
-
-                if _.isUndefined media
-                    media = new Media.MediaModel id : mediaId
-                    mediaCollection.add media
-                    media.fetch()
+                media = new Media.MediaModel id : mediaId
+                media.fetch()
 
                 media
 
             getEmptyMediaCollection : ->
-                new Media.MediaCollection
+                mediaCollection = new Media.MediaCollection
 
         # this fucntion will return a placeholder media for the requesting element
         # this will be special purpose media model.
@@ -99,7 +98,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             createNewMedia : (data)->
                 media = new Media.MediaModel data
-                mediaCollection.add media
                 media
 
 
@@ -107,7 +105,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "get:empty:media:collection", ->
             API.getEmptyMediaCollection()
 
-        App.reqres.setHandler "fetch:media", (params = {}, shouldReset = true) ->
+        App.reqres.setHandler "fetch:media", (params = {}, shouldReset = false) ->
             API.fetchMedia params, shouldReset
 
         App.reqres.setHandler "get:media:by:id", (mediaId)->

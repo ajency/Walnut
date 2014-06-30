@@ -17,16 +17,10 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
       }
 
       OptionsBarController.prototype.initialize = function(options) {
-        var saveModelCommand;
-        saveModelCommand = options.saveModelCommand, this.contentPieceModel = options.contentPieceModel;
+        this.contentPieceModel = options.contentPieceModel;
         this.view = this._getOptionsBarView(this.contentPieceModel);
         this.textbooksCollection = App.request("get:textbooks");
         App.execute("when:fetched", [this.textbooksCollection, this.contentPieceModel], this.showView);
-        saveModelCommand.setHandler("save:model:data", (function(_this) {
-          return function() {
-            return _this.view.triggerMethod("save:question:settings");
-          };
-        })(this));
         return this.listenTo(this.view, "save:data:to:model", (function(_this) {
           return function(data) {
             _this.contentPieceModel.set(data);
