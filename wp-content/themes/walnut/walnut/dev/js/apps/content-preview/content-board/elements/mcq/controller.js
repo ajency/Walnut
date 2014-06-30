@@ -45,11 +45,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         }
         optionCollection = App.request("create:new:option:collection", optionsObj);
         this.layout.model.set('options', optionCollection);
-        console.log(optionCollection.pluck('optionNo'));
-        this.layout.model.set('correct_answer', _.map(this.layout.model.get('correct_answer'), function(ans) {
-          return parseInt(ans);
-        }));
-        App.execute("show:total:marks", this.layout.model.get('marks'));
         this.view = this._getMcqView();
         this.listenTo(this.view, "create:row:structure", this.createRowStructure);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
@@ -63,7 +58,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       };
 
       Controller.prototype._parseOptions = function(optionsObj) {
-        return _.each(optionsObj, function(option) {
+        _.each(optionsObj, function(option) {
           if (option.marks != null) {
             option.marks = parseInt(option.marks);
           }
@@ -74,6 +69,9 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             return option["class"] = parseInt(option['class']);
           }
         });
+        return this.layout.model.set('correct_answer', _.map(this.layout.model.get('correct_answer'), function(ans) {
+          return parseInt(ans);
+        }));
       };
 
       Controller.prototype._submitAnswer = function() {

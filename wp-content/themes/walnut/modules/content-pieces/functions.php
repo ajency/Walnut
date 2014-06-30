@@ -355,8 +355,9 @@ function get_meta_values($element, $create = FALSE)
 
 function validate_element(&$element)
 {
-    $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id', 'marks','columncount','optioncount');
-    $boolkey = array('draggable', 'justified');
+    $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id', 'marks',
+        'columncount','optioncount','numberOfBlanks','bg_opacity','font_size');
+    $boolkey = array('draggable', 'justified','case_sensitive','enableIndividualMarks');
 
     if (!is_array($element) && !is_object($element))
         return $element;

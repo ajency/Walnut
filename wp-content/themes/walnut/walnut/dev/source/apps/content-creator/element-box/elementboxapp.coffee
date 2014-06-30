@@ -7,19 +7,19 @@ define ['app'
         class ElementBoxController extends RegionController
 
             initialize: (options)->
-                {contentType} = options
+                {contentType,eventObj} = options
 
-                # {eventObj} = options
+                console.log eventObj
 
                 # get the main view for the element box
                 @view = @_getElementBoxView contentType
 
 
-                # @listenTo eventObj.vent, "question:dropped", =>
-                # 	@view.triggerMethod "question:dropped"
+                @listenTo eventObj.vent, "question:element:added", =>
+                	@view.triggerMethod "question:element:added"
 
-                # @listenTo eventObj.vent, "question:removed", =>
-                # 	@view.triggerMethod "question:removed"
+                @listenTo eventObj.vent, "question:element:removed", =>
+                	@view.triggerMethod "question:element:removed"
 
                 # show the view
                 @show @view

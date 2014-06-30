@@ -36,3 +36,12 @@ define ['app'
                     if not _.contains elementSet, elementName
                         $(el).hide()
 
+            onQuestionElementAdded :->
+
+                @$el.find('.qstns *[data-element]').draggable 'disable'
+
+
+            onQuestionElementRemoved : ->
+
+                @$el.find('.qstns *[data-element]').draggable 'enable'
+
