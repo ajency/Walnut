@@ -71,7 +71,7 @@ define ['app'], (App)->
                 @$el.append('<p class=\"hidden-align-fix\" contenteditable=\"false\"
                                                 style=\"display:none;\"></p>')
 
-                if not parseInt @model.get 'numberOfBlanks'
+                if not @model.get 'numberOfBlanks'
                     @model.set 'numberOfBlanks', 1
 
                 else

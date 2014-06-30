@@ -64,7 +64,7 @@ define ['app'], (App)->
 
         class TextbookModules.ContentGroupsView extends Marionette.CompositeView
 
-            template : '<div class="tiles white grid simple vertical blue animated slideInRight">
+            template : '<div class="tiles white grid simple vertical blue animated fadeIn">
                         							<div class="grid-title no-border">
                         								<h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4>
 

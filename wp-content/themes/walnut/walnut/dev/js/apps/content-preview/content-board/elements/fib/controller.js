@@ -21,9 +21,13 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       };
 
       Controller.prototype.renderElement = function() {
-        this.blanksCollection = App.request("create:new:question:element:collection", this.layout.model.get('blanksArray'));
+        var blanksArray;
+        blanksArray = this.layout.model.get('blanksArray');
+        this._parseOptions(blanksArray);
+        this.blanksCollection = App.request("create:new:question:element:collection", blanksArray);
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.layout.model.set('blanksArray', this.blanksCollection);
+        console.log(this.blanksCollection.pluck('marks'));
         this.view = this._getFibView(this.layout.model);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
         return this.layout.elementRegion.show(this.view, {
@@ -34,6 +38,20 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       Controller.prototype._getFibView = function(model) {
         return new Fib.Views.FibView({
           model: model
+        });
+      };
+
+      Controller.prototype._parseOptions = function(blanksArray) {
+        return _.each(blanksArray, function(blank) {
+          if (blank.blank_index != null) {
+            blank.blank_index = parseInt(blank.blank_index);
+          }
+          if (blank.blank_size != null) {
+            blank.blank_size = parseInt(blank.blank_size);
+          }
+          if (blank.marks != null) {
+            return blank.marks = parseInt(blank.marks);
+          }
         });
       };
 
@@ -81,6 +99,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       };
 
       Controller.prototype._checkAnswer = function(answer, correctAnswersArray) {
+        console.log(answer);
+        console.log(correctAnswersArray);
         if (this.caseSensitive) {
           return _.contains(correctAnswersArray, answer);
         } else {

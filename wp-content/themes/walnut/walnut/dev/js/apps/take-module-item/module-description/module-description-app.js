@@ -142,10 +142,18 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       };
 
       ModuleDescriptionView.prototype.onShow = function() {
-        var onBackbuttonClick;
+        var onBackbuttonClick, stickyHeaderTop;
         if (!Marionette.getOption(this, 'nextItemID')) {
           this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
+        stickyHeaderTop = $("#module-details-region").height();
+        $(window).scroll(function() {
+          if ($(window).scrollTop() > stickyHeaderTop) {
+            $("#module-details-region").addClass("condensed");
+          } else {
+            $("#module-details-region").removeClass("condensed");
+          }
+        });
         if (_.platform() === 'DEVICE') {
           document.addEventListener("pause", (function(_this) {
             return function() {

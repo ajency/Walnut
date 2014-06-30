@@ -13,7 +13,9 @@ define ['app'
 
             initialize : (options)->
 
-                {contentPieceModel} = options
+                {contentPieceModel,@eventObj} = options
+
+                console.log @eventObj
 
 
                 @view = @_getContentBuilderView contentPieceModel
@@ -21,7 +23,8 @@ define ['app'
 
 
                 @listenTo @view, "add:new:element", (container, type)->
-                    App.request "add:new:element", container, type
+
+                    App.request "add:new:element", container, type ,@eventObj
 
                 @listenTo @view, "dependencies:fetched", =>
                     _.delay =>
@@ -51,7 +54,7 @@ define ['app'
                     if element.element is 'Row' or element.element is 'TeacherQuestion'
                         @addNestedElements container,element
                     else
-                        App.request "add:new:element",container,element.element, element
+                        App.request "add:new:element",container,element.element,@eventObj, element
 
 
             addNestedElements:(container,element)->
@@ -63,19 +66,20 @@ define ['app'
                         if ele.element is 'Row' or element.element is 'TeacherQuestion'
                             @addNestedElements $(container),ele
                         else
-                            App.request "add:new:element",container,ele.element, ele
+                            App.request "add:new:element",container,ele.element,@eventObj, ele
 
 
 
 
         API =
         # add a new element to the builder region
-            addNewElement : (container , type, modelData)->
+            addNewElement : (container , type, eventObj, modelData)->
                 console.log type
 
                 new ContentBuilder.Element[type].Controller
                     container : container
                     modelData : modelData
+                    eventObj : eventObj
 
 
             saveQuestion :=>
@@ -89,8 +93,8 @@ define ['app'
             new ContentBuilderController options
 
         #Request handler for new element
-        App.reqres.setHandler "add:new:element" , (container, type, modelData = {})->
-            API.addNewElement container, type, modelData
+        App.reqres.setHandler "add:new:element" , (container, type, eventObj, modelData = {})->
+            API.addNewElement container, type, eventObj, modelData
 
 
         App.commands.setHandler "save:question",(contentPieceModel)->

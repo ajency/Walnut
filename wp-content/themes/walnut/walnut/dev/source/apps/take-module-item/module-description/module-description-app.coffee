@@ -80,8 +80,8 @@ define ['app'
 							seconds = parseInt time%60
 							display_time = ''
 
-							if hours > 0
-								display_time = hours + 'h '
+							if hours >0
+								display_time= hours+'h '
 
 							display_time += mins + 'm '+ seconds+'s'
 
@@ -103,9 +103,7 @@ define ['app'
 
 			events:
 				'click #back-to-module, #pause-session': ->
-
 					_.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
-					
 					@trigger "goto:previous:route"
 
 				'click #question-done': 'questionCompleted'
@@ -114,6 +112,16 @@ define ['app'
 				if not Marionette.getOption(@, 'nextItemID')
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
+
+				
+				stickyHeaderTop = $("#module-details-region").height()
+				$(window).scroll ->
+					if $(window).scrollTop() > stickyHeaderTop
+						$("#module-details-region").addClass "condensed"
+					else
+						$("#module-details-region").removeClass "condensed"
+					
+					return
 
 				if _.platform() is 'DEVICE'
 
@@ -139,7 +147,7 @@ define ['app'
 
 					#Cordova backbutton event
 					document.addEventListener("backbutton", onBackbuttonClick, false)
-				
+
 
 			questionCompleted: =>
 
