@@ -16,7 +16,7 @@ define ['app'], (App)->
                         </audio>
                         {{/audio}}
                         {{#placeholder}}
-                        <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Audio</div>
+                        <div class="audio-placeholder"><span class="bicon icon-uniF100"></span>Upload Audio</div>
                         {{/placeholder}}'
 
 
@@ -41,6 +41,7 @@ define ['app'], (App)->
 
             onShow: ->
                 @$el.find('audio').panzer
+                    theme: 'light'
                     layout: 'big'
                     expanded: true
                     showduration: true

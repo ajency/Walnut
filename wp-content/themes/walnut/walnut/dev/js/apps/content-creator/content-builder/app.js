@@ -13,10 +13,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
       }
 
       ContentBuilderController.prototype.initialize = function(options) {
-        contentPieceModel = options.contentPieceModel;
+        contentPieceModel = options.contentPieceModel, this.eventObj = options.eventObj;
+        console.log(this.eventObj);
         this.view = this._getContentBuilderView(contentPieceModel);
         this.listenTo(this.view, "add:new:element", function(container, type) {
-          return App.request("add:new:element", container, type);
+          return App.request("add:new:element", container, type, this.eventObj);
         });
         this.listenTo(this.view, "dependencies:fetched", (function(_this) {
           return function() {
@@ -49,7 +50,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
             if (element.element === 'Row' || element.element === 'TeacherQuestion') {
               return _this.addNestedElements(container, element);
             } else {
-              return App.request("add:new:element", container, element.element, element);
+              return App.request("add:new:element", container, element.element, _this.eventObj, element);
             }
           };
         })(this));
@@ -68,7 +69,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
               if (ele.element === 'Row' || element.element === 'TeacherQuestion') {
                 return _this.addNestedElements($(container), ele);
               } else {
-                return App.request("add:new:element", container, ele.element, ele);
+                return App.request("add:new:element", container, ele.element, _this.eventObj, ele);
               }
             });
           };
@@ -79,11 +80,12 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
 
     })(RegionController);
     API = {
-      addNewElement: function(container, type, modelData) {
+      addNewElement: function(container, type, eventObj, modelData) {
         console.log(type);
         return new ContentBuilder.Element[type].Controller({
           container: container,
-          modelData: modelData
+          modelData: modelData,
+          eventObj: eventObj
         });
       },
       saveQuestion: (function(_this) {
@@ -97,11 +99,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
     App.commands.setHandler("show:content:builder", function(options) {
       return new ContentBuilderController(options);
     });
-    App.reqres.setHandler("add:new:element", function(container, type, modelData) {
+    App.reqres.setHandler("add:new:element", function(container, type, eventObj, modelData) {
       if (modelData == null) {
         modelData = {};
       }
-      return API.addNewElement(container, type, modelData);
+      return API.addNewElement(container, type, eventObj, modelData);
     });
     return App.commands.setHandler("save:question", function(contentPieceModel) {
       return API.saveQuestion(contentPieceModel);

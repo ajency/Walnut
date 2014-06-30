@@ -65,7 +65,7 @@ define(['app'], function(App) {
 
       McqOptionView.prototype.tagName = 'div';
 
-      McqOptionView.prototype.template = '<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no"> <p class="mcq-option-text"></p>';
+      McqOptionView.prototype.template = '<input class="mcq-option-select" id="option-{{optionNo}}" type="checkbox"  value="no">';
 
       McqOptionView.prototype.events = {
         'change input:checkbox': '_onClickOfCheckbox'
@@ -73,7 +73,6 @@ define(['app'], function(App) {
 
       McqOptionView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-option-' + this.model.get('optionNo'));
-        this.$el.find('p').append(_.stripslashes(this.model.get('text')));
         return this.$el.find('input:checkbox').screwDefaultButtons({
           image: 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")',
           width: 32,
