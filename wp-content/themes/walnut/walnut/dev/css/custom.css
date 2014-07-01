@@ -1076,9 +1076,8 @@ p.mcq-option-text {
   height: 12px;
 }
 .mcq-option {
-  width: 100%;
+  float: left;
   border: 2px solid transparent;
-  padding: 5px;
   margin-bottom: 2px;
   min-height: 40px;
 }
@@ -1168,6 +1167,9 @@ p.mcq-option-text {
   padding-top: 6px;
   padding-right: 2px;
   font-size: 16px;
+}
+.mcq-option + .element-wrapper {
+  overflow: hidden;
 }
 #multiple-answer label {
   margin-bottom: 10px;
@@ -1296,6 +1298,17 @@ p.mcq-option-text {
 .cpTimer .textDiv_Seconds span {
   opacity: 0.3;
 }
+.time_circles {
+  position: static;
+}
+.time_circles canvas {
+  margin-bottom: -80px;
+}
+.time_circles > div {
+  position: static;
+  display: inline-block;
+  margin-bottom: 50px;
+}
 .modInfo,
 .qstnInfo {
   cursor: pointer;
@@ -1309,6 +1322,10 @@ p.mcq-option-text {
 }
 #content-board {
   margin-top: 15px;
+  margin-left: 220px;
+  margin-right: 220px;
+  margin-bottom: 50px;
+  overflow-x: auto;
 }
 #content-board .element-wrapper {
   border: none;
@@ -1316,10 +1333,10 @@ p.mcq-option-text {
   margin: 2px 0 15px;
 }
 .contentTime {
-  float: left;
+  left: 5px;
 }
 .contentInfo {
-  float: right;
+  right: 5px;
   padding: 20px 20px 10px;
 }
 .contentTime,
@@ -1328,9 +1345,13 @@ p.mcq-option-text {
   background: #f3f3f3;
   border: 1px solid #c3c3c3;
   box-shadow: #dadada 0 0 0 3px inset;
-  margin: 0 1.5%;
+  position: absolute;
 }
 @media (min-width: 1020px) and (max-width: 1295px) {
+  #content-board {
+    margin: 0;
+    margin-top: 15px;
+  }
   #myCanvas {
     margin: 0;
     margin-left: auto;
@@ -1339,12 +1360,14 @@ p.mcq-option-text {
     float: left;
     margin-left: 2px;
   }
-  .contentTime {
-    margin-bottom: 8px;
-  }
   .contentTime,
   .contentInfo {
+    position: static;
     float: none;
+    margin: 0 1.5%;
+  }
+  .contentTime {
+    margin-bottom: 8px;
   }
 }
 .answrMsg.alert-success h3 {
@@ -1367,7 +1390,7 @@ p.mcq-option-text {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 2;
+  z-index: 5;
 }
 #module-details-region.condensed .moduleInfo > div {
   padding: 0;
@@ -1393,7 +1416,7 @@ p.mcq-option-text {
   line-height: 22px;
 }
 #question-details-region {
-  margin-top: 90px;
+  margin-top: 115px;
 }
 /*.answrRight{
 	background: url(../../../images/answer.png) no-repeat;
@@ -1747,7 +1770,6 @@ h3.time {
 }
 .studentList {
   margin: 0 5px;
-  position: relative;
 }
 .studentList h4 span {
   display: block;
