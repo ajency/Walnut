@@ -69,7 +69,7 @@ define(['app'], function(App) {
 
       EvaluationView.prototype.className = 'parameters animated fadeIn';
 
-      EvaluationView.prototype.template = '<div class="tiles grey p-t-10 p-b-10 m-b-10"> <div class="row m-l-0 m-r-0"> <!-- <div class="pull-right"> <span id="close-parameters" class="fa fa-times text-grey p-r-15 p-l-15 p-t-15 p-b-15 closeEval"></span> </div>--> <h3 class="text-center text-grey semi-bold">Evaluation for {{studentName}}</h3> </div> <div id="evaluation-collection"> </div> {{#class_mode}} <div class="row m-r-0 m-l-0 p-t-10"> <button class="btn btn-info h-center block" id="saveEval">Save</button> </div> {{/class_mode}} </div>';
+      EvaluationView.prototype.template = '<div class="tiles grey p-t-10 p-b-10 m-b-10"> <div class="row m-l-0 m-r-0"> <div class="pull-right"> <span id="close-parameters" class="fa fa-times text-grey p-r-15 p-l-15 p-t-15 p-b-15 closeEval"></span> </div> <h3 class="text-center text-grey semi-bold">Evaluation for {{studentName}}</h3> </div> <div id="evaluation-collection"> </div> {{#class_mode}} <div class="row m-r-0 m-l-0 p-t-10"> <button class="btn btn-info h-center block" id="saveEval">Save</button> </div> {{/class_mode}} </div>';
 
       EvaluationView.prototype.itemView = EvaluationItemView;
 
@@ -92,7 +92,8 @@ define(['app'], function(App) {
       };
 
       EvaluationView.prototype.events = {
-        'click #saveEval': '_saveEvalParameters'
+        'click #saveEval': '_saveEvalParameters',
+        'click #close-parameters': '_closeEvalParams'
       };
 
       EvaluationView.prototype.initialize = function(options) {
@@ -104,6 +105,11 @@ define(['app'], function(App) {
         if (_.size(this.responseObj) > 1) {
           return this.trigger("save:eval:parameters");
         }
+      };
+
+      EvaluationView.prototype._closeEvalParams = function() {
+        this.$el.closest('.studentList').find('.tiles.single').removeClass('light').removeClass('selected');
+        return this.$el.slideToggle();
       };
 
       return EvaluationView;

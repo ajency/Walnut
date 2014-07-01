@@ -49,10 +49,10 @@ define ['app'], (App)->
 
             template : '<div class="tiles grey p-t-10 p-b-10 m-b-10">
                                                     <div class="row m-l-0 m-r-0">
-                                                       <!-- <div class="pull-right">
+                                                       <div class="pull-right">
                                                             <span id="close-parameters" class="fa fa-times text-grey p-r-15 p-l-15 p-t-15
                                                              p-b-15 closeEval"></span>
-                                                        </div>-->
+                                                        </div>
                                                         <h3 class="text-center text-grey semi-bold">Evaluation for {{studentName}}</h3>
                                                     </div>
                                                     <div id="evaluation-collection">
@@ -80,6 +80,7 @@ define ['app'], (App)->
 
             events :
                 'click #saveEval' : '_saveEvalParameters'
+                'click #close-parameters' : '_closeEvalParams'
 
             initialize : (options)->
                 @studentModel = Marionette.getOption @, 'studentModel'
@@ -88,6 +89,10 @@ define ['app'], (App)->
             _saveEvalParameters : ->
                 if _.size(@responseObj) > 1
                     @trigger "save:eval:parameters"
+
+            _closeEvalParams : ->
+                @$el.closest('.studentList').find('.tiles.single').removeClass('light').removeClass 'selected'
+                @$el.slideToggle()
 
 
 
