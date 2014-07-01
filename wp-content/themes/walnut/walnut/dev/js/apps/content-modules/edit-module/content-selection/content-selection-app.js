@@ -17,6 +17,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       ContentSelectionController.prototype.initialize = function(opts) {
         this.textbooksCollection = App.request("get:textbooks");
         this.contentPiecesCollection = App.request("get:content:pieces", {
+          post_status: 'publish',
           content_type: ['teacher_question', 'content_piece']
         });
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;

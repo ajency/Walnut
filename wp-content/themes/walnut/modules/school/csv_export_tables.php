@@ -13,6 +13,7 @@
  * @param string $user_id # todo: sync by textbook id. Its not going to be by user
  * @return mixed
  */
+$export_det = export_tables_for_app(46);
 
 function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
@@ -122,7 +123,8 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
 
         //CHILD SITE TABLE QUERIES
         "{$wpdb->prefix}class_divisions",
-        "{$wpdb->prefix}question_response"
+        "{$wpdb->prefix}question_response",
+        "{$wpdb->prefix}question_response_meta"
 
     );
 
