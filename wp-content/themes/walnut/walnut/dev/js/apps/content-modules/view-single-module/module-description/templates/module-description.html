@@ -71,7 +71,7 @@
 
     {{#takeClassModule}}
     <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
-        <div class="modTimes no-margin p-r-10">
+        <div class="modTimes no-margin">
             <div class="text-center b-r b-grey">
                 <p class="bold small-text muted no-margin"> Module Time</p>
                 <h3 class="bold text-grey no-margin">
@@ -100,7 +100,7 @@
                     {{^isTraining}}
                     <div class="progress progress-large">
                         <div data-percentage="{{getProgressPercentage}}%" style="width:{{getProgressPercentage}}%;"
-                             class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0"
+                             class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{getProgressPercentage}}" aria-valuemin="0"
                              aria-valuemax="100">{{getProgressData}}
                         </div>
                     </div>
