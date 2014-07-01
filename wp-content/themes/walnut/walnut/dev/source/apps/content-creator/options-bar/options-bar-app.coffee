@@ -19,6 +19,13 @@ define ['app'
                     @contentPieceModel.set data
                     App.execute "save:question"
 
+                @listenTo @view, 'show:grading:parameter',()=>
+                    @region.trigger 'show:grading:parameter'
+
+                @listenTo @view, 'close:grading:parameter',()=>
+                    @region.trigger 'close:grading:parameter'
+
+
 
 
             showView: =>
