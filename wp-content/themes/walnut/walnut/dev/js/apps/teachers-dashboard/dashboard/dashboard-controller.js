@@ -54,10 +54,19 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
       };
 
       TeachersDashboardView.prototype.mixinTemplateHelpers = function() {
-        var data;
+        var c, class_id, class_ids, classes, data, _i, _len;
         data = TeachersDashboardView.__super__.mixinTemplateHelpers.call(this, data);
         data.divisions = _.chain(this.collection.toJSON()).groupBy('class_id').toArray().value();
-        data.class_ids = _.unique(this.collection.pluck('class_id'));
+        classes = [];
+        class_ids = _.unique(this.collection.pluck('class_id'));
+        for (_i = 0, _len = class_ids.length; _i < _len; _i++) {
+          class_id = class_ids[_i];
+          c = [];
+          c.id = class_id;
+          c.label = CLASS_LABEL[class_id];
+          classes.push(c);
+        }
+        data.classes = classes;
         return data;
       };
 

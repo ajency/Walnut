@@ -18,9 +18,9 @@
     <div class="tab-pane animated fadeInUp" id="training">
         <h1 class="text-center muted m-b-20">Select a <span class="bold">class</span> to begin</h1>
         <ul class="classes">
-            {{#class_ids}}
-                <li><a href="#teachers/start-training/{{.}}"><div class="classesWrap">{{.}}</div></a></li>
-            {{/class_ids}}
+            {{#classes}}
+                <li><a href="#teachers/start-training/{{id}}"><div class="classesWrap">{{label}}</div></a></li>
+            {{/classes}}
         </ul>
     </div>
     <div class="tab-pane animated fadeInUp" id="progress">
