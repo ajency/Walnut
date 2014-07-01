@@ -21,7 +21,7 @@ define(['app'], function(App) {
         this.trigger("create:row:structure", {
           container: this.$el
         });
-        this.$el.find('.row').closest('.element-wrapper').children('.element-controls').find('.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-delete-btn').remove();
+        this.$el.find('.row').closest('.element-wrapper').children('.element-controls').find('.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-delete-btn, .aj-imp-settings-btn').remove();
         return this.$el.children('.element-wrapper').children('.element-markup').children('.row').children('.column').sortable('disable');
       };
 

@@ -19,7 +19,6 @@ define ['app'
                     ]
                     elements : []
                     marks : 1
-                    individual_marks : false
                     multiple : false
                     correct_answer : [3]
 

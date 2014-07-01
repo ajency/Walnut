@@ -363,7 +363,7 @@ function validate_element(&$element)
 {
     $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id', 'marks',
         'columncount','optioncount','numberOfBlanks','bg_opacity','font_size');
-    $boolkey = array('draggable', 'justified','case_sensitive','enableIndividualMarks');
+    $boolkey = array('draggable', 'justified','case_sensitive','enableIndividualMarks','multiple');
 
     if (!is_array($element) && !is_object($element))
         return $element;
