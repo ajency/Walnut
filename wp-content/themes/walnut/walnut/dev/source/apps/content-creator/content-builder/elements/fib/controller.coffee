@@ -10,7 +10,6 @@ define ['app'
                 # set defaults for the model
                 _.defaults options.modelData,
                     element: 'Fib'
-                    # maxlength : '12'
                     font: 'Arial'
                     color: '#000000'
                     bg_color: '#ffffff'
