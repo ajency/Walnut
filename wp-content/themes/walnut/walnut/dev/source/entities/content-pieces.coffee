@@ -7,7 +7,6 @@ define ["app", 'backbone'], (App, Backbone) ->
             idAttribute : 'ID'
 
             defaults :
-                ID : 0
                 post_title : ''
                 post_author : ''
                 post_author_name : ''
@@ -89,6 +88,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                             ids : ids
                 contentPieces
 
+            newContentPiece:->
+                contentPiece = new ContentPiece.ItemModel
+
         # request handler to get all ContentPieces
         App.reqres.setHandler "get:content:pieces", (opt) ->
             API.getContentPieces(opt)
@@ -103,3 +105,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "get:content:pieces:by:ids", (ids)->
             API.getContentPiecesByIDs ids
+
+        App.reqres.setHandler "new:content:piece",->
+            API.newContentPiece()

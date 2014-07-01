@@ -33,6 +33,9 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
         if (this.model.get('content_type') === 'content_piece') {
           this.$el.find('#question-type-col, #correct-answer-col').hide();
         }
+        if (this.model.get('content_type') !== 'student_question') {
+          this.$el.find('#total-marks').hide();
+        }
         if (this.mode === 'class_mode') {
           qTimer = this.$el.find('div.cpTimer');
           qTime = qTimer.data('timer');
@@ -103,6 +106,11 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
             }
           });
         }
+      };
+
+      TopPanelView.prototype.onShowTotalMarks = function(marks) {
+        console.log(marks);
+        return console.log(this.$el.find('#total-marks span').text(marks));
       };
 
       return TopPanelView;

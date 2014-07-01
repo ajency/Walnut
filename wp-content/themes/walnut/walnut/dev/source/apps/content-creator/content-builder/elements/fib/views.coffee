@@ -71,7 +71,7 @@ define ['app'], (App)->
                 @$el.append('<p class=\"hidden-align-fix\" contenteditable=\"false\"
                                                 style=\"display:none;\"></p>')
 
-                if not parseInt @model.get 'numberOfBlanks'
+                if not @model.get 'numberOfBlanks'
                     @model.set 'numberOfBlanks', 1
 
                 else
@@ -188,11 +188,17 @@ define ['app'], (App)->
 
             # save the text field on blur
             onSaveText: ->
-                formatedText = @$el.find('p').first().clone()
-                $(formatedText).find('input').attr 'value', ''
-                $(formatedText).find('input').unwrap()
-                $(formatedText).find('input').prev().remove()
-                @model.set 'text', formatedText.html()
+                text = ''
+                pTagList =  @$el.find('p')
+                _.each pTagList , (pTag,index)=>
+                    if not $(pTag).hasClass('hidden-align-fix')
+                        formatedText = $(pTag).clone()
+                        $(formatedText).find('input').attr 'value', ''
+                        $(formatedText).find('input').unwrap()
+                        $(formatedText).find('input').prev().remove()
+                        text += formatedText.html()
+                        text += '<br>' if index isnt pTagList.length - 1
+                @model.set 'text', text
 #                console.log formatedText.html()
 
 

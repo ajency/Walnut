@@ -125,7 +125,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
               answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
               unanswered = _.difference(allContentPieces, answeredIDs);
               if (_.size(unanswered) > 0 && _this.mode !== 'training') {
-                actionButtons = '<button type="button" id="start-module" class="btn btn-success action pull-right m-t-10"> <i class="fa fa-play"></i> Start </button>';
+                actionButtons = '<button type="button" id="start-module" class="btn btn-success action btn-block m-t-10"> <i class="fa fa-play"></i> Start </button>';
               }
               return actionButtons;
             };

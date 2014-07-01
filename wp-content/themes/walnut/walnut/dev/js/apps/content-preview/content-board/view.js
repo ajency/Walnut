@@ -18,6 +18,21 @@ define(['app'], function(App) {
         return this.$el.find('#feedback-area div').hide();
       };
 
+      ContentBoardView.prototype.onShowResponse = function(marks, total) {
+        this.$el.find('.total-marks').text(total);
+        this.$el.find('.marks').text(marks);
+        this.$el.find('#feedback-area div').hide();
+        if (marks === 0) {
+          this.$el.find('#wrong').show();
+        }
+        if (marks === total) {
+          this.$el.find('#correct').show();
+        }
+        if (marks > 0 && marks < total) {
+          return this.$el.find('#partially-correct').show();
+        }
+      };
+
       return ContentBoardView;
 
     })(Marionette.ItemView);

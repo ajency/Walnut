@@ -10,6 +10,7 @@ define ['app'
                 data = super data
                 if data.question_type is 'multiple_eval'
                     data.question_type = 'multiple Evaluation'
+
                 data.isTraining = if @mode is 'training' then true else false
                 data
 
@@ -17,10 +18,13 @@ define ['app'
                 @mode = Marionette.getOption(@, 'display_mode')
 
             onShow:->
+
                 @$el.find('#correct-answer-col').hide() if @model.get('question_type') is 'multiple_eval'
-                if @model.get('content_type') is 'content_piece'
-                    @$el.find '#question-type-col, #correct-answer-col'
-                    .hide()
+
+                @$el.find('#question-type-col, #correct-answer-col').hide() if @model.get('content_type') is 'content_piece'
+
+                @$el.find('#total-marks').hide() if @model.get('content_type') isnt 'student_question'
+
 
                 if @mode is 'class_mode'
                     qTimer = @$el.find 'div.cpTimer'
@@ -77,3 +81,7 @@ define ['app'
                                             color: '#ea0d0d'
                                         Seconds:
                                             color: '#ea0d0d'
+
+            onShowTotalMarks : (marks)->
+                console.log(marks)
+                console.log @$el.find('#total-marks span').text marks
