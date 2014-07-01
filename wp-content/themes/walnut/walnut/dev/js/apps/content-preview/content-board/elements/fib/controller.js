@@ -76,6 +76,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             };
           })(this));
         } else {
+          this.answerModel.set('marks', 0);
           _.each(this.view.$el.find('input'), (function(_this) {
             return function(blank, index) {
               var blankModel, correctAnswersArray;

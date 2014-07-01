@@ -27,9 +27,16 @@ define ['app'
                 super options
 
             renderElement: ->
-                @blanksCollection = App.request "create:new:question:element:collection", @layout.model.get 'blanksArray'
+
+                blanksArray = @layout.model.get 'blanksArray'
+
+                @_parseOptions blanksArray
+
+                @blanksCollection = App.request "create:new:question:element:collection", blanksArray
 
                 @layout.model.set 'blanksArray', @blanksCollection
+
+                console.log @blanksCollection
                 # get the view
                 view = @_getFibView @layout.model
 
@@ -72,6 +79,12 @@ define ['app'
                 @layout.elementRegion.show view,
                     loading: true
                     entities: [@layout.model]
+
+            _parseOptions:(blanksArray)->
+                _.each blanksArray,(blank)->
+                    blank.blank_index = parseInt blank.blank_index if blank.blank_index?
+                    blank.blank_size = parseInt blank.blank_size if blank.blank_size?
+                    blank.marks = parseInt blank.marks if blank.marks?
 
             _getFibView: (model)->
                 new Fib.Views.FibView

@@ -33,6 +33,9 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
         if (this.model.get('content_type') === 'content_piece') {
           this.$el.find('#question-type-col, #correct-answer-col').hide();
         }
+        if (this.model.get('content_type') !== 'student_question') {
+          this.$el.find('#total-marks').hide();
+        }
         if (this.mode === 'class_mode') {
           qTimer = this.$el.find('div.cpTimer');
           qTime = qTimer.data('timer');
@@ -59,7 +62,9 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
               }
             },
             circle_bg_color: "#d6d5d4",
-            bg_width: 0.2
+            bg_width: 0.2,
+            fg_width: 0.02,
+            animation: "ticks"
           }).addListener(function(unit, value, total) {
             if (total === 10) {
               qTimer.data('timer', 10);
@@ -101,6 +106,11 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
             }
           });
         }
+      };
+
+      TopPanelView.prototype.onShowTotalMarks = function(marks) {
+        console.log(marks);
+        return console.log(this.$el.find('#total-marks span').text(marks));
       };
 
       return TopPanelView;

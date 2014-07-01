@@ -105,3 +105,4 @@ function ajax_save_content_piece() {
 }
 
 add_action('wp_ajax_save-content-piece-json', 'ajax_save_content_piece');
+add_action('wp_ajax_create-content-piece', 'ajax_save_content_piece');

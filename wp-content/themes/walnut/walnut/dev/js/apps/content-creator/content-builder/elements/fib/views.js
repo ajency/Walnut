@@ -194,12 +194,25 @@ define(['app'], function(App) {
       };
 
       FibView.prototype.onSaveText = function() {
-        var formatedText;
-        formatedText = this.$el.find('p').first().clone();
-        $(formatedText).find('input').attr('value', '');
-        $(formatedText).find('input').unwrap();
-        $(formatedText).find('input').prev().remove();
-        return this.model.set('text', formatedText.html());
+        var pTagList, text;
+        text = '';
+        pTagList = this.$el.find('p');
+        _.each(pTagList, (function(_this) {
+          return function(pTag, index) {
+            var formatedText;
+            if (!$(pTag).hasClass('hidden-align-fix')) {
+              formatedText = $(pTag).clone();
+              $(formatedText).find('input').attr('value', '');
+              $(formatedText).find('input').unwrap();
+              $(formatedText).find('input').prev().remove();
+              text += formatedText.html();
+              if (index !== pTagList.length - 1) {
+                return text += '<br>';
+              }
+            }
+          };
+        })(this));
+        return this.model.set('text', text);
       };
 
       FibView.prototype._updateInputProperties = function() {

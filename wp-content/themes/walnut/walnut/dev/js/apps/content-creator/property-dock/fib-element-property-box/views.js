@@ -22,6 +22,7 @@ define(['app'], function(App) {
       };
 
       BlankElementView.prototype.mixinTemplateHelpers = function(data) {
+        data = BlankElementView.__super__.mixinTemplateHelpers.call(this, data);
         data.correctanswersFn = function() {
           return this.correct_answers.toString();
         };
