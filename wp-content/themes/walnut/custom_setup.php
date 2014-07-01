@@ -61,16 +61,57 @@ function create_custom_tables(){
           )";
 
     $wpdb->query($collection_meta);
-    
-    $training_logs_table= "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}training_logs
-             (`id` INT NOT NULL AUTO_INCREMENT, `division_id` INT NOT NULL, 
-             `collection_id` INT NOT NULL, 
-             `teacher_id` INT NOT NULL, 
-             `date` DATETIME NOT NULL, 
-             `status` VARCHAR(255) NOT NULL, 
-             PRIMARY KEY (`id`))";
 
-    $wpdb->query($training_logs_table);
+    $communication_module_table = "
+            CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}comm_module` (
+              `id` int(200) NOT NULL AUTO_INCREMENT,
+              `message_type` varchar(200) NOT NULL,
+              `recipients` varchar(200) NOT NULL,
+              `blog` int(11) NOT NULL,
+              `mode` varchar(50) NOT NULL COMMENT 'sms or email',
+              `status` varchar(200) NOT NULL DEFAULT 'pending',
+              `priority` varchar(200) NOT NULL,
+              `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              PRIMARY KEY (`id`)
+            )";
+
+    $wpdb->query($communication_module_table);
+
+    $communication_module_meta_table = "
+        CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}comm_module_meta` (
+          `id` int(100) NOT NULL AUTO_INCREMENT,
+          `comm_module_id` int(100) NOT NULL,
+          `meta_key` varchar(200) NOT NULL,
+          `meta_value` varchar(200) NOT NULL,
+          PRIMARY KEY (`id`)
+        )";
+
+    $wpdb->query($communication_module_meta_table);
+
+
+    $question_response_table = "
+            CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}question_response` (
+              `ref_id` varchar(255) NOT NULL,
+              `teacher_id` int(11) NOT NULL,
+              `content_piece_id` int(11) NOT NULL,
+              `collection_id` int(11) NOT NULL,
+              `division` int(11) NOT NULL,
+              `question_response` varchar(255) NOT NULL,
+              `time_taken` varchar(255) NOT NULL DEFAULT '0',
+              `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              `end_date` datetime NOT NULL,
+              `status` varchar(50) NOT NULL
+            )";
+
+    $wpdb->query( $question_response_table );
+
+    $question_response_meta_table = "CREATE TABLE `{$wpdb->prefix}question_response_meta` (
+                `qr_ref_id` varchar(30) NOT NULL,
+              `meta_key` varchar(255) NOT NULL,
+              `meta_value` text NOT NULL
+            )";
+
+    $wpdb->query( $question_response_meta_table );
 
 }
 create_custom_tables();

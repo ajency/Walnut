@@ -69,8 +69,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
             ele = _ref[_i];
             $(ele).addClass('selectable');
           }
-        } else {
-          this.$el.find('#select-an-item').hide();
         }
         responsePercentage = Marionette.getOption(this, 'responsePercentage');
         if (_.isString(responsePercentage) && responsePercentage.length > 0) {

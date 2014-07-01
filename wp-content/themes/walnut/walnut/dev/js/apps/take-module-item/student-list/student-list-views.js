@@ -41,7 +41,7 @@ define(['app'], function(App) {
 
       StudentsList.prototype.className = 'studentList m-t-10';
 
-      StudentsList.prototype.template = '{{#class_mode}} <div style="display:none" class="studentActions p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"> <h3 id="select-an-item" class="no-margin semi-bold muted">Select a student to grade</h3> </div>';
+      StudentsList.prototype.template = '{{#class_mode}} <div id="select-an-item" class="studentActions p-t-10 p-b-10"> <h3 class="no-margin semi-bold muted">Select a student to grade</h3> </div> <div style="display:none" class="studentActions p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"> </div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 

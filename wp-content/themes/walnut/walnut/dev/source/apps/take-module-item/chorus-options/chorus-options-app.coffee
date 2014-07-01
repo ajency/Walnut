@@ -43,10 +43,6 @@ define ['app'
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
-                else
-                    @$el.find '#select-an-item'
-                    .hide()
-
                 responsePercentage = Marionette.getOption @, 'responsePercentage'
 
                 if _.isString(responsePercentage) and responsePercentage.length > 0
