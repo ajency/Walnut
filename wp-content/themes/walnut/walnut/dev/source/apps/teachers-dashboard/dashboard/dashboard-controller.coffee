@@ -33,9 +33,7 @@ define ['app'
             className: 'teacher-app'
 
             events:
-                'change #class': (e)->
-                    @loadDivisions $(e.target).val()
-                'click .submit-btn': 'onSubmitClicked'
+                'click #teacherOptns a': 'changeTab'
 
             mixinTemplateHelpers:->
                 data = super data
@@ -47,64 +45,15 @@ define ['app'
                 data.class_ids = _.unique @collection.pluck 'class_id'
                 data
 
-
-            onShow: ->
-                class_ids = @collection.pluck 'class_id'
-
-                class_ids = _.uniq class_ids
-
-                unique_classes = []
-
-                for c_id in class_ids
-                    unique_classes.push @collection.findWhere({'class_id': c_id})
-
-                classes_dropdown = ''
-
-                for c in unique_classes
-                    classes_dropdown += '<option value="' + c.get('class_id') + '">' + c.get('class_label') + '</option>'
-
-                @$el.find '#class, #class-training'
-                .append classes_dropdown
-
-                @loadDivisions class_ids[0]
+            changeTab: (e)->
+                e.preventDefault()
 
                 @$el.find '#teacherOptns a'
-                .click (e)->
-                        e.preventDefault()
-                        $(@).tab 'show'
+                .removeClass 'active'
 
-                $('#class, #div, #class-training')
-                .select2()
-
-
-            loadDivisions: (class_id)=>
-                class_id = parseInt class_id
-
-                divs = @collection.where({'class_id': class_id})
-
-                @$el.find '#div'
-                .empty()
-                .select2('data', null)
-
-                for div in divs
-                    @$el.find '#div'
-                    .append '<option value="' + div.get('id') + '">' + div.get('division') + '</option>'
-
-
-            onSubmitClicked: (e)->
-                if $(e.target).val() is 'take-class'
-                    class_id = @$el.find('#class').val()
-                    div_id = @$el.find('#div').val()
-                    App.navigate('teachers/take-class/' + class_id + '/' + div_id, trigger: true)
-
-                if $(e.target).val() is 'start-training'
-                    class_id = @$el.find('#class-training').val()
-                    App.navigate('teachers/start-training/' + class_id, trigger: true)
-
-
-
-
-
+                $(e.target)
+                .addClass 'active'
+                .tab 'show'
 
 
 
