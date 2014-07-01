@@ -52,11 +52,10 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.renderElement = function() {
         var optionCollection, optionsObj;
         optionsObj = this.layout.model.get('options');
+        this._parseOptions(optionsObj);
         optionCollection = App.request("create:new:option:collection", optionsObj);
         this.layout.model.set('options', optionCollection);
-        this.layout.model.set('correct_answer', _.map(this.layout.model.get('correct_answer'), function(ans) {
-          return parseInt(ans);
-        }));
+        console.log(this.layout.model);
         this.view = this._getMcqView();
         this.listenTo(this.view, "show show:this:mcq:properties", (function(_this) {
           return function(options) {
@@ -73,6 +72,23 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         return new Mcq.Views.McqView({
           model: this.layout.model
         });
+      };
+
+      Controller.prototype._parseOptions = function(optionsObj) {
+        _.each(optionsObj, function(option) {
+          if (option.marks != null) {
+            option.marks = parseInt(option.marks);
+          }
+          if (option.optionNo != null) {
+            option.optionNo = parseInt(option.optionNo);
+          }
+          if (option['class'] != null) {
+            return option["class"] = parseInt(option['class']);
+          }
+        });
+        return this.layout.model.set('correct_answer', _.map(this.layout.model.get('correct_answer'), function(ans) {
+          return parseInt(ans);
+        }));
       };
 
       Controller.prototype.createRowStructure = function(options) {
@@ -104,7 +120,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         while (totalOptionsinMcq > 0) {
           optionsInCurrentRow = totalOptionsinMcq > this.layout.model.get('columncount') ? this.layout.model.get('columncount') : totalOptionsinMcq;
           this._setColumnClassForRow(rowElements, rowNumber, optionsInCurrentRow);
-          controller = App.request("add:new:element", options.container, 'Row', rowElements);
+          console.log(rowElements);
+          controller = App.request("add:new:element", options.container, 'Row', null, rowElements);
           for (num = _i = 1; 1 <= optionsInCurrentRow ? _i <= optionsInCurrentRow : _i >= optionsInCurrentRow; num = 1 <= optionsInCurrentRow ? ++_i : --_i) {
             this._iterateThruOptions(controller, rowNumber, num);
           }
@@ -145,6 +162,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         optionNumber = (rowNumber - 1) * this.layout.model.get('columncount') + index;
         idx = index - 1;
         container = controller.layout.elementRegion.currentView.$el.children().eq(idx);
+        console.log(container);
         $(container).attr('data-option', optionNumber);
         optionElements = {
           element: 'Row',
@@ -158,7 +176,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
             }
           ]
         };
-        optionRowController = App.request("add:new:element", container, 'Row', optionElements);
+        optionRowController = App.request("add:new:element", container, 'Row', null, optionElements);
         optionRowContainer = optionRowController.layout.elementRegion.currentView.$el.children().eq(0);
         return this._fillOptionRowWithElements(optionRowContainer, optionNumber);
       };
@@ -166,7 +184,6 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype._fillOptionRowWithElements = function(optionRowContainer, optionNumber) {
         var thisOptionElementsArray;
         this._addMcqOption(optionRowContainer, this.layout.model.get('options').get(optionNumber));
-        console.log(JSON.stringify(this.layout.model.get('elements')));
         if (this.layout.model.get('elements')[optionNumber - 1] == null) {
           this.layout.model.get('elements')[optionNumber - 1] = [
             {
@@ -175,9 +192,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           ];
         }
         thisOptionElementsArray = this.layout.model.get('elements')[optionNumber - 1];
-        console.log(JSON.stringify(thisOptionElementsArray));
         return _.each(thisOptionElementsArray, function(ele) {
-          return App.request("add:new:element", optionRowContainer, ele.element, ele);
+          return App.request("add:new:element", optionRowContainer, ele.element, null, ele);
         });
       };
 
