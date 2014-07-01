@@ -62,7 +62,9 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
               }
             },
             circle_bg_color: "#d6d5d4",
-            bg_width: 0.2
+            bg_width: 0.2,
+            fg_width: 0.02,
+            animation: "ticks"
           }).addListener(function(unit, value, total) {
             if (total === 10) {
               qTimer.data('timer', 10);
