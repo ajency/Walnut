@@ -13,7 +13,8 @@ function admin_scripts_division($hook) {
 add_action( 'admin_enqueue_scripts', 'admin_scripts_division',100 );
 
 function school_divisions_addedit_menu() {
-    add_options_page( 'School Divisions Options', 'School Divisions', 'manage_options', 'school_divisions', 'school_divisions_options' );
+    add_options_page( 'School Divisions Options', 'School Divisions', 'manage_options', 'school_divisions', 
+            'school_divisions_options' );
 }
 add_action( 'admin_menu', 'school_divisions_addedit_menu' );
 
@@ -87,9 +88,12 @@ function school_divisions_options() {
          <tr>
              <td><?php get_class_dropdown($counter,$division->class_id); ?></td>
              <td>
-             <input type='text' class='regular-text code' name='divisionlabel_<?php echo $counter;?>' id='divisionlabel_<?php echo $counter;?>' value='<?php echo $division->division; ?>'/>
-             <input type='hidden' name='divisionid_<?php echo $counter;?>' id='divisionid_<?php echo $counter;?>' value='<?php echo $division->id; ?>'/>
-             <a class='delete_division' id="del_division_<?php echo $division->id; ?>" href="javascript:void(0);" >Delete</a>
+             <input type='text' class='regular-text code' name='divisionlabel_<?php echo $counter;?>' 
+                    id='divisionlabel_<?php echo $counter;?>' value='<?php echo $division->division; ?>'/>
+             <input type='hidden' name='divisionid_<?php echo $counter;?>' id='divisionid_<?php echo $counter;?>' 
+                    value='<?php echo $division->id; ?>'/>
+             <a class='delete_division' id="del_division_<?php echo $division->id; ?>" href="javascript:void(0);" >
+                 Delete</a>
              </td>   
          </tr>
         <?php $counter++;}
