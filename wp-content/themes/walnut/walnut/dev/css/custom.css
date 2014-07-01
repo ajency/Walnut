@@ -1746,6 +1746,12 @@ p.mcq-option-text {
 .modProgress .progress {
   width: 100%;
 }
+.modProgress .progress .progress-bar[aria-valuenow="NaN"],
+.modProgress .progress .progress-bar[aria-valuenow="0"] {
+  min-width: 30px;
+  color: #333333;
+  background-color: transparent;
+}
 h3.time {
   line-height: 20px;
 }

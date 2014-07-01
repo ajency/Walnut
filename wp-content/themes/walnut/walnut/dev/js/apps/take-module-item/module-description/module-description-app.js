@@ -141,9 +141,18 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       };
 
       ModuleDescriptionView.prototype.onShow = function() {
+        var stickyHeaderTop;
         if (!Marionette.getOption(this, 'nextItemID')) {
-          return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
+          this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
+        stickyHeaderTop = $("#module-details-region").height();
+        return $(window).scroll(function() {
+          if ($(window).scrollTop() > stickyHeaderTop) {
+            $("#module-details-region").addClass("condensed");
+          } else {
+            $("#module-details-region").removeClass("condensed");
+          }
+        });
       };
 
       ModuleDescriptionView.prototype.questionCompleted = function() {
@@ -160,18 +169,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         if (!nextItemID) {
           return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
-      };
-
-      ModuleDescriptionView.prototype.onShow = function() {
-        var stickyHeaderTop;
-        stickyHeaderTop = $("#module-details-region").height();
-        $(window).scroll(function() {
-          if ($(window).scrollTop() > stickyHeaderTop) {
-            $("#module-details-region").addClass("condensed");
-          } else {
-            $("#module-details-region").removeClass("condensed");
-          }
-        });
       };
 
       return ModuleDescriptionView;
