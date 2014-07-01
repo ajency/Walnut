@@ -25,7 +25,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
           collection: this.evaluationCollection,
           studentModel: this.studentModel,
           responseObj: this.responseObj,
-          display_mode: this.dispaly_mode
+          display_mode: this.display_mode
         });
       };
 
