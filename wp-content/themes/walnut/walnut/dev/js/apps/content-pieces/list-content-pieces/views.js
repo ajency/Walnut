@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html'], function(App, contentListTpl, listitemTpl, notextbooksTpl) {
@@ -8,6 +9,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       __extends(ListItemView, _super);
 
       function ListItemView() {
+        this.successSaveFn = __bind(this.successSaveFn, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -15,7 +17,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{&post_excerpt}}</td> <td>{{post_author_name}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{modified_date}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> {{&edit_link}}</td>';
+      ListItemView.prototype.template = '<td>{{&post_excerpt}}</td> <td>{{post_author_name}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{modified_date}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> {{&edit_link}} {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
 
       ListItemView.prototype.serializeData = function() {
         var data, edit_url, _ref;
@@ -54,15 +56,47 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
             return '<span class="label label-success">Archived</span>';
           }
         };
-        if ((_ref = data.status) === 'publish' || _ref === 'archive') {
+        if ((_ref = data.post_status) === 'publish' || _ref === 'archive') {
           data.archivedModule = true;
         }
         return data;
       };
 
+      ListItemView.prototype.events = {
+        'click a.cloneModule': 'cloneModule'
+      };
+
       ListItemView.prototype.initialize = function(options) {
         this.textbooks = options.textbooksCollection;
         return this.chapters = options.chaptersCollection;
+      };
+
+      ListItemView.prototype.cloneModule = function() {
+        var contentPieceData, _ref;
+        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
+          if (confirm("Are you sure you want to clone '" + (this.model.get('post_excerpt')) + "' ?") === true) {
+            this.cloneModel = App.request("new:content:piece");
+            contentPieceData = this.model.toJSON();
+            console.log('contentpiecedata');
+            console.log(this.model.toJSON());
+            this.clonedData = _.omit(contentPieceData, ['ID', 'guid', 'last_modified_by', 'post_author', 'post_author_name', 'post_date', 'post_date_gmt', 'published_by']);
+            this.clonedData.post_status = "pending";
+            this.clonedData.clone_id = this.model.id;
+            return App.execute("when:fetched", this.cloneModel, (function(_this) {
+              return function() {
+                return _this.cloneModel.save(_this.clonedData, {
+                  wait: true,
+                  success: _this.successSaveFn,
+                  error: _this.errorFn
+                });
+              };
+            })(this));
+          }
+        }
+      };
+
+      ListItemView.prototype.successSaveFn = function(model) {
+        return document.location = SITEURL + ("/content-creator/#edit-content/" + model.id);
       };
 
       return ListItemView;
