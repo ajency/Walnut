@@ -30,4 +30,23 @@ jQuery(document).ready(function() {
                 break;            
         }
     });
+    
+    jQuery('#createusersub,#addusersub').on('click',function(){
+        if(jQuery(this).attr('id') == 'addusersub'){
+            var roleselected = jQuery(this).closest('form').find('#adduser-role').val();
+        }else{
+            var roleselected = jQuery(this).closest('form').find('#role').val();
+        }
+        if(roleselected == 'student'){
+            var division = jQuery(this).closest('form').find('#student_division').val();
+            if(division == ""){
+                jQuery(this).closest('form').find('#student_division_row').addClass('form-invalid');
+                return false;
+            }else{
+                jQuery(this).closest('form').find('#student_division_row').removeClass('form-invalid');
+                return true;
+            }
+        }
+
+    })
 });
