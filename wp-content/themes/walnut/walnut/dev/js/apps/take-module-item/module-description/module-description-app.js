@@ -135,7 +135,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.events = {
         'click #back-to-module, #pause-session': function() {
-          _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
           return this.trigger("goto:previous:route");
         },
         'click #question-done': 'questionCompleted'
@@ -149,9 +148,11 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         stickyHeaderTop = $("#module-details-region").height();
         $(window).scroll(function() {
           if ($(window).scrollTop() > stickyHeaderTop) {
-            $("#module-details-region").addClass("condensed");
+            $("#module-details-region").addClass("condensed animated slideInDown");
+            $("#question-details-region").css("margin-top", stickyHeaderTop + 15);
           } else {
-            $("#module-details-region").removeClass("condensed");
+            $("#module-details-region").removeClass("condensed slideInDown");
+            $("#question-details-region").css("margin-top", 0);
           }
         });
         if (_.platform() === 'DEVICE') {

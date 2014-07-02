@@ -80,6 +80,7 @@ define ['app'
 
 
                 else
+                    @answerModel.set 'marks',0
                     _.each @view.$el.find('input'), (blank, index)=>
                         # save it in answerModel
                         @answerModel.get('answer').push($(blank).val())

@@ -103,7 +103,6 @@ define ['app'
 
 			events:
 				'click #back-to-module, #pause-session': ->
-					_.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
 					@trigger "goto:previous:route"
 
 				'click #question-done': 'questionCompleted'
@@ -113,19 +112,21 @@ define ['app'
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
 
-				
 				stickyHeaderTop = $("#module-details-region").height()
 				$(window).scroll ->
 					if $(window).scrollTop() > stickyHeaderTop
-						$("#module-details-region").addClass "condensed"
+						$("#module-details-region").addClass "condensed animated slideInDown"                        
+						$("#question-details-region").css "margin-top", stickyHeaderTop+15
 					else
-						$("#module-details-region").removeClass "condensed"
-					
+						$("#module-details-region").removeClass "condensed slideInDown"
+						$("#question-details-region").css "margin-top", 0
 					return
 
+
+				
 				if _.platform() is 'DEVICE'
 
-					#Cordova pause event
+					# Cordova pause event
 					document.addEventListener("pause"
 						,=>
 							console.log 'Fired cordova pause event'
@@ -145,8 +146,11 @@ define ['app'
 
 						document.removeEventListener("backbutton", onBackbuttonClick, false)
 
-					#Cordova backbutton event
+
+					# Cordova backbutton event
 					document.addEventListener("backbutton", onBackbuttonClick, false)
+
+
 
 
 			questionCompleted: =>

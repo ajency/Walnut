@@ -15,6 +15,7 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
         console.log("list");
         this.contentPiecesCollection = App.request("get:content:pieces");
         this.textbooksCollection = App.request("get:textbooks");
+        this.allChaptersCollection = null;
         breadcrumb_items = {
           'items': [
             {
@@ -33,20 +34,25 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
         App.execute("update:breadcrumb:model", breadcrumb_items);
         return App.execute("when:fetched", [this.contentPiecesCollection, this.textbooksCollection], (function(_this) {
           return function() {
-            var view;
+            var chapter_ids;
+            chapter_ids = _.chain(_this.contentPiecesCollection.pluck('term_ids')).pluck('chapter').unique().compact().value();
+            _this.allChaptersCollection = App.request("get:textbook:names:by:ids", chapter_ids);
             _this.fullCollection = _this.contentPiecesCollection.clone();
-            _this.view = view = _this._getContentPiecesListView();
-            _this.show(view, {
-              loading: true,
-              entities: [_this.contentPiecesCollection, _this.textbooksCollection, _this.fullCollection]
-            });
-            return _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
-              var chaptersOrSections;
-              chaptersOrSections = App.request("get:chapters", {
-                'parent': parentID
+            return App.execute("when:fetched", _this.allChaptersCollection, function() {
+              var view;
+              _this.view = view = _this._getContentPiecesListView();
+              _this.show(view, {
+                loading: true,
+                entities: [_this.contentPiecesCollection, _this.textbooksCollection, _this.fullCollection]
               });
-              return App.execute("when:fetched", chaptersOrSections, function() {
-                return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
+              return _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
+                var chaptersOrSections;
+                chaptersOrSections = App.request("get:chapters", {
+                  'parent': parentID
+                });
+                return App.execute("when:fetched", chaptersOrSections, function() {
+                  return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
+                });
               });
             });
           };
@@ -54,11 +60,11 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
       };
 
       ListController.prototype._getContentPiecesListView = function() {
-        console.log(this.fullCollection);
         return new ContentList.Views.ListView({
           collection: this.contentPiecesCollection,
           fullCollection: this.fullCollection,
-          textbooksCollection: this.textbooksCollection
+          textbooksCollection: this.textbooksCollection,
+          chaptersCollection: this.allChaptersCollection
         });
       };
 

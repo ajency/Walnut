@@ -8,16 +8,83 @@ define ['app'
 
             template:   '<td>{{&post_excerpt}}</td>
                                     <td>{{post_author_name}}</td>
-                                    <td>{{modified_date}}</td>
-                                    <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
-                                        <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>'
+                                    <td>{{textbookName}}</td>
+                                    <td>{{chapterName}}</td>
+                                    <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
+                                    <td>{{&statusMessage}}</td>
+                                    <td class="text-center"><a target="_blank" href="{{view_url}}">View</a>
+                                        {{&edit_link}}
+                                    {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>'
 
             serializeData:->
                 data= super()
-                data.modified_date= moment(@model.get('post_modified')).format("Do MMM YYYY")
-                data.view_url = SITEURL + '/#content-piece/'+@model.get 'ID'
-                data.edit_url = SITEURL + '/content-creator/#edit-content/'+@model.get 'ID'
+
+                #this is for display purpose only
+                data.modified_date= moment(data.post_modified).format("Do MMM YYYY")
+
+                #for sorting the column date-wise
+                data.sort_date= moment(data.post_modified).format "YYYYMMDD"
+
+                data.view_url = SITEURL + '/#content-piece/'+data.ID
+                edit_url = SITEURL + '/content-creator/#edit-content/'+data.ID
+                data.edit_link= ''
+
+                if data.post_status is 'pending'
+                    data.edit_link= ' <span class="nonDevice">|</span> <a target="_blank" href="'+edit_url+'" class="nonDevice">Edit</a>'
+
+                data.textbookName = =>
+                    textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
+                    textbook.name
+
+                data.chapterName = =>
+                    chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
+                    .pluck 'name'
+                        .compact()
+                        .value()
+                    chapter
+
+                data.statusMessage = ->
+                    if data.post_status is 'pending'
+                        return '<span class="label label-important">Under Review</span>'
+                    else if data.post_status is 'publish'
+                        return '<span class="label label-info">Published</span>'
+                    else if data.post_status is 'archive'
+                        return '<span class="label label-success">Archived</span>'
+
+                data.archivedModule = true if data.post_status in ['publish', 'archive']
+
                 data
+
+            events:
+                'click a.cloneModule' : 'cloneModule'
+
+            initialize : (options)->
+                @textbooks = options.textbooksCollection
+                @chapters = options.chaptersCollection
+
+            cloneModule :->
+                if @model.get('post_status') in ['publish','archive']
+                    if confirm("Are you sure you want to clone '#{@model.get('post_excerpt')}' ?") is true
+                        @cloneModel = App.request "new:content:piece"
+                        contentPieceData = @model.toJSON()
+                        console.log 'contentpiecedata'
+                        console.log @model.toJSON()
+
+                        @clonedData = _.omit contentPieceData,
+                                      ['ID', 'guid', 'last_modified_by', 'post_author',
+                                       'post_author_name', 'post_date', 'post_date_gmt', 'published_by']
+
+                        @clonedData.post_status = "pending"
+                        @clonedData.clone_id =@model.id
+
+                        App.execute "when:fetched", @cloneModel, =>
+                            @cloneModel.save @clonedData,
+                                wait : true
+                                success : @successSaveFn
+                                error : @errorFn
+
+            successSaveFn : (model)=>
+                document.location = SITEURL+ "/content-creator/#edit-content/#{model.id}"
 
         class EmptyView extends Marionette.ItemView
 
@@ -40,6 +107,10 @@ define ['app'
 
             itemViewContainer: '#list-content-pieces'
 
+            itemViewOptions : ->
+                textbooksCollection : @textbooks
+                chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
+
             events:
                 'change #content-post-status-filter, .content-type-filter'  :->
                     @setFilteredContent()
@@ -47,6 +118,13 @@ define ['app'
                 'change .textbook-filter' :(e)->
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
+            initialize : ->
+                @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
+                @textbooks = new Array()
+                @textbooksCollection.each (textbookModel, ind)=>
+                    @textbooks.push
+                        'name' : textbookModel.get('name')
+                        'id' : textbookModel.get('term_id')
             onShow:->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
                 @fullCollection = Marionette.getOption @, 'fullCollection'

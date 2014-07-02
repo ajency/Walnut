@@ -52,6 +52,10 @@ define ['app'
                         .addClass 'blue'
 
             selectStudent: (e)->
+
+                @$el.find '#select-an-item'
+                .remove()
+
                 @$el.find '.blue'
                 .removeClass 'blue'
                     .addClass 'unselected'

@@ -94,6 +94,15 @@ function setup_childsite_tables() {
 
     $wpdb->query( $question_response_table );
 
+    $question_response_meta_table = "CREATE TABLE `{$wpdb->prefix}question_response_meta` (
+                `qr_ref_id` varchar(30) NOT NULL,
+              `meta_key` varchar(255) NOT NULL,
+              `meta_value` text NOT NULL
+            )";
+
+    $wpdb->query( $question_response_meta_table );
+
+
     $sync_apps_data_query = "
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_apps_data` (
               `id` int(11) NOT NULL primary key AUTO_INCREMENT,

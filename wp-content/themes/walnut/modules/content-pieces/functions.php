@@ -104,7 +104,9 @@ function get_content_pieces($args = array()) {
 
     $args['numberposts'] = -1;
     $args['fields'] = 'ids';
-    $args['post_status'] = 'any';
+
+    if(!isset($args['post_status']))
+        $args['post_status'] = 'any';
 
     $content_items = get_posts($args);
 
@@ -229,22 +231,28 @@ function get_single_content_piece($id){
 }
 
 
-function get_json_to_clone($elements)
+function get_json_to_clone($elements, $content_id=0, $create=FALSE)
 {
     $d = array();
     $excerpt= array();
     $row_elements = array('Row','TeacherQuestion','TeacherQuestRow');
+
+    if($content_id !=0){
+        $elements = get_post_meta($content_id, 'layout_json', TRUE);
+        $elements= maybe_unserialize($elements);
+    }
+
     if (is_array($elements)) {
         foreach ($elements as $element) {
             if (in_array($element['element'], $row_elements)) {
                 $element['columncount'] = count($element['elements']);
-                $d2= get_row_elements($element);
+                $d2= get_row_elements($element, $create);
                 $d[]                    = $d2['element'];
 
                 $excerpt[]= $d2['excerpt'];
 
             } else {
-                $meta = get_meta_values($element);
+                $meta = get_meta_values($element, $create);
                 if ($meta !== FALSE){
                     $d[] = $meta;
                     $excerpt[]=$meta['content'];
@@ -258,7 +266,7 @@ function get_json_to_clone($elements)
     return $content;
 }
 
-function get_row_elements($element)
+function get_row_elements($element, $create=FALSE)
 {
     $excerpt= array();
     $row_elements = array('Row','TeacherQuestion','TeacherQuestRow');
@@ -272,13 +280,13 @@ function get_row_elements($element)
 
                 if (in_array($ele['element'],$row_elements)) {
                     $ele['columncount'] = count($ele['elements']);
-                    $data= get_row_elements($ele);
+                    $data= get_row_elements($ele, $create);
 
                     $data['element']['position']= (int) $data['element']['position'];
                     $ele = $data['element'];
                     $excerpt []= $data['excerpt'];
                 } else {
-                    $meta = get_meta_values($ele);
+                    $meta = get_meta_values($ele, $create);
                     if ($meta !== FALSE){
                         $ele = wp_parse_args($meta, $ele);
                         if($ele['element']=='Text')
@@ -340,14 +348,14 @@ function get_meta_values($element, $create = FALSE)
         if($allElements){
             foreach ($allElements as &$optionElements){
                 foreach ($optionElements as &$optionElement){
-                    $optionElement = get_meta_values($optionElement);
+                    $optionElement = get_meta_values($optionElement, $create);
                 }
             }
         }
         $ele['elements'] = $element['elements'];
     }
 
-    $ele['meta_id'] = $create ? create_new_record($ele) : $element['meta_id'];
+    $ele['meta_id'] = $create ? create_new_element($ele) : $element['meta_id'];
     validate_element($ele);
 
     return $ele;
@@ -450,5 +458,39 @@ function save_content_piece($data){
 
     update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
 
+    if(isset($data['clone_id'])){
+        clone_json_of_content_piece($content_id, $data['clone_id']);
+    }
+
     return $content_id;
+}
+
+function clone_json_of_content_piece($id, $clone_id){
+
+    $layout_json = get_json_to_clone($layout='', $clone_id, true);
+
+    $layout_json = maybe_serialize($layout_json['elements']);
+
+    update_post_meta($id, 'layout_json',$layout_json);
+
+}
+
+function create_new_element(&$ele)
+{
+
+    global $wpdb;
+
+    //unset the existing meta_id
+    unset($ele['meta_id']);
+
+    //handle_unavailable_fields($ele);
+    //insert the element in postmeta and retunr the meta_id
+    $serialized_element = maybe_serialize($ele);
+    $wpdb->insert($wpdb->postmeta, array(
+        'post_id'    => 0,
+        'meta_value' => $serialized_element,
+        'meta_key'   => 'content_element'
+    ));
+
+    return $wpdb->insert_id;
 }

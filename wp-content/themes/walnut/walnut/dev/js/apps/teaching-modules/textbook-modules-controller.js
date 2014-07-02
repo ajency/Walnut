@@ -21,7 +21,8 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
         this.textbook = App.request("get:textbook:by:id", textbookID);
         this.contentGroupsCollection = App.request("get:content:groups", {
           'textbook': textbookID,
-          'division': this.division
+          'division': this.division,
+          'module_status': 'publish,archive'
         });
         this.view = view = this._getContentGroupsListingView(this.contentGroupsCollection);
         App.execute("when:fetched", this.textbook, (function(_this) {

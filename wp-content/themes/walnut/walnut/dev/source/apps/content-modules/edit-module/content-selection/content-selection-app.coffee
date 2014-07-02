@@ -7,7 +7,9 @@ define ['app'
             initialize: (opts) ->
 
                 @textbooksCollection = App.request "get:textbooks"
-                @contentPiecesCollection = App.request "get:content:pieces", content_type: ['teacher_question','content_piece']
+                @contentPiecesCollection = App.request "get:content:pieces",
+                    post_status: 'publish',
+                    content_type: ['teacher_question','content_piece']
 
                 {@model,@contentGroupCollection}= opts
 

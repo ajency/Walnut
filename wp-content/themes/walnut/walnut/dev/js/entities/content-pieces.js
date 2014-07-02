@@ -15,7 +15,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       ItemModel.prototype.idAttribute = 'ID';
 
       ItemModel.prototype.defaults = {
-        ID: 0,
         post_title: '',
         post_author: '',
         post_author_name: '',
@@ -139,6 +138,10 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
         return contentPieces;
       },
+      newContentPiece: function() {
+        var contentPiece;
+        return contentPiece = new ContentPiece.ItemModel;
+      },
       getContentPieceFromLocal: function(ids) {
         var onSuccess, runMainQuery;
         runMainQuery = function() {
@@ -249,6 +252,9 @@ define(["app", 'backbone'], function(App, Backbone) {
     });
     App.reqres.setHandler("get:content:pieces:by:ids", function(ids) {
       return API.getContentPiecesByIDs(ids);
+    });
+    App.reqres.setHandler("new:content:piece", function() {
+      return API.newContentPiece();
     });
     return App.reqres.setHandler("get:content-piece:local", function(ids) {
       return API.getContentPieceFromLocal(ids);

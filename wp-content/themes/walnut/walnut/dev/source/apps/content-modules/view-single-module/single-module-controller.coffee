@@ -118,9 +118,5 @@ define ['app'
             onShow:->
                 $('.page-content').removeClass 'expand-page'
 
-                #Changes for app
+                # Changes for cordova app
                 _.deleteAllDecryptedVideoFilesFromVideosWebDirectory() if _.platform() is 'DEVICE'
-
-
-
-

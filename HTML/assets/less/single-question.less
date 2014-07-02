@@ -24,6 +24,18 @@
 	}
 }
 
+.time_circles{
+	position: static;
+	canvas{
+		margin-bottom: -80px;
+	}
+	& > div{
+		position: static;
+		display: inline-block;
+		margin-bottom: 50px;
+	}
+}
+
 .modInfo, .qstnInfo{
 	cursor: pointer;
 }
@@ -38,19 +50,36 @@
 
 #content-board{
 	margin-top: 15px;
+	margin-left: 220px;
+	margin-right: 220px;
+	margin-bottom: 50px;
+	overflow-x: auto;
 	.element-wrapper{
 		border: none;
 		padding: 0 7px;
 		margin: 2px 0 15px;
 	}
+
+	.imagewithtext{
+		.image-placeholder{
+			cursor: default;
+			position: static;
+		}
+		img{
+			position: static;
+			cursor: default;
+		}
+	}
 }
 
 .contentTime{
-	float: left;
+	// float: left;
+	left: 5px;
 }
 
 .contentInfo{
-	float: right;
+	// float: right;
+	right: 5px;
 	padding: 20px 20px 10px;
 }
 
@@ -60,10 +89,15 @@
 	background: @preview-grey;
 	border: 1px solid lighten(@dash-grey, 10%);
 	box-shadow: darken(@preview-grey, 10%) 0 0 0 3px inset;
-	margin: 0 1.5%;
+	// margin: 0 1.5%;
+	position: absolute;
 }
 
 @media (min-width: 1020px) and (max-width:1295px){
+	#content-board{
+		margin: 0;
+		margin-top: 15px;
+	}
 	#myCanvas{
 		margin: 0;
 		margin-left: auto;
@@ -72,14 +106,15 @@
 		float: left;
 		margin-left: 2px;
 	}
-	.contentTime{
-		margin-bottom: 8px;
-	}
 	.contentTime, .contentInfo{
 		// margin: 0;
 		// left: 5px;
-		// position: absolute;
+		position: static;
 		float: none;
+		margin: 0 1.5%;
+	}
+	.contentTime{
+		margin-bottom: 8px;
 	}
 	.contentInfo{
 		// top: 175px;
@@ -111,12 +146,13 @@
 }
 
 #module-details-region{
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 2;
+	
 	&.condensed{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 5;
 		.moduleInfo > div{
 			padding: 0;
 			.modTime{
@@ -138,12 +174,11 @@
 				}
 			}
 		}
+
 	}
 }
 
-#question-details-region{
-	margin-top: 90px;
-}
+
 
 
 /*.answrRight{
