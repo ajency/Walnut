@@ -350,7 +350,6 @@ function user_extend_profile_fields_save($user_id) {
     }
     
 }
-
 add_action( 'personal_options_update', 'user_extend_profile_fields_save' );
 add_action( 'edit_user_profile_update', 'user_extend_profile_fields_save' );
 //add_action( 'wpmu_new_user', 'user_extend_profile_fields_save' );
@@ -425,7 +424,7 @@ function get_students_by_division($division){
 
 function get_class_divisions(){
     global $wpdb;
-    $divisions_query= "SELECT id,division FROM {$wpdb->base_prefix}class_divisions";
+    $divisions_query= "SELECT id,division FROM {$wpdb->prefix}class_divisions";
 
     $division_ids = $wpdb->get_results($divisions_query);
 

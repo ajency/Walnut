@@ -19,7 +19,7 @@ function school_divisions_addedit_menu() {
 add_action( 'admin_menu', 'school_divisions_addedit_menu' );
 
 /*
- * function to display the sidebars sync options form.
+ * function to display the school divisions
  */
 function school_divisions_options() {
     if ( !current_user_can( 'manage_options' ) )  {
