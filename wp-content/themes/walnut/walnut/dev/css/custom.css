@@ -1298,19 +1298,6 @@ p.mcq-option-text {
 .cpTimer .textDiv_Seconds span {
   opacity: 0.3;
 }
-.time_circles {
-  position: static;
-  display: table-cell;
-  height: 120px;
-}
-.time_circles canvas {
-  margin-bottom: -80px;
-  display: table-cell;
-}
-.time_circles > div {
-  position: static;
-  display: table-cell;
-}
 .modInfo,
 .qstnInfo {
   cursor: pointer;
@@ -2389,6 +2376,10 @@ tbody.rowlink td {
 textarea.error,
 .select2-choice.error {
   border: 1px solid #f35958 !important;
+}
+.page-container,
+.page-content {
+  position: static;
 }
 .page-content.condensed {
   overflow: visible;
