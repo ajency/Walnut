@@ -7,7 +7,7 @@ define ['app'],(App)->
             template : '<div class="row m-b-10">
                             <div class="col-sm-4">
                                 <input id="parameter" type="text" placeholder="Parameter name" class="w100" value="{{parameter}}">
-                            </div><div class="saved" style="color: dodgerblue">Saved</div><div class="changed" style="color: #ff0000;
+                            </div><div class="saved" style="color: dodgerblue;display: none">Updated</div><div class="changed" style="color: #ff0000;
                             display: none">Changed</div>
                         </div>
                         <div class="row p-b-15">
