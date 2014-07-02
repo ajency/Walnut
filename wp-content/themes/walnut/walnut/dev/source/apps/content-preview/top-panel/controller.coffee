@@ -150,7 +150,7 @@ define ['app'
                             <div class="qstnStatus"><i class="fa fa-check-circle"></i> Completed</div>
                       </div>
                     <div class="b-grey b-b m-b-10 p-b-5">
-                          <label class="form-label bold small-text muted no-margin">Time Alloted:</label>' + model.get("duration") + ' mins<br>
+                          <label class="form-label bold small-text muted no-margin">Time Alloted:</label>' + @model.get("duration") + ' mins<br>
                         </div>
                         <div class="b-grey b-b m-b-10 p-b-5">
                           <label class="form-label bold small-text muted no-margin">Time Taken:</label>' + time_taken_string + '

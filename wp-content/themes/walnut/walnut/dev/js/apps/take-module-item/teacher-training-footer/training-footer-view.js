@@ -10,7 +10,7 @@ define(['app'], function(App) {
         return TrainingFooterView.__super__.constructor.apply(this, arguments);
       }
 
-      TrainingFooterView.prototype.template = '{{#isChorus}} <h4 class="text-primary semi-bold  p-t-15 p-b-20 p-l-5 p-r-5 "> In a chorus question you will be marking a group of students in the class mode </h4> {{/isChorus}} {{#isIndividual}} <h4 class="text-primary semi-bold  p-t-15 p-b-20 p-l-5 p-r-5 "> Your individual class students will be displayed in the class mode for marking </h4> {{/isIndividual}}';
+      TrainingFooterView.prototype.template = '{{#isChorus}} <h4 class="text-grey semi-bold text-center p-t-15 p-b-20 p-l-5 p-r-5 "> In a chorus question you will be marking a group of students in the class mode </h4> {{/isChorus}} {{#isIndividual}} <h4 class="text-grey semi-bold text-center p-t-15 p-b-20 p-l-5 p-r-5 "> Your individual class students will be displayed in the class mode for marking </h4> {{/isIndividual}}';
 
       TrainingFooterView.prototype.mixinTemplateHelpers = function(data) {
         data = TrainingFooterView.__super__.mixinTemplateHelpers.call(this, data);

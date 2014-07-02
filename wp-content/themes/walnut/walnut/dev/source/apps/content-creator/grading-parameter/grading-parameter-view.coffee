@@ -7,7 +7,8 @@ define ['app'],(App)->
             template : '<div class="row m-b-10">
                             <div class="col-sm-4">
                                 <input id="parameter" type="text" placeholder="Parameter name" class="w100" value="{{parameter}}">
-                            </div>
+                            </div><div class="saved" style="color: dodgerblue">Saved</div><div class="changed" style="color: #ff0000;
+                            display: none">Changed</div>
                         </div>
                         <div class="row p-b-15">
                             {{#attributes}}
@@ -31,11 +32,12 @@ define ['app'],(App)->
             events :
                 'click #btn-save' : '_saveGradingParameter'
                 'click #btn-delete' : '_deleteGradingParameter'
+                'change input' : '_inputChanged'
 
             _saveGradingParameter : ->
                 if @$el.find('input#parameter').val() is ''
                     return
-                @model.set 'parameter',@$el.find('input#parameter').val()
+
                 attributes = new Array()
 
                 _.each @$el.find('input.attribute') ,(attributeInput)->
@@ -43,11 +45,19 @@ define ['app'],(App)->
                         attributes.push $(attributeInput).val()
                 if not attributes.length
                     return
+                @model.set 'parameter',@$el.find('input#parameter').val()
                 @model.set 'attributes',attributes
                 @trigger 'save:grading:parameter'
+                @$el.find('.saved').show()
+                @$el.find('.changed').hide()
 
             _deleteGradingParameter : ->
                 @trigger 'delete:grading:parameter'
+
+            _inputChanged : ->
+                @$el.find('.saved').hide()
+                @$el.find('.changed').show()
+
 
 
 

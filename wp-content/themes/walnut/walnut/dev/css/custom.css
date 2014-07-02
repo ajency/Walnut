@@ -1332,6 +1332,14 @@ p.mcq-option-text {
   padding: 0 7px;
   margin: 2px 0 15px;
 }
+#content-board .imagewithtext .image-placeholder {
+  cursor: default;
+  position: static;
+}
+#content-board .imagewithtext img {
+  position: static;
+  cursor: default;
+}
 .contentTime {
   left: 5px;
 }
@@ -1385,7 +1393,7 @@ p.mcq-option-text {
 .page-content.expand-page .content {
   padding: 0;
 }
-#module-details-region {
+#module-details-region.condensed {
   position: fixed;
   top: 0;
   left: 0;
@@ -1414,9 +1422,6 @@ p.mcq-option-text {
 #module-details-region.condensed .moduleInfo > div .modTime.pause h4 {
   font-size: 17px;
   line-height: 22px;
-}
-#question-details-region {
-  margin-top: 115px;
 }
 /*.answrRight{
 	background: url(../../../images/answer.png) no-repeat;
@@ -2154,7 +2159,7 @@ input#duration {
 }
 #teacherOptns {
   text-align: center;
-  margin-bottom: 30px;
+  margin-top: 30px;
 }
 #teacherOptns h3 {
   display: inline-block;

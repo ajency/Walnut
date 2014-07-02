@@ -59,6 +59,17 @@
 		padding: 0 7px;
 		margin: 2px 0 15px;
 	}
+
+	.imagewithtext{
+		.image-placeholder{
+			cursor: default;
+			position: static;
+		}
+		img{
+			position: static;
+			cursor: default;
+		}
+	}
 }
 
 .contentTime{
@@ -135,12 +146,13 @@
 }
 
 #module-details-region{
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 5;
+	
 	&.condensed{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 5;
 		.moduleInfo > div{
 			padding: 0;
 			.modTime{
@@ -162,12 +174,11 @@
 				}
 			}
 		}
+
 	}
 }
 
-#question-details-region{
-	margin-top: 115px;
-}
+
 
 
 /*.answrRight{

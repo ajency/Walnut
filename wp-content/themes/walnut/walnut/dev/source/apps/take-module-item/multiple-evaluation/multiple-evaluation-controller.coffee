@@ -52,12 +52,9 @@ define ['app'
                     @questionResponseArray = new Array() if @questionResponseArray is ''
                     @questionResponseArray.push responseObj
 
-
                 @questionResponseModel.set 'question_response',@questionResponseArray
 
-
                 @layout.studentListRegion.trigger 'student:answer:saved',responseObj.id
-
 
 
             _changeQuestion:=>
