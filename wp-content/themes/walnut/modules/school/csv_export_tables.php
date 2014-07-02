@@ -13,7 +13,6 @@
  * @param string $user_id # todo: sync by textbook id. Its not going to be by user
  * @return mixed
  */
-$export_det = export_tables_for_app(46);
 
 function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
@@ -130,7 +129,7 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
 
     // USER AND USERMETA TABLES ARE CUSTOM QUERIED AND ONLY BLOG RELATED RECORDS ARE FETCHED
     $tables_list[]= get_user_table_query($blog_id);
-    //$tables_list[]= get_usermeta_table_query($blog_id);
+    $tables_list[]= get_usermeta_table_query($blog_id);
 
     // POST, POST META, COLLECCTION and COLLECTION META TABLES ARE FETCHED BASED ON LAST SYNCED
 
@@ -163,9 +162,15 @@ function get_user_table_query($blog_id){
         $blog_id= get_current_blog_id();
 
     $args= array('role'=>'student','fields'=>'ID');
-    $users= get_users($args);
+    $students= get_users($args);
 
-    $student_ids= join(',',$users);
+
+    $args= array('role'=>'teacher','fields'=>'ID');
+    $teacher= get_users($args);
+
+    $users = array_merge($students, $teacher);
+
+    $user_ids= join(',',$users);
 
     $user_table_query= $wpdb->prepare(
         "SELECT u.* FROM
@@ -174,7 +179,7 @@ function get_user_table_query($blog_id){
                 WHERE u.ID= um.user_id
                     AND um.meta_key=%s
                     AND um.meta_value=%d
-                    AND u.ID in (".$student_ids.")",
+                    AND u.ID in (".$user_ids.")",
         array('primary_blog', $blog_id)
     );
     $user_table= array(
