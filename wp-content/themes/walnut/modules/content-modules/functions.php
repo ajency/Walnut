@@ -214,27 +214,23 @@ function get_single_content_module($id, $division='', $post_status=''){
 
     global $wpdb;
 
-    $current_blog= get_current_blog_id();
-    switch_to_blog(1);
 
-    $query = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}content_collection WHERE id= %d", $id);
+    $query = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id= %d", $id);
 
-    $data = $wpdb->get_results($query);
+    $data = $wpdb->get_row($query);
 
-    foreach ($data as $item){
-        $data=$item;
-        $data->term_ids         = maybe_unserialize ($data->term_ids);
-        $duration               = $item->duration;
-        $data->minshours        ='mins';
-        $data->total_minutes    = $data->duration; // only used for sorting accoring to time
-        if($duration >= 60){
-            $data->duration     = $duration/60;
-            $data->minshours    ='hrs';
-        }
-        $data->post_status = $post_status;
+
+    $data->term_ids         = maybe_unserialize ($data->term_ids);
+    $duration               = $data->duration;
+    $data->minshours        ='mins';
+    $data->total_minutes    = $data->duration; // only used for sorting accoring to time
+    if($duration >= 60){
+        $data->duration     = $duration/60;
+        $data->minshours    ='hrs';
     }
+    $data->post_status = $post_status;
 
-    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}collection_meta
+    $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta
         WHERE collection_id=%d",$id);
 
     $description= $wpdb->get_results($query_description);
@@ -252,7 +248,6 @@ function get_single_content_module($id, $division='', $post_status=''){
 
     }
 
-    switch_to_blog($current_blog);
 
     if($division){
         $status_dets = get_content_module_status($id, $division,$data->content_pieces);
