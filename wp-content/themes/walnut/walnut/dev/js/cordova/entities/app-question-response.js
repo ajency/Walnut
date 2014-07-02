@@ -24,6 +24,9 @@ define(['underscore', 'serialize'], function(_) {
                   var question_response;
                   if (meta_value.question_type === 'individual') {
                     question_response = _.unserialize(row['question_response']);
+                    question_response = _.map(question_response, function(num) {
+                      return parseInt(num);
+                    });
                   } else if (meta_value.question_type === 'chorus') {
                     question_response = row['question_response'];
                   } else {
@@ -33,7 +36,6 @@ define(['underscore', 'serialize'], function(_) {
                     var teacherName;
                     teacherName = _.getTeacherName(row['teacher_id']);
                     return teacherName.done(function(teacher_name) {
-                      console.log('teacher_name: ' + teacher_name);
                       return result[i] = {
                         ref_id: row['ref_id'],
                         teacher_id: row['teacher_id'],
@@ -76,14 +78,19 @@ define(['underscore', 'serialize'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var meta_key, meta_value, row;
-          if (data.rows.length !== 0) {
-            row = data.rows.item(0);
-            meta_key = row['meta_key'];
+          var i, row, _fn, _i, _ref;
+          question_response = [];
+          _fn = function(row, i) {
+            var meta_key, meta_value;
+            meta_key = parseInt(row['meta_key']);
             meta_value = _.unserialize(row['meta_value']);
-            question_response = _.extend(meta_value, {
+            return question_response[i] = _.extend(meta_value, {
               'id': meta_key
             });
+          };
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            row = data.rows.item(i);
+            _fn(row, i);
           }
           return d.resolve(question_response);
         };
@@ -166,25 +173,8 @@ define(['underscore', 'serialize'], function(_) {
       });
     },
     updateQuestionResponse: function(model, question_response, question_type) {
-      var end_date, multiple_eval_questionResponse;
-      if (question_type === 'multiple_eval') {
-        multiple_eval_questionResponse = model.get('question_response');
-        if (!_.isEmpty(multiple_eval_questionResponse)) {
-          _.each(multiple_eval_questionResponse, function(qR, i) {
-            var meta_value, student_id;
-            student_id = qR['id'];
-            qR = _.omit(qR, 'id');
-            meta_value = serialize(qR);
-            console.log('meta_key in QR: ' + student_id);
-            console.log('Meta value in QR: ' + meta_value);
-            return _.db.transaction(function(tx) {
-              return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_meta (qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)', [model.get('ref_id'), student_id, meta_value, 0]);
-            }, _.transactionErrorHandler, function(tx) {
-              return console.log('SUCCESS: Inserted record in wp_question_response_meta');
-            });
-          });
-        }
-      }
+      var end_date;
+      _.insertUpdateQuestionResponseMeta(model, question_type);
       end_date = model.get('end_date');
       if (model.get('status') === 'completed') {
         end_date = _.getCurrentDateTime(0);
@@ -194,6 +184,39 @@ define(['underscore', 'serialize'], function(_) {
       }, _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: Updated record in wp_question_response');
       });
+    },
+    insertUpdateQuestionResponseMeta: function(model, question_type) {
+      var multiple_eval_questionResponse;
+      if (question_type === 'multiple_eval') {
+        multiple_eval_questionResponse = model.get('question_response');
+        if (!_.isEmpty(multiple_eval_questionResponse)) {
+          return _.each(multiple_eval_questionResponse, function(qR, i) {
+            var meta_value, student_id;
+            student_id = qR['id'];
+            qR = _.omit(qR, 'id');
+            meta_value = serialize(qR);
+            return (function(student_id, meta_value) {
+              var record_exists;
+              record_exists = _.checkIfRecordExistsInQuestionResponseMeta(model.get('ref_id'), student_id);
+              return record_exists.done(function(exists) {
+                if (exists) {
+                  return _.db.transaction(function(tx) {
+                    return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response_meta SET meta_value=?, sync=? WHERE qr_ref_id=? AND meta_key=?', [meta_value, 0, model.get('ref_id'), student_id]);
+                  }, _.transactionErrorHandler, function(tx) {
+                    return console.log('SUCCESS: Updated record in wp_question_response_meta');
+                  });
+                } else {
+                  return _.db.transaction(function(tx) {
+                    return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_meta (qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)', [model.get('ref_id'), student_id, meta_value, 0]);
+                  }, _.transactionErrorHandler, function(tx) {
+                    return console.log('SUCCESS: Inserted record in wp_question_response_meta');
+                  });
+                }
+              });
+            })(student_id, meta_value);
+          });
+        }
+      }
     },
     checkIfRecordExistsInQuestionResponse: function(ref_id) {
       var onSuccess, runQuery;
@@ -216,6 +239,29 @@ define(['underscore', 'serialize'], function(_) {
       };
       return $.when(runQuery()).done(function() {
         return console.log('checkIfRecordExistsInQuestionResponse transaction completed');
+      }).fail(_.failureHandler);
+    },
+    checkIfRecordExistsInQuestionResponseMeta: function(qr_ref_id, meta_key) {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT qr_ref_id FROM " + _.getTblPrefix() + "question_response_meta WHERE qr_ref_id=? AND meta_key=?", [qr_ref_id, meta_key], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var exists;
+          exists = false;
+          if (data.rows.length > 0) {
+            exists = true;
+          }
+          return d.resolve(exists);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('checkIfRecordExistsInQuestionResponseMeta transaction completed');
       }).fail(_.failureHandler);
     }
   });

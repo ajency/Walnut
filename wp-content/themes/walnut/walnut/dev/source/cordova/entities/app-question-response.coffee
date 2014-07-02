@@ -32,6 +32,9 @@ define ['underscore', 'serialize'], ( _) ->
 
 										if meta_value.question_type is 'individual'
 											question_response = _.unserialize(row['question_response'])
+											question_response = _.map(question_response, (num)->
+													parseInt(num)
+												)
 										
 										else if meta_value.question_type is 'chorus'
 											question_response = row['question_response']
@@ -43,7 +46,6 @@ define ['underscore', 'serialize'], ( _) ->
 										do(row, i, question_response)->
 											teacherName = _.getTeacherName(row['teacher_id'])
 											teacherName.done (teacher_name)->
-												console.log 'teacher_name: '+teacher_name
 
 												result[i] = 
 													ref_id: row['ref_id']
@@ -80,13 +82,17 @@ define ['underscore', 'serialize'], ( _) ->
 			onSuccess = (d)->
 				(tx, data)->
 
-					if data.rows.length isnt 0
-						row = data.rows.item(0)
+					question_response = []
 
-						meta_key = row['meta_key']
-						meta_value = _.unserialize(row['meta_value'])
+					for i in [0..data.rows.length-1] by 1
 
-						question_response = _.extend(meta_value, 'id':meta_key)
+						row = data.rows.item(i)
+
+						do(row , i)->
+							meta_key = parseInt(row['meta_key'])
+							meta_value = _.unserialize(row['meta_value'])
+
+							question_response[i] = _.extend(meta_value, 'id':meta_key)
 
 					d.resolve question_response
 
@@ -193,30 +199,7 @@ define ['underscore', 'serialize'], ( _) ->
 
 		updateQuestionResponse : (model, question_response, question_type)->
 
-			if question_type is 'multiple_eval'
-				multiple_eval_questionResponse = model.get('question_response')
-				
-				if not _.isEmpty(multiple_eval_questionResponse)
-					
-					_.each multiple_eval_questionResponse, (qR, i)->
-						
-						student_id = qR['id']
-
-						qR = _.omit(qR, 'id')
-						meta_value = serialize(qR)
-						console.log 'meta_key in QR: '+student_id
-						console.log 'Meta value in QR: '+meta_value
-
-						_.db.transaction((tx)->
-							tx.executeSql('INSERT INTO '+_.getTblPrefix()+'question_response_meta 
-								(qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)'
-								, [model.get('ref_id'), student_id, meta_value, 0])
-
-						,_.transactionErrorHandler
-						,(tx)->
-							console.log 'SUCCESS: Inserted record in wp_question_response_meta'
-						)
-
+			_.insertUpdateQuestionResponseMeta(model, question_type)
 
 			end_date = model.get('end_date')			
 			end_date = _.getCurrentDateTime(0) if model.get('status') is 'completed'
@@ -231,7 +214,49 @@ define ['underscore', 'serialize'], ( _) ->
 			,_.transactionErrorHandler
 			,(tx)->
 				console.log 'SUCCESS: Updated record in wp_question_response'
-			)   
+			)
+
+
+		insertUpdateQuestionResponseMeta : (model, question_type)->
+
+			if question_type is 'multiple_eval'
+				multiple_eval_questionResponse = model.get('question_response')
+				
+				if not _.isEmpty(multiple_eval_questionResponse)
+					
+					_.each multiple_eval_questionResponse, (qR, i)->
+						
+						student_id = qR['id']
+
+						qR = _.omit(qR, 'id')
+						meta_value = serialize(qR)
+
+						do(student_id, meta_value)->
+
+							record_exists = 
+							_.checkIfRecordExistsInQuestionResponseMeta(model.get('ref_id'), student_id)
+							record_exists.done (exists)->
+								if exists
+									_.db.transaction((tx)->
+										tx.executeSql('UPDATE '+_.getTblPrefix()+'question_response_meta 
+											SET meta_value=?, sync=? WHERE qr_ref_id=? AND meta_key=?'
+											, [meta_value, 0, model.get('ref_id'), student_id])
+
+									,_.transactionErrorHandler
+									,(tx)->
+										console.log 'SUCCESS: Updated record in wp_question_response_meta'
+									)
+
+								else
+									_.db.transaction((tx)->
+										tx.executeSql('INSERT INTO '+_.getTblPrefix()+'question_response_meta 
+											(qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)'
+											, [model.get('ref_id'), student_id, meta_value, 0])
+
+									,_.transactionErrorHandler
+									,(tx)->
+										console.log 'SUCCESS: Inserted record in wp_question_response_meta'
+									)
 
 
 
@@ -253,4 +278,28 @@ define ['underscore', 'serialize'], ( _) ->
 
 			$.when(runQuery()).done ->
 				console.log 'checkIfRecordExistsInQuestionResponse transaction completed'
+			.fail _.failureHandler
+
+
+		
+		checkIfRecordExistsInQuestionResponseMeta : (qr_ref_id, meta_key)->
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT qr_ref_id
+							FROM "+_.getTblPrefix()+"question_response_meta 
+							WHERE qr_ref_id=? AND meta_key=?", [qr_ref_id, meta_key]
+							, onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+
+					exists = false
+					exists = true if data.rows.length > 0
+
+					d.resolve exists
+
+			$.when(runQuery()).done ->
+				console.log 'checkIfRecordExistsInQuestionResponseMeta transaction completed'
 			.fail _.failureHandler
