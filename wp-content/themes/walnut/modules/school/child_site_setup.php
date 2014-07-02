@@ -71,10 +71,9 @@ function setup_childsite_tables() {
     global $wpdb;
 
     $class_divisions_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}class_divisions
-            (`id` varchar(255),
+            (`id` int(11) NOT NULL primary key AUTO_INCREMENT,
              `division` varchar(255) NOT NULL, 
-             `class_id` INT NOT NULL, 
-             PRIMARY KEY (`id`))";
+             `class_id` INT NOT NULL)";
 
     $wpdb->query( $class_divisions_table );
 
