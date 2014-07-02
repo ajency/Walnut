@@ -28,10 +28,12 @@ define ['app'
 
                 if @display_mode is 'class_mode'
                     @timerObject.setHandler "get:elapsed:time", ()=>
-                        timerTime = $ @view.el
-                        .find '.cpTimer'
-                            .TimeCircles()
-                            .getTime()
+
+                        timerTimePeriod = $ @view.el
+                            .find '#downUpTimer'
+                            .countdown 'getTimes'
+
+                        timerTime= $.countdown.periodsToSeconds timerTimePeriod
 
                         timeElapsed = @durationInSeconds - timerTime
 
@@ -72,9 +74,9 @@ define ['app'
                 new TopPanel.Views.TopPanelView
                     model : @model
                     display_mode : @display_mode
+                    timeLeftOrElapsed : @_timeLeftOrElapsed()
 
                     templateHelpers :
-                        timeLeftOrElapsed : @_timeLeftOrElapsed
                         getClass : @_getClass
                         getTextbookName : _.bind @_getTextbookName , @, terms
                         getChapterName : _.bind @_getChapterName, @, terms
@@ -93,6 +95,7 @@ define ['app'
                     timeTaken = responseTime
 
                 timer = @durationInSeconds - timeTaken
+                timer
 
             _getClass : =>
                 classesArray = []

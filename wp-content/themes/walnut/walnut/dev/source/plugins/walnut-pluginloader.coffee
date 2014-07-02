@@ -35,4 +35,6 @@ define [
     'videojs'
     'panzer'
     'mmenu'
+    'timerplugin'
+    'countdowntimer'
 ], ->

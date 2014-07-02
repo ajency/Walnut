@@ -26,7 +26,7 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
       };
 
       TopPanelView.prototype.onShow = function() {
-        var qTime, qTimer, timerColor;
+        var timeLeftOrElapsed;
         if (this.model.get('question_type') === 'multiple_eval') {
           this.$el.find('#correct-answer-col').hide();
         }
@@ -36,76 +36,22 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
         if (this.model.get('content_type') !== 'student_question') {
           this.$el.find('#total-marks').hide();
         }
+        timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         if (this.mode === 'class_mode') {
-          qTimer = this.$el.find('div.cpTimer');
-          qTime = qTimer.data('timer');
-          timerColor = '#1ec711';
-          if (qTime < 10) {
-            timerColor = '#f8a616';
-          }
-          if (qTime < 0) {
-            timerColor = '#ea0d0d';
-          }
-          return qTimer.TimeCircles({
-            time: {
-              Days: {
-                show: false
-              },
-              Hours: {
-                show: false
-              },
-              Minutes: {
-                color: timerColor
-              },
-              Seconds: {
-                color: timerColor
-              }
-            },
-            circle_bg_color: "#d6d5d4",
-            bg_width: 0.2,
-            fg_width: 0.02,
-            animation: "ticks"
-          }).addListener(function(unit, value, total) {
-            if (total === 10) {
-              qTimer.data('timer', 10);
-              return qTimer.TimeCircles({
-                time: {
-                  Days: {
-                    show: false
-                  },
-                  Hours: {
-                    show: false
-                  },
-                  Minutes: {
-                    color: '#f8a616'
-                  },
-                  Seconds: {
-                    color: '#f8a616'
-                  }
-                }
-              });
-            } else if (total === 5) {
-              return console.log('The expected time for this question is almost over.');
-            } else if (total === -1) {
-              return qTimer.TimeCircles({
-                time: {
-                  Days: {
-                    show: false
-                  },
-                  Hours: {
-                    show: false
-                  },
-                  Minutes: {
-                    color: '#ea0d0d'
-                  },
-                  Seconds: {
-                    color: '#ea0d0d'
-                  }
-                }
-              });
-            }
+          return $('#downUpTimer').countdown({
+            until: timeLeftOrElapsed,
+            format: 'MS',
+            onExpiry: this.countUp
           });
         }
+      };
+
+      TopPanelView.prototype.countUp = function() {
+        $('#downUpTimer').countdown('destroy');
+        return $('#downUpTimer').countdown({
+          since: -0,
+          format: 'MS'
+        });
       };
 
       TopPanelView.prototype.onShowTotalMarks = function(marks) {

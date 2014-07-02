@@ -6,7 +6,8 @@
                 <p class="small-text muted text-center">Visible in Class room mode</p>
             {{/isTraining}}
             {{^isTraining}}
-                <div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>
+                <!--<div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>-->
+                <div id="downUpTimer"></div>
                 {{&getCompletedSummary}}
             {{/isTraining}}
         </div>
