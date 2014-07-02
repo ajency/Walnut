@@ -285,10 +285,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.deleteElement = function(model) {
-        console.log('destroying');
         model.set('options', '');
         delete model.get('options');
-        model.destroy();
+        Controller.__super__.deleteElement.call(this, model);
         return App.execute("close:question:properties");
       };
 

@@ -7,24 +7,9 @@ define ['app',
             template: optionsBarTpl
 
             events:
-                'change #subs': (e)->
-                    @$el.find '#chaps, #secs, #subsecs'
-                    .select2 'data', null
+                'change #subs': '_changeSubject'
 
-                    @$el.find '#chaps, #secs, #subsecs'
-                    .html ''
-
-                    @trigger "fetch:chapters", $(e.target).val()
-
-                'change #chaps': (e)->
-
-                    @$el.find '#secs, #subsecs'
-                    .select2 'data', null
-
-                    @$el.find '#secs, #subsecs'
-                    .html ''
-
-                    @trigger "fetch:sections:subsections", $(e.target).val()
+                'change #chaps': '_changeChapter'
 
                 'change #qType' : '_changeOfQuestionType'
 
@@ -32,13 +17,20 @@ define ['app',
 
                 'click #preview-question' : 'previewQuestion'
 
+                'click #subProps.nav-tabs' : '_changeTabs'
+
+            mixinTemplateHelpers : (data)->
+                data = super data
+                data.isStudentQuestion = if @model.get('content_type') is 'student_question' then true else false
+                data
+
 
 
             onShow:->
-                $ "#subs, #chaps, #qType, #status, #secs, #subsecs "#,#negativeMarks"
+                @$el.find "#subs, #chaps, #qType, #status, #secs, #subsecs, #difficulty_level "#,#negativeMarks"
                 .select2();
 
-                $('input.tagsinput').tagsinput()
+                @$el.find('input.tagsinput').tagsinput()
 
                 $('#subProps a').click (e)->
                     e.preventDefault();
@@ -46,29 +38,58 @@ define ['app',
 
                 if @model.get 'ID'
                     qType= @model.get 'question_type'
-                    $('#qType').select2().select2('val',qType)
+                    @$el.find('#qType').select2().select2('val',qType)
 
                     postStatus= @model.get 'post_status'
-                    $('#status').select2().select2('val',postStatus)
+                    @$el.find('#status').select2().select2('val',postStatus)
+
+                    @$el.find('#difficulty_level').select2().select2 'val',@model.get 'difficulty_level'
 
 #                    negativeMarks= parseInt @model.get 'negative_marks'
 #                    $('#negativeMarks').select2().select2('val',negativeMarks)
 
-                if @model.get('content_type') in ['content_piece','student_question']
+                if @model.get('content_type') isnt 'teacher_question'
                     @$el.find '#question_type_column'
                     .remove()
+
+            _changeTabs : (e)->
+                tabId = @$el.find('#subProps.nav-tabs li.active').attr 'id'
+                tabPaneId = tabId+'-pane'
+                console.log tabPaneId
+                @$el.find('.tab-content .tab-pane').removeClass 'active'
+                @$el.find(".tab-content ##{tabPaneId}.tab-pane").addClass 'active'
+
+
+            _changeSubject : (e)->
+                @$el.find '#chaps, #secs, #subsecs'
+                .select2 'data', null
+
+                @$el.find '#chaps, #secs, #subsecs'
+                .html ''
+
+                @trigger "fetch:chapters", $(e.target).val()
+
+            _changeChapter : (e)->
+
+                @$el.find '#secs, #subsecs'
+                .select2 'data', null
+
+                @$el.find '#secs, #subsecs'
+                .html ''
+
+                @trigger "fetch:sections:subsections", $(e.target).val()
 
             onFetchChaptersComplete: (chaps, curr_chapter)->
                 if _.size(chaps) > 0
                     @$el.find('#chaps').html('');
                     _.each chaps.models, (chap, index)=>
                         @$el.find '#chaps'
-                        .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
+                        .append "<option value='#{chap.get('term_id')}'>#{chap.get('name')}</option>"
 
-                    $('#chaps').select2().select2 'val',curr_chapter
+                    @$el.find('#chaps').select2().select2 'val',curr_chapter
 
                 else
-                    $('#chaps').select2().select2 'data', null
+                    @$el.find('#chaps').select2().select2 'data', null
 
             onFetchSubsectionsComplete: (allsections)=>
                 term_ids= @model.get 'term_ids'
@@ -84,21 +105,21 @@ define ['app',
                             @$el.find('#secs')
                             .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
 
-                        $('#secs').select2().select2 'val',sectionIDs
+                        @$el.find('#secs').select2().select2 'val',sectionIDs
 
                     else
-                        $('#secs').select2().select2 'data', null
+                        @$el.find('#secs').select2().select2 'data', null
 
                     if _.size(allsections.subsections) > 0
                         @$el.find('#subsecs').html('');
                         _.each allsections.subsections, (section, index)=>
                             @$el.find '#subsecs'
                             .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-                        $('#subsecs').select2().select2 'val',subSectionIDs
+                        @$el.find('#subsecs').select2().select2 'val',subSectionIDs
                     else
-                        $('#subsecs').select2().select2 'data', null
+                        @$el.find('#subsecs').select2().select2 'data', null
                 else
-                    $('#subsecs,#secs').select2().select2 'data', null
+                    @$el.find('#subsecs,#secs').select2().select2 'data', null
 
             _changeOfQuestionType : (e)->
                 if $(e.target).val() is 'multiple_eval'

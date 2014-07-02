@@ -261,10 +261,11 @@ define ['app'
                 @view.triggerMethod 'get:all:option:elements'
 
             deleteElement: (model)->
-                console.log 'destroying'
                 model.set('options', '')
                 delete model.get 'options'
-                model.destroy()
+
+                super model
+
                 App.execute "close:question:properties"
 
 

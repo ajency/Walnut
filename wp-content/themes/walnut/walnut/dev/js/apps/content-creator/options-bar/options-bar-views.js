@@ -15,38 +15,59 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       OptionsBarView.prototype.template = optionsBarTpl;
 
       OptionsBarView.prototype.events = {
-        'change #subs': function(e) {
-          this.$el.find('#chaps, #secs, #subsecs').select2('data', null);
-          this.$el.find('#chaps, #secs, #subsecs').html('');
-          return this.trigger("fetch:chapters", $(e.target).val());
-        },
-        'change #chaps': function(e) {
-          this.$el.find('#secs, #subsecs').select2('data', null);
-          this.$el.find('#secs, #subsecs').html('');
-          return this.trigger("fetch:sections:subsections", $(e.target).val());
-        },
+        'change #subs': '_changeSubject',
+        'change #chaps': '_changeChapter',
         'change #qType': '_changeOfQuestionType',
         'click  #save-question': 'saveQuestionSettings',
-        'click #preview-question': 'previewQuestion'
+        'click #preview-question': 'previewQuestion',
+        'click #subProps.nav-tabs': '_changeTabs'
+      };
+
+      OptionsBarView.prototype.mixinTemplateHelpers = function(data) {
+        data = OptionsBarView.__super__.mixinTemplateHelpers.call(this, data);
+        data.isStudentQuestion = this.model.get('content_type') === 'student_question' ? true : false;
+        return data;
       };
 
       OptionsBarView.prototype.onShow = function() {
-        var postStatus, qType, _ref;
-        $("#subs, #chaps, #qType, #status, #secs, #subsecs ").select2();
-        $('input.tagsinput').tagsinput();
+        var postStatus, qType;
+        this.$el.find("#subs, #chaps, #qType, #status, #secs, #subsecs, #difficulty_level ").select2();
+        this.$el.find('input.tagsinput').tagsinput();
         $('#subProps a').click(function(e) {
           e.preventDefault();
           return $(this).tab('show');
         });
         if (this.model.get('ID')) {
           qType = this.model.get('question_type');
-          $('#qType').select2().select2('val', qType);
+          this.$el.find('#qType').select2().select2('val', qType);
           postStatus = this.model.get('post_status');
-          $('#status').select2().select2('val', postStatus);
+          this.$el.find('#status').select2().select2('val', postStatus);
+          this.$el.find('#difficulty_level').select2().select2('val', this.model.get('difficulty_level'));
         }
-        if ((_ref = this.model.get('content_type')) === 'content_piece' || _ref === 'student_question') {
+        if (this.model.get('content_type') !== 'teacher_question') {
           return this.$el.find('#question_type_column').remove();
         }
+      };
+
+      OptionsBarView.prototype._changeTabs = function(e) {
+        var tabId, tabPaneId;
+        tabId = this.$el.find('#subProps.nav-tabs li.active').attr('id');
+        tabPaneId = tabId + '-pane';
+        console.log(tabPaneId);
+        this.$el.find('.tab-content .tab-pane').removeClass('active');
+        return this.$el.find(".tab-content #" + tabPaneId + ".tab-pane").addClass('active');
+      };
+
+      OptionsBarView.prototype._changeSubject = function(e) {
+        this.$el.find('#chaps, #secs, #subsecs').select2('data', null);
+        this.$el.find('#chaps, #secs, #subsecs').html('');
+        return this.trigger("fetch:chapters", $(e.target).val());
+      };
+
+      OptionsBarView.prototype._changeChapter = function(e) {
+        this.$el.find('#secs, #subsecs').select2('data', null);
+        this.$el.find('#secs, #subsecs').html('');
+        return this.trigger("fetch:sections:subsections", $(e.target).val());
       };
 
       OptionsBarView.prototype.onFetchChaptersComplete = function(chaps, curr_chapter) {
@@ -54,12 +75,12 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           this.$el.find('#chaps').html('');
           _.each(chaps.models, (function(_this) {
             return function(chap, index) {
-              return _this.$el.find('#chaps').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
+              return _this.$el.find('#chaps').append("<option value='" + (chap.get('term_id')) + "'>" + (chap.get('name')) + "</option>");
             };
           })(this));
-          return $('#chaps').select2().select2('val', curr_chapter);
+          return this.$el.find('#chaps').select2().select2('val', curr_chapter);
         } else {
-          return $('#chaps').select2().select2('data', null);
+          return this.$el.find('#chaps').select2().select2('data', null);
         }
       };
 
@@ -80,9 +101,9 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
                 return _this.$el.find('#secs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
               };
             })(this));
-            $('#secs').select2().select2('val', sectionIDs);
+            this.$el.find('#secs').select2().select2('val', sectionIDs);
           } else {
-            $('#secs').select2().select2('data', null);
+            this.$el.find('#secs').select2().select2('data', null);
           }
           if (_.size(allsections.subsections) > 0) {
             this.$el.find('#subsecs').html('');
@@ -91,12 +112,12 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
                 return _this.$el.find('#subsecs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
               };
             })(this));
-            return $('#subsecs').select2().select2('val', subSectionIDs);
+            return this.$el.find('#subsecs').select2().select2('val', subSectionIDs);
           } else {
-            return $('#subsecs').select2().select2('data', null);
+            return this.$el.find('#subsecs').select2().select2('data', null);
           }
         } else {
-          return $('#subsecs,#secs').select2().select2('data', null);
+          return this.$el.find('#subsecs,#secs').select2().select2('data', null);
         }
       };
 
