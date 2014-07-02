@@ -135,7 +135,7 @@ define ['jquery', 'underscore'], ($, _)->
     $.filterTableByTextbooks = (_this)->
         filter_elements= _this.$el.find('select.textbook-filter')
 
-        fullCollection = _this.fullCollection
+        filterCollection = _this.fullCollection.clone()
 
         filter_ids=_.map filter_elements, (ele,index)->
             item = ''
@@ -149,16 +149,17 @@ define ['jquery', 'underscore'], ($, _)->
 
         content_post_status = _this.$el.find('#content-post-status-filter').val()
 
-        filtered_models= fullCollection.models
 
         if content_type
-            filtered_models =  fullCollection.where 'content_type': content_type
+            filterCollection.reset  filterCollection.where 'content_type': content_type
 
         if content_status
-            filtered_models =  fullCollection.where 'status': content_status
+            filterCollection.reset  filterCollection.where 'status': content_status
 
         if content_post_status
-            filtered_models =  fullCollection.where 'post_status': content_post_status
+            filterCollection.reset  filterCollection.where 'post_status': content_post_status
+
+        filtered_models= filterCollection.models
 
         if _.size(filter_ids) > 0
             filtered_data = _.filter filtered_models, (item)=>
