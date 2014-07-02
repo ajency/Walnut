@@ -88,10 +88,29 @@ define ['underscore', 'csvparse'], ( _, parse) ->
                 ,_.transactionErrorhandler
                 ,(tx)->
                     console.log 'Inserted data in '+_.getTblPrefix()+'question_response'
-                    _.insertIntoWpCollectionMeta()
+                    _.insertIntoWpQuestionResponseMeta()
                 )
 
 
+        insertIntoWpQuestionResponseMeta : ->
+
+            getParsedData = _.parseCSVToJSON _.getTblPrefix()+'question_response_meta.csv'
+            getParsedData.done (data)->
+                _.db.transaction((tx)->
+                    tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response_meta")
+
+                    _.each data, (row, i)->
+                        tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response_meta 
+                            (qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)"
+                            , [row[0], row[1], row[2], 1])
+
+                ,_.transactionErrorhandler
+                ,(tx)->
+                    console.log 'Inserted data in '+_.getTblPrefix()+'question_response_meta'
+                    _.insertIntoWpCollectionMeta()
+                )
+
+        
         insertIntoWpCollectionMeta : ->
 
             getParsedData = _.parseCSVToJSON 'wp_collection_meta.csv'

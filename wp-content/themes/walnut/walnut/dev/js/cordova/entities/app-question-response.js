@@ -174,9 +174,11 @@ define(['underscore', 'serialize'], function(_) {
             var meta_value, student_id;
             student_id = qR['id'];
             qR = _.omit(qR, 'id');
-            meta_value = serialize(qR['meta_value']);
+            meta_value = serialize(qR);
+            console.log('meta_key in QR: ' + student_id);
+            console.log('Meta value in QR: ' + meta_value);
             return _.db.transaction(function(tx) {
-              return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_meta (qr_ref_id, meta_key, meta_value) VALUES (?,?,?)', [model.get('ref_id'), student_id, meta_value]);
+              return tx.executeSql('INSERT INTO ' + _.getTblPrefix() + 'question_response_meta (qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)', [model.get('ref_id'), student_id, meta_value, 0]);
             }, _.transactionErrorHandler, function(tx) {
               return console.log('SUCCESS: Inserted record in wp_question_response_meta');
             });

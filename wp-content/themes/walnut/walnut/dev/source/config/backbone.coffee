@@ -62,8 +62,6 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'question-response'
 				data = App.reqres.request "get:#{collection_name}:local", opts.collection_id, opts.division
 				data.done (d)->
-					console.log 'QR data'
-					console.log d
 					collection.set d
 
 			if collection_name is 'textbookName'

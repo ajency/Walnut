@@ -89,7 +89,7 @@ define(["app", 'backbone'], function(App, Backbone) {
                 ID: row['ID'],
                 display_name: row['display_name'],
                 user_email: row['user_email'],
-                profile_pic: ''
+                profile_pic: '/images/avtar.png'
               };
             }
             return d.resolve(result);

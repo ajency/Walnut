@@ -73,6 +73,21 @@ define(['underscore', 'csvparse'], function(_, parse) {
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in ' + _.getTblPrefix() + 'question_response');
+          return _.insertIntoWpQuestionResponseMeta();
+        });
+      });
+    },
+    insertIntoWpQuestionResponseMeta: function() {
+      var getParsedData;
+      getParsedData = _.parseCSVToJSON(_.getTblPrefix() + 'question_response_meta.csv');
+      return getParsedData.done(function(data) {
+        return _.db.transaction(function(tx) {
+          tx.executeSql("DELETE FROM " + _.getTblPrefix() + "question_response_meta");
+          return _.each(data, function(row, i) {
+            return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "question_response_meta (qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)", [row[0], row[1], row[2], 1]);
+          });
+        }, _.transactionErrorhandler, function(tx) {
+          console.log('Inserted data in ' + _.getTblPrefix() + 'question_response_meta');
           return _.insertIntoWpCollectionMeta();
         });
       });
