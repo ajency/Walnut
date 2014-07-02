@@ -1300,11 +1300,11 @@ p.mcq-option-text {
 }
 .time_circles {
   position: static;
-  display: table-caption;
-  padding-bottom: 50px;
+  display: table-cell;
+  height: 120px;
 }
 .time_circles canvas {
-  margin-bottom: -75px;
+  margin-bottom: -80px;
   display: table-cell;
 }
 .time_circles > div {
@@ -1827,6 +1827,9 @@ h3.time {
 }
 .studentList .students i {
   font-size: 20px;
+}
+.studentList .students div {
+  position: static;
 }
 .studentList .ln-letters {
   display: table;
