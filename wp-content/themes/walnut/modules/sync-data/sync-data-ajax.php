@@ -15,6 +15,8 @@ function ajax_sync_app_data() {
     switch_to_blog( $blog_id );
 
     $file_id = '';
+    
+    $crontriggerd = false;
 
     if (empty($_FILES))
         wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'No file to upload' ) ) );
@@ -33,10 +35,16 @@ function ajax_sync_app_data() {
 
     $sync_request_id = insert_sync_request_record( array( 'file_path' => $file_data['file'] ) );
 
-    if (is_wp_error( $sync_request_id ))
+    if (is_wp_error( $sync_request_id )){
         wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Failed to create sync request. Please try again' ) ) );
-
-    wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_request_id ) ) );
+    }
+       
+    $blogurl = get_site_url();
+    $trigger_blogurl_hit = wp_remote_get($blogurl);
+    if(!is_wp_error( $trigger_blogurl_hit ))
+          $crontriggerd = true;
+    
+    wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_request_id ,'cron_trigger' => $crontriggerd ) ) );
 }
 
 add_action( 'wp_ajax_nopriv_sync-app-data', 'ajax_sync_app_data' );
