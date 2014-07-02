@@ -162,8 +162,9 @@ function user_extend_profile_fields($user){
             <div>
             <ul clsss="divisions-list">
     <?php
-
+        restore_current_blog();
         $divisions =  get_class_divisions();
+        switch_to_blog(1);
         if(!is_null($divisions)){
         foreach($divisions as $key => $value):
 

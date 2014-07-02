@@ -15,8 +15,6 @@ function ajax_sync_app_data() {
     switch_to_blog( $blog_id );
 
     $file_id = '';
-    
-    $crontriggerd = false;
 
     if (empty($_FILES))
         wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'No file to upload' ) ) );
@@ -38,13 +36,8 @@ function ajax_sync_app_data() {
     if (is_wp_error( $sync_request_id )){
         wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Failed to create sync request. Please try again' ) ) );
     }
-       
-    $blogurl = get_site_url();
-    $trigger_blogurl_hit = wp_remote_get($blogurl);
-    if(!is_wp_error( $trigger_blogurl_hit ))
-          $crontriggerd = true;
     
-    wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_request_id ,'cron_trigger' => $crontriggerd ) ) );
+    wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_request_id ) ) );
 }
 
 add_action( 'wp_ajax_nopriv_sync-app-data', 'ajax_sync_app_data' );
@@ -72,6 +65,9 @@ function check_app_data_sync_completion() {
     $blog_id = $_REQUEST['blog_id'];
 
     switch_to_blog($blog_id);
+    
+    $blogurl = get_site_url();
+    $trigger_blogurl_hit = wp_remote_get($blogurl); //blog url hit to trigger cron scheduled if no site hits
 
     $status = check_app_sync_data_completion( $sync_request_id );
 
