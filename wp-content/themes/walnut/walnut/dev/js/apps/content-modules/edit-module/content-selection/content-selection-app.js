@@ -17,6 +17,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       ContentSelectionController.prototype.initialize = function(opts) {
         this.textbooksCollection = App.request("get:textbooks");
         this.contentPiecesCollection = App.request("get:content:pieces", {
+          post_status: 'publish',
           content_type: ['teacher_question', 'content_piece']
         });
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
@@ -78,9 +79,17 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         return DataContentItemView.__super__.constructor.apply(this, arguments);
       }
 
-      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td>{{post_excerpt}}</td> <td>{{post_author_name}}</td> <td>{{post_modified}}</td>';
+      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td>{{post_excerpt}}</td> <td>{{post_author_name}}</td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>';
 
       DataContentItemView.prototype.tagName = 'tr';
+
+      DataContentItemView.prototype.serializeData = function() {
+        var data;
+        data = DataContentItemView.__super__.serializeData.call(this);
+        data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
+        data.sort_date = moment(data.post_modified).format("YYYYMMDD");
+        return data;
+      };
 
       return DataContentItemView;
 

@@ -7,7 +7,9 @@ define ['app'
             initialize: (opts) ->
 
                 @textbooksCollection = App.request "get:textbooks"
-                @contentPiecesCollection = App.request "get:content:pieces", content_type: ['teacher_question','content_piece']
+                @contentPiecesCollection = App.request "get:content:pieces",
+                    post_status: 'publish',
+                    content_type: ['teacher_question','content_piece']
 
                 {@model,@contentGroupCollection}= opts
 
@@ -52,9 +54,20 @@ define ['app'
                         </td>
                         <td>{{post_excerpt}}</td>
                         <td>{{post_author_name}}</td>
-                        <td>{{post_modified}}</td>'
+                        <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>'
 
             tagName: 'tr'
+
+            serializeData:->
+                data= super()
+
+                #this is for display purpose only
+                data.modified_date= moment(data.post_modified).format("Do MMM YYYY")
+
+                #for sorting the column date-wise
+                data.sort_date= moment(data.post_modified).format "YYYYMMDD"
+
+                data
 
         class NoDataItemView extends Marionette.ItemView
 

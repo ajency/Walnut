@@ -13,7 +13,7 @@ define(['app'], function(App) {
 
       GradingParamsItemView.prototype.className = 'singleParam';
 
-      GradingParamsItemView.prototype.template = '<div class="row m-b-10"> <div class="col-sm-4"> <input id="parameter" type="text" placeholder="Parameter name" class="w100" value="{{parameter}}"> </div> </div> <div class="row p-b-15"> {{#attributes}} <div class="col-sm-3"> <input type="text" placeholder="Attribute" class="w100 attribute" value="{{.}}"> </div> {{/attributes}} </div> <div class="row b-grey b-b p-b-15 m-b-15"> <div class="col-sm-12"> <button id="btn-delete" class="btn btn-default btn-sm btn-small pull-right">Delete</button> <button id="btn-save" class="btn btn-success btn-sm btn-small pull-right m-r-10">Save</button> </div> </div>';
+      GradingParamsItemView.prototype.template = '<div class="row m-b-10"> <div class="col-sm-4"> <input id="parameter" type="text" placeholder="Parameter name" class="w100" value="{{parameter}}"> </div><div class="saved" style="color: dodgerblue">Saved</div><div class="changed" style="color: #ff0000; display: none">Changed</div> </div> <div class="row p-b-15"> {{#attributes}} <div class="col-sm-3"> <input type="text" placeholder="Attribute" class="w100 attribute" value="{{.}}"> </div> {{/attributes}} </div> <div class="row b-grey b-b p-b-15 m-b-15"> <div class="col-sm-12"> <button id="btn-delete" class="btn btn-default btn-sm btn-small pull-right">Delete</button> <button id="btn-save" class="btn btn-success btn-sm btn-small pull-right m-r-10">Save</button> </div> </div>';
 
       GradingParamsItemView.prototype.mixinTemplateHelpers = function(data) {
         data = GradingParamsItemView.__super__.mixinTemplateHelpers.call(this, data);
@@ -25,7 +25,8 @@ define(['app'], function(App) {
 
       GradingParamsItemView.prototype.events = {
         'click #btn-save': '_saveGradingParameter',
-        'click #btn-delete': '_deleteGradingParameter'
+        'click #btn-delete': '_deleteGradingParameter',
+        'change input': '_inputChanged'
       };
 
       GradingParamsItemView.prototype._saveGradingParameter = function() {
@@ -33,7 +34,6 @@ define(['app'], function(App) {
         if (this.$el.find('input#parameter').val() === '') {
           return;
         }
-        this.model.set('parameter', this.$el.find('input#parameter').val());
         attributes = new Array();
         _.each(this.$el.find('input.attribute'), function(attributeInput) {
           if ($(attributeInput).val() !== '') {
@@ -43,12 +43,20 @@ define(['app'], function(App) {
         if (!attributes.length) {
           return;
         }
+        this.model.set('parameter', this.$el.find('input#parameter').val());
         this.model.set('attributes', attributes);
-        return this.trigger('save:grading:parameter');
+        this.trigger('save:grading:parameter');
+        this.$el.find('.saved').show();
+        return this.$el.find('.changed').hide();
       };
 
       GradingParamsItemView.prototype._deleteGradingParameter = function() {
         return this.trigger('delete:grading:parameter');
+      };
+
+      GradingParamsItemView.prototype._inputChanged = function() {
+        this.$el.find('.saved').hide();
+        return this.$el.find('.changed').show();
       };
 
       return GradingParamsItemView;

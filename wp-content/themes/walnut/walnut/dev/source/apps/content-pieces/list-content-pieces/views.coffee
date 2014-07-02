@@ -10,7 +10,7 @@ define ['app'
                                     <td>{{post_author_name}}</td>
                                     <td>{{textbookName}}</td>
                                     <td>{{chapterName}}</td>
-                                    <td>{{modified_date}}</td>
+                                    <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
                                     <td>{{&statusMessage}}</td>
                                     <td class="text-center"><a target="_blank" href="{{view_url}}">View</a>
                                         {{&edit_link}}
@@ -18,7 +18,13 @@ define ['app'
 
             serializeData:->
                 data= super()
+
+                #this is for display purpose only
                 data.modified_date= moment(data.post_modified).format("Do MMM YYYY")
+
+                #for sorting the column date-wise
+                data.sort_date= moment(data.post_modified).format "YYYYMMDD"
+
                 data.view_url = SITEURL + '/#content-piece/'+data.ID
                 edit_url = SITEURL + '/content-creator/#edit-content/'+data.ID
                 data.edit_link= ''

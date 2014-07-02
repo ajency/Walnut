@@ -104,7 +104,9 @@ function get_content_pieces($args = array()) {
 
     $args['numberposts'] = -1;
     $args['fields'] = 'ids';
-    $args['post_status'] = 'any';
+
+    if(!isset($args['post_status']))
+        $args['post_status'] = 'any';
 
     $content_items = get_posts($args);
 

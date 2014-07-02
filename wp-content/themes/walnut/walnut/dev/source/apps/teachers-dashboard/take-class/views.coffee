@@ -68,3 +68,7 @@ define ['app'
 
 				@dimensions = 
 					status: 'all'
+
+				$("li.txtbook").click ->
+				  window.location = $(this).find("a").attr("href")
+				  false

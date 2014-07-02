@@ -47,12 +47,12 @@ define(['app'], function(App) {
       EvaluationItemView.prototype._buttonClicked = function(e) {
         if (this.display_mode === 'class_mode') {
           if ($(e.target).closest('button').hasClass('btn-primary')) {
-
+            this.$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white');
+            return delete this.responseObj[this.model.get('id')];
           } else {
             this.$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white');
             $(e.target).closest('button').removeClass('btn-white').addClass('btn-primary');
-            this.responseObj[this.model.get('id')] = $(e.target).attr('id');
-            return console.log(this.responseObj);
+            return this.responseObj[this.model.get('id')] = $(e.target).attr('id');
           }
         }
       };
@@ -92,7 +92,8 @@ define(['app'], function(App) {
       };
 
       EvaluationView.prototype.events = {
-        'click #saveEval': '_saveEvalParameters'
+        'click #saveEval': '_saveEvalParameters',
+        'click #close-parameters': '_closeEvalParams'
       };
 
       EvaluationView.prototype.initialize = function(options) {
@@ -104,6 +105,11 @@ define(['app'], function(App) {
         if (_.size(this.responseObj) > 1) {
           return this.trigger("save:eval:parameters");
         }
+      };
+
+      EvaluationView.prototype._closeEvalParams = function() {
+        this.$el.closest('.studentList').find('.tiles.single').removeClass('light').removeClass('selected');
+        return this.$el.slideToggle();
       };
 
       return EvaluationView;

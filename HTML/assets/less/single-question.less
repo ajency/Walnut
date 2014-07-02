@@ -26,13 +26,15 @@
 
 .time_circles{
 	position: static;
+	display: table-cell;
+	height: 120px;
 	canvas{
 		margin-bottom: -80px;
+		display: table-cell;
 	}
 	& > div{
 		position: static;
-		display: inline-block;
-		margin-bottom: 50px;
+		display: table-cell;
 	}
 }
 
@@ -58,6 +60,17 @@
 		border: none;
 		padding: 0 7px;
 		margin: 2px 0 15px;
+	}
+
+	.imagewithtext{
+		.image-placeholder{
+			cursor: default;
+			position: static;
+		}
+		img{
+			position: static;
+			cursor: default;
+		}
 	}
 }
 
@@ -135,12 +148,13 @@
 }
 
 #module-details-region{
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 5;
+	
 	&.condensed{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 5;
 		.moduleInfo > div{
 			padding: 0;
 			.modTime{
@@ -162,12 +176,11 @@
 				}
 			}
 		}
+
 	}
 }
 
-#question-details-region{
-	margin-top: 115px;
-}
+
 
 
 /*.answrRight{
