@@ -1227,14 +1227,16 @@ p.mcq-option-text {
 }
 .time_circles {
   position: static;
+  display: table-cell;
+  height: 120px;
 }
 .time_circles canvas {
   margin-bottom: -80px;
+  display: table-cell;
 }
 .time_circles > div {
   position: static;
-  display: inline-block;
-  margin-bottom: 50px;
+  display: table-cell;
 }
 .modInfo,
 .qstnInfo {
@@ -1752,6 +1754,9 @@ h3.time {
 }
 .studentList .students i {
   font-size: 20px;
+}
+.studentList .students div {
+  position: static;
 }
 .studentList .ln-letters {
   display: table;

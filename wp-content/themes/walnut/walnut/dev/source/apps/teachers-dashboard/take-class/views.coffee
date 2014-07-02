@@ -68,6 +68,10 @@ define ['app'
 
 				@dimensions = 
 					status: 'all'
-				
+
+				$("li.txtbook").click ->
+					window.location = $(this).find("a").attr("href")
+					false
+
 				# Cordova app navigation
 				_.appNavigation() if _.platform() is 'DEVICE'
