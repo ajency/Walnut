@@ -86,9 +86,13 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
           effects: ['fade', 'blur'],
           listEffects: ['fade', 'rotateX']
         });
-        return this.dimensions = {
+        this.dimensions = {
           status: 'all'
         };
+        return $("li.txtbook").click(function() {
+          window.location = $(this).find("a").attr("href");
+          return false;
+        });
       };
 
       return TextbooksListView;
