@@ -136,10 +136,7 @@ function upload_textbook_image() {
         }
     }
 
-    echo json_encode( array( 'attachment_id' => $attachment_id, 'attachment_url' => $attachment_url ) );
-
-    // run ajax
-    die($ajax_message);
+    wp_send_json( array( 'attachment_id' => $attachment_id, 'attachment_url' => $attachment_url ) );
 }
 
 add_action( 'admin_init', 'upload_textbook_image' );
@@ -197,18 +194,21 @@ add_action( 'edited_textbook', 'save_extra_taxonomy_fields', 10, 2 );
 
 function get_textbooks( $args = array() ) {
 
+    $textbooks_for_blog = get_textbooksids_for_current_blog();
+
     $current_blog = get_current_blog_id();
     switch_to_blog( 1 );
     // set defaults
     $defaults = array(
-        'hide_empty' => false,
-        'parent' => 0,
-        'fetch_all' => false,
-        'orderby' => 'name',
-        'order' => 'asc',
+        'hide_empty'    => false,
+        'parent'        => 0,
+        'fetch_all'     => false,
+        'orderby'       => 'name',
+        'order'         => 'asc',
         //'number'=>2,
-        'user_id' => get_current_user_id(),
-        'class_id' => ''
+        'user_id'       => get_current_user_id(),
+        'class_id'      => '',
+        'include'       => $textbooks_for_blog
     );
 
     $count_total=0;
@@ -248,6 +248,35 @@ function get_textbooks( $args = array() ) {
     switch_to_blog( $current_blog );
 
     return $textbooks_data;
+}
+
+function get_textbooksids_for_current_blog(){
+
+    global $wpdb;
+
+    $class_ids= $wpdb->get_results("SELECT class_id FROM {$wpdb->prefix}class_divisions",ARRAY_A);
+    $class_ids=__u::flatten($class_ids);
+    $class_ids=__u::unique($class_ids);
+
+    $textbooks= $wpdb->get_results("SELECT textbook_id, class_id FROM {$wpdb->base_prefix}textbook_relationships");
+
+    $blog_textbooks=array();
+
+    foreach($textbooks as $book){
+        $book_classes = maybe_unserialize($book->class_id);
+
+        if($book_classes){
+            $contains = __u::intersection($book_classes,$class_ids );
+
+            if ($contains){
+                $blog_textbooks[]=$book->textbook_id;
+            }
+        }
+
+    }
+
+    return $blog_textbooks;
+
 }
 
 function get_book( $book ) {
