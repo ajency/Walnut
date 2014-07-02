@@ -194,10 +194,6 @@ add_action( 'edited_textbook', 'save_extra_taxonomy_fields', 10, 2 );
 
 function get_textbooks( $args = array() ) {
 
-    $textbooks_for_blog = get_textbooksids_for_current_blog();
-
-    $current_blog = get_current_blog_id();
-    switch_to_blog( 1 );
     // set defaults
     $defaults = array(
         'hide_empty'    => false,
@@ -207,13 +203,20 @@ function get_textbooks( $args = array() ) {
         'order'         => 'asc',
         //'number'=>2,
         'user_id'       => get_current_user_id(),
-        'class_id'      => '',
-        'include'       => $textbooks_for_blog
+        'class_id'      => ''
     );
 
     $count_total=0;
     $args = wp_parse_args( $args, $defaults );
+    $textbooks_for_blog = get_textbooksids_for_current_blog();
+
+    if($args['parent'] ==0)
+        $args['include']=$textbooks_for_blog;
+
     extract( $args );
+
+    $current_blog = get_current_blog_id();
+    switch_to_blog( 1 );
 
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all) {
@@ -255,6 +258,7 @@ function get_textbooksids_for_current_blog(){
     global $wpdb;
 
     $class_ids= $wpdb->get_results("SELECT class_id FROM {$wpdb->prefix}class_divisions",ARRAY_A);
+
     $class_ids=__u::flatten($class_ids);
     $class_ids=__u::unique($class_ids);
 
@@ -274,7 +278,6 @@ function get_textbooksids_for_current_blog(){
         }
 
     }
-
     return $blog_textbooks;
 
 }
