@@ -142,9 +142,9 @@ define(['jquery', 'underscore'], function($, _) {
     }
   };
   return $.filterTableByTextbooks = function(_this) {
-    var content_post_status, content_status, content_type, filter_elements, filter_ids, filtered_data, filtered_models, fullCollection;
+    var content_post_status, content_status, content_type, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models;
     filter_elements = _this.$el.find('select.textbook-filter');
-    fullCollection = _this.fullCollection;
+    filterCollection = _this.fullCollection.clone();
     filter_ids = _.map(filter_elements, function(ele, index) {
       var item;
       item = '';
@@ -157,22 +157,22 @@ define(['jquery', 'underscore'], function($, _) {
     content_type = _this.$el.find('#content-type-filter').val();
     content_status = _this.$el.find('#content-status-filter').val();
     content_post_status = _this.$el.find('#content-post-status-filter').val();
-    filtered_models = fullCollection.models;
     if (content_type) {
-      filtered_models = fullCollection.where({
+      filterCollection.reset(filterCollection.where({
         'content_type': content_type
-      });
+      }));
     }
     if (content_status) {
-      filtered_models = fullCollection.where({
+      filterCollection.reset(filterCollection.where({
         'status': content_status
-      });
+      }));
     }
     if (content_post_status) {
-      filtered_models = fullCollection.where({
+      filterCollection.reset(filterCollection.where({
         'post_status': content_post_status
-      });
+      }));
     }
+    filtered_models = filterCollection.models;
     if (_.size(filter_ids) > 0) {
       filtered_data = _.filter(filtered_models, (function(_this) {
         return function(item) {

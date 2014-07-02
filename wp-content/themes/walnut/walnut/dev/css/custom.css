@@ -1298,17 +1298,6 @@ p.mcq-option-text {
 .cpTimer .textDiv_Seconds span {
   opacity: 0.3;
 }
-.time_circles {
-  position: static;
-}
-.time_circles canvas {
-  margin-bottom: -80px;
-}
-.time_circles > div {
-  position: static;
-  display: inline-block;
-  margin-bottom: 50px;
-}
 .modInfo,
 .qstnInfo {
   cursor: pointer;
@@ -1825,6 +1814,9 @@ h3.time {
 }
 .studentList .students i {
   font-size: 20px;
+}
+.studentList .students div {
+  position: static;
 }
 .studentList .ln-letters {
   display: table;
@@ -2384,6 +2376,10 @@ tbody.rowlink td {
 textarea.error,
 .select2-choice.error {
   border: 1px solid #f35958 !important;
+}
+.page-container,
+.page-content {
+  position: static;
 }
 .page-content.condensed {
   overflow: visible;

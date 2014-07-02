@@ -25,7 +25,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         if (class_ids) {
           for (_i = 0, _len = class_ids.length; _i < _len; _i++) {
             class_id = class_ids[_i];
-            this.$el.addClass(CLASS_LABEL[class_id]);
+            this.$el.addClass(_.slugify(CLASS_LABEL[class_id]));
           }
         }
         subjects = this.model.get('subjects');
@@ -121,7 +121,11 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
           return parseInt(num);
         }).map(function(m) {
-          return CLASS_LABEL[m];
+          var classes;
+          classes = [];
+          classes.slug = _.slugify(CLASS_LABEL[m]);
+          classes.label = CLASS_LABEL[m];
+          return classes;
         }).value();
         collection_subjects = this.collection.pluck('subjects');
         data_subjects = _.union(_.flatten(collection_subjects));

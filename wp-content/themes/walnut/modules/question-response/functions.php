@@ -76,7 +76,17 @@ function update_question_response($data)
                     'meta_key'      => $student_id,
                     'meta_value'    => maybe_serialize($single_student_response)
                 );
-                $wpdb->replace($wpdb->prefix .'question_response_meta',$response_meta);
+                $meta_exists = $wpdb->get_row("select * from {$wpdb->prefix}question_response_meta where qr_ref_id = '$ref_id' and meta_key = '$student_id'");
+                if ($meta_exists){
+                    $wpdb->update($wpdb->prefix . 'question_response_meta', $response_meta,
+                        array('qr_ref_id' => $ref_id, 'meta_key' => $student_id),
+                        array('%s', '%d', '%s'));
+                } else
+                    $wpdb->insert($wpdb->prefix . 'question_response_meta', $response_meta,
+                        array('%s', '%d', '%s'));
+
+
+//                $wpdb->replace($wpdb->prefix .'question_response_meta',$response_meta);
 
             }
 
