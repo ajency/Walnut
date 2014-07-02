@@ -10,7 +10,7 @@ define ['app'], (App)->
 
 			template : '
 							<video class="video-js vjs-default-skin" 
-								poster="http://www.eyespot.com/2013/wp-content/uploads/2013/04/video-clip.jpg" 
+								poster="/images/video-poster.jpg" 
 								width="100%" data-setup="{}" controls></video>
 							
 							<div class="clearfix"></div>
