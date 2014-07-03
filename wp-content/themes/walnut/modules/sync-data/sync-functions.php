@@ -75,7 +75,7 @@ function sync_app_data_to_db( $sync_request_id ) {
 
     //FIXME: handle deletion of .tmp folder
 
-    //mark_sync_as_complete( $sync_request_id );
+    mark_sync_as_complete( $sync_request_id );
     $zip->close();
 }
 
