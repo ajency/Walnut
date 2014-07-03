@@ -532,8 +532,8 @@ function set_meta_user_activation($user_id, $password, $meta)
     $updatemetafields = array('divisions','textbooks','student_division','student_rollno','parent_email1','parent_email',
                             'parent_email2','parent_email3','parent_phone1','parent_phone2'
                         );
-    $signup_tbl = $wpdb->prefix."signups";
-    $users_tbl = $wpdb->prefix."users";
+    $signup_tbl = $wpdb->base_prefix."signups";
+    $users_tbl = $wpdb->base_prefix."users";
 
     //Query to get the custom fields stored in the signup table
     $metadata = $wpdb->get_var("SELECT meta FROM ".$signup_tbl." WHERE user_login=(SELECT user_login FROM $users_tbl "
