@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], function(App, TopPanelTemplate) {
@@ -7,6 +8,8 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
       __extends(TopPanelView, _super);
 
       function TopPanelView() {
+        this.countUp = __bind(this.countUp, this);
+        this.countDown = __bind(this.countDown, this);
         return TopPanelView.__super__.constructor.apply(this, arguments);
       }
 
@@ -38,18 +41,28 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
         }
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         if (this.mode === 'class_mode') {
-          return $('#downUpTimer').countdown({
-            until: timeLeftOrElapsed,
-            format: 'MS',
-            onExpiry: this.countUp
-          });
+          if (timeLeftOrElapsed < 0) {
+            return this.countUp(timeLeftOrElapsed);
+          } else {
+            return this.countDown(timeLeftOrElapsed);
+          }
         }
       };
 
-      TopPanelView.prototype.countUp = function() {
-        $('#downUpTimer').countdown('destroy');
-        return $('#downUpTimer').countdown({
-          since: -0,
+      TopPanelView.prototype.countDown = function(time) {
+        return this.$el.find('#downUpTimer').attr('timerdirection', 'countDown').countdown('destroy').countdown({
+          until: time,
+          format: 'MS',
+          onExpiry: this.countUp
+        });
+      };
+
+      TopPanelView.prototype.countUp = function(time) {
+        if (time == null) {
+          time = 0;
+        }
+        return this.$el.find('#downUpTimer').attr('timerdirection', 'countUp').countdown('destroy').countdown({
+          since: time,
           format: 'MS'
         });
       };

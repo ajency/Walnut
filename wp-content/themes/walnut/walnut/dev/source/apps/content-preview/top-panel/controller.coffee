@@ -35,7 +35,15 @@ define ['app'
 
                         timerTime= $.countdown.periodsToSeconds timerTimePeriod
 
-                        timeElapsed = @durationInSeconds - timerTime
+                        timerSign= $ @view.el
+                        .find '#downUpTimer'
+                        .attr 'timerdirection'
+
+                        if timerSign is 'countDown'
+                            timeElapsed = @durationInSeconds - timerTime
+
+                        else
+                            timeElapsed = @durationInSeconds + timerTime
 
                         timeElapsed
 

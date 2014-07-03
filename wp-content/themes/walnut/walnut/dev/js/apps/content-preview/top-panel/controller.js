@@ -38,10 +38,15 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
         if (this.display_mode === 'class_mode') {
           this.timerObject.setHandler("get:elapsed:time", (function(_this) {
             return function() {
-              var timeElapsed, timerTime, timerTimePeriod;
+              var timeElapsed, timerSign, timerTime, timerTimePeriod;
               timerTimePeriod = $(_this.view.el).find('#downUpTimer').countdown('getTimes');
               timerTime = $.countdown.periodsToSeconds(timerTimePeriod);
-              timeElapsed = _this.durationInSeconds - timerTime;
+              timerSign = $(_this.view.el).find('#downUpTimer').attr('timerdirection');
+              if (timerSign === 'countDown') {
+                timeElapsed = _this.durationInSeconds - timerTime;
+              } else {
+                timeElapsed = _this.durationInSeconds + timerTime;
+              }
               return timeElapsed;
             };
           })(this));

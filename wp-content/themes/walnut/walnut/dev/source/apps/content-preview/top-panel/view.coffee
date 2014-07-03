@@ -28,14 +28,26 @@ define ['app'
                 timeLeftOrElapsed = Marionette.getOption @,'timeLeftOrElapsed'
 
                 if @mode is 'class_mode'
-                    $('#downUpTimer').countdown
-                        until: timeLeftOrElapsed
-                        format: 'MS'
-                        onExpiry: @countUp
+                    if timeLeftOrElapsed < 0
+                        @countUp timeLeftOrElapsed
+                    else @countDown timeLeftOrElapsed
 
-            countUp:->
-                $('#downUpTimer').countdown 'destroy'
-                $('#downUpTimer').countdown since: -0, format: 'MS'
+            countDown:(time)=>
+
+                @$el.find '#downUpTimer'
+                .attr 'timerdirection','countDown'
+                .countdown 'destroy'
+                .countdown
+                    until: time
+                    format: 'MS'
+                    onExpiry: @countUp
+
+            countUp:(time=0)=>
+
+                @$el.find '#downUpTimer'
+                .attr 'timerdirection','countUp'
+                .countdown 'destroy'
+                .countdown since: time, format: 'MS'
 
             onShowTotalMarks : (marks)->
                 console.log(marks)
