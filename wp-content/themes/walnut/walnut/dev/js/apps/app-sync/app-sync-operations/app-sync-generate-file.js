@@ -5,21 +5,28 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
       $('#syncSuccess').css("display", "block").text("Generating file...");
       questionResponseData = _.getDataFromQuestionResponse();
       return questionResponseData.done(function(question_response_data) {
-        return _.convertDataToCSV(question_response_data);
+        var questionResponseMetaData;
+        questionResponseMetaData = _.getDataFromQuestionResponseMeta();
+        return questionResponseMetaData.done(function(question_response_meta_data) {
+          question_response_data = _.convertDataToCSV(question_response_data, 'question_response');
+          question_response_meta_data = _.convertDataToCSV(question_response_meta_data, 'question_response_meta');
+          return _.writeToZipFile(question_response_data, question_response_meta_data);
+        });
       });
     },
-    convertDataToCSV: function(questionResponseData) {
+    convertDataToCSV: function(data, table_name) {
       var csvData;
-      questionResponseData = JSON.stringify(questionResponseData);
-      csvData = ConvertToCSV(questionResponseData);
-      console.log("CSV Data");
+      data = JSON.stringify(data);
+      csvData = ConvertToCSV(data);
+      console.log('CSV Data for ' + table_name);
       console.log(csvData);
-      return _.writeToZipFile(csvData);
+      return csvData;
     },
-    writeToZipFile: function(csvData) {
+    writeToZipFile: function(question_response_data, question_response_meta_data) {
       var content, zip;
       zip = new JSZip();
-      zip.file('' + _.getTblPrefix() + 'question_response.csv', csvData);
+      zip.file('' + _.getTblPrefix() + 'question_response.csv', question_response_data);
+      zip.file('' + _.getTblPrefix() + 'question_response_meta.csv', question_response_meta_data);
       content = zip.generate({
         type: "blob"
       });
@@ -39,18 +46,22 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
     onFileGenerationSuccess: function() {
       _.updateSyncDetails('file_generate', _.getCurrentDateTime(2));
       $('#syncSuccess').css("display", "block").text("File generation completed...");
-      return _.updateQuestionResponseSyncFlag();
+      return _.updateSyncFlag('question_response');
     },
-    updateQuestionResponseSyncFlag: function() {
+    updateSyncFlag: function(table_name) {
       return _.db.transaction(function(tx) {
-        return tx.executeSql("UPDATE " + _.getTblPrefix() + "question_response SET sync=? WHERE sync=?", [1, 0]);
+        return tx.executeSql("UPDATE " + _.getTblPrefix() + table_name + " SET sync=? WHERE sync=?", [1, 0]);
       }, _.transactionErrorhandler, function(tx) {
-        setTimeout((function(_this) {
-          return function() {
-            return _.uploadGeneratedZipFile();
-          };
-        })(this), 2000);
-        return console.log('updateQuestionResponseSyncFlag transaction completed');
+        console.log('Updated sync flag in ' + table_name);
+        if (table_name === 'question_response') {
+          return _.updateSyncFlag('question_response_meta');
+        } else {
+          return setTimeout((function(_this) {
+            return function() {
+              return _.uploadGeneratedZipFile();
+            };
+          })(this), 2000);
+        }
       });
     },
     getDataFromQuestionResponse: function() {
@@ -58,7 +69,7 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response WHERE sync=0", [], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response WHERE sync=?", [0], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -78,6 +89,33 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
       };
       return $.when(runQuery()).done(function() {
         return console.log('getDataFromQuestionResponse transaction completed');
+      }).fail(_.failureHandler);
+    },
+    getDataFromQuestionResponseMeta: function() {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response_meta WHERE sync=?", [0], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var i, question_response_meta_data, row, _fn, _i, _ref;
+          question_response_meta_data = new Array();
+          _fn = function(i, row) {
+            return question_response_meta_data[i] = [row.qr_ref_id, row.meta_key, row.meta_value];
+          };
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            row = data.rows.item(i);
+            _fn(i, row);
+          }
+          return d.resolve(question_response_meta_data);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getDataFromQuestionResponseMeta transaction completed');
       }).fail(_.failureHandler);
     }
   });
