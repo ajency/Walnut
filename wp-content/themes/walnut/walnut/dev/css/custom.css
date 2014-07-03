@@ -1350,6 +1350,11 @@ p.mcq-option-text {
   position: static;
   cursor: default;
 }
+#content-board .video > * {
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateZ(0px);
+  -webkit-transform: translate3d(0, 0, 0);
+}
 .contentTime {
   left: 5px;
 }
@@ -2251,7 +2256,7 @@ ul.classes .classesWrap {
 body {
   background-color: #e5e9ec;
   overflow-y: scroll;
-  min-height: 100%;
+  height: 100%;
   -webkit-text-stroke: 0.1px;
 }
 #site_main_container {
@@ -2398,8 +2403,7 @@ textarea.error,
 .select2-choice.error {
   border: 1px solid #f35958 !important;
 }
-.page-container,
-.page-content {
+.page-container {
   position: static;
 }
 .page-content.condensed {

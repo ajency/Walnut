@@ -112,6 +112,10 @@ define ['app'
                     @$el.find "#question-done"
                     .html '<i class="fa fa-forward"></i> Finish Module'
 
+                if @model.get('status') is 'archive'
+                    @$el.find "#question-done"
+                    .remove()
+
                 stickyHeaderTop = $("#module-details-region").height()
                 $(window).scroll ->
                     if $(window).scrollTop() > stickyHeaderTop
