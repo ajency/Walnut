@@ -107,10 +107,15 @@ define ['app'
 
 				'click #question-done': 'questionCompleted'
 
-			onShow:->
+			onShow : ->
+				
 				if not Marionette.getOption(@, 'nextItemID')
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
+
+				if @model.get('status') is 'archive'
+					@$el.find "#question-done"
+					.remove()
 
 				stickyHeaderTop = $("#module-details-region").height()
 				$(window).scroll ->
@@ -150,8 +155,6 @@ define ['app'
 
 					# Cordova backbutton event
 					document.addEventListener("backbutton", onBackbuttonClick, false)
-
-
 
 
 			questionCompleted: =>

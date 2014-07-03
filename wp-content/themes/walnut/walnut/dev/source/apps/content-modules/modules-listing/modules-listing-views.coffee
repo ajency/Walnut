@@ -27,7 +27,7 @@ define ['app'
                 data.edit_url = SITEURL + "/#edit-module/#{data.id}"
                 data.textbookName = =>
                     textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
-                    textbook.name
+                    textbook.name if textbook?
 
                 data.chapterName = =>
                     chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter

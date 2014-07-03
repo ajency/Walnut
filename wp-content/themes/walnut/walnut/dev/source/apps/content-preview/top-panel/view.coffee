@@ -25,62 +25,30 @@ define ['app'
 
                 @$el.find('#total-marks').hide() if @model.get('content_type') isnt 'student_question'
 
+                timeLeftOrElapsed = Marionette.getOption @,'timeLeftOrElapsed'
 
                 if @mode is 'class_mode'
-                    qTimer = @$el.find 'div.cpTimer'
+                    if timeLeftOrElapsed < 0
+                        @countUp timeLeftOrElapsed
+                    else @countDown timeLeftOrElapsed
 
-                    qTime= qTimer.data 'timer'
-                    timerColor = '#1ec711'
+            countDown:(time)=>
 
-                    if qTime <10
-                        timerColor = '#f8a616'
+                @$el.find '#downUpTimer'
+                .attr 'timerdirection','countDown'
+                .countdown 'destroy'
+                .countdown
+                    until: time
+                    format: 'MS'
+                    onExpiry: @countUp
 
-                    if qTime <0
-                        timerColor = '#ea0d0d'
+            countUp:(time=0)=>
 
-                    qTimer.TimeCircles
-                        time:
-                            Days:
-                                show:false
-                            Hours:
-                                show:false
-                            Minutes:
-                                color: timerColor
-                            Seconds:
-                                color: timerColor
-
-                        circle_bg_color: "#d6d5d4"
-                        bg_width: 0.2
-                        fg_width: 0.02
-                        animation: "ticks"
-
-                    .addListener (unit,value,total)->
-                            if total is 10
-                                qTimer.data 'timer',10
-                                qTimer.TimeCircles
-                                    time:
-                                        Days:
-                                            show:false
-                                        Hours:
-                                            show:false
-                                        Minutes:
-                                            color: '#f8a616'
-                                        Seconds:
-                                            color: '#f8a616'
-                            else if total is 5
-                                console.log 'The expected time for this question is almost over.'
-
-                            else if total is -1
-                                qTimer.TimeCircles
-                                    time:
-                                        Days:
-                                            show:false
-                                        Hours:
-                                            show:false
-                                        Minutes:
-                                            color: '#ea0d0d'
-                                        Seconds:
-                                            color: '#ea0d0d'
+                @$el.find '#downUpTimer'
+                .attr 'timerdirection','countUp'
+                .addClass 'negative'
+                .countdown 'destroy'
+                .countdown since: time, format: 'MS'
 
             onShowTotalMarks : (marks)->
                 console.log(marks)

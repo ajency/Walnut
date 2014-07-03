@@ -41,13 +41,15 @@ require.config({
     holder: 'plugins/holder',
     videojs: 'plugins/video',
     panzer: 'plugins/panzer',
+    mmenu: 'plugins/jquery.mmenu.min.all',
+    timerplugin: 'plugins/jquery.countdown_plugin.min',
+    countdowntimer: 'plugins/jquery.countdown.min',
     unserialize: 'plugins/unserialize',
     serialize: 'plugins/serialize',
     csvparse: 'plugins/jquery.parse',
     json2csvparse: 'plugins/json2csv',
     jszip: 'plugins/jszip',
-    fastclick: 'plugins/fastclick',
-    mmenu: 'plugins/jquery.mmenu.min.all'
+    fastclick: 'plugins/fastclick'
   },
   shim: {
     underscore: {
@@ -87,14 +89,16 @@ require.config({
     kineticresize: ['kinetic'],
     bridget: ['jquery'],
     isotope: ['jquery', 'bridget'],
-    csvparse: ['jquery'],
-    json2csvparse: ['jquery'],
     panzer: ['jquery'],
     mmenu: ['jquery'],
+    timerplugin: ['jquery'],
+    countdowntimer: ['jquery', 'timerplugin'],
+    csvparse: ['jquery'],
+    json2csvparse: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });
 
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'cordova/cordova-apploader', 'app', 'controllers/authenticationcontroller', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, cordova, App) {
+require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'cordova/cordova-apploader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, cordova, App) {
   return App.start();
 });

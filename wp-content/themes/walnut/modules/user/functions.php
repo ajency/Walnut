@@ -107,7 +107,7 @@ function user_extend_profile_fields($user){
       switch_to_blog(1);
 ?> 
     
-    <table class="form-table visible-teacher" style="display:none">
+    <table class="form-table">
 
     <tr>
         <th><label for="tax_input[document_folders]">Textbooks</label></th>

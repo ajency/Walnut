@@ -47,22 +47,21 @@ require.config
         screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
         bridget: 'plugins/jquery.bridget'
         isotope: 'plugins/isotope.pkgd.min'
-        kinetic				: 'plugins/kinetic'
-        kineticresize		: 'plugins/kinetic.plugin.resize'
-        checkbox			: 'plugins/flatui-checkbox'
-        holder				: 'plugins/holder'
-        videojs             : 'plugins/video'
-        panzer              : 'plugins/panzer'
-        unserialize			: 'plugins/unserialize'
-        serialize			: 'plugins/serialize'
-        csvparse			: 'plugins/jquery.parse'
+        kinetic: 'plugins/kinetic'
+        kineticresize: 'plugins/kinetic.plugin.resize'
+        checkbox: 'plugins/flatui-checkbox'
+        holder: 'plugins/holder'
+        videojs: 'plugins/video'
+        panzer: 'plugins/panzer'
+        mmenu: 'plugins/jquery.mmenu.min.all'
+        timerplugin: 'plugins/jquery.countdown_plugin.min' #needed for jquerytimer to work
+        countdowntimer: 'plugins/jquery.countdown.min'
+        unserialize         : 'plugins/unserialize'
+        serialize           : 'plugins/serialize'
+        csvparse            : 'plugins/jquery.parse'
         json2csvparse       : 'plugins/json2csv'
         jszip               : 'plugins/jszip'
         fastclick           : 'plugins/fastclick'
-        mmenu               : 'plugins/jquery.mmenu.min.all'
-
-
-
 
     shim:
         underscore:
@@ -94,15 +93,17 @@ require.config
         timepicker: ['jquery', 'bootstrap']
         timecircles: ['jquery']
         jquery_listnav: ['jquery']
-        screwbuttons : ['jquery']
-        checkbox  : ['bootstrap']
-        kineticresize : ['kinetic']
-        bridget : ['jquery']
-        isotope : ['jquery','bridget']
-        csvparse		: ['jquery']
+        screwbuttons: ['jquery']
+        checkbox: ['bootstrap']
+        kineticresize: ['kinetic']
+        bridget: ['jquery']
+        isotope: ['jquery', 'bridget']
+        panzer: ['jquery']
+        mmenu: ['jquery']
+        timerplugin: ['jquery']
+        countdowntimer: ['jquery','timerplugin']
+        csvparse        : ['jquery']
         json2csvparse   : ['jquery']
-        panzer          : ['jquery']
-        mmenu           : ['jquery']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
 
@@ -111,7 +112,6 @@ require [  'plugins/walnut-pluginloader'
            'config/walnut-configloader'
            'cordova/cordova-apploader'
            'app'
-           'controllers/authenticationcontroller'
            'apps/walnut-appsloader'
            'entities/walnut-entities-loader'
            'componentloader'

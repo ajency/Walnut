@@ -145,6 +145,9 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         if (!Marionette.getOption(this, 'nextItemID')) {
           this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
+        if (this.model.get('status') === 'archive') {
+          this.$el.find("#question-done").remove();
+        }
         stickyHeaderTop = $("#module-details-region").height();
         $(window).scroll(function() {
           if ($(window).scrollTop() > stickyHeaderTop) {

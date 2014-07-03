@@ -31,7 +31,9 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
             textbook = _.findWhere(_this.textbooks, {
               "id": data.term_ids.textbook
             });
-            return textbook.name;
+            if (textbook != null) {
+              return textbook.name;
+            }
           };
         })(this);
         data.chapterName = (function(_this) {
