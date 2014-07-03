@@ -480,7 +480,8 @@ function add_user_meta_signups($user, $user_email, $key, $meta){
              if(isset($_POST['parent_email_'.$i]) && $_POST['parent_email_'.$i] !=''){
                  if( $parent_id = email_exists( $_POST['parent_email_'.$i] )) {
                      $usermeta['parent_email'.$i] = $_POST['parent_email_'.$i];
-                     update_user_meta( $parent_id, 'parent_of', $user_id );
+                     $usermeta['child_of'.$i] = $parent_id;
+                     //update_user_meta( $parent_id, 'parent_of', $user_id );
                     }
                  elseif(is_email($_POST['parent_email_'.$i])){
                      $password = wp_generate_password( 12, true );
@@ -495,7 +496,8 @@ function add_user_meta_signups($user, $user_email, $key, $meta){
                      wp_new_user_notification($new_parent_id, $password);
 
                      $usermeta['parent_email'.$i] = $_POST['parent_email_'.$i];
-                     update_user_meta( $new_parent_id, 'parent_of', $user_id );
+                     $usermeta['child_of'.$i] = $parent_id;
+                     //update_user_meta( $new_parent_id, 'parent_of', $user_id );
 
                  }             
             }  
@@ -532,6 +534,7 @@ function set_meta_user_activation($user_id, $password, $meta)
     $updatemetafields = array('divisions','textbooks','student_division','student_rollno','parent_email1','parent_email',
                             'parent_email2','parent_email3','parent_phone1','parent_phone2'
                         );
+    $updateparentof = array('child_of1','child_of2','child_of3');
     $signup_tbl = $wpdb->base_prefix."signups";
     $users_tbl = $wpdb->base_prefix."users";
 
@@ -545,7 +548,11 @@ function set_meta_user_activation($user_id, $password, $meta)
      if(isset($user_meta[$value]))
          update_usermeta( $user_id, $value, $user_meta[$value] );
     }
-
+    
+    foreach($updateparentof as $field => $value){
+        if(isset($user_meta[$value]))
+            update_usermeta( $user_meta[$value], 'parent_of', $user_id );
+    }
 
 }
 add_action( 'wpmu_activate_user', 'set_meta_user_activation', 10, 3);
