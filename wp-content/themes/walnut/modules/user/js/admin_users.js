@@ -7,6 +7,10 @@ jQuery(document).ready(function() {
                 break;
             case 'student':
                  jQuery('.visible-student').show();
+                 jQuery('#adduser-noconfirmation').prop('checked', true)
+                 jQuery('#adduser-noconfirmation').prop('disabled', true);
+                 jQuery('#noconfirmation').prop('checked', true);
+                 jQuery('#noconfirmation').prop('disabled', true);
                 break;
             default:
                 break;
@@ -19,14 +23,26 @@ jQuery(document).ready(function() {
             case 'teacher':
                 jQuery(this).closest('form').find('.visible-student').hide();
                 jQuery(this).closest('form').find('.visible-teacher').show();
+                jQuery(this).closest('form').find('#adduser-noconfirmation').prop('checked', false)
+                jQuery(this).closest('form').find('#adduser-noconfirmation').prop('disabled', false);
+                jQuery(this).closest('form').find('#noconfirmation').prop('checked', false);
+                jQuery(this).closest('form').find('#noconfirmation').prop('disabled', false);
                 break;
             case 'student':
                 jQuery(this).closest('form').find('.visible-student').show();
                 jQuery(this).closest('form').find('.visible-teacher').hide();
+                jQuery(this).closest('form').find('#adduser-noconfirmation').prop('checked', true)
+                jQuery(this).closest('form').find('#adduser-noconfirmation').prop('disabled', true);
+                jQuery(this).closest('form').find('#noconfirmation').prop('checked', true);
+                jQuery(this).closest('form').find('#noconfirmation').prop('disabled', true);
                 break;
             default:
                 jQuery(this).closest('form').find('.visible-student').hide();
                 jQuery(this).closest('form').find('.visible-teacher').hide();
+                jQuery(this).closest('form').find('#adduser-noconfirmation').prop('checked', false)
+                jQuery(this).closest('form').find('#adduser-noconfirmation').prop('disabled', false);
+                jQuery(this).closest('form').find('#noconfirmation').prop('checked', false);
+                jQuery(this).closest('form').find('#noconfirmation').prop('disabled', false);
                 break;            
         }
     });
