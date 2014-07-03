@@ -46,6 +46,7 @@ define ['app'
 
                 @$el.find '#downUpTimer'
                 .attr 'timerdirection','countUp'
+                .addClass 'negative'
                 .countdown 'destroy'
                 .countdown since: time, format: 'MS'
 

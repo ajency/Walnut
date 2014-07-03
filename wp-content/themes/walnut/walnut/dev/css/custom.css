@@ -1298,6 +1298,45 @@ p.mcq-option-text {
 .cpTimer .textDiv_Seconds span {
   opacity: 0.3;
 }
+.is-countdown {
+  font-weight: 300;
+  padding: 10px 10px 20px;
+}
+.is-countdown:after {
+  clear: both;
+  content: " ";
+  /* 1 */
+
+  display: table;
+  /* 2 */
+
+}
+.countdown-row {
+  width: 100%;
+  text-align: center;
+}
+.countdown-row .countdown-section {
+  width: 49%;
+}
+.countdown-amount {
+  color: #259b24;
+  font-size: 200%;
+}
+.countdown-section {
+  display: block;
+  float: left;
+  font-size: 18px;
+  text-align: center;
+}
+.countdown-section:last-child .countdown-amount {
+  opacity: 0.2;
+}
+.countdown-period {
+  display: block;
+}
+.negative .countdown-amount {
+  color: #f35958;
+}
 .modInfo,
 .qstnInfo {
   cursor: pointer;
@@ -1328,6 +1367,11 @@ p.mcq-option-text {
 #content-board .imagewithtext img {
   position: static;
   cursor: default;
+}
+#content-board .video > * {
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateZ(0px);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 .contentTime {
   left: 5px;

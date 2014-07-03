@@ -61,7 +61,7 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
         if (time == null) {
           time = 0;
         }
-        return this.$el.find('#downUpTimer').attr('timerdirection', 'countUp').countdown('destroy').countdown({
+        return this.$el.find('#downUpTimer').attr('timerdirection', 'countUp').addClass('negative').countdown('destroy').countdown({
           since: time,
           format: 'MS'
         });
