@@ -387,7 +387,7 @@ function get_parents_by_student_ids($student_ids){
     $students_str = join(',',$student_ids);
     $students_str = "(".$students_str.")";
 
-    $parents_query =$wpdb->prepare("SELECT user_id FROM {$wpdb->prefix}usermeta
+    $parents_query =$wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
         WHERE meta_key LIKE %s
         AND meta_value in $students_str",
         array('parent_of')
