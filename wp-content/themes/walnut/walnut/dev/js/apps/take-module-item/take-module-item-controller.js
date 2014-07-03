@@ -110,16 +110,23 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           status: status
         };
         questionResponseModel.set(data);
-        return questionResponseModel.save(data, {
-          wait: true,
-          success: (function(_this) {
-            return function(model) {
-              if (model.get('status') === 'paused') {
-                return _this._getPreviousRoute();
-              }
-            };
-          })(this)
-        });
+        if (_.platform() === 'BROWSER') {
+          return questionResponseModel.save(data, {
+            wait: true,
+            success: (function(_this) {
+              return function(model) {
+                if (model.get('status') === 'paused') {
+                  return _this._getPreviousRoute();
+                }
+              };
+            })(this)
+          });
+        } else {
+          questionResponseModel.save(data);
+          if (status === 'paused') {
+            return this._getPreviousRoute();
+          }
+        }
       };
 
       TeacherTeachingController.prototype._getPreviousRoute = function() {

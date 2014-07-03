@@ -28,7 +28,7 @@ define(['underscore', 'unserialize'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT COUNT(*) AS total FROM " + _.getTblPrefix() + "question_response WHERE sync=?", [0], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT SUM(rows) AS total FROM (SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response_meta WHERE sync=?)", [0, 0], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };

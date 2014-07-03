@@ -173,7 +173,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
             return function() {
               console.log('Fired cordova back button event');
               _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
-              Backbone.history.history.back();
+              _this.trigger("goto:previous:route");
               return document.removeEventListener("backbutton", onBackbuttonClick, false);
             };
           })(this);

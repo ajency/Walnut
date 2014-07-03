@@ -21,6 +21,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 					_.writeToZipFile(question_response_data, question_response_meta_data)
 
 
+		
 		convertDataToCSV : (data, table_name)->
 
 			data = JSON.stringify data
@@ -38,6 +39,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 			zip = new JSZip()
 			zip.file(''+_.getTblPrefix()+'question_response.csv', question_response_data)
 			zip.file(''+_.getTblPrefix()+'question_response_meta.csv', question_response_meta_data)
+			
 			content = zip.generate({type:"blob"})
 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 

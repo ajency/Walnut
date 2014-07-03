@@ -31,9 +31,12 @@ define ['underscore', 'unserialize'], ( _) ->
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT COUNT(*) AS total 
-							FROM "+_.getTblPrefix()+"question_response 
-							WHERE sync=?", [0], onSuccess(d), _.deferredErrorHandler(d))
+						tx.executeSql("SELECT SUM(rows) AS total FROM 
+							(SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"question_response 
+							WHERE sync=? UNION ALL
+							SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"question_response_meta 
+							WHERE sync=?)"
+							, [0, 0], onSuccess(d), _.deferredErrorHandler(d))
 
 
 			onSuccess = (d)->

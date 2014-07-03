@@ -118,11 +118,19 @@ define ['app'
 
                 questionResponseModel.set data
 
-                questionResponseModel.save data,
-                    wait : true
-                    success :(model)=>
-                        if model.get('status') is 'paused'
-                            @_getPreviousRoute()
+                if _.platform() is 'BROWSER'
+                    questionResponseModel.save data,
+                        wait : true
+                        success :(model)=>
+                            if model.get('status') is 'paused'
+                                @_getPreviousRoute()
+
+                else 
+                    questionResponseModel.save data
+
+                    if status is 'paused'
+                        @_getPreviousRoute()
+
 
             _getPreviousRoute:->
                 currRoute = App.getCurrentRoute()

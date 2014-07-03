@@ -148,7 +148,9 @@ define ['app'
 
 						_.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
 
-						Backbone.history.history.back()
+						# Backbone.history.history.back()
+						
+						@trigger "goto:previous:route"
 
 						document.removeEventListener("backbutton", onBackbuttonClick, false)
 
@@ -161,7 +163,7 @@ define ['app'
 
 				if Marionette.getOption(@, 'display_mode') is 'class_mode'
 					if confirm 'This item will be marked as complete. Continue?'
-							@trigger "question:completed"
+						@trigger "question:completed"
 
 				else @trigger "question:completed"
 
