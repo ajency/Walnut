@@ -99,6 +99,6 @@ require.config({
   }
 });
 
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'cordova/cordova-apploader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, cordova, App) {
+require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'cordova/cordova-apploader', 'app', 'controllers/authenticationcontroller', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, cordova, App) {
   return App.start();
 });

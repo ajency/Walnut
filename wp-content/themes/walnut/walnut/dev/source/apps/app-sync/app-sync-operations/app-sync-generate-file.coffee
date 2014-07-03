@@ -83,7 +83,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 			,_.transactionErrorhandler
 			
 			,(tx)->
-
+				
 				console.log 'Updated sync flag in '+table_name
 
 				if table_name is 'question_response'
