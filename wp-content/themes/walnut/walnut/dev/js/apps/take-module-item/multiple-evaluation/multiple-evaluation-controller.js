@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-evaluation/student-list/student-list-controller', 'apps/take-module-item/multiple-evaluation/evaluation/evaluation-controller'], function(App, RegionController) {
@@ -9,7 +8,6 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
       __extends(SingleQuestionMultipleEvalController, _super);
 
       function SingleQuestionMultipleEvalController() {
-        this._changeQuestion = __bind(this._changeQuestion, this);
         return SingleQuestionMultipleEvalController.__super__.constructor.apply(this, arguments);
       }
 
@@ -18,7 +16,6 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
         this.questionResponseArray = this.questionResponseModel.get('question_response');
         this.layout = this._getMultipleEvaluationLayout();
         this.listenTo(this.layout, 'show', this._onShowOfLayout);
-        this.listenTo(this.layout, "question:completed", this._changeQuestion);
         this.listenTo(this.layout.studentListRegion, 'student:selected', this.studentSelected);
         this.listenTo(this.layout.evalParametersRegion, 'save:eval:parameters', this._saveEvalParameters);
         return this.show(this.layout, {
@@ -67,10 +64,6 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
         return this.layout.studentListRegion.trigger('student:answer:saved', responseObj.id);
       };
 
-      SingleQuestionMultipleEvalController.prototype._changeQuestion = function() {
-        return this.region.trigger("goto:next:question", this.questionResponseModel.get('content_piece_id'));
-      };
-
       SingleQuestionMultipleEvalController.prototype._onShowOfLayout = function() {
         return new MultipleEval.StudentList.Controller({
           region: this.layout.studentListRegion,
@@ -98,33 +91,17 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
 
       MultipleEvalLayout.prototype.className = 'studentList m-t-35';
 
-      MultipleEvalLayout.prototype.template = '<div class="m-t-10 well pull-right m-b-10 p-t-10 p-b-10 m-l-20"> <button type="button" id="question-done" class="btn btn-success btn-xs btn-sm"> <i class="fa fa-forward"></i> Next </button> </div> <div class="clearfix"></div> <div id="eval-parameters"></div> <div id="students-list"></div>';
+      MultipleEvalLayout.prototype.template = '<div class="clearfix"></div> <div id="eval-parameters"></div> <div id="students-list"></div>';
 
       MultipleEvalLayout.prototype.regions = {
         studentListRegion: '#students-list',
         evalParametersRegion: '#eval-parameters'
       };
 
-      MultipleEvalLayout.prototype.events = {
-        'click #question-done': 'questionCompleted'
-      };
-
       MultipleEvalLayout.prototype.initialize = function(options) {
         var questionResponseModel;
         questionResponseModel = Marionette.getOption(this, 'questionResponseModel');
         return this.correctAnswer = questionResponseModel.get('question_response');
-      };
-
-      MultipleEvalLayout.prototype.questionCompleted = function() {
-        if ((_.size(this.correctAnswers) < 1) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
-          if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
-            return this.trigger("question:completed", "no_answer");
-          }
-        } else {
-          if (confirm('This item will be marked as complete. Continue?')) {
-            return this.trigger("question:completed");
-          }
-        }
       };
 
       return MultipleEvalLayout;

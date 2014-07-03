@@ -43,7 +43,7 @@ function school_divisions_options() {
 
                     $wpdb->update( $wpdb->prefix . 'class_divisions', $update_data,
                                     array( 'id' => $_POST['divisionid_'.$i] ) );
-                }elseif(isset($_POST['divisionid_'.$i]) && $_POST['divisionclass_'.$i] !=""){
+                }elseif(isset($_POST['divisionid_'.$i]) && $_POST['divisionclass_'.$i] !="" && $_POST['divisionlabel_'.$i] !=""){
                     $insert_data = array(
                         'division' => $_POST['divisionlabel_'.$i],
                         'class_id' => $_POST['divisionclass_'.$i]
