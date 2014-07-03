@@ -1298,6 +1298,27 @@ p.mcq-option-text {
 .cpTimer .textDiv_Seconds span {
   opacity: 0.3;
 }
+.countdown-row {
+  clear: both;
+  width: 100%;
+  padding: 0px 2px;
+  text-align: center;
+}
+.countdown-row .countdown-section {
+  width: 48%;
+}
+.countdown-section {
+  display: block;
+  float: left;
+  font-size: 75%;
+  text-align: center;
+}
+.countdown-amount {
+  font-size: 200%;
+}
+.countdown-period {
+  display: block;
+}
 .modInfo,
 .qstnInfo {
   cursor: pointer;
@@ -2230,7 +2251,7 @@ ul.classes .classesWrap {
 body {
   background-color: #e5e9ec;
   overflow-y: scroll;
-  height: 100%;
+  min-height: 100%;
   -webkit-text-stroke: 0.1px;
 }
 #site_main_container {
