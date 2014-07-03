@@ -113,8 +113,10 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         return questionResponseModel.save(data, {
           wait: true,
           success: (function(_this) {
-            return function() {
-              return _this._getPreviousRoute();
+            return function(model) {
+              if (model.get('status') === 'paused') {
+                return _this._getPreviousRoute();
+              }
             };
           })(this)
         });

@@ -120,7 +120,9 @@ define ['app'
 
                 questionResponseModel.save data,
                     wait : true
-                    success :=> @_getPreviousRoute()
+                    success :(model)=>
+                        if model.get('status') is 'paused'
+                            @_getPreviousRoute()
 
             _getPreviousRoute:->
                 currRoute = App.getCurrentRoute()
