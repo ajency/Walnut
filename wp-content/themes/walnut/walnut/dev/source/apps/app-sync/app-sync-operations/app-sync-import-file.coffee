@@ -137,8 +137,6 @@ define ['underscore', 'csvparse'], ( _, parse) ->
                 _.db.transaction((tx)->
                     tx.executeSql("DELETE FROM wp_content_collection")
 
-                    tx.executeSql("DELETE FROM wp_content_collection")
-
                     _.each data, (row, i)->
                         tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on
                             , created_by, last_modified_on, last_modified_by, published_on, published_by
@@ -196,8 +194,6 @@ define ['underscore', 'csvparse'], ( _, parse) ->
             getParsedData = _.parseCSVToJSON 'wp_posts.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_posts")
-
                     tx.executeSql("DELETE FROM wp_posts")
 
                     _.each data, (row, i)->
