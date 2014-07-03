@@ -7,10 +7,10 @@
 				#startWithParent = false
 				class TeacherTeachingRouter extends Marionette.AppRouter
 
-					appRoutes : 
+					appRoutes :
 						'teachers/take-class/:classID/:div/textbook/:tID/module/:mID/:qID' 	: 'teacherTeachingModule'
 
-				Controller = 
+				Controller =
 
 					teacherTeachingModule: (classID,div,tID, mID, qID) ->
 
@@ -21,12 +21,12 @@
 							division	: div
 							moduleID 	: mID
 							questionID	: qID
-	
+
 				TeacherTeachingApp.on "start", ->
 					new TeacherTeachingRouter
-							controller : Controller 
+							controller : Controller
 
 
 			# set handlers
 			App.commands.setHandler "start:teacher:teaching:app", (opt = {})->
-				new App.TeacherTeachingApp.TeacherTeachingController opt	
+				new App.TeacherTeachingApp.TeacherTeachingController opt
