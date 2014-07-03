@@ -72,6 +72,30 @@ define(['underscore', 'unserialize'], function(_) {
       }, _.transactionErrorhandler, function(tx) {
         return console.log('Updated sync details for ' + operation);
       });
+    },
+    deleteAllFilesFromSynapseDataDirectory: function() {
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+        return fileSystem.root.getDirectory("SynapseAssets/SynapseData", {
+          create: false,
+          exclusive: false
+        }, function(directoryEntry) {
+          var reader;
+          reader = directoryEntry.createReader();
+          return reader.readEntries(function(entries) {
+            var i, _i, _ref, _results;
+            _results = [];
+            for (i = _i = 0, _ref = entries.length - 1; _i <= _ref; i = _i += 1) {
+              entries[i].remove();
+              if (i === entries[i].length - 1) {
+                _results.push(console.log("Deleted all files from 'SynapseData' directory"));
+              } else {
+                _results.push(void 0);
+              }
+            }
+            return _results;
+          }, _.directoryErrorHandler);
+        }, _.directoryErrorHandler);
+      }, _.fileSystemErrorHandler);
     }
   });
 });

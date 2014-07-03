@@ -8,22 +8,22 @@ define ['underscore'], ( _) ->
 
 			$('#syncSuccess').css("display","block").text("Starting file download...")
 
-			# lastDownloadTimestamp = _.getLastDownloadTimeStamp()
-			# lastDownloadTimestamp.done (time_stamp)->
+			lastDownloadTimestamp = _.getLastDownloadTimeStamp()
+			lastDownloadTimestamp.done (time_stamp)->
 
-			data = blog_id: _.getBlogID(), last_sync: ''#time_stamp
+				data = blog_id: _.getBlogID(), last_sync: time_stamp
 
-			#TODO: Change action name for import.
-			$.get AJAXURL + '?action=sync-database',
-					data,
-					(resp)=>
-						console.log 'getZipFileDownloadDetails response'
-						console.log resp
+				#TODO: Change action name for import.
+				$.get AJAXURL + '?action=sync-database',
+						data,
+						(resp)=>
+							console.log 'getZipFileDownloadDetails response'
+							console.log resp
 
-						_.downloadZipFile resp
+							_.downloadZipFile resp
 
-					,
-					'json'
+						,
+						'json'
 
 
 		downloadZipFile : (resp)->

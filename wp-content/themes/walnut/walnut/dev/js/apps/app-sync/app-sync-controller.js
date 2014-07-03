@@ -12,6 +12,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
 
     SynchronizationController.prototype.initialize = function() {
       this.displayTotalRecordsToBeSynced();
+      this.displayLastDownloadTimeStamp();
       return this.changeSyncButtonTextBasedOnLastSyncOperation();
     };
 
@@ -23,6 +24,25 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
           return $('#totalRecordsToBeSynced').text("Data already upto date");
         } else {
           return $('#totalRecordsToBeSynced').text("" + totalRecords + " record(s) to be synced");
+        }
+      });
+    };
+
+    SynchronizationController.prototype.displayLastDownloadTimeStamp = function() {
+      var lastSyncOperation;
+      lastSyncOperation = _.getLastSyncOperation();
+      return lastSyncOperation.done(function(typeOfOperation) {
+        var lastDownloadTimeStamp;
+        if (typeOfOperation === 'file_import') {
+          lastDownloadTimeStamp = _.getLastDownloadTimeStamp();
+          return lastDownloadTimeStamp.done(function(time_stamp) {
+            var escaped;
+            escaped = $('<div>').text("Last synced on \n" + time_stamp + "").text();
+            return $('#lastDownloadTimeStamp').html(escaped.replace(/\n/g, '<br />'));
+          });
+        } else {
+          $('#totalRecords').css("display", "none");
+          return $('#lastDownload').css("display", "none");
         }
       });
     };
@@ -48,6 +68,8 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
 
     SynchronizationController.prototype.startContinueDataSyncProcess = function() {
       var synapseDataDirectory;
+      $('#totalRecords').css("display", "none");
+      $('#lastDownload').css("display", "none");
       $('#syncError').css("display", "none");
       synapseDataDirectory = _.createSynapseDataDirectory();
       return synapseDataDirectory.done(function() {

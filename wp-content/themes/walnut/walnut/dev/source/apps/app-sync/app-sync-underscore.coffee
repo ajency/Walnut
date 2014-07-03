@@ -81,3 +81,25 @@ define ['underscore', 'unserialize'], ( _) ->
 			,(tx)->
 				console.log 'Updated sync details for '+operation
 			)
+
+
+		#Delete all files from 'SynapseData' directory
+		deleteAllFilesFromSynapseDataDirectory : ->
+		   
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
+				fileSystem.root.getDirectory("SynapseAssets/SynapseData"
+					, {create: false, exclusive: false}
+
+					, (directoryEntry)->
+						reader = directoryEntry.createReader()
+						reader.readEntries(
+							(entries)->
+								for i in [0..entries.length-1] by 1
+									entries[i].remove()
+
+									if i is entries[i].length-1
+										console.log "Deleted all files from 'SynapseData' directory"
+
+							,_.directoryErrorHandler)
+					, _.directoryErrorHandler)
+			, _.fileSystemErrorHandler)

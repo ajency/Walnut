@@ -7,6 +7,8 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 			@displayTotalRecordsToBeSynced()
 
+			@displayLastDownloadTimeStamp()
+
 			@changeSyncButtonTextBasedOnLastSyncOperation()
 
 
@@ -21,6 +23,25 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 				else
 					$('#totalRecordsToBeSynced')
 					.text(""+totalRecords+" record(s) to be synced")
+
+
+		displayLastDownloadTimeStamp : ->
+
+			lastSyncOperation = _.getLastSyncOperation()
+			lastSyncOperation.done (typeOfOperation)->
+
+				if typeOfOperation is 'file_import'
+
+					lastDownloadTimeStamp = _.getLastDownloadTimeStamp()
+					lastDownloadTimeStamp.done (time_stamp)->
+						
+						escaped = $('<div>').text("Last synced on \n"+time_stamp+"").text()
+						$('#lastDownloadTimeStamp').html(escaped.replace(/\n/g, '<br />'))
+
+				else
+					$('#totalRecords').css("display","none")
+					$('#lastDownload').css("display","none")
+
 
 
 		
@@ -49,6 +70,10 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 
 		startContinueDataSyncProcess : ->
+
+			# Hide sync details
+			$('#totalRecords').css("display","none")
+			$('#lastDownload').css("display","none") 
 
 			# Hide error message
 			$('#syncError').css("display","none")

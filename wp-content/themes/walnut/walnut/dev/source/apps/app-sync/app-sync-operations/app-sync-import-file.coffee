@@ -49,7 +49,7 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
 
 
-        # Insert data into 13 tables
+        # Insert data into 14 tables
         insertIntoWpClassDivisions : ->
 
             $('#syncSuccess').css("display","block").text("Importing file...")
@@ -116,10 +116,9 @@ define ['underscore', 'csvparse'], ( _, parse) ->
             getParsedData = _.parseCSVToJSON 'wp_collection_meta.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_collection_meta")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_collection_meta (id, collection_id
+                        tx.executeSql("INSERT OR REPLACE INTO wp_collection_meta (id, collection_id
                             , meta_key, meta_value) VALUES (?,?,?,?)"
                             , [row[0], row[1], row[2], row[3]])
 
@@ -135,10 +134,9 @@ define ['underscore', 'csvparse'], ( _, parse) ->
             getParsedData = _.parseCSVToJSON 'wp_content_collection.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_content_collection")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_content_collection (id, name, created_on
+                        tx.executeSql("INSERT OR REPLACE INTO wp_content_collection (id, name, created_on
                             , created_by, last_modified_on, last_modified_by, published_on, published_by
                             , status, type, term_ids, duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
                             , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
@@ -175,10 +173,9 @@ define ['underscore', 'csvparse'], ( _, parse) ->
             getParsedData = _.parseCSVToJSON 'wp_postmeta.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_postmeta")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_postmeta (meta_id, post_id
+                        tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
                             , meta_key, meta_value) VALUES (?,?,?,?)"
                             , [row[0], row[1], row[2], row[3]])
 
@@ -194,10 +191,9 @@ define ['underscore', 'csvparse'], ( _, parse) ->
             getParsedData = _.parseCSVToJSON 'wp_posts.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_posts")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_posts (ID, post_author, post_date
+                        tx.executeSql("INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date
                             , post_date_gmt, post_content, post_title, post_excerpt, post_status
                             , comment_status, ping_status, post_password, post_name, to_ping, pinged
                             , post_modified, post_modified_gmt, post_content_filtered, post_parent
@@ -330,6 +326,8 @@ define ['underscore', 'csvparse'], ( _, parse) ->
         onFileImportSuccess : ->
 
             _.updateSyncDetails('file_import', _.getCurrentDateTime(2))
+
+            _.deleteAllFilesFromSynapseDataDirectory()
 
             $('#syncSuccess').css("display","block").text("File import completed")
 
