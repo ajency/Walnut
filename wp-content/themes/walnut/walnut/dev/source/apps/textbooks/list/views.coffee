@@ -97,7 +97,7 @@ define ['app'
                 data
 
             events:
-                'click #Filters li': 'filterBooks' #(e)->  @trigger "filter:textbooks:class", $(e.target).closest('li').attr('data-filter')
+                'click #Filters li': 'filterBooks'
 
 
             sortTable: (e)->
