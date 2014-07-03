@@ -4,6 +4,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             idAttribute: 'ID'
 
+            defaults :
+                'post_status' : 'pending'
+
             name: 'content-piece'
             layout: ''
 

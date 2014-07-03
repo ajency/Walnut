@@ -9,6 +9,8 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
 
       function OptionsBarView() {
         this.onFetchSubsectionsComplete = __bind(this.onFetchSubsectionsComplete, this);
+        this._commentEnable = __bind(this._commentEnable, this);
+        this._hintEnable = __bind(this._hintEnable, this);
         return OptionsBarView.__super__.constructor.apply(this, arguments);
       }
 
@@ -20,7 +22,9 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         'change #qType': '_changeOfQuestionType',
         'click  #save-question': 'saveQuestionSettings',
         'click #preview-question': 'previewQuestion',
-        'click #subProps.nav-tabs': '_changeTabs'
+        'click a.tabs': '_changeTabs',
+        'change #hint_enable': '_hintEnable',
+        'change #comment_enable': '_commentEnable'
       };
 
       OptionsBarView.prototype.mixinTemplateHelpers = function(data) {
@@ -30,19 +34,15 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype.onShow = function() {
-        var postStatus, qType;
+        Backbone.Syphon.deserialize(this, this.model.toJSON());
         this.$el.find("#subs, #chaps, #qType, #status, #secs, #subsecs, #difficulty_level ").select2();
         this.$el.find('input.tagsinput').tagsinput();
-        $('#subProps a').click(function(e) {
-          e.preventDefault();
-          return $(this).tab('show');
-        });
-        if (this.model.get('ID')) {
-          qType = this.model.get('question_type');
-          this.$el.find('#qType').select2().select2('val', qType);
-          postStatus = this.model.get('post_status');
-          this.$el.find('#status').select2().select2('val', postStatus);
-          this.$el.find('#difficulty_level').select2().select2('val', this.model.get('difficulty_level'));
+        if (this.model.get('hint_enable')) {
+          console.log('hint');
+          this.$el.find('#hint_enable').trigger('click');
+        }
+        if (this.model.get('comment_enable')) {
+          this.$el.find('#comment_enable').trigger('click');
         }
         if (this.model.get('content_type') !== 'teacher_question') {
           return this.$el.find('#question_type_column').remove();
@@ -50,12 +50,28 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype._changeTabs = function(e) {
-        var tabId, tabPaneId;
-        tabId = this.$el.find('#subProps.nav-tabs li.active').attr('id');
-        tabPaneId = tabId + '-pane';
-        console.log(tabPaneId);
-        this.$el.find('.tab-content .tab-pane').removeClass('active');
-        return this.$el.find(".tab-content #" + tabPaneId + ".tab-pane").addClass('active');
+        e.preventDefault();
+        return $(e.target).tab('show');
+      };
+
+      OptionsBarView.prototype._hintEnable = function(e) {
+        if ($(e.target).prop('checked')) {
+          this.$el.find('#question-hint').prop('disabled', false);
+          return this.$el.find('#question-hint').parent().show();
+        } else {
+          this.$el.find('#question-hint').prop('disabled', true);
+          return this.$el.find('#question-hint').parent().hide();
+        }
+      };
+
+      OptionsBarView.prototype._commentEnable = function(e) {
+        if ($(e.target).prop('checked')) {
+          this.$el.find('#question-comment').prop('disabled', false);
+          return this.$el.find('#question-comment').parent().show();
+        } else {
+          this.$el.find('#question-comment').prop('disabled', true);
+          return this.$el.find('#question-comment').parent().hide();
+        }
       };
 
       OptionsBarView.prototype._changeSubject = function(e) {

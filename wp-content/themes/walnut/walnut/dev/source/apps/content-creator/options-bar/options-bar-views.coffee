@@ -17,7 +17,11 @@ define ['app',
 
                 'click #preview-question' : 'previewQuestion'
 
-                'click #subProps.nav-tabs' : '_changeTabs'
+                'click a.tabs' : '_changeTabs'
+
+                'change #hint_enable': '_hintEnable'
+
+                'change #comment_enable' : '_commentEnable'
 
             mixinTemplateHelpers : (data)->
                 data = super data
@@ -27,23 +31,30 @@ define ['app',
 
 
             onShow:->
+                Backbone.Syphon.deserialize @,@model.toJSON()
+
                 @$el.find "#subs, #chaps, #qType, #status, #secs, #subsecs, #difficulty_level "#,#negativeMarks"
                 .select2();
 
                 @$el.find('input.tagsinput').tagsinput()
 
-                $('#subProps a').click (e)->
-                    e.preventDefault();
-                    $(this).tab('show');
+                if @model.get 'hint_enable'
+                    console.log 'hint'
+                    @$el.find('#hint_enable').trigger 'click'
 
-                if @model.get 'ID'
-                    qType= @model.get 'question_type'
-                    @$el.find('#qType').select2().select2('val',qType)
+                if @model.get 'comment_enable'
+                    @$el.find('#comment_enable').trigger 'click'
 
-                    postStatus= @model.get 'post_status'
-                    @$el.find('#status').select2().select2('val',postStatus)
+#              
 
-                    @$el.find('#difficulty_level').select2().select2 'val',@model.get 'difficulty_level'
+#                if @model.get 'ID'
+#                    qType= @model.get 'question_type'
+#                    @$el.find('#qType').select2().select2('val',qType)
+
+#                    postStatus= @model.get 'post_status'
+#                    @$el.find('#status').select2().select2('val',postStatus)
+
+#                    @$el.find('#difficulty_level').select2().select2 'val',@model.get 'difficulty_level'
 
 #                    negativeMarks= parseInt @model.get 'negative_marks'
 #                    $('#negativeMarks').select2().select2('val',negativeMarks)
@@ -53,11 +64,24 @@ define ['app',
                     .remove()
 
             _changeTabs : (e)->
-                tabId = @$el.find('#subProps.nav-tabs li.active').attr 'id'
-                tabPaneId = tabId+'-pane'
-                console.log tabPaneId
-                @$el.find('.tab-content .tab-pane').removeClass 'active'
-                @$el.find(".tab-content ##{tabPaneId}.tab-pane").addClass 'active'
+                e.preventDefault()
+                $(e.target).tab('show')
+
+            _hintEnable : (e)=>
+                if $(e.target).prop 'checked'
+                    @$el.find('#question-hint').prop 'disabled',false
+                    @$el.find('#question-hint').parent().show()
+                else
+                    @$el.find('#question-hint').prop 'disabled',true
+                    @$el.find('#question-hint').parent().hide()
+
+            _commentEnable : (e)=>
+                if $(e.target).prop 'checked'
+                    @$el.find('#question-comment').prop 'disabled',false
+                    @$el.find('#question-comment').parent().show()
+                else
+                    @$el.find('#question-comment').prop 'disabled',true
+                    @$el.find('#question-comment').parent().hide()
 
 
             _changeSubject : (e)->

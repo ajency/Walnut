@@ -1,7 +1,7 @@
 {{#isStudentQuestion}}
 <ul class="nav nav-tabs" id="subProps">
-    <li class="active" id="settings-tab"><a>Settings</a></li>
-    <li class="" id="more-tab"><a>More</a></li>
+    <li class="active" id="settings-tab"><a class="tabs" href="#settings-tab-pane">Settings</a></li>
+    <li class="" id="more-tab"><a class="tabs" href="#more-tab-pane">More</a></li>
 </ul>
 {{/isStudentQuestion}}
 <form name="contentpiece-settings">
@@ -66,9 +66,9 @@
                     <label class="form-label">Difficulty Level</label>
                     <select required name="difficulty_level" id="difficulty_level" class="form-control select2" >
                         <option value="">--select Difficulty Level--</option>
-                        <option value="l1">Level 1</option>
-                        <option value="l2">level 2</option>
-                        <option value="l3">Level 3</option>
+                        <option value="1">Level 1</option>
+                        <option value="2">level 2</option>
+                        <option value="3">Level 3</option>
                     </select>
                 </div>
                 {{/isStudentQuestion}}
@@ -116,7 +116,34 @@
                 <!--</div>-->
             <!--{{/studentQuestion}}-->
         </div>
-        <div class="tab-pane" id="more-tab-pane"></div>
+        {{#isStudentQuestion}}
+        <div class="tab-pane" id="more-tab-pane">
+            <div class="row m-b-15">
+                <div class="col-sm-3">
+                    <div class="checkbox check-success">
+                        <input type="checkbox" name="hint_enable" id="hint_enable">
+                        <label class="form-label" for="hint_enable">Enable Hint</label>
+                    </div>
+                </div>
+                <div class="col-sm-9" style="display: none">
+                    <textarea name="hint" id="question-hint" class="form-control" rows="4" placeholder="Enter Hint"
+                              disabled></textarea>
+                </div>
+            </div>
+            <div class="row m-b-15">
+                <div class="col-sm-3">
+                    <div class="checkbox check-success">
+                        <input type="checkbox" name="comment_enable" id="comment_enable">
+                        <label class="form-label" for="comment_enable">Enable Comment</label>
+                    </div>
+                </div>
+                <div class="col-sm-9" style="display: none">
+                    <textarea name="comment" id="question-comment" class="form-control" placeholder="Enter Comment"
+                        rows="4" disabled ></textarea>
+                </div>
+            </div>
+        </div>
+        {{/isStudentQuestion}}
     </div>
 </form>
 
