@@ -150,6 +150,9 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
       ContentGroupViewLayout.prototype.onShow = function() {
         $('.page-content').removeClass('expand-page');
         if (_.platform() === 'DEVICE') {
+          $('body').css({
+            'height': '100%'
+          });
           return _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
         }
       };

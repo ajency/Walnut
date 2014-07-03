@@ -119,4 +119,8 @@ define ['app'
                 $('.page-content').removeClass 'expand-page'
 
                 # Changes for cordova app
-                _.deleteAllDecryptedVideoFilesFromVideosWebDirectory() if _.platform() is 'DEVICE'
+                if _.platform() is 'DEVICE'
+
+                    $('body').css('height' : '100%')
+
+                    _.deleteAllDecryptedVideoFilesFromVideosWebDirectory() 
