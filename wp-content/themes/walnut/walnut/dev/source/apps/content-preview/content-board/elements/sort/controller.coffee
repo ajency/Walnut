@@ -1,66 +1,73 @@
 define ['app'
-		'apps/content-preview/content-board/element/controller'
-		'apps/content-preview/content-board/elements/sort/view'],
-		(App,Element)->
+        'apps/content-preview/content-board/element/controller'
+        'apps/content-preview/content-board/elements/sort/view'],
+(App, Element)->
+    App.module "ContentPreview.ContentBoard.Element.Sort", (Sort, App, Backbone, Marionette, $, _)->
+        class Sort.Controller extends Element.Controller
 
-			App.module "ContentPreview.ContentBoard.Element.Sort" ,(Sort, App, Backbone, Marionette,$, _)->
+            initialize : (options)->
+                answerData =
+                    answer : []
+                    marks : 0
 
-				class Sort.Controller extends Element.Controller
+                @answerModel = App.request "create:new:answer", answerData
 
-					initialize : (options)->
-						
-						answerData =
-								answer : []
-								marks : 0
-							
-						@answerModel = App.request "create:new:answer",answerData						
+                super options
 
-						super options
 
-						
 
-					renderElement : ->
-							optionsObj = @layout.model.get 'elements'
-							# if the object is a collection then keep as it is 
-							optionsObj = _.shuffle optionsObj
+            renderElement : ->
+                optionsObj = @layout.model.get 'elements'
 
-							@optionCollection = App.request "create:new:option:collection" , optionsObj
-							@layout.model.set 'elements',@optionCollection
+                @_parseOptions optionsObj
 
-							# get the view 
-							@view = @_getSortView @optionCollection
+                # if the object is a collection then keep as it is
+                optionsObj = _.shuffle optionsObj
 
-							App.execute "show:total:marks",@layout.model.get 'marks'
-							
-							@listenTo @view, "submit:answer", @_submitAnswer
+                @optionCollection = App.request "create:new:option:collection", optionsObj
+                @layout.model.set 'elements', @optionCollection
 
-							# show the view
-							@layout.elementRegion.show @view
+                # get the view
+                @view = @_getSortView @optionCollection
 
-					_getSortView : (collection)->		
-							new Sort.Views.SortView
-									collection : collection
-									sort_model : @layout.model
+                App.execute "show:total:marks", @layout.model.get 'marks'
 
-					_submitAnswer:=>
-						@answerModel.set 'marks',@layout.model.get 'marks'
-						@view.$el.find('input#optionNo').each (index,element)=>
+                @listenTo @view, "submit:answer", @_submitAnswer
 
-								answerOptionIndex = @optionCollection.get($(element).val()).get('index')
-								@answerModel.get('answer').push answerOptionIndex
+                # show the view
+                @layout.elementRegion.show @view
 
-								if answerOptionIndex isnt index+1
-									@answerModel.set 'marks',0
-									$(element).parent().addClass 'ansWrong'
-								else
-									$(element).parent().addClass 'ansRight'
+            _getSortView : (collection)->
+                new Sort.Views.SortView
+                    collection : collection
+                    sort_model : @layout.model
 
-						App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
+            _parseOptions : (optionsObj)->
+                _.each optionsObj, (option)->
+                    option.optionNo = parseInt option.optionNo if option.optionNo?
+                    option.marks = parseInt option.marks if option.marks?
+                    option.index = parseInt option.index if option.index?
 
-						console.log @answerModel.get('answer').toString()
 
-						if @answerModel.get('marks') is 0
-							@view.triggerMethod 'show:feedback'
+
+            _submitAnswer : =>
+                @answerModel.set 'marks', @layout.model.get 'marks'
+                @view.$el.find('input#optionNo').each (index, element)=>
+                    answerOptionIndex = @optionCollection.get($(element).val()).get('index')
+                    @answerModel.get('answer').push answerOptionIndex
+
+                    if answerOptionIndex isnt index + 1
+                        @answerModel.set 'marks', 0
+                        $(element).parent().addClass 'ansWrong'
+                    else
+                        $(element).parent().addClass 'ansRight'
+
+                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')
+
+                console.log @answerModel.get('answer').toString()
+
+                if @answerModel.get('marks') is 0
+                    @view.triggerMethod 'show:feedback'
 
 					
 

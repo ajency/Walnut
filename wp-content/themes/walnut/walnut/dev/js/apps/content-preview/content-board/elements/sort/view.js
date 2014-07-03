@@ -90,10 +90,13 @@ define(['app'], function(App) {
             myAnswer: '.myAnswer parseInt'
           }
         });
-        return this.$el.find('#toggleView').on('click', (function(_this) {
+        return this.$el.find('#toggleView input').on('click', (function(_this) {
           return function(evt) {
             var sortValue;
-            sortValue = $(evt.target).find('input').attr('data-sort-value');
+            evt.stopPropagation();
+            sortValue = $(evt.target).attr('data-sort-value');
+            console.log(sortValue);
+            console.log($(evt.target));
             return _this.$el.find('.sort').isotope({
               sortBy: sortValue
             });
