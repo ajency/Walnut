@@ -142,6 +142,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
             division: this.division
           };
           questionResponseModel = App.request("save:question:response", '');
+          questionResponseModel.set('question_response', []);
           questionResponseModel.set(modelData);
           if (this.display_mode === 'class_mode') {
             questionResponseModel.save();
