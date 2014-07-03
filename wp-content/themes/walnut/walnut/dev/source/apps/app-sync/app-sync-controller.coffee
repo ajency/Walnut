@@ -10,7 +10,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			@displayLastDownloadTimeStamp()
 
 			@changeSyncButtonTextBasedOnLastSyncOperation()
-
+			
 
 		
 		displayTotalRecordsToBeSynced : ->
@@ -25,6 +25,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 					.text(""+totalRecords+" record(s) to be synced")
 
 
+		
 		displayLastDownloadTimeStamp : ->
 
 			lastSyncOperation = _.getLastSyncOperation()

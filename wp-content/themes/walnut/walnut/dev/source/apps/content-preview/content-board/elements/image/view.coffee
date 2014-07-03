@@ -9,9 +9,10 @@ define ['app'], (App)->
 
             className : 'image'
 
-            template : '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%"/>
-                        						<div class="clearfix"></div>
-                        						'
+            template : '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%"
+                        onerror="this.onerror=null;this.src=\'/images/avtar.png\';"/>
+						<div class="clearfix"></div>
+						'
 
             # override serializeData to set holder property for the view
             mixinTemplateHelpers : (data)->
@@ -27,4 +28,3 @@ define ['app'], (App)->
             # after run remove the data-src attribute of the image to avoid
             # reloading placeholder image again
             onShow : ->
-

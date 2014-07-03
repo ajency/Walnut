@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       ImageView.prototype.className = 'image';
 
-      ImageView.prototype.template = '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%"/> <div class="clearfix"></div>';
+      ImageView.prototype.template = '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%" onerror="this.onerror=null;this.src=\'/images/avtar.png\';"/> <div class="clearfix"></div>';
 
       ImageView.prototype.mixinTemplateHelpers = function(data) {
         data = ImageView.__super__.mixinTemplateHelpers.call(this, data);

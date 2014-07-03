@@ -262,9 +262,7 @@ define(['underscore', 'csvparse'], function(_, parse) {
       setTimeout((function(_this) {
         return function() {
           $('#syncSuccess').css("display", "block").text("Sync completed successfully");
-          return App.execute("show:leftnavapp", {
-            region: App.leftNavRegion
-          });
+          return $('#main-menu-toggle').css('display', 'block');
         };
       })(this), 2000);
       return setTimeout((function(_this) {

@@ -101,6 +101,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.onShow = function() {
+        var lastSyncOperation;
         if ($(window).width() > 1024) {
           $("#gears-mob").remove();
         }
@@ -109,7 +110,17 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         }
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
-          return $(".header-seperation").css("display", "none");
+          $(".header-seperation").css("display", "none");
+        }
+        if (_.platform() === 'DEVICE') {
+          lastSyncOperation = _.getLastSyncOperation();
+          return lastSyncOperation.done(function(typeOfOperation) {
+            if (typeOfOperation === 'file_import') {
+              return $('#main-menu-toggle').css('display', 'block');
+            } else {
+              return $('#main-menu-toggle').css('display', 'none');
+            }
+          });
         }
       };
 

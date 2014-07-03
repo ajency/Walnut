@@ -9,9 +9,10 @@ define ['app'], (App)->
 
             className : 'imagewithtext'
 
-            template : '<img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive"/>
-            						<p class="editor"></p>
-            						<div class="clearfix"></div>'
+            template : '<img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive" 
+                        onerror="this.onerror=null;this.src=\'/images/avtar.png\';"/>
+                        <p class="editor"></p>
+						<div class="clearfix"></div>'
 
             # override serializeData to set holder property for the view
             mixinTemplateHelpers : (data)->

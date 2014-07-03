@@ -333,7 +333,8 @@ define ['underscore', 'csvparse'], ( _, parse) ->
 
             setTimeout(=>
                 $('#syncSuccess').css("display","block").text("Sync completed successfully")
-                App.execute "show:leftnavapp", region:App.leftNavRegion 
+                # App.execute "show:leftnavapp", region:App.leftNavRegion
+                $('#main-menu-toggle').css('display','block')
             ,2000)
 
             setTimeout(=>
