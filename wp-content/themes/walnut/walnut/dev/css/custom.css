@@ -1298,26 +1298,44 @@ p.mcq-option-text {
 .cpTimer .textDiv_Seconds span {
   opacity: 0.3;
 }
-.countdown-row {
+.is-countdown {
+  font-weight: 300;
+  padding: 10px 10px 20px;
+}
+.is-countdown:after {
   clear: both;
+  content: " ";
+  /* 1 */
+
+  display: table;
+  /* 2 */
+
+}
+.countdown-row {
   width: 100%;
-  padding: 0px 2px;
   text-align: center;
 }
 .countdown-row .countdown-section {
-  width: 48%;
+  width: 49%;
+}
+.countdown-amount {
+  color: #259b24;
+  font-size: 200%;
 }
 .countdown-section {
   display: block;
   float: left;
-  font-size: 75%;
+  font-size: 18px;
   text-align: center;
 }
-.countdown-amount {
-  font-size: 200%;
+.countdown-section:last-child .countdown-amount {
+  opacity: 0.2;
 }
 .countdown-period {
   display: block;
+}
+.negative .countdown-amount {
+  color: #f35958;
 }
 .modInfo,
 .qstnInfo {
@@ -2289,7 +2307,7 @@ body {
 }
 .page-sidebar .page-sidebar-wrapper > ul > li > a,
 .page-sidebar .page-sidebar-wrapper > ul > li > a i,
-.page-sidebar .page-sidebar-wrapper > ul > li > a .arrow,
+.page-sidebar .page-sidebar-wrapper > ul > li > a .arrow:before,
 .page-sidebar .page-sidebar-wrapper > ul > li > a .arrow.open:before {
   color: #ffffff !important;
   font-size: 16px;

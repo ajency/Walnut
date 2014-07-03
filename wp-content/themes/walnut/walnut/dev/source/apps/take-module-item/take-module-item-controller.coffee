@@ -106,6 +106,25 @@ define ['app'
                 if @display_mode is 'class_mode' and questionResponseModel.get('status') isnt 'completed'
                     @_saveQuestionResponse "paused"
 
+                else
+                    @_getPreviousRoute()
+
+            _saveQuestionResponse : (status) =>
+                elapsedTime = @timerObject.request "get:elapsed:time"
+
+                data=
+                    time_taken : elapsedTime
+                    status : status
+
+                questionResponseModel.set data
+
+                questionResponseModel.save data,
+                    wait : true
+                    success :(model)=>
+                        if model.get('status') is 'paused'
+                            @_getPreviousRoute()
+
+            _getPreviousRoute:->
                 currRoute = App.getCurrentRoute()
 
                 removeStr = _.str.strRightBack currRoute, '/'
@@ -113,15 +132,6 @@ define ['app'
                 newRoute = _.str.rtrim currRoute, removeStr + '/'
 
                 App.navigate newRoute, true
-
-            _saveQuestionResponse : (status) =>
-                elapsedTime = @timerObject.request "get:elapsed:time"
-
-                questionResponseModel.set
-                    time_taken : elapsedTime
-                    status : status
-
-                questionResponseModel.save()
 
             _getOrCreateModel : (content_piece_id)=>
                 questionResponseModel = questionResponseCollection.findWhere
@@ -135,6 +145,7 @@ define ['app'
                         division : @division
                     }
                     questionResponseModel = App.request "save:question:response", ''
+                    questionResponseModel.set 'question_response',[]
                     questionResponseModel.set modelData
 
                     if @display_mode is 'class_mode'

@@ -38,9 +38,15 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
         if (this.display_mode === 'class_mode') {
           this.timerObject.setHandler("get:elapsed:time", (function(_this) {
             return function() {
-              var timeElapsed, timerTime;
-              timerTime = $(_this.view.el).find('.cpTimer').TimeCircles().getTime();
-              timeElapsed = _this.durationInSeconds - timerTime;
+              var timeElapsed, timerSign, timerTime, timerTimePeriod;
+              timerTimePeriod = $(_this.view.el).find('#downUpTimer').countdown('getTimes');
+              timerTime = $.countdown.periodsToSeconds(timerTimePeriod);
+              timerSign = $(_this.view.el).find('#downUpTimer').attr('timerdirection');
+              if (timerSign === 'countDown') {
+                timeElapsed = _this.durationInSeconds - timerTime;
+              } else {
+                timeElapsed = _this.durationInSeconds + timerTime;
+              }
               return timeElapsed;
             };
           })(this));
@@ -90,8 +96,8 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
         return new TopPanel.Views.TopPanelView({
           model: this.model,
           display_mode: this.display_mode,
+          timeLeftOrElapsed: this._timeLeftOrElapsed(),
           templateHelpers: {
-            timeLeftOrElapsed: this._timeLeftOrElapsed,
             getClass: this._getClass,
             getTextbookName: _.bind(this._getTextbookName, this, terms),
             getChapterName: _.bind(this._getChapterName, this, terms),
@@ -108,10 +114,15 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
         if (this.questionResponseModel) {
           responseTime = this.questionResponseModel.get('time_taken');
         }
+        console.log('responseTime');
+        console.log(responseTime);
+        console.log('@questionResponseModel');
+        console.log(this.questionResponseModel);
         if (responseTime && responseTime !== 'NaN') {
           timeTaken = responseTime;
         }
-        return timer = this.durationInSeconds - timeTaken;
+        timer = this.durationInSeconds - timeTaken;
+        return timer;
       };
 
       Controller.prototype._getClass = function() {

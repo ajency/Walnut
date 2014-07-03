@@ -41,7 +41,9 @@ require.config({
     holder: 'plugins/holder',
     videojs: 'plugins/video',
     panzer: 'plugins/panzer',
-    mmenu: 'plugins/jquery.mmenu.min.all'
+    mmenu: 'plugins/jquery.mmenu.min.all',
+    timerplugin: 'plugins/jquery.countdown_plugin.min',
+    countdowntimer: 'plugins/jquery.countdown.min'
   },
   shim: {
     underscore: {
@@ -83,6 +85,8 @@ require.config({
     isotope: ['jquery', 'bridget'],
     panzer: ['jquery'],
     mmenu: ['jquery'],
+    timerplugin: ['jquery'],
+    countdowntimer: ['jquery', 'timerplugin'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

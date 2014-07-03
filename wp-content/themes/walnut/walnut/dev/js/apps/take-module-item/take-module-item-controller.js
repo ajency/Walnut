@@ -95,24 +95,39 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       };
 
       TeacherTeachingController.prototype._gotoPreviousRoute = function() {
-        var currRoute, newRoute, removeStr;
         if (this.display_mode === 'class_mode' && questionResponseModel.get('status') !== 'completed') {
-          this._saveQuestionResponse("paused");
+          return this._saveQuestionResponse("paused");
+        } else {
+          return this._getPreviousRoute();
         }
+      };
+
+      TeacherTeachingController.prototype._saveQuestionResponse = function(status) {
+        var data, elapsedTime;
+        elapsedTime = this.timerObject.request("get:elapsed:time");
+        data = {
+          time_taken: elapsedTime,
+          status: status
+        };
+        questionResponseModel.set(data);
+        return questionResponseModel.save(data, {
+          wait: true,
+          success: (function(_this) {
+            return function(model) {
+              if (model.get('status') === 'paused') {
+                return _this._getPreviousRoute();
+              }
+            };
+          })(this)
+        });
+      };
+
+      TeacherTeachingController.prototype._getPreviousRoute = function() {
+        var currRoute, newRoute, removeStr;
         currRoute = App.getCurrentRoute();
         removeStr = _.str.strRightBack(currRoute, '/');
         newRoute = _.str.rtrim(currRoute, removeStr + '/');
         return App.navigate(newRoute, true);
-      };
-
-      TeacherTeachingController.prototype._saveQuestionResponse = function(status) {
-        var elapsedTime;
-        elapsedTime = this.timerObject.request("get:elapsed:time");
-        questionResponseModel.set({
-          time_taken: elapsedTime,
-          status: status
-        });
-        return questionResponseModel.save();
       };
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
@@ -127,6 +142,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
             division: this.division
           };
           questionResponseModel = App.request("save:question:response", '');
+          questionResponseModel.set('question_response', []);
           questionResponseModel.set(modelData);
           if (this.display_mode === 'class_mode') {
             questionResponseModel.save();

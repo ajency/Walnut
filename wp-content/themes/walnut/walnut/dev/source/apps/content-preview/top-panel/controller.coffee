@@ -28,12 +28,22 @@ define ['app'
 
                 if @display_mode is 'class_mode'
                     @timerObject.setHandler "get:elapsed:time", ()=>
-                        timerTime = $ @view.el
-                        .find '.cpTimer'
-                            .TimeCircles()
-                            .getTime()
 
-                        timeElapsed = @durationInSeconds - timerTime
+                        timerTimePeriod = $ @view.el
+                            .find '#downUpTimer'
+                            .countdown 'getTimes'
+
+                        timerTime= $.countdown.periodsToSeconds timerTimePeriod
+
+                        timerSign= $ @view.el
+                        .find '#downUpTimer'
+                        .attr 'timerdirection'
+
+                        if timerSign is 'countDown'
+                            timeElapsed = @durationInSeconds - timerTime
+
+                        else
+                            timeElapsed = @durationInSeconds + timerTime
 
                         timeElapsed
 
@@ -72,9 +82,9 @@ define ['app'
                 new TopPanel.Views.TopPanelView
                     model : @model
                     display_mode : @display_mode
+                    timeLeftOrElapsed : @_timeLeftOrElapsed()
 
                     templateHelpers :
-                        timeLeftOrElapsed : @_timeLeftOrElapsed
                         getClass : @_getClass
                         getTextbookName : _.bind @_getTextbookName , @, terms
                         getChapterName : _.bind @_getChapterName, @, terms
@@ -89,10 +99,19 @@ define ['app'
 
                 responseTime = @questionResponseModel.get('time_taken') if @questionResponseModel
 
+                console.log 'responseTime'
+
+                console.log responseTime
+
+                console.log '@questionResponseModel'
+
+                console.log @questionResponseModel
+
                 if responseTime and responseTime isnt 'NaN'
                     timeTaken = responseTime
 
                 timer = @durationInSeconds - timeTaken
+                timer
 
             _getClass : =>
                 classesArray = []
