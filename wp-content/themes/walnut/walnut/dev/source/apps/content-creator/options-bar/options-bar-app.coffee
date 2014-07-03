@@ -9,7 +9,7 @@ define ['app'
             initialize: (options)->
                 {@contentPieceModel}= options
 
-                @view = @_getOptionsBarView @contentPieceModel
+                @view = @_getOptionsBarView()
 
                 @textbooksCollection = App.request "get:textbooks"
 
@@ -80,9 +80,9 @@ define ['app'
 
                     @view.triggerMethod 'fetch:subsections:complete', allSections
 
-            _getOptionsBarView: (model)=>
+            _getOptionsBarView: =>
                 new OptionsBar.Views.OptionsBarView
-                    model: model
+                    model: @contentPieceModel
                     templateHelpers: @_getTemplateHelpers()
 
 

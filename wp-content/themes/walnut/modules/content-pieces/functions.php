@@ -174,6 +174,16 @@ function get_single_content_piece($id){
 
     $content_piece->duration = (isset($duration)) ? $duration : '';
 
+    $content_piece->hint_enable = (isset($hint_enable))? $hint_enable === "true" : false;
+
+    $content_piece->hint = (isset($hint))? $hint : '';
+
+    $content_piece->comment_enable = (isset($comment_enable))? $comment_enable === "true" : false;
+
+    $content_piece->comment = (isset($comment))? $comment : '';
+
+    $content_piece->difficulty_level = (int) get_post_meta($id,'difficulty_level',true);
+
     $content_piece->last_modified_by='';
 
     if(isset($last_modified_by)){
@@ -415,6 +425,8 @@ function save_content_piece($data){
 
     update_post_meta ($content_id, 'textbook',$data['term_ids']['textbook']);
 
+    update_post_meta ($content_id, 'difficulty_level', $data['difficulty_level']);
+
 //    negative marks for student question
 //    if($data['content_type'] == 'student_question'){
 //        update_post_meta ($content_id, 'negative_marks', $data['negative_marks']);
@@ -448,6 +460,10 @@ function save_content_piece($data){
         'duration'          => $data['duration'],
         'post_tags'         => $data['post_tags'],
         'instructions'         => $data['instructions'],
+        'hint_enable'       => $data['hint_enable'],
+        'hint'              => $data['hint'],
+        'comment_enable'    => $data['comment_enable'],
+        'comment'           => $data['comment'],
         'last_modified_by'  => $post_author
     );
 
