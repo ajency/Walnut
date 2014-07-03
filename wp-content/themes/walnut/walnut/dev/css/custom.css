@@ -2307,7 +2307,7 @@ body {
 }
 .page-sidebar .page-sidebar-wrapper > ul > li > a,
 .page-sidebar .page-sidebar-wrapper > ul > li > a i,
-.page-sidebar .page-sidebar-wrapper > ul > li > a .arrow,
+.page-sidebar .page-sidebar-wrapper > ul > li > a .arrow:before,
 .page-sidebar .page-sidebar-wrapper > ul > li > a .arrow.open:before {
   color: #ffffff !important;
   font-size: 16px;
@@ -2421,8 +2421,7 @@ textarea.error,
 .select2-choice.error {
   border: 1px solid #f35958 !important;
 }
-.page-container,
-.page-content {
+.page-container {
   position: static;
 }
 .page-content.condensed {
