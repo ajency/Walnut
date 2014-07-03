@@ -46,7 +46,9 @@
         checkbox			: 'plugins/flatui-checkbox',
         holder				: 'plugins/holder',
         videojs				: 'plugins/video',
-        panzer: 'plugins/panzer'
+        panzer              : 'plugins/panzer',
+        timerplugin         : 'plugins/jquery.countdown_plugin.min',
+        countdowntimer      : 'plugins/jquery.countdown.min'
     },
     shim: {
         underscore: {
@@ -87,6 +89,8 @@
         bridget : ['jquery'],
         isotope : ['jquery','bridget'],
         panzer: ['jquery'],
-        app: ['plugins/walnut-pluginloader', 'config/walnut-configloader'],
+        timerplugin: ['jquery'],
+        countdowntimer: ['jquery','timerplugin'],
+        app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
     }
 })
