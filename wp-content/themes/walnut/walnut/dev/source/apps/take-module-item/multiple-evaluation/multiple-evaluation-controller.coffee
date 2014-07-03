@@ -43,7 +43,7 @@ define ['app'
                 responseObjOld = _.findWhere @questionResponseArray, id : responseObj.id
                 if responseObjOld?
                     index = _.indexOf @questionResponseArray,responseObjOld
-                    _.extend @questionResponseArray[index], responseObj
+                    @questionResponseArray[index] = responseObj
                 else
                     @questionResponseArray = new Array() if @questionResponseArray is ''
                     @questionResponseArray.push responseObj
@@ -67,7 +67,10 @@ define ['app'
 
             _getMultipleEvaluationLayout : ->
                 new MultipleEvalLayout
-                    questionResponseModel : @questionResponseModel
+                    questionResponseArray : @questionResponseArray
+
+
+
 
 
         class MultipleEvalLayout extends Marionette.Layout
@@ -83,8 +86,12 @@ define ['app'
                 evalParametersRegion : '#eval-parameters'
 
             initialize : (options)->
-                questionResponseModel = Marionette.getOption @, 'questionResponseModel'
-                @correctAnswer = questionResponseModel.get 'question_response'
+                @questionResponseArray = Marionette.getOption @, 'questionResponseArray'
+
+#                @correctAnswer = questionResponseModel.get 'question_response'
+
+            onClose :->
+                delete @questionResponseArray
 
 
         # set handlers

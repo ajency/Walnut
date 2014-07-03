@@ -53,7 +53,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
         });
         if (responseObjOld != null) {
           index = _.indexOf(this.questionResponseArray, responseObjOld);
-          _.extend(this.questionResponseArray[index], responseObj);
+          this.questionResponseArray[index] = responseObj;
         } else {
           if (this.questionResponseArray === '') {
             this.questionResponseArray = new Array();
@@ -75,7 +75,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
 
       SingleQuestionMultipleEvalController.prototype._getMultipleEvaluationLayout = function() {
         return new MultipleEvalLayout({
-          questionResponseModel: this.questionResponseModel
+          questionResponseArray: this.questionResponseArray
         });
       };
 
@@ -99,9 +99,11 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
       };
 
       MultipleEvalLayout.prototype.initialize = function(options) {
-        var questionResponseModel;
-        questionResponseModel = Marionette.getOption(this, 'questionResponseModel');
-        return this.correctAnswer = questionResponseModel.get('question_response');
+        return this.questionResponseArray = Marionette.getOption(this, 'questionResponseArray');
+      };
+
+      MultipleEvalLayout.prototype.onClose = function() {
+        return delete this.questionResponseArray;
       };
 
       return MultipleEvalLayout;

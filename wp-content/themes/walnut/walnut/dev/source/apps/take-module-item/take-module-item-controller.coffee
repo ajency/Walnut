@@ -145,6 +145,7 @@ define ['app'
                         division : @division
                     }
                     questionResponseModel = App.request "save:question:response", ''
+                    questionResponseModel.set 'question_response',[]
                     questionResponseModel.set modelData
 
                     if @display_mode is 'class_mode'
