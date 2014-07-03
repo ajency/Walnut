@@ -25,6 +25,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       Controller.prototype.renderElement = function() {
         var optionsObj;
         optionsObj = this.layout.model.get('elements');
+        this._parseOptions(optionsObj);
         optionsObj = _.shuffle(optionsObj);
         this.optionCollection = App.request("create:new:option:collection", optionsObj);
         this.layout.model.set('elements', this.optionCollection);
@@ -38,6 +39,20 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         return new Sort.Views.SortView({
           collection: collection,
           sort_model: this.layout.model
+        });
+      };
+
+      Controller.prototype._parseOptions = function(optionsObj) {
+        return _.each(optionsObj, function(option) {
+          if (option.optionNo != null) {
+            option.optionNo = parseInt(option.optionNo);
+          }
+          if (option.marks != null) {
+            option.marks = parseInt(option.marks);
+          }
+          if (option.index != null) {
+            return option.index = parseInt(option.index);
+          }
         });
       };
 
