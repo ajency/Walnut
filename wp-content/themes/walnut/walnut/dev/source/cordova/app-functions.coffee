@@ -48,28 +48,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 
 		
-		appNavigation : ->
-			#Cordova backbutton event
-			document.addEventListener("backbutton", _.onBackButtonClick, false) 
-
-		
-		
-		onBackButtonClick : ->
-			console.log 'Fired cordova back button event'
-			
-			currentRoute = App.getCurrentRoute()
-			console.log 'currentRoute: '+currentRoute
-
-			if currentRoute is 'teachers/dashboard' or currentRoute is 'app-login'
-				#Exit the application
-				navigator.app.exitApp()
-			else 
-				Backbone.history.history.back()
-
-			document.removeEventListener("backbutton", _.onBackButtonClick, false)
-
-
-		
 		unserialize : (string)->
 
 			if string is '' then string

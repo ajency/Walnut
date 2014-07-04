@@ -41,21 +41,6 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         };
       })(this), false);
     },
-    appNavigation: function() {
-      return document.addEventListener("backbutton", _.onBackButtonClick, false);
-    },
-    onBackButtonClick: function() {
-      var currentRoute;
-      console.log('Fired cordova back button event');
-      currentRoute = App.getCurrentRoute();
-      console.log('currentRoute: ' + currentRoute);
-      if (currentRoute === 'teachers/dashboard' || currentRoute === 'app-login') {
-        navigator.app.exitApp();
-      } else {
-        Backbone.history.history.back();
-      }
-      return document.removeEventListener("backbutton", _.onBackButtonClick, false);
-    },
     unserialize: function(string) {
       if (string === '') {
         return string;

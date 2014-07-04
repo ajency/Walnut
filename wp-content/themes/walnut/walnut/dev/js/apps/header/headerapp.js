@@ -19,9 +19,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         this.layout = layout = this._getHeaderView();
         this.school = App.request("get:current:school");
         this.listenTo(layout, 'show', this._showLeftRightViews);
-        this.show(layout, {
-          loading: true
-        });
+        this.show(layout);
         this.listenTo(this.layout.rightRegion, "user:logout", this._logoutCurrentUser);
         return this.listenTo(layout, 'user:logout', this._logoutCurrentUser);
       };

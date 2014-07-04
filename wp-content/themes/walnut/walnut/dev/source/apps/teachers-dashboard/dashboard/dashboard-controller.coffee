@@ -73,6 +73,3 @@ define ['app'
                     
                     # Hide the splash screen image
                     navigator.splashscreen.hide()
-
-                    # Cordova app navigation
-                    _.appNavigation()

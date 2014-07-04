@@ -61,7 +61,8 @@ define ['underscore'], ( _) ->
 		
 		checkIfServerImportOperationCompleted : ->
 
-			$('#syncSuccess').css("display","block").text("Please wait...")
+			escaped = $('<div>').text("Please wait...\nThis should take a few minutes").text()
+			$('#syncSuccess').css("display","block").html(escaped.replace(/\n/g, '<br />'))
 
 			setTimeout(=>
 

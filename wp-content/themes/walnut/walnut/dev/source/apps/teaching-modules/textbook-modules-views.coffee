@@ -142,6 +142,3 @@ define ['app'], (App)->
                     output : '{startRow} to {endRow} of {totalRows}'
 
                 $('#take-class-modules').tablesorterPager pagerOptions
-
-                # Cordova app navigation
-                # _.appNavigation() if _.platform() is 'DEVICE'

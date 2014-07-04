@@ -83,10 +83,10 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
       };
 
       AppLoginView.prototype.onShow = function() {
-        var onBackbuttonClick;
+        var onBackButtonClick;
         _.setSchoolLogo();
         navigator.splashscreen.hide();
-        onBackbuttonClick = (function(_this) {
+        onBackButtonClick = (function(_this) {
           return function() {
             console.log('Fired cordova back button event for login');
             if (App.getCurrentRoute() === 'app-login') {
@@ -96,10 +96,10 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
                 trigger: true
               });
             }
-            return document.removeEventListener("backbutton", onBackbuttonClick, false);
+            return document.removeEventListener("backbutton", onBackButtonClick, false);
           };
         })(this);
-        return document.addEventListener("backbutton", onBackbuttonClick, false);
+        return document.addEventListener("backbutton", onBackButtonClick, false);
       };
 
       return AppLoginView;

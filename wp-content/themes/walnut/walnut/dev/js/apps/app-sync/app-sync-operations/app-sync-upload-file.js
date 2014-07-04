@@ -38,7 +38,9 @@ define(['underscore'], function(_) {
       })(this), 2000);
     },
     checkIfServerImportOperationCompleted: function() {
-      $('#syncSuccess').css("display", "block").text("Please wait...");
+      var escaped;
+      escaped = $('<div>').text("Please wait...\nThis should take a few minutes").text();
+      $('#syncSuccess').css("display", "block").html(escaped.replace(/\n/g, '<br />'));
       return setTimeout((function(_this) {
         return function() {
           var data;

@@ -70,7 +70,7 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 				#Hide the splash screen image
 				navigator.splashscreen.hide()
 
-				onBackbuttonClick = =>
+				onBackButtonClick = =>
 					console.log 'Fired cordova back button event for login'
 
 					if App.getCurrentRoute() is 'app-login'
@@ -78,7 +78,8 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 					else 	
 						App.navigate('app-login', trigger: true)
 
-					document.removeEventListener("backbutton", onBackbuttonClick, false)
+					# navigator.app.overrideBackbutton(true)
+					document.removeEventListener("backbutton", onBackButtonClick, false)
 
 				#Cordova backbutton event
-				document.addEventListener("backbutton", onBackbuttonClick, false) 
+				document.addEventListener("backbutton", onBackButtonClick, false) 
