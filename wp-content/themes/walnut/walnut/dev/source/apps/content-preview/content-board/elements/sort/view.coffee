@@ -5,7 +5,7 @@ define ['app'], (App)->
             className : 'sort-option'
 
             template : '<input type="hidden" id="optionNo" value="{{optionNo}}">
-            							<p class="sort-option-text"></p>'
+                        							<p class="sort-option-text"></p>'
 
 
 
@@ -20,16 +20,21 @@ define ['app'], (App)->
 
 
             template : '<div class="sort"></div>
-            						<div class="alert alert-success text-center fibRightAns" style="display: none;">
-            							<div class="btn-group " data-toggle="buttons" id="toggleView">
-            								<label class="btn btn-default">
-            									<input type="radio" name="sort" id="myAnswer" data-sort-value="myAnswer"> My Answer
-            								</label>
-            								<label class="btn btn-primary">
-            									<input type="radio" name="sort" id="rightAnswer" data-sort-value="correctAnswer"> Correct Answer
-            								</label>
-            							</div>
-            						</div>'
+                        <div class="alert alert-success text-center fibRightAns" style="display: none;">
+                            <div class="btn-group">
+                                <input type="button" class="btn btn-default btn-primary" value=" My Answer" data-sort-value="myAnswer">
+                                <input type="button" class="btn btn-default " value=" Correct Answer" data-sort-value="correctAnswer">
+                            </div>
+                        </div>'
+
+#            <div class="btn-group " data-toggle="buttons" id="toggleView">
+#            <label class="btn btn-default">
+#            #                                    <input type="radio" name="sort" id="myAnswer" data-sort-value="myAnswer"> My Answer
+#            </label>
+#                                <label class="btn btn-primary">
+#                                    <input type="radio" name="sort" id="rightAnswer" data-sort-value="correctAnswer"> Correct Answer
+#                                </label>
+#            </div>
 
             itemView : OptionView
 
@@ -72,13 +77,17 @@ define ['app'], (App)->
                     @$el.find('.sort').sortable
                         cursor : "move"
 
+            onDestroySortable:->
+                @$el.find('.sort').sortable('destroy') if @$el.find('.sort').hasClass 'ui-sortable'
+
+
             onShowFeedback : ->
                 @$el.find('.fibRightAns').show()
                 @$el.find('input#optionNo').each (index, element)=>
                     $(element).before("<span class='myAnswer' style='display:none;'>#{index + 1}</span>")
                     $(element).before("<span class='correctAnswer' style='display:none;'>#{@collection.get($(element).val()).get('index')}</span>")
 
-                @$el.find('.sort').sortable('destroy') if @$el.find('.sort').hasClass 'ui-sortable'
+                @onDestroySortable()
 
                 $container = @$el.find('.sort')
 
@@ -91,10 +100,14 @@ define ['app'], (App)->
                         correctAnswer : '.correctAnswer parseInt'
                         myAnswer : '.myAnswer parseInt'
 
+                @$el.find('.sort-option').css 'min-width', '100%'
 
-                @$el.find('#toggleView input').on 'click', (evt)=>
+
+                @$el.find('.fibRightAns input').on 'click', (evt)=>
                     # _.delay =>
                     evt.stopPropagation()
+                    @$el.find('.fibRightAns input').removeClass('btn-primary')
+                    $(evt.target).addClass 'btn-primary'
                     sortValue = $(evt.target).attr('data-sort-value')
                     console.log sortValue
                     console.log $(evt.target)

@@ -68,6 +68,8 @@ define ['app'
 
                 if @answerModel.get('marks') is 0
                     @view.triggerMethod 'show:feedback'
+                else
+                    @view.triggerMethod 'destroy:sortable'
 
 					
 

@@ -75,6 +75,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         console.log(this.answerModel.get('answer').toString());
         if (this.answerModel.get('marks') === 0) {
           return this.view.triggerMethod('show:feedback');
+        } else {
+          return this.view.triggerMethod('destroy:sortable');
         }
       };
 
