@@ -57,7 +57,7 @@ body{
 	}
 
 	.page-sidebar-wrapper > ul > li{
-		&>a, &> a i, &> a .arrow, &> a .arrow.open:before{
+		&>a, &> a i, &> a .arrow:before, &> a .arrow.open:before{
 			color: @color-white !important;
 			font-size: 16px;
 		}
@@ -382,6 +382,16 @@ ol {
 		//color: darken(@dash-grey, 25%);
 		//font-weight: bold;
 		border-radius: 0;
+	}
+}
+
+.table-hover tbody tr:hover > td, .table-hover tbody tr:hover > th{
+	background-color: transparent;
+}
+
+.teacher-app{
+	.grid{
+		background-color: transparent !important;
 	}
 }
 
