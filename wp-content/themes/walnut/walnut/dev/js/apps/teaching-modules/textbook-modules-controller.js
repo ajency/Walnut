@@ -18,6 +18,12 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       textbookModulesController.prototype.initialize = function(opts) {
         var textbookID, view;
         textbookID = opts.textbookID, this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
+        App.execute("show:headerapp", {
+          region: App.headerRegion
+        });
+        App.execute("show:leftnavapp", {
+          region: App.leftNavRegion
+        });
         this.textbook = App.request("get:textbook:by:id", textbookID);
         if (this.mode === 'training') {
           this.contentGroupsCollection = App.request("get:content:groups", {

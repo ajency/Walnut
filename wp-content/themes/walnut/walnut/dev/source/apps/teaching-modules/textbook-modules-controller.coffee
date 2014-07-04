@@ -9,6 +9,13 @@ define ['app'
             initialize: (opts) ->
                 {textbookID,@classID,@division,@mode} = opts
 
+                #in teaching/ training mode take-an-item the header & left nav are removed
+                #so on browser back, on reaching this page we need to call them again.
+                #hence the following two lines
+
+                App.execute "show:headerapp", region : App.headerRegion
+                App.execute "show:leftnavapp", region : App.leftNavRegion
+
                 @textbook = App.request "get:textbook:by:id", textbookID
 
                 if @mode is 'training'
