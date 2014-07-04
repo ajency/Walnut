@@ -120,7 +120,9 @@ define ['app'
 
                 questionResponseModel.save data,
                     wait : true
-                    success :=> @_getPreviousRoute()
+                    success :(model)=>
+                        if model.get('status') is 'paused'
+                            @_getPreviousRoute()
 
             _getPreviousRoute:->
                 currRoute = App.getCurrentRoute()
@@ -143,6 +145,7 @@ define ['app'
                         division : @division
                     }
                     questionResponseModel = App.request "save:question:response", ''
+                    questionResponseModel.set 'question_response',[]
                     questionResponseModel.set modelData
 
                     if @display_mode is 'class_mode'
