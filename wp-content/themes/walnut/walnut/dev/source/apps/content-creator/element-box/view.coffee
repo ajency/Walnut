@@ -19,6 +19,13 @@ define ['app'
 
                 if contentType is 'teacher_question'
                     elementSet = ['Row', 'TeacherQuestion', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio']
+
+                else if contentType is 'content_piece'
+                    elementSet = ['Row', 'Image', 'Text', 'ImageWithText',
+                                  'Video', 'Audio']
+                    @$el.find '#questions_elements_label'
+                    .hide()
+
                 else
                     elementSet = ['Row', 'Hotspot', 'Mcq', 'Fib', 'BigAnswer', 'Sort', 'Image', 'Text', 'ImageWithText',
                                   'Video', 'Audio']
@@ -28,4 +35,13 @@ define ['app'
                     elementName = $(el).attr 'data-element'
                     if not _.contains elementSet, elementName
                         $(el).hide()
+
+            onQuestionElementAdded :->
+
+                @$el.find('.qstns *[data-element]').draggable 'disable'
+
+
+            onQuestionElementRemoved : ->
+
+                @$el.find('.qstns *[data-element]').draggable 'enable'
 

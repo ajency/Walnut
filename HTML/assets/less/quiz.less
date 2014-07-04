@@ -43,17 +43,18 @@
 }
 
 .timerBox{
-	float: left;
+	float: right;
 }
 
 .timerBox, .quizProgress{
 	width: 235px;
-	background: @color-white;
+	// background: @color-white;
+	background: darken(@preview-grey, 15%);
 	margin: 0 1.5%;
 }
 
 .quizProgress{
-	float: right;
+	float: left;
 }
 
 .quizSteps{
@@ -186,19 +187,20 @@
 	.timerBox, .quizProgress{
 		margin: 0;
 		// float: right;
-		right: 0;
+		left: 0;
 		position: absolute;
 	}
 	.timerBox{
 		top: 420px;
 	}
-	.quizContent{
-		#myCanvas{
-			margin: 0;
-		}
-	}
+	// .quizContent{
+	// 	#myCanvas{
+	// 		margin: 0;
+	// 	}
+	// }
 	.quizActions{
 		margin: 0;
+		margin-left: auto;
 	}
 	.sidebarContainer{
 		position: relative;

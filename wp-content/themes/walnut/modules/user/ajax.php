@@ -46,6 +46,7 @@ function authenticate_app_login() {
 }
 
 add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
+add_action( 'wp_ajax_get-user-app-profile', 'authenticate_app_login' );
 
 function ajax_fetch_users() {
 

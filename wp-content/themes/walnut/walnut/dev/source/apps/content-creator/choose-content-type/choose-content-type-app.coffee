@@ -26,7 +26,8 @@ define ['app'
 
         class ChooseContentTypeView extends Marionette.ItemView
 
-            template: '<div class="col-sm-4">
+            template: '<h1 class="text-center muted m-b-20">Select a <span class="bold">content type</span> to create</h1>
+                        <div class="col-sm-4">
             					<div class="tiles white text-center">
             	                	<a class="heading p-t-40 p-b-40" href="#create-content/teacher_question"> Teacher Question </a>
             	           	 	</div>

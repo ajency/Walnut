@@ -14,8 +14,8 @@ define(['app', 'controllers/element-controller', 'apps/content-creator/content-b
       }
 
       Controller.prototype.initialize = function(opts) {
-        var container, element, modelData, options;
-        container = opts.container, modelData = opts.modelData;
+        var container, element, modelData, options, _ref;
+        container = opts.container, modelData = opts.modelData, this.eventObj = opts.eventObj;
         options = {
           draggable: true,
           style: '',
@@ -25,6 +25,9 @@ define(['app', 'controllers/element-controller', 'apps/content-creator/content-b
           right_margin: ''
         };
         _.defaults(modelData, options);
+        if ((_ref = modelData.element) === 'Mcq' || _ref === 'Fib' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer' || _ref === 'TeacherQuestion') {
+          this.eventObj.vent.trigger("question:element:added");
+        }
         element = App.request("create:new:element", modelData);
         this.layout = this._getView(element);
         this.listenTo(this.layout, "show:setting:popup", function(model) {
@@ -50,12 +53,12 @@ define(['app', 'controllers/element-controller', 'apps/content-creator/content-b
         })(this));
         this.layout.elementRegion.on("show", (function(_this) {
           return function(view) {
-            var margin, model, _i, _len, _ref, _results;
+            var margin, model, _i, _len, _ref1, _results;
             model = Marionette.getOption(_this.layout, 'model');
-            _ref = ['top_margin', 'left_margin', 'right_margin', 'bottom_margin'];
+            _ref1 = ['top_margin', 'left_margin', 'right_margin', 'bottom_margin'];
             _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              margin = _ref[_i];
+            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+              margin = _ref1[_i];
               _results.push(_this.layout.setMargin(model.get(margin)));
             }
             return _results;
@@ -110,6 +113,10 @@ define(['app', 'controllers/element-controller', 'apps/content-creator/content-b
       Controller.prototype.removeSpinner = function() {};
 
       Controller.prototype.deleteElement = function(model) {
+        var _ref;
+        if ((_ref = model.get('element')) === 'Mcq' || _ref === 'Fib' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer' || _ref === 'TeacherQuestion') {
+          this.eventObj.vent.trigger("question:element:removed");
+        }
         return model.destroy({
           wait: true
         });

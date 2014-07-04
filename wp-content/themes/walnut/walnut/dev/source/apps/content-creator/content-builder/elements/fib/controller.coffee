@@ -6,7 +6,6 @@ define ['app'
         class Fib.Controller extends Element.Controller
 
             initialize: (options)->
-                @eventObj = options.eventObj
 
                 # set defaults for the model
                 _.defaults options.modelData,
@@ -28,9 +27,16 @@ define ['app'
                 super options
 
             renderElement: ->
-                @blanksCollection = App.request "create:new:question:element:collection", @layout.model.get 'blanksArray'
+
+                blanksArray = @layout.model.get 'blanksArray'
+
+                @_parseOptions blanksArray
+
+                @blanksCollection = App.request "create:new:question:element:collection", blanksArray
 
                 @layout.model.set 'blanksArray', @blanksCollection
+
+                console.log @blanksCollection
                 # get the view
                 view = @_getFibView @layout.model
 
@@ -47,13 +53,9 @@ define ['app'
                     App.execute "close:question:elements"
 
                 App.commands.setHandler 'save:fib:text', ->
-                    _.delay ->
-                        view.triggerMethod 'save:text'
-                    , 500
+                    view.triggerMethod 'save:text'
 
-                # # on show disable all question elements in d element box
-                # @listenTo view, "show",=>
-                # 		@eventObj.vent.trigger "question:dropped"
+
 
                 # listen to create fib element  event from view
                 @listenTo view, "create:new:fib:element", (blankId)=>
@@ -74,7 +76,15 @@ define ['app'
                 # @layout.model.set 'marks',@layout.model.get('marks')+1
 
                 # show the view
-                @layout.elementRegion.show view, (loading: true)
+                @layout.elementRegion.show view,
+                    loading: true
+                    entities: [@layout.model]
+
+            _parseOptions:(blanksArray)->
+                _.each blanksArray,(blank)->
+                    blank.blank_index = parseInt blank.blank_index if blank.blank_index?
+                    blank.blank_size = parseInt blank.blank_size if blank.blank_size?
+                    blank.marks = parseInt blank.marks if blank.marks?
 
             _getFibView: (model)->
                 new Fib.Views.FibView
@@ -85,8 +95,9 @@ define ['app'
                 # and delete it
                 model.set('blanksArray', '')
                 delete model.get 'blanksArray'
-                model.destroy()
+
+                super model
+
                 App.execute "close:question:properties"
                 App.execute "close:question:element:properties"
-# # on delete enable all question elements in d element box
-# @eventObj.vent.trigger "question:removed"
+

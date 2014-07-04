@@ -29,101 +29,6 @@ function ajax_get_single_content_piece() {
 
 add_action('wp_ajax_read-content-piece', 'ajax_get_single_content_piece');
 
-function ajax_create_content_group() {
-
-    $data = array(
-        'name' => $_POST['name'],
-        'description' => $_POST['description'],
-        'term_ids' => $_POST['term_ids'],
-        'duration' => $_POST['duration'],
-        'minshours' => $_POST['minshours'],
-//        save status
-        'status' => $_POST['status']
-    );
-
-    $id = save_content_group($data);
-
-    wp_send_json(array('code' => 'OK', 'data' => array('id'=> $id)));
-}
-
-add_action('wp_ajax_create-content-group', 'ajax_create_content_group');
-
-function ajax_update_content_group() {
-
-    global $wpdb;
-
-    if (isset($_POST['changed']) && $_POST['changed']=='module_details') {
-        $data = array(
-            'id' => $_POST['id'],
-            'name' => $_POST['name'],
-            'description' => $_POST['description'],
-            'term_ids' => $_POST['term_ids'],
-            'duration' => $_POST['duration'],
-            'minshours' => $_POST['minshours'],
-            //        save status
-            'status'    => $_POST['status']
-        );
-        $content_group = save_content_group($data);
-    }
-   
-    if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
-        $data = array(
-          'id' => $_POST['id'],
-          'content_pieces' => $_POST['content_pieces']
-        );
-        $update_group_content_pieces=update_group_content_pieces($data);
-    }
-    
-    if (isset($_POST['changed']) && ($_POST['changed']=='status')) {
-        if($_POST['status'] == 'scheduled'){
-            $data = array(
-              'id' => $_POST['id'],
-              'status' => $_POST['status'],
-              'division' => $_POST['division'],
-              'training_date' => $_POST['training_date']
-            );
-            $update_training_module_status=update_training_module_status($data);
-        }
-    }
-    
-    wp_send_json(array('code' => 'OK', 'data' => array('id'=> (int) $_POST['id'])));
-}
-
-add_action('wp_ajax_update-content-group', 'ajax_update_content_group');
-
-function ajax_fetch_content_groups() {
-    
-    $args= $_GET;
-    
-    $content_groups= get_all_content_groups($args);
-  
-    wp_send_json(array('code' => 'OK', 'data' => $content_groups));
-}
-
-add_action('wp_ajax_get-content-groups', 'ajax_fetch_content_groups');
-
-function ajax_fetch_single_content_group() {
-    
-    $id=$_GET['id'];
-    $content_groups= get_single_content_group($id);
-  
-    wp_send_json(array('code' => 'OK', 'data' => $content_groups));
-}
-add_action('wp_ajax_read-content-group', 'ajax_fetch_single_content_group');
-
-function ajax_save_content_piece() {
-
-    unset($_POST['action']);
-
-    $post_data =$_POST;
-
-    $content_id = save_content_piece($post_data);
-
-    wp_send_json(array('ID'=>$content_id));
-
-}
-
-add_action('wp_ajax_save-content-piece-json', 'ajax_save_content_piece');
 
 function ajax_create_content_element() {
     global $wpdb;
@@ -185,3 +90,19 @@ function get_blog_media() {
 
 }
 add_action ( 'wp_ajax_read-media', 'get_blog_media' );
+
+
+function ajax_save_content_piece() {
+
+    unset($_POST['action']);
+
+    $post_data =$_POST;
+
+    $content_id = save_content_piece($post_data);
+
+    wp_send_json(array('ID'=>$content_id));
+
+}
+
+add_action('wp_ajax_save-content-piece-json', 'ajax_save_content_piece');
+add_action('wp_ajax_create-content-piece', 'ajax_save_content_piece');

@@ -1,49 +1,33 @@
-<div class="col-md-3">
+<div id="teacherOptns">
+    <h3><a href="#takeClass" class="active">Take a Class</a></h3>
+    <h3 class=""><a href="#training">Start Traning</a></h3>
+    <h3 class=""><a href="#progress">Class Progress</a></h3>
 </div>
-<div class="col-md-6 m-t-20">
 
-    <ul class="nav nav-tabs" id="teacherOptns">
-        <li class="active"><a href="#takeClass">Take a Class</a></li>
-        <li class=""><a href="#training">Start Training</a></li>
-        <li class=""><a href="#progress">Class Progress</a></li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane active" id="takeClass">
-          <div class="m-b-15 semi-bold row">
-				<div class="col-md-6">
-					<label class="form-label bold">Class</label>
-					<select id="class" class="form-control select2" >
-			        </select>
-			    </div>
-			    <div class="col-md-6">
-			        <label class="form-label bold">Div</label>
-					<select id="div" class="form-control select2" >
-			        </select>
-			    </div>
-		    </div>
-		    <button value="take-class" type="button" class="submit-btn btn btn-primary btn-xs btn-sm pull-right"> Go </button>
-		    <div class="clearfix"></div>
-        </div>
-        <div class="tab-pane" id="training">
-          <div class="m-b-15 semi-bold row">
-				<div class="col-md-12">
-					<label class="form-label bold">Class</label>
-					<select id="class-training" class="form-control select2" >
-			        </select>
-			    </div>
-		    </div>
-		    <button value="start-training" type="button" class="submit-btn btn btn-primary btn-xs btn-sm pull-right"> Go </button>
-		    <div class="clearfix"></div>
-        </div>
-        <div class="tab-pane" id="progress">
-          <div class="row">
-            <div class="col-md-12">
-              <h3>Coming Soon...</h3>
-            </div>
-          </div>
-        </div>
+<div class="tab-content" style="background: none">
+    <div class="tab-pane animated fadeInUp active" id="takeClass">
+        <h1 class="text-center muted m-b-20">Select a <span class="bold">class</span> to begin</h1>
+        <ul class="classes">
+            {{#divisions}}
+                {{#.}}
+                    <li><a href="#teachers/take-class/{{class_id}}/{{id}}"><div class="classesWrap">{{division}}</div></a></li>
+                {{/.}}
+            {{/divisions}}
+        </ul>
     </div>
-</div>
-<div class="col-md-3">
+    <div class="tab-pane animated fadeInUp" id="training">
+        <h1 class="text-center muted m-b-20">Select a <span class="bold">class</span> to begin</h1>
+        <ul class="classes">
+            {{#classes}}
+                <li><a href="#teachers/start-training/{{id}}"><div class="classesWrap">{{label}}</div></a></li>
+            {{/classes}}
+        </ul>
+    </div>
+    <div class="tab-pane animated fadeInUp" id="progress">
+      <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center muted m-b-20">Coming <span class="bold">Soon</span> ...</h1>
+        </div>
+      </div>
+    </div>
 </div>

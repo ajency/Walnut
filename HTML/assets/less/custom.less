@@ -22,6 +22,7 @@ body{
 	background-color: @body-bg;
 	overflow-y: scroll;
 	height: 100%;
+	-webkit-text-stroke: 0.1px;
 }
 
 #site_main_container{
@@ -56,7 +57,7 @@ body{
 	}
 
 	.page-sidebar-wrapper > ul > li{
-		&>a, &> a i, &> a .arrow, &> a .arrow.open:before{
+		&>a, &> a i, &> a .arrow:before, &> a .arrow.open:before{
 			color: @color-white !important;
 			font-size: 16px;
 		}
@@ -175,6 +176,7 @@ tbody.rowlink{
 .scrollup{
 	left:auto;
 	right:50px;
+	display: none !important;
 }
 
 .tiles-head{
@@ -239,6 +241,10 @@ textarea.error, .select2-choice.error {
 	border:1px solid @color-danger !important;
 }
 
+.page-container{
+	position: static;
+}
+
 .page-content.condensed{
 	overflow: visible;
 }
@@ -246,7 +252,7 @@ textarea.error, .select2-choice.error {
 .page-content{
 	min-height: 0;
 	overflow-x: hidden;
-	padding-bottom: 80px;
+	padding-bottom: 50px;
 }
 
 .mainLogo{
@@ -321,12 +327,17 @@ label, input, button, select, textarea{
 
 .alert{
 	font-size: 14px;
+	border-radius: 0;
 }
 
 .btn{
 	//padding: 10px 30px;
 	//padding-top: 10px;
-	font-weight: bold;
+	// font-weight: bold;
+	font-family: "Roboto";
+	border-radius: 0;
+	text-transform: uppercase;
+	box-shadow: 0 2px 5px 0 rgba(0,0,0,.2);
 }
 
 .form-control{
@@ -365,7 +376,13 @@ ol {
 }
 
 .progress{
-	background: darken(@body-bg, 5%)
+	border-radius: 0;
+	background: darken(@body-bg, 5%);
+	.progress-bar{
+		//color: darken(@dash-grey, 25%);
+		//font-weight: bold;
+		border-radius: 0;
+	}
 }
 
 ::-webkit-input-placeholder {
@@ -457,4 +474,10 @@ select{
 	.page-content{
 		min-height: 0;
 	}
+}
+
+/*Panzer Audio Player*/
+.panzer-light .player{
+	background: @preview-grey;
+	border: none;
 }

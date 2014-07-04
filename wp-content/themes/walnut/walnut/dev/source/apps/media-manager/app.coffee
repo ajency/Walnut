@@ -47,6 +47,7 @@ define ['app'
 
 
                 @listenTo @layout, "media:selected", =>
+
                     if not _.isNull @choosedMedia
                         App.vent.trigger "media:manager:choosed:media", @choosedMedia
                         @region.closeDialog()
@@ -87,7 +88,10 @@ define ['app'
                 'click button.media-manager-select': ->
                     @trigger "media:selected"
 
-
+            onShow:->
+                if Marionette.getOption(@,'mediaType') in ['audio', 'video']
+                    @$el.find '.upload-tab'
+                    .hide()
 
             onClose: ->
                 #stop listening to event

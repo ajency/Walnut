@@ -12,22 +12,29 @@ define(['app'], function(App) {
 
       AudioView.prototype.className = 'audio';
 
-      AudioView.prototype.template = '{{#audio}} <audio controls> <source src="{{audioUrl}}" type="audio/ogg"> Your browser does not support the audio element. </audio> {{/audio}} {{#placeholder}} <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Audio</div> {{/placeholder}}';
+      AudioView.prototype.template = '{{#audio}} <audio controls> <source src="{{audioUrl}}" type="audio/ogg"> Your browser does not support the audio element. </audio> {{/audio}} {{#placeholder}} <div class="audio-placeholder"><span class="bicon icon-uniF100"></span>Upload Audio</div> {{/placeholder}}';
 
       AudioView.prototype.mixinTemplateHelpers = function(data) {
         data = AudioView.__super__.mixinTemplateHelpers.call(this, data);
-        data.audio = true;
+        if (!this.model.get('audio_id')) {
+          data.placeholder = true;
+        } else {
+          data.audio = true;
+          data.audioUrl = this.model.get('audioUrl');
+        }
         return data;
       };
 
       AudioView.prototype.events = {
         'click': function(e) {
-          return e.stopPropagation();
+          e.stopPropagation();
+          return this.trigger("show:media:manager");
         }
       };
 
       AudioView.prototype.onShow = function() {
         return this.$el.find('audio').panzer({
+          theme: 'light',
           layout: 'big',
           expanded: true,
           showduration: true

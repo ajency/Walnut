@@ -34,38 +34,37 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.renderElement = function() {
-        var videoModel, view;
+        var videoModel;
         this.removeSpinner();
         videoModel = App.request("get:media:by:id", this.layout.model.get('video_id'));
-        view = this.view = this._getVideoView(videoModel);
-        this.listenTo(view, "show:media:manager", (function(_this) {
+        return App.execute("when:fetched", videoModel, (function(_this) {
           return function() {
-            return App.execute("show:media:manager:app", {
-              region: App.dialogRegion,
-              mediaType: 'video'
+            var view;
+            view = _this.view = _this._getVideoView(videoModel);
+            _this.listenTo(view, "show:media:manager", function() {
+              App.execute("show:media:manager:app", {
+                region: App.dialogRegion,
+                mediaType: 'video'
+              });
+              _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
+                _this.layout.model.set({
+                  'video_id': media.get('id'),
+                  'videoUrl': media.get('url')
+                });
+                _this.layout.model.save();
+                _this.layout.elementRegion.show(_this.view);
+                return _this.stopListening(App.vent, "media:manager:choosed:media");
+              });
+              return _this.listenTo(App.vent, "stop:listening:to:media:manager", function() {
+                return _this.stopListening(App.vent, "media:manager:choosed:media");
+              });
             });
-          };
-        })(this));
-        this.listenTo(App.vent, "media:manager:choosed:media", (function(_this) {
-          return function(media) {
-            _this.layout.model.set({
-              'video_id': media.get('id'),
-              'videoUrl': media.get('url')
+            App.commands.setHandler("video:moved", function() {
+              return view.triggerMethod("video:moved");
             });
-            _this.layout.model.save();
-            _this.layout.elementRegion.show(_this.view);
-            return _this.stopListening(App.vent, "media:manager:choosed:media");
+            return _this.layout.elementRegion.show(view);
           };
         })(this));
-        this.listenTo(App.vent, "stop:listening:to:media:manager", (function(_this) {
-          return function() {
-            return _this.stopListening(App.vent, "media:manager:choosed:media");
-          };
-        })(this));
-        App.commands.setHandler("video:moved", function() {
-          return view.triggerMethod("video:moved");
-        });
-        return this.layout.elementRegion.show(view);
       };
 
       return Controller;

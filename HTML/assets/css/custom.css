@@ -68,28 +68,28 @@
   padding-top: 60px;
 }
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 300;
   src: local('Open Sans Light'), local('OpenSans-Light'), url('../fonts/OpenSans-Light.ttf') format('ttf');
   src: local('Open Sans Light'), local('OpenSans-Light'), url('../fonts/OpenSans-Light.woff') format('woff');
 }
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
   src: local('Open Sans'), local('OpenSans'), url('../fonts/OpenSans-Regular.ttf') format('ttf');
   src: local('Open Sans'), local('OpenSans'), url('../fonts/OpenSans-Regular.woff') format('woff');
 }
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 600;
   src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url('../fonts/OpenSans-Semibold.ttf') format('ttf');
   src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url('../fonts/OpenSans-Semibold.woff') format('woff');
 }
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 700;
   src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../fonts/OpenSans-Bold.ttf') format('ttf');
@@ -1274,8 +1274,14 @@ p.mcq-option-text {
 .hashtags {
   font-size: 13px;
 }
+.moduleInfo {
+  background: #f3f3f3;
+  border-bottom: 1px solid #c3c3c3;
+}
+.moduleInfo .btn {
+  white-space: normal;
+}
 .cpTimer {
-  max-width: 190px;
   margin: 10px auto 0;
 }
 .cpTimer .textDiv_Seconds span {
@@ -1293,12 +1299,42 @@ p.mcq-option-text {
   font-size: 22px;
 }
 #content-board {
-  margin-top: 30px;
+  margin-top: 15px;
 }
 #content-board .element-wrapper {
   border: none;
   padding: 0 7px;
   margin: 2px 0 15px;
+}
+.contentTime {
+  float: left;
+}
+.contentInfo {
+  float: right;
+  padding: 20px;
+}
+.contentTime,
+.contentInfo {
+  width: 235px;
+  background: #f3f3f3;
+  border: 1px solid #c3c3c3;
+  box-shadow: #dadada 0 0 0 3px inset;
+  margin: 0 1.5%;
+}
+@media (min-width: 1020px) and (max-width: 1295px) {
+  #myCanvas {
+    margin: 0;
+    margin-left: auto;
+  }
+  .contentTime,
+  .contentInfo {
+    margin: 0;
+    left: 5px;
+    position: absolute;
+  }
+  .contentInfo {
+    top: 280px;
+  }
 }
 .answrMsg.alert-success h3 {
   color: #007366;
@@ -1613,11 +1649,8 @@ p.mcq-option-text {
   position: relative;
   min-height: 200px;
 }
-h4.modName a {
-  color: #0090d9;
-}
 .modProgress {
-  width: 200px;
+  width: 100%;
 }
 .modProgress .progress {
   width: 100%;
@@ -1630,6 +1663,18 @@ h3.time {
 }
 .parameters:focus {
   outline: none;
+}
+#question-details-region {
+  min-height: 580px;
+}
+.studentActions {
+  display: table;
+  margin: 0 auto;
+  border-bottom: 1px solid #c3c3c3;
+}
+.studentList {
+  margin: 0 5px;
+  position: relative;
 }
 .studentList h4 span {
   display: block;
@@ -1657,6 +1702,9 @@ h3.time {
   -webkit-transform: scale(1.3);
   -moz-transform: scale(1.3);
   transform: scale(1.3);
+}
+.studentList .students .tiles.white {
+  background-color: #f3f3f3;
 }
 .studentList .students .tiles.single.light {
   opacity: 0.2;
@@ -1797,6 +1845,16 @@ input#duration {
   color: #6a6a6a;
   font-weight: bold;
 }
+.modTimes > div {
+  width: 25%;
+  float: left;
+  padding: 0 10px;
+}
+.moduleInfo .modTime {
+  width: 20%;
+  float: left;
+  padding: 0 10px 10px;
+}
 .panel-default > .panel-heading {
   background-color: transparent;
 }
@@ -1828,16 +1886,16 @@ input#duration {
   max-width: 760px;
 }
 .timerBox {
-  float: left;
+  float: right;
 }
 .timerBox,
 .quizProgress {
   width: 235px;
-  background: #ffffff;
+  background: #cdcdcd;
   margin: 0 1.5%;
 }
 .quizProgress {
-  float: right;
+  float: left;
 }
 .quizSteps ul {
   list-style-type: none;
@@ -1954,17 +2012,15 @@ input#duration {
   .timerBox,
   .quizProgress {
     margin: 0;
-    right: 0;
+    left: 0;
     position: absolute;
   }
   .timerBox {
     top: 420px;
   }
-  .quizContent #myCanvas {
-    margin: 0;
-  }
   .quizActions {
     margin: 0;
+    margin-left: auto;
   }
   .sidebarContainer {
     position: relative;
@@ -1994,6 +2050,69 @@ input#duration {
     width: 15%;
   }
 }
+/*Dashboard*/
+.teacher-app {
+  max-width: 1164px;
+  margin: 0 auto;
+}
+#teacherOptns {
+  text-align: center;
+  margin-bottom: 30px;
+}
+#teacherOptns h3 {
+  display: inline-block;
+}
+#teacherOptns h3:last-child {
+  border-right: none;
+}
+#teacherOptns h3 a {
+  padding: 0 20px;
+}
+#teacherOptns h3 a.active,
+#teacherOptns h3 a:hover {
+  border-bottom: 4px solid #0090d9;
+}
+#teacherOptns h3 a.active {
+  font-weight: 600;
+}
+ul.classes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+ul.classes > li {
+  width: 15.2%;
+  height: 88px;
+  float: left;
+  margin-right: 1.5%;
+  margin-bottom: 20px;
+}
+ul.classes > li:nth-child(6n) {
+  margin-right: 0;
+}
+ul.classes a {
+  background: #f3f3f3;
+  border: 1px solid #c3c3c3;
+  box-shadow: #dadada 0 0 0 3px inset;
+  display: table;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  font-size: 21px;
+  color: #8d8d8d;
+}
+ul.classes a:hover {
+  border: 3px solid #dadada;
+  background: #0090d9;
+  color: #ffffff;
+  box-shadow: #dadada 0 0 0 0;
+  padding: 8px;
+}
+ul.classes .classesWrap {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
 /*Take Class*/
 #textbooks.list.takeClass .meta.name {
   width: 50%;
@@ -2018,6 +2137,7 @@ body {
   background-color: #e5e9ec;
   overflow-y: scroll;
   height: 100%;
+  -webkit-text-stroke: 0.1px;
 }
 #site_main_container {
   opacity: 0;
@@ -2143,6 +2263,7 @@ tbody.rowlink td {
 .scrollup {
   left: auto;
   right: 50px;
+  display: none !important;
 }
 .tiles-head {
   padding: 10px 18px 5px 24px;
@@ -2168,7 +2289,7 @@ textarea.error,
 .page-content {
   min-height: 0;
   overflow-x: hidden;
-  padding-bottom: 80px;
+  padding-bottom: 50px;
 }
 .mainLogo {
   background-size: 80%;
