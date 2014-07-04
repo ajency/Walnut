@@ -50,7 +50,6 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
             _this.listenTo(_this.layout, 'show', _this.showContentGroupViews);
             _this.listenTo(_this.layout.collectionDetailsRegion, 'start:teaching:module', _this.startTeachingModule);
             return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:question:readonly', function(questionID) {
-              App.navigate(App.getCurrentRoute() + '/question');
               return _this.gotoTrainingModule(questionID, 'readonly');
             });
           };
@@ -131,7 +130,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
       return GroupController;
 
     })(RegionController);
-    return ContentGroupViewLayout = (function(_super) {
+    ContentGroupViewLayout = (function(_super) {
       __extends(ContentGroupViewLayout, _super);
 
       function ContentGroupViewLayout() {
@@ -160,5 +159,11 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
       return ContentGroupViewLayout;
 
     })(Marionette.Layout);
+    return App.commands.setHandler("show:single:module:app", function(opt) {
+      if (opt == null) {
+        opt = {};
+      }
+      return new View.GroupController(opt);
+    });
   });
 });

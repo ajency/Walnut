@@ -136,7 +136,7 @@ define ['app'
 
             startModule : =>
                 currentRoute = App.getCurrentRoute()
-                App.navigate currentRoute + "/question"
+                #App.navigate currentRoute + "/question"
 
                 @trigger "start:teaching:module"
 

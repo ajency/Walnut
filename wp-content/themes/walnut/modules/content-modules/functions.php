@@ -141,6 +141,8 @@ function update_training_module_status($args=array()){
 
 function get_all_content_modules($args=array()){
 
+    #fixme : fetch modules based on post_status to implemented properly
+
     $current_blog= get_current_blog_id();
     switch_to_blog(1);
 
@@ -150,10 +152,21 @@ function get_all_content_modules($args=array()){
     $id=0;
 
     if(isset($args['textbook'])){
-        $published_query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "publish" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
-        $archived_query =  $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "archive" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
-        $published_modules = $wpdb->get_results($published_query);
-        $archived_modules = $wpdb->get_results($archived_query);
+
+        if(isset($args['post_status'])){
+            $published_query = $wpdb->prepare(
+                'SELECT id FROM '.$wpdb->prefix.'content_collection WHERE
+                    status LIKE %s and term_ids LIKE %s',
+                array($args['post_status'], '%\"'.$args['textbook'].'\";%')
+            );
+            $published_modules = $wpdb->get_results($published_query);
+        }
+        else{
+            $published_query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "publish" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
+            $archived_query =  $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "archive" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
+            $published_modules = $wpdb->get_results($published_query);
+            $archived_modules = $wpdb->get_results($archived_query);
+        }
 
     }
     elseif(isset($args['class_id'])){
@@ -175,9 +188,6 @@ function get_all_content_modules($args=array()){
         $all_query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection", null);
         $all_content_modules = $wpdb->get_results($all_query);
     }
-
-
-
 
     $content_data=array();
     switch_to_blog($current_blog);

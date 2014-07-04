@@ -117,6 +117,7 @@ define ['app'], (App)->
                 @trigger "schedule:training", dataID
 
             onShow : =>
+                $('.page-content').removeClass 'expand-page'
                 if Marionette.getOption(@, 'mode') is 'training'
                     @$el.find '.status_label, .training-date, #status_header, .dateInfo'
                     .remove();

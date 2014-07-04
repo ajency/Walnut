@@ -98,6 +98,7 @@ define(['app'], function(App) {
 
       ContentGroupsView.prototype.onShow = function() {
         var pagerDiv, pagerOptions;
+        $('.page-content').removeClass('expand-page');
         if (Marionette.getOption(this, 'mode') === 'training') {
           this.$el.find('.status_label, .training-date, #status_header, .dateInfo').remove();
         }

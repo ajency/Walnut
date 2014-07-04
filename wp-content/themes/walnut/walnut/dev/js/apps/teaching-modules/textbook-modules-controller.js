@@ -18,12 +18,25 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       textbookModulesController.prototype.initialize = function(opts) {
         var textbookID, view;
         textbookID = opts.textbookID, this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
-        this.textbook = App.request("get:textbook:by:id", textbookID);
-        this.contentGroupsCollection = App.request("get:content:groups", {
-          'textbook': textbookID,
-          'division': this.division,
-          'module_status': 'publish,archive'
+        App.execute("show:headerapp", {
+          region: App.headerRegion
         });
+        App.execute("show:leftnavapp", {
+          region: App.leftNavRegion
+        });
+        this.textbook = App.request("get:textbook:by:id", textbookID);
+        if (this.mode === 'training') {
+          this.contentGroupsCollection = App.request("get:content:groups", {
+            'textbook': textbookID,
+            'division': this.division,
+            'post_status': 'publish'
+          });
+        } else {
+          this.contentGroupsCollection = App.request("get:content:groups", {
+            'textbook': textbookID,
+            'division': this.division
+          });
+        }
         this.view = view = this._getContentGroupsListingView(this.contentGroupsCollection);
         App.execute("when:fetched", this.textbook, (function(_this) {
           return function() {

@@ -57,9 +57,9 @@ define ['app'
 
                 @listenTo @layout, "show", @_showQuestionDisplayView contentPiece
 
-                @listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoPreviousRoute
+                @listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoViewModule
 
-                @listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoPreviousRoute
+                @listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoViewModule
 
                 @listenTo @layout.moduleDetailsRegion, "goto:next:question", @_changeQuestion
 
@@ -86,7 +86,7 @@ define ['app'
                         @_showStudentsListView questionResponseModel
 
                 else
-                    @_gotoPreviousRoute()
+                    @_gotoViewModule()
 
             _getNextItemID : ->
                 contentPieces = contentGroupModel.get 'content_pieces'
@@ -102,12 +102,12 @@ define ['app'
 
                 nextQuestion
 
-            _gotoPreviousRoute : =>
+            _gotoViewModule : =>
                 if @display_mode is 'class_mode' and questionResponseModel.get('status') isnt 'completed'
                     @_saveQuestionResponse "paused"
 
                 else
-                    @_getPreviousRoute()
+                    @_startViewModuleApp()
 
             _saveQuestionResponse : (status) =>
                 elapsedTime = @timerObject.request "get:elapsed:time"
@@ -118,28 +118,24 @@ define ['app'
 
                 questionResponseModel.set data
 
-                if _.platform() is 'BROWSER'
-                    questionResponseModel.save data,
-                        wait : true
-                        success :(model)=>
-                            if model.get('status') is 'paused'
-                                @_getPreviousRoute()
+                questionResponseModel.save data,
+                    wait : true
+                    success :(model)=>
+                        if model.get('status') is 'paused'
+                            @_startViewModuleApp()
 
-                else 
-                    questionResponseModel.save data
+            _startViewModuleApp:=>
 
-                    if status is 'paused'
-                        @_getPreviousRoute()
+                App.execute "show:headerapp", region : App.headerRegion
+                App.execute "show:leftnavapp", region : App.leftNavRegion
 
+                App.execute "show:single:module:app",
+                    region: App.mainContentRegion
+                    model: contentGroupModel
+                    mode: @display_mode
+                    division: @division
+                    classID: @classID
 
-            _getPreviousRoute:->
-                currRoute = App.getCurrentRoute()
-
-                removeStr = _.str.strRightBack currRoute, '/'
-
-                newRoute = _.str.rtrim currRoute, removeStr + '/'
-
-                App.navigate newRoute, true
 
             _getOrCreateModel : (content_piece_id)=>
                 questionResponseModel = questionResponseCollection.findWhere
