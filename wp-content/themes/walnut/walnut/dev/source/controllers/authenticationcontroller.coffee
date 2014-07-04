@@ -45,7 +45,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		
 		isOfflineLoginEnabled:->
 
-			if($('#offline').is(':checked')) then true else false
+			if ($('#onOffSwitch').is(':checked')) then false else true
 
 		
 		

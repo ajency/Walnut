@@ -17,6 +17,7 @@ define ['detect', 'jquery', 'underscore'], (detect, $, _)->
 	if _.platform() is 'BROWSER'
 		$.getScript('wp-content/themes/walnut/walnut/dev/js/plugins/online.js')
 
+	
 	# event handlers triggered based on internet connection availability for browser. 
 	connected = false
 	window.onLineHandler = ->
@@ -24,26 +25,6 @@ define ['detect', 'jquery', 'underscore'], (detect, $, _)->
 
 	window.offLineHandler = ->
 		connected = false
-
-
-	# cordova events triggered based on internet connection availability for device.
-	document.addEventListener("online"
-		,->
-			console.log 'Online'
-			$('#connectionStatus').text('Available')
-			$('#online').prop("disabled",false)
-
-		, false)
-
-	document.addEventListener("offline"
-		,->
-			console.log 'Offline'
-			$('#connectionStatus').text('Unavailable')
-			$('#online').prop("disabled",true)
-			$('#online').prop("checked",false)
-			$("#offline").prop("checked", true)
-
-		, false)
 
 
 	# check connectivity based on platform
@@ -59,15 +40,3 @@ define ['detect', 'jquery', 'underscore'], (detect, $, _)->
 					connected
 				else
 					if navigator.connection.type is Connection.NONE	then false else true
-
-
-	# change main logo to school logo after initial user login
-	_.setMainLogo = ->
-
-		switch _.platform()
-
-			when 'DEVICE'
-				if _.getSchoolLogoSrc() isnt null
-					$("#logo").attr('src', _.getSchoolLogoSrc())
-				else 
-					$("#logo").attr('src', '/images/synapse-logo-main.png')	

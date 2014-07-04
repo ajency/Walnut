@@ -84,7 +84,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 
       AppLoginView.prototype.onShow = function() {
         var onBackbuttonClick;
-        _.setMainLogo();
+        _.setSchoolLogo();
         navigator.splashscreen.hide();
         onBackbuttonClick = (function(_this) {
           return function() {

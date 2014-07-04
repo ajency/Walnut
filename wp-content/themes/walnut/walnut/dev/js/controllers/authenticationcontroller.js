@@ -52,10 +52,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.isOfflineLoginEnabled = function() {
-      if ($('#offline').is(':checked')) {
-        return true;
-      } else {
+      if ($('#onOffSwitch').is(':checked')) {
         return false;
+      } else {
+        return true;
       }
     };
 

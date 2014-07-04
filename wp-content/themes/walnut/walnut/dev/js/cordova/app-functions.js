@@ -3,6 +3,44 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
     getTblPrefix: function() {
       return 'wp_' + _.getBlogID() + '_';
     },
+    displayConnectionStatusOnMainLoginPage: function() {
+      if (_.isOnline()) {
+        return $('#connectionStatus').text('Available');
+      } else {
+        return $('#connectionStatus').text('Unavailable');
+      }
+    },
+    setSchoolLogo: function() {
+      if (_.getSchoolLogoSrc() !== null) {
+        return $("#logo").attr('src', _.getSchoolLogoSrc());
+      } else {
+        return $("#logo").attr('src', '/images/synapse-logo-main.png');
+      }
+    },
+    cordovaOnlineOfflineEvents: function() {
+      document.addEventListener("online", (function(_this) {
+        return function() {
+          $('#connectionStatus').text('Available');
+          if (!_.isUndefined(_.app_username)) {
+            return $('#onOffSwitch').prop({
+              "disabled": false,
+              "checked": false
+            });
+          }
+        };
+      })(this), false);
+      return document.addEventListener("offline", (function(_this) {
+        return function() {
+          $('#connectionStatus').text('Unavailable');
+          if (!_.isUndefined(_.app_username)) {
+            return $('#onOffSwitch').prop({
+              "disabled": true,
+              "checked": false
+            });
+          }
+        };
+      })(this), false);
+    },
     appNavigation: function() {
       return document.addEventListener("backbutton", _.onBackButtonClick, false);
     },

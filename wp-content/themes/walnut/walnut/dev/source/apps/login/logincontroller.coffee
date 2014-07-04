@@ -10,6 +10,8 @@ define ['app'
 				# username used for mobile
 				{@username} = opts
 
+				_.app_username = @username
+
 				@view = view = @_getLoginView()
 
 				# listen to authenticate:user event from the view.
@@ -23,7 +25,7 @@ define ['app'
 				@listenTo view, 'prepopulate:username', @prepopulateUsername
 
 				# listen to disable:offline:login:type event from the view for mobile
-				@listenTo view, 'disable:offline:login:type', @disableOfflineLoginType  
+				@listenTo view, 'enable:disable:offline:login:type', @enableDisableOfflineLoginType
 
 				if _.platform() is 'BROWSER' then @show view, (loading: true)
 				else @show view
@@ -58,13 +60,19 @@ define ['app'
 				$('#txtusername').val($.trim(@username)) if not _.isUndefined @username
 
 			
-			# disable offline login for add new account option
-			disableOfflineLoginType : ->
-
+			# enable/disable offline login for select existing account/add new account option respectively.
+			enableDisableOfflineLoginType : ->
 				if _.isUndefined @username
-					$("#online").prop("checked", true)
-					$("#offline").prop("checked", false)
-					$('#offline').prop("disabled",true)    
+					$('#onOffSwitch').prop
+						"disabled" : true, "checked" : true
+				else
+					if _.isOnline()
+						$('#onOffSwitch').prop
+							"disabled" : false, "checked" : false
+
+					else 
+						$('#onOffSwitch').prop
+							"disabled" : true, "checked" : false
 
 
 		
@@ -90,16 +98,15 @@ define ['app'
 					#Hide the splash screen image
 					navigator.splashscreen.hide()
 
+					_.setSchoolLogo()
+
+					_.displayConnectionStatusOnMainLoginPage()
+
+					_.cordovaOnlineOfflineEvents()
+
 					@trigger "prepopulate:username"
 
-					_.setMainLogo()
-
-					if _.isOnline() then $('#connectionStatus').text('Available')
-					else 
-						$('#connectionStatus').text('Unavailable')
-						$('#online').prop("disabled",true)
-
-					@trigger "disable:offline:login:type"
+					@trigger "enable:disable:offline:login:type"
 					
 					
 

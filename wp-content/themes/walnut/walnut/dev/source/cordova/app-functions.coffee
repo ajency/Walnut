@@ -8,6 +8,45 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			'wp_'+_.getBlogID()+'_'
 
 
+
+		displayConnectionStatusOnMainLoginPage : ->
+			
+			if _.isOnline() then $('#connectionStatus').text('Available')
+			else $('#connectionStatus').text('Unavailable')
+
+
+		
+		# change main logo to school logo after initial user login
+		setSchoolLogo : ->
+
+			if _.getSchoolLogoSrc() isnt null
+				$("#logo").attr('src', _.getSchoolLogoSrc())
+			else 
+				$("#logo").attr('src', '/images/synapse-logo-main.png')
+
+
+		
+		cordovaOnlineOfflineEvents : ->
+
+			document.addEventListener("online"
+				,=>
+					$('#connectionStatus').text('Available')
+					
+					if not _.isUndefined _.app_username
+						$('#onOffSwitch').prop
+							"disabled" : false, "checked" : false
+				, false)
+
+			document.addEventListener("offline"
+				,=>
+					$('#connectionStatus').text('Unavailable')
+					
+					if not _.isUndefined _.app_username
+						$('#onOffSwitch').prop
+							"disabled" : true, "checked" : false
+				, false)
+
+
 		
 		appNavigation : ->
 			#Cordova backbutton event
@@ -30,12 +69,14 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			document.removeEventListener("backbutton", _.onBackButtonClick, false)
 
 
+		
 		unserialize : (string)->
 
 			if string is '' then string
 			else unserialize(string)
 		
 	
+		
 		#Get all user details from local database
 		getUserDetails : (username)->
 

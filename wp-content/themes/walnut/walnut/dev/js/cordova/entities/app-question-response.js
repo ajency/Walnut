@@ -19,7 +19,7 @@ define(['underscore', 'serialize'], function(_) {
             return questionType.done(function(meta_value) {
               return (function(row, i, meta_value) {
                 var questionResponseMeta;
-                questionResponseMeta = _.getDataFromQuestionResponseMeta(row['ref_id']);
+                questionResponseMeta = _.getQuestionResponseMetaData(row['ref_id']);
                 return questionResponseMeta.done(function(multipleEvalQuestionResponse) {
                   var question_response;
                   if (meta_value.question_type === 'individual') {
@@ -66,7 +66,7 @@ define(['underscore', 'serialize'], function(_) {
         return console.log('getQuestionResponse transaction completed');
       }).fail(_.failureHandler);
     },
-    getDataFromQuestionResponseMeta: function(ref_id) {
+    getQuestionResponseMetaData: function(ref_id) {
       var onSuccess, question_response, runQuery;
       question_response = '';
       runQuery = function() {
@@ -96,7 +96,7 @@ define(['underscore', 'serialize'], function(_) {
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('getDataFromQuestionResponseMeta transaction completed');
+        return console.log('getQuestionResponseMetaData transaction completed');
       }).fail(_.failureHandler);
     },
     getTeacherName: function(teacher_id) {

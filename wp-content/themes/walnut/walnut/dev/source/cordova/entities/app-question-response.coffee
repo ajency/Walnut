@@ -27,7 +27,7 @@ define ['underscore', 'serialize'], ( _) ->
 							questionType.done (meta_value)->
 
 								do(row, i, meta_value)->
-									questionResponseMeta = _.getDataFromQuestionResponseMeta(row['ref_id'])
+									questionResponseMeta = _.getQuestionResponseMetaData(row['ref_id'])
 									questionResponseMeta.done (multipleEvalQuestionResponse)->
 
 										if meta_value.question_type is 'individual'
@@ -68,7 +68,7 @@ define ['underscore', 'serialize'], ( _) ->
 
 
 
-		getDataFromQuestionResponseMeta : (ref_id)->
+		getQuestionResponseMetaData : (ref_id)->
 
 			question_response = ''
 
@@ -97,7 +97,7 @@ define ['underscore', 'serialize'], ( _) ->
 					d.resolve question_response
 
 			$.when(runQuery()).done ->
-				console.log 'getDataFromQuestionResponseMeta transaction completed'
+				console.log 'getQuestionResponseMetaData transaction completed'
 			.fail _.failureHandler
 
 

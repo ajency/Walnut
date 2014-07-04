@@ -19,19 +19,7 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
   window.offLineHandler = function() {
     return connected = false;
   };
-  document.addEventListener("online", function() {
-    console.log('Online');
-    $('#connectionStatus').text('Available');
-    return $('#online').prop("disabled", false);
-  }, false);
-  document.addEventListener("offline", function() {
-    console.log('Offline');
-    $('#connectionStatus').text('Unavailable');
-    $('#online').prop("disabled", true);
-    $('#online').prop("checked", false);
-    return $("#offline").prop("checked", true);
-  }, false);
-  _.isOnline = function() {
+  return _.isOnline = function() {
     switch (_.platform()) {
       case 'BROWSER':
         return connected;
@@ -44,16 +32,6 @@ define(['detect', 'jquery', 'underscore'], function(detect, $, _) {
           } else {
             return true;
           }
-        }
-    }
-  };
-  return _.setMainLogo = function() {
-    switch (_.platform()) {
-      case 'DEVICE':
-        if (_.getSchoolLogoSrc() !== null) {
-          return $("#logo").attr('src', _.getSchoolLogoSrc());
-        } else {
-          return $("#logo").attr('src', '/images/synapse-logo-main.png');
         }
     }
   };

@@ -65,7 +65,7 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 			onShow: ->
 				
 				# change mainLogo to school logo
-				_.setMainLogo()
+				_.setSchoolLogo()
 
 				#Hide the splash screen image
 				navigator.splashscreen.hide()
@@ -81,5 +81,4 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 					document.removeEventListener("backbutton", onBackbuttonClick, false)
 
 				#Cordova backbutton event
-				document.addEventListener("backbutton", onBackbuttonClick, false)   
-				
+				document.addEventListener("backbutton", onBackbuttonClick, false) 

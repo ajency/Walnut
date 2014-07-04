@@ -16,13 +16,14 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginController.prototype.initialize = function(opts) {
         var view;
         this.username = opts.username;
+        _.app_username = this.username;
         this.view = view = this._getLoginView();
         this.listenTo(view, 'authenticate:user', this.authenticateUser);
         this.listenTo(view, 'close', function() {
           return App.vent.trigger('show:dashboard');
         });
         this.listenTo(view, 'prepopulate:username', this.prepopulateUsername);
-        this.listenTo(view, 'disable:offline:login:type', this.disableOfflineLoginType);
+        this.listenTo(view, 'enable:disable:offline:login:type', this.enableDisableOfflineLoginType);
         if (_.platform() === 'BROWSER') {
           return this.show(view, {
             loading: true
@@ -64,11 +65,24 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         }
       };
 
-      LoginController.prototype.disableOfflineLoginType = function() {
+      LoginController.prototype.enableDisableOfflineLoginType = function() {
         if (_.isUndefined(this.username)) {
-          $("#online").prop("checked", true);
-          $("#offline").prop("checked", false);
-          return $('#offline').prop("disabled", true);
+          return $('#onOffSwitch').prop({
+            "disabled": true,
+            "checked": true
+          });
+        } else {
+          if (_.isOnline()) {
+            return $('#onOffSwitch').prop({
+              "disabled": false,
+              "checked": false
+            });
+          } else {
+            return $('#onOffSwitch').prop({
+              "disabled": true,
+              "checked": false
+            });
+          }
         }
       };
 
@@ -96,15 +110,11 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         if (_.platform() === 'DEVICE') {
           _.setSynapseMediaDirectoryPathToLocalStorage();
           navigator.splashscreen.hide();
+          _.setSchoolLogo();
+          _.displayConnectionStatusOnMainLoginPage();
+          _.cordovaOnlineOfflineEvents();
           this.trigger("prepopulate:username");
-          _.setMainLogo();
-          if (_.isOnline()) {
-            $('#connectionStatus').text('Available');
-          } else {
-            $('#connectionStatus').text('Unavailable');
-            $('#online').prop("disabled", true);
-          }
-          return this.trigger("disable:offline:login:type");
+          return this.trigger("enable:disable:offline:login:type");
         }
       };
 
