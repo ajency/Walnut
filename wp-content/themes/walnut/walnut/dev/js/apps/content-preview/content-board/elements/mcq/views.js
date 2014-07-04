@@ -48,7 +48,7 @@ define(['app'], function(App) {
       };
 
       McqView.prototype._addClass = function(option, className) {
-        return this.$el.find("#mcq-option-" + option).addClass(className);
+        return this.$el.find("#mcq-option-" + option).parent().addClass(className);
       };
 
       return McqView;
