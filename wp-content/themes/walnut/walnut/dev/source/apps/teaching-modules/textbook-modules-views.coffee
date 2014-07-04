@@ -73,7 +73,7 @@ define ['app'], (App)->
                         								<div class="row">
                         									<div class="col-lg-12">
                         										<!--<h4>{{&showModulesHeading}}</h4>-->
-                        										<table class="table table-condensed table-fixed-layout" id="take-class-modules">
+                        										<table class="table table-condensed table-fixed-layout table-bordered" id="take-class-modules">
                         							                <thead>
                         							                  <tr>
                         							                    <th style="width:50%">Name</th>
