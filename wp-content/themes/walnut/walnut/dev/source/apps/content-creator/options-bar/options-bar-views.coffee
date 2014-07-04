@@ -26,6 +26,14 @@ define ['app',
 
                     @trigger "fetch:sections:subsections", $(e.target).val()
 
+                'change #qType' : '_changeOfQuestionType'
+
+                'click  #save-question': 'saveQuestionSettings'
+
+                'click #preview-question' : 'previewQuestion'
+
+
+
             onShow:->
                 $ "#subs, #chaps, #qType, #status, #secs, #subsecs "#,#negativeMarks"
                 .select2();
@@ -46,7 +54,7 @@ define ['app',
 #                    negativeMarks= parseInt @model.get 'negative_marks'
 #                    $('#negativeMarks').select2().select2('val',negativeMarks)
 
-                if @model.get('content_type') is 'content_piece'
+                if @model.get('content_type') in ['content_piece','student_question']
                     @$el.find '#question_type_column'
                     .remove()
 
@@ -68,7 +76,6 @@ define ['app',
                 sectionIDs = term_ids['sections'] if term_ids?
 
                 subSectionIDs = term_ids['subsections'] if term_ids?
-
 
                 if _.size(allsections) > 0
                     if _.size(allsections.sections) > 0
@@ -93,9 +100,18 @@ define ['app',
                 else
                     $('#subsecs,#secs').select2().select2 'data', null
 
+            _changeOfQuestionType : (e)->
+                if $(e.target).val() is 'multiple_eval'
+                    @trigger 'show:grading:parameter'
+                else
+                    @trigger 'close:grading:parameter'
 
-
-            onSaveQuestionSettings:->
+            saveQuestionSettings:->
                 if @$el.find('form').valid()
                     data = Backbone.Syphon.serialize (@)
                     @trigger "save:data:to:model", data
+                    @$el.find '#preview-question'
+                    .show()
+
+            previewQuestion:->
+                window.open SITEURL + "/#content-piece/"+@model.id, 'target':'blank'

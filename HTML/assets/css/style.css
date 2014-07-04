@@ -101,7 +101,7 @@ html {
 body {
   background-color: #1b1e24;
   color: #6f7b8a;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-size: 13px;
   padding: 0px !important;
   margin: 0px !important;
@@ -432,7 +432,7 @@ body {
 .page-sidebar {
   background-color: #1b1e24 !important;
   height: 100%;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
 }
 .page-sidebar .outer-tab-nav-section {
   display: inline-block;
@@ -813,7 +813,7 @@ body {
 }
 .chat-window-wrapper {
   overflow: hidden;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-size: 13px;
 }
 .chat-window-wrapper .chat-header {
@@ -1211,7 +1211,7 @@ body {
   font-size: 18px;
 }
 .page-content .breadcrumb {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   border-radius: 0px;
@@ -1242,7 +1242,7 @@ body {
   display: inline-block;
   position: absolute;
   width: 200px;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   background-color: #1b1e24;
   height: 100%;
 }
@@ -1522,7 +1522,7 @@ h4,
 h5,
 h6 {
   margin: 10px 0;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-weight: 300;
   color: #505458;
 }
@@ -1541,7 +1541,7 @@ h4 {
 h3 small,
 h4 small,
 h5 small {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-weight: 300;
   color: #444;
 }
@@ -1808,7 +1808,7 @@ hr {
   color: #666;
   margin: 0 0 10px;
   font-weight: 300;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
 }
 .page-title h3 {
   display: inline-block;
@@ -2890,6 +2890,9 @@ textarea[class*="span"] {
   height: 36px !important;
   line-height: 36px !important;
   padding: 22px 8px !important;
+}
+.w100 {
+  width: 100%;
 }
 .radio,
 .checkbox {
@@ -4512,7 +4515,7 @@ form legend,
 }
 .tiles .tiles-title {
   font-size: 10.5px;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   letter-spacing: 0.5px;
   font-weight: 600;
 }
@@ -4658,7 +4661,7 @@ form legend,
 .tiles .heading {
   font-size: 25px;
   display: block;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-weight: 600;
   margin: 4px 0px;
 }
@@ -6178,7 +6181,7 @@ code:hover {
   padding: 15px 19px 15px 17px;
 }
 .notification-messages {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   background-color: #eef9f8;
   padding: 15px 18px 10px;
   display: block;
@@ -6378,13 +6381,13 @@ code:hover {
   font-size: 11px;
   text-shadow: none;
   background-color: #D1DADE;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-weight: 600;
   color: #5E5E5E;
 }
 .badge {
   text-shadow: none;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   font-weight: 600;
   background-color: #D1DADE;
   font-size: 11px;
@@ -7153,7 +7156,7 @@ input[type="checkbox"] {
 }
 .error-body {
   background-color: #e5e9ec !important;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   height: 100%;
 }
 .error-wrapper {
@@ -7168,7 +7171,7 @@ input[type="checkbox"] {
   display: block;
 }
 .error-container {
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   margin-left: auto;
   margin-right: auto;
   float: none;
@@ -7273,7 +7276,7 @@ input[type="checkbox"] {
   width: 25%;
   padding-right: 100px;
   position: absolute;
-  font-family: 'Open Sans';
+  font-family: 'Roboto';
   text-align: right;
 }
 .cbp_tmtimeline > li .cbp_tmtime .date {

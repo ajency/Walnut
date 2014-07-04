@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], function(App, TopPanelTemplate) {
@@ -7,6 +8,8 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
       __extends(TopPanelView, _super);
 
       function TopPanelView() {
+        this.countUp = __bind(this.countUp, this);
+        this.countDown = __bind(this.countDown, this);
         return TopPanelView.__super__.constructor.apply(this, arguments);
       }
 
@@ -14,6 +17,9 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
 
       TopPanelView.prototype.mixinTemplateHelpers = function(data) {
         data = TopPanelView.__super__.mixinTemplateHelpers.call(this, data);
+        if (data.question_type === 'multiple_eval') {
+          data.question_type = 'multiple Evaluation';
+        }
         data.isTraining = this.mode === 'training' ? true : false;
         return data;
       };
@@ -23,78 +29,47 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
       };
 
       TopPanelView.prototype.onShow = function() {
-        var qTime, qTimer, timerColor;
+        var timeLeftOrElapsed;
+        if (this.model.get('question_type') === 'multiple_eval') {
+          this.$el.find('#correct-answer-col').hide();
+        }
         if (this.model.get('content_type') === 'content_piece') {
           this.$el.find('#question-type-col, #correct-answer-col').hide();
         }
-        if (this.mode === 'class_mode') {
-          qTimer = this.$el.find('div.cpTimer');
-          qTime = qTimer.data('timer');
-          timerColor = '#1ec711';
-          if (qTime < 10) {
-            timerColor = '#f8a616';
-          }
-          if (qTime < 0) {
-            timerColor = '#ea0d0d';
-          }
-          return qTimer.TimeCircles({
-            time: {
-              Days: {
-                show: false
-              },
-              Hours: {
-                show: false
-              },
-              Minutes: {
-                color: timerColor
-              },
-              Seconds: {
-                color: timerColor
-              }
-            },
-            circle_bg_color: "#EBEEF1",
-            bg_width: 0.2
-          }).addListener(function(unit, value, total) {
-            if (total === 10) {
-              qTimer.data('timer', 10);
-              return qTimer.TimeCircles({
-                time: {
-                  Days: {
-                    show: false
-                  },
-                  Hours: {
-                    show: false
-                  },
-                  Minutes: {
-                    color: '#f8a616'
-                  },
-                  Seconds: {
-                    color: '#f8a616'
-                  }
-                }
-              });
-            } else if (total === 5) {
-              return console.log('The expected time for this question is almost over.');
-            } else if (total === -1) {
-              return qTimer.TimeCircles({
-                time: {
-                  Days: {
-                    show: false
-                  },
-                  Hours: {
-                    show: false
-                  },
-                  Minutes: {
-                    color: '#ea0d0d'
-                  },
-                  Seconds: {
-                    color: '#ea0d0d'
-                  }
-                }
-              });
-            }
-          });
+        if (this.model.get('content_type') !== 'student_question') {
+          this.$el.find('#total-marks').hide();
         }
+        timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
+        if (this.mode === 'class_mode') {
+          if (timeLeftOrElapsed < 0) {
+            return this.countUp(timeLeftOrElapsed);
+          } else {
+            return this.countDown(timeLeftOrElapsed);
+          }
+        }
+      };
+
+      TopPanelView.prototype.countDown = function(time) {
+        return this.$el.find('#downUpTimer').attr('timerdirection', 'countDown').countdown('destroy').countdown({
+          until: time,
+          format: 'MS',
+          onExpiry: this.countUp
+        });
+      };
+
+      TopPanelView.prototype.countUp = function(time) {
+        if (time == null) {
+          time = 0;
+        }
+        return this.$el.find('#downUpTimer').attr('timerdirection', 'countUp').addClass('negative').countdown('destroy').countdown({
+          since: time,
+          format: 'MS'
+        });
+      };
+
+      TopPanelView.prototype.onShowTotalMarks = function(marks) {
+        console.log(marks);
+        return console.log(this.$el.find('#total-marks span').text(marks));
       };
 
       return TopPanelView;

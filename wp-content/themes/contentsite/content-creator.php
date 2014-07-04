@@ -21,7 +21,7 @@ Template Name: Content Creator
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Walnut Learn</title>
+	<title>Synapse</title>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -80,6 +80,7 @@ Template Name: Content Creator
 <script type="text/javascript">
 
 var SITEURL = '<?php echo site_url();?>'
+THEMEURL = '<?php echo get_template_directory_uri()?>';
 AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
 var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE    = '<?php echo wp_create_nonce('media-form');?>';

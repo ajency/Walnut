@@ -8,6 +8,9 @@ define ['app'
 
             mixinTemplateHelpers:(data)->
                 data = super data
+                if data.question_type is 'multiple_eval'
+                    data.question_type = 'multiple Evaluation'
+
                 data.isTraining = if @mode is 'training' then true else false
                 data
 
@@ -15,60 +18,38 @@ define ['app'
                 @mode = Marionette.getOption(@, 'display_mode')
 
             onShow:->
-                if @model.get('content_type') is 'content_piece'
-                    @$el.find '#question-type-col, #correct-answer-col'
-                    .hide()
+
+                @$el.find('#correct-answer-col').hide() if @model.get('question_type') is 'multiple_eval'
+
+                @$el.find('#question-type-col, #correct-answer-col').hide() if @model.get('content_type') is 'content_piece'
+
+                @$el.find('#total-marks').hide() if @model.get('content_type') isnt 'student_question'
+
+                timeLeftOrElapsed = Marionette.getOption @,'timeLeftOrElapsed'
 
                 if @mode is 'class_mode'
-                    qTimer = @$el.find 'div.cpTimer'
+                    if timeLeftOrElapsed < 0
+                        @countUp timeLeftOrElapsed
+                    else @countDown timeLeftOrElapsed
 
-                    qTime= qTimer.data 'timer'
-                    timerColor = '#1ec711'
+            countDown:(time)=>
 
-                    if qTime <10
-                        timerColor = '#f8a616'
+                @$el.find '#downUpTimer'
+                .attr 'timerdirection','countDown'
+                .countdown 'destroy'
+                .countdown
+                    until: time
+                    format: 'MS'
+                    onExpiry: @countUp
 
-                    if qTime <0
-                        timerColor = '#ea0d0d'
+            countUp:(time=0)=>
 
-                    qTimer.TimeCircles
-                        time:
-                            Days:
-                                show:false
-                            Hours:
-                                show:false
-                            Minutes:
-                                color: timerColor
-                            Seconds:
-                                color: timerColor
+                @$el.find '#downUpTimer'
+                .attr 'timerdirection','countUp'
+                .addClass 'negative'
+                .countdown 'destroy'
+                .countdown since: time, format: 'MS'
 
-                        circle_bg_color: "#EBEEF1"
-                        bg_width: 0.2
-
-                    .addListener (unit,value,total)->
-                            if total is 10
-                                qTimer.data 'timer',10
-                                qTimer.TimeCircles
-                                    time:
-                                        Days:
-                                            show:false
-                                        Hours:
-                                            show:false
-                                        Minutes:
-                                            color: '#f8a616'
-                                        Seconds:
-                                            color: '#f8a616'
-                            else if total is 5
-                                console.log 'The expected time for this question is almost over.'
-
-                            else if total is -1
-                                qTimer.TimeCircles
-                                    time:
-                                        Days:
-                                            show:false
-                                        Hours:
-                                            show:false
-                                        Minutes:
-                                            color: '#ea0d0d'
-                                        Seconds:
-                                            color: '#ea0d0d'
+            onShowTotalMarks : (marks)->
+                console.log(marks)
+                console.log @$el.find('#total-marks span').text marks

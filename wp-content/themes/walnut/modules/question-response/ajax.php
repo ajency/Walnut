@@ -29,6 +29,7 @@ function ajax_update_question_response() {
     
     $data = array(
         'ref_id'            => $ref_id,
+        'content_piece_id'  => $content_piece_id,
         'question_response' => $question_response,
         'time_taken'        => $time_taken,
         'status'            => $status

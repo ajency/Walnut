@@ -113,7 +113,7 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
         // THIS FOLLOWING LIST IS OF TABLES WHOSE FULL DATA WILL BE EXPORTED EVERY TIME
 
         //PARENT SITE TABLE QUERIES
-        "{$wpdb->base_prefix}options",
+        //"{$wpdb->base_prefix}options",
         "{$wpdb->base_prefix}terms",
         "{$wpdb->base_prefix}term_relationships",
         "{$wpdb->base_prefix}term_taxonomy",
@@ -122,13 +122,18 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
 
         //CHILD SITE TABLE QUERIES
         "{$wpdb->prefix}class_divisions",
-        "{$wpdb->prefix}question_response"
+        "{$wpdb->prefix}question_response",
+        "{$wpdb->prefix}question_response_meta"
 
     );
 
+    // ONLY THE RECORDS REGARDING TEXTBOOKS ADDITIONAL DATA
+    // LIKE AUTHOR AND IMAGE FROM WP_OPTIONS TABLE ARE FETCHED
+    $tables_list[]= get_options_table_query();
+
     // USER AND USERMETA TABLES ARE CUSTOM QUERIED AND ONLY BLOG RELATED RECORDS ARE FETCHED
     $tables_list[]= get_user_table_query($blog_id);
-    //$tables_list[]= get_usermeta_table_query($blog_id);
+    $tables_list[]= get_usermeta_table_query($blog_id);
 
     // POST, POST META, COLLECCTION and COLLECTION META TABLES ARE FETCHED BASED ON LAST SYNCED
 
@@ -153,6 +158,27 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
     return $tables_list;
 }
 
+
+function get_options_table_query(){
+
+    global $wpdb;
+
+    $options_table_name= $wpdb->base_prefix.'options';
+
+    $options_table_query= $wpdb->prepare(
+        "SELECT * FROM $options_table_name
+            WHERE option_name LIKE %s",
+        'taxonomy%'
+    );
+    $options_table= array(
+        'query'=> $options_table_query,
+        'table_name'=> $options_table_name
+    );
+
+    return $options_table;
+
+}
+
 function get_user_table_query($blog_id){
 
     global $wpdb;
@@ -161,9 +187,15 @@ function get_user_table_query($blog_id){
         $blog_id= get_current_blog_id();
 
     $args= array('role'=>'student','fields'=>'ID');
-    $users= get_users($args);
+    $students= get_users($args);
 
-    $student_ids= join(',',$users);
+
+    $args= array('role'=>'teacher','fields'=>'ID');
+    $teacher= get_users($args);
+
+    $users = array_merge($students, $teacher);
+
+    $user_ids= join(',',$users);
 
     $user_table_query= $wpdb->prepare(
         "SELECT u.* FROM
@@ -172,7 +204,7 @@ function get_user_table_query($blog_id){
                 WHERE u.ID= um.user_id
                     AND um.meta_key=%s
                     AND um.meta_value=%d
-                    AND u.ID in (".$student_ids.")",
+                    AND u.ID in (".$user_ids.")",
         array('primary_blog', $blog_id)
     );
     $user_table= array(

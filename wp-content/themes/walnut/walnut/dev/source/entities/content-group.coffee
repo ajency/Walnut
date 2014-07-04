@@ -16,7 +16,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 last_modified_by: ''
                 published_on: ''
                 published_by: ''
-                status: ''
+                status: 'underreview'
                 type: ''
                 total_minutes: 0
                 duration: 0
@@ -26,6 +26,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                 training_date: ''
 
             name: 'content-group'
+
+
 
         # collection of group of content pieces eg. quizzes, teacher training modules etc.
         class ContentGroup.ItemCollection extends Backbone.Collection
@@ -38,13 +40,13 @@ define ["app", 'backbone'], (App, Backbone) ->
             parse: (resp)->
                 resp.data
 
-
-        contentGroupCollection = new ContentGroup.ItemCollection
-
         # API
         API =
         # get all content groups
             getContentGroups: (param = {})->
+
+                contentGroupCollection = new ContentGroup.ItemCollection
+
                 contentGroupCollection.fetch
                     reset: true
                     data: param

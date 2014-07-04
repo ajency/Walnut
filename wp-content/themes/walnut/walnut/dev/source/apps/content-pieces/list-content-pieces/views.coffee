@@ -6,22 +6,94 @@ define ['app'
             tagName : 'tr'
             className: 'gradeX odd'
 
-            template:   '<td>{{post_excerpt}}</td>
-                        <td>{{post_author_name}}</td>
-                        <td>{{modified_date}}</td>
-                        <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
-                            <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a></td>'
+            template:   '<td>{{&post_excerpt}}</td>
+                                    <td>{{post_author_name}}</td>
+                                    <td>{{textbookName}}</td>
+                                    <td>{{chapterName}}</td>
+                                    <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
+                                    <td>{{&statusMessage}}</td>
+                                    <td class="text-center"><a target="_blank" href="{{view_url}}">View</a>
+                                        {{&edit_link}}
+                                    {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>'
 
             serializeData:->
                 data= super()
-                data.modified_date= moment(@model.get('post_modified')).format("Do MMM YYYY")
-                data.view_url = SITEURL + '/#content-piece/'+@model.get 'ID'
-                data.edit_url = SITEURL + '/content-creator/#edit-content/'+@model.get 'ID'
+
+                #this is for display purpose only
+                data.modified_date= moment(data.post_modified).format("Do MMM YYYY")
+
+                #for sorting the column date-wise
+                data.sort_date= moment(data.post_modified).format "YYYYMMDD"
+
+                data.view_url = SITEURL + '/#content-piece/'+data.ID
+                edit_url = SITEURL + '/content-creator/#edit-content/'+data.ID
+                data.edit_link= ''
+
+                if data.post_status is 'pending'
+                    data.edit_link= ' <span class="nonDevice">|</span> <a target="_blank" href="'+edit_url+'" class="nonDevice">Edit</a>'
+
+                data.textbookName = =>
+                    textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
+                    textbook.name
+
+                data.chapterName = =>
+                    chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
+                    .pluck 'name'
+                        .compact()
+                        .value()
+                    chapter
+
+                data.statusMessage = ->
+                    if data.post_status is 'pending'
+                        return '<span class="label label-important">Under Review</span>'
+                    else if data.post_status is 'publish'
+                        return '<span class="label label-info">Published</span>'
+                    else if data.post_status is 'archive'
+                        return '<span class="label label-success">Archived</span>'
+
+                data.archivedModule = true if data.post_status in ['publish', 'archive']
+
                 data
+
+            events:
+                'click a.cloneModule' : 'cloneModule'
+
+            initialize : (options)->
+                @textbooks = options.textbooksCollection
+                @chapters = options.chaptersCollection
+
+            cloneModule :->
+                if @model.get('post_status') in ['publish','archive']
+                    if confirm("Are you sure you want to clone '#{@model.get('post_excerpt')}' ?") is true
+                        @cloneModel = App.request "new:content:piece"
+                        contentPieceData = @model.toJSON()
+                        console.log 'contentpiecedata'
+                        console.log @model.toJSON()
+
+                        @clonedData = _.omit contentPieceData,
+                                      ['ID', 'guid', 'last_modified_by', 'post_author',
+                                       'post_author_name', 'post_date', 'post_date_gmt', 'published_by']
+
+                        @clonedData.post_status = "pending"
+                        @clonedData.clone_id =@model.id
+
+                        App.execute "when:fetched", @cloneModel, =>
+                            @cloneModel.save @clonedData,
+                                wait : true
+                                success : @successSaveFn
+                                error : @errorFn
+
+            successSaveFn : (model)=>
+                document.location = SITEURL+ "/content-creator/#edit-content/#{model.id}"
 
         class EmptyView extends Marionette.ItemView
 
-            template: 'No content pieces available'
+            template: 'No Content Available'
+
+            tagName: 'td'
+
+            onShow:->
+                @$el.attr 'colspan',3
 
         class Views.ListView extends Marionette.CompositeView
 
@@ -35,15 +107,33 @@ define ['app'
 
             itemViewContainer: '#list-content-pieces'
 
-            events:
-                'change .filters': 'filterTableData'
-                'change #textbooks-filter': 'changeTextbooks'
-                'change #chapters-filter': (e)->
-                    @trigger "fetch:sections:subsections", $(e.target).val()
+            itemViewOptions : ->
+                textbooksCollection : @textbooks
+                chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
 
+            events:
+                'change #content-post-status-filter, .content-type-filter'  :->
+                    @setFilteredContent()
+
+                'change .textbook-filter' :(e)->
+                    @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
+
+            initialize : ->
+                @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
+                @textbooks = new Array()
+                @textbooksCollection.each (textbookModel, ind)=>
+                    @textbooks.push
+                        'name' : textbookModel.get('name')
+                        'id' : textbookModel.get('term_id')
             onShow:->
-                $ "#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter"
-                .select2();
+                @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
+                @fullCollection = Marionette.getOption @, 'fullCollection'
+                textbookFiltersHTML= $.showTextbookFilters @textbooksCollection
+                @$el.find '#textbook-filters'
+                .html textbookFiltersHTML
+
+                @$el.find ".select2-filters"
+                .select2()
 
                 $('#content-pieces-table').tablesorter();
 
@@ -53,119 +143,24 @@ define ['app'
 
                 $('#content-pieces-table').tablesorterPager pagerOptions
 
+            onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
-            changeTextbooks: (e)=>
+                switch filterType
+                    when 'textbooks-filter' then $.populateChapters filteredCollection, @$el
+                    when 'chapters-filter' then $.populateSections filteredCollection, @$el
+                    when 'sections-filter' then $.populateSubSections filteredCollection, @$el
 
-                @$el.find '#chapters-filter, #sections-filter, #subsections-filter'
-                .select2 'data', ''
-
-                @trigger "fetch:chapters", $(e.target).val()
-
-            onFetchChaptersComplete: (chapters)->
-
-                if _.size(chapters) > 0
-
-                    $ '#chapters-filter'
-                    .select2 'data', {'text':'Select Chapter'}
-
-                    _.each chapters.models, (chap, index)=>
-                        @$el.find '#chapters-filter'
-                        .append '<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>'
-
-                else
-                    @$el.find '#chapters-filter,#sections-filter,#subsections-filter'
-                    .html ''
-
-                    @$el.find '#chapters-filter'
-                    .select2 'data', 'text': 'No chapters'
-
-                    @$el.find '#sections-filter'
-                    .select2 'data', 'text': 'No Sections'
-
-                    @$el.find '#subsections-filter'
-                    .select2 'data', 'text': 'No Subsections'
-
-            onFetchSubsectionsComplete: (allsections)->
-                if _.size(allsections) > 0
-
-                    if _.size(allsections.sections) > 0
-
-                        $ '#sections-filter'
-                        .select2 'data', {'text':'Select Section'}
-
-                        _.each allsections.sections, (section, index)=>
-
-                            @$el.find '#sections-filter'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-
-                    else
-                        $ '#sections-filter'
-                        .select2 'data', 'text': 'No Sections'
-                        .html ''
-
-                    if _.size(allsections.subsections) > 0
-
-                        $ '#subsections-filter'
-                        .select2 'data', {'text':'Select SubSection'}
-
-                        _.each allsections.subsections, (section, index)=>
-                            @$el.find '#subsections-filter'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-
-                    else
-                        $ '#subsections-filter'
-                        .select2 'data', 'text': 'No Subsections'
-                        .html ''
-
-                else
-                    $('#sections-filter,#subsections-filter')
-                    .html ''
-
-                    $ '#sections-filter'
-                    .select2 'data', 'text': 'No Sections'
-
-                    $ '#subsections-filter'
-                    .select2 'data', 'text': 'No Subsections'
+                @setFilteredContent()
 
 
-
-            filterTableData: (e)=>
-
-                filter_ids=_.map @$el.find('select.textbook-filter'), (ele,index)->
-                    item = ''
-                    if not isNaN ele.value
-                        item= ele.value
-                    item
-                filter_ids= _.compact filter_ids
-
-                content_type = @$el.find('#content-type-filter').val()
-
-                fullCollection= Marionette.getOption @,'fullCollection'
-
-                filtered_data= fullCollection.models
-
-                if content_type isnt ''
-                    filtered_data = fullCollection.where 'content_type': content_type
-
-                if _.size(filter_ids)>0
-                    filtered_data = _.filter filtered_data, (item)=>
-                        filtered_item=''
-                        term_ids= _.flatten item.get 'term_ids'
-                        if _.size(_.intersection(term_ids, filter_ids)) == _.size(filter_ids)
-                            filtered_item=item
-                        filtered_item
-
-
-
+            setFilteredContent:->
+                filtered_data= $.filterTableByTextbooks(@)
 
                 @collection.set filtered_data
-                console.log @collection
 
-
-                $("#content-pieces-table").trigger "updateCache"
+                $('#content-pieces-table').trigger "updateCache"
                 pagerOptions =
-                    container: $(".pager"),
-                    output: '{startRow} to {endRow} of {totalRows}'
+                    container : $(".pager")
+                    output : '{startRow} to {endRow} of {totalRows}'
 
                 $('#content-pieces-table').tablesorterPager pagerOptions
-

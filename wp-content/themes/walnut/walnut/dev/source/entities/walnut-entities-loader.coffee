@@ -17,4 +17,6 @@ define [
     'entities/content-creator/option'
     'entities/content-creator/json'
     'entities/answer'
+    'entities/grading-parameter'
+    'entities/communications'
 		],->

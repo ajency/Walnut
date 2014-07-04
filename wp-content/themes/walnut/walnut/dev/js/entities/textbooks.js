@@ -64,6 +64,13 @@ define(["app", 'backbone'], function(App, Backbone) {
         return resp.data;
       };
 
+      ItemCollection.prototype.fetchChaptersOrSections = function(parentID) {
+        var chaptersOrSectionsCollection;
+        return chaptersOrSectionsCollection = App.request("get:chapters", {
+          'parent': parentID
+        });
+      };
+
       return ItemCollection;
 
     })(Backbone.Collection);

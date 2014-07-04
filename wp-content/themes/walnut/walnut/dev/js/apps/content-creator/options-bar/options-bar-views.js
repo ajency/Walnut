@@ -24,11 +24,14 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           this.$el.find('#secs, #subsecs').select2('data', null);
           this.$el.find('#secs, #subsecs').html('');
           return this.trigger("fetch:sections:subsections", $(e.target).val());
-        }
+        },
+        'change #qType': '_changeOfQuestionType',
+        'click  #save-question': 'saveQuestionSettings',
+        'click #preview-question': 'previewQuestion'
       };
 
       OptionsBarView.prototype.onShow = function() {
-        var postStatus, qType;
+        var postStatus, qType, _ref;
         $("#subs, #chaps, #qType, #status, #secs, #subsecs ").select2();
         $('input.tagsinput').tagsinput();
         $('#subProps a').click(function(e) {
@@ -41,7 +44,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           postStatus = this.model.get('post_status');
           $('#status').select2().select2('val', postStatus);
         }
-        if (this.model.get('content_type') === 'content_piece') {
+        if ((_ref = this.model.get('content_type')) === 'content_piece' || _ref === 'student_question') {
           return this.$el.find('#question_type_column').remove();
         }
       };
@@ -97,12 +100,27 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         }
       };
 
-      OptionsBarView.prototype.onSaveQuestionSettings = function() {
+      OptionsBarView.prototype._changeOfQuestionType = function(e) {
+        if ($(e.target).val() === 'multiple_eval') {
+          return this.trigger('show:grading:parameter');
+        } else {
+          return this.trigger('close:grading:parameter');
+        }
+      };
+
+      OptionsBarView.prototype.saveQuestionSettings = function() {
         var data;
         if (this.$el.find('form').valid()) {
           data = Backbone.Syphon.serialize(this);
-          return this.trigger("save:data:to:model", data);
+          this.trigger("save:data:to:model", data);
+          return this.$el.find('#preview-question').show();
         }
+      };
+
+      OptionsBarView.prototype.previewQuestion = function() {
+        return window.open(SITEURL + "/#content-piece/" + this.model.id, {
+          'target': 'blank'
+        });
       };
 
       return OptionsBarView;

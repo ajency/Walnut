@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '<video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="http://www.eyespot.com/2013/wp-content/uploads/2013/04/video-clip.jpg" data-setup="{}" controls> <source src="{{videoUrl}}" type="video/mp4" /> </video> <div class="clearfix"></div>';
+      VideoView.prototype.template = '<video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls> <source src="{{videoUrl}}" type="video/mp4" /> </video> <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click': function(e) {

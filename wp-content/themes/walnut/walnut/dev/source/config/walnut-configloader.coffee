@@ -4,5 +4,5 @@ define ['config/marionette'
     'config/underscore'
 		'config/middle-layer'
 		'config/jquery'
-		#'config/app-storage'
+    'config/textbook-filters'
 		], ->

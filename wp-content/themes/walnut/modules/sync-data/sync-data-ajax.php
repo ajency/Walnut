@@ -33,10 +33,16 @@ function ajax_sync_app_data() {
 
     $sync_request_id = insert_sync_request_record( array( 'file_path' => $file_data['file'] ) );
 
-    if (is_wp_error( $sync_request_id ))
+    if (is_wp_error( $sync_request_id )){
         wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Failed to create sync request. Please try again' ) ) );
-
-    wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_request_id ) ) );
+    }
+    
+    $blogurl = get_site_url();
+    $trigger_cron = false;
+    $trigger_blogurl_hit = wp_remote_get($blogurl); //blog url hit to trigger cron scheduled if no site hits
+    if(!is_wp_error( $trigger_blogurl_hit ))
+        $trigger_cron = true;
+    wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_request_id, 'trigger_cron' => $trigger_cron) ) );
 }
 
 add_action( 'wp_ajax_nopriv_sync-app-data', 'ajax_sync_app_data' );
@@ -61,10 +67,41 @@ function check_app_data_sync_completion() {
 
     $sync_request_id = $_REQUEST['sync_request_id'];
 
+    $blog_id = $_REQUEST['blog_id'];
+
+    switch_to_blog($blog_id);
+    
+    $blogurl = get_site_url();
+    $trigger_blogurl_hit = wp_remote_get($blogurl); //blog url hit to trigger cron scheduled if no site hits
+
     $status = check_app_sync_data_completion( $sync_request_id );
+
+    restore_current_blog();
 
     wp_send_json( $status );
 }
 
 add_action( 'wp_ajax_check_app_data_sync_completion', 'check_app_data_sync_completion' );
 add_action( 'wp_ajax_nopriv_check-app-data-sync-completion', 'check_app_data_sync_completion' );
+
+
+function get_site_image_resources_data() {
+
+    switch_to_blog( 1 );
+
+    $resource_data = get_images_directory_json();
+    wp_die( json_encode( $resource_data ) );
+
+}
+add_action( 'wp_ajax_get-site-image-resources-data', 'get_site_image_resources_data' );
+add_action( 'wp_ajax_nopriv_get-site-image-resources-data', 'get_site_image_resources_data' );
+
+function get_site_video_resources_data() {
+
+    switch_to_blog( 1 );
+    $resource_data = get_videos_directory_json();
+    wp_die( json_encode( $resource_data ) );
+}
+
+add_action( 'wp_ajax_get-site-video-resources-data', 'get_site_video_resources_data' );
+add_action( 'wp_ajax_nopriv_get-site-video-resources-data', 'get_site_video_resources_data' );

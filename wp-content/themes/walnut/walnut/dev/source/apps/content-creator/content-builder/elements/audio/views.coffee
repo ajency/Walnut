@@ -16,25 +16,32 @@ define ['app'], (App)->
                         </audio>
                         {{/audio}}
                         {{#placeholder}}
-                        <div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Upload Audio</div>
+                        <div class="audio-placeholder"><span class="bicon icon-uniF100"></span>Upload Audio</div>
                         {{/placeholder}}'
 
 
             # override serializeData to set holder property for the view
             mixinTemplateHelpers: (data)->
                 data = super data
-                data.audio = true
+
+                if not @model.get 'audio_id'
+                    data.placeholder = true
+                else
+                    data.audio = true
+                    data.audioUrl = @model.get 'audioUrl'
 
                 data
 
             events:
                 'click': (e)->
                     e.stopPropagation()
+                    @trigger "show:media:manager"
 
 
 
             onShow: ->
                 @$el.find('audio').panzer
+                    theme: 'light'
                     layout: 'big'
                     expanded: true
                     showduration: true

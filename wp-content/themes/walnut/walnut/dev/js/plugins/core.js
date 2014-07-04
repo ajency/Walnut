@@ -505,13 +505,13 @@ $(document).ready(function() {
 			calculateHeight();
 	});
 	
-	$(window).scroll(function(){
-        if ($(this).scrollTop() > 100) {
-            $('.scrollup').fadeIn();
-        } else {
-            $('.scrollup').fadeOut();
-        }
-    });
+	// $(window).scroll(function(){
+ //        if ($(this).scrollTop() > 100) {
+ //            $('.scrollup').fadeIn();
+ //        } else {
+ //            $('.scrollup').fadeOut();
+ //        }
+ //    });
 //***********************************BEGIN Function calls *****************************		
 	$('.scrollup').click(function(){
 		$("html, body").animate({ scrollTop: 0 }, 700);

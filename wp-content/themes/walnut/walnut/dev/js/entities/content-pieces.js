@@ -15,7 +15,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       ItemModel.prototype.idAttribute = 'ID';
 
       ItemModel.prototype.defaults = {
-        ID: 0,
         post_title: '',
         post_author: '',
         post_author_name: '',
@@ -136,6 +135,10 @@ define(["app", 'backbone'], function(App, Backbone) {
           });
         }
         return contentPieces;
+      },
+      newContentPiece: function() {
+        var contentPiece;
+        return contentPiece = new ContentPiece.ItemModel;
       }
     };
     App.reqres.setHandler("get:content:pieces", function(opt) {
@@ -147,8 +150,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:content:piece:by:id", function(id) {
       return API.getContentPieceByID(id);
     });
-    return App.reqres.setHandler("get:content:pieces:by:ids", function(ids) {
+    App.reqres.setHandler("get:content:pieces:by:ids", function(ids) {
       return API.getContentPiecesByIDs(ids);
+    });
+    return App.reqres.setHandler("new:content:piece", function() {
+      return API.newContentPiece();
     });
   });
 });

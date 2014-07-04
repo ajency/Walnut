@@ -36,6 +36,7 @@
 	//width: 59%;
 	margin-left: 240px;
 	margin-right: 240px;
+	margin-bottom: 50px;
 	overflow-x: auto;
 }
 
@@ -43,12 +44,13 @@
 	//border: 1px solid #505458;
 	background: @color-white;
 	//position: absolute;
-	left: 260px;
-	top: 0;
+	// left: 260px;
+	// top: 0;
 	max-width: 760px;
 	margin: 0 auto;
 	min-height: 500px !important;
 	padding: 15px 10px;
+	font-weight: normal;
 
 	li.ui-sortable-placeholder{
 		list-style: none;
@@ -56,6 +58,14 @@
 		background: lighten(@dash-grey, 15%);
 		border: none;
 	}
+}
+
+.createParameters{
+	background: @color-white;
+	max-width: 760px;
+	margin: 0 auto;
+	padding: 15px 10px;
+	// margin-top: 30px;
 }
 
 #toolbox{
@@ -589,8 +599,8 @@
 	}
 }
 
-.image, .video{
-	.image-placeholder, .video-placeholder{
+.image, .video, .audio{
+	.image-placeholder, .video-placeholder, .audio-placeholder{
 		padding: 2% 0;
 		text-align: center;
 		//border: 3px dashed @preview-grey;

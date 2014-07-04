@@ -14,7 +14,7 @@ define ['app'
                 @$el.attr 'data-name', @model.get 'name'
                 class_ids = @model.get 'classes'
                 if class_ids
-                    @$el.addClass CLASS_LABEL[class_id] for class_id in class_ids
+                    @$el.addClass _.slugify(CLASS_LABEL[class_id]) for class_id in class_ids
 
                 subjects = @model.get 'subjects'
                 if subjects
@@ -82,7 +82,11 @@ define ['app'
                                     .union()
                                     .compact()
                                     .sortBy (num)-> parseInt num
-                                    .map (m)-> CLASS_LABEL[m]
+                                    .map (m)->
+                                        classes=[]
+                                        classes.slug = _.slugify CLASS_LABEL[m]
+                                        classes.label = CLASS_LABEL[m]
+                                        classes
                                 .value()
 
                 collection_subjects = @collection.pluck 'subjects'
@@ -93,7 +97,7 @@ define ['app'
                 data
 
             events:
-                'click #Filters li': 'filterBooks' #(e)->  @trigger "filter:textbooks:class", $(e.target).closest('li').attr('data-filter')
+                'click #Filters li': 'filterBooks'
 
 
             sortTable: (e)->

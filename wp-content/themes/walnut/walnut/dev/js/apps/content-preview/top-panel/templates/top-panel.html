@@ -1,47 +1,48 @@
-<div class="tiles white grid simple vertical blue m-b-0">
+<div class="contentTime">
     <div class="grid-body no-border">
         <div class="p-t-10">
-            <div class="row">
-                <div class="col-sm-8">
-                    <div class="row m-b-10">
-                        <div class="col-xs-4 b-grey b-r">
-                            <label class="form-label bold small-text">Class</label>
-                            {{getClass}}
-                        </div>
-                        <div class="col-xs-4 b-grey b-r">
-                            <label class="form-label bold small-text">Textbook</label>
-                            {{getTextbookName}}
-                        </div>
-                        <div class="col-xs-4 b-grey b-r">
-                            <label class="form-label bold small-text">Chapter</label>
-                            {{getChapterName}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4 b-grey b-r">
-                            <label class="form-label bold small-text">Section</label>
-                            {{getSectionsNames}}
-                        </div>
-                        <div class="col-xs-4 b-grey b-r">
-                            <label class="form-label bold small-text">Sub-Section</label>
-                            {{getSubSectionsNames}}
-                        </div>
-                        <div class="col-xs-4 b-grey b-r" id="question-type-col">
-                            <label class="form-label bold small-text">Type</label>
-                            <span style="text-transform: capitalize">{{question_type}}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <label class="form-label bold small-text text-center">Content Piece Timer</label>
-                    {{#isTraining}}
-                        <p class="small-text muted text-center">Visible in Class room mode</p>
-                    {{/isTraining}}
-                    {{^isTraining}}
-                        <div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>
-                        {{&getCompletedSummary}}
-                    {{/isTraining}}
-                </div>
-            </div>
+            <label class="form-label bold small-text text-center">Content Piece Timer</label>
+            {{#isTraining}}
+                <p class="small-text muted text-center">Visible in Class room mode</p>
+            {{/isTraining}}
+            {{^isTraining}}
+                <!--<div class="cpTimer" data-timer="{{timeLeftOrElapsed}}"></div>-->
+                <div id="downUpTimer" timerdirection=""></div>
+                {{&getCompletedSummary}}
+            {{/isTraining}}
         </div>
     </div>
+</div>
+
+<div class="contentInfo">
+    <div class="grid-body no-border">
+        <div class="b-grey b-b m-b-10 p-b-5" id="question-type-col">
+            <label class="form-label bold small-text muted no-margin">Type</label>
+            <span style="text-transform: capitalize">{{question_type}}</span>
+        </div>
+        <div class="b-grey b-b m-b-10 p-b-5">
+            <label class="form-label bold small-text muted no-margin">Class</label>
+            {{getClass}}
+        </div>
+        <div class="b-grey b-b m-b-10 p-b-5">
+            <label class="form-label bold small-text muted no-margin">Textbook</label>
+            {{getTextbookName}}
+        </div>
+        <div class="b-grey b-b m-b-10 p-b-5">
+            <label class="form-label bold small-text muted no-margin">Chapter</label>
+            {{getChapterName}}
+        </div>
+        <div class="b-grey b-b m-b-10 p-b-5">
+            <label class="form-label bold small-text muted no-margin">Section</label>
+            {{getSectionsNames}}
+        </div>
+        <div class="b-grey b-b m-b-10 p-b-5">
+            <label class="form-label bold small-text muted no-margin">Sub-Section</label>
+            {{getSubSectionsNames}}
+        </div>
+        <div class="b-grey b-b m-b-10 p-b-5" id="total-marks">
+            <label class="form-label bold small-text muted no-margin">Marks</label>
+            <span></span>
+        </div>
+    </div>
+</div>
