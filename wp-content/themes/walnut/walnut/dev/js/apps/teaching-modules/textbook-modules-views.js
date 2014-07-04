@@ -66,7 +66,7 @@ define(['app'], function(App) {
         return ContentGroupsView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsView.prototype.template = '<div class="tiles white grid simple vertical blue animated fadeIn"> <div class="grid-title no-border"> <h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4> </div> <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-lg-12"> <h4>{{&showModulesHeading}}</h4> <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules"> <thead> <tr> <th style="width:50%">Name</th> <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th> <th style="width:40%"><div id="status_header">Status</div></th> </tr> </thead> <tbody> </tbody> </table> </div> </div> </div> </div>';
+      ContentGroupsView.prototype.template = '<div class="tiles white grid simple  animated fadeIn"> <div class="grid-title"> <h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4> </div> <div class="grid-body contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-lg-12"> <!--<h4>{{&showModulesHeading}}</h4>--> <table class="table table-condensed table-fixed-layout" id="take-class-modules"> <thead> <tr> <th style="width:50%">Name</th> <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th> <th style="width:40%"><div id="status_header">Status</div></th> </tr> </thead> <tbody> </tbody> </table> </div> </div> </div> </div>';
 
       ContentGroupsView.prototype.itemView = ContentGroupsItemView;
 

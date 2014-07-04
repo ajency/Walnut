@@ -7,13 +7,13 @@
             <div class="filters">
                 <div class="table-tools-actions">
                     <span id="textbook-filters"></span>
-                    <select class="select2-filters" id="content-post-status-filter" style="width:150px">
+                    <select class="select2-filters selectFilter" id="content-post-status-filter">
                         <option value="">All Status</option>
                         <option value="pending">Under Review</option>
                         <option value="publish">Published</option>
                         <option value="archived">Archived</option>
                     </select>
-                    <select class="content-type-filter select2-filters" id="content-type-filter" style="width:200px">
+                    <select class="content-type-filter select2-filters selectFilter" id="content-type-filter">
                         <option value="">All Types</option>
                         <option value="teacher_question">Teacher Question</option>
                         <option value="student_question">Student Question</option>
@@ -27,9 +27,9 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <h4><span class="semi-bold">All</span> Content Pieces</h4>
+            <!-- <h4><span class="semi-bold">All</span> Content Pieces</h4> -->
 
-            <table class="table table-striped" id="content-pieces-table" >
+            <table class="table table-bordered m-t-15" id="content-pieces-table" >
                 <thead>
                 <tr>
                     <th style="width:30%">Excerpt</th>

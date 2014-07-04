@@ -64,16 +64,16 @@ define ['app'], (App)->
 
         class TextbookModules.ContentGroupsView extends Marionette.CompositeView
 
-            template : '<div class="tiles white grid simple vertical blue animated fadeIn">
-                        							<div class="grid-title no-border">
+            template : '<div class="tiles white grid simple  animated fadeIn">
+                        							<div class="grid-title">
                         								<h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4>
 
                         							</div>
-                        							<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
+                        							<div class="grid-body contentSelect" style="overflow: hidden; display: block;">
                         								<div class="row">
                         									<div class="col-lg-12">
-                        										<h4>{{&showModulesHeading}}</h4>
-                        										<table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules">
+                        										<!--<h4>{{&showModulesHeading}}</h4>-->
+                        										<table class="table table-condensed table-fixed-layout" id="take-class-modules">
                         							                <thead>
                         							                  <tr>
                         							                    <th style="width:50%">Name</th>
