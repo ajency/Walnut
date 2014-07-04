@@ -1282,6 +1282,11 @@ p.mcq-option-text {
 .teacher-question-row > span:first-letter {
   font-size: 40px;
 }
+.container-grey {
+  background: #f3f3f3;
+  border: 1px solid #c3c3c3;
+  box-shadow: #dadada 0 0 0 3px inset;
+}
 .hashtags {
   font-size: 13px;
 }
@@ -1388,6 +1393,12 @@ p.mcq-option-text {
   box-shadow: #dadada 0 0 0 3px inset;
   position: absolute;
 }
+.qstnInfo {
+  max-width: 760px;
+  margin: auto;
+  margin-bottom: 5px;
+  padding: 10px 10px 10px 20px;
+}
 @media (min-width: 1020px) and (max-width: 1295px) {
   #content-board {
     margin: 0;
@@ -1409,6 +1420,11 @@ p.mcq-option-text {
   }
   .contentTime {
     margin-bottom: 8px;
+  }
+  .qstnInfo {
+    margin: 0;
+    margin-bottom: 5px;
+    margin-left: auto;
   }
 }
 .answrMsg.alert-success h3 {
@@ -2161,9 +2177,6 @@ input#duration {
   }
   .sidebarContainer {
     position: relative;
-  }
-  .qstnInfo {
-    margin-top: 100px;
   }
 }
 @media (max-width: 1019px) {

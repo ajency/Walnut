@@ -6,6 +6,10 @@ define ['app'], (App)->
 
             template : '<div class="preview">
                                         <div class="" id="top-panel"></div>
+                                        <div class="container-grey m-b-5  qstnInfo ">
+                                            <label class="form-label bold small-text muted no-margin inline">Question Info: </label>
+                                            <span class="small-text" style="text-transform: capitalize">{{instructions}}</span>
+                                        </div>
                                         <div class="" id="content-board"></div>
                                          {{#content_preview}}
                                         <input type="button" class="btn btn-info btn-cons2" id="submit-answer-button" value="submit">
