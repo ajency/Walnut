@@ -1500,7 +1500,6 @@ p.mcq-option-text {
   height: 38px;
   line-height: 38px;
   text-align: right;
-  color: #59514c;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
@@ -2539,6 +2538,13 @@ ol > li {
 }
 .progress .progress-bar {
   border-radius: 0;
+}
+.table-hover tbody tr:hover > td,
+.table-hover tbody tr:hover > th {
+  background-color: transparent;
+}
+.teacher-app .grid {
+  background-color: transparent !important;
 }
 ::-webkit-input-placeholder {
   color: #cdcdcd;
