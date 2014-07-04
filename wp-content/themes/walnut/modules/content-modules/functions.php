@@ -318,6 +318,7 @@ function get_module_taken_by($module_id, $blog_id){
     switch_to_blog($blog_id);
 
     $teachers = '';
+    $teacher_names= array();
 
     $question_response_table = $wpdb->prefix . "question_response";
 
@@ -329,17 +330,19 @@ function get_module_taken_by($module_id, $blog_id){
 
     $taken_by_result=$wpdb->get_results($taken_by_query, ARRAY_A);
 
+    switch_to_blog(1);
     if(sizeof($taken_by_result>0)){
         $taken_by= (__u::unique(__u::flatten($taken_by_result)));
 
         foreach($taken_by as $teacher){
             $teacher_data = get_userdata($teacher);
-            $teachers[]= $teacher_data->display_name;
+            $teacher_names[]= $teacher_data->display_name;
         }
-        $teachers= join(',', $teachers);
+        if($teacher_names)
+            $teachers= join(',', $teacher_names);
     }
 
-    switch_to_blog(1);
+    switch_to_blog($blog_id);
 
     return $teachers;
 }

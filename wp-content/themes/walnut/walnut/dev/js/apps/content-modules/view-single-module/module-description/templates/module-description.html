@@ -78,21 +78,6 @@
                     <span class="animate-number" data-animation-duration="1200">{{total_minutes}} mins</span>
                 </h3>
             </div>
-            
-            <div class="text-center b-r b-grey">
-                <p class="bold small-text muted no-margin"> Elapsed Module Time</p>
-                {{^isTraining}}
-                <h3 class="bold text-grey no-margin">
-                    <span class="animate-number" data-animation-duration="1200">
-                        {{showElapsedTime}}
-                    </span>
-                </h3>
-                {{/isTraining}}
-                {{#isTraining}}
-                <p class="small-text muted">This will display what is the elapsed module
-                    time of the training module in class mode.</p>
-                {{/isTraining}}
-            </div>
 
             <div class="text-center b-r b-grey">
                 <div class="{{^isTraining}}modProgress{{/isTraining}}" >
@@ -110,6 +95,21 @@
                     {{/isTraining}}
 
                 </div>
+            </div>
+            
+            <div class="text-center b-r b-grey">
+                <p class="bold small-text muted no-margin"> Elapsed Module Time</p>
+                {{^isTraining}}
+                <h3 class="bold text-grey no-margin">
+                    <span class="animate-number" data-animation-duration="1200">
+                        {{showElapsedTime}}
+                    </span>
+                </h3>
+                {{/isTraining}}
+                {{#isTraining}}
+                <p class="small-text muted">This will display what is the elapsed module
+                    time of the training module in class mode.</p>
+                {{/isTraining}}
             </div>
 
             <div class="">
