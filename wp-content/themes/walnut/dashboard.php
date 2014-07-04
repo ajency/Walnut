@@ -105,6 +105,7 @@ global $chorus_options; ?>
 </script>
 <?php
 $ver = date('YmdHis');
+$VERSION = 1.0;
 if (ENV == 'dev') {
     ?>
     <script type="text/javascript"
@@ -115,7 +116,7 @@ if (ENV == 'dev') {
 
 ?>
     <script type="text/javascript"
-            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $ver ?>"></script>
+            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $VERSION ?>"></script>
 <?php } ?>
 
 </body>
