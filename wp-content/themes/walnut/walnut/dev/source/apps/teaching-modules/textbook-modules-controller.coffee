@@ -11,7 +11,15 @@ define ['app'
 
                 @textbook = App.request "get:textbook:by:id", textbookID
 
-                @contentGroupsCollection = App.request "get:content:groups", ('textbook': textbookID, 'division': @division, 'module_status': 'publish,archive')
+                if @mode is 'training'
+                    @contentGroupsCollection = App.request "get:content:groups",
+                        'textbook': textbookID
+                        'division': @division
+                        'post_status': 'publish'
+                else
+                    @contentGroupsCollection = App.request "get:content:groups",
+                        'textbook': textbookID
+                        'division': @division
 
                 @view = view = @_getContentGroupsListingView @contentGroupsCollection
 

@@ -79,11 +79,12 @@ define ['app'], (App)->
             selectStudent : (e)->
                 @$el.find('.tiles.single').removeClass 'selected'
                 $(e.target).closest('.tiles.single').addClass "selected"
-                @$el.closest('.studentList').find('.parameters').slideToggle()
+
+#                @$el.closest('.studentList').find('#eval-parameters').slideToggle()
                 @$el.find( ".tiles.single" ).addClass( "light" )
-                $('html, body').animate
-                    scrollTop: @$el.closest('.studentList').find("#eval-parameters").offset().top
-                , 1000
+#                $('html, body').animate
+#                    scrollTop: @$el.closest('.studentList').find("#eval-parameters").offset().top
+#                , 1000
                 @trigger 'student:selected', $(e.target).closest('.tiles.single').attr 'data-id'
 
             onStudentAnswerSaved : (id)->
