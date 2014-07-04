@@ -144,7 +144,4 @@ define ['app'], (App)->
                 $('#take-class-modules').tablesorterPager pagerOptions
 
                 # Cordova app navigation
-                _.appNavigation() if _.platform() is 'DEVICE'
-
-
-		
+                # _.appNavigation() if _.platform() is 'DEVICE'

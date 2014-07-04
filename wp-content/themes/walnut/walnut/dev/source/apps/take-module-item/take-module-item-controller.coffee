@@ -118,11 +118,19 @@ define ['app'
 
                 questionResponseModel.set data
 
-                questionResponseModel.save data,
-                    wait : true
-                    success :(model)=>
-                        if model.get('status') is 'paused'
-                            @_startViewModuleApp()
+                if _.platform is 'BROWSER'
+                    questionResponseModel.save data,
+                        wait : true
+                        success :(model)=>
+                            if model.get('status') is 'paused'
+                                @_startViewModuleApp()
+
+                else
+                    questionResponseModel.save data
+
+                    if status is 'paused'
+                        @_startViewModuleApp()
+
 
             _startViewModuleApp:=>
 
