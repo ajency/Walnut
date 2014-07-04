@@ -37,7 +37,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
           lastDownloadTimeStamp = _.getLastDownloadTimeStamp();
           return lastDownloadTimeStamp.done(function(time_stamp) {
             var escaped;
-            escaped = $('<div>').text("Last synced on \n" + time_stamp + "").text();
+            escaped = $('<div>').text("Last synced \n" + time_stamp + "").text();
             return $('#lastDownloadTimeStamp').html(escaped.replace(/\n/g, '<br />'));
           });
         } else {
@@ -53,15 +53,19 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       return lastSyncOperation.done(function(typeOfOperation) {
         switch (typeOfOperation) {
           case 'none':
-            return $('#syncButtonText').text('Start');
+            $('#syncButtonText').text('Start');
+            return $('#syncMediaStart').prop("disabled", true);
           case 'file_import':
             return $('#syncButtonText').text('Start');
           case 'file_download':
-            return $('#syncButtonText').text('Continue');
+            $('#syncButtonText').text('Continue');
+            return $('#syncMediaStart').prop("disabled", true);
           case 'file_generate':
-            return $('#syncButtonText').text('Continue');
+            $('#syncButtonText').text('Continue');
+            return $('#syncMediaStart').prop("disabled", true);
           case 'file_upload':
-            return $('#syncButtonText').text('Continue');
+            $('#syncButtonText').text('Continue');
+            return $('#syncMediaStart').prop("disabled", true);
         }
       });
     };
@@ -71,6 +75,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       $('#totalRecords').css("display", "none");
       $('#lastDownload').css("display", "none");
       $('#syncError').css("display", "none");
+      $('#syncMediaStart').prop("disabled", true);
       synapseDataDirectory = _.createSynapseDataDirectory();
       return synapseDataDirectory.done(function() {
         var lastSyncOperation;
@@ -123,6 +128,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
     };
 
     SynchronizationController.prototype.startMediaSyncProcess = function() {
+      $('#syncStartContinue').prop("disabled", true);
       $('#syncMediaError').css("display", "none");
       $('#syncMediaStart').css("display", "none");
       $('#syncMediaSuccess').css("display", "block").text("Started media sync process...");

@@ -10,7 +10,7 @@ define ['app'], (App)->
             className : 'image'
 
             template : '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%"
-                        onerror="this.onerror=null;this.src=\'/images/avtar.png\';"/>
+                        onerror="this.onerror=null;this.src=\'/images/img-not-found.jpg\';"/>
 						<div class="clearfix"></div>
 						'
 

@@ -36,7 +36,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 					lastDownloadTimeStamp = _.getLastDownloadTimeStamp()
 					lastDownloadTimeStamp.done (time_stamp)->
 						
-						escaped = $('<div>').text("Last synced on \n"+time_stamp+"").text()
+						escaped = $('<div>').text("Last synced \n"+time_stamp+"").text()
 						$('#lastDownloadTimeStamp').html(escaped.replace(/\n/g, '<br />'))
 
 				else
@@ -55,18 +55,22 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 					when 'none'
 						$('#syncButtonText').text('Start')
+						$('#syncMediaStart').prop("disabled",true)
 
 					when 'file_import'
 						$('#syncButtonText').text('Start')
 
 					when 'file_download'
 						$('#syncButtonText').text('Continue')
+						$('#syncMediaStart').prop("disabled",true)
 
 					when 'file_generate'
 						$('#syncButtonText').text('Continue')
+						$('#syncMediaStart').prop("disabled",true)
 
 					when 'file_upload'
 						$('#syncButtonText').text('Continue')
+						$('#syncMediaStart').prop("disabled",true)
 
 
 
@@ -78,6 +82,10 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 			# Hide error message
 			$('#syncError').css("display","none")
+
+			# Disable media sync button
+			$('#syncMediaStart').prop("disabled",true)
+
 
 			# Create 'SynapseData' inside 'SynapseAssets' directory
 			synapseDataDirectory = _.createSynapseDataDirectory()
@@ -140,6 +148,9 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 		
 		startMediaSyncProcess : ->
+
+			# Disable data sync button
+			$('#syncStartContinue').prop("disabled",true)
 
 			# Hide error message
 			$('#syncMediaError').css("display","none")

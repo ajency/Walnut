@@ -78,6 +78,7 @@ define(['app'], function(App) {
         if (!Marionette.getOption(this, 'nextItemID')) {
           this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
+        this.$el.find('.listNav a').removeAttr('href').css('pointer', 'cursor');
         $(".students").listnav({
           includeNums: false
         });

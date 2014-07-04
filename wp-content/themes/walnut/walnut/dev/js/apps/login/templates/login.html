@@ -32,12 +32,22 @@
             <div class="control-group  col-xs-6 b-r b-grey">
 
               <h6 class=" m-b-5 text-center semi-bold">Login Type</h6>
-              <div class="switch">
+              <!-- <div class="switch">
                 <input id="online" class="switch-input" type="radio" name="optionyes" value="online">
                 <label for="online" class="switch-label switch-label-off">Online</label>
                 <input id="offline" class="switch-input" type="radio" name="optionyes" value="offline" checked="checked">
                 <label for="offline" class="switch-label switch-label-on">Offline</label>
                 <span class="switch-selection"></span>
+              </div> -->
+
+              <div class="onoffswitch">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+                <label class="onoffswitch-label" for="myonoffswitch">
+                    <span class="onoffswitch-inner">
+                        <span class="onoffswitch-active"><span class="onoffswitch-switch">Online</span></span>
+                        <span class="onoffswitch-inactive"><span class="onoffswitch-switch">Offline</span></span>
+                    </span>
+                </label>
               </div>
               
             </div>

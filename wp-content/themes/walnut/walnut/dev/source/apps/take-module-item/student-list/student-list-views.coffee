@@ -86,6 +86,10 @@ define ['app'], (App)->
                     @$el.find "#question-done"
                     .html '<i class="fa fa-forward"></i> Finish Module'
 
+                @$el.find '.listNav a'
+                .removeAttr 'href'
+                .css 'pointer','cursor'
+
                 $ ".students"
                 .listnav
                 #filterSelector: '.last-name'
