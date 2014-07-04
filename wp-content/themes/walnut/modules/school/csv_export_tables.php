@@ -113,7 +113,7 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
         // THIS FOLLOWING LIST IS OF TABLES WHOSE FULL DATA WILL BE EXPORTED EVERY TIME
 
         //PARENT SITE TABLE QUERIES
-        "{$wpdb->base_prefix}options",
+        //"{$wpdb->base_prefix}options",
         "{$wpdb->base_prefix}terms",
         "{$wpdb->base_prefix}term_relationships",
         "{$wpdb->base_prefix}term_taxonomy",
@@ -126,6 +126,10 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
         "{$wpdb->prefix}question_response_meta"
 
     );
+
+    // ONLY THE RECORDS REGARDING TEXTBOOKS ADDITIONAL DATA
+    // LIKE AUTHOR AND IMAGE FROM WP_OPTIONS TABLE ARE FETCHED
+    $tables_list[]= get_options_table_query();
 
     // USER AND USERMETA TABLES ARE CUSTOM QUERIED AND ONLY BLOG RELATED RECORDS ARE FETCHED
     $tables_list[]= get_user_table_query($blog_id);
@@ -152,6 +156,27 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
     }
 
     return $tables_list;
+}
+
+
+function get_options_table_query(){
+
+    global $wpdb;
+
+    $options_table_name= $wpdb->base_prefix.'options';
+
+    $options_table_query= $wpdb->prepare(
+        "SELECT * FROM $options_table_name
+            WHERE option_name LIKE %s",
+        'taxonomy%'
+    );
+    $options_table= array(
+        'query'=> $options_table_query,
+        'table_name'=> $options_table_name
+    );
+
+    return $options_table;
+
 }
 
 function get_user_table_query($blog_id){
