@@ -374,8 +374,9 @@ function get_meta_values($element, $create = FALSE)
 function validate_element(&$element)
 {
     $numkeys = array('id', 'meta_id', 'menu_id', 'ID', 'image_id', 'marks',
-        'columncount','optioncount','numberOfBlanks','bg_opacity','font_size','height');
+        'columncount','optioncount','numberOfBlanks','font_size','height');
     $boolkey = array('draggable', 'justified','case_sensitive','enableIndividualMarks','multiple');
+    $floatkeys = array('bg_opacity');
 
     if (!is_array($element) && !is_object($element))
         return $element;
@@ -387,6 +388,9 @@ function validate_element(&$element)
         }
         if (in_array($key, $boolkey))
             $element[$key] = $val === "true";
+
+        if (in_array($key,$floatkeys))
+            $element[$key] = (float)$val;
     }
 
     return $element;
