@@ -254,7 +254,7 @@ function validate_meta_csv_row( $question_response_meta_data ) {
 function convert_csv_row_to_question_response_meta_format( $question_response_meta_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    $question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
+    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'qr_ref_id' => $question_response_meta_data[0],
@@ -265,18 +265,19 @@ function convert_csv_row_to_question_response_meta_format( $question_response_me
 
 function sync_question_response_meta( $question_response_meta_data ) {
 
-    if (question_response_meta_exists( $question_response_meta_data )) {
+    if (question_response_meta_exists( $question_response_meta_data ))
         sync_update_question_response_meta( $question_response_meta_data );
-    } else {
-        sync_insert_question_response( $question_response_meta_data );
-    }
+
+    else
+        sync_insert_question_response_meta( $question_response_meta_data );
+
 }
 
 function sync_insert_question_response_meta( $question_response_meta_data ) {
 
     global $wpdb;
 
-    $wpdb->insert( $wpdb->prefix . "question_response_meta",
+    $insert = $wpdb->insert( $wpdb->prefix . "question_response_meta",
         $question_response_meta_data );
 
     return $wpdb->insert_id;
@@ -288,14 +289,15 @@ function sync_update_question_response_meta( $question_response_meta_data ) {
 
     $ref_id     = $question_response_meta_data['qr_ref_id'];
     $meta_key   = $question_response_meta_data['meta_key'];
-    $meta_value   = $question_response_meta_data['meta_key'];
+    $meta_value   = $question_response_meta_data['meta_value'];
 
-    $insert_query= $wpdb->prepare( "UPDATE {$wpdb->prefix}question_response_meta
+
+    $update_query= $wpdb->prepare( "UPDATE {$wpdb->prefix}question_response_meta
         SET meta_value = %s
         WHERE qr_ref_id like %s AND meta_key like %s",
         array($meta_value, $ref_id, $meta_key ) );
 
-    $wpdb->query($insert_query);
+    $wpdb->query($update_query);
 
     return true;
 }
