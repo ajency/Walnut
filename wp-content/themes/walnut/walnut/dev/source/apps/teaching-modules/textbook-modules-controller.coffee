@@ -28,21 +28,13 @@ define ['app'
                         'textbook': textbookID
                         'division': @division
 
+                @chaptersCollection= App.request "get:chapters", ('parent' : textbookID)
 
-                App.execute "when:fetched", @textbook, =>
-                    textbookName = @textbook.get 'name'
-
-                    breadcrumb_items =
-                        'items': [
-                            {'label': 'Dashboard', 'link': '#teachers/dashboard'},
-                            {'label': 'Take Class', 'link': '#teachers/take-class/' + @classID + '/' + @division},
-                            {'label': textbookName, 'link': 'javascript:;', 'active': 'active'}
-                        ]
+                App.execute "when:fetched", [@chaptersCollection,@contentGroupsCollection,@textbook], =>
 
                     @view = view = @_getContentGroupsListingView @contentGroupsCollection
-                    App.execute "update:breadcrumb:model", breadcrumb_items
 
-                    @show @view, (loading: true)
+                    @show @view, loading: true
 
                     @listenTo @view, "schedule:training": (id)=>
                         @singleModule = @contentGroupsCollection.get id
@@ -50,6 +42,11 @@ define ['app'
                         @show modalview, region: App.dialogRegion
 
                         @listenTo modalview, "save:scheduled:date", @_saveTrainingStatus
+
+                    @listenTo @view, "fetch:chapters:or:sections", (parentID, filterType) =>
+                        chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
+                        App.execute "when:fetched", chaptersOrSections, =>
+                            @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType
 
 
             _saveTrainingStatus: (id, date)=>
@@ -71,18 +68,21 @@ define ['app'
 
             _getContentGroupsListingView: (collection)=>
                 new View.TakeClassTextbookModules.ContentGroupsView
-                    collection: collection
-                    mode: @mode
+                    collection          : collection
+                    mode                : @mode
+                    chaptersCollection  : @chaptersCollection
+                    fullCollection      : collection.clone()
+
                     templateHelpers:
                         showTextbookName: =>
                             @textbook.get 'name'
 
                         showModulesHeading:=>
-                            console.log @mode
-                            headingString = '<span class="semi-bold">All</span> Modules'
+
+                            headingString='<span class="semi-bold">All</span> Modules'
 
                             if @mode is 'training'
-                                headingString = '<span class="semi-bold">Practice</span> Modules'
+                                headingString='<span class="semi-bold">Practice</span> Modules'
 
                             headingString
 
@@ -115,7 +115,7 @@ define ['app'
 
             onShow: ->
                 nowDate = new Date();
-                today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+                today= new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
 
                 $('.input-append.date').datepicker
                     autoclose: true

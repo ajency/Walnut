@@ -31,7 +31,7 @@ define ['app'
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-                textbooks = App.request "get:textbooks", (class_id: @classID)
+                textbooks = App.request "get:textbooks", (class_id: @classID, division:@division )
 
                 @layout = layout = @_getTrainingModuleLayout()
 
