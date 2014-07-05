@@ -1402,7 +1402,6 @@ p.mcq-option-text {
 @media (min-width: 1020px) and (max-width: 1295px) {
   #content-board {
     margin: 0;
-    margin-top: 15px;
   }
   #myCanvas {
     margin: 0;
@@ -1441,6 +1440,11 @@ p.mcq-option-text {
 }
 .page-content.expand-page .content {
   padding: 0;
+}
+#module-details-region {
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateZ(0px);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 #module-details-region.condensed {
   position: fixed;
