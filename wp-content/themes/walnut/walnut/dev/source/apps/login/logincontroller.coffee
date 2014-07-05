@@ -11,10 +11,6 @@ define ['app'
                 # listen to authenticate:user event from the view.
                 @listenTo view, 'authenticate:user', @authenticateUser
 
-                # listen to the close event of the view
-                @listenTo view, 'close', ->
-                    App.vent.trigger 'show:dashboard'
-
                 @show view, (loading: true)
 
             _getLoginView: ->
@@ -35,6 +31,7 @@ define ['app'
                                 window.location= response.blog_details.site_url
 
                             @view.close()
+                            App.vent.trigger 'show:dashboard'
                 );
 
                 if(connection_resp is "connection_error")

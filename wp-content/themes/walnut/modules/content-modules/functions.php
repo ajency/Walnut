@@ -272,10 +272,21 @@ function get_single_content_module($id, $division='', $post_status=''){
 
 }
 
-function get_content_module_status($id, $division, $content_pieces){
+function get_content_module_status($id, $division, $content_pieces=array()){
 
     global $wpdb;
     $start_date='';
+
+    if(sizeof($content_pieces==0)){
+
+        $content_pieces_query= $wpdb->prepare("SELECT meta_value FROM {$wpdb->base_prefix}collection_meta
+            WHERE collection_id = %d AND meta_key like %s",
+            array($id, 'content_pieces')
+        );
+
+        $content_pieces  = $wpdb->get_var($content_pieces_query);
+        $content_pieces = __u::flatten(maybe_unserialize($content_pieces));
+    }
 
     $check_responses_query= $wpdb->prepare("SELECT content_piece_id, status, start_date  FROM
             {$wpdb->prefix}question_response WHERE collection_id=%d AND
@@ -342,7 +353,6 @@ function get_module_taken_by($module_id, $blog_id){
             $teachers= join(',', $teacher_names);
     }
 
-    switch_to_blog($blog_id);
 
     return $teachers;
 }

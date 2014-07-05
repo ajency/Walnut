@@ -241,9 +241,14 @@ function get_textbooks( $args = array() ) {
     $data = array();
 
     if (is_array( $textbooks )) {
-        foreach ($textbooks as $book) {
-            $data[] = get_book( $book );
-        }
+
+        $division=0;
+        if(isset($args['division']))
+            $division = $args['division'];
+
+        foreach ($textbooks as $book)
+            $data[] = get_book( $book,$division );
+
     }
     $textbooks_data['data'] = $data;
     $textbooks_data['count'] = $count_total;
@@ -282,7 +287,7 @@ function get_textbooksids_for_current_blog(){
 
 }
 
-function get_book( $book ) {
+function get_book( $book, $division=0 ) {
     global $wpdb;
     $current_blog = get_current_blog_id();
     switch_to_blog( 1 );
@@ -312,8 +317,18 @@ function get_book( $book ) {
     $book_dets->classes = maybe_unserialize( $classes[0]['class_id'] );
     $book_dets->subjects = maybe_unserialize( $classes[0]['tags'] );
 
-    $modules_count = $wpdb->get_results( "SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection` where term_ids like '%\"" . $book_id . "\";%'" );
-    $book_dets->modules_count = $modules_count[0]->count;
+    $modules_count_query=$wpdb->prepare("
+        SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
+            WHERE term_ids LIKE %s AND status like %s",
+        array('%"'. $book_id . '";%', 'publish')
+    );
+    $modules_count = $wpdb->get_row( $modules_count_query );
+    $book_dets->modules_count = $modules_count->count;
+
+    if ($division != 0){
+        $modules_completed = get_completed_modules_for_textbook($book_id, $division);
+        $book_dets->modules_completed = sizeof($modules_completed);
+    }
 
     $questions_count = $wpdb->get_results( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='textbook' and meta_value=" . $book_id );
     $book_dets->questions_count = $questions_count[0]->count;
@@ -328,6 +343,34 @@ function get_book( $book ) {
 
     switch_to_blog( $current_blog );
     return $book_dets;
+}
+
+function get_completed_modules_for_textbook($textbook_id, $division){
+
+    global $wpdb;
+
+    if(!(int)$textbook_id || ! (int) $division)
+        return false;
+
+    $completed_modules = array();
+
+    $module_ids_query = $wpdb->prepare("SELECT collection_id FROM {$wpdb->base_prefix}collection_meta
+        WHERE meta_key like %s AND meta_value= %s",
+        array('textbook',$textbook_id)
+    );
+
+    $module_ids = $wpdb->get_results($module_ids_query);
+
+    if($module_ids){
+        foreach($module_ids as $module){
+            $module_status = get_content_module_status($module->collection_id, $division);
+
+            if($module_status['status']=='completed')
+                $completed_modules[]=$module->collection_id;
+        }
+    }
+    return $completed_modules;
+
 }
 
 //fetching textbooks list based on the classid passed
