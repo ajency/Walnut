@@ -68,3 +68,5 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 				_.setSchoolLogo()
 
 				_.cordovaHideSplashscreen()
+
+				_.cordovaBackbuttonNavigation()

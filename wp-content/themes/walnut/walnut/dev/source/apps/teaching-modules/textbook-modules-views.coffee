@@ -29,7 +29,11 @@ define ['app'], (App)->
                 data = super()
 
                 data.chapterName = =>
-                    chapter = _.chain @chapters.findWhere "term_id" : data.term_ids.chapter
+
+                    chapterId = data.term_ids.chapter
+                    chapterId = parseInt(chapterId) if _.platform() is 'DEVICE'
+
+                    chapter = _.chain @chapters.findWhere "term_id" : chapterId
                     .pluck 'name'
                         .compact()
                         .value()

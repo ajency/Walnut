@@ -20,29 +20,27 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
     cordovaHideSplashscreen: function() {
       return navigator.splashscreen.hide();
     },
-    cordovaEnableBackbutton: function() {
-      return navigator.app.overrideBackbutton(true);
-    },
     cordovaDisableBackbutton: function() {
       return navigator.app.overrideBackbutton(false);
     },
     cordovaBackbuttonNavigation: function() {
       var onBackButtonClick;
-      onBackButtonClick = (function(_this) {
-        return function() {
-          var currentRoute;
+      navigator.app.overrideBackbutton(true);
+      onBackButtonClick = function() {
+        var currentRoute;
+        document.removeEventListener("backbutton", onBackButtonClick, false);
+        if (_.cordovaAppNavigationFlag) {
           currentRoute = App.getCurrentRoute();
           console.log('Fired cordova back button event for ' + currentRoute);
           if (currentRoute === 'teachers/dashboard' || currentRoute === 'app-login') {
-            navigator.app.exitApp();
+            return navigator.app.exitApp();
           } else {
-            App.navigate('app-login', {
+            return App.navigate('app-login', {
               trigger: true
             });
           }
-          return document.removeEventListener("backbutton", onBackButtonClick, false);
-        };
-      })(this);
+        }
+      };
       return document.addEventListener("backbutton", onBackButtonClick, false);
     },
     cordovaOnlineOfflineEvents: function() {

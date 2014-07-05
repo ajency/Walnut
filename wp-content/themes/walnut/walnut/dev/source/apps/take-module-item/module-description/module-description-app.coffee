@@ -132,10 +132,12 @@ define ['app'
 
 					$('body').css('height' : 'auto')
 
+					_.cordovaAppNavigationFlag = false
+
 					# Cordova pause event
 					document.addEventListener("pause"
 						,=>
-							console.log 'Fired cordova pause event'
+							console.log 'Fired cordova pause event for module-description'
 
 							_.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
 							
@@ -145,17 +147,17 @@ define ['app'
 
 					onBackbuttonClick = =>
 						
-						console.log 'Fired cordova back button event'
+						console.log 'Fired cordova back button event for module-description'
+
+						document.removeEventListener("backbutton", onBackbuttonClick, false)
 
 						_.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
 						
 						@trigger "goto:previous:route"
 
-						document.removeEventListener("backbutton", onBackbuttonClick, false)
-
-
+					
 					# Cordova backbutton event
-					_.cordovaEnableBackbutton()
+					navigator.app.overrideBackbutton(true)
 					document.addEventListener("backbutton", onBackbuttonClick, false)
 
 

@@ -72,3 +72,5 @@ define ['app'
                     _.setSynapseMediaDirectoryPathToLocalStorage()
                     
                     _.cordovaHideSplashscreen()
+
+                    _.cordovaBackbuttonNavigation()

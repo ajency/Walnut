@@ -270,35 +270,32 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						_.db.transaction (tx)->
 							tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 								LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id  
-								WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND tt.term_id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
+								WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 
+								AND tt.term_id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
 							
 
 				onSuccess =(d)->
 					(tx,data)->
 
-						result = []
-
-						for i in [0..data.rows.length-1] by 1
-
-							row = data.rows.item(i)
-							
-							classes = subjects = ''
-							classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
-							subjects = unserialize(row["tags"]) if row["tags"] isnt ''
-							
-							result[i] =
-								term_id: row["term_id"]
-								name: row["name"]
-								slug: row["slug"]
-								term_group: row["term_group"]
-								term_order: row["term_order"]
-								term_taxonomy_id: row["term_taxonomy_id"]
-								taxonomy: row["taxonomy"]
-								description: row["description"]
-								parent: row["parent"]
-								count: row["count"]
-								classes: classes
-								subjects: subjects
+						row = data.rows.item(0)
+						
+						classes = subjects = ''
+						classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
+						subjects = unserialize(row["tags"]) if row["tags"] isnt ''
+						
+						result =
+							term_id: row["term_id"]
+							name: row["name"]
+							slug: row["slug"]
+							term_group: row["term_group"]
+							term_order: row["term_order"]
+							term_taxonomy_id: row["term_taxonomy_id"]
+							taxonomy: row["taxonomy"]
+							description: row["description"]
+							parent: row["parent"]
+							count: row["count"]
+							classes: classes
+							subjects: subjects
 	
 						d.resolve(result)
 
@@ -313,7 +310,8 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				runQuery = ->
 					$.Deferred (d)->
 						_.db.transaction (tx)->
-							tx.executeSql("SELECT term_id, name FROM wp_terms WHERE term_id IN ("+ids+")", [], onSuccess(d), _.deferredErrorHandler(d))
+							tx.executeSql("SELECT term_id, name FROM wp_terms WHERE 
+								term_id IN ("+ids+")", [], onSuccess(d), _.deferredErrorHandler(d))
 
 				onSuccess =(d)->
 					(tx, data)->

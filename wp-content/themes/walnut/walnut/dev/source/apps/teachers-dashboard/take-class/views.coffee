@@ -72,3 +72,5 @@ define ['app'
 				$("li.txtbook").click ->
 					window.location = $(this).find("a").attr("href")
 					false
+
+				_.cordovaDisableBackbutton() if _.platform() is 'DEVICE'

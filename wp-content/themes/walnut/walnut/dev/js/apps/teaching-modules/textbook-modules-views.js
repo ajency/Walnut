@@ -26,9 +26,13 @@ define(['app'], function(App) {
         data = ContentGroupsItemView.__super__.serializeData.call(this);
         data.chapterName = (function(_this) {
           return function() {
-            var chapter;
+            var chapter, chapterId;
+            chapterId = data.term_ids.chapter;
+            if (_.platform() === 'DEVICE') {
+              chapterId = parseInt(chapterId);
+            }
             chapter = _.chain(_this.chapters.findWhere({
-              "term_id": data.term_ids.chapter
+              "term_id": chapterId
             })).pluck('name').compact().value();
             return chapter;
           };

@@ -133,8 +133,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         App.mainContentRegion.close();
         App.breadcrumbRegion.close();
         return App.navigate('app-login', {
-          trigger: true,
-          replace: true
+          trigger: true
         });
       };
 

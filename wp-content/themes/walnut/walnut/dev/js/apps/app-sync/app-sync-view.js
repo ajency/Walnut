@@ -41,6 +41,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncView.prototype.onShow = function() {
         App.breadcrumbRegion.close();
         _.cordovaHideSplashscreen();
+        _.cordovaDisableBackbutton();
         cordova.getAppVersion().then(function(version) {
           return $('#app-version').text("Version: " + version);
         });

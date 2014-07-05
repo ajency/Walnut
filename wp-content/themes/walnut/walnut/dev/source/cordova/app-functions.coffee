@@ -32,11 +32,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			navigator.splashscreen.hide()
 
 
-		cordovaEnableBackbutton : ->
-
-			navigator.app.overrideBackbutton(true)
-
-
 		cordovaDisableBackbutton : ->
 
 			navigator.app.overrideBackbutton(false)
@@ -45,21 +40,25 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		
 		cordovaBackbuttonNavigation : ->
 
-			onBackButtonClick = =>
+			navigator.app.overrideBackbutton(true)
 
-				currentRoute = App.getCurrentRoute()
-				console.log 'Fired cordova back button event for '+currentRoute
+			onBackButtonClick = ->
 
-				if currentRoute is 'teachers/dashboard' or currentRoute is 'app-login'
-					navigator.app.exitApp()
-				else 	
-					App.navigate('app-login', trigger: true)
-				
 				document.removeEventListener("backbutton", onBackButtonClick, false)
+
+				if _.cordovaAppNavigationFlag
+
+					currentRoute = App.getCurrentRoute()
+					console.log 'Fired cordova back button event for '+currentRoute
+
+					if currentRoute is 'teachers/dashboard' or currentRoute is 'app-login'
+						navigator.app.exitApp()
+					else 	
+						App.navigate('app-login', trigger: true)
+				
 
 			#Cordova backbutton event
 			document.addEventListener("backbutton", onBackButtonClick, false)
-		
 
 
 		

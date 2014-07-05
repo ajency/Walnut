@@ -84,7 +84,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 
       AppLoginView.prototype.onShow = function() {
         _.setSchoolLogo();
-        return _.cordovaHideSplashscreen();
+        _.cordovaHideSplashscreen();
+        return _.cordovaBackbuttonNavigation();
       };
 
       return AppLoginView;

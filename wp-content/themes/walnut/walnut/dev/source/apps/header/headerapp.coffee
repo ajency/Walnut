@@ -116,8 +116,7 @@ define ['app'
                 App.mainContentRegion.close()
                 App.breadcrumbRegion.close()
 
-                App.navigate('app-login', trigger: true, replace : true)
-
+                App.navigate('app-login', trigger: true)
 
 
 
