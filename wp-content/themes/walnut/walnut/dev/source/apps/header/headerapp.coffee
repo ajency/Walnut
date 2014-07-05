@@ -13,7 +13,7 @@ define ['app'
 
                 @listenTo layout, 'show', @_showLeftRightViews
 
-                @show layout, (loading: true)
+                @show layout
 
                 @listenTo @layout.rightRegion, "user:logout", @_logoutCurrentUser
 
@@ -117,7 +117,6 @@ define ['app'
                 App.breadcrumbRegion.close()
 
                 App.navigate('app-login', trigger: true)
-
 
 
 

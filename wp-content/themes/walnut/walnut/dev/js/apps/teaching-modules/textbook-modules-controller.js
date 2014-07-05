@@ -16,7 +16,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       }
 
       textbookModulesController.prototype.initialize = function(opts) {
-        var textbookID, view;
+        var textbookID;
         textbookID = opts.textbookID, this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
         App.execute("show:headerapp", {
           region: App.headerRegion
@@ -37,45 +37,38 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
             'division': this.division
           });
         }
-        this.view = view = this._getContentGroupsListingView(this.contentGroupsCollection);
-        App.execute("when:fetched", this.textbook, (function(_this) {
+        this.chaptersCollection = App.request("get:chapters", {
+          'parent': textbookID
+        });
+        return App.execute("when:fetched", [this.chaptersCollection, this.contentGroupsCollection, this.textbook], (function(_this) {
           return function() {
-            var breadcrumb_items, textbookName;
-            textbookName = _this.textbook.get('name');
-            breadcrumb_items = {
-              'items': [
-                {
-                  'label': 'Dashboard',
-                  'link': '#teachers/dashboard'
-                }, {
-                  'label': 'Take Class',
-                  'link': '#teachers/take-class/' + _this.classID + '/' + _this.division
-                }, {
-                  'label': textbookName,
-                  'link': 'javascript:;',
-                  'active': 'active'
-                }
-              ]
-            };
-            App.execute("update:breadcrumb:model", breadcrumb_items);
-            return _this.show(_this.view, {
+            var view;
+            _this.view = view = _this._getContentGroupsListingView(_this.contentGroupsCollection);
+            _this.show(_this.view, {
               loading: true
+            });
+            _this.listenTo(_this.view, {
+              "schedule:training": function(id) {
+                var modalview;
+                _this.singleModule = _this.contentGroupsCollection.get(id);
+                modalview = _this._showScheduleModal(_this.singleModule);
+                _this.show(modalview, {
+                  region: App.dialogRegion
+                });
+                return _this.listenTo(modalview, "save:scheduled:date", _this._saveTrainingStatus);
+              }
+            });
+            return _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
+              var chaptersOrSections;
+              chaptersOrSections = App.request("get:chapters", {
+                'parent': parentID
+              });
+              return App.execute("when:fetched", chaptersOrSections, function() {
+                return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
+              });
             });
           };
         })(this));
-        return this.listenTo(this.view, {
-          "schedule:training": (function(_this) {
-            return function(id) {
-              var modalview;
-              _this.singleModule = _this.contentGroupsCollection.get(id);
-              modalview = _this._showScheduleModal(_this.singleModule);
-              _this.show(modalview, {
-                region: App.dialogRegion
-              });
-              return _this.listenTo(modalview, "save:scheduled:date", _this._saveTrainingStatus);
-            };
-          })(this)
-        });
       };
 
       textbookModulesController.prototype._saveTrainingStatus = function(id, date) {
@@ -97,6 +90,8 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
         return new View.TakeClassTextbookModules.ContentGroupsView({
           collection: collection,
           mode: this.mode,
+          chaptersCollection: this.chaptersCollection,
+          fullCollection: collection.clone(),
           templateHelpers: {
             showTextbookName: (function(_this) {
               return function() {
@@ -106,7 +101,6 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
             showModulesHeading: (function(_this) {
               return function() {
                 var headingString;
-                console.log(_this.mode);
                 headingString = '<span class="semi-bold">All</span> Modules';
                 if (_this.mode === 'training') {
                   headingString = '<span class="semi-bold">Practice</span> Modules';

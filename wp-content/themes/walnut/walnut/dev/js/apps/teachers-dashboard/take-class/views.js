@@ -89,10 +89,13 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
         this.dimensions = {
           status: 'all'
         };
-        return $("li.txtbook").click(function() {
+        $("li.txtbook").click(function() {
           window.location = $(this).find("a").attr("href");
           return false;
         });
+        if (_.platform() === 'DEVICE') {
+          return _.cordovaDisableBackbutton();
+        }
       };
 
       return TextbooksListView;

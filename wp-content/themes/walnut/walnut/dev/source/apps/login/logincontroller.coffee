@@ -17,10 +17,6 @@ define ['app'
 				# listen to authenticate:user event from the view.
 				@listenTo view, 'authenticate:user', @authenticateUser
 
-				# listen to the close event of the view
-				@listenTo view, 'close', ->
-					App.vent.trigger 'show:dashboard'
-
 				# listen to prepopulate:username event from the view for mobile
 				@listenTo view, 'prepopulate:username', @prepopulateUsername
 
@@ -48,6 +44,7 @@ define ['app'
 							user = App.request "get:user:model"
 							user.set resp
 							@view.close()
+							App.vent.trigger 'show:dashboard'
 
 				authController = App.request "get:auth:controller", authOptions
 
@@ -95,8 +92,7 @@ define ['app'
 					# Set 'SynapseMedia' directory path to local storage
 					_.setSynapseMediaDirectoryPathToLocalStorage()
 
-					#Hide the splash screen image
-					navigator.splashscreen.hide()
+					_.cordovaHideSplashscreen()
 
 					_.setSchoolLogo()
 

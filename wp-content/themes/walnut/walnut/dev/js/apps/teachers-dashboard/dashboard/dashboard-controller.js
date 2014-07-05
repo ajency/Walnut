@@ -79,8 +79,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
       TeachersDashboardView.prototype.onShow = function() {
         if (_.platform() === "DEVICE") {
           _.setSynapseMediaDirectoryPathToLocalStorage();
-          navigator.splashscreen.hide();
-          return _.appNavigation();
+          _.cordovaHideSplashscreen();
+          return _.cordovaBackbuttonNavigation();
         }
       };
 

@@ -122,6 +122,10 @@ define ['app'
                     
                     $('body').css('height' : '100%')
 
+                    _.cordovaAppNavigationFlag = true
+
+                    _.cordovaDisableBackbutton()
+
                     _.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
 
 

@@ -67,18 +67,6 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 				# change mainLogo to school logo
 				_.setSchoolLogo()
 
-				#Hide the splash screen image
-				navigator.splashscreen.hide()
+				_.cordovaHideSplashscreen()
 
-				onBackbuttonClick = =>
-					console.log 'Fired cordova back button event for login'
-
-					if App.getCurrentRoute() is 'app-login'
-						navigator.app.exitApp()
-					else 	
-						App.navigate('app-login', trigger: true)
-
-					document.removeEventListener("backbutton", onBackbuttonClick, false)
-
-				#Cordova backbutton event
-				document.addEventListener("backbutton", onBackbuttonClick, false) 
+				_.cordovaBackbuttonNavigation()

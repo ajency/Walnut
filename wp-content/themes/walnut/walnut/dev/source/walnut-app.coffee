@@ -45,6 +45,8 @@ define ['marionette'], (Marionette)->
 
         if _.platform() is 'DEVICE'
 
+            _.cordovaAppNavigationFlag = true
+
             if _.isNull(_.getUserID()) or _.getUserID() is 'null'
                 @rootRoute = 'app-login'
                 @rootRoute = 'login' if _.isNull _.getBlogID()

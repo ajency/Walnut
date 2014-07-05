@@ -37,7 +37,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
         textbooks = App.request("get:textbooks", {
-          class_id: this.classID
+          class_id: this.classID,
+          division: this.division
         });
         this.layout = layout = this._getTrainingModuleLayout();
         this.show(layout, {

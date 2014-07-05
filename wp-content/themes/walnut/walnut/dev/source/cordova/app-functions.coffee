@@ -4,9 +4,10 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 	_.mixin
 
-		getTblPrefix : ->
-			'wp_'+_.getBlogID()+'_'
 
+		getTblPrefix : ->
+
+			'wp_'+_.getBlogID()+'_'
 
 
 		displayConnectionStatusOnMainLoginPage : ->
@@ -23,6 +24,41 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 				$("#logo").attr('src', _.getSchoolLogoSrc())
 			else 
 				$("#logo").attr('src', '/images/synapse-logo-main.png')
+
+
+
+		cordovaHideSplashscreen : ->
+
+			navigator.splashscreen.hide()
+
+
+		cordovaDisableBackbutton : ->
+
+			navigator.app.overrideBackbutton(false)
+
+
+		
+		cordovaBackbuttonNavigation : ->
+
+			navigator.app.overrideBackbutton(true)
+
+			onBackButtonClick = ->
+
+				document.removeEventListener("backbutton", onBackButtonClick, false)
+
+				if _.cordovaAppNavigationFlag
+
+					currentRoute = App.getCurrentRoute()
+					console.log 'Fired cordova back button event for '+currentRoute
+
+					if currentRoute is 'teachers/dashboard' or currentRoute is 'app-login'
+						navigator.app.exitApp()
+					else 	
+						App.navigate('app-login', trigger: true)
+				
+
+			#Cordova backbutton event
+			document.addEventListener("backbutton", onBackButtonClick, false)
 
 
 		
@@ -45,28 +81,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 						$('#onOffSwitch').prop
 							"disabled" : true, "checked" : false
 				, false)
-
-
-		
-		appNavigation : ->
-			#Cordova backbutton event
-			document.addEventListener("backbutton", _.onBackButtonClick, false) 
-
-		
-		
-		onBackButtonClick : ->
-			console.log 'Fired cordova back button event'
-			
-			currentRoute = App.getCurrentRoute()
-			console.log 'currentRoute: '+currentRoute
-
-			if currentRoute is 'teachers/dashboard' or currentRoute is 'app-login'
-				#Exit the application
-				navigator.app.exitApp()
-			else 
-				Backbone.history.history.back()
-
-			document.removeEventListener("backbutton", _.onBackButtonClick, false)
 
 
 		

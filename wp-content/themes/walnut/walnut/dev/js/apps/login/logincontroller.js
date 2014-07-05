@@ -19,9 +19,6 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         _.app_username = this.username;
         this.view = view = this._getLoginView();
         this.listenTo(view, 'authenticate:user', this.authenticateUser);
-        this.listenTo(view, 'close', function() {
-          return App.vent.trigger('show:dashboard');
-        });
         this.listenTo(view, 'prepopulate:username', this.prepopulateUsername);
         this.listenTo(view, 'enable:disable:offline:login:type', this.enableDisableOfflineLoginType);
         if (_.platform() === 'BROWSER') {
@@ -50,7 +47,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
               } else {
                 user = App.request("get:user:model");
                 user.set(resp);
-                return _this.view.close();
+                _this.view.close();
+                return App.vent.trigger('show:dashboard');
               }
             };
           })(this)
@@ -109,7 +107,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         $('.page-content').addClass('condensed');
         if (_.platform() === 'DEVICE') {
           _.setSynapseMediaDirectoryPathToLocalStorage();
-          navigator.splashscreen.hide();
+          _.cordovaHideSplashscreen();
           _.setSchoolLogo();
           _.displayConnectionStatusOnMainLoginPage();
           _.cordovaOnlineOfflineEvents();

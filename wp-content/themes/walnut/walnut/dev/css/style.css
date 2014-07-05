@@ -6398,28 +6398,33 @@ code:hover {
 }
 .label-success,
 .badge-success {
-  background-color: #259b24;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #259b24;
+  border: 1px solid #259b24;
 }
 .label-warning,
 .badge-warning {
-  background-color: #fdd01c;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #fdd01c;
+  border: 1px solid #fdd01c;
 }
 .label-important,
 .badge-important {
-  background-color: #f35958;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #f35958;
+  border: 1px solid #f35958;
 }
 .label-danger,
 .badge-danger {
-  background-color: #f35958;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #f35958;
+  border: 1px solid #f35958;
 }
 .label-info,
 .badge-info {
-  background-color: #0090d9;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #0090d9;
+  border: 1px solid #0090d9;
 }
 .label-inverse,
 .badge-inverse {

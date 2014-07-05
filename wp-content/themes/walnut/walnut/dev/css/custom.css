@@ -1022,21 +1022,7 @@ p.mcq-option-text {
   width: 25px;
   height: 12px;
 }
-.mcq-option {
-  float: left;
-  border: 2px solid transparent;
-  margin-bottom: 2px;
-  min-height: 40px;
-}
-.mcq-option:before,
-.mcq-option:after {
-  content: " ";
-  display: table;
-}
-.mcq-option:after {
-  clear: both;
-}
-.mcq-option.ansWrong {
+#mcq-container .ansWrong {
   opacity: 0.2;
   background: url(../../../images/wrong-ans.gif) no-repeat right center;
   border-bottom: 2px solid #f35958;
@@ -1050,7 +1036,7 @@ p.mcq-option-text {
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 }
-.mcq-option.ansFalse {
+#mcq-container .ansFalse {
   opacity: 0.2;
   border-bottom: 2px solid #f35958;
   -webkit-transition: all 0.3s ease-out;
@@ -1062,7 +1048,7 @@ p.mcq-option-text {
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 }
-.mcq-option.ansRight {
+#mcq-container .ansRight {
   background: url(../../../images/right-ans.gif) no-repeat right center;
   border-bottom: 2px solid #259b24;
   background-size: 25px;
@@ -1074,6 +1060,20 @@ p.mcq-option-text {
   /* Opera 10.50–12.00 */
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+}
+.mcq-option {
+  float: left;
+  border: 2px solid transparent;
+  margin-bottom: 2px;
+  min-height: 40px;
+}
+.mcq-option:before,
+.mcq-option:after {
+  content: " ";
+  display: table;
+}
+.mcq-option:after {
+  clear: both;
 }
 .mcq-option .mcq-option-select {
   float: left;
@@ -1329,7 +1329,6 @@ p.mcq-option-text {
 @media (min-width: 1020px) and (max-width: 1295px) {
   #content-board {
     margin: 0;
-    margin-top: 15px;
   }
   #myCanvas {
     margin: 0;
@@ -1368,6 +1367,11 @@ p.mcq-option-text {
 }
 .page-content.expand-page .content {
   padding: 0;
+}
+#module-details-region {
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateZ(0px);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 #module-details-region.condensed {
   position: fixed;
@@ -1660,11 +1664,13 @@ p.mcq-option-text {
 }
 #textbooks.list .meta.area {
   width: 15%;
+  word-break: break-all;
 }
 #textbooks.list .meta {
   width: 20%;
   padding: 0 2% 0 2%;
   float: left;
+  word-break: break-all;
 }
 #textbooks.list .img_wrapper {
   width: 20%;
@@ -2399,12 +2405,28 @@ textarea.error,
 .select2-results {
   margin: 4px 4px 4px 0;
 }
+.textbook-filter,
+.selectFilter {
+  width: 160px;
+  margin-right: 5px;
+}
+.textbook-filter:last-child,
+.selectFilter:last-child {
+  margin-right: 0;
+}
 #breadcrumb-region {
   display: none;
 }
 #main-content-region > .row,
 #content-display-region > .row {
   margin: 0;
+}
+.tablesorter-header-inner {
+  font-size: 14px;
+  cursor: pointer;
+}
+#content-pieces-table a {
+  text-decoration: underline;
 }
 /*Theme Modifications*/
 body {
@@ -2431,7 +2453,9 @@ textarea {
 .label {
   font-size: 14px;
   display: inline-block;
-  padding: 6px 9px;
+  padding: 7px 9px;
+  min-width: 100px;
+  border-radius: 0;
 }
 .alert {
   font-size: 14px;
@@ -2469,7 +2493,9 @@ ol > li {
   font-size: 16px;
 }
 .table td {
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 14px 12px !important;
 }
 .progress {
   border-radius: 0;
@@ -2477,10 +2503,6 @@ ol > li {
 }
 .progress .progress-bar {
   border-radius: 0;
-}
-.table-hover tbody tr:hover > td,
-.table-hover tbody tr:hover > th {
-  background-color: transparent;
 }
 .teacher-app .grid {
   background-color: transparent !important;

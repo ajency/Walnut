@@ -9,7 +9,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				@view = view = @_getAppSyncView()
 
-				@show view, (loading: true)
+				@show view
 
 
 			_getAppSyncView : ->
@@ -33,8 +33,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				# Hide breadcrumb region
 				App.breadcrumbRegion.close()
 				
-				# Hide the splash screen image
-				navigator.splashscreen.hide()
+				_.cordovaHideSplashscreen()
+
+				_.cordovaDisableBackbutton()
 				
 				# Display app version number
 				cordova.getAppVersion().then((version)-> 

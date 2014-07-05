@@ -329,32 +329,29 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
         };
         onSuccess = function(d) {
           return function(tx, data) {
-            var classes, i, result, row, subjects, _i, _ref;
-            result = [];
-            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-              row = data.rows.item(i);
-              classes = subjects = '';
-              if (row["class_id"] !== '') {
-                classes = unserialize(row["class_id"]);
-              }
-              if (row["tags"] !== '') {
-                subjects = unserialize(row["tags"]);
-              }
-              result[i] = {
-                term_id: row["term_id"],
-                name: row["name"],
-                slug: row["slug"],
-                term_group: row["term_group"],
-                term_order: row["term_order"],
-                term_taxonomy_id: row["term_taxonomy_id"],
-                taxonomy: row["taxonomy"],
-                description: row["description"],
-                parent: row["parent"],
-                count: row["count"],
-                classes: classes,
-                subjects: subjects
-              };
+            var classes, result, row, subjects;
+            row = data.rows.item(0);
+            classes = subjects = '';
+            if (row["class_id"] !== '') {
+              classes = unserialize(row["class_id"]);
             }
+            if (row["tags"] !== '') {
+              subjects = unserialize(row["tags"]);
+            }
+            result = {
+              term_id: row["term_id"],
+              name: row["name"],
+              slug: row["slug"],
+              term_group: row["term_group"],
+              term_order: row["term_order"],
+              term_taxonomy_id: row["term_taxonomy_id"],
+              taxonomy: row["taxonomy"],
+              description: row["description"],
+              parent: row["parent"],
+              count: row["count"],
+              classes: classes,
+              subjects: subjects
+            };
             return d.resolve(result);
           };
         };

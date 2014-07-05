@@ -187,7 +187,9 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       GroupsListingView.prototype.onShow = function() {
         var pagerOptions, textbookFiltersHTML;
-        textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
+        textbookFiltersHTML = $.showTextbookFilters({
+          textbooks: this.textbooksCollection
+        });
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
         this.$el.find(".select2-filters").select2();

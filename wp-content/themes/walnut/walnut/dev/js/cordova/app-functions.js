@@ -17,6 +17,32 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return $("#logo").attr('src', '/images/synapse-logo-main.png');
       }
     },
+    cordovaHideSplashscreen: function() {
+      return navigator.splashscreen.hide();
+    },
+    cordovaDisableBackbutton: function() {
+      return navigator.app.overrideBackbutton(false);
+    },
+    cordovaBackbuttonNavigation: function() {
+      var onBackButtonClick;
+      navigator.app.overrideBackbutton(true);
+      onBackButtonClick = function() {
+        var currentRoute;
+        document.removeEventListener("backbutton", onBackButtonClick, false);
+        if (_.cordovaAppNavigationFlag) {
+          currentRoute = App.getCurrentRoute();
+          console.log('Fired cordova back button event for ' + currentRoute);
+          if (currentRoute === 'teachers/dashboard' || currentRoute === 'app-login') {
+            return navigator.app.exitApp();
+          } else {
+            return App.navigate('app-login', {
+              trigger: true
+            });
+          }
+        }
+      };
+      return document.addEventListener("backbutton", onBackButtonClick, false);
+    },
     cordovaOnlineOfflineEvents: function() {
       document.addEventListener("online", (function(_this) {
         return function() {
@@ -40,21 +66,6 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
           }
         };
       })(this), false);
-    },
-    appNavigation: function() {
-      return document.addEventListener("backbutton", _.onBackButtonClick, false);
-    },
-    onBackButtonClick: function() {
-      var currentRoute;
-      console.log('Fired cordova back button event');
-      currentRoute = App.getCurrentRoute();
-      console.log('currentRoute: ' + currentRoute);
-      if (currentRoute === 'teachers/dashboard' || currentRoute === 'app-login') {
-        navigator.app.exitApp();
-      } else {
-        Backbone.history.history.back();
-      }
-      return document.removeEventListener("backbutton", _.onBackButtonClick, false);
     },
     unserialize: function(string) {
       if (string === '') {
