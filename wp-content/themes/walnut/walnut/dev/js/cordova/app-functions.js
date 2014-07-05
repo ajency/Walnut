@@ -17,6 +17,34 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return $("#logo").attr('src', '/images/synapse-logo-main.png');
       }
     },
+    cordovaHideSplashscreen: function() {
+      return navigator.splashscreen.hide();
+    },
+    cordovaEnableBackbutton: function() {
+      return navigator.app.overrideBackbutton(true);
+    },
+    cordovaDisableBackbutton: function() {
+      return navigator.app.overrideBackbutton(false);
+    },
+    cordovaBackbuttonNavigation: function() {
+      var onBackButtonClick;
+      onBackButtonClick = (function(_this) {
+        return function() {
+          var currentRoute;
+          currentRoute = App.getCurrentRoute();
+          console.log('Fired cordova back button event for ' + currentRoute);
+          if (currentRoute === 'teachers/dashboard' || currentRoute === 'app-login') {
+            navigator.app.exitApp();
+          } else {
+            App.navigate('app-login', {
+              trigger: true
+            });
+          }
+          return document.removeEventListener("backbutton", onBackButtonClick, false);
+        };
+      })(this);
+      return document.addEventListener("backbutton", onBackButtonClick, false);
+    },
     cordovaOnlineOfflineEvents: function() {
       document.addEventListener("online", (function(_this) {
         return function() {

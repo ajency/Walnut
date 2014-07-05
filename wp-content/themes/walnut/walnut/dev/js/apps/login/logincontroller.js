@@ -107,7 +107,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         $('.page-content').addClass('condensed');
         if (_.platform() === 'DEVICE') {
           _.setSynapseMediaDirectoryPathToLocalStorage();
-          navigator.splashscreen.hide();
+          _.cordovaHideSplashscreen();
           _.setSchoolLogo();
           _.displayConnectionStatusOnMainLoginPage();
           _.cordovaOnlineOfflineEvents();

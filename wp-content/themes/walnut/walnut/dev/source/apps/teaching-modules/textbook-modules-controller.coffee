@@ -28,7 +28,6 @@ define ['app'
                         'textbook': textbookID
                         'division': @division
 
-                @view = view = @_getContentGroupsListingView @contentGroupsCollection
 
                 App.execute "when:fetched", @textbook, =>
                     textbookName = @textbook.get 'name'
@@ -40,16 +39,17 @@ define ['app'
                             {'label': textbookName, 'link': 'javascript:;', 'active': 'active'}
                         ]
 
+                    @view = view = @_getContentGroupsListingView @contentGroupsCollection
                     App.execute "update:breadcrumb:model", breadcrumb_items
 
                     @show @view, (loading: true)
 
-                @listenTo @view, "schedule:training": (id)=>
-                    @singleModule = @contentGroupsCollection.get id
-                    modalview = @_showScheduleModal @singleModule
-                    @show modalview, region: App.dialogRegion
+                    @listenTo @view, "schedule:training": (id)=>
+                        @singleModule = @contentGroupsCollection.get id
+                        modalview = @_showScheduleModal @singleModule
+                        @show modalview, region: App.dialogRegion
 
-                    @listenTo modalview, "save:scheduled:date", @_saveTrainingStatus
+                        @listenTo modalview, "save:scheduled:date", @_saveTrainingStatus
 
 
             _saveTrainingStatus: (id, date)=>

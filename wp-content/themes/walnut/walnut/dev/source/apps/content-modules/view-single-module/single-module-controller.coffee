@@ -122,6 +122,8 @@ define ['app'
                     
                     $('body').css('height' : '100%')
 
+                    _.cordovaDisableBackbutton()
+
                     _.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
 
 

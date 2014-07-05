@@ -177,6 +177,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
               return document.removeEventListener("backbutton", onBackbuttonClick, false);
             };
           })(this);
+          _.cordovaEnableBackbutton();
           return document.addEventListener("backbutton", onBackbuttonClick, false);
         }
       };

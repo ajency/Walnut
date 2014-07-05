@@ -16,7 +16,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       }
 
       textbookModulesController.prototype.initialize = function(opts) {
-        var textbookID, view;
+        var textbookID;
         textbookID = opts.textbookID, this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
         App.execute("show:headerapp", {
           region: App.headerRegion
@@ -37,10 +37,9 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
             'division': this.division
           });
         }
-        this.view = view = this._getContentGroupsListingView(this.contentGroupsCollection);
-        App.execute("when:fetched", this.textbook, (function(_this) {
+        return App.execute("when:fetched", this.textbook, (function(_this) {
           return function() {
-            var breadcrumb_items, textbookName;
+            var breadcrumb_items, textbookName, view;
             textbookName = _this.textbook.get('name');
             breadcrumb_items = {
               'items': [
@@ -57,25 +56,24 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
                 }
               ]
             };
+            _this.view = view = _this._getContentGroupsListingView(_this.contentGroupsCollection);
             App.execute("update:breadcrumb:model", breadcrumb_items);
-            return _this.show(_this.view, {
+            _this.show(_this.view, {
               loading: true
+            });
+            return _this.listenTo(_this.view, {
+              "schedule:training": function(id) {
+                var modalview;
+                _this.singleModule = _this.contentGroupsCollection.get(id);
+                modalview = _this._showScheduleModal(_this.singleModule);
+                _this.show(modalview, {
+                  region: App.dialogRegion
+                });
+                return _this.listenTo(modalview, "save:scheduled:date", _this._saveTrainingStatus);
+              }
             });
           };
         })(this));
-        return this.listenTo(this.view, {
-          "schedule:training": (function(_this) {
-            return function(id) {
-              var modalview;
-              _this.singleModule = _this.contentGroupsCollection.get(id);
-              modalview = _this._showScheduleModal(_this.singleModule);
-              _this.show(modalview, {
-                region: App.dialogRegion
-              });
-              return _this.listenTo(modalview, "save:scheduled:date", _this._saveTrainingStatus);
-            };
-          })(this)
-        });
       };
 
       textbookModulesController.prototype._saveTrainingStatus = function(id, date) {

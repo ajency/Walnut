@@ -14,9 +14,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
       AppSyncController.prototype.initialize = function() {
         var view;
         this.view = view = this._getAppSyncView();
-        return this.show(view, {
-          loading: true
-        });
+        return this.show(view);
       };
 
       AppSyncController.prototype._getAppSyncView = function() {
@@ -42,7 +40,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.onShow = function() {
         App.breadcrumbRegion.close();
-        navigator.splashscreen.hide();
+        _.cordovaHideSplashscreen();
         cordova.getAppVersion().then(function(version) {
           return $('#app-version').text("Version: " + version);
         });

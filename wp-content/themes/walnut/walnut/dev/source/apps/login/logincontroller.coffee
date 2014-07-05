@@ -92,8 +92,7 @@ define ['app'
 					# Set 'SynapseMedia' directory path to local storage
 					_.setSynapseMediaDirectoryPathToLocalStorage()
 
-					#Hide the splash screen image
-					navigator.splashscreen.hide()
+					_.cordovaHideSplashscreen()
 
 					_.setSchoolLogo()
 

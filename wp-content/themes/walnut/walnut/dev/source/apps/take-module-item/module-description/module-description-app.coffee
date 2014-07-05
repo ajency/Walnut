@@ -144,11 +144,10 @@ define ['app'
 						, false)
 
 					onBackbuttonClick = =>
+						
 						console.log 'Fired cordova back button event'
 
 						_.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
-
-						# Backbone.history.history.back()
 						
 						@trigger "goto:previous:route"
 
@@ -156,7 +155,9 @@ define ['app'
 
 
 					# Cordova backbutton event
+					_.cordovaEnableBackbutton()
 					document.addEventListener("backbutton", onBackbuttonClick, false)
+
 
 
 			questionCompleted: =>
