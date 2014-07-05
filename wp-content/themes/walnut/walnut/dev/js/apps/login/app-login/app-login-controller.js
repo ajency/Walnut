@@ -96,7 +96,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
                 trigger: true
               });
             }
-            return document.removeEventListener("backbutton", onBackButtonClick, false);
+            document.removeEventListener("backbutton", onBackButtonClick, false);
+            return navigator.app.overrideBackbutton(true);
           };
         })(this);
         return document.addEventListener("backbutton", onBackButtonClick, false);

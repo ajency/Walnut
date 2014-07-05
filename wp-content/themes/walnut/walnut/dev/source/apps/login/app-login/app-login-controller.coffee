@@ -77,9 +77,9 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 						navigator.app.exitApp()
 					else 	
 						App.navigate('app-login', trigger: true)
-
-					# navigator.app.overrideBackbutton(true)
+					
 					document.removeEventListener("backbutton", onBackButtonClick, false)
+					navigator.app.overrideBackbutton(true)
 
 				#Cordova backbutton event
 				document.addEventListener("backbutton", onBackButtonClick, false) 
