@@ -1528,7 +1528,7 @@ p.mcq-option-text {
   display: inline-block;
   width: 205px;
   text-align: center;
-  line-height: 99px;
+  line-height: 110px;
   border-left: 1px solid #d1d3d9;
   height: 100%;
   vertical-align: top;
@@ -1690,7 +1690,7 @@ p.mcq-option-text {
 #textbooks.list .mix {
   background-color: #fbfbfb;
   cursor: pointer;
-  height: 120px;
+  min-height: 120px;
   margin-bottom: 10px;
   border-bottom: none;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
@@ -1756,7 +1756,6 @@ p.mcq-option-text {
   left: -40%;
 }
 #textbooks.list .titles {
-  vertical-align: top;
   width: 70%;
   word-break: break-word;
 }
@@ -2280,6 +2279,13 @@ ul.classes .classesWrap {
   cursor: pointer;
   z-index: 2;
   position: relative;
+}
+.chapStatus {
+  width: 33%;
+  padding: 0 4px;
+  text-align: center;
+  float: left;
+  font-weight: 600;
 }
 /*Modules Table*/
 .moduleList .btn.action {
