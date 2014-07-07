@@ -4219,7 +4219,7 @@ form legend,
 }
 .grid.simple .grid-body {
   background-color: #ffffff;
-  padding: 26px;
+  padding: 20px;
   border: 1px solid #dddddd;
   color: #6f7b8a;
 }
@@ -7291,7 +7291,7 @@ input[type="checkbox"] {
   display: block;
 }
 .cbp_tmtimeline > li .cbp_tmtime .time {
-  font-size: 1.5em;
+  font-size: 1.4em;
   color: #505458;
   display: block;
 }

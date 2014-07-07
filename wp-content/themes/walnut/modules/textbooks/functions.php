@@ -336,6 +336,15 @@ function get_book( $book, $division=0 ) {
 
     $book_dets->chapter_count = ($subsections) ? $subsections : 0;
 
+    if ($division != 0 && $book_dets->parent === 0){
+        $textbook_status = get_status_for_textbook($book_id, $division);
+        $book_dets->chapters_completed = sizeof($textbook_status['completed']);
+        $book_dets->chapters_in_progress = sizeof($textbook_status['in_progress']);
+        $book_dets->chapters_not_started = sizeof($textbook_status['not_started']);
+
+    }
+
+
     switch_to_blog( $current_blog );
 
     if ($division != 0 && $book_dets->parent === 0){
@@ -351,7 +360,6 @@ function get_book( $book, $division=0 ) {
 }
 
 function get_status_for_textbook($textbook_id, $division){
-
 
     $args = array( 'hide_empty' => false,
         'parent' => $textbook_id,
@@ -418,6 +426,7 @@ function get_status_for_chapter($chapter_id, $division){
 
         }
     }
+
     $chapter_status= array(
         'all_modules' => $module_ids,
         'completed' => $completed,
