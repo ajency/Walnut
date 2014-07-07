@@ -216,15 +216,17 @@ function get_textbooks( $args = array() ) {
     extract( $args );
 
     $current_blog = get_current_blog_id();
-    switch_to_blog( 1 );
+
 
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all) {
+        switch_to_blog( 1 );
         $textbooks = get_terms( 'textbook', $args );
         $count_args = $args;
         $count_args['fields'] = 'count';
         $count_args['number'] = '';
         $count_total = get_terms( 'textbook', $count_args );
+        switch_to_blog( $current_blog );
     } //if filtering for a particular class, get textbooks based on which class they belong to
     else if (is_numeric( $class_id ) || $class_id == '0')
         $textbooks = get_textbooks_for_class( $class_id );
@@ -239,7 +241,6 @@ function get_textbooks( $args = array() ) {
         return false;
 
     $data = array();
-
     if (is_array( $textbooks )) {
 
         $division=0;
@@ -252,8 +253,6 @@ function get_textbooks( $args = array() ) {
     }
     $textbooks_data['data'] = $data;
     $textbooks_data['count'] = $count_total;
-
-    switch_to_blog( $current_blog );
 
     return $textbooks_data;
 }
@@ -290,6 +289,7 @@ function get_textbooksids_for_current_blog(){
 function get_book( $book, $division=0 ) {
     global $wpdb;
     $current_blog = get_current_blog_id();
+
     switch_to_blog( 1 );
 
     if (is_numeric( $book )) {
@@ -311,11 +311,11 @@ function get_book( $book, $division=0 ) {
     $book_dets->cover_pic = wp_get_attachment_image( $coverid, 'large' );
     $book_dets->author = $additional['author'];
 
-    $classes = $wpdb->get_results( "select class_id, tags from {$wpdb->prefix}textbook_relationships
+    $classes = $wpdb->get_row( "select class_id, tags from {$wpdb->base_prefix}textbook_relationships
                 where textbook_id=" . $book_id, ARRAY_A );
 
-    $book_dets->classes = maybe_unserialize( $classes[0]['class_id'] );
-    $book_dets->subjects = maybe_unserialize( $classes[0]['tags'] );
+    $book_dets->classes = maybe_unserialize( $classes['class_id'] );
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
 
     $modules_count_query=$wpdb->prepare("
         SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
@@ -346,6 +346,16 @@ function get_book( $book, $division=0 ) {
 
 
     switch_to_blog( $current_blog );
+
+    if ($division != 0 && $book_dets->parent === 0){
+        $textbook_status = get_status_for_textbook($book_id, $division);
+        $book_dets->chapters_completed = sizeof($textbook_status['completed']);
+        $book_dets->chapters_in_progress = sizeof($textbook_status['in_progress']);
+        $book_dets->chapters_not_started = sizeof($textbook_status['not_started']);
+
+    }
+
+
     return $book_dets;
 }
 
@@ -355,7 +365,10 @@ function get_status_for_textbook($textbook_id, $division){
         'parent' => $textbook_id,
         'fields' => 'ids' );
 
+    $current_blog = get_current_blog_id();
+    switch_to_blog( 1 );
     $chapters = get_terms( 'textbook', $args );
+    switch_to_blog( $current_blog );
 
     $completed = $in_progress = $not_started = array();
 
@@ -428,8 +441,6 @@ function get_status_for_chapter($chapter_id, $division){
 //fetching textbooks list based on the classid passed
 function get_textbooks_for_class( $classid ) {
     global $wpdb;
-    $current_blog = get_current_blog_id();
-    switch_to_blog( 1 );
 
     $data = array();
 
@@ -443,7 +454,7 @@ function get_textbooks_for_class( $classid ) {
     if ($txtbooks_assigned) {
         $tids = implode( ',', $txtbooks_assigned );
 
-        $txtbook_qry = $wpdb->prepare( "select textbook_id from {$wpdb->prefix}textbook_relationships
+        $txtbook_qry = $wpdb->prepare( "select textbook_id from {$wpdb->base_prefix}textbook_relationships
             where textbook_id in ($tids) and class_id like %s", '%"' . $classid . '";%' );
 
         $textbook_ids = $wpdb->get_results( $txtbook_qry );
@@ -455,7 +466,6 @@ function get_textbooks_for_class( $classid ) {
             }
         }
     }
-    switch_to_blog( $current_blog );
     return $data;
 }
 
