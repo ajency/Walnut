@@ -105,6 +105,8 @@ define ['app'
             onAppLogout : ->
 
                 console.log 'Synapse App Logout'
+
+                _.removeCordovaBackbuttonEventListener()
                 
                 _.setUserID(null)
 

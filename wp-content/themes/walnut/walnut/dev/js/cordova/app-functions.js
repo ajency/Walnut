@@ -20,28 +20,28 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
     cordovaHideSplashscreen: function() {
       return navigator.splashscreen.hide();
     },
-    cordovaDisableBackbutton: function() {
+    enableCordovaBackbuttonNavigation: function() {
+      navigator.app.overrideBackbutton(true);
+      return document.addEventListener("backbutton", _.onDeviceBackButtonClick, false);
+    },
+    disableCordovaBackbuttonNavigation: function() {
       return navigator.app.overrideBackbutton(false);
     },
-    cordovaBackbuttonNavigation: function() {
-      var onBackButtonClick;
-      navigator.app.overrideBackbutton(true);
-      onBackButtonClick = function() {
-        var currentRoute;
-        document.removeEventListener("backbutton", onBackButtonClick, false);
-        if (_.cordovaAppNavigationFlag) {
-          currentRoute = App.getCurrentRoute();
-          console.log('Fired cordova back button event for ' + currentRoute);
-          if (currentRoute === 'teachers/dashboard' || currentRoute === 'app-login') {
-            return navigator.app.exitApp();
-          } else {
-            return App.navigate('app-login', {
-              trigger: true
-            });
-          }
-        }
-      };
-      return document.addEventListener("backbutton", onBackButtonClick, false);
+    onDeviceBackButtonClick: function() {
+      var currentRoute;
+      currentRoute = App.getCurrentRoute();
+      console.log('Fired cordova back button event for ' + currentRoute);
+      if (currentRoute === 'teachers/dashboard' || currentRoute === 'app-login') {
+        navigator.app.exitApp();
+      } else {
+        App.navigate('app-login', {
+          trigger: true
+        });
+      }
+      return _.removeCordovaBackbuttonEventListener();
+    },
+    removeCordovaBackbuttonEventListener: function() {
+      return document.removeEventListener("backbutton", _.onDeviceBackButtonClick, false);
     },
     cordovaOnlineOfflineEvents: function() {
       document.addEventListener("online", (function(_this) {
@@ -218,7 +218,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return console.log('Decrypted video file at location: ' + destination);
       }).fail(_.failureHandler);
     },
-    deleteAllDecryptedVideoFilesFromVideosWebDirectory: function() {
+    clearVideosWebDirectory: function() {
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
         return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/videos-web", {
           create: false,

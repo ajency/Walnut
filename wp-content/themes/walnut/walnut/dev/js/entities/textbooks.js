@@ -217,7 +217,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           success = function(d) {
             return function(tx, data) {
               var ids;
-              console.log('meta_value: ' + data.rows.item(0)['meta_value']);
               ids = unserialize(data.rows.item(0)['meta_value']);
               ids = _.compact(ids);
               return d.resolve(ids);

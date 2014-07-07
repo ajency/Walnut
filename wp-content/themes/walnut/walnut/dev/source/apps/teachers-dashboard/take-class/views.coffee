@@ -73,4 +73,8 @@ define ['app'
 					window.location = $(this).find("a").attr("href")
 					false
 
-				_.cordovaDisableBackbutton() if _.platform() is 'DEVICE'
+				if _.platform() is 'DEVICE'
+
+					_.removeCordovaBackbuttonEventListener()
+
+					_.disableCordovaBackbuttonNavigation() 

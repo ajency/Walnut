@@ -87,7 +87,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 		#Delete all files from 'SynapseData' directory
-		deleteAllFilesFromSynapseDataDirectory : ->
+		clearSynapseDataDirectory : ->
 		   
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
 				fileSystem.root.getDirectory("SynapseAssets/SynapseData"

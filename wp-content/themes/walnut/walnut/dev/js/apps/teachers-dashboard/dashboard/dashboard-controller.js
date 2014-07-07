@@ -80,7 +80,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
         if (_.platform() === "DEVICE") {
           _.setSynapseMediaDirectoryPathToLocalStorage();
           _.cordovaHideSplashscreen();
-          return _.cordovaBackbuttonNavigation();
+          _.removeCordovaBackbuttonEventListener();
+          return _.enableCordovaBackbuttonNavigation();
         }
       };
 

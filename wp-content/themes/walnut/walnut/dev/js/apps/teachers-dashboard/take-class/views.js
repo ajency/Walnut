@@ -94,7 +94,8 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
           return false;
         });
         if (_.platform() === 'DEVICE') {
-          return _.cordovaDisableBackbutton();
+          _.removeCordovaBackbuttonEventListener();
+          return _.disableCordovaBackbuttonNavigation();
         }
       };
 

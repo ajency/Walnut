@@ -30,7 +30,6 @@ define(['marionette'], function(Marionette) {
     var user, xhr;
     App.startHistory();
     if (_.platform() === 'DEVICE') {
-      _.cordovaAppNavigationFlag = true;
       if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
         this.rootRoute = 'app-login';
         if (_.isNull(_.getBlogID())) {

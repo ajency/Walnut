@@ -69,4 +69,4 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 
 				_.cordovaHideSplashscreen()
 
-				_.cordovaBackbuttonNavigation()
+				_.enableCordovaBackbuttonNavigation()

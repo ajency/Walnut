@@ -42,10 +42,10 @@ define ['app'
                                 .toArray()
                                 .value();
 
-                classes=[]
+                classes = []
                 class_ids = _.unique @collection.pluck 'class_id'
                 for class_id in class_ids
-                    c=[]
+                    c = []
                     c.id= class_id
                     c.label = CLASS_LABEL[class_id]
                     classes.push c
@@ -73,4 +73,6 @@ define ['app'
                     
                     _.cordovaHideSplashscreen()
 
-                    _.cordovaBackbuttonNavigation()
+                    _.removeCordovaBackbuttonEventListener()
+                    
+                    _.enableCordovaBackbuttonNavigation()

@@ -125,6 +125,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       HeaderView.prototype.onAppLogout = function() {
         var user;
         console.log('Synapse App Logout');
+        _.removeCordovaBackbuttonEventListener();
         _.setUserID(null);
         user = App.request("get:user:model");
         user.clear();

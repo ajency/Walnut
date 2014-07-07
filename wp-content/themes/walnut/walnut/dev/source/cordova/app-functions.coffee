@@ -30,35 +30,40 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		cordovaHideSplashscreen : ->
 
 			navigator.splashscreen.hide()
+		
 
 
-		cordovaDisableBackbutton : ->
+		enableCordovaBackbuttonNavigation : ->
+
+			navigator.app.overrideBackbutton(true)
+			
+			document.addEventListener("backbutton", _.onDeviceBackButtonClick, false)
+
+
+
+		disableCordovaBackbuttonNavigation : ->
 
 			navigator.app.overrideBackbutton(false)
 
 
-		
-		cordovaBackbuttonNavigation : ->
 
-			navigator.app.overrideBackbutton(true)
+		onDeviceBackButtonClick : ->
 
-			onBackButtonClick = ->
+			currentRoute = App.getCurrentRoute()
+			console.log 'Fired cordova back button event for '+currentRoute
 
-				document.removeEventListener("backbutton", onBackButtonClick, false)
+			if currentRoute is 'teachers/dashboard' or currentRoute is 'app-login'
+				navigator.app.exitApp()
+			else 	
+				App.navigate('app-login', trigger: true)
 
-				if _.cordovaAppNavigationFlag
+			_.removeCordovaBackbuttonEventListener()
 
-					currentRoute = App.getCurrentRoute()
-					console.log 'Fired cordova back button event for '+currentRoute
 
-					if currentRoute is 'teachers/dashboard' or currentRoute is 'app-login'
-						navigator.app.exitApp()
-					else 	
-						App.navigate('app-login', trigger: true)
-				
 
-			#Cordova backbutton event
-			document.addEventListener("backbutton", onBackButtonClick, false)
+		removeCordovaBackbuttonEventListener : ->
+
+			document.removeEventListener("backbutton", _.onDeviceBackButtonClick, false)
 
 
 		
@@ -238,7 +243,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 
 		
-		deleteAllDecryptedVideoFilesFromVideosWebDirectory : ->
+		clearVideosWebDirectory : ->
 			# Delete all video files from 'videos-web' folder
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
 				fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/videos-web"

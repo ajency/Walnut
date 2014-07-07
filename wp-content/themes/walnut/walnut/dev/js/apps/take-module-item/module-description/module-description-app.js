@@ -162,20 +162,19 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
           $('body').css({
             'height': 'auto'
           });
-          _.cordovaAppNavigationFlag = false;
           document.addEventListener("pause", (function(_this) {
             return function() {
               console.log('Fired cordova pause event for module-description');
-              _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
-              return _this.trigger("goto:previous:route");
+              _this.trigger("goto:previous:route");
+              return _.clearVideosWebDirectory();
             };
           })(this), false);
           onBackbuttonClick = (function(_this) {
             return function() {
               console.log('Fired cordova back button event for module-description');
-              document.removeEventListener("backbutton", onBackbuttonClick, false);
-              _.deleteAllDecryptedVideoFilesFromVideosWebDirectory();
-              return _this.trigger("goto:previous:route");
+              _this.trigger("goto:previous:route");
+              _.clearVideosWebDirectory();
+              return document.removeEventListener("backbutton", onBackbuttonClick, false);
             };
           })(this);
           navigator.app.overrideBackbutton(true);

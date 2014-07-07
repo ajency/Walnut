@@ -73,7 +73,7 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('Updated sync details for ' + operation);
       });
     },
-    deleteAllFilesFromSynapseDataDirectory: function() {
+    clearSynapseDataDirectory: function() {
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
         return fileSystem.root.getDirectory("SynapseAssets/SynapseData", {
           create: false,

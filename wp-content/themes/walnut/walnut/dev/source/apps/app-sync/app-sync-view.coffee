@@ -35,7 +35,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				
 				_.cordovaHideSplashscreen()
 
-				_.cordovaDisableBackbutton()
+				_.disableCordovaBackbuttonNavigation()
 				
 				# Display app version number
 				cordova.getAppVersion().then((version)-> 

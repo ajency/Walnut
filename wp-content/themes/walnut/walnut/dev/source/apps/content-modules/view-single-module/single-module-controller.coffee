@@ -122,13 +122,12 @@ define ['app'
                     
                     $('body').css('height' : '100%')
 
-                    _.cordovaAppNavigationFlag = true
+                    _.clearVideosWebDirectory()
 
-                    _.cordovaDisableBackbutton()
-
-                    _.deleteAllDecryptedVideoFilesFromVideosWebDirectory()
+                    _.disableCordovaBackbuttonNavigation()
 
 
+        
         # set handlers
         App.commands.setHandler "show:single:module:app", (opt = {})->
             new View.GroupController opt
