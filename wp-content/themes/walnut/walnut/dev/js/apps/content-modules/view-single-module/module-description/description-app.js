@@ -167,7 +167,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
       CollectionDetailsView.prototype.startModule = function() {
         var currentRoute;
         currentRoute = App.getCurrentRoute();
-        App.navigate(currentRoute + "/question");
         return this.trigger("start:teaching:module");
       };
 

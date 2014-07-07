@@ -11,7 +11,6 @@ define ['app'
 
             initialize: (opts) ->
 
-
                 App.execute "show:headerapp", region : App.headerRegion
                 App.execute "show:leftnavapp", region : App.leftNavRegion
 
@@ -37,7 +36,7 @@ define ['app'
                     @listenTo @layout.collectionDetailsRegion, 'start:teaching:module', @startTeachingModule
 
                     @listenTo @layout.contentDisplayRegion, 'goto:question:readonly', (questionID)=>
-                        App.navigate App.getCurrentRoute() + '/question'
+                        #App.navigate App.getCurrentRoute() + '/question'
                         @gotoTrainingModule questionID, 'readonly'
 
 
@@ -119,5 +118,6 @@ define ['app'
                 $('.page-content').removeClass 'expand-page'
 
 
-
-
+        # set handlers
+        App.commands.setHandler "show:single:module:app", (opt = {})->
+            new View.GroupController opt

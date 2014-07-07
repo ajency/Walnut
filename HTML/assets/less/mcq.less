@@ -22,6 +22,24 @@
 			}
 		}
 	}
+	.ansWrong{
+		opacity: 0.2;
+		background: url(../../../images/wrong-ans.gif) no-repeat right center;
+		border-bottom: 2px solid @color-danger;
+		background-size: 25px;
+		.ease;
+	}
+	.ansFalse{
+		opacity: 0.2;
+		border-bottom: 2px solid @color-danger;
+		.ease;
+	}
+	.ansRight{
+		background: url(../../../images/right-ans.gif) no-repeat right center;
+		border-bottom: 2px solid @color-success;
+		background-size: 25px;
+		.ease;
+	}
 }
 .mcq-option {
 	// width: 100%;
@@ -39,24 +57,6 @@
 	}
 	&:after {
 	    clear: both;
-	}
-	&.ansWrong{
-		opacity: 0.2;
-		background: url(../../../images/wrong-ans.gif) no-repeat right center;
-		border-bottom: 2px solid @color-danger;
-		background-size: 25px;
-		.ease;
-	}
-	&.ansFalse{
-		opacity: 0.2;
-		border-bottom: 2px solid @color-danger;
-		.ease;
-	}
-	&.ansRight{
-		background: url(../../../images/right-ans.gif) no-repeat right center;
-		border-bottom: 2px solid @color-success;
-		background-size: 25px;
-		.ease;
 	}
 	span{
 		//float: left;

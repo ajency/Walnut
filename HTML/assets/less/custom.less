@@ -287,6 +287,14 @@ textarea.error, .select2-choice.error {
 	margin: 4px 4px 4px 0;
 }
 
+.textbook-filter, .selectFilter{
+	width: 160px;
+	margin-right: 5px;
+	&:last-child{
+		margin-right: 0;
+	}
+}
+
 #breadcrumb-region{
 	display: none;
 }
@@ -297,10 +305,30 @@ textarea.error, .select2-choice.error {
 	}
 }
 
+.tablesorter-header-inner{
+	font-size: 14px;
+	cursor: pointer;
+}
+
+#content-pieces-table{
+	a{
+		text-decoration: underline;
+	}
+}
+
+#take-class-modules{
+	th:nth-child(3){
+		width: 100px;
+	}
+	th:last-child{
+		width: 40%;
+	}
+}
+
 /*Theme Modifications*/
 body{
-	font-size: 18px;
-	font-weight: bold;
+	font-size: 20px;
+	font-weight: 600;
 }
 
 select{
@@ -322,7 +350,9 @@ label, input, button, select, textarea{
 .label{
 	font-size: 14px;
 	display: inline-block;
-	padding: 6px 9px;
+	padding: 7px 9px;
+	min-width: 100px;
+	border-radius: 0;
 }
 
 .alert{
@@ -372,7 +402,9 @@ ol {
 	font-size: 16px;
 }
 .table td{
-	font-size: 15px;
+	font-size: 16px;
+	font-weight: 400;
+	padding: 14px 12px !important;
 }
 
 .progress{
@@ -385,9 +417,6 @@ ol {
 	}
 }
 
-.table-hover tbody tr:hover > td, .table-hover tbody tr:hover > th{
-	background-color: transparent;
-}
 
 .teacher-app{
 	.grid{

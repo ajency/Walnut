@@ -149,15 +149,15 @@ function setup_childsite_menus( $current_blog, $blog_id ) {
 function create_temporary_folders() {
 
     $uploads_dir = wp_upload_dir();
-    // TODO: change file permission form 0777 to something else. This is read write execute access
+
     if (!file_exists( $uploads_dir['basedir'] . '/tmp/' ))
-        mkdir( $uploads_dir['basedir'] . '/tmp', 0777 );
+        mkdir( $uploads_dir['basedir'] . '/tmp', 0755 );
 
     if (!file_exists( $uploads_dir['basedir'] . '/tmp/downsync' ))
-        mkdir( $uploads_dir['basedir'] . '/tmp/downsync', 0777 );
+        mkdir( $uploads_dir['basedir'] . '/tmp/downsync', 0755 );
 
     if (!file_exists( $uploads_dir['basedir'] . '/tmp/upsync' ))
-        mkdir( $uploads_dir['basedir'] . '/tmp/upsync', 0777 );
+        mkdir( $uploads_dir['basedir'] . '/tmp/upsync', 0755 );
 
 }
 

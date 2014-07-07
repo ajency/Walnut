@@ -6,7 +6,7 @@
  * Time: 6:28 PM
  */
 require_once 'sync-functions.php';
-
+require_once "csv_export_tables.php";
 
 function ajax_sync_app_data() {
 
@@ -105,3 +105,16 @@ function get_site_video_resources_data() {
 
 add_action( 'wp_ajax_get-site-video-resources-data', 'get_site_video_resources_data' );
 add_action( 'wp_ajax_nopriv_get-site-video-resources-data', 'get_site_video_resources_data' );
+
+function ajax_sync_database(){
+
+    $blog_id= $_GET['blog_id'];
+
+    $last_sync= (isset($_GET['last_sync']))? $_GET['last_sync']: '';
+
+    $export_details = export_tables_for_app($blog_id, $last_sync);
+
+    wp_send_json($export_details);
+
+}
+add_action( 'wp_ajax_nopriv_sync-database', 'ajax_sync_database' );
