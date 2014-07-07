@@ -1,6 +1,5 @@
 <?php
 require_once 'functions.php';
-require_once "csv_export_tables.php";
 
 add_action( 'wp_ajax_read-schools', 'fetch_school' );
 
@@ -29,16 +28,3 @@ function new_school_setup( $blog_id ){
 
 }
 add_action('wpmu_new_blog', 'new_school_setup');
-
-function ajax_sync_database(){
-
-    $blog_id= $_GET['blog_id'];
-
-    $last_sync= (isset($_GET['last_sync']))? $_GET['last_sync']: '';
-
-    $export_details = export_tables_for_app($blog_id, $last_sync);
-
-    wp_send_json($export_details);
-
-}
-add_action( 'wp_ajax_nopriv_sync-database', 'ajax_sync_database' );
