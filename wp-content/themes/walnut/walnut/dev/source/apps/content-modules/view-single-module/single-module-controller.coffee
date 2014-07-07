@@ -122,8 +122,6 @@ define ['app'
                     
                     $('body').css('height' : '100%')
 
-                    _.clearVideosWebDirectory()
-
                     _.disableCordovaBackbuttonNavigation()
 
 

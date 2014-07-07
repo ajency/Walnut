@@ -116,6 +116,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       function ModuleDescriptionView() {
         this.questionCompleted = __bind(this.questionCompleted, this);
+        this.onPauseSessionClick = __bind(this.onPauseSessionClick, this);
         return ModuleDescriptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -135,13 +136,13 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.events = {
         'click #back-to-module, #pause-session': function() {
-          return this.trigger("goto:previous:route");
+          return this.onPauseSessionClick();
         },
         'click #question-done': 'questionCompleted'
       };
 
       ModuleDescriptionView.prototype.onShow = function() {
-        var onBackbuttonClick, stickyHeaderTop;
+        var stickyHeaderTop;
         if (!Marionette.getOption(this, 'nextItemID')) {
           this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
@@ -162,24 +163,25 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
           $('body').css({
             'height': 'auto'
           });
-          document.addEventListener("pause", (function(_this) {
-            return function() {
-              console.log('Fired cordova pause event for module-description');
-              _this.trigger("goto:previous:route");
-              return _.clearVideosWebDirectory();
-            };
-          })(this), false);
-          onBackbuttonClick = (function(_this) {
-            return function() {
-              console.log('Fired cordova back button event for module-description');
-              _this.trigger("goto:previous:route");
-              _.clearVideosWebDirectory();
-              return document.removeEventListener("backbutton", onBackbuttonClick, false);
-            };
-          })(this);
-          navigator.app.overrideBackbutton(true);
-          return document.addEventListener("backbutton", onBackbuttonClick, false);
+          return this.cordovaEventsForModuleDescriptionView();
         }
+      };
+
+      ModuleDescriptionView.prototype.onPauseSessionClick = function() {
+        if (_.platform() === 'BROWSER') {
+          return this.trigger("goto:previous:route");
+        } else {
+          console.log('Invoked onPauseSessionClick');
+          this.trigger("goto:previous:route");
+          _.clearVideosWebDirectory();
+          return document.removeEventListener("backbutton", this.onPauseSessionClick, false);
+        }
+      };
+
+      ModuleDescriptionView.prototype.cordovaEventsForModuleDescriptionView = function() {
+        navigator.app.overrideBackbutton(true);
+        document.addEventListener("backbutton", this.onPauseSessionClick, false);
+        return document.addEventListener("pause", this.onPauseSessionClick, false);
       };
 
       ModuleDescriptionView.prototype.questionCompleted = function() {

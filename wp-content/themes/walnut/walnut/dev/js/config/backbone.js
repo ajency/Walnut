@@ -33,6 +33,8 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'chapter') {
         data = App.reqres.request("get:" + collection_name + ":local", opts.parent);
         data.done(function(d) {
+          console.log('chapters data');
+          console.log(d);
           return collection.set(d);
         });
       }
@@ -140,8 +142,6 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'textbook') {
           data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('term_id'));
           data.done(function(d) {
-            console.log('textbook model data');
-            console.log(d);
             return model.set(d);
           });
         }

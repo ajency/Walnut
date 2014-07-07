@@ -103,7 +103,7 @@ define ['app'
 
 			events:
 				'click #back-to-module, #pause-session': ->
-					@trigger "goto:previous:route"
+					@onPauseSessionClick()
 
 				'click #question-done': 'questionCompleted'
 
@@ -132,32 +132,32 @@ define ['app'
 
 					$('body').css('height' : 'auto')
 
-					# Cordova pause event
-					document.addEventListener("pause"
-						,=>
-							console.log 'Fired cordova pause event for module-description'
-							
-							@trigger "goto:previous:route"
+					@cordovaEventsForModuleDescriptionView()
+			
 
-							_.clearVideosWebDirectory()
-						
-						, false)
+			onPauseSessionClick : =>
 
-					onBackbuttonClick = =>
-						
-						console.log 'Fired cordova back button event for module-description'
+				if _.platform() is 'BROWSER'
+					@trigger "goto:previous:route"
 
-						@trigger "goto:previous:route"
+				else
+					console.log 'Invoked onPauseSessionClick'
 
-						_.clearVideosWebDirectory()
+					@trigger "goto:previous:route"
 
-						document.removeEventListener("backbutton", onBackbuttonClick, false)
+					_.clearVideosWebDirectory()
 
-					
-					# Cordova backbutton event
-					navigator.app.overrideBackbutton(true)
-					document.addEventListener("backbutton", onBackbuttonClick, false)
+					document.removeEventListener("backbutton", @onPauseSessionClick, false)
 
+
+			cordovaEventsForModuleDescriptionView : ->
+
+				# Cordova backbutton event
+				navigator.app.overrideBackbutton(true)
+				document.addEventListener("backbutton", @onPauseSessionClick, false)
+
+				# Cordova pause event
+				document.addEventListener("pause", @onPauseSessionClick, false)
 
 
 			questionCompleted: =>
@@ -168,11 +168,13 @@ define ['app'
 
 				else @trigger "question:completed"
 
+
 			onQuestionChanged: (nextItemID)->
 
 				if not nextItemID
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
+
 
 
 

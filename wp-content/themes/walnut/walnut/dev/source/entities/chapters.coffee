@@ -73,47 +73,21 @@ define ["app", 'backbone'], (App, Backbone) ->
 					
 
 				# get chapters from local database
-				getChaptersFromLocal:(parent)->
-					
-					runQuery = ->
+				getChaptersFromLocal : (parent)->
+
+					runFunc = ->
 						$.Deferred (d)->
-							_.db.transaction (tx)->
-								tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
-									WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=?", [parent], onSuccess(d), _.deferredErrorHandler(d))
+							chapters = _.getChaptersByParentId(parent)
+							chapters.done (result)->
 
-					onSuccess =(d)->
-						(tx,data)->
-							result = []
+								d.resolve result
 
-							for i in [0..data.rows.length-1] by 1
-								r = data.rows.item(i)
-								
-								result[i]=
-									term_id: r['term_id']
-									name: r['name']
-									slug: r['slug']
-									term_group: r['term_group']
-									term_order: r['term_order']
-									term_taxonomy_id: r['term_taxonomy_id']
-									taxonomy: r['taxonomy']
-									description: r['description']
-									parent: r['parent']
-									count: r['count']#Questions
-									thumbnail: ''
-									cover_pic: ''
-									author: ''
-									classes: null
-									subjects: null
-									modules_count: ''
-									chapter_count: ''#Sections
-							
-							d.resolve(result)
-
-					$.when(runQuery()).done (d)->
-						console.log 'getChaptersFromLocal transaction completed'
+					$.when(runFunc()).done	->
+						console.log 'getChaptersFromLocal done'
 					.fail _.failureHandler
 
 
+			
 			# request handler to get all Chapters
 			App.reqres.setHandler "get:chapters", (opt) ->
 				API.getChapters(opt)
@@ -126,6 +100,4 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			# request handler to get all chapters from local database
 			App.reqres.setHandler "get:chapter:local", (parent)->
-				API.getChaptersFromLocal parent		
-				
-
+				API.getChaptersFromLocal parent	
