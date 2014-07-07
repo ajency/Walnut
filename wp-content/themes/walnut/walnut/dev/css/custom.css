@@ -2502,10 +2502,16 @@ textarea.error,
 #content-pieces-table a {
   text-decoration: underline;
 }
+#take-class-modules th:nth-child(3) {
+  width: 100px;
+}
+#take-class-modules th:last-child {
+  width: 40%;
+}
 /*Theme Modifications*/
 body {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 600;
 }
 select {
   font-weight: bold;
