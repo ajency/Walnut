@@ -86,7 +86,7 @@ define ['app'], (App)->
 
             template : '<div class="tiles white grid simple  animated fadeIn">
 							<div class="grid-title">
-								<h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4>
+								<h3 class="m-t-5 m-b-5">Textbook <span class="semi-bold">{{showTextbookName}}</span></h3>
 							</div>
 
                     		<div class="grid-body contentSelect" style="overflow: hidden; display: block;">
