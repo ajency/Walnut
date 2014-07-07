@@ -1,5 +1,12 @@
 define ['jquery', 'underscore'], ($, _)->
 
+    ##
+    # eg. $.showTextbookFilters textbooks: textbookCollection
+    #
+    # OR $.showTextbookFilters chapters: chaptersCollection // incase you dont need the textbook filter
+    #
+    ##
+
     $.showTextbookFilters =(opts={}) ->
 
         divHtml= ''

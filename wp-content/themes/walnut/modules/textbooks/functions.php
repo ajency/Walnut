@@ -216,15 +216,17 @@ function get_textbooks( $args = array() ) {
     extract( $args );
 
     $current_blog = get_current_blog_id();
-    switch_to_blog( 1 );
+
 
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all) {
+        switch_to_blog( 1 );
         $textbooks = get_terms( 'textbook', $args );
         $count_args = $args;
         $count_args['fields'] = 'count';
         $count_args['number'] = '';
         $count_total = get_terms( 'textbook', $count_args );
+        switch_to_blog( $current_blog );
     } //if filtering for a particular class, get textbooks based on which class they belong to
     else if (is_numeric( $class_id ) || $class_id == '0')
         $textbooks = get_textbooks_for_class( $class_id );
@@ -239,7 +241,6 @@ function get_textbooks( $args = array() ) {
         return false;
 
     $data = array();
-
     if (is_array( $textbooks )) {
 
         $division=0;
@@ -252,8 +253,6 @@ function get_textbooks( $args = array() ) {
     }
     $textbooks_data['data'] = $data;
     $textbooks_data['count'] = $count_total;
-
-    switch_to_blog( $current_blog );
 
     return $textbooks_data;
 }
@@ -290,6 +289,7 @@ function get_textbooksids_for_current_blog(){
 function get_book( $book, $division=0 ) {
     global $wpdb;
     $current_blog = get_current_blog_id();
+
     switch_to_blog( 1 );
 
     if (is_numeric( $book )) {
@@ -311,11 +311,11 @@ function get_book( $book, $division=0 ) {
     $book_dets->cover_pic = wp_get_attachment_image( $coverid, 'large' );
     $book_dets->author = $additional['author'];
 
-    $classes = $wpdb->get_results( "select class_id, tags from {$wpdb->prefix}textbook_relationships
+    $classes = $wpdb->get_row( "select class_id, tags from {$wpdb->base_prefix}textbook_relationships
                 where textbook_id=" . $book_id, ARRAY_A );
 
-    $book_dets->classes = maybe_unserialize( $classes[0]['class_id'] );
-    $book_dets->subjects = maybe_unserialize( $classes[0]['tags'] );
+    $book_dets->classes = maybe_unserialize( $classes['class_id'] );
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
 
     $modules_count_query=$wpdb->prepare("
         SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
@@ -325,13 +325,8 @@ function get_book( $book, $division=0 ) {
     $modules_count = $wpdb->get_row( $modules_count_query );
     $book_dets->modules_count = $modules_count->count;
 
-    if ($division != 0){
-        $modules_completed = get_completed_modules_for_textbook($book_id, $division);
-        $book_dets->modules_completed = sizeof($modules_completed);
-    }
-
-    $questions_count = $wpdb->get_results( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='textbook' and meta_value=" . $book_id );
-    $book_dets->questions_count = $questions_count[0]->count;
+    $questions_count = $wpdb->get_row( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='textbook' and meta_value=" . $book_id );
+    $book_dets->questions_count = $questions_count->count;
 
     $args = array( 'hide_empty' => false,
         'parent' => $book_id,
@@ -342,42 +337,101 @@ function get_book( $book, $division=0 ) {
     $book_dets->chapter_count = ($subsections) ? $subsections : 0;
 
     switch_to_blog( $current_blog );
+
+    if ($division != 0 && $book_dets->parent === 0){
+        $textbook_status = get_status_for_textbook($book_id, $division);
+        $book_dets->chapters_completed = sizeof($textbook_status['completed']);
+        $book_dets->chapters_in_progress = sizeof($textbook_status['in_progress']);
+        $book_dets->chapters_not_started = sizeof($textbook_status['not_started']);
+
+    }
+
+
     return $book_dets;
 }
 
-function get_completed_modules_for_textbook($textbook_id, $division){
+function get_status_for_textbook($textbook_id, $division){
+
+
+    $args = array( 'hide_empty' => false,
+        'parent' => $textbook_id,
+        'fields' => 'ids' );
+
+    $current_blog = get_current_blog_id();
+    switch_to_blog( 1 );
+    $chapters = get_terms( 'textbook', $args );
+    switch_to_blog( $current_blog );
+
+    $completed = $in_progress = $not_started = array();
+
+    foreach($chapters as $chapter){
+        $chapter_status = get_status_for_chapter($chapter, $division);
+
+        if(sizeof($chapter_status['all_modules']) == sizeof($chapter_status['completed']))
+            $completed[]=$chapter;
+
+        elseif(sizeof($chapter_status['in_progress']) > 0)
+            $in_progress[]=$chapter;
+
+        else
+            $not_started[]= $chapter;
+
+    }
+
+    $textbook_status= array(
+        'completed' => $completed,
+        'in_progress'=> $in_progress,
+        'not_started'=> $not_started
+    );
+
+    return $textbook_status;
+}
+
+function get_status_for_chapter($chapter_id, $division){
 
     global $wpdb;
 
-    if(!(int)$textbook_id || ! (int) $division)
+    if(!(int)$chapter_id || ! (int) $division)
         return false;
 
-    $completed_modules = array();
+    $completed = $in_progress = $not_started = array();
 
-    $module_ids_query = $wpdb->prepare("SELECT collection_id FROM {$wpdb->base_prefix}collection_meta
-        WHERE meta_key like %s AND meta_value= %s",
-        array('textbook',$textbook_id)
+    $module_ids_query = $wpdb->prepare("SELECT id FROM {$wpdb->base_prefix}content_collection
+        WHERE term_ids like %s AND status like %s",
+        array('%"' . $chapter_id . '";%', 'publish')
     );
 
     $module_ids = $wpdb->get_results($module_ids_query);
 
     if($module_ids){
         foreach($module_ids as $module){
-            $module_status = get_content_module_status($module->collection_id, $division);
+            $module_status = get_content_module_status($module->id, $division);
 
             if($module_status['status']=='completed')
-                $completed_modules[]=$module->collection_id;
+                $completed[]=$module->id;
+
+            elseif($module_status['status']=='started')
+                $in_progress[]=$module->id;
+
+            else
+                $not_started[]= $module->id;
+
         }
     }
-    return $completed_modules;
+    $chapter_status= array(
+        'all_modules' => $module_ids,
+        'completed' => $completed,
+        'in_progress'=> $in_progress,
+        'not_started'=> $not_started
+    );
+
+    return $chapter_status;
 
 }
 
 //fetching textbooks list based on the classid passed
 function get_textbooks_for_class( $classid ) {
     global $wpdb;
-    $current_blog = get_current_blog_id();
-    switch_to_blog( 1 );
 
     $data = array();
 
@@ -391,7 +445,7 @@ function get_textbooks_for_class( $classid ) {
     if ($txtbooks_assigned) {
         $tids = implode( ',', $txtbooks_assigned );
 
-        $txtbook_qry = $wpdb->prepare( "select textbook_id from {$wpdb->prefix}textbook_relationships
+        $txtbook_qry = $wpdb->prepare( "select textbook_id from {$wpdb->base_prefix}textbook_relationships
             where textbook_id in ($tids) and class_id like %s", '%"' . $classid . '";%' );
 
         $textbook_ids = $wpdb->get_results( $txtbook_qry );
@@ -403,7 +457,6 @@ function get_textbooks_for_class( $classid ) {
             }
         }
     }
-    switch_to_blog( $current_blog );
     return $data;
 }
 
