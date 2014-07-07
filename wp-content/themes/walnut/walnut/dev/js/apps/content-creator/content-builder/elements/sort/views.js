@@ -28,7 +28,7 @@ define(['app'], function(App) {
 
       OptionView.prototype.onShow = function() {
         this.$el.attr('id', 'sort-option-' + this.model.get('optionNo'));
-        this.$el.find('.sort-option-text').attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
+        this.$el.find('.sort-option-text').attr('contenteditable', 'true').attr('id', "text-" + (this.model.get('optionNo')));
         CKEDITOR.on('instanceCreated', this.configureEditor);
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.find('.sort-option-text').attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));

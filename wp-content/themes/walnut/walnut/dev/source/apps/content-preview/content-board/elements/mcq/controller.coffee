@@ -71,6 +71,7 @@ define ['app'
                     parseInt ans
 
             _submitAnswer : =>
+                @answerModel.set 'marks', 0
                 if not @answerModel.get('answer').length
                     # confirmbox = confirm 'You haven\'t selected anything..\n do you still want to continue?'
                     console.log 'you havent selected any thing'
