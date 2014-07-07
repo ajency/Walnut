@@ -113,51 +113,18 @@ define(["app", 'backbone'], function(App, Backbone) {
         return media;
       },
       getMediaByIdFromLocal: function(id) {
-        var onSuccess, runQuery;
-        runQuery = function() {
+        var runFunc;
+        runFunc = function() {
           return $.Deferred(function(d) {
-            return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_posts WHERE id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
+            var media;
+            media = _.getMediaById(id);
+            return media.done(function(result) {
+              return d.resolve(result);
             });
           });
         };
-        onSuccess = function(d) {
-          return function(tx, data) {
-            var attachmentData, row;
-            row = data.rows.item(0);
-            attachmentData = _.getAttachmentData(id);
-            return attachmentData.done(function(data) {
-              var full, mediaUrl, result, url;
-              url = row['guid'];
-              mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"));
-              console.log('mediaUrl: ' + mediaUrl);
-              full = {
-                full: {}
-              };
-              _.extend(data.sizes, full);
-              if (data.sizes) {
-                _.each(data.sizes, function(size) {
-                  return size.url = mediaUrl;
-                });
-              } else {
-                data.sizes = '';
-              }
-              result = {
-                id: row['ID'],
-                filename: data.file,
-                url: mediaUrl,
-                mime: row['post_mime_type'],
-                icon: '',
-                sizes: data.sizes,
-                height: data.height,
-                width: data.width
-              };
-              return d.resolve(result);
-            });
-          };
-        };
-        return $.when(runQuery()).done(function() {
-          return console.log('getMediaByIdFromLocal transaction completed');
+        return $.when(runFunc()).done(function() {
+          return console.log('getMediaByIdFromLocal done');
         }).fail(_.failureHandler);
       }
     };

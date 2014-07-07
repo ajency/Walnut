@@ -102,53 +102,18 @@ define ["app", 'backbone'], (App, Backbone) ->
 				media
 
 
-			# get media from local database
+			# get media from local directory
 			getMediaByIdFromLocal : (id)->
 
-				runQuery = ->
+				runFunc = ->
 					$.Deferred (d)->
-						_.db.transaction (tx)->
-							tx.executeSql("SELECT * FROM wp_posts WHERE id=?", [id]
-								, onSuccess(d), _.deferredErrorHandler(d))
+						media = _.getMediaById(id)
+						media.done (result)->
 
-				onSuccess = (d)->
-					(tx, data)->
+							d.resolve result
 
-						row = data.rows.item(0)
-
-						attachmentData = _.getAttachmentData id
-						attachmentData.done (data)->
-
-							url = row['guid']
-							mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"))
-							console.log 'mediaUrl: '+mediaUrl
-
-							full = {
-								full: {}
-							}
-							_.extend(data.sizes, full)
-
-							if data.sizes
-								_.each data.sizes, (size)->
-									size.url = mediaUrl
-							else
-								data.sizes = ''
-							
-							result = 
-								id: row['ID']
-								filename: data.file
-								url: mediaUrl
-								mime: row['post_mime_type']
-								icon: ''
-								sizes: data.sizes
-								height: data.height
-								width: data.width
-
-							d.resolve result    
-
-				
-				$.when(runQuery()).done ->
-					console.log 'getMediaByIdFromLocal transaction completed'
+				$.when(runFunc()).done	->
+					console.log 'getMediaByIdFromLocal done'
 				.fail _.failureHandler
 
 
@@ -167,6 +132,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 			API.createNewMedia modelData
 
 
-		#Get media from local database
+		#Get media from local directory
 		App.reqres.setHandler "get:media:by:id:local",(id)->
 			API.getMediaByIdFromLocal id

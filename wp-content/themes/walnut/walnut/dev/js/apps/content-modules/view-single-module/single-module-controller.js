@@ -152,7 +152,6 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
           $('body').css({
             'height': '100%'
           });
-          _.clearVideosWebDirectory();
           return _.disableCordovaBackbuttonNavigation();
         }
       };

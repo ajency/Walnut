@@ -37,6 +37,8 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'chapter'
 				data = App.reqres.request "get:#{collection_name}:local", opts.parent 
 				data.done (d)->
+					console.log 'chapters data'
+					console.log d
 					collection.set d
 
 			if collection_name is 'division'
@@ -204,8 +206,6 @@ define ["backbone"], (Backbone) ->
 					#Get textbooks by textbook_id	
 					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('term_id')
 					data.done (d)->
-						console.log 'textbook model data'
-						console.log d
 						model.set d	
 
 				if modelname is 'content-group'
