@@ -70,9 +70,14 @@ function sync_app_data_to_db( $sync_request_id ) {
             read_question_response_meta_csv_file( $extract_path . '/' . $stat['name'] );
     }
 
-    //FIXME: handle deletion of .tmp folder
-
     mark_sync_as_complete( $sync_request_id );
+
+    $files = glob($extract_path.'/*'); // get all file names from .tmp folder
+    foreach($files as $file){ // iterate files
+        if(is_file($file))
+            unlink($file); // delete file
+    }
+
     $zip->close();
 }
 
