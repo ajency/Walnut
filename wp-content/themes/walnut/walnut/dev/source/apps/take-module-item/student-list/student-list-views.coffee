@@ -75,6 +75,7 @@ define ['app'], (App)->
                 data
 
             onShow: ->
+
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
@@ -92,6 +93,10 @@ define ['app'], (App)->
                     includeNums: false
                 #removeDisabled: true
 
+
+                @$el.find '.listNav a'
+                .removeAttr 'href'
+                .css 'cursor', 'pointer'
 
                 @correctAnswers = Marionette.getOption @, 'correctAnswers'
                 @correctAnswers = _.compact @correctAnswers

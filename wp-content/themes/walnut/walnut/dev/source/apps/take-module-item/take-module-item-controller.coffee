@@ -57,9 +57,9 @@ define ['app'
 
                 @listenTo @layout, "show", @_showQuestionDisplayView contentPiece
 
-                @listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoPreviousRoute
+                @listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoViewModule
 
-                @listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoPreviousRoute
+                @listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoViewModule
 
                 @listenTo @layout.moduleDetailsRegion, "goto:next:question", @_changeQuestion
 
@@ -86,7 +86,7 @@ define ['app'
                         @_showStudentsListView questionResponseModel
 
                 else
-                    @_gotoPreviousRoute()
+                    @_gotoViewModule()
 
             _getNextItemID : ->
                 contentPieces = contentGroupModel.get 'content_pieces'
@@ -102,12 +102,12 @@ define ['app'
 
                 nextQuestion
 
-            _gotoPreviousRoute : =>
+            _gotoViewModule : =>
                 if @display_mode is 'class_mode' and questionResponseModel.get('status') isnt 'completed'
                     @_saveQuestionResponse "paused"
 
                 else
-                    @_getPreviousRoute()
+                    @_startViewModuleApp()
 
             _saveQuestionResponse : (status) =>
                 elapsedTime = @timerObject.request "get:elapsed:time"
@@ -122,16 +122,20 @@ define ['app'
                     wait : true
                     success :(model)=>
                         if model.get('status') is 'paused'
-                            @_getPreviousRoute()
+                            @_startViewModuleApp()
 
-            _getPreviousRoute:->
-                currRoute = App.getCurrentRoute()
+            _startViewModuleApp:=>
 
-                removeStr = _.str.strRightBack currRoute, '/'
+                App.execute "show:headerapp", region : App.headerRegion
+                App.execute "show:leftnavapp", region : App.leftNavRegion
 
-                newRoute = _.str.rtrim currRoute, removeStr + '/'
+                App.execute "show:single:module:app",
+                    region: App.mainContentRegion
+                    model: contentGroupModel
+                    mode: @display_mode
+                    division: @division
+                    classID: @classID
 
-                App.navigate newRoute, true
 
             _getOrCreateModel : (content_piece_id)=>
                 questionResponseModel = questionResponseCollection.findWhere

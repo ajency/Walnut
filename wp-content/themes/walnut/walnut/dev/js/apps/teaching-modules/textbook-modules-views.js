@@ -4,7 +4,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app'], function(App) {
   return App.module("TeachersDashboardApp.View.TakeClassTextbookModules", function(TextbookModules, App) {
-    var ContentGroupsItemView;
+    var ContentGroupsItemView, EmptyView;
     ContentGroupsItemView = (function(_super) {
       __extends(ContentGroupsItemView, _super);
 
@@ -12,7 +12,7 @@ define(['app'], function(App) {
         return ContentGroupsItemView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsItemView.prototype.template = '<td class="v-align-middle"><a href="#"></a>{{name}}</td> <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> <span class="muted status_label">{{&status_str}}</span> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{&training_date}} </td>';
+      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> <span class="muted status_label">{{&status_str}}</span> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{&training_date}} </td>';
 
       ContentGroupsItemView.prototype.tagName = 'tr';
 
@@ -24,6 +24,15 @@ define(['app'], function(App) {
       ContentGroupsItemView.prototype.serializeData = function() {
         var data, status, training_date;
         data = ContentGroupsItemView.__super__.serializeData.call(this);
+        data.chapterName = (function(_this) {
+          return function() {
+            var chapter;
+            chapter = _.chain(_this.chapters.findWhere({
+              "term_id": data.term_ids.chapter
+            })).pluck('name').compact().value();
+            return chapter;
+          };
+        })(this);
         training_date = this.model.get('training_date');
         if (training_date === '') {
           training_date = 'Schedule';
@@ -54,7 +63,29 @@ define(['app'], function(App) {
         return data;
       };
 
+      ContentGroupsItemView.prototype.initialize = function(options) {
+        return this.chapters = options.chaptersCollection;
+      };
+
       return ContentGroupsItemView;
+
+    })(Marionette.ItemView);
+    EmptyView = (function(_super) {
+      __extends(EmptyView, _super);
+
+      function EmptyView() {
+        return EmptyView.__super__.constructor.apply(this, arguments);
+      }
+
+      EmptyView.prototype.template = 'No Modules Available';
+
+      EmptyView.prototype.tagName = 'td';
+
+      EmptyView.prototype.onShow = function() {
+        return this.$el.attr('colspan', 4);
+      };
+
+      return EmptyView;
 
     })(Marionette.ItemView);
     return TextbookModules.ContentGroupsView = (function(_super) {
@@ -66,15 +97,26 @@ define(['app'], function(App) {
         return ContentGroupsView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsView.prototype.template = '<div class="tiles white grid simple vertical blue animated fadeIn"> <div class="grid-title no-border"> <h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4> </div> <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-lg-12"> <h4>{{&showModulesHeading}}</h4> <table class="table table-hover table-condensed table-fixed-layout table-bordered" id="take-class-modules"> <thead> <tr> <th style="width:50%">Name</th> <th class="{sorter:\'minutesSort\'}" style="width:10%" >Duration</th> <th style="width:40%"><div id="status_header">Status</div></th> </tr> </thead> <tbody> </tbody> </table> </div> </div> </div> </div>';
+      ContentGroupsView.prototype.template = '<div class="tiles white grid simple  animated fadeIn"> <div class="grid-title"> <h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4> </div> <div class="grid-body contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-xs-12"> <div class="filters"> <div class="table-tools-actions"> <span id="textbook-filters"></span> </div> </div> </div> <div class="clearfix"></div> <div class="col-sm-12"></div> </div><br> <div class="row"> <div class="col-lg-12"> <!--<h4>{{&showModulesHeading}}</h4>--> <table class="table table-condensed table-fixed-layout table-bordered" id="take-class-modules"> <thead> <tr> <th>Name</th> <th>Chapter</th> <th class="{sorter:\'minutesSort\'}">Duration</th> <th><div id="status_header">Status</div></th> </tr> </thead> <tbody> </tbody> </table> </div> </div> </div> </div>';
 
       ContentGroupsView.prototype.itemView = ContentGroupsItemView;
 
       ContentGroupsView.prototype.itemViewContainer = 'tbody';
 
+      ContentGroupsView.prototype.itemViewOptions = function() {
+        return {
+          chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
+        };
+      };
+
+      ContentGroupsView.prototype.emptyView = EmptyView;
+
       ContentGroupsView.prototype.className = 'teacher-app moduleList';
 
       ContentGroupsView.prototype.events = {
+        'change .textbook-filter': function(e) {
+          return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
+        },
         'click .start-training': 'startTraining',
         'click .training-date': 'scheduleTraining'
       };
@@ -97,15 +139,46 @@ define(['app'], function(App) {
       };
 
       ContentGroupsView.prototype.onShow = function() {
-        var pagerDiv, pagerOptions;
+        var pagerOptions, textbookFiltersHTML;
+        $('.page-content').removeClass('expand-page');
         if (Marionette.getOption(this, 'mode') === 'training') {
           this.$el.find('.status_label, .training-date, #status_header, .dateInfo').remove();
         }
-        this.$el.find('#take-class-modules').tablesorter();
-        pagerDiv = '<div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option value="25" selected>25</option> <option value="50">50</option> <option value="100">100</option> </select> </div>';
-        this.$el.find('#take-class-modules').after(pagerDiv);
+        textbookFiltersHTML = $.showTextbookFilters({
+          chapters: Marionette.getOption(this, 'chaptersCollection')
+        });
+        this.fullCollection = Marionette.getOption(this, 'fullCollection');
+        console.log(this.fullCollection);
+        this.$el.find('#textbook-filters').html(textbookFiltersHTML);
+        this.$el.find(".select2-filters").select2();
+        $('#take-class-modules').tablesorter();
         pagerOptions = {
-          totalRows: _.size(this.collection.modules),
+          container: $(".pager"),
+          output: '{startRow} to {endRow} of {totalRows}'
+        };
+        return $('#take-class-modules').tablesorterPager(pagerOptions);
+      };
+
+      ContentGroupsView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
+        switch (filterType) {
+          case 'textbooks-filter':
+            $.populateChapters(filteredCollection, this.$el);
+            break;
+          case 'chapters-filter':
+            $.populateSections(filteredCollection, this.$el);
+            break;
+          case 'sections-filter':
+            $.populateSubSections(filteredCollection, this.$el);
+        }
+        return this.setFilteredContent();
+      };
+
+      ContentGroupsView.prototype.setFilteredContent = function() {
+        var filtered_data, pagerOptions;
+        filtered_data = $.filterTableByTextbooks(this);
+        this.collection.set(filtered_data);
+        $("#take-class-modules").trigger("updateCache");
+        pagerOptions = {
           container: $(".pager"),
           output: '{startRow} to {endRow} of {totalRows}'
         };

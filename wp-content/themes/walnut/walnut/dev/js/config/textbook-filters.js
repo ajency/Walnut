@@ -1,11 +1,25 @@
 define(['jquery', 'underscore'], function($, _) {
-  $.showTextbookFilters = function(textbooks) {
-    var divHtml, textbookItems;
-    textbookItems = '';
-    textbooks.each(function(t) {
-      return textbookItems += '<option value=' + t.get('term_id') + '>' + t.get('name') + '</option>';
-    });
-    return divHtml = '<select class="textbook-filter select2-filters" id="textbooks-filter" style="width:150px"> <option value="">All Textbooks</option>' + textbookItems + '</select> <select class="textbook-filter select2-filters" id="chapters-filter" style="width:150px"> <option value="">All Chapters</option> </select> <select class="textbook-filter select2-filters" id="sections-filter" style="width:150px"> <option value="">All Sections</option> </select> <select class="textbook-filter select2-filters" id="subsections-filter" style="width:200px"> <option value="">All Sub Sections</option> </select>';
+  $.showTextbookFilters = function(opts) {
+    var ChapterItems, divHtml, textbookItems;
+    if (opts == null) {
+      opts = {};
+    }
+    divHtml = '';
+    if (opts.textbooks) {
+      textbookItems = '';
+      opts.textbooks.each(function(t) {
+        return textbookItems += '<option value=' + t.get('term_id') + '>' + t.get('name') + '</option>';
+      });
+      divHtml += '<select class="textbook-filter select2-filters" id="textbooks-filter" style="width:150px"> <option value="">All Textbooks</option>' + textbookItems + '</select> <select class="textbook-filter select2-filters" id="chapters-filter" style="width:150px"> <option value="">All Chapters</option> </select>';
+    }
+    if (opts.chapters) {
+      ChapterItems = '';
+      opts.chapters.each(function(t) {
+        return ChapterItems += '<option value=' + t.get('term_id') + '>' + t.get('name') + '</option>';
+      });
+      divHtml += '<select class="textbook-filter select2-filters" id="chapters-filter" style="width:150px"> <option value="">All Chapters</option>' + ChapterItems + '</select>';
+    }
+    return divHtml += '<select class="textbook-filter select2-filters" id="sections-filter" style="width:150px"> <option value="">All Sections</option> </select> <select class="textbook-filter select2-filters" id="subsections-filter" style="width:200px"> <option value="">All Sub Sections</option> </select>';
   };
   $.populateChapters = function(items, ele, curr_item) {
     var chapterElement, selectedTextbook, txt;

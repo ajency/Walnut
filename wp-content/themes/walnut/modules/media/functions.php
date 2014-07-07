@@ -74,3 +74,59 @@ function update_media( $data, $media_id = 0 ) {
     return $media_id;
 
 }
+
+function media_encrypt_files() {
+    // current page is mediafromftp (the plugin)
+    if($_GET['page'] =='mediafromftp' || $_REQUEST['mediaType'] == 'video' || $_REQUEST['mediaType'] == 'audio'){
+        if(isset($_POST['new_url_attaches']) && !empty($_POST['new_url_attaches'])){
+            encrypt_media_files($_POST['new_url_attaches']);
+        }
+        
+    }
+ 
+}
+
+add_filter( 'admin_init', 'media_encrypt_files', 100);
+
+function encrypt_media_files($media_files){
+    $mediatype =array('audios','videos');
+    foreach($media_files as $filepath){
+        $parse_file_path = parse_url($filepath);
+        $pathinfo = explode('/', $parse_file_path['path']);
+        $count_pathinfo = count($pathinfo);
+
+        if($pathinfo[$count_pathinfo-2] == 'audio-web'){
+           $enc_media_type = $mediatype[0];
+        }
+        elseif($pathinfo[$count_pathinfo-2] == 'video-web'){
+           $enc_media_type = $mediatype[1];   
+        }
+        
+        if(in_array($enc_media_type, $mediatype)){
+        $filename = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'media-web'
+                .DIRECTORY_SEPARATOR.$pathinfo[$count_pathinfo-2].DIRECTORY_SEPARATOR.$pathinfo[$count_pathinfo-1];
+        
+        $filename_enc = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$enc_media_type
+                .DIRECTORY_SEPARATOR.$pathinfo[$count_pathinfo-1];
+        
+        aes_file_encrypt($filename,$filename_enc,$enc_media_type);
+        }
+    }
+}
+
+function aes_file_encrypt($orig_file,$encfile,$mediatype){
+    $inputKey = "kal/dvjBWAaD8+fl0a1b1JljOJtdv6G6"; //unique key to be used for AES encryption and decryption
+    
+    $file_data = file_get_contents($orig_file);
+
+    $enc = mcrypt_encrypt(MCRYPT_RIJNDAEL_128,
+          $inputKey, $file_data, MCRYPT_MODE_ECB);
+   
+    if (!file_exists(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$mediatype)) {
+        mkdir(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$mediatype, 0777, true);
+    }
+    
+    $nfile = fopen($encfile, "w") ;
+    fwrite($nfile, $enc);
+    fclose($nfile);
+}

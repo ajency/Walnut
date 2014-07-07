@@ -13,7 +13,7 @@ define ['app'
 
                 @listenTo layout, 'show', @_showLeftRightViews
 
-                @show layout, (loading: true)
+                @show layout
 
                 @listenTo @layout.rightRegion, "user:logout", @_logoutCurrentUser
 
