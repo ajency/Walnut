@@ -95,10 +95,10 @@ function encrypt_media_files($media_files){
         $pathinfo = explode('/', $parse_file_path['path']);
         $count_pathinfo = count($pathinfo);
 
-        if($pathinfo[$count_pathinfo-2] == 'audio-web'){
+        if($pathinfo[$count_pathinfo-2] == 'audios-web'){
            $enc_media_type = $mediatype[0];
         }
-        elseif($pathinfo[$count_pathinfo-2] == 'video-web'){
+        elseif($pathinfo[$count_pathinfo-2] == 'videos-web'){
            $enc_media_type = $mediatype[1];   
         }
         
