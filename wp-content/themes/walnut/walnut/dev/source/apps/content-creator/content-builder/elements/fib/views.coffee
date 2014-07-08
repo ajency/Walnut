@@ -57,7 +57,7 @@ define ['app'], (App)->
                 if element.getAttribute('id') is @$el.attr 'id'
                     editor.on 'configLoaded', ->
 
-                        editor.config.placeholder = 'This is a Text Block. Use this to provide text…'
+                        editor.config.placeholder = 'This is a FIB Block. Use this to provide text and blanks…'
 
 
             # after initialization of ckeditor

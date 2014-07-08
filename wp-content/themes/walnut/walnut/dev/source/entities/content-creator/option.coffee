@@ -31,8 +31,6 @@ define ['app'
                 optionCollection = new Option.OptionCollection
                 optionCollection.set data
 
-
-
                 optionCollection
 
         App.reqres.setHandler "create:new:option", (data)->

@@ -17,11 +17,8 @@ define ['app'], (App)->
                 @trigger "create:row:structure",
                     container : @$el
 
-                #                @$el.find('.aj-imp-drag-handle').remove()
-                #                @$el.find('.aj-imp-delete-btn').remove()
-                #                @$el.find('..aj-imp-delete-btn').remove()
                 @$el.find('.row').closest('.element-wrapper').children('.element-controls')
-                .find('.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-delete-btn').remove()
+                .find('.aj-imp-drag-handle, .aj-imp-delete-btn, .aj-imp-delete-btn, .aj-imp-settings-btn').remove()
 
                 @$el.children('.element-wrapper').children('.element-markup').children('.row')
                 .children('.column').sortable 'disable'
