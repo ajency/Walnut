@@ -106,7 +106,9 @@ define(['app'], function(App) {
             return this._addBlanks(noOfBlanksToAdd);
           } else if (numberOfBlanks < model.previous('numberOfBlanks')) {
             noOfBlanksToRemove = model.previous('numberOfBlanks') - numberOfBlanks;
-            return this._removeBlanks(noOfBlanksToRemove);
+            if (confirm("Decreasing number of blanks may cause loss of data. Do you want to continue?")) {
+              return this._removeBlanks(noOfBlanksToRemove);
+            }
           }
         }
       };
