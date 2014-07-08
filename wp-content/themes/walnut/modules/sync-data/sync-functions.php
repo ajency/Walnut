@@ -429,6 +429,16 @@ function get_videos_directory_json() {
     return $files;
 }
 
+function get_audio_directory_json() {
+    $wp_upload_dir = wp_upload_dir();
+
+    $audio_path=str_replace("images", "media-web/audio-web", $wp_upload_dir['path']);
+    $audio_url = str_replace("images", "media-web/audio-web", $wp_upload_dir['baseurl']);
+
+    $files = read_folder_directory( $audio_path, $audio_url);
+    return $files;
+}
+
 function read_folder_directory( $dir, $base_URL = '' ) {
 
     $listDir = array();
