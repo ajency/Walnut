@@ -36,7 +36,7 @@ function ajax_sync_app_data() {
     if (is_wp_error( $sync_request_id )){
         wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Failed to create sync request. Please try again' ) ) );
     }
-    
+
     $blogurl = get_site_url();
     $trigger_cron = false;
     $trigger_blogurl_hit = wp_remote_get($blogurl); //blog url hit to trigger cron scheduled if no site hits
@@ -70,7 +70,7 @@ function check_app_data_sync_completion() {
     $blog_id = $_REQUEST['blog_id'];
 
     switch_to_blog($blog_id);
-    
+
     $blogurl = get_site_url();
     $trigger_blogurl_hit = wp_remote_get($blogurl); //blog url hit to trigger cron scheduled if no site hits
 
@@ -105,6 +105,16 @@ function get_site_video_resources_data() {
 
 add_action( 'wp_ajax_get-site-video-resources-data', 'get_site_video_resources_data' );
 add_action( 'wp_ajax_nopriv_get-site-video-resources-data', 'get_site_video_resources_data' );
+
+function get_site_audio_resources_data() {
+
+    switch_to_blog( 1 );
+    $resource_data = get_audio_directory_json();
+    wp_die( json_encode( $resource_data ) );
+}
+
+add_action( 'wp_ajax_get-site-audio-resources-data', 'get_site_audio_resources_data' );
+add_action( 'wp_ajax_nopriv_get-site-audio-resources-data', 'get_site_audio_resources_data' );
 
 function ajax_sync_database(){
 

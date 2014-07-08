@@ -23,8 +23,6 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
     switch_to_blog($blog_id);
 
-    global $wpdb;
-
     $tables_to_export= get_tables_to_export($blog_id, $last_sync, $user_id);
 
     $exported_tables= prepare_csvs_for_export($tables_to_export);
@@ -32,6 +30,7 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
     $uploads_dir=wp_upload_dir();
 
     $upload_directory = str_replace('/images', '', $uploads_dir['basedir']);
+    $upload_url = str_replace('/images', '', $uploads_dir['baseurl']);
 
     $random= rand(9999,99999);
 
@@ -46,7 +45,6 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
     $upload_path= '/tmp/downsync/csvs-'.$random.date('Ymdhis').'.zip';
 
-
     $result = create_zip($exported_tables, $upload_directory.$upload_path);
 
     switch_to_blog($current_blog);
@@ -58,7 +56,7 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
         $export_details['message'] = 'Failed to create export file';
     }
     else{
-        $uploaded_url= $upload_directory.$upload_path;
+        $uploaded_url= $upload_url.$upload_path;
         $export_details['exported_csv_url'] = $uploaded_url;
         $export_details['last_sync']=date('Y-m-d h:i:s');
     }
@@ -268,12 +266,43 @@ function get_postmeta_table_query($last_sync='', $user_id=''){
     if(!$last_sync)
         return false;
 
+    // set it so that empty file is generated if no records are to be sent
+    $meta_ids_str = $post_ids_str = -1;
+
+    $element_metas=$wpdb->prepare(
+        "SELECT p.ID, pm.meta_value as layout FROM
+        {$wpdb->base_prefix}posts p, {$wpdb->base_prefix}postmeta pm
+        WHERE p.post_modified > %s AND p.ID = pm.post_id AND pm.meta_key like %s",
+        array($last_sync,'layout_json')
+    );
+
+    $elements= $wpdb->get_results($element_metas, ARRAY_A);
+
+    $post_ids= __u::pluck($elements, 'ID');
+
+    if($post_ids)
+        $post_ids_str=join(',',$post_ids);
+
+    $layouts =  __u::pluck($elements, 'layout');
+
+    foreach($layouts as $ele){
+        $layout = maybe_unserialize($ele);
+        $layout = maybe_unserialize($layout);
+
+        $meta_ids= array();
+        foreach($layout as $l){
+            $meta_ids= get_meta_ids($l, $meta_ids);
+        }
+
+        if(sizeof($meta_ids>0))
+            $meta_ids_str = join(',',__u::compact($meta_ids));
+    }
+
     $postmeta_table_query=$wpdb->prepare(
-        "SELECT pm.* FROM {$wpdb->base_prefix}posts p,
-            {$wpdb->base_prefix}postmeta pm
-                WHERE p.post_modified > '%s'
-                AND p.ID = pm.post_id",
-        $last_sync
+        "SELECT * FROM {$wpdb->base_prefix}postmeta
+                WHERE post_id in ($post_ids_str)
+                OR meta_id in ($meta_ids_str)",
+        null
     );
 
     $postmeta_table= array(
@@ -282,6 +311,29 @@ function get_postmeta_table_query($last_sync='', $user_id=''){
     );
 
     return $postmeta_table;
+}
+
+function get_meta_ids($layout, &$meta_ids)
+{
+    $row_elements = array('Row','TeacherQuestion','TeacherQuestRow');
+
+    if($layout['elements']){
+        foreach ($layout['elements'] as &$column) {
+            if($column['elements']){
+                foreach ($column['elements'] as &$ele) {
+                if (in_array($ele['element'],$row_elements)) {
+                        $ele['columncount'] = count($ele['elements']);
+                        get_meta_ids($ele,$meta_ids);
+                    }
+                else
+                    $meta_ids[]= $ele['meta_id'];
+                }
+            }
+        }
+    }
+    $meta_ids[]= $layout['meta_id'];
+
+    return $meta_ids;
 }
 
 function get_collection_table_query($last_sync='', $user_id=''){
