@@ -171,7 +171,9 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         var pagerOptions, textbookFiltersHTML;
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
-        textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
+        textbookFiltersHTML = $.showTextbookFilters({
+          textbooks: this.textbooksCollection
+        });
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
         this.$el.find(".select2-filters").select2();
         $('#content-pieces-table').tablesorter();
