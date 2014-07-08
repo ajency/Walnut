@@ -10,6 +10,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
 
       function OptionsBarController() {
         this._getOptionsBarView = __bind(this._getOptionsBarView, this);
+        this._fetchSubsections = __bind(this._fetchSubsections, this);
         this._fetchSections = __bind(this._fetchSections, this);
         this._fetchChapters = __bind(this._fetchChapters, this);
         this.showView = __bind(this.showView, this);
@@ -59,7 +60,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
           }
         }
         this.listenTo(this.view, "fetch:chapters", this._fetchChapters);
-        return this.listenTo(this.view, "fetch:sections:subsections", this._fetchSections);
+        this.listenTo(this.view, "fetch:sections", this._fetchSections);
+        return this.listenTo(this.view, "fetch:subsections", this._fetchSubsections);
       };
 
       OptionsBarController.prototype._fetchChapters = function(term_id, current_chapter) {
@@ -75,22 +77,31 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
       };
 
       OptionsBarController.prototype._fetchSections = function(term_id) {
-        var allSectionsCollection;
-        allSectionsCollection = App.request("get:subsections:by:chapter:id", {
+        this.subSectionsList = null;
+        this.allSectionsCollection = App.request("get:subsections:by:chapter:id", {
           'child_of': term_id
         });
-        return App.execute("when:fetched", allSectionsCollection, (function(_this) {
+        return App.execute("when:fetched", this.allSectionsCollection, (function(_this) {
           return function() {
-            var allSections, sectionsList, subsectionsList;
-            sectionsList = allSectionsCollection.where({
+            var sectionsList;
+            sectionsList = _this.allSectionsCollection.where({
               'parent': term_id
             });
-            subsectionsList = _.difference(allSectionsCollection.models, sectionsList);
-            allSections = {
-              'sections': sectionsList,
-              'subsections': subsectionsList
-            };
-            return _this.view.triggerMethod('fetch:subsections:complete', allSections);
+            _this.subSectionsList = _.difference(_this.allSectionsCollection.models, sectionsList);
+            return _this.view.triggerMethod('fetch:sections:complete', sectionsList);
+          };
+        })(this));
+      };
+
+      OptionsBarController.prototype._fetchSubsections = function(term_id) {
+        return App.execute("when:fetched", this.allSectionsCollection, (function(_this) {
+          return function() {
+            var subSectionList;
+            subSectionList = null;
+            subSectionList = _.filter(_this.subSectionsList, function(subSection) {
+              return _.contains(term_id, subSection.get('parent'));
+            });
+            return _this.view.triggerMethod('fetch:subsections:complete', subSectionList);
           };
         })(this));
       };

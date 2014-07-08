@@ -1,1 +1,1 @@
-define(['config/jquery', 'config/jquery-validate', 'config/underscore', 'config/backbone', 'config/marionette/dialog-region', 'config/marionette/settings-region', 'config/marionette/formview', 'config/marionette/marionette'], function() {});
+define(['config/jquery', 'config/jquery-validate', 'config/underscore', 'config/backbone', 'config/marionette/dialog-region', 'config/marionette/settings-region', 'config/marionette/formview', 'config/marionette/marionette', 'config/textbook-filters'], function() {});
