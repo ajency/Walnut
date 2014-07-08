@@ -31,20 +31,23 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
     $uploads_dir=wp_upload_dir();
 
+    $upload_directory = str_replace('/images', '', $uploads_dir['basedir']);
+
     $random= rand(9999,99999);
 
-    if(!file_exists($uploads_dir['basedir'].'/tmp/'))
-        mkdir($uploads_dir['basedir'].'/tmp',0755);
+    if(!file_exists($upload_directory.'/tmp/'))
+        mkdir($upload_directory.'/tmp',0755);
 
-    if(!file_exists($uploads_dir['basedir'].'/tmp/downsync'))
-        mkdir($uploads_dir['basedir'].'/tmp/downsync',0755);
+    if(!file_exists($upload_directory.'/tmp/downsync'))
+        mkdir($upload_directory.'/tmp/downsync',0755);
 
-    if(!file_exists($uploads_dir['basedir'].'/tmp/upsync'))
-        mkdir($uploads_dir['basedir'].'/tmp/upsync',0755);
+    if(!file_exists($upload_directory.'/tmp/upsync'))
+        mkdir($upload_directory.'/tmp/upsync',0755);
 
     $upload_path= '/tmp/downsync/csvs-'.$random.date('Ymdhis').'.zip';
 
-    $result = create_zip($exported_tables, $uploads_dir['basedir'].$upload_path);
+
+    $result = create_zip($exported_tables, $upload_directory.$upload_path);
 
     switch_to_blog($current_blog);
 
@@ -55,7 +58,7 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
         $export_details['message'] = 'Failed to create export file';
     }
     else{
-        $uploaded_url= $uploads_dir['baseurl'].$upload_path;
+        $uploaded_url= $upload_directory.$upload_path;
         $export_details['exported_csv_url'] = $uploaded_url;
         $export_details['last_sync']=date('Y-m-d h:i:s');
     }
