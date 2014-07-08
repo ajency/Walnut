@@ -2254,7 +2254,6 @@ ul.classes a {
   width: 100%;
   padding: 10px;
   font-size: 21px;
-  color: #8d8d8d;
 }
 ul.classes a:hover {
   border: 3px solid #dadada;
@@ -2664,7 +2663,7 @@ select:before {
     font-weight: bold;
   }
   .header .notifcation-center > li > a {
-    padding: 5px 20px 15px !important;
+    padding: 5px 10px 10px!important;
     font-size: 28px;
     color: white;
   }
