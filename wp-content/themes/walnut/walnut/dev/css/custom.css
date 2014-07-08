@@ -846,7 +846,6 @@
 /*Properties Bar*/
 #options-bar-region label {
   font-size: 15px;
-  line-height: 10px;
 }
 #subProps {
   background-color: #0090d9;
@@ -2541,6 +2540,10 @@ textarea {
   padding: 7px 9px;
   min-width: 100px;
   border-radius: 0;
+}
+.label.tag.label-info {
+  min-width: 0;
+  color: #0090d9;
 }
 .alert {
   font-size: 14px;

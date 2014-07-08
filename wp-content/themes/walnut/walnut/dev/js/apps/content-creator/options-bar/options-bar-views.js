@@ -63,20 +63,20 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       OptionsBarView.prototype._hintEnable = function(e) {
         if ($(e.target).prop('checked')) {
           this.$el.find('#question-hint').prop('disabled', false);
-          return this.$el.find('#question-hint').parent().show();
+          return this.$el.find('#question-hint').show();
         } else {
           this.$el.find('#question-hint').prop('disabled', true);
-          return this.$el.find('#question-hint').parent().hide();
+          return this.$el.find('#question-hint').hide();
         }
       };
 
       OptionsBarView.prototype._commentEnable = function(e) {
         if ($(e.target).prop('checked')) {
           this.$el.find('#question-comment').prop('disabled', false);
-          return this.$el.find('#question-comment').parent().show();
+          return this.$el.find('#question-comment').show();
         } else {
           this.$el.find('#question-comment').prop('disabled', true);
-          return this.$el.find('#question-comment').parent().hide();
+          return this.$el.find('#question-comment').hide();
         }
       };
 

@@ -75,18 +75,18 @@ define ['app',
             _hintEnable : (e)=>
                 if $(e.target).prop 'checked'
                     @$el.find('#question-hint').prop 'disabled',false
-                    @$el.find('#question-hint').parent().show()
+                    @$el.find('#question-hint').show()
                 else
                     @$el.find('#question-hint').prop 'disabled',true
-                    @$el.find('#question-hint').parent().hide()
+                    @$el.find('#question-hint').hide()
 
             _commentEnable : (e)=>
                 if $(e.target).prop 'checked'
                     @$el.find('#question-comment').prop 'disabled',false
-                    @$el.find('#question-comment').parent().show()
+                    @$el.find('#question-comment').show()
                 else
                     @$el.find('#question-comment').prop 'disabled',true
-                    @$el.find('#question-comment').parent().hide()
+                    @$el.find('#question-comment').hide()
 
             onFetchChaptersComplete : (chapters)->
 
