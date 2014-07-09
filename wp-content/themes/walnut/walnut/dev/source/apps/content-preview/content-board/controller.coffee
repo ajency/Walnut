@@ -9,6 +9,7 @@ define ['app'
 
             initialize : (options)->
                 {@model}=options
+                console.log 'model is',@model
 
 
                 @view = @_getContentBoardView()

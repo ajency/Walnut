@@ -4,14 +4,14 @@ define(['underscore', 'jquery'], function(_, $) {
       return _.syncFiles('Image');
     },
     syncFiles: function(file_type) {
-      var localImageFileList;
-      localImageFileList = _.getListOfFilesFromLocalDirectory(file_type);
-      return localImageFileList.done(function(localImageFilesList) {
-        var remoteImageFileList;
-        remoteImageFileList = _.getListOfMediaFilesFromServer(file_type);
-        return remoteImageFileList.done(function(remoteImageFilesList) {
+      var localFileList;
+      localFileList = _.getListOfFilesFromLocalDirectory(file_type);
+      return localFileList.done(function(localFilesList) {
+        var remoteFileList;
+        remoteFileList = _.getListOfMediaFilesFromServer(file_type);
+        return remoteFileList.done(function(remoteFilesList) {
           var fileTobeDownloaded;
-          fileTobeDownloaded = _.getFilesToBeDownloaded(localImageFilesList, remoteImageFilesList);
+          fileTobeDownloaded = _.getFilesToBeDownloaded(localFilesList, remoteFilesList);
           return fileTobeDownloaded.done(function(files_to_be_downloaded) {
             var downloadFiles;
             if (files_to_be_downloaded.length > 0) {
@@ -20,6 +20,9 @@ define(['underscore', 'jquery'], function(_, $) {
             } else {
               $('#syncMediaSuccess').css("display", "block").text(file_type + " files already upto date");
               if (file_type === 'Image') {
+                _.syncFiles('Audio');
+              }
+              if (file_type === 'Audio') {
                 _.syncFiles('Video');
               }
               if (file_type === 'Video') {
@@ -41,6 +44,9 @@ define(['underscore', 'jquery'], function(_, $) {
       file = filesTobeDownloaded[index];
       directoryPath = file.substr(file.indexOf("uploads/"));
       fileName = file.substr(file.lastIndexOf('/') + 1);
+      if (file_type === 'Audio') {
+        directoryPath = directoryPath.replace("media-web/audio-web", "audios");
+      }
       $('#syncMediaSuccess').css("display", "block").text("Downloading file: \n" + fileName);
       uri = encodeURI(file);
       localPath = _.getSynapseMediaDirectoryPath() + directoryPath;
@@ -54,6 +60,9 @@ define(['underscore', 'jquery'], function(_, $) {
           } else {
             $('#syncMediaSuccess').css("display", "block").text("Downloaded all " + file_type + " files");
             if (file_type === 'Image') {
+              _.syncFiles('Audio');
+            }
+            if (file_type === 'Audio') {
               _.syncFiles('Video');
             }
             if (file_type === 'Video') {
@@ -79,6 +88,9 @@ define(['underscore', 'jquery'], function(_, $) {
       var path, runFunc;
       if (file_type === 'Image') {
         path = 'images';
+      }
+      if (file_type === 'Audio') {
+        path = 'audios';
       }
       if (file_type === 'Video') {
         path = 'videos';
@@ -118,6 +130,9 @@ define(['underscore', 'jquery'], function(_, $) {
           var action, data;
           if (file_type === 'Image') {
             action = 'get-site-image-resources-data';
+          }
+          if (file_type === 'Audio') {
+            action = 'get-site-audio-resources-data';
           }
           if (file_type === 'Video') {
             action = 'get-site-video-resources-data';

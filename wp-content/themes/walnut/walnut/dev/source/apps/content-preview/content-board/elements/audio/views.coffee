@@ -20,7 +20,12 @@ define ['app'], (App)->
             # override serializeData to set holder property for the view
             mixinTemplateHelpers: (data)->
                 data = super data
-
+                #if _.platform() is 'DEVICE' then the source of audio is taken from the localpath of device
+                if _.platform() is 'DEVICE'
+                    audioPath = data.audioUrl.substr(data.audioUrl.indexOf("uploads/"))
+                    audioPath = audioPath.replace("media-web/audio-web", "audios")
+                    localAudioPath = _.getSynapseMediaDirectoryPath() + audioPath
+                    data.audioUrl = localAudioPath
 
                 data
 
@@ -35,7 +40,6 @@ define ['app'], (App)->
                     expanded: true
                     showduration: true
 
-#
 
 
 

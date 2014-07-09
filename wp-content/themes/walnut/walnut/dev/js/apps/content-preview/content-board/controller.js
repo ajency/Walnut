@@ -16,6 +16,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
 
       Controller.prototype.initialize = function(options) {
         this.model = options.model;
+        console.log('model is', this.model);
         this.view = this._getContentBoardView();
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);

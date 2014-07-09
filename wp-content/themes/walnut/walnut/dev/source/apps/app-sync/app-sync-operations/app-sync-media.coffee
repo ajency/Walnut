@@ -12,32 +12,34 @@ define ['underscore', 'jquery'], ( _ , $) ->
 
 		syncFiles : (file_type)->
 
-			localImageFileList = _.getListOfFilesFromLocalDirectory file_type
-			localImageFileList.done (localImageFilesList)->
+			localFileList = _.getListOfFilesFromLocalDirectory file_type
+			localFileList.done (localFilesList)->
 
-				remoteImageFileList = _.getListOfMediaFilesFromServer file_type
-				remoteImageFileList.done (remoteImageFilesList)->
+				remoteFileList = _.getListOfMediaFilesFromServer file_type
+				remoteFileList.done (remoteFilesList)->
 
-						fileTobeDownloaded = _.getFilesToBeDownloaded(localImageFilesList, remoteImageFilesList)
-						fileTobeDownloaded.done (files_to_be_downloaded)->
+					fileTobeDownloaded = _.getFilesToBeDownloaded(localFilesList, remoteFilesList)
+					fileTobeDownloaded.done (files_to_be_downloaded)->
 
-							if files_to_be_downloaded.length > 0
+						if files_to_be_downloaded.length > 0
 
-								$('#syncMediaSuccess').css("display","block")
-								.text("Downloading "+file_type+" files...")
+							$('#syncMediaSuccess').css("display","block")
+							.text("Downloading "+file_type+" files...")
 
-								downloadFiles = _.downloadMediaFiles(files_to_be_downloaded, 0, file_type)
+							downloadFiles = _.downloadMediaFiles(files_to_be_downloaded, 0, file_type)
 
-							else
-								$('#syncMediaSuccess').css("display","block")
-								.text(file_type+" files already upto date")
+						else
+							$('#syncMediaSuccess').css("display","block")
+							.text(file_type+" files already upto date")
 
-								_.syncFiles 'Video' if file_type is 'Image'
+							_.syncFiles 'Audio' if file_type is 'Image'
 
-								if file_type is 'Video'
-									setTimeout(=>
-										App.navigate('teachers/dashboard', trigger: true)
-									,2000)
+							_.syncFiles 'Video' if file_type is 'Audio'
+
+							if file_type is 'Video'
+								setTimeout(=>
+									App.navigate('teachers/dashboard', trigger: true)
+								,2000)
 
 
 
@@ -48,6 +50,11 @@ define ['underscore', 'jquery'], ( _ , $) ->
 			file = filesTobeDownloaded[index]		 
 			directoryPath = file.substr(file.indexOf("uploads/"))
 			fileName = file.substr(file.lastIndexOf('/') + 1)
+			
+			#audio path from server has media-web/audio-web , here we replace it with audios
+			if file_type is 'Audio'
+				directoryPath = directoryPath.replace("media-web/audio-web", "audios")
+			
 
 			$('#syncMediaSuccess').css("display","block").text("Downloading file: \n"+fileName)
 			# $('#syncMediaProgress').css("display","block")
@@ -78,7 +85,9 @@ define ['underscore', 'jquery'], ( _ , $) ->
 							$('#syncMediaSuccess').css("display","block")
 							.text("Downloaded all "+file_type+" files")
 
-							_.syncFiles 'Video' if file_type is 'Image'
+							_.syncFiles 'Audio' if file_type is 'Image'
+
+							_.syncFiles 'Video' if file_type is 'Audio'
 
 							if file_type is 'Video'
 								setTimeout(=>
@@ -106,6 +115,7 @@ define ['underscore', 'jquery'], ( _ , $) ->
 		getListOfFilesFromLocalDirectory : (file_type)->
 
 			path = 'images' if file_type is 'Image'
+			path = 'audios' if file_type is 'Audio'
 			path = 'videos' if file_type is 'Video'
 
 			runFunc = ->
@@ -146,8 +156,11 @@ define ['underscore', 'jquery'], ( _ , $) ->
 
 					if file_type is 'Image'
 						action = 'get-site-image-resources-data'
+					if file_type is 'Audio'
+						action = 'get-site-audio-resources-data'
 					if file_type is 'Video'
 						action = 'get-site-video-resources-data'
+
 					
 					data = ''
 					$.get AJAXURL + '?action='+action,
