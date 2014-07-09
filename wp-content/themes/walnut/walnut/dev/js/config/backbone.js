@@ -18,8 +18,10 @@ define(["backbone"], function(Backbone) {
             return collection.set(d);
           });
         } else {
-          data = App.reqres.request("get:" + collection_name + ":by:classid:local", opts.class_id);
+          data = _.getTextbooksByClassIdAndDivision(opts.class_id, opts.division);
           data.done(function(d) {
+            console.log('textbook by class id and division data');
+            console.log(d);
             return collection.set(d);
           });
         }

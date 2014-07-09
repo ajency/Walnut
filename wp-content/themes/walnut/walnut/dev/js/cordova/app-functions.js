@@ -163,46 +163,6 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return console.log('getMetaValue transaction completed');
       }).fail(_.failureHandler);
     },
-    getTextbookOptions: function(id) {
-      var onSuccess, options, runQuery;
-      options = {
-        author: '',
-        attachmenturl: ''
-      };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT option_value FROM wp_options WHERE option_name=?", ['taxonomy_' + id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var attachmenturl, directoryPath, option_value, url;
-          if (data.rows.length !== 0) {
-            option_value = unserialize(data.rows.item(0)['option_value']);
-            url = option_value.attachmenturl;
-            if (url === 'false') {
-              attachmenturl = '';
-            } else {
-              directoryPath = _.getSynapseMediaDirectoryPath();
-              attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"));
-              attachmenturl = '<img src="' + attachmenturl + '" onerror="this.onerror=null;this.src=\'/images/img-not-found.jpg\';">';
-            }
-            options = {
-              author: option_value.author,
-              attachmenturl: attachmenturl
-            };
-            return d.resolve(options);
-          } else {
-            return d.resolve(options);
-          }
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getTextbookOptions transaction completed');
-      }).fail(_.failureHandler);
-    },
     decryptVideoFile: function(source, destination) {
       var runFunc;
       runFunc = function() {

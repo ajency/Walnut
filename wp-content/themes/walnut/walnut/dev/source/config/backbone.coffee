@@ -24,9 +24,10 @@ define ["backbone"], (Backbone) ->
 					data.done (d)->
 						collection.set d
 				else
-					#Get textbooks by class_id
-					data = App.reqres.request "get:#{collection_name}:by:classid:local", opts.class_id
+					data = _.getTextbooksByClassIdAndDivision(opts.class_id, opts.division)
 					data.done (d)->
+						console.log 'textbook by class id and division data'
+						console.log d
 						collection.set d
 			
 			if collection_name is 'menu-item'
