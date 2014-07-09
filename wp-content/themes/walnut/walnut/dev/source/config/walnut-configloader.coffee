@@ -1,8 +1,9 @@
 define ['config/marionette'
 		'config/backbone'
 		'config/jquery-validate'
-    	'config/underscore'
+        'config/underscore'
 		'config/middle-layer'
 		'config/jquery'
-    	'config/textbook-filters'
-		], ->
+        'config/textbook-filters'
+        'config/marionette/dialog-region'
+], ->

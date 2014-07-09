@@ -7,4 +7,5 @@ define [
 		'config/marionette/settings-region'
 		'config/marionette/formview'
 		'config/marionette/marionette'
+    'config/textbook-filters'
 		],->
