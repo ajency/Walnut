@@ -4219,7 +4219,7 @@ form legend,
 }
 .grid.simple .grid-body {
   background-color: #ffffff;
-  padding: 26px;
+  padding: 20px;
   border: 1px solid #dddddd;
   color: #6f7b8a;
 }
@@ -7291,7 +7291,7 @@ input[type="checkbox"] {
   display: block;
 }
 .cbp_tmtimeline > li .cbp_tmtime .time {
-  font-size: 1.5em;
+  font-size: 1.3em;
   color: #505458;
   display: block;
 }
@@ -7346,7 +7346,7 @@ input[type="checkbox"] {
   left: 20%;
   top: 0;
   margin: 0 0 0 -25px;
-  font-size: 1.3em;
+  font-size: 1em;
 }
 .cbp_tmtimeline > li .cbp_tmicon.success {
   background: #36ac35;
@@ -7369,9 +7369,9 @@ input[type="checkbox"] {
   color: #ffffff;
 }
 .cbp_tmtimeline > li .cbp_tmicon.info {
-  background: #11a1ea;
-  box-shadow: 0 0 0 8px #22b2fb;
-  color: #ffffff;
+  background: #ffffff;
+  box-shadow: 0 0 0 8px #11a1ea;
+  color: #11a1ea;
 }
 .cbp_tmtimeline .action-links {
   margin: 4px 0 0;

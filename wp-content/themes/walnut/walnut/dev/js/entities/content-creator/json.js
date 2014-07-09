@@ -13,6 +13,10 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       PageJson.prototype.idAttribute = 'ID';
 
+      PageJson.prototype.defaults = {
+        'post_status': 'pending'
+      };
+
       PageJson.prototype.name = 'content-piece';
 
       PageJson.prototype.layout = '';

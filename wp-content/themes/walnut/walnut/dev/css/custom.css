@@ -802,7 +802,6 @@
 /*Properties Bar*/
 #options-bar-region label {
   font-size: 15px;
-  line-height: 10px;
 }
 #subProps {
   background-color: #0090d9;
@@ -1455,7 +1454,7 @@ p.mcq-option-text {
   display: inline-block;
   width: 205px;
   text-align: center;
-  line-height: 99px;
+  line-height: 110px;
   border-left: 1px solid #d1d3d9;
   height: 100%;
   vertical-align: top;
@@ -1617,7 +1616,7 @@ p.mcq-option-text {
 #textbooks.list .mix {
   background-color: #fbfbfb;
   cursor: pointer;
-  height: 120px;
+  min-height: 120px;
   margin-bottom: 10px;
   border-bottom: none;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
@@ -1683,7 +1682,6 @@ p.mcq-option-text {
   left: -40%;
 }
 #textbooks.list .titles {
-  vertical-align: top;
   width: 70%;
   word-break: break-word;
 }
@@ -2182,7 +2180,6 @@ ul.classes a {
   width: 100%;
   padding: 10px;
   font-size: 21px;
-  color: #8d8d8d;
 }
 ul.classes a:hover {
   border: 3px solid #dadada;
@@ -2207,6 +2204,13 @@ ul.classes .classesWrap {
   cursor: pointer;
   z-index: 2;
   position: relative;
+}
+.chapStatus {
+  width: 33%;
+  padding: 0 4px;
+  text-align: center;
+  float: left;
+  font-weight: 600;
 }
 /*Modules Table*/
 .moduleList .btn.action {
@@ -2428,10 +2432,16 @@ textarea.error,
 #content-pieces-table a {
   text-decoration: underline;
 }
+#take-class-modules th:nth-child(3) {
+  width: 100px;
+}
+#take-class-modules th:last-child {
+  width: 40%;
+}
 /*Theme Modifications*/
 body {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 600;
 }
 select {
   font-weight: bold;
@@ -2456,6 +2466,10 @@ textarea {
   padding: 7px 9px;
   min-width: 100px;
   border-radius: 0;
+}
+.label.tag.label-info {
+  min-width: 0;
+  color: #0090d9;
 }
 .alert {
   font-size: 14px;
@@ -2578,7 +2592,7 @@ select:before {
     font-weight: bold;
   }
   .header .notifcation-center > li > a {
-    padding: 5px 20px 15px !important;
+    padding: 5px 10px 10px!important;
     font-size: 28px;
     color: white;
   }

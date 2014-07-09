@@ -21,7 +21,7 @@ define ['app'
 
                 @$el.find('#correct-answer-col').hide() if @model.get('question_type') is 'multiple_eval'
 
-                @$el.find('#question-type-col, #correct-answer-col').hide() if @model.get('content_type') is 'content_piece'
+                @$el.find('#question-type-col, #correct-answer-col').hide() if @model.get('content_type') in ['content_piece','student_question']
 
                 @$el.find('#total-marks').hide() if @model.get('content_type') isnt 'student_question'
 

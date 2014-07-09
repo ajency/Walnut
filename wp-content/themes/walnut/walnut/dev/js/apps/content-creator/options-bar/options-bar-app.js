@@ -18,7 +18,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
 
       OptionsBarController.prototype.initialize = function(options) {
         this.contentPieceModel = options.contentPieceModel;
-        this.view = this._getOptionsBarView(this.contentPieceModel);
+        this.view = this._getOptionsBarView();
         this.textbooksCollection = App.request("get:textbooks");
         App.execute("when:fetched", [this.textbooksCollection, this.contentPieceModel], this.showView);
         this.listenTo(this.view, "save:data:to:model", (function(_this) {
@@ -95,9 +95,9 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
         })(this));
       };
 
-      OptionsBarController.prototype._getOptionsBarView = function(model) {
+      OptionsBarController.prototype._getOptionsBarView = function() {
         return new OptionsBar.Views.OptionsBarView({
-          model: model,
+          model: this.contentPieceModel,
           templateHelpers: this._getTemplateHelpers()
         });
       };

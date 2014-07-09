@@ -143,7 +143,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         var pagerOptions, textbookFiltersHTML;
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
-        textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
+        textbookFiltersHTML = $.showTextbookFilters({
+          textbooks: this.textbooksCollection
+        });
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
         $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
         $('#dataContentTable').tablesorter();

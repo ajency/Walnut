@@ -26,7 +26,7 @@ define ['app'], (App)->
             # we can destroy it on close of element
             onShow: ->
                 @$el.attr 'id', 'sort-option-' + @model.get 'optionNo'
-                @$el.find('.sort-option-text').attr('contenteditable', 'true').attr 'id', _.uniqueId 'text-'
+                @$el.find('.sort-option-text').attr('contenteditable', 'true').attr 'id', "text-#{@model.get('optionNo')}"#_.uniqueId 'text-'
                 CKEDITOR.on 'instanceCreated', @configureEditor
                 @editor = CKEDITOR.inline document.getElementById @$el.find('.sort-option-text').attr 'id'
                 @editor.setData _.stripslashes @model.get 'text'
@@ -58,8 +58,6 @@ define ['app'], (App)->
             className: 'sort'
 
             itemView: OptionView
-
-
 
             initialize: (options)->
                 @sort_model = options.sort_model

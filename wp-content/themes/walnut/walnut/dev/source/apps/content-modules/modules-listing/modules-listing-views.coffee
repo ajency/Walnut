@@ -17,7 +17,7 @@ define ['app'
                         <td>{{chapterName}}</td>
                         <td>{{durationRounded}} {{minshours}}</td>
                         <td>{{&statusMessage}}</td>
-                        <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
+                        <td><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
                             <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a>
                         {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>'
 
