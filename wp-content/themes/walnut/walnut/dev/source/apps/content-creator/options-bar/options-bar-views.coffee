@@ -7,9 +7,14 @@ define ['app',
             template: optionsBarTpl
 
             events:
-                'change #subs': '_changeSubject'
+                'change #subs' : (e)->
+                    @trigger "fetch:chapters", $(e.target).val()
 
-                'change #chaps': '_changeChapter'
+                'change #chaps' : (e)->
+                    @trigger "fetch:sections", $(e.target).val()
+
+                'change #secs' : (e)->
+                    @trigger "fetch:subsections", $(e.target).val()
 
                 'change #qType' : '_changeOfQuestionType'
 
@@ -83,17 +88,21 @@ define ['app',
                     @$el.find('#question-comment').prop 'disabled',true
                     @$el.find('#question-comment').hide()
 
+            onFetchChaptersComplete : (chapters)->
 
-            _changeSubject : (e)->
                 @$el.find '#chaps, #secs, #subsecs'
                 .select2 'data', null
 
                 @$el.find '#chaps, #secs, #subsecs'
                 .html ''
 
-                @trigger "fetch:chapters", $(e.target).val()
+                chapterElement= @$el.find '#chaps'
+                termIDs= @model.get 'term_ids'
+                currentChapter= if termIDs then termIDs['chapter'] else ''
 
-            _changeChapter : (e)->
+                $.populateChaptersOrSections(chapters,chapterElement, currentChapter);
+
+            onFetchSectionsComplete : (sections)->
 
                 @$el.find '#secs, #subsecs'
                 .select2 'data', null
@@ -101,49 +110,28 @@ define ['app',
                 @$el.find '#secs, #subsecs'
                 .html ''
 
-                @trigger "fetch:sections:subsections", $(e.target).val()
-
-            onFetchChaptersComplete: (chaps, curr_chapter)->
-                if _.size(chaps) > 0
-                    @$el.find('#chaps').html('');
-                    _.each chaps.models, (chap, index)=>
-                        @$el.find '#chaps'
-                        .append "<option value='#{chap.get('term_id')}'>#{chap.get('name')}</option>"
-
-                    @$el.find('#chaps').select2().select2 'val',curr_chapter
-
-                else
-                    @$el.find('#chaps').select2().select2 'data', null
-
-            onFetchSubsectionsComplete: (allsections)=>
                 term_ids= @model.get 'term_ids'
 
                 sectionIDs = term_ids['sections'] if term_ids?
 
+                sectionsElement     = @$el.find '#secs'
+
+                $.populateChaptersOrSections(sections,sectionsElement, sectionIDs);
+
+            onFetchSubsectionsComplete : (subsections)->
+
+                @$el.find '#subsecs'
+                .select2 'data', null
+
+                @$el.find '#subsecs'
+                .html ''
+
+                term_ids= @model.get 'term_ids'
+
                 subSectionIDs = term_ids['subsections'] if term_ids?
 
-                if _.size(allsections) > 0
-                    if _.size(allsections.sections) > 0
-                        @$el.find('#secs').html('');
-                        _.each allsections.sections, (section, index)=>
-                            @$el.find('#secs')
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-
-                        @$el.find('#secs').select2().select2 'val',sectionIDs
-
-                    else
-                        @$el.find('#secs').select2().select2 'data', null
-
-                    if _.size(allsections.subsections) > 0
-                        @$el.find('#subsecs').html('');
-                        _.each allsections.subsections, (section, index)=>
-                            @$el.find '#subsecs'
-                            .append '<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>'
-                        @$el.find('#subsecs').select2().select2 'val',subSectionIDs
-                    else
-                        @$el.find('#subsecs').select2().select2 'data', null
-                else
-                    @$el.find('#subsecs,#secs').select2().select2 'data', null
+                subsectionsElemnet  = @$el.find '#subsecs'
+                $.populateChaptersOrSections(subsections,subsectionsElemnet, subSectionIDs);
 
             _changeOfQuestionType : (e)->
                 if $(e.target).val() is 'multiple_eval'

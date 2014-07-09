@@ -53,7 +53,9 @@ define ['app'
                 # and sections
                 @listenTo @view, "fetch:chapters", @_fetchChapters
 
-                @listenTo @view, "fetch:sections:subsections", @_fetchSections
+                @listenTo @view, "fetch:sections", @_fetchSections
+
+                @listenTo @view, "fetch:subsections", @_fetchSubsections
 
             ##fetch chapters based on textbook id, current_chapter refers to the chapter to be selected by default
             _fetchChapters: (term_id, current_chapter)=>
@@ -63,22 +65,30 @@ define ['app'
                     @view.triggerMethod 'fetch:chapters:complete',
                       chaptersCollection, current_chapter
 
-            #fetch all sections and subsections beloging to the chapter id passed as term_id
+            #fetch all sections beloging to the chapter id passed as term_id
             _fetchSections: (term_id)=>
-                allSectionsCollection = App.request "get:subsections:by:chapter:id",
+                @subSectionsList = null
+                @allSectionsCollection = App.request "get:subsections:by:chapter:id",
                   ('child_of': term_id)
 
-                App.execute "when:fetched", allSectionsCollection, =>
+                App.execute "when:fetched", @allSectionsCollection, =>
                     #make list of sections directly belonging to chapter ie. parent=term_id
-                    sectionsList = allSectionsCollection.where 'parent': term_id
+                    sectionsList = @allSectionsCollection.where 'parent': term_id
 
                     #all the other sections are listed as subsections
-                    subsectionsList = _.difference(allSectionsCollection.models, sectionsList);
-                    allSections =
-                        'sections': sectionsList
-                        'subsections': subsectionsList
+                    @subSectionsList = _.difference(@allSectionsCollection.models, sectionsList);
 
-                    @view.triggerMethod 'fetch:subsections:complete', allSections
+                    @view.triggerMethod 'fetch:sections:complete', sectionsList
+
+
+            #fetch all sub sections beloging to the section id passed as term_id
+            _fetchSubsections: (term_id)=>
+                App.execute "when:fetched", @allSectionsCollection, =>
+                    subSectionList = null
+                    subSectionList = _.filter @subSectionsList, (subSection)->
+                        _.contains term_id, subSection.get 'parent'
+
+                    @view.triggerMethod 'fetch:subsections:complete', subSectionList
 
             _getOptionsBarView: =>
                 new OptionsBar.Views.OptionsBarView

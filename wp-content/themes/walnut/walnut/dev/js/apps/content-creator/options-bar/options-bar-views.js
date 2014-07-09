@@ -8,7 +8,6 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       __extends(OptionsBarView, _super);
 
       function OptionsBarView() {
-        this.onFetchSubsectionsComplete = __bind(this.onFetchSubsectionsComplete, this);
         this._commentEnable = __bind(this._commentEnable, this);
         this._hintEnable = __bind(this._hintEnable, this);
         return OptionsBarView.__super__.constructor.apply(this, arguments);
@@ -17,8 +16,15 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       OptionsBarView.prototype.template = optionsBarTpl;
 
       OptionsBarView.prototype.events = {
-        'change #subs': '_changeSubject',
-        'change #chaps': '_changeChapter',
+        'change #subs': function(e) {
+          return this.trigger("fetch:chapters", $(e.target).val());
+        },
+        'change #chaps': function(e) {
+          return this.trigger("fetch:sections", $(e.target).val());
+        },
+        'change #secs': function(e) {
+          return this.trigger("fetch:subsections", $(e.target).val());
+        },
         'change #qType': '_changeOfQuestionType',
         'click  #save-question': 'saveQuestionSettings',
         'click #preview-question': 'previewQuestion',
@@ -74,67 +80,38 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         }
       };
 
-      OptionsBarView.prototype._changeSubject = function(e) {
+      OptionsBarView.prototype.onFetchChaptersComplete = function(chapters) {
+        var chapterElement, currentChapter, termIDs;
         this.$el.find('#chaps, #secs, #subsecs').select2('data', null);
         this.$el.find('#chaps, #secs, #subsecs').html('');
-        return this.trigger("fetch:chapters", $(e.target).val());
+        chapterElement = this.$el.find('#chaps');
+        termIDs = this.model.get('term_ids');
+        currentChapter = termIDs ? termIDs['chapter'] : '';
+        return $.populateChaptersOrSections(chapters, chapterElement, currentChapter);
       };
 
-      OptionsBarView.prototype._changeChapter = function(e) {
+      OptionsBarView.prototype.onFetchSectionsComplete = function(sections) {
+        var sectionIDs, sectionsElement, term_ids;
         this.$el.find('#secs, #subsecs').select2('data', null);
         this.$el.find('#secs, #subsecs').html('');
-        return this.trigger("fetch:sections:subsections", $(e.target).val());
-      };
-
-      OptionsBarView.prototype.onFetchChaptersComplete = function(chaps, curr_chapter) {
-        if (_.size(chaps) > 0) {
-          this.$el.find('#chaps').html('');
-          _.each(chaps.models, (function(_this) {
-            return function(chap, index) {
-              return _this.$el.find('#chaps').append("<option value='" + (chap.get('term_id')) + "'>" + (chap.get('name')) + "</option>");
-            };
-          })(this));
-          return this.$el.find('#chaps').select2().select2('val', curr_chapter);
-        } else {
-          return this.$el.find('#chaps').select2().select2('data', null);
-        }
-      };
-
-      OptionsBarView.prototype.onFetchSubsectionsComplete = function(allsections) {
-        var sectionIDs, subSectionIDs, term_ids;
         term_ids = this.model.get('term_ids');
         if (term_ids != null) {
           sectionIDs = term_ids['sections'];
         }
+        sectionsElement = this.$el.find('#secs');
+        return $.populateChaptersOrSections(sections, sectionsElement, sectionIDs);
+      };
+
+      OptionsBarView.prototype.onFetchSubsectionsComplete = function(subsections) {
+        var subSectionIDs, subsectionsElemnet, term_ids;
+        this.$el.find('#subsecs').select2('data', null);
+        this.$el.find('#subsecs').html('');
+        term_ids = this.model.get('term_ids');
         if (term_ids != null) {
           subSectionIDs = term_ids['subsections'];
         }
-        if (_.size(allsections) > 0) {
-          if (_.size(allsections.sections) > 0) {
-            this.$el.find('#secs').html('');
-            _.each(allsections.sections, (function(_this) {
-              return function(section, index) {
-                return _this.$el.find('#secs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-              };
-            })(this));
-            this.$el.find('#secs').select2().select2('val', sectionIDs);
-          } else {
-            this.$el.find('#secs').select2().select2('data', null);
-          }
-          if (_.size(allsections.subsections) > 0) {
-            this.$el.find('#subsecs').html('');
-            _.each(allsections.subsections, (function(_this) {
-              return function(section, index) {
-                return _this.$el.find('#subsecs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-              };
-            })(this));
-            return this.$el.find('#subsecs').select2().select2('val', subSectionIDs);
-          } else {
-            return this.$el.find('#subsecs').select2().select2('data', null);
-          }
-        } else {
-          return this.$el.find('#subsecs,#secs').select2().select2('data', null);
-        }
+        subsectionsElemnet = this.$el.find('#subsecs');
+        return $.populateChaptersOrSections(subsections, subsectionsElemnet, subSectionIDs);
       };
 
       OptionsBarView.prototype._changeOfQuestionType = function(e) {
