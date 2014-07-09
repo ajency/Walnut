@@ -37,8 +37,6 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'chapter'
 				data = App.reqres.request "get:#{collection_name}:local", opts.parent 
 				data.done (d)->
-					console.log 'chapters data'
-					console.log d
 					collection.set d
 
 			if collection_name is 'division'

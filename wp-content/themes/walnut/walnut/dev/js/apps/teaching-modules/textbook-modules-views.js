@@ -28,13 +28,22 @@ define(['app'], function(App) {
           return function() {
             var chapter, chapterId;
             chapterId = data.term_ids.chapter;
-            if (_.platform() === 'DEVICE') {
+            if (_.platform() === 'BROWSER') {
+              chapter = _.chain(_this.chapters.findWhere({
+                "term_id": chapterId
+              })).pluck('name').compact().value();
+              return chapter;
+            } else {
               chapterId = parseInt(chapterId);
+              chapter = _this.chapters.findWhere({
+                "term_id": chapterId
+              });
+              if (_.isUndefined(chapter)) {
+                return '';
+              } else {
+                return chapter.get('name');
+              }
             }
-            chapter = _.chain(_this.chapters.findWhere({
-              "term_id": chapterId
-            })).pluck('name').compact().value();
-            return chapter;
           };
         })(this);
         training_date = this.model.get('training_date');

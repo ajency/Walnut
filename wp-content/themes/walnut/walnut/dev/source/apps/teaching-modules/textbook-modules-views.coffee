@@ -31,13 +31,19 @@ define ['app'], (App)->
                 data.chapterName = =>
 
                     chapterId = data.term_ids.chapter
-                    chapterId = parseInt(chapterId) if _.platform() is 'DEVICE'
 
-                    chapter = _.chain @chapters.findWhere "term_id" : chapterId
-                    .pluck 'name'
-                        .compact()
-                        .value()
-                    chapter
+                    if _.platform() is 'BROWSER'
+                        chapter = _.chain @chapters.findWhere "term_id" : chapterId
+                        .pluck 'name'
+                            .compact()
+                            .value()
+                        chapter
+                    else
+                        chapterId = parseInt(chapterId)
+                        chapter = @chapters.findWhere "term_id" : chapterId
+                        if _.isUndefined(chapter) then ''
+                        else chapter.get('name')
+                    
 
                 training_date = @model.get 'training_date'
 
