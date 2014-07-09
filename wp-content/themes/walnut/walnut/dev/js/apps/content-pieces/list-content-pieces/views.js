@@ -146,11 +146,17 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.events = {
-        'change #content-post-status-filter, .content-type-filter': function() {
-          return this.setFilteredContent();
-        },
+        'change #content-post-status-filter, #difficulty-level-filter': 'setFilteredContent',
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
+        },
+        'change .content-type-filter': function(e) {
+          if ($(e.target).val() === 'student_question') {
+            this.$el.find('.difficulty-level-filter').show();
+          } else {
+            this.$el.find('.difficulty-level-filter').hide();
+          }
+          return this.setFilteredContent();
         }
       };
 

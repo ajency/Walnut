@@ -165,10 +165,12 @@ define ['jquery', 'underscore'], ($, _)->
         filter_ids= _.compact filter_ids
 
         content_type = _this.$el.find('#content-type-filter').val()
+
         content_status = _this.$el.find('#content-status-filter').val()
 
         content_post_status = _this.$el.find('#content-post-status-filter').val()
 
+        difficulty_level = parseInt _this.$el.find('#difficulty-level-filter').val()
 
         if content_type
             filterCollection.reset  filterCollection.where 'content_type': content_type
@@ -178,6 +180,9 @@ define ['jquery', 'underscore'], ($, _)->
 
         if content_post_status
             filterCollection.reset  filterCollection.where 'post_status': content_post_status
+
+        if difficulty_level
+            filterCollection.reset filterCollection.where 'difficulty_level' : difficulty_level
 
         filtered_models= filterCollection.models
 

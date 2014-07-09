@@ -226,10 +226,13 @@ define ['app'
                             optionNo: oldOptionCount
                 # else remove options
                 if oldOptionCount > newOptionCount
-                    until oldOptionCount is newOptionCount
-                        model.get('elements').pop()
-                        model.get('options').pop()
-                        oldOptionCount--
+                    if confirm "Decreasing number of options may cause loss of data. Do you want to continue?"
+                        until oldOptionCount is newOptionCount
+                            model.get('elements').pop()
+                            optionRemoved = model.get('options').pop()
+
+                            model.set 'correct_answer',_.without model.get('correct_answer'),optionRemoved.get 'optionNo'
+                            oldOptionCount--
 
                 model.get('options').each _.bind @_changeColumnClass, @, numberOfColumns
 
