@@ -33,8 +33,6 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'chapter') {
         data = App.reqres.request("get:" + collection_name + ":local", opts.parent);
         data.done(function(d) {
-          console.log('chapters data');
-          console.log(d);
           return collection.set(d);
         });
       }
