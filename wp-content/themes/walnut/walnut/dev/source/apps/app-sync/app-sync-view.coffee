@@ -53,11 +53,30 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 			startContinueSyncProcess : ->
 
-				syncController = App.request "get:sync:controller"
-				syncController.startContinueDataSyncProcess()
+				if _.isOnline()
+					@connectionErrorMessage false
+					syncController = App.request "get:sync:controller"
+					syncController.startContinueDataSyncProcess()
+				else
+					@connectionErrorMessage true
 
 
 			startMediaSyncProcess : ->
 
-				syncController = App.request "get:sync:controller"
-				syncController.startMediaSyncProcess()
+				if _.isOnline()
+					@connectionErrorMessage false
+					syncController = App.request "get:sync:controller"
+					syncController.startMediaSyncProcess()
+				else
+					@connectionErrorMessage true
+
+			
+			connectionErrorMessage : (display)->
+
+				if display
+					$('#syncInternetConnection').css("display", "block").addClass("shake")
+					setTimeout(=>
+						$('#syncInternetConnection').removeClass("shake")
+					,1000)
+
+				else $('#syncInternetConnection').css("display", "none")

@@ -23,7 +23,7 @@ define(['underscore'], function(_) {
         console.log("RESPONSE: " + success.response);
         return console.log("BYTES SENT: " + success.bytesSent);
       }, function(error) {
-        _.onFileUploadError();
+        _.onDataSyncError(error, "An error occurred during file upload");
         console.log("UPLOAD ERROR SOURCE" + error.source);
         return console.log("UPLOAD ERROR TARGET" + error.target);
       }, options);
@@ -55,15 +55,11 @@ define(['underscore'], function(_) {
             } else {
               return _.getZipFileDownloadDetails();
             }
-          }, 'json');
+          }, 'json').fail(function() {
+            return _.onDataSyncError("none", "Could not connect to server");
+          });
         };
       })(this), 10000);
-    },
-    onFileUploadError: function() {
-      $('#syncSuccess').css("display", "none");
-      $('#syncStartContinue').css("display", "block");
-      $('#syncButtonText').text('Try again');
-      return $('#syncError').css("display", "block").text("An error occurred during file upload");
     }
   });
 });

@@ -38,7 +38,7 @@ define ['underscore'], ( _) ->
 
 				, (error)->
 
-					_.onFileUploadError()
+					_.onDataSyncError(error, "An error occurred during file upload")
 
 					console.log "UPLOAD ERROR SOURCE" + error.source
 					console.log "UPLOAD ERROR TARGET" + error.target
@@ -80,17 +80,8 @@ define ['underscore'], ( _) ->
 							_.getZipFileDownloadDetails()
 					,
 					'json'
+
+				.fail ->
+					_.onDataSyncError("none", "Could not connect to server")
 	
 			,10000)
-
-
-
-		onFileUploadError : ->
-
-			$('#syncSuccess').css("display","none")
-
-			$('#syncStartContinue').css("display","block")
-			$('#syncButtonText').text('Try again')
-
-			$('#syncError').css("display","block")
-			.text("An error occurred during file upload")

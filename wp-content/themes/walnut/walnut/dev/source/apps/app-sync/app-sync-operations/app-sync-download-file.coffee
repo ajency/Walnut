@@ -25,7 +25,11 @@ define ['underscore'], ( _) ->
 						,
 						'json'
 
+				.fail ->
+					_.onDataSyncError("none", "Could not connect to server")
 
+
+		
 		downloadZipFile : (resp)->
 
 			$('#syncSuccess').css("display","block").text("Downloading file...")
@@ -49,7 +53,7 @@ define ['underscore'], ( _) ->
 									_.onFileDownloadSuccess(file.toURL(), filePath, resp.last_sync)
 								
 								,(error)->
-									_.onFileDownloadError error
+									_.onDataSyncError(error, "An error occurred during file download")
 
 								, true)
 
@@ -77,18 +81,3 @@ define ['underscore'], ( _) ->
 				,2000)
 				
 			zip.unzip(source, destination, onFileUnzipSuccess)
-			
-
-
-		onFileDownloadError : (error)->
-
-			console.log 'ERROR: '+error.code
-
-			$('#syncSuccess').css("display","none")
-
-			$('#syncStartContinue').css("display","block")
-
-			$('#syncButtonText').text('Try again')
-
-			$('#syncError').css("display","block")
-			.text("An error occurred during file download")

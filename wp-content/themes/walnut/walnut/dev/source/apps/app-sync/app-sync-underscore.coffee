@@ -2,6 +2,35 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	_.mixin
 
+		
+		onDataSyncError  : (error, message)->
+
+			console.log 'ERROR: '+error.code if error isnt 'none'
+
+			$('#syncSuccess').css("display","none")
+
+			$('#syncStartContinue').css("display","block")
+
+			$('#syncButtonText').text("Try again")
+
+			$('#syncError').css("display","block").text(""+message)
+
+
+		
+		onMediaSyncError : (error, message)->
+
+			console.log 'ERROR: '+error.code if error isnt 'none'
+
+			$('#syncMediaSuccess').css("display","none")
+
+			$('#syncMediaStart').css("display","block")
+
+			$('#syncMediaButtonText').text("Try again")
+
+			$('#syncMediaError').css("display","block").text(""+message)
+
+
+
 		#Get the last sync operation from table 'sync_details'
 		getLastSyncOperation : ->
 
@@ -25,6 +54,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			.fail _.failureHandler
 			
 
+		
 		# Get total records from wp_question_response where sync=0 
 		getTotalRecordsTobeSynced : ->
 
@@ -49,6 +79,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			.fail _.failureHandler
 
 
+		
 		# Get last download time_stamp
 		getLastDownloadTimeStamp : ->
 
@@ -86,6 +117,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			)
 
 
+		
 		#Delete all files from 'SynapseData' directory
 		clearSynapseDataDirectory : ->
 		   

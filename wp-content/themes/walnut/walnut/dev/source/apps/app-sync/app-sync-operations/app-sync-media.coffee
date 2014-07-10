@@ -97,18 +97,9 @@ define ['underscore', 'jquery'], ( _ , $) ->
 
 
 					,(error)->
-						console.log 'ERROR: '+error.code
-						$('#syncMediaSuccess').css("display","none")
-
-						$('#syncMediaStart').css("display","block")
-
-						$('syncMediaButtonText').text('Try again')
-
-						$('syncMediaError').css("display","block")
-						.text('An error occurred during file download')
+						_.onMediaSyncError(error, "An error occurred during file download")
 
 					, true)
-
 				
 
 
@@ -173,6 +164,9 @@ define ['underscore', 'jquery'], ( _ , $) ->
 							d.resolve resp
 						,
 						'json'
+
+					.fail ->
+						_.onMediaSyncError("none", "Could not connect to server")
 
 
 			$.when(runFunc()).done ->

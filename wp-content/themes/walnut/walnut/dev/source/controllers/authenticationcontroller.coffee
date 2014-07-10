@@ -68,6 +68,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				,
 				'json'
 
+			.fail =>
+				@onErrorResponse('Could not connect to server')
+
 
 		offlineDeviceAuth : ->
 

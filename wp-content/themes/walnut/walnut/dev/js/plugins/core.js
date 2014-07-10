@@ -343,10 +343,10 @@ $(document).ready(function() {
 	
 	}
 	function rebuildSider(){
-		$('#main-menu-toggle').sidr({		
-				name : 'main-menu',
-				side: 'left'
-		});
+		// $('#main-menu-toggle').sidr({		
+		// 		name : 'main-menu',
+		// 		side: 'left'
+		// });
 	}
 //***********************************END Function calls *****************************	
 

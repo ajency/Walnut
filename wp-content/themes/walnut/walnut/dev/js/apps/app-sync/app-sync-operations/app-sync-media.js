@@ -77,11 +77,7 @@ define(['underscore', 'jquery'], function(_, $) {
             }
           }
         }, function(error) {
-          console.log('ERROR: ' + error.code);
-          $('#syncMediaSuccess').css("display", "none");
-          $('#syncMediaStart').css("display", "block");
-          $('syncMediaButtonText').text('Try again');
-          return $('syncMediaError').css("display", "block").text('An error occurred during file download');
+          return _.onMediaSyncError(error, "An error occurred during file download");
         }, true);
       });
     },
@@ -145,7 +141,9 @@ define(['underscore', 'jquery'], function(_, $) {
               console.log(resp);
               return d.resolve(resp);
             };
-          })(this), 'json');
+          })(this), 'json').fail(function() {
+            return _.onMediaSyncError("none", "Could not connect to server");
+          });
         });
       };
       return $.when(runFunc()).done(function() {

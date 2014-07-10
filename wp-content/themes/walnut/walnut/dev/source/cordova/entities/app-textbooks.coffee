@@ -78,6 +78,7 @@ define ['underscore'], ( _) ->
 			.fail _.failureHandler
 
 
+		
 		getTextBookIds : ->
 
 			runQuery = ->
@@ -120,6 +121,7 @@ define ['underscore'], ( _) ->
 			.fail _.failureHandler
 
 
+		
 		#Get additional textbook options
 		getTextbookOptions : (id)->
 

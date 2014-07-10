@@ -16,7 +16,9 @@ define(['underscore'], function(_) {
             console.log(resp);
             return _.downloadZipFile(resp);
           };
-        })(this), 'json');
+        })(this), 'json').fail(function() {
+          return _.onDataSyncError("none", "Could not connect to server");
+        });
       });
     },
     downloadZipFile: function(resp) {
@@ -36,7 +38,7 @@ define(['underscore'], function(_) {
             return fileTransfer.download(uri, filePath + "csv-synapse.zip", function(file) {
               return _.onFileDownloadSuccess(file.toURL(), filePath, resp.last_sync);
             }, function(error) {
-              return _.onFileDownloadError(error);
+              return _.onDataSyncError(error, "An error occurred during file download");
             }, true);
           }, _.fileErrorHandler);
         };
@@ -56,13 +58,6 @@ define(['underscore'], function(_) {
         })(this), 2000);
       };
       return zip.unzip(source, destination, onFileUnzipSuccess);
-    },
-    onFileDownloadError: function(error) {
-      console.log('ERROR: ' + error.code);
-      $('#syncSuccess').css("display", "none");
-      $('#syncStartContinue').css("display", "block");
-      $('#syncButtonText').text('Try again');
-      return $('#syncError').css("display", "block").text("An error occurred during file download");
     }
   });
 });

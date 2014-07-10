@@ -50,14 +50,37 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
 
       AppSyncView.prototype.startContinueSyncProcess = function() {
         var syncController;
-        syncController = App.request("get:sync:controller");
-        return syncController.startContinueDataSyncProcess();
+        if (_.isOnline()) {
+          this.connectionErrorMessage(false);
+          syncController = App.request("get:sync:controller");
+          return syncController.startContinueDataSyncProcess();
+        } else {
+          return this.connectionErrorMessage(true);
+        }
       };
 
       AppSyncView.prototype.startMediaSyncProcess = function() {
         var syncController;
-        syncController = App.request("get:sync:controller");
-        return syncController.startMediaSyncProcess();
+        if (_.isOnline()) {
+          this.connectionErrorMessage(false);
+          syncController = App.request("get:sync:controller");
+          return syncController.startMediaSyncProcess();
+        } else {
+          return this.connectionErrorMessage(true);
+        }
+      };
+
+      AppSyncView.prototype.connectionErrorMessage = function(display) {
+        if (display) {
+          $('#syncInternetConnection').css("display", "block").addClass("shake");
+          return setTimeout((function(_this) {
+            return function() {
+              return $('#syncInternetConnection').removeClass("shake");
+            };
+          })(this), 1000);
+        } else {
+          return $('#syncInternetConnection').css("display", "none");
+        }
       };
 
       return AppSyncView;

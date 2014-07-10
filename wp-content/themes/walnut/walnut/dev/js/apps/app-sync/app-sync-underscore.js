@@ -1,5 +1,23 @@
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
+    onDataSyncError: function(error, message) {
+      if (error !== 'none') {
+        console.log('ERROR: ' + error.code);
+      }
+      $('#syncSuccess').css("display", "none");
+      $('#syncStartContinue').css("display", "block");
+      $('#syncButtonText').text("Try again");
+      return $('#syncError').css("display", "block").text("" + message);
+    },
+    onMediaSyncError: function(error, message) {
+      if (error !== 'none') {
+        console.log('ERROR: ' + error.code);
+      }
+      $('#syncMediaSuccess').css("display", "none");
+      $('#syncMediaStart').css("display", "block");
+      $('#syncMediaButtonText').text("Try again");
+      return $('#syncMediaError').css("display", "block").text("" + message);
+    },
     getLastSyncOperation: function() {
       var onSuccess, runQuery;
       runQuery = function() {

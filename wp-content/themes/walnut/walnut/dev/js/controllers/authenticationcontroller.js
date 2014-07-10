@@ -77,7 +77,11 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             }
           }
         };
-      })(this), 'json');
+      })(this), 'json').fail((function(_this) {
+        return function() {
+          return _this.onErrorResponse('Could not connect to server');
+        };
+      })(this));
     };
 
     AuthenticationController.prototype.offlineDeviceAuth = function() {
