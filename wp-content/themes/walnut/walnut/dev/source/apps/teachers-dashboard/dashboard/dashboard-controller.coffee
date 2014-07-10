@@ -1,12 +1,14 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/teachers-dashboard/dashboard/templates/teachers-dashboard.html'
+        'text!apps/teachers-dashboard/dashboard/templates/teachers-dashboard.html',
+        'apps/teachers-dashboard/dashboard/dashboard-take-class-app',
+        'apps/teachers-dashboard/dashboard/dashboard-start-training-app'
 ], (App, RegionController, teachersDashboardTpl)->
     App.module "TeachersDashboardApp.View", (View, App)->
         class View.DashboardController extends RegionController
 
             initialize: ->
-                divisionsCollection = App.request "get:divisions"
+                @divisionsCollection = App.request "get:divisions"
 
                 breadcrumb_items =
                     'items': [
@@ -15,43 +17,38 @@ define ['app'
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-                @view = view = @_getTeachersDashboardView divisionsCollection
+                @layout = @_getTeachersDashboardLayout()
+                @show @layout, loading:true
 
-                @show view, (loading: true)
+                @listenTo @layout, 'show', =>
+                    App.execute "show:dashboard:takeclass:app",
+                        region: @layout.take_class_region
+                        divisionsCollection: @divisionsCollection
+
+                    App.execute "show:dashboard:start:training:app",
+                        region: @layout.start_training_region
+                        divisionsCollection: @divisionsCollection
+
+                    App.execute "show:all:content:modules:app",
+                        region: @layout.class_progress_region
 
 
+            _getTeachersDashboardLayout:  ->
+                new TeachersDashboardLayout()
 
-            _getTeachersDashboardView: (divisions) ->
-                new TeachersDashboardView
-                    collection: divisions
-
-
-        class TeachersDashboardView extends Marionette.ItemView
+        class TeachersDashboardLayout extends Marionette.Layout
 
             template: teachersDashboardTpl
 
             className: 'teacher-app'
 
+            regions:
+                take_class_region: '#take-class-region'
+                start_training_region: '#start-training-region'
+                class_progress_region: '#class-progress-region'
+
             events:
                 'click #teacherOptns a': 'changeTab'
-
-            mixinTemplateHelpers:->
-                data = super data
-                data.divisions = _.chain @collection.toJSON()
-                                .groupBy 'class_id'
-                                .toArray()
-                                .value();
-
-                classes=[]
-                class_ids = _.unique @collection.pluck 'class_id'
-                for class_id in class_ids
-                    c=[]
-                    c.id= class_id
-                    c.label = CLASS_LABEL[class_id]
-                    classes.push c
-
-                data.classes = classes
-                data
 
             changeTab: (e)->
                 e.preventDefault()
@@ -61,7 +58,7 @@ define ['app'
 
                 $(e.target)
                 .addClass 'active'
-                .tab 'show'
+                    .tab 'show'
 
 
 
