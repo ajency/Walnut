@@ -1,9 +1,9 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/dashboard/templates/teachers-dashboard.html'], function(App, RegionController, teachersDashboardTpl) {
+define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/dashboard/templates/teachers-dashboard.html', 'apps/teachers-dashboard/dashboard/dashboard-take-class-app', 'apps/teachers-dashboard/dashboard/dashboard-start-training-app'], function(App, RegionController, teachersDashboardTpl) {
   return App.module("TeachersDashboardApp.View", function(View, App) {
-    var TeachersDashboardView;
+    var TeachersDashboardLayout;
     View.DashboardController = (function(_super) {
       __extends(DashboardController, _super);
 
@@ -12,8 +12,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
       }
 
       DashboardController.prototype.initialize = function() {
-        var breadcrumb_items, divisionsCollection, view;
-        divisionsCollection = App.request("get:divisions");
+        var breadcrumb_items;
+        this.divisionsCollection = App.request("get:divisions");
         breadcrumb_items = {
           'items': [
             {
@@ -23,61 +23,63 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
-        this.view = view = this._getTeachersDashboardView(divisionsCollection);
-        return this.show(view, {
+        this.layout = this._getTeachersDashboardLayout();
+        this.show(this.layout, {
           loading: true
         });
+        return this.listenTo(this.layout, 'show', (function(_this) {
+          return function() {
+            App.execute("show:dashboard:takeclass:app", {
+              region: _this.layout.take_class_region,
+              divisionsCollection: _this.divisionsCollection
+            });
+            App.execute("show:dashboard:start:training:app", {
+              region: _this.layout.start_training_region,
+              divisionsCollection: _this.divisionsCollection
+            });
+            return App.execute("show:all:content:modules:app", {
+              region: _this.layout.class_progress_region
+            });
+          };
+        })(this));
       };
 
-      DashboardController.prototype._getTeachersDashboardView = function(divisions) {
-        return new TeachersDashboardView({
-          collection: divisions
-        });
+      DashboardController.prototype._getTeachersDashboardLayout = function() {
+        return new TeachersDashboardLayout();
       };
 
       return DashboardController;
 
     })(RegionController);
-    return TeachersDashboardView = (function(_super) {
-      __extends(TeachersDashboardView, _super);
+    return TeachersDashboardLayout = (function(_super) {
+      __extends(TeachersDashboardLayout, _super);
 
-      function TeachersDashboardView() {
-        return TeachersDashboardView.__super__.constructor.apply(this, arguments);
+      function TeachersDashboardLayout() {
+        return TeachersDashboardLayout.__super__.constructor.apply(this, arguments);
       }
 
-      TeachersDashboardView.prototype.template = teachersDashboardTpl;
+      TeachersDashboardLayout.prototype.template = teachersDashboardTpl;
 
-      TeachersDashboardView.prototype.className = 'teacher-app';
+      TeachersDashboardLayout.prototype.className = 'teacher-app';
 
-      TeachersDashboardView.prototype.events = {
+      TeachersDashboardLayout.prototype.regions = {
+        take_class_region: '#take-class-region',
+        start_training_region: '#start-training-region',
+        class_progress_region: '#class-progress-region'
+      };
+
+      TeachersDashboardLayout.prototype.events = {
         'click #teacherOptns a': 'changeTab'
       };
 
-      TeachersDashboardView.prototype.mixinTemplateHelpers = function() {
-        var c, class_id, class_ids, classes, data, _i, _len;
-        data = TeachersDashboardView.__super__.mixinTemplateHelpers.call(this, data);
-        data.divisions = _.chain(this.collection.toJSON()).groupBy('class_id').toArray().value();
-        classes = [];
-        class_ids = _.unique(this.collection.pluck('class_id'));
-        for (_i = 0, _len = class_ids.length; _i < _len; _i++) {
-          class_id = class_ids[_i];
-          c = [];
-          c.id = class_id;
-          c.label = CLASS_LABEL[class_id];
-          classes.push(c);
-        }
-        data.classes = classes;
-        return data;
-      };
-
-      TeachersDashboardView.prototype.changeTab = function(e) {
+      TeachersDashboardLayout.prototype.changeTab = function(e) {
         e.preventDefault();
         this.$el.find('#teacherOptns a').removeClass('active');
         return $(e.target).addClass('active').tab('show');
       };
 
-      return TeachersDashboardView;
+      return TeachersDashboardLayout;
 
-    })(Marionette.ItemView);
+    })(Marionette.Layout);
   });
 });

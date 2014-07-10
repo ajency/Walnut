@@ -116,7 +116,18 @@ define ['app'], (App)->
 							                <tbody>
 							                </tbody>
 							            </table>
-							        </div>
+					                <div id="pager" class="pager">
+            <i class="fa fa-chevron-left prev"></i>
+                                							<span style="padding:0 15px"  class="pagedisplay"></span>
+            <i class="fa fa-chevron-right next"></i>
+                                							<select class="pagesize">
+                                								  <option value="25" selected>25</option>
+            <option value="50">50</option>
+                                                	<option value="100">100</option>
+            </select>
+                                						</div>
+
+           	        </div>
 							    </div>
 							</div>
 						</div>'

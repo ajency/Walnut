@@ -28,8 +28,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
         if (this.mode === 'training') {
           this.contentGroupsCollection = App.request("get:content:groups", {
             'textbook': textbookID,
-            'division': this.division,
-            'post_status': 'publish'
+            'division': this.division
           });
         } else {
           this.contentGroupsCollection = App.request("get:content:groups", {
@@ -53,7 +52,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
                 _this.singleModule = _this.contentGroupsCollection.get(id);
                 modalview = _this._showScheduleModal(_this.singleModule);
                 _this.show(modalview, {
-                  region: App.dialogRegion
+                  region: App.popupRegion
                 });
                 return _this.listenTo(modalview, "save:scheduled:date", _this._saveTrainingStatus);
               }
@@ -79,8 +78,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
           collection_id: id,
           content_piece_id: first_content_piece,
           start_date: date,
-          division: this.division,
-          status: 'scheduled'
+          division: this.division
         };
         App.request("schedule:content:group", data);
         return this.view.triggerMethod('scheduled:module', id, date);
@@ -121,7 +119,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       return textbookModulesController;
 
     })(RegionController);
-    return ScheduleModalView = (function(_super) {
+    ScheduleModalView = (function(_super) {
       __extends(ScheduleModalView, _super);
 
       function ScheduleModalView() {
@@ -168,5 +166,11 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       return ScheduleModalView;
 
     })(Marionette.ItemView);
+    return App.commands.setHandler("show:teaching:modules:app", function(opt) {
+      if (opt == null) {
+        opt = {};
+      }
+      return new View.textbookModulesController(opt);
+    });
   });
 });
