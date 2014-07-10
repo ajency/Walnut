@@ -35,7 +35,7 @@ define ['app'
 						$('#main-menu').removeClass('mini');
 						$('.page-content').removeClass('condensed');
 						$('.scrollup').removeClass('to-edge');
-						$('.header-seperation').show();
+						$('.header-seperation').css("width", "250px");
 						$('.header-seperation').css('height','61px');
 						$('.footer-widget').show();
 					
@@ -44,7 +44,7 @@ define ['app'
 						$('#main-menu').addClass('mini');
 						$('.page-content').addClass('condensed');
 						$('.scrollup').addClass('to-edge');
-						$('.header-seperation').hide();
+						$('.header-seperation').css("width", "0");
 						$('.footer-widget').hide();
 					
 				

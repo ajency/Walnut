@@ -148,6 +148,11 @@ body {
 }
 .header-seperation {
   background-color: #22262e;
+  -webkit-transition: all 0.28s ease-in-out;
+  -moz-transition: all 0.28s ease-in-out;
+  -o-transition: all 0.28s ease-in-out;
+  -ms-transition: all 0.28s ease-in-out;
+  transition: all 0.28s ease-in-out;
 }
 .header {
   padding: 0 !important;
@@ -433,6 +438,11 @@ body {
   background-color: #1b1e24 !important;
   height: 100%;
   font-family: 'Roboto';
+  -webkit-transition: all 0.28s ease-in-out;
+  -moz-transition: all 0.28s ease-in-out;
+  -o-transition: all 0.28s ease-in-out;
+  -ms-transition: all 0.28s ease-in-out;
+  transition: all 0.28s ease-in-out;
 }
 .page-sidebar .outer-tab-nav-section {
   display: inline-block;
@@ -4175,7 +4185,7 @@ form legend,
 }
 .grid.solid .grid-body {
   color: #ffffff;
-  padding: 20px;
+  padding: 15px;
 }
 .grid.solid .grid-body h3 {
   color: #ffffff;
@@ -4219,7 +4229,7 @@ form legend,
 }
 .grid.simple .grid-body {
   background-color: #ffffff;
-  padding: 20px;
+  padding: 15px;
   border: 1px solid #dddddd;
   color: #6f7b8a;
 }
@@ -6609,9 +6619,6 @@ input[type="checkbox"] {
 .table-condensed th,
 .table-condensed td {
   padding: 10px 5px;
-}
-.table-tools-actions {
-  margin: 0px 5px;
 }
 .inner-table td {
   background-color: transparent !important;

@@ -2506,10 +2506,10 @@ textarea.error,
 #content-pieces-table a {
   text-decoration: underline;
 }
-#take-class-modules th:nth-child(3) {
+#take-class-modules.takeClass th:nth-child(3) {
   width: 100px;
 }
-#take-class-modules th:last-child {
+#take-class-modules.takeClass th:last-child {
   width: 40%;
 }
 /*Theme Modifications*/
