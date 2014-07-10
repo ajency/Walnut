@@ -55,7 +55,7 @@ define ['app'
 
             events:
                 'click #logout'   :->
-                    $.sidr 'close', 'walnutProfile'
+                    # $.sidr 'close', 'walnutProfile'
                     @trigger "user:logout"
 
                 'click #user_logout' : 'onAppLogout'
