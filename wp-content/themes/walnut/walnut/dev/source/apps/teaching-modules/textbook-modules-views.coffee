@@ -100,11 +100,11 @@ define ['app'], (App)->
                                     </div>
                                     <div class="clearfix"></div>
                                     <div class="col-sm-12"></div>
-                                </div><br>
-                    			<div class="row">
+                                </div>
+                    			<div class="row m-t-15">
 									<div class="col-lg-12">
 										<!--<h4>{{&showModulesHeading}}</h4>-->
-										<table class="table table-condensed table-fixed-layout table-bordered" id="take-class-modules">
+										<table class="table table-condensed table-fixed-layout table-bordered takeClass" id="take-class-modules">
 							                <thead>
 							                  <tr>
 							                    <th>Name</th>
