@@ -112,11 +112,18 @@ define ['app'
                 chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
 
             events:
-                'change #content-post-status-filter, .content-type-filter'  :->
-                    @setFilteredContent()
+                'change #content-post-status-filter, #difficulty-level-filter'  : 'setFilteredContent'
 
                 'change .textbook-filter' :(e)->
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
+
+                'change .content-type-filter' : (e)->
+                    if $(e.target).val() is 'student_question'
+                        @$el.find('.difficulty-level-filter').show()
+                    else
+                        @$el.find('.difficulty-level-filter').hide()
+                    @setFilteredContent()
+
 
             initialize : ->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
@@ -128,17 +135,17 @@ define ['app'
             onShow:->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
                 @fullCollection = Marionette.getOption @, 'fullCollection'
-                textbookFiltersHTML= $.showTextbookFilters @textbooksCollection
+                textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection
                 @$el.find '#textbook-filters'
                 .html textbookFiltersHTML
 
                 @$el.find ".select2-filters"
                 .select2()
 
-                $('#content-pieces-table').tablesorter();
+                $('#content-pieces-table').tablesorter()
 
                 pagerOptions =
-                    container: $(".pager"),
+                    container: $(".pager")
                     output: '{startRow} to {endRow} of {totalRows}'
 
                 $('#content-pieces-table').tablesorterPager pagerOptions

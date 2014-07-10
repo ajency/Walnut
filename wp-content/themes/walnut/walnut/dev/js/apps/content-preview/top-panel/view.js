@@ -29,11 +29,11 @@ define(['app', 'text!apps/content-preview/top-panel/templates/top-panel.html'], 
       };
 
       TopPanelView.prototype.onShow = function() {
-        var timeLeftOrElapsed;
+        var timeLeftOrElapsed, _ref;
         if (this.model.get('question_type') === 'multiple_eval') {
           this.$el.find('#correct-answer-col').hide();
         }
-        if (this.model.get('content_type') === 'content_piece') {
+        if ((_ref = this.model.get('content_type')) === 'content_piece' || _ref === 'student_question') {
           this.$el.find('#question-type-col, #correct-answer-col').hide();
         }
         if (this.model.get('content_type') !== 'student_question') {

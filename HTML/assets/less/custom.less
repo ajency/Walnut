@@ -316,10 +316,19 @@ textarea.error, .select2-choice.error {
 	}
 }
 
+#take-class-modules{
+	th:nth-child(3){
+		width: 100px;
+	}
+	th:last-child{
+		width: 40%;
+	}
+}
+
 /*Theme Modifications*/
 body{
-	font-size: 18px;
-	font-weight: bold;
+	font-size: 20px;
+	font-weight: 600;
 }
 
 select{
@@ -344,6 +353,10 @@ label, input, button, select, textarea{
 	padding: 7px 9px;
 	min-width: 100px;
 	border-radius: 0;
+	&.tag.label-info{
+		min-width: 0;
+		color: @color-info;
+	}
 }
 
 .alert{
@@ -487,7 +500,7 @@ select{
 				font-weight: bold;
 			}
 			& > li > a{
-				padding: 5px 20px 15px !important;
+				padding: 5px 10px 10px!important;
 				font-size: 28px;
 				color: white;
 			}

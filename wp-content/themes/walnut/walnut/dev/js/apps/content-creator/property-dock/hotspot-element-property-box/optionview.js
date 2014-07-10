@@ -25,6 +25,22 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
       };
 
       OptionView.prototype.onShow = function() {
+        console.log(this.hotspotModel.get('transparent'));
+        if (this.hotspotModel.get('transparent')) {
+          this.$el.find('.option-color').hide();
+          this.$el.find('.option-color').removeClass('inline');
+        }
+        this.listenTo(this.hotspotModel, 'change:transparent', (function(_this) {
+          return function(model, transparent) {
+            if (transparent) {
+              _this.$el.find('.option-color').hide();
+              return _this.$el.find('.option-color').removeClass('inline');
+            } else {
+              _this.$el.find('.option-color').show();
+              return _this.$el.find('.option-color').addClass('inline');
+            }
+          };
+        })(this));
         this.$el.find('.fontColor').minicolors({
           animationSpeed: 200,
           animationEasing: 'swing',

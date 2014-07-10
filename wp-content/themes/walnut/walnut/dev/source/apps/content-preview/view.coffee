@@ -5,34 +5,40 @@ define ['app'], (App)->
             className : ''
 
             template : '<div class="preview">
-                                        <div class="" id="top-panel"></div>
-                                        <div class="container-grey m-b-5  qstnInfo ">
-                                            <label class="form-label bold small-text muted no-margin inline">Question Info: </label>
-                                            <span class="small-text" style="text-transform: capitalize">{{instructions}}</span>
-                                        </div>
-                                        <div class="" id="content-board"></div>
-                                         {{#content_preview}}
-                                        <input type="button" class="btn btn-info btn-cons2" id="submit-answer-button" value="submit">
-                                        {{/content_preview}}
-                                        <div class="clearfix"></div>
-                                        <!--<div class="tiles grey text-grey b-grey b-b m-t-20">
-                                            <div class="grid simple m-b-0 transparent">
-                                                <div class="grid-title no-border qstnInfo">
-                                                    <p class="bold small-text inline text-grey"><i class="fa fa-question"></i> Additional Information </p>
-                                                    <div class="tools"> <a href="javascript:;" class="arrow expand"></a> </div>
-                                                </div>
-                                                <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20">
-                                                    <p class="">{{instructions}}</p>
-                                                </div>
-                                            </div>
-                                        </div>-->
-                                    </div>'
+                            <div class="" id="top-panel"></div>
+                                <div class="container-grey m-b-5  qstnInfo ">
+                                    <label class="form-label bold small-text muted no-margin inline">Question Info: </label>
+                                    <span class="small-text" style="text-transform: capitalize">{{instructions}}</span>
+                                </div>
+                                <div class="" id="content-board"></div>
+                                 {{#content_preview}}
+                                <input type="button" class="btn btn-info btn-cons2 h-center block" id="submit-answer-button" value="submit">
+                                {{#showHintButton}}
+                                <button class="btn btn-primary show-hint h-center block">Show Hint</button>
+                                {{/showHintButton}}
+                                {{/content_preview}}
+                            <div class="clearfix"></div>
+                        </div>'
 
             regions :
                 contentBoardRegion : '#content-board'
                 topPanelRegion : '#top-panel'
 
+            events:
+                'click .show-hint' : '_showHint'
+                'click #submit-answer-button' : 'submitAnswer'
+
             mixinTemplateHelpers : (data)->
                 data = super data
                 data.content_preview = Marionette.getOption @, 'content_preview'
+                data.showHintButton = if data.content_type is 'student_question' and data.hint_enable then true else false
                 data
+
+            _showHint : ->
+                @trigger 'show:hint:dialog',
+                    hint : @model.get 'hint'
+
+            submitAnswer : ->
+                if @model.get 'comment_enable'
+                    @trigger 'show:comment:dialog',
+                        comment : @model.get 'comment'

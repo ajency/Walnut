@@ -16,8 +16,7 @@ define(['marionette'], function(Marionette) {
 
     LoadingView.prototype.onShow = function() {
       var opts;
-      opts = this._getOptions();
-      return this.$el.spin(opts);
+      return opts = this._getOptions();
     };
 
     LoadingView.prototype.onClose = function() {

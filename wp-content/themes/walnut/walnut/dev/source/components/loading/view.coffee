@@ -9,7 +9,7 @@ define ['marionette'], (Marionette) ->
 
         onShow : ->
             opts = @._getOptions()
-            @$el.spin opts
+            # @$el.spin opts
 
         onClose : ->
             @$el.spin false

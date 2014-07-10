@@ -31,13 +31,19 @@ define ['app'], (App)->
                 data.chapterName = =>
 
                     chapterId = data.term_ids.chapter
-                    chapterId = parseInt(chapterId) if _.platform() is 'DEVICE'
 
-                    chapter = _.chain @chapters.findWhere "term_id" : chapterId
-                    .pluck 'name'
-                        .compact()
-                        .value()
-                    chapter
+                    if _.platform() is 'BROWSER'
+                        chapter = _.chain @chapters.findWhere "term_id" : chapterId
+                        .pluck 'name'
+                            .compact()
+                            .value()
+                        chapter
+                    else
+                        chapterId = parseInt(chapterId)
+                        chapter = @chapters.findWhere "term_id" : chapterId
+                        if _.isUndefined(chapter) then ''
+                        else chapter.get('name')
+                    
 
                 training_date = @model.get 'training_date'
 
@@ -89,41 +95,41 @@ define ['app'], (App)->
         class TextbookModules.ContentGroupsView extends Marionette.CompositeView
 
             template : '<div class="tiles white grid simple  animated fadeIn">
-                        							<div class="grid-title">
-                        								<h4 class="">Textbook <span class="semi-bold">{{showTextbookName}}</span></h4>
-                        							</div>
+							<div class="grid-title">
+								<h3 class="m-t-5 m-b-5">Textbook <span class="semi-bold">{{showTextbookName}}</span></h3>
+							</div>
 
-                                    		<div class="grid-body contentSelect" style="overflow: hidden; display: block;">
-                                          <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="filters">
-                                                    <div class="table-tools-actions">
-                                                        <span id="textbook-filters"></span>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                                <div class="col-sm-12"></div>
-                                            </div><br>
-                                    			<div class="row">
-                        									<div class="col-lg-12">
-                        										<!--<h4>{{&showModulesHeading}}</h4>-->
-                        										<table class="table table-condensed table-fixed-layout table-bordered" id="take-class-modules">
-                        							                <thead>
-                        							                  <tr>
-                        							                    <th>Name</th>
-                                    							        <th>Chapter</th>
-                        							                    <th class="{sorter:\'minutesSort\'}">Duration</th>
-                        							                    <th style="width:35%"><div id="status_header">Status</div></th>
-                        							                  </tr>
-                        							                </thead>
-                        							                <tbody>
-                        							                </tbody>
-                        							            </table>
-                        							        </div>
-                        							    </div>
-                        							</div>
-                        						</div>'
+                    		<div class="grid-body contentSelect" style="overflow: hidden; display: block;">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="filters">
+                                            <div class="table-tools-actions">
+                                                <span id="textbook-filters"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-sm-12"></div>
+                                </div><br>
+                    			<div class="row">
+									<div class="col-lg-12">
+										<!--<h4>{{&showModulesHeading}}</h4>-->
+										<table class="table table-condensed table-fixed-layout table-bordered" id="take-class-modules">
+							                <thead>
+							                  <tr>
+							                    <th>Name</th>
+            							        <th>Chapter</th>
+							                    <th class="{sorter:\'minutesSort\'}">Duration</th>
+							                    <th><div id="status_header">Status</div></th>
+							                  </tr>
+							                </thead>
+							                <tbody>
+							                </tbody>
+							            </table>
+							        </div>
+							    </div>
+							</div>
+						</div>'
 
             itemView : ContentGroupsItemView
 

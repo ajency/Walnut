@@ -214,6 +214,12 @@ define ['app'
 
             onFetchSubsectionsComplete : (subsections)->
 
+                @$el.find '#subsecs'
+                .select2 'data', null
+
+                @$el.find '#subsecs'
+                .html ''
+
                 term_ids= @model.get 'term_ids'
 
                 subSectionIDs = term_ids['subsections'] if term_ids?

@@ -1,5 +1,12 @@
 define ['jquery', 'underscore'], ($, _)->
 
+    ##
+    # eg. $.showTextbookFilters textbooks: textbookCollection
+    #
+    # OR $.showTextbookFilters chapters: chaptersCollection // incase you dont need the textbook filter
+    #
+    ##
+
     $.showTextbookFilters =(opts={}) ->
 
         divHtml= ''
@@ -9,10 +16,10 @@ define ['jquery', 'underscore'], ($, _)->
             opts.textbooks.each (t) ->
                 textbookItems += '<option value='+t.get('term_id')+'>'+t.get('name')+'</option>'
 
-            divHtml +='<select class="textbook-filter select2-filters" id="textbooks-filter" style="width:150px">
+            divHtml +='<select class="textbook-filter select2-filters" id="textbooks-filter">
                 <option value="">All Textbooks</option>'+textbookItems +
             '</select>
-            <select class="textbook-filter select2-filters" id="chapters-filter" style="width:150px">
+            <select class="textbook-filter select2-filters" id="chapters-filter">
                 <option value="">All Chapters</option>
             </select>'
 
@@ -21,14 +28,14 @@ define ['jquery', 'underscore'], ($, _)->
             opts.chapters.each (t) ->
                 ChapterItems += '<option value='+t.get('term_id')+'>'+t.get('name')+'</option>'
 
-            divHtml +='<select class="textbook-filter select2-filters" id="chapters-filter" style="width:150px">
+            divHtml +='<select class="textbook-filter select2-filters" id="chapters-filter">
                             <option value="">All Chapters</option>'+ChapterItems +
             '</select>'
 
-        divHtml += '<select class="textbook-filter select2-filters" id="sections-filter" style="width:150px">
+        divHtml += '<select class="textbook-filter select2-filters" id="sections-filter">
                             <option value="">All Sections</option>
                         </select>
-                        <select class="textbook-filter select2-filters" id="subsections-filter" style="width:200px">
+                        <select class="textbook-filter select2-filters" id="subsections-filter">
                             <option value="">All Sub Sections</option>
                         </select>'
 
@@ -158,10 +165,12 @@ define ['jquery', 'underscore'], ($, _)->
         filter_ids= _.compact filter_ids
 
         content_type = _this.$el.find('#content-type-filter').val()
+
         content_status = _this.$el.find('#content-status-filter').val()
 
         content_post_status = _this.$el.find('#content-post-status-filter').val()
 
+        difficulty_level = parseInt _this.$el.find('#difficulty-level-filter').val()
 
         if content_type
             filterCollection.reset  filterCollection.where 'content_type': content_type
@@ -171,6 +180,9 @@ define ['jquery', 'underscore'], ($, _)->
 
         if content_post_status
             filterCollection.reset  filterCollection.where 'post_status': content_post_status
+
+        if difficulty_level
+            filterCollection.reset filterCollection.where 'difficulty_level' : difficulty_level
 
         filtered_models= filterCollection.models
 

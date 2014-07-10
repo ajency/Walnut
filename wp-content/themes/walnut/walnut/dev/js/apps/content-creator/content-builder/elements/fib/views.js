@@ -69,7 +69,7 @@ define(['app'], function(App) {
         element = editor.element;
         if (element.getAttribute('id') === this.$el.attr('id')) {
           return editor.on('configLoaded', function() {
-            return editor.config.placeholder = 'This is a Text Block. Use this to provide text…';
+            return editor.config.placeholder = 'This is a FIB Block. Use this to provide text and blanks…';
           });
         }
       };
@@ -106,7 +106,9 @@ define(['app'], function(App) {
             return this._addBlanks(noOfBlanksToAdd);
           } else if (numberOfBlanks < model.previous('numberOfBlanks')) {
             noOfBlanksToRemove = model.previous('numberOfBlanks') - numberOfBlanks;
-            return this._removeBlanks(noOfBlanksToRemove);
+            if (confirm("Decreasing number of blanks may cause loss of data. Do you want to continue?")) {
+              return this._removeBlanks(noOfBlanksToRemove);
+            }
           }
         }
       };
