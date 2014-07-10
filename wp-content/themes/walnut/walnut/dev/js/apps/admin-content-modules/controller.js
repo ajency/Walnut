@@ -4,7 +4,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'apps/admin-content-modules/views'], function(App, RegionController, classDescriptionTpl) {
   return App.module("AdminContentModulesApp.View", function(View, App) {
-    return View.AdminModulesController = (function(_super) {
+    View.AdminModulesController = (function(_super) {
       __extends(AdminModulesController, _super);
 
       function AdminModulesController() {
@@ -25,7 +25,8 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
             class_id = _this.divisionsCollection.first().get('class_id');
             _this.contentGroupsCollection = App.request("get:content:groups", {
               division: division,
-              class_id: class_id
+              class_id: class_id,
+              post_status: 'publish'
             });
             _this.textbooksCollection = App.request("get:textbooks", {
               'class_id': class_id
@@ -57,7 +58,8 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
                   }).get('class_id');
                   newModulesCollection = App.request("get:content:groups", {
                     division: division,
-                    class_id: class_id
+                    class_id: class_id,
+                    post_status: 'publish'
                   });
                   _this.textbooksCollection = App.request("get:textbooks", {
                     'class_id': class_id
@@ -98,5 +100,11 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
       return AdminModulesController;
 
     })(RegionController);
+    return App.commands.setHandler("show:all:content:modules:app", function(opt) {
+      if (opt == null) {
+        opt = {};
+      }
+      return new View.AdminModulesController(opt);
+    });
   });
 });
