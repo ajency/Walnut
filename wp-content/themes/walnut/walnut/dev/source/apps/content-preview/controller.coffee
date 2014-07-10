@@ -3,6 +3,8 @@ define ['app'
         'apps/content-preview/view'
         'apps/content-preview/content-board/controller'
         'apps/content-preview/top-panel/controller'
+        'apps/content-preview/dialogs/hint-dialog/hint-dialog-controller'
+        'apps/content-preview/dialogs/comment-dialog/comment-dialog-controller'
 ], (App, RegionController)->
     App.module "ContentPreview", (ContentPreview, App, Backbone, Marionette, $, _)->
         class ContentPreviewRouter extends Marionette.AppRouter
@@ -29,6 +31,14 @@ define ['app'
 
                 # get the main layout for the content preview
                 @layout = @_getContentPreviewLayout(content_preview)
+
+                @listenTo @layout, 'show:hint:dialog',(options)->
+                    App.execute 'show:hint:dialog',
+                        hint : options.hint
+
+                @listenTo @layout,'show:comment:dialog',(options)->
+                    App.execute 'show:comment:dialog',
+                        comment : options.comment
 
                 App.execute "when:fetched", @model, =>
                     # show the layout
