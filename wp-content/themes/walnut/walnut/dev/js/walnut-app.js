@@ -4,6 +4,7 @@ define(['marionette'], function(Marionette) {
     leftNavRegion: '#left-nav-region',
     headerRegion: '#header-region',
     mainContentRegion: '#main-content-region',
+    popupRegion: '#dialog-region',
     dialogRegion: Marionette.Region.Dialog.extend({
       el: '#dialog-region'
     }),
