@@ -38,7 +38,7 @@ define ['app'
                     @listenTo @view, "schedule:training": (id)=>
                         @singleModule = @contentGroupsCollection.get id
                         modalview = @_showScheduleModal @singleModule
-                        @show modalview, region: App.dialogRegion
+                        @show modalview, region: App.popupRegion
 
                         @listenTo modalview, "save:scheduled:date", @_saveTrainingStatus
 

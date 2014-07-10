@@ -52,7 +52,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
                 _this.singleModule = _this.contentGroupsCollection.get(id);
                 modalview = _this._showScheduleModal(_this.singleModule);
                 _this.show(modalview, {
-                  region: App.dialogRegion
+                  region: App.popupRegion
                 });
                 return _this.listenTo(modalview, "save:scheduled:date", _this._saveTrainingStatus);
               }
