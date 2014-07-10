@@ -1,19 +1,23 @@
 define(['underscore'], function(_) {
   return _.mixin({
     getZipFileDownloadDetails: function() {
-      var data;
+      var lastDownloadTimestamp;
       $('#syncSuccess').css("display", "block").text("Starting file download...");
-      data = {
-        blog_id: _.getBlogID(),
-        last_sync: ''
-      };
-      return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
-        return function(resp) {
-          console.log('getZipFileDownloadDetails response');
-          console.log(resp);
-          return _.downloadZipFile(resp);
+      lastDownloadTimestamp = _.getLastDownloadTimeStamp();
+      return lastDownloadTimestamp.done(function(time_stamp) {
+        var data;
+        data = {
+          blog_id: _.getBlogID(),
+          last_sync: time_stamp
         };
-      })(this), 'json');
+        return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
+          return function(resp) {
+            console.log('getZipFileDownloadDetails response');
+            console.log(resp);
+            return _.downloadZipFile(resp);
+          };
+        })(this), 'json');
+      });
     },
     downloadZipFile: function(resp) {
       var uri;

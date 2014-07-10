@@ -44,30 +44,31 @@ define ['underscore'], ( _) ->
 											chapterCount = _.getChapterCount(row['term_id'])
 											chapterCount.done (chapter_count)->
 
-												do(row, i, modules_count, options, chapter_count)->
-													chapterStatusCount = _.getCountOfChaptersStatuses(row['term_id'], division)
-													chapterStatusCount.done (chapter_status_count)->
-														console.log 'chapterStatusCount'
-														console.log chapter_status_count
+												# do(row, i, modules_count, options, chapter_count)->
+												# 	chapterStatusCount = 
+												# 	_.getCountOfChaptersStatuses(row['term_id'], division)
+												# 	chapterStatusCount.done (chapter_status_count)->
+												# 		console.log 'chapterStatusCount'
+												# 		console.log chapter_status_count
 
-														result[i] = 
-															term_id: row["term_id"]
-															name: row["name"]
-															slug: row["slug"]
-															term_group: row["term_group"]
-															term_taxonomy_id: row["term_taxonomy_id"]
-															taxonomy: row["taxonomy"]
-															description: row["description"]
-															parent: row["parent"]
-															count: row["count"]
-															classes: _.unserialize(row["class_id"])
-															subjects: _.unserialize(row["tags"])
-															modules_count: modules_count
-															author: options.author
-															thumbnail: options.attachmenturl
-															cover_pic: options.attachmenturl
-															filter: 'raw'
-															chapter_count : chapter_count
+												result[i] = 
+													term_id: row["term_id"]
+													name: row["name"]
+													slug: row["slug"]
+													term_group: row["term_group"]
+													term_taxonomy_id: row["term_taxonomy_id"]
+													taxonomy: row["taxonomy"]
+													description: row["description"]
+													parent: row["parent"]
+													count: row["count"]
+													classes: _.unserialize(row["class_id"])
+													subjects: _.unserialize(row["tags"])
+													modules_count: modules_count
+													author: options.author
+													thumbnail: options.attachmenturl
+													cover_pic: options.attachmenturl
+													filter: 'raw'
+													chapter_count : chapter_count
 
 
 					d.resolve(result)
@@ -75,15 +76,6 @@ define ['underscore'], ( _) ->
 			$.when(runQuery()).done (data)->
 				console.log 'getTextbooksByClassIdAndDivision transaction completed'
 			.fail _.failureHandler
-
-
-		# chapterStatusCount = _.getCountOfChaptersStatuses(99, 12341531)
-		# chapterStatusCount.done (chapter_status_count)->
-		# 	console.log 'chapterStatusCount'
-		# 	console.log chapter_status_count
-
-					
-
 
 
 		getTextBookIds : ->
@@ -199,7 +191,7 @@ define ['underscore'], ( _) ->
 					getChapters = _.getChaptersByParentId(textbook_id)
 					getChapters.done (chapters)->
 
-						_.each chapters, (chapter, i)->
+						_.each chapters, (chapter)->
 							chapterId = chapter.term_id
 
 							do(chapterId)->

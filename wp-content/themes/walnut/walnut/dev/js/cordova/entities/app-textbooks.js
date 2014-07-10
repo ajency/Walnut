@@ -35,33 +35,25 @@ define(['underscore'], function(_) {
                     var chapterCount;
                     chapterCount = _.getChapterCount(row['term_id']);
                     return chapterCount.done(function(chapter_count) {
-                      return (function(row, i, modules_count, options, chapter_count) {
-                        var chapterStatusCount;
-                        chapterStatusCount = _.getCountOfChaptersStatuses(row['term_id'], division);
-                        return chapterStatusCount.done(function(chapter_status_count) {
-                          console.log('chapterStatusCount');
-                          console.log(chapter_status_count);
-                          return result[i] = {
-                            term_id: row["term_id"],
-                            name: row["name"],
-                            slug: row["slug"],
-                            term_group: row["term_group"],
-                            term_taxonomy_id: row["term_taxonomy_id"],
-                            taxonomy: row["taxonomy"],
-                            description: row["description"],
-                            parent: row["parent"],
-                            count: row["count"],
-                            classes: _.unserialize(row["class_id"]),
-                            subjects: _.unserialize(row["tags"]),
-                            modules_count: modules_count,
-                            author: options.author,
-                            thumbnail: options.attachmenturl,
-                            cover_pic: options.attachmenturl,
-                            filter: 'raw',
-                            chapter_count: chapter_count
-                          };
-                        });
-                      })(row, i, modules_count, options, chapter_count);
+                      return result[i] = {
+                        term_id: row["term_id"],
+                        name: row["name"],
+                        slug: row["slug"],
+                        term_group: row["term_group"],
+                        term_taxonomy_id: row["term_taxonomy_id"],
+                        taxonomy: row["taxonomy"],
+                        description: row["description"],
+                        parent: row["parent"],
+                        count: row["count"],
+                        classes: _.unserialize(row["class_id"]),
+                        subjects: _.unserialize(row["tags"]),
+                        modules_count: modules_count,
+                        author: options.author,
+                        thumbnail: options.attachmenturl,
+                        cover_pic: options.attachmenturl,
+                        filter: 'raw',
+                        chapter_count: chapter_count
+                      };
                     });
                   })(row, i, modules_count, options);
                 });
@@ -194,7 +186,7 @@ define(['underscore'], function(_) {
           var getChapters;
           getChapters = _.getChaptersByParentId(textbook_id);
           return getChapters.done(function(chapters) {
-            _.each(chapters, function(chapter, i) {
+            _.each(chapters, function(chapter) {
               var chapterId;
               chapterId = chapter.term_id;
               return (function(chapterId) {
