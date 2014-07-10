@@ -42,7 +42,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         App.breadcrumbRegion.close();
         _.cordovaHideSplashscreen();
         _.disableCordovaBackbuttonNavigation();
-        $('#userName').text("Username: " + _.getUserName());
         cordova.getAppVersion().then(function(version) {
           return $('#app-version').text("Version: " + version);
         });

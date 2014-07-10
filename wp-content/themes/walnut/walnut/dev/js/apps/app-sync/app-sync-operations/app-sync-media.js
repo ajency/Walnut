@@ -40,14 +40,15 @@ define(['underscore', 'jquery'], function(_, $) {
       });
     },
     downloadMediaFiles: function(filesTobeDownloaded, index, file_type) {
-      var directoryPath, directoryStructure, file, fileName, localPath, uri;
+      var directoryPath, directoryStructure, escaped, file, fileName, localPath, uri;
       file = filesTobeDownloaded[index];
       directoryPath = file.substr(file.indexOf("uploads/"));
       fileName = file.substr(file.lastIndexOf('/') + 1);
       if (file_type === 'Audio') {
         directoryPath = directoryPath.replace("media-web/audio-web", "audios");
       }
-      $('#syncMediaSuccess').css("display", "block").text("Downloading file: \n" + fileName);
+      escaped = $('<div>').text("Downloading...\n\n" + fileName).text();
+      $('#syncMediaSuccess').css("display", "block").html(escaped.replace(/\n/g, '<br />'));
       uri = encodeURI(file);
       localPath = _.getSynapseMediaDirectoryPath() + directoryPath;
       directoryStructure = _.createDirectoryStructure(directoryPath);

@@ -55,8 +55,9 @@ define ['underscore', 'jquery'], ( _ , $) ->
 			if file_type is 'Audio'
 				directoryPath = directoryPath.replace("media-web/audio-web", "audios")
 			
+			escaped = $('<div>').text("Downloading...\n\n"+fileName).text()
+			$('#syncMediaSuccess').css("display","block").html(escaped.replace(/\n/g, '<br />'))
 
-			$('#syncMediaSuccess').css("display","block").text("Downloading file: \n"+fileName)
 			# $('#syncMediaProgress').css("display","block")
 			# $('#mediaProgressUpdate').css("width","0%")
 
