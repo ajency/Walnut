@@ -43,3 +43,14 @@ function upload_attachment( $file_handler, $post_id, $set_thumb = 'false' ) {
     return $attach_id;
 }
 
+
+// define empty functions for standalone installation to ignore multisite functions
+if (!is_multisite()) {
+
+    function switch_to_blog(){}
+    function restore_current_blog(){}
+    function get_blog_option(){}
+    function get_active_blog_for_user(){}
+    function get_blog_details(){}
+
+}
