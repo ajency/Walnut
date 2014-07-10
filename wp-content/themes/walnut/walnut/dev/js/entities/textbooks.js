@@ -203,120 +203,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           return console.log('getAllTextbooks transaction completed');
         }).fail(_.failureHandler);
       },
-      getTextbooksByClassIDFromLocal: function(class_id) {
-        var getModulesCount, getTextBookIds, onSuccess, runMainQuery;
-        getTextBookIds = function() {
-          var runQ, success;
-          runQ = function() {
-            return $.Deferred(function(d) {
-              return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['textbooks', _.getUserID()], success(d), _.deferredErrorHandler(d));
-              });
-            });
-          };
-          success = function(d) {
-            return function(tx, data) {
-              var ids;
-              ids = unserialize(data.rows.item(0)['meta_value']);
-              ids = _.compact(ids);
-              return d.resolve(ids);
-            };
-          };
-          return $.when(runQ()).done(function() {
-            return console.log('getTextBookIds transaction completed');
-          }).fail(_.failureHandler);
-        };
-        getModulesCount = function(textbook_id) {
-          var pattern, runQ, success;
-          pattern = '%"' + textbook_id + '"%';
-          runQ = function() {
-            return $.Deferred(function(d) {
-              return _.db.transaction(function(tx) {
-                return tx.executeSql("SELECT COUNT(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "'", [], success(d), _.deferredErrorHandler(d));
-              });
-            });
-          };
-          success = function(d) {
-            return function(tx, data) {
-              var modules_count;
-              modules_count = data.rows.item(0)['count'];
-              return d.resolve(modules_count);
-            };
-          };
-          return $.when(runQ()).done(function() {
-            return console.log('getModulesCount transaction completed');
-          }).fail(_.failureHandler);
-        };
-        runMainQuery = function() {
-          var textbookIds, textbook_ids;
-          textbook_ids = '';
-          textbookIds = getTextBookIds();
-          textbookIds.done((function(_this) {
-            return function(ids) {
-              return textbook_ids = ids;
-            };
-          })(this));
-          return $.Deferred(function(d) {
-            return _.db.transaction(function(tx) {
-              var pattern;
-              pattern = '%"' + class_id + '"%';
-              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' AND wtr.textbook_id IN (" + textbook_ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
-            });
-          });
-        };
-        onSuccess = function(d) {
-          return function(tx, data) {
-            var i, result, row, _fn, _i, _ref;
-            result = [];
-            _fn = function(row, i) {
-              var modulesCount;
-              modulesCount = getModulesCount(row['textbook_id']);
-              return modulesCount.done(function(modules_count) {
-                return (function(row, i, modules_count) {
-                  var textbookOptions;
-                  textbookOptions = _.getTextbookOptions(row['term_id']);
-                  return textbookOptions.done(function(options) {
-                    var classes, subjects;
-                    classes = subjects = '';
-                    if (row["class_id"] !== '') {
-                      classes = unserialize(row["class_id"]);
-                    }
-                    if (row["tags"] !== '') {
-                      subjects = unserialize(row["tags"]);
-                    }
-                    return result[i] = {
-                      term_id: row["term_id"],
-                      name: row["name"],
-                      slug: row["slug"],
-                      term_group: row["term_group"],
-                      term_order: row["term_order"],
-                      term_taxonomy_id: row["term_taxonomy_id"],
-                      taxonomy: row["taxonomy"],
-                      description: row["description"],
-                      parent: row["parent"],
-                      count: row["count"],
-                      classes: classes,
-                      subjects: subjects,
-                      modules_count: modules_count,
-                      author: options.author,
-                      thumbnail: options.attachmenturl,
-                      cover_pic: options.attachmenturl
-                    };
-                  });
-                })(row, i, modules_count);
-              });
-            };
-            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-              row = data.rows.item(i);
-              _fn(row, i);
-            }
-            return d.resolve(result);
-          };
-        };
-        return $.when(runMainQuery()).done(function(data) {
-          return console.log('getTextbooksByClassIDFromLocal transaction completed');
-        }).fail(_.failureHandler);
-      },
       getTextBookByIDFromLocal: function(id) {
         var onSuccess, runQuery;
         runQuery = function() {
@@ -400,9 +286,6 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
     });
     App.reqres.setHandler("get:textbook:local", function() {
       return API.getTextbooksFromLocal();
-    });
-    App.reqres.setHandler("get:textbook:by:classid:local", function(class_id) {
-      return API.getTextbooksByClassIDFromLocal(class_id);
     });
     App.reqres.setHandler("get:textbook:by:id:local", function(id) {
       return API.getTextBookByIDFromLocal(id);

@@ -118,7 +118,3 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'getStudentsCount transaction completed'
 			.fail _.failureHandler
-
-
-		
-		

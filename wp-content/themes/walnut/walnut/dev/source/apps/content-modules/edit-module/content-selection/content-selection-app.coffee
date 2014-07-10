@@ -101,7 +101,7 @@ define ['app'
             onShow:->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
                 @fullCollection= Marionette.getOption @, 'fullCollection'
-                textbookFiltersHTML= $.showTextbookFilters @textbooksCollection
+                textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection
                 @$el.find '#textbook-filters'
                 .html textbookFiltersHTML
 

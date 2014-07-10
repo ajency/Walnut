@@ -179,48 +179,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 				console.log 'getMetaValue transaction completed'
 			.fail _.failureHandler
 
-		
-		#Get additional textbook options
-		getTextbookOptions : (id)->
-
-			options =
-				author:''
-				attachmenturl:''
-
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT option_value FROM wp_options WHERE option_name=?"
-							, ['taxonomy_'+id], onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess = (d)->
-				(tx, data)->
-					if data.rows.length isnt 0
-
-						option_value = unserialize(data.rows.item(0)['option_value'])
-
-						url = option_value.attachmenturl
-						if url is 'false'
-							attachmenturl = ''
-						else
-							directoryPath = _.getSynapseMediaDirectoryPath()
-							attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"))
-							attachmenturl = '<img src="'+attachmenturl+'" 
-							onerror="this.onerror=null;this.src=\'/images/img-not-found.jpg\';">'
-
-						options = 
-							author: option_value.author
-							attachmenturl: attachmenturl
-
-						d.resolve options
-
-					else 
-						d.resolve options
-					
-			$.when(runQuery()).done ->
-				console.log 'getTextbookOptions transaction completed'
-			.fail _.failureHandler
-
 
 		
 		# Decrypt the encrypted video file

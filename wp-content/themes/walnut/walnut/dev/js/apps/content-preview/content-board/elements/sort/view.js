@@ -32,7 +32,7 @@ define(['app'], function(App) {
         return SortView.__super__.constructor.apply(this, arguments);
       }
 
-      SortView.prototype.template = '<div class="sort"></div> <div class="alert alert-success text-center fibRightAns" style="display: none;"> <div class="btn-group " data-toggle="buttons" id="toggleView"> <label class="btn btn-default"> <input type="radio" name="sort" id="myAnswer" data-sort-value="myAnswer"> My Answer </label> <label class="btn btn-primary"> <input type="radio" name="sort" id="rightAnswer" data-sort-value="correctAnswer"> Correct Answer </label> </div> </div>';
+      SortView.prototype.template = '<div class="sort"></div> <div class="alert alert-success text-center fibRightAns" style="display: none;"> <div class="btn-group"> <input type="button" class="btn btn-default btn-primary" value=" My Answer" data-sort-value="myAnswer"> <input type="button" class="btn btn-default " value=" Correct Answer" data-sort-value="correctAnswer"> </div> </div>';
 
       SortView.prototype.itemView = OptionView;
 
@@ -69,6 +69,12 @@ define(['app'], function(App) {
         }
       };
 
+      SortView.prototype.onDestroySortable = function() {
+        if (this.$el.find('.sort').hasClass('ui-sortable')) {
+          return this.$el.find('.sort').sortable('destroy');
+        }
+      };
+
       SortView.prototype.onShowFeedback = function() {
         var $container;
         this.$el.find('.fibRightAns').show();
@@ -78,9 +84,7 @@ define(['app'], function(App) {
             return $(element).before("<span class='correctAnswer' style='display:none;'>" + (_this.collection.get($(element).val()).get('index')) + "</span>");
           };
         })(this));
-        if (this.$el.find('.sort').hasClass('ui-sortable')) {
-          this.$el.find('.sort').sortable('destroy');
-        }
+        this.onDestroySortable();
         $container = this.$el.find('.sort');
         $container.isotope({
           itemSelector: '.sort-option',
@@ -90,10 +94,16 @@ define(['app'], function(App) {
             myAnswer: '.myAnswer parseInt'
           }
         });
-        return this.$el.find('#toggleView').on('click', (function(_this) {
+        this.$el.find('.sort-option').css('min-width', '100%');
+        return this.$el.find('.fibRightAns input').on('click', (function(_this) {
           return function(evt) {
             var sortValue;
-            sortValue = $(evt.target).find('input').attr('data-sort-value');
+            evt.stopPropagation();
+            _this.$el.find('.fibRightAns input').removeClass('btn-primary');
+            $(evt.target).addClass('btn-primary');
+            sortValue = $(evt.target).attr('data-sort-value');
+            console.log(sortValue);
+            console.log($(evt.target));
             return _this.$el.find('.sort').isotope({
               sortBy: sortValue
             });

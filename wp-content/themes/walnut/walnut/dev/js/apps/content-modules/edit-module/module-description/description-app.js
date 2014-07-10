@@ -253,6 +253,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
 
       CollectionDetailsView.prototype.onFetchSubsectionsComplete = function(subsections) {
         var subSectionIDs, subsectionsElemnet, term_ids;
+        this.$el.find('#subsecs').select2('data', null);
+        this.$el.find('#subsecs').html('');
         term_ids = this.model.get('term_ids');
         if (term_ids != null) {
           subSectionIDs = term_ids['subsections'];

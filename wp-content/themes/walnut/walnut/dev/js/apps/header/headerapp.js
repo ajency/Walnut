@@ -82,7 +82,6 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
 
       HeaderView.prototype.events = {
         'click #logout': function() {
-          $.sidr('close', 'walnutProfile');
           return this.trigger("user:logout");
         },
         'click #user_logout': 'onAppLogout'

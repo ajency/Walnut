@@ -19,7 +19,6 @@ define ['app'
                     ]
                     elements : []
                     marks : 1
-                    individual_marks : false
                     multiple : false
                     correct_answer : [3]
 
@@ -35,9 +34,12 @@ define ['app'
             renderElement : =>
                 optionsObj = @layout.model.get 'options'
 
+                @_parseOptions optionsObj
+
                 optionCollection = App.request "create:new:option:collection", optionsObj
                 @layout.model.set 'options', optionCollection
-                @layout.model.set 'correct_answer',  _.map @layout.model.get('correct_answer'),(ans)->parseInt ans
+
+                console.log @layout.model
 
 
                 # get the view
@@ -58,6 +60,16 @@ define ['app'
             _getMcqView : ->
                 new Mcq.Views.McqView
                     model : @layout.model
+
+            # convert the option attributes to integers
+            _parseOptions : (optionsObj)->
+                _.each optionsObj,(option)->
+                    option.marks = parseInt option.marks if option.marks?
+                    option.optionNo = parseInt option.optionNo if option.optionNo?
+                    option.class = parseInt option['class'] if option['class']?
+
+                @layout.model.set 'correct_answer', _.map @layout.model.get('correct_answer'), (ans)->
+                    parseInt ans
 
             createRowStructure : (options)->
                 columnCount = parseInt(@layout.model.get('columncount') ) + 1
@@ -83,7 +95,9 @@ define ['app'
 
                     @_setColumnClassForRow(rowElements,rowNumber,optionsInCurrentRow)
 
-                    controller = App.request "add:new:element", options.container, 'Row', rowElements
+                    console.log rowElements
+
+                    controller = App.request "add:new:element", options.container, 'Row',null, rowElements
 
                     @_iterateThruOptions(controller, rowNumber, num) for num in [1..optionsInCurrentRow]
                     totalOptionsinMcq -= @layout.model.get 'columncount'
@@ -112,6 +126,7 @@ define ['app'
                 optionNumber = (rowNumber - 1) * @layout.model.get('columncount') + index
                 idx = index - 1
                 container = controller.layout.elementRegion.currentView.$el.children().eq(idx)
+                console.log container
                 #                @_addMcqOption(container,@layout.model.get('options').get(optionNumber) )
 
                 # set the option number for current option
@@ -127,7 +142,7 @@ define ['app'
                         className : 12
                         elements : []
                     ]
-                optionRowController = App.request "add:new:element", container, 'Row', optionElements
+                optionRowController = App.request "add:new:element", container, 'Row',null, optionElements
 
                 optionRowContainer = optionRowController.layout.elementRegion.currentView.$el.children().eq(0)
 
@@ -139,15 +154,15 @@ define ['app'
             _fillOptionRowWithElements: (optionRowContainer,optionNumber)->
                 @_addMcqOption(optionRowContainer, @layout.model.get('options').get(optionNumber))
 
-                console.log JSON.stringify @layout.model.get('elements')
+#                console.log JSON.stringify @layout.model.get('elements')
 
                 if not @layout.model.get('elements')[optionNumber-1]?
                     @layout.model.get('elements')[optionNumber-1] = [{element : 'Text'}]
 
                 thisOptionElementsArray = @layout.model.get('elements')[optionNumber-1]
-                console.log JSON.stringify thisOptionElementsArray
+#                console.log JSON.stringify thisOptionElementsArray
                 _.each thisOptionElementsArray,(ele)->
-                    App.request "add:new:element", optionRowContainer, ele.element, ele
+                    App.request "add:new:element", optionRowContainer, ele.element,null, ele
 
 
             # create an mcq option
@@ -211,10 +226,13 @@ define ['app'
                             optionNo: oldOptionCount
                 # else remove options
                 if oldOptionCount > newOptionCount
-                    until oldOptionCount is newOptionCount
-                        model.get('elements').pop()
-                        model.get('options').pop()
-                        oldOptionCount--
+                    if confirm "Decreasing number of options may cause loss of data. Do you want to continue?"
+                        until oldOptionCount is newOptionCount
+                            model.get('elements').pop()
+                            optionRemoved = model.get('options').pop()
+
+                            model.set 'correct_answer',_.without model.get('correct_answer'),optionRemoved.get 'optionNo'
+                            oldOptionCount--
 
                 model.get('options').each _.bind @_changeColumnClass, @, numberOfColumns
 
@@ -246,10 +264,11 @@ define ['app'
                 @view.triggerMethod 'get:all:option:elements'
 
             deleteElement: (model)->
-                console.log 'destroying'
                 model.set('options', '')
                 delete model.get 'options'
-                model.destroy()
+
+                super model
+
                 App.execute "close:question:properties"
 
 

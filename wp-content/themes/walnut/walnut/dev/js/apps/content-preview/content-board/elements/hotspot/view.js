@@ -128,7 +128,8 @@ define(['app'], function(App) {
                 y: option.height() / 2
               },
               opacity: 0.5,
-              fill: 'blue'
+              fill: 'blue',
+              rotation: option.rotation()
             });
           }
         } else {

@@ -442,7 +442,7 @@ define(['app'], function(App) {
           }
         });
         canvasText = new Kinetic.Text({
-          text: 'CLICK TO ENTER TEXT',
+          text: 'Enter text in Properties Dock',
           opacity: 0.3,
           fontFamily: hotspotElement.get('fontFamily'),
           fontSize: hotspotElement.get('fontSize'),

@@ -27,22 +27,32 @@ define ['underscore'], ( _) ->
 							name: row['name']
 							slug: row['slug']
 							term_group: row['term_group']
-							term_order: row['term_order']
 							term_taxonomy_id: row['term_taxonomy_id']
 							taxonomy: row['taxonomy']
 							description: row['description']
 							parent: row['parent']
-							count: row['count']#Questions
-							thumbnail: ''
-							cover_pic: ''
-							author: ''
-							classes: null
-							subjects: null
-							modules_count: ''
-							chapter_count: ''#Sections
 					
 					d.resolve result
 
 			$.when(runQuery()).done (d)->
 				console.log 'getChaptersByParentId transaction completed'
+			.fail _.failureHandler
+
+
+		
+		getChapterCount : (parentId)->
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT COUNT(term_id) AS chapter_count FROM wp_term_taxonomy
+							WHERE parent=?", [parentId], onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+					chapter_count = data.rows.item(0)['chapter_count']
+					d.resolve chapter_count
+
+			$.when(runQuery()).done ->
+				console.log 'getChapterCount transaction completed'
 			.fail _.failureHandler

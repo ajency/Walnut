@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       FibView.prototype.tagName = 'div';
 
-      FibView.prototype.template = '<p class="fib-text"></p> </br> <div class="alert alert-success text-center fibRightAns" style="display: none;"> <h5>The correct answer is:</h5> <h4 class="semi-bold"> </h4> </div>';
+      FibView.prototype.template = '<p class="fib-text"></p> </br> <div class="alert alert-success text-center fibRightAns" style="display: none;"> <h5>The correct answer is:</h5> <h4 class="semi-bold"> </h4> <div class="semi-bold" id="allAnswers"> </div> </div>';
 
       FibView.prototype.className = 'fib';
 
@@ -36,16 +36,20 @@ define(['app'], function(App) {
         htmlText = $.parseHTML(originalText);
         this.$el.find('h4').html(htmlText);
         self = this;
-        return this.$el.find('h4').find('input').each(function(index) {
-          var correctAnswerArray;
-          console.log($(this));
-          correctAnswerArray = self.blanksCollection.get($(this).attr('data-id')).get('correct_answers');
-          if (correctAnswerArray[0] !== "") {
-            return $(this).replaceWith("<span class='fibAns'>" + correctAnswerArray[0] + "</span>");
-          } else {
-            return $(this).replaceWith("<span class='fibAns'>(no correct)</span>");
-          }
-        });
+        return this.$el.find('h4').find('input').each((function(_this) {
+          return function(index, input) {
+            var correctAnswerArray;
+            correctAnswerArray = _this.blanksCollection.get($(input).attr('data-id')).get('correct_answers');
+            if (correctAnswerArray[0] !== "") {
+              $(input).replaceWith("<span class='fibAns'>" + correctAnswerArray[0] + "</span>");
+              if (correctAnswerArray.length > 1) {
+                return _this.$el.find('#allAnswers').append("<span>All answers for " + correctAnswerArray[0] + ": " + (_.toSentence(correctAnswerArray)) + "</span></br>");
+              }
+            } else {
+              return $(input).replaceWith("<span class='fibAns'>(no correct)</span>");
+            }
+          };
+        })(this));
       };
 
       return FibView;
