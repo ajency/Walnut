@@ -1,4 +1,4 @@
-define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
+define ["app", 'backbone'], (App, Backbone) ->
 
 		App.module "Entities.Divisions", (Divisions, App, Backbone, Marionette, $, _)->
 			
@@ -51,36 +51,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 						division.fetch()
 						console.log division
 					division
-
-
-				#get divisions from local database
-				getDivisionsFromLocal : ->
-
-					runFunc = ->
-						$.Deferred (d)->
-							divisions = _.getAllDivisions()
-							divisions.done (result)->
-
-								d.resolve result
-
-					$.when(runFunc()).done	->
-						console.log 'getDivisionsFromLocal done'
-					.fail _.failureHandler
-
-				
-				#get division by id from local database
-				getDivisionByIdFromLocal : (id)->
-
-					runFunc = ->
-						$.Deferred (d)->
-							divisions = _.getDivisionById(id)
-							divisions.done (result)->
-
-								d.resolve result
-
-					$.when(runFunc()).done	->
-						console.log 'getDivisionByIdFromLocal done'
-					.fail _.failureHandler	
 					
 
 
@@ -92,11 +62,3 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			# request handler to get single division
 			App.reqres.setHandler "get:division:by:id", (id) ->
 				API.getDivisionByID(id)
-
-			# request handler to get all divisions from local database
-			App.reqres.setHandler "get:division:local", ->
-				API.getDivisionsFromLocal()
-
-			# request handler to get division by id
-			App.reqres.setHandler "get:division:by:id:local", (id)->
-				API.getDivisionByIdFromLocal(id)			

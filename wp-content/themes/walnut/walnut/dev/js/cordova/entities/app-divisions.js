@@ -1,4 +1,4 @@
-define(['underscore', 'unserialize'], function(_) {
+define(['underscore'], function(_) {
   return _.mixin({
     getAllDivisions: function() {
       var runFunc;
@@ -26,21 +26,6 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getAllDivisions done');
       }).fail(_.failureHandler);
     },
-    getDivisionById: function(id) {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          var division;
-          division = _.fetchSingleDivision(id);
-          return division.done(function(result) {
-            return d.resolve(result);
-          });
-        });
-      };
-      return $.when(runFunc()).done(function() {
-        return console.log('getDivisionById done');
-      }).fail(_.failureHandler);
-    },
     getDivisionIds: function() {
       var onSuccess, runQuery;
       runQuery = function() {
@@ -55,7 +40,7 @@ define(['underscore', 'unserialize'], function(_) {
           var ids;
           ids = '';
           if (data.rows.length !== 0) {
-            ids = unserialize(data.rows.item(0)['meta_value']);
+            ids = _.unserialize(data.rows.item(0)['meta_value']);
           }
           return d.resolve(ids);
         };

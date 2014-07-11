@@ -12,12 +12,7 @@ define(["backbone"], function(Backbone) {
       console.log('Collection name: ' + collection_name);
       opts = options.data;
       if (collection_name === 'textbook') {
-        if (typeof options.data.class_id === 'undefined') {
-          data = App.reqres.request("get:" + collection_name + ":local");
-          data.done(function(d) {
-            return collection.set(d);
-          });
-        } else {
+        if (typeof opts.class_id !== 'undefined') {
           data = _.getTextbooksByClassIdAndDivision(opts.class_id, opts.division);
           data.done(function(d) {
             console.log('textbook by class id and division data');
@@ -39,7 +34,7 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'division') {
-        data = App.reqres.request("get:" + collection_name + ":local");
+        data = _.getAllDivisions();
         data.done(function(d) {
           return collection.set(d);
         });
@@ -134,7 +129,7 @@ define(["backbone"], function(Backbone) {
         modelname = model.name;
         console.log('Model name: ' + modelname);
         if (modelname === 'division') {
-          data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('id'));
+          data = _.fetchSingleDivision(model.get('id'));
           data.done(function(d) {
             return model.set(d);
           });

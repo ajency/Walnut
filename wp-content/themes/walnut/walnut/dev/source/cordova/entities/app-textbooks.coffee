@@ -4,6 +4,10 @@ define ['underscore'], ( _) ->
 
 	_.mixin
 
+		
+		# Get list of textbooks based on class id and division.
+		# Also fetch the total number of modules and chapters for that particular textbook.
+		# Pass additional textbook details such as author name and image url.
 		getTextbooksByClassIdAndDivision : (class_id, division)->
 
 			runQuery = ->
@@ -77,6 +81,8 @@ define ['underscore'], ( _) ->
 
 
 		
+		# Get meta_value i.e serialized string containing textbook ids assigned to the logged in user
+		# and return the unserialized array. 
 		getTextBookIds : ->
 
 			runQuery = ->
@@ -98,6 +104,7 @@ define ['underscore'], ( _) ->
 
 
 		
+		# Get the total number of modules for each textbook having status as 'publish'
 		getModulesCount : (textbook_id)->
 
 			pattern = '%"'+textbook_id+'"%'
@@ -120,7 +127,8 @@ define ['underscore'], ( _) ->
 
 
 		
-		#Get additional textbook options
+		# Get additional textbook options such as author name and textbook image url.
+		# Here the url is modified to fetch textbook images from local directory.
 		getTextbookOptions : (id)->
 
 			options = author:'', attachmenturl:''

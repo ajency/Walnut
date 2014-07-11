@@ -1,4 +1,4 @@
-define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
+define ["app", 'backbone'], (App, Backbone) ->
 	App.module "Entities.Textbooks", (Textbooks, App, Backbone, Marionette, $, _)->
 
 
@@ -96,61 +96,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 				textbookNamesCollection
 
 
-
-			#get all textbooks from local database
-			getTextbooksFromLocal:->
-
-				runQuery = ->
-					$.Deferred (d)->
-						_.db.transaction (tx)->
-							tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
-								LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id  
-								WHERE t.term_id=tt.term_id AND tt.taxonomy=? AND tt.parent=?"
-								, ['textbook', 0], onSuccess(d), _.deferredErrorHandler(d));
-							
-
-				onSuccess =(d)->
-					(tx,data)->
-
-						result = []
-
-						for i in [0..data.rows.length-1] by 1
-
-							row = data.rows.item(i)
-
-							do(row, i)->
-								textbookOptions = _.getTextbookOptions(row['term_id'])
-								textbookOptions.done (options)->
-							
-									classes = subjects = ''
-									classes = unserialize(row["class_id"]) if row["class_id"] isnt ''
-									subjects = unserialize(row["tags"]) if row["tags"] isnt ''
-									
-									result[i] = 
-										term_id: row["term_id"]
-										name: row["name"]
-										slug: row["slug"]
-										term_group: row["term_group"]
-										term_order: row["term_order"]
-										term_taxonomy_id: row["term_taxonomy_id"]
-										taxonomy: row["taxonomy"]
-										description: row["description"]
-										parent: row["parent"]
-										count: row["count"]
-										classes: classes
-										subjects: subjects
-										author: options.author
-										thumbnail: options.attachmenturl
-										cover_pic: options.attachmenturl
-
-	
-						d.resolve(result)
-
-				$.when(runQuery()).done (data)->
-					console.log 'getAllTextbooks transaction completed'
-				.fail _.failureHandler
-
-
 			# get textbooks by textbook id from local database
 			getTextBookByIDFromLocal : (id)->
 
@@ -238,9 +183,6 @@ define ["app", 'backbone', 'unserialize'], (App, Backbone) ->
 			API.getTextBookNamesByIDs ids
 
 
-		# request handler to get all textbooks from local database
-		App.reqres.setHandler "get:textbook:local", ->
-			API.getTextbooksFromLocal()
 
 		App.reqres.setHandler "get:textbook:by:id:local", (id)->
 			API.getTextBookByIDFromLocal id	

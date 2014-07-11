@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
+define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Divisions", function(Divisions, App, Backbone, Marionette, $, _) {
     var API, DivisionCollection, DivisionModel;
     DivisionModel = (function(_super) {
@@ -74,49 +74,13 @@ define(["app", 'backbone', 'unserialize'], function(App, Backbone) {
           console.log(division);
         }
         return division;
-      },
-      getDivisionsFromLocal: function() {
-        var runFunc;
-        runFunc = function() {
-          return $.Deferred(function(d) {
-            var divisions;
-            divisions = _.getAllDivisions();
-            return divisions.done(function(result) {
-              return d.resolve(result);
-            });
-          });
-        };
-        return $.when(runFunc()).done(function() {
-          return console.log('getDivisionsFromLocal done');
-        }).fail(_.failureHandler);
-      },
-      getDivisionByIdFromLocal: function(id) {
-        var runFunc;
-        runFunc = function() {
-          return $.Deferred(function(d) {
-            var divisions;
-            divisions = _.getDivisionById(id);
-            return divisions.done(function(result) {
-              return d.resolve(result);
-            });
-          });
-        };
-        return $.when(runFunc()).done(function() {
-          return console.log('getDivisionByIdFromLocal done');
-        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:divisions", function(opt) {
       return API.getDivisions(opt);
     });
-    App.reqres.setHandler("get:division:by:id", function(id) {
+    return App.reqres.setHandler("get:division:by:id", function(id) {
       return API.getDivisionByID(id);
-    });
-    App.reqres.setHandler("get:division:local", function() {
-      return API.getDivisionsFromLocal();
-    });
-    return App.reqres.setHandler("get:division:by:id:local", function(id) {
-      return API.getDivisionByIdFromLocal(id);
     });
   });
 });
