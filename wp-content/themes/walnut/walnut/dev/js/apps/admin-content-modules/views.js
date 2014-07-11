@@ -193,7 +193,9 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         if (Marionette.getOption(this, 'mode') === 'training') {
           this.$el.find('.status_label, .training-date, #status_header, .dateInfo').remove();
         }
-        textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
+        textbookFiltersHTML = $.showTextbookFilters({
+          textbooks: this.textbooksCollection
+        });
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
         this.$el.find(".select2-filters").select2();

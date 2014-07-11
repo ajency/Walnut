@@ -95,7 +95,13 @@ define ['app'], (App)->
                                         <div class="filters">
                                             <div class="table-tools-actions">
                                                 <span id="textbook-filters"></span>
-                                            </div>
+                                                <select class="select2-filters" id="content-status-filter" style="width:150px">
+                                                    <option value="">All Status</option>
+                                                    <option value="started">In Progress</option>
+                                                    <option value="not started">Not Started</option>
+                                                    <option value="completed">Completed</option>
+                                                </select>
+                                                </div>
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
@@ -146,6 +152,7 @@ define ['app'], (App)->
             events :
                 'change .textbook-filter' :(e)->
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
+                'change #content-status-filter'  : 'setFilteredContent'
 
                 'click .start-training' : 'startTraining'
                 'click .training-date' : 'scheduleTraining'
