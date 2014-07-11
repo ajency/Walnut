@@ -89,7 +89,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
         this.contentGroupCollection = App.request("get:content:pieces:of:group", model);
         return App.execute("when:fetched", this.contentGroupCollection, (function(_this) {
           return function() {
-            if (model.get('status') === 'underreview') {
+            if (model.get('post_status') === 'underreview') {
               App.execute("show:content:selectionapp", {
                 region: _this.layout.contentSelectionRegion,
                 model: model,

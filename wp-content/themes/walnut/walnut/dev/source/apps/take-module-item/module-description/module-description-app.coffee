@@ -112,7 +112,7 @@ define ['app'
                     @$el.find "#question-done"
                     .html '<i class="fa fa-forward"></i> Finish Module'
 
-                if @model.get('status') is 'archive'
+                if @model.get('post_status') is 'archive'
                     @$el.find "#question-done"
                     .remove()
 

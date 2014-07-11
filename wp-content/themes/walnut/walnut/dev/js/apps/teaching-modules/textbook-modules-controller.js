@@ -11,7 +11,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       function textbookModulesController() {
         this._showScheduleModal = __bind(this._showScheduleModal, this);
         this._getContentGroupsListingView = __bind(this._getContentGroupsListingView, this);
-        this._saveTrainingStatus = __bind(this._saveTrainingStatus, this);
+        this._saveSchedule = __bind(this._saveSchedule, this);
         return textbookModulesController.__super__.constructor.apply(this, arguments);
       }
 
@@ -54,7 +54,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
                 _this.show(modalview, {
                   region: App.popupRegion
                 });
-                return _this.listenTo(modalview, "save:scheduled:date", _this._saveTrainingStatus);
+                return _this.listenTo(modalview, "save:scheduled:date", _this._saveSchedule);
               }
             });
             return _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
@@ -70,7 +70,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
         })(this));
       };
 
-      textbookModulesController.prototype._saveTrainingStatus = function(id, date) {
+      textbookModulesController.prototype._saveSchedule = function(id, date) {
         var data, first_content_piece, singleModule;
         singleModule = this.contentGroupsCollection.get(id);
         first_content_piece = _.first(singleModule.get('content_pieces'));
@@ -78,7 +78,8 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
           collection_id: id,
           content_piece_id: first_content_piece,
           start_date: date,
-          division: this.division
+          division: this.division,
+          status: 'scheduled'
         };
         App.request("schedule:content:group", data);
         return this.view.triggerMethod('scheduled:module', id, date);

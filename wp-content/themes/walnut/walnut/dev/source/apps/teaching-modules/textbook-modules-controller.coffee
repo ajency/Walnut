@@ -40,7 +40,7 @@ define ['app'
                         modalview = @_showScheduleModal @singleModule
                         @show modalview, region: App.popupRegion
 
-                        @listenTo modalview, "save:scheduled:date", @_saveTrainingStatus
+                        @listenTo modalview, "save:scheduled:date", @_saveSchedule
 
                     @listenTo @view, "fetch:chapters:or:sections", (parentID, filterType) =>
                         chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
@@ -48,7 +48,7 @@ define ['app'
                             @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType
 
 
-            _saveTrainingStatus: (id, date)=>
+            _saveSchedule: (id, date)=>
 
                 singleModule = @contentGroupsCollection.get id
 
@@ -59,6 +59,7 @@ define ['app'
                     content_piece_id: first_content_piece
                     start_date      : date
                     division        : @division
+                    status          : 'scheduled'
 
                 App.request "schedule:content:group",data
 
