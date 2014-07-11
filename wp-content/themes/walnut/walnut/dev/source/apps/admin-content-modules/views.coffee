@@ -168,7 +168,7 @@ define ['app',
                     @$el.find '.status_label, .training-date, #status_header, .dateInfo'
                     .remove();
 
-                textbookFiltersHTML= $.showTextbookFilters @textbooksCollection
+                textbookFiltersHTML= $.showTextbookFilters textbooks: @textbooksCollection
 
                 @fullCollection = Marionette.getOption @, 'fullCollection'
 

@@ -22,15 +22,16 @@ define ['app'
                     @contentGroupsCollection = App.request "get:content:groups",
                         division: division
                         class_id: class_id
+                        post_status: 'publish'
 
                     @textbooksCollection = App.request "get:textbooks", ('class_id': class_id)
                     App.execute "when:fetched", [@contentGroupsCollection,@textbooksCollection], =>
                         #division= @textbooksCollection.first().get 'id'
                         chapter_ids= _.chain @contentGroupsCollection.pluck 'term_ids'
-                                    .pluck 'chapter'
-                                    .unique()
-                                    .compact()
-                                    .value()
+                        .pluck 'chapter'
+                            .unique()
+                            .compact()
+                            .value()
 
                         #all chapter names in this set of contentgroupscollection
                         @allChaptersCollection = App.request "get:textbook:names:by:ids", chapter_ids
@@ -54,6 +55,7 @@ define ['app'
                                 newModulesCollection = App.request "get:content:groups",
                                     division    : division
                                     class_id    : class_id
+                                    post_status: 'publish'
 
                                 @textbooksCollection = App.request "get:textbooks", ('class_id': class_id)
                                 App.execute "when:fetched", [newModulesCollection,@textbooksCollection ], =>
@@ -78,3 +80,10 @@ define ['app'
                     textbooksCollection : @textbooksCollection
                     chaptersCollection  : @allChaptersCollection
                     divisionsCollection : @divisionsCollection
+
+
+
+
+        # set handlers
+        App.commands.setHandler "show:all:content:modules:app", (opt = {})->
+            new View.AdminModulesController opt

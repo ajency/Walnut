@@ -1,33 +1,11 @@
 <div id="teacherOptns">
-    <h3><a href="#takeClass" class="active">Take a Class</a></h3>
-    <h3 class=""><a href="#training">Start Traning</a></h3>
-    <h3 class=""><a href="#progress">Class Progress</a></h3>
+    <h3><a href="#take-class-region" class="active">Take a Class</a></h3>
+    <h3 class=""><a href="#start-training-region">Start Training</a></h3>
+    <h3 class=""><a href="#class-progress-region">Class Progress</a></h3>
 </div>
 
-<div class="tab-content" style="background: none">
-    <div class="tab-pane animated fadeInUp active" id="takeClass">
-        <h1 class="text-center muted m-b-20">Select a <span class="bold">class</span> to begin</h1>
-        <ul class="classes">
-            {{#divisions}}
-                {{#.}}
-                    <li><a href="#teachers/take-class/{{class_id}}/{{id}}"><div class="classesWrap">{{division}}</div></a></li>
-                {{/.}}
-            {{/divisions}}
-        </ul>
-    </div>
-    <div class="tab-pane animated fadeInUp" id="training">
-        <h1 class="text-center muted m-b-20">Select a <span class="bold">class</span> to begin</h1>
-        <ul class="classes">
-            {{#classes}}
-                <li><a href="#teachers/start-training/{{id}}"><div class="classesWrap">{{label}}</div></a></li>
-            {{/classes}}
-        </ul>
-    </div>
-    <div class="tab-pane animated fadeInUp" id="progress">
-      <div class="row">
-        <div class="col-md-12">
-            <h1 class="text-center muted m-b-20">Coming <span class="bold">Soon</span> ...</h1>
-        </div>
-      </div>
-    </div>
+<div id="tab-content" class="tab-content" style="background: none">
+    <div class="tab-pane active" id="take-class-region"></div>
+    <div class="tab-pane" id="start-training-region"></div>
+    <div class="tab-pane" id="class-progress-region"></div>
 </div>

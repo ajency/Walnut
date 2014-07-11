@@ -48,7 +48,7 @@ define(['app', 'controllers/region-controller', 'text!apps/header/left/templates
             $('#main-menu').removeClass('mini');
             $('.page-content').removeClass('condensed');
             $('.scrollup').removeClass('to-edge');
-            $('.header-seperation').show();
+            $('.header-seperation').css("width", "250px");
             $('.header-seperation').css('height', '61px');
             return $('.footer-widget').show();
           } else {
@@ -56,7 +56,7 @@ define(['app', 'controllers/region-controller', 'text!apps/header/left/templates
             $('#main-menu').addClass('mini');
             $('.page-content').addClass('condensed');
             $('.scrollup').addClass('to-edge');
-            $('.header-seperation').hide();
+            $('.header-seperation').css("width", "0");
             return $('.footer-widget').hide();
           }
         }
