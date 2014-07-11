@@ -8,19 +8,17 @@ define ['underscore'], ( _) ->
 
 			runQuery = ->
 
-				textbook_ids = ''
-				textbookIds = _.getTextBookIds()
-				textbookIds.done (ids)=>
-					textbook_ids = ids
-
 				$.Deferred (d)->
-					_.db.transaction (tx)->
-						pattern = '%"'+class_id+'"%'
-						tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
-							LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 
-							WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0
-							AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+textbook_ids+")"
-							, [], onSuccess(d) , _.deferredErrorHandler(d));
+					textbookIds = _.getTextBookIds()
+					textbookIds.done (textbook_ids)->
+
+						_.db.transaction (tx)->
+							pattern = '%"'+class_id+'"%'
+							tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
+								LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id 
+								WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0
+								AND wtr.class_id LIKE '"+pattern+"' AND wtr.textbook_id IN ("+textbook_ids+")"
+								, [], onSuccess(d) , _.deferredErrorHandler(d));
 							
 
 			onSuccess = (d)->

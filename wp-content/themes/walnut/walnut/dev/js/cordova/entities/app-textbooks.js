@@ -3,19 +3,15 @@ define(['underscore'], function(_) {
     getTextbooksByClassIdAndDivision: function(class_id, division) {
       var onSuccess, runQuery;
       runQuery = function() {
-        var textbookIds, textbook_ids;
-        textbook_ids = '';
-        textbookIds = _.getTextBookIds();
-        textbookIds.done((function(_this) {
-          return function(ids) {
-            return textbook_ids = ids;
-          };
-        })(this));
         return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            var pattern;
-            pattern = '%"' + class_id + '"%';
-            return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' AND wtr.textbook_id IN (" + textbook_ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
+          var textbookIds;
+          textbookIds = _.getTextBookIds();
+          return textbookIds.done(function(textbook_ids) {
+            return _.db.transaction(function(tx) {
+              var pattern;
+              pattern = '%"' + class_id + '"%';
+              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' AND wtr.textbook_id IN (" + textbook_ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
+            });
           });
         });
       };
