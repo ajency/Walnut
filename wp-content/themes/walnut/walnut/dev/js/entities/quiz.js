@@ -23,13 +23,15 @@ define(["app", 'backbone'], function(App, Backbone) {
           last_modified_by: '',
           published_on: '',
           published_by: '',
-          status: 'underreview',
+          post_status: 'underreview',
           type: 'quiz',
           quiz_type: 'practice',
-          marks: 0,
+          marks: '',
           total_minutes: 0,
-          duration: 0,
+          duration: '',
           minshours: 'mins',
+          negMarksEnable: 'false',
+          negMarks: '',
           content_pieces: [],
           message: {}
         };

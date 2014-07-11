@@ -21,7 +21,7 @@ function save_quiz_module ($data = array()) {
         'last_modified_on' => date ('y-m-d H:i:s'),
         'last_modified_by' => get_current_user_id (),
         'duration' => $duration,
-        'status' => $data['status'],
+        'post_status' => $data['post_status'],
         'type' => $data['type']
     );
 
