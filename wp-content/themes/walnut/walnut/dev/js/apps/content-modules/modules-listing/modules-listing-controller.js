@@ -14,7 +14,9 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
 
       Controller.prototype.initialize = function() {
         var breadcrumb_items;
-        this.contentGroupCollection = App.request("get:content:groups");
+        this.contentGroupCollection = App.request("get:content:groups", {
+          'post_status': 'any'
+        });
         this.textbooksCollection = App.request("get:textbooks");
         this.allChaptersCollection = null;
         breadcrumb_items = {

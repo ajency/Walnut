@@ -43,14 +43,14 @@ define ['app'
                         data.duration
 
                 data.statusMessage = ->
-                    if data.status is 'underreview'
+                    if data.post_status is 'underreview'
                         return '<span class="label label-important">Under Review</span>'
-                    else if data.status is 'publish'
+                    else if data.post_status is 'publish'
                         return '<span class="label label-info">Published</span>'
-                    else if data.status is 'archive'
+                    else if data.post_status is 'archive'
                         return '<span class="label label-success">Archived</span>'
 
-                data.archivedModule = true if data.status in ['publish', 'archive']
+                data.archivedModule = true if data.post_status in ['publish', 'archive']
 
                 data
 
@@ -62,14 +62,14 @@ define ['app'
                 @chapters = options.chaptersCollection
 
             cloneModule :->
-                if @model.get('status') in ['publish','archive']
+                if @model.get('post_status') in ['publish','archive']
                     if confirm("Are you sure you want to clone '#{@model.get('name')}' ?") is true
                         @cloneModel = App.request "new:content:group"
                         groupData = @model.toJSON()
                         @clonedData = _.omit groupData,
                           ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
                         @clonedData.name = "#{@clonedData.name} clone"
-                        @clonedData.status = "underreview"
+                        @clonedData.post_status = "underreview"
 
                         App.execute "when:fetched", @cloneModel, =>
                             @cloneModel.save @clonedData,
@@ -122,7 +122,7 @@ define ['app'
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
                 'change #check_all_div'     : 'checkAll'
-                'change #content-status-filter'  : 'setFilteredContent'
+                'change #content-post-status-filter'  : 'setFilteredContent'
 
             initialize : ->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'

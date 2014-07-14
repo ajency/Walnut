@@ -118,9 +118,9 @@ add_action( 'wp_ajax_nopriv_get-site-audio-resources-data', 'get_site_audio_reso
 
 function ajax_sync_database(){
 
-    $blog_id= $_GET['blog_id'];
+    $blog_id= $_REQUEST['blog_id'];
 
-    $last_sync= (isset($_GET['last_sync']))? $_GET['last_sync']: '';
+    $last_sync= (isset($_REQUEST['last_sync']))? $_REQUEST['last_sync']: '';
 
     $export_details = export_tables_for_app($blog_id, $last_sync);
 
