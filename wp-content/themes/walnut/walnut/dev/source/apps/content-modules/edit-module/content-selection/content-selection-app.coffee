@@ -19,11 +19,29 @@ define ['app'
                     @show @view,
                         loading: true
 
+                    term_ids = @model.get 'term_ids'
 
-                    @listenTo @view, "fetch:chapters:or:sections", (parentID, filterType) =>
-                        chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
-                        App.execute "when:fetched", chaptersOrSections, =>
-                            @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType
+                    @listenTo @view, "show",=>
+                        if term_ids
+                            textbook_id = term_ids['textbook']
+
+                            chapter_id = term_ids['chapter'] if term_ids['chapter']?
+
+                            section_id = _.first _.flatten(term_ids['sections']) if term_ids['sections']?
+
+                            subsection_id = _.first _.flatten(term_ids['subsections']) if term_ids['subsections']?
+
+                            #fetch chapters based on the current content piece's textbook
+                            @fetchSectionOrSubsection(textbook_id, 'textbooks-filter', chapter_id) if textbook_id?
+
+                            #fetch sections based on chapter id
+                            @fetchSectionOrSubsection(chapter_id, 'chapters-filter',section_id) if chapter_id?
+
+                            #fetch sub sections based on chapter id
+                            @fetchSectionOrSubsection(section_id, 'sections-filter',subsection_id) if section_id?
+
+
+                    @listenTo @view, "fetch:chapters:or:sections", @fetchSectionOrSubsection
 
                     @listenTo @view, "add:content:pieces": (contentIDs) =>
 
@@ -33,6 +51,11 @@ define ['app'
 
 
                     @listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPieceRemoved
+
+            fetchSectionOrSubsection:(parentID, filterType, currItem) =>
+                chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
+                App.execute "when:fetched", chaptersOrSections, =>
+                    @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType,currItem
 
             contentPieceRemoved: (model)=>
                 @contentPiecesCollection.add model
@@ -52,8 +75,13 @@ define ['app'
                             <label for="checkbox{{ID}}"></label>
                           </div>
                         </td>
-                        <td>{{post_excerpt}}</td>
-                        <td>{{post_author_name}}</td>
+                        <td class="cpHeight">{{&post_excerpt}}</td>
+                        <td>{{content_type_str}}</td>
+                        <td>
+                            {{#present_in_modules}}
+                                <a href="#view-group/{{id}}">{{name}}</a> |
+                            {{/present_in_modules}}
+                         </td>
                         <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>'
 
             tagName: 'tr'
@@ -66,6 +94,13 @@ define ['app'
 
                 #for sorting the column date-wise
                 data.sort_date= moment(data.post_modified).format "YYYYMMDD"
+
+                data.content_type_str=
+                    _ data.content_type
+                    .chain()
+                    .humanize()
+                    .titleize()
+                    .value()
 
                 data
 
@@ -110,18 +145,26 @@ define ['app'
 
                 $('#dataContentTable').tablesorter();
 
-                pagerOptions =
-                    container : $(".pager")
-                    output : '{startRow} to {endRow} of {totalRows}'
+                @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
 
-                $('#dataContentTable').tablesorterPager pagerOptions
+                term_ids= @contentGroupModel.get 'term_ids'
+                $ "#textbooks-filter"
+                .select2().select2 'val', term_ids['textbook']
 
-            onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
+                @setFilteredContent()
+
+
+            onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
 
                 switch filterType
-                    when 'textbooks-filter' then $.populateChapters filteredCollection, @$el
-                    when 'chapters-filter' then $.populateSections filteredCollection, @$el
-                    when 'sections-filter' then $.populateSubSections filteredCollection, @$el
+                    when 'textbooks-filter' then $.populateChapters filteredCollection, @$el, currItem
+                    when 'chapters-filter' then $.populateSections filteredCollection, @$el, currItem
+                    when 'sections-filter' then $.populateSubSections filteredCollection, @$el, currItem
+
+                @setFilteredContent()
+
+
+            setFilteredContent:->
 
                 filtered_data= $.filterTableByTextbooks(@)
 

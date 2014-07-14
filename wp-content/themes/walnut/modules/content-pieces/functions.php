@@ -235,11 +235,43 @@ function get_single_content_piece($id){
     }
     $content_piece->grading_params = $grading_params;
 
+    $content_piece->present_in_modules = get_modules_containing_content_piece($id);
+
     switch_to_blog($current_blog_id);
 
     return $content_piece;
 }
 
+function get_modules_containing_content_piece($content_id){
+
+    global $wpdb;
+
+    if(!$content_id)
+        return false;
+
+    $modules=array();
+
+    $present_in_query=$wpdb->prepare("
+        SELECT * from {$wpdb->base_prefix}collection_meta
+            WHERE meta_key like %s
+            AND meta_value like %s",
+        array('content_pieces', "%\"$content_id\";%")
+    );
+
+    $result= $wpdb->get_results($present_in_query);
+
+    foreach($result as $module_meta){
+
+        $m['id']=$module_meta->collection_id;
+        $m['name']=get_module_name($module_meta->collection_id);
+
+        $modules[]=$m;
+
+    }
+
+    return $modules;
+
+}
 
 function get_json_to_clone($elements, $content_id=0, $create=FALSE)
 {
@@ -326,7 +358,7 @@ function prettify_content_piece_excerpt($excerpt_array){
         //IF CURRENT STRING HAS TEXT AND LENGTH OF EXCERPT TILL NOW IS LESS THAN 150
         //CONTINUE ADDING TO EXCERPT
 
-        if(strlen($ex)>0 && $excerpt_length <150 ){
+        if(strlen($ex)>0 && $excerpt_length <500 ){
             $excerpt.=$ex;
             $excerpt_length += strlen($ex);
             $excerpt.=' | ';
