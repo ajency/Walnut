@@ -109,7 +109,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         return DataContentItemView.__super__.constructor.apply(this, arguments);
       }
 
-      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td>{{content_type_str}}</td> <td> {{#present_in_modules}} <a href="#view-group/{{id}}">{{name}}</a> | {{/present_in_modules}} </td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>';
+      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td>{{content_type_str}}</td> <td class="cpHeight"> {{#present_in_modules}} <a href="#view-group/{{id}}" target="_blank">{{name}}</a> | {{/present_in_modules}} </td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>';
 
       DataContentItemView.prototype.tagName = 'tr';
 

@@ -77,9 +77,9 @@ define ['app'
                         </td>
                         <td class="cpHeight">{{&post_excerpt}}</td>
                         <td>{{content_type_str}}</td>
-                        <td>
+                        <td class="cpHeight">
                             {{#present_in_modules}}
-                                <a href="#view-group/{{id}}">{{name}}</a> |
+                                <a href="#view-group/{{id}}" target="_blank">{{name}}</a> |
                             {{/present_in_modules}}
                          </td>
                         <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>'
