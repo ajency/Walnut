@@ -10,7 +10,7 @@
 function save_content_module($data = array()) {
     global $wpdb;
 
-    $duration= (int) $data['duration'];
+    $duration = (int)$data['duration'];
 
     if($data['minshours']=='hrs')
         $duration = $duration * 60;
