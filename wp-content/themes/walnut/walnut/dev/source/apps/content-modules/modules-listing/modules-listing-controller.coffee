@@ -6,7 +6,7 @@ define ['app'
         class GroupListing.Controller extends RegionController
 
             initialize : ->
-                @contentGroupCollection = App.request "get:content:groups"
+                @contentGroupCollection = App.request "get:content:groups", 'post_status': 'any'
                 @textbooksCollection = App.request "get:textbooks"
                 @allChaptersCollection = null
 

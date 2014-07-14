@@ -16,7 +16,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 last_modified_by: ''
                 published_on: ''
                 published_by: ''
-                post_status: 'underreview'  # eg. underreview, publish, archive
+                post_status: 'publish'  # eg. underreview, publish, archive
                 total_minutes: 0
                 duration: 0
                 minshrs: 'mins'
