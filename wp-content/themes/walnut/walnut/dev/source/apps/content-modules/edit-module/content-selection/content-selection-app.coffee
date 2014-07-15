@@ -8,7 +8,7 @@ define ['app'
 
                 @textbooksCollection = App.request "get:textbooks"
                 @contentPiecesCollection = App.request "get:content:pieces",
-                    post_status: 'publish',
+                    post_status: 'publish'
                     content_type: ['teacher_question','content_piece']
 
                 {@model,@contentGroupCollection}= opts
@@ -92,6 +92,7 @@ define ['app'
 
             events:
                 'change .filters' :(e)->
+                    console.log 'change'
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
                 'change #check_all_div'     : 'checkAll'

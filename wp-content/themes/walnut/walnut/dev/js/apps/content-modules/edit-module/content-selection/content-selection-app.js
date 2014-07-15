@@ -133,6 +133,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
 
       DataContentTableView.prototype.events = {
         'change .filters': function(e) {
+          console.log('change');
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         },
         'change #check_all_div': 'checkAll',
