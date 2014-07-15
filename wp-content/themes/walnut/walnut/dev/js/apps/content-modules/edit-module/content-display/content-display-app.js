@@ -104,11 +104,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       ContentDisplayView.prototype.modelEvents = {
-        'change:status': 'statusChanged'
+        'change:post_status': 'statusChanged'
       };
 
-      ContentDisplayView.prototype.statusChanged = function(model, status) {
-        if (status === 'publish' || status === 'archive') {
+      ContentDisplayView.prototype.statusChanged = function(model, post_status) {
+        if (post_status === 'publish' || post_status === 'archive') {
           this.$el.find('.remove').hide();
           return this.$el.find(".cbp_tmtimeline").sortable('disable');
         } else {
@@ -127,7 +127,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
             };
           })(this)
         });
-        return this.statusChanged(this.model, this.model.get('status'));
+        return this.statusChanged(this.model, this.model.get('post_status'));
       };
 
       ContentDisplayView.prototype.removeItem = function(e) {

@@ -68,7 +68,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
                 success: _this.successFn,
                 error: _this.errorFn
               });
-              if (data.status !== 'underreview') {
+              if (data.post_status !== 'underreview') {
                 return _this.region.trigger("close:content:selection:app");
               }
             };
@@ -176,7 +176,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       CollectionDetailsView.prototype.modelEvents = {
-        'change:status': 'statusChanged'
+        'change:post_status': 'statusChanged'
       };
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
@@ -199,7 +199,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
           }
         };
         data.statusSelected = function() {
-          if (this.value === data.status) {
+          if (this.value === data.post_status) {
             return 'selected';
           }
         };
@@ -214,7 +214,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
 
       CollectionDetailsView.prototype.statusChanged = function() {
         var _ref;
-        if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
+        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
           this.$el.find('input, textarea, select').prop('disabled', true);
           this.$el.find('select#status').prop('disabled', false);
           return this.$el.find('select#status option[value="underreview"]').prop('disabled', true);

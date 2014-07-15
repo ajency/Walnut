@@ -61,7 +61,7 @@ define ['app'
                 @contentGroupCollection = App.request "get:content:pieces:of:group", model
 
                 App.execute "when:fetched", @contentGroupCollection, =>
-                    if model.get('status') is 'underreview'
+                    if model.get('post_status') is 'underreview'
                         App.execute "show:content:selectionapp",
                             region : @layout.contentSelectionRegion
                             model : model

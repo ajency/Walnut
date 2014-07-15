@@ -49,7 +49,7 @@ define ['app'
                 @listenTo @view, "save:content:collection:details" : (data) =>
                     @model.set 'changed' : 'module_details'
                     @model.save(data, { wait : true, success : @successFn, error : @errorFn })
-                    @region.trigger "close:content:selection:app" if data.status isnt 'underreview'
+                    @region.trigger "close:content:selection:app" if data.post_status isnt 'underreview'
 
             ##fetch chapters based on textbook id, current_chapter refers to the chapter to be selected by default
             _fetchChapters: (term_id, current_chapter)=>
@@ -127,7 +127,7 @@ define ['app'
                 'click #save-content-collection' : 'save_content'
 
             modelEvents :
-                'change:status' : 'statusChanged'
+                'change:post_status' : 'statusChanged'
 
             mixinTemplateHelpers : (data)->
                 data = super data
@@ -152,7 +152,7 @@ define ['app'
                     return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
 
                 data.statusSelected = ->
-                    return 'selected' if @value is data.status
+                    return 'selected' if @value is data.post_status
 
                 data
 
@@ -166,7 +166,7 @@ define ['app'
                 @statusChanged()
 
             statusChanged : ->
-                if @model.get('status') in ['publish', 'archive']
+                if @model.get('post_status') in ['publish', 'archive']
                     @$el.find 'input, textarea, select'
                     .prop 'disabled', true
 

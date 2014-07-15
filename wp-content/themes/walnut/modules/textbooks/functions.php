@@ -319,7 +319,7 @@ function get_book( $book, $division=0 ) {
 
     $modules_count_query=$wpdb->prepare("
         SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
-            WHERE term_ids LIKE %s AND status like %s",
+            WHERE term_ids LIKE %s AND post_status like %s",
         array('%"'. $book_id . '";%', 'publish')
     );
     $modules_count = $wpdb->get_row( $modules_count_query );
@@ -405,7 +405,7 @@ function get_status_for_chapter($chapter_id, $division){
     $completed = $in_progress = $not_started = array();
 
     $module_ids_query = $wpdb->prepare("SELECT id FROM {$wpdb->base_prefix}content_collection
-        WHERE term_ids like %s AND status like %s",
+        WHERE term_ids like %s AND post_status like %s",
         array('%"' . $chapter_id . '";%', 'publish')
     );
 

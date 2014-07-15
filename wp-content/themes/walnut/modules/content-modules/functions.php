@@ -21,7 +21,7 @@ function save_content_module($data = array()) {
         'last_modified_on'  => date('y-m-d H:i:s'),
         'last_modified_by'  => get_current_user_id(),
         'duration'          => $duration,
-        'status'            => $data['status']
+        'post_status'       => $data['post_status']
     );
 
     if (isset($data['id'])) {
@@ -84,91 +84,31 @@ function update_module_content_pieces($data= array()){
     $wpdb->query($content_pieces_qry);
 }
 
-function update_training_module_status($args=array()){
-
-    global $wpdb;
-
-    extract($args);
-
-    if(!isset($teacher_id))
-        $teacher_id= get_current_user_id();
-
-    $data=array(
-        'division_id'=> $division,
-        'collection_id'=>$id,
-        'teacher_id'=> $teacher_id,
-        'date'=>date('Ymd'),
-        'status'=>$status
-    );
-
-    if($status=='completed' || $status=='scheduled'){
-        if($status=='scheduled'){
-            $date = date('Ymd',strtotime($training_date));
-            $data['date']= $date;
-        }
-        $content_module = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
-    }
-
-    else { //check if the last status was started/ scheduled and change it appropriately
-        $chk_logs_qry = $wpdb->prepare("select id,status from
-            {$wpdb->prefix}training_logs where division_id=%d and
-                collection_id=%d order by id desc limit 1",$division,$id);
-
-        $chk_logs= $wpdb->get_results($chk_logs_qry);
-
-        if($chk_logs){
-            foreach($chk_logs as $log){
-                if($log->status=='started'){
-                    $data['status'] = 'resumed';
-                    $content_module = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
-                }
-
-                if($log->status=='scheduled'){
-                    $data['status'] = 'started';
-                    $content_module = $wpdb->update($wpdb->prefix . 'training_logs', $data, array('id'=>$log->id));
-                }
-            }
-        }
-        else {
-            $data['status'] = 'started';
-            $content_module = $wpdb->insert($wpdb->prefix . 'training_logs', $data);
-        }
-    }
-
-    return $content_module;
-
-}
-
 function get_all_content_modules($args=array()){
 
-    #fixme : fetch modules based on post_status to implemented properly
-
-    $current_blog= get_current_blog_id();
-    switch_to_blog(1);
-
     global $wpdb;
 
-    $published_modules = $archived_modules = $all_content_modules = null;
-    $id=0;
+    $post_status= 'publish';
+
+    if(isset($args['post_status']))
+        $post_status = $args['post_status'];
+
+    $content_modules_ids_array = get_modules_by_post_status($post_status);
+
+    $content_module_ids = join(',',__u::flatten($content_modules_ids_array));
 
     if(isset($args['textbook'])){
 
-        if(isset($args['post_status'])){
-            $published_query = $wpdb->prepare(
-                'SELECT id FROM '.$wpdb->prefix.'content_collection WHERE
-                    status LIKE %s and term_ids LIKE %s',
-                array($args['post_status'], '%\"'.$args['textbook'].'\";%')
-            );
-            $published_modules = $wpdb->get_results($published_query);
-        }
-        else{
-            $published_query = $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "publish" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
-            $archived_query =  $wpdb->prepare('SELECT id FROM '.$wpdb->prefix.'content_collection WHERE status = "archive" and term_ids LIKE %s', '%\"'.$args['textbook'].'\";%');
-            $published_modules = $wpdb->get_results($published_query);
-            $archived_modules = $wpdb->get_results($archived_query);
-        }
+        $modules_query = $wpdb->prepare(
+            "SELECT id FROM {$wpdb->base_prefix}content_collection WHERE
+                term_ids LIKE %s AND id in ($content_module_ids)",
+            array('%\"'.$args['textbook'].'\";%')
+        );
+        $content_modules = $wpdb->get_results($modules_query, ARRAY_A);
+        $content_modules_ids_array = __u::flatten($content_modules);
 
     }
+
     elseif(isset($args['class_id'])){
 
         $textbooks=get_textbooks_for_class($args['class_id']);
@@ -177,50 +117,59 @@ function get_all_content_modules($args=array()){
             $textbook_ids[]=$book->term_id;
 
         $textbook_ids = join(',',$textbook_ids);
-        $all_query = $wpdb->prepare("SELECT collection_id FROM {$wpdb->prefix}collection_meta
-            WHERE meta_key like %s AND meta_value in ($textbook_ids)", 'textbook');
-        $all_content_modules = $wpdb->get_results($all_query);
+        $modules_query = $wpdb->prepare(
+            "SELECT collection_id FROM {$wpdb->prefix}collection_meta
+                WHERE meta_key like %s
+                AND meta_value in ($textbook_ids)
+                AND collection_id in ($content_module_ids)", 'textbook');
+        $content_modules = $wpdb->get_results($modules_query, ARRAY_A);
+        $content_modules_ids_array = __u::flatten($content_modules);
+
     }
 
-    else{
-//        $query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'publish'", null);
-//        $archived_query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection where status = 'archive'", null);
-        $all_query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}content_collection", null);
-        $all_content_modules = $wpdb->get_results($all_query);
+
+    $division = '';
+    if(isset($args['division'])){
+
+       $division = $args['division'];
+
+       $archive_ids = get_modules_by_post_status('archive');
+
+        foreach($archive_ids as $id){
+            $taken_status= get_content_module_status($id, $division);
+            if($taken_status['status']!='not started')
+                $content_modules_ids_array[] = $id;
+        }
+
     }
 
     $content_data=array();
-    switch_to_blog($current_blog);
 
-    $division = '';
+    foreach($content_modules_ids_array as $id)
+        $content_data[]=  get_single_content_module($id, $division);
 
-    if(isset($args['division']))
-        $division = $args['division'];
-
-    if( !is_null($published_modules))
-        foreach($published_modules as $item)
-            $content_data[]=  get_single_content_module($item->id, $division , 'publish');
-
-    if( !is_null($all_content_modules))
-        foreach($all_content_modules as $item){
-            $id=$item->id;
-            if ($id == 0)
-                $id = $item->collection_id;
-            $content_data[]=  get_single_content_module($id, $division);
-        }
-
-    if( !is_null($archived_modules))
-        foreach($archived_modules as $item){
-            $archived_data = get_single_content_module($item->id, $division, 'archive');
-            if($archived_data)
-                $content_data[] = $archived_data;
-        }
-
-    switch_to_blog($current_blog);
     return $content_data;
 }
 
-function get_single_content_module($id, $division='', $post_status=''){
+function get_modules_by_post_status($post_status='publish'){
+
+    global $wpdb;
+
+    if ($post_status=='any')
+        $post_status='%%';
+
+    $modules_by_status_query = $wpdb->prepare('SELECT id FROM '.$wpdb->base_prefix.'content_collection
+            WHERE post_status LIKE %s', $post_status);
+
+    $modules_by_status = $wpdb->get_results($modules_by_status_query, ARRAY_A);
+
+    $module_ids = __u::flatten($modules_by_status);
+
+    return $module_ids;
+
+}
+
+function get_single_content_module($id, $division=''){
 
     global $wpdb;
 
@@ -238,7 +187,6 @@ function get_single_content_module($id, $division='', $post_status=''){
         $data->duration     = $duration/60;
         $data->minshours    ='hrs';
     }
-    $data->post_status = $post_status;
 
     $query_description = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta
         WHERE collection_id=%d",$id);
@@ -258,16 +206,13 @@ function get_single_content_module($id, $division='', $post_status=''){
 
     }
 
-
     if($division){
         $status_dets = get_content_module_status($id, $division,$data->content_pieces);
         $data->status= $status_dets['status'];
         $data->training_date= $status_dets['start_date'];
+        $data->end_date = $status_dets['end_date'];
     }
-    if($post_status == 'archive'){
-        if($data->status == 'not started')
-            return false;
-    }
+
     return $data;
 
 }
@@ -315,7 +260,8 @@ function get_content_module_status($id, $division, $content_pieces=array()){
     }
     $status_data=array(
         'status'     => $status,
-        'start_date' => $start_date
+        'start_date' => $start_date,
+        'end_date'   => get_module_end_date($id)
     );
 
     return $status_data;
@@ -358,11 +304,12 @@ function get_module_taken_by($module_id, $blog_id){
 }
 
 
-function get_module_end_date($module_id, $blog_id){
+function get_module_end_date($module_id, $blog_id=0){
 
     global $wpdb;
 
-    switch_to_blog($blog_id);
+    if($blog_id>0)
+        switch_to_blog($blog_id);
 
     $question_response_table = $wpdb->prefix . "question_response";
 
@@ -376,7 +323,7 @@ function get_module_end_date($module_id, $blog_id){
 
     $end_date = date('d M Y', strtotime($end_date));
 
-    switch_to_blog(1);
+    restore_current_blog();
 
     return $end_date;
 

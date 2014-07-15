@@ -66,10 +66,10 @@ define ['app'
                 'click .remove' : 'removeItem'
 
             modelEvents :
-                'change:status' : 'statusChanged'
+                'change:post_status' : 'statusChanged'
 
-            statusChanged : (model, status)->
-                if status in ['publish', 'archive']
+            statusChanged : (model, post_status)->
+                if post_status in ['publish', 'archive']
                     @$el.find('.remove').hide()
                     @$el.find(".cbp_tmtimeline").sortable('disable')
                 else
@@ -85,7 +85,7 @@ define ['app'
                         console.log sorted_order
                         @trigger "changed:order", sorted_order
 
-                @statusChanged @model, @model.get('status')
+                @statusChanged @model, @model.get('post_status')
 
 
             removeItem : (e)=>

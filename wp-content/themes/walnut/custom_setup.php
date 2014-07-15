@@ -43,7 +43,7 @@ function create_custom_tables(){
             `last_modified_by` int(11) NOT NULL,
             `published_on` datetime NOT NULL,
             `published_by` int(11) NOT NULL,
-            `status` varchar(255) NOT NULL,
+            `post_status` varchar(255) NOT NULL,
             `type` varchar(255) NOT NULL,
             `term_ids` varchar(255) NOT NULL,
             `duration` int(11) NOT NULL COMMENT 'in minutes',

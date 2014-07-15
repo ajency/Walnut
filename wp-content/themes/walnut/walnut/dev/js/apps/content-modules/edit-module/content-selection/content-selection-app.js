@@ -11,6 +11,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       function ContentSelectionController() {
         this._getContentSelectionView = __bind(this._getContentSelectionView, this);
         this.contentPieceRemoved = __bind(this.contentPieceRemoved, this);
+        this.fetchSectionOrSubsection = __bind(this.fetchSectionOrSubsection, this);
         return ContentSelectionController.__super__.constructor.apply(this, arguments);
       }
 
@@ -23,7 +24,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
         return App.execute("when:fetched", [this.contentPiecesCollection, this.contentGroupCollection, this.textbooksCollection], (function(_this) {
           return function() {
-            var model, view, _i, _len, _ref;
+            var model, term_ids, view, _i, _len, _ref;
             _ref = _this.contentGroupCollection.models;
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               model = _ref[_i];
@@ -33,15 +34,32 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
             _this.show(_this.view, {
               loading: true
             });
-            _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
-              var chaptersOrSections;
-              chaptersOrSections = App.request("get:chapters", {
-                'parent': parentID
-              });
-              return App.execute("when:fetched", chaptersOrSections, function() {
-                return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
-              });
+            term_ids = _this.model.get('term_ids');
+            _this.listenTo(_this.view, "show", function() {
+              var chapter_id, section_id, subsection_id, textbook_id;
+              if (term_ids) {
+                textbook_id = term_ids['textbook'];
+                if (term_ids['chapter'] != null) {
+                  chapter_id = term_ids['chapter'];
+                }
+                if (term_ids['sections'] != null) {
+                  section_id = _.first(_.flatten(term_ids['sections']));
+                }
+                if (term_ids['subsections'] != null) {
+                  subsection_id = _.first(_.flatten(term_ids['subsections']));
+                }
+                if (textbook_id != null) {
+                  _this.fetchSectionOrSubsection(textbook_id, 'textbooks-filter', chapter_id);
+                }
+                if (chapter_id != null) {
+                  _this.fetchSectionOrSubsection(chapter_id, 'chapters-filter', section_id);
+                }
+                if (section_id != null) {
+                  return _this.fetchSectionOrSubsection(section_id, 'sections-filter', subsection_id);
+                }
+              }
             });
+            _this.listenTo(_this.view, "fetch:chapters:or:sections", _this.fetchSectionOrSubsection);
             _this.listenTo(_this.view, {
               "add:content:pieces": function(contentIDs) {
                 return _.each(contentIDs, function(ele, index) {
@@ -51,6 +69,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
               }
             });
             return _this.listenTo(_this.contentGroupCollection, 'content:pieces:of:group:removed', _this.contentPieceRemoved);
+          };
+        })(this));
+      };
+
+      ContentSelectionController.prototype.fetchSectionOrSubsection = function(parentID, filterType, currItem) {
+        var chaptersOrSections;
+        chaptersOrSections = App.request("get:chapters", {
+          'parent': parentID
+        });
+        return App.execute("when:fetched", chaptersOrSections, (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType, currItem);
           };
         })(this));
       };
@@ -79,7 +109,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         return DataContentItemView.__super__.constructor.apply(this, arguments);
       }
 
-      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td>{{post_excerpt}}</td> <td>{{post_author_name}}</td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>';
+      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td>{{content_type_str}}</td> <td class="cpHeight"> {{#present_in_modules}} <a href="#view-group/{{id}}" target="_blank">{{name}}</a> | {{/present_in_modules}} </td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>';
 
       DataContentItemView.prototype.tagName = 'tr';
 
@@ -88,6 +118,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         data = DataContentItemView.__super__.serializeData.call(this);
         data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
         data.sort_date = moment(data.post_modified).format("YYYYMMDD");
+        data.content_type_str = _(data.content_type).chain().humanize().titleize().value();
         return data;
       };
 
@@ -141,7 +172,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       DataContentTableView.prototype.onShow = function() {
-        var pagerOptions, textbookFiltersHTML;
+        var term_ids, textbookFiltersHTML;
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         textbookFiltersHTML = $.showTextbookFilters({
@@ -150,25 +181,28 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
         $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
         $('#dataContentTable').tablesorter();
-        pagerOptions = {
-          container: $(".pager"),
-          output: '{startRow} to {endRow} of {totalRows}'
-        };
-        return $('#dataContentTable').tablesorterPager(pagerOptions);
+        this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
+        term_ids = this.contentGroupModel.get('term_ids');
+        $("#textbooks-filter").select2().select2('val', term_ids['textbook']);
+        return this.setFilteredContent();
       };
 
-      DataContentTableView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
-        var filtered_data, pagerOptions;
+      DataContentTableView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType, currItem) {
         switch (filterType) {
           case 'textbooks-filter':
-            $.populateChapters(filteredCollection, this.$el);
+            $.populateChapters(filteredCollection, this.$el, currItem);
             break;
           case 'chapters-filter':
-            $.populateSections(filteredCollection, this.$el);
+            $.populateSections(filteredCollection, this.$el, currItem);
             break;
           case 'sections-filter':
-            $.populateSubSections(filteredCollection, this.$el);
+            $.populateSubSections(filteredCollection, this.$el, currItem);
         }
+        return this.setFilteredContent();
+      };
+
+      DataContentTableView.prototype.setFilteredContent = function() {
+        var filtered_data, pagerOptions;
         filtered_data = $.filterTableByTextbooks(this);
         this.collection.set(filtered_data);
         $("#dataContentTable").trigger("updateCache");
