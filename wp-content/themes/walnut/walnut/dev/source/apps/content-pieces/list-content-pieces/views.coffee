@@ -33,15 +33,17 @@ define ['app'
                     data.edit_link= ' <span class="nonDevice">|</span> <a target="_blank" href="'+edit_url+'" class="nonDevice">Edit</a>'
 
                 data.textbookName = =>
-                    textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
-                    textbook.name
+                    if data.term_ids.textbook
+                        textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
+                        textbook.name
 
                 data.chapterName = =>
-                    chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
-                    .pluck 'name'
-                        .compact()
-                        .value()
-                    chapter
+                    if data.term_ids.chapter
+                        chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
+                        .pluck 'name'
+                            .compact()
+                            .value()
+                        chapter
 
                 data.statusMessage = ->
                     if data.post_status is 'pending'

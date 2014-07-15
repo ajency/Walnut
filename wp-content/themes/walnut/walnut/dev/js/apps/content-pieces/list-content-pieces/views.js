@@ -33,19 +33,23 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
-            textbook = _.findWhere(_this.textbooks, {
-              "id": data.term_ids.textbook
-            });
-            return textbook.name;
+            if (data.term_ids.textbook) {
+              textbook = _.findWhere(_this.textbooks, {
+                "id": data.term_ids.textbook
+              });
+              return textbook.name;
+            }
           };
         })(this);
         data.chapterName = (function(_this) {
           return function() {
             var chapter;
-            chapter = _.chain(_this.chapters.findWhere({
-              "id": data.term_ids.chapter
-            })).pluck('name').compact().value();
-            return chapter;
+            if (data.term_ids.chapter) {
+              chapter = _.chain(_this.chapters.findWhere({
+                "id": data.term_ids.chapter
+              })).pluck('name').compact().value();
+              return chapter;
+            }
           };
         })(this);
         data.statusMessage = function() {
