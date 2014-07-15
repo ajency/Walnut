@@ -58,6 +58,8 @@ define ['app'
                 new ContentGroupEditLayout
 
             _showContentSelectionApp : (model)=>
+
+
                 @contentGroupCollection = App.request "get:content:pieces:of:group", model
 
                 App.execute "when:fetched", @contentGroupCollection, =>

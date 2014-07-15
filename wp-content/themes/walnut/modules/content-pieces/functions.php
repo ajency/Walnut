@@ -110,6 +110,9 @@ function get_content_pieces($args = array()) {
 
     $content_items = get_posts($args);
 
+    if(isset($args['search_str']) && trim($args['search_str']) !='')
+        $content_items = get_content_pieces_by_search_string($args['search_str'], $content_items);
+
 
     $content_pieces=array();
 
@@ -132,6 +135,30 @@ function get_content_pieces($args = array()) {
 
 }
 
+function get_content_pieces_by_search_string($search_string, $content_pieces){
+
+    $content_items= array();
+
+    foreach($content_pieces as $item){
+
+        $content_layout= get_post_meta($item, 'layout_json', true);
+
+        $content_layout = maybe_unserialize($content_layout);
+        $content_elements = get_json_to_clone($content_layout);
+        $excerpts = __u::flatten($content_elements['excerpt']);
+
+        foreach($excerpts as $excerpt){
+
+            if(strpos(strtolower(strip_tags($excerpt)), strtolower($search_string)) !== false){
+                $content_items[]=$item;
+            }
+        }
+
+    }
+
+    return $content_items;
+
+}
 
 function get_single_content_piece($id){
 
@@ -209,19 +236,14 @@ function get_single_content_piece($id){
 
     $content_layout = maybe_unserialize($content_layout);
 
+    $excerpt_array = array();
     $excerpt = '';
 
     if($content_layout){
         $content_elements = get_json_to_clone($content_layout);
         $content_piece->layout = $content_elements['elements'];
-        $excerpt = prettify_content_piece_excerpt($content_elements['excerpt']);
+        $excerpt_array = $content_elements['excerpt'];
     }
-    if(strlen(trim($excerpt))==0)
-        $excerpt='No excerpt';
-    else
-        $excerpt.='...';
-
-    $content_piece->post_excerpt =$excerpt;
 
     $allParams = $wpdb->get_results( "SELECT * FROM {$wpdb->base_prefix}postmeta WHERE post_id = $id
     AND meta_key LIKE 'parameter_%'",ARRAY_A);
@@ -229,13 +251,21 @@ function get_single_content_piece($id){
     foreach ($allParams as $params){
         $paramObj = array();
         $paramObj['id'] = $params['meta_id'];
-        $paramObj['parameter'] = ltrim($params['meta_key'],'parameter_');
-        $paramObj['attributes'] = maybe_unserialize($params['meta_value']);
+        $paramObj['parameter'] =$excerpt_array[]= ltrim($params['meta_key'],'parameter_');
+        $paramObj['attributes'] =$excerpt_array[]= maybe_unserialize($params['meta_value']);
         array_push($grading_params,$paramObj);
     }
     $content_piece->grading_params = $grading_params;
 
     $content_piece->present_in_modules = get_modules_containing_content_piece($id);
+
+    $excerpt = prettify_content_piece_excerpt($excerpt_array);
+    if(strlen(trim($excerpt))==0)
+        $excerpt='No excerpt';
+    else
+        $excerpt.='...';
+
+    $content_piece->post_excerpt =$excerpt;
 
     switch_to_blog($current_blog_id);
 
@@ -297,7 +327,10 @@ function get_json_to_clone($elements, $content_id=0, $create=FALSE)
                 $meta = get_meta_values($element, $create);
                 if ($meta !== FALSE){
                     $d[] = $meta;
-                    $excerpt[]=$meta['content'];
+                    if($meta['element']=='Text')
+                        $excerpt []= $meta['content'];
+                    if($meta['element']=='Fib')
+                        $excerpt []= $meta['text'];
                 }
             }
         }
@@ -333,6 +366,8 @@ function get_row_elements($element, $create=FALSE)
                         $ele = wp_parse_args($meta, $ele);
                         if($ele['element']=='Text')
                             $excerpt []= $ele['content'];
+                        if($ele['element']=='Fib')
+                            $excerpt []= $ele['text'];
                     }
                 }
             }

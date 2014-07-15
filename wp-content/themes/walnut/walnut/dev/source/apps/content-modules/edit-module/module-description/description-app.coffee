@@ -27,13 +27,14 @@ define ['app'
                         section_ids = _.flatten(term_ids['sections']) if term_ids['sections']?
 
                         #fetch chapters based on the current content piece's textbook
-                        @_fetchChapters(textbook_id, chapter_id) if textbook_id?
+                        fetchChapters= @_fetchChapters(textbook_id, chapter_id)
 
                         #fetch sections based on chapter id
-                        @_fetchSections(chapter_id) if chapter_id?
+                        fetchChapters.done =>
+                            @_fetchSections(chapter_id) if chapter_id?
 
-                        #fetch sections based on chapter id
-                        @_fetchSubsections(section_ids) if section_ids?
+                            #fetch sections based on chapter id
+                            @_fetchSubsections(section_ids) if section_ids?
 
 
                 ## end of fetching of edit content piece
@@ -53,17 +54,20 @@ define ['app'
 
             ##fetch chapters based on textbook id, current_chapter refers to the chapter to be selected by default
             _fetchChapters: (term_id, current_chapter)=>
+                defer = $.Deferred();
                 chaptersCollection = App.request "get:chapters", ('parent': term_id)
 
                 App.execute "when:fetched", chaptersCollection, =>
                     @view.triggerMethod 'fetch:chapters:complete',
-                        chaptersCollection, current_chapter
+                      chaptersCollection, current_chapter
+                    defer.resolve()
+                defer.promise()
 
             #fetch all sections beloging to the chapter id passed as term_id
             _fetchSections: (term_id)=>
                 @subSectionsList = null
                 @allSectionsCollection = App.request "get:subsections:by:chapter:id",
-                    ('child_of': term_id)
+                  ('child_of': term_id)
 
                 App.execute "when:fetched", @allSectionsCollection, =>
                     #make list of sections directly belonging to chapter ie. parent=term_id

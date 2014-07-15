@@ -33,7 +33,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         term_ids = this.model.get('term_ids');
         this.listenTo(this.view, "show", (function(_this) {
           return function() {
-            var chapter_id, section_ids, textbook_id;
+            var chapter_id, fetchChapters, section_ids, textbook_id;
             if (term_ids) {
               textbook_id = term_ids['textbook'];
               if (term_ids['chapter'] != null) {
@@ -42,15 +42,15 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
               if (term_ids['sections'] != null) {
                 section_ids = _.flatten(term_ids['sections']);
               }
-              if (textbook_id != null) {
-                _this._fetchChapters(textbook_id, chapter_id);
-              }
-              if (chapter_id != null) {
-                _this._fetchSections(chapter_id);
-              }
-              if (section_ids != null) {
-                return _this._fetchSubsections(section_ids);
-              }
+              fetchChapters = _this._fetchChapters(textbook_id, chapter_id);
+              return fetchChapters.done(function() {
+                if (chapter_id != null) {
+                  _this._fetchSections(chapter_id);
+                }
+                if (section_ids != null) {
+                  return _this._fetchSubsections(section_ids);
+                }
+              });
             }
           };
         })(this));
@@ -77,15 +77,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       EditCollecionDetailsController.prototype._fetchChapters = function(term_id, current_chapter) {
-        var chaptersCollection;
+        var chaptersCollection, defer;
+        defer = $.Deferred();
         chaptersCollection = App.request("get:chapters", {
           'parent': term_id
         });
-        return App.execute("when:fetched", chaptersCollection, (function(_this) {
+        App.execute("when:fetched", chaptersCollection, (function(_this) {
           return function() {
-            return _this.view.triggerMethod('fetch:chapters:complete', chaptersCollection, current_chapter);
+            _this.view.triggerMethod('fetch:chapters:complete', chaptersCollection, current_chapter);
+            return defer.resolve();
           };
         })(this));
+        return defer.promise();
       };
 
       EditCollecionDetailsController.prototype._fetchSections = function(term_id) {

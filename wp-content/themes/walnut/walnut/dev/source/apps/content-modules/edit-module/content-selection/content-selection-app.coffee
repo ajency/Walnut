@@ -1,6 +1,10 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-modules/edit-module/content-selection/templates/content-selection.html'], (App, RegionController, contentSelectionTpl)->
+        'text!apps/content-modules/edit-module/content-selection/templates/content-selection.html'
+        'apps/content-modules/edit-module/content-selection/all-content-app'
+        'apps/content-modules/edit-module/content-selection/search-results-app'
+        'apps/content-modules/edit-module/content-selection/textbook-filters-app'
+], (App, RegionController, contentSelectionTpl)->
     App.module "ContentSelectionApp.Controller", (Controller, App)->
         class Controller.ContentSelectionController extends RegionController
 
@@ -8,194 +12,88 @@ define ['app'
 
                 @textbooksCollection = App.request "get:textbooks"
                 @contentPiecesCollection = App.request "get:content:pieces",
-                    post_status: 'publish',
                     content_type: ['teacher_question','content_piece']
+                    post_status : 'publish'
 
                 {@model,@contentGroupCollection}= opts
 
                 App.execute "when:fetched", [@contentPiecesCollection,@contentGroupCollection, @textbooksCollection], =>
                     @contentPiecesCollection.remove model for model in @contentGroupCollection.models
-                    @view = view = @_getContentSelectionView(@contentPiecesCollection)
-                    @show @view,
+
+                    @layout = @_getContentSelectionLayout()
+                    @show @layout,
                         loading: true
 
-                    term_ids = @model.get 'term_ids'
+                    @listenTo @layout, "show",=>
 
-                    @listenTo @view, "show",=>
-                        if term_ids
-                            textbook_id = term_ids['textbook']
+                        App.execute "show:textbook:filters:app",
+                            region: @layout.filtersRegion
+                            textbooksCollection: @textbooksCollection
+                            contentPiecesCollection: @contentPiecesCollection
+                            model: @model
 
-                            chapter_id = term_ids['chapter'] if term_ids['chapter']?
+                        App.execute "show:all:content:selection:app",
+                            region: @layout.allContentRegion
+                            textbooksCollection: @textbooksCollection
+                            contentPiecesCollection: @contentPiecesCollection
+                            contentGroupCollection:@contentGroupCollection
+                            model: @model
 
-                            section_id = _.first _.flatten(term_ids['sections']) if term_ids['sections']?
-
-                            subsection_id = _.first _.flatten(term_ids['subsections']) if term_ids['subsections']?
-
-                            #fetch chapters based on the current content piece's textbook
-                            @fetchSectionOrSubsection(textbook_id, 'textbooks-filter', chapter_id) if textbook_id?
-
-                            #fetch sections based on chapter id
-                            @fetchSectionOrSubsection(chapter_id, 'chapters-filter',section_id) if chapter_id?
-
-                            #fetch sub sections based on chapter id
-                            @fetchSectionOrSubsection(section_id, 'sections-filter',subsection_id) if section_id?
-
-
-                    @listenTo @view, "fetch:chapters:or:sections", @fetchSectionOrSubsection
-
-                    @listenTo @view, "add:content:pieces": (contentIDs) =>
-
-                        _.each contentIDs, (ele, index)=>
-                            @contentGroupCollection.add @contentPiecesCollection.get ele
-                            @contentPiecesCollection.remove ele
+                        App.execute "show:content:search:results:app",
+                            region: @layout.searchResultsRegion
+                            textbooksCollection: @textbooksCollection
+                            contentPiecesCollection: @contentPiecesCollection
+                            contentGroupCollection:@contentGroupCollection
+                            model: @model
 
 
-                    @listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPieceRemoved
 
-            fetchSectionOrSubsection:(parentID, filterType, currItem) =>
-                chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
-                App.execute "when:fetched", chaptersOrSections, =>
-                    @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType,currItem
-
-            contentPieceRemoved: (model)=>
-                @contentPiecesCollection.add model
-                @view.triggerMethod "content:piece:removed", model
-
-            _getContentSelectionView: (collection)=>
-                new DataContentTableView
-                    collection: collection
-                    fullCollection : collection.clone()
-                    contentGroupModel : @model
-                    textbooksCollection : @textbooksCollection
-
-        class DataContentItemView extends Marionette.ItemView
-
-            template: '<td class="v-align-middle"><div class="checkbox check-default">
-                            <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}">
-                            <label for="checkbox{{ID}}"></label>
-                          </div>
-                        </td>
-                        <td class="cpHeight">{{&post_excerpt}}</td>
-                        <td>{{content_type_str}}</td>
-                        <td class="cpHeight">
-                            {{#present_in_modules}}
-                                <a href="#view-group/{{id}}" target="_blank">{{name}}</a> |
-                            {{/present_in_modules}}
-                         </td>
-                        <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>'
-
-            tagName: 'tr'
-
-            serializeData:->
-                data= super()
-
-                #this is for display purpose only
-                data.modified_date= moment(data.post_modified).format("Do MMM YYYY")
-
-                #for sorting the column date-wise
-                data.sort_date= moment(data.post_modified).format "YYYYMMDD"
-
-                data.content_type_str=
-                    _ data.content_type
-                    .chain()
-                    .humanize()
-                    .titleize()
-                    .value()
-
-                data
-
-        class NoDataItemView extends Marionette.ItemView
-
-            template: 'No Content Available'
-
-            tagName: 'td'
-
-            onShow:->
-                @$el.attr 'colspan',4
-
-        class DataContentTableView extends Marionette.CompositeView
-
-            template: contentSelectionTpl
-
-            className: 'tiles white grid simple vertical green'
-
-            emptyView: NoDataItemView
-
-            itemView: DataContentItemView
-
-            itemViewContainer: '#dataContentTable tbody'
-
-            events:
-                'change .filters' :(e)->
-                    @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
-
-                'change #check_all_div'     : 'checkAll'
-
-                'click #add-content-pieces' : 'addContentPieces'
-
-            onShow:->
-                @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
-                @fullCollection= Marionette.getOption @, 'fullCollection'
-                textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection
-                @$el.find '#textbook-filters'
-                .html textbookFiltersHTML
-
-                $ "#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter"
-                .select2();
-
-                $('#dataContentTable').tablesorter();
-
-                @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
-
-                term_ids= @contentGroupModel.get 'term_ids'
-                $ "#textbooks-filter"
-                .select2().select2 'val', term_ids['textbook']
-
-                @setFilteredContent()
+            _getContentSelectionLayout:->
+                new ContentSelectionLayout()
 
 
-            onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
+            class ContentSelectionLayout extends Marionette.Layout
+                template : '<div class="grid-title no-border">
+                                    <h4 class="">Content <span class="semi-bold">Selection</span></h4>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"></a>
+                                    </div>
+                                </div>
 
-                switch filterType
-                    when 'textbooks-filter' then $.populateChapters filteredCollection, @$el, currItem
-                    when 'chapters-filter' then $.populateSections filteredCollection, @$el, currItem
-                    when 'sections-filter' then $.populateSubSections filteredCollection, @$el, currItem
+                                <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
 
-                @setFilteredContent()
+                                    <div id="filters-region" class="m-b-10"></div>
 
+                                    <ul class="nav nav-tabs b-grey b-l b-r b-t" id="addContent">
+                					            <li class="active"><a href="#all-content-region"><span class="semi-bold">All</span> Questions</a></li>
+                					            <li><a href="#search-results-region"><span class="semi-bold">Search</span> Questions</a></li>
+                					          </ul>
 
-            setFilteredContent:->
+                                		<div id="tab-content" class="tab-content" >
+                                        <div id="all-content-region" class="tab-pane active"></div>
+                                        <div id="search-results-region" class="tab-pane"></div>
+                                    </div>
+                                </div>'
 
-                filtered_data= $.filterTableByTextbooks(@)
+                className: 'tiles white grid simple vertical green'
 
-                @collection.set filtered_data
+                regions:
+                    filtersRegion       : '#filters-region'
+                    allContentRegion    : '#all-content-region'
+                    searchResultsRegion : '#search-results-region'
 
-                $("#dataContentTable").trigger "updateCache"
-                pagerOptions =
-                    container : $(".pager")
-                    output : '{startRow} to {endRow} of {totalRows}'
+                events:
+                    'click #addContent a': 'changeTab'
 
-                $('#dataContentTable').tablesorterPager pagerOptions
+                changeTab: (e)->
+                    e.preventDefault()
 
-            checkAll: ->
-                if @$el.find '#check_all'
-                .is ':checked'
-                    @$el.find '#dataContentTable .tab_checkbox'
-                    .trigger 'click'
-                    .prop 'checked', true
+                    @$el.find '#addContent a'
+                    .removeClass 'active'
 
-                else
-                    @$el.find '#dataContentTable .tab_checkbox'
-                    .removeAttr 'checked'
-
-            addContentPieces: =>
-                content_pieces = _.pluck(@$el.find('#dataContentTable .tab_checkbox:checked'), 'value')
-                if content_pieces
-                    @trigger "add:content:pieces", content_pieces
-                    @fullCollection.remove(id) for id in content_pieces
-
-            onContentPieceRemoved: (model)=>
-                @fullCollection.add model
+                    $(e.target).closest 'a'
+                    .addClass 'active'
+                        .tab 'show'
 
         # set handlers
         App.commands.setHandler "show:content:selectionapp", (opt = {})->
