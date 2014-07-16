@@ -40,6 +40,7 @@ define ['underscore'], ( _) ->
 
 
 		
+		# Get the total count of chapters assigned to a textbook.
 		getChapterCount : (parentId)->
 
 			runQuery = ->

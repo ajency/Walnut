@@ -1,9 +1,11 @@
-define ['underscore', 'unserialize'], ( _) ->
+define ['underscore'], ( _) ->
 
 	#Functions related to divisions entity
 
 	_.mixin
 
+
+		# Get all division details based on division ids assigned to the logged in user.
 		getAllDivisions : ->
 
 			runFunc = ->
@@ -11,9 +13,6 @@ define ['underscore', 'unserialize'], ( _) ->
 
 					divisionIds = _.getDivisionIds()
 					divisionIds.done (ids)->
-						
-						# if _.isArray(ids)
-						# 	ids = _.compact ids.reverse()
 
 						results = []
 
@@ -31,22 +30,8 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 
-		getDivisionById : (id)->
-
-			runFunc = ->
-				$.Deferred (d)->
-
-					division = _.fetchSingleDivision(id)
-					division.done (result)->
-
-						d.resolve result
-
-			$.when(runFunc()).done ->
-				console.log 'getDivisionById done'
-			.fail _.failureHandler
-
-
-
+		# Get meta_value i.e serialized string containing division ids assigned to the logged in user
+		# and return the unserialized array.
 		getDivisionIds : ->
 
 			runQuery = ->
@@ -60,7 +45,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx, data)->
 					ids = ''
 					if data.rows.length isnt 0
-						ids = unserialize(data.rows.item(0)['meta_value'])
+						ids = _.unserialize(data.rows.item(0)['meta_value'])
 
 					d.resolve ids
 
@@ -70,6 +55,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 
+		# For each division id, fetch individual division details along with total students count.
 		fetchSingleDivision	: (id)->
 
 			divisionData = id:'', division:'', class_id:'', class_label:'', students_count:''
@@ -101,6 +87,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 		
+		# Get the count of number of students assigned to each division.
 		getStudentsCount : (id)->
 
 			runQuery = ->

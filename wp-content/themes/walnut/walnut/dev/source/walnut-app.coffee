@@ -46,11 +46,20 @@ define ['marionette'], (Marionette)->
 
         if _.platform() is 'DEVICE'
 
+            # If the UserId is null or 'null' i.e id not set in local storage then the app
+            # is either installed for the first time or user has logged out.
+
             if _.isNull(_.getUserID()) or _.getUserID() is 'null'
+
+                # If the blog_id is not set then the app is installed for the very first time.
+                # Navigate to main login screen if blog id is null, else show list of users view.
+
                 @rootRoute = 'app-login'
                 @rootRoute = 'login' if _.isNull _.getBlogID()
                 App.navigate(@rootRoute, trigger: true)
             else
+                #If User ID is set, then navigate to dashboard.
+
                 user = App.request "get:user:model"
                 user.set 'ID' : ''+_.getUserID()
                 App.vent.trigger "show:dashboard"
@@ -86,6 +95,11 @@ define ['marionette'], (Marionette)->
         user_role = user.get "roles"
 
         if _.platform() is 'DEVICE'
+
+            # If the last sync operation is 'none' i.e sync is not performed for the first time
+            # or if the operation is 'file_import' i.e sync process is not completed, then the user should
+            # not be allowed to navigate else where in the app and only the sync screen should be visible
+            # to the user.
 
             lastSyncOperation = _.getLastSyncOperation()
             lastSyncOperation.done (typeOfOperation)->

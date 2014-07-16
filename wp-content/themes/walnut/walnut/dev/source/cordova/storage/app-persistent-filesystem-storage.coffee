@@ -51,6 +51,7 @@ define ['underscore'], ( _) ->
 			.fail _.failureHandler
 
 
+		
 		#Create 'SynapseMedia' directory inside 'SynapseAssets'
 		createSynapseMediaDirectory : ->
 

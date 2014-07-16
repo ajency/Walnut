@@ -18,12 +18,7 @@ define ["backbone"], (Backbone) ->
 			opts = options.data
 
 			if collection_name is 'textbook'
-				if typeof options.data.class_id is 'undefined'
-					#Get all textbooks
-					data = App.reqres.request "get:#{collection_name}:local"
-					data.done (d)->
-						collection.set d
-				else
+				if typeof opts.class_id isnt 'undefined'
 					data = _.getTextbooksByClassIdAndDivision(opts.class_id, opts.division)
 					data.done (d)->
 						console.log 'textbook by class id and division data'
@@ -41,7 +36,7 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'division'
-				data = App.reqres.request "get:#{collection_name}:local"
+				data = _.getAllDivisions()
 				data.done (d)->
 					collection.set d
 
@@ -197,7 +192,7 @@ define ["backbone"], (Backbone) ->
 				console.log 'Model name: '+modelname
 
 				if modelname is 'division'
-					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('id')
+					data = _.fetchSingleDivision model.get('id')
 					data.done (d)->
 						model.set d
 
