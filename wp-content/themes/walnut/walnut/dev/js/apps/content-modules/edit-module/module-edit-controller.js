@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-modules/edit-module/module-description/description-app', 'apps/content-modules/edit-module/content-selection/content-selection-app', 'apps/content-modules/edit-module/content-display/content-display-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/content-modules/edit-module/module-description/description-app', 'apps/content-modules/edit-module/content-selection/app', 'apps/content-modules/edit-module/content-display/content-display-app'], function(App, RegionController) {
   return App.module("ContentModulesApp.Edit", function(Edit, App) {
     var ContentGroupEditLayout, NotEditView;
     Edit.GroupController = (function(_super) {
@@ -89,7 +89,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
         this.contentGroupCollection = App.request("get:content:pieces:of:group", model);
         return App.execute("when:fetched", this.contentGroupCollection, (function(_this) {
           return function() {
-            if (model.get('status') === 'underreview') {
+            if (model.get('post_status') === 'underreview') {
               App.execute("show:content:selectionapp", {
                 region: _this.layout.contentSelectionRegion,
                 model: model,

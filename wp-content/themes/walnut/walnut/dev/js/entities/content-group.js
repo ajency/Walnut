@@ -22,8 +22,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         last_modified_by: '',
         published_on: '',
         published_by: '',
-        status: 'underreview',
-        type: '',
+        post_status: '',
         total_minutes: 0,
         duration: 0,
         minshrs: 'mins',
@@ -99,36 +98,6 @@ define(["app", 'backbone'], function(App, Backbone) {
         questionResponseModel = App.request("save:question:response");
         questionResponseModel.set(data);
         return questionResponseModel.save();
-      },
-      getContentGroupByTextbookIdAndDivisionFromLocal: function(textbookId, division) {
-        var runFunc;
-        runFunc = function() {
-          return $.Deferred(function(d) {
-            var contentGroup;
-            contentGroup = _.getContentGroupByTextbookIdAndDivision(textbookId, division);
-            return contentGroup.done(function(result) {
-              return d.resolve(result);
-            });
-          });
-        };
-        return $.when(runFunc()).done(function() {
-          return console.log('getContentGroupByTextbookIdAndDivisionFromLocal done');
-        }).fail(_.failureHandler);
-      },
-      getContentGroupByIdFromLocal: function(id) {
-        var runFunc;
-        runFunc = function() {
-          return $.Deferred(function(d) {
-            var contentGroupById;
-            contentGroupById = _.getContentGroupById(id);
-            return contentGroupById.done(function(result) {
-              return d.resolve(result);
-            });
-          });
-        };
-        return $.when(runFunc()).done(function() {
-          return console.log('getContentGroupByIdFromLocal done');
-        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:content:groups", function(opt) {
@@ -143,14 +112,8 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("new:content:group", function() {
       return API.newContentGroup();
     });
-    App.reqres.setHandler("schedule:content:group", function(data) {
+    return App.reqres.setHandler("schedule:content:group", function(data) {
       return API.scheduleContentGroup(data);
-    });
-    App.reqres.setHandler("get:content-group:by:textbookid:and:division:local", function(textbookId, division) {
-      return API.getContentGroupByTextbookIdAndDivisionFromLocal(textbookId, division);
-    });
-    return App.reqres.setHandler("get:content-group:by:id:local", function(id) {
-      return API.getContentGroupByIdFromLocal(id);
     });
   });
 });

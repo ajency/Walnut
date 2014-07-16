@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/dashboard/templates/teachers-dashboard.html', 'apps/teachers-dashboard/dashboard/dashboard-take-class-app', 'apps/teachers-dashboard/dashboard/dashboard-start-training-app'], function(App, RegionController, teachersDashboardTpl) {
+define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/dashboard/templates/teachers-dashboard.html', 'apps/teachers-dashboard/dashboard/dashboard-take-class-app', 'apps/teachers-dashboard/dashboard/dashboard-start-training-app', 'apps/teachers-dashboard/dashboard/class-progress-app'], function(App, RegionController, teachersDashboardTpl) {
   return App.module("TeachersDashboardApp.View", function(View, App) {
     var TeachersDashboardLayout;
     View.DashboardController = (function(_super) {
@@ -37,7 +37,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
               region: _this.layout.start_training_region,
               divisionsCollection: _this.divisionsCollection
             });
-            return App.execute("show:all:content:modules:app", {
+            return App.execute("show:dashboard:class:progress:app", {
               region: _this.layout.class_progress_region
             });
           };

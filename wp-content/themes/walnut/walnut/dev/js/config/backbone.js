@@ -40,7 +40,7 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'content-group') {
-        data = App.reqres.request("get:" + collection_name + ":by:textbookid:and:division:local", opts.textbook, opts.division);
+        data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division);
         data.done(function(d) {
           return collection.set(d);
         });
@@ -141,7 +141,7 @@ define(["backbone"], function(Backbone) {
           });
         }
         if (modelname === 'content-group') {
-          data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('id'));
+          data = _.getContentGroupById(model.get('id'));
           data.done(function(d) {
             return model.set(d);
           });

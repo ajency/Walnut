@@ -10,5 +10,7 @@ define [
     'apps/content-preview/controller'
     'apps/content-pieces/content-pieces-app'
     'apps/admin-content-modules/app'
+    'apps/quiz-modules/quiz-module-app'
+    'apps/popup-dialog/single-edit-popup/single-edit-popup-controller'
     'apps/app-sync/app'
 ], ->

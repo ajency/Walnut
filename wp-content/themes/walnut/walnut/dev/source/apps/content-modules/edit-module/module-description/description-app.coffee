@@ -27,13 +27,14 @@ define ['app'
                         section_ids = _.flatten(term_ids['sections']) if term_ids['sections']?
 
                         #fetch chapters based on the current content piece's textbook
-                        @_fetchChapters(textbook_id, chapter_id) if textbook_id?
+                        fetchChapters= @_fetchChapters(textbook_id, chapter_id)
 
                         #fetch sections based on chapter id
-                        @_fetchSections(chapter_id) if chapter_id?
+                        fetchChapters.done =>
+                            @_fetchSections(chapter_id) if chapter_id?
 
-                        #fetch sections based on chapter id
-                        @_fetchSubsections(section_ids) if section_ids?
+                            #fetch sections based on chapter id
+                            @_fetchSubsections(section_ids) if section_ids?
 
 
                 ## end of fetching of edit content piece
@@ -49,21 +50,24 @@ define ['app'
                 @listenTo @view, "save:content:collection:details" : (data) =>
                     @model.set 'changed' : 'module_details'
                     @model.save(data, { wait : true, success : @successFn, error : @errorFn })
-                    @region.trigger "close:content:selection:app" if data.status isnt 'underreview'
+                    @region.trigger "close:content:selection:app" if data.post_status isnt 'underreview'
 
             ##fetch chapters based on textbook id, current_chapter refers to the chapter to be selected by default
             _fetchChapters: (term_id, current_chapter)=>
+                defer = $.Deferred();
                 chaptersCollection = App.request "get:chapters", ('parent': term_id)
 
                 App.execute "when:fetched", chaptersCollection, =>
                     @view.triggerMethod 'fetch:chapters:complete',
-                        chaptersCollection, current_chapter
+                      chaptersCollection, current_chapter
+                    defer.resolve()
+                defer.promise()
 
             #fetch all sections beloging to the chapter id passed as term_id
             _fetchSections: (term_id)=>
                 @subSectionsList = null
                 @allSectionsCollection = App.request "get:subsections:by:chapter:id",
-                    ('child_of': term_id)
+                  ('child_of': term_id)
 
                 App.execute "when:fetched", @allSectionsCollection, =>
                     #make list of sections directly belonging to chapter ie. parent=term_id
@@ -127,10 +131,12 @@ define ['app'
                 'click #save-content-collection' : 'save_content'
 
             modelEvents :
-                'change:status' : 'statusChanged'
+                'change:post_status' : 'statusChanged'
 
             mixinTemplateHelpers : (data)->
                 data = super data
+
+                data.heading = if @model.isNew() then 'Add' else 'Edit'
 
                 # add status values
                 data.statusOptions = [
@@ -152,7 +158,7 @@ define ['app'
                     return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
 
                 data.statusSelected = ->
-                    return 'selected' if @value is data.status
+                    return 'selected' if @value is data.post_status
 
                 data
 
@@ -166,7 +172,7 @@ define ['app'
                 @statusChanged()
 
             statusChanged : ->
-                if @model.get('status') in ['publish', 'archive']
+                if @model.get('post_status') in ['publish', 'archive']
                     @$el.find 'input, textarea, select'
                     .prop 'disabled', true
 
@@ -252,8 +258,12 @@ define ['app'
             onSavedContentGroup : (model) ->
                 @$el.find('#saved-success').remove();
 
+                attrs= model.changedAttributes()
+
+                msg= if attrs.id then 'saved' else 'updated'
+
                 @$el.find '.grid-title'
-                .prepend '<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/' + model.get('id') + '">view your module</a><hr></div>'
+                .prepend '<div id="saved-success">Training module '+msg+'. Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>'
 
         # set handlers
         App.commands.setHandler "show:editgroup:content:group:detailsapp", (opt = {})->

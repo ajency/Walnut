@@ -44,6 +44,7 @@ require.config({
     mmenu: 'plugins/jquery.mmenu.min.all',
     timerplugin: 'plugins/jquery.countdown_plugin.min',
     countdowntimer: 'plugins/jquery.countdown.min',
+    spinedit: 'plugins/bootstrap-spinedit',
     unserialize: 'plugins/unserialize',
     serialize: 'plugins/serialize',
     csvparse: 'plugins/jquery.parse',
@@ -93,6 +94,7 @@ require.config({
     mmenu: ['jquery'],
     timerplugin: ['jquery'],
     countdowntimer: ['jquery', 'timerplugin'],
+    spinedit: ['jquery', 'bootstrap'],
     csvparse: ['jquery'],
     json2csvparse: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']

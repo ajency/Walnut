@@ -41,7 +41,7 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'content-group'
-				data = App.reqres.request "get:#{collection_name}:by:textbookid:and:division:local", opts.textbook, opts.division
+				data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division)
 				data.done (d)->
 					collection.set d
 
@@ -203,7 +203,7 @@ define ["backbone"], (Backbone) ->
 						model.set d	
 
 				if modelname is 'content-group'
-					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('id')
+					data = _.getContentGroupById(model.get('id'))
 					data.done (d)->
 						model.set d
 

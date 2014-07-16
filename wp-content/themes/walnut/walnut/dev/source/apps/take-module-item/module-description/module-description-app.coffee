@@ -107,13 +107,12 @@ define ['app'
 
 				'click #question-done': 'questionCompleted'
 
-			onShow : ->
-				
+			onShow:->
 				if not Marionette.getOption(@, 'nextItemID')
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
 
-				if @model.get('status') is 'archive'
+				if @model.get('post_status') is 'archive'
 					@$el.find "#question-done"
 					.remove()
 
@@ -127,13 +126,12 @@ define ['app'
 						$("#question-details-region").css "margin-top", 0
 					return
 
-				
 				if _.platform() is 'DEVICE'
 
 					$('body').css('height' : 'auto')
 
 					@cordovaEventsForModuleDescriptionView()
-			
+
 
 			onPauseSessionClick : =>
 
@@ -158,23 +156,21 @@ define ['app'
 
 				# Cordova pause event
 				document.addEventListener("pause", @onPauseSessionClick, false)
-
+					
 
 			questionCompleted: =>
 
 				if Marionette.getOption(@, 'display_mode') is 'class_mode'
 					if confirm 'This item will be marked as complete. Continue?'
-						@trigger "question:completed"
+							@trigger "question:completed"
 
 				else @trigger "question:completed"
-
 
 			onQuestionChanged: (nextItemID)->
 
 				if not nextItemID
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
-
 
 
 

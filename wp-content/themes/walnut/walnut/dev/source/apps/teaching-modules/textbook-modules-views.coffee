@@ -105,16 +105,22 @@ define ['app'], (App)->
                                         <div class="filters">
                                             <div class="table-tools-actions">
                                                 <span id="textbook-filters"></span>
-                                            </div>
+                                                <select class="select2-filters" id="content-status-filter" style="width:150px">
+                                                    <option value="">All Status</option>
+                                                    <option value="started">In Progress</option>
+                                                    <option value="not started">Not Started</option>
+                                                    <option value="completed">Completed</option>
+                                                </select>
+                                                </div>
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
                                     <div class="col-sm-12"></div>
-                                </div><br>
-                    			<div class="row">
+                                </div>
+                    			<div class="row m-t-15">
 									<div class="col-lg-12">
 										<!--<h4>{{&showModulesHeading}}</h4>-->
-										<table class="table table-condensed table-fixed-layout table-bordered" id="take-class-modules">
+										<table class="table table-condensed table-fixed-layout table-bordered takeClass" id="take-class-modules">
 							                <thead>
 							                  <tr>
 							                    <th>Name</th>
@@ -156,6 +162,7 @@ define ['app'], (App)->
             events :
                 'change .textbook-filter' :(e)->
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
+                'change #content-status-filter'  : 'setFilteredContent'
 
                 'click .start-training' : 'startTraining'
                 'click .training-date' : 'scheduleTraining'

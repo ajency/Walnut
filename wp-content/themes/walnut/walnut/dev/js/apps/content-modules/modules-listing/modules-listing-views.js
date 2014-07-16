@@ -53,15 +53,15 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
           }
         };
         data.statusMessage = function() {
-          if (data.status === 'underreview') {
+          if (data.post_status === 'underreview') {
             return '<span class="label label-important">Under Review</span>';
-          } else if (data.status === 'publish') {
+          } else if (data.post_status === 'publish') {
             return '<span class="label label-info">Published</span>';
-          } else if (data.status === 'archive') {
+          } else if (data.post_status === 'archive') {
             return '<span class="label label-success">Archived</span>';
           }
         };
-        if ((_ref = data.status) === 'publish' || _ref === 'archive') {
+        if ((_ref = data.post_status) === 'publish' || _ref === 'archive') {
           data.archivedModule = true;
         }
         return data;
@@ -78,13 +78,13 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.cloneModule = function() {
         var groupData, _ref;
-        if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
+        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
           if (confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?") === true) {
             this.cloneModel = App.request("new:content:group");
             groupData = this.model.toJSON();
             this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
             this.clonedData.name = "" + this.clonedData.name + " clone";
-            this.clonedData.status = "underreview";
+            this.clonedData.post_status = "underreview";
             return App.execute("when:fetched", this.cloneModel, (function(_this) {
               return function() {
                 return _this.cloneModel.save(_this.clonedData, {
@@ -169,7 +169,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         },
         'change #check_all_div': 'checkAll',
-        'change #content-status-filter': 'setFilteredContent'
+        'change #content-post-status-filter': 'setFilteredContent'
       };
 
       GroupsListingView.prototype.initialize = function() {

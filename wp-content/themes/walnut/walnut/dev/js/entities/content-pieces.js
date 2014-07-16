@@ -141,6 +141,10 @@ define(["app", 'backbone'], function(App, Backbone) {
       newContentPiece: function() {
         var contentPiece;
         return contentPiece = new ContentPiece.ItemModel;
+      },
+      emptyContentCollection: function() {
+        var contentPieces;
+        return contentPieces = new ContentPiece.ItemCollection;
       }
     };
     App.reqres.setHandler("get:content:pieces", function(opt) {
@@ -155,8 +159,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:content:pieces:by:ids", function(ids) {
       return API.getContentPiecesByIDs(ids);
     });
-    return App.reqres.setHandler("new:content:piece", function() {
+    App.reqres.setHandler("new:content:piece", function() {
       return API.newContentPiece();
+    });
+    return App.reqres.setHandler("empty:content:pieces:collection", function() {
+      return API.emptyContentCollection();
     });
   });
 });

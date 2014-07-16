@@ -105,7 +105,7 @@ define ['app'
 
                     unanswered = _.difference allContentPieces, answeredIDs
 
-                    if _.size(unanswered) > 0 and @mode isnt 'training' and @model.get('status') isnt 'archive'
+                    if _.size(unanswered) > 0 and @mode isnt 'training' and @model.get('post_status') isnt 'archive'
                         actionButtons = '<button type="button" id="start-module" class="btn btn-success action btn-block m-t-10">
                                                                                                                                                                                                             <i class="fa fa-play"></i> Start
                                                                                                                                                                                                         </button>'

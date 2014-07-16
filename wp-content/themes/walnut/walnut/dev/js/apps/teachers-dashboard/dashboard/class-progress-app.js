@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module("DashboardClassProgressApp.Controller", function(Controller, App) {
-    var TeachersTakeClassView;
+    var ClassProgressView;
     Controller.DashboardClassProgressController = (function(_super) {
       __extends(DashboardClassProgressController, _super);
 
@@ -13,46 +13,31 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       DashboardClassProgressController.prototype.initialize = function(opts) {
         var view;
-        this.view = view = this._getClassProgressView(opts.divisionsCollection);
+        this.view = view = this._getClassProgressView();
         return this.show(view, {
           loading: true
         });
       };
 
-      DashboardClassProgressController.prototype._getTakeClassView = function(divisions) {
-        return new TeachersTakeClassView({
-          collection: divisions
-        });
+      DashboardClassProgressController.prototype._getClassProgressView = function() {
+        return new ClassProgressView();
       };
 
       return DashboardClassProgressController;
 
     })(RegionController);
-    TeachersTakeClassView = (function(_super) {
-      __extends(TeachersTakeClassView, _super);
+    ClassProgressView = (function(_super) {
+      __extends(ClassProgressView, _super);
 
-      function TeachersTakeClassView() {
-        return TeachersTakeClassView.__super__.constructor.apply(this, arguments);
+      function ClassProgressView() {
+        return ClassProgressView.__super__.constructor.apply(this, arguments);
       }
 
-      TeachersTakeClassView.prototype.template = '<h1 class="text-center muted m-b-20">Select a <span class="bold">class</span> to begin</h1> <ul class="classes"> {{#divisions}} {{#.}} <li><a href="#teachers/take-class/{{class_id}}/{{id}}"><div class="classesWrap">{{division}}</div></a></li> {{/.}} {{/divisions}} </ul>';
+      ClassProgressView.prototype.template = '<h1 class="text-center muted m-b-20">Coming <span class="bold">Soon</span>...</h1>';
 
-      TeachersTakeClassView.prototype.className = 'animated fadeInUp';
+      ClassProgressView.prototype.className = 'animated fadeInUp';
 
-      TeachersTakeClassView.prototype.mixinTemplateHelpers = function() {
-        var data;
-        data = TeachersTakeClassView.__super__.mixinTemplateHelpers.call(this, data);
-        data.divisions = _.chain(this.collection.toJSON()).groupBy('class_id').toArray().value();
-        return data;
-      };
-
-      TeachersTakeClassView.prototype.changeTab = function(e) {
-        e.preventDefault();
-        this.$el.find('#teacherOptns a').removeClass('active');
-        return $(e.target).addClass('active').tab('show');
-      };
-
-      return TeachersTakeClassView;
+      return ClassProgressView;
 
     })(Marionette.ItemView);
     return App.commands.setHandler("show:dashboard:class:progress:app", function(opt) {

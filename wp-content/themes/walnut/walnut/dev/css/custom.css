@@ -1402,6 +1402,9 @@ p.mcq-option-text {
   font-size: 17px;
   line-height: 22px;
 }
+.parameters .btn {
+  white-space: normal;
+}
 /*.answrRight{
 	background: url(../../../images/answer.png) no-repeat;
 	width: 45px;
@@ -1679,7 +1682,7 @@ p.mcq-option-text {
 #textbooks.list .img_wrapper img {
   height: auto;
   width: auto;
-  left: -40%;
+  left: -20%;
 }
 #textbooks.list .titles {
   width: 70%;
@@ -2429,14 +2432,20 @@ textarea.error,
   font-size: 14px;
   cursor: pointer;
 }
-#content-pieces-table a {
+#content-pieces-table th:first-child {
+  width: 28%;
+}
+#content-pieces-table th:last-child a {
   text-decoration: underline;
 }
-#take-class-modules th:nth-child(3) {
+#take-class-modules.takeClass th:nth-child(3) {
   width: 100px;
 }
-#take-class-modules th:last-child {
+#take-class-modules.takeClass th:last-child {
   width: 40%;
+}
+.table-fixed-layout td.cpHeight {
+  white-space: normal;
 }
 /*Theme Modifications*/
 body {

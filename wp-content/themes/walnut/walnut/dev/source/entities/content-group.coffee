@@ -16,8 +16,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				last_modified_by: ''
 				published_on: ''
 				published_by: ''
-				status: 'underreview'
-				type: ''
+				post_status: ''  # eg. underreview, publish, archive
 				total_minutes: 0
 				duration: 0
 				minshrs: 'mins'
@@ -77,39 +76,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				questionResponseModel.set data
 
 				questionResponseModel.save()
-
-
-			# get content group by textbook id and division from local
-			getContentGroupByTextbookIdAndDivisionFromLocal : (textbookId, division)->
-
-				runFunc = ->
-					$.Deferred (d)->
-						contentGroup = _.getContentGroupByTextbookIdAndDivision(textbookId, division)
-						contentGroup.done (result)->
-
-							d.resolve result
-
-
-				$.when(runFunc()).done ->
-					console.log 'getContentGroupByTextbookIdAndDivisionFromLocal done'
-				.fail _.failureHandler
-
-
-			getContentGroupByIdFromLocal : (id)->
-
-				runFunc = ->
-					$.Deferred (d)->
-						contentGroupById = _.getContentGroupById(id)
-						contentGroupById.done (result)->
-
-							d.resolve result
-
-
-				$.when(runFunc()).done ->
-					console.log 'getContentGroupByIdFromLocal done'
-				.fail _.failureHandler
-
-
+			
 				
 
 		# request handler to get all content groups
@@ -127,11 +94,3 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 		App.reqres.setHandler "schedule:content:group", (data)->
 			API.scheduleContentGroup data
-
-
-		# request handler to get content group by textbook id and division from local database
-		App.reqres.setHandler "get:content-group:by:textbookid:and:division:local", (textbookId, division) ->
-			API.getContentGroupByTextbookIdAndDivisionFromLocal(textbookId, division)
-
-		App.reqres.setHandler "get:content-group:by:id:local", (id) ->
-			API.getContentGroupByIdFromLocal(id)

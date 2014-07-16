@@ -110,7 +110,7 @@ define(['app'], function(App) {
         return ContentGroupsView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsView.prototype.template = '<div class="tiles white grid simple  animated fadeIn"> <div class="grid-title"> <h3 class="m-t-5 m-b-5">Textbook <span class="semi-bold">{{showTextbookName}}</span></h3> </div> <div class="grid-body contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-xs-12"> <div class="filters"> <div class="table-tools-actions"> <span id="textbook-filters"></span> </div> </div> </div> <div class="clearfix"></div> <div class="col-sm-12"></div> </div><br> <div class="row"> <div class="col-lg-12"> <!--<h4>{{&showModulesHeading}}</h4>--> <table class="table table-condensed table-fixed-layout table-bordered" id="take-class-modules"> <thead> <tr> <th>Name</th> <th>Chapter</th> <th class="{sorter:\'minutesSort\'}">Duration</th> <th><div id="status_header">Status</div></th> </tr> </thead> <tbody> </tbody> </table> <div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option value="25" selected>25</option> <option value="50">50</option> <option value="100">100</option> </select> </div> </div> </div> </div> </div>';
+      ContentGroupsView.prototype.template = '<div class="tiles white grid simple  animated fadeIn"> <div class="grid-title"> <h3 class="m-t-5 m-b-5">Textbook <span class="semi-bold">{{showTextbookName}}</span></h3> </div> <div class="grid-body contentSelect" style="overflow: hidden; display: block;"> <div class="row"> <div class="col-xs-12"> <div class="filters"> <div class="table-tools-actions"> <span id="textbook-filters"></span> <select class="select2-filters" id="content-status-filter" style="width:150px"> <option value="">All Status</option> <option value="started">In Progress</option> <option value="not started">Not Started</option> <option value="completed">Completed</option> </select> </div> </div> </div> <div class="clearfix"></div> <div class="col-sm-12"></div> </div> <div class="row m-t-15"> <div class="col-lg-12"> <!--<h4>{{&showModulesHeading}}</h4>--> <table class="table table-condensed table-fixed-layout table-bordered takeClass" id="take-class-modules"> <thead> <tr> <th>Name</th> <th>Chapter</th> <th class="{sorter:\'minutesSort\'}">Duration</th> <th><div id="status_header">Status</div></th> </tr> </thead> <tbody> </tbody> </table> <div id="pager" class="pager"> <i class="fa fa-chevron-left prev"></i> <span style="padding:0 15px"  class="pagedisplay"></span> <i class="fa fa-chevron-right next"></i> <select class="pagesize"> <option value="25" selected>25</option> <option value="50">50</option> <option value="100">100</option> </select> </div> </div> </div> </div> </div>';
 
       ContentGroupsView.prototype.itemView = ContentGroupsItemView;
 
@@ -130,6 +130,7 @@ define(['app'], function(App) {
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         },
+        'change #content-status-filter': 'setFilteredContent',
         'click .start-training': 'startTraining',
         'click .training-date': 'scheduleTraining'
       };

@@ -33,7 +33,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         term_ids = this.model.get('term_ids');
         this.listenTo(this.view, "show", (function(_this) {
           return function() {
-            var chapter_id, section_ids, textbook_id;
+            var chapter_id, fetchChapters, section_ids, textbook_id;
             if (term_ids) {
               textbook_id = term_ids['textbook'];
               if (term_ids['chapter'] != null) {
@@ -42,15 +42,15 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
               if (term_ids['sections'] != null) {
                 section_ids = _.flatten(term_ids['sections']);
               }
-              if (textbook_id != null) {
-                _this._fetchChapters(textbook_id, chapter_id);
-              }
-              if (chapter_id != null) {
-                _this._fetchSections(chapter_id);
-              }
-              if (section_ids != null) {
-                return _this._fetchSubsections(section_ids);
-              }
+              fetchChapters = _this._fetchChapters(textbook_id, chapter_id);
+              return fetchChapters.done(function() {
+                if (chapter_id != null) {
+                  _this._fetchSections(chapter_id);
+                }
+                if (section_ids != null) {
+                  return _this._fetchSubsections(section_ids);
+                }
+              });
             }
           };
         })(this));
@@ -68,7 +68,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
                 success: _this.successFn,
                 error: _this.errorFn
               });
-              if (data.status !== 'underreview') {
+              if (data.post_status !== 'underreview') {
                 return _this.region.trigger("close:content:selection:app");
               }
             };
@@ -77,15 +77,18 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       EditCollecionDetailsController.prototype._fetchChapters = function(term_id, current_chapter) {
-        var chaptersCollection;
+        var chaptersCollection, defer;
+        defer = $.Deferred();
         chaptersCollection = App.request("get:chapters", {
           'parent': term_id
         });
-        return App.execute("when:fetched", chaptersCollection, (function(_this) {
+        App.execute("when:fetched", chaptersCollection, (function(_this) {
           return function() {
-            return _this.view.triggerMethod('fetch:chapters:complete', chaptersCollection, current_chapter);
+            _this.view.triggerMethod('fetch:chapters:complete', chaptersCollection, current_chapter);
+            return defer.resolve();
           };
         })(this));
+        return defer.promise();
       };
 
       EditCollecionDetailsController.prototype._fetchSections = function(term_id) {
@@ -176,11 +179,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       CollectionDetailsView.prototype.modelEvents = {
-        'change:status': 'statusChanged'
+        'change:post_status': 'statusChanged'
       };
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
         data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
+        data.heading = this.model.isNew() ? 'Add' : 'Edit';
         data.statusOptions = [
           {
             name: 'Under Review',
@@ -199,7 +203,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
           }
         };
         data.statusSelected = function() {
-          if (this.value === data.status) {
+          if (this.value === data.post_status) {
             return 'selected';
           }
         };
@@ -214,7 +218,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
 
       CollectionDetailsView.prototype.statusChanged = function() {
         var _ref;
-        if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
+        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
           this.$el.find('input, textarea, select').prop('disabled', true);
           this.$el.find('select#status').prop('disabled', false);
           return this.$el.find('select#status option[value="underreview"]').prop('disabled', true);
@@ -284,8 +288,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {
+        var attrs, msg;
         this.$el.find('#saved-success').remove();
-        return this.$el.find('.grid-title').prepend('<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/' + model.get('id') + '">view your module</a><hr></div>');
+        attrs = model.changedAttributes();
+        msg = attrs.id ? 'saved' : 'updated';
+        return this.$el.find('.grid-title').prepend('<div id="saved-success">Training module ' + msg + '. Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>');
       };
 
       return CollectionDetailsView;

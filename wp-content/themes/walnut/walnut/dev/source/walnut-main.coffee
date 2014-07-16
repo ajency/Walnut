@@ -10,8 +10,8 @@ require.config
 
     # baseUrl: './wp-content/themes/walnut/walnut/dev/js'
 
-    # baseUrl for synapse app
-    baseUrl : '/dev/js'
+    # Url for Synapse App
+    baseUrl: '/dev/js'
 
     paths:
         jquery: 'plugins/jquery'
@@ -56,6 +56,7 @@ require.config
         mmenu: 'plugins/jquery.mmenu.min.all'
         timerplugin: 'plugins/jquery.countdown_plugin.min' #needed for jquerytimer to work
         countdowntimer: 'plugins/jquery.countdown.min'
+        spinedit : 'plugins/bootstrap-spinedit'
         unserialize         : 'plugins/unserialize'
         serialize           : 'plugins/serialize'
         csvparse            : 'plugins/jquery.parse'
@@ -102,6 +103,7 @@ require.config
         mmenu: ['jquery']
         timerplugin: ['jquery']
         countdowntimer: ['jquery','timerplugin']
+        spinedit : ['jquery','bootstrap']
         csvparse        : ['jquery']
         json2csvparse   : ['jquery']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
