@@ -95,6 +95,11 @@ function get_all_content_modules($args=array()){
 
     $content_modules_ids_array = get_modules_by_post_status($post_status);
 
+    if(isset($args['search_str']) && trim($args['search_str']) !=''){
+        $search_results = get_modules_by_search_string($args['search_str']);
+
+    }
+
     $content_module_ids = join(',',__u::flatten($content_modules_ids_array));
 
     if(isset($args['textbook'])){
@@ -151,6 +156,11 @@ function get_all_content_modules($args=array()){
     return $content_data;
 }
 
+function get_modules_by_search_string($search_string){
+
+
+}
+
 function get_modules_by_post_status($post_status='publish'){
 
     global $wpdb;
@@ -178,7 +188,7 @@ function get_single_content_module($id, $division=''){
 
     $data = $wpdb->get_row($query);
 
-
+    $data->id               = (int) $data->id;
     $data->term_ids         = maybe_unserialize ($data->term_ids);
     $duration               = $data->duration;
     $data->minshours        ='mins';

@@ -6,8 +6,8 @@ define ['app'
             tagName : 'tr'
             className: 'gradeX odd'
 
-            template:   '<td>{{&post_excerpt}}</td>
-                                    <td>{{post_author_name}}</td>
+            template:   '<td class="cpHeight">{{&post_excerpt}}</td>
+                                    <td class="cpHeight">{{&present_in_str}}</td>
                                     <td>{{textbookName}}</td>
                                     <td>{{chapterName}}</td>
                                     <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
@@ -33,15 +33,17 @@ define ['app'
                     data.edit_link= ' <span class="nonDevice">|</span> <a target="_blank" href="'+edit_url+'" class="nonDevice">Edit</a>'
 
                 data.textbookName = =>
-                    textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
-                    textbook.name
+                    if data.term_ids.textbook
+                        textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
+                        textbook.name
 
                 data.chapterName = =>
-                    chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
-                    .pluck 'name'
-                        .compact()
-                        .value()
-                    chapter
+                    if data.term_ids.chapter
+                        chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
+                        .pluck 'name'
+                            .compact()
+                            .value()
+                        chapter
 
                 data.statusMessage = ->
                     if data.post_status is 'pending'
@@ -52,6 +54,15 @@ define ['app'
                         return '<span class="label label-success">Archived</span>'
 
                 data.archivedModule = true if data.post_status in ['publish', 'archive']
+
+                modules=[]
+                _.each data.present_in_modules, (ele,index)->
+                    modules.push "<a target='_blank' href='#view-group/"+ ele.id+"'>"+ ele.name+"</a>"
+
+                data.present_in_str=
+                    if _.size(modules)>0
+                    then _.toSentence(modules)
+                    else 'Not added to a module yet'
 
                 data
 

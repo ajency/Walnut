@@ -91,6 +91,10 @@ define ["app", 'backbone'], (App, Backbone) ->
             newContentPiece:->
                 contentPiece = new ContentPiece.ItemModel
 
+            emptyContentCollection:->
+                contentPieces = new ContentPiece.ItemCollection
+
+
         # request handler to get all ContentPieces
         App.reqres.setHandler "get:content:pieces", (opt) ->
             API.getContentPieces(opt)
@@ -108,3 +112,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "new:content:piece",->
             API.newContentPiece()
+
+        App.reqres.setHandler "empty:content:pieces:collection",->
+            API.emptyContentCollection()
