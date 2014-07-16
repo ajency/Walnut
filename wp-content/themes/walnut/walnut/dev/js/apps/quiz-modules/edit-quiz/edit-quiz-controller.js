@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edit-quiz-view', 'apps/quiz-modules/edit-quiz/quiz-description/quiz-description-controller', 'apps/quiz-modules/edit-quiz/content-selection/content-selection-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edit-quiz-view', 'apps/quiz-modules/edit-quiz/quiz-description/quiz-description-controller', 'apps/quiz-modules/edit-quiz/content-selection/content-selection-controller', 'apps/quiz-modules/edit-quiz/quiz-content-display/quiz-content-display-controller'], function(App, RegionController) {
   return App.module('QuizModuleApp.EditQuiz', function(EditQuiz, App) {
     return EditQuiz.Controller = (function(_super) {
       __extends(Controller, _super);
@@ -54,15 +54,34 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edi
 
       Controller.prototype._showContentSelectionApp = function(model) {
         this.quizContentCollection = new Backbone.Collection;
+        _.each(model.get('content_pieces'), (function(_this) {
+          return function(content) {
+            var contentModel;
+            if (content.type === 'content-piece') {
+              contentModel = App.request("get:content:piece:by:id", content.id);
+            } else {
+              content.data.lvl1 = parseInt(content.data.lvl1);
+              content.data.lvl2 = parseInt(content.data.lvl2);
+              content.data.lvl3 = parseInt(content.data.lvl3);
+              contentModel = new Backbone.Model(content.data);
+            }
+            return _this.quizContentCollection.add(contentModel);
+          };
+        })(this));
         return App.execute("when:fetched", this.quizContentCollection, (function(_this) {
           return function() {
             if (model.get('post_status') === 'underreview') {
-              return App.execute("show:content:selectionapp", {
+              App.execute("show:quiz:content:selection:app", {
                 region: _this.layout.contentSelectionRegion,
                 model: model,
                 quizContentCollection: _this.quizContentCollection
               });
             }
+            return App.execute("show:quiz:content:display:app", {
+              region: _this.layout.contentDisplayRegion,
+              model: model,
+              quizContentCollection: _this.quizContentCollection
+            });
           };
         })(this));
       };
