@@ -1475,6 +1475,9 @@ p.mcq-option-text {
   font-size: 17px;
   line-height: 22px;
 }
+.parameters .btn {
+  white-space: normal;
+}
 /*.answrRight{
 	background: url(../../../images/answer.png) no-repeat;
 	width: 45px;
@@ -2503,7 +2506,10 @@ textarea.error,
   font-size: 14px;
   cursor: pointer;
 }
-#content-pieces-table a {
+#content-pieces-table th:first-child {
+  width: 28%;
+}
+#content-pieces-table th:last-child a {
   text-decoration: underline;
 }
 #take-class-modules.takeClass th:nth-child(3) {
