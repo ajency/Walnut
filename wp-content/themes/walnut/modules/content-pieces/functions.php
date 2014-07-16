@@ -65,41 +65,42 @@ function get_content_pieces($args = array()) {
 
     if(isset($args['content_type'])){
 
-//        $content_type_meta_array = array();
+        $content_type_meta_array = array('relation' => 'OR');
 //
-//        foreach($args['content_type'] as $content_type){
-//            $content_type_meta_array[]= array(
-//                'key'     => 'content_type',
-//                'value'   => $content_type,
-//                'compare' => '='
-//            );
-//        }
+        foreach($args['content_type'] as $content_type){
+            $content_type_meta_array[]= array(
+                'key'     => 'content_type',
+                'value'   => $content_type,
+                'compare' => '='
+            );
+        }
+        $args['meta_query']=$content_type_meta_array;
 //
 //        $content_type_meta= array_values($content_type_meta_array);
 //
-//        print_r($content_type_meta); //exit;
+//        print_r($content_type_meta_array); exit;
 
         //NEED TO CHANGE THIS !!
 
-        $args['meta_query']=
-            array(
-                'relation' => 'OR',
+//        $args['meta_query']=
+//            array(
+//                'relation' => 'OR',
+//
+//                array(
+//                    'key'     => 'content_type',
+//                    'value'   => 'teacher_question',
+//                    'compare' => '='
+//                ),
+//
+//                array(
+//                    'key'     => 'content_type',
+//                    'value'   => 'content_piece',
+//                    'compare' => '='
+//                ),
+//
+//            );
 
-                array(
-                    'key'     => 'content_type',
-                    'value'   => 'teacher_question',
-                    'compare' => '='
-                ),
-
-                array(
-                    'key'     => 'content_type',
-                    'value'   => 'content_piece',
-                    'compare' => '='
-                ),
-
-            );
-
-        #  print_r($args['meta_query']); exit;
+//         print_r($args['meta_query']); exit;
     }
 
     $args['numberposts'] = -1;
