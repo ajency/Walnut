@@ -57,6 +57,13 @@ function ajax_update_quiz ()
 
         $id = save_quiz_module ($data);
     }
+    if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
+        $data = array(
+            'id' => $_POST['id'],
+            'content_pieces' => $_POST['content_pieces']
+        );
+        update_quiz_content_pieces($data);
+    }
 
     wp_send_json (array('code' => 'OK', 'data' => array('id' => $_POST['id'])));
 }

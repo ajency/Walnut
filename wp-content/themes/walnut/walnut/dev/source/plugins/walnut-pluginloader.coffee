@@ -37,4 +37,5 @@ define [
     'mmenu'
     'timerplugin'
     'countdowntimer'
+    'spinedit'
 ], ->

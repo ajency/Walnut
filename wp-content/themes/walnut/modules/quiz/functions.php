@@ -10,7 +10,7 @@ function save_quiz_module ($data = array()) {
 
     global $wpdb;
 
-    $duration = (int)$data['duration'];
+    $duration = $data['duration'];
 
     if ($data['minshours'] == 'hrs')
         $duration = $duration * 60;
@@ -130,6 +130,9 @@ function get_single_quiz_module ($id) {
         if ($value->meta_key == 'quiz_type')
             $data->quiz_type = $value->meta_value;
 
+        if ($value->meta_key == 'content_pieces')
+            $data->content_pieces = maybe_unserialize($value->meta_value);
+
         if ($value->meta_key == 'quiz_meta'){
             $quiz_meta = maybe_unserialize($value->meta_value);
             $data->marks = (int)$quiz_meta['marks'];
@@ -141,4 +144,28 @@ function get_single_quiz_module ($id) {
 //    print_r($data); exit;
 
     return $data;
+}
+
+function update_quiz_content_pieces($data= array()){
+    global $wpdb;
+    $content_pieces = maybe_serialize($data['content_pieces']);
+
+    $exists_qry = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}collection_meta WHERE
+        collection_id=%d AND meta_key=%s", $data['id'], 'content_pieces');
+
+    $exists = $wpdb->get_results($exists_qry);
+
+    if($exists){
+        $content_pieces_qry = $wpdb->prepare("UPDATE {$wpdb->prefix}collection_meta SET
+            meta_value=%s WHERE collection_id=%d AND meta_key=%s",
+            $content_pieces,$data['id'],'content_pieces' );
+    }
+
+    else{
+        $content_pieces_qry = $wpdb->prepare("INSERT into {$wpdb->prefix}collection_meta
+            (collection_id, meta_key, meta_value) VALUES (%d,%s,%s)",
+            $data['id'],'content_pieces',$content_pieces );
+    }
+
+    $wpdb->query($content_pieces_qry);
 }
