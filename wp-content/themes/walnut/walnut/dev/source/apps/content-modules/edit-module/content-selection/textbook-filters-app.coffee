@@ -11,6 +11,8 @@ define ['app'
                 @show @view,
                     loading: true
 
+                @listenTo @view, "update:pager", => @region.trigger "update:pager"
+
                 @listenTo @view, "show",=>
                     term_ids = @model.get 'term_ids'
 
@@ -93,8 +95,6 @@ define ['app'
                     $ "#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter"
                     .select2();
 
-                    $('#dataContentTable').tablesorter();
-
                     @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
 
                     term_ids= @contentGroupModel.get 'term_ids'
@@ -120,12 +120,7 @@ define ['app'
 
                     @collection.set filtered_data
 
-                    $("#dataContentTable").trigger "updateCache"
-                    pagerOptions =
-                        container : $(".pager")
-                        output : '{startRow} to {endRow} of {totalRows}'
-
-                    $('#dataContentTable').tablesorterPager pagerOptions
+                    @trigger "update:pager"
 
         # set handlers
         App.commands.setHandler "show:textbook:filters:app", (opt = {})->

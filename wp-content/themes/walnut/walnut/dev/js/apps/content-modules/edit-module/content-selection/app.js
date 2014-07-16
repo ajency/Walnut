@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-module/content-selection/templates/content-selection.html', 'apps/content-modules/edit-module/content-selection/all-content-app', 'apps/content-modules/edit-module/content-selection/search-results-app', 'apps/content-modules/edit-module/content-selection/textbook-filters-app'], function(App, RegionController, contentSelectionTpl) {
+define(['app', 'controllers/region-controller', 'apps/content-modules/edit-module/content-selection/all-content-app', 'apps/content-modules/edit-module/content-selection/search-results-app', 'apps/content-modules/edit-module/content-selection/textbook-filters-app'], function(App, RegionController) {
   return App.module("ContentSelectionApp.Controller", function(Controller, App) {
     Controller.ContentSelectionController = (function(_super) {
       var ContentSelectionLayout;
@@ -31,7 +31,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
             _this.show(_this.layout, {
               loading: true
             });
-            return _this.listenTo(_this.layout, "show", function() {
+            _this.listenTo(_this.layout, "show", function() {
               App.execute("show:textbook:filters:app", {
                 region: _this.layout.filtersRegion,
                 textbooksCollection: _this.textbooksCollection,
@@ -52,6 +52,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
                 contentGroupCollection: _this.contentGroupCollection,
                 model: _this.model
               });
+            });
+            return _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {
+              return _this.layout.allContentRegion.trigger("update:pager");
             });
           };
         })(this));

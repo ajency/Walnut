@@ -1,10 +1,9 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-modules/edit-module/content-selection/templates/content-selection.html'
         'apps/content-modules/edit-module/content-selection/all-content-app'
         'apps/content-modules/edit-module/content-selection/search-results-app'
         'apps/content-modules/edit-module/content-selection/textbook-filters-app'
-], (App, RegionController, contentSelectionTpl)->
+], (App, RegionController)->
     App.module "ContentSelectionApp.Controller", (Controller, App)->
         class Controller.ContentSelectionController extends RegionController
 
@@ -45,6 +44,8 @@ define ['app'
                             contentPiecesCollection: @contentPiecesCollection
                             contentGroupCollection:@contentGroupCollection
                             model: @model
+
+                    @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
 
 
 

@@ -1,7 +1,7 @@
 define ['app'
         'controllers/region-controller'
         'apps/content-modules/edit-module/module-description/description-app'
-        'apps/content-modules/edit-module/content-selection/content-selection-app'
+        'apps/content-modules/edit-module/content-selection/app'
         'apps/content-modules/edit-module/content-display/content-display-app'], (App, RegionController)->
     App.module "ContentModulesApp.Edit", (Edit, App)->
         class Edit.GroupController extends RegionController

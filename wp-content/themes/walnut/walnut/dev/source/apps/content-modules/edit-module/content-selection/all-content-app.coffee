@@ -13,6 +13,9 @@ define ['app'
                 @show @view,
                     loading: true
 
+                @listenTo @region, "update:pager",=>
+                    @view.triggerMethod "update:pager"
+
                 @listenTo @view, "add:content:pieces": (contentIDs) =>
 
                     _.each contentIDs, (ele, index)=>
@@ -21,8 +24,8 @@ define ['app'
 
                 @listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPieceRemoved
 
-                @listenTo @region, "new:search:collection", (collection)=>
-                    @contentPiecesCollection.reset collection.models
+#                @listenTo @region, "new:search:collection", (collection)=>
+#                    @contentPiecesCollection.reset collection.models
 
             contentPieceRemoved: (model)=>
                 @contentPiecesCollection.add model
@@ -103,7 +106,9 @@ define ['app'
                     'click #add-content-pieces' : 'addContentPieces'
 
                 onShow:->
-                    $('#dataContentTable').tablesorter();
+                    @$el.find '#dataContentTable'
+                    .tablesorter();
+
                     @fullCollection= Marionette.getOption @, 'fullCollection'
 
 
@@ -124,13 +129,13 @@ define ['app'
                         @trigger "add:content:pieces", content_pieces
                         @fullCollection.remove(id) for id in content_pieces
 
-                    @updatePager()
+                    @onUpdatePager()
 
                 onContentPieceRemoved: (model)=>
                     @fullCollection.add model
-                    @updatePager()
+                    @onUpdatePager()
 
-                updatePager:->
+                onUpdatePager:->
 
                     @$el.find "#dataContentTable"
                     .trigger "updateCache"

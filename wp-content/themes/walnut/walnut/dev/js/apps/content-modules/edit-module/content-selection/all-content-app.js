@@ -22,6 +22,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         this.show(this.view, {
           loading: true
         });
+        this.listenTo(this.region, "update:pager", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("update:pager");
+          };
+        })(this));
         this.listenTo(this.view, {
           "add:content:pieces": (function(_this) {
             return function(contentIDs) {
@@ -32,12 +37,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
             };
           })(this)
         });
-        this.listenTo(this.contentGroupCollection, 'content:pieces:of:group:removed', this.contentPieceRemoved);
-        return this.listenTo(this.region, "new:search:collection", (function(_this) {
-          return function(collection) {
-            return _this.contentPiecesCollection.reset(collection.models);
-          };
-        })(this));
+        return this.listenTo(this.contentGroupCollection, 'content:pieces:of:group:removed', this.contentPieceRemoved);
       };
 
       Controller.prototype.contentPieceRemoved = function(model) {
@@ -123,7 +123,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         };
 
         DataContentTableView.prototype.onShow = function() {
-          $('#dataContentTable').tablesorter();
+          this.$el.find('#dataContentTable').tablesorter();
           return this.fullCollection = Marionette.getOption(this, 'fullCollection');
         };
 
@@ -145,15 +145,15 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
               this.fullCollection.remove(id);
             }
           }
-          return this.updatePager();
+          return this.onUpdatePager();
         };
 
         DataContentTableView.prototype.onContentPieceRemoved = function(model) {
           this.fullCollection.add(model);
-          return this.updatePager();
+          return this.onUpdatePager();
         };
 
-        DataContentTableView.prototype.updatePager = function() {
+        DataContentTableView.prototype.onUpdatePager = function() {
           var pagerOptions;
           this.$el.find("#dataContentTable").trigger("updateCache");
           pagerOptions = {

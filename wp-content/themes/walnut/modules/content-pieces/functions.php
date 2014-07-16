@@ -137,20 +137,34 @@ function get_content_pieces($args = array()) {
 
 function get_content_pieces_by_search_string($search_string, $content_pieces){
 
-    $content_items= array();
+    $content_items= $excerpts= array();
 
-    foreach($content_pieces as $item){
+    foreach($content_pieces as $id){
 
-        $content_layout= get_post_meta($item, 'layout_json', true);
+        $content_layout= get_post_meta($id, 'layout_json', true);
 
         $content_layout = maybe_unserialize($content_layout);
         $content_elements = get_json_to_clone($content_layout);
-        $excerpts = __u::flatten($content_elements['excerpt']);
+
+        $excerpts = $content_elements['excerpt'];
+
+        $grading_parameters=get_grading_parameters($id);
+
+        $excerpts[]=$grading_parameters['excerpts'];
+
+        //get instructions for content piece
+        $content_meta= get_post_meta($id,'content_piece_meta',true);
+
+        $content_meta= maybe_unserialize($content_meta);
+
+        $excerpts[] = $content_meta['instructions'];
+
+        $excerpts = __u::flatten($excerpts);
 
         foreach($excerpts as $excerpt){
 
             if(strpos(strtolower(strip_tags($excerpt)), strtolower($search_string)) !== false){
-                $content_items[]=$item;
+                $content_items[]=$id;
             }
         }
 
@@ -161,8 +175,6 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
 }
 
 function get_single_content_piece($id){
-
-    global $wpdb;
 
     $current_blog_id= get_current_blog_id();
 
@@ -245,21 +257,16 @@ function get_single_content_piece($id){
         $excerpt_array = $content_elements['excerpt'];
     }
 
-    $allParams = $wpdb->get_results( "SELECT * FROM {$wpdb->base_prefix}postmeta WHERE post_id = $id
-    AND meta_key LIKE 'parameter_%'",ARRAY_A);
-    $grading_params = array();
-    foreach ($allParams as $params){
-        $paramObj = array();
-        $paramObj['id'] = $params['meta_id'];
-        $paramObj['parameter'] =$excerpt_array[]= ltrim($params['meta_key'],'parameter_');
-        $paramObj['attributes'] =$excerpt_array[]= maybe_unserialize($params['meta_value']);
-        array_push($grading_params,$paramObj);
-    }
-    $content_piece->grading_params = $grading_params;
+    $grading_details= get_grading_parameters($id);
+
+    $content_piece->grading_params = $grading_details['parameters']; //$grading_params;
 
     $content_piece->present_in_modules = get_modules_containing_content_piece($id);
 
+    $excerpt_array= array_merge($excerpt_array, $grading_details['excerpts']);
+
     $excerpt = prettify_content_piece_excerpt($excerpt_array);
+
     if(strlen(trim($excerpt))==0)
         $excerpt='No excerpt';
     else
@@ -300,6 +307,38 @@ function get_modules_containing_content_piece($content_id){
     }
 
     return $modules;
+
+}
+
+//get grading parameters, attributes and excerpts
+
+function get_grading_parameters($content_piece_id){
+
+    global $wpdb;
+
+    $all_params_query = $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}postmeta WHERE post_id = %d
+                    AND meta_key LIKE %s",
+                    array($content_piece_id, 'parameter_%')
+                );
+
+    $allParams= $wpdb->get_results($all_params_query, ARRAY_A);
+
+    $grading_params = $excerpt_array= array();
+
+    foreach ($allParams as $params){
+        $paramObj = array();
+        $paramObj['id'] = $params['meta_id'];
+        $paramObj['parameter'] =$excerpt_array[]= ltrim($params['meta_key'],'parameter_');
+        $paramObj['attributes'] =$excerpt_array[]= maybe_unserialize($params['meta_value']);
+        array_push($grading_params,$paramObj);
+    }
+
+    $grading = array(
+      'parameters'  => $grading_params,
+      'excerpts'    => $excerpt_array
+    );
+
+    return $grading;
 
 }
 
@@ -503,29 +542,29 @@ function save_content_piece($data){
 //    if($data['content_type'] == 'student_question'){
 //        update_post_meta ($content_id, 'negative_marks', $data['negative_marks']);
 //    }
-    $preventDelete = array();
+
+
+    // get all params for this content piece
+    $allParams = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->base_prefix}postmeta WHERE post_id = $content_id AND meta_key LIKE 'parameter_%'",ARRAY_N);
+    // delete them
+    foreach ($allParams as $params)
+        delete_post_meta ($content_id,$params[0]);
+
+    //add new set of parameters & attributes
     if (isset($data['grading_params'])){
         foreach($data['grading_params'] as $grading_parameter){
+
             if($grading_parameter['parameter'] == '' || sizeOf($grading_parameter['attributes']) == 0)
                 continue;
             else{
                 $meta_key = "parameter_" . $grading_parameter['parameter'];
                 $meta_value = $grading_parameter['attributes'];
-                update_post_meta ($content_id, $meta_key,$meta_value);
-                array_push($preventDelete,$meta_key);
+                add_post_meta ($content_id, $meta_key,$meta_value);
             }
         }
     }
-//    get all params for this content piece
-    $allParams = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->base_prefix}postmeta WHERE post_id = $content_id AND meta_key LIKE 'parameter_%'",ARRAY_N);
-    // delete it if absent from current update
-    foreach ($allParams as $params){
-        if (in_array($params[0],$preventDelete ))
-            continue;
-        else
-            delete_post_meta ($content_id,$params[0]);
 
-    }
+
 
     $content_piece_additional = array(
         'term_ids'          => $data['term_ids'],

@@ -22,6 +22,11 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         this.show(this.view, {
           loading: true
         });
+        this.listenTo(this.view, "update:pager", (function(_this) {
+          return function() {
+            return _this.region.trigger("update:pager");
+          };
+        })(this));
         this.listenTo(this.view, "show", (function(_this) {
           return function() {
             var chapter_id, fetchChapters, fetchSections, section_id, subsection_id, term_ids, textbook_id;
@@ -111,7 +116,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           });
           this.$el.find('#textbook-filters').html(textbookFiltersHTML);
           $("#textbooks-filter, #chapters-filter, #sections-filter, #subsections-filter, #content-type-filter").select2();
-          $('#dataContentTable').tablesorter();
           this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
           term_ids = this.contentGroupModel.get('term_ids');
           $("#textbooks-filter").select2().select2('val', term_ids['textbook']);
@@ -133,15 +137,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         };
 
         TextbookFiltersView.prototype.setFilteredContent = function() {
-          var filtered_data, pagerOptions;
+          var filtered_data;
           filtered_data = $.filterTableByTextbooks(this);
           this.collection.set(filtered_data);
-          $("#dataContentTable").trigger("updateCache");
-          pagerOptions = {
-            container: $(".pager"),
-            output: '{startRow} to {endRow} of {totalRows}'
-          };
-          return $('#dataContentTable').tablesorterPager(pagerOptions);
+          return this.trigger("update:pager");
         };
 
         return TextbookFiltersView;
