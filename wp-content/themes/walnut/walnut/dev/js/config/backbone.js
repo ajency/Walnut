@@ -46,7 +46,7 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'content-piece') {
-        data = App.reqres.request("get:" + collection_name + ":local", opts.ids);
+        data = _.getContentPiecesByIDs(opts.ids);
         data.done(function(d) {
           return collection.set(d);
         });

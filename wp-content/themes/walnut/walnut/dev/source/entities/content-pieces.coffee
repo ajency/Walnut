@@ -93,100 +93,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 			newContentPiece:->
 				contentPiece = new ContentPiece.ItemModel
 
-
-			#get all content pieces from local database
-			getContentPieceFromLocal : (ids)->
-				
-				# get data from wp_posts
-				runMainQuery = ->
-					$.Deferred (d)->
-						_.db.transaction (tx)->
-							tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' 
-								AND post_status = 'publish' AND ID in ("+ids+")", []
-								, onSuccess(d), _.deferredErrorHandler(d))
-
-				onSuccess = (d)->
-					(tx,data)->
-						result = []
-
-						for i in [0..data.rows.length-1] by 1
-
-							row = data.rows.item(i)
-
-							do(row, i)->
-								postAuthorName = _.getPostAuthorName(row['post_author'])
-								postAuthorName.done (author_name)->
-
-									do(row, i, author_name)->
-										metaValue = _.getMetaValue(row['ID'])
-										metaValue.done (meta_value)->
-
-											do(row, i, author_name, meta_value)->
-												gradingParams = _.getGradingParams(row['ID'])
-												gradingParams.done (grading_params)->
-
-													do(row, i, author_name, meta_value, grading_params)->
-
-														if(meta_value.layout_json)
-															
-															contentElementsArray = _.getJsonToClone(meta_value.layout_json)
-															contentElementsArray.done (contentElements)->
-
-																_.mixin(_.str.exports());
-																excerpt_array= contentElements.excerpt
-																excerpt_array = _.flatten excerpt_array
-																taglessArray = new Array
-																_.each excerpt_array , (excerpt)->												
-																	taglessArray.push _(excerpt).stripTags()													
-																
-																excerpt = taglessArray.join ' | '
-																excerpt= _(excerpt).prune(150)
-
-																result[i] = 
-																	ID: row['ID']
-																	post_author: row['post_author']
-																	post_date: row['post_date']
-																	post_date_gmt: row['post_date_gmt']
-																	post_content: row['post_content']
-																	post_title: row['post_title']
-																	post_excerpt: excerpt
-																	post_status: row['post_status']
-																	comment_status: row['comment_status']
-																	ping_status: row['ping_status']
-																	post_password: row['post_password']
-																	post_name: row['post_name']
-																	to_ping: row['to_ping']
-																	pinged: row['pinged']
-																	post_modified: row['post_modified']
-																	post_modified_gmt: row['post_modified_gmt']
-																	post_content_filtered: row['post_content_filtered']
-																	post_parent: row['post_parent']
-																	guid: row['guid']
-																	menu_order: row['menu_order']
-																	post_type: row['post_type']
-																	post_mime_type: row['post_mime_type']
-																	comment_count: row['comment_count']
-																	filter: 'raw'
-																	post_author_name: author_name
-																	content_type: meta_value.content_type
-																	layout: contentElements.elements
-																	question_type: meta_value.question_type
-																	post_tags: meta_value.post_tags
-																	duration: meta_value.duration
-																	last_modified_by: meta_value.last_modified_by
-																	published_by: meta_value.published_by
-																	term_ids: meta_value.term_ids
-																	instructions: meta_value.instructions
-																	order: _.indexOf(ids, row['ID'].toString())
-																	grading_params : grading_params
-																	
-							
-						d.resolve(result)
-
-				$.when(runMainQuery()).done (d)->
-					console.log 'getContentPieceFromLocal transaction completed'
-				.fail _.failureHandler
-
 		
 
 		# request handler to get all ContentPieces
@@ -205,7 +111,3 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 		App.reqres.setHandler "new:content:piece",->
 			API.newContentPiece()
-
-		# request handler to get all ContentPieces from local database
-		App.reqres.setHandler "get:content-piece:local", (ids) ->
-			API.getContentPieceFromLocal ids

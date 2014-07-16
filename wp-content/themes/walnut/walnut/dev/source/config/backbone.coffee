@@ -46,7 +46,7 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'content-piece'
-				data = App.reqres.request "get:#{collection_name}:local", opts.ids 
+				data = _.getContentPiecesByIDs(opts.ids)
 				data.done (d)->
 					collection.set d
 
