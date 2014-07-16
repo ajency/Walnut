@@ -184,6 +184,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
         data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
+        data.heading = this.model.isNew() ? 'Add' : 'Edit';
         data.statusOptions = [
           {
             name: 'Under Review',
@@ -287,8 +288,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {
+        var attrs, msg;
         this.$el.find('#saved-success').remove();
-        return this.$el.find('.grid-title').prepend('<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/' + model.get('id') + '">view your module</a><hr></div>');
+        attrs = model.changedAttributes();
+        msg = attrs.id ? 'saved' : 'updated';
+        return this.$el.find('.grid-title').prepend('<div id="saved-success">Training module ' + msg + '. Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>');
       };
 
       return CollectionDetailsView;

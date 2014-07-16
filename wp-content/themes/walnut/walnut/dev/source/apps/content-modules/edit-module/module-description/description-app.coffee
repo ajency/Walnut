@@ -136,6 +136,8 @@ define ['app'
             mixinTemplateHelpers : (data)->
                 data = super data
 
+                data.heading = if @model.isNew() then 'Add' else 'Edit'
+
                 # add status values
                 data.statusOptions = [
                     (
@@ -256,8 +258,12 @@ define ['app'
             onSavedContentGroup : (model) ->
                 @$el.find('#saved-success').remove();
 
+                attrs= model.changedAttributes()
+
+                msg= if attrs.id then 'saved' else 'updated'
+
                 @$el.find '.grid-title'
-                .prepend '<div id="saved-success">Saved Successfully. Click here to <a href="#view-group/' + model.get('id') + '">view your module</a><hr></div>'
+                .prepend '<div id="saved-success">Training module '+msg+'. Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>'
 
         # set handlers
         App.commands.setHandler "show:editgroup:content:group:detailsapp", (opt = {})->
