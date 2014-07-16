@@ -13,7 +13,7 @@ define(['app'], function(App) {
 
       GradingParamsItemView.prototype.className = 'singleParam';
 
-      GradingParamsItemView.prototype.template = '<div class="row m-b-10"> <div class="col-sm-4"> <textarea style="overflow:hidden" id="parameter" placeholder="Parameter name" class="w100">{{parameter}}</textarea> </div><div class="saved" style="color: dodgerblue;display: none">Updated</div><div class="changed" style="color: #ff0000; display: none">Changed</div> </div> <div class="row p-b-15"> {{#attributes}} <div class="col-sm-3"> <textarea style="overflow:hidden" placeholder="Attribute" class="w100 attribute">{{.}}</textarea> </div> {{/attributes}} </div> <div class="row b-grey b-b p-b-15 m-b-15"> <div class="col-sm-12"> <button id="btn-delete" class="btn btn-default btn-sm btn-small pull-right">Delete</button> <button id="btn-save" class="btn btn-success btn-sm btn-small pull-right m-r-10">Save</button> </div> </div>';
+      GradingParamsItemView.prototype.template = '<div class="row m-b-10"> <div class="col-sm-4"> <textarea id="parameter" placeholder="Parameter name" class="w100 autogrow">{{parameter}}</textarea> </div><div class="saved" style="color: dodgerblue;display: none">Updated</div><div class="changed" style="color: #ff0000; display: none">Changed</div> </div> <div class="row p-b-15"> {{#attributes}} <div class="col-sm-3"> <textarea placeholder="Attribute" class="w100 attribute autogrow">{{.}}</textarea> </div> {{/attributes}} </div> <div class="row b-grey b-b p-b-15 m-b-15"> <div class="col-sm-12"> <button id="btn-delete" class="btn btn-default btn-sm btn-small pull-right">Delete</button> <button id="btn-save" class="btn btn-success btn-sm btn-small pull-right m-r-10">Save</button> </div> </div>';
 
       GradingParamsItemView.prototype.mixinTemplateHelpers = function(data) {
         data = GradingParamsItemView.__super__.mixinTemplateHelpers.call(this, data);
@@ -26,8 +26,7 @@ define(['app'], function(App) {
       GradingParamsItemView.prototype.events = {
         'click #btn-save': '_saveGradingParameter',
         'click #btn-delete': '_deleteGradingParameter',
-        'change textarea': '_inputChanged',
-        'keyup textarea': 'autoGrowTextArea'
+        'change textarea': '_inputChanged'
       };
 
       GradingParamsItemView.prototype.onShow = function() {
@@ -38,21 +37,6 @@ define(['app'], function(App) {
             });
           };
         })(this));
-      };
-
-      GradingParamsItemView.prototype.autoGrowTextArea = function(e) {
-        var ele;
-        ele = e.target;
-        if ($(ele).prop('clientHeight') < $(ele).prop('scrollHeight')) {
-          $(ele).css({
-            'height': $(ele).prop('scrollHeight') + "px"
-          });
-        }
-        if ($(ele).prop('clientHeight') < $(ele).prop('scrollHeight')) {
-          return $(ele).css({
-            'height': ($(ele).prop('scrollHeight') * 2 - $(ele).prop('clientHeight')) + "px"
-          });
-        }
       };
 
       GradingParamsItemView.prototype._saveGradingParameter = function() {

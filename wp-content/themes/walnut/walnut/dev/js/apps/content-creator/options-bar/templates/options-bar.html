@@ -87,8 +87,10 @@
             </div>
             <div class="row">
                 <div class="col-sm-8">
-                    <label class="form-label">Instructions</label>
-                    <input name="instructions" type="text" class="form-control" value="{{instructions}}" placeholder="Instructions">
+                    <label class="form-label">{{instructionsLabel}}</label>
+                    <textarea name="instructions" class="instructions form-control autogrow" placeholder="{{instructionsLabel}}">
+                        {{instructions}}
+                    </textarea>
                 </div>
                 <div class="col-sm-2">
                     <label class="form-label">Published By:</label>

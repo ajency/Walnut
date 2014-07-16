@@ -6,14 +6,14 @@ define ['app'],(App)->
 
             template : '<div class="row m-b-10">
                             <div class="col-sm-4">
-                                <textarea style="overflow:hidden" id="parameter" placeholder="Parameter name" class="w100">{{parameter}}</textarea>
+                                <textarea id="parameter" placeholder="Parameter name" class="w100 autogrow">{{parameter}}</textarea>
                             </div><div class="saved" style="color: dodgerblue;display: none">Updated</div><div class="changed" style="color: #ff0000;
                             display: none">Changed</div>
                         </div>
                         <div class="row p-b-15">
                             {{#attributes}}
                             <div class="col-sm-3">
-                                <textarea style="overflow:hidden" placeholder="Attribute" class="w100 attribute">{{.}}</textarea>
+                                <textarea placeholder="Attribute" class="w100 attribute autogrow">{{.}}</textarea>
                             </div>
                             {{/attributes}}
                         </div>
@@ -33,21 +33,10 @@ define ['app'],(App)->
                 'click #btn-save'   : '_saveGradingParameter'
                 'click #btn-delete' : '_deleteGradingParameter'
                 'change textarea'   : '_inputChanged'
-                'keyup textarea'    : 'autoGrowTextArea'
 
             onShow:->
                 _.each @$el.find('textarea'), (ele,index)=>
                     $(ele).css 'height' : $(ele).prop('scrollHeight') + "px";
-
-            autoGrowTextArea:(e)->
-
-                ele=e.target
-
-                if $(ele).prop('clientHeight') < $(ele).prop('scrollHeight')
-                    $(ele).css 'height' : $(ele).prop('scrollHeight') + "px";
-
-                if $(ele).prop('clientHeight') < $(ele).prop('scrollHeight')
-                    $(ele).css 'height' : ($(ele).prop('scrollHeight') * 2 - $(ele).prop('clientHeight')) + "px"
 
             _saveGradingParameter : ->
                 if @$el.find('textarea#parameter').val() is ''

@@ -7,8 +7,8 @@ define ['app'], (App)->
             template : '<div class="preview">
                             <div class="" id="top-panel"></div>
                                 <div class="container-grey m-b-5  qstnInfo ">
-                                    <label class="form-label bold small-text muted no-margin inline">Question Info: </label>
-                                    <span class="small-text" style="text-transform: capitalize">{{instructions}}</span>
+                                    <label class="form-label bold small-text muted no-margin inline">{{instructionsLabel}} : </label>
+                                    <span class="small-text">{{instructions}}</span>
                                 </div>
                                 <div class="" id="content-board"></div>
                                  {{#content_preview}}
@@ -32,6 +32,9 @@ define ['app'], (App)->
                 data = super data
                 data.content_preview = Marionette.getOption @, 'content_preview'
                 data.showHintButton = if data.content_type is 'student_question' and data.hint_enable then true else false
+
+                data.instructionsLabel = if @model.get('content_type') is 'content_piece' then 'Procedure Summary' else 'Instructions'
+
                 data
 
             _showHint : ->

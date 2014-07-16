@@ -36,10 +36,16 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       OptionsBarView.prototype.mixinTemplateHelpers = function(data) {
         data = OptionsBarView.__super__.mixinTemplateHelpers.call(this, data);
         data.isStudentQuestion = this.model.get('content_type') === 'student_question' ? true : false;
+        data.instructionsLabel = this.model.get('content_type') === 'content_piece' ? 'Procedure Summary' : 'Instructions';
         return data;
       };
 
       OptionsBarView.prototype.onShow = function() {
+        var ele;
+        ele = this.$el.find(".instructions");
+        $(ele).css({
+          'height': $(ele).prop('scrollHeight') + "px"
+        });
         Backbone.Syphon.deserialize(this, this.model.toJSON());
         this.$el.find("#subs, #chaps, #qType, #status, #secs, #subsecs, #difficulty_level ").select2();
         this.$el.find('input.tagsinput').tagsinput();

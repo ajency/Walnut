@@ -39,6 +39,22 @@ define(['jquery', 'underscore'], function($, _) {
     })(this));
     return this;
   };
+  $(document).on("keyup", ".autogrow", (function(_this) {
+    return function(e) {
+      var ele;
+      ele = $(e.target);
+      if ($(ele).prop('clientHeight') < $(ele).prop('scrollHeight')) {
+        $(ele).css({
+          'height': $(ele).prop('scrollHeight') + "px"
+        });
+      }
+      if ($(ele).prop('clientHeight') < $(ele).prop('scrollHeight')) {
+        return $(ele).css({
+          'height': ($(ele).prop('scrollHeight') * 2 - $(ele).prop('clientHeight')) + "px"
+        });
+      }
+    };
+  })(this));
   $.fn.selectSelectableElements = function(elementsToSelect) {
     $(".ui-selected", this).not(elementsToSelect).removeClass("ui-selected");
     return $(elementsToSelect).not(".ui-selected").addClass("ui-selected");

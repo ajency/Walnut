@@ -31,11 +31,18 @@ define ['app',
             mixinTemplateHelpers : (data)->
                 data = super data
                 data.isStudentQuestion = if @model.get('content_type') is 'student_question' then true else false
+
+                data.instructionsLabel = if @model.get('content_type') is 'content_piece' then 'Procedure Summary' else 'Instructions'
+
                 data
 
 
 
             onShow:->
+                ele = @$el.find ".instructions"
+
+                $(ele).css 'height' : $(ele).prop('scrollHeight') + "px";
+
                 Backbone.Syphon.deserialize @,@model.toJSON()
 
                 @$el.find "#subs, #chaps, #qType, #status, #secs, #subsecs, #difficulty_level "#,#negativeMarks"
@@ -49,20 +56,6 @@ define ['app',
 
                 if @model.get 'comment_enable'
                     @$el.find('#comment_enable').trigger 'click'
-
-#              
-
-#                if @model.get 'ID'
-#                    qType= @model.get 'question_type'
-#                    @$el.find('#qType').select2().select2('val',qType)
-
-#                    postStatus= @model.get 'post_status'
-#                    @$el.find('#status').select2().select2('val',postStatus)
-
-#                    @$el.find('#difficulty_level').select2().select2 'val',@model.get 'difficulty_level'
-
-#                    negativeMarks= parseInt @model.get 'negative_marks'
-#                    $('#negativeMarks').select2().select2('val',negativeMarks)
 
                 if @model.get('content_type') isnt 'teacher_question'
                     @$el.find '#question_type_column'
