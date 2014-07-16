@@ -35,7 +35,7 @@ define ['app'
 
 
 
-                eventObj = App.createEventObject()
+                @eventObj = App.createEventObject()
 
                 # listen to "show" event of the layout and start the
                 # elementboxapp passing the region
@@ -48,12 +48,12 @@ define ['app'
                     App.execute "show:element:box",
                         region : @layout.elementBoxRegion
                         contentType : @contentPieceModel.get 'content_type'
-                        eventObj : eventObj
+                        eventObj : @eventObj
 
                     App.execute "show:content:builder",
                         region : @layout.contentBuilderRegion
                         contentPieceModel : @contentPieceModel
-                        eventObj : eventObj
+                        eventObj : @eventObj
 
                     App.execute "show:property:dock",
                         region : @layout.PropertyRegion
@@ -77,14 +77,21 @@ define ['app'
                 new ContentCreatorLayout
 
             _showGradingParameter : ->
-#                console.log
+
+                @layout.contentBuilderRegion.reset()
+
                 App.execute 'show:grading:parameter:view',
                     region : @layout.gradingParameterRegion
                     contentPieceModel : @contentPieceModel
 
             _closeGradingParameter :->
+
                 @layout.gradingParameterRegion.reset()
 
+                App.execute "show:content:builder",
+                    region : @layout.contentBuilderRegion
+                    contentPieceModel : @contentPieceModel
+                    eventObj : @eventObj
 
         class ContentCreatorLayout extends Marionette.Layout
 
