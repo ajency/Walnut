@@ -5,6 +5,7 @@ define ['app'
         'apps/content-preview/top-panel/controller'
         'apps/content-preview/dialogs/hint-dialog/hint-dialog-controller'
         'apps/content-preview/dialogs/comment-dialog/comment-dialog-controller'
+        'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'
 ], (App, RegionController)->
     App.module "ContentPreview", (ContentPreview, App, Backbone, Marionette, $, _)->
         class ContentPreviewRouter extends Marionette.AppRouter
@@ -56,10 +57,19 @@ define ['app'
                         display_mode : @display_mode
                         students : @students
 
+                    if @model.get('question_type') is 'multiple_eval'
+                        App.execute "show:single:question:multiple:evaluation:app",
+                            region : @layout.contentBoardRegion
+                            questionResponseModel : @questionResponseModel
+                            studentCollection : @students
+                            display_mode : @display_mode
+                            timerObject : @timerObject
+                            evaluationParams : @model.get 'grading_params'
 
-                    App.execute "show:content:board",
-                        region : @layout.contentBoardRegion
-                        model : @model
+                    else
+                        App.execute "show:content:board",
+                            region : @layout.contentBoardRegion
+                            model : @model
 
             _getContentPreviewLayout : (content_preview)=>
                 new ContentPreview.Views.Layout

@@ -2,7 +2,7 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'apps/content-preview/content-board/controller', 'apps/content-preview/top-panel/controller', 'apps/content-preview/dialogs/hint-dialog/hint-dialog-controller', 'apps/content-preview/dialogs/comment-dialog/comment-dialog-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'apps/content-preview/content-board/controller', 'apps/content-preview/top-panel/controller', 'apps/content-preview/dialogs/hint-dialog/hint-dialog-controller', 'apps/content-preview/dialogs/comment-dialog/comment-dialog-controller', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController) {
   return App.module("ContentPreview", function(ContentPreview, App, Backbone, Marionette, $, _) {
     var ContentPreviewRouter, Controller;
     ContentPreviewRouter = (function(_super) {
@@ -71,10 +71,21 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
               display_mode: _this.display_mode,
               students: _this.students
             });
-            return App.execute("show:content:board", {
-              region: _this.layout.contentBoardRegion,
-              model: _this.model
-            });
+            if (_this.model.get('question_type') === 'multiple_eval') {
+              return App.execute("show:single:question:multiple:evaluation:app", {
+                region: _this.layout.contentBoardRegion,
+                questionResponseModel: _this.questionResponseModel,
+                studentCollection: _this.students,
+                display_mode: _this.display_mode,
+                timerObject: _this.timerObject,
+                evaluationParams: _this.model.get('grading_params')
+              });
+            } else {
+              return App.execute("show:content:board", {
+                region: _this.layout.contentBoardRegion,
+                model: _this.model
+              });
+            }
           };
         })(this));
       };
