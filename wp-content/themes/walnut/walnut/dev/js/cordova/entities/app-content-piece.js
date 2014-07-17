@@ -30,14 +30,17 @@ define(['underscore', 'unserialize'], function(_) {
                         if (meta_value.layout_json) {
                           contentElementsArray = _.getJsonToClone(meta_value.layout_json);
                           return contentElementsArray.done(function(contentElements) {
-                            var excerpt, excerpt_array, gradingParamsExcerpt, taglessArray;
+                            var excerpt, excerpt_array, taglessArray;
                             _.mixin(_.str.exports());
                             excerpt_array = contentElements.excerpt;
                             if (!_.isEmpty(grading_params)) {
-                              gradingParamsExcerpt = [];
                               _.each(grading_params, function(params, i) {
-                                gradingParamsExcerpt[i] = _.omit(params, 'id');
-                                return excerpt_array.push(gradingParamsExcerpt);
+                                var attributes;
+                                excerpt_array.push(params['parameter']);
+                                attributes = params['attributes'];
+                                return _.each(attributes, function(attr, i) {
+                                  return excerpt_array.push(attr);
+                                });
                               });
                             }
                             excerpt_array = _.flatten(excerpt_array);
@@ -46,7 +49,7 @@ define(['underscore', 'unserialize'], function(_) {
                               return taglessArray.push(_(excerpt).stripTags());
                             });
                             excerpt = taglessArray.join(' | ');
-                            excerpt = _(excerpt).prune(150);
+                            excerpt = _(excerpt).prune(550);
                             return result[i] = {
                               ID: row['ID'],
                               post_author: row['post_author'],

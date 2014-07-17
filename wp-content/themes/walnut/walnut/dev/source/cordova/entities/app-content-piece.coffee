@@ -43,22 +43,24 @@ define ['underscore', 'unserialize'], ( _) ->
 															_.mixin(_.str.exports());
 															excerpt_array = contentElements.excerpt
 															
-															#removes id grading_params and push the other values to excerpt_array
-															if not _.isEmpty grading_params
-																gradingParamsExcerpt = []
 
+															#pushes the parameter and attributes values to excerpt_array
+															if not _.isEmpty grading_params
 																_.each grading_params, (params, i)->
-																	gradingParamsExcerpt[i] = _.omit(params, 'id')
-																	excerpt_array.push gradingParamsExcerpt
-															
-															
+																	excerpt_array.push params['parameter']
+																	attributes = params['attributes']
+
+																	_.each attributes, (attr, i)->
+																		excerpt_array.push attr
+
+
 															excerpt_array = _.flatten excerpt_array
 															taglessArray = new Array
 															_.each excerpt_array , (excerpt)->												
 																taglessArray.push _(excerpt).stripTags()													
 															
 															excerpt = taglessArray.join ' | '
-															excerpt= _(excerpt).prune(150)
+															excerpt= _(excerpt).prune(550)
 
 															result[i] = 
 																ID: row['ID']
