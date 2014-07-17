@@ -70,21 +70,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 										data  : param
 
 					subSectionsCollection
-					
-
-				# get chapters from local database
-				getChaptersFromLocal : (parent)->
-
-					runFunc = ->
-						$.Deferred (d)->
-							chapters = _.getChaptersByParentId(parent)
-							chapters.done (result)->
-
-								d.resolve result
-
-					$.when(runFunc()).done	->
-						console.log 'getChaptersFromLocal done'
-					.fail _.failureHandler
 
 
 			
@@ -97,7 +82,3 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:subsections:by:chapter:id", (id)->
 				API.getSubsectionByChapterID id
-
-			# request handler to get all chapters from local database
-			App.reqres.setHandler "get:chapter:local", (parent)->
-				API.getChaptersFromLocal parent	

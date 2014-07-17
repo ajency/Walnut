@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Users", function(Users, App, Backbone, Marionette, $, _) {
-    var API, LocalUserCollection, UserCollection, user;
+    var API, OfflineUserCollection, UserCollection, user;
     Users.UserModel = (function(_super) {
       __extends(UserModel, _super);
 
@@ -44,18 +44,18 @@ define(["app", 'backbone'], function(App, Backbone) {
       return UserCollection;
 
     })(Backbone.Collection);
-    LocalUserCollection = (function(_super) {
-      __extends(LocalUserCollection, _super);
+    OfflineUserCollection = (function(_super) {
+      __extends(OfflineUserCollection, _super);
 
-      function LocalUserCollection() {
-        return LocalUserCollection.__super__.constructor.apply(this, arguments);
+      function OfflineUserCollection() {
+        return OfflineUserCollection.__super__.constructor.apply(this, arguments);
       }
 
-      LocalUserCollection.prototype.model = Users.UserModel;
+      OfflineUserCollection.prototype.model = Users.UserModel;
 
-      LocalUserCollection.prototype.name = 'offlineUsers';
+      OfflineUserCollection.prototype.name = 'offlineUsers';
 
-      return LocalUserCollection;
+      return OfflineUserCollection;
 
     })(Backbone.Collection);
     API = {
@@ -70,65 +70,11 @@ define(["app", 'backbone'], function(App, Backbone) {
         });
         return userCollection;
       },
-      getUsersFromLocal: function(division) {
-        var onSuccess, runQuery;
-        runQuery = function() {
-          return $.Deferred(function(d) {
-            return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_users u INNER JOIN wp_usermeta um ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?", [division], onSuccess(d), _.deferredErrorHandler(d));
-            });
-          });
-        };
-        onSuccess = function(d) {
-          return function(tx, data) {
-            var i, result, row, _i, _ref;
-            result = [];
-            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-              row = data.rows.item(i);
-              result[i] = {
-                ID: row['ID'],
-                display_name: row['display_name'],
-                user_email: row['user_email'],
-                profile_pic: '/images/avtar.png'
-              };
-            }
-            return d.resolve(result);
-          };
-        };
-        return $.when(runQuery()).done(function(data) {
-          return console.log('getUsersFromLocal transaction completed');
-        }).fail(_.failureHandler);
-      },
-      getLoggedinUsers: function() {
+      getOfflineUsers: function() {
         var offlineUsers;
-        offlineUsers = new LocalUserCollection;
+        offlineUsers = new OfflineUserCollection;
         offlineUsers.fetch();
         return offlineUsers;
-      },
-      getOfflineUSersFromLocal: function() {
-        var onSuccess, runQuery;
-        runQuery = function() {
-          return $.Deferred(function(d) {
-            return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT username FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d));
-            });
-          });
-        };
-        onSuccess = function(d) {
-          return function(tx, data) {
-            var i, result, _i, _ref;
-            result = [];
-            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-              result[i] = {
-                username: data.rows.item(i)['username']
-              };
-            }
-            return d.resolve(result);
-          };
-        };
-        return $.when(runQuery()).done(function() {
-          return console.log('getOfflineUSersFromLocal transaction completed');
-        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:user:model", function() {
@@ -137,14 +83,8 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);
     });
-    App.reqres.setHandler("get:user:by:division:local", function(division) {
-      return API.getUsersFromLocal(division);
-    });
-    App.reqres.setHandler("get:loggedin:user:collection", function() {
-      return API.getLoggedinUsers();
-    });
-    return App.reqres.setHandler("get:offlineUsers:local", function() {
-      return API.getOfflineUSersFromLocal();
+    return App.reqres.setHandler("get:offline:user:collection", function() {
+      return API.getOfflineUsers();
     });
   });
 });

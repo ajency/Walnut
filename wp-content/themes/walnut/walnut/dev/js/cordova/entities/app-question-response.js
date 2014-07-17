@@ -1,6 +1,6 @@
 define(['underscore', 'serialize'], function(_) {
   return _.mixin({
-    getQuestionResponse: function(collection_id, division) {
+    getQuestionResponseByCollectionIdAndDivision: function(collection_id, division) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
@@ -63,7 +63,7 @@ define(['underscore', 'serialize'], function(_) {
         };
       };
       return $.when(runQuery()).done(function(data) {
-        return console.log('getQuestionResponse transaction completed');
+        return console.log('getQuestionResponseByCollectionIdAndDivision transaction completed');
       }).fail(_.failureHandler);
     },
     getQuestionResponseMetaData: function(ref_id) {

@@ -110,21 +110,6 @@ define(["app", 'backbone'], function(App, Backbone) {
           data: param
         });
         return subSectionsCollection;
-      },
-      getChaptersFromLocal: function(parent) {
-        var runFunc;
-        runFunc = function() {
-          return $.Deferred(function(d) {
-            var chapters;
-            chapters = _.getChaptersByParentId(parent);
-            return chapters.done(function(result) {
-              return d.resolve(result);
-            });
-          });
-        };
-        return $.when(runFunc()).done(function() {
-          return console.log('getChaptersFromLocal done');
-        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:chapters", function(opt) {
@@ -133,11 +118,8 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:chapter:by:id", function(id) {
       return API.getChapterByID(id);
     });
-    App.reqres.setHandler("get:subsections:by:chapter:id", function(id) {
+    return App.reqres.setHandler("get:subsections:by:chapter:id", function(id) {
       return API.getSubsectionByChapterID(id);
-    });
-    return App.reqres.setHandler("get:chapter:local", function(parent) {
-      return API.getChaptersFromLocal(parent);
     });
   });
 });

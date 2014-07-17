@@ -52,27 +52,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 				questionResponse
 
 
-			# get question response from local database
-			getQuestionResponseFromLocal:(collection_id, division)->
-
-				runFunc = ->
-					$.Deferred (d)->
-						questionResponse = _.getQuestionResponse(collection_id, division)
-						questionResponse.done (result)->
-
-							d.resolve result
-
-				$.when(runFunc()).done ->
-					console.log 'getQuestionResponseFromLocal done'
-				.fail _.failureHandler
-				
-			
-			# save/update question_response to local database    
-			saveUpdateQuestionResponseLocal:(model)->
-
-				_.saveUpdateQuestionResponse model
-
-
 
 		# request handler to get all responses
 		App.reqres.setHandler "get:question:response:collection", (params) ->
@@ -80,12 +59,3 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 		App.reqres.setHandler "save:question:response", (qID)->
 			API.saveQuestionResponse qID
-	   
-
-		# request handler to get all responses from local database
-		App.reqres.setHandler "get:question-response:local", (collection_id, division)->
-			API.getQuestionResponseFromLocal collection_id, division
-
-		App.reqres.setHandler "save:question-response:local", (model)->
-			API.saveUpdateQuestionResponseLocal model    
-
