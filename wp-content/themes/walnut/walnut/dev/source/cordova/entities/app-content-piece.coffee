@@ -108,9 +108,9 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?" 
-							, [post_author_id], success(d), _.deferredErrorHandler(d))
+							, [post_author_id], onSuccess(d), _.deferredErrorHandler(d))
 
-			success = (d)->
+			onSuccess = (d)->
 				(tx, data)->
 					if data.rows.length isnt 0
 						postAuthorName = data.rows.item(0)['display_name']
@@ -130,11 +130,11 @@ define ['underscore', 'unserialize'], ( _) ->
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=? 
-							AND meta_key LIKE '"+pattern+"'", [post_id], success(d), _.deferredErrorHandler(d))
+						tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=? AND meta_key 
+							LIKE '"+pattern+"'", [post_id], onSuccess(d), _.deferredErrorHandler(d))
 
 
-			success = (d)->
+			onSuccess = (d)->
 				(tx, data)->
 
 					gradingParams = []

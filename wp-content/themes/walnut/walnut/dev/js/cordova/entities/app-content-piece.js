@@ -99,16 +99,16 @@ define(['underscore', 'unserialize'], function(_) {
       }).fail(_.failureHandler);
     },
     getPostAuthorName: function(post_author_id) {
-      var postAuthorName, runQuery, success;
+      var onSuccess, postAuthorName, runQuery;
       postAuthorName = '';
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?", [post_author_id], success(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?", [post_author_id], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
-      success = function(d) {
+      onSuccess = function(d) {
         return function(tx, data) {
           if (data.rows.length !== 0) {
             postAuthorName = data.rows.item(0)['display_name'];
@@ -121,16 +121,16 @@ define(['underscore', 'unserialize'], function(_) {
       }).fail(_.failureHandler);
     },
     getGradingParams: function(post_id) {
-      var pattern, runQuery, success;
+      var onSuccess, pattern, runQuery;
       pattern = '%parameter_%';
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=? AND meta_key LIKE '" + pattern + "'", [post_id], success(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=? AND meta_key LIKE '" + pattern + "'", [post_id], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
-      success = function(d) {
+      onSuccess = function(d) {
         return function(tx, data) {
           var gradingParams, i, row, _fn, _i, _ref;
           gradingParams = [];
