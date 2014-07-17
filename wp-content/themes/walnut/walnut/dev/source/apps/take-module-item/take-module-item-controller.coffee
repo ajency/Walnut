@@ -4,7 +4,6 @@ define ['app'
         'apps/take-module-item/teacher-training-footer/training-footer-controller'
         'apps/take-module-item/module-description/module-description-app'
         'apps/take-module-item/chorus-options/chorus-options-app'
-        'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'
 ], (App, RegionController)->
     App.module "TeacherTeachingApp", (View, App)->
 
@@ -207,23 +206,10 @@ define ['app'
                             display_mode : @display_mode
                             timerObject : @timerObject
 
-                    else if question_type is 'multiple_eval'
-
-                        App.execute "show:single:question:multiple:evaluation:app",
-                            region : @layout.studentsListRegion
-                            questionResponseModel : questionResponseModel
-                            studentCollection : studentCollection
-                            display_mode : @display_mode
-                            timerObject : @timerObject
-                            evaluationParams : contentPiece.get 'grading_params'
-
-
 
             _showTeacherTrainingFooter : =>
                 App.execute "when:fetched", contentPiece, =>
                     question_type = contentPiece.get('question_type')
-
-                    console.log contentPiece.get 'ID'
 
                     App.execute 'show:teacher:training:footer:app',
                         region : @layout.studentsListRegion
