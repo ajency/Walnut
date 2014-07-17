@@ -5,7 +5,7 @@ define ['underscore', 'serialize'], ( _) ->
 	_.mixin
 
 		# Question response get functions
-		getQuestionResponse : (collection_id, division)->
+		getQuestionResponseByCollectionIdAndDivision : (collection_id, division)->
 
 			runQuery = ->
 				$.Deferred (d)->
@@ -63,7 +63,7 @@ define ['underscore', 'serialize'], ( _) ->
 					d.resolve result          
 
 			$.when(runQuery()).done (data)->
-				console.log 'getQuestionResponse transaction completed'
+				console.log 'getQuestionResponseByCollectionIdAndDivision transaction completed'
 			.fail _.failureHandler
 
 

@@ -102,21 +102,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 				media
 
 
-			# get media from local directory
-			getMediaByIdFromLocal : (id)->
-
-				runFunc = ->
-					$.Deferred (d)->
-						media = _.getMediaById(id)
-						media.done (result)->
-
-							d.resolve result
-
-				$.when(runFunc()).done	->
-					console.log 'getMediaByIdFromLocal done'
-				.fail _.failureHandler
-
-
 		
 		#REQUEST HANDLERS
 		App.reqres.setHandler "get:empty:media:collection", ->
@@ -130,8 +115,3 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 		App.commands.setHandler "new:media:added", (modelData)->
 			API.createNewMedia modelData
-
-
-		#Get media from local directory
-		App.reqres.setHandler "get:media:by:id:local",(id)->
-			API.getMediaByIdFromLocal id

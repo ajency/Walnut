@@ -5,4 +5,6 @@ define ['cordova/entities/app-content-group'
 		'cordova/entities/app-question-response'
 		'cordova/entities/app-media'
 		'cordova/entities/app-chapters'
+		'cordova/entities/app-menu'
+		'cordova/entities/app-user'
 		], ->
