@@ -9,8 +9,8 @@ define ['underscore', 'unserialize'], ( _) ->
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_posts WHERE post_type = 'content-piece' 
-							AND post_status = 'publish' AND ID in ("+ids+")", []
+						tx.executeSql("SELECT * FROM wp_posts WHERE post_type=? AND post_status=? 
+							AND ID in ("+ids+")", ['content-piece', 'publish']
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
