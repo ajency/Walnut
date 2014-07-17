@@ -1,7 +1,7 @@
 define ["backbone"], (Backbone) ->
 
 	#Changes needed for offline data retrieval
-	Backbone.local =(options, name)->
+	Backbone.local = (options, name)->
 
 		jsonData = App.request "get:#{name}:collection"
 
@@ -26,12 +26,12 @@ define ["backbone"], (Backbone) ->
 						collection.set d
 			
 			if collection_name is 'menu-item'
-				data = App.reqres.request "get:#{collection_name}:local"
+				data = _.getAppMenuItems()
 				data.done (d)->
 					collection.set d
 
 			if collection_name is 'chapter'
-				data = App.reqres.request "get:#{collection_name}:local", opts.parent 
+				data = _.getChaptersByParentId(opts.parent)
 				data.done (d)->
 					collection.set d
 
@@ -51,22 +51,22 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'user'
-				data = App.reqres.request "get:#{collection_name}:by:division:local", opts.division
+				data = _.getStudentsByDivision(opts.division)
 				data.done (d)->
 					collection.set d
 
 			if collection_name is 'question-response'
-				data = App.reqres.request "get:#{collection_name}:local", opts.collection_id, opts.division
+				data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division)
 				data.done (d)->
 					collection.set d
 
 			if collection_name is 'textbookName'
-				data = App.reqres.request "get:#{collection_name}:by:term_ids:local", opts.term_ids
+				data = _.getTextBookNamesByTermIDs(opts.term_ids)
 				data.done (d)->
 					collection.set d
 
 			if collection_name is 'offlineUsers'
-				data = App.reqres.request "get:#{collection_name}:local"
+				data = _.getNamesOfAllOfflineUsers()
 				data.done (d)->
 					collection.set d		
 
@@ -197,8 +197,7 @@ define ["backbone"], (Backbone) ->
 						model.set d
 
 				if modelname is 'textbook'
-					#Get textbooks by textbook_id	
-					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('term_id')
+					data = _.getTextBookByTextbookId(model.get('term_id'))
 					data.done (d)->
 						model.set d	
 
@@ -208,10 +207,10 @@ define ["backbone"], (Backbone) ->
 						model.set d
 
 				if modelname is 'question-response'
-					data = App.reqres.request "save:#{modelname}:local", model
+					data = _.saveUpdateQuestionResponse(model)
 
 				if modelname is 'media'
-					data = App.reqres.request "get:#{modelname}:by:id:local", model.get('id')
+					data = _.getMediaById(model.get('id'))
 					data.done (d)->
 						model.set d	
 

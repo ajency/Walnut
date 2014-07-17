@@ -22,13 +22,13 @@ define(["backbone"], function(Backbone) {
         }
       }
       if (collection_name === 'menu-item') {
-        data = App.reqres.request("get:" + collection_name + ":local");
+        data = _.getAppMenuItems();
         data.done(function(d) {
           return collection.set(d);
         });
       }
       if (collection_name === 'chapter') {
-        data = App.reqres.request("get:" + collection_name + ":local", opts.parent);
+        data = _.getChaptersByParentId(opts.parent);
         data.done(function(d) {
           return collection.set(d);
         });
@@ -52,25 +52,25 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'user') {
-        data = App.reqres.request("get:" + collection_name + ":by:division:local", opts.division);
+        data = _.getStudentsByDivision(opts.division);
         data.done(function(d) {
           return collection.set(d);
         });
       }
       if (collection_name === 'question-response') {
-        data = App.reqres.request("get:" + collection_name + ":local", opts.collection_id, opts.division);
+        data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division);
         data.done(function(d) {
           return collection.set(d);
         });
       }
       if (collection_name === 'textbookName') {
-        data = App.reqres.request("get:" + collection_name + ":by:term_ids:local", opts.term_ids);
+        data = _.getTextBookNamesByTermIDs(opts.term_ids);
         data.done(function(d) {
           return collection.set(d);
         });
       }
       if (collection_name === 'offlineUsers') {
-        data = App.reqres.request("get:" + collection_name + ":local");
+        data = _.getNamesOfAllOfflineUsers();
         data.done(function(d) {
           return collection.set(d);
         });
@@ -135,7 +135,7 @@ define(["backbone"], function(Backbone) {
           });
         }
         if (modelname === 'textbook') {
-          data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('term_id'));
+          data = _.getTextBookByTextbookId(model.get('term_id'));
           data.done(function(d) {
             return model.set(d);
           });
@@ -147,10 +147,10 @@ define(["backbone"], function(Backbone) {
           });
         }
         if (modelname === 'question-response') {
-          data = App.reqres.request("save:" + modelname + ":local", model);
+          data = _.saveUpdateQuestionResponse(model);
         }
         if (modelname === 'media') {
-          data = App.reqres.request("get:" + modelname + ":by:id:local", model.get('id'));
+          data = _.getMediaById(model.get('id'));
           data.done(function(d) {
             return model.set(d);
           });

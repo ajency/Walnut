@@ -6,7 +6,7 @@ define ['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 
 			initialize : ->
 
-				LoginCollection = App.request "get:loggedin:user:collection"
+				LoginCollection = App.request "get:offline:user:collection"
 				
 				@view = view = @_getLoginView LoginCollection
 

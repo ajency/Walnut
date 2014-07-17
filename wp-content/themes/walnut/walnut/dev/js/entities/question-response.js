@@ -71,37 +71,13 @@ define(["app", 'backbone'], function(App, Backbone) {
         var questionResponse;
         questionResponse = new QuestionResponseModel(data);
         return questionResponse;
-      },
-      getQuestionResponseFromLocal: function(collection_id, division) {
-        var runFunc;
-        runFunc = function() {
-          return $.Deferred(function(d) {
-            var questionResponse;
-            questionResponse = _.getQuestionResponse(collection_id, division);
-            return questionResponse.done(function(result) {
-              return d.resolve(result);
-            });
-          });
-        };
-        return $.when(runFunc()).done(function() {
-          return console.log('getQuestionResponseFromLocal done');
-        }).fail(_.failureHandler);
-      },
-      saveUpdateQuestionResponseLocal: function(model) {
-        return _.saveUpdateQuestionResponse(model);
       }
     };
     App.reqres.setHandler("get:question:response:collection", function(params) {
       return API.getAllQuestionResponses(params);
     });
-    App.reqres.setHandler("save:question:response", function(qID) {
+    return App.reqres.setHandler("save:question:response", function(qID) {
       return API.saveQuestionResponse(qID);
-    });
-    App.reqres.setHandler("get:question-response:local", function(collection_id, division) {
-      return API.getQuestionResponseFromLocal(collection_id, division);
-    });
-    return App.reqres.setHandler("save:question-response:local", function(model) {
-      return API.saveUpdateQuestionResponseLocal(model);
     });
   });
 });

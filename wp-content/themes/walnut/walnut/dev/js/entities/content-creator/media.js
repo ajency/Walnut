@@ -111,21 +111,6 @@ define(["app", 'backbone'], function(App, Backbone) {
         var media;
         media = new Media.MediaModel(data);
         return media;
-      },
-      getMediaByIdFromLocal: function(id) {
-        var runFunc;
-        runFunc = function() {
-          return $.Deferred(function(d) {
-            var media;
-            media = _.getMediaById(id);
-            return media.done(function(result) {
-              return d.resolve(result);
-            });
-          });
-        };
-        return $.when(runFunc()).done(function() {
-          return console.log('getMediaByIdFromLocal done');
-        }).fail(_.failureHandler);
       }
     };
     App.reqres.setHandler("get:empty:media:collection", function() {
@@ -143,11 +128,8 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:media:by:id", function(mediaId) {
       return API.getMediaById(mediaId);
     });
-    App.commands.setHandler("new:media:added", function(modelData) {
+    return App.commands.setHandler("new:media:added", function(modelData) {
       return API.createNewMedia(modelData);
-    });
-    return App.reqres.setHandler("get:media:by:id:local", function(id) {
-      return API.getMediaByIdFromLocal(id);
     });
   });
 });

@@ -13,7 +13,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/app-login/templ
 
       AppController.prototype.initialize = function() {
         var LoginCollection, view;
-        LoginCollection = App.request("get:loggedin:user:collection");
+        LoginCollection = App.request("get:offline:user:collection");
         this.view = view = this._getLoginView(LoginCollection);
         this.show(view);
         this.listenTo(view, "goto:login:view", function(username) {
