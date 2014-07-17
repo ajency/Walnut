@@ -48,6 +48,7 @@ define ['underscore', 'unserialize'], ( _) ->
 															if not _.isEmpty grading_params
 																_.each grading_params, (params, i)->
 																	excerpt_array.push params['parameter']
+																	
 																	attributes = params['attributes']
 
 																	_.each attributes, (attr, i)->
