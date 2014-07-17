@@ -30,15 +30,15 @@ define(['underscore', 'unserialize'], function(_) {
                         if (meta_value.layout_json) {
                           contentElementsArray = _.getJsonToClone(meta_value.layout_json);
                           return contentElementsArray.done(function(contentElements) {
-                            var excerpt, excerpt_array, taglessArray;
+                            var excerpt, excerpt_array, gradingParamsExcerpt, taglessArray;
                             _.mixin(_.str.exports());
                             excerpt_array = contentElements.excerpt;
                             if (!_.isEmpty(grading_params)) {
-                              console.log("ar");
-                              console.log(grading_params);
-                              console.log(JSON.stringify(grading_params));
-                              console.log(grading_params['id']);
-                              console.log(grading_params['attributes']);
+                              gradingParamsExcerpt = [];
+                              _.each(grading_params, function(params, i) {
+                                gradingParamsExcerpt[i] = _.omit(params, 'id');
+                                return excerpt_array.push(gradingParamsExcerpt);
+                              });
                             }
                             excerpt_array = _.flatten(excerpt_array);
                             taglessArray = new Array;

@@ -43,16 +43,14 @@ define ['underscore', 'unserialize'], ( _) ->
 															_.mixin(_.str.exports());
 															excerpt_array = contentElements.excerpt
 															
+															#removes id grading_params and push the other values to excerpt_array
 															if not _.isEmpty grading_params
-																console.log "ar"
-																console.log grading_params
-																console.log JSON.stringify grading_params
-																console.log grading_params['id']
-																console.log grading_params['attributes']
+																gradingParamsExcerpt = []
+
+																_.each grading_params, (params, i)->
+																	gradingParamsExcerpt[i] = _.omit(params, 'id')
+																	excerpt_array.push gradingParamsExcerpt
 															
-
-
-
 															
 															excerpt_array = _.flatten excerpt_array
 															taglessArray = new Array
