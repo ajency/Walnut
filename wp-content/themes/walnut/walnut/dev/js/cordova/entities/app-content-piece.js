@@ -33,6 +33,13 @@ define(['underscore', 'unserialize'], function(_) {
                             var excerpt, excerpt_array, taglessArray;
                             _.mixin(_.str.exports());
                             excerpt_array = contentElements.excerpt;
+                            if (!_.isEmpty(grading_params)) {
+                              console.log("ar");
+                              console.log(grading_params);
+                              console.log(JSON.stringify(grading_params));
+                              console.log(grading_params['id']);
+                              console.log(grading_params['attributes']);
+                            }
                             excerpt_array = _.flatten(excerpt_array);
                             taglessArray = new Array;
                             _.each(excerpt_array, function(excerpt) {

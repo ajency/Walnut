@@ -42,6 +42,15 @@ define ['underscore', 'unserialize'], ( _) ->
 
 															_.mixin(_.str.exports());
 															excerpt_array = contentElements.excerpt
+															
+															if not _.isEmpty grading_params
+																console.log "ar"
+																console.log grading_params
+																console.log JSON.stringify grading_params
+																console.log grading_params['id']
+																console.log grading_params['attributes']
+															
+
 
 
 															
