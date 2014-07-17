@@ -41,7 +41,7 @@ define ['underscore', 'unserialize'], ( _) ->
 														contentElementsArray.done (contentElements)->
 
 															_.mixin(_.str.exports());
-															excerpt_array= contentElements.excerpt
+															excerpt_array = contentElements.excerpt
 
 
 															
