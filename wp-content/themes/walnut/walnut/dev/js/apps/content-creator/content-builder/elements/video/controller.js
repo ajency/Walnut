@@ -49,6 +49,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype._parseInt = function() {
         var video_ids;
         video_ids = new Array();
+        if (this.layout.model.get('video_id')) {
+          this.layout.model.set('video_ids', [this.layout.model.get('video_id')]);
+          this.layout.model.unset('video_id');
+          this.layout.model.set('videoUrl', [this.layout.model.get('videoUrl')]);
+        }
         _.each(this.layout.model.get('video_ids'), function(id) {
           return video_ids.push(parseInt(id));
         });

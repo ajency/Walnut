@@ -33,6 +33,7 @@ define ['app'
 
             _getVideoCollection: ->
                 if not @videoCollection
+
                     if @layout.model.get('video_ids').length
                         @videoCollection = App.request "get:media:collection:by:ids", @layout.model.get 'video_ids'
                     else
@@ -45,6 +46,10 @@ define ['app'
 
             _parseInt:->
                 video_ids = new Array()
+                if @layout.model.get('video_id')
+                    @layout.model.set 'video_ids',[@layout.model.get('video_id')]
+                    @layout.model.unset('video_id')
+                    @layout.model.set 'videoUrl',[@layout.model.get('videoUrl')]
                 _.each @layout.model.get('video_ids'),(id)->
                     video_ids.push parseInt id
 
