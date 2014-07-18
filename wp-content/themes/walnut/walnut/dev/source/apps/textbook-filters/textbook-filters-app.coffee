@@ -6,7 +6,7 @@ define ['app'
         class TextbookFilters.Controller extends RegionController
             initialize: (opts) ->
 
-                {@contentPiecesCollection,@model,@filters,@selectedFilterParamsObject}=opts
+                {@collection,@model,@filters,@selectedFilterParamsObject}=opts
 
                 @filters = ['textbooks', 'chapters','sections','subsections'] if not @filters
                 @textbooksCollection = App.request "get:textbooks"
@@ -21,7 +21,7 @@ define ['app'
 
 
                 App.execute "when:fetched", @textbooksCollection,=>
-                    @view = view = @_getTextbookFiltersView @contentPiecesCollection
+                    @view = view = @_getTextbookFiltersView @collection
                     @show @view,
                         loading: true
 

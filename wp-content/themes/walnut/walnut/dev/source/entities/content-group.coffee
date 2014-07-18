@@ -76,6 +76,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 questionResponseModel.save()
 
+
+            getEmptyModulesCollection: ()->
+
+                contentGroupCollection = new ContentGroup.ItemCollection
+
+
+
         # request handler to get all content groups
         App.reqres.setHandler "get:content:groups", (opt) ->
             API.getContentGroups(opt)
@@ -91,4 +98,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "schedule:content:group", (data)->
             API.scheduleContentGroup data
+
+
+        App.reqres.setHandler "empty:content:modules:collection", ->
+            API.getEmptyModulesCollection()
 

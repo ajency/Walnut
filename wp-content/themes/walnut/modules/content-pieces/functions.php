@@ -158,6 +158,8 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
 
         $content_meta= maybe_unserialize($content_meta);
 
+        $excerpts[] = $content_meta['post_tags'];
+
         $excerpts[] = $content_meta['instructions'];
 
         $excerpts = __u::flatten($excerpts);

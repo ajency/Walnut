@@ -24,10 +24,10 @@ define ['app'
 
                         App.execute "show:textbook:filters:app",
                             region: @layout.filtersRegion
-                            contentPiecesCollection: @contentPiecesCollection
+                            collection: @contentPiecesCollection
                             textbooksCollection: @textbooksCollection
                             selectedFilterParamsObject: @selectedFilterParamsObject
-                            filters : ['textbooks', 'chapters','sections','subsections','post_status','status','content_type','content_piece']
+                            filters : ['textbooks', 'chapters','sections','subsections','post_status','status','content_type','student_question']
 
                         App.execute "show:list:content:pieces:app",
                             region: @layout.allContentRegion

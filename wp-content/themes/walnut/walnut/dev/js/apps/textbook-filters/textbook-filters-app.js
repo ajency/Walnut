@@ -14,7 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
       }
 
       Controller.prototype.initialize = function(opts) {
-        this.contentPiecesCollection = opts.contentPiecesCollection, this.model = opts.model, this.filters = opts.filters, this.selectedFilterParamsObject = opts.selectedFilterParamsObject;
+        this.collection = opts.collection, this.model = opts.model, this.filters = opts.filters, this.selectedFilterParamsObject = opts.selectedFilterParamsObject;
         if (!this.filters) {
           this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
         }
@@ -22,7 +22,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         return App.execute("when:fetched", this.textbooksCollection, (function(_this) {
           return function() {
             var view;
-            _this.view = view = _this._getTextbookFiltersView(_this.contentPiecesCollection);
+            _this.view = view = _this._getTextbookFiltersView(_this.collection);
             _this.show(_this.view, {
               loading: true
             });
