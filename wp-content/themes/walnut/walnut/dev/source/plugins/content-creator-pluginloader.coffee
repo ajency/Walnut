@@ -27,5 +27,5 @@ define [
     'screwbuttons'
     'videojs'
     'panzer'
-
+    'videojsplaylist'
 ], ->
