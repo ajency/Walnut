@@ -1,12 +1,11 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-modules/edit-module/content-selection/templates/content-selection.html'
-], (App, RegionController, contentSelectionTpl)->
+], (App, RegionController)->
     App.module "ContentSelectionApp.Controller.SearchResults", (SearchResults, App, Backbone, Marionette, $, _)->
         class SearchResults.Controller extends RegionController
             initialize: (opts) ->
 
-                {@model,@contentGroupCollection}=opts
+                {@contentGroupCollection}=opts
 
                 @layout = layout = @_getSearchResultsLayout()
 

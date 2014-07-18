@@ -1,5 +1,5 @@
 define ['app'
-        'apps/content-pieces/list-content-pieces/list-content-pieces-controller'
+        'apps/content-pieces/list-content-pieces/app'
 ], (App)->
     App.module "ContentPiecesApp", (ContentPiecesApp, App)->
 
