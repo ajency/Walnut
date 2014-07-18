@@ -26,10 +26,38 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         });
       };
 
+      Controller.prototype._getVideoCollection = function() {
+        if (!this.videoCollection) {
+          if (this.layout.model.get('video_ids').length) {
+            this.videoCollection = App.request("get:media:collection:by:ids", this.layout.model.get('video_ids'));
+          } else {
+            this.videoCollection = App.request("get:empty:media:collection");
+          }
+        }
+        this.videoCollection.comparator = 'order';
+        return this.videoCollection;
+      };
+
+      Controller.prototype._parseInt = function() {
+        var video_ids;
+        video_ids = new Array();
+        _.each(this.layout.model.get('video_ids'), function(id) {
+          return video_ids.push(parseInt(id));
+        });
+        return this.layout.model.set('video_ids', video_ids);
+      };
+
       Controller.prototype.renderElement = function() {
-        var view;
-        view = this._getVideoView();
-        return this.layout.elementRegion.show(view);
+        var videoCollection;
+        this._parseInt();
+        videoCollection = this._getVideoCollection();
+        return App.execute("when:fetched", videoCollection, (function(_this) {
+          return function() {
+            var view;
+            view = _this._getVideoView();
+            return _this.layout.elementRegion.show(view);
+          };
+        })(this));
       };
 
       return Controller;

@@ -59,7 +59,9 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
           return function() {
             if (!_.isNull(_this.choosedMedia)) {
               App.vent.trigger("media:manager:choosed:media", _this.choosedMedia);
-              return _this.region.closeDialog();
+              if (_this.region) {
+                return _this.region.closeDialog();
+              }
             }
           };
         })(this));

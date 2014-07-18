@@ -15,10 +15,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.initialize = function(options) {
         _.defaults(options.modelData, {
           element: 'Video',
-          video_id: 0,
+          video_ids: [],
           height: 0,
           width: 0,
-          videoUrl: ''
+          title: [],
+          videoUrl: []
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -27,42 +28,62 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         return Controller.__super__.bindEvents.call(this);
       };
 
-      Controller.prototype._getVideoView = function(imageModel) {
+      Controller.prototype._getVideoView = function() {
         return new Video.Views.VideoView({
           model: this.layout.model
         });
       };
 
+      Controller.prototype._getVideoCollection = function() {
+        if (!this.videoCollection) {
+          if (this.layout.model.get('video_ids').length) {
+            this.videoCollection = App.request("get:media:collection:by:ids", this.layout.model.get('video_ids'));
+          } else {
+            this.videoCollection = App.request("get:empty:media:collection");
+          }
+        }
+        this.videoCollection.comparator = 'order';
+        return this.videoCollection;
+      };
+
+      Controller.prototype._parseInt = function() {
+        var video_ids;
+        video_ids = new Array();
+        _.each(this.layout.model.get('video_ids'), function(id) {
+          return video_ids.push(parseInt(id));
+        });
+        return this.layout.model.set('video_ids', video_ids);
+      };
+
       Controller.prototype.renderElement = function() {
-        var videoModel;
+        var viedoCollection;
         this.removeSpinner();
-        videoModel = App.request("get:media:by:id", this.layout.model.get('video_id'));
-        return App.execute("when:fetched", videoModel, (function(_this) {
+        this._parseInt();
+        viedoCollection = this._getVideoCollection();
+        return App.execute("when:fetched", viedoCollection, (function(_this) {
           return function() {
-            var view;
-            view = _this.view = _this._getVideoView(videoModel);
-            _this.listenTo(view, "show:media:manager", function() {
-              App.execute("show:media:manager:app", {
+            _this.view = _this._getVideoView();
+            _this.listenTo(_this.view, "show:media:manager", function() {
+              return App.execute("show:media:collection:manager", {
                 region: App.dialogRegion,
-                mediaType: 'video'
+                mediaType: 'video',
+                mediaCollection: viedoCollection
               });
-              _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
-                _this.layout.model.set({
-                  'video_id': media.get('id'),
-                  'videoUrl': media.get('url')
-                });
-                _this.layout.model.save();
-                _this.layout.elementRegion.show(_this.view);
-                return _this.stopListening(App.vent, "media:manager:choosed:media");
+            });
+            _this.listenTo(_this.videoCollection, 'add remove order:updated', function() {
+              this.videoCollection.sort();
+              this.layout.model.set({
+                'video_ids': this.videoCollection.pluck('id'),
+                'videoUrl': this.videoCollection.pluck('url'),
+                'title': this.videoCollection.pluck('title')
               });
-              return _this.listenTo(App.vent, "stop:listening:to:media:manager", function() {
-                return _this.stopListening(App.vent, "media:manager:choosed:media");
-              });
+              this.layout.elementRegion.show(this.view);
+              return this.layout.model.save();
             });
             App.commands.setHandler("video:moved", function() {
-              return view.triggerMethod("video:moved");
+              return this.view.triggerMethod("video:moved");
             });
-            return _this.layout.elementRegion.show(view);
+            return _this.layout.elementRegion.show(_this.view);
           };
         })(this));
       };
