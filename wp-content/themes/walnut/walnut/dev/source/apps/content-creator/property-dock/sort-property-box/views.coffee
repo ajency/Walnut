@@ -8,7 +8,7 @@ define ['app'],(App)->
 			template : '<div class="tile-more-content no-padding">
 								<div class="tiles green">
 									<div class="tile-footer drag">
-										MCQ <i class="fa fa-chevron-right"></i> <span class="semi-bold">Multiple Choice Question Properties</span>
+										Sort <i class="fa fa-chevron-right"></i> <span class="semi-bold">Sort Properties</span>
 									</div>
 									<div class="docket-body">
 

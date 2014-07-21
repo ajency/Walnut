@@ -81,6 +81,7 @@ define(['app'], function(App) {
         $(".students").listnav({
           includeNums: false
         });
+        this.$el.find('.listNav a').removeAttr('href').css('cursor', 'pointer');
         this.correctAnswers = Marionette.getOption(this, 'correctAnswers');
         this.correctAnswers = _.compact(this.correctAnswers);
         _ref1 = this.$el.find('.tiles.single');

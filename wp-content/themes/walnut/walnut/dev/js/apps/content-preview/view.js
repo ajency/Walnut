@@ -12,17 +12,38 @@ define(['app'], function(App) {
 
       Layout.prototype.className = '';
 
-      Layout.prototype.template = '<div class="preview"> <div class="" id="top-panel"></div> <div class="" id="content-board"></div> {{#content_preview}} <input type="button" class="btn btn-info btn-cons2" id="submit-answer-button" value="submit"> {{/content_preview}} <div class="clearfix"></div> <!--<div class="tiles grey text-grey b-grey b-b m-t-20"> <div class="grid simple m-b-0 transparent"> <div class="grid-title no-border qstnInfo"> <p class="bold small-text inline text-grey"><i class="fa fa-question"></i> Additional Information </p> <div class="tools"> <a href="javascript:;" class="arrow expand"></a> </div> </div> <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20"> <p class="">{{instructions}}</p> </div> </div> </div>--> </div>';
+      Layout.prototype.template = '<div class="preview"> <div class="" id="top-panel"></div> <div class="container-grey m-b-5  qstnInfo "> <label class="form-label bold small-text muted no-margin inline">{{instructionsLabel}} : </label> <span class="small-text">{{instructions}}</span> </div> <div class="" id="content-board"></div> {{#content_preview}} <input type="button" class="btn btn-info btn-cons2 h-center block" id="submit-answer-button" value="submit"> {{#showHintButton}} <button class="btn btn-primary show-hint h-center block">Show Hint</button> {{/showHintButton}} {{/content_preview}} <div class="clearfix"></div> </div>';
 
       Layout.prototype.regions = {
         contentBoardRegion: '#content-board',
         topPanelRegion: '#top-panel'
       };
 
+      Layout.prototype.events = {
+        'click .show-hint': '_showHint',
+        'click #submit-answer-button': 'submitAnswer'
+      };
+
       Layout.prototype.mixinTemplateHelpers = function(data) {
         data = Layout.__super__.mixinTemplateHelpers.call(this, data);
         data.content_preview = Marionette.getOption(this, 'content_preview');
+        data.showHintButton = data.content_type === 'student_question' && data.hint_enable ? true : false;
+        data.instructionsLabel = this.model.get('content_type') === 'content_piece' ? 'Procedure Summary' : 'Instructions';
         return data;
+      };
+
+      Layout.prototype._showHint = function() {
+        return this.trigger('show:hint:dialog', {
+          hint: this.model.get('hint')
+        });
+      };
+
+      Layout.prototype.submitAnswer = function() {
+        if (this.model.get('comment_enable')) {
+          return this.trigger('show:comment:dialog', {
+            comment: this.model.get('comment')
+          });
+        }
       };
 
       return Layout;

@@ -17,10 +17,10 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{&post_excerpt}}</td> <td>{{post_author_name}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> {{&edit_link}} {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
+      ListItemView.prototype.template = '<td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> {{&edit_link}} {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
 
       ListItemView.prototype.serializeData = function() {
-        var data, edit_url, _ref;
+        var data, edit_url, modules, _ref;
         data = ListItemView.__super__.serializeData.call(this);
         data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
         data.sort_date = moment(data.post_modified).format("YYYYMMDD");
@@ -33,19 +33,23 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
-            textbook = _.findWhere(_this.textbooks, {
-              "id": data.term_ids.textbook
-            });
-            return textbook.name;
+            if (data.term_ids.textbook) {
+              textbook = _.findWhere(_this.textbooks, {
+                "id": data.term_ids.textbook
+              });
+              return textbook.name;
+            }
           };
         })(this);
         data.chapterName = (function(_this) {
           return function() {
             var chapter;
-            chapter = _.chain(_this.chapters.findWhere({
-              "id": data.term_ids.chapter
-            })).pluck('name').compact().value();
-            return chapter;
+            if (data.term_ids.chapter) {
+              chapter = _.chain(_this.chapters.findWhere({
+                "id": data.term_ids.chapter
+              })).pluck('name').compact().value();
+              return chapter;
+            }
           };
         })(this);
         data.statusMessage = function() {
@@ -60,6 +64,11 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         if ((_ref = data.post_status) === 'publish' || _ref === 'archive') {
           data.archivedModule = true;
         }
+        modules = [];
+        _.each(data.present_in_modules, function(ele, index) {
+          return modules.push("<a target='_blank' href='#view-group/" + ele.id + "'>" + ele.name + "</a>");
+        });
+        data.present_in_str = _.size(modules) > 0 ? _.toSentence(modules) : 'Not added to a module yet';
         return data;
       };
 
@@ -115,7 +124,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        return this.$el.attr('colspan', 3);
+        return this.$el.attr('colspan', 7);
       };
 
       return EmptyView;
@@ -130,7 +139,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListView.prototype.template = contentListTpl;
 
-      ListView.prototype.className = 'tiles white grid simple vertical green';
+      ListView.prototype.className = 'row';
 
       ListView.prototype.itemView = ListItemView;
 
@@ -146,9 +155,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.events = {
-        'change #content-post-status-filter, .content-type-filter': function() {
-          return this.setFilteredContent();
-        },
+        'change #content-post-status-filter, #difficulty-level-filter': 'setFilteredContent',
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         }
@@ -168,18 +175,16 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.onShow = function() {
-        var pagerOptions, textbookFiltersHTML;
+        var textbookFiltersHTML;
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
-        textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
+        textbookFiltersHTML = $.showTextbookFilters({
+          textbooks: this.textbooksCollection
+        });
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
+        this.$el.find("#content-pieces-table").tablesorter();
         this.$el.find(".select2-filters").select2();
-        $('#content-pieces-table').tablesorter();
-        pagerOptions = {
-          container: $(".pager"),
-          output: '{startRow} to {endRow} of {totalRows}'
-        };
-        return $('#content-pieces-table').tablesorterPager(pagerOptions);
+        return this.onUpdatePager();
       };
 
       ListView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
@@ -197,15 +202,20 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.setFilteredContent = function() {
-        var filtered_data, pagerOptions;
+        var filtered_data;
         filtered_data = $.filterTableByTextbooks(this);
         this.collection.set(filtered_data);
-        $('#content-pieces-table').trigger("updateCache");
+        return this.onUpdatePager();
+      };
+
+      ListView.prototype.onUpdatePager = function() {
+        var pagerOptions;
+        this.$el.find("#content-pieces-table").trigger("updateCache");
         pagerOptions = {
-          container: $(".pager"),
+          container: this.$el.find(".pager"),
           output: '{startRow} to {endRow} of {totalRows}'
         };
-        return $('#content-pieces-table').tablesorterPager(pagerOptions);
+        return this.$el.find("#content-pieces-table").tablesorterPager(pagerOptions);
       };
 
       return ListView;

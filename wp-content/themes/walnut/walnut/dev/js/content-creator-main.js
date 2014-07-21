@@ -33,6 +33,7 @@ require.config({
     tagsinput: 'plugins/bootstrap-tagsinput.min',
     screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
     videojs: 'plugins/video',
+    videojsplaylist: 'plugins/videojs-playlists.min',
     panzer: 'plugins/panzer',
     sidr: 'plugins/jquery.sidr.min'
   },
@@ -70,6 +71,7 @@ require.config({
     tagsinput: ['jquery', 'bootstrap'],
     screwbuttons: ['jquery'],
     panzer: ['jquery'],
+    videojsplaylist: ['videojs'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 });

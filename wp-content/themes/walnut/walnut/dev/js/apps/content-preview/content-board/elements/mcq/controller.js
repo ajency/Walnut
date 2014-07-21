@@ -76,6 +76,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
 
       Controller.prototype._submitAnswer = function() {
         var answersNotMarked, totalMarks;
+        this.answerModel.set('marks', 0);
         if (!this.answerModel.get('answer').length) {
           console.log('you havent selected any thing');
         } else {

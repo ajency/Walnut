@@ -84,3 +84,20 @@ function change_uploads_directory( $uploads_dir ) {
 }
 
 add_filter( 'upload_dir', 'change_uploads_directory', 100, 1 );
+
+
+function get_media_by_ids(){
+    $ids = $_GET['ids'];
+    $media = array();
+    foreach ($ids as $id){
+//        $media[] = $id;
+        $media[] = wp_prepare_attachment_for_js( $id );
+    }
+    wp_send_json( array(
+        'code' => 'OK',
+        'data' => $media
+    ) );
+
+}
+
+add_action('wp_ajax_get_media_by_ids','get_media_by_ids');

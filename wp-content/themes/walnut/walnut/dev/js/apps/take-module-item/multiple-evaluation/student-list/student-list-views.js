@@ -82,11 +82,7 @@ define(['app'], function(App) {
       StudentsListView.prototype.selectStudent = function(e) {
         this.$el.find('.tiles.single').removeClass('selected');
         $(e.target).closest('.tiles.single').addClass("selected");
-        this.$el.closest('.studentList').find('.parameters').slideToggle();
         this.$el.find(".tiles.single").addClass("light");
-        $('html, body').animate({
-          scrollTop: this.$el.closest('.studentList').find("#eval-parameters").offset().top
-        }, 1000);
         return this.trigger('student:selected', $(e.target).closest('.tiles.single').attr('data-id'));
       };
 

@@ -8,7 +8,8 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       __extends(OptionsBarView, _super);
 
       function OptionsBarView() {
-        this.onFetchSubsectionsComplete = __bind(this.onFetchSubsectionsComplete, this);
+        this._commentEnable = __bind(this._commentEnable, this);
+        this._hintEnable = __bind(this._hintEnable, this);
         return OptionsBarView.__super__.constructor.apply(this, arguments);
       }
 
@@ -16,88 +17,107 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
 
       OptionsBarView.prototype.events = {
         'change #subs': function(e) {
-          this.$el.find('#chaps, #secs, #subsecs').select2('data', null);
-          this.$el.find('#chaps, #secs, #subsecs').html('');
           return this.trigger("fetch:chapters", $(e.target).val());
         },
         'change #chaps': function(e) {
-          this.$el.find('#secs, #subsecs').select2('data', null);
-          this.$el.find('#secs, #subsecs').html('');
-          return this.trigger("fetch:sections:subsections", $(e.target).val());
+          return this.trigger("fetch:sections", $(e.target).val());
+        },
+        'change #secs': function(e) {
+          return this.trigger("fetch:subsections", $(e.target).val());
         },
         'change #qType': '_changeOfQuestionType',
         'click  #save-question': 'saveQuestionSettings',
-        'click #preview-question': 'previewQuestion'
+        'click #preview-question': 'previewQuestion',
+        'click a.tabs': '_changeTabs',
+        'change #hint_enable': '_hintEnable',
+        'change #comment_enable': '_commentEnable'
+      };
+
+      OptionsBarView.prototype.mixinTemplateHelpers = function(data) {
+        data = OptionsBarView.__super__.mixinTemplateHelpers.call(this, data);
+        data.isStudentQuestion = this.model.get('content_type') === 'student_question' ? true : false;
+        data.instructionsLabel = this.model.get('content_type') === 'content_piece' ? 'Procedure Summary' : 'Instructions';
+        return data;
       };
 
       OptionsBarView.prototype.onShow = function() {
-        var postStatus, qType, _ref;
-        $("#subs, #chaps, #qType, #status, #secs, #subsecs ").select2();
-        $('input.tagsinput').tagsinput();
-        $('#subProps a').click(function(e) {
-          e.preventDefault();
-          return $(this).tab('show');
+        var ele;
+        ele = this.$el.find(".instructions");
+        $(ele).css({
+          'height': $(ele).prop('scrollHeight') + "px"
         });
-        if (this.model.get('ID')) {
-          qType = this.model.get('question_type');
-          $('#qType').select2().select2('val', qType);
-          postStatus = this.model.get('post_status');
-          $('#status').select2().select2('val', postStatus);
+        Backbone.Syphon.deserialize(this, this.model.toJSON());
+        this.$el.find("#subs, #chaps, #qType, #status, #secs, #subsecs, #difficulty_level ").select2();
+        this.$el.find('input.tagsinput').tagsinput();
+        if (this.model.get('hint_enable')) {
+          console.log('hint');
+          this.$el.find('#hint_enable').trigger('click');
         }
-        if ((_ref = this.model.get('content_type')) === 'content_piece' || _ref === 'student_question') {
+        if (this.model.get('comment_enable')) {
+          this.$el.find('#comment_enable').trigger('click');
+        }
+        if (this.model.get('content_type') !== 'teacher_question') {
           return this.$el.find('#question_type_column').remove();
         }
       };
 
-      OptionsBarView.prototype.onFetchChaptersComplete = function(chaps, curr_chapter) {
-        if (_.size(chaps) > 0) {
-          this.$el.find('#chaps').html('');
-          _.each(chaps.models, (function(_this) {
-            return function(chap, index) {
-              return _this.$el.find('#chaps').append('<option value="' + chap.get('term_id') + '">' + chap.get('name') + '</option>');
-            };
-          })(this));
-          return $('#chaps').select2().select2('val', curr_chapter);
+      OptionsBarView.prototype._changeTabs = function(e) {
+        e.preventDefault();
+        return $(e.target).tab('show');
+      };
+
+      OptionsBarView.prototype._hintEnable = function(e) {
+        if ($(e.target).prop('checked')) {
+          this.$el.find('#question-hint').prop('disabled', false);
+          return this.$el.find('#question-hint').show();
         } else {
-          return $('#chaps').select2().select2('data', null);
+          this.$el.find('#question-hint').prop('disabled', true);
+          return this.$el.find('#question-hint').hide();
         }
       };
 
-      OptionsBarView.prototype.onFetchSubsectionsComplete = function(allsections) {
-        var sectionIDs, subSectionIDs, term_ids;
+      OptionsBarView.prototype._commentEnable = function(e) {
+        if ($(e.target).prop('checked')) {
+          this.$el.find('#question-comment').prop('disabled', false);
+          return this.$el.find('#question-comment').show();
+        } else {
+          this.$el.find('#question-comment').prop('disabled', true);
+          return this.$el.find('#question-comment').hide();
+        }
+      };
+
+      OptionsBarView.prototype.onFetchChaptersComplete = function(chapters) {
+        var chapterElement, currentChapter, termIDs;
+        this.$el.find('#chaps, #secs, #subsecs').select2('data', null);
+        this.$el.find('#chaps, #secs, #subsecs').html('');
+        chapterElement = this.$el.find('#chaps');
+        termIDs = this.model.get('term_ids');
+        currentChapter = termIDs ? termIDs['chapter'] : '';
+        return $.populateChaptersOrSections(chapters, chapterElement, currentChapter);
+      };
+
+      OptionsBarView.prototype.onFetchSectionsComplete = function(sections) {
+        var sectionIDs, sectionsElement, term_ids;
+        this.$el.find('#secs, #subsecs').select2('data', null);
+        this.$el.find('#secs, #subsecs').html('');
         term_ids = this.model.get('term_ids');
         if (term_ids != null) {
           sectionIDs = term_ids['sections'];
         }
+        sectionsElement = this.$el.find('#secs');
+        return $.populateChaptersOrSections(sections, sectionsElement, sectionIDs);
+      };
+
+      OptionsBarView.prototype.onFetchSubsectionsComplete = function(subsections) {
+        var subSectionIDs, subsectionsElemnet, term_ids;
+        this.$el.find('#subsecs').select2('data', null);
+        this.$el.find('#subsecs').html('');
+        term_ids = this.model.get('term_ids');
         if (term_ids != null) {
           subSectionIDs = term_ids['subsections'];
         }
-        if (_.size(allsections) > 0) {
-          if (_.size(allsections.sections) > 0) {
-            this.$el.find('#secs').html('');
-            _.each(allsections.sections, (function(_this) {
-              return function(section, index) {
-                return _this.$el.find('#secs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-              };
-            })(this));
-            $('#secs').select2().select2('val', sectionIDs);
-          } else {
-            $('#secs').select2().select2('data', null);
-          }
-          if (_.size(allsections.subsections) > 0) {
-            this.$el.find('#subsecs').html('');
-            _.each(allsections.subsections, (function(_this) {
-              return function(section, index) {
-                return _this.$el.find('#subsecs').append('<option value="' + section.get('term_id') + '">' + section.get('name') + '</option>');
-              };
-            })(this));
-            return $('#subsecs').select2().select2('val', subSectionIDs);
-          } else {
-            return $('#subsecs').select2().select2('data', null);
-          }
-        } else {
-          return $('#subsecs,#secs').select2().select2('data', null);
-        }
+        subsectionsElemnet = this.$el.find('#subsecs');
+        return $.populateChaptersOrSections(subsections, subsectionsElemnet, subSectionIDs);
       };
 
       OptionsBarView.prototype._changeOfQuestionType = function(e) {

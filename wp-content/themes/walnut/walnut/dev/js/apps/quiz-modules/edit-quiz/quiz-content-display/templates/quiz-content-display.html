@@ -1,0 +1,57 @@
+{{#isContentPiece}}
+<div class="contentPiece" data-id="{{ID}}">
+    <time class="cbp_tmtime" datetime="">
+        <span class="time">{{duration}} <span class="semi-bold">mins</span></span>
+    </time>
+    <div class="cbp_tmicon success animated bounceIn"> <i class="fa fa-question"></i> </div>
+    <div class="cbp_tmlabel">
+        <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
+            <div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+            <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">{{&post_excerpt}}</span> </h4>
+        </div>
+        <div class="clearfix"></div>
+        <div class="tiles grey p-t-10 p-b-10 p-l-20">
+            <div class="muted">{{post_tags}}</div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+{{/isContentPiece}}
+{{#isSet}}
+<div class="contentPiece" data-id="{{id}}">
+    <time class="cbp_tmtime" datetime="">
+        <span class="time"><span class="semi-bold">{{id}}</span></span>
+    </time>
+    <div class="cbp_tmicon info animated bounceIn"> <i class="fa fa-folder-open"></i> </div>
+    <div class="cbp_tmlabel">
+        <div class="p-l-10 m-b-10">
+            <div class="tools"> <a href="#content-piece-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="remove"></a> </div>
+            <h5 class="m-t-5 m-b-5 bold pull-left">
+                <span>
+                    <span class="muted">Textbook:</span>
+                    {{textbook}}
+                </span>
+                <span>
+                    <span class="muted"> | Chapter:</span>
+                    {{chapter}}
+                </span>
+                <span>
+                    <span class="muted"> | Section:</span>
+                    {{section}}
+                </span>
+                <span>
+                    <span class="muted"> | Sub-Section:</span>
+                    {{sub-section}}
+                </span>
+            </h5>
+
+            <div class="clearfix"></div>
+        </div>
+        {{#contentLevels}}
+        <div class="tiles grey m-b-10 p-t-15 p-l-30 p-r-15 p-b-20 b-b b-grey">
+            <h4 class="no-margin"><span class="text-info semi-bold">{{.}}</span> </h4>
+        </div>
+        {{/contentLevels}}
+    </div>
+</div>
+{{/isSet}}

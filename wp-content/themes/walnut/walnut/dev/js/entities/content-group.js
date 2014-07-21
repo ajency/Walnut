@@ -22,8 +22,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         last_modified_by: '',
         published_on: '',
         published_by: '',
-        status: 'underreview',
-        type: '',
+        post_status: '',
         total_minutes: 0,
         duration: 0,
         minshrs: 'mins',
@@ -97,6 +96,10 @@ define(["app", 'backbone'], function(App, Backbone) {
         questionResponseModel = App.request("save:question:response");
         questionResponseModel.set(data);
         return questionResponseModel.save();
+      },
+      getEmptyModulesCollection: function() {
+        var contentGroupCollection;
+        return contentGroupCollection = new ContentGroup.ItemCollection;
       }
     };
     App.reqres.setHandler("get:content:groups", function(opt) {
@@ -111,8 +114,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("new:content:group", function() {
       return API.newContentGroup();
     });
-    return App.reqres.setHandler("schedule:content:group", function(data) {
+    App.reqres.setHandler("schedule:content:group", function(data) {
       return API.scheduleContentGroup(data);
+    });
+    return App.reqres.setHandler("empty:content:modules:collection", function() {
+      return API.getEmptyModulesCollection();
     });
   });
 });

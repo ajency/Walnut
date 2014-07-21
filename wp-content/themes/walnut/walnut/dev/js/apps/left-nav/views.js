@@ -1,5 +1,6 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTpl) {
   return App.module("LeftNavApp.Controller.Views", function(Views, App) {
@@ -33,11 +34,10 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
 
     })(Marionette.ItemView);
     return Views.LeftNavView = (function(_super) {
-      var handleSidenarAndContentHeight;
-
       __extends(LeftNavView, _super);
 
       function LeftNavView() {
+        this.clickMenu = __bind(this.clickMenu, this);
         return LeftNavView.__super__.constructor.apply(this, arguments);
       }
 
@@ -52,7 +52,8 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
       LeftNavView.prototype.itemViewContainer = 'ul.menu-items';
 
       LeftNavView.prototype.events = {
-        'click li': 'clickMenu'
+        'click li': 'clickMenu',
+        'click .sub-menu li': 'closeNav'
       };
 
       LeftNavView.prototype.onShow = function() {
@@ -90,20 +91,24 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
         if (sub.is(":visible")) {
           $('.arrow', li_target).removeClass("open");
           li_target.parent().removeClass("active");
-          sub.slideUp(200, function() {
-            return handleSidenarAndContentHeight();
-          });
+          sub.slideUp(200, (function(_this) {
+            return function() {
+              return _this.handleSidenarAndContentHeight();
+            };
+          })(this));
         } else {
           $('.arrow', li_target).addClass("open");
           li_target.parent().addClass("open");
-          sub.slideDown(200, function() {
-            return handleSidenarAndContentHeight();
-          });
+          sub.slideDown(200, (function(_this) {
+            return function() {
+              return _this.handleSidenarAndContentHeight();
+            };
+          })(this));
         }
         return e.preventDefault();
       };
 
-      handleSidenarAndContentHeight = function() {
+      LeftNavView.prototype.handleSidenarAndContentHeight = function() {
         var content, sidebar;
         content = $('.page-content');
         sidebar = $('.page-sidebar');
@@ -114,6 +119,13 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           return content.css("min-height", sidebar.height() + 120);
         } else {
           return content.css("min-height", content.attr("data-height"));
+        }
+      };
+
+      LeftNavView.prototype.closeNav = function() {
+        if (this.$el.hasClass("mini")) {
+          this.$el.find('.menu-items li').removeClass('open');
+          return this.$el.find('.sub-menu').slideUp();
         }
       };
 

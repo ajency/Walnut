@@ -34,7 +34,7 @@ define ['app'], (App)->
                     @_addClass(option, 'ansFalse')
 
             _addClass : (option, className)->
-                @$el.find("#mcq-option-#{option}").addClass(className)
+                @$el.find("#mcq-option-#{option}").parent().addClass(className)
 
 
         class Views.McqOptionView extends Marionette.ItemView

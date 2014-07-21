@@ -49,6 +49,7 @@ function send_modules_completed_parent_mail($comm_id, $parentdata, $blog_id, $mo
                     <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Class:</strong> $division</p>
                     <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Subject:</strong> {$module['subject_name']}</p>
                     <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Textbook:</strong> {$module['textbook_name']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Chapter:</strong> {$module['chapter_name']}</p>
                     <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Date completed:</strong>  {$module['end_date']}</p>
                     <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Taken by:</strong> {$module['taken_by']}</p>
                 ";
@@ -67,7 +68,7 @@ function send_modules_completed_student_mail($comm_id, $studentdata, $blog_id, $
     foreach($modules as $module){
 
         $to = $studentdata->user_email;
-        echo $studentdata->user_email;
+
         $subject = $blog_name ." Training module completed";
 
         $text = "<p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 20px;text-align: center;font-weight: bold;'>You have successfully completed the following training modules:</p><br>";
@@ -75,6 +76,7 @@ function send_modules_completed_student_mail($comm_id, $studentdata, $blog_id, $
         $text .= "<p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Name:</strong> {$module['module_name']}</p>
                     <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Subject:</strong> {$module['subject_name']}</p>
                     <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Textbook:</strong> {$module['textbook_name']}</p>
+                    <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Chapter:</strong> {$module['chapter_name']}</p>
                     <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Date completed:</strong>  {$module['end_date']}</p>
                     <p style='font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size: 16px;'><strong>Taken by:</strong> {$module['taken_by']}</p>";
 
@@ -105,13 +107,21 @@ function get_data_required_for_modules_completed_mail($comm_id, $blog_id){
 
             $module_data['id']  = $module_id;
 
-            $module_data['module_name'] = get_module_name($module_id);
+            $module_details= get_single_content_module($module_id);
+
+            $module_data['module_name'] = $module_details->name;
 
             $module_data['end_date'] = get_module_end_date($module_id, $blog_id);
 
-            $textbook_id = get_module_textbook($module_id);
+            $terms= $module_details->term_ids;
+
+            $textbook_id = $terms['textbook'];
+
+            $chapter_id = $terms['chapter'];
 
             $module_data['textbook_name'] = get_term_field('name', $textbook_id, 'textbook');
+
+            $module_data['chapter_name'] = get_term_field('name', $chapter_id, 'textbook');
 
             $module_data['taken_by'] = get_module_taken_by($module_id, $blog_id);
 
@@ -120,6 +130,7 @@ function get_data_required_for_modules_completed_mail($comm_id, $blog_id){
             $modules[]= $module_data;
         }
     }
+
     return $modules;
 
 }

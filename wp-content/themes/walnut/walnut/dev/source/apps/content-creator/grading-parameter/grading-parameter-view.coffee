@@ -6,14 +6,14 @@ define ['app'],(App)->
 
             template : '<div class="row m-b-10">
                             <div class="col-sm-4">
-                                <input id="parameter" type="text" placeholder="Parameter name" class="w100" value="{{parameter}}">
+                                <textarea id="parameter" placeholder="Parameter name" class="w100 autogrow">{{parameter}}</textarea>
                             </div><div class="saved" style="color: dodgerblue;display: none">Updated</div><div class="changed" style="color: #ff0000;
                             display: none">Changed</div>
                         </div>
                         <div class="row p-b-15">
                             {{#attributes}}
                             <div class="col-sm-3">
-                                <input type="text" placeholder="Attribute" class="w100 attribute" value="{{.}}">
+                                <textarea placeholder="Attribute" class="w100 attribute autogrow">{{.}}</textarea>
                             </div>
                             {{/attributes}}
                         </div>
@@ -30,22 +30,26 @@ define ['app'],(App)->
                 data
 
             events :
-                'click #btn-save' : '_saveGradingParameter'
+                'click #btn-save'   : '_saveGradingParameter'
                 'click #btn-delete' : '_deleteGradingParameter'
-                'change input' : '_inputChanged'
+                'change textarea'   : '_inputChanged'
+
+            onShow:->
+                _.each @$el.find('textarea'), (ele,index)=>
+                    $(ele).css 'height' : $(ele).prop('scrollHeight') + "px";
 
             _saveGradingParameter : ->
-                if @$el.find('input#parameter').val() is ''
+                if @$el.find('textarea#parameter').val() is ''
                     return
 
                 attributes = new Array()
 
-                _.each @$el.find('input.attribute') ,(attributeInput)->
+                _.each @$el.find('textarea.attribute') ,(attributeInput)->
                     if $(attributeInput).val() isnt ''
                         attributes.push $(attributeInput).val()
                 if not attributes.length
                     return
-                @model.set 'parameter',@$el.find('input#parameter').val()
+                @model.set 'parameter',@$el.find('textarea#parameter').val()
                 @model.set 'attributes',attributes
                 @trigger 'save:grading:parameter'
                 @$el.find('.saved').show()

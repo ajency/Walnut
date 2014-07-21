@@ -86,13 +86,22 @@ define ['app'], (App)->
                 @studentModel = Marionette.getOption @, 'studentModel'
                 @responseObj = Marionette.getOption @, 'responseObj'
 
+            onShow: ->
+                # stickyHeaderTop = @$el.closest('#main-content-region').find("#module-details-region").height()
+                # @$el.css "margin-top", "#{stickyHeaderTop}px"
+
+                $('html, body').animate
+                    scrollTop: @$el.closest('.studentList').find("#eval-parameters").offset().top - stickyHeaderTop
+                , 1000
+                @$el.slideDown()
+
             _saveEvalParameters : ->
                 if _.size(@responseObj) > 1
                     @trigger "save:eval:parameters"
 
             _closeEvalParams : ->
                 @$el.closest('.studentList').find('.tiles.single').removeClass('light').removeClass 'selected'
-                @$el.slideToggle()
+                @$el.slideUp(700)
 
 
 

@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/take-module-item/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/take-module-item/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app'], function(App, RegionController) {
   return App.module("TeacherTeachingApp", function(View, App) {
     var SingleQuestionLayout, contentGroupModel, contentPiece, questionResponseCollection, questionResponseModel, questionsCollection, studentCollection;
     contentGroupModel = null;
@@ -20,8 +20,9 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         this._showQuestionDisplayView = __bind(this._showQuestionDisplayView, this);
         this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
         this._getOrCreateModel = __bind(this._getOrCreateModel, this);
+        this._startViewModuleApp = __bind(this._startViewModuleApp, this);
         this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
-        this._gotoPreviousRoute = __bind(this._gotoPreviousRoute, this);
+        this._gotoViewModule = __bind(this._gotoViewModule, this);
         this._changeQuestion = __bind(this._changeQuestion, this);
         return TeacherTeachingController.__super__.constructor.apply(this, arguments);
       }
@@ -54,8 +55,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           };
         })(this));
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(contentPiece));
-        this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoPreviousRoute);
-        this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoPreviousRoute);
+        this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoViewModule);
+        this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoViewModule);
         this.listenTo(this.layout.moduleDetailsRegion, "goto:next:question", this._changeQuestion);
         return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
       };
@@ -76,7 +77,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
             return this._showStudentsListView(questionResponseModel);
           }
         } else {
-          return this._gotoPreviousRoute();
+          return this._gotoViewModule();
         }
       };
 
@@ -94,11 +95,11 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         return nextQuestion;
       };
 
-      TeacherTeachingController.prototype._gotoPreviousRoute = function() {
+      TeacherTeachingController.prototype._gotoViewModule = function() {
         if (this.display_mode === 'class_mode' && questionResponseModel.get('status') !== 'completed') {
           return this._saveQuestionResponse("paused");
         } else {
-          return this._getPreviousRoute();
+          return this._startViewModuleApp();
         }
       };
 
@@ -115,19 +116,27 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           success: (function(_this) {
             return function(model) {
               if (model.get('status') === 'paused') {
-                return _this._getPreviousRoute();
+                return _this._startViewModuleApp();
               }
             };
           })(this)
         });
       };
 
-      TeacherTeachingController.prototype._getPreviousRoute = function() {
-        var currRoute, newRoute, removeStr;
-        currRoute = App.getCurrentRoute();
-        removeStr = _.str.strRightBack(currRoute, '/');
-        newRoute = _.str.rtrim(currRoute, removeStr + '/');
-        return App.navigate(newRoute, true);
+      TeacherTeachingController.prototype._startViewModuleApp = function() {
+        App.execute("show:headerapp", {
+          region: App.headerRegion
+        });
+        App.execute("show:leftnavapp", {
+          region: App.leftNavRegion
+        });
+        return App.execute("show:single:module:app", {
+          region: App.mainContentRegion,
+          model: contentGroupModel,
+          mode: this.display_mode,
+          division: this.division,
+          classID: this.classID
+        });
       };
 
       TeacherTeachingController.prototype._getOrCreateModel = function(content_piece_id) {
@@ -199,15 +208,6 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
                 display_mode: _this.display_mode,
                 timerObject: _this.timerObject
               });
-            } else if (question_type === 'multiple_eval') {
-              return App.execute("show:single:question:multiple:evaluation:app", {
-                region: _this.layout.studentsListRegion,
-                questionResponseModel: questionResponseModel,
-                studentCollection: studentCollection,
-                display_mode: _this.display_mode,
-                timerObject: _this.timerObject,
-                evaluationParams: contentPiece.get('grading_params')
-              });
             }
           };
         })(this));
@@ -218,7 +218,6 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           return function() {
             var question_type;
             question_type = contentPiece.get('question_type');
-            console.log(contentPiece.get('ID'));
             return App.execute('show:teacher:training:footer:app', {
               region: _this.layout.studentsListRegion,
               contentPiece: contentPiece,

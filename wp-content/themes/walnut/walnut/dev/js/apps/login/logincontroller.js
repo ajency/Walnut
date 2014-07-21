@@ -17,9 +17,6 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         var view;
         this.view = view = this._getLoginView();
         this.listenTo(view, 'authenticate:user', this.authenticateUser);
-        this.listenTo(view, 'close', function() {
-          return App.vent.trigger('show:dashboard');
-        });
         return this.show(view, {
           loading: true
         });
@@ -44,7 +41,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
               if (response.blog_details.site_url !== SITEURL) {
                 window.location = response.blog_details.site_url;
               }
-              return _this.view.close();
+              _this.view.close();
+              return App.vent.trigger('show:dashboard');
             }
           };
         })(this));

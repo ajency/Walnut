@@ -101,6 +101,13 @@ define(['app'], function(App) {
         return this.responseObj = Marionette.getOption(this, 'responseObj');
       };
 
+      EvaluationView.prototype.onShow = function() {
+        $('html, body').animate({
+          scrollTop: this.$el.closest('.studentList').find("#eval-parameters").offset().top - stickyHeaderTop
+        }, 1000);
+        return this.$el.slideDown();
+      };
+
       EvaluationView.prototype._saveEvalParameters = function() {
         if (_.size(this.responseObj) > 1) {
           return this.trigger("save:eval:parameters");
@@ -109,7 +116,7 @@ define(['app'], function(App) {
 
       EvaluationView.prototype._closeEvalParams = function() {
         this.$el.closest('.studentList').find('.tiles.single').removeClass('light').removeClass('selected');
-        return this.$el.slideToggle();
+        return this.$el.slideUp(700);
       };
 
       return EvaluationView;
