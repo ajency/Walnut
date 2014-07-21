@@ -175,26 +175,38 @@ function get_modules_by_search_string($search_string, $all_module_ids){
 
     $other_module_ids= join(',',$other_modules);
 
-    $content_modules_query= $wpdb->prepare("SELECT collection_id, meta_value
-                                FROM {$wpdb->base_prefix}collection_meta
-                                WHERE meta_key like %s
+    $content_modules_query= $wpdb->prepare("SELECT c.id, c.type, cm.meta_value
+                                FROM {$wpdb->base_prefix}content_collection c, {$wpdb->base_prefix}collection_meta cm
+                                WHERE c.id=cm.collection_id AND meta_key like %s
                                 AND collection_id in ($other_module_ids)",
-                            'content_pieces'
-                            );
+        'content_pieces'
+    );
 
     $content_modules = $wpdb->get_results($content_modules_query);
 
+    if($content_modules){
 
-    foreach($content_modules as $module){
+        foreach($content_modules as $module){
 
-        $content_pieces= maybe_unserialize($module->meta_value);
-        $string_exists= get_content_pieces_by_search_string($search_string,$content_pieces);
+            $content_pieces= maybe_unserialize($module->meta_value);
 
-        if(is_array($string_exists) && sizeof($string_exists)>0)
-            $module_ids[]=$module->collection_id;
+            if($module->type == 'quiz')
+                $content_pieces =__u::pluck($content_pieces, 'id');
+
+            if(sizeof($content_pieces)>0){
+
+                $string_exists= get_content_pieces_by_search_string($search_string,$content_pieces);
+
+
+                if(is_array($string_exists) && sizeof($string_exists)>0)
+                    $module_ids[]=$module->id;
+
+            }
+        }
+
+        $module_ids = __u::flatten($module_ids);
+
     }
-
-    $module_ids = __u::flatten($module_ids);
 
     return $module_ids;
 
