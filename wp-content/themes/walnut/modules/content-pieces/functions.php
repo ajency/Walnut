@@ -158,6 +158,8 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
 
         $content_meta= maybe_unserialize($content_meta);
 
+        $excerpts[] = $content_meta['post_tags'];
+
         $excerpts[] = $content_meta['instructions'];
 
         $excerpts = __u::flatten($excerpts);
@@ -329,7 +331,7 @@ function get_grading_parameters($content_piece_id){
     foreach ($allParams as $params){
         $paramObj = array();
         $paramObj['id'] = $params['meta_id'];
-        $paramObj['parameter'] =$excerpt_array[]= ltrim($params['meta_key'],'parameter_');
+        $paramObj['parameter'] =$excerpt_array[]= str_replace('parameter_','',$params['meta_key']);
         $paramObj['attributes'] =$excerpt_array[]= maybe_unserialize($params['meta_value']);
         array_push($grading_params,$paramObj);
     }

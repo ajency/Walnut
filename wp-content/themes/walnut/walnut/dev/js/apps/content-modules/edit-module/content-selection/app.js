@@ -33,7 +33,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
             _this.listenTo(_this.layout, "show", function() {
               App.execute("show:textbook:filters:app", {
                 region: _this.layout.filtersRegion,
-                contentPiecesCollection: _this.contentPiecesCollection,
+                collection: _this.contentPiecesCollection,
                 model: _this.model,
                 filters: ['textbooks', 'chapters', 'sections', 'subsections', 'content_type']
               });

@@ -814,6 +814,38 @@
   font-size: 50px;
   color: #e5e9ec;
 }
+.vjs-poster {
+  height: auto;
+}
+.video-js {
+  background-color: #f8f8f8;
+  border: 2px solid #e5e9ec;
+}
+.playlistToggle {
+  position: relative;
+  top: -45px;
+  left: 10px;
+  z-index: 999;
+}
+.playlistHover {
+  background-color: #f8f8f8;
+  border: 2px solid #e5e9ec;
+  border-top: none;
+  padding: 10px 0;
+}
+.playlist-video {
+  width: 49%;
+  float: left;
+  background-color: #ffffff;
+  border: 2px solid #e5e9ec;
+  margin: 2px;
+  text-align: center;
+  cursor: pointer;
+}
+.playlist-video.currentVid {
+  color: #0090d9;
+  font-weight: 600;
+}
 /*Editor popup*/
 .cke_dialog_body .cke_dialog_title {
   background-color: #0090d9;

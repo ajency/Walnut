@@ -16,10 +16,11 @@ define ['app'], (App)->
 
                         </video>
                         <div class="clearfix"></div>
-                        <div id="playlist-hover" class="row" style="position: absolute; background-color: #000000;  z-index:20;  display: none">
-                            <div class="col-sm-2" id="prev"><button>Prev</button></div>
-                            <div class="row video-list col-sm-8" id="video-list"></div>
-                            <div class="col-sm-2" id="next"><button>Next</button></div>
+                        <div id="playlist-hover" class="row playlistHover m-l-0 m-r-0" style="z-index:20">
+                            <div class="col-sm-1"><button class="btn btn-info btn-small"><i class="fa fa-list-ul"></i></button></div>
+                            <div class="video-list col-sm-9" id="video-list"></div>
+                            <div class="col-sm-1" id="prev"><button class="btn btn-info btn-small"><i class="fa fa-step-backward"></i></button></div>
+                            <div class="col-sm-1" id="next"><button class="btn btn-info btn-small pull-right"><i class="fa fa-step-forward"></i></button></div>
 
                          </div>
                             {{/video}}
@@ -90,17 +91,17 @@ define ['app'], (App)->
 
             _setPlaylistPosition : ->
 
-                position =  @$el.position()
-                @$el.find('#playlist-hover').css
-                    'top' : position.top + @$el.height()
-                    'left' : position.left + 15
-                    'width' : @$el.width()
+                # position =  @$el.position()
+                # @$el.find('#playlist-hover').css
+                #     'top' : position.top + @$el.height()
+                #     'left' : position.left + 7
+                #     'width' : @$el.width()
 
             _setVideoList : ->
 
                 @$el.find('#video-list').empty()
                 _.each @model.get('title'),(title,index)=>
-                    @$el.find('#video-list').append("<div class='col-sm-6 playlist-video' data-index=#{index}>#{title}</div>")
+                    @$el.find('#video-list').append("<div class='playlist-video' data-index=#{index}>#{title}</div>")
 
 
 
