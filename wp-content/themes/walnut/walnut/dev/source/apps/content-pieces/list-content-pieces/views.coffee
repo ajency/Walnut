@@ -104,13 +104,13 @@ define ['app'
             tagName: 'td'
 
             onShow:->
-                @$el.attr 'colspan',3
+                @$el.attr 'colspan',7
 
         class Views.ListView extends Marionette.CompositeView
 
             template: contentListTpl
 
-            className: 'tiles white grid simple vertical green'
+            className: 'row'
 
             itemView: ListItemView
 
@@ -128,13 +128,6 @@ define ['app'
                 'change .textbook-filter' :(e)->
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
-                'change .content-type-filter' : (e)->
-                    if $(e.target).val() is 'student_question'
-                        @$el.find('.difficulty-level-filter').show()
-                    else
-                        @$el.find('.difficulty-level-filter').hide()
-                    @setFilteredContent()
-
 
             initialize : ->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
@@ -150,16 +143,13 @@ define ['app'
                 @$el.find '#textbook-filters'
                 .html textbookFiltersHTML
 
+                @$el.find "#content-pieces-table"
+                .tablesorter()
+
                 @$el.find ".select2-filters"
                 .select2()
 
-                $('#content-pieces-table').tablesorter()
-
-                pagerOptions =
-                    container: $(".pager")
-                    output: '{startRow} to {endRow} of {totalRows}'
-
-                $('#content-pieces-table').tablesorterPager pagerOptions
+                @onUpdatePager()
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
@@ -176,9 +166,16 @@ define ['app'
 
                 @collection.set filtered_data
 
-                $('#content-pieces-table').trigger "updateCache"
+                @onUpdatePager()
+
+
+            onUpdatePager:->
+
+                @$el.find "#content-pieces-table"
+                .trigger "updateCache"
                 pagerOptions =
-                    container : $(".pager")
+                    container : @$el.find ".pager"
                     output : '{startRow} to {endRow} of {totalRows}'
 
-                $('#content-pieces-table').tablesorterPager pagerOptions
+                @$el.find "#content-pieces-table"
+                .tablesorterPager pagerOptions

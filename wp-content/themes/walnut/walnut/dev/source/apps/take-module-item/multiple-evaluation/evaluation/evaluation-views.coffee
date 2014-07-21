@@ -87,8 +87,8 @@ define ['app'], (App)->
                 @responseObj = Marionette.getOption @, 'responseObj'
 
             onShow: ->
-                stickyHeaderTop = @$el.closest('#main-content-region').find("#module-details-region").height()
-                @$el.css "margin-top", "#{stickyHeaderTop}px"
+                # stickyHeaderTop = @$el.closest('#main-content-region').find("#module-details-region").height()
+                # @$el.css "margin-top", "#{stickyHeaderTop}px"
 
                 $('html, body').animate
                     scrollTop: @$el.closest('.studentList').find("#eval-parameters").offset().top - stickyHeaderTop

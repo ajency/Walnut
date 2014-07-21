@@ -52,6 +52,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				searchStr: ''
 
 			model : Media.MediaModel
+
 			name : 'media'
 
 			parse : (resp)->
@@ -90,6 +91,18 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			getEmptyMediaCollection : ->
 				mediaCollection = new Media.MediaCollection
+				mediaCollection
+
+			getMediaCollectionById:(ids = [])->
+				mediaCollection = new Media.MediaCollection
+				mediaCollection.url = "#{AJAXURL}?action=get_media_by_ids"
+				if _.size(ids) > 0
+					mediaCollection.fetch
+						data:
+							ids : ids
+							mediaType : 'video'
+
+				mediaCollection
 
 		# this fucntion will return a placeholder media for the requesting element
 		# this will be special purpose media model.
@@ -102,7 +115,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 				media
 
 
-		
 		#REQUEST HANDLERS
 		App.reqres.setHandler "get:empty:media:collection", ->
 			API.getEmptyMediaCollection()
@@ -112,6 +124,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 		App.reqres.setHandler "get:media:by:id", (mediaId)->
 			API.getMediaById mediaId
+
+		App.reqres.setHandler 'get:media:collection:by:ids',(mediaIds)->
+			API.getMediaCollectionById mediaIds
 
 		App.commands.setHandler "new:media:added", (modelData)->
 			API.createNewMedia modelData

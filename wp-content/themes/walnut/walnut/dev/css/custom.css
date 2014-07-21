@@ -1325,13 +1325,21 @@ p.mcq-option-text {
   margin-bottom: 5px;
   padding: 10px 10px 10px 20px;
 }
+#eval-parameters {
+  max-width: 760px;
+  margin: 0 auto;
+}
 @media (min-width: 1020px) and (max-width: 1295px) {
   #content-board {
     margin: 0;
   }
-  #myCanvas {
+  #myCanvas,
+  #eval-parameters {
     margin: 0;
     margin-left: auto;
+  }
+  #eval-parameters {
+    max-width: 755px;
   }
   #top-panel {
     float: left;
@@ -1404,6 +1412,7 @@ p.mcq-option-text {
 }
 .parameters .btn {
   white-space: normal;
+  word-break: break-word;
 }
 /*.answrRight{
 	background: url(../../../images/answer.png) no-repeat;

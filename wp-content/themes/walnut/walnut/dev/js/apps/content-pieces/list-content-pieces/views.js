@@ -124,7 +124,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        return this.$el.attr('colspan', 3);
+        return this.$el.attr('colspan', 7);
       };
 
       return EmptyView;
@@ -139,7 +139,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListView.prototype.template = contentListTpl;
 
-      ListView.prototype.className = 'tiles white grid simple vertical green';
+      ListView.prototype.className = 'row';
 
       ListView.prototype.itemView = ListItemView;
 
@@ -158,14 +158,6 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         'change #content-post-status-filter, #difficulty-level-filter': 'setFilteredContent',
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
-        },
-        'change .content-type-filter': function(e) {
-          if ($(e.target).val() === 'student_question') {
-            this.$el.find('.difficulty-level-filter').show();
-          } else {
-            this.$el.find('.difficulty-level-filter').hide();
-          }
-          return this.setFilteredContent();
         }
       };
 
@@ -183,20 +175,16 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.onShow = function() {
-        var pagerOptions, textbookFiltersHTML;
+        var textbookFiltersHTML;
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         textbookFiltersHTML = $.showTextbookFilters({
           textbooks: this.textbooksCollection
         });
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
+        this.$el.find("#content-pieces-table").tablesorter();
         this.$el.find(".select2-filters").select2();
-        $('#content-pieces-table').tablesorter();
-        pagerOptions = {
-          container: $(".pager"),
-          output: '{startRow} to {endRow} of {totalRows}'
-        };
-        return $('#content-pieces-table').tablesorterPager(pagerOptions);
+        return this.onUpdatePager();
       };
 
       ListView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
@@ -214,15 +202,20 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.setFilteredContent = function() {
-        var filtered_data, pagerOptions;
+        var filtered_data;
         filtered_data = $.filterTableByTextbooks(this);
         this.collection.set(filtered_data);
-        $('#content-pieces-table').trigger("updateCache");
+        return this.onUpdatePager();
+      };
+
+      ListView.prototype.onUpdatePager = function() {
+        var pagerOptions;
+        this.$el.find("#content-pieces-table").trigger("updateCache");
         pagerOptions = {
-          container: $(".pager"),
+          container: this.$el.find(".pager"),
           output: '{startRow} to {endRow} of {totalRows}'
         };
-        return $('#content-pieces-table').tablesorterPager(pagerOptions);
+        return this.$el.find("#content-pieces-table").tablesorterPager(pagerOptions);
       };
 
       return ListView;
