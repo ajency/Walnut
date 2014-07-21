@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls> </video> <div class="clearfix"></div> <div id="playlist-hover" class="row" style="position: absolute; background-color: #000000;  z-index:20;  display: none"> <div class="col-sm-2" id="prev"><button>Prev</button></div> <div class="row video-list col-sm-8" id="video-list"></div> <div class="col-sm-2" id="next"><button>Next</button></div> </div>';
+      VideoView.prototype.template = '    <video class="video-js vjs-default-skin" poster="/images/video-poster.jpg" width="100%" data-setup="{}" controls> </video> <div class="clearfix"></div> <div id="playlist-hover" class="row" style="position: absolute; background-color: #000000;  z-index:20;  display: none"> <div class="col-sm-2" id="prev"><button>Prev</button></div> <div class="row video-list col-sm-8" id="video-list"></div> <div class="col-sm-2" id="next"><button>Next</button></div> </div>';
 
       VideoView.prototype.events = {
         'mouseenter': 'showPlaylist',
@@ -23,24 +23,9 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype.onShow = function() {
-        var height, videoId, videos, width;
+        var videoId;
         videoId = _.uniqueId('video-');
         this.$el.find('video').attr('id', videoId);
-        this.videoElement = videojs(videoId);
-        videos = new Array();
-        _.each(this.model.get('videoUrl'), function(url) {
-          return videos.push({
-            src: [url]
-          });
-        });
-        this.videoElement.playList(videos, {
-          getVideoSource: function(vid, cb) {
-            return cb(vid.src);
-          }
-        });
-        width = this.videoElement.width();
-        height = 9 * width / 16;
-        this.videoElement.height(height);
         this._setPlaylistPosition();
         return this._setVideoList();
       };
