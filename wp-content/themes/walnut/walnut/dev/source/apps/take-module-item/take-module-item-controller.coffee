@@ -4,7 +4,6 @@ define ['app'
         'apps/take-module-item/teacher-training-footer/training-footer-controller'
         'apps/take-module-item/module-description/module-description-app'
         'apps/take-module-item/chorus-options/chorus-options-app'
-        'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'
 ], (App, RegionController)->
     App.module "TeacherTeachingApp", (View, App)->
 
@@ -57,9 +56,9 @@ define ['app'
 
                 @listenTo @layout, "show", @_showQuestionDisplayView contentPiece
 
-                @listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoPreviousRoute
+                @listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoViewModule
 
-                @listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoPreviousRoute
+                @listenTo @layout.studentsListRegion, "goto:previous:route", @_gotoViewModule
 
                 @listenTo @layout.moduleDetailsRegion, "goto:next:question", @_changeQuestion
 
@@ -86,7 +85,7 @@ define ['app'
                         @_showStudentsListView questionResponseModel
 
                 else
-                    @_gotoPreviousRoute()
+                    @_gotoViewModule()
 
             _getNextItemID : ->
                 contentPieces = contentGroupModel.get 'content_pieces'
@@ -102,12 +101,12 @@ define ['app'
 
                 nextQuestion
 
-            _gotoPreviousRoute : =>
+            _gotoViewModule : =>
                 if @display_mode is 'class_mode' and questionResponseModel.get('status') isnt 'completed'
                     @_saveQuestionResponse "paused"
 
                 else
-                    @_getPreviousRoute()
+                    @_startViewModuleApp()
 
             _saveQuestionResponse : (status) =>
                 elapsedTime = @timerObject.request "get:elapsed:time"
@@ -122,16 +121,20 @@ define ['app'
                     wait : true
                     success :(model)=>
                         if model.get('status') is 'paused'
-                            @_getPreviousRoute()
+                            @_startViewModuleApp()
 
-            _getPreviousRoute:->
-                currRoute = App.getCurrentRoute()
+            _startViewModuleApp:=>
 
-                removeStr = _.str.strRightBack currRoute, '/'
+                App.execute "show:headerapp", region : App.headerRegion
+                App.execute "show:leftnavapp", region : App.leftNavRegion
 
-                newRoute = _.str.rtrim currRoute, removeStr + '/'
+                App.execute "show:single:module:app",
+                    region: App.mainContentRegion
+                    model: contentGroupModel
+                    mode: @display_mode
+                    division: @division
+                    classID: @classID
 
-                App.navigate newRoute, true
 
             _getOrCreateModel : (content_piece_id)=>
                 questionResponseModel = questionResponseCollection.findWhere
@@ -195,23 +198,10 @@ define ['app'
                             display_mode : @display_mode
                             timerObject : @timerObject
 
-                    else if question_type is 'multiple_eval'
-
-                        App.execute "show:single:question:multiple:evaluation:app",
-                            region : @layout.studentsListRegion
-                            questionResponseModel : questionResponseModel
-                            studentCollection : studentCollection
-                            display_mode : @display_mode
-                            timerObject : @timerObject
-                            evaluationParams : contentPiece.get 'grading_params'
-
-
 
             _showTeacherTrainingFooter : =>
                 App.execute "when:fetched", contentPiece, =>
                     question_type = contentPiece.get('question_type')
-
-                    console.log contentPiece.get 'ID'
 
                     App.execute 'show:teacher:training:footer:app',
                         region : @layout.studentsListRegion

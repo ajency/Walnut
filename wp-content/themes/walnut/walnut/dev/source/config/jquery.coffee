@@ -35,6 +35,16 @@ define ['jquery', 'underscore'], ($, _)->
 
         this
 
+    $( document ).on  "keyup", ".autogrow", (e)=>
+
+        ele= $ e.target
+
+        if $(ele).prop('clientHeight') < $(ele).prop('scrollHeight')
+            $(ele).css 'height' : $(ele).prop('scrollHeight') + "px";
+
+        if $(ele).prop('clientHeight') < $(ele).prop('scrollHeight')
+            $(ele).css 'height' : ($(ele).prop('scrollHeight') * 2 - $(ele).prop('clientHeight')) + "px"
+
     #programatically select elements
     $.fn.selectSelectableElements = (elementsToSelect)->
         # remove the class ui-selected for the ones not selected

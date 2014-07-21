@@ -148,6 +148,11 @@ body {
 }
 .header-seperation {
   background-color: #22262e;
+  -webkit-transition: all 0.28s ease-in-out;
+  -moz-transition: all 0.28s ease-in-out;
+  -o-transition: all 0.28s ease-in-out;
+  -ms-transition: all 0.28s ease-in-out;
+  transition: all 0.28s ease-in-out;
 }
 .header {
   padding: 0 !important;
@@ -433,6 +438,11 @@ body {
   background-color: #1b1e24 !important;
   height: 100%;
   font-family: 'Roboto';
+  -webkit-transition: all 0.28s ease-in-out;
+  -moz-transition: all 0.28s ease-in-out;
+  -o-transition: all 0.28s ease-in-out;
+  -ms-transition: all 0.28s ease-in-out;
+  transition: all 0.28s ease-in-out;
 }
 .page-sidebar .outer-tab-nav-section {
   display: inline-block;
@@ -4175,7 +4185,7 @@ form legend,
 }
 .grid.solid .grid-body {
   color: #ffffff;
-  padding: 20px;
+  padding: 15px;
 }
 .grid.solid .grid-body h3 {
   color: #ffffff;
@@ -4219,7 +4229,7 @@ form legend,
 }
 .grid.simple .grid-body {
   background-color: #ffffff;
-  padding: 26px;
+  padding: 15px;
   border: 1px solid #dddddd;
   color: #6f7b8a;
 }
@@ -6398,28 +6408,33 @@ code:hover {
 }
 .label-success,
 .badge-success {
-  background-color: #259b24;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #259b24;
+  border: 1px solid #259b24;
 }
 .label-warning,
 .badge-warning {
-  background-color: #fdd01c;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #fdd01c;
+  border: 1px solid #fdd01c;
 }
 .label-important,
 .badge-important {
-  background-color: #f35958;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #f35958;
+  border: 1px solid #f35958;
 }
 .label-danger,
 .badge-danger {
-  background-color: #f35958;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #f35958;
+  border: 1px solid #f35958;
 }
 .label-info,
 .badge-info {
-  background-color: #0090d9;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #0090d9;
+  border: 1px solid #0090d9;
 }
 .label-inverse,
 .badge-inverse {
@@ -6604,9 +6619,6 @@ input[type="checkbox"] {
 .table-condensed th,
 .table-condensed td {
   padding: 10px 5px;
-}
-.table-tools-actions {
-  margin: 0px 5px;
 }
 .inner-table td {
   background-color: transparent !important;
@@ -7286,7 +7298,7 @@ input[type="checkbox"] {
   display: block;
 }
 .cbp_tmtimeline > li .cbp_tmtime .time {
-  font-size: 1.5em;
+  font-size: 1.3em;
   color: #505458;
   display: block;
 }
@@ -7341,7 +7353,7 @@ input[type="checkbox"] {
   left: 20%;
   top: 0;
   margin: 0 0 0 -25px;
-  font-size: 1.3em;
+  font-size: 1em;
 }
 .cbp_tmtimeline > li .cbp_tmicon.success {
   background: #36ac35;
@@ -7364,9 +7376,9 @@ input[type="checkbox"] {
   color: #ffffff;
 }
 .cbp_tmtimeline > li .cbp_tmicon.info {
-  background: #11a1ea;
-  box-shadow: 0 0 0 8px #22b2fb;
-  color: #ffffff;
+  background: #ffffff;
+  box-shadow: 0 0 0 8px #11a1ea;
+  color: #11a1ea;
 }
 .cbp_tmtimeline .action-links {
   margin: 4px 0 0;

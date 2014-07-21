@@ -50,7 +50,8 @@ define ['app'
 
                     if not _.isNull @choosedMedia
                         App.vent.trigger "media:manager:choosed:media", @choosedMedia
-                        @region.closeDialog()
+                        if @region
+                            @region.closeDialog()
 
             # App.getRegion('elementsBoxRegion').hide()
 

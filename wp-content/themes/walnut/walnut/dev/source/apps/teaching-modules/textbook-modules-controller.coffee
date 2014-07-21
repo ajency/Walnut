@@ -9,35 +9,46 @@ define ['app'
             initialize: (opts) ->
                 {textbookID,@classID,@division,@mode} = opts
 
+                #in teaching/ training mode take-an-item the header & left nav are removed
+                #so on browser back, on reaching this page we need to call them again.
+                #hence the following two lines
+
+                App.execute "show:headerapp", region : App.headerRegion
+                App.execute "show:leftnavapp", region : App.leftNavRegion
+
                 @textbook = App.request "get:textbook:by:id", textbookID
 
-                @contentGroupsCollection = App.request "get:content:groups", ('textbook': textbookID, 'division': @division, 'module_status': 'publish,archive')
+                if @mode is 'training'
+                    @contentGroupsCollection = App.request "get:content:groups",
+                        'textbook': textbookID
+                        'division': @division
+                else
+                    @contentGroupsCollection = App.request "get:content:groups",
+                        'textbook': textbookID
+                        'division': @division
 
-                @view = view = @_getContentGroupsListingView @contentGroupsCollection
+                @chaptersCollection= App.request "get:chapters", ('parent' : textbookID)
 
-                App.execute "when:fetched", @textbook, =>
-                    textbookName = @textbook.get 'name'
+                App.execute "when:fetched", [@chaptersCollection,@contentGroupsCollection,@textbook], =>
 
-                    breadcrumb_items =
-                        'items': [
-                            {'label': 'Dashboard', 'link': '#teachers/dashboard'},
-                            {'label': 'Take Class', 'link': '#teachers/take-class/' + @classID + '/' + @division},
-                            {'label': textbookName, 'link': 'javascript:;', 'active': 'active'}
-                        ]
+                    @view = view = @_getContentGroupsListingView @contentGroupsCollection
 
-                    App.execute "update:breadcrumb:model", breadcrumb_items
+                    @show @view, loading: true
 
-                    @show @view, (loading: true)
+                    @listenTo @view, "schedule:training": (id)=>
+                        @singleModule = @contentGroupsCollection.get id
+                        modalview = @_showScheduleModal @singleModule
+                        @show modalview, region: App.popupRegion
 
-                @listenTo @view, "schedule:training": (id)=>
-                    @singleModule = @contentGroupsCollection.get id
-                    modalview = @_showScheduleModal @singleModule
-                    @show modalview, region: App.dialogRegion
+                        @listenTo modalview, "save:scheduled:date", @_saveSchedule
 
-                    @listenTo modalview, "save:scheduled:date", @_saveTrainingStatus
+                    @listenTo @view, "fetch:chapters:or:sections", (parentID, filterType) =>
+                        chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
+                        App.execute "when:fetched", chaptersOrSections, =>
+                            @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType
 
 
-            _saveTrainingStatus: (id, date)=>
+            _saveSchedule: (id, date)=>
 
                 singleModule = @contentGroupsCollection.get id
 
@@ -56,14 +67,17 @@ define ['app'
 
             _getContentGroupsListingView: (collection)=>
                 new View.TakeClassTextbookModules.ContentGroupsView
-                    collection: collection
-                    mode: @mode
+                    collection          : collection
+                    mode                : @mode
+                    chaptersCollection  : @chaptersCollection
+                    fullCollection      : collection.clone()
+
                     templateHelpers:
                         showTextbookName: =>
                             @textbook.get 'name'
 
                         showModulesHeading:=>
-                            console.log @mode
+
                             headingString='<span class="semi-bold">All</span> Modules'
 
                             if @mode is 'training'
@@ -78,22 +92,22 @@ define ['app'
         class ScheduleModalView extends Marionette.ItemView
 
             template: '<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            					<div class="modal-dialog">
-            					  <div class="modal-content">
-            						<div class="modal-header">
-            						  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            						  <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
-            						</div>
-            						<div class="modal-body">
-            						  <div data-date-format="yyyy-mm-dd" class="input-append success date">
-            										  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
-            										  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
-            								  </div>
-            								  <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
-            						</div>
-            					  </div>
-            					</div>
-            				</div>'
+                        					<div class="modal-dialog">
+                        					  <div class="modal-content">
+                        						<div class="modal-header">
+                        						  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        						  <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
+                        						</div>
+                        						<div class="modal-body">
+                        						  <div data-date-format="yyyy-mm-dd" class="input-append success date">
+                        										  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
+                        										  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
+                        								  </div>
+                        								  <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
+                        						</div>
+                        					  </div>
+                        					</div>
+                        				</div>'
 
             events:
                 'click .btn-success': 'saveScheduledDate'
@@ -126,3 +140,8 @@ define ['app'
                 if scheduledDate isnt ''
                     @trigger "save:scheduled:date", dataID, scheduledDate
 
+
+
+        # set handlers
+        App.commands.setHandler "show:teaching:modules:app", (opt = {})->
+            new View.textbookModulesController opt

@@ -3,7 +3,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-modules/modules-listing/templates/content-modules-list-tmpl.html'], function(App, contentListTpl) {
-  return App.module("ContentModulesApp.GroupListing.Views", function(Views, App, Backbone, Marionette, $, _) {
+  return App.module("ContentModulesApp.ModulesListing.Views", function(Views, App, Backbone, Marionette, $, _) {
     var EmptyView, ListItemView;
     ListItemView = (function(_super) {
       __extends(ListItemView, _super);
@@ -18,7 +18,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<!--<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td>--> <td>{{name}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
+      ListItemView.prototype.template = '<!--<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td>--> <td>{{name}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
 
       ListItemView.prototype.serializeData = function() {
         var data, _ref;
@@ -53,15 +53,15 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
           }
         };
         data.statusMessage = function() {
-          if (data.status === 'underreview') {
+          if (data.post_status === 'underreview') {
             return '<span class="label label-important">Under Review</span>';
-          } else if (data.status === 'publish') {
+          } else if (data.post_status === 'publish') {
             return '<span class="label label-info">Published</span>';
-          } else if (data.status === 'archive') {
+          } else if (data.post_status === 'archive') {
             return '<span class="label label-success">Archived</span>';
           }
         };
-        if ((_ref = data.status) === 'publish' || _ref === 'archive') {
+        if ((_ref = data.post_status) === 'publish' || _ref === 'archive') {
           data.archivedModule = true;
         }
         return data;
@@ -78,13 +78,13 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.cloneModule = function() {
         var groupData, _ref;
-        if ((_ref = this.model.get('status')) === 'publish' || _ref === 'archive') {
+        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
           if (confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?") === true) {
             this.cloneModel = App.request("new:content:group");
             groupData = this.model.toJSON();
             this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
             this.clonedData.name = "" + this.clonedData.name + " clone";
-            this.clonedData.status = "underreview";
+            this.clonedData.post_status = "underreview";
             return App.execute("when:fetched", this.cloneModel, (function(_this) {
               return function() {
                 return _this.cloneModel.save(_this.clonedData, {
@@ -134,45 +134,45 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        return this.$el.attr('colspan', 3);
+        return this.$el.attr('colspan', 6);
       };
 
       return EmptyView;
 
     })(Marionette.ItemView);
-    return Views.GroupsListingView = (function(_super) {
-      __extends(GroupsListingView, _super);
+    return Views.ModulesListingView = (function(_super) {
+      __extends(ModulesListingView, _super);
 
-      function GroupsListingView() {
-        return GroupsListingView.__super__.constructor.apply(this, arguments);
+      function ModulesListingView() {
+        return ModulesListingView.__super__.constructor.apply(this, arguments);
       }
 
-      GroupsListingView.prototype.template = contentListTpl;
+      ModulesListingView.prototype.template = contentListTpl;
 
-      GroupsListingView.prototype.className = 'tiles white grid simple vertical green';
+      ModulesListingView.prototype.className = 'row';
 
-      GroupsListingView.prototype.itemView = ListItemView;
+      ModulesListingView.prototype.itemView = ListItemView;
 
-      GroupsListingView.prototype.emptyView = EmptyView;
+      ModulesListingView.prototype.emptyView = EmptyView;
 
-      GroupsListingView.prototype.itemViewContainer = '#list-content-pieces';
+      ModulesListingView.prototype.itemViewContainer = '#list-content-pieces';
 
-      GroupsListingView.prototype.itemViewOptions = function() {
+      ModulesListingView.prototype.itemViewOptions = function() {
         return {
           textbooksCollection: this.textbooks,
           chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
         };
       };
 
-      GroupsListingView.prototype.events = {
+      ModulesListingView.prototype.events = {
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         },
         'change #check_all_div': 'checkAll',
-        'change #content-status-filter': 'setFilteredContent'
+        'change #content-post-status-filter': 'setFilteredContent'
       };
 
-      GroupsListingView.prototype.initialize = function() {
+      ModulesListingView.prototype.initialize = function() {
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
         this.textbooks = new Array();
         return this.textbooksCollection.each((function(_this) {
@@ -185,21 +185,19 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         })(this));
       };
 
-      GroupsListingView.prototype.onShow = function() {
-        var pagerOptions, textbookFiltersHTML;
-        textbookFiltersHTML = $.showTextbookFilters(this.textbooksCollection);
+      ModulesListingView.prototype.onShow = function() {
+        var textbookFiltersHTML;
+        textbookFiltersHTML = $.showTextbookFilters({
+          textbooks: this.textbooksCollection
+        });
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
         this.$el.find(".select2-filters").select2();
-        $('#content-pieces-table').tablesorter();
-        pagerOptions = {
-          container: $(".pager"),
-          output: '{startRow} to {endRow} of {totalRows}'
-        };
-        return $('#content-pieces-table').tablesorterPager(pagerOptions);
+        this.$el.find('#content-pieces-table').tablesorter();
+        return this.onUpdatePager();
       };
 
-      GroupsListingView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
+      ModulesListingView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
         switch (filterType) {
           case 'textbooks-filter':
             $.populateChapters(filteredCollection, this.$el);
@@ -213,19 +211,14 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         return this.setFilteredContent();
       };
 
-      GroupsListingView.prototype.setFilteredContent = function() {
-        var filtered_data, pagerOptions;
+      ModulesListingView.prototype.setFilteredContent = function() {
+        var filtered_data;
         filtered_data = $.filterTableByTextbooks(this);
         this.collection.set(filtered_data);
-        $("#content-pieces-table").trigger("updateCache");
-        pagerOptions = {
-          container: $(".pager"),
-          output: '{startRow} to {endRow} of {totalRows}'
-        };
-        return $('#content-pieces-table').tablesorterPager(pagerOptions);
+        return this.onUpdatePager();
       };
 
-      GroupsListingView.prototype.checkAll = function() {
+      ModulesListingView.prototype.checkAll = function() {
         if (this.$el.find('#check_all').is(':checked')) {
           return this.$el.find('.table-striped .tab_checkbox').trigger('click').prop('checked', true);
         } else {
@@ -233,7 +226,17 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         }
       };
 
-      return GroupsListingView;
+      ModulesListingView.prototype.onUpdatePager = function() {
+        var pagerOptions;
+        this.$el.find("#content-pieces-table").trigger("updateCache");
+        pagerOptions = {
+          container: this.$el.find(".pager"),
+          output: '{startRow} to {endRow} of {totalRows}'
+        };
+        return this.$el.find("#content-pieces-table").tablesorterPager(pagerOptions);
+      };
+
+      return ModulesListingView;
 
     })(Marionette.CompositeView);
   });

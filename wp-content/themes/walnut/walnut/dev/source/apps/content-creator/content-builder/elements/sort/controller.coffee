@@ -1,84 +1,96 @@
 define ['app'
-		'apps/content-creator/content-builder/element/controller'
-		'apps/content-creator/content-builder/elements/sort/views'],
-		(App,Element)->
+        'apps/content-creator/content-builder/element/controller'
+        'apps/content-creator/content-builder/elements/sort/views'],
+(App, Element)->
+    App.module "ContentCreator.ContentBuilder.Element.Sort", (Sort, App, Backbone, Marionette, $, _)->
+        class Sort.Controller extends Element.Controller
 
-			App.module "ContentCreator.ContentBuilder.Element.Sort" ,(Sort, App, Backbone, Marionette,$, _)->
+            initialize : (options)->
+                @eventObj = options.eventObj
 
-				class Sort.Controller extends Element.Controller
+                _.defaults options.modelData,
+                    marks : 1
+                    element : 'Sort'
+                    optioncount : 2
+                    elements : [
+                        { optionNo : _.uniqueId(), index : 1 },
+                        { optionNo : _.uniqueId(), index : 2 }
+                    ]
+                    bg_color : '#ffffff'
+                    bg_opacity : 1
+                    height : 40
 
-					initialize : (options)->
-						@eventObj = options.eventObj
+                super options
 
-						_.defaults options.modelData,
-							marks : 1
-							element : 'Sort'
-							optioncount : 2
-							elements 	:[{optionNo:_.uniqueId(),index:1},{optionNo:_.uniqueId(),index:2}]
-							bg_color : '#ffffff'
-							bg_opacity : 1
-							height : 40
+                @layout.model.on 'change:optioncount', @_changeOptionCount
 
-						super options
+            renderElement : ->
+                optionsObj = @layout.model.get 'elements'
 
-						@layout.model.on 'change:optioncount', @_changeOptionCount
+                console.log optionsObj
 
-					renderElement : ->
-							optionsObj = @layout.model.get 'elements'
-							# if the object is a collection then keep as it is 
-							if optionsObj instanceof Backbone.Collection
-								optionCollection = optionsObj
-							# else convert it to collection and set it to mcq model
-							else
-								optionCollection = App.request "create:new:option:collection" , optionsObj
-								@layout.model.set 'elements',optionCollection
+                @_parseOptions optionsObj
 
-							# get the view 
-							@view = view = @_getSortView optionCollection
+                optionCollection = App.request "create:new:option:collection", optionsObj
+                optionCollection.comparator = 'index'
+                optionCollection.sort()
+                @layout.model.set 'elements', optionCollection
 
-							# listen to show event, and trigger show property box event
-							# listen to show property box event and show the property by passing the current model
-							@listenTo view, 'show show:this:sort:properties',=>
-								App.execute "show:question:properties", 
-											model : @layout.model
+                # get the view
+                @view = @_getSortView optionCollection
 
-							# # on show disable all question elements in d element box
-							# @listenTo view, "show",=>
-							# 	@eventObj.vent.trigger "question:dropped"
+                # listen to show event, and trigger show property box event
+                # listen to show property box event and show the property by passing the current model
+                @listenTo @view, 'show show:this:sort:properties', =>
+                    App.execute "show:question:properties",
+                        model : @layout.model
 
-							# show the view
-							@layout.elementRegion.show view
+                # # on show disable all question elements in d element box
+                # @listenTo view, "show",=>
+                # 	@eventObj.vent.trigger "question:dropped"
 
-					_getSortView : (collection)->		
-							new Sort.Views.SortView
-									collection : collection
-									sort_model : @layout.model
+                # show the view
+                @layout.elementRegion.show @view
 
-					# on delete remove the collection from the model 
-					# coz the model cant be deleted with a collection in it
-					deleteElement:(model)->
-							model.set('elements','')
-							delete model.get 'elements'
-							model.destroy()
-							App.execute "close:question:properties"
-							# # on delete enable all question elements in d element box
-							# @eventObj.vent.trigger "question:removed"
+            _getSortView : (collection)->
+                new Sort.Views.SortView
+                    collection : collection
+                    sort_model : @layout.model
+
+            _parseOptions:(optionsObj)->
+                _.each optionsObj,(option)->
+                    option.optionNo = parseInt option.optionNo if option.optionNo?
+                    option.marks = parseInt option.marks if option.marks?
+                    option.index = parseInt option.index if option.index?
 
 
-					# on change of optionNo attribute in the model 
-					# change the number of options
-					_changeOptionCount:(model,num)=>
-							oldval = model.previous('optioncount')
-							newval = num
-							# if greater then previous then add option
-							if oldval<newval
-								until oldval is newval
-									oldval++
-									model.get('elements').push({optionNo:_.uniqueId(),index:oldval})
-							# else remove options
-							if oldval>newval
-								until oldval is newval
-									model.get('elements').pop()#remove model.get('elements').where({index:oldval})[0]
-									oldval--
 
-							@renderElement()
+            # on change of optionNo attribute in the model
+            # change the number of options
+            _changeOptionCount : (model, num)=>
+                oldval = model.previous('optioncount')
+                newval = num
+                # if greater then previous then add option
+                if oldval < newval
+                    until oldval is newval
+                        oldval++
+                        model.get('elements').push({ optionNo : _.uniqueId(), index : oldval })
+                # else remove options
+                if oldval > newval
+                    until oldval is newval
+                        model.get('elements').pop() #remove model.get('elements').where({index:oldval})[0]
+                        oldval--
+#                @view.triggerMethod 'close'
+#                @layout.elementRegion.show @view
+
+
+                # on delete remove the collection from the model
+                # coz the model cant be deleted with a collection in it
+            deleteElement : (model)->
+                model.set('elements', '')
+                delete model.get 'elements'
+                console.log model.get 'elements'
+                super model
+                App.execute "close:question:properties"
+                # # on delete enable all question elements in d element box
+                # @eventObj.vent.trigger "question:removed"

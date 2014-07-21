@@ -36,23 +36,23 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.renderElement = function() {
-        var optionCollection, optionsObj, view;
+        var optionCollection, optionsObj;
         optionsObj = this.layout.model.get('elements');
-        if (optionsObj instanceof Backbone.Collection) {
-          optionCollection = optionsObj;
-        } else {
-          optionCollection = App.request("create:new:option:collection", optionsObj);
-          this.layout.model.set('elements', optionCollection);
-        }
-        this.view = view = this._getSortView(optionCollection);
-        this.listenTo(view, 'show show:this:sort:properties', (function(_this) {
+        console.log(optionsObj);
+        this._parseOptions(optionsObj);
+        optionCollection = App.request("create:new:option:collection", optionsObj);
+        optionCollection.comparator = 'index';
+        optionCollection.sort();
+        this.layout.model.set('elements', optionCollection);
+        this.view = this._getSortView(optionCollection);
+        this.listenTo(this.view, 'show show:this:sort:properties', (function(_this) {
           return function() {
             return App.execute("show:question:properties", {
               model: _this.layout.model
             });
           };
         })(this));
-        return this.layout.elementRegion.show(view);
+        return this.layout.elementRegion.show(this.view);
       };
 
       Controller.prototype._getSortView = function(collection) {
@@ -62,15 +62,22 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         });
       };
 
-      Controller.prototype.deleteElement = function(model) {
-        model.set('elements', '');
-        delete model.get('elements');
-        model.destroy();
-        return App.execute("close:question:properties");
+      Controller.prototype._parseOptions = function(optionsObj) {
+        return _.each(optionsObj, function(option) {
+          if (option.optionNo != null) {
+            option.optionNo = parseInt(option.optionNo);
+          }
+          if (option.marks != null) {
+            option.marks = parseInt(option.marks);
+          }
+          if (option.index != null) {
+            return option.index = parseInt(option.index);
+          }
+        });
       };
 
       Controller.prototype._changeOptionCount = function(model, num) {
-        var newval, oldval;
+        var newval, oldval, _results;
         oldval = model.previous('optioncount');
         newval = num;
         if (oldval < newval) {
@@ -83,12 +90,21 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           }
         }
         if (oldval > newval) {
+          _results = [];
           while (oldval !== newval) {
             model.get('elements').pop();
-            oldval--;
+            _results.push(oldval--);
           }
+          return _results;
         }
-        return this.renderElement();
+      };
+
+      Controller.prototype.deleteElement = function(model) {
+        model.set('elements', '');
+        delete model.get('elements');
+        console.log(model.get('elements'));
+        Controller.__super__.deleteElement.call(this, model);
+        return App.execute("close:question:properties");
       };
 
       return Controller;

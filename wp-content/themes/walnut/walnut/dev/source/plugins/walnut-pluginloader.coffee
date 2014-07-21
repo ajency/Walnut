@@ -33,8 +33,10 @@ define [
     'checkbox'
     'screwbuttons'
     'videojs'
+    'videojsplaylist'
     'panzer'
     'mmenu'
     'timerplugin'
     'countdowntimer'
+    'spinedit'
 ], ->

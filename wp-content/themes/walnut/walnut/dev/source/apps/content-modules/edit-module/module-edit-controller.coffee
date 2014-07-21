@@ -1,7 +1,7 @@
 define ['app'
         'controllers/region-controller'
         'apps/content-modules/edit-module/module-description/description-app'
-        'apps/content-modules/edit-module/content-selection/content-selection-app'
+        'apps/content-modules/edit-module/content-selection/app'
         'apps/content-modules/edit-module/content-display/content-display-app'], (App, RegionController)->
     App.module "ContentModulesApp.Edit", (Edit, App)->
         class Edit.GroupController extends RegionController
@@ -58,10 +58,12 @@ define ['app'
                 new ContentGroupEditLayout
 
             _showContentSelectionApp : (model)=>
+
+
                 @contentGroupCollection = App.request "get:content:pieces:of:group", model
 
                 App.execute "when:fetched", @contentGroupCollection, =>
-                    if model.get('status') is 'underreview'
+                    if model.get('post_status') is 'underreview'
                         App.execute "show:content:selectionapp",
                             region : @layout.contentSelectionRegion
                             model : model

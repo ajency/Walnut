@@ -11,61 +11,66 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       function textbookModulesController() {
         this._showScheduleModal = __bind(this._showScheduleModal, this);
         this._getContentGroupsListingView = __bind(this._getContentGroupsListingView, this);
-        this._saveTrainingStatus = __bind(this._saveTrainingStatus, this);
+        this._saveSchedule = __bind(this._saveSchedule, this);
         return textbookModulesController.__super__.constructor.apply(this, arguments);
       }
 
       textbookModulesController.prototype.initialize = function(opts) {
-        var textbookID, view;
+        var textbookID;
         textbookID = opts.textbookID, this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
-        this.textbook = App.request("get:textbook:by:id", textbookID);
-        this.contentGroupsCollection = App.request("get:content:groups", {
-          'textbook': textbookID,
-          'division': this.division,
-          'module_status': 'publish,archive'
+        App.execute("show:headerapp", {
+          region: App.headerRegion
         });
-        this.view = view = this._getContentGroupsListingView(this.contentGroupsCollection);
-        App.execute("when:fetched", this.textbook, (function(_this) {
+        App.execute("show:leftnavapp", {
+          region: App.leftNavRegion
+        });
+        this.textbook = App.request("get:textbook:by:id", textbookID);
+        if (this.mode === 'training') {
+          this.contentGroupsCollection = App.request("get:content:groups", {
+            'textbook': textbookID,
+            'division': this.division
+          });
+        } else {
+          this.contentGroupsCollection = App.request("get:content:groups", {
+            'textbook': textbookID,
+            'division': this.division
+          });
+        }
+        this.chaptersCollection = App.request("get:chapters", {
+          'parent': textbookID
+        });
+        return App.execute("when:fetched", [this.chaptersCollection, this.contentGroupsCollection, this.textbook], (function(_this) {
           return function() {
-            var breadcrumb_items, textbookName;
-            textbookName = _this.textbook.get('name');
-            breadcrumb_items = {
-              'items': [
-                {
-                  'label': 'Dashboard',
-                  'link': '#teachers/dashboard'
-                }, {
-                  'label': 'Take Class',
-                  'link': '#teachers/take-class/' + _this.classID + '/' + _this.division
-                }, {
-                  'label': textbookName,
-                  'link': 'javascript:;',
-                  'active': 'active'
-                }
-              ]
-            };
-            App.execute("update:breadcrumb:model", breadcrumb_items);
-            return _this.show(_this.view, {
+            var view;
+            _this.view = view = _this._getContentGroupsListingView(_this.contentGroupsCollection);
+            _this.show(_this.view, {
               loading: true
+            });
+            _this.listenTo(_this.view, {
+              "schedule:training": function(id) {
+                var modalview;
+                _this.singleModule = _this.contentGroupsCollection.get(id);
+                modalview = _this._showScheduleModal(_this.singleModule);
+                _this.show(modalview, {
+                  region: App.popupRegion
+                });
+                return _this.listenTo(modalview, "save:scheduled:date", _this._saveSchedule);
+              }
+            });
+            return _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
+              var chaptersOrSections;
+              chaptersOrSections = App.request("get:chapters", {
+                'parent': parentID
+              });
+              return App.execute("when:fetched", chaptersOrSections, function() {
+                return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
+              });
             });
           };
         })(this));
-        return this.listenTo(this.view, {
-          "schedule:training": (function(_this) {
-            return function(id) {
-              var modalview;
-              _this.singleModule = _this.contentGroupsCollection.get(id);
-              modalview = _this._showScheduleModal(_this.singleModule);
-              _this.show(modalview, {
-                region: App.dialogRegion
-              });
-              return _this.listenTo(modalview, "save:scheduled:date", _this._saveTrainingStatus);
-            };
-          })(this)
-        });
       };
 
-      textbookModulesController.prototype._saveTrainingStatus = function(id, date) {
+      textbookModulesController.prototype._saveSchedule = function(id, date) {
         var data, first_content_piece, singleModule;
         singleModule = this.contentGroupsCollection.get(id);
         first_content_piece = _.first(singleModule.get('content_pieces'));
@@ -84,6 +89,8 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
         return new View.TakeClassTextbookModules.ContentGroupsView({
           collection: collection,
           mode: this.mode,
+          chaptersCollection: this.chaptersCollection,
+          fullCollection: collection.clone(),
           templateHelpers: {
             showTextbookName: (function(_this) {
               return function() {
@@ -93,7 +100,6 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
             showModulesHeading: (function(_this) {
               return function() {
                 var headingString;
-                console.log(_this.mode);
                 headingString = '<span class="semi-bold">All</span> Modules';
                 if (_this.mode === 'training') {
                   headingString = '<span class="semi-bold">Practice</span> Modules';
@@ -114,7 +120,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       return textbookModulesController;
 
     })(RegionController);
-    return ScheduleModalView = (function(_super) {
+    ScheduleModalView = (function(_super) {
       __extends(ScheduleModalView, _super);
 
       function ScheduleModalView() {
@@ -161,5 +167,11 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       return ScheduleModalView;
 
     })(Marionette.ItemView);
+    return App.commands.setHandler("show:teaching:modules:app", function(opt) {
+      if (opt == null) {
+        opt = {};
+      }
+      return new View.textbookModulesController(opt);
+    });
   });
 });

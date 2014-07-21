@@ -1,7 +1,7 @@
 define ['app'
         'text!apps/content-modules/modules-listing/templates/content-modules-list-tmpl.html'
 ], (App, contentListTpl)->
-    App.module "ContentModulesApp.GroupListing.Views", (Views, App, Backbone, Marionette, $, _)->
+    App.module "ContentModulesApp.ModulesListing.Views", (Views, App, Backbone, Marionette, $, _)->
         class ListItemView extends Marionette.ItemView
 
             tagName : 'tr'
@@ -17,7 +17,7 @@ define ['app'
                         <td>{{chapterName}}</td>
                         <td>{{durationRounded}} {{minshours}}</td>
                         <td>{{&statusMessage}}</td>
-                        <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
+                        <td><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
                             <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a>
                         {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>'
 
@@ -43,14 +43,14 @@ define ['app'
                         data.duration
 
                 data.statusMessage = ->
-                    if data.status is 'underreview'
+                    if data.post_status is 'underreview'
                         return '<span class="label label-important">Under Review</span>'
-                    else if data.status is 'publish'
+                    else if data.post_status is 'publish'
                         return '<span class="label label-info">Published</span>'
-                    else if data.status is 'archive'
+                    else if data.post_status is 'archive'
                         return '<span class="label label-success">Archived</span>'
 
-                data.archivedModule = true if data.status in ['publish', 'archive']
+                data.archivedModule = true if data.post_status in ['publish', 'archive']
 
                 data
 
@@ -62,14 +62,14 @@ define ['app'
                 @chapters = options.chaptersCollection
 
             cloneModule :->
-                if @model.get('status') in ['publish','archive']
+                if @model.get('post_status') in ['publish','archive']
                     if confirm("Are you sure you want to clone '#{@model.get('name')}' ?") is true
                         @cloneModel = App.request "new:content:group"
                         groupData = @model.toJSON()
                         @clonedData = _.omit groupData,
                           ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
                         @clonedData.name = "#{@clonedData.name} clone"
-                        @clonedData.status = "underreview"
+                        @clonedData.post_status = "underreview"
 
                         App.execute "when:fetched", @cloneModel, =>
                             @cloneModel.save @clonedData,
@@ -99,13 +99,13 @@ define ['app'
             tagName: 'td'
 
             onShow:->
-                @$el.attr 'colspan',3
+                @$el.attr 'colspan',6
 
-        class Views.GroupsListingView extends Marionette.CompositeView
+        class Views.ModulesListingView extends Marionette.CompositeView
 
             template : contentListTpl
 
-            className : 'tiles white grid simple vertical green'
+            className : 'row'
 
             itemView : ListItemView
 
@@ -122,7 +122,7 @@ define ['app'
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
                 'change #check_all_div'     : 'checkAll'
-                'change #content-status-filter'  : 'setFilteredContent'
+                'change #content-post-status-filter'  : 'setFilteredContent'
 
             initialize : ->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
@@ -134,7 +134,7 @@ define ['app'
 
             onShow : ->
 
-                textbookFiltersHTML= $.showTextbookFilters @textbooksCollection
+                textbookFiltersHTML= $.showTextbookFilters textbooks: @textbooksCollection
                 @fullCollection = Marionette.getOption @, 'fullCollection'
 
                 @$el.find '#textbook-filters'
@@ -143,13 +143,10 @@ define ['app'
                 @$el.find ".select2-filters"
                 .select2()
 
-                $('#content-pieces-table').tablesorter();
+                @$el.find '#content-pieces-table'
+                .tablesorter();
 
-                pagerOptions =
-                    container : $(".pager")
-                    output : '{startRow} to {endRow} of {totalRows}'
-
-                $('#content-pieces-table').tablesorterPager pagerOptions
+                @onUpdatePager()
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
@@ -167,12 +164,7 @@ define ['app'
 
                 @collection.set filtered_data
 
-                $("#content-pieces-table").trigger "updateCache"
-                pagerOptions =
-                    container : $(".pager")
-                    output : '{startRow} to {endRow} of {totalRows}'
-
-                $('#content-pieces-table').tablesorterPager pagerOptions
+                @onUpdatePager()
 
             checkAll: ->
                 if @$el.find '#check_all'
@@ -184,3 +176,15 @@ define ['app'
                 else
                     @$el.find '.table-striped .tab_checkbox'
                     .removeAttr 'checked'
+
+
+            onUpdatePager:->
+
+                @$el.find "#content-pieces-table"
+                .trigger "updateCache"
+                pagerOptions =
+                    container : @$el.find ".pager"
+                    output : '{startRow} to {endRow} of {totalRows}'
+
+                @$el.find "#content-pieces-table"
+                .tablesorterPager pagerOptions

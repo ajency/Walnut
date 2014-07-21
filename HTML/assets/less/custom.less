@@ -287,6 +287,14 @@ textarea.error, .select2-choice.error {
 	margin: 4px 4px 4px 0;
 }
 
+.textbook-filter, .selectFilter{
+	width: 160px;
+	margin-right: 5px;
+	&:last-child{
+		margin-right: 0;
+	}
+}
+
 #breadcrumb-region{
 	display: none;
 }
@@ -297,10 +305,37 @@ textarea.error, .select2-choice.error {
 	}
 }
 
+.tablesorter-header-inner{
+	font-size: 14px;
+	cursor: pointer;
+}
+
+#content-pieces-table{
+	th:first-child{
+		width: 28%;
+	}
+	th:last-child a{
+		text-decoration: underline;
+	}
+}
+
+#take-class-modules.takeClass{
+	th:nth-child(3){
+		width: 100px;
+	}
+	th:last-child{
+		width: 40%;
+	}
+}
+
+.table-fixed-layout td.cpHeight{
+	white-space: normal;
+}
+
 /*Theme Modifications*/
 body{
-	font-size: 18px;
-	font-weight: bold;
+	font-size: 20px;
+	font-weight: 600;
 }
 
 select{
@@ -322,7 +357,13 @@ label, input, button, select, textarea{
 .label{
 	font-size: 14px;
 	display: inline-block;
-	padding: 6px 9px;
+	padding: 7px 9px;
+	min-width: 100px;
+	border-radius: 0;
+	&.tag.label-info{
+		min-width: 0;
+		color: @color-info;
+	}
 }
 
 .alert{
@@ -372,7 +413,9 @@ ol {
 	font-size: 16px;
 }
 .table td{
-	font-size: 15px;
+	font-size: 16px;
+	font-weight: 400;
+	padding: 14px 12px !important;
 }
 
 .progress{
@@ -382,6 +425,13 @@ ol {
 		//color: darken(@dash-grey, 25%);
 		//font-weight: bold;
 		border-radius: 0;
+	}
+}
+
+
+.teacher-app{
+	.grid{
+		background-color: transparent !important;
 	}
 }
 
@@ -457,7 +507,7 @@ select{
 				font-weight: bold;
 			}
 			& > li > a{
-				padding: 5px 20px 15px !important;
+				padding: 5px 10px 10px!important;
 				font-size: 28px;
 				color: white;
 			}
@@ -480,4 +530,108 @@ select{
 .panzer-light .player{
 	background: @preview-grey;
 	border: none;
+}
+
+/*Toggle switch for app login*/
+.onoffswitch {
+    position: relative;
+    width: 120px;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select: none;
+    & > *{
+    	-webkit-overflow-scrolling: touch;
+		-webkit-transform: translateZ(0px);
+		-webkit-transform: translate3d(0,0,0);
+    }
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 0px solid @preview-grey;
+    border-radius: 0px;
+}
+.onoffswitch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s;
+    -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s;
+    transition: margin 0.3s ease-in 0s;
+    & > span {
+        display: block;
+        float: left;
+        position: relative;
+        width: 50%;
+        height: 30px;
+        padding: 0;
+        line-height: 30px;
+        font-size: 15px;
+        color: white;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .onoffswitch-active {
+        padding-left: 10px;
+        background-color: darken(@body-bg, 15%);
+        color: @color-white;
+    }
+    .onoffswitch-inactive {
+        padding-right: 10px;
+        background-color: darken(@body-bg, 15%);
+        color: @color-white;
+        text-align: right;
+    }
+}
+.onoffswitch-switch {
+    display: block;
+    width: 50px;
+    margin: 0px;
+    text-align: center;
+    border: 0px solid @preview-grey;
+    border-radius: 0px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+.onoffswitch-active {
+    .onoffswitch-switch {
+        background: @color-info;
+        left: 0;
+    }
+    .onoffswitch-switch:before {
+        content: " ";
+        position: absolute;
+        top: 0;
+        left: 50px;
+        border-style: solid;
+        border-color: @color-info transparent transparent @color-info;
+        border-width: 15px 12px;
+    }
+}
+.onoffswitch-inactive {
+    .onoffswitch-switch {
+        background: @dash-grey;
+        right: 0;
+    }
+    .onoffswitch-switch:before {
+        content: " ";
+        position: absolute;
+        top: 0;
+        right: 50px;
+        border-style: solid;
+        border-color: transparent @dash-grey @dash-grey transparent;
+        border-width: 15px 12px;
+    }
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label{
+    .onoffswitch-inner {
+        margin-left: 0;
+    }
 }
