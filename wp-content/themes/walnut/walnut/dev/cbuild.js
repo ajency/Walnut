@@ -39,6 +39,7 @@
         screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
         babysitter: 'plugins/backbone.babysitter.min',
         videojs: 'plugins/video',
+        videojsplaylist : 'plugins/videojs-playlists.min',
         panzer: 'plugins/panzer',
         sidr: 'plugins/jquery.sidr.min',
         mmenu: 'plugins/jquery.mmenu.min.all'
@@ -76,6 +77,7 @@
         tagsinput: ['jquery', 'bootstrap'],
         screwbuttons: ['jquery'],
         babysitter: ['backbone'],
+        videojsplaylist : ['videojs'],
         panzer: ['jquery'],
         sidr: ['jquery'],
         app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']

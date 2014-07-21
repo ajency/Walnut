@@ -378,7 +378,7 @@ function get_status_for_textbook($textbook_id, $division){
         if(sizeof($chapter_status['all_modules']) == sizeof($chapter_status['completed']))
             $completed[]=$chapter;
 
-        elseif(sizeof($chapter_status['in_progress']) > 0)
+        elseif(sizeof($chapter_status['in_progress']) > 0 || sizeof($chapter_status['completed']) > 0)
             $in_progress[]=$chapter;
 
         else

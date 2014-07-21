@@ -1,7 +1,7 @@
 define ['app'
         'text!apps/content-modules/modules-listing/templates/content-modules-list-tmpl.html'
 ], (App, contentListTpl)->
-    App.module "ContentModulesApp.GroupListing.Views", (Views, App, Backbone, Marionette, $, _)->
+    App.module "ContentModulesApp.ModulesListing.Views", (Views, App, Backbone, Marionette, $, _)->
         class ListItemView extends Marionette.ItemView
 
             tagName : 'tr'
@@ -99,13 +99,13 @@ define ['app'
             tagName: 'td'
 
             onShow:->
-                @$el.attr 'colspan',3
+                @$el.attr 'colspan',6
 
-        class Views.GroupsListingView extends Marionette.CompositeView
+        class Views.ModulesListingView extends Marionette.CompositeView
 
             template : contentListTpl
 
-            className : 'tiles white grid simple vertical green'
+            className : 'row'
 
             itemView : ListItemView
 
@@ -143,13 +143,10 @@ define ['app'
                 @$el.find ".select2-filters"
                 .select2()
 
-                $('#content-pieces-table').tablesorter();
+                @$el.find '#content-pieces-table'
+                .tablesorter();
 
-                pagerOptions =
-                    container : $(".pager")
-                    output : '{startRow} to {endRow} of {totalRows}'
-
-                $('#content-pieces-table').tablesorterPager pagerOptions
+                @onUpdatePager()
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
@@ -167,12 +164,7 @@ define ['app'
 
                 @collection.set filtered_data
 
-                $("#content-pieces-table").trigger "updateCache"
-                pagerOptions =
-                    container : $(".pager")
-                    output : '{startRow} to {endRow} of {totalRows}'
-
-                $('#content-pieces-table').tablesorterPager pagerOptions
+                @onUpdatePager()
 
             checkAll: ->
                 if @$el.find '#check_all'
@@ -184,3 +176,15 @@ define ['app'
                 else
                     @$el.find '.table-striped .tab_checkbox'
                     .removeAttr 'checked'
+
+
+            onUpdatePager:->
+
+                @$el.find "#content-pieces-table"
+                .trigger "updateCache"
+                pagerOptions =
+                    container : @$el.find ".pager"
+                    output : '{startRow} to {endRow} of {totalRows}'
+
+                @$el.find "#content-pieces-table"
+                .tablesorterPager pagerOptions
