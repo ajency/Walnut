@@ -1,96 +1,105 @@
 define ["app", 'backbone'], (App, Backbone) ->
-	App.module "Entities.ContentGroup", (ContentGroup, App, Backbone, Marionette, $, _)->
+    App.module "Entities.ContentGroup", (ContentGroup, App, Backbone, Marionette, $, _)->
 
 
-		# content group model
-		class ContentGroup.ItemModel extends Backbone.Model
+        # content group model
+        class ContentGroup.ItemModel extends Backbone.Model
 
-			idAttribute: 'id'
+            idAttribute: 'id'
 
-			defaults:
-				name: ''
-				description: []
-				created_on: ''
-				created_by: ''
-				last_modified_on: ''
-				last_modified_by: ''
-				published_on: ''
-				published_by: ''
-				post_status: ''  # eg. underreview, publish, archive
-				total_minutes: 0
-				duration: 0
-				minshrs: 'mins'
-				term_ids: []
-				content_pieces: []
-				training_date: ''
+            defaults:
+                name: ''
+                description: []
+                created_on: ''
+                created_by: ''
+                last_modified_on: ''
+                last_modified_by: ''
+                published_on: ''
+                published_by: ''
+                post_status: ''  # eg. underreview, publish, archive
+                total_minutes: 0
+                duration: 0
+                minshrs: 'mins'
+                term_ids: []
+                content_pieces: []
+                training_date: ''
 
-			name: 'content-group'
-
-
-
-		# collection of group of content pieces eg. quizzes, teacher training modules etc.
-		class ContentGroup.ItemCollection extends Backbone.Collection
-			model: ContentGroup.ItemModel
-			name: 'content-group'
+            name: 'content-group'
 
 
-			url: ->
-				AJAXURL + '?action=get-content-groups'
 
-			parse: (resp)->
-				resp.data
+        # collection of group of content pieces eg. quizzes, teacher training modules etc.
+        class ContentGroup.ItemCollection extends Backbone.Collection
+            model: ContentGroup.ItemModel
+            name: 'content-group'
 
-		# API
-		API =
-		# get all content groups
-			getContentGroups: (param = {})->
+            url: ->
+                AJAXURL + '?action=get-content-groups'
 
-				contentGroupCollection = new ContentGroup.ItemCollection
+            parse: (resp)->
+                resp.data
 
-				contentGroupCollection.fetch
-					reset: true
-					data: param
+        # API
+        API =
+        # get all content groups
+            getContentGroups: (param = {})->
 
-				contentGroupCollection
+                contentGroupCollection = new ContentGroup.ItemCollection
 
+                contentGroupCollection.fetch
+                    reset: true
+                    data: param
 
-			getContentGroupByID: (id)->
-				contentGroup = contentGroupCollection.get id if contentGroupCollection?
-
-				if not contentGroup
-					contentGroup = new ContentGroup.ItemModel 'id': id
-					contentGroup.fetch()
-				contentGroup
+                contentGroupCollection
 
 
-			saveContentGroupDetails: (data)->
-				contentGroupItem = new ContentGroup.ItemModel data
-				contentGroupItem
+            getContentGroupByID: (id)->
+                contentGroup = contentGroupCollection.get id if contentGroupCollection?
 
-			newContentGroup:->
-				contentGroup = new ContentGroup.ItemModel
+                if not contentGroup
+                    contentGroup = new ContentGroup.ItemModel 'id': id
+                    contentGroup.fetch()
+                contentGroup
 
-			scheduleContentGroup:(data)->
-				questionResponseModel= App.request "save:question:response"
 
-				questionResponseModel.set data
+            saveContentGroupDetails: (data)->
+                contentGroupItem = new ContentGroup.ItemModel data
+                contentGroupItem
 
-				questionResponseModel.save()
-			
-				
+            newContentGroup:->
+                contentGroup = new ContentGroup.ItemModel
 
-		# request handler to get all content groups
-		App.reqres.setHandler "get:content:groups", (opt) ->
-			API.getContentGroups(opt)
+            scheduleContentGroup:(data)->
+                questionResponseModel= App.request "save:question:response"
 
-		App.reqres.setHandler "get:content:group:by:id", (id)->
-			API.getContentGroupByID id
+                questionResponseModel.set data
 
-		App.reqres.setHandler "save:content:group:details", (data)->
-			API.saveContentGroupDetails data
+                questionResponseModel.save()
 
-		App.reqres.setHandler "new:content:group",->
-			API.newContentGroup()
 
-		App.reqres.setHandler "schedule:content:group", (data)->
-			API.scheduleContentGroup data
+            getEmptyModulesCollection: ()->
+
+                contentGroupCollection = new ContentGroup.ItemCollection
+
+
+
+        # request handler to get all content groups
+        App.reqres.setHandler "get:content:groups", (opt) ->
+            API.getContentGroups(opt)
+
+        App.reqres.setHandler "get:content:group:by:id", (id)->
+            API.getContentGroupByID id
+
+        App.reqres.setHandler "save:content:group:details", (data)->
+            API.saveContentGroupDetails data
+
+        App.reqres.setHandler "new:content:group",->
+            API.newContentGroup()
+
+        App.reqres.setHandler "schedule:content:group", (data)->
+            API.scheduleContentGroup data
+
+
+        App.reqres.setHandler "empty:content:modules:collection", ->
+            API.getEmptyModulesCollection()
+

@@ -26,7 +26,7 @@ define ['app'
 
                         App.execute "show:textbook:filters:app",
                             region: @layout.filtersRegion
-                            contentPiecesCollection: @contentPiecesCollection
+                            collection: @contentPiecesCollection
                             model: @model
                             filters : ['textbooks', 'chapters','sections','subsections','content_type']
 

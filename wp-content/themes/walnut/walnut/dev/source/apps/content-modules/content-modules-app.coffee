@@ -1,7 +1,7 @@
 define ['app'
         'apps/content-modules/edit-module/module-edit-controller'
         'apps/content-modules/view-single-module/single-module-controller'
-        'apps/content-modules/modules-listing/modules-listing-controller'
+        'apps/content-modules/modules-listing/app'
 ], (App)->
     App.module "ContentModulesApp", (ContentModulesApp, App)->
 
@@ -46,7 +46,7 @@ define ['app'
                     model: @contentGroupModel
 
             modulesListing: ->
-                new ContentModulesApp.GroupListing.Controller
+                new ContentModulesApp.ModulesListing.ListController
                     region: App.mainContentRegion
 
             takeClassSingleModule: (classID, div, tID, mID)->
