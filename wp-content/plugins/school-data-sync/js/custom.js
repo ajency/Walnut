@@ -18,6 +18,7 @@ jQuery(document).ready(function() {
     
     function init_school_data_sync(referer,lastsync_id,syncstatus){
       console.log(referer);
+       jQuery('#sync-media').prop('disabled', true);
        jQuery.ajax({  
                 type: 'GET',  
                 url: SERVER_AJAXURL,  
@@ -27,13 +28,14 @@ jQuery(document).ready(function() {
                 },  
                 success: function(data, textStatus, XMLHttpRequest){  
                     //alert('Success: ' + data);
-                    jQuery(referer).next().text('Local Sync started...');  
-                    jQuery(referer).prop('disabled', true); 
+                    jQuery(referer).next().text('Local Sync started...'); 
                     //jQuery("#test-div1").append(data);  
                     school_data_sync_start(referer,lastsync_id,syncstatus,data)
                 },  
                 error: function(XMLHttpRequest, textStatus, errorThrown){  
                     console.log(errorThrown);  
+                    jQuery('#sync-media').prop('disabled', false);
+                    jQuery(referer).prop('disabled', false); 
                 }  
 	    }); 
     }
@@ -58,6 +60,7 @@ jQuery(document).ready(function() {
                                //alert('error');
                                jQuery(referer).next().text('File download failed'); 
                                jQuery(referer).prop('disabled', false);
+                               jQuery('#sync-media').prop('disabled', false);
                    }          
         },'json');
         
@@ -83,6 +86,7 @@ jQuery(document).ready(function() {
                                //alert('error');
                                jQuery(referer).next().text('File download failed'); 
                                jQuery(referer).prop('disabled', false);
+                               jQuery('#sync-media').prop('disabled', false);
                    }          
         },'json');
         
@@ -99,19 +103,22 @@ jQuery(document).ready(function() {
                    if(data.code === 'OK'){ 
                                jQuery(referer).next().text('Data Imported successfully!!');
                                jQuery(referer).prop('disabled', false);
+                               jQuery('#sync-media').prop('disabled', false);
                                jQuery(referer).val('Start');
                   
                    } else if(data.code === 'ERROR') {
                                //alert('error');
                                jQuery(referer).next().text('Data Import failed'); 
                                jQuery(referer).prop('disabled', false);
+                               jQuery('#sync-media').prop('disabled', false);
                    }          
         },'json');
         
     }
     
     function resync_school_data_sync(syncreference,lastsync,syncstatus,filepath,lastsync_id){
-        jQuery(syncreference).prop('disabled', true); 
+        jQuery(syncreference).prop('disabled', true);
+        jQuery('#sync-media').prop('disabled', true);
         if(syncstatus == 'downloaded'){
             school_data_sync_import(syncreference,lastsync_id);
         }
@@ -151,6 +158,7 @@ jQuery(document).ready(function() {
                                //alert('error');
                                jQuery(referer).next().text(data.status); 
                                jQuery(referer).prop('disabled', false);
+                               jQuery('#sync-media').prop('disabled', false);
                    }          
         },'json');
     }
@@ -173,6 +181,7 @@ jQuery(document).ready(function() {
                                //alert('error');
                                jQuery(referer).next().text(data.message); 
                                jQuery(referer).prop('disabled', false);
+                               jQuery('#sync-media').prop('disabled', false);
                    }          
         },'json');
     }
@@ -207,6 +216,7 @@ jQuery(document).ready(function() {
         jQuery("#sync-media").on('click',function(){
 
                 jQuery(this).prop('disabled', true); 
+                jQuery('#sync-data').prop('disabled', true);
                 jQuery(this).next().text('Downloading images...');     
                 var referer = jQuery(this);
                 jQuery.post( ajaxurl,
@@ -228,6 +238,7 @@ jQuery(document).ready(function() {
                                        //alert('error');
                                        referer.next().text(data.message); 
                                        referer.prop('disabled', false);
+                                       jQuery('#sync-data').prop('disabled', false);
                            }          
                 },'json');
          
@@ -254,6 +265,7 @@ jQuery(document).ready(function() {
                                        //alert('error');
                                        jQuery(referer).next().text(data.message); 
                                        jQuery(referer).prop('disabled', false);
+                                       jQuery('#sync-data').prop('disabled', false);
                            }          
                 },'json');
         }
@@ -269,11 +281,13 @@ jQuery(document).ready(function() {
                            if(data.code === 'OK'){ 
                                        jQuery(referer).next().text('Video files downloaded...').fadeOut(5000);
                                        jQuery(referer).prop('disabled', false);
+                                       jQuery('#sync-data').prop('disabled', false);
 
                            } else if(data.code === 'ERROR') {
                                        //alert('error');
                                        jQuery(referer).next().text(data.message).fadeOut(5000); 
                                        jQuery(referer).prop('disabled', false);
+                                       jQuery('#sync-data').prop('disabled', false);
                            }          
                 },'json');
         }        
