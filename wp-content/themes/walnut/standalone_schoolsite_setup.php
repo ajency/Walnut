@@ -151,16 +151,6 @@ function add_new_roles_main_site()
     add_role( 'teacher','Teacher');
     add_role( 'parent','Parent');
 
-//    $u = new WP_User( get_current_user_id() );
-//
-//    // Remove role
-//    $u->remove_role( 'administrator' );
-//
-//    // Add role
-//    $u->add_role( 'school-admin' );
-//
-//    if(get_role('administrator')!=NULL)remove_role( 'administrator' );//removes the editor role
-
 }
 add_new_roles_main_site();
 
@@ -187,3 +177,21 @@ function add_pages_to_main_site()
 }
 
 add_pages_to_main_site();
+
+function activate_school_data_sync_plugin($plugin){
+
+    $current = get_option( 'active_plugins' );
+    $plugin = plugin_basename( trim( $plugin ) );
+
+    if ( !in_array( $plugin, $current ) ) {
+        $current[] = $plugin;
+        sort( $current );
+        do_action( 'activate_plugin', trim( $plugin ) );
+        update_option( 'active_plugins', $current );
+        do_action( 'activate_' . trim( $plugin ) );
+        do_action( 'activated_plugin', trim( $plugin) );
+    }
+
+}
+
+activate_school_data_sync_plugin('school-data-sync/school_data_sync.php');
