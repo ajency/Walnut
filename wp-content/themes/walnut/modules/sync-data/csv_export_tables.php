@@ -187,83 +187,22 @@ function get_user_table_query($blog_id){
     if(!$blog_id)
         $blog_id= get_current_blog_id();
 
-    $users_table_queries=array();
+    $blog_users= get_all_user_ids();
 
-    $args= array('role'=>'school-admin','fields'=>'ID');
-    $school_admins= get_users($args);
+    $user_ids= join(',',$blog_users);
 
-    if($school_admins){
-        $school_admin_ids= join(',',$school_admins);
-
-        $users_table_queries[]= $wpdb->prepare(
-            "SELECT u.*, 'school-admin' as role FROM
-                {$wpdb->base_prefix}users u,
-                {$wpdb->base_prefix}usermeta um
-                    WHERE u.ID= um.user_id
-                        AND um.meta_key=%s
-                        AND um.meta_value=%d
-                        AND u.ID in (".$school_admin_ids.")",
-            array('primary_blog', $blog_id)
-        );
-    }
-
-    $args= array('role'=>'student','fields'=>'ID');
-    $students= get_users($args);
-
-    if($students){
-        $student_ids= join(',',$students);
-
-        $users_table_queries[]= $wpdb->prepare(
-            "SELECT u.*, 'student' as role FROM
-                {$wpdb->base_prefix}users u,
-                {$wpdb->base_prefix}usermeta um
-                    WHERE u.ID= um.user_id
-                        AND um.meta_key=%s
-                        AND um.meta_value=%d
-                        AND u.ID in (".$student_ids.")",
-            array('primary_blog', $blog_id)
-        );
-    }
-
-
-    $args= array('role'=>'parent','fields'=>'ID');
-    $parent= get_users($args);
-
-    if($parent){
-        $parent_ids= join(',',$parent);
-
-        $users_table_queries[]= $wpdb->prepare(
-            "SELECT u.*, 'parent' as role FROM
-                {$wpdb->base_prefix}users u,
-                {$wpdb->base_prefix}usermeta um
-                    WHERE u.ID= um.user_id
-                        AND um.meta_key=%s
-                        AND um.meta_value=%d
-                        AND u.ID in (".$parent_ids.")",
-            array('primary_blog', $blog_id)
-        );
-    }
-
-    $args= array('role'=>'teacher','fields'=>'ID');
-    $teacher= get_users($args);
-    if($teacher){
-        $teacher_ids= join(',',$teacher);
-
-        $users_table_queries[]= $wpdb->prepare(
-            "SELECT u.*, 'teacher' as role FROM
-                {$wpdb->base_prefix}users u,
-                {$wpdb->base_prefix}usermeta um
-                    WHERE u.ID= um.user_id
-                        AND um.meta_key=%s
-                        AND um.meta_value=%d
-                        AND u.ID in (".$teacher_ids.")",
-            array('primary_blog', $blog_id)
-        );
-    }
-    $users_table_query = join(' UNION ', $users_table_queries);
-
+    $user_table_query= $wpdb->prepare(
+        "SELECT u.* FROM
+            {$wpdb->base_prefix}users u,
+            {$wpdb->base_prefix}usermeta um
+                WHERE u.ID= um.user_id
+                    AND um.meta_key=%s
+                    AND um.meta_value=%d
+                    AND u.ID in (".$user_ids.")",
+        array('primary_blog', $blog_id)
+    );
     $user_table= array(
-        'query'=> $users_table_query,
+        'query'=> $user_table_query,
         'table_name'=> "{$wpdb->base_prefix}users"
     );
 
@@ -271,13 +210,37 @@ function get_user_table_query($blog_id){
 
 }
 
+function get_all_user_ids(){
+
+    $args= array('role'=>'student','fields'=>'ID');
+    $students= get_users($args);
+
+
+    $args= array('role'=>'teacher','fields'=>'ID');
+    $teacher= get_users($args);
+
+    $args = array('role'=>'parent','fields'=>'ID');
+    $parents= get_users($args);
+
+    $args = array('role'=>'school-admin','fields'=>'ID');
+    $school_admins= get_users($args);
+
+    $users = array_merge($students, $teacher,$parents,$school_admins);
+
+    return $users;
+
+}
+
 function get_usermeta_table_query($blog_id){
 
     global $wpdb;
 
+    $blog_users= get_all_user_ids();
+    $user_ids= join(',',$blog_users);
+
     $user_meta_query = $wpdb->prepare(
         "SELECT * FROM
-            {$wpdb->base_prefix}usermeta",
+            {$wpdb->base_prefix}usermeta WHERE user_id in ($user_ids)",
         array('primary_blog', $blog_id)
     );
 
