@@ -26,7 +26,8 @@ function set_sds_plugin_options() {
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_local_data` (
 			   `id` int(11) NOT NULL primary key AUTO_INCREMENT,
               `file_path` varchar(455) NOT NULL,
-			  `last_sync` datetime NOT NULL,
+              `last_sync` datetime NOT NULL,
+              `server_sync_id` int(11) DEFAULT NULL,
               `meta` TEXT NOT NULL,
               `status` VARCHAR(30) NOT NULL
             )";
