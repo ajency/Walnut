@@ -98,7 +98,7 @@ define(['app'], function(App) {
         return this.$el.find('video')[0].play();
       };
 
-      VideoView.prototype._showMediaManager = function() {
+      VideoView.prototype._showMediaManager = function(e) {
         e.stopPropagation();
         return this.trigger("show:media:manager");
       };

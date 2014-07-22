@@ -104,7 +104,7 @@ define ['app'], (App)->
                 @$el.find('video')[0].play()
 
 
-            _showMediaManager : ->
+            _showMediaManager : (e)->
                 e.stopPropagation()
                 @trigger "show:media:manager"
 
