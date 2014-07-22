@@ -18,7 +18,7 @@ function sds_read_class_divisions_csv_file( $file_path ) {
             sds_sync_class_divisions( $class_divisions_data );
 
         } else {
-            sds_write_to_class_divisions_import_error_log( $class_divisions_data );
+            sds_write_to_import_error_log( $class_divisions_data );
         }
 
     } );
@@ -30,6 +30,9 @@ function sds_validate_class_divisions_csv_row( $class_divisions_data ) {
 
     if (!is_array( $class_divisions_data ))
         return new WP_Error("", "Not a valid record");
+
+    if(! (int) $class_divisions_data[0] )
+        return false;
 
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $class_divisions_data ) !== 3)
@@ -145,6 +148,9 @@ function sds_validate_question_response_csv_row( $question_response_data ) {
     if (!is_array( $question_response_data ))
         return new WP_Error("", "Not a valid record");
 
+    if($question_response_data[0] == 'ref_id')
+        return false;
+
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $question_response_data ) !== 10)
         return new WP_Error("", "Column count for csv row not proper");
@@ -176,7 +182,7 @@ function sds_convert_csv_row_to_question_response_format( $question_response_dat
         'content_piece_id' => $question_response_data[2],
         'collection_id' => $question_response_data[3],
         'division' => $question_response_data[4],
-        'question_response' => $question_response,
+        'question_response' => wp_unslash($question_response),
         'time_taken' => $question_response_data[6],
         'start_date' => $question_response_data[7],
         'end_date' => $question_response_data[8],
@@ -263,6 +269,9 @@ function sds_validate_question_response_meta_csv_row( $question_response_meta_da
     if (!is_array( $question_response_meta_data ))
         return new WP_Error("", "Not a valid record");
 
+    if($question_response_meta_data[0] == 'qr_ref_id')
+        return false;
+
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $question_response_meta_data ) !== 3)
         return new WP_Error("", "Column count for csv row not proper");
@@ -282,7 +291,7 @@ function sds_convert_csv_row_to_question_response_meta_format( $question_respons
     return array(
         'qr_ref_id' => $question_response_meta_data[0],
         'meta_key' => $question_response_meta_data[1],
-        'meta_value' => $question_response_meta_data[2]
+        'meta_value' => wp_unslash($question_response_meta_data[2])
     );
 }
 
@@ -372,6 +381,10 @@ function sds_validate_content_collection_csv_row( $content_collection_data ) {
     if (!is_array( $content_collection_data ))
         return new WP_Error("", "Not a valid record");
 
+
+    if(!(int) $content_collection_data[0])
+        return false;
+
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $content_collection_data ) !== 12)
         return new WP_Error("", "Column count for csv row not proper");
@@ -397,9 +410,9 @@ function sds_convert_csv_row_to_content_collection_format( $content_collection_d
         'last_modified_by' => $content_collection_data[5],
         'published_on' => $content_collection_data[6],
         'published_by' => $content_collection_data[7],
-        'status' => $content_collection_data[8],
+        'post_status' => $content_collection_data[8],
         'type' => $content_collection_data[9],
-        'term_ids' => $content_collection_data[10],
+        'term_ids' => wp_unslash($content_collection_data[10]),
         'duration' => $content_collection_data[11]
     );
 }
@@ -432,7 +445,7 @@ function sds_sync_update_content_collection( $content_collection_data ) {
         $content_collection_data,
         array( 'id' => $content_collection_data['id'] ) );
 
-    
+
 
     return true;
 }
@@ -483,6 +496,9 @@ function sds_validate_collection_meta_csv_row( $collection_meta_data ) {
     if (!is_array( $collection_meta_data ))
         return new WP_Error("", "Not a valid record");
 
+    if(!(int) $collection_meta_data[0] )
+        return false;
+
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $collection_meta_data ) !== 4)
         return new WP_Error("", "Column count for csv row not proper");
@@ -503,7 +519,7 @@ function sds_convert_csv_row_to_collection_meta_format( $collection_meta_data ) 
         'id' => $collection_meta_data[0],
         'collection_id' => $collection_meta_data[1],
         'meta_key' => $collection_meta_data[2],
-        'meta_value' => $collection_meta_data[3]
+        'meta_value' => wp_unslash($collection_meta_data[3])
     );
 }
 
@@ -535,7 +551,7 @@ function sds_sync_update_collection_meta( $collection_meta_data ) {
         $collection_meta_data,
         array( 'id' => $collection_meta_data['id'] ) );
 
-    
+
 
     return true;
 }
@@ -606,7 +622,7 @@ function sds_convert_csv_row_to_options_format( $options_data ) {
     return array(
         'option_id' => $options_data[0],
         'option_name' => $options_data[1],
-        'option_value' => $options_data[2],
+        'option_value' => wp_unslash($options_data[2]),
         'autoload' => $options_data[3]
     );
 }
@@ -639,7 +655,7 @@ function sds_sync_update_options( $options_data ) {
         $options_data,
         array( 'option_id' => $options_data['option_id'] ) );
 
-    
+
 
     return true;
 }
@@ -729,7 +745,7 @@ function sds_convert_csv_row_to_posts_format( $posts_data ) {
         'menu_order' => $posts_data[19],
         'post_type' => $posts_data[20],
         'post_mime_type' => $posts_data[21],
-        'comment_count' => $posts_data[22]		
+        'comment_count' => $posts_data[22]
     );
 }
 
@@ -761,7 +777,7 @@ function sds_sync_update_posts( $posts_data ) {
         $posts_data,
         array( 'ID' => $posts_data['ID'] ) );
 
-    
+
 
     return true;
 }
@@ -827,12 +843,12 @@ function sds_convert_csv_row_to_postmeta_format( $postmeta_data ) {
     // it can be string or array; hence, sanitize if serialize string
     //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
-   
+
     return array(
         'meta_id' => $postmeta_data[0],
         'post_id' => $postmeta_data[1],
         'meta_key' => $postmeta_data[2],
-        'meta_value' => $postmeta_data[3]
+        'meta_value' => wp_unslash($postmeta_data[3])
     );
 }
 
@@ -864,7 +880,7 @@ function sds_sync_update_postmeta( $postmeta_data ) {
         $postmeta_data,
         array( 'meta_id' => $postmeta_data['meta_id'] ) );
 
-    
+
 
     return true;
 }
@@ -966,7 +982,7 @@ function sds_sync_update_term_relationships( $term_relationships_data ) {
         $term_relationships_data,
         array( 'object_id' => $term_relationships_data['object_id'] ) );
 
-    
+
 
     return true;
 }
@@ -1039,7 +1055,7 @@ function sds_convert_csv_row_to_term_taxonomy_format( $term_taxonomy_data ) {
         'taxonomy' => $term_taxonomy_data[2],
         'description' => $term_taxonomy_data[3],
         'parent' => $term_taxonomy_data[4],
-        'count' => $term_taxonomy_data[5]		
+        'count' => $term_taxonomy_data[5]
     );
 }
 
@@ -1071,7 +1087,7 @@ function sds_sync_update_term_taxonomy( $term_taxonomy_data ) {
         $term_taxonomy_data,
         array( 'term_taxonomy_id' => $term_taxonomy_data['term_taxonomy_id'] ) );
 
-    
+
 
     return true;
 }
@@ -1142,7 +1158,7 @@ function sds_convert_csv_row_to_terms_format( $terms_data ) {
         'term_id' => $terms_data[0],
         'name' => $terms_data[1],
         'slug' => $terms_data[2],
-        'term_group' => $terms_data[3]	
+        'term_group' => $terms_data[3]
     );
 }
 
@@ -1174,7 +1190,7 @@ function sds_sync_update_terms( $terms_data ) {
         $terms_data,
         array( 'term_id' => $terms_data['term_id'] ) );
 
-    
+
 
     return true;
 }
@@ -1244,8 +1260,8 @@ function sds_convert_csv_row_to_textbook_relationships_format( $textbook_relatio
     return array(
         'id' => $textbook_relationships_data[0],
         'textbook_id' => $textbook_relationships_data[1],
-        'class_id' => $textbook_relationships_data[2],
-        'tags' => $textbook_relationships_data[3]	
+        'class_id' => wp_unslash($textbook_relationships_data[2]),
+        'tags' => wp_unslash($textbook_relationships_data[3])
     );
 }
 
@@ -1277,7 +1293,7 @@ function sds_sync_update_textbook_relationships( $textbook_relationships_data ) 
         $textbook_relationships_data,
         array( 'id' => $textbook_relationships_data['id'] ) );
 
-    
+
 
     return true;
 }
@@ -1328,6 +1344,9 @@ function sds_validate_usermeta_csv_row( $usermeta_data ) {
     if (!is_array( $usermeta_data ))
         return new WP_Error("", "Not a valid record");
 
+    if($usermeta_data[2] == 'wp_capabilities' || $usermeta_data[2] ==  'wp_user_level' || !(int) $usermeta_data[0])
+        return false;
+
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $usermeta_data ) !== 4)
         return new WP_Error("", "Column count for csv row not proper");
@@ -1344,11 +1363,22 @@ function sds_convert_csv_row_to_usermeta_format( $usermeta_data ) {
     // it can be string or array; hence, sanitize if serialize string
     //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
+    global $wpdb;
+
+    $meta_value = wp_unslash($usermeta_data[3]);
+    $meta_key = $usermeta_data[2];
+
+    if(strpos($usermeta_data[2], 'capabilities'))
+        $meta_key = $wpdb->prefix. 'capabilities';
+
+    if(strpos($usermeta_data[2], 'user_level'))
+        $meta_key = $wpdb->prefix. 'user_level';
+
     return array(
         'umeta_id' => $usermeta_data[0],
         'user_id' => $usermeta_data[1],
-        'meta_key' => $usermeta_data[2],
-        'meta_value' => $usermeta_data[3]	
+        'meta_key' => $meta_key,
+        'meta_value' =>$meta_value
     );
 }
 
@@ -1380,7 +1410,7 @@ function sds_sync_update_usermeta( $usermeta_data ) {
         $usermeta_data,
         array( 'umeta_id' => $usermeta_data['umeta_id'] ) );
 
-    
+
 
     return true;
 }
@@ -1389,11 +1419,12 @@ function sds_usermeta_exists( $usermeta_data ) {
 
     global $wpdb;
 
-    $id= $usermeta_data['umeta_id'];
+    $user_id= $usermeta_data['user_id'];
+    $meta_key= $usermeta_data['meta_key'];
 
     $query = $wpdb->prepare( "SELECT umeta_id FROM {$wpdb->prefix}usermeta
-        WHERE umeta_id like %s",
-        array($id)
+        WHERE user_id = %d AND meta_key like %s",
+        array($user_id, $meta_key)
     );
     $record = $wpdb->get_var( $query );
 
@@ -1431,6 +1462,9 @@ function sds_validate_users_csv_row( $users_data ) {
     if (!is_array( $users_data ))
         return new WP_Error("", "Not a valid record");
 
+    if (!(int) $users_data[0] )
+        return false;
+
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $users_data ) !== 12)
         return new WP_Error("", "Column count for csv row not proper");
@@ -1451,25 +1485,21 @@ function sds_convert_csv_row_to_users_format( $users_data ) {
         'ID' => $users_data[0],
         'user_login' => $users_data[1],
         'user_pass' => $users_data[2],
-        'user_nicename' => $users_data[3],	
-        'user_email' => $users_data[4],	
-        'user_url' => $users_data[5],	
-        'user_registered' => $users_data[6],	
-        'user_activation_key' => $users_data[7],	
-        'user_status' => $users_data[8],	
-        'display_name' => $users_data[9],	
-        'spam' => $users_data[10],	
-        'deleted' => $users_data[11],			
+        'user_nicename' => $users_data[3],
+        'user_email' => $users_data[4],
+        'user_url' => $users_data[5],
+        'user_registered' => $users_data[6],
+        'user_activation_key' => $users_data[7],
+        'user_status' => $users_data[8],
+        'display_name' => $users_data[9],
+        'spam' => $users_data[10],
+        'deleted' => $users_data[11]
     );
 }
 
 function sds_sync_users( $users_data ) {
 
-    if (sds_users_exists( $users_data ))
-        sds_sync_update_users( $users_data );
-
-    else
-        sds_sync_insert_users( $users_data );
+    sds_sync_insert_users( $users_data );
 
 }
 
@@ -1477,10 +1507,20 @@ function sds_sync_insert_users( $users_data ) {
 
     global $wpdb;
 
-    $insert = $wpdb->insert( $wpdb->prefix . "users",
-        $users_data );
+    $data = array(
+        'ID'        =>(int) $users_data['ID'],
+        'user_login'=> $users_data['user_login'],
+        'user_pass' => $users_data['user_pass'],
+        'user_nicename' =>$users_data['user_nicename'],
+        'user_email' =>$users_data['user_email'],
+        'user_registered' =>$users_data['user_registered'],
+        'display_name' =>$users_data['display_name']
+    );
 
-    return $wpdb->insert_id;
+    $insert= $wpdb->insert( $wpdb->prefix . "users",
+        $data );
+
+    return $users_data['ID'];
 }
 
 function sds_sync_update_users( $users_data ) {
@@ -1490,8 +1530,6 @@ function sds_sync_update_users( $users_data ) {
     $wpdb->update( $wpdb->prefix . "users",
         $users_data,
         array( 'ID' => $users_data['ID'] ) );
-
-    
 
     return true;
 }
@@ -1510,5 +1548,3 @@ function sds_users_exists( $users_data ) {
 
     return is_string( $record );
 }
-
-
