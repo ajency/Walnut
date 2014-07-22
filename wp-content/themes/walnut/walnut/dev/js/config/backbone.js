@@ -75,6 +75,12 @@ define(["backbone"], function(Backbone) {
           return collection.set(d);
         });
       }
+      if (collection_name === 'media') {
+        data = _.getListOfMediaByID(opts.ids);
+        data.done(function(d) {
+          return collection.set(d);
+        });
+      }
       return true;
     }
   });
