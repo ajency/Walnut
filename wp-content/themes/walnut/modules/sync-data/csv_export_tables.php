@@ -187,29 +187,83 @@ function get_user_table_query($blog_id){
     if(!$blog_id)
         $blog_id= get_current_blog_id();
 
+    $users_table_queries=array();
+
+    $args= array('role'=>'school-admin','fields'=>'ID');
+    $school_admins= get_users($args);
+
+    if($school_admins){
+        $school_admin_ids= join(',',$school_admins);
+
+        $users_table_queries[]= $wpdb->prepare(
+            "SELECT u.*, 'school-admin' as role FROM
+                {$wpdb->base_prefix}users u,
+                {$wpdb->base_prefix}usermeta um
+                    WHERE u.ID= um.user_id
+                        AND um.meta_key=%s
+                        AND um.meta_value=%d
+                        AND u.ID in (".$school_admin_ids.")",
+            array('primary_blog', $blog_id)
+        );
+    }
+
     $args= array('role'=>'student','fields'=>'ID');
     $students= get_users($args);
 
+    if($students){
+        $student_ids= join(',',$students);
+
+        $users_table_queries[]= $wpdb->prepare(
+            "SELECT u.*, 'student' as role FROM
+                {$wpdb->base_prefix}users u,
+                {$wpdb->base_prefix}usermeta um
+                    WHERE u.ID= um.user_id
+                        AND um.meta_key=%s
+                        AND um.meta_value=%d
+                        AND u.ID in (".$student_ids.")",
+            array('primary_blog', $blog_id)
+        );
+    }
+
+
+    $args= array('role'=>'parent','fields'=>'ID');
+    $parent= get_users($args);
+
+    if($parent){
+        $parent_ids= join(',',$parent);
+
+        $users_table_queries[]= $wpdb->prepare(
+            "SELECT u.*, 'parent' as role FROM
+                {$wpdb->base_prefix}users u,
+                {$wpdb->base_prefix}usermeta um
+                    WHERE u.ID= um.user_id
+                        AND um.meta_key=%s
+                        AND um.meta_value=%d
+                        AND u.ID in (".$parent_ids.")",
+            array('primary_blog', $blog_id)
+        );
+    }
 
     $args= array('role'=>'teacher','fields'=>'ID');
     $teacher= get_users($args);
+    if($teacher){
+        $teacher_ids= join(',',$teacher);
 
-    $users = array_merge($students, $teacher);
+        $users_table_queries[]= $wpdb->prepare(
+            "SELECT u.*, 'teacher' as role FROM
+                {$wpdb->base_prefix}users u,
+                {$wpdb->base_prefix}usermeta um
+                    WHERE u.ID= um.user_id
+                        AND um.meta_key=%s
+                        AND um.meta_value=%d
+                        AND u.ID in (".$teacher_ids.")",
+            array('primary_blog', $blog_id)
+        );
+    }
+    $users_table_query = join(' UNION ', $users_table_queries);
 
-    $user_ids= join(',',$users);
-
-    $user_table_query= $wpdb->prepare(
-        "SELECT u.* FROM
-            {$wpdb->base_prefix}users u,
-            {$wpdb->base_prefix}usermeta um
-                WHERE u.ID= um.user_id
-                    AND um.meta_key=%s
-                    AND um.meta_value=%d
-                    AND u.ID in (".$user_ids.")",
-        array('primary_blog', $blog_id)
-    );
     $user_table= array(
-        'query'=> $user_table_query,
+        'query'=> $users_table_query,
         'table_name'=> "{$wpdb->base_prefix}users"
     );
 
@@ -321,12 +375,12 @@ function get_meta_ids($layout, &$meta_ids)
         foreach ($layout['elements'] as &$column) {
             if($column['elements']){
                 foreach ($column['elements'] as &$ele) {
-                if (in_array($ele['element'],$row_elements)) {
+                    if (in_array($ele['element'],$row_elements)) {
                         $ele['columncount'] = count($ele['elements']);
                         get_meta_ids($ele,$meta_ids);
                     }
-                else
-                    $meta_ids[]= $ele['meta_id'];
+                    else
+                        $meta_ids[]= $ele['meta_id'];
                 }
             }
         }
@@ -516,7 +570,7 @@ function exportMysqlToCsv($table, $sql_query=''){
                 } else
                 {
                     $schema_insert .= $csv_enclosed .
-                        str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $row[$j]) . $csv_enclosed;
+                        str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, stripslashes($row[$j])) . $csv_enclosed;
                 }
             } else
             {

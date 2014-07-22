@@ -78,7 +78,7 @@ define ['app'
 
             _showGradingParameter : ->
 
-                @layout.contentBuilderRegion.reset()
+                $(@layout.contentBuilderRegion.el).find('#myCanvas').hide()
 
                 App.execute 'show:grading:parameter:view',
                     region : @layout.gradingParameterRegion
@@ -86,12 +86,9 @@ define ['app'
 
             _closeGradingParameter :->
 
-                @layout.gradingParameterRegion.reset()
+                $(@layout.contentBuilderRegion.el).find('#myCanvas').show()
 
-                App.execute "show:content:builder",
-                    region : @layout.contentBuilderRegion
-                    contentPieceModel : @contentPieceModel
-                    eventObj : @eventObj
+                @layout.gradingParameterRegion.reset()
 
         class ContentCreatorLayout extends Marionette.Layout
 
