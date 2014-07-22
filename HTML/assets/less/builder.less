@@ -643,7 +643,7 @@
 
 .video-js{
 	background-color: lighten(@preview-grey, 2%);
-	border: 2px solid @body-bg;
+	border-bottom: 1px solid @body-bg;
 }
 
 .playlistToggle{
@@ -655,22 +655,42 @@
 
 .playlistHover{
 	background-color: lighten(@preview-grey, 2%);
-	border: 2px solid @body-bg;
-	border-top: none;
-	padding: 10px 0;
+	// border: 2px solid @body-bg;
+	// border-top: none;
+	padding: 10px 0 0;
+	font-size: 16px;
 }
 .playlist-video{
-	width: 49%;
-	float: left;
-	background-color: @color-white;
-	border: 2px solid @body-bg;	
-	margin: 2px;
-	text-align: center;
+	// width: 49%;
+	// float: left;
+	// background-color: @color-white;
+	border-bottom: 1px solid darken(@preview-grey, 5%);	
+	margin: 2px 0 0;
+	padding: 2px 0 5px;
+	// text-align: center;
 	cursor: pointer;
+	&:before{
+		content: '';
+		margin-right: 22px;
+	}
+	&:last-child{
+		border: none;
+	}
 	&.currentVid{
 		color: @color-info;
-		font-weight: 600;
+		// font-weight: 600;
+		&:before{
+			font-family: 'Glyphicons Halflings';
+			content: "\e072";
+			margin-right: 6px;
+		}
 	}
+}
+
+.vidList{
+	background-color: darken(@preview-grey, 1%);
+	border-top: 1px solid @body-bg;
+	.ease;
 }
 
 /*Editor popup*/

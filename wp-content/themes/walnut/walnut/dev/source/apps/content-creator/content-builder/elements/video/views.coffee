@@ -16,13 +16,16 @@ define ['app'], (App)->
 
                         </video>
                         <div class="clearfix"></div>
-                        <div id="playlist-hover" class="row playlistHover m-l-0 m-r-0" style="z-index:20">
-                            <div class="col-sm-1"><button class="btn btn-info btn-small"><i class="fa fa-list-ul"></i></button></div>
-                            <div class="video-list col-sm-9" id="video-list"></div>
-                            <div class="col-sm-1" id="prev"><button class="btn btn-info btn-small"><i class="fa fa-step-backward"></i></button></div>
-                            <div class="col-sm-1" id="next"><button class="btn btn-info btn-small pull-right"><i class="fa fa-step-forward"></i></button></div>
-
-                         </div>
+                        <div id="playlist-hover" class="playlistHover">
+                            <div class="row m-l-0 m-r-0 p-b-5 m-b-5">
+                                <div class="col-sm-8 nowPlaying"><span class="small text-muted">Now Playing:</span> <span>Current video name comes here</span></div>
+                                <div class="col-sm-4"><button class="btn btn-white btn-small pull-right"><i class="fa fa-list-ul"></i> Playlist</button></div>
+                            </div>
+                            <div class="row m-l-0 m-r-0 vidList animated fadeInRight">
+                                <div class="video-list col-sm-8" id="video-list"></div>
+                                <div class="col-sm-4 p-t-5 m-b-5"><button class="btn btn-info btn-small pull-right" id="next"><i class="fa fa-step-forward"></i></button> <button class="btn btn-info btn-small pull-right m-r-10" id="prev"><i class="fa fa-step-backward"></i></button></div>
+                            </div>
+                        </div>
                             {{/video}}
                         {{#placeholder}}
                             <div class="video-placeholder show-video "><span class="bicon icon-uniF11E"></span>Add Video</div>
