@@ -16,21 +16,11 @@ define ['app'], (App)->
 
                         </video>
                         <div class="clearfix"></div>
-                        <div id="playlist-hover" class="row playlistHover m-l-0 m-r-0" style="z-index:20">
-                            <div class="col-sm-1 show-playlist"><button class="btn btn-info btn-small"><i class="fa fa-list-ul"></i></button></div>
-                            <div class="video-list col-sm-9 playlist-hidden" id="video-list"></div>
-                            <div class="col-sm-1 playlist-hidden" id="prev"><button class="btn btn-info btn-small"><i class="fa fa-step-backward"></i></button></div>
-                            <div class="col-sm-1 playlist-hidden" id="next"><button class="btn btn-info btn-small pull-right"><i class="fa fa-step-forward"></i></button></div>
 
-                         </div>
                             {{/video}}
                         {{#placeholder}}
                             <div class="video-placeholder show-video "><span class="bicon icon-uniF11E"></span>Add Video</div>
                         {{/placeholder}}'
-
-#            <source src="{{videoUrl[0]}}" type="video/mp4" />
-#
-
 
 
                     # override serializeData to set holder property for the view
@@ -41,15 +31,12 @@ define ['app'], (App)->
                     data.placeholder = true
                 else
                     data.video = true
-                    data.videourl = data.videoUrl[0]
+                    data.videourl = data.videoUrls[0]
 
                 data
 
             events:
-                'click .show-video': (e)->
-                    e.stopPropagation()
-                    @trigger "show:media:manager"
-#
+                'click .show-video': '_showMediaManager'
                 'click .show-playlist' : 'togglePlaylist'
                 'click #prev' : '_playPrevVideo'
                 'click #next' : '_playNextVideo'
@@ -63,20 +50,23 @@ define ['app'], (App)->
             onShow: ->
                 return if not @model.get('video_ids').length
 
-
-
-                @videos = @model.get('videoUrl')
+                @videos = @model.get('videoUrls')
                 @index = 0
 
                 @$el.find('video').on 'ended', =>
                     @_playNextVideo()
 
-                @_setVideoList()
+                @_setVideoList() if _.size(@videos) > 1
                 @$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
 
             _setVideoList : ->
-
+                @$el.append('<div id="playlist-hover" class="row playlistHover m-l-0 m-r-0" style="z-index:20">
+                                <div class="col-sm-1 show-playlist"><button class="btn btn-info btn-small"><i class="fa fa-list-ul"></i></button></div>
+                                <div class="video-list col-sm-9 playlist-hidden" id="video-list" style="display: none;"></div>
+                                <div class="col-sm-1 playlist-hidden" id="prev" style="display: none;"><button class="btn btn-info btn-small"><i class="fa fa-step-backward"></i></button></div>
+                                <div class="col-sm-1 playlist-hidden" id="next" style="display: none;"><button class="btn btn-info btn-small pull-right"><i class="fa fa-step-forward"></i></button></div>
+                             </div>')
                 @$el.find('#video-list').empty()
                 _.each @model.get('title'),(title,index)=>
                     @$el.find('#video-list').append("<div class='playlist-video' data-index=#{index}>#{title}</div>")
@@ -112,6 +102,11 @@ define ['app'], (App)->
                 @$el.find('video').attr 'src',@videos[@index]
                 @$el.find('video')[0].load()
                 @$el.find('video')[0].play()
+
+
+            _showMediaManager : ->
+                e.stopPropagation()
+                @trigger "show:media:manager"
 
 
 
