@@ -856,18 +856,6 @@
 .vidList {
   background-color: #f0f0f0;
   border-top: 1px solid #e5e9ec;
-  -webkit-transition: all 0.3s ease-out;
-  /* Chrome 1-25, Safari 3.2+ */
-
-  -moz-transition: all 0.3s ease-out;
-  /* Firefox 4-15 */
-
-  -o-transition: all 0.3s ease-out;
-  /* Opera 10.50–12.00 */
-
-  transition: all 0.3s ease-out;
-  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 /*Editor popup*/
 .cke_dialog_body .cke_dialog_title {
