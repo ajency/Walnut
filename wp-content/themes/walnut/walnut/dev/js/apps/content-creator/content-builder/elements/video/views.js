@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '{{#video}} <video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls> </video> <div class="clearfix"></div> <div id="playlist-hover" class="row" style="position: absolute; background-color: #000000;  z-index:20;  display: none"> <div class="col-sm-2" id="prev"><button>Prev</button></div> <div class="row video-list col-sm-8" id="video-list"></div> <div class="col-sm-2" id="next"><button>Next</button></div> </div> {{/video}} {{#placeholder}} <div class="video-placeholder show-video "><span class="bicon icon-uniF11E"></span>Add Video</div> {{/placeholder}}';
+      VideoView.prototype.template = '{{#video}} <video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls> </video> <div class="clearfix"></div> <div id="playlist-hover" class="row playlistHover m-l-0 m-r-0" style="z-index:20"> <div class="col-sm-1"><button class="btn btn-info btn-small"><i class="fa fa-list-ul"></i></button></div> <div class="video-list col-sm-9" id="video-list"></div> <div class="col-sm-1" id="prev"><button class="btn btn-info btn-small"><i class="fa fa-step-backward"></i></button></div> <div class="col-sm-1" id="next"><button class="btn btn-info btn-small pull-right"><i class="fa fa-step-forward"></i></button></div> </div> {{/video}} {{#placeholder}} <div class="video-placeholder show-video "><span class="bicon icon-uniF11E"></span>Add Video</div> {{/placeholder}}';
 
       VideoView.prototype.mixinTemplateHelpers = function(data) {
         data = VideoView.__super__.mixinTemplateHelpers.call(this, data);
@@ -67,21 +67,13 @@ define(['app'], function(App) {
         return this._setVideoList();
       };
 
-      VideoView.prototype._setPlaylistPosition = function() {
-        var position;
-        position = this.$el.position();
-        return this.$el.find('#playlist-hover').css({
-          'top': position.top + this.$el.height(),
-          'left': position.left + 15,
-          'width': this.$el.width()
-        });
-      };
+      VideoView.prototype._setPlaylistPosition = function() {};
 
       VideoView.prototype._setVideoList = function() {
         this.$el.find('#video-list').empty();
         return _.each(this.model.get('title'), (function(_this) {
           return function(title, index) {
-            return _this.$el.find('#video-list').append("<div class='col-sm-6 playlist-video' data-index=" + index + ">" + title + "</div>");
+            return _this.$el.find('#video-list').append("<div class='playlist-video' data-index=" + index + ">" + title + "</div>");
           };
         })(this));
       };
