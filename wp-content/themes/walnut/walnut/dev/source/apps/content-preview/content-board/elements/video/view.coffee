@@ -8,26 +8,19 @@ define ['app'], (App)->
 
             className : 'video'
 
-            template : '    <video class="video-js vjs-default-skin" 
-                                poster="/images/video-poster.jpg" 
-                                width="100%" data-setup="{}" controls>
-                            </video>
-                          
-                            <div class="clearfix"></div>
-                            <div id="playlist-hover" class="row" style="position: absolute; background-color: #000000;  z-index:20;  display: none">
-                                <div class="col-sm-2" id="prev"><button>Prev</button></div>
-                                <div class="row video-list col-sm-8" id="video-list"></div>
-                                <div class="col-sm-2" id="next"><button>Next</button></div>
+            template : '    <video  class="video-js vjs-default-skin" controls preload="none" width="100%"
+                            poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
+                                    data-setup="{}" controls src="{{videoUrl}}">
 
-                             </div>
-                        					'
+                            </video>
+                            <div class="clearfix"></div>
+                      					'
 
 
 
 
             events :
-                'mouseenter' : 'showPlaylist'
-                'mouseleave' : 'hidePlaylist'
+                'click .show-playlist' : 'togglePlaylist'
                 'click #prev' : '_playPrevVideo'
                 'click #next' : '_playNextVideo'
                 'click .playlist-video' : '_playClickedVideo'
@@ -38,84 +31,59 @@ define ['app'], (App)->
             # reloading placeholder image again
             onShow : ->
 
-                # generate unique id and give to video element
-                videoId = _.uniqueId('video-')
-                @$el.find('video').attr 'id', videoId
-                # init videojs
-                # @videoElement = videojs videoId
+                return if not @model.get('video_ids').length
 
-                # videos = new Array()
-                # _.each @model.get('videoUrl'),(url)->
-                #     videos.push
-                #         src : [url]
+                @videos = @model.get('videoUrls')
+                @index = 0
 
-                # #playlist
-                # @videoElement.playList videos,
-                #     getVideoSource: (vid, cb) ->
-                #         cb(vid.src)
+                @$el.find('video').on 'ended', =>
+                    @_playNextVideo()
 
+                @_setVideoList() if _.size(@videos) > 1
+                @$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
-                # set height according to the aspect ratio of 16:9
-                # width = @videoElement.width()
-                # height = 9 * width / 16
-                # @videoElement.height height
-
-                @_setPlaylistPosition()
-                @_setVideoList()
-
-                # if _.platform() is 'DEVICE'
-
-                #     url = @model.get('videoUrl').replace("media-web/","")
-                #     videosWebUrl = url.substr(url.indexOf("uploads/"))
-
-                #     videoUrl = videosWebUrl.replace("videos-web", "videos")
-                #     encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
-                    
-                #     decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
-
-                #     videosWebDirectory = _.createVideosWebDirectory()
-                #     videosWebDirectory.done ->
-
-                #         decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
-                #         decryptFile.done (videoPath)->
-                            
-                #             #'videos' is initialized globally inside 'plugins/walnut-app.js'
-                #             `videos[videoId] = videoPath;`
-
-                #             window.plugins.html5Video.initialize videos
-                #             window.plugins.html5Video.play videoId
-
-            _setPlaylistPosition : ->
-
-                position =  @$el.position()
-                @$el.find('#playlist-hover').css
-                    'top' : position.top + @$el.height()
-                    'left' : position.left + 15
-                    'width' : @$el.width()
 
             _setVideoList : ->
+                @$el.append('<div id="playlist-hover" class="row playlistHover m-l-0 m-r-0" style="z-index:20">
+                                                <div class="col-sm-1 show-playlist"><button class="btn btn-info btn-small"><i class="fa fa-list-ul"></i></button></div>
+                                                <div class="video-list col-sm-9 playlist-hidden" id="video-list" style="display: none;"></div>
+                                                <div class="col-sm-1 playlist-hidden" id="prev" style="display: none;"><button class="btn btn-info btn-small"><i class="fa fa-step-backward"></i></button></div>
+                                                <div class="col-sm-1 playlist-hidden" id="next" style="display: none;"><button class="btn btn-info btn-small pull-right"><i class="fa fa-step-forward"></i></button></div>
+                                             </div>')
                 @$el.find('#video-list').empty()
                 _.each @model.get('title'),(title,index)=>
-                    @$el.find('#video-list').append("<div class='col-sm-6 playlist-video' data-index=#{index}>#{title}</div>")
+                    @$el.find('#video-list').append("<div class='playlist-video' data-index=#{index}>#{title}</div>")
 
 
 
-            showPlaylist :->
-                @_setPlaylistPosition()
-                @$el.find('#playlist-hover').show()
+            togglePlaylist :->
+                @$el.find('.playlist-hidden').toggle()
 
-            hidePlaylist : ->
-                @$el.find('#playlist-hover').hide()
+            _playPrevVideo : (e)->
+                e.stopPropagation()
+                @index-- if @index > 0
+                @_playVideo()
 
-            _playPrevVideo : ->
-                @videoElement.prev()
-
-            _playNextVideo : ->
-                @videoElement.next()
+            _playNextVideo : (e)->
+                e.stopPropagation() if e?
+                if @index < @videos.length-1
+                    @index++
+                    @_playVideo()
 
             _playClickedVideo : (e)->
-                index = parseInt $(e.target).attr('data-index')
-                @videoElement.playList index
+                e.stopPropagation()
+                index = parseInt $(e.target).attr 'data-index'
+                @index = index
+                @_playVideo()
+
+
+
+            _playVideo:->
+                @$el.find('.playlist-video').removeClass 'currentVid'
+                @$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
+                @$el.find('video').attr 'src',@videos[@index]
+                @$el.find('video')[0].load()
+                @$el.find('video')[0].play()
 
 
 				
