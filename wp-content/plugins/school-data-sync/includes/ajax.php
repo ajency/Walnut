@@ -93,11 +93,15 @@ function ajax_sds_data_sync_import() {
         if(strpos($stat['name'],'textbook_relationships.csv') !== false)
             sds_read_textbook_relationships_csv_file( $extract_path . '/' . $stat['name'] );     
         
-        if(strpos($stat['name'],'users.csv') !== false)
-            sds_read_users_csv_file( $extract_path . '/' . $stat['name'] );  
+        if(strpos($stat['name'],'users.csv') !== false){
+            $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}users`");
+            $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}usermeta`");
+            sds_read_users_csv_file( $extract_path . '/' . $stat['name'] );
+        }
         
         if(strpos($stat['name'],'usermeta.csv') !== false)
-            sds_read_usermeta_csv_file( $extract_path . '/' . $stat['name'] );          
+            sds_read_usermeta_csv_file( $extract_path . '/' . $stat['name'] );
+        
     }
 
     sds_mark_sync_complete( $sync_id );

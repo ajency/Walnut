@@ -54,7 +54,7 @@ function create_custom_tables(){
             `last_modified_by` int(11) NOT NULL,
             `published_on` datetime NOT NULL,
             `published_by` int(11) NOT NULL,
-            `status` varchar(255) NOT NULL,
+            `post_status` varchar(255) NOT NULL,
             `type` varchar(255) NOT NULL,
             `term_ids` varchar(255) NOT NULL,
             `duration` int(11) NOT NULL COMMENT 'in minutes',
@@ -151,18 +151,22 @@ function add_new_roles_main_site()
     add_role( 'teacher','Teacher');
     add_role( 'parent','Parent');
 
-    $u = new WP_User( get_current_user_id() );
-
-    // Remove role
-    $u->remove_role( 'administrator' );
-
-    // Add role
-    $u->add_role( 'school-admin' );
-
-    if(get_role('administrator')!=NULL)remove_role( 'administrator' );//removes the editor role
+//    $u = new WP_User( get_current_user_id() );
+//
+//    // Remove role
+//    $u->remove_role( 'administrator' );
+//
+//    // Add role
+//    $u->add_role( 'school-admin' );
+//
+//    if(get_role('administrator')!=NULL)remove_role( 'administrator' );//removes the editor role
 
 }
 add_new_roles_main_site();
+
+//setup the template and stylesheet for child sites
+update_option( 'template', 'walnut' );
+update_option( 'stylesheet', 'schoolsite' );
 
 function add_pages_to_main_site()
 {
@@ -174,16 +178,12 @@ function add_pages_to_main_site()
         $post['post_title'] = 'Dashboard';
         $postid = wp_insert_post($post);
 
-    }
-    update_post_meta($postid, '_wp_page_template', 'dashboard.php');
+        update_post_meta($postid, '_wp_page_template', 'dashboard.php');
 
-    update_option( 'page_on_front', $postid );
-    update_option( 'show_on_front', 'page' );
+        update_option( 'page_on_front', $postid );
+        update_option( 'show_on_front', 'page' );
+    }
+
 }
 
 add_pages_to_main_site();
-
-
-//setup the template and stylesheet for child sites
-update_option( 'template', 'walnut' );
-update_option( 'stylesheet', 'schoolsite' );
