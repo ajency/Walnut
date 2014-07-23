@@ -187,16 +187,9 @@ function get_user_table_query($blog_id){
     if(!$blog_id)
         $blog_id= get_current_blog_id();
 
-    $args= array('role'=>'student','fields'=>'ID');
-    $students= get_users($args);
+    $blog_users= get_all_user_ids();
 
-
-    $args= array('role'=>'teacher','fields'=>'ID');
-    $teacher= get_users($args);
-
-    $users = array_merge($students, $teacher);
-
-    $user_ids= join(',',$users);
+    $user_ids= join(',',$blog_users);
 
     $user_table_query= $wpdb->prepare(
         "SELECT u.* FROM
@@ -217,13 +210,37 @@ function get_user_table_query($blog_id){
 
 }
 
+function get_all_user_ids(){
+
+    $args= array('role'=>'student','fields'=>'ID');
+    $students= get_users($args);
+
+
+    $args= array('role'=>'teacher','fields'=>'ID');
+    $teacher= get_users($args);
+
+    $args = array('role'=>'parent','fields'=>'ID');
+    $parents= get_users($args);
+
+    $args = array('role'=>'school-admin','fields'=>'ID');
+    $school_admins= get_users($args);
+
+    $users = array_merge($students, $teacher,$parents,$school_admins);
+
+    return $users;
+
+}
+
 function get_usermeta_table_query($blog_id){
 
     global $wpdb;
 
+    $blog_users= get_all_user_ids();
+    $user_ids= join(',',$blog_users);
+
     $user_meta_query = $wpdb->prepare(
         "SELECT * FROM
-            {$wpdb->base_prefix}usermeta",
+            {$wpdb->base_prefix}usermeta WHERE user_id in ($user_ids)",
         array('primary_blog', $blog_id)
     );
 
@@ -321,12 +338,12 @@ function get_meta_ids($layout, &$meta_ids)
         foreach ($layout['elements'] as &$column) {
             if($column['elements']){
                 foreach ($column['elements'] as &$ele) {
-                if (in_array($ele['element'],$row_elements)) {
+                    if (in_array($ele['element'],$row_elements)) {
                         $ele['columncount'] = count($ele['elements']);
                         get_meta_ids($ele,$meta_ids);
                     }
-                else
-                    $meta_ids[]= $ele['meta_id'];
+                    else
+                        $meta_ids[]= $ele['meta_id'];
                 }
             }
         }
@@ -516,7 +533,7 @@ function exportMysqlToCsv($table, $sql_query=''){
                 } else
                 {
                     $schema_insert .= $csv_enclosed .
-                        str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $row[$j]) . $csv_enclosed;
+                        str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, stripslashes($row[$j])) . $csv_enclosed;
                 }
             } else
             {

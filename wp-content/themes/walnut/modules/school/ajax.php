@@ -1,5 +1,6 @@
 <?php
 require_once 'functions.php';
+require_once 'wpadmin-custom-menus.php';
 
 add_action( 'wp_ajax_read-schools', 'fetch_school' );
 

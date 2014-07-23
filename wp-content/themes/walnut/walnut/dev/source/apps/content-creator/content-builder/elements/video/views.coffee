@@ -16,7 +16,6 @@ define ['app'], (App)->
 
                         </video>
                         <div class="clearfix"></div>
-
                             {{/video}}
                         {{#placeholder}}
                             <div class="video-placeholder show-video "><span class="bicon icon-uniF11E"></span>Add Video</div>
@@ -61,12 +60,30 @@ define ['app'], (App)->
 
 
             _setVideoList : ->
-                @$el.append('<div id="playlist-hover" class="row playlistHover m-l-0 m-r-0" style="z-index:20">
-                                <div class="col-sm-1 show-playlist"><button class="btn btn-info btn-small"><i class="fa fa-list-ul"></i></button></div>
-                                <div class="video-list col-sm-9 playlist-hidden" id="video-list" style="display: none;"></div>
-                                <div class="col-sm-1 playlist-hidden" id="prev" style="display: none;"><button class="btn btn-info btn-small"><i class="fa fa-step-backward"></i></button></div>
-                                <div class="col-sm-1 playlist-hidden" id="next" style="display: none;"><button class="btn btn-info btn-small pull-right"><i class="fa fa-step-forward"></i></button></div>
-                             </div>')
+                @$el.append('<div id="playlist-hover" class="playlistHover">
+                                <div class="row m-l-0 m-r-0 p-b-5 m-b-5">
+                                    <div class="col-sm-8 nowPlaying">
+                                    <span class="small text-muted">Now Playing:</span>
+                                    <span id="now-playing-tag">'+@model.get('title')[0]+'</span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-white btn-small pull-right show-playlist">
+                                        <i class="fa fa-list-ul"></i> Playlist
+                                    </button>
+                                </div>
+                                </div>
+                                <div class="row m-l-0 m-r-0 playlist-hidden vidList animated fadeInRight" style="display: none;">
+                                    <div class="video-list col-sm-8" id="video-list"></div>
+                                    <div class="col-sm-4 p-t-5 m-b-5">
+                                        <button class="btn btn-info btn-small pull-right" id="next">
+                                            <i class="fa fa-step-forward"></i>
+                                        </button>
+                                        <button class="btn btn-info btn-small pull-right m-r-10" id="prev">
+                                            <i class="fa fa-step-backward"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>')
                 @$el.find('#video-list').empty()
                 _.each @model.get('title'),(title,index)=>
                     @$el.find('#video-list').append("<div class='playlist-video' data-index=#{index}>#{title}</div>")
@@ -99,12 +116,13 @@ define ['app'], (App)->
             _playVideo:->
                 @$el.find('.playlist-video').removeClass 'currentVid'
                 @$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
+                @$el.find('#now-playing-tag').text @model.get('title')[@index]
                 @$el.find('video').attr 'src',@videos[@index]
                 @$el.find('video')[0].load()
                 @$el.find('video')[0].play()
 
 
-            _showMediaManager : ->
+            _showMediaManager : (e)->
                 e.stopPropagation()
                 @trigger "show:media:manager"
 
