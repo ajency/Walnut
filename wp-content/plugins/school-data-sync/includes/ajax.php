@@ -259,3 +259,18 @@ function ajax_sds_media_sync_images(){
     wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Files download error','files' => $download_resp) ) );
 }
 add_action( 'wp_ajax_sds_media_sync_images', 'ajax_sds_media_sync_images' );
+
+add_action( 'wp_ajax_nopriv_sds_media_sync_images', 'ajax_sds_media_sync_images' );
+
+
+function ajax_save_standalone_school_blogid(){
+
+    $blog_id = $_REQUEST['blog_id'];
+    update_option('blog_id', $blog_id);
+
+    wp_send_json (array('blog_id'=>$blog_id));
+
+}
+
+add_action ('wp_ajax_save_standalone_school_blogid', 'ajax_save_standalone_school_blogid');
+

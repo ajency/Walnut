@@ -1,22 +1,78 @@
+
+
 jQuery(document).ready(function() {
+
+    jQuery("#validate-blog-user").on('click',function(){
+
+        data ={}
+        data['txtusername'] = jQuery.trim(jQuery('#validate_school_user #validate_uname').val())
+        data['txtpassword'] = jQuery('#validate_school_user #validate_pwd').val()
+
+        if(data['txtusername']=='' || data['txtpassword']==''){
+          jQuery('#validate_school_user .error_msg').html('Invalid username or password');
+          return false
+        }
+
+
+        formData= {}
+        formData['data'] = data
+
+        jQuery.ajax({
+            type: 'POST',
+            url: SERVER_AJAXURL+'?action=get-user-profile',
+            data: formData,
+            success: function(data, textStatus, XMLHttpRequest){
+              if(data.error){
+                jQuery('#validate_school_user .error_msg').html('Invalid username or password');
+              }
+              else{
+                blog_id = data.blog_details.blog_id
+                insert_blogid_in_options_table(blog_id);
+              }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+
+            }
+        });
+
+    });
 
     jQuery("#sync-data").on('click',function(){
         var lastsync = jQuery(this).attr('data-lastsync');
         var lastsync_id = jQuery(this).attr('data-lastsync-id');
         var syncstatus = jQuery(this).attr('data-syncstatus');
         var filepath = jQuery(this).attr('data-file-path');
+        var blog_id = jQuery(this).attr('data-blog-id');
         var syncreference = jQuery(this);
 	//alert(SERVER_AJAXURL);
         if(syncstatus == ''){
-            init_school_data_sync(syncreference,lastsync_id,syncstatus);
+            init_school_data_sync(syncreference,lastsync_id,syncstatus,blog_id);
         }
         else{
-            resync_school_data_sync(syncreference,lastsync,syncstatus,filepath,lastsync_id);
+            resync_school_data_sync(syncreference,lastsync,syncstatus,filepath,lastsync_id,blog_id);
         }
  
     });
     
-    function init_school_data_sync(referer,lastsync_id,syncstatus){
+
+    function insert_blogid_in_options_table(blog_id){
+
+      jQuery.post( ajaxurl,
+        {
+            action    : 'save_standalone_school_blogid',
+            blog_id  : blog_id
+        },
+        function(data) {           
+            if(data.blog_id)
+                location.reload();
+            else 
+              console.log('error inserting blogid in database');
+                        
+        },'json');
+
+    }
+
+    function init_school_data_sync(referer,lastsync_id,syncstatus,blog_id){
       console.log(referer);
        jQuery('#sync-media').prop('disabled', true);
        jQuery.ajax({  
@@ -24,7 +80,7 @@ jQuery(document).ready(function() {
                 url: SERVER_AJAXURL,  
                 data: {  
                     action: 'sync-database',
-                    blog_id: 15
+                    blog_id: blog_id
                 },  
                 success: function(data, textStatus, XMLHttpRequest){  
                     //alert('Success: ' + data);
@@ -116,7 +172,7 @@ jQuery(document).ready(function() {
         
     }
     
-    function resync_school_data_sync(syncreference,lastsync,syncstatus,filepath,lastsync_id){
+    function resync_school_data_sync(syncreference,lastsync,syncstatus,filepath,lastsync_id,blog_id){
         jQuery(syncreference).prop('disabled', true);
         jQuery('#sync-media').prop('disabled', true);
         if(syncstatus == 'downloaded'){
@@ -132,7 +188,7 @@ jQuery(document).ready(function() {
             school_data_local_upload(syncreference,lastsync_id);
         }
         else if(syncstatus == 'transfered-server'){
-            check_server_data_sync(syncreference,lastsync_id);
+            check_server_data_sync(syncreference,lastsync_id,blog_id);
         }
         
         
@@ -186,7 +242,7 @@ jQuery(document).ready(function() {
         },'json');
     }
     
-    function check_server_data_sync(referer,sync_request_id){
+    function check_server_data_sync(referer,sync_request_id,blog_id){
         referer.next().text('Checking server...');
         var syncstatus = referer.attr('data-syncstatus');
         var server_sync_id = referer.attr('data-server-sync-id');
@@ -195,7 +251,7 @@ jQuery(document).ready(function() {
                                   jQuery.get( SERVER_AJAXURL,
                                   {
                                     action    : 'check-app-data-sync-completion',
-                                    blog_id : 15,
+                                    blog_id : blog_id,
                                     sync_request_id:server_sync_id
                                   },
                                     function(data) { 

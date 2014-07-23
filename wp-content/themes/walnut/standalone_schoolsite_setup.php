@@ -22,6 +22,7 @@
 require_once( '../../../wp-load.php');
 require_once('../../../wp-admin/includes/plugin.php');
 
+require_once( '../../..//wp-content/plugins/school-data-sync/school_data_sync.php');
 /**
  *
  */
@@ -192,6 +193,9 @@ function activate_school_data_sync_plugin($plugin){
         do_action( 'activated_plugin', trim( $plugin) );
     }
 
+    set_sds_plugin_options();
 }
 
 activate_school_data_sync_plugin('school-data-sync/school_data_sync.php');
+
+wp_redirect(site_url().'/wp-admin/options-general.php?page=school_data_sync');

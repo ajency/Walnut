@@ -8,39 +8,79 @@ function school_data_sync_screen(){
 	<script>
 	SERVER_AJAXURL = 'http://synapsedu.info/wp-admin/admin-ajax.php';
 	</script>
+
 	<?php
-	global $wpdb;
-	$last_sync_status = get_last_sync_status();
-        $last_sync_imported = get_last_sync_imported();
-        $sync_defaults = array('label' =>'Start','lastsync'=>'','syncstatus' =>'','filepath' =>'','sync_id' => '','server_sync_id'=>'');
-        if(!empty($last_sync_status)){
-            $sync_defaults['sync_id'] = $last_sync_status[0]->id;
-            $sync_defaults['syncstatus'] = $last_sync_status[0]->status;
-            $sync_defaults['lastsync'] = $last_sync_status[0]->last_sync;
-            if($last_sync_status[0]->status != 'imported'){
-                 $sync_defaults['label'] = 'Continue';
-                 $sync_defaults['syncstatus'] = $last_sync_status[0]->status;
-                 $sync_defaults['filepath'] = $last_sync_status[0]->file_path;
-                 $sync_defaults['server_sync_id'] = $last_sync_status[0]->server_sync_id;
-            }
+
+        $blog_id = get_option('blog_id');
+
+        if($blog_id){
+            $sync_form_html = get_sync_form_html($blog_id); 
+            echo $sync_form_html;
         }
-        
-	echo '<form>
-		 <fieldset>
-		 <h3>School Data Sync</h3>
-                 <p>[Last Data Sync]:'.date_format(date_create($last_sync_imported[0]->last_sync), 'd/m/Y H:i:s').'</p>
-	     <label>Data Sync </label> -> 
-             <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
-                . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
-                . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
-                . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
-                . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
-                    <span class="status-msg"></span>
-		 <br/><br/>
-		 <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
-                 <span class="status-msg"></span>
-		 </fieldset>
-              </form>';
+
+        else {
+            $validation_form_html= get_sync_user_validation_form();
+            echo $validation_form_html;
+        }
+
+}
+
+function get_sync_form_html($blog_id){
+
+    global $wpdb;
+    $last_sync_status = get_last_sync_status();
+    $last_sync_imported = get_last_sync_imported();
+    $sync_defaults = array('label' =>'Start','lastsync'=>'','syncstatus' =>'','filepath' =>'','sync_id' => '','server_sync_id'=>'');
+    if(!empty($last_sync_status)){
+        $sync_defaults['sync_id'] = $last_sync_status->id;
+        $sync_defaults['syncstatus'] = $last_sync_status->status;
+        $sync_defaults['lastsync'] = $last_sync_status->last_sync;
+        if($last_sync_status->status != 'imported'){
+             $sync_defaults['label'] = 'Continue';
+             $sync_defaults['syncstatus'] = $last_sync_status->status;
+             $sync_defaults['filepath'] = $last_sync_status->file_path;
+             $sync_defaults['server_sync_id'] = $last_sync_status->server_sync_id;
+        }
+    }
+
+
+    $sync_form_html= '<form>
+         <fieldset>
+         <h3>School Data Sync</h3>';
+    if($last_sync_imported->last_sync)
+        $sync_form_html .= '<p>[Last Data Sync]:'.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'</p>';
+
+    $sync_form_html .= '<label>Data Sync </label> ->
+                    <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
+        . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
+        . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
+        . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
+        . 'data-blog-id='.$blog_id.' '
+        . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
+                        <span class="status-msg"></span>
+                     <br/><br/>
+                     <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
+                             <span class="status-msg"></span>
+                     </fieldset>
+                    </form>';
+
+    return $sync_form_html;
+
+}
+
+function get_sync_user_validation_form(){
+
+    $html ='<h3>Validate Blog User</h3>';
+
+    $html .= '<form id="validate_school_user"  autocomplete="off">
+                <div class="error_msg" style="color:red; padding:10px 0"></div>
+                Username: <input id="validate_uname" value=" " type="text"><br>
+                Password: <input id="validate_pwd" value=""  type="password"><br>
+                <input type="button" id="validate-blog-user" value="Validate User">
+            </form>';
+
+    return $html;
+
 }
 
 function sds_admin_scripts($hook) {
@@ -53,7 +93,7 @@ add_action( 'admin_enqueue_scripts', 'sds_admin_scripts',100 );
 
 function get_last_sync_status() {
     global $wpdb;
-    $import_last_status = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}sync_local_data order by id DESC LIMIT 0,1" );
+    $import_last_status = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}sync_local_data order by id DESC LIMIT 0,1" );
     
     return $import_last_status;
     
@@ -61,7 +101,7 @@ function get_last_sync_status() {
 
 function get_last_sync_imported() {
     global $wpdb;
-    $import_last_status = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}sync_local_data where status LIKE 'imported' order by id DESC LIMIT 0,1" );
+    $import_last_status = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}sync_local_data where status LIKE 'imported' order by id DESC LIMIT 0,1" );
     
     return $import_last_status;
     
@@ -149,51 +189,10 @@ function sds_get_tables_to_export($last_sync=''){
 
     $tables_list= array(
 
-        // THIS FOLLOWING LIST IS OF TABLES WHOSE FULL DATA WILL BE EXPORTED EVERY TIME
-
-        //PARENT SITE TABLE QUERIES
-        //"{$wpdb->base_prefix}options",
-        //"{$wpdb->prefix}terms",
-        //"{$wpdb->prefix}term_relationships",
-        //"{$wpdb->prefix}term_taxonomy",
-        //"{$wpdb->prefix}textbook_relationships",
-        //"{$wpdb->prefix}usermeta",
-
-        //CHILD SITE TABLE QUERIES
-        //"{$wpdb->prefix}class_divisions",
         "{$wpdb->prefix}question_response",
         "{$wpdb->prefix}question_response_meta"
 
     );
-
-    // ONLY THE RECORDS REGARDING TEXTBOOKS ADDITIONAL DATA
-    // LIKE AUTHOR AND IMAGE FROM WP_OPTIONS TABLE ARE FETCHED
-    //$tables_list[]= sds_get_options_table_query();
-
-    // USER AND USERMETA TABLES ARE CUSTOM QUERIED AND ONLY BLOG RELATED RECORDS ARE FETCHED
-    //$tables_list[]= get_user_table_query($blog_id);
-    //$tables_list[]= get_usermeta_table_query($blog_id);
-
-    // POST, POST META, COLLECCTION and COLLECTION META TABLES ARE FETCHED BASED ON LAST SYNCED
-
-    /*if(!$last_sync){
-        //IF LAST SYNC TIME IS EMPTY JUST PASSING TABLE NAMES GETS ALL RECORDS IN TABLES
-        array_push(
-            $tables_list,
-            "{$wpdb->prefix}posts",
-            "{$wpdb->prefix}postmeta",
-            "{$wpdb->prefix}content_collection",
-            "{$wpdb->prefix}collection_meta"
-        );
-    }
-
-    else{
-        $tables_list[]= sds_get_posts_table_query($last_sync);
-        $tables_list[]= sds_get_postmeta_table_query($last_sync);
-        $tables_list[]= sds_get_collection_table_query($last_sync);
-        $tables_list[]= sds_get_collectionmeta_table_query($last_sync);
-    }*/
-
     return $tables_list;
 }
 
