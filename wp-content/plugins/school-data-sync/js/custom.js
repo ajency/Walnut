@@ -72,7 +72,7 @@ jQuery(document).ready(function() {
 
     }
 
-    function init_school_data_sync(referer,lastsync_id,syncstatus,blog_id){
+    function init_school_data_sync(referer,lastsync_id,syncstatus,blog_id,last_sync){
       console.log(referer);
        jQuery('#sync-media').prop('disabled', true);
        jQuery.ajax({  
@@ -80,7 +80,8 @@ jQuery(document).ready(function() {
                 url: SERVER_AJAXURL,  
                 data: {  
                     action: 'sync-database',
-                    blog_id: blog_id
+                    blog_id: blog_id,
+                    last_sync: last_sync
                 },  
                 success: function(data, textStatus, XMLHttpRequest){  
                     //alert('Success: ' + data);
@@ -182,7 +183,7 @@ jQuery(document).ready(function() {
             data_sync_resume_download(syncreference,lastsync,syncstatus,filepath,lastsync_id);
         }
         else if(syncstatus == 'imported'){
-            school_data_local_export(syncreference,lastsync,lastsync_id);
+            school_data_local_export(syncreference,lastsync,lastsync_id,blog_id);
         }
         else if(syncstatus == 'export-local'){
             school_data_local_upload(syncreference,lastsync_id);
@@ -194,7 +195,7 @@ jQuery(document).ready(function() {
         
     }
     
-    function school_data_local_export(referer,lastsync,lastsync_id){
+    function school_data_local_export(referer,lastsync,lastsync_id,blog_id){
         referer.next().text('Exporting local data...');
         jQuery.post( ajaxurl,
         {
@@ -207,7 +208,7 @@ jQuery(document).ready(function() {
                                jQuery(referer).next().text('Local Data exported...');
                                jQuery(referer).attr('data-lastsync-id',data.sync_request_id);
                                jQuery(referer).attr('data-syncstatus',data.status);
-                               school_data_local_upload(referer,data.sync_request_id);
+                               school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
                                
                   
                    } else if(data.code === 'ERROR') {
@@ -219,18 +220,19 @@ jQuery(document).ready(function() {
         },'json');
     }
     
-    function school_data_local_upload(referer,sync_request_id){
+    function school_data_local_upload(referer,sync_request_id,blog_id,last_sync){
         jQuery.post( ajaxurl,
         {
             action    : 'sds_data_sync_local_upload',
-            sync_request_id : sync_request_id
+            sync_request_id : sync_request_id,
+            blog_id         : blog_id
         },
         function(data) {           
                    if(data.code === 'OK'){ 
                                jQuery(referer).next().text('Local Data uploaded...').delay(250).text('Waiting For Server Sync..');
                                //school_data_local_upload(referer,data.sync_request_id);
                                jQuery(referer).attr( 'data-server-sync-id', data.sync_request_id );
-                               check_server_data_sync(referer,sync_request_id);
+                               check_server_data_sync(referer,sync_request_id,blog_id,last_sync);
                                
                   
                    } else if(data.code === 'ERROR') {
@@ -242,7 +244,7 @@ jQuery(document).ready(function() {
         },'json');
     }
     
-    function check_server_data_sync(referer,sync_request_id,blog_id){
+    function check_server_data_sync(referer,sync_request_id,blog_id,last_sync){
         referer.next().text('Checking server...');
         var syncstatus = referer.attr('data-syncstatus');
         var server_sync_id = referer.attr('data-server-sync-id');
@@ -251,14 +253,14 @@ jQuery(document).ready(function() {
                                   jQuery.get( SERVER_AJAXURL,
                                   {
                                     action    : 'check-app-data-sync-completion',
-                                    blog_id : blog_id,
+                                    blog_id :blog_id,
                                     sync_request_id:server_sync_id
                                   },
                                     function(data) { 
                                         console.log(data);
                                         if(data === true){ 
                                         jQuery(referer).next().text('Server Syncd...').delay(250).text('Initializing download..');
-                                        init_school_data_sync(referer,sync_request_id,syncstatus);
+                                        init_school_data_sync(referer,sync_request_id,syncstatus,blog_id,last_sync);
                                         clearInterval(check_server_sync);
                                         }         
                                     },'json');  

@@ -286,7 +286,7 @@ function sds_exportMysqlToCsv($table, $sql_query=''){
                 } else
                 {
                     $schema_insert .= $csv_enclosed .
-                        str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $row[$j]) . $csv_enclosed;
+                        str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, stripslashes($row[$j])) . $csv_enclosed;
                 }
             } else
             {

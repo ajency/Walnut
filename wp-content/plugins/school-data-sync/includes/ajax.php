@@ -180,7 +180,8 @@ function ajax_sds_local_upload_to_server(){
     global $wpdb;
     
     $sync_request_id = $_POST['sync_request_id'];
-    
+    $blog_id         = $_POST['blog_id'];
+
     $filetoupload = get_local_uploaded_file($sync_request_id);
     
     $remote_url = 'http://synapsedu.info/wp-admin/admin-ajax.php';          //temporary hard code url   
@@ -195,7 +196,7 @@ function ajax_sds_local_upload_to_server(){
     $post = array(
         'file' => '@'.$filetoupload,
         'action' => 'sync-app-data',
-        'blog_id' =>14,
+        'blog_id' =>$blog_id,
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
     $response = curl_exec($ch);

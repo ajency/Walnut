@@ -1241,6 +1241,9 @@ function sds_validate_textbook_relationships_csv_row( $textbook_relationships_da
     if (!is_array( $textbook_relationships_data ))
         return new WP_Error("", "Not a valid record");
 
+    if(! (int) $textbook_relationships_data[0])
+        return false;
+
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $textbook_relationships_data ) !== 4)
         return new WP_Error("", "Column count for csv row not proper");
