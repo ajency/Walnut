@@ -74,22 +74,7 @@ function delete_content_element(){
 add_action('wp_ajax_delete-element', 'delete_content_element');
 
 
-function get_blog_media() {
-    $id = $_GET ['id'];
-    $current_blog_id= get_current_blog_id();
-    switch_to_blog(1);
 
-    $media = wp_prepare_attachment_for_js ( $id );
-    switch_to_blog($current_blog_id);
-
-    wp_send_json ( array (
-        'code' => 'OK',
-        'data' => $media
-    ) );
-
-
-}
-add_action ( 'wp_ajax_read-media', 'get_blog_media' );
 
 
 function ajax_save_content_piece() {

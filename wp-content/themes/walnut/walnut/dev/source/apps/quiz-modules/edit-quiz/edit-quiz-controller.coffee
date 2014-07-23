@@ -31,11 +31,11 @@ define ['app'
                     if @quiz_id
                         @_showContentSelectionApp @quizModel
 
-#                @listenTo @quizModel, 'change:id', @_showContentSelectionApp, @
+                @listenTo @quizModel, 'change:id', @_showContentSelectionApp, @
 
-#                @listenTo @layout.collectionDetailsRegion, 'close:content:selection:app', =>
+                @listenTo @layout.quizDetailsRegion, 'close:content:selection:app', =>
 #                    console.log 'close:content:selection:app '
-#                    @layout.contentSelectionRegion.close()
+                    @layout.contentSelectionRegion.close()
 
                 @show @layout, (loading : true)
 

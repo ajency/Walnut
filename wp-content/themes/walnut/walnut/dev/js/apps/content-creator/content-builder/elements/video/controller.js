@@ -16,10 +16,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         _.defaults(options.modelData, {
           element: 'Video',
           video_ids: [],
+          video_id: 0,
           height: 0,
           width: 0,
           title: [],
-          videoUrl: []
+          videoUrl: '',
+          videoUrls: []
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -49,10 +51,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype._parseInt = function() {
         var video_ids;
         video_ids = new Array();
-        if (this.layout.model.get('video_id')) {
+        if (!this.layout.model.get('video_ids') && this.layout.model.get('video_id')) {
           this.layout.model.set('video_ids', [this.layout.model.get('video_id')]);
-          this.layout.model.unset('video_id');
-          this.layout.model.set('videoUrl', [this.layout.model.get('videoUrl')]);
+          this.layout.model.set('videoUrls', [this.layout.model.get('videoUrl')]);
         }
         _.each(this.layout.model.get('video_ids'), function(id) {
           return video_ids.push(parseInt(id));
@@ -61,32 +62,31 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.renderElement = function() {
-        var viedoCollection;
+        var videoCollection;
         this.removeSpinner();
         this._parseInt();
-        viedoCollection = this._getVideoCollection();
-        return App.execute("when:fetched", viedoCollection, (function(_this) {
+        videoCollection = this._getVideoCollection();
+        return App.execute("when:fetched", videoCollection, (function(_this) {
           return function() {
             _this.view = _this._getVideoView();
             _this.listenTo(_this.view, "show:media:manager", function() {
               return App.execute("show:media:collection:manager", {
                 region: App.dialogRegion,
                 mediaType: 'video',
-                mediaCollection: viedoCollection
+                mediaCollection: videoCollection
               });
             });
             _this.listenTo(_this.videoCollection, 'add remove order:updated', function() {
               this.videoCollection.sort();
               this.layout.model.set({
                 'video_ids': this.videoCollection.pluck('id'),
-                'videoUrl': this.videoCollection.pluck('url'),
-                'title': this.videoCollection.pluck('title')
+                'videoUrls': this.videoCollection.pluck('url'),
+                'title': this.videoCollection.pluck('title'),
+                'video_id': _.first(this.videoCollection.pluck('id')),
+                'videoUrl': _.first(this.videoCollection.pluck('url'))
               });
               this.layout.elementRegion.show(this.view);
               return this.layout.model.save();
-            });
-            App.commands.setHandler("video:moved", function() {
-              return this.view.triggerMethod("video:moved");
             });
             return _this.layout.elementRegion.show(_this.view);
           };

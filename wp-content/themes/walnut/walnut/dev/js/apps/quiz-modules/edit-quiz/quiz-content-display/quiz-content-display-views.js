@@ -71,6 +71,10 @@ define(['app', 'text!apps/quiz-modules/edit-quiz/quiz-content-display/templates/
         'click .remove': 'removeItem'
       };
 
+      ContentDisplayView.prototype.modelEvents = {
+        'change:post_status': 'statusChanged'
+      };
+
       ContentDisplayView.prototype.statusChanged = function(model, post_status) {
         if (post_status === 'publish' || post_status === 'archive') {
           this.$el.find('.remove').hide();
