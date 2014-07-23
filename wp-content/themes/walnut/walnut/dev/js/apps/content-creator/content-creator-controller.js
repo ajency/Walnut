@@ -88,7 +88,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       };
 
       ContentCreatorController.prototype._showGradingParameter = function() {
-        this.layout.contentBuilderRegion.reset();
+        $(this.layout.contentBuilderRegion.el).find('#myCanvas').hide();
         return App.execute('show:grading:parameter:view', {
           region: this.layout.gradingParameterRegion,
           contentPieceModel: this.contentPieceModel
@@ -96,12 +96,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       };
 
       ContentCreatorController.prototype._closeGradingParameter = function() {
-        this.layout.gradingParameterRegion.reset();
-        return App.execute("show:content:builder", {
-          region: this.layout.contentBuilderRegion,
-          contentPieceModel: this.contentPieceModel,
-          eventObj: this.eventObj
-        });
+        $(this.layout.contentBuilderRegion.el).find('#myCanvas').show();
+        return this.layout.gradingParameterRegion.reset();
       };
 
       return ContentCreatorController;
