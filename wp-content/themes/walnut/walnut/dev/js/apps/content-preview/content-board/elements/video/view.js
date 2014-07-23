@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
@@ -7,12 +8,14 @@ define(['app'], function(App) {
       __extends(VideoView, _super);
 
       function VideoView() {
+        this._firstTimePlay = __bind(this._firstTimePlay, this);
+        this._playVideo = __bind(this._playVideo, this);
         return VideoView.__super__.constructor.apply(this, arguments);
       }
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="{{videoUrl}}"> </video> <div class="clearfix"></div>';
+      VideoView.prototype.template = '<video id="video1" class="video-js vjs-default-skin" poster="/images/video-poster.jpg" width="100%" data-setup="{}" src="{{videoUrl}}" controls> </video> <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
@@ -22,6 +25,7 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype.onShow = function() {
+        var videosWebDirectory;
         if (!this.model.get('video_ids').length) {
           return;
         }
@@ -29,17 +33,43 @@ define(['app'], function(App) {
         this.index = 0;
         this.$el.find('video').on('ended', (function(_this) {
           return function() {
+            console.log("ended");
             return _this._playNextVideo();
           };
         })(this));
         if (_.size(this.videos) > 1) {
           this._setVideoList();
         }
-        return this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        if (_.platform() === 'DEVICE') {
+          videosWebDirectory = _.createVideosWebDirectory();
+          return videosWebDirectory.done((function(_this) {
+            return function() {
+              return _.each(_this.videos, function(videosource, index) {
+                return (function(videosource, index) {
+                  var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
+                  url = videosource.replace("media-web/", "");
+                  videosWebUrl = url.substr(url.indexOf("uploads/"));
+                  videoUrl = videosWebUrl.replace("videos-web", "videos");
+                  encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
+                  decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+                  decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath);
+                  return decryptFile.done(function(videoPath) {
+                    console.log(videoPath);
+                    _this.videos[index] = videoPath;
+                    console.log(_this.videos);
+                    console.log(JSON.stringify(_this.videos));
+                    return console.log(JSON.stringify(_this.videos[index]));
+                  });
+                })(videosource, index);
+              });
+            };
+          })(this));
+        }
       };
 
       VideoView.prototype._setVideoList = function() {
-        this.$el.append('<div id="playlist-hover" class="row playlistHover m-l-0 m-r-0" style="z-index:20"> <div class="col-sm-1 show-playlist"><button class="btn btn-info btn-small"><i class="fa fa-list-ul"></i></button></div> <div class="video-list col-sm-9 playlist-hidden" id="video-list" style="display: none;"></div> <div class="col-sm-1 playlist-hidden" id="prev" style="display: none;"><button class="btn btn-info btn-small"><i class="fa fa-step-backward"></i></button></div> <div class="col-sm-1 playlist-hidden" id="next" style="display: none;"><button class="btn btn-info btn-small pull-right"><i class="fa fa-step-forward"></i></button></div> </div>');
+        this.$el.append('<div id="playlist-hover" class="playlistHover"> <div class="row m-l-0 m-r-0 p-b-5 m-b-5"> <div class="col-sm-8 nowPlaying"> <span class="small text-muted">Now Playing:</span> <span id="now-playing-tag">' + this.model.get('title')[0] + '</span> </div> <div class="col-sm-4"> <button class="btn btn-white btn-small pull-right show-playlist"> <i class="fa fa-list-ul"></i> Playlist </button> </div> </div> <div class="row m-l-0 m-r-0 playlist-hidden vidList animated fadeInRight" style="display: none;"> <div class="video-list col-sm-8" id="video-list"></div> <div class="col-sm-4 p-t-5 m-b-5"> <button class="btn btn-info btn-small pull-right" id="next"> <i class="fa fa-step-forward"></i> </button> <button class="btn btn-info btn-small pull-right m-r-10" id="prev"> <i class="fa fa-step-backward"></i> </button> </div> </div> </div>');
         this.$el.find('#video-list').empty();
         return _.each(this.model.get('title'), (function(_this) {
           return function(title, index) {
@@ -79,11 +109,27 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._playVideo = function() {
+        var videosAll;
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
-        this.$el.find('video').attr('src', this.videos[this.index]);
-        this.$el.find('video')[0].load();
-        return this.$el.find('video')[0].play();
+        this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
+        if (_.platform() === 'DEVICE') {
+          console.log(JSON.stringify(this.videos));
+          videosAll = {};
+          videosAll["video1"] = this.videos[this.index];
+          console.log("video1");
+          console.log(videosAll["video1"]);
+          window.plugins.html5Video.initialize(videosAll);
+          return window.plugins.html5Video.play("video1");
+        } else {
+          this.$el.find('video').attr('src', this.videos[this.index]);
+          this.$el.find('video')[0].load();
+          return this.$el.find('video')[0].play();
+        }
+      };
+
+      VideoView.prototype._firstTimePlay = function() {
+        return this._playVideo();
       };
 
       return VideoView;

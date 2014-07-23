@@ -8,10 +8,9 @@ define ['app'], (App)->
 
             className : 'video'
 
-            template : '    <video  class="video-js vjs-default-skin" controls preload="none" width="100%"
-                            poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
-                                    data-setup="{}" controls src="{{videoUrl}}">
-
+            template : '<video id="video1" class="video-js vjs-default-skin" 
+                                poster="/images/video-poster.jpg" 
+                                width="100%" data-setup="{}" src="{{videoUrl}}" controls>
                             </video>
                             <div class="clearfix"></div>
                       					'
@@ -24,6 +23,11 @@ define ['app'], (App)->
                 'click #prev' : '_playPrevVideo'
                 'click #next' : '_playNextVideo'
                 'click .playlist-video' : '_playClickedVideo'
+                # 'click':->
+                    # _.once @_firstTimePlay()
+
+
+            
 
             # check if a valid image_id is set for the element
             # if present ignore else run the Holder.js to show a placeholder
@@ -31,25 +35,85 @@ define ['app'], (App)->
             # reloading placeholder image again
             onShow : ->
 
+
                 return if not @model.get('video_ids').length
 
                 @videos = @model.get('videoUrls')
                 @index = 0
 
+                # @videoId = _.uniqueId('video-')
+                # @$el.find('video').attr 'id', @videoId
+
                 @$el.find('video').on 'ended', =>
+                    console.log "ended"
                     @_playNextVideo()
+
 
                 @_setVideoList() if _.size(@videos) > 1
                 @$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
 
+            #code for mobile app
+                if _.platform() is 'DEVICE'
+
+                    videosWebDirectory = _.createVideosWebDirectory()
+                    videosWebDirectory.done =>
+
+                        _.each @videos , (videosource, index)=>
+                            do(videosource, index)=>
+
+                                url = videosource.replace("media-web/","")
+                                videosWebUrl = url.substr(url.indexOf("uploads/"))
+
+                                videoUrl = videosWebUrl.replace("videos-web", "videos")
+                                encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
+                                
+                                decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+
+                                decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
+                                decryptFile.done (videoPath)=>
+                                    console.log videoPath
+                                    @videos[index] = videoPath
+                                    # @videos.push videoPath
+                                    # Array.prototype.push.apply @videos ,videoPath
+                                    console.log @videos
+                                    console.log JSON.stringify @videos
+                                    console.log JSON.stringify @videos[index]
+
+
+
+                                    #'videos' is initialized globally inside 'plugins/walnut-app.js'
+                                    # `videos[videoId] = videoPath;`
+
+                                    # window.plugins.html5Video.initialize videos
+                                    # window.plugins.html5Video.play videoId
+
+
             _setVideoList : ->
-                @$el.append('<div id="playlist-hover" class="row playlistHover m-l-0 m-r-0" style="z-index:20">
-                                                <div class="col-sm-1 show-playlist"><button class="btn btn-info btn-small"><i class="fa fa-list-ul"></i></button></div>
-                                                <div class="video-list col-sm-9 playlist-hidden" id="video-list" style="display: none;"></div>
-                                                <div class="col-sm-1 playlist-hidden" id="prev" style="display: none;"><button class="btn btn-info btn-small"><i class="fa fa-step-backward"></i></button></div>
-                                                <div class="col-sm-1 playlist-hidden" id="next" style="display: none;"><button class="btn btn-info btn-small pull-right"><i class="fa fa-step-forward"></i></button></div>
-                                             </div>')
+                @$el.append('<div id="playlist-hover" class="playlistHover">
+                                <div class="row m-l-0 m-r-0 p-b-5 m-b-5">
+                                    <div class="col-sm-8 nowPlaying">
+                                    <span class="small text-muted">Now Playing:</span>
+                                    <span id="now-playing-tag">'+@model.get('title')[0]+'</span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-white btn-small pull-right show-playlist">
+                                        <i class="fa fa-list-ul"></i> Playlist
+                                    </button>
+                                </div>
+                                </div>
+                                <div class="row m-l-0 m-r-0 playlist-hidden vidList animated fadeInRight" style="display: none;">
+                                    <div class="video-list col-sm-8" id="video-list"></div>
+                                    <div class="col-sm-4 p-t-5 m-b-5">
+                                        <button class="btn btn-info btn-small pull-right" id="next">
+                                            <i class="fa fa-step-forward"></i>
+                                        </button>
+                                        <button class="btn btn-info btn-small pull-right m-r-10" id="prev">
+                                            <i class="fa fa-step-backward"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>')
                 @$el.find('#video-list').empty()
                 _.each @model.get('title'),(title,index)=>
                     @$el.find('#video-list').append("<div class='playlist-video' data-index=#{index}>#{title}</div>")
@@ -78,12 +142,36 @@ define ['app'], (App)->
 
 
 
-            _playVideo:->
+            _playVideo:=>
                 @$el.find('.playlist-video').removeClass 'currentVid'
                 @$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
-                @$el.find('video').attr 'src',@videos[@index]
-                @$el.find('video')[0].load()
-                @$el.find('video')[0].play()
+                @$el.find('#now-playing-tag').text @model.get('title')[@index]
+                
+                if _.platform() is 'DEVICE'
+
+                    console.log JSON.stringify @videos
+
+                    # @index = 1
+                    videosAll = {}
+                    videosAll["video1"] = @videos[@index]
+                    console.log "video1"
+                    console.log videosAll["video1"]
+
+
+                    window.plugins.html5Video.initialize videosAll
+                    window.plugins.html5Video.play "video1"
+                    # window.plugins.html5Video.play "@index" , videoIsFinished:->
+                    #     console.log "video videoIsFinished"
+                    #     @index++
+
+                else
+                    @$el.find('video').attr 'src',@videos[@index]
+                    @$el.find('video')[0].load()
+                    @$el.find('video')[0].play()
+
+            _firstTimePlay:=>
+                @_playVideo()
+
 
 
 				

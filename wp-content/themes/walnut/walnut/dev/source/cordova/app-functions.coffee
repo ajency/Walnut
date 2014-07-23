@@ -203,23 +203,23 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		
 		clearVideosWebDirectory : ->
 			# Delete all video files from 'videos-web' folder
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
-				fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/videos-web"
-					, {create: false, exclusive: false}
+			# window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
+			# 	fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/videos-web"
+			# 		, {create: false, exclusive: false}
 
-					, (directoryEntry)->
-						reader = directoryEntry.createReader()
-						reader.readEntries(
-							(entries)->
-								for i in [0..entries.length-1] by 1
-									entries[i].remove()
+			# 		, (directoryEntry)->
+			# 			reader = directoryEntry.createReader()
+			# 			reader.readEntries(
+			# 				(entries)->
+			# 					for i in [0..entries.length-1] by 1
+			# 						entries[i].remove()
 
-									if i is entries.length-1
-										console.log 'Deleted all video files from videos-web directory'
+			# 						if i is entries.length-1
+			# 							console.log 'Deleted all video files from videos-web directory'
 
-							,_.directoryErrorHandler)
-					, _.directoryErrorHandler)
-			, _.fileSystemErrorHandler)
+			# 				,_.directoryErrorHandler)
+			# 		, _.directoryErrorHandler)
+			# , _.fileSystemErrorHandler)
 			
 
 
