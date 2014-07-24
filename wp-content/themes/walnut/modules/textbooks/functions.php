@@ -146,6 +146,8 @@ function save_extra_taxonomy_fields( $term_id ) {
     if ($_POST['parent'] > 0)
         return true;
 
+    $classes= ''; $tags= '';
+
     if (isset($_POST['term_meta'])) {
         global $wpdb;
         $t_id = $term_id;
@@ -158,9 +160,13 @@ function save_extra_taxonomy_fields( $term_id ) {
         }
         //save the option array
         update_option( "taxonomy_$t_id", $term_meta );
-        $classes = maybe_serialize( $_POST['classes'] );
-        $tags = maybe_serialize( $_POST['term_tags'] );
 
+        if($_POST['classes'])
+            $classes = maybe_serialize(array_map('intval', $_POST['classes']));
+        
+        if($_POST['term_tags'])
+            $tags = maybe_serialize( $_POST['term_tags'] );
+        
         $check_exists = $wpdb->query( "select id from {$wpdb->prefix}textbook_relationships where textbook_id=" . $t_id );
         if ($check_exists)
             $textbooks_query = "update {$wpdb->prefix}textbook_relationships set class_id= '" . $classes . "', tags='" . $tags . "'
