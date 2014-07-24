@@ -75,6 +75,8 @@ define(['underscore', 'unserialize'], function(_) {
               });
             }
           });
+        } else {
+          return d.resolve(elements);
         }
       });
     };

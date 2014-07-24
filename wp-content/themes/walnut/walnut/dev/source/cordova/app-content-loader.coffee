@@ -6,8 +6,8 @@ define ['underscore', 'unserialize'], ( _) ->
 		runQuery = ->
 			$.Deferred (d)->
 				_.db.transaction (tx)->
-					tx.executeSql "SELECT * FROM wp_postmeta WHERE meta_id=?"
-						, [meta_id], onSuccess(d), _.deferredErrorHandler(d)
+					tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_id=?"
+						, [meta_id], onSuccess(d), _.deferredErrorHandler(d))
 
 		onSuccess = (d)->
 			(tx, data)->
@@ -70,6 +70,8 @@ define ['underscore', 'unserialize'], ( _) ->
 									total--
 									if not total
 										d.resolve content
+
+				else d.resolve(elements)
 
 		$.when(runFunc()).done ->
 			console.log  "get getJsonToClone done"
