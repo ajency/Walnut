@@ -1,72 +1,70 @@
 define ['app'
         'apps/content-creator/content-builder/element/controller'
-        'apps/content-creator/content-builder/elements/video/views'],
-(App, Element)->
-    App.module 'ContentCreator.ContentBuilder.Element.Video',
-    (Video, App, Backbone, Marionette, $, _)->
+        'apps/content-creator/content-builder/elements/audio/views'
+], (App, Element)->
+    App.module 'ContentCreator.ContentBuilder.Element.Audio',
+    (Audio, App, Backbone, Marionette, $, _)->
 
         # menu controller
-        class Video.Controller extends Element.Controller
+        class Audio.Controller extends Element.Controller
 
             # intializer
-            initialize: (options)->
+            initialize : (options)->
                 _.defaults options.modelData,
-                    element: 'Video'
-                    video_ids: []
-                    video_id : 0
-                    height: 0
-                    width: 0
-                    title : []
-                    videoUrl : ''
-                    videoUrls: [] #'http://video-js.zencoder.com/oceans-clip.mp4'
+                    element : 'Audio'
+                    audio_id : 0
+                    audio_ids : []
+                    height : 0
+                    width : 0
+                    audioUrl : ''
+                    audioUrls : []
+                    title : [] #'http://www.jplayer.org/audio/ogg/Miaow-04-Lismore.ogg'
 
 
                 super(options)
 
-            bindEvents: ->
+            bindEvents : ->
                 super()
 
 
+            _getAudioView : ->
+                new Audio.Views.AudioCollectionView
+                    collection : @audioCollection
 
-            _getVideoView: ->
-                new Video.Views.VideoView
-                    model: @layout.model
+            _getAudioCollection : ->
+                if not @audioCollection
 
-
-            _getVideoCollection: ->
-                if not @videoCollection
-
-                    if @layout.model.get('video_ids').length
-                        @videoCollection = App.request "get:media:collection:by:ids", @layout.model.get 'video_ids'
+                    if @layout.model.get('audio_ids').length
+                        @audioCollection = App.request "get:media:collection:by:ids", @layout.model.get 'audio_ids'
                     else
-                        @videoCollection = App.request "get:empty:media:collection"
+                        @audioCollection = App.request "get:empty:media:collection"
 
-                @videoCollection.comparator = 'order'
+                @audioCollection.comparator = 'order'
 
 
-                @videoCollection
+                @audioCollection
 
             _parseInt:->
-                video_ids = new Array()
-                if not @layout.model.get('video_ids') and @layout.model.get('video_id')
-                    @layout.model.set 'video_ids',[@layout.model.get('video_id')]
-                    @layout.model.set 'videoUrls',[@layout.model.get('videoUrl')]
-                _.each @layout.model.get('video_ids'),(id)->
-                    video_ids.push parseInt id
+                audio_ids = new Array()
+                if not @layout.model.get('audio_ids') and @layout.model.get('audio_id')
+                    @layout.model.set 'audio_ids',[@layout.model.get('audio_id')]
+                _.each @layout.model.get('audio_ids'),(id)->
+                    audio_ids.push parseInt id
 
-                @layout.model.set 'video_ids',video_ids
+                @layout.model.set 'audio_ids',audio_ids
 
 
 
             # setup templates for the element
-            renderElement: ()=>
+            renderElement : =>
                 @removeSpinner()
                 @_parseInt()
-                # get logo attachment
-#                videoModel = App.request "get:media:by:id", @layout.model.get 'video_id'
-                videoCollection = @_getVideoCollection()
-                App.execute "when:fetched", videoCollection, =>
-                    @view = @_getVideoView()
+
+                audioCollection = @_getAudioCollection()
+
+
+                App.execute "when:fetched", audioCollection, =>
+                    @view = @_getAudioView audioModel
 
                     #trigger media manager popup and start listening to "media:manager:choosed:media" event
                     @listenTo @view, "show:media:manager", =>
@@ -74,42 +72,15 @@ define ['app'
                         App.execute "show:media:collection:manager",
                             region: App.dialogRegion
                             mediaType: 'video'
-                            mediaCollection : videoCollection
+                            mediaCollection : audioCollection
 
-                    @listenTo @videoCollection, 'add remove order:updated',->
-                        @videoCollection.sort()
+                    @listenTo @audioCollection, 'add remove order:updated',->
+                        @audioCollection.sort()
                         @layout.model.set
-                            'video_ids': @videoCollection.pluck 'id'
-                            'videoUrls' : @videoCollection.pluck 'url'
-                            'title' : @videoCollection.pluck 'title'
-                            'video_id' : _.first @videoCollection.pluck 'id'
-                            'videoUrl' : _.first @videoCollection.pluck 'url'
+                            'audio_ids': @audioCollection.pluck 'id'
+                            'audio_id' : _.first @audioCollection.pluck 'id'
+                            'audioUrl' : _.first @audioCollection.pluck 'url'
                         @layout.elementRegion.show @view
                         @layout.model.save()
 
-
-
-
                     @layout.elementRegion.show @view
-
-
-
-
-
-#                        App.execute "show:media:manager:app",
-#                            region: App.dialogRegion
-#                            mediaType: 'video'
-#
-#                        @listenTo App.vent, "media:manager:choosed:media", (media)=>
-#                            @layout.model.set
-#                                'video_id': media.get 'id'
-#                                'videoUrl': media.get 'url'
-#                            @layout.model.save()
-#                            @layout.elementRegion.show @view
-#                            @stopListening App.vent, "media:manager:choosed:media"
-#
-#                        @listenTo App.vent, "stop:listening:to:media:manager", =>
-#                            @stopListening App.vent, "media:manager:choosed:media"
-
-
-							

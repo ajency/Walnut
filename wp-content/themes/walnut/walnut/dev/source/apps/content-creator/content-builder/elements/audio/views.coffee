@@ -4,8 +4,12 @@ define ['app'], (App)->
     App.module 'ContentCreator.ContentBuilder.Element.Audio.Views',
     (Views, App, Backbone, Marionette, $, _)->
 
+        class AudioItemView extends Marionette.ItemView
+
+            template : ''
+
         # Menu item view
-        class Views.AudioView extends Marionette.ItemView
+        class Views.AudioCollectionView extends Marionette.CompositeView
 
             className: 'audio'
 
