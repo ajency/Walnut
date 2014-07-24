@@ -39,7 +39,6 @@ require.config({
     kineticresize: 'plugins/kinetic.plugin.resize',
     checkbox: 'plugins/flatui-checkbox',
     holder: 'plugins/holder',
-    videojs: 'plugins/video',
     panzer: 'plugins/panzer',
     mmenu: 'plugins/jquery.mmenu.min.all',
     timerplugin: 'plugins/jquery.countdown_plugin.min',
