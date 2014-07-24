@@ -127,6 +127,9 @@ function validate_csv_row( $question_response_data ) {
     if (!is_array( $question_response_data ))
         return new WP_Error("", "Not a valid record");
 
+    if($question_response_data [0] == 'ref_id')
+        return false;
+        
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $question_response_data ) !== 10)
         return new WP_Error("", "Column count for csv row not proper");
@@ -147,6 +150,7 @@ function validate_csv_row( $question_response_data ) {
  * 'status' => $status
  * );
  */
+ 
 function convert_csv_row_to_question_response_format( $question_response_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
@@ -158,7 +162,7 @@ function convert_csv_row_to_question_response_format( $question_response_data ) 
         'content_piece_id' => $question_response_data[2],
         'collection_id' => $question_response_data[3],
         'division' => $question_response_data[4],
-        'question_response' => $question_response,
+        'question_response' => wp_unslash($question_response),
         'time_taken' => $question_response_data[6],
         'start_date' => $question_response_data[7],
         'end_date' => $question_response_data[8],
@@ -244,6 +248,9 @@ function validate_meta_csv_row( $question_response_meta_data ) {
 
     if (!is_array( $question_response_meta_data ))
         return new WP_Error("", "Not a valid record");
+    
+    if($question_response_meta_data [0] == 'qr_ref_id')
+        return false;
 
     // Total columns for each row MUST be 11. else its a improper CSV row
     if (count( $question_response_meta_data ) !== 3)
@@ -264,7 +271,7 @@ function convert_csv_row_to_question_response_meta_format( $question_response_me
     return array(
         'qr_ref_id' => $question_response_meta_data[0],
         'meta_key' => $question_response_meta_data[1],
-        'meta_value' => $question_response_meta_data[2]
+        'meta_value' => wp_unslash($question_response_meta_data[2])
     );
 }
 
