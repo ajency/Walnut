@@ -169,7 +169,7 @@ function import_student_csv($file_path){
                 if(! is_wp_error( $user_id ) ){
                     //Insert/Update user meta table	
                     update_user_meta( $user_id, 'student_division', $meta_value_division );
-                    update_user_meta( $user_id, 'roll_no', $meta_value_rollno);
+                    update_user_meta( $user_id, 'student_rollno', $meta_value_rollno);
                     update_user_meta( $user_id, 'parent_phone1', $parent_phone1 );
                     update_user_meta( $user_id, 'parent_phone2', $parent_phone2);
 
