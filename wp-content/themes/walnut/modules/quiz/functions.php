@@ -169,3 +169,52 @@ function update_quiz_content_pieces($data= array()){
 
     $wpdb->query($content_pieces_qry);
 }
+
+
+function get_all_quiz_modules($args){
+    global $wpdb;
+
+
+    if ($args['post_status'] =='any')
+            $args['post_status'] = '';
+    if ( $args['textbook'] =='any')
+            $args['textbook'] = '';
+    if ( $args['quiz_type'] =='any')
+            $args['quiz_type'] = '';
+
+
+    $query_string = "SELECT DISTINCT post.id
+            FROM {$wpdb->base_prefix}content_collection AS post,
+                {$wpdb->base_prefix}collection_meta AS meta
+            WHERE meta.collection_id = post.id
+            AND post.type = %s
+            AND post.post_status LIKE %s
+            AND meta.meta_key = %s
+            AND meta.meta_value LIKE %s
+            AND post.term_ids LIKE %s";
+
+    $post_status_prepare = "%".$args['post_status']."%";
+    $quiz_type_prepare = "%".$args['quiz_type']."%";
+
+    if (empty($args['textbook'])){
+        $textbook_prepare = '';
+    }
+    else{
+        $textbook_prepare = '%"'.$args['textbook'].'"%';
+    }
+
+
+    $query = $wpdb->prepare($query_string,'quiz',$post_status_prepare,'quiz_type',$quiz_type_prepare,
+        $textbook_prepare);
+    $quiz_ids = $wpdb->get_col($query);
+
+    $result = array();
+
+    foreach ($quiz_ids as $id){
+        $quiz_data = get_single_quiz_module((int)$id);
+        unset($quiz_data ->content_pieces);
+        $result[] = $quiz_data;
+    }
+
+    return $result;
+}

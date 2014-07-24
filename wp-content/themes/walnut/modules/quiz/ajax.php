@@ -79,3 +79,19 @@ function ajax_fetch_single_quiz ()
 }
 
 add_action ('wp_ajax_read-quiz', 'ajax_fetch_single_quiz');
+
+
+function ajax_fetch_all_quizes(){
+
+    $args = $_GET;
+    $defaults = array(
+        'textbook' => '',
+        'post_status' => 'publish',
+        'quiz_type' => ''
+    );
+    $args = wp_parse_args($args,$defaults);
+    $quiz_modules = get_all_quiz_modules($args);
+    wp_send_json($quiz_modules);
+}
+
+add_action('wp_ajax_get_all_quiz','ajax_fetch_all_quizes');
