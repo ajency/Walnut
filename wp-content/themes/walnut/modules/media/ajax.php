@@ -28,16 +28,25 @@ add_action( 'wp_ajax_query_attachments', 'query_attachments' );
 add_action( 'wp_ajax_nopriv_query_attachments', 'query_attachments' );
 
 
-function get_media() {
+function get_blog_media() {
     $id = $_GET ['id'];
-    $media = wp_prepare_attachment_for_js( $id );
-    wp_send_json( array(
+    $current_blog_id= get_current_blog_id();
+    switch_to_blog(1);
+
+    $media = wp_prepare_attachment_for_js ( $id );
+    switch_to_blog($current_blog_id);
+
+    wp_send_json ( array (
         'code' => 'OK',
         'data' => $media
     ) );
-}
 
-add_action( 'wp_ajax_read-media', 'get_media' );
+
+}
+add_action ( 'wp_ajax_read-media', 'get_blog_media' );
+
+
+
 
 
 function ajax_update_media() {
@@ -84,3 +93,23 @@ function change_uploads_directory( $uploads_dir ) {
 }
 
 add_filter( 'upload_dir', 'change_uploads_directory', 100, 1 );
+
+
+function get_media_by_ids(){
+    $ids = $_GET['ids'];
+    $media = array();
+    $current_blog_id= get_current_blog_id();
+    switch_to_blog(1);
+    foreach ($ids as $id){
+//        $media[] = $id;
+        $media[] = wp_prepare_attachment_for_js( $id );
+    }
+    switch_to_blog($current_blog_id);
+    wp_send_json( array(
+        'code' => 'OK',
+        'data' => $media
+    ) );
+
+}
+
+add_action('wp_ajax_get_media_by_ids','get_media_by_ids');

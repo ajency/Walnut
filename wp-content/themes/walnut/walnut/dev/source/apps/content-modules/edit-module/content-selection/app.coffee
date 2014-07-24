@@ -2,21 +2,20 @@ define ['app'
         'controllers/region-controller'
         'apps/content-modules/edit-module/content-selection/all-content-app'
         'apps/content-modules/edit-module/content-selection/search-results-app'
-        'apps/content-modules/edit-module/content-selection/textbook-filters-app'
+        'apps/textbook-filters/textbook-filters-app'
 ], (App, RegionController)->
     App.module "ContentSelectionApp.Controller", (Controller, App)->
         class Controller.ContentSelectionController extends RegionController
 
             initialize: (opts) ->
 
-                @textbooksCollection = App.request "get:textbooks"
                 @contentPiecesCollection = App.request "get:content:pieces",
                     content_type: ['teacher_question','content_piece']
                     post_status : 'publish'
 
                 {@model,@contentGroupCollection}= opts
 
-                App.execute "when:fetched", [@contentPiecesCollection,@contentGroupCollection, @textbooksCollection], =>
+                App.execute "when:fetched", [@contentPiecesCollection,@contentGroupCollection], =>
                     @contentPiecesCollection.remove model for model in @contentGroupCollection.models
 
                     @layout = @_getContentSelectionLayout()
@@ -27,23 +26,18 @@ define ['app'
 
                         App.execute "show:textbook:filters:app",
                             region: @layout.filtersRegion
-                            textbooksCollection: @textbooksCollection
-                            contentPiecesCollection: @contentPiecesCollection
+                            collection: @contentPiecesCollection
                             model: @model
+                            filters : ['textbooks', 'chapters','sections','subsections','content_type']
 
                         App.execute "show:all:content:selection:app",
                             region: @layout.allContentRegion
-                            textbooksCollection: @textbooksCollection
                             contentPiecesCollection: @contentPiecesCollection
                             contentGroupCollection:@contentGroupCollection
-                            model: @model
 
                         App.execute "show:content:search:results:app",
                             region: @layout.searchResultsRegion
-                            textbooksCollection: @textbooksCollection
-                            contentPiecesCollection: @contentPiecesCollection
                             contentGroupCollection:@contentGroupCollection
-                            model: @model
 
                     @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
 

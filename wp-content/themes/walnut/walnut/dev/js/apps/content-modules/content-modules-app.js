@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'apps/content-modules/edit-module/module-edit-controller', 'apps/content-modules/view-single-module/single-module-controller', 'apps/content-modules/modules-listing/modules-listing-controller'], function(App) {
+define(['app', 'apps/content-modules/edit-module/module-edit-controller', 'apps/content-modules/view-single-module/single-module-controller', 'apps/content-modules/modules-listing/app'], function(App) {
   return App.module("ContentModulesApp", function(ContentModulesApp, App) {
     var ContentModulesRouter, Controller;
     ContentModulesRouter = (function(_super) {
@@ -60,7 +60,7 @@ define(['app', 'apps/content-modules/edit-module/module-edit-controller', 'apps/
         });
       },
       modulesListing: function() {
-        return new ContentModulesApp.GroupListing.Controller({
+        return new ContentModulesApp.ModulesListing.ListController({
           region: App.mainContentRegion
         });
       },

@@ -100,7 +100,25 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getEmptyMediaCollection: function() {
         var mediaCollection;
-        return mediaCollection = new Media.MediaCollection;
+        mediaCollection = new Media.MediaCollection;
+        return mediaCollection;
+      },
+      getMediaCollectionById: function(ids) {
+        var mediaCollection;
+        if (ids == null) {
+          ids = [];
+        }
+        mediaCollection = new Media.MediaCollection;
+        mediaCollection.url = "" + AJAXURL + "?action=get_media_by_ids";
+        if (_.size(ids) > 0) {
+          mediaCollection.fetch({
+            data: {
+              ids: ids,
+              mediaType: 'video'
+            }
+          });
+        }
+        return mediaCollection;
       },
       getPlaceHolderMedia: function() {
         var media;
@@ -127,6 +145,9 @@ define(["app", 'backbone'], function(App, Backbone) {
     });
     App.reqres.setHandler("get:media:by:id", function(mediaId) {
       return API.getMediaById(mediaId);
+    });
+    App.reqres.setHandler('get:media:collection:by:ids', function(mediaIds) {
+      return API.getMediaCollectionById(mediaIds);
     });
     return App.commands.setHandler("new:media:added", function(modelData) {
       return API.createNewMedia(modelData);

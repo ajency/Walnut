@@ -36,6 +36,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edi
             }
           };
         })(this));
+        this.listenTo(this.quizModel, 'change:id', this._showContentSelectionApp, this);
+        this.listenTo(this.layout.quizDetailsRegion, 'close:content:selection:app', (function(_this) {
+          return function() {
+            return _this.layout.contentSelectionRegion.close();
+          };
+        })(this));
         return this.show(this.layout, {
           loading: true
         });

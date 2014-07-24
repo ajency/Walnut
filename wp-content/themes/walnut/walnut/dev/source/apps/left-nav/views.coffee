@@ -5,15 +5,15 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
             tagName: 'li'
 
             template: '<a href="javascript:;">
-            					<i class="{{iconClass}}"></i>
-            					<span class="title">{{post_title}}</span>
-            					<span class="arrow"></span>
-            				</a>
-            				<ul class="sub-menu">
-            					{{#submenu}}
-            					<li><a href="{{menu_item_link}}">{{post_title}}</a></li>
-            					{{/submenu}}
-            				</ul>'
+                        					<i class="{{iconClass}}"></i>
+                        					<span class="title">{{post_title}}</span>
+                        					<span class="arrow"></span>
+                        				</a>
+                        				<ul class="sub-menu">
+                        					{{#submenu}}
+                        					<li><a href="{{menu_item_link}}">{{post_title}}</a></li>
+                        					{{/submenu}}
+                        				</ul>'
 
             serializeData: ->
                 data = super()
@@ -45,6 +45,7 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
 
             events:
                 'click li': 'clickMenu'
+                'click .sub-menu li' : 'closeNav'
 
             onShow: ->
                 # if $( window ).width()<1025
@@ -52,12 +53,12 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                 #         position: 'left'
                 #         zposition: 'front'
                 #     $("#main-menu").find(".mm-subopen").addClass("mm-fullsubopen ")
-                    
-                    # $('#main-menu').find( 'li a' ).not( '.mm-subopen' ).not( '.mm-subclose' )
-                    # .bind('click.example', (e)->
-                    #     e.preventDefault()
-                    #     $('#main-menu').trigger('close')
-                    #     )
+
+                # $('#main-menu').find( 'li a' ).not( '.mm-subopen' ).not( '.mm-subclose' )
+                # .bind('click.example', (e)->
+                #     e.preventDefault()
+                #     $('#main-menu').trigger('close')
+                #     )
 
                 #Auto close open menus in Condensed menu
                 #|| ($('.teacher-app').length>0)
@@ -77,15 +78,14 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     elem.children('li.open').children('.sub-menu').slideUp(200);
                     elem.children('li').removeClass('open');
 
-                # if $( window ).width()<1025
-                #     $('#main-menu-toggle').sidr
-                #         name : 'main-menu'
-                #         side: 'left'
-
-                    
+            # if $( window ).width()<1025
+            #     $('#main-menu-toggle').sidr
+            #         name : 'main-menu'
+            #         side: 'left'
 
 
-            clickMenu: (e)->
+
+            clickMenu: (e)=>
                 li_target = $(e.target).closest('li').find('a');
                 if (li_target.next().hasClass('sub-menu') == false)
                     return;
@@ -100,17 +100,19 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                 if (sub.is(":visible"))
                     $('.arrow', li_target).removeClass("open");
                     li_target.parent().removeClass("active");
-                    sub.slideUp 200, () ->
-                        handleSidenarAndContentHeight();
+                    sub.slideUp 200, =>
+                        @handleSidenarAndContentHeight();
                 else
                     $('.arrow', li_target).addClass("open");
                     li_target.parent().addClass("open");
-                    sub.slideDown 200, ()->
-                        handleSidenarAndContentHeight();
+                    sub.slideDown 200, =>
+                        @handleSidenarAndContentHeight();
 
                 e.preventDefault();
 
-            handleSidenarAndContentHeight = ()->
+
+
+            handleSidenarAndContentHeight:->
                 content = $('.page-content');
                 sidebar = $('.page-sidebar');
                 if (!content.attr("data-height"))
@@ -120,6 +122,12 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     content.css("min-height", sidebar.height() + 120);
                 else
                     content.css("min-height", content.attr("data-height"));
-				
 
 
+            closeNav:->
+                if @$el.hasClass "mini"
+                    @$el.find '.menu-items li'
+                    .removeClass 'open'
+
+                    @$el.find '.sub-menu'
+                    .slideUp()

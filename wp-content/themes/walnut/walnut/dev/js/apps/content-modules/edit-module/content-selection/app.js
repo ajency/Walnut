@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-modules/edit-module/content-selection/all-content-app', 'apps/content-modules/edit-module/content-selection/search-results-app', 'apps/content-modules/edit-module/content-selection/textbook-filters-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/content-modules/edit-module/content-selection/all-content-app', 'apps/content-modules/edit-module/content-selection/search-results-app', 'apps/textbook-filters/textbook-filters-app'], function(App, RegionController) {
   return App.module("ContentSelectionApp.Controller", function(Controller, App) {
     Controller.ContentSelectionController = (function(_super) {
       var ContentSelectionLayout;
@@ -13,13 +13,12 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
       }
 
       ContentSelectionController.prototype.initialize = function(opts) {
-        this.textbooksCollection = App.request("get:textbooks");
         this.contentPiecesCollection = App.request("get:content:pieces", {
           content_type: ['teacher_question', 'content_piece'],
           post_status: 'publish'
         });
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
-        return App.execute("when:fetched", [this.contentPiecesCollection, this.contentGroupCollection, this.textbooksCollection], (function(_this) {
+        return App.execute("when:fetched", [this.contentPiecesCollection, this.contentGroupCollection], (function(_this) {
           return function() {
             var model, _i, _len, _ref;
             _ref = _this.contentGroupCollection.models;
@@ -34,23 +33,18 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
             _this.listenTo(_this.layout, "show", function() {
               App.execute("show:textbook:filters:app", {
                 region: _this.layout.filtersRegion,
-                textbooksCollection: _this.textbooksCollection,
-                contentPiecesCollection: _this.contentPiecesCollection,
-                model: _this.model
+                collection: _this.contentPiecesCollection,
+                model: _this.model,
+                filters: ['textbooks', 'chapters', 'sections', 'subsections', 'content_type']
               });
               App.execute("show:all:content:selection:app", {
                 region: _this.layout.allContentRegion,
-                textbooksCollection: _this.textbooksCollection,
                 contentPiecesCollection: _this.contentPiecesCollection,
-                contentGroupCollection: _this.contentGroupCollection,
-                model: _this.model
+                contentGroupCollection: _this.contentGroupCollection
               });
               return App.execute("show:content:search:results:app", {
                 region: _this.layout.searchResultsRegion,
-                textbooksCollection: _this.textbooksCollection,
-                contentPiecesCollection: _this.contentPiecesCollection,
-                contentGroupCollection: _this.contentGroupCollection,
-                model: _this.model
+                contentGroupCollection: _this.contentGroupCollection
               });
             });
             return _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {

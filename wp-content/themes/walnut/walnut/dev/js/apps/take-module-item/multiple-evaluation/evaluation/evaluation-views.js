@@ -102,9 +102,6 @@ define(['app'], function(App) {
       };
 
       EvaluationView.prototype.onShow = function() {
-        var stickyHeaderTop;
-        stickyHeaderTop = this.$el.closest('#main-content-region').find("#module-details-region").height();
-        this.$el.css("margin-top", "" + stickyHeaderTop + "px");
         $('html, body').animate({
           scrollTop: this.$el.closest('.studentList').find("#eval-parameters").offset().top - stickyHeaderTop
         }, 1000);

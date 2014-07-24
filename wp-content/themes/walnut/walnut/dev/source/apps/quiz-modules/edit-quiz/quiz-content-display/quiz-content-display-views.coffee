@@ -45,12 +45,16 @@ define ['app'
             events :
                 'click .remove' : 'removeItem'
 
+            modelEvents :
+                'change:post_status' : 'statusChanged'
+
             statusChanged : (model, post_status)->
                 if post_status in ['publish', 'archive']
                     @$el.find('.remove').hide()
                     @$el.find(".cbp_tmtimeline").sortable('disable')
                 else
                     @$el.find('.remove').show()
+#                    @triggerMethod 'show'
 
 
             onShow : ->

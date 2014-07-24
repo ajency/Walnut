@@ -770,6 +770,49 @@
   font-size: 50px;
   color: #e5e9ec;
 }
+.vjs-poster {
+  height: auto;
+}
+.video-js {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #e5e9ec;
+}
+.playlistToggle {
+  position: relative;
+  top: -45px;
+  left: 10px;
+  z-index: 999;
+}
+.playlistHover {
+  background-color: #f8f8f8;
+  padding: 10px 0 0;
+  font-size: 16px;
+}
+.playlist-video {
+  border-bottom: 1px solid #e6e6e6;
+  margin: 2px 0 0;
+  padding: 2px 0 5px;
+  cursor: pointer;
+}
+.playlist-video:before {
+  content: '';
+  margin-right: 22px;
+}
+.playlist-video:last-child {
+  border: none;
+}
+.playlist-video.currentVid {
+  color: #0090d9;
+}
+.playlist-video.currentVid:before {
+  font-family: 'Glyphicons Halflings';
+  content: "\e072";
+  margin-right: 6px;
+}
+.vidList {
+  background-color: #f0f0f0;
+  border-top: 1px solid #e5e9ec;
+}
 /*Editor popup*/
 .cke_dialog_body .cke_dialog_title {
   background-color: #0090d9;
@@ -1325,13 +1368,21 @@ p.mcq-option-text {
   margin-bottom: 5px;
   padding: 10px 10px 10px 20px;
 }
+#eval-parameters {
+  max-width: 760px;
+  margin: 0 auto;
+}
 @media (min-width: 1020px) and (max-width: 1295px) {
   #content-board {
     margin: 0;
   }
-  #myCanvas {
+  #myCanvas,
+  #eval-parameters {
     margin: 0;
     margin-left: auto;
+  }
+  #eval-parameters {
+    max-width: 755px;
   }
   #top-panel {
     float: left;
@@ -1404,6 +1455,7 @@ p.mcq-option-text {
 }
 .parameters .btn {
   white-space: normal;
+  word-break: break-word;
 }
 /*.answrRight{
 	background: url(../../../images/answer.png) no-repeat;

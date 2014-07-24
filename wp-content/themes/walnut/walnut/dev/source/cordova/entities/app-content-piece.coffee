@@ -42,7 +42,6 @@ define ['underscore', 'unserialize'], ( _) ->
 
 															_.mixin(_.str.exports());
 															excerpt_array = contentElements.excerpt
-															
 
 															#pushes the parameter and attributes values to excerpt_array
 															if not _.isEmpty grading_params
@@ -50,7 +49,6 @@ define ['underscore', 'unserialize'], ( _) ->
 																	excerpt_array.push params['parameter']
 																	
 																	attributes = params['attributes']
-
 																	_.each attributes, (attr, i)->
 																		excerpt_array.push attr
 
