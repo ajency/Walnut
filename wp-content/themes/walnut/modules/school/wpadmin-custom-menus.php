@@ -27,11 +27,11 @@ function school_csv_import_options() {
             check_admin_referer( 'school-csvdata-import' );
             $temp = explode(".", $_FILES["student_csv_file"]["name"]);
             $extension = end($temp);
-
+            
             if($_FILES["student_csv_file"]["error"] > 0){
                 $import_status = array('success'=>false,'msg'=>'No file added');
             }
-            elseif(($_FILES["student_csv_file"]["type"] == "text/comma-separated-values" || $_FILES["student_csv_file"]["type"] == "text/csv") && in_array($extension, $allowedExts)){   
+            elseif($_FILES["student_csv_file"]["type"] == "text/comma-separated-values" && in_array($extension, $allowedExts)){   
                 $import_status = import_student_csv($_FILES["student_csv_file"]);
             }else{
                 $import_status = array('success'=>false,'msg'=>'Invalid file.');
@@ -77,10 +77,12 @@ function import_student_csv($file_path){
     $updated_records = $new_records = $failed_records = array();
     // get json from parsed csv data
     $csv_json = parseCSV($file_path['tmp_name']);
-
+    
     $csvData = json_decode($csv_json);
     
-    $student_csv_headers = array('NAME',
+    $student_csv_headers = array('USERNAME',
+                                 'FIRST_NAME',
+                                 'LAST_NAME',
                                  'ROLL_NO',
                                  'BLOG_ID',
                                  'EMAIL_ID',
@@ -93,7 +95,7 @@ function import_student_csv($file_path){
 
     $i=1;
     $update_count = $insert_count = $failed_count = 0;
-
+    
     if($student_csv_headers !== $csvData[0] ){
             $imp_status = array('success'=>false,'msg'=>'Column Headers incorrect.');
             return $imp_status;
@@ -113,16 +115,18 @@ function import_student_csv($file_path){
 	$user_table = $wpdb->prefix ."users";
         $user_pass = "ajency";
         $user_login = $csvData[$i][0];
-        $meta_value_rollno = $csvData[$i][1];
-        $blogId = $csvData[$i][2];
-        $user_email = $csvData[$i][3];
+        $first_name = $csvData[$i][1];
+        $last_name = $csvData[$i][2];
+        $meta_value_rollno = $csvData[$i][3];
+        $blogId = $csvData[$i][4];
+        $user_email = $csvData[$i][5];
 
-        $meta_value_division =(int) $csvData[$i][5];
+        $meta_value_division =(int) $csvData[$i][7];
         
-        $parent_email1 = $csvData[$i][6];
-        $parent_phone1 = $csvData[$i][7];
-        $parent_email2 = $csvData[$i][8];
-        $parent_phone2 = $csvData[$i][9];
+        $parent_email1 = $csvData[$i][8];
+        $parent_phone1 = $csvData[$i][9];
+        $parent_email2 = $csvData[$i][10];
+        $parent_phone2 = $csvData[$i][11];
         $role = "student";
 
         //Check if $user_email is present in users table
@@ -167,9 +171,11 @@ function import_student_csv($file_path){
 		}
 		
                 if(! is_wp_error( $user_id ) ){
-                    //Insert/Update user meta table	
+                    //Insert/Update user meta table
+                    update_user_meta( $user_id, 'first_name', $first_name );
+                    update_user_meta( $user_id, 'last_name', $last_name );
                     update_user_meta( $user_id, 'student_division', $meta_value_division );
-                    update_user_meta( $user_id, 'student_rollno', $meta_value_rollno);
+                    update_user_meta( $user_id, 'roll_no', $meta_value_rollno);
                     update_user_meta( $user_id, 'parent_phone1', $parent_phone1 );
                     update_user_meta( $user_id, 'parent_phone2', $parent_phone2);
 
