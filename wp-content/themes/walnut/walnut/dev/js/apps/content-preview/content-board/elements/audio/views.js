@@ -12,32 +12,29 @@ define(['app'], function(App) {
 
       AudioView.prototype.className = 'audio';
 
-      AudioView.prototype.template = '<audio controls> <source src="{{audioUrl}}" type="audio/ogg"> Your browser does not support the audio element. </audio>';
+      AudioView.prototype.template = '{{#audio}} <audio title="{{title}}" class="audio1" controls> <source src="{{audioUrl}}" type="audio/mpeg"> Your browser does not support the audio element. </audio> {{/audio}}';
 
       AudioView.prototype.mixinTemplateHelpers = function(data) {
-        var audioPath, localAudioPath;
+        var arrays, audioArray;
         data = AudioView.__super__.mixinTemplateHelpers.call(this, data);
-        if (_.platform() === 'DEVICE') {
-          audioPath = data.audioUrl.substr(data.audioUrl.indexOf("uploads/"));
-          audioPath = audioPath.replace("media-web/audio-web", "audios");
-          localAudioPath = _.getSynapseMediaDirectoryPath() + audioPath;
-          data.audioUrl = localAudioPath;
+        if (this.model.get('audio_ids').length) {
+          arrays = _.zip(this.model.get('title'), this.model.get('audioUrls'));
+          audioArray = new Array();
+          _.each(arrays, function(array) {
+            return audioArray.push(_.object(['title', 'audioUrl'], array));
+          });
+          data.audio = audioArray;
         }
         return data;
       };
 
-      AudioView.prototype.events = {
-        'click': function(e) {
-          return e.stopPropagation();
-        }
-      };
-
       AudioView.prototype.onShow = function() {
-        return this.$el.find('audio').panzer({
+        return this.$el.find('audio').panzerlist({
           theme: 'light',
           layout: 'big',
           expanded: true,
-          showduration: true
+          showduration: true,
+          show_prev_next: true
         });
       };
 

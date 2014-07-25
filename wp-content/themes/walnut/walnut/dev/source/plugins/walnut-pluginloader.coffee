@@ -33,6 +33,7 @@ define [
     'checkbox'
     'screwbuttons'
     'panzer'
+    'panzerlist'
     'mmenu'
     'timerplugin'
     'countdowntimer'
