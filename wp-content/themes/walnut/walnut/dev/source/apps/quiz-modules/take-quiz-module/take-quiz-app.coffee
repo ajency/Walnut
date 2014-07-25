@@ -116,6 +116,8 @@ define ['app'
                             region: @layout.questionDisplayRegion
                             model: questionModel
 
+                        @layout.quizProgressRegion.trigger "question:changed", questionModel
+
                 _showQuizViews:->
 
                     new View.QuizDescription.Controller
@@ -125,6 +127,7 @@ define ['app'
                     new View.QuizProgress.Controller
                         region: @layout.quizProgressRegion
                         questionsCollection: questionsCollection
+                        currentQuestion: questionModel
 
                     new View.QuizTimer.Controller
                         region: @layout.quizTimerRegion

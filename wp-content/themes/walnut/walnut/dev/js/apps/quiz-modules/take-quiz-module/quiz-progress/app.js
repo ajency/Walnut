@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-quiz-module/quiz-progress/templates/quiz-progress-tpl.html'], function(App, RegionController, quizProgressTemplate) {
@@ -9,25 +8,28 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       __extends(Controller, _super);
 
       function Controller() {
-        this._showQuizProgressView = __bind(this._showQuizProgressView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
       Controller.prototype.initialize = function(opts) {
-        var view;
-        this.questionsCollection = opts.questionsCollection;
-        this.view = view = this._showQuizProgressView(this.questionsCollection);
+        var currentQuestion, view;
+        this.questionsCollection = opts.questionsCollection, currentQuestion = opts.currentQuestion;
+        this.view = view = this._showQuizProgressView(this.questionsCollection, currentQuestion);
         this.show(view, {
           loading: true
         });
-        return this.listenTo(view, "change:question", function(id) {
+        this.listenTo(view, "change:question", function(id) {
           return this.region.trigger("change:question", id);
+        });
+        return this.listenTo(this.region, "question:changed", function(model) {
+          return this.view.triggerMethod("question:change", model);
         });
       };
 
-      Controller.prototype._showQuizProgressView = function(collection) {
+      Controller.prototype._showQuizProgressView = function(collection, currentQuestion) {
         return new QuizProgressView({
-          collection: collection
+          collection: collection,
+          currentQuestion: currentQuestion
         });
       };
 
@@ -41,7 +43,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         return QuestionProgressView.__super__.constructor.apply(this, arguments);
       }
 
-      QuestionProgressView.prototype.template = '<a data-id="{{ID}}">{{itemNumber}}</a>';
+      QuestionProgressView.prototype.template = '<a id="{{ID}}">{{itemNumber}}</a>';
 
       QuestionProgressView.prototype.tagName = 'li';
 
@@ -76,12 +78,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       QuizProgressView.prototype.events = {
         'click #quiz-items a': function(e) {
-          return this.trigger("change:question", $(e.target).attr('data-id'));
+          return this.trigger("change:question", $(e.target).attr('id'));
         }
       };
 
       QuizProgressView.prototype.onShow = function() {
-        return $("div.holder").jPages({
+        var currentQuestion;
+        this.$el.find("div.holder").jPages({
           containerID: "quiz-items",
           perPage: 9,
           keyBrowse: true,
@@ -91,6 +94,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           midRange: 15,
           links: "blank"
         });
+        currentQuestion = Marionette.getOption(this, 'currentQuestion');
+        return this.$el.find("#quiz-items a#" + currentQuestion.id).closest('li').addClass('current');
+      };
+
+      QuizProgressView.prototype.onQuestionChange = function(model) {
+        this.$el.find("#quiz-items li").removeClass('current');
+        return this.$el.find("#quiz-items a#" + model.id).closest('li').addClass('current');
       };
 
       return QuizProgressView;

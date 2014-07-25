@@ -108,10 +108,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._showSingleQuestionApp = function() {
         if (questionModel) {
-          return new View.SingleQuestion.Controller({
+          new View.SingleQuestion.Controller({
             region: this.layout.questionDisplayRegion,
             model: questionModel
           });
+          return this.layout.quizProgressRegion.trigger("question:changed", questionModel);
         }
       };
 
@@ -122,7 +123,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         new View.QuizProgress.Controller({
           region: this.layout.quizProgressRegion,
-          questionsCollection: questionsCollection
+          questionsCollection: questionsCollection,
+          currentQuestion: questionModel
         });
         new View.QuizTimer.Controller({
           region: this.layout.quizTimerRegion,
