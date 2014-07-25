@@ -130,8 +130,8 @@ function get_single_quiz_module ($id) {
         if ($value->meta_key == 'quiz_type')
             $data->quiz_type = $value->meta_value;
 
-        if ($value->meta_key == 'content_pieces')
-            $data->content_pieces = maybe_unserialize($value->meta_value);
+        if ($value->meta_key == 'content_layout')
+            $data->content_layout = maybe_unserialize($value->meta_value);
 
         if ($value->meta_key == 'quiz_meta'){
             $quiz_meta = maybe_unserialize($value->meta_value);
@@ -141,33 +141,53 @@ function get_single_quiz_module ($id) {
             $data->message = $quiz_meta['message'];
         }
     }
-//    print_r($data); exit;
+    $content_content_ids = array();
+    if ($data->content_layout){
+        foreach($data->content_layout as $content){
+            if ($content['type'] == 'content-piece'){
+                $content_content_ids[] = $content['id'];
+            }
+
+//            elseif ($content['type'] == 'content_set'){
+//                print_r($content['data']['lvl1']);
+//                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
+//                    $content['data']['lvl2'],$content['data']['lvl3']);
+//            }
+//            print_r($content['type']);
+//            print_r("</br>");
+        }
+        $data->content_pieces = $content_content_ids;
+    }
 
     return $data;
 }
 
-function update_quiz_content_pieces($data= array()){
+function generate_set_items($term_ids, $level1,$level2,$level3){
+    return 0;
+}
+
+function update_quiz_content_layout($data= array()){
     global $wpdb;
-    $content_pieces = maybe_serialize($data['content_pieces']);
+    $content_layout = maybe_serialize($data['content_layout']);
 
     $exists_qry = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}collection_meta WHERE
-        collection_id=%d AND meta_key=%s", $data['id'], 'content_pieces');
+        collection_id=%d AND meta_key=%s", $data['id'], 'content_layout');
 
     $exists = $wpdb->get_results($exists_qry);
 
     if($exists){
-        $content_pieces_qry = $wpdb->prepare("UPDATE {$wpdb->prefix}collection_meta SET
+        $content_layout_qry = $wpdb->prepare("UPDATE {$wpdb->prefix}collection_meta SET
             meta_value=%s WHERE collection_id=%d AND meta_key=%s",
-            $content_pieces,$data['id'],'content_pieces' );
+            $content_layout,$data['id'],'content_layout' );
     }
 
     else{
-        $content_pieces_qry = $wpdb->prepare("INSERT into {$wpdb->prefix}collection_meta
+        $content_layout_qry = $wpdb->prepare("INSERT into {$wpdb->prefix}collection_meta
             (collection_id, meta_key, meta_value) VALUES (%d,%s,%s)",
-            $data['id'],'content_pieces',$content_pieces );
+            $data['id'],'content_layout',$content_layout );
     }
 
-    $wpdb->query($content_pieces_qry);
+    $wpdb->query($content_layout_qry);
 }
 
 
@@ -212,7 +232,7 @@ function get_all_quiz_modules($args){
 
     foreach ($quiz_ids as $id){
         $quiz_data = get_single_quiz_module((int)$id);
-        unset($quiz_data ->content_pieces);
+        unset($quiz_data ->content_layout);
         $result[] = $quiz_data;
     }
 

@@ -33,7 +33,8 @@ define(["app", 'backbone'], function(App, Backbone) {
           negMarksEnable: 'false',
           negMarks: '',
           content_pieces: [],
-          message: {}
+          message: {},
+          content_layout: []
         };
       };
 

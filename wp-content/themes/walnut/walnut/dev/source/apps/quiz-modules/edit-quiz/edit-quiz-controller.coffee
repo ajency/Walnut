@@ -49,7 +49,7 @@ define ['app'
 
             _showContentSelectionApp : (model)=>
                 @quizContentCollection = new Backbone.Collection
-                _.each model.get('content_pieces'),(content)=>
+                _.each model.get('content_layout'),(content)=>
                     if content.type is 'content-piece'
                         contentModel = App.request "get:content:piece:by:id",content.id
                     else

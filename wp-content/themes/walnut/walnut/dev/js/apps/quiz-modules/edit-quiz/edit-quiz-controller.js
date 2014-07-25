@@ -60,7 +60,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edi
 
       Controller.prototype._showContentSelectionApp = function(model) {
         this.quizContentCollection = new Backbone.Collection;
-        _.each(model.get('content_pieces'), (function(_this) {
+        _.each(model.get('content_layout'), (function(_this) {
           return function(content) {
             var contentModel;
             if (content.type === 'content-piece') {
