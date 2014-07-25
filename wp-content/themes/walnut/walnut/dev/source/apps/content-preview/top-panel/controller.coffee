@@ -99,14 +99,6 @@ define ['app'
 
                 responseTime = @questionResponseModel.get('time_taken') if @questionResponseModel
 
-                console.log 'responseTime'
-
-                console.log responseTime
-
-                console.log '@questionResponseModel'
-
-                console.log @questionResponseModel
-
                 if responseTime and responseTime isnt 'NaN'
                     timeTaken = responseTime
 

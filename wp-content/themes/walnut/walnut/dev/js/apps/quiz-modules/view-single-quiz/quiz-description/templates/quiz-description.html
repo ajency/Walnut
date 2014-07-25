@@ -1,0 +1,43 @@
+<div class="tiles white grid simple vertical green">
+    <div class="grid-title no-border">
+        <h4 class="">{{name}}</h4>
+        <div class="tools">
+            <a href="javascript:;" class="collapse"></a>
+        </div>
+    </div>
+    <div class="grid-body no-border" style="overflow: hidden; display: block;">
+        <div class="row ">
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">No. of Questions</label>
+                    10
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Duration</label>
+                    {{total_minutes}} mins
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Marks</label>
+                    {{marks}}
+                </div>
+            </div>                                               
+        </div>
+    </div>
+</div>
+<div class="tiles white grid simple vertical blue">
+    <div class="tiles grey text-grey p-t-10 p-l-15 p-r-10 p-b-10 b-grey b-b">
+        <div class="row">
+            <div class="col-sm-12">
+                <h5 class="bold">Quiz Instructions</h5>
+                {{#description}}{{&instruction}}{{/description}}
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<button type="button" class="btn btn-success btn-lg btn-large btn-cons2 h-center block" id="take-quiz"> Start Quiz</button>

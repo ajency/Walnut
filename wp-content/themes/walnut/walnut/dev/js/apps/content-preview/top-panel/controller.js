@@ -114,10 +114,6 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
         if (this.questionResponseModel) {
           responseTime = this.questionResponseModel.get('time_taken');
         }
-        console.log('responseTime');
-        console.log(responseTime);
-        console.log('@questionResponseModel');
-        console.log(this.questionResponseModel);
         if (responseTime && responseTime !== 'NaN') {
           timeTaken = responseTime;
         }

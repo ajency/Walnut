@@ -50,7 +50,8 @@
         panzer              : 'plugins/panzer',
         timerplugin         : 'plugins/jquery.countdown_plugin.min',
         countdowntimer      : 'plugins/jquery.countdown.min',
-        spinedit            : 'plugins/bootstrap-spinedit'
+        spinedit            : 'plugins/bootstrap-spinedit',
+        jPages: 'plugins/jPages.min'
     },
     shim: {
         underscore: {
@@ -95,6 +96,7 @@
         timerplugin: ['jquery'],
         countdowntimer: ['jquery','timerplugin'],
         spinedit            : ['jquery','bootstrap'],
+        jPages: ['jquery'],
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
     }
 })
