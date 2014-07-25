@@ -8,17 +8,16 @@ define(['app'], function(App) {
       __extends(VideoView, _super);
 
       function VideoView() {
-        this._firstTimePlay = __bind(this._firstTimePlay, this);
         this._playVideo = __bind(this._playVideo, this);
         return VideoView.__super__.constructor.apply(this, arguments);
       }
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '<video id="video1" class="video-js vjs-default-skin" poster="/images/video-poster.jpg" width="100%" data-setup="{}" src="{{videoUrl}}" controls> </video> <div class="clearfix"></div>';
+      VideoView.prototype.template = '<video class="video-js vjs-default-skin" poster="/images/video-poster.jpg" width="100%" data-setup="{}" controls > </video> <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
-        'click .show-playlist': 'togglePlaylist',
+        'click .show-playlist': '_togglePlaylist',
         'click #prev': '_playPrevVideo',
         'click #next': '_playNextVideo',
         'click .playlist-video': '_playClickedVideo'
@@ -31,12 +30,8 @@ define(['app'], function(App) {
         }
         this.videos = this.model.get('videoUrls');
         this.index = 0;
-        this.$el.find('video').on('ended', (function(_this) {
-          return function() {
-            console.log("ended");
-            return _this._playNextVideo();
-          };
-        })(this));
+        this.videoId = _.uniqueId('video_');
+        this.$el.find('video').attr('id', this.videoId);
         if (_.size(this.videos) > 1) {
           this._setVideoList();
         }
@@ -45,23 +40,29 @@ define(['app'], function(App) {
           videosWebDirectory = _.createVideosWebDirectory();
           return videosWebDirectory.done((function(_this) {
             return function() {
-              return _.each(_this.videos, function(videosource, index) {
-                return (function(videosource, index) {
+              return _.each(_this.videos, function(videoSource, index) {
+                return (function(videoSource, index) {
                   var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
-                  url = videosource.replace("media-web/", "");
+                  url = videoSource.replace("media-web/", "");
                   videosWebUrl = url.substr(url.indexOf("uploads/"));
                   videoUrl = videosWebUrl.replace("videos-web", "videos");
                   encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
                   decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
                   decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath);
                   return decryptFile.done(function(videoPath) {
-                    console.log(videoPath);
+                    var initVideos;
                     _this.videos[index] = videoPath;
-                    console.log(_this.videos);
-                    console.log(JSON.stringify(_this.videos));
-                    return console.log(JSON.stringify(_this.videos[index]));
+                    if (index === 0) {
+                      initVideos = {};
+                      initVideos[_this.videoId] = _this.videos[index];
+                      window.localStorage.setItem("count", 0);
+                      window.plugins.html5Video.initialize(initVideos);
+                      return window.plugins.html5Video.play(_this.videoId, function() {
+                        return _this._playNextVideo();
+                      });
+                    }
                   });
-                })(videosource, index);
+                })(videoSource, index);
               });
             };
           })(this));
@@ -78,7 +79,7 @@ define(['app'], function(App) {
         })(this));
       };
 
-      VideoView.prototype.togglePlaylist = function() {
+      VideoView.prototype._togglePlaylist = function() {
         return this.$el.find('.playlist-hidden').toggle();
       };
 
@@ -95,7 +96,9 @@ define(['app'], function(App) {
           e.stopPropagation();
         }
         if (this.index < this.videos.length - 1) {
-          this.index++;
+          console.log("index");
+          console.log(this.index += 1);
+          this.index += 1;
           return this._playVideo();
         }
       };
@@ -109,27 +112,26 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._playVideo = function() {
-        var videosAll;
+        var initVideos;
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
         if (_.platform() === 'DEVICE') {
-          console.log(JSON.stringify(this.videos));
-          videosAll = {};
-          videosAll["video1"] = this.videos[this.index];
-          console.log("video1");
-          console.log(videosAll["video1"]);
-          window.plugins.html5Video.initialize(videosAll);
-          return window.plugins.html5Video.play("video1");
+          console.log(this.videoId);
+          initVideos = {};
+          initVideos[this.videoId] = this.videos[this.index];
+          console.log(initVideos[this.videoId]);
+          window.plugins.html5Video.initialize(initVideos);
+          return window.plugins.html5Video.play(this.videoId, (function(_this) {
+            return function() {
+              return _this._playNextVideo();
+            };
+          })(this));
         } else {
           this.$el.find('video').attr('src', this.videos[this.index]);
           this.$el.find('video')[0].load();
           return this.$el.find('video')[0].play();
         }
-      };
-
-      VideoView.prototype._firstTimePlay = function() {
-        return this._playVideo();
       };
 
       return VideoView;
