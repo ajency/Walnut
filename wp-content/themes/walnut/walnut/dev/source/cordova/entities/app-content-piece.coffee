@@ -14,7 +14,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
-				(tx,data)->
+				(tx, data)->
 					result = []
 
 					for i in [0..data.rows.length-1] by 1
@@ -34,72 +34,69 @@ define ['underscore', 'unserialize'], ( _) ->
 											gradingParams.done (grading_params)->
 
 												do(row, i, author_name, meta_value, grading_params)->
+													contentElementsArray = _.getJsonToClone(meta_value.layout_json)
+													contentElementsArray.done (contentElements)->
 
-													if(meta_value.layout_json)
-														
-														contentElementsArray = _.getJsonToClone(meta_value.layout_json)
-														contentElementsArray.done (contentElements)->
-
-															_.mixin(_.str.exports());
-															excerpt_array = contentElements.excerpt
-															
-
-															#pushes the parameter and attributes values to excerpt_array
+														# 'contentElements' will return empty string for multiple eval
+														# as layout_json is empty.
+														if contentElements is ''
+															# Add grading params to excerpt for multiple eval
 															if not _.isEmpty grading_params
+																excerpt_array = []
 																_.each grading_params, (params, i)->
 																	excerpt_array.push params['parameter']
 																	
 																	attributes = params['attributes']
-
 																	_.each attributes, (attr, i)->
 																		excerpt_array.push attr
 
+														else excerpt_array = contentElements.excerpt
 
-															excerpt_array = _.flatten excerpt_array
-															taglessArray = new Array
-															_.each excerpt_array , (excerpt)->												
-																taglessArray.push _(excerpt).stripTags()													
-															
-															excerpt = taglessArray.join ' | '
-															excerpt= _(excerpt).prune(550)
+														excerpt_array = _.flatten excerpt_array
+														taglessArray = new Array
+														_.each excerpt_array , (excerpt)->												
+															taglessArray.push _(excerpt).stripTags()													
+														
+														excerpt = taglessArray.join ' | '
+														excerpt= _(excerpt).prune(500)
 
-															result[i] = 
-																ID: row['ID']
-																post_author: row['post_author']
-																post_date: row['post_date']
-																post_date_gmt: row['post_date_gmt']
-																post_content: row['post_content']
-																post_title: row['post_title']
-																post_excerpt: excerpt
-																post_status: row['post_status']
-																comment_status: row['comment_status']
-																ping_status: row['ping_status']
-																post_password: row['post_password']
-																post_name: row['post_name']
-																to_ping: row['to_ping']
-																pinged: row['pinged']
-																post_modified: row['post_modified']
-																post_modified_gmt: row['post_modified_gmt']
-																post_content_filtered: row['post_content_filtered']
-																post_parent: row['post_parent']
-																guid: row['guid']
-																menu_order: row['menu_order']
-																post_type: row['post_type']
-																post_mime_type: row['post_mime_type']
-																comment_count: row['comment_count']
-																filter: 'raw'
-																post_author_name: author_name
-																content_type: meta_value.content_type
-																layout: contentElements.elements
-																question_type: meta_value.question_type
-																post_tags: meta_value.post_tags
-																duration: meta_value.duration
-																last_modified_by: meta_value.last_modified_by
-																published_by: meta_value.published_by
-																term_ids: meta_value.term_ids
-																instructions: meta_value.instructions
-																order: _.indexOf(ids, row['ID'].toString())
-																grading_params : grading_params
+														result[i] = 
+															ID: row['ID']
+															post_author: row['post_author']
+															post_date: row['post_date']
+															post_date_gmt: row['post_date_gmt']
+															post_content: row['post_content']
+															post_title: row['post_title']
+															post_excerpt: excerpt
+															post_status: row['post_status']
+															comment_status: row['comment_status']
+															ping_status: row['ping_status']
+															post_password: row['post_password']
+															post_name: row['post_name']
+															to_ping: row['to_ping']
+															pinged: row['pinged']
+															post_modified: row['post_modified']
+															post_modified_gmt: row['post_modified_gmt']
+															post_content_filtered: row['post_content_filtered']
+															post_parent: row['post_parent']
+															guid: row['guid']
+															menu_order: row['menu_order']
+															post_type: row['post_type']
+															post_mime_type: row['post_mime_type']
+															comment_count: row['comment_count']
+															filter: 'raw'
+															post_author_name: author_name
+															content_type: meta_value.content_type
+															layout: contentElements.elements
+															question_type: meta_value.question_type
+															post_tags: meta_value.post_tags
+															duration: meta_value.duration
+															last_modified_by: meta_value.last_modified_by
+															published_by: meta_value.published_by
+															term_ids: meta_value.term_ids
+															instructions: meta_value.instructions
+															order: _.indexOf(ids, row['ID'].toString())
+															grading_params : grading_params
 																
 						
 					d.resolve(result)

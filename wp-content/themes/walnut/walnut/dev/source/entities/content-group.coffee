@@ -33,6 +33,7 @@ define ["app", 'backbone'], (App, Backbone) ->
             model: ContentGroup.ItemModel
             name: 'content-group'
 
+
             url: ->
                 AJAXURL + '?action=get-content-groups'
 
