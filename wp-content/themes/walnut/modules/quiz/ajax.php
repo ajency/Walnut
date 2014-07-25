@@ -13,6 +13,7 @@ function ajax_create_quiz ()
     $data = array(
         'name' => $_POST['name'],
         'description' => $_POST['description'],
+        'term_ids' => $_POST['term_ids'],
         'duration' => $_POST['duration'],
         'minshours' => $_POST['minshours'],
         'post_status' => $_POST['post_status'],
@@ -43,6 +44,7 @@ function ajax_update_quiz ()
             'id' => $_POST['id'],
             'name' => $_POST['name'],
             'description' => $_POST['description'],
+            'term_ids' => $_POST['term_ids'],
             'duration' => $_POST['duration'],
             'minshours' => $_POST['minshours'],
             'post_status' => $_POST['post_status'],

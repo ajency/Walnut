@@ -17,7 +17,9 @@ define ['app'
                 else
                     @quizModel = App.request "new:quiz"
 
-                App.execute "when:fetched", @quizModel, =>
+                @textbooksCollection = App.request "get:textbooks"
+
+                App.execute "when:fetched", [@quizModel,@textbooksCollection], =>
                     @showQuizEditView()
 
             showQuizEditView : ->
@@ -46,6 +48,7 @@ define ['app'
                 App.execute "show:edit:quiz:details",
                     region : @layout.quizDetailsRegion
                     model : @quizModel
+                    textbooksCollection : @textbooksCollection
 
             _showContentSelectionApp : (model)=>
                 @quizContentCollection = new Backbone.Collection
@@ -65,6 +68,7 @@ define ['app'
                             region : @layout.contentSelectionRegion
                             model : model
                             quizContentCollection : @quizContentCollection
+                            textbooksCollection : @textbooksCollection
 
                     App.execute "show:quiz:content:display:app",
                         region : @layout.contentDisplayRegion
