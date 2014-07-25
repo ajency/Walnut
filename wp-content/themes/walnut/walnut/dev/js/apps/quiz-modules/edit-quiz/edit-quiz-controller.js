@@ -19,7 +19,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edi
         } else {
           this.quizModel = App.request("new:quiz");
         }
-        return App.execute("when:fetched", this.quizModel, (function(_this) {
+        this.textbooksCollection = App.request("get:textbooks");
+        return App.execute("when:fetched", [this.quizModel, this.textbooksCollection], (function(_this) {
           return function() {
             return _this.showQuizEditView();
           };
@@ -54,7 +55,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edi
       Controller.prototype._showQuizDetailsViews = function() {
         return App.execute("show:edit:quiz:details", {
           region: this.layout.quizDetailsRegion,
-          model: this.quizModel
+          model: this.quizModel,
+          textbooksCollection: this.textbooksCollection
         });
       };
 
@@ -80,7 +82,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edi
               App.execute("show:quiz:content:selection:app", {
                 region: _this.layout.contentSelectionRegion,
                 model: model,
-                quizContentCollection: _this.quizContentCollection
+                quizContentCollection: _this.quizContentCollection,
+                textbooksCollection: _this.textbooksCollection
               });
             }
             return App.execute("show:quiz:content:display:app", {
