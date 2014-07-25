@@ -31,7 +31,8 @@ function school_csv_import_options() {
             if($_FILES["student_csv_file"]["error"] > 0){
                 $import_status = array('success'=>false,'msg'=>'No file added');
             }
-            elseif($_FILES["student_csv_file"]["type"] == "text/comma-separated-values" && in_array($extension, $allowedExts)){   
+            elseif(($_FILES["student_csv_file"]["type"] == "text/comma-separated-values" || $_FILES["student_csv_file"]["type"] == "text/csv" || $_FILES["student_csv_file"]["type"] == "application/vnd.ms-excel") 
+                    && in_array($extension, $allowedExts)){   
                 $import_status = import_student_csv($_FILES["student_csv_file"]);
             }else{
                 $import_status = array('success'=>false,'msg'=>'Invalid file.');
@@ -104,7 +105,7 @@ function import_student_csv($file_path){
   //While there is an entry in the CSV data    
     while ($i <= count($csvData)-1 ) {
         
-        if( count($csvData[$i]) !== 10  || $csvData[$i][6] == '' || !is_email($csvData[$i][6]) || $csvData[$i][7] == '' ){
+        if( count($csvData[$i]) !== 12  || $csvData[$i][8] == '' || !is_email($csvData[$i][8]) || $csvData[$i][9] == '' ){
             $csvData[$i][] = get_failed_status($csvData[$i]);
             $failed_records[] = $csvData[$i];
             $failed_count++;
@@ -130,7 +131,7 @@ function import_student_csv($file_path){
         $role = "student";
 
         //Check if $user_email is present in users table
-        $userExists = $wpdb->get_row( "select * from $user_table where user_email like '%" . $user_email . "%' OR user_login like '%" . $user_login . "%' "  );
+        $userExists = $wpdb->get_row( "select * from $user_table where user_email ='" . $user_email . "' OR user_login ='" . $user_login . "' "  );
 		
 		if( $userExists != null ){ 
 		
@@ -313,13 +314,13 @@ function clear_csv_import_logs(){
 
 function get_failed_status($csvDataRecord){
 
-    if(count($csvDataRecord) !== 10)
+    if(count($csvDataRecord) !== 12)
         $status = 'Columns Not Equal';
-    elseif($csvDataRecord[6] == '' )
+    elseif($csvDataRecord[8] == '' )
          $status = 'Parent Email required';
-    elseif(!is_email($csvDataRecord[6]))
+    elseif(!is_email($csvDataRecord[8]))
          $status = 'Invalid Parent Email';
-    elseif($csvDataRecord[7] == '')
+    elseif($csvDataRecord[9] == '')
          $status = 'Parent Mobile required';
     else
          $status = '-';
