@@ -51,6 +51,7 @@ require.config
         videojs: 'plugins/video'
         videojsplaylist : 'plugins/videojs-playlists.min'
         panzer: 'plugins/panzer'
+        panzerlist : 'plugins/panzerlist'
         mmenu: 'plugins/jquery.mmenu.min.all'
         timerplugin: 'plugins/jquery.countdown_plugin.min' #needed for jquerytimer to work
         countdowntimer: 'plugins/jquery.countdown.min'
@@ -93,6 +94,7 @@ require.config
         bridget: ['jquery']
         isotope: ['jquery', 'bridget']
         panzer: ['jquery']
+        panzerlist : ['jquery']
         mmenu: ['jquery']
         timerplugin: ['jquery']
         countdowntimer: ['jquery','timerplugin']
