@@ -32,6 +32,12 @@ define(['app'], function(App) {
         this.index = 0;
         this.videoId = _.uniqueId('video_');
         this.$el.find('video').attr('id', this.videoId);
+        this.$el.find('video').on('ended', (function(_this) {
+          return function() {
+            console.log("done ");
+            return _this._playNextVideo();
+          };
+        })(this));
         if (_.size(this.videos) > 1) {
           this._setVideoList();
         }
@@ -50,16 +56,10 @@ define(['app'], function(App) {
                   decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
                   decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath);
                   return decryptFile.done(function(videoPath) {
-                    var initVideos;
-                    _this.videos[index] = videoPath;
+                    _this.videos[index] = 'file:///mnt/sdcard/' + videoPath;
                     if (index === 0) {
-                      initVideos = {};
-                      initVideos[_this.videoId] = _this.videos[index];
-                      window.localStorage.setItem("count", 0);
-                      window.plugins.html5Video.initialize(initVideos);
-                      return window.plugins.html5Video.play(_this.videoId, function() {
-                        return _this._playNextVideo();
-                      });
+                      _this.$el.find('#' + _this.videoId)[0].src = _this.videos[_this.index];
+                      return _this.$el.find('#' + _this.videoId)[0].load();
                     }
                   });
                 })(videoSource, index);
@@ -96,9 +96,7 @@ define(['app'], function(App) {
           e.stopPropagation();
         }
         if (this.index < this.videos.length - 1) {
-          console.log("index");
-          console.log(this.index += 1);
-          this.index += 1;
+          this.index++;
           return this._playVideo();
         }
       };
@@ -112,26 +110,12 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._playVideo = function() {
-        var initVideos;
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
-        if (_.platform() === 'DEVICE') {
-          console.log(this.videoId);
-          initVideos = {};
-          initVideos[this.videoId] = this.videos[this.index];
-          console.log(initVideos[this.videoId]);
-          window.plugins.html5Video.initialize(initVideos);
-          return window.plugins.html5Video.play(this.videoId, (function(_this) {
-            return function() {
-              return _this._playNextVideo();
-            };
-          })(this));
-        } else {
-          this.$el.find('video').attr('src', this.videos[this.index]);
-          this.$el.find('video')[0].load();
-          return this.$el.find('video')[0].play();
-        }
+        this.$el.find('video').src = this.videos[this.index];
+        this.$el.find('video')[0].load();
+        return this.$el.find('video')[0].play();
       };
 
       return VideoView;

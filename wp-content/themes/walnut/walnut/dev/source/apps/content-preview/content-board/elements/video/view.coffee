@@ -38,13 +38,12 @@ define ['app'], (App)->
 				@videoId = _.uniqueId('video_')
 				@$el.find('video').attr 'id', @videoId
 
-				# @$el.find('video').on 'ended', =>
-				# 	console.log "ended"
-				# 	@_playNextVideo()
+				@$el.find('video').on 'ended', =>
+					console.log "done "
+					@_playNextVideo()
 
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
-
 
 				# Code for mobile app
 				if _.platform() is 'DEVICE'
@@ -60,21 +59,22 @@ define ['app'], (App)->
 
 								videoUrl = videosWebUrl.replace("videos-web", "videos")
 								encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
-								
 								decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
 
 								decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
 								decryptFile.done (videoPath)=>
-									@videos[index] = videoPath
+									@videos[index] = 'file:///mnt/sdcard/'+videoPath
 
 									if index is 0
-										initVideos = {}
-										initVideos[@videoId] = @videos[index]
-										window.localStorage.setItem("count",0)
-										window.plugins.html5Video.initialize initVideos
-										window.plugins.html5Video.play @videoId , =>
-											@_playNextVideo()
-											
+										@$el.find('#'+@videoId)[0].src = @videos[@index]
+										@$el.find('#'+@videoId)[0].load()
+									# @videos[index] = videoPath
+
+									# if index is 0
+									# 	initVideos = {}
+									# 	initVideos[@videoId] = @videos[index]
+									# 	window.plugins.html5Video.initialize initVideos
+									# 	window.plugins.html5Video.play @videoId
 
 
 
@@ -120,9 +120,7 @@ define ['app'], (App)->
 			_playNextVideo : (e)->
 				e.stopPropagation() if e?
 				if @index < @videos.length-1
-					console.log "index"
-					console.log @index+=1
-					@index+=1
+					@index++
 					@_playVideo()
 
 			_playClickedVideo : (e)->
@@ -133,27 +131,37 @@ define ['app'], (App)->
 
 
 
+			# _playVideo:=>
+			# 	@$el.find('.playlist-video').removeClass 'currentVid'
+			# 	@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
+			# 	@$el.find('#now-playing-tag').text @model.get('title')[@index]
+				
+			# 	if _.platform() is 'DEVICE'
+			# 		initVideos = {}
+			# 		initVideos[@videoId] = @videos[@index]
+			# 		window.plugins.html5Video.initialize initVideos
+			# 		window.plugins.html5Video.play @videoId
+
+			# 		setTimeout(=>
+			# 			@$el.find('#'+@videoId)[0].play()
+			# 		,2000)
+
+			# 	else
+			# 		@$el.find('video').attr 'src',@videos[@index]
+			# 		@$el.find('video')[0].load()
+			# 		@$el.find('video')[0].play()
 			_playVideo:=>
 				@$el.find('.playlist-video').removeClass 'currentVid'
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
 				@$el.find('#now-playing-tag').text @model.get('title')[@index]
 				
-				if _.platform() is 'DEVICE'
-					console.log @videoId
-					initVideos = {}
-					initVideos[@videoId] = @videos[@index]
-					console.log initVideos[@videoId]
-					window.plugins.html5Video.initialize initVideos
-					window.plugins.html5Video.play @videoId , =>
-						@_playNextVideo()
+				# if _.platform() is 'DEVICE'
+				# 	@$el.find('#'+@videoId)[0].src = @videos[@index]
+				# 	@$el.find('#'+@videoId)[0].load()
+				# 	@$el.find('#'+@videoId)[0].play()
 
-
-
-					# appVideoSource = 'file:///mnt/sdcard/'+@videos[@index]
-					# @$el.find('video').attr 'src',appVideoSource
-					# # # @$el.find('video')[0].load()
-					# @$el.find('video')[0].play()
-				else
-					@$el.find('video').attr 'src',@videos[@index]
-					@$el.find('video')[0].load()
-					@$el.find('video')[0].play()
+				# else
+				@$el.find('video').src = @videos[@index]
+				# @$el.find('video').attr 'src',@videos[@index]
+				@$el.find('video')[0].load()
+				@$el.find('video')[0].play()
