@@ -19,7 +19,7 @@ define ['app'
                 term_ids = @model.get 'term_ids'
 
                 @listenTo @view, "show",=>
-                    if term_ids
+                    if _.size(term_ids) >0 
                         textbook_id = term_ids['textbook']
 
                         chapter_id = term_ids['chapter'] if term_ids['chapter']?
