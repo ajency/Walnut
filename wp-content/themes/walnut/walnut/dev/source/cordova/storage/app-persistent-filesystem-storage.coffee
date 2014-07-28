@@ -134,6 +134,30 @@ define ['underscore'], ( _) ->
 			$.when(runFunc()).done ->
 				console.log 'createVideosWebDirectory done'
 			.fail _.failureHandler
+
+		#Create 'audios-web' directory inside 'uploads' for saving decrypted files
+		createAudiosWebDirectory : ->
+
+			runFunc = ->
+				$.Deferred (d)->
+					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+						,(fileSystem)->
+							fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/audio-web"
+								,{create: true, exclusive:false} 
+								
+								,(fileEntry)->
+									console.log 'audios-web directory path: '+fileEntry.toURL()
+									d.resolve fileEntry
+								
+								,(error)->
+									console.log 'ERROR: '+error.code
+								)
+
+						,_.fileSystemErrorHandler)
+
+			$.when(runFunc()).done ->
+				console.log 'createAudiosWebDirectory done'
+			.fail _.failureHandler
 			
 
 		
