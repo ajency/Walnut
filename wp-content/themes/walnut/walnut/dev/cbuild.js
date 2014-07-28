@@ -41,6 +41,7 @@
         videojs: 'plugins/video',
         videojsplaylist : 'plugins/videojs-playlists.min',
         panzer: 'plugins/panzer',
+        panzerlist : 'plugins/panzerlist',
         sidr: 'plugins/jquery.sidr.min',
         mmenu: 'plugins/jquery.mmenu.min.all'
 
@@ -79,6 +80,7 @@
         babysitter: ['backbone'],
         videojsplaylist : ['videojs'],
         panzer: ['jquery'],
+        panzerlist : ['jquery'],
         sidr: ['jquery'],
         app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
     }

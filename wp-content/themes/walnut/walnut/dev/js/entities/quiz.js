@@ -32,6 +32,7 @@ define(["app", 'backbone'], function(App, Backbone) {
           minshours: 'mins',
           negMarksEnable: 'false',
           negMarks: '',
+          term_ids: [],
           content_pieces: [],
           message: {}
         };
