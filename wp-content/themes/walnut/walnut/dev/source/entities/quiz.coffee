@@ -28,6 +28,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 term_ids: []
                 content_pieces: []
                 message : {}
+                content_layout:[]
 #                training_date: ''
 
             name: 'quiz'

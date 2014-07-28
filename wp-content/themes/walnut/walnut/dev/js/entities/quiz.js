@@ -34,7 +34,8 @@ define(["app", 'backbone'], function(App, Backbone) {
           negMarks: '',
           term_ids: [],
           content_pieces: [],
-          message: {}
+          message: {},
+          content_layout: []
         };
       };
 
