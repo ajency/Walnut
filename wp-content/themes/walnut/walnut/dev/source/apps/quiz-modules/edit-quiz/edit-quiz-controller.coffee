@@ -17,7 +17,9 @@ define ['app'
                 else
                     @quizModel = App.request "new:quiz"
 
-                App.execute "when:fetched", @quizModel, =>
+                @textbooksCollection = App.request "get:textbooks"
+
+                App.execute "when:fetched", [@quizModel,@textbooksCollection], =>
                     @showQuizEditView()
 
             showQuizEditView : ->
@@ -31,11 +33,11 @@ define ['app'
                     if @quiz_id
                         @_showContentSelectionApp @quizModel
 
-#                @listenTo @quizModel, 'change:id', @_showContentSelectionApp, @
+                @listenTo @quizModel, 'change:id', @_showContentSelectionApp, @
 
-#                @listenTo @layout.collectionDetailsRegion, 'close:content:selection:app', =>
+                @listenTo @layout.quizDetailsRegion, 'close:content:selection:app', =>
 #                    console.log 'close:content:selection:app '
-#                    @layout.contentSelectionRegion.close()
+                    @layout.contentSelectionRegion.close()
 
                 @show @layout, (loading : true)
 
@@ -46,6 +48,7 @@ define ['app'
                 App.execute "show:edit:quiz:details",
                     region : @layout.quizDetailsRegion
                     model : @quizModel
+                    textbooksCollection : @textbooksCollection
 
             _showContentSelectionApp : (model)=>
                 @quizContentCollection = new Backbone.Collection
@@ -65,6 +68,7 @@ define ['app'
                             region : @layout.contentSelectionRegion
                             model : model
                             quizContentCollection : @quizContentCollection
+                            textbooksCollection : @textbooksCollection
 
                     App.execute "show:quiz:content:display:app",
                         region : @layout.contentDisplayRegion

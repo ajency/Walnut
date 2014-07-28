@@ -10,25 +10,17 @@ define ['app'], (App)->
 
             template : '    <video  class="video-js vjs-default-skin" controls preload="none" width="100%"
                             poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
-                                    data-setup="{}" controls>
-
+                                    data-setup="{}" controls src="{{videoUrl}}">
 
                             </video>
                             <div class="clearfix"></div>
-                            <div id="playlist-hover" class="row" style="position: absolute; background-color: #000000;  z-index:20;  display: none">
-                                <div class="col-sm-2" id="prev"><button>Prev</button></div>
-                                <div class="row video-list col-sm-8" id="video-list"></div>
-                                <div class="col-sm-2" id="next"><button>Next</button></div>
-
-                             </div>
-                        					'
+                      					'
 
 
 
 
             events :
-                'mouseenter' : 'showPlaylist'
-                'mouseleave' : 'hidePlaylist'
+                'click .show-playlist' : 'togglePlaylist'
                 'click #prev' : '_playPrevVideo'
                 'click #next' : '_playNextVideo'
                 'click .playlist-video' : '_playClickedVideo'
@@ -39,62 +31,78 @@ define ['app'], (App)->
             # reloading placeholder image again
             onShow : ->
 
-                # generate unique id and give to video element
-                videoId = _.uniqueId('video-')
-                @$el.find('video').attr 'id', videoId
-                # init videojs
-                @videoElement = videojs videoId
+                return if not @model.get('video_ids').length
 
-                videos = new Array()
-                _.each @model.get('videoUrl'),(url)->
-                    videos.push
-                        src : [url]
+                @videos = @model.get('videoUrls')
+                @index = 0
 
-                #playlist
-                @videoElement.playList videos,
-                    getVideoSource: (vid, cb) ->
-                        cb(vid.src)
+                @$el.find('video').on 'ended', =>
+                    @_playNextVideo()
 
+                @_setVideoList() if _.size(@videos) > 1
+                @$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
-                # set height according to the aspect ratio of 16:9
-                width = @videoElement.width()
-                height = 9 * width / 16
-                @videoElement.height height
-
-                @_setPlaylistPosition()
-                @_setVideoList()
-
-            _setPlaylistPosition : ->
-
-                position =  @$el.position()
-                @$el.find('#playlist-hover').css
-                    'top' : position.top + @$el.height()
-                    'left' : position.left + 15
-                    'width' : @$el.width()
 
             _setVideoList : ->
+                @$el.append('<div id="playlist-hover" class="playlistHover">
+                                <div class="row m-l-0 m-r-0 p-b-5 m-b-5">
+                                    <div class="col-sm-8 nowPlaying">
+                                    <span class="small text-muted">Now Playing:</span>
+                                    <span id="now-playing-tag">'+@model.get('title')[0]+'</span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-white btn-small pull-right show-playlist">
+                                        <i class="fa fa-list-ul"></i> Playlist
+                                    </button>
+                                </div>
+                                </div>
+                                <div class="row m-l-0 m-r-0 playlist-hidden vidList animated fadeInRight" style="display: none;">
+                                    <div class="video-list col-sm-8" id="video-list"></div>
+                                    <div class="col-sm-4 p-t-5 m-b-5">
+                                        <button class="btn btn-info btn-small pull-right" id="next">
+                                            <i class="fa fa-step-forward"></i>
+                                        </button>
+                                        <button class="btn btn-info btn-small pull-right m-r-10" id="prev">
+                                            <i class="fa fa-step-backward"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>')
                 @$el.find('#video-list').empty()
                 _.each @model.get('title'),(title,index)=>
-                    @$el.find('#video-list').append("<div class='col-sm-6 playlist-video' data-index=#{index}>#{title}</div>")
+                    @$el.find('#video-list').append("<div class='playlist-video' data-index=#{index}>#{title}</div>")
 
 
 
-            showPlaylist :->
-                @_setPlaylistPosition()
-                @$el.find('#playlist-hover').show()
+            togglePlaylist :->
+                @$el.find('.playlist-hidden').toggle()
 
-            hidePlaylist : ->
-                @$el.find('#playlist-hover').hide()
+            _playPrevVideo : (e)->
+                e.stopPropagation()
+                @index-- if @index > 0
+                @_playVideo()
 
-            _playPrevVideo : ->
-                @videoElement.prev()
-
-            _playNextVideo : ->
-                @videoElement.next()
+            _playNextVideo : (e)->
+                e.stopPropagation() if e?
+                if @index < @videos.length-1
+                    @index++
+                    @_playVideo()
 
             _playClickedVideo : (e)->
-                index = parseInt $(e.target).attr('data-index')
-                @videoElement.playList index
+                e.stopPropagation()
+                index = parseInt $(e.target).attr 'data-index'
+                @index = index
+                @_playVideo()
+
+
+
+            _playVideo:->
+                @$el.find('.playlist-video').removeClass 'currentVid'
+                @$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
+                @$el.find('#now-playing-tag').text @model.get('title')[@index]
+                @$el.find('video').attr 'src',@videos[@index]
+                @$el.find('video')[0].load()
+                @$el.find('video')[0].play()
 
 
 				
