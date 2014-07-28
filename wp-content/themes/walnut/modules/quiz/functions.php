@@ -142,30 +142,80 @@ function get_single_quiz_module ($id) {
             $data->message = $quiz_meta['message'];
         }
     }
-    $content_content_ids = array();
+    $content_ids = array();
     if ($data->content_layout){
         foreach($data->content_layout as $content){
             if ($content['type'] == 'content-piece'){
-                $content_content_ids[] = $content['id'];
+                $content_ids[] = $content['id'];
             }
 
-//            elseif ($content['type'] == 'content_set'){
-//                print_r($content['data']['lvl1']);
-//                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
-//                    $content['data']['lvl2'],$content['data']['lvl3']);
-//            }
-//            print_r($content['type']);
-//            print_r("</br>");
+            elseif ($content['type'] == 'content_set'){
+                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
+                    $content['data']['lvl2'],$content['data']['lvl3']);
+                foreach($set_content_ids as $id){
+                    $content_ids[] = $id;
+                }
+            }
+
         }
-        $data->content_pieces = $content_content_ids;
+        $data->content_pieces = $content_ids;
     }
 
     return $data;
 }
 
 function generate_set_items($term_ids, $level1,$level2,$level3){
-    return 0;
+    global $wpdb;
+//    get id for all student type question
+    $query = "select ID from {$wpdb->base_prefix}posts
+            where ID in (select post_id from {$wpdb->base_prefix}postmeta
+                        where meta_key = 'content_type'
+                        and meta_value = 'student_question')
+             and post_status = 'publish'";
+    $stud_quest_ids = $wpdb->get_col($query);
+    $stud_quest_ids_string = implode(',',$stud_quest_ids);
+    $term_id = '';
+    foreach($term_ids as $val){
+        if ($val){
+            $term_id = $val;
+        }
+    }
+    $term_id_query = '%"'.$term_id.'"%';
+    //    get id for all student type question with term id
+    $query = "select post_id from {$wpdb->base_prefix}postmeta
+              where post_id in ({$stud_quest_ids_string})
+              and meta_key = 'content_piece_meta'
+              and meta_value like %s";
+    $quest_ids_for_terms_id =  $wpdb->get_col($wpdb->prepare($query,$term_id_query));
+
+    $complete_ids = array();
+    get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids);
+    get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids);
+    get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids);
+    shuffle($complete_ids);
+
+    return $complete_ids;
+
 }
+
+//get ids for each level accoring to the number specified for that level
+//return it in $complete
+function get_id_from_level($ids, $count , $level,&$complete){
+    global $wpdb;
+    $ids_string = implode(',',$ids);
+    $query = "select post_id from {$wpdb->base_prefix}postmeta
+              where post_id in ({$ids_string})
+              and meta_key = 'difficulty_level'
+              and meta_value = %s
+              order by RAND()
+              limit %d";
+    $level_ids = $wpdb->get_col($wpdb->prepare($query,$level,(int)$count));
+    foreach($level_ids as $val){
+        $complete[]=$val;
+    }
+}
+
+
 
 function update_quiz_content_layout($data= array()){
     global $wpdb;
