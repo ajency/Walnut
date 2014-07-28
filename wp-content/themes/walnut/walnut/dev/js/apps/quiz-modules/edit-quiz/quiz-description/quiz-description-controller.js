@@ -37,7 +37,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/qui
         this.listenTo(this.view, "show", (function(_this) {
           return function() {
             var chapter_id, fetchChapters, section_ids, textbook_id;
-            if (term_ids) {
+            if (_.size(term_ids) > 0) {
               textbook_id = term_ids['textbook'];
               if (term_ids['chapter'] != null) {
                 chapter_id = term_ids['chapter'];

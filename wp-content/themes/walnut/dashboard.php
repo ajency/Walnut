@@ -106,19 +106,18 @@ global $chorus_options; ?>
     })
 </script>
 <?php
-$ver = date('YmdHis');
-$VERSION = 1.0;
+
 if (ENV == 'dev') {
     ?>
     <script type="text/javascript"
-            data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo $ver ?>"
+            data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo DEV_VERSION ?>"
             src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php
 } else {
 
 ?>
     <script type="text/javascript"
-            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $VERSION ?>"></script>
+            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo VERSION ?>"></script>
 <?php } ?>
 
 </body>
