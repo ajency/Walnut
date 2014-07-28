@@ -50,6 +50,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           return function() {
             var allAudioUrls;
             allAudioUrls = _this.layout.model.get('audioUrls');
+            console.log(allAudioUrls);
             return _.each(allAudioUrls, function(allAudioPaths, index) {
               var _ref;
               (function(allAudioPaths, index) {
@@ -62,6 +63,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                 encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioPaths;
                 decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosWebUrl;
                 decryptFile = _.decryptVideoFile(encryptedAudioPath, decryptedAudioPath);
+                console.log(decryptFile);
+                console.log(JSON.stringify(decryptFile));
                 return deferreds.push(decryptFile);
               })(allAudioPaths, index);
               console.log(JSON.stringify(deferreds));

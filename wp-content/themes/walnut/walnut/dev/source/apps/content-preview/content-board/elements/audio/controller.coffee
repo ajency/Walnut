@@ -42,6 +42,7 @@ define ['app'
 						audiosWebDirectory = _.createAudiosWebDirectory()
 						audiosWebDirectory.done =>
 							allAudioUrls = @layout.model.get('audioUrls')
+							console.log allAudioUrls
 							_.each allAudioUrls , (allAudioPaths , index)=>
 								do(allAudioPaths, index)=>
 									url = allAudioPaths.replace("media-web/","")
@@ -55,6 +56,8 @@ define ['app'
 									decryptedAudioPath = "SynapseAssets/SynapseMedia/"+audiosWebUrl
 
 									decryptFile = _.decryptVideoFile(encryptedAudioPath, decryptedAudioPath)
+									console.log decryptFile
+									console.log JSON.stringify decryptFile
 									deferreds.push decryptFile
 
 								console.log JSON.stringify deferreds
