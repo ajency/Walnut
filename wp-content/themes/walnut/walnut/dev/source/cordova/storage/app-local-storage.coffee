@@ -9,7 +9,6 @@ define ['underscore'], ( _)->
             _.localStorage = window.localStorage
 
 
-
         # save/get logged in user ID
         setUserID : (id)->
             _.localStorage.setItem("user_id", id)

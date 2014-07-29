@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
@@ -7,35 +8,65 @@ define(['app'], function(App) {
       __extends(VideoView, _super);
 
       function VideoView() {
+        this._playVideo = __bind(this._playVideo, this);
         return VideoView.__super__.constructor.apply(this, arguments);
       }
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="{{videoUrl}}"> </video> <div class="clearfix"></div>';
+      VideoView.prototype.template = '<video class="video-js vjs-default-skin" poster="/images/video-poster.jpg" width="100%" data-setup="{}" controls > </video> <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
-        'click .show-playlist': 'togglePlaylist',
+        'click .show-playlist': '_togglePlaylist',
         'click #prev': '_playPrevVideo',
         'click #next': '_playNextVideo',
         'click .playlist-video': '_playClickedVideo'
       };
 
       VideoView.prototype.onShow = function() {
+        var videosWebDirectory;
         if (!this.model.get('video_ids').length) {
           return;
         }
         this.videos = this.model.get('videoUrls');
         this.index = 0;
+        this.videoId = _.uniqueId('video_');
+        this.$el.find('video').attr('id', this.videoId);
         this.$el.find('video').on('ended', (function(_this) {
           return function() {
+            console.log("done ");
             return _this._playNextVideo();
           };
         })(this));
         if (_.size(this.videos) > 1) {
           this._setVideoList();
         }
-        return this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        if (_.platform() === 'DEVICE') {
+          videosWebDirectory = _.createVideosWebDirectory();
+          return videosWebDirectory.done((function(_this) {
+            return function() {
+              return _.each(_this.videos, function(videoSource, index) {
+                return (function(videoSource, index) {
+                  var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
+                  url = videoSource.replace("media-web/", "");
+                  videosWebUrl = url.substr(url.indexOf("uploads/"));
+                  videoUrl = videosWebUrl.replace("videos-web", "videos");
+                  encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
+                  decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+                  decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath);
+                  return decryptFile.done(function(videoPath) {
+                    _this.videos[index] = 'file:///mnt/sdcard/' + videoPath;
+                    if (index === 0) {
+                      _this.$el.find('#' + _this.videoId)[0].src = _this.videos[_this.index];
+                      return _this.$el.find('#' + _this.videoId)[0].load();
+                    }
+                  });
+                })(videoSource, index);
+              });
+            };
+          })(this));
+        }
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -48,7 +79,7 @@ define(['app'], function(App) {
         })(this));
       };
 
-      VideoView.prototype.togglePlaylist = function() {
+      VideoView.prototype._togglePlaylist = function() {
         return this.$el.find('.playlist-hidden').toggle();
       };
 
@@ -82,7 +113,7 @@ define(['app'], function(App) {
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
-        this.$el.find('video').attr('src', this.videos[this.index]);
+        this.$el.find('video').src = this.videos[this.index];
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();
       };

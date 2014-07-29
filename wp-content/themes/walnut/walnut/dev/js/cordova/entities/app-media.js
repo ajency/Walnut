@@ -1,5 +1,27 @@
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
+    getListOfMediaByID: function(ids) {
+      var runFunc;
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          var result;
+          result = [];
+          _.each(ids, function(mediaId, index) {
+            return (function(mediaId, index) {
+              var mediaIdList;
+              mediaIdList = _.getMediaById(mediaId);
+              return mediaIdList.done(function(data) {
+                return result[index] = data;
+              });
+            })(mediaId, index);
+          });
+          return d.resolve(result);
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log('getListOfMediaByID transaction completed');
+      }).fail(_.failureHandler);
+    },
     getMediaById: function(id) {
       var onSuccess, runQuery;
       runQuery = function() {
@@ -15,19 +37,20 @@ define(['underscore', 'unserialize'], function(_) {
           row = data.rows.item(0);
           attachmentData = _.getAttachmentData(id);
           return attachmentData.done(function(data) {
-            var full, mediaUrl, result, url;
+            var full, mediaUrl, result, sizes, url;
             url = row['guid'];
             mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"));
-            full = {
-              full: {}
-            };
-            _.extend(data.sizes, full);
             if (data.sizes) {
-              _.each(data.sizes, function(size) {
+              sizes = data.sizes;
+              full = {
+                full: {}
+              };
+              _.extend(sizes, full);
+              _.each(sizes, function(size) {
                 return size.url = mediaUrl;
               });
             } else {
-              data.sizes = '';
+              sizes = '';
             }
             result = {
               id: row['ID'],
@@ -35,7 +58,7 @@ define(['underscore', 'unserialize'], function(_) {
               url: mediaUrl,
               mime: row['post_mime_type'],
               icon: '',
-              sizes: data.sizes,
+              sizes: sizes,
               height: data.height,
               width: data.width
             };

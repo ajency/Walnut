@@ -4,8 +4,26 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	_.mixin
 
-		getMediaById : (id)->
+		getListOfMediaByID : (ids)->
+			runFunc = ->
+				$.Deferred (d)->
+					result = []
+					_.each ids , (mediaId, index)->
+						do(mediaId, index)->
+							mediaIdList = _.getMediaById mediaId
+							mediaIdList.done (data)->
+								result[index] = data
+					
+					d.resolve result
 
+
+			$.when(runFunc()).done ->
+				console.log 'getListOfMediaByID transaction completed'
+			.fail _.failureHandler
+
+
+
+		getMediaById : (id)->
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
@@ -23,16 +41,15 @@ define ['underscore', 'unserialize'], ( _) ->
 						url = row['guid']
 						mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"))
 
-						full = {
-							full: {}
-						}
-						_.extend(data.sizes, full)
-
 						if data.sizes
-							_.each data.sizes, (size)->
+							sizes = data.sizes
+							full = full: {}
+							_.extend(sizes, full)
+
+							_.each sizes, (size)->
 								size.url = mediaUrl
 						else
-							data.sizes = ''
+							sizes = ''
 						
 						result = 
 							id: row['ID']
@@ -40,7 +57,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							url: mediaUrl
 							mime: row['post_mime_type']
 							icon: ''
-							sizes: data.sizes
+							sizes: sizes
 							height: data.height
 							width: data.width
 

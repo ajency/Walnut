@@ -68,7 +68,12 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'offlineUsers'
 				data = _.getNamesOfAllOfflineUsers()
 				data.done (d)->
-					collection.set d		
+					collection.set d
+
+			if collection_name is 'media'
+				data = _.getListOfMediaByID(opts.ids)
+				data.done (d)->
+					collection.set d	
 
 			return true
 
