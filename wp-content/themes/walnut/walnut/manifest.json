@@ -1,6 +1,6 @@
 {
-  "name": "Synapse Staging",                          // [Synapse Staging Build]
-  // "name": "Teacher Training App - Synapse Learning",  // [Synapse Production Build]
+  "name": "Synapse Staging",                           // [Synapse Staging Build]
+  // "name": "Teacher Training App - Synapse Learning",   // [Synapse Production Build]
 
   "description": "Synapse Android App",
 
