@@ -67,7 +67,7 @@ function ajax_update_quiz ()
         update_quiz_content_layout($data);
     }
 
-    wp_send_json (array('code' => 'OK', 'data' => array('id' => $_POST['id'])));
+    wp_send_json (array('code' => 'OK', 'data' => array('id' => (int)$_POST['id'])));
 }
 
 add_action ('wp_ajax_update-quiz', 'ajax_update_quiz');

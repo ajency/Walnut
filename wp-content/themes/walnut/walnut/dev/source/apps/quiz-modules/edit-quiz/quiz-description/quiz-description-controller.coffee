@@ -50,7 +50,7 @@ define ['app'
                 @listenTo @view, "save:quiz:details" , (data) =>
                     @model.set 'changed' , 'quiz_details'
                     @model.save(data, { wait : true, success : @successFn, error : @errorFn })
-                    @region.trigger "close:content:selection:app" if data.status isnt 'underreview'
+                    @region.trigger "close:content:selection:app" if data.post_status isnt 'underreview'
 
                 @show @view,
                     loading : true

@@ -68,7 +68,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/qui
               success: _this.successFn,
               error: _this.errorFn
             });
-            if (data.status !== 'underreview') {
+            if (data.post_status !== 'underreview') {
               return _this.region.trigger("close:content:selection:app");
             }
           };
