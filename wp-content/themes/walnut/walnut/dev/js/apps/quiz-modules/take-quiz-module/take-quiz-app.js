@@ -56,18 +56,29 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._submitQuestion = function(answer) {
-        var data, quizResponseModel;
+        var data, newResponseModel, quizResponseModel;
         data = {
           'collection_id': quizModel.id,
           'content_piece_id': questionModel.id,
           'question_response': answer.toJSON()
         };
-        quizResponseModel = App.request("create:quiz:response:model", data);
-        questionResponseCollection.add(quizResponseModel);
+        newResponseModel = App.request("create:quiz:response:model", data);
+        quizResponseModel = questionResponseCollection.findWhere({
+          'content_piece_id': newResponseModel.get('content_piece_id')
+        });
+        if (quizResponseModel) {
+          console.log('update model');
+          quizResponseModel.set(newResponseModel.toJSON());
+        } else {
+          console.log('new model');
+          quizResponseModel = newResponseModel;
+          questionResponseCollection.add(newResponseModel);
+        }
         return this.layout.quizProgressRegion.trigger("question:submitted", quizResponseModel);
       };
 
-      TakeQuizController.prototype._skipQuestion = function() {
+      TakeQuizController.prototype._skipQuestion = function(answer) {
+        this._submitQuestion(answer);
         return this._gotoNextQuestion();
       };
 
@@ -88,7 +99,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
           quizModel: quizModel,
-          questionsCollection: questionsCollection
+          questionsCollection: questionsCollection,
+          questionResponseCollection: questionResponseCollection
         });
       };
 

@@ -29,7 +29,9 @@ define(['app', 'backbone'], function(App, Backbone) {
           data = {};
         }
         answer = new Answer.AnswerModel;
-        answer.set(data);
+        if (data != null) {
+          answer.set(data);
+        }
         return answer;
       }
     };

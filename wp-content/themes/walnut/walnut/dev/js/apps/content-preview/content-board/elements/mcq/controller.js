@@ -25,8 +25,12 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         if (answerWreqrObject) {
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
+              var data;
               _this._submitAnswer();
-              return _this.answerModel;
+              return data = {
+                'answerModel': _this.answerModel,
+                'totalMarks': _this.layout.model.get('marks')
+              };
             };
           })(this));
         }
@@ -90,21 +94,16 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.answerModel.set('marks', 0);
         if (!this.answerModel.get('answer').length) {
           console.log('you havent selected any thing');
-          this.answerModel.set('status', 'wrong_answer');
         } else {
           if (!this.layout.model.get('multiple')) {
             console.log(_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')));
             if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
               this.answerModel.set('marks', this.layout.model.get('marks'));
-              this.answerModel.set('status', 'correct_answer');
-            } else {
-              this.answerModel.set('status', 'wrong_answer');
             }
           } else {
             if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
               if (!_.difference(this.layout.model.get('correct_answer'), this.answerModel.get('answer')).length) {
                 this.answerModel.set('marks', this.layout.model.get('marks'));
-                this.answerModel.set('status', 'correct_answer');
               } else {
                 answersNotMarked = _.difference(this.layout.model.get('correct_answer'), this.answerModel.get('answer'));
                 totalMarks = this.layout.model.get('marks');
@@ -114,11 +113,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                   };
                 })(this));
                 this.answerModel.set('marks', totalMarks);
-                if (totalMarks > 0) {
-                  this.answerModel.set('status', 'partially_correct');
-                } else {
-                  this.answerModel.set('status', 'wrong_answer');
-                }
               }
             }
           }

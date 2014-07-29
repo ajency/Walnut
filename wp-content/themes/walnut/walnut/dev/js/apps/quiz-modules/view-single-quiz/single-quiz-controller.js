@@ -6,7 +6,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
   return App.module("QuizModuleApp.View", function(View, App) {
     var QuizViewLayout;
     View.QuizController = (function(_super) {
-      var questionsCollection, quizModel;
+      var questionResponseCollection, questionsCollection, quizModel;
 
       __extends(QuizController, _super);
 
@@ -21,9 +21,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       questionsCollection = null;
 
+      questionResponseCollection = null;
+
       QuizController.prototype.initialize = function(opts) {
         var quiz_id;
-        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection;
+        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection;
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }
@@ -33,9 +35,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         App.execute("show:leftnavapp", {
           region: App.leftNavRegion
         });
-        this.questionResponseCollection = App.request("get:quiz:response:collection", {
-          'collection_id': quizModel.get('id')
-        });
+        if (!questionResponseCollection) {
+          questionResponseCollection = App.request("get:quiz:response:collection", {
+            'collection_id': quizModel.get('id')
+          });
+        }
+        console.log(questionResponseCollection);
         return App.execute("when:fetched", quizModel, (function(_this) {
           return function() {
             if (!questionsCollection) {
@@ -60,7 +65,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           quizModel: quizModel,
           questionsCollection: questionsCollection,
           display_mode: 'quiz_mode',
-          questionResponseCollection: this.questionResponseCollection
+          questionResponseCollection: questionResponseCollection
         });
       };
 

@@ -11,18 +11,32 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData;
-        answerData = {
-          answer: [],
-          marks: 0
-        };
-        this.answerModel = App.request("create:new:answer", answerData);
+        var answerWreqrObject;
+        answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        if (!this.answerModel) {
+          this.answerModel = App.request("create:new:answer");
+        }
+        if (answerWreqrObject) {
+          answerWreqrObject.setHandler("get:question:answer", (function(_this) {
+            return function() {
+              var data;
+              _this._submitAnswer();
+              return data = {
+                'answerModel': _this.answerModel,
+                'totalMarks': _this.layout.model.get('marks')
+              };
+            };
+          })(this));
+        }
         return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype.renderElement = function() {
         var blanksArray;
         blanksArray = this.layout.model.get('blanksArray');
+        if (blanksArray instanceof Backbone.Collection) {
+          blanksArray = blanksArray.models;
+        }
         this._parseOptions(blanksArray);
         this.blanksCollection = App.request("create:new:question:element:collection", blanksArray);
         App.execute("show:total:marks", this.layout.model.get('marks'));
@@ -30,6 +44,9 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         console.log(this.blanksCollection.pluck('marks'));
         this.view = this._getFibView(this.layout.model);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
+        if (this.answerModel.get('status') !== 'not_attempted') {
+          this._submitAnswer();
+        }
         return this.layout.elementRegion.show(this.view, {
           loading: true
         });

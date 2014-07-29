@@ -75,14 +75,23 @@ define ['app'
                         'content_piece_id'  : questionModel.id
                         'question_response' : answer.toJSON()
                     
-                    quizResponseModel = App.request "create:quiz:response:model", data
+                    newResponseModel = App.request "create:quiz:response:model", data
 
-                    questionResponseCollection.add quizResponseModel
+                    quizResponseModel = questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
+                    
+                    if quizResponseModel
+                        console.log 'update model'
+                        quizResponseModel.set newResponseModel.toJSON()
+                    else 
+                        console.log 'new model'
+                        quizResponseModel = newResponseModel
+                        questionResponseCollection.add newResponseModel
 
                     @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
-                _skipQuestion:->
+                _skipQuestion:(answer)->
                     #save skipped status
+                    @_submitQuestion answer
                     @_gotoNextQuestion()                    
 
                 _gotoNextQuestion:->
@@ -101,6 +110,7 @@ define ['app'
                         region: App.mainContentRegion
                         quizModel: quizModel
                         questionsCollection: questionsCollection
+                        questionResponseCollection: questionResponseCollection
                     
 
                 _gotoPreviousQuestion:->

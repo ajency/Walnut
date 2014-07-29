@@ -9,30 +9,32 @@ define ['app'
                 class SingleQuestion.Controller extends RegionController
 
                     initialize: (opts)->
-                        {model, questionResponseCollection} = opts
+                        {@model, questionResponseCollection} = opts
 
                         @answerWreqrObject = new Backbone.Wreqr.RequestResponse()
 
-                        @layout = layout = @_showSingleQuestionLayout model
+                        @layout = layout = @_showSingleQuestionLayout @model
 
                         @answerModel = App.request "create:new:answer"
 
-                        questionResponseModel= questionResponseCollection.findWhere 'content_piece_id': model.id 
+                        questionResponseModel= questionResponseCollection.findWhere 'content_piece_id': @model.id 
 
                         if questionResponseModel
                             answerData = questionResponseModel.get('question_response')
                             @answerModel = App.request "create:new:answer", answerData
-                            console.log @answerModel
 
                         @show layout,
                             loading: true
 
-                        @listenTo layout, "show", @_showContentBoard model,@answerWreqrObject
+                        @listenTo layout, "show", @_showContentBoard @model,@answerWreqrObject
 
                         @listenTo layout, "submit:question",->
+                            answerData= @answerWreqrObject.request "get:question:answer"
 
-                            answer= @answerWreqrObject.request "get:question:answer"
+                            answer = answerData.answerModel
 
+                            answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
+                            
                             @region.trigger "submit:question", answer
 
                         @listenTo layout, "goto:next:question",->
@@ -41,8 +43,11 @@ define ['app'
                         @listenTo layout, "goto:previous:question",
                             -> @region.trigger "goto:previous:question"
 
-                        @listenTo layout, "skip:question",
-                            -> @region.trigger "skip:question"
+                        @listenTo layout, "skip:question",-> 
+
+                            @answerModel.set 'status': 'skipped'
+
+                            @region.trigger "skip:question", @answerModel
 
                         @listenTo layout, 'show:hint:dialog',(options)->
                             App.execute 'show:hint:dialog',
@@ -51,6 +56,17 @@ define ['app'
                         @listenTo layout,'show:comment:dialog',(options)->
                             App.execute 'show:comment:dialog',
                                 comment : options.comment
+
+                    _getAnswerStatus:(recievedMarks, totalMarks)->
+                        status = 'wrong_answer'
+
+                        if recievedMarks is totalMarks 
+                            status = 'correct_answer' 
+
+                        if recievedMarks > 0 and recievedMarks < totalMarks
+                            status = 'partially_correct' 
+
+                        status
 
                     _showContentBoard:(model,answerWreqrObject)=>
                         App.execute "show:content:board",

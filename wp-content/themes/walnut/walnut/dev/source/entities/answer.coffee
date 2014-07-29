@@ -19,7 +19,7 @@ define ['app'
 
 						answer = new Answer.AnswerModel
 
-						answer.set data
+						answer.set data if data?
 
 						answer
 

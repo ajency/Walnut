@@ -32,7 +32,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       Controller.prototype._showQuizProgressView = function(collection, currentQuestion) {
         return new QuizProgressView({
           collection: collection,
-          currentQuestion: currentQuestion
+          currentQuestion: currentQuestion,
+          questionResponseCollection: this.questionResponseCollection
         });
       };
 
@@ -86,16 +87,12 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.mixinTemplateHelpers = function(data) {
-        var currentQuestion;
         data.totalQuestions = this.collection.length;
-        currentQuestion = Marionette.getOption(this, 'currentQuestion');
-        data.answeredQuestions = this.collection.indexOf(currentQuestion.id) + 1;
-        data.progressPercentage = (data.answeredQuestions / data.totalQuestions) * 100;
         return data;
       };
 
       QuizProgressView.prototype.onShow = function() {
-        var currentQuestion;
+        var currentQuestion, questionResponseCollection;
         this.$el.find("div.holder").jPages({
           containerID: "quiz-items",
           perPage: 9,
@@ -107,7 +104,15 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           links: "blank"
         });
         currentQuestion = Marionette.getOption(this, 'currentQuestion');
-        return this.$el.find("#quiz-items a#" + currentQuestion.id).closest('li').addClass('current');
+        questionResponseCollection = Marionette.getOption(this, 'questionResponseCollection');
+        questionResponseCollection.each((function(_this) {
+          return function(response) {
+            return _this.changeClassName(response);
+          };
+        })(this));
+        this.onQuestionChange(currentQuestion);
+        this.updateProgressBar();
+        return this.updateSkippedCount();
       };
 
       QuizProgressView.prototype.onQuestionChange = function(model) {
@@ -116,16 +121,50 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
+        this.changeClassName(responseModel);
+        this.updateProgressBar();
+        return this.updateSkippedCount();
+      };
+
+      QuizProgressView.prototype.changeClassName = function(responseModel) {
         var answer, className, _ref;
-        console.log('question submitted- progress page');
-        console.log(responseModel);
         answer = responseModel.get('question_response');
         if ((_ref = answer.status) === 'correct_answer' || _ref === 'partially_correct') {
           className = 'right';
-        } else {
+        }
+        if (answer.status === 'wrong_answer') {
           className = 'wrong';
         }
+        if (answer.status === 'skipped') {
+          className = 'skip';
+        }
         return this.$el.find("a#" + responseModel.get('content_piece_id')).closest('li').removeClass('wrong').removeClass('right').removeClass('skip').addClass(className);
+      };
+
+      QuizProgressView.prototype.updateProgressBar = function() {
+        var answeredQuestions, progressPercentage, questionResponseCollection, responses;
+        questionResponseCollection = Marionette.getOption(this, 'questionResponseCollection');
+        responses = questionResponseCollection.pluck('question_response');
+        answeredQuestions = _.chain(responses).map(function(m) {
+          if (m.status !== 'skipped') {
+            return m;
+          }
+        }).compact().size().value();
+        progressPercentage = (answeredQuestions / this.collection.length) * 100;
+        this.$el.find("#quiz-progress-bar").attr("data-percentage", progressPercentage + '%').css({
+          "width": progressPercentage + '%'
+        });
+        return this.$el.find("#answered-questions").html(answeredQuestions);
+      };
+
+      QuizProgressView.prototype.updateSkippedCount = function() {
+        var answers, questionResponseCollection, skipped;
+        questionResponseCollection = Marionette.getOption(this, 'questionResponseCollection');
+        answers = questionResponseCollection.pluck('question_response');
+        skipped = _.where(answers, {
+          'status': 'skipped'
+        });
+        return this.$el.find("#skipped-questions").html(_.size(skipped));
       };
 
       return QuizProgressView;

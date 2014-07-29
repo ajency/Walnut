@@ -26,8 +26,9 @@ define ['app'
                     _showQuizProgressView: (collection,currentQuestion) ->
                         
                         new QuizProgressView
-                            collection: collection
-                            currentQuestion: currentQuestion
+                            collection                  : collection
+                            currentQuestion             : currentQuestion
+                            questionResponseCollection  : @questionResponseCollection
  
 
                 class QuestionProgressView extends Marionette.ItemView 
@@ -60,13 +61,6 @@ define ['app'
 
                     mixinTemplateHelpers:(data)->
                         data.totalQuestions = @collection.length
-
-                        currentQuestion= Marionette.getOption @,'currentQuestion'
-
-                        data.answeredQuestions = @collection.indexOf(currentQuestion.id)+1
-
-                        data.progressPercentage = (data.answeredQuestions / data.totalQuestions) * 100
-
                         data
 
                     onShow:->
@@ -83,9 +77,14 @@ define ['app'
 
                         currentQuestion = Marionette.getOption @,'currentQuestion'
 
-                        @$el.find "#quiz-items a#"+currentQuestion.id
-                        .closest 'li'
-                        .addClass 'current'
+                        questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
+                        questionResponseCollection.each (response)=> @changeClassName response
+
+                        @onQuestionChange currentQuestion
+
+                        @updateProgressBar()
+
+                        @updateSkippedCount()
 
                     onQuestionChange:(model)->
                         @$el.find "#quiz-items li"
@@ -96,16 +95,25 @@ define ['app'
                         .addClass 'current'
 
                     onQuestionSubmitted:(responseModel)->
-                        console.log 'question submitted- progress page'
-                        console.log responseModel
 
+                        @changeClassName responseModel
+
+                        @updateProgressBar()
+
+                        @updateSkippedCount()
+
+                    changeClassName:(responseModel)->
+                        
                         answer = responseModel.get 'question_response'
-
-
+                        
                         if answer.status in ['correct_answer','partially_correct']
                             className = 'right'  
 
-                        else className = 'wrong'
+                        if answer.status is 'wrong_answer' 
+                            className = 'wrong'
+
+                        if answer.status is 'skipped' 
+                            className = 'skip'
 
                         @$el.find "a#"+responseModel.get 'content_piece_id'
                         .closest 'li'
@@ -113,5 +121,37 @@ define ['app'
                         .removeClass 'right'
                         .removeClass 'skip'
                         .addClass className
+
+                    updateProgressBar:->
+                        questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
+
+                        responses = questionResponseCollection.pluck 'question_response'
+
+                        answeredQuestions = _.chain responses
+                                    .map (m)->m if m.status isnt 'skipped'
+                                    .compact()
+                                    .size()
+                                    .value()
+
+                        progressPercentage = (answeredQuestions / @collection.length) * 100
+
+                        @$el.find "#quiz-progress-bar"
+                        .attr "data-percentage", progressPercentage + '%'
+                        .css "width" : progressPercentage + '%'
+
+                        @$el.find "#answered-questions"
+                        .html answeredQuestions
+
+
+
+                    updateSkippedCount:->
+                        questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
+                        answers = questionResponseCollection.pluck 'question_response'
+                        skipped = _.where answers, 'status': 'skipped'
+
+                        @$el.find "#skipped-questions"
+                        .html _.size skipped
+
+
                     
 

@@ -13,18 +13,32 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData;
-        answerData = {
-          answer: [],
-          marks: 0
-        };
-        this.answerModel = App.request("create:new:answer", answerData);
+        var answerWreqrObject;
+        answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        if (!this.answerModel) {
+          this.answerModel = App.request("create:new:answer");
+        }
+        if (answerWreqrObject) {
+          answerWreqrObject.setHandler("get:question:answer", (function(_this) {
+            return function() {
+              var data;
+              _this._submitAnswer();
+              return data = {
+                'answerModel': _this.answerModel,
+                'totalMarks': _this.layout.model.get('marks')
+              };
+            };
+          })(this));
+        }
         return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype.renderElement = function() {
         var optionsObj;
         optionsObj = this.layout.model.get('elements');
+        if (optionsObj instanceof Backbone.Collection) {
+          optionsObj = optionsObj.models;
+        }
         this._parseOptions(optionsObj);
         optionsObj = _.shuffle(optionsObj);
         this.optionCollection = App.request("create:new:option:collection", optionsObj);
@@ -32,6 +46,9 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.view = this._getSortView(this.optionCollection);
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
+        if (this.answerModel.get('status') !== 'not_attempted') {
+          this._submitAnswer();
+        }
         return this.layout.elementRegion.show(this.view);
       };
 

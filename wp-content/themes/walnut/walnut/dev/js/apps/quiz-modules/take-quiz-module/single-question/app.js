@@ -14,26 +14,29 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       }
 
       Controller.prototype.initialize = function(opts) {
-        var answerData, layout, model, questionResponseCollection, questionResponseModel;
-        model = opts.model, questionResponseCollection = opts.questionResponseCollection;
+        var answerData, layout, questionResponseCollection, questionResponseModel;
+        this.model = opts.model, questionResponseCollection = opts.questionResponseCollection;
         this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
-        this.layout = layout = this._showSingleQuestionLayout(model);
+        this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
         questionResponseModel = questionResponseCollection.findWhere({
-          'content_piece_id': model.id
+          'content_piece_id': this.model.id
         });
         if (questionResponseModel) {
           answerData = questionResponseModel.get('question_response');
           this.answerModel = App.request("create:new:answer", answerData);
-          console.log(this.answerModel);
         }
         this.show(layout, {
           loading: true
         });
-        this.listenTo(layout, "show", this._showContentBoard(model, this.answerWreqrObject));
+        this.listenTo(layout, "show", this._showContentBoard(this.model, this.answerWreqrObject));
         this.listenTo(layout, "submit:question", function() {
           var answer;
-          answer = this.answerWreqrObject.request("get:question:answer");
+          answerData = this.answerWreqrObject.request("get:question:answer");
+          answer = answerData.answerModel;
+          answer.set({
+            'status': this._getAnswerStatus(answer.get('marks'), answerData.totalMarks)
+          });
           return this.region.trigger("submit:question", answer);
         });
         this.listenTo(layout, "goto:next:question", function() {
@@ -43,7 +46,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           return this.region.trigger("goto:previous:question");
         });
         this.listenTo(layout, "skip:question", function() {
-          return this.region.trigger("skip:question");
+          this.answerModel.set({
+            'status': 'skipped'
+          });
+          return this.region.trigger("skip:question", this.answerModel);
         });
         this.listenTo(layout, 'show:hint:dialog', function(options) {
           return App.execute('show:hint:dialog', {
@@ -55,6 +61,18 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             comment: options.comment
           });
         });
+      };
+
+      Controller.prototype._getAnswerStatus = function(recievedMarks, totalMarks) {
+        var status;
+        status = 'wrong_answer';
+        if (recievedMarks === totalMarks) {
+          status = 'correct_answer';
+        }
+        if (recievedMarks > 0 && recievedMarks < totalMarks) {
+          status = 'partially_correct';
+        }
+        return status;
       };
 
       Controller.prototype._showContentBoard = function(model, answerWreqrObject) {
