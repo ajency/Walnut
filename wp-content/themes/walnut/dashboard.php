@@ -79,7 +79,7 @@
         </div>
     </div>
 
-    <div id="dialog-region">
+    <div id="dialog-region" class="modal">
     </div>
 </div>
 <?php global $class_ids;
