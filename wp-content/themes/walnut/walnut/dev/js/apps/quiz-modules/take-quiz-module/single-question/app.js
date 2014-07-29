@@ -9,30 +9,35 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       function Controller() {
         this._showSingleQuestionLayout = __bind(this._showSingleQuestionLayout, this);
+        this._showContentBoard = __bind(this._showContentBoard, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
       Controller.prototype.initialize = function(opts) {
-        var layout, model;
-        model = opts.model, this.questionResponseCollection = opts.questionResponseCollection;
+        var answerData, layout, model, questionResponseCollection, questionResponseModel;
+        model = opts.model, questionResponseCollection = opts.questionResponseCollection;
         this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
         this.layout = layout = this._showSingleQuestionLayout(model);
+        this.answerModel = App.request("create:new:answer");
+        questionResponseModel = questionResponseCollection.findWhere({
+          'content_piece_id': model.id
+        });
+        if (questionResponseModel) {
+          answerData = questionResponseModel.get('question_response');
+          this.answerModel = App.request("create:new:answer", answerData);
+          console.log(this.answerModel);
+        }
         this.show(layout, {
           loading: true
         });
         this.listenTo(layout, "show", this._showContentBoard(model, this.answerWreqrObject));
         this.listenTo(layout, "submit:question", function() {
-          var answer, data, quizResponseModel;
+          var answer;
           answer = this.answerWreqrObject.request("get:question:answer");
-          data = {
-            'question_response': answer.toJSON()
-          };
-          quizResponseModel = App.request("create:quiz:response:model", data);
-          this.questionResponseCollection.add(quizResponseModel);
-          return console.log(this.questionResponseCollection);
+          return this.region.trigger("submit:question", answer);
         });
         this.listenTo(layout, "goto:next:question", function() {
-          return this.region.trigger("submit:question");
+          return this.region.trigger("goto:next:question");
         });
         this.listenTo(layout, "goto:previous:question", function() {
           return this.region.trigger("goto:previous:question");
@@ -56,7 +61,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         return App.execute("show:content:board", {
           region: this.layout.contentBoardRegion,
           model: model,
-          answerWreqrObject: answerWreqrObject
+          answerWreqrObject: answerWreqrObject,
+          answerModel: this.answerModel
         });
       };
 

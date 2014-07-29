@@ -1,7 +1,7 @@
 <div class="modProgress h-center">
 	<p class="bold small-text m-b-5 p-t-10 text-center">Questions Answered</p>
 		<div class="progress progress-large m-b-10">
-		<div data-percentage="0%" style="width: 40%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">4/18</div>
+		<div data-percentage="{{progressPercentage}}%" style="width: {{progressPercentage}}%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100">{{answeredQuestions}}/{{totalQuestions}}</div>
 	</div>
 </div>
 <div class="text-center small-text p-t-10 m-t-5 p-b-10 b-grey b-t skipped">

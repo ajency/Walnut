@@ -8,9 +8,10 @@ define ['app'
         class ContentBoard.Controller extends RegionController
 
             answerWreqrObject = null
+            answerModel       = null
 
             initialize : (options)->
-                {@model,answerWreqrObject}=options
+                {@model,answerWreqrObject, answerModel}=options
 
                 @view = @_getContentBoardView()
 
@@ -70,7 +71,8 @@ define ['app'
                     new ContentBoard.Element[type].Controller
                         container            : container
                         modelData            : modelData
-                        answerWreqrObject     : answerWreqrObject
+                        answerWreqrObject    : answerWreqrObject
+                        answerModel          : answerModel
 
 
             App.commands.setHandler 'show:content:board', (options)->

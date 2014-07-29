@@ -5,7 +5,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['app', 'controllers/region-controller', 'apps/content-preview/content-board/element/controller', 'apps/content-preview/content-board/view', 'apps/content-preview/content-board/elements-loader'], function(App, RegionController) {
   return App.module("ContentPreview.ContentBoard", function(ContentBoard, App, Backbone, Marionette, $, _) {
     return ContentBoard.Controller = (function(_super) {
-      var API, answerWreqrObject;
+      var API, answerModel, answerWreqrObject;
 
       __extends(Controller, _super);
 
@@ -16,8 +16,10 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
 
       answerWreqrObject = null;
 
+      answerModel = null;
+
       Controller.prototype.initialize = function(options) {
-        this.model = options.model, answerWreqrObject = options.answerWreqrObject;
+        this.model = options.model, answerWreqrObject = options.answerWreqrObject, answerModel = options.answerModel;
         this.view = this._getContentBoardView();
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
@@ -84,7 +86,8 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
           return new ContentBoard.Element[type].Controller({
             container: container,
             modelData: modelData,
-            answerWreqrObject: answerWreqrObject
+            answerWreqrObject: answerWreqrObject,
+            answerModel: answerModel
           });
         }
       };

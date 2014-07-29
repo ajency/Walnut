@@ -13,7 +13,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       Controller.prototype.initialize = function(opts) {
         var currentQuestion, view;
-        this.questionsCollection = opts.questionsCollection, currentQuestion = opts.currentQuestion;
+        this.questionsCollection = opts.questionsCollection, currentQuestion = opts.currentQuestion, this.questionResponseCollection = opts.questionResponseCollection;
         this.view = view = this._showQuizProgressView(this.questionsCollection, currentQuestion);
         this.show(view, {
           loading: true
@@ -21,8 +21,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         this.listenTo(view, "change:question", function(id) {
           return this.region.trigger("change:question", id);
         });
-        return this.listenTo(this.region, "question:changed", function(model) {
+        this.listenTo(this.region, "question:changed", function(model) {
           return this.view.triggerMethod("question:change", model);
+        });
+        return this.listenTo(this.region, "question:submitted", function(responseModel) {
+          return this.view.triggerMethod("question:submitted", responseModel);
         });
       };
 
@@ -82,6 +85,15 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         }
       };
 
+      QuizProgressView.prototype.mixinTemplateHelpers = function(data) {
+        var currentQuestion;
+        data.totalQuestions = this.collection.length;
+        currentQuestion = Marionette.getOption(this, 'currentQuestion');
+        data.answeredQuestions = this.collection.indexOf(currentQuestion.id) + 1;
+        data.progressPercentage = (data.answeredQuestions / data.totalQuestions) * 100;
+        return data;
+      };
+
       QuizProgressView.prototype.onShow = function() {
         var currentQuestion;
         this.$el.find("div.holder").jPages({
@@ -101,6 +113,19 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       QuizProgressView.prototype.onQuestionChange = function(model) {
         this.$el.find("#quiz-items li").removeClass('current');
         return this.$el.find("#quiz-items a#" + model.id).closest('li').addClass('current');
+      };
+
+      QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
+        var answer, className, _ref;
+        console.log('question submitted- progress page');
+        console.log(responseModel);
+        answer = responseModel.get('question_response');
+        if ((_ref = answer.status) === 'correct_answer' || _ref === 'partially_correct') {
+          className = 'right';
+        } else {
+          className = 'wrong';
+        }
+        return this.$el.find("a#" + responseModel.get('content_piece_id')).closest('li').removeClass('wrong').removeClass('right').removeClass('skip').addClass(className);
       };
 
       return QuizProgressView;

@@ -7,7 +7,7 @@ define ['app'
                 class QuizProgress.Controller extends RegionController
 
                     initialize: (opts)->
-                        {@questionsCollection,currentQuestion} = opts
+                        {@questionsCollection,currentQuestion,@questionResponseCollection} = opts
 
                         @view = view = @_showQuizProgressView @questionsCollection,currentQuestion
 
@@ -18,6 +18,9 @@ define ['app'
 
                         @listenTo @region, "question:changed", (model)->
                             @view.triggerMethod "question:change", model
+
+                        @listenTo @region, "question:submitted", (responseModel)->
+                            @view.triggerMethod "question:submitted", responseModel
 
 
                     _showQuizProgressView: (collection,currentQuestion) ->
@@ -55,6 +58,16 @@ define ['app'
                     events:
                         'click #quiz-items a' :(e)-> @trigger "change:question", $(e.target).attr 'id'
 
+                    mixinTemplateHelpers:(data)->
+                        data.totalQuestions = @collection.length
+
+                        currentQuestion= Marionette.getOption @,'currentQuestion'
+
+                        data.answeredQuestions = @collection.indexOf(currentQuestion.id)+1
+
+                        data.progressPercentage = (data.answeredQuestions / data.totalQuestions) * 100
+
+                        data
 
                     onShow:->
                         @$el.find "div.holder"
@@ -81,5 +94,24 @@ define ['app'
                         @$el.find "#quiz-items a#"+model.id
                         .closest 'li'
                         .addClass 'current'
+
+                    onQuestionSubmitted:(responseModel)->
+                        console.log 'question submitted- progress page'
+                        console.log responseModel
+
+                        answer = responseModel.get 'question_response'
+
+
+                        if answer.status in ['correct_answer','partially_correct']
+                            className = 'right'  
+
+                        else className = 'wrong'
+
+                        @$el.find "a#"+responseModel.get 'content_piece_id'
+                        .closest 'li'
+                        .removeClass 'wrong'
+                        .removeClass 'right'
+                        .removeClass 'skip'
+                        .addClass className
                     
 

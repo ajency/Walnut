@@ -17,14 +17,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData, answerWreqrObject;
-        answerData = {
-          answer: [],
-          marks: 0,
-          comment: 'Not Attempted'
-        };
-        this.answerModel = App.request("create:new:answer", answerData);
-        answerWreqrObject = options.answerWreqrObject;
+        var answerWreqrObject;
+        answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        if (!this.answerModel) {
+          this.answerModel = App.request("create:new:answer");
+        }
         if (answerWreqrObject) {
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
@@ -59,6 +56,9 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.view = this._getMcqView();
         this.listenTo(this.view, "create:row:structure", this.createRowStructure);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
+        if (this.answerModel.get('status') !== 'not_attempted') {
+          this._submitAnswer();
+        }
         return this.layout.elementRegion.show(this.view);
       };
 
@@ -90,16 +90,21 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.answerModel.set('marks', 0);
         if (!this.answerModel.get('answer').length) {
           console.log('you havent selected any thing');
+          this.answerModel.set('status', 'wrong_answer');
         } else {
           if (!this.layout.model.get('multiple')) {
             console.log(_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')));
             if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
               this.answerModel.set('marks', this.layout.model.get('marks'));
+              this.answerModel.set('status', 'correct_answer');
+            } else {
+              this.answerModel.set('status', 'wrong_answer');
             }
           } else {
             if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
               if (!_.difference(this.layout.model.get('correct_answer'), this.answerModel.get('answer')).length) {
                 this.answerModel.set('marks', this.layout.model.get('marks'));
+                this.answerModel.set('status', 'correct_answer');
               } else {
                 answersNotMarked = _.difference(this.layout.model.get('correct_answer'), this.answerModel.get('answer'));
                 totalMarks = this.layout.model.get('marks');
@@ -109,6 +114,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                   };
                 })(this));
                 this.answerModel.set('marks', totalMarks);
+                if (totalMarks > 0) {
+                  this.answerModel.set('status', 'partially_correct');
+                } else {
+                  this.answerModel.set('status', 'wrong_answer');
+                }
               }
             }
           }

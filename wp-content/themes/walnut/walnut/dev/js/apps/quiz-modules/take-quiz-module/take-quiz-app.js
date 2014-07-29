@@ -42,6 +42,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         this.timerObject = new Backbone.Wreqr.RequestResponse();
         this.listenTo(this.layout, "show", this._showQuizViews);
+        this.listenTo(this.layout.questionDisplayRegion, "goto:next:question", this._gotoNextQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "submit:question", this._submitQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "goto:previous:question", this._gotoPreviousQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "skip:question", this._skipQuestion);
@@ -54,10 +55,16 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         return this._showSingleQuestionApp(questionModel);
       };
 
-      TakeQuizController.prototype._submitQuestion = function() {
-        console.log('questionResponseCollection from take quiz app page');
-        console.log(questionResponseCollection);
-        return this._gotoNextQuestion();
+      TakeQuizController.prototype._submitQuestion = function(answer) {
+        var data, quizResponseModel;
+        data = {
+          'collection_id': quizModel.id,
+          'content_piece_id': questionModel.id,
+          'question_response': answer.toJSON()
+        };
+        quizResponseModel = App.request("create:quiz:response:model", data);
+        questionResponseCollection.add(quizResponseModel);
+        return this.layout.quizProgressRegion.trigger("question:submitted", quizResponseModel);
       };
 
       TakeQuizController.prototype._skipQuestion = function() {
@@ -135,7 +142,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         new View.QuizProgress.Controller({
           region: this.layout.quizProgressRegion,
           questionsCollection: questionsCollection,
-          currentQuestion: questionModel
+          currentQuestion: questionModel,
+          questionResponseCollection: questionResponseCollection
         });
         new View.QuizTimer.Controller({
           region: this.layout.quizTimerRegion,

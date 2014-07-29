@@ -6,13 +6,10 @@ define ['app'
         class Mcq.Controller extends Element.Controller
 
             initialize : (options)->
-                answerData =
-                    answer : []
-                    marks : 0
-                    comment : 'Not Attempted'
-                @answerModel = App.request "create:new:answer", answerData
 
-                {answerWreqrObject} = options
+                {answerWreqrObject,@answerModel} = options
+
+                @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
                     answerWreqrObject.setHandler "get:question:answer", ()=>
@@ -61,6 +58,10 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
+                
+                if @answerModel.get('status') isnt 'not_attempted'
+                    @_submitAnswer()
+
                 # show the view
                 @layout.elementRegion.show @view
 
@@ -84,6 +85,7 @@ define ['app'
                 if not @answerModel.get('answer').length
                     # confirmbox = confirm 'You haven\'t selected anything..\n do you still want to continue?'
                     console.log 'you havent selected any thing'
+                    @answerModel.set 'status', 'wrong_answer'
                     # return if not confirmbox
                     # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
 
@@ -92,11 +94,15 @@ define ['app'
                         console.log _.difference(@answerModel.get('answer'), @layout.model.get('correct_answer'))
                         if not _.difference(@answerModel.get('answer'), @layout.model.get('correct_answer')).length
                             @answerModel.set 'marks', @layout.model.get 'marks'
+                            @answerModel.set 'status', 'correct_answer'
+                        else 
+                            @answerModel.set 'status', 'wrong_answer'
                         # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
                     else
                         if not _.difference(@answerModel.get('answer'), @layout.model.get('correct_answer')).length
                             if not _.difference(@layout.model.get('correct_answer'), @answerModel.get('answer')).length
                                 @answerModel.set 'marks', @layout.model.get 'marks'
+                                @answerModel.set 'status', 'correct_answer'
                                 # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
                             else
                                 answersNotMarked = _.difference(@layout.model.get('correct_answer'),
@@ -105,6 +111,12 @@ define ['app'
                                 _.each answersNotMarked, (notMarked)=>
                                     totalMarks -= @layout.model.get('options').get(notMarked).get('marks')
                                 @answerModel.set 'marks', totalMarks
+                                if totalMarks>0 
+                                    @answerModel.set 'status', 'partially_correct'
+                                else 
+                                    @answerModel.set 'status', 'wrong_answer'
+
+
                 # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
                 # else
                 # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')

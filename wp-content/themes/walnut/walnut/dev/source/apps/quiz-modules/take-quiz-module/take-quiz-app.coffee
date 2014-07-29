@@ -49,6 +49,8 @@ define ['app'
 
                     @listenTo @layout, "show", @_showQuizViews
 
+                    @listenTo @layout.questionDisplayRegion, "goto:next:question", @_gotoNextQuestion
+
                     @listenTo @layout.questionDisplayRegion, "submit:question", @_submitQuestion
 
                     @listenTo @layout.questionDisplayRegion, "goto:previous:question", @_gotoPreviousQuestion
@@ -65,13 +67,19 @@ define ['app'
                     @_showSingleQuestionApp questionModel
 
 
-                _submitQuestion:->
+                _submitQuestion:(answer)->
                     #save results here
 
-                    console.log 'questionResponseCollection from take quiz app page'
-                    console.log questionResponseCollection
+                    data = 
+                        'collection_id'     : quizModel.id
+                        'content_piece_id'  : questionModel.id
+                        'question_response' : answer.toJSON()
+                    
+                    quizResponseModel = App.request "create:quiz:response:model", data
 
-                    @_gotoNextQuestion()
+                    questionResponseCollection.add quizResponseModel
+
+                    @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
                 _skipQuestion:->
                     #save skipped status
@@ -139,6 +147,7 @@ define ['app'
                         region: @layout.quizProgressRegion
                         questionsCollection: questionsCollection
                         currentQuestion: questionModel
+                        questionResponseCollection   : questionResponseCollection
 
                     new View.QuizTimer.Controller
                         region: @layout.quizTimerRegion

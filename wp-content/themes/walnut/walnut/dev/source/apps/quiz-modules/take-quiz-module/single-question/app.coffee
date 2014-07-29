@@ -9,11 +9,20 @@ define ['app'
                 class SingleQuestion.Controller extends RegionController
 
                     initialize: (opts)->
-                        {model, @questionResponseCollection} = opts
+                        {model, questionResponseCollection} = opts
 
                         @answerWreqrObject = new Backbone.Wreqr.RequestResponse()
 
                         @layout = layout = @_showSingleQuestionLayout model
+
+                        @answerModel = App.request "create:new:answer"
+
+                        questionResponseModel= questionResponseCollection.findWhere 'content_piece_id': model.id 
+
+                        if questionResponseModel
+                            answerData = questionResponseModel.get('question_response')
+                            @answerModel = App.request "create:new:answer", answerData
+                            console.log @answerModel
 
                         @show layout,
                             loading: true
@@ -23,17 +32,11 @@ define ['app'
                         @listenTo layout, "submit:question",->
 
                             answer= @answerWreqrObject.request "get:question:answer"
-                            
-                            data = 'question_response': answer.toJSON()
-                            
-                            quizResponseModel = App.request "create:quiz:response:model", data
 
-                            @questionResponseCollection.add quizResponseModel
-                            
-                            console.log @questionResponseCollection
+                            @region.trigger "submit:question", answer
 
                         @listenTo layout, "goto:next:question",->
-                            @region.trigger "submit:question"
+                            @region.trigger "goto:next:question"
 
                         @listenTo layout, "goto:previous:question",
                             -> @region.trigger "goto:previous:question"
@@ -49,11 +52,12 @@ define ['app'
                             App.execute 'show:comment:dialog',
                                 comment : options.comment
 
-                    _showContentBoard:(model,answerWreqrObject)->
+                    _showContentBoard:(model,answerWreqrObject)=>
                         App.execute "show:content:board",
-                                region: @layout.contentBoardRegion,
-                                model: model
-                                answerWreqrObject: answerWreqrObject
+                                region              : @layout.contentBoardRegion,
+                                model               : model
+                                answerWreqrObject   : answerWreqrObject
+                                answerModel         : @answerModel
                             
                     _showSingleQuestionLayout: (model) =>
                         new SingleQuestion.SingleQuestionLayout
