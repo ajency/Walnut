@@ -94,6 +94,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.view = this._getAudioView();
         if (_.platform() === 'DEVICE') {
           return this._getAudioLocalPath();
+        } else {
+          return this.layout.elementRegion.show(this.view);
         }
       };
 

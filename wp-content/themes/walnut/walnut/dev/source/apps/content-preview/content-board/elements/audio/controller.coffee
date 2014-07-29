@@ -87,5 +87,7 @@ define ['app'
 						@view = @_getAudioView()
 						if _.platform() is 'DEVICE'
 							@_getAudioLocalPath()
+						else
+							@layout.elementRegion.show @view
 
 						

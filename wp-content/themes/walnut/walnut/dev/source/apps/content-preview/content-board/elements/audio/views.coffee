@@ -44,6 +44,9 @@ define ['app'], (App)->
 					showduration: true
 					show_prev_next : true
 
+			# onClose: ->
+			# 	@$el.find('audio').panzerlist('destroy');
+
 
 
 
