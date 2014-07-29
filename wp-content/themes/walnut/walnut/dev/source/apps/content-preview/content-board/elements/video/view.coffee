@@ -68,13 +68,7 @@ define ['app'], (App)->
 									if index is 0
 										@$el.find('#'+@videoId)[0].src = @videos[@index]
 										@$el.find('#'+@videoId)[0].load()
-									# @videos[index] = videoPath
 
-									# if index is 0
-									# 	initVideos = {}
-									# 	initVideos[@videoId] = @videos[index]
-									# 	window.plugins.html5Video.initialize initVideos
-									# 	window.plugins.html5Video.play @videoId
 
 
 
@@ -131,37 +125,11 @@ define ['app'], (App)->
 
 
 
-			# _playVideo:=>
-			# 	@$el.find('.playlist-video').removeClass 'currentVid'
-			# 	@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
-			# 	@$el.find('#now-playing-tag').text @model.get('title')[@index]
-				
-			# 	if _.platform() is 'DEVICE'
-			# 		initVideos = {}
-			# 		initVideos[@videoId] = @videos[@index]
-			# 		window.plugins.html5Video.initialize initVideos
-			# 		window.plugins.html5Video.play @videoId
 
-			# 		setTimeout(=>
-			# 			@$el.find('#'+@videoId)[0].play()
-			# 		,2000)
-
-			# 	else
-			# 		@$el.find('video').attr 'src',@videos[@index]
-			# 		@$el.find('video')[0].load()
-			# 		@$el.find('video')[0].play()
 			_playVideo:=>
 				@$el.find('.playlist-video').removeClass 'currentVid'
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
 				@$el.find('#now-playing-tag').text @model.get('title')[@index]
-				
-				# if _.platform() is 'DEVICE'
-				# 	@$el.find('#'+@videoId)[0].src = @videos[@index]
-				# 	@$el.find('#'+@videoId)[0].load()
-				# 	@$el.find('#'+@videoId)[0].play()
-
-				# else
 				@$el.find('video').src = @videos[@index]
-				# @$el.find('video').attr 'src',@videos[@index]
 				@$el.find('video')[0].load()
 				@$el.find('video')[0].play()
