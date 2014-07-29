@@ -18,7 +18,11 @@ define ['app'
             class View.TakeQuizController extends RegionController
 
                 initialize : (opts)->
-                    {quizModel,questionsCollection} = opts
+                    {quizModel,questionsCollection,questionResponseCollection} = opts
+
+                    if quizModel.get('permissions').randomize
+                        questionsCollection.each (e)-> e.unset 'order'
+                        questionsCollection.reset questionsCollection.shuffle()
 
                     @display_mode = 'quiz_mode'
 
@@ -30,7 +34,7 @@ define ['app'
                         #checking if model exists in collection. if so, replacing the empty model
                         #@_getOrCreateModel questionModel.get 'ID'
 
-                    questionIDs = quizModel.get 'content_pieces'
+                    questionIDs = questionsCollection.pluck 'ID'
                     questionIDs= _.map questionIDs, (m)-> parseInt m
 
                     questionID = _.first questionIDs
@@ -63,6 +67,10 @@ define ['app'
 
                 _submitQuestion:->
                     #save results here
+
+                    console.log 'questionResponseCollection from take quiz app page'
+                    console.log questionResponseCollection
+
                     @_gotoNextQuestion()
 
                 _skipQuestion:->
@@ -79,7 +87,6 @@ define ['app'
 
                     else
                         @_endQuiz()
-
 
                 _endQuiz:->
                     App.execute "show:single:quiz:app",
@@ -111,18 +118,22 @@ define ['app'
 
 
                 _showSingleQuestionApp:->
+                    
                     if questionModel
                         new View.SingleQuestion.Controller
-                            region: @layout.questionDisplayRegion
-                            model: questionModel
+                            region                  : @layout.questionDisplayRegion
+                            model                   : questionModel
+                            questionResponseCollection   : questionResponseCollection
 
                         @layout.quizProgressRegion.trigger "question:changed", questionModel
+                        @layout.quizDescriptionRegion.trigger "question:changed", questionModel
 
                 _showQuizViews:->
 
                     new View.QuizDescription.Controller
                         region: @layout.quizDescriptionRegion
                         model: quizModel
+                        currentQuestion: questionModel
 
                     new View.QuizProgress.Controller
                         region: @layout.quizProgressRegion

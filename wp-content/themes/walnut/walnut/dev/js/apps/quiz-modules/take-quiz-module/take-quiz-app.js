@@ -19,12 +19,18 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype.initialize = function(opts) {
         var layout, questionID;
-        quizModel = opts.quizModel, questionsCollection = opts.questionsCollection;
+        quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection;
+        if (quizModel.get('permissions').randomize) {
+          questionsCollection.each(function(e) {
+            return e.unset('order');
+          });
+          questionsCollection.reset(questionsCollection.shuffle());
+        }
         this.display_mode = 'quiz_mode';
         App.leftNavRegion.close();
         App.headerRegion.close();
         App.breadcrumbRegion.close();
-        questionIDs = quizModel.get('content_pieces');
+        questionIDs = questionsCollection.pluck('ID');
         questionIDs = _.map(questionIDs, function(m) {
           return parseInt(m);
         });
@@ -49,6 +55,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._submitQuestion = function() {
+        console.log('questionResponseCollection from take quiz app page');
+        console.log(questionResponseCollection);
         return this._gotoNextQuestion();
       };
 
@@ -110,16 +118,19 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         if (questionModel) {
           new View.SingleQuestion.Controller({
             region: this.layout.questionDisplayRegion,
-            model: questionModel
+            model: questionModel,
+            questionResponseCollection: questionResponseCollection
           });
-          return this.layout.quizProgressRegion.trigger("question:changed", questionModel);
+          this.layout.quizProgressRegion.trigger("question:changed", questionModel);
+          return this.layout.quizDescriptionRegion.trigger("question:changed", questionModel);
         }
       };
 
       TakeQuizController.prototype._showQuizViews = function() {
         new View.QuizDescription.Controller({
           region: this.layout.quizDescriptionRegion,
-          model: quizModel
+          model: quizModel,
+          currentQuestion: questionModel
         });
         new View.QuizProgress.Controller({
           region: this.layout.quizProgressRegion,

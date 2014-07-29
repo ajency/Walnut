@@ -17,6 +17,16 @@ define ["app", 'backbone'], (App, Backbone) ->
                 chapter_count: 0
 
             name: 'textbook'
+            
+            getClasses:->
+                classesArray = []
+                classes = @.get 'classes'
+
+                if _.isArray classes
+                    classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
+                    classesArray.join()
+
+                classesArray
 
 
         # textbook model
@@ -48,6 +58,40 @@ define ["app", 'backbone'], (App, Backbone) ->
             comparator: 'term_order'
             url: ->
                 AJAXURL + '?action=get-textbook-names'
+
+            getTextbookName:(terms)->
+                textbook = @.get terms.textbook
+                texbookName = textbook.get 'name' if textbook?
+
+            getChapterName:(terms)->
+                chapter = @.get terms.chapter
+                chapterName = chapter.get 'name' if chapter?
+
+            getSectionsNames:(terms)->
+                sections = _.flatten terms.sections
+                sectionString = ''
+                sectionNames = []
+
+                if sections
+                    for section in sections
+                        term = @.get section
+                        sectionName = term.get 'name' if term?
+                        sectionNames.push sectionName
+
+                    sectionString = sectionNames.join()
+
+            getSubSectionsNames:(terms)->
+                subsections = _.flatten terms.subsections
+                subSectionString = ''
+                subsectionNames = []
+
+                if subsections
+                    for sub in subsections
+                        subsection = @.get sub
+                        subsectionNames.push subsection.get 'name' if subsection?
+
+                    subSectionString = subsectionNames.join()
+
 
 
         # API

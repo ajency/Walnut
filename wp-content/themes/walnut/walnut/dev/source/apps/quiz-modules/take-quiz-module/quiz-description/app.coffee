@@ -7,18 +7,37 @@ define ['app'
                 class QuizDescription.Controller extends RegionController
 
                     initialize: (opts)->
-                        {@model} = opts
+                        {model, currentQuestion} = opts
 
-                        @view = view = @_showQuizDescriptionView @model
+                        @view = view = @_showQuizDescriptionView model, currentQuestion
 
-                        @show view,
-                            loading: true
+                        textbook_termIDs = _.flatten model.get 'term_ids'
 
-                    _showQuizDescriptionView: (model) =>
+                        @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
+
+                        textbookID = model.get('term_ids').textbook
+                        @textbookModel = App.request "get:textbook:by:id", textbookID
+
+                        App.execute "when:fetched", [@textbookNames, @textbookModel], =>
+                            @show @view, (loading : true)
+
+                        @listenTo @region, "question:changed", (model)->
+                            @view.triggerMethod "question:change", model
+
+                    _showQuizDescriptionView: (model, currentQuestion) =>
                         
+                        terms = model.get 'term_ids'
+
                         new ModuleDescriptionView
                             model           : model
 
+                            templateHelpers :
+                                getQuestionDuration: currentQuestion.get 'duration'
+                                getClass :=> @textbookModel.getClasses()
+                                getTextbookName :=> @textbookNames.getTextbookName terms
+                                getChapterName :=> @textbookNames.getChapterName terms
+                                getSectionsNames :=> @textbookNames.getSectionsNames terms
+                                getSubSectionsNames :=> @textbookNames.getSubSectionsNames terms
 
                 class ModuleDescriptionView extends Marionette.ItemView
 
@@ -26,3 +45,7 @@ define ['app'
 
                     template: quizDescriptionTemplate
 
+                    onQuestionChange:(model)->
+                        @$el.find "#time-on-question"
+                        .html model.get 'duration'
+                    

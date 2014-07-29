@@ -33,6 +33,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         App.execute("show:leftnavapp", {
           region: App.leftNavRegion
         });
+        this.questionResponseCollection = App.request("get:quiz:response:collection", {
+          'collection_id': quizModel.get('id')
+        });
         return App.execute("when:fetched", quizModel, (function(_this) {
           return function() {
             if (!questionsCollection) {
@@ -56,7 +59,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           region: App.mainContentRegion,
           quizModel: quizModel,
           questionsCollection: questionsCollection,
-          display_mode: 'quiz_mode'
+          display_mode: 'quiz_mode',
+          questionResponseCollection: this.questionResponseCollection
         });
       };
 

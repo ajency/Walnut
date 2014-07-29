@@ -15,6 +15,9 @@ define ['app'
                                     <button type="button" id="submit-question" class="btn btn-success pull-right"> 
                                         Submit <i class="fa fa-forward"></i> 
                                     </button> 
+                                    <button type="button" style="display:none" id="next-question" class="btn btn-info pull-right"> 
+                                        Next <i class="fa fa-forward"></i> 
+                                    </button> 
                                     <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small h-center block"> 
                                         <i class="fa fa-refresh"></i> Skip 
                                     </button> 
@@ -39,11 +42,28 @@ define ['app'
                         contentBoardRegion: '#content-board'
 
                     events:
-                        'click #submit-question'    :-> @trigger "submit:question"
+                        'click #submit-question'    : 'submitQuestion'
 
                         'click #previous-question'  :-> @trigger "goto:previous:question"
 
                         'click #skip-question'      :-> @trigger "skip:question"
+
+                        'click #next-question'      :-> @trigger "goto:next:question"
+
+
+                    submitQuestion:->
+
+                        @trigger "submit:question"
+
+                        if @model.get 'comment_enable'
+                            @trigger 'show:comment:dialog',
+                                comment : @model.get 'comment'
+
+                        @$el.find "#submit-question"
+                        .hide()
+
+                        @$el.find "#next-question"
+                        .show()
 
 
 

@@ -17,6 +17,7 @@ define [
     'entities/content-creator/option'
     'entities/content-creator/json'
     'entities/answer'
+    'entities/quiz-response'
     'entities/grading-parameter'
     'entities/communications'
     'entities/quiz'

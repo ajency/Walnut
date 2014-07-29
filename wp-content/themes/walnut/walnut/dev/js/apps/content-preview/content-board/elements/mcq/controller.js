@@ -17,19 +17,31 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData;
+        var answerData, answerWreqrObject;
         answerData = {
           answer: [],
           marks: 0,
           comment: 'Not Attempted'
         };
         this.answerModel = App.request("create:new:answer", answerData);
+        answerWreqrObject = options.answerWreqrObject;
+        if (answerWreqrObject) {
+          answerWreqrObject.setHandler("get:question:answer", (function(_this) {
+            return function() {
+              _this._submitAnswer();
+              return _this.answerModel;
+            };
+          })(this));
+        }
         return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype.renderElement = function() {
         var optionCollection, optionsObj, shuffleFlag;
         optionsObj = this.layout.model.get('options');
+        if (optionsObj instanceof Backbone.Collection) {
+          optionsObj = optionsObj.models;
+        }
         this._parseOptions(optionsObj);
         shuffleFlag = true;
         _.each(optionsObj, (function(_this) {
@@ -40,7 +52,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           };
         })(this));
         if (shuffleFlag) {
-          console.log('shuffle');
           optionsObj = _.shuffle(optionsObj);
         }
         optionCollection = App.request("create:new:option:collection", optionsObj);

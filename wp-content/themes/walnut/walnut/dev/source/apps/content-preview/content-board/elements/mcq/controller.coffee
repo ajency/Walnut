@@ -12,6 +12,13 @@ define ['app'
                     comment : 'Not Attempted'
                 @answerModel = App.request "create:new:answer", answerData
 
+                {answerWreqrObject} = options
+
+                if answerWreqrObject
+                    answerWreqrObject.setHandler "get:question:answer", ()=>
+                        @_submitAnswer()
+
+                        @answerModel
 
                 # _.defaults options.modelData,
 
@@ -24,6 +31,8 @@ define ['app'
             renderElement : ()=>
 
                 optionsObj = @layout.model.get 'options'
+                if optionsObj instanceof Backbone.Collection
+                    optionsObj = optionsObj.models
 
                 @_parseOptions optionsObj
 
@@ -36,7 +45,6 @@ define ['app'
                         shuffleFlag = false
 
                 if shuffleFlag
-                    console.log 'shuffle'
                     optionsObj = _.shuffle optionsObj
 
                 optionCollection = App.request "create:new:option:collection", optionsObj
@@ -62,6 +70,7 @@ define ['app'
 
             # convert the option attributes to integers
             _parseOptions : (optionsObj)->
+                
                 _.each optionsObj,(option)->
                     option.marks = parseInt option.marks if option.marks?
                     option.optionNo = parseInt option.optionNo if option.optionNo?

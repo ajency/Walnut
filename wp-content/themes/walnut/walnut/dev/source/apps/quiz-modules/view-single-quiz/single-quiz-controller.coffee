@@ -19,6 +19,9 @@ define ['app'
                 App.execute "show:headerapp", region : App.headerRegion
                 App.execute "show:leftnavapp", region : App.leftNavRegion
 
+                @questionResponseCollection = App.request "get:quiz:response:collection",
+                    'collection_id': quizModel.get 'id'
+
                 App.execute "when:fetched", quizModel, =>
                     
                     if not questionsCollection
@@ -34,12 +37,13 @@ define ['app'
                         @listenTo @layout.quizDetailsRegion, 'start:quiz:module', @startQuiz
 
             startQuiz: =>
-
+                
                 App.execute "start:take:quiz:app",
                     region: App.mainContentRegion
                     quizModel: quizModel
                     questionsCollection: questionsCollection
                     display_mode: 'quiz_mode' 
+                    questionResponseCollection: @questionResponseCollection
 
                     # when display mode is readonly, the save response options are not shown
                     # only when display mode is class_mode response changes can be done

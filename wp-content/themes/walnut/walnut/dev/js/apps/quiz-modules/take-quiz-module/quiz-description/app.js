@@ -14,17 +14,58 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       }
 
       Controller.prototype.initialize = function(opts) {
-        var view;
-        this.model = opts.model;
-        this.view = view = this._showQuizDescriptionView(this.model);
-        return this.show(view, {
-          loading: true
+        var currentQuestion, model, textbookID, textbook_termIDs, view;
+        model = opts.model, currentQuestion = opts.currentQuestion;
+        this.view = view = this._showQuizDescriptionView(model, currentQuestion);
+        textbook_termIDs = _.flatten(model.get('term_ids'));
+        this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
+        textbookID = model.get('term_ids').textbook;
+        this.textbookModel = App.request("get:textbook:by:id", textbookID);
+        App.execute("when:fetched", [this.textbookNames, this.textbookModel], (function(_this) {
+          return function() {
+            return _this.show(_this.view, {
+              loading: true
+            });
+          };
+        })(this));
+        return this.listenTo(this.region, "question:changed", function(model) {
+          return this.view.triggerMethod("question:change", model);
         });
       };
 
-      Controller.prototype._showQuizDescriptionView = function(model) {
+      Controller.prototype._showQuizDescriptionView = function(model, currentQuestion) {
+        var terms;
+        terms = model.get('term_ids');
         return new ModuleDescriptionView({
-          model: model
+          model: model,
+          templateHelpers: {
+            getQuestionDuration: currentQuestion.get('duration'),
+            getClass: (function(_this) {
+              return function() {
+                return _this.textbookModel.getClasses();
+              };
+            })(this),
+            getTextbookName: (function(_this) {
+              return function() {
+                return _this.textbookNames.getTextbookName(terms);
+              };
+            })(this),
+            getChapterName: (function(_this) {
+              return function() {
+                return _this.textbookNames.getChapterName(terms);
+              };
+            })(this),
+            getSectionsNames: (function(_this) {
+              return function() {
+                return _this.textbookNames.getSectionsNames(terms);
+              };
+            })(this),
+            getSubSectionsNames: (function(_this) {
+              return function() {
+                return _this.textbookNames.getSubSectionsNames(terms);
+              };
+            })(this)
+          }
         });
       };
 
@@ -41,6 +82,10 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       ModuleDescriptionView.prototype.className = 'pieceWrapper';
 
       ModuleDescriptionView.prototype.template = quizDescriptionTemplate;
+
+      ModuleDescriptionView.prototype.onQuestionChange = function(model) {
+        return this.$el.find("#time-on-question").html(model.get('duration'));
+      };
 
       return ModuleDescriptionView;
 
