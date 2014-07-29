@@ -178,7 +178,40 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return console.log('Decrypted video file at location: ' + destination);
       }).fail(_.failureHandler);
     },
-    clearVideosWebDirectory: function() {},
+    decryptVideoFile_N: function(source, destination) {
+      return $.Deferred(function(d) {
+        return decrypt.startDecryption(source, destination, function() {
+          console.log(destination);
+          return d.resolve(destination);
+        }, function(message) {
+          return console.log('ERROR: ' + message);
+        });
+      });
+    },
+    clearMediaDirectory: function(directory_name) {
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+        return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/" + directory_name, {
+          create: false,
+          exclusive: false
+        }, function(directoryEntry) {
+          var reader;
+          reader = directoryEntry.createReader();
+          return reader.readEntries(function(entries) {
+            var i, _i, _ref, _results;
+            _results = [];
+            for (i = _i = 0, _ref = entries.length - 1; _i <= _ref; i = _i += 1) {
+              entries[i].remove();
+              if (i === entries.length - 1) {
+                _results.push(console.log('Deleted all files from ' + directory_name + ' directory'));
+              } else {
+                _results.push(void 0);
+              }
+            }
+            return _results;
+          }, _.directoryErrorHandler);
+        }, _.directoryErrorHandler);
+      }, _.fileSystemErrorHandler);
+    },
     getCurrentDateTime: function(bit) {
       var d, date, time;
       d = new Date();

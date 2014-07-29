@@ -34,46 +34,57 @@ define ['app'
 
 						@layout.model.set 'audio_ids',audio_ids
 						
-					_getAudioLocalPath :->
-						localAudioPath = new Array()
-						decryptFile = []
-						deferreds = []
-						audioPaths = []
-						audiosWebDirectory = _.createAudiosWebDirectory()
-						audiosWebDirectory.done =>
-							allAudioUrls = @layout.model.get('audioUrls')
-							console.log allAudioUrls
-							_.each allAudioUrls , (allAudioPaths , index)=>
-								do(allAudioPaths, index)=>
-									url = allAudioPaths.replace("media-web/","")
+					_getAudioLocalPath :=>
 
-									audiosWebUrl = url.substr(url.indexOf("uploads/"))
-									console.log audiosWebUrl
-									audioPaths = audiosWebUrl.replace("audio-web", "audios")
-									console.log audioPaths
+						runFunc = =>
+							$.Deferred (d)=>
 
-									encryptedAudioPath = "SynapseAssets/SynapseMedia/"+audioPaths
-									decryptedAudioPath = "SynapseAssets/SynapseMedia/"+audiosWebUrl
+								localAudioPath = new Array()
+								audioPath = new Array()
+								localAudioPaths = []
+								decryptFile = []
+								deferreds = []
+								audioPaths = []
 
-									decryptFile = _.decryptVideoFile(encryptedAudioPath, decryptedAudioPath)
-									console.log decryptFile
-									console.log JSON.stringify decryptFile
-									deferreds.push decryptFile
+								audiosWebDirectory = _.createAudiosWebDirectory()
+								audiosWebDirectory.done =>
+									allAudioUrls = @layout.model.get('audioUrls')
 
-								console.log JSON.stringify deferreds
-								$.when(deferreds...).done(audioPaths...) =>
-									console.log audioPaths
-									console.log JSON.stringify audioPaths
-									localAudioPath[index] = 'file:///mnt/sdcard/'+audioPaths
-									console.log localAudioPath[index]
-									localAudioPaths.push localAudioPath
-									@layout.model.set 'audioUrls',localAudioPaths
+									_.each allAudioUrls , (allAudioPaths , index)->
+										url = allAudioPaths.replace("media-web/","")
+
+										audiosWebUrl = url.substr(url.indexOf("uploads/"))
+
+										audioPaths = audiosWebUrl.replace("audio-web", "audios")
+
+										encryptedAudioPath = "SynapseAssets/SynapseMedia/"+audioPaths
+										decryptedAudioPath = "SynapseAssets/SynapseMedia/"+audiosWebUrl
+
+										decryptFile = _.decryptVideoFile_N(encryptedAudioPath, decryptedAudioPath)
+										deferreds.push decryptFile
+									
+									$.when(deferreds...).done (audioPaths...)=>
+										_.each audioPaths , (localAudioPath , index)=>
+											do(localAudioPath, index)=>
+
+												audioPath = 'file:///storage/emulated/0/' + localAudioPath
+
+												localAudioPaths.push audioPath
+
+										d.resolve @layout.model.set 'audioUrls',localAudioPaths
+
+						$.when(runFunc()).done =>
+							@layout.elementRegion.show @view
+						.fail _.failureHandler
+
+
 
 					# setup templates for the element
 					renderElement: =>
 						@_parseInt()
 
 						@view = @_getAudioView()
-						@_getAudioLocalPath()
+						if _.platform() is 'DEVICE'
+							@_getAudioLocalPath()
 
-						@layout.elementRegion.show @view
+						

@@ -143,7 +143,8 @@ define ['app'
 
 					@trigger "goto:previous:route"
 
-					_.clearVideosWebDirectory()
+					_.clearMediaDirectory 'videos-web'
+					_.clearMediaDirectory 'audio-web'
 
 					document.removeEventListener("backbutton", @onPauseSessionClick, false)
 

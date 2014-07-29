@@ -1,6 +1,7 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __slice = [].slice;
 
 define(['app', 'apps/content-preview/content-board/element/controller', 'apps/content-preview/content-board/elements/audio/views'], function(App, Element) {
   return App.module('ContentPreview.ContentBoard.Element.Audio', function(Audio, App, Backbone, Marionette, $, _) {
@@ -9,6 +10,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
 
       function Controller() {
         this.renderElement = __bind(this.renderElement, this);
+        this._getAudioLocalPath = __bind(this._getAudioLocalPath, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -40,52 +42,59 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       };
 
       Controller.prototype._getAudioLocalPath = function() {
-        var audioPaths, audiosWebDirectory, decryptFile, deferreds, localAudioPath;
-        localAudioPath = new Array();
-        decryptFile = [];
-        deferreds = [];
-        audioPaths = [];
-        audiosWebDirectory = _.createAudiosWebDirectory();
-        return audiosWebDirectory.done((function(_this) {
+        var runFunc;
+        runFunc = (function(_this) {
           return function() {
-            var allAudioUrls;
-            allAudioUrls = _this.layout.model.get('audioUrls');
-            console.log(allAudioUrls);
-            return _.each(allAudioUrls, function(allAudioPaths, index) {
-              var _ref;
-              (function(allAudioPaths, index) {
-                var audiosWebUrl, decryptedAudioPath, encryptedAudioPath, url;
-                url = allAudioPaths.replace("media-web/", "");
-                audiosWebUrl = url.substr(url.indexOf("uploads/"));
-                console.log(audiosWebUrl);
-                audioPaths = audiosWebUrl.replace("audio-web", "audios");
-                console.log(audioPaths);
-                encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioPaths;
-                decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosWebUrl;
-                decryptFile = _.decryptVideoFile(encryptedAudioPath, decryptedAudioPath);
-                console.log(decryptFile);
-                console.log(JSON.stringify(decryptFile));
-                return deferreds.push(decryptFile);
-              })(allAudioPaths, index);
-              console.log(JSON.stringify(deferreds));
-              return (_ref = $.when.apply($, deferreds)).done.apply(_ref, audioPaths)(function() {
-                console.log(audioPaths);
-                console.log(JSON.stringify(audioPaths));
-                localAudioPath[index] = 'file:///mnt/sdcard/' + audioPaths;
-                console.log(localAudioPath[index]);
-                localAudioPaths.push(localAudioPath);
-                return _this.layout.model.set('audioUrls', localAudioPaths);
+            return $.Deferred(function(d) {
+              var audioPath, audioPaths, audiosWebDirectory, decryptFile, deferreds, localAudioPath, localAudioPaths;
+              localAudioPath = new Array();
+              audioPath = new Array();
+              localAudioPaths = [];
+              decryptFile = [];
+              deferreds = [];
+              audioPaths = [];
+              audiosWebDirectory = _.createAudiosWebDirectory();
+              return audiosWebDirectory.done(function() {
+                var allAudioUrls;
+                allAudioUrls = _this.layout.model.get('audioUrls');
+                _.each(allAudioUrls, function(allAudioPaths, index) {
+                  var audiosWebUrl, decryptedAudioPath, encryptedAudioPath, url;
+                  url = allAudioPaths.replace("media-web/", "");
+                  audiosWebUrl = url.substr(url.indexOf("uploads/"));
+                  audioPaths = audiosWebUrl.replace("audio-web", "audios");
+                  encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioPaths;
+                  decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosWebUrl;
+                  decryptFile = _.decryptVideoFile_N(encryptedAudioPath, decryptedAudioPath);
+                  return deferreds.push(decryptFile);
+                });
+                return $.when.apply($, deferreds).done(function() {
+                  var audioPaths;
+                  audioPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+                  _.each(audioPaths, function(localAudioPath, index) {
+                    return (function(localAudioPath, index) {
+                      audioPath = 'file:///storage/emulated/0/' + localAudioPath;
+                      return localAudioPaths.push(audioPath);
+                    })(localAudioPath, index);
+                  });
+                  return d.resolve(_this.layout.model.set('audioUrls', localAudioPaths));
+                });
               });
             });
           };
-        })(this));
+        })(this);
+        return $.when(runFunc()).done((function(_this) {
+          return function() {
+            return _this.layout.elementRegion.show(_this.view);
+          };
+        })(this)).fail(_.failureHandler);
       };
 
       Controller.prototype.renderElement = function() {
         this._parseInt();
         this.view = this._getAudioView();
-        this._getAudioLocalPath();
-        return this.layout.elementRegion.show(this.view);
+        if (_.platform() === 'DEVICE') {
+          return this._getAudioLocalPath();
+        }
       };
 
       return Controller;

@@ -173,7 +173,8 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         } else {
           console.log('Invoked onPauseSessionClick');
           this.trigger("goto:previous:route");
-          _.clearVideosWebDirectory();
+          _.clearMediaDirectory('videos-web');
+          _.clearMediaDirectory('audio-web');
           return document.removeEventListener("backbutton", this.onPauseSessionClick, false);
         }
       };

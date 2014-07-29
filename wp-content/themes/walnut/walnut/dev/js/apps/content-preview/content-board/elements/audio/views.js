@@ -15,12 +15,10 @@ define(['app'], function(App) {
       AudioView.prototype.template = '{{#audio}} <audio title="{{title}}" class="audio1" controls> <source src="{{audioUrl}}" type="audio/mpeg"> Your browser does not support the audio element. </audio> {{/audio}}';
 
       AudioView.prototype.mixinTemplateHelpers = function(data) {
-        var allAudioUrls, arrays, audioArray;
+        var arrays, audioArray;
         data = AudioView.__super__.mixinTemplateHelpers.call(this, data);
         if (this.model.get('audio_ids').length) {
-          allAudioUrls = this.model.get('audioUrls');
-          console.log(localAudioPaths);
-          arrays = _.zip(this.model.get('title'), localAudioPaths);
+          arrays = _.zip(this.model.get('title'), this.model.get('audioUrls'));
           audioArray = new Array();
           _.each(arrays, function(array) {
             return audioArray.push(_.object(['title', 'audioUrl'], array));
