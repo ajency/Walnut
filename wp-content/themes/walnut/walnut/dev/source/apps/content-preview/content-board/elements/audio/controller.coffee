@@ -34,6 +34,7 @@ define ['app'
 
 						@layout.model.set 'audio_ids',audio_ids
 						
+					#Get the encrypted audio and decrypt it and play it from local path 
 					_getAudioLocalPath :=>
 
 						runFunc = =>
