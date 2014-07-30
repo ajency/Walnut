@@ -37,7 +37,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           });
         }
         this.$el.find("#submit-question").hide();
-        return this.$el.find("#next-question").show();
+        this.$el.find("#next-question").show();
+        return this.$el.find("#skip-question").hide();
       };
 
       return SingleQuestionLayout;

@@ -23,6 +23,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         published_on: '',
         published_by: '',
         post_status: '',
+        type: 'teaching-module',
         total_minutes: 0,
         duration: 0,
         minshrs: 'mins',

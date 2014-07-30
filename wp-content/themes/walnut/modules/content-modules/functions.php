@@ -21,7 +21,8 @@ function save_content_module($data = array()) {
         'last_modified_on'  => date('y-m-d H:i:s'),
         'last_modified_by'  => get_current_user_id(),
         'duration'          => $duration,
-        'post_status'       => $data['post_status']
+        'post_status'       => $data['post_status'],
+        'type'              => $data['type']
     );
 
     if (isset($data['id'])) {

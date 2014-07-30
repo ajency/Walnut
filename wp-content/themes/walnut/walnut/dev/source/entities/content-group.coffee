@@ -17,6 +17,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 published_on: ''
                 published_by: ''
                 post_status: ''  # eg. underreview, publish, archive
+                type: 'teaching-module'
                 total_minutes: 0
                 duration: 0
                 minshrs: 'mins'

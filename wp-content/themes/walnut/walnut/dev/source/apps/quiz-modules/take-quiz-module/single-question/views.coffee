@@ -65,5 +65,5 @@ define ['app'
                         @$el.find "#next-question"
                         .show()
 
-
-
+                        @$el.find "#skip-question"
+                        .hide()
