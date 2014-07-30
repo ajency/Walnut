@@ -38,13 +38,16 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype.renderElement = function() {
         var optionCollection, optionsObj;
         optionsObj = this.layout.model.get('elements');
+        if (this.layout.model.get('elements') instanceof Backbone.Collection) {
+          optionsObj = this.layout.model.get('elements').toJSON();
+        }
         console.log(optionsObj);
         this._parseOptions(optionsObj);
         optionCollection = App.request("create:new:option:collection", optionsObj);
         optionCollection.comparator = 'index';
         optionCollection.sort();
         this.layout.model.set('elements', optionCollection);
-        this.view = this._getSortView(optionCollection);
+        this.view = this._getSortView();
         this.listenTo(this.view, 'show show:this:sort:properties', (function(_this) {
           return function() {
             return App.execute("show:question:properties", {
@@ -55,9 +58,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         return this.layout.elementRegion.show(this.view);
       };
 
-      Controller.prototype._getSortView = function(collection) {
+      Controller.prototype._getSortView = function() {
         return new Sort.Views.SortView({
-          collection: collection,
+          collection: this.layout.model.get('elements'),
           sort_model: this.layout.model
         });
       };
@@ -77,7 +80,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype._changeOptionCount = function(model, num) {
-        var newval, oldval, _results;
+        var newval, oldval;
         oldval = model.previous('optioncount');
         newval = num;
         if (oldval < newval) {
@@ -90,13 +93,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           }
         }
         if (oldval > newval) {
-          _results = [];
           while (oldval !== newval) {
             model.get('elements').pop();
-            _results.push(oldval--);
+            oldval--;
           }
-          return _results;
         }
+        return this.renderElement();
       };
 
       Controller.prototype.deleteElement = function(model) {
