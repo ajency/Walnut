@@ -13,6 +13,7 @@ function ajax_create_quiz ()
     $data = array(
         'name' => $_POST['name'],
         'description' => $_POST['description'],
+        'term_ids' => $_POST['term_ids'],
         'duration' => $_POST['duration'],
         'minshours' => $_POST['minshours'],
         'post_status' => $_POST['post_status'],
@@ -43,6 +44,7 @@ function ajax_update_quiz ()
             'id' => $_POST['id'],
             'name' => $_POST['name'],
             'description' => $_POST['description'],
+            'term_ids' => $_POST['term_ids'],
             'duration' => $_POST['duration'],
             'minshours' => $_POST['minshours'],
             'post_status' => $_POST['post_status'],
@@ -65,7 +67,7 @@ function ajax_update_quiz ()
         update_quiz_content_pieces($data);
     }
 
-    wp_send_json (array('code' => 'OK', 'data' => array('id' => $_POST['id'])));
+    wp_send_json (array('code' => 'OK', 'data' => array('id' => (int)$_POST['id'])));
 }
 
 add_action ('wp_ajax_update-quiz', 'ajax_update_quiz');

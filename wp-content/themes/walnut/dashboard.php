@@ -34,6 +34,7 @@
     <link href="./wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
     <link href="./wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
     <link href="./wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
+    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
 
     <link href="./wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
     <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
@@ -78,7 +79,7 @@
         </div>
     </div>
 
-    <div id="dialog-region">
+    <div id="dialog-region" class="modal">
     </div>
 </div>
 <?php global $class_ids;
@@ -105,18 +106,18 @@ global $chorus_options; ?>
     })
 </script>
 <?php
-$ver = date('YmdHis');
+
 if (ENV == 'dev') {
     ?>
     <script type="text/javascript"
-            data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo $ver ?>"
+            data-main="./wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo DEV_VERSION ?>"
             src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php
 } else {
 
 ?>
     <script type="text/javascript"
-            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo $ver ?>"></script>
+            src="./wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo VERSION ?>"></script>
 <?php } ?>
 
 </body>

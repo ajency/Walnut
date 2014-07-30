@@ -16,9 +16,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         _.defaults(options.modelData, {
           element: 'Audio',
           audio_id: 0,
+          audio_ids: [],
           height: 0,
           width: 0,
-          audioUrl: ''
+          audioUrl: '',
+          audioUrls: [],
+          title: []
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -33,32 +36,57 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         });
       };
 
+      Controller.prototype._getAudioCollection = function() {
+        if (!this.audioCollection) {
+          if (this.layout.model.get('audio_ids').length) {
+            this.audioCollection = App.request("get:media:collection:by:ids", this.layout.model.get('audio_ids'));
+          } else {
+            this.audioCollection = App.request("get:empty:media:collection");
+          }
+        }
+        this.audioCollection.comparator = 'order';
+        return this.audioCollection;
+      };
+
+      Controller.prototype._parseInt = function() {
+        var audio_ids;
+        audio_ids = new Array();
+        if (!this.layout.model.get('audio_ids') && this.layout.model.get('audio_id')) {
+          this.layout.model.set('audio_ids', [this.layout.model.get('audio_id')]);
+          this.layout.model.set('audioUrls', [this.layout.model.get('audioUrl')]);
+        }
+        _.each(this.layout.model.get('audio_ids'), function(id) {
+          return audio_ids.push(parseInt(id));
+        });
+        return this.layout.model.set('audio_ids', audio_ids);
+      };
+
       Controller.prototype.renderElement = function() {
-        var audioModel, view;
+        var audioCollection;
         this.removeSpinner();
-        view = this.view = this._getAudioView();
-        this.layout.elementRegion.show(view);
-        audioModel = App.request("get:media:by:id", this.layout.model.get('audio_id'));
-        return App.execute("when:fetched", audioModel, (function(_this) {
+        this._parseInt();
+        audioCollection = this._getAudioCollection();
+        return App.execute("when:fetched", audioCollection, (function(_this) {
           return function() {
-            view = _this.view = _this._getAudioView(audioModel);
-            _this.listenTo(view, "show:media:manager", function() {
-              App.execute("show:media:manager:app", {
+            _this.view = _this._getAudioView();
+            _this.listenTo(_this.view, "show:media:manager", function() {
+              return App.execute("show:media:collection:manager", {
                 region: App.dialogRegion,
-                mediaType: 'audio'
+                mediaType: 'audio',
+                mediaCollection: audioCollection
               });
-              _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
-                _this.layout.model.set({
-                  'audio_id': media.get('id'),
-                  'audioUrl': media.get('url')
-                });
-                _this.layout.model.save();
-                _this.layout.elementRegion.show(_this.view);
-                return _this.stopListening(App.vent, "media:manager:choosed:media");
+            });
+            _this.listenTo(_this.audioCollection, 'add remove order:updated', function() {
+              this.audioCollection.sort();
+              this.layout.model.set({
+                'audio_ids': this.audioCollection.pluck('id'),
+                'audioUrls': this.audioCollection.pluck('url'),
+                'title': this.audioCollection.pluck('title'),
+                'audio_id': _.first(this.audioCollection.pluck('id')),
+                'audioUrl': _.first(this.audioCollection.pluck('url'))
               });
-              return _this.listenTo(App.vent, "stop:listening:to:media:manager", function() {
-                return _this.stopListening(App.vent, "media:manager:choosed:media");
-              });
+              this.layout.elementRegion.show(this.view);
+              return this.layout.model.save();
             });
             return _this.layout.elementRegion.show(_this.view);
           };

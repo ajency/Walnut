@@ -17,7 +17,7 @@ function save_quiz_module ($data = array()) {
 
     $content_data = array(
         'name' => $data['name'],
-        'term_ids' => '',
+        'term_ids' => maybe_serialize($data['term_ids']),
         'last_modified_on' => date ('y-m-d H:i:s'),
         'last_modified_by' => get_current_user_id (),
         'duration' => $duration,
@@ -99,6 +99,7 @@ function get_single_quiz_module ($id) {
     $data->id = (int)$data->id;
 
     $duration = (int)$data->duration;
+    $data->term_ids = maybe_unserialize($data->term_ids);
     $data->duration = $duration;
     $data->minshours = 'mins';
     $data->total_minutes = (int)$data->duration;

@@ -17,12 +17,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/con
       }
 
       Controller.prototype.initialize = function(options) {
-        this.textbooksCollection = App.request("get:textbooks");
         this.contentPiecesCollection = App.request("get:content:pieces", {
           post_status: 'publish',
           content_type: ['student_question']
         });
-        this.model = options.model, this.quizContentCollection = options.quizContentCollection;
+        this.model = options.model, this.quizContentCollection = options.quizContentCollection, this.textbooksCollection = options.textbooksCollection;
         return App.execute("when:fetched", [this.contentPiecesCollection, this.quizContentCollection, this.textbooksCollection], (function(_this) {
           return function() {
             var model, _i, _len, _ref;
