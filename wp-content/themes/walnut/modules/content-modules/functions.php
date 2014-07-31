@@ -21,6 +21,7 @@ function save_content_module($data = array()) {
         'last_modified_on'  => date('y-m-d H:i:s'),
         'last_modified_by'  => get_current_user_id(),
         'duration'          => $duration,
+        'type'              => $data['type'],
         'post_status'       => $data['post_status']
     );
 
@@ -274,6 +275,7 @@ function get_single_content_module($id, $division=''){
     $data->term_ids         = maybe_unserialize ($data->term_ids);
     $duration               = $data->duration;
     $data->minshours        ='mins';
+    $data->type             = $data->type;
     $data->total_minutes    = $data->duration; // only used for sorting accoring to time
     if($duration >= 60){
         $data->duration     = $duration/60;

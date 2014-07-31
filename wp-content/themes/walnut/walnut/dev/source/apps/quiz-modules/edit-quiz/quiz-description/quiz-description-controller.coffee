@@ -1,77 +1,79 @@
 define ['app'
         'controllers/region-controller'
         'apps/quiz-modules/edit-quiz/quiz-description/quiz-description-views'
-], (App, RegionController, collectionDetailsTpl)->
+], (App, RegionController)->
     App.module "QuizModuleApp.EditQuiz.QuizDetails", (QuizDetails, App)->
 
         class QuizDetails.Controller extends RegionController
 
             initialize : (opts)->
                 {@model,@textbooksCollection}= opts
-                @message = @model.get('message')
+
 
                 @view = @_getQuizDetailsView()
 
-                @listenTo @view, 'show:custom:msg:popup',(options)=>
-                    slug = options.slug
-                    if not @message[slug]? then  @message[slug]=''
+#                @message = @model.get('message')
+#
+#                @listenTo @view, 'show:custom:msg:popup',(options)=>
+#                    slug = options.slug
+#                    if not @message[slug]? then  @message[slug]=''
+#
+#                    App.execute 'show:single:edit:popup',
+#                        title :  slug
+#                        textArray : @message
 
-                    App.execute 'show:single:edit:popup',
-                        title :  slug
-                        textArray : @message
+#                term_ids = @model.get 'term_ids'
 
-                term_ids = @model.get 'term_ids'
-
-                @listenTo @view, "show",=>
-                    if _.size(term_ids) >0 
-                        textbook_id = term_ids['textbook']
-
-                        chapter_id = term_ids['chapter'] if term_ids['chapter']?
-
-                        section_ids = _.flatten(term_ids['sections']) if term_ids['sections']?
-
-                        #fetch chapters based on the current content piece's textbook
-                        fetchChapters= @_fetchChapters(textbook_id, chapter_id)
-
-                        #fetch sections based on chapter id
-                        fetchChapters.done =>
-                            @_fetchSections(chapter_id) if chapter_id?
-
-                            #fetch sections based on chapter id
-                            @_fetchSubsections(section_ids) if section_ids?
+#                @listenTo @view, "show",=>
+#                    if _.size(term_ids) >0
+#                        textbook_id = term_ids['textbook']
+#
+#                        chapter_id = term_ids['chapter'] if term_ids['chapter']?
+#
+#                        section_ids = _.flatten(term_ids['sections']) if term_ids['sections']?
+#
+#                        #fetch chapters based on the current content piece's textbook
+#                        fetchChapters= @_fetchChapters(textbook_id, chapter_id)
+#
+#                        #fetch sections based on chapter id
+#                        fetchChapters.done =>
+#                            @_fetchSections(chapter_id) if chapter_id?
+#
+#                            #fetch sections based on chapter id
+#                            @_fetchSubsections(section_ids) if section_ids?
 
 
-                @listenTo @view, "fetch:chapters", @_fetchChapters
+#                @listenTo @view, "fetch:chapters", @_fetchChapters
+#
+#                @listenTo @view, "fetch:sections", @_fetchSections
+#
+#                @listenTo @view, "fetch:subsections", @_fetchSubsections
 
-                @listenTo @view, "fetch:sections", @_fetchSections
+#                @listenTo @view, "save:quiz:details" , (data) =>
+#                    @model.set 'changed' , 'quiz_details'
+#                    @model.save(data, { wait : true, success : @successFn, error : @errorFn })
+#                    @region.trigger "close:content:selection:app" if data.post_status isnt 'underreview'
 
-                @listenTo @view, "fetch:subsections", @_fetchSubsections
+#                @show @view,
+#                    loading : true
 
-                @listenTo @view, "save:quiz:details" , (data) =>
-                    @model.set 'changed' , 'quiz_details'
-                    @model.save(data, { wait : true, success : @successFn, error : @errorFn })
-                    @region.trigger "close:content:selection:app" if data.post_status isnt 'underreview'
-
-                @show @view,
-                    loading : true
-
-            successFn : (model)=>
-                App.navigate "edit-quiz/#{model.get('id')}"
-                @view.triggerMethod 'saved:quiz', model
-
-            errorFn : ->
-                console.log 'error'
+#            successFn : (model)=>
+#                App.navigate "edit-quiz/#{model.get('id')}"
+#                @view.triggerMethod 'saved:quiz', model
+#
+#            errorFn : ->
+#                console.log 'error'
 
             ##fetch chapters based on textbook id, current_chapter refers to the chapter to be selected by default
-            _fetchChapters: (term_id, current_chapter)=>
-                defer = $.Deferred();
-                chaptersCollection = App.request "get:chapters", ('parent': term_id)
-
-                App.execute "when:fetched", chaptersCollection, =>
-                    @view.triggerMethod 'fetch:chapters:complete',
-                      chaptersCollection, current_chapter
-                    defer.resolve()
-                defer.promise()
+#            _fetchChapters: (term_id, current_chapter)=>
+#                defer = $.Deferred();
+#                chaptersCollection = App.request "get:chapters", ('parent': term_id)
+#
+#                App.execute "when:fetched", chaptersCollection, =>
+#                    @view.triggerMethod 'fetch:chapters:complete',
+#                      chaptersCollection, current_chapter
+#                    defer.resolve()
+#                defer.promise()
 
             #fetch all sections beloging to the chapter id passed as term_id
             _fetchSections: (term_id)=>

@@ -19,6 +19,25 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
           this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
         }
         this.textbooksCollection = App.request("get:textbooks");
+        this.selectedFilterParamsObject.setHandler("get:selected:parameters", (function(_this) {
+          return function() {
+            var ele, term_id, textbook_filters, _i, _len, _results;
+            textbook_filters = $(_this.view.el).find('select.textbook-filter');
+            _results = [];
+            for (_i = 0, _len = textbook_filters.length; _i < _len; _i++) {
+              ele = textbook_filters[_i];
+              if ($(ele).val() != null) {
+                _results.push(term_id = {
+                  id: $(ele).val(),
+                  text: $(ele).find(':selected').text()
+                });
+              } else {
+                _results.push(void 0);
+              }
+            }
+            return _results;
+          };
+        })(this));
         return App.execute("when:fetched", this.textbooksCollection, (function(_this) {
           return function() {
             var view;

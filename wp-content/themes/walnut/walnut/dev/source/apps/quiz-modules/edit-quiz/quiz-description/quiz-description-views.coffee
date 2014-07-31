@@ -10,24 +10,24 @@ define ['app'
 
 
 
-            events :
-                'click #save-quiz' : '_saveQuiz'
-                'change input[name="negMarksEnable"]' : (e)->
-                    e.stopPropagation()
-                    @_toggleNegativeMarks $(e.target)
-                'change #msgs' : (e)->
-                    @_showCustomMessages $(e.target)
+#            events :
+#                'click #save-quiz' : '_saveQuiz'
+#                'change input[name="negMarksEnable"]' : (e)->
+#                    e.stopPropagation()
+#                    @_toggleNegativeMarks $(e.target)
+#                'change #msgs' : (e)->
+#                    @_showCustomMessages $(e.target)
 
-                'change #textbooks' : (e)->
-                    @trigger "fetch:chapters", $(e.target).val()
-
-                'change #chapters' : (e)->
-                    @trigger "fetch:sections", $(e.target).val()
-
-                'change #secs' : (e)->
-                    @trigger "fetch:subsections", $(e.target).val()
-
-                'click .customMsgLink' : '_openCustomMsgPopup'
+#                'change #textbooks' : (e)->
+#                    @trigger "fetch:chapters", $(e.target).val()
+#
+#                'change #chapters' : (e)->
+#                    @trigger "fetch:sections", $(e.target).val()
+#
+#                'change #secs' : (e)->
+#                    @trigger "fetch:subsections", $(e.target).val()
+#
+#                'click .customMsgLink' : '_openCustomMsgPopup'
 
 #
 #            modelEvents :
