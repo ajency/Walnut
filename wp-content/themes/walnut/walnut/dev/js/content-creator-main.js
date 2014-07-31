@@ -35,6 +35,7 @@ require.config({
     videojs: 'plugins/video',
     videojsplaylist: 'plugins/videojs-playlists.min',
     panzer: 'plugins/panzer',
+    panzerlist: 'plugins/panzerlist',
     sidr: 'plugins/jquery.sidr.min'
   },
   shim: {
@@ -71,6 +72,7 @@ require.config({
     tagsinput: ['jquery', 'bootstrap'],
     screwbuttons: ['jquery'],
     panzer: ['jquery'],
+    panzerlist: ['jquery'],
     videojsplaylist: ['videojs'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }

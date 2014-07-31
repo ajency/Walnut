@@ -16,6 +16,7 @@ function ajax_create_content_module() {
         'term_ids' => $_POST['term_ids'],
         'duration' => $_POST['duration'],
         'minshours' => $_POST['minshours'],
+        'type' => $_POST['type'],
 //        save status
         'post_status' => $_POST['post_status']
     );
@@ -39,6 +40,7 @@ function ajax_update_content_module() {
             'term_ids' => $_POST['term_ids'],
             'duration' => $_POST['duration'],
             'minshours' => $_POST['minshours'],
+            'type' => $_POST['type'],
             //        save status
             'post_status'    => $_POST['post_status']
         );

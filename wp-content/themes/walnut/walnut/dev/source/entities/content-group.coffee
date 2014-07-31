@@ -19,6 +19,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 post_status: ''  # eg. underreview, publish, archive
                 total_minutes: 0
                 duration: 0
+                type : 'module'
                 minshrs: 'mins'
                 term_ids: []
                 content_pieces: []

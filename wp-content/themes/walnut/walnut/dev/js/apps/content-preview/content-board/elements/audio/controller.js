@@ -26,10 +26,23 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         });
       };
 
+      Controller.prototype._parseInt = function() {
+        var audio_ids;
+        audio_ids = new Array();
+        if (!this.layout.model.get('audio_ids') && this.layout.model.get('audio_id')) {
+          this.layout.model.set('audio_ids', [this.layout.model.get('audio_id')]);
+          this.layout.model.set('audioUrls', [this.layout.model.get('audioUrl')]);
+        }
+        _.each(this.layout.model.get('audio_ids'), function(id) {
+          return audio_ids.push(parseInt(id));
+        });
+        return this.layout.model.set('audio_ids', audio_ids);
+      };
+
       Controller.prototype.renderElement = function() {
-        var view;
-        view = this._getAudioView();
-        return this.layout.elementRegion.show(view);
+        this._parseInt();
+        this.view = this._getAudioView();
+        return this.layout.elementRegion.show(this.view);
       };
 
       return Controller;

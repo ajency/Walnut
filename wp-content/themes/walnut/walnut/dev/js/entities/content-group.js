@@ -25,6 +25,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         post_status: '',
         total_minutes: 0,
         duration: 0,
+        type: 'module',
         minshrs: 'mins',
         term_ids: [],
         content_pieces: [],
