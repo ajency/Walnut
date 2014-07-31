@@ -36,6 +36,8 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       OptionsBarView.prototype.mixinTemplateHelpers = function(data) {
         data = OptionsBarView.__super__.mixinTemplateHelpers.call(this, data);
         data.isStudentQuestion = this.model.get('content_type') === 'student_question' ? true : false;
+        data.isTeacherQuestion = this.model.get('content_type') === 'teacher_question' ? true : false;
+        data.isContentPiece = this.model.get('content_type') === 'content_piece' ? true : false;
         data.instructionsLabel = this.model.get('content_type') === 'content_piece' ? 'Procedure Summary' : 'Instructions';
         return data;
       };
