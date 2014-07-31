@@ -63,7 +63,7 @@ define(['app', 'controllers/region-controller', 'apps/media-collection-manager/m
         return OuterLayout.__super__.constructor.apply(this, arguments);
       }
 
-      OuterLayout.prototype.template = '<div class="row"> <div class="col-sm-7"> <div id="media-list-region"></div> </div> <div class="col-sm-5"> <div id="slides-info"> Click the button to select images to add to your slider. You can change the order of the images by dragging them up or down in the list to the left. </div> <div class="aj-imp-block-button add-new-media"> <button class="btn btn-default btn-hg"><span class="bicon icon-uniF10C"></span>&nbsp;&nbsp;Add Media</button> </div> </div> </div> <div id="add-media-region"></div>';
+      OuterLayout.prototype.template = '<div class="row"> <div class="col-sm-7 b-r b-grey"> <div id="media-list-region"></div> </div> <div class="col-sm-5"> <div id="slides-info"> Click the button to select images to add to your slider. You can change the order of the images by dragging them up or down in the list to the left. </div> </div> </div> <div class="aj-imp-block-button add-new-media pull-right"> <button class="btn btn-default btn-hg"><span class="bicon icon-uniF10C"></span>&nbsp;&nbsp;Add Media</button> </div> <div class="clearfix"></div> <div id="add-media-region"></div>';
 
       OuterLayout.prototype.regions = {
         mediaListRegion: '#media-list-region',
