@@ -7356,24 +7356,24 @@ input[type="checkbox"] {
   font-size: 1em;
 }
 .cbp_tmtimeline > li .cbp_tmicon.success {
-  background: #36ac35;
+  background: #ffffff;
   box-shadow: 0 0 0 8px #47bd46;
-  color: #ffffff;
+  color: #36ac35;
 }
 .cbp_tmtimeline > li .cbp_tmicon.primary {
-  background: #f85d41;
+  background: #ffffff;
   box-shadow: 0 0 0 8px #ff6e52;
-  color: #ffffff;
+  color: #f85d41;
 }
 .cbp_tmtimeline > li .cbp_tmicon.warning {
-  background: #ffe12d;
+  background: #1b1e24;
   box-shadow: 0 0 0 8px #fff23e;
-  color: #1b1e24;
+  color: #ffe12d;
 }
 .cbp_tmtimeline > li .cbp_tmicon.danger {
-  background: #ff6a69;
+  background: #ffffff;
   box-shadow: 0 0 0 8px #ff7b7a;
-  color: #ffffff;
+  color: #ff6a69;
 }
 .cbp_tmtimeline > li .cbp_tmicon.info {
   background: #ffffff;

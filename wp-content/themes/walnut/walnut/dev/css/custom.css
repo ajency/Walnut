@@ -2073,10 +2073,10 @@ input#duration {
 .panel-default > .panel-heading.collapsed {
   background-color: transparent;
 }
-.cbp_tmtimeline li.setGroup {
+.setGroup {
   margin-bottom: 20px;
 }
-.cbp_tmtimeline li.setGroup .cbp_tmlabel {
+.setGroup .cbp_tmlabel {
   margin-bottom: 2px;
   padding: 10px;
 }
