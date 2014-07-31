@@ -39,7 +39,7 @@ define ['app'], (App)->
 				@$el.find('video').attr 'id', @videoId
 
 				@$el.find('video').on 'ended', =>
-					console.log "done "
+					console.log "done"
 					@_playNextVideo()
 
 				@_setVideoList() if _.size(@videos) > 1
@@ -66,7 +66,7 @@ define ['app'], (App)->
 									@videos[index] = 'file:///mnt/sdcard/'+videoPath
 
 									if index is 0
-										@$el.find('#'+@videoId)[0].src = @videos[@index]
+										@$el.find('#'+@videoId)[0].src = @videos[index]
 										@$el.find('#'+@videoId)[0].load()
 
 
@@ -115,6 +115,7 @@ define ['app'], (App)->
 				e.stopPropagation() if e?
 				if @index < @videos.length-1
 					@index++
+					console.log @index++
 					@_playVideo()
 
 			_playClickedVideo : (e)->
@@ -131,5 +132,6 @@ define ['app'], (App)->
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
 				@$el.find('#now-playing-tag').text @model.get('title')[@index]
 				@$el.find('video').src = @videos[@index]
+				console.log @videos[@index]
 				@$el.find('video')[0].load()
 				@$el.find('video')[0].play()

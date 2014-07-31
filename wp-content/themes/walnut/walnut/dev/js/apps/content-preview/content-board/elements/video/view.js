@@ -34,7 +34,7 @@ define(['app'], function(App) {
         this.$el.find('video').attr('id', this.videoId);
         this.$el.find('video').on('ended', (function(_this) {
           return function() {
-            console.log("done ");
+            console.log("done");
             return _this._playNextVideo();
           };
         })(this));
@@ -58,7 +58,7 @@ define(['app'], function(App) {
                   return decryptFile.done(function(videoPath) {
                     _this.videos[index] = 'file:///mnt/sdcard/' + videoPath;
                     if (index === 0) {
-                      _this.$el.find('#' + _this.videoId)[0].src = _this.videos[_this.index];
+                      _this.$el.find('#' + _this.videoId)[0].src = _this.videos[index];
                       return _this.$el.find('#' + _this.videoId)[0].load();
                     }
                   });
@@ -97,6 +97,7 @@ define(['app'], function(App) {
         }
         if (this.index < this.videos.length - 1) {
           this.index++;
+          console.log(this.index++);
           return this._playVideo();
         }
       };
@@ -114,6 +115,7 @@ define(['app'], function(App) {
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
         this.$el.find('video').src = this.videos[this.index];
+        console.log(this.videos[this.index]);
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();
       };
