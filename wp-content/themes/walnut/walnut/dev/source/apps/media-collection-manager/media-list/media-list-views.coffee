@@ -7,21 +7,21 @@ define ['app'],(App)->
 
             className: 'panel panel-default moveable'
 
-            template: '<div class="panel-heading">
-                              <a class="accordion-toggle">
-                                <div class="aj-imp-image-item row">
-
-                                    <a class="thumbnail col-sm-8">
-                                    <div class="imaTitle"><span>{{title_show}}</span></div>
-
-                                    </a>
-
-                                    <div class="imgactions col-sm-4">
-                                        <a class="remove-media" title="Delete Media"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete Image</a>
+            template: '<div class="accordion-toggle">
+                            <div class="aj-imp-image-item row">
+                                <div class="col-sm-8">
+                                    <div class="thumbnail m-b-5">
+                                        <div class="imaTitle"><span>{{title_show}}</span></div>
                                     </div>
                                 </div>
-                              </a>
-                            </div>'
+
+                                <div class="col-sm-4">
+                                    <div class="imgactions">
+                                        <a class="remove-media text-error" title="Delete Media"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>'
 
             events:
 
@@ -46,7 +46,7 @@ define ['app'],(App)->
 
         class Views.MediaListView extends Marionette.CompositeView
 
-            template: '<div class="aj-imp-image-header row">
+            template: '<div class="aj-imp-image-header m-b-10 row">
 
                             <div class="col-sm-8">
                                 File Name
