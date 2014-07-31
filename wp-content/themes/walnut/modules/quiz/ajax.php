@@ -59,7 +59,7 @@ function ajax_update_quiz ()
 
         $id = save_quiz_module ($data);
     }
-    if (isset($_POST['changed']) && ($_POST['changed']=='content_layout')) {
+    if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
         $data = array(
             'id' => $_POST['id'],
             'content_layout' => $_POST['content_layout']
