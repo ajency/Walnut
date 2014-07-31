@@ -12,15 +12,20 @@ define(['app'], function(App) {
 
       AudioView.prototype.className = 'audio';
 
-      AudioView.prototype.template = '{{#audio}} <audio controls> <source src="{{audioUrl}}" type="audio/ogg"> Your browser does not support the audio element. </audio> {{/audio}} {{#placeholder}} <div class="audio-placeholder"><span class="bicon icon-uniF100"></span>Upload Audio</div> {{/placeholder}}';
+      AudioView.prototype.template = '{{#audio}} <audio title="{{title}}" class="audio1" controls> <source src="{{audioUrl}}" type="audio/mpeg"> Your browser does not support the audio element. </audio> {{/audio}} {{#placeholder}} <div class="audio-placeholder"><span class="bicon icon-uniF100"></span>Upload Audio</div> {{/placeholder}}';
 
       AudioView.prototype.mixinTemplateHelpers = function(data) {
+        var arrays, audioArray;
         data = AudioView.__super__.mixinTemplateHelpers.call(this, data);
-        if (!this.model.get('audio_id')) {
+        if (!this.model.get('audio_ids').length) {
           data.placeholder = true;
         } else {
-          data.audio = true;
-          data.audioUrl = this.model.get('audioUrl');
+          arrays = _.zip(this.model.get('title'), this.model.get('audioUrls'));
+          audioArray = new Array();
+          _.each(arrays, function(array) {
+            return audioArray.push(_.object(['title', 'audioUrl'], array));
+          });
+          data.audio = audioArray;
         }
         return data;
       };
@@ -29,15 +34,22 @@ define(['app'], function(App) {
         'click': function(e) {
           e.stopPropagation();
           return this.trigger("show:media:manager");
-        }
+        },
+        'click .panzerlist .controls': '_stopPropagating',
+        'click .panzerlist .list': '_stopPropagating'
+      };
+
+      AudioView.prototype._stopPropagating = function(e) {
+        return e.stopPropagation();
       };
 
       AudioView.prototype.onShow = function() {
-        return this.$el.find('audio').panzer({
+        return this.$el.find('audio.audio1').panzerlist({
           theme: 'light',
           layout: 'big',
           expanded: true,
-          showduration: true
+          showduration: true,
+          show_prev_next: true
         });
       };
 

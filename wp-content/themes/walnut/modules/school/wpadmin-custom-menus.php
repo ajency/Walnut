@@ -31,7 +31,8 @@ function school_csv_import_options() {
             if($_FILES["student_csv_file"]["error"] > 0){
                 $import_status = array('success'=>false,'msg'=>'No file added');
             }
-            elseif($_FILES["student_csv_file"]["type"] == "text/comma-separated-values" && in_array($extension, $allowedExts)){   
+            elseif(($_FILES["student_csv_file"]["type"] == "text/comma-separated-values" || $_FILES["student_csv_file"]["type"] == "text/csv" || $_FILES["student_csv_file"]["type"] == "application/vnd.ms-excel") 
+                    && in_array($extension, $allowedExts)){   
                 $import_status = import_student_csv($_FILES["student_csv_file"]);
             }else{
                 $import_status = array('success'=>false,'msg'=>'Invalid file.');
@@ -80,7 +81,9 @@ function import_student_csv($file_path){
     
     $csvData = json_decode($csv_json);
     
-    $student_csv_headers = array('NAME',
+    $student_csv_headers = array('USERNAME',
+                                 'FIRST_NAME',
+                                 'LAST_NAME',
                                  'ROLL_NO',
                                  'BLOG_ID',
                                  'EMAIL_ID',
@@ -102,7 +105,7 @@ function import_student_csv($file_path){
   //While there is an entry in the CSV data    
     while ($i <= count($csvData)-1 ) {
         
-        if( count($csvData[$i]) !== 10  || $csvData[$i][6] == '' || !is_email($csvData[$i][6]) || $csvData[$i][7] == '' ){
+        if( count($csvData[$i]) !== 12  || $csvData[$i][8] == '' || !is_email($csvData[$i][8]) || $csvData[$i][9] == '' ){
             $csvData[$i][] = get_failed_status($csvData[$i]);
             $failed_records[] = $csvData[$i];
             $failed_count++;
@@ -113,20 +116,22 @@ function import_student_csv($file_path){
 	$user_table = $wpdb->prefix ."users";
         $user_pass = "ajency";
         $user_login = $csvData[$i][0];
-        $meta_value_rollno = $csvData[$i][1];
-        $blogId = $csvData[$i][2];
-        $user_email = $csvData[$i][3];
+        $first_name = $csvData[$i][1];
+        $last_name = $csvData[$i][2];
+        $meta_value_rollno = $csvData[$i][3];
+        $blogId = $csvData[$i][4];
+        $user_email = $csvData[$i][5];
 
-        $meta_value_division =(int) $csvData[$i][5];
+        $meta_value_division =(int) $csvData[$i][7];
         
-        $parent_email1 = $csvData[$i][6];
-        $parent_phone1 = $csvData[$i][7];
-        $parent_email2 = $csvData[$i][8];
-        $parent_phone2 = $csvData[$i][9];
+        $parent_email1 = $csvData[$i][8];
+        $parent_phone1 = $csvData[$i][9];
+        $parent_email2 = $csvData[$i][10];
+        $parent_phone2 = $csvData[$i][11];
         $role = "student";
 
         //Check if $user_email is present in users table
-        $userExists = $wpdb->get_row( "select * from $user_table where user_email like '%" . $user_email . "%' OR user_login like '%" . $user_login . "%' "  );
+        $userExists = $wpdb->get_row( "select * from $user_table where user_email ='" . $user_email . "' OR user_login ='" . $user_login . "' "  );
 		
 		if( $userExists != null ){ 
 		
@@ -167,7 +172,9 @@ function import_student_csv($file_path){
 		}
 		
                 if(! is_wp_error( $user_id ) ){
-                    //Insert/Update user meta table	
+                    //Insert/Update user meta table
+                    update_user_meta( $user_id, 'first_name', $first_name );
+                    update_user_meta( $user_id, 'last_name', $last_name );
                     update_user_meta( $user_id, 'student_division', $meta_value_division );
                     update_user_meta( $user_id, 'roll_no', $meta_value_rollno);
                     update_user_meta( $user_id, 'parent_phone1', $parent_phone1 );
@@ -307,13 +314,13 @@ function clear_csv_import_logs(){
 
 function get_failed_status($csvDataRecord){
 
-    if(count($csvDataRecord) !== 10)
+    if(count($csvDataRecord) !== 12)
         $status = 'Columns Not Equal';
-    elseif($csvDataRecord[6] == '' )
+    elseif($csvDataRecord[8] == '' )
          $status = 'Parent Email required';
-    elseif(!is_email($csvDataRecord[6]))
+    elseif(!is_email($csvDataRecord[8]))
          $status = 'Invalid Parent Email';
-    elseif($csvDataRecord[7] == '')
+    elseif($csvDataRecord[9] == '')
          $status = 'Parent Mobile required';
     else
          $status = '-';

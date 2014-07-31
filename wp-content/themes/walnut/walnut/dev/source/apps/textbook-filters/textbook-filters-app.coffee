@@ -11,11 +11,13 @@ define ['app'
                 @filters = ['textbooks', 'chapters','sections','subsections'] if not @filters
                 @textbooksCollection = App.request "get:textbooks"
 
-#                @selectedFilterParamsObject.setHandler "get:selected:parameters", =>
-#                    textbook_filters= $(@view.el).find '.textbook-filter'
-#
-#                    for ele in textbook_filters
-#                        term_id = $(ele).val() if $(ele).val()
+                @selectedFilterParamsObject.setHandler "get:selected:parameters", =>
+                    textbook_filters= $(@view.el).find 'select.textbook-filter'
+                    for ele in textbook_filters
+                        if $(ele).val()?
+                            term_id =
+                                id : $(ele).val()
+                                text : $(ele).find(':selected').text()
 #                        console.log ele.id
 #                        console.log term_id
 

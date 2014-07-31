@@ -13,6 +13,7 @@ function ajax_create_quiz ()
     $data = array(
         'name' => $_POST['name'],
         'description' => $_POST['description'],
+        'term_ids' => $_POST['term_ids'],
         'duration' => $_POST['duration'],
         'minshours' => $_POST['minshours'],
         'post_status' => $_POST['post_status'],
@@ -43,6 +44,7 @@ function ajax_update_quiz ()
             'id' => $_POST['id'],
             'name' => $_POST['name'],
             'description' => $_POST['description'],
+            'term_ids' => $_POST['term_ids'],
             'duration' => $_POST['duration'],
             'minshours' => $_POST['minshours'],
             'post_status' => $_POST['post_status'],
@@ -60,12 +62,12 @@ function ajax_update_quiz ()
     if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
         $data = array(
             'id' => $_POST['id'],
-            'content_pieces' => $_POST['content_pieces']
+            'content_layout' => $_POST['content_layout']
         );
-        update_quiz_content_pieces($data);
+        update_quiz_content_layout($data);
     }
 
-    wp_send_json (array('code' => 'OK', 'data' => array('id' => $_POST['id'])));
+    wp_send_json (array('code' => 'OK', 'data' => array('id' => (int)$_POST['id'])));
 }
 
 add_action ('wp_ajax_update-quiz', 'ajax_update_quiz');
@@ -79,3 +81,19 @@ function ajax_fetch_single_quiz ()
 }
 
 add_action ('wp_ajax_read-quiz', 'ajax_fetch_single_quiz');
+
+
+function ajax_fetch_all_quizes(){
+
+    $args = $_GET;
+    $defaults = array(
+        'textbook' => '',
+        'post_status' => 'publish',
+        'quiz_type' => ''
+    );
+    $args = wp_parse_args($args,$defaults);
+    $quiz_modules = get_all_quiz_modules($args);
+    wp_send_json($quiz_modules);
+}
+
+add_action('wp_ajax_get_all_quiz','ajax_fetch_all_quizes');

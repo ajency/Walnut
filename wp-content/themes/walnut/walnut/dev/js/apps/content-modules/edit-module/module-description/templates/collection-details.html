@@ -1,6 +1,7 @@
 <form name="content-collection-form" id="content-collection-form">
-	<div class="grid-title"><h3>{{heading}} <span class="semi-bold">Module</span></h3>
+	<div class="grid-title"><h3>{{heading}} <span class="semi-bold">{{type}}</span></h3>
 	</div>
+    {{#isModule}}
 	<div class="grid-body" style="overflow: hidden; display: block;">
 		<div class="row m-b-10">
 			<div class="col-md-6">
@@ -59,10 +60,10 @@
         <div class="row">
             <div class="col-sm-6">
                 <label class="form-label">Status</label>
-                <select required name="post_status" id="status" class="form-control select2" >
-                    {{#statusOptions}}
-                        <option value="{{value}}" {{statusSelected}}>{{name}}</option>
-                    {{/statusOptions}}
+                <select required name="post_status" id="status" class="form-control" >
+                    <option value="underreview">Under Review</option>
+                    <option value="publish">Published</option>
+                    <option value="archive">Archived</option>
                 </select>
             </div>
 			<div class="col-md-6">
@@ -74,6 +75,302 @@
 	            </select> -->
 			</div>
         </div>
+        {{/isModule}}
+
+
+        {{#isQuiz}}
+        <div class="grid-body no-border" style="overflow: hidden; display: block;">
+        <div class="row">
+            <div class="col-md-6">
+                <input name="name" type="text" class="input-lg" placeholder="Quiz Name" required="required">
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Quiz Type</label>
+                    <select name="quiz_type" id="qType" class="form-control">
+                        <option value="practice">Practice</option>
+                        <option value="test">Class Test</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Status</label>
+                    <select name="post_status" id="status" class="form-control">
+                        <option value="underreview">Under Review</option>
+                        <option value="publish">Published</option>
+                        <option value="archive">Archived</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+
+                </div>
+            </div>
+        </div>
+        <div class="row m-b-10">
+            <div class="col-md-6">
+                <label required="required" class="form-label">Textbook</label>
+                <select name="term_ids[textbook]" id="textbooks" class="form-control select2" >
+                    <option value="">--select textbook--</option>
+                    {{#textbooksFilter}}
+                    <option value="{{id}}" {{textBookSelected}} >{{name}}</option>
+                    {{/textbooksFilter}}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Chapter <span class="muted small pull-right"> Select a Textbook first</span></label>
+                <select name="term_ids[chapter]" id="chapters" class="form-control select2" >
+                    <option value="">--select chapters--</option>
+                </select>
+            </div>
+        </div>
+        <div class="row m-b-10">
+            <div class="col-md-6">
+                <label class="form-label">Section <span class="muted small pull-right"> Select a Chapter first</span></label>
+                <select name="term_ids[sections][]" id="secs" class="form-control select2" multiple="">
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Sub-Sections <span class="muted small pull-right"> Select a Chapter first</span></label>
+                <select name="term_ids[subsections][]" id="subsecs" class="form-control select2" multiple="">
+                </select>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Marks</label>
+                    <input id="" name="marks" class="pull-left" placeholder="Enter Marks" type="text" required="required"/>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Duration</label>
+                    <input id="" name="duration" class="pull-left" placeholder="Enter Duration" type="text"
+                           required="required"/> &nbsp;{{minshours}}
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Negative Marks</label>
+
+                    <div class="radio radio-info inline">
+                        <input id="yes" type="radio" name="negMarksEnable" value="true" checked="checked">
+                        <label for="yes">Yes</label>
+                        <input id="no" type="radio" name="negMarksEnable" value="false">
+                        <label for="no">No</label>
+                    </div>
+                    <div id="negPercent" class="input-with-icon right inline">
+                        <input id="" name="negMarks" class="inline" placeholder="Set Negative marks" type="text" /> %
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Total Marks</label>
+                    <input id="" class="disabled" placeholder="0" type="text" disabled="disabled">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Total Time </label>
+                    <input id=""  class="disabled" placeholder="0" type="text" disabled="disabled">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Total No. of Questions</label>
+                    <input id="total-question-number"  class="disabled" placeholder="0" type="text" disabled="disabled">
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="margin-bottom-20 ">
+                    <label class="form-label">Quiz Instructions</label>
+                    <input id="" name="description[instruction]" class="form-control" placeholder="Rich Text Editor will come here" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div data-toggle="collapse" id="accordion" class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="collapsed"> &nbsp;
+                                    Permissions
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="panel-collapse collapse" id="collapseOne">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[single_attempt]" id="attempt" type="checkbox" value="1">
+                                            <label for="attempt">Single Attempt</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[randomize]" id="random" type="checkbox" value="1">
+                                            <label for="random">Randomize Order</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[display_answer]" id="answer" type="checkbox" value="1">
+                                            <label for="answer">Display Answer</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[teacher_check]" id="check" type="checkbox" value="1">
+                                            <label for="check">Teacher Check</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[allow_skip]" id="skip" type="checkbox" value="1">
+                                            <label for="skip">Allow Skip</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[disable_quiz_replay]" id="marks" type="checkbox" value="1">
+                                            <label for="marks">Disable Quiz Replay</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[allow_resubmit]" id="resubmit" type="checkbox" value="1">
+                                            <label for="resubmit">Allow Resubmit</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[answer_printing]" id="print" type="checkbox" value="1">
+                                            <label for="print">Allow Answer Printing</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[allow_hint]" id="hint" type="checkbox" value="1">
+                                            <label for="hint">Allow Hint</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[customize_messages]" id="msgs" type="checkbox" value="1">
+                                            <label for="msgs">Customize Messages</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+
+                                    </div>
+                                    <div class="col-sm-3">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default none" id="customMsg">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="collapsed"> &nbsp;
+                                    Custom Messages
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="panel-collapse collapse" id="collapseTwo">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="small-text customMsgLink" data-slug="end_quiz">
+                                            <a  data-toggle="modal">End Quiz Popup</a></div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="small-text customMsgLink" data-slug="correct_answer">
+                                            <a  data-toggle="modal">Correct answer</a></div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="small-text customMsgLink" data-slug="incorrect_answer">
+                                            <a  data-toggle="modal">Incorrect answer</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="small-text customMsgLink" data-slug="partial_correct_answers">
+                                            <a  data-toggle="modal">Partial correct answers</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row m-t-15">
+                                    <div class="col-sm-3">
+                                        <div class="small-text customMsgLink" data-slug="incomplete_answer">
+                                            <a data-toggle="modal">Incomplete answer</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="small-text customMsgLink" data-slug="submit_without_attempting">
+                                            <a href="#msgModal" data-toggle="modal">Submit without attempting</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                    </div>
+                                    <div class="col-sm-3">
+                                    </div>
+                                </div>
+
+                                <!--<div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"-->
+                                <!--aria-hidden="true" style="display: none;">-->
+                                <!--<div class="modal-dialog">-->
+                                <!--<div class="modal-content">-->
+                                <!--<div class="modal-header">-->
+                                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×-->
+                                <!--</button>-->
+                                <!--<h4 id="" class="semi-bold text-white">Edit Message</h4>-->
+                                <!--</div>-->
+                                <!--<div class="modal-body">-->
+                                <!--<div class="row form-row">-->
+                                <!--<div class="col-md-12">-->
+                                <!--<input type="text" class="form-control"-->
+                                <!--placeholder="Rich Text Editor will come here">-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="modal-footer">-->
+                                <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close-->
+                                <!--</button>-->
+                                <!--<button type="button" class="btn btn-success">Save changes</button>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash; /.modal-content &ndash;&gt;-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash; /.modal-dialog &ndash;&gt;-->
+                                <!--</div>-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/isQuiz}}
+
+
         <div class="row">
         	<div class="col-sm-12">
         		<button type="submit" class="btn btn-success btn-cons2 right pull-right m-t-10" id="save-content-collection"> <i class="fa fa-check"></i> Save</button>
