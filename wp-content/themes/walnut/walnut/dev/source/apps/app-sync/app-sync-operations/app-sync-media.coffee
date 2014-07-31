@@ -52,8 +52,8 @@ define ['underscore', 'jquery'], ( _ , $) ->
 			fileName = file.substr(file.lastIndexOf('/') + 1)
 			
 			#audio path from server has media-web/audio-web , here we replace it with audios
-			if file_type is 'Audio'
-				directoryPath = directoryPath.replace("media-web/audio-web", "audios")
+			# if file_type is 'Audio'
+			# 	directoryPath = directoryPath.replace("media-web/audio-web", "audios")
 			
 			escaped = $('<div>').text("Downloading...\n\n"+fileName).text()
 			$('#syncMediaSuccess').css("display","block").html(escaped.replace(/\n/g, '<br />'))

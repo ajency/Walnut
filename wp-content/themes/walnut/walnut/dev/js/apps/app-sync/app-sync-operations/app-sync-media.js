@@ -44,9 +44,6 @@ define(['underscore', 'jquery'], function(_, $) {
       file = filesTobeDownloaded[index];
       directoryPath = file.substr(file.indexOf("uploads/"));
       fileName = file.substr(file.lastIndexOf('/') + 1);
-      if (file_type === 'Audio') {
-        directoryPath = directoryPath.replace("media-web/audio-web", "audios");
-      }
       escaped = $('<div>').text("Downloading...\n\n" + fileName).text();
       $('#syncMediaSuccess').css("display", "block").html(escaped.replace(/\n/g, '<br />'));
       uri = encodeURI(file);

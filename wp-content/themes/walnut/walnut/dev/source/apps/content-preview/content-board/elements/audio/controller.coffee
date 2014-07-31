@@ -39,7 +39,7 @@ define ['app'
 
 						runFunc = =>
 							$.Deferred (d)=>
-
+								console.log @layout.model.get('audioUrls')
 								localAudioPath = new Array()
 								audioPath = new Array()
 								localAudioPaths = []
@@ -50,6 +50,7 @@ define ['app'
 								audiosWebDirectory = _.createAudiosWebDirectory()
 								audiosWebDirectory.done =>
 									allAudioUrls = @layout.model.get('audioUrls')
+									console.log allAudioUrls
 
 									_.each allAudioUrls , (allAudioPaths , index)->
 										url = allAudioPaths.replace("media-web/","")
@@ -68,7 +69,7 @@ define ['app'
 										_.each audioPaths , (localAudioPath , index)=>
 											do(localAudioPath, index)=>
 
-												audioPath = 'file:///storage/emulated/0/' + localAudioPath
+												audioPath = 'file:///mnt/sdcard/' + localAudioPath
 
 												localAudioPaths.push audioPath
 

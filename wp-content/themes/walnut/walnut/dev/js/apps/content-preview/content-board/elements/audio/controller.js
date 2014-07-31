@@ -47,6 +47,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           return function() {
             return $.Deferred(function(d) {
               var audioPath, audioPaths, audiosWebDirectory, decryptFile, deferreds, localAudioPath, localAudioPaths;
+              console.log(_this.layout.model.get('audioUrls'));
               localAudioPath = new Array();
               audioPath = new Array();
               localAudioPaths = [];
@@ -57,6 +58,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
               return audiosWebDirectory.done(function() {
                 var allAudioUrls;
                 allAudioUrls = _this.layout.model.get('audioUrls');
+                console.log(allAudioUrls);
                 _.each(allAudioUrls, function(allAudioPaths, index) {
                   var audiosWebUrl, decryptedAudioPath, encryptedAudioPath, url;
                   url = allAudioPaths.replace("media-web/", "");
@@ -72,7 +74,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                   audioPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
                   _.each(audioPaths, function(localAudioPath, index) {
                     return (function(localAudioPath, index) {
-                      audioPath = 'file:///storage/emulated/0/' + localAudioPath;
+                      audioPath = 'file:///mnt/sdcard/' + localAudioPath;
                       return localAudioPaths.push(audioPath);
                     })(localAudioPath, index);
                   });
