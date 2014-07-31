@@ -193,11 +193,11 @@
 .docket-body{
 	background: @preview-grey;
 	padding: 15px 10px;
-	color: #000;
+	color: @color-black;
 	font-size: 14px;
 	font-weight: normal;
 	label{
-		color: #777a80;
+		color: darken(@body-bg, 30%);
 	}
 	select{
 		&.marks, &.blanks{
@@ -391,14 +391,14 @@
 	top: -4.6em;
        display: none;
 	.tooltip-arrow {
-		border-top-color: #29333F;
+		border-top-color: @dark-blue;
 		left: 2em;
 	}
 	.tooltip-inner {
 		width: auto;
 		min-width: 250px;
 		max-width: 300px;
-		background: #29333F;
+		background: @dark-blue;
 		label {
 			display: inline-block;
 			margin: 0;
@@ -495,7 +495,7 @@
 .settings-box {
 	width: 400px;
 	background: @color-white;
-	box-shadow: 0 0 3px 1px #aaaaaa;
+	box-shadow: 0 0 3px 1px @dash-grey;
 	padding: 0 0.5em 0.5em;
 	border-radius: 3px;
 	border: 2px solid @body-bg;
@@ -620,7 +620,7 @@
 
 	.aj-imp-upload-message{
 		cursor: pointer;
-		background: #e4e4e4;
+		background: @body-bg;
 		border-radius: 5px;
 		padding: 10px;
 		width: 40%;
@@ -819,4 +819,17 @@
 			}
 		}
 	}
+}
+
+.imaTitle{
+	cursor: move;
+	font-size: 18px;
+	margin-left: 5px;
+}
+.remove-media{
+	cursor: pointer;
+	font-size: 14px;
+}
+#slides-info{
+	font-size: 16px;
 }
