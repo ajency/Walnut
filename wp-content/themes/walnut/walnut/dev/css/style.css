@@ -2,16 +2,12 @@
 .ease {
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 .fadein {
   -webkit-transition: opacity 0.5s ease-in-out;
@@ -85,13 +81,11 @@
 ::selection {
   background: #1b1e24;
   /* Safari */
-
   color: #ffffff;
 }
 ::-moz-selection {
   background: #1b1e24;
   /* Safari */
-
   color: #ffffff;
 }
 html {
@@ -2390,7 +2384,7 @@ span.iconset {
   border-color: rgba(0, 0, 0, 0.4);
 }
 .b-grey {
-  border-color: #e5e9ec;
+  border-color: #dadada;
 }
 .visible-xlg {
   display: none;
@@ -5902,13 +5896,11 @@ code:hover {
 .alert::selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert::-moz-selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert .link {
@@ -5918,13 +5910,11 @@ code:hover {
 .alert .link::selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert .link::-moz-selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert .alert-heading {
@@ -5935,13 +5925,11 @@ code:hover {
 .alert .alert-heading::selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert .alert-heading::-moz-selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert .btn-small {
@@ -5951,13 +5939,11 @@ code:hover {
 .alert .btn-small::selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert .btn-small::-moz-selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert .button-set .btn {
@@ -5967,13 +5953,11 @@ code:hover {
 .alert .button-set .btn::selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert .button-set .btn::-moz-selection {
   background: #fdd01c;
   /* Safari */
-
   color: #1b1e24;
 }
 .alert .close {
@@ -5997,13 +5981,11 @@ code:hover {
 .alert-success::selection {
   background: #259b24;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-success::-moz-selection {
   background: #259b24;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-success .link {
@@ -6012,13 +5994,11 @@ code:hover {
 .alert-success .link::selection {
   background: #259b24;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-success .link::-moz-selection {
   background: #259b24;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-success .alert-heading {
@@ -6027,13 +6007,11 @@ code:hover {
 .alert-success .alert-heading::selection {
   background: #259b24;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-success .alert-heading::-moz-selection {
   background: #259b24;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-success .close {
@@ -6042,13 +6020,11 @@ code:hover {
 .alert-success .close::selection {
   background: #259b24;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-success .close::-moz-selection {
   background: #259b24;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-info {
@@ -6059,13 +6035,11 @@ code:hover {
 .alert-info::selection {
   background: #0090d9;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-info::-moz-selection {
   background: #0090d9;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-info .link {
@@ -6074,13 +6048,11 @@ code:hover {
 .alert-info .link::selection {
   background: #0090d9;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-info .link::-moz-selection {
   background: #0090d9;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-info .alert-heading {
@@ -6089,13 +6061,11 @@ code:hover {
 .alert-info .alert-heading::selection {
   background: #0090d9;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-info .alert-heading::-moz-selection {
   background: #0090d9;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-info .close {
@@ -6104,13 +6074,11 @@ code:hover {
 .alert-info .close::selection {
   background: #0090d9;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-info .close::-moz-selection {
   background: #0090d9;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-danger,
@@ -6123,14 +6091,12 @@ code:hover {
 .alert-error::selection {
   background: #f35958;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-danger::-moz-selection,
 .alert-error::-moz-selection {
   background: #f35958;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-danger .link,
@@ -6141,14 +6107,12 @@ code:hover {
 .alert-error .link::selection {
   background: #f35958;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-danger .link::-moz-selection,
 .alert-error .link::-moz-selection {
   background: #f35958;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-danger .alert-heading,
@@ -6159,14 +6123,12 @@ code:hover {
 .alert-error .alert-heading::selection {
   background: #f35958;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-danger .alert-heading::-moz-selection,
 .alert-error .alert-heading::-moz-selection {
   background: #f35958;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-error .close,
@@ -6177,14 +6139,12 @@ code:hover {
 .alert .alert-danger .close::selection {
   background: #f35958;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-error .close::-moz-selection,
 .alert .alert-danger .close::-moz-selection {
   background: #f35958;
   /* Safari */
-
   color: #ffffff;
 }
 .alert-block {
