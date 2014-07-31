@@ -13,6 +13,8 @@ define ['app'
                 'view-group/:id': 'viewModule'
                 'edit-module/:id': 'editModule'
                 'module-list': 'modulesListing'
+                'create-quiz' : 'createQuiz'
+                'edit-quiz/:id' : 'editQuiz'
                 'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule'
                 'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule'
 
@@ -21,12 +23,14 @@ define ['app'
             addModule: ->
                 new ContentModulesApp.Edit.GroupController
                     region: App.mainContentRegion
+                    groupType : 'module'
 
 
             editModule:(id) ->
                 new ContentModulesApp.Edit.GroupController
                     region: App.mainContentRegion
                     group_id: id
+                    groupType : 'module'
 
 
             viewModule: (id)->
@@ -48,6 +52,18 @@ define ['app'
             modulesListing: ->
                 new ContentModulesApp.ModulesListing.ListController
                     region: App.mainContentRegion
+
+            createQuiz : ->
+                new ContentModulesApp.Edit.GroupController
+                    region : App.mainContentRegion
+                    groupType : 'quiz'
+
+            editQuiz : (id)->
+                new ContentModulesApp.Edit.GroupController
+                    region : App.mainContentRegion
+                    group_id : id
+                    groupType : 'quiz'
+
 
             takeClassSingleModule: (classID, div, tID, mID)->
                 opts =

@@ -1,7 +1,7 @@
 define ['app'
         'controllers/region-controller'
 ], (App, RegionController)->
-    App.module "ContentSelectionApp.Controller.SearchResults", (SearchResults, App, Backbone, Marionette, $, _)->
+    App.module "ContentSelectionApp.SearchResults", (SearchResults, App, Backbone, Marionette, $, _)->
         class SearchResults.Controller extends RegionController
             initialize: (opts) ->
 
