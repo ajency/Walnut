@@ -35,8 +35,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         var newSetModel;
         data.id = this._getNewSetId();
         newSetModel = new Backbone.Model(data);
-        this.contentGroupCollection.add(newSetModel);
-        return console.log(this.contentGroupCollection);
+        return this.contentGroupCollection.add(newSetModel);
       };
 
       Controller.prototype._getNewSetId = function() {
@@ -96,7 +95,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       SetView.prototype._setLevelCount = function() {
         var count, i, levelCount, _i, _ref, _results;
         levelCount = this.collection.countBy('difficulty_level');
-        console.log(levelCount);
         this.$el.find('#selectAll').prop('checked', false);
         _results = [];
         for (i = _i = 1; _i <= 3; i = ++_i) {
@@ -119,7 +117,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         _.each(this.$el.find(".level-selection input.spinedit"), function(num) {
           return total += parseInt($(num).val());
         });
-        console.log(total);
         return this.$el.find('#total-questions').val(total);
       };
 
@@ -127,7 +124,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         var levelCount, _ref, _ref1, _ref2;
         if ($(e.target).is(':checked')) {
           levelCount = this.collection.countBy('difficulty_level');
-          console.log(levelCount);
           this.$el.find("#lvl1 input").val((_ref = levelCount["1"]) != null ? _ref : 0);
           this.$el.find("#lvl2 input").val((_ref1 = levelCount["2"]) != null ? _ref1 : 0);
           this.$el.find("#lvl3 input").val((_ref2 = levelCount["3"]) != null ? _ref2 : 0);
@@ -142,7 +138,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       SetView.prototype.onAddSet = function(filters) {
         var data, terms_id;
-        console.log(filters);
         _.each(filters, function(term, index) {
           var newTerm;
           if ((term == null) || term.id === '') {
@@ -171,7 +166,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           post_type: 'content_set'
         };
         this.trigger("add:new:set", data);
-        this.$el.find("#addSet input[type='text']").val(0);
+        this.$el.find("input[type='text']").val(0);
         return this.$el.find('#selectAll').prop('checked', false);
       };
 

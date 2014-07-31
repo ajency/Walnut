@@ -31,6 +31,7 @@ define ['app'
 
             modelEvents :
                 'change:post_status' : 'statusChanged'
+                'change:content_layout' : '_changeLayout'
 
             mixinTemplateHelpers : (data)->
                 data = super data
@@ -68,6 +69,7 @@ define ['app'
                 @$el.find("#secs,#subsecs").val([]).select2()
 
                 @statusChanged()
+                @_changeLayout() if @model.get('type') is 'quiz'
 
             statusChanged : ->
                 if @model.get('post_status') in ['publish', 'archive']
@@ -172,6 +174,17 @@ define ['app'
                 @trigger 'show:custom:msg:popup',
                     slug : $(e.target).closest('.customMsgLink').attr 'data-slug'
 
+
+            _changeLayout : ->
+                totalQuestions = 0
+                _.each @model.get('content_layout'),(content)=>
+                    if content.type is 'content-piece'
+                        totalQuestions += 1
+                    else
+                        totalQuestions += parseInt content.data.lvl1
+                        totalQuestions += parseInt content.data.lvl2
+                        totalQuestions += parseInt content.data.lvl3
+                @$el.find('#total-question-number').val totalQuestions
 
 
             onSavedContentGroup : (model) ->

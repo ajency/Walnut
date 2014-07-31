@@ -78,6 +78,9 @@ define ['app'
                             contentModel = new Backbone.Model content.data
                         @contentGroupCollection.add contentModel
 
+
+
+
                 App.execute "when:fetched", @contentGroupCollection, =>
                     if model.get('post_status') is 'underreview'
                         App.execute "show:content:selectionapp",

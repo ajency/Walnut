@@ -36,7 +36,8 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
       };
 
       CollectionDetailsView.prototype.modelEvents = {
-        'change:post_status': 'statusChanged'
+        'change:post_status': 'statusChanged',
+        'change:content_layout': '_changeLayout'
       };
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
@@ -65,7 +66,10 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
         }
         this.$el.find('select:not(#qType,#status)').select2();
         this.$el.find("#secs,#subsecs").val([]).select2();
-        return this.statusChanged();
+        this.statusChanged();
+        if (this.model.get('type') === 'quiz') {
+          return this._changeLayout();
+        }
       };
 
       CollectionDetailsView.prototype.statusChanged = function() {
@@ -164,6 +168,23 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
         return this.trigger('show:custom:msg:popup', {
           slug: $(e.target).closest('.customMsgLink').attr('data-slug')
         });
+      };
+
+      CollectionDetailsView.prototype._changeLayout = function() {
+        var totalQuestions;
+        totalQuestions = 0;
+        _.each(this.model.get('content_layout'), (function(_this) {
+          return function(content) {
+            if (content.type === 'content-piece') {
+              return totalQuestions += 1;
+            } else {
+              totalQuestions += parseInt(content.data.lvl1);
+              totalQuestions += parseInt(content.data.lvl2);
+              return totalQuestions += parseInt(content.data.lvl3);
+            }
+          };
+        })(this));
+        return this.$el.find('#total-question-number').val(totalQuestions);
       };
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {

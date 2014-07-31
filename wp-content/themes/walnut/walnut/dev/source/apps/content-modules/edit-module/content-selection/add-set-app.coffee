@@ -28,8 +28,6 @@ define ['app'
 
                 @contentGroupCollection.add newSetModel
 
-                console.log @contentGroupCollection
-
 
             _getNewSetId : ->
                 modelsArray = @contentGroupCollection.where post_type : 'content_set'
@@ -96,7 +94,6 @@ define ['app'
 
             _setLevelCount : ->
                 levelCount = @collection.countBy 'difficulty_level'
-                console.log levelCount
                 @$el.find('#selectAll').prop 'checked',false
 
                 for i in [ 1..3 ]
@@ -113,13 +110,11 @@ define ['app'
                 total = 0
                 _.each @$el.find(".level-selection input.spinedit"), (num)->
                     total += parseInt $(num).val()
-                console.log total
                 @$el.find('#total-questions').val total
 
             _selectAllForSet : (e)->
                 if $(e.target).is(':checked')
                     levelCount = @collection.countBy 'difficulty_level'
-                    console.log levelCount
                     @$el.find("#lvl1 input").val(levelCount["1"] ? 0)
                     @$el.find("#lvl2 input").val(levelCount["2"] ? 0)
                     @$el.find("#lvl3 input").val(levelCount["3"] ? 0)
@@ -131,7 +126,6 @@ define ['app'
                     @_onSpinEditValueChanged()
 
             onAddSet : (filters)->
-                console.log filters
                 _.each filters, (term,index)->
                     if not term? or term.id is ''
                         newTerm =
@@ -157,7 +151,6 @@ define ['app'
                     post_type : 'content_set'
 
 #                _.each ['textbook','chapter','section','sub-section'],(attr)->
-#                    console.log data[attr]
 #
 #                    x= _.slugify data[attr]
 #                    if not data[attr]? or data[attr] is '' or _.slugify(data[attr]) is _.slugify("All #{attr}s")
@@ -165,7 +158,7 @@ define ['app'
 
                 @trigger "add:new:set",data
 
-                @$el.find("#addSet input[type='text']").val 0
+                @$el.find("input[type='text']").val 0
                 @$el.find('#selectAll').prop 'checked',false
 
 
