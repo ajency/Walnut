@@ -88,6 +88,7 @@ define(['app'], function(App) {
         if (this.index > 0) {
           this.index--;
         }
+        console.log(this.index);
         return this._playVideo();
       };
 
@@ -97,7 +98,6 @@ define(['app'], function(App) {
         }
         if (this.index < this.videos.length - 1) {
           this.index++;
-          console.log(this.index++);
           return this._playVideo();
         }
       };
@@ -107,14 +107,16 @@ define(['app'], function(App) {
         e.stopPropagation();
         index = parseInt($(e.target).attr('data-index'));
         this.index = index;
+        console.log(this.index);
         return this._playVideo();
       };
 
       VideoView.prototype._playVideo = function() {
+        console.log(this.index);
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
-        this.$el.find('video').src = this.videos[this.index];
+        this.$el.find('video')[0].src = this.videos[this.index];
         console.log(this.videos[this.index]);
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();

@@ -66,7 +66,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                   audioPaths = audiosWebUrl.replace("audio-web", "audios");
                   encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioPaths;
                   decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosWebUrl;
-                  decryptFile = _.decryptVideoFile_N(encryptedAudioPath, decryptedAudioPath);
+                  decryptFile = _.decryptAudioFile(encryptedAudioPath, decryptedAudioPath);
                   return deferreds.push(decryptFile);
                 });
                 return $.when.apply($, deferreds).done(function() {

@@ -167,7 +167,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       var runFunc;
       runFunc = function() {
         return $.Deferred(function(d) {
-          return decrypt.startDecryption(source, destination, function() {
+          return decrypt.startDecryption(source, destination, "Video", function() {
+            console.log(destination);
             return d.resolve(destination);
           }, function(message) {
             return console.log('ERROR: ' + message);
@@ -178,9 +179,9 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return console.log('Decrypted video file at location: ' + destination);
       }).fail(_.failureHandler);
     },
-    decryptVideoFile_N: function(source, destination) {
+    decryptAudioFile: function(source, destination) {
       return $.Deferred(function(d) {
-        return decrypt.startDecryption(source, destination, function() {
+        return decrypt.startDecryption(source, destination, "Audio", function() {
           console.log(destination);
           return d.resolve(destination);
         }, function(message) {

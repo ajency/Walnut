@@ -109,29 +109,31 @@ define ['app'], (App)->
 			_playPrevVideo : (e)->
 				e.stopPropagation()
 				@index-- if @index > 0
+				console.log @index
 				@_playVideo()
 
 			_playNextVideo : (e)->
 				e.stopPropagation() if e?
 				if @index < @videos.length-1
 					@index++
-					console.log @index++
 					@_playVideo()
 
 			_playClickedVideo : (e)->
 				e.stopPropagation()
 				index = parseInt $(e.target).attr 'data-index'
 				@index = index
+				console.log @index
 				@_playVideo()
 
 
 
 
 			_playVideo:=>
+				console.log @index
 				@$el.find('.playlist-video').removeClass 'currentVid'
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
 				@$el.find('#now-playing-tag').text @model.get('title')[@index]
-				@$el.find('video').src = @videos[@index]
+				@$el.find('video')[0].src = @videos[@index]
 				console.log @videos[@index]
 				@$el.find('video')[0].load()
 				@$el.find('video')[0].play()

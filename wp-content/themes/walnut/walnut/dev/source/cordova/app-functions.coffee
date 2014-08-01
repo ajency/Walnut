@@ -187,8 +187,9 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			runFunc = ->
 				$.Deferred (d)->
 
-					decrypt.startDecryption(source, destination
+					decrypt.startDecryption(source, destination, "Video"
 						, ->
+							console.log destination
 							d.resolve destination
 
 						, (message) ->
@@ -201,11 +202,11 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 
 		# Decrypt the encrypted video file
-		decryptVideoFile_N : (source, destination)->
+		decryptAudioFile : (source, destination)->
 
 			$.Deferred (d)->
 
-				decrypt.startDecryption(source, destination
+				decrypt.startDecryption(source, destination, "Audio"
 					, ->
 						console.log destination
 						d.resolve destination
