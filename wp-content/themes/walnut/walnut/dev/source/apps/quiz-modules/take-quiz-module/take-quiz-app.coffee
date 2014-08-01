@@ -14,12 +14,12 @@ define ['app'
             questionResponseModel = null
             questionModel = null
             questionIDs = null
-            textbookNames = null
+            timeBeforeCurrentQuestion = null
 
             class View.TakeQuizController extends RegionController
 
                 initialize : (opts)->
-                    {quizModel,questionsCollection,questionResponseCollection,textbookNames} = opts
+                    {quizModel,questionsCollection,questionResponseCollection,@textbookNames} = opts
 
                     @display_mode = 'quiz_mode'
 
@@ -66,19 +66,27 @@ define ['app'
                 _submitQuestion:(answer)->
                     #save results here
 
-                    data = 
+                    totalTime =@timerObject.request "get:elapsed:time"
+                    timeTaken= totalTime - timeBeforeCurrentQuestion
+                    timeBeforeCurrentQuestion= totalTime
+
+                    console.log timeTaken
+
+                    data =
                         'collection_id'     : quizModel.id
                         'content_piece_id'  : questionModel.id
                         'question_response' : answer.toJSON()
-                    
+                        'status'            : answer.get 'status'
+                        'time_taken'        : timeTaken
+
                     newResponseModel = App.request "create:quiz:response:model", data
 
                     quizResponseModel = questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
-                    
+
                     if quizResponseModel
                         console.log 'update model'
                         quizResponseModel.set newResponseModel.toJSON()
-                    else 
+                    else
                         console.log 'new model'
                         quizResponseModel = newResponseModel
                         questionResponseCollection.add newResponseModel
@@ -88,7 +96,7 @@ define ['app'
                 _skipQuestion:(answer)->
                     #save skipped status
                     @_submitQuestion answer
-                    @_gotoNextQuestion()                    
+                    @_gotoNextQuestion()
 
                 _gotoNextQuestion:->
 
@@ -107,7 +115,7 @@ define ['app'
                         quizModel: quizModel
                         questionsCollection: questionsCollection
                         questionResponseCollection: questionResponseCollection
-                    
+
 
                 _gotoPreviousQuestion:->
 
@@ -122,7 +130,7 @@ define ['app'
                     nextIndex = pieceIndex + 1
 
                     if nextIndex < questionIDs.length
-                        nextID = parseInt questionIDs[nextIndex] 
+                        nextID = parseInt questionIDs[nextIndex]
 
                     nextID
 
@@ -132,23 +140,24 @@ define ['app'
 
 
                 _showSingleQuestionApp:->
-                    
+                    console.log '_showSingleQuestionApp'
                     if questionModel
                         new View.SingleQuestion.Controller
                             region                  : @layout.questionDisplayRegion
                             model                   : questionModel
+                            quizModel               : quizModel
                             questionResponseCollection   : questionResponseCollection
 
                         @layout.quizProgressRegion.trigger "question:changed", questionModel
                         @layout.quizDescriptionRegion.trigger "question:changed", questionModel
 
                 _showQuizViews:->
-
+                    console.log '_showQuizViews'
                     new View.QuizDescription.Controller
                         region: @layout.quizDescriptionRegion
                         model: quizModel
                         currentQuestion: questionModel
-                        textbookNames: textbookNames
+                        textbookNames: @textbookNames
 
                     new View.QuizProgress.Controller
                         region: @layout.quizProgressRegion
@@ -160,17 +169,20 @@ define ['app'
                         region: @layout.quizTimerRegion
                         model: quizModel
                         display_mode: @display_mode
+                        timerObject: @timerObject
 
                     @_showSingleQuestionApp questionModel
 
             class TakeQuizLayout extends Marionette.Layout
 
+                console.log 'test TakeQuizLayout'
+
                 template : '<div id="quiz-description-region"></div>
-                            <div class="sidebarContainer">
-                                <div id="quiz-timer-region"></div>
-                                <div id="quiz-progress-region"></div>                        
-                            </div>
-                            <div id="question-display-region"></div>'
+                                            <div class="sidebarContainer">
+                                                <div id="quiz-timer-region"></div>
+                                                <div id="quiz-progress-region"></div>
+                                            </div>
+                                            <div id="question-display-region"></div>'
 
                 regions :
                     quizDescriptionRegion : '#quiz-description-region'

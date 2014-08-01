@@ -3,14 +3,14 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/quiz-description/app', 'apps/quiz-modules/take-quiz-module/quiz-progress/app', 'apps/quiz-modules/take-quiz-module/quiz-timer/app', 'apps/quiz-modules/take-quiz-module/single-question/app'], function(App, RegionController) {
   return App.module("TakeQuizApp", function(View, App) {
-    var TakeQuizLayout, questionIDs, questionModel, questionResponseCollection, questionResponseModel, questionsCollection, quizModel, textbookNames;
+    var TakeQuizLayout, questionIDs, questionModel, questionResponseCollection, questionResponseModel, questionsCollection, quizModel, timeBeforeCurrentQuestion;
     quizModel = null;
     questionsCollection = null;
     questionResponseCollection = null;
     questionResponseModel = null;
     questionModel = null;
     questionIDs = null;
-    textbookNames = null;
+    timeBeforeCurrentQuestion = null;
     View.TakeQuizController = (function(_super) {
       __extends(TakeQuizController, _super);
 
@@ -20,7 +20,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype.initialize = function(opts) {
         var layout, questionID;
-        quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, textbookNames = opts.textbookNames;
+        quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
         this.display_mode = 'quiz_mode';
         App.leftNavRegion.close();
         App.headerRegion.close();
@@ -51,11 +51,17 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._submitQuestion = function(answer) {
-        var data, newResponseModel, quizResponseModel;
+        var data, newResponseModel, quizResponseModel, timeTaken, totalTime;
+        totalTime = this.timerObject.request("get:elapsed:time");
+        timeTaken = totalTime - timeBeforeCurrentQuestion;
+        timeBeforeCurrentQuestion = totalTime;
+        console.log(timeTaken);
         data = {
           'collection_id': quizModel.id,
           'content_piece_id': questionModel.id,
-          'question_response': answer.toJSON()
+          'question_response': answer.toJSON(),
+          'status': answer.get('status'),
+          'time_taken': timeTaken
         };
         newResponseModel = App.request("create:quiz:response:model", data);
         quizResponseModel = questionResponseCollection.findWhere({
@@ -129,10 +135,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._showSingleQuestionApp = function() {
+        console.log('_showSingleQuestionApp');
         if (questionModel) {
           new View.SingleQuestion.Controller({
             region: this.layout.questionDisplayRegion,
             model: questionModel,
+            quizModel: quizModel,
             questionResponseCollection: questionResponseCollection
           });
           this.layout.quizProgressRegion.trigger("question:changed", questionModel);
@@ -141,11 +149,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._showQuizViews = function() {
+        console.log('_showQuizViews');
         new View.QuizDescription.Controller({
           region: this.layout.quizDescriptionRegion,
           model: quizModel,
           currentQuestion: questionModel,
-          textbookNames: textbookNames
+          textbookNames: this.textbookNames
         });
         new View.QuizProgress.Controller({
           region: this.layout.quizProgressRegion,
@@ -156,7 +165,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         new View.QuizTimer.Controller({
           region: this.layout.quizTimerRegion,
           model: quizModel,
-          display_mode: this.display_mode
+          display_mode: this.display_mode,
+          timerObject: this.timerObject
         });
         return this._showSingleQuestionApp(questionModel);
       };
@@ -170,6 +180,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       function TakeQuizLayout() {
         return TakeQuizLayout.__super__.constructor.apply(this, arguments);
       }
+
+      console.log('test TakeQuizLayout');
 
       TakeQuizLayout.prototype.template = '<div id="quiz-description-region"></div> <div class="sidebarContainer"> <div id="quiz-timer-region"></div> <div id="quiz-progress-region"></div> </div> <div id="question-display-region"></div>';
 

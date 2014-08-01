@@ -4,6 +4,8 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/single-question/views', 'apps/content-preview/dialogs/hint-dialog/hint-dialog-controller', 'apps/content-preview/dialogs/comment-dialog/comment-dialog-controller'], function(App, RegionController) {
   return App.module("TakeQuizApp.SingleQuestion", function(SingleQuestion, App) {
+    var answer;
+    answer = null;
     return SingleQuestion.Controller = (function(_super) {
       __extends(Controller, _super);
 
@@ -14,31 +16,41 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       }
 
       Controller.prototype.initialize = function(opts) {
-        var answerData, layout, questionResponseCollection, questionResponseModel;
-        this.model = opts.model, questionResponseCollection = opts.questionResponseCollection;
+        var answerData, layout;
+        this.model = opts.model, this.quizModel = opts.quizModel, this.questionResponseCollection = opts.questionResponseCollection;
+        this.questionResponseModel = this.questionResponseCollection.findWhere({
+          'content_piece_id': this.model.id
+        });
         this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
         this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
-        questionResponseModel = questionResponseCollection.findWhere({
-          'content_piece_id': this.model.id
-        });
-        if (questionResponseModel) {
-          answerData = questionResponseModel.get('question_response');
+        console.log('SingleQuestion.Controller');
+        if (this.questionResponseModel) {
+          answerData = this.questionResponseModel.get('question_response');
           this.answerModel = App.request("create:new:answer", answerData);
         }
         this.show(layout, {
           loading: true
         });
         this.listenTo(layout, "show", this._showContentBoard(this.model, this.answerWreqrObject));
-        this.listenTo(layout, "submit:question", function() {
-          var answer;
+        this.listenTo(layout, "validate:answer", function() {
+          var isEmptyAnswer;
           answerData = this.answerWreqrObject.request("get:question:answer");
           answer = answerData.answerModel;
           answer.set({
             'status': this._getAnswerStatus(answer.get('marks'), answerData.totalMarks)
           });
-          return this.region.trigger("submit:question", answer);
+          console.log(answer);
+          isEmptyAnswer = _.isEmpty(_.compact(answer.get('answer')));
+          return this.layout.triggerMethod("answer:validated", isEmptyAnswer);
         });
+        this.listenTo(layout, "submit:question", (function(_this) {
+          return function() {
+            _this.answerWreqrObject.request("show:correct:answer");
+            console.log(answer);
+            return _this.region.trigger("submit:question", answer);
+          };
+        })(this));
         this.listenTo(layout, "goto:next:question", function() {
           return this.region.trigger("goto:next:question");
         });
@@ -51,16 +63,20 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           });
           return this.region.trigger("skip:question", this.answerModel);
         });
-        this.listenTo(layout, 'show:hint:dialog', function(options) {
-          return App.execute('show:hint:dialog', {
-            hint: options.hint
-          });
-        });
-        return this.listenTo(layout, 'show:comment:dialog', function(options) {
-          return App.execute('show:comment:dialog', {
-            comment: options.comment
-          });
-        });
+        this.listenTo(layout, 'show:hint:dialog', (function(_this) {
+          return function() {
+            return App.execute('show:hint:dialog', {
+              hint: _this.model.get('hint')
+            });
+          };
+        })(this));
+        return this.listenTo(layout, 'show:comment:dialog', (function(_this) {
+          return function() {
+            return App.execute('show:comment:dialog', {
+              comment: _this.model.get('comment')
+            });
+          };
+        })(this));
       };
 
       Controller.prototype._getAnswerStatus = function(recievedMarks, totalMarks) {
@@ -86,7 +102,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       Controller.prototype._showSingleQuestionLayout = function(model) {
         return new SingleQuestion.SingleQuestionLayout({
-          model: model
+          model: model,
+          questionResponseModel: this.questionResponseModel,
+          quizModel: this.quizModel
         });
       };
 

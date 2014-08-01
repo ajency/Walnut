@@ -33,6 +33,10 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name: 'quiz'
 
+            hasPermission:(permsission)->
+                all_permissions = @.get 'permissions'
+                if all_permissions[permsission] then return true else return false
+
 
 
         # collection of group of content pieces eg. quizzes, teacher training modules etc.

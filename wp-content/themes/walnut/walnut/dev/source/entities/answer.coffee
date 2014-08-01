@@ -5,7 +5,7 @@ define ['app'
 
 			class Answer.AnswerModel extends Backbone.Model 
 
-				defaults:
+				defaults:->
                     answer : []
                     marks : 0
                     status : 'not_attempted'

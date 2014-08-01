@@ -6,9 +6,29 @@ define ['app'
                 class QuizTimer.Controller extends RegionController
 
                     initialize: (opts)->
-                        {@model,@display_mode} = opts
+                        {@model,@display_mode, @timerObject} = opts
 
                         @durationInSeconds = @model.get('duration') * 60
+
+                        @timerObject.setHandler "get:elapsed:time", ()=>
+
+                            timerTimePeriod = $ @view.el
+                            .find '#downUpTimer'
+                                .countdown 'getTimes'
+
+                            timerTime= $.countdown.periodsToSeconds timerTimePeriod
+
+                            timerSign= $ @view.el
+                            .find '#downUpTimer'
+                                .attr 'timerdirection'
+
+                            if timerSign is 'countDown'
+                                timeElapsed = @durationInSeconds - timerTime
+
+                            else
+                                timeElapsed = @durationInSeconds + timerTime
+
+                            timeElapsed
 
                         @view = view = @_showQuizTimerView @model
 

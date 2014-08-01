@@ -27,7 +27,7 @@
         </div>
 	</div>
     {{#responseStatus}}
-    <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed
+    <div class="qstnStatus {{statusUI.divClass}} p-t-10"><i class="fa  {{statusUI.icon}}"></i>  {{statusUI.text}}
         <div>
             <label class="form-label small-text text-grey inline">Time Taken: <span class="bold">{{timeTaken}}</span></label></div>
     </div>

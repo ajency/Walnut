@@ -16,8 +16,22 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       Controller.prototype.initialize = function(opts) {
         var view;
-        this.model = opts.model, this.display_mode = opts.display_mode;
+        this.model = opts.model, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
         this.durationInSeconds = this.model.get('duration') * 60;
+        this.timerObject.setHandler("get:elapsed:time", (function(_this) {
+          return function() {
+            var timeElapsed, timerSign, timerTime, timerTimePeriod;
+            timerTimePeriod = $(_this.view.el).find('#downUpTimer').countdown('getTimes');
+            timerTime = $.countdown.periodsToSeconds(timerTimePeriod);
+            timerSign = $(_this.view.el).find('#downUpTimer').attr('timerdirection');
+            if (timerSign === 'countDown') {
+              timeElapsed = _this.durationInSeconds - timerTime;
+            } else {
+              timeElapsed = _this.durationInSeconds + timerTime;
+            }
+            return timeElapsed;
+          };
+        })(this));
         this.view = view = this._showQuizTimerView(this.model);
         this.show(view, {
           loading: true
