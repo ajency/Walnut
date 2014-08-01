@@ -38,7 +38,7 @@ add_action ('wp_ajax_create-quiz', 'ajax_create_quiz');
 function ajax_update_quiz ()
 {
 
-    if (isset($_POST['changed']) && $_POST['changed'] == 'quiz_details') {
+    if (isset($_POST['changed']) && $_POST['changed'] == 'module_details') {
 
         $data = array(
             'id' => $_POST['id'],
