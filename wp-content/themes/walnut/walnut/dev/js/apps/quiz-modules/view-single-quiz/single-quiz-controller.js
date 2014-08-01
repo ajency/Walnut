@@ -86,9 +86,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           model: quizModel,
           textbookNames: this.textbookNames
         });
-        console.log('test 3213');
         if (_.size(quizModel.get('content_pieces')) > 0) {
-          console.log('test start quiz items app');
           return App.execute("show:quiz:items:app", {
             region: this.layout.contentDisplayRegion,
             model: quizModel,

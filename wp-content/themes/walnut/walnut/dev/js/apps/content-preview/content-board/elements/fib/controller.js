@@ -20,11 +20,18 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var data;
-              _this._submitAnswer();
+              _.each(_this.view.$el.find('input'), function(blank, index) {
+                return _this.answerModel.get('answer').push($(blank).val());
+              });
               return data = {
                 'answerModel': _this.answerModel,
                 'totalMarks': _this.layout.model.get('marks')
               };
+            };
+          })(this));
+          answerWreqrObject.setHandler("submit:answer", (function(_this) {
+            return function(displayAnswer) {
+              return _this._submitAnswer(displayAnswer);
             };
           })(this));
         }
@@ -72,8 +79,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         });
       };
 
-      Controller.prototype._submitAnswer = function() {
+      Controller.prototype._submitAnswer = function(displayAnswer) {
         var answerArray, enableIndividualMarks;
+        if (displayAnswer == null) {
+          displayAnswer = true;
+        }
         enableIndividualMarks = this.layout.model.get('enableIndividualMarks');
         this.caseSensitive = this.layout.model.get('case_sensitive');
         answerArray = this.answerModel.get('answer');
@@ -85,10 +95,14 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
               _this.answerModel.get('answer').push($(blank).val());
               correctAnswersArray = _this.blanksCollection.get($(blank).attr('data-id')).get('correct_answers');
               if (_this._checkAnswer($(blank).val(), correctAnswersArray)) {
-                return $(blank).addClass('ansRight');
+                if (displayAnswer) {
+                  return $(blank).addClass('ansRight');
+                }
               } else {
                 _this.answerModel.set('marks', 0);
-                return $(blank).addClass('ansWrong');
+                if (displayAnswer) {
+                  return $(blank).addClass('ansWrong');
+                }
               }
             };
           })(this));
@@ -110,9 +124,13 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             };
           })(this));
         }
-        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        if (displayAnswer) {
+          App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        }
         if (this.answerModel.get('marks') < this.layout.model.get('marks')) {
-          return this.view.triggerMethod('show:feedback');
+          if (displayAnswer) {
+            return this.view.triggerMethod('show:feedback');
+          }
         }
       };
 

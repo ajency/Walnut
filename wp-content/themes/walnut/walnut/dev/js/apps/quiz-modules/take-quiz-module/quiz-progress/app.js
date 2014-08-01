@@ -13,7 +13,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       Controller.prototype.initialize = function(opts) {
         var currentQuestion, view;
-        this.questionsCollection = opts.questionsCollection, currentQuestion = opts.currentQuestion, this.questionResponseCollection = opts.questionResponseCollection;
+        this.questionsCollection = opts.questionsCollection, currentQuestion = opts.currentQuestion, this.questionResponseCollection = opts.questionResponseCollection, this.quizModel = opts.quizModel;
         this.view = view = this._showQuizProgressView(this.questionsCollection, currentQuestion);
         this.show(view, {
           loading: true
@@ -33,7 +33,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         return new QuizProgressView({
           collection: collection,
           currentQuestion: currentQuestion,
-          questionResponseCollection: this.questionResponseCollection
+          questionResponseCollection: this.questionResponseCollection,
+          quizModel: this.quizModel
         });
       };
 
@@ -121,7 +122,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
-        this.changeClassName(responseModel);
+        var quizModel;
+        quizModel = Marionette.getOption(this, 'quizModel');
+        if (quizModel.hasPermission('display_answer')) {
+          this.changeClassName(responseModel);
+        }
         this.updateProgressBar();
         return this.updateSkippedCount();
       };

@@ -21,7 +21,7 @@ define ['app'
                         @layout = layout = @_showSingleQuestionLayout @model
 
                         @answerModel = App.request "create:new:answer"
-                        console.log 'SingleQuestion.Controller'
+
                         if @questionResponseModel
                             answerData = @questionResponseModel.get('question_response')
                             @answerModel = App.request "create:new:answer", answerData
@@ -36,14 +36,21 @@ define ['app'
 
                             answer = answerData.answerModel
 
-                            answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
-                            console.log answer
                             isEmptyAnswer= _.isEmpty _.compact answer.get 'answer'
+
+                            isEmptyAnswer= false if answerData.questionType is 'sort'
 
                             @layout.triggerMethod "answer:validated", isEmptyAnswer
 
                         @listenTo layout, "submit:question",=>
-                            @answerWreqrObject.request "show:correct:answer"
+
+                            #displayAnswer true or false based on permission
+                            displayAnswer = @quizModel.hasPermission 'display_answer'
+
+                            @answerWreqrObject.request "submit:answer", displayAnswer
+
+                            answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
+
                             console.log answer
                             @region.trigger "submit:question", answer
 

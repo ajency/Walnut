@@ -26,11 +26,17 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var data;
-              _this._submitAnswer();
+              console.log("@answerModel.get 'answer'");
+              console.log(_this.answerModel.get('answer'));
               return data = {
                 'answerModel': _this.answerModel,
                 'totalMarks': _this.layout.model.get('marks')
               };
+            };
+          })(this));
+          answerWreqrObject.setHandler("submit:answer", (function(_this) {
+            return function(displayAnswer) {
+              return _this._submitAnswer(displayAnswer);
             };
           })(this));
         }
@@ -89,8 +95,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         }));
       };
 
-      Controller.prototype._submitAnswer = function() {
+      Controller.prototype._submitAnswer = function(displayAnswer) {
         var answersNotMarked, totalMarks;
+        if (displayAnswer == null) {
+          displayAnswer = true;
+        }
         this.answerModel.set('marks', 0);
         if (!this.answerModel.get('answer').length) {
           console.log('you havent selected any thing');
@@ -117,8 +126,12 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             }
           }
         }
-        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
-        return this.view.triggerMethod("add:option:classes", this.answerModel.get('answer'));
+        if (displayAnswer) {
+          App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        }
+        if (displayAnswer) {
+          return this.view.triggerMethod("add:option:classes", this.answerModel.get('answer'));
+        }
       };
 
       Controller.prototype.createRowStructure = function(options) {

@@ -24,7 +24,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
         this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
-        console.log('SingleQuestion.Controller');
         if (this.questionResponseModel) {
           answerData = this.questionResponseModel.get('question_response');
           this.answerModel = App.request("create:new:answer", answerData);
@@ -37,16 +36,20 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           var isEmptyAnswer;
           answerData = this.answerWreqrObject.request("get:question:answer");
           answer = answerData.answerModel;
-          answer.set({
-            'status': this._getAnswerStatus(answer.get('marks'), answerData.totalMarks)
-          });
-          console.log(answer);
           isEmptyAnswer = _.isEmpty(_.compact(answer.get('answer')));
+          if (answerData.questionType === 'sort') {
+            isEmptyAnswer = false;
+          }
           return this.layout.triggerMethod("answer:validated", isEmptyAnswer);
         });
         this.listenTo(layout, "submit:question", (function(_this) {
           return function() {
-            _this.answerWreqrObject.request("show:correct:answer");
+            var displayAnswer;
+            displayAnswer = _this.quizModel.hasPermission('display_answer');
+            _this.answerWreqrObject.request("submit:answer", displayAnswer);
+            answer.set({
+              'status': _this._getAnswerStatus(answer.get('marks'), answerData.totalMarks)
+            });
             console.log(answer);
             return _this.region.trigger("submit:question", answer);
           };

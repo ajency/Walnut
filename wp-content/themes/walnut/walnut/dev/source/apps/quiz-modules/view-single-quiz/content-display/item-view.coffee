@@ -24,6 +24,14 @@ define ['app'
 
                     data.responseStatus = responseModel.get 'status'
 
+                    data.display_answer = Marionette.getOption @,'display_answer'
+
+                    data.marks_obtained = responseModel.get('question_response').marks
+                    all_marks  = _.compact _.pluck @model.get('layout'), 'marks'
+                    data.total_marks= 0
+                    if all_marks.length>0
+                        data.total_marks= _.reduce all_marks, (memo, num)-> parseInt(memo) + parseInt(num) 
+
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-right', text : 'Correct', icon : 'fa-check'
                         when 'partially_correct'  then divClass : 'text-right', text : 'Parially Correct', icon : 'fa-check-square'
@@ -40,31 +48,6 @@ define ['app'
                 seconds = parseInt time%60
 
                 timeTaken = mins + 'm '+ seconds+'s'
-
-            getResults:(question_response)=>
-                correct_answer='No One'
-
-                names=[]
-                studentCollection= Marionette.getOption @, 'studentCollection'
-
-                if @model.get('question_type') is 'chorus'
-                    correct_answer= CHORUS_OPTIONS[question_response] if question_response?
-
-                else if @model.get('question_type') is 'individual'
-
-                    for studID in question_response
-                        answeredCorrectly = studentCollection.where("ID": studID)
-                        name= ans.get('display_name') for ans in answeredCorrectly
-                        names.push(name)
-
-                    if _.size(names)>0
-                        student_names=names.join(', ')
-                        correct_answer= _.size(names)+ ' Students ('+ student_names+ ')'
-
-                else
-                     correct_answer = _.size(_.pluck(question_response, 'id')) + ' Students'
-
-                correct_answer
 
             onShow:->
                 content_icon= 'fa-question'

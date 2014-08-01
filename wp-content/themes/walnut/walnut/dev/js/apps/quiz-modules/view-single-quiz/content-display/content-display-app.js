@@ -14,8 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype.initialize = function(opts) {
         var groupContentCollection, model, questionResponseCollection, view;
-        model = opts.model, this.mode = opts.mode, questionResponseCollection = opts.questionResponseCollection, groupContentCollection = opts.groupContentCollection, this.studentCollection = opts.studentCollection;
-        console.log('test quiz items display');
+        model = opts.model, this.mode = opts.mode, questionResponseCollection = opts.questionResponseCollection, groupContentCollection = opts.groupContentCollection;
         this.view = view = this._getCollectionContentDisplayView(model, groupContentCollection, questionResponseCollection);
         this.show(view, {
           loading: true,
@@ -33,7 +32,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           model: model,
           collection: collection,
           responseCollection: responseCollection,
-          studentCollection: this.studentCollection,
           mode: this.mode
         });
       };

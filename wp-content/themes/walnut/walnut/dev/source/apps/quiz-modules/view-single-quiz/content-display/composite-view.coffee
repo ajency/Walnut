@@ -14,11 +14,12 @@ define ['app'
 
             itemViewOptions:(model, index)->
                 responseCollection= Marionette.getOption @, 'responseCollection'
+
                 if responseCollection
                     responseModel= responseCollection.findWhere "content_piece_id": model.get 'ID'
 
                 data = 
-                    studentCollection: Marionette.getOption @, 'studentCollection'
+                    display_answer: @model.hasPermission 'display_answer'
                     responseModel: responseModel if responseModel?
 
             events:

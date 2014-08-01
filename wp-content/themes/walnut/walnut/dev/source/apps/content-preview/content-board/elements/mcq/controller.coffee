@@ -12,12 +12,18 @@ define ['app'
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
-                    answerWreqrObject.setHandler "get:question:answer", ()=>
-                        @_submitAnswer()
-
+                    answerWreqrObject.setHandler "get:question:answer", =>
+                        #@_submitAnswer()
+                        console.log "@answerModel.get 'answer'"
+                        console.log @answerModel.get 'answer'
                         data=
                             'answerModel': @answerModel
                             'totalMarks' : @layout.model.get('marks')
+
+                    answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
+                        #if displayAnswer is true, the correct & wrong answers & marks will be displayed
+                        #default is true
+                        @_submitAnswer displayAnswer 
 
                 # _.defaults options.modelData,
 
@@ -82,7 +88,7 @@ define ['app'
                 @layout.model.set 'correct_answer', _.map @layout.model.get('correct_answer'), (ans)->
                     parseInt ans
 
-            _submitAnswer : =>
+            _submitAnswer :(displayAnswer=true) =>
                 @answerModel.set 'marks', 0
                 if not @answerModel.get('answer').length
                     # confirmbox = confirm 'You haven\'t selected anything..\n do you still want to continue?'
@@ -114,9 +120,9 @@ define ['app'
                 # else
                 # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
 
-                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')
+                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')  if displayAnswer
 
-                @view.triggerMethod "add:option:classes", @answerModel.get('answer')
+                @view.triggerMethod "add:option:classes", @answerModel.get('answer')  if displayAnswer
 
 
 

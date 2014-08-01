@@ -27,7 +27,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           });
         }
         return data = responseModel != null ? {
-          studentCollection: Marionette.getOption(this, 'studentCollection'),
+          display_answer: this.model.hasPermission('display_answer'),
           responseModel: responseModel
         } : void 0;
       };

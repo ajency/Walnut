@@ -22,11 +22,16 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var data;
-              _this._submitAnswer();
               return data = {
                 'answerModel': _this.answerModel,
-                'totalMarks': _this.layout.model.get('marks')
+                'totalMarks': _this.layout.model.get('marks'),
+                'questionType': 'sort'
               };
+            };
+          })(this));
+          answerWreqrObject.setHandler("submit:answer", (function(_this) {
+            return function(displayAnswer) {
+              return _this._submitAnswer(displayAnswer);
             };
           })(this));
         }
@@ -73,7 +78,10 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         });
       };
 
-      Controller.prototype._submitAnswer = function() {
+      Controller.prototype._submitAnswer = function(displayAnswer) {
+        if (displayAnswer == null) {
+          displayAnswer = true;
+        }
         this.answerModel.set('marks', this.layout.model.get('marks'));
         this.view.$el.find('input#optionNo').each((function(_this) {
           return function(index, element) {
@@ -82,16 +90,24 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             _this.answerModel.get('answer').push(answerOptionIndex);
             if (answerOptionIndex !== index + 1) {
               _this.answerModel.set('marks', 0);
-              return $(element).parent().addClass('ansWrong');
+              if (displayAnswer) {
+                return $(element).parent().addClass('ansWrong');
+              }
             } else {
-              return $(element).parent().addClass('ansRight');
+              if (displayAnswer) {
+                return $(element).parent().addClass('ansRight');
+              }
             }
           };
         })(this));
-        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        if (displayAnswer) {
+          App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        }
         console.log(this.answerModel.get('answer').toString());
         if (this.answerModel.get('marks') === 0) {
-          return this.view.triggerMethod('show:feedback');
+          if (displayAnswer) {
+            return this.view.triggerMethod('show:feedback');
+          }
         } else {
           return this.view.triggerMethod('destroy:sortable');
         }

@@ -7,7 +7,7 @@ define ['app'
                 class QuizProgress.Controller extends RegionController
 
                     initialize: (opts)->
-                        {@questionsCollection,currentQuestion,@questionResponseCollection} = opts
+                        {@questionsCollection,currentQuestion,@questionResponseCollection,@quizModel} = opts
 
                         @view = view = @_showQuizProgressView @questionsCollection,currentQuestion
 
@@ -29,6 +29,7 @@ define ['app'
                             collection                  : collection
                             currentQuestion             : currentQuestion
                             questionResponseCollection  : @questionResponseCollection
+                            quizModel                   : @quizModel
  
 
                 class QuestionProgressView extends Marionette.ItemView 
@@ -96,7 +97,9 @@ define ['app'
 
                     onQuestionSubmitted:(responseModel)->
 
-                        @changeClassName responseModel
+                        quizModel = Marionette.getOption @,'quizModel'
+
+                        @changeClassName responseModel if quizModel.hasPermission 'display_answer'
 
                         @updateProgressBar()
 

@@ -23,11 +23,15 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var data;
-              _this._submitAnswer();
               return data = {
                 'answerModel': _this.answerModel,
                 'totalMarks': _this.layout.model.get('marks')
               };
+            };
+          })(this));
+          answerWreqrObject.setHandler("submit:answer", (function(_this) {
+            return function(displayAnswer) {
+              return _this._submitAnswer(displayAnswer);
             };
           })(this));
         }
@@ -109,8 +113,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         });
       };
 
-      Controller.prototype._submitAnswer = function() {
+      Controller.prototype._submitAnswer = function(displayAnswer) {
         var answerId, answersNotMarked, correctOptions, correctOptionsIds, totalMarks;
+        if (displayAnswer == null) {
+          displayAnswer = true;
+        }
         console.log(this.optionCollection);
         correctOptions = this.optionCollection.where({
           correct: true
@@ -145,8 +152,12 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             this.answerModel.set('marks', this.layout.model.get('marks'));
           }
         }
-        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
-        return this.view.triggerMethod('show:feedback');
+        if (displayAnswer) {
+          App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        }
+        if (displayAnswer) {
+          return this.view.triggerMethod('show:feedback');
+        }
       };
 
       return Controller;

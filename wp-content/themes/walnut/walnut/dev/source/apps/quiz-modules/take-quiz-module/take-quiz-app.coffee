@@ -154,22 +154,23 @@ define ['app'
                 _showQuizViews:->
                     console.log '_showQuizViews'
                     new View.QuizDescription.Controller
-                        region: @layout.quizDescriptionRegion
-                        model: quizModel
-                        currentQuestion: questionModel
-                        textbookNames: @textbookNames
+                        region          : @layout.quizDescriptionRegion
+                        model           : quizModel
+                        currentQuestion : questionModel
+                        textbookNames   : @textbookNames
 
                     new View.QuizProgress.Controller
                         region: @layout.quizProgressRegion
-                        questionsCollection: questionsCollection
-                        currentQuestion: questionModel
-                        questionResponseCollection   : questionResponseCollection
+                        questionsCollection         : questionsCollection
+                        currentQuestion             : questionModel
+                        quizModel                   : quizModel
+                        questionResponseCollection  : questionResponseCollection
 
                     new View.QuizTimer.Controller
-                        region: @layout.quizTimerRegion
-                        model: quizModel
+                        region      : @layout.quizTimerRegion
+                        model       : quizModel
                         display_mode: @display_mode
-                        timerObject: @timerObject
+                        timerObject : @timerObject
 
                     @_showSingleQuestionApp questionModel
 

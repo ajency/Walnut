@@ -13,12 +13,20 @@ define ['app'
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
-                    answerWreqrObject.setHandler "get:question:answer", ()=>
-                        @_submitAnswer()
+                    answerWreqrObject.setHandler "get:question:answer",=>
+
+                        _.each @view.$el.find('input'), (blank, index)=>
+                            # save it in answerModel
+                            @answerModel.get('answer').push($(blank).val())
 
                         data=
                             'answerModel': @answerModel
                             'totalMarks' : @layout.model.get('marks')
+
+                    answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
+                        #if displayAnswer is true, the correct & wrong answers & marks will be displayed
+                        #default is true
+                        @_submitAnswer displayAnswer 
 
 
                 super options
@@ -60,7 +68,7 @@ define ['app'
                     blank.marks = parseInt blank.marks if blank.marks?
 
 
-            _submitAnswer : ->
+            _submitAnswer :(displayAnswer=true) ->
                 enableIndividualMarks = @layout.model.get('enableIndividualMarks')
                 @caseSensitive = @layout.model.get 'case_sensitive'
 
@@ -85,10 +93,10 @@ define ['app'
                         correctAnswersArray = @blanksCollection.get($(blank).attr('data-id')).get('correct_answers')
 
                         if @_checkAnswer $(blank).val(), correctAnswersArray
-                            $(blank).addClass('ansRight')
+                            $(blank).addClass('ansRight') if displayAnswer
                         else
                             @answerModel.set 'marks', 0
-                            $(blank).addClass('ansWrong')
+                            $(blank).addClass('ansWrong') if displayAnswer
 
 
                 else
@@ -112,10 +120,10 @@ define ['app'
                 # condition when enableIndividualMarks is true i.e. evaluate individual question
 
 
-                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')
+                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')  if displayAnswer
 
                 if @answerModel.get('marks') < @layout.model.get('marks')
-                    @view.triggerMethod 'show:feedback'
+                    @view.triggerMethod 'show:feedback'  if displayAnswer
 
             # function to check wether a given blank is correct
             _checkAnswer : (answer, correctAnswersArray)->

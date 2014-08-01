@@ -8,8 +8,8 @@ define ['app'
         class QuizItemsDisplayApp.Controller extends RegionController
 
             initialize: (opts)->
-                {model, @mode, questionResponseCollection,groupContentCollection, @studentCollection} = opts
-                console.log 'test quiz items display'
+                {model, @mode, questionResponseCollection,groupContentCollection} = opts
+                
                 @view = view = @_getCollectionContentDisplayView model, groupContentCollection, questionResponseCollection
 
                 @show view, (loading: true, entities: [groupContentCollection])
@@ -23,7 +23,6 @@ define ['app'
                     model: model
                     collection: collection
                     responseCollection: responseCollection
-                    studentCollection: @studentCollection
                     mode: @mode
 
         # set handlers

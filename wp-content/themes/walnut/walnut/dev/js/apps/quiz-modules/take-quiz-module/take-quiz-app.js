@@ -160,6 +160,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           region: this.layout.quizProgressRegion,
           questionsCollection: questionsCollection,
           currentQuestion: questionModel,
+          quizModel: quizModel,
           questionResponseCollection: questionResponseCollection
         });
         new View.QuizTimer.Controller({

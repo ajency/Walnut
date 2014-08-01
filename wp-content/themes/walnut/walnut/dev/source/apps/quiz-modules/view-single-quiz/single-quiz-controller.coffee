@@ -62,9 +62,8 @@ define ['app'
                     model: quizModel
                     textbookNames: @textbookNames
 
-                console.log 'test 3213'
                 if _.size(quizModel.get('content_pieces')) > 0
-                    console.log 'test start quiz items app'
+                    
                     App.execute "show:quiz:items:app",
                         region: @layout.contentDisplayRegion
                         model: quizModel

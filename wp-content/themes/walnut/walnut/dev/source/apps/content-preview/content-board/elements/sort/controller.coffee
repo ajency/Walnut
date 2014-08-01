@@ -11,12 +11,17 @@ define ['app'
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
-                    answerWreqrObject.setHandler "get:question:answer", ()=>
-                        @_submitAnswer()
+                    answerWreqrObject.setHandler "get:question:answer",=>
 
                         data=
                             'answerModel': @answerModel
                             'totalMarks' : @layout.model.get('marks')
+                            'questionType': 'sort'
+
+                    answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
+                        #if displayAnswer is true, the correct & wrong answers & marks will be displayed
+                        #default is true
+                        @_submitAnswer displayAnswer 
 
                 super options
 
@@ -60,7 +65,7 @@ define ['app'
 
 
 
-            _submitAnswer : =>
+            _submitAnswer :(displayAnswer=true) =>
                 @answerModel.set 'marks', @layout.model.get 'marks'
                 @view.$el.find('input#optionNo').each (index, element)=>
                     answerOptionIndex = @optionCollection.get($(element).val()).get('index')
@@ -68,16 +73,16 @@ define ['app'
 
                     if answerOptionIndex isnt index + 1
                         @answerModel.set 'marks', 0
-                        $(element).parent().addClass 'ansWrong'
+                        $(element).parent().addClass 'ansWrong' if displayAnswer
                     else
-                        $(element).parent().addClass 'ansRight'
+                        $(element).parent().addClass 'ansRight' if displayAnswer
 
-                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')
+                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks') if displayAnswer
 
                 console.log @answerModel.get('answer').toString()
 
                 if @answerModel.get('marks') is 0
-                    @view.triggerMethod 'show:feedback'
+                    @view.triggerMethod 'show:feedback' if displayAnswer
                 else
                     @view.triggerMethod 'destroy:sortable'
 

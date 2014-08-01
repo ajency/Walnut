@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-single-quiz/content-display/templates/content-display-item.html'], function(App, RegionController, contentDisplayItemTpl) {
@@ -8,7 +7,6 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       __extends(View, _super);
 
       function View() {
-        this.getResults = __bind(this.getResults, this);
         return View.__super__.constructor.apply(this, arguments);
       }
 
@@ -17,13 +15,22 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       View.prototype.tagName = 'li';
 
       View.prototype.mixinTemplateHelpers = function(data) {
-        var responseModel;
+        var all_marks, responseModel;
         responseModel = Marionette.getOption(this, 'responseModel');
         data.dateCompleted = 'N/A';
         if (responseModel) {
           data.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY");
           data.timeTaken = this.formatTimeTaken(responseModel.get('time_taken'));
           data.responseStatus = responseModel.get('status');
+          data.display_answer = Marionette.getOption(this, 'display_answer');
+          data.marks_obtained = responseModel.get('question_response').marks;
+          all_marks = _.compact(_.pluck(this.model.get('layout'), 'marks'));
+          data.total_marks = 0;
+          if (all_marks.length > 0) {
+            data.total_marks = _.reduce(all_marks, function(memo, num) {
+              return parseInt(memo) + parseInt(num);
+            });
+          }
           data.statusUI = (function() {
             switch (data.responseStatus) {
               case 'correct_answer':
@@ -65,37 +72,6 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         }
         seconds = parseInt(time % 60);
         return timeTaken = mins + 'm ' + seconds + 's';
-      };
-
-      View.prototype.getResults = function(question_response) {
-        var ans, answeredCorrectly, correct_answer, name, names, studID, studentCollection, student_names, _i, _j, _len, _len1;
-        correct_answer = 'No One';
-        names = [];
-        studentCollection = Marionette.getOption(this, 'studentCollection');
-        if (this.model.get('question_type') === 'chorus') {
-          if (question_response != null) {
-            correct_answer = CHORUS_OPTIONS[question_response];
-          }
-        } else if (this.model.get('question_type') === 'individual') {
-          for (_i = 0, _len = question_response.length; _i < _len; _i++) {
-            studID = question_response[_i];
-            answeredCorrectly = studentCollection.where({
-              "ID": studID
-            });
-            for (_j = 0, _len1 = answeredCorrectly.length; _j < _len1; _j++) {
-              ans = answeredCorrectly[_j];
-              name = ans.get('display_name');
-            }
-            names.push(name);
-          }
-          if (_.size(names) > 0) {
-            student_names = names.join(', ');
-            correct_answer = _.size(names) + ' Students (' + student_names + ')';
-          }
-        } else {
-          correct_answer = _.size(_.pluck(question_response, 'id')) + ' Students';
-        }
-        return correct_answer;
       };
 
       View.prototype.onShow = function() {

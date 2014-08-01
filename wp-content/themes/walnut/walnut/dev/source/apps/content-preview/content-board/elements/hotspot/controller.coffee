@@ -16,12 +16,16 @@ define ['app'
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
-                    answerWreqrObject.setHandler "get:question:answer", ()=>
-                        @_submitAnswer()
+                    answerWreqrObject.setHandler "get:question:answer", =>
 
                         data=
                             'answerModel': @answerModel
                             'totalMarks' : @layout.model.get('marks')
+
+                    answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
+                        #if displayAnswer is true, the correct & wrong answers & marks will be displayed
+                        #default is true
+                        @_submitAnswer displayAnswer 
 
                 super(options)
 
@@ -93,7 +97,7 @@ define ['app'
                     object[key] = parseFloat value if key in Floats
                     object[key] = _.toBoolean value if key in Booleans
 
-            _submitAnswer : ->
+            _submitAnswer :(displayAnswer=true) ->
                 console.log @optionCollection
                 correctOptions = @optionCollection.where { correct : true }
                 console.log correctOptions
@@ -121,10 +125,10 @@ define ['app'
                         @answerModel.set 'marks', @layout.model.get 'marks'
 
 
-                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')
+                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks') if displayAnswer
 
                 # if @answerModel.get('marks') < @layout.model.get('marks')
-                @view.triggerMethod 'show:feedback'
+                @view.triggerMethod 'show:feedback' if displayAnswer
 
 
 
