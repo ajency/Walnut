@@ -6,7 +6,7 @@ define ['app'
 
             initialize : (opts)->
 
-                {@model}= opts
+                {@model,@textbookNames}= opts
 
                 @view = view = @_getQuizDescriptionView()
 
@@ -19,8 +19,15 @@ define ['app'
 
             _getQuizDescriptionView : ->
 
+                terms = @model.get 'term_ids'
+
                 new QuizDetailsView
                     model : @model
+
+                    templateHelpers:
+                        getTextbookName     :=> @textbookNames.getTextbookName terms
+                        getChapterName      :=> @textbookNames.getChapterName terms
+                        getQuestionsCount   :=> _.size @model.get 'content_pieces'
 
 
         class QuizDetailsView extends Marionette.ItemView

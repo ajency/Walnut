@@ -4,8 +4,8 @@ define ['app'
         'apps/quiz-modules/view-single-quiz/content-display/content-display-app'
         'apps/quiz-modules/take-quiz-module/take-quiz-app'
 ], (App, RegionController)->
-    App.module "QuizModuleApp.View", (View, App)->
-        class View.QuizController extends RegionController
+    App.module "QuizModuleApp.ViewQuiz", (ViewQuiz, App)->
+        class ViewQuiz.Controller extends RegionController
 
             quizModel = null
             questionsCollection = null
@@ -23,15 +23,20 @@ define ['app'
                 if not questionResponseCollection
                     questionResponseCollection = App.request "get:quiz:response:collection",
                         'collection_id': quizModel.get 'id'
-
-                console.log questionResponseCollection
-
+                
                 App.execute "when:fetched", quizModel, =>
-                    
+                    textbook_termIDs = _.flatten quizModel.get 'term_ids'
+                    @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
+
                     if not questionsCollection
                         questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+
+                        App.execute "when:fetched", questionsCollection, ->
+                            if quizModel.get('permissions').randomize
+                                questionsCollection.each (e)-> e.unset 'order'
+                                questionsCollection.reset questionsCollection.shuffle()
                     
-                    App.execute "when:fetched", questionsCollection, =>
+                    App.execute "when:fetched", [questionsCollection,@textbookNames],  =>
                         @layout = layout = @_getQuizViewLayout()
 
                         @show @layout, loading: true
@@ -48,21 +53,23 @@ define ['app'
                     questionsCollection: questionsCollection
                     display_mode: 'quiz_mode' 
                     questionResponseCollection: questionResponseCollection
-
-                    # when display mode is readonly, the save response options are not shown
-                    # only when display mode is class_mode response changes can be done
+                    textbookNames: @textbookNames
 
             showQuizViews: =>
 
                 App.execute "show:view:quiz:detailsapp",
                     region: @layout.quizDetailsRegion
                     model: quizModel
+                    textbookNames: @textbookNames
 
-                # if _.size(@quizModel.get('content_pieces')) > 0
-                #     App.execute "show:viewgroup:content:displayapp",
-                #         region: @layout.contentDisplayRegion
-                #         model: model
-                #         groupContentCollection: groupContentCollection
+                console.log 'test 3213'
+                if _.size(quizModel.get('content_pieces')) > 0
+                    console.log 'test start quiz items app'
+                    App.execute "show:quiz:items:app",
+                        region: @layout.contentDisplayRegion
+                        model: quizModel
+                        groupContentCollection: questionsCollection
+                        questionResponseCollection: questionResponseCollection
 
             _getQuizViewLayout: =>
                 new QuizViewLayout
@@ -75,8 +82,6 @@ define ['app'
                         </div>
                         <div id="content-display-region"></div>'
 
-            className: ''
-
             regions:
                 quizDetailsRegion: '#quiz-details-region'
                 contentDisplayRegion: '#content-display-region'
@@ -87,4 +92,4 @@ define ['app'
 
         # set handlers
         App.commands.setHandler "show:single:quiz:app", (opt = {})->
-            new View.QuizController opt
+            new ViewQuiz.Controller opt

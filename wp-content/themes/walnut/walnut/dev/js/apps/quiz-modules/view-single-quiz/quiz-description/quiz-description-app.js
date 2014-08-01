@@ -13,7 +13,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
-        this.model = opts.model;
+        this.model = opts.model, this.textbookNames = opts.textbookNames;
         this.view = view = this._getQuizDescriptionView();
         this.listenTo(view, 'start:quiz:module', (function(_this) {
           return function() {
@@ -25,8 +25,27 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       };
 
       ViewCollecionDetailsController.prototype._getQuizDescriptionView = function() {
+        var terms;
+        terms = this.model.get('term_ids');
         return new QuizDetailsView({
-          model: this.model
+          model: this.model,
+          templateHelpers: {
+            getTextbookName: (function(_this) {
+              return function() {
+                return _this.textbookNames.getTextbookName(terms);
+              };
+            })(this),
+            getChapterName: (function(_this) {
+              return function() {
+                return _this.textbookNames.getChapterName(terms);
+              };
+            })(this),
+            getQuestionsCount: (function(_this) {
+              return function() {
+                return _.size(_this.model.get('content_pieces'));
+              };
+            })(this)
+          }
         });
       };
 

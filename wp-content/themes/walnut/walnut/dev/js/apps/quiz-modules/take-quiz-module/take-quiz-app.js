@@ -3,13 +3,14 @@ var __hasProp = {}.hasOwnProperty,
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/quiz-description/app', 'apps/quiz-modules/take-quiz-module/quiz-progress/app', 'apps/quiz-modules/take-quiz-module/quiz-timer/app', 'apps/quiz-modules/take-quiz-module/single-question/app'], function(App, RegionController) {
   return App.module("TakeQuizApp", function(View, App) {
-    var TakeQuizLayout, questionIDs, questionModel, questionResponseCollection, questionResponseModel, questionsCollection, quizModel;
+    var TakeQuizLayout, questionIDs, questionModel, questionResponseCollection, questionResponseModel, questionsCollection, quizModel, textbookNames;
     quizModel = null;
     questionsCollection = null;
     questionResponseCollection = null;
     questionResponseModel = null;
     questionModel = null;
     questionIDs = null;
+    textbookNames = null;
     View.TakeQuizController = (function(_super) {
       __extends(TakeQuizController, _super);
 
@@ -19,13 +20,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype.initialize = function(opts) {
         var layout, questionID;
-        quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection;
-        if (quizModel.get('permissions').randomize) {
-          questionsCollection.each(function(e) {
-            return e.unset('order');
-          });
-          questionsCollection.reset(questionsCollection.shuffle());
-        }
+        quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, textbookNames = opts.textbookNames;
         this.display_mode = 'quiz_mode';
         App.leftNavRegion.close();
         App.headerRegion.close();
@@ -149,7 +144,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         new View.QuizDescription.Controller({
           region: this.layout.quizDescriptionRegion,
           model: quizModel,
-          currentQuestion: questionModel
+          currentQuestion: questionModel,
+          textbookNames: textbookNames
         });
         new View.QuizProgress.Controller({
           region: this.layout.quizProgressRegion,

@@ -14,11 +14,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       }
 
       Controller.prototype.initialize = function(opts) {
-        var currentQuestion, model, textbookID, textbook_termIDs, view;
-        model = opts.model, currentQuestion = opts.currentQuestion;
+        var currentQuestion, model, textbookID, view;
+        model = opts.model, currentQuestion = opts.currentQuestion, this.textbookNames = opts.textbookNames;
         this.view = view = this._showQuizDescriptionView(model, currentQuestion);
-        textbook_termIDs = _.flatten(model.get('term_ids'));
-        this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
         textbookID = model.get('term_ids').textbook;
         this.textbookModel = App.request("get:textbook:by:id", textbookID);
         App.execute("when:fetched", [this.textbookNames, this.textbookModel], (function(_this) {

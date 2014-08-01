@@ -7,13 +7,9 @@ define ['app'
                 class QuizDescription.Controller extends RegionController
 
                     initialize: (opts)->
-                        {model, currentQuestion} = opts
+                        {model, currentQuestion,@textbookNames} = opts
 
                         @view = view = @_showQuizDescriptionView model, currentQuestion
-
-                        textbook_termIDs = _.flatten model.get 'term_ids'
-
-                        @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
 
                         textbookID = model.get('term_ids').textbook
                         @textbookModel = App.request "get:textbook:by:id", textbookID

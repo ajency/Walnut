@@ -14,15 +14,12 @@ define ['app'
             questionResponseModel = null
             questionModel = null
             questionIDs = null
+            textbookNames = null
 
             class View.TakeQuizController extends RegionController
 
                 initialize : (opts)->
-                    {quizModel,questionsCollection,questionResponseCollection} = opts
-
-                    if quizModel.get('permissions').randomize
-                        questionsCollection.each (e)-> e.unset 'order'
-                        questionsCollection.reset questionsCollection.shuffle()
+                    {quizModel,questionsCollection,questionResponseCollection,textbookNames} = opts
 
                     @display_mode = 'quiz_mode'
 
@@ -39,7 +36,6 @@ define ['app'
 
                     questionID = _.first questionIDs
                     questionModel = questionsCollection.get questionID
-
                     @layout = layout = new TakeQuizLayout
 
                     @show @layout,
@@ -152,6 +148,7 @@ define ['app'
                         region: @layout.quizDescriptionRegion
                         model: quizModel
                         currentQuestion: questionModel
+                        textbookNames: textbookNames
 
                     new View.QuizProgress.Controller
                         region: @layout.quizProgressRegion
