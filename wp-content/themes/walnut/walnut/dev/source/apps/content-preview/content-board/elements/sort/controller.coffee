@@ -6,11 +6,17 @@ define ['app'
         class Sort.Controller extends Element.Controller
 
             initialize : (options)->
-                answerData =
-                    answer : []
-                    marks : 0
+                {answerWreqrObject,@answerModel} = options
 
-                @answerModel = App.request "create:new:answer", answerData
+                @answerModel = App.request "create:new:answer" if not @answerModel
+
+                if answerWreqrObject
+                    answerWreqrObject.setHandler "get:question:answer", ()=>
+                        @_submitAnswer()
+
+                        data=
+                            'answerModel': @answerModel
+                            'totalMarks' : @layout.model.get('marks')
 
                 super options
 
@@ -18,6 +24,8 @@ define ['app'
 
             renderElement : ->
                 optionsObj = @layout.model.get 'elements'
+                if optionsObj instanceof Backbone.Collection
+                    optionsObj = optionsObj.models
 
                 @_parseOptions optionsObj
 
@@ -34,6 +42,8 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
+                if @answerModel.get('status') isnt 'not_attempted'
+                    @_submitAnswer()
                 # show the view
                 @layout.elementRegion.show @view
 

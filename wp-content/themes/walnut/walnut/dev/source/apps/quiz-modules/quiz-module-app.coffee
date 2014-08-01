@@ -1,5 +1,6 @@
 define ['app'
         'apps/quiz-modules/edit-quiz/edit-quiz-controller'
+        'apps/quiz-modules/view-single-quiz/single-quiz-controller'
 ],(App)->
     App.module 'QuizModuleApp',(QuizModuleApp,App)->
 
@@ -8,6 +9,7 @@ define ['app'
             appRoutes :
                 'create-quiz' : 'createQuiz'
                 'edit-quiz/:id' : 'editQuiz'
+                'view-quiz/:id' : 'viewQuiz'
 
 
         Controller =
@@ -20,6 +22,11 @@ define ['app'
                 new QuizModuleApp.EditQuiz.Controller
                     region : App.mainContentRegion
                     quiz_id : id
+
+            viewQuiz: (id)->
+                new QuizModuleApp.View.QuizController
+                    region: App.mainContentRegion
+                    quiz_id: id
 
 
         QuizModuleApp.on 'start',->

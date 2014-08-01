@@ -1,0 +1,35 @@
+
+<div class="contentPiece" data-id="{{ID}}">
+	<time class="cbp_tmtime" datetime="">
+	    <span class="time">{{duration}} <span class="semi-bold">mins</span></span>
+	</time>
+	<div class="cbp_tmicon info animated bounceIn"> <span class="fa"></span> </div>
+	<div class="cbp_tmlabel view" style="cursor:auto">
+		<div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
+		  <h4 class="m-t-5 m-b-5"><a class="text-grey semi-bold question_link">{{&post_excerpt}}</a> </h4>
+		</div>
+		<div class="clearfix"></div>
+        <div class="tiles grey p-t-10 p-b-10 p-l-20">
+            <div class="muted">
+                <span class="bold question-type-div">Question Type:</span> <span class="question-type-div"> {{question_type}},</span>
+                <span class="bold">Date Completed:</span> {{dateCompleted}}
+
+                {{#responseStatus}}
+                <div id="correct-answer-div">
+                    <span class="bold">Correct Answer:</span> {{correctAnswer}}
+                </div>
+                <div>
+                    <span class="bold">Taken By:</span> {{teacherName}}
+                </div>
+                {{/responseStatus}}
+            </div>
+            <div class="clearfix"></div>
+        </div>
+	</div>
+    {{#responseStatus}}
+    <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed
+        <div>
+            <label class="form-label small-text text-grey inline">Time Taken: <span class="bold">{{timeTaken}}</span></label></div>
+    </div>
+    {{/responseStatus}}
+</div>

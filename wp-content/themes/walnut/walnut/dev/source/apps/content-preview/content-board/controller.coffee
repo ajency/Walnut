@@ -7,9 +7,11 @@ define ['app'
     App.module "ContentPreview.ContentBoard", (ContentBoard, App, Backbone, Marionette, $, _)->
         class ContentBoard.Controller extends RegionController
 
-            initialize : (options)->
-                {@model}=options
+            answerWreqrObject = null
+            answerModel       = null
 
+            initialize : (options)->
+                {@model,answerWreqrObject, answerModel}=options
 
                 @view = @_getContentBoardView()
 
@@ -17,12 +19,13 @@ define ['app'
                     App.request "add:new:element", container, type
 
                 @listenTo @view, 'dependencies:fetched', =>
-                    @startFillingElements()
+                    @startFillingElements()          
+
 
                 #                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
 
                 App.commands.setHandler "show:response", (marks, total)=>
-                    console.log "#{marks}   #{total}"
+                   # console.log "#{marks}   #{total}"
                     @view.triggerMethod 'show:response', parseInt(marks), parseInt(total)
 
                 @show @view,
@@ -62,12 +65,14 @@ define ['app'
 
             API =
             # add a new element to the builder region
-                addNewElement : (container, type, modelData)->
-                    console.log type
+                addNewElement : (container, type, modelData)=>
+                    #console.log type
 
                     new ContentBoard.Element[type].Controller
-                        container : container
-                        modelData : modelData
+                        container            : container
+                        modelData            : modelData
+                        answerWreqrObject    : answerWreqrObject
+                        answerModel          : answerModel
 
 
             App.commands.setHandler 'show:content:board', (options)->

@@ -6,12 +6,18 @@ define ['app'
         class Mcq.Controller extends Element.Controller
 
             initialize : (options)->
-                answerData =
-                    answer : []
-                    marks : 0
-                    comment : 'Not Attempted'
-                @answerModel = App.request "create:new:answer", answerData
 
+                {answerWreqrObject,@answerModel} = options
+
+                @answerModel = App.request "create:new:answer" if not @answerModel
+
+                if answerWreqrObject
+                    answerWreqrObject.setHandler "get:question:answer", ()=>
+                        @_submitAnswer()
+
+                        data=
+                            'answerModel': @answerModel
+                            'totalMarks' : @layout.model.get('marks')
 
                 # _.defaults options.modelData,
 
@@ -24,6 +30,8 @@ define ['app'
             renderElement : ()=>
 
                 optionsObj = @layout.model.get 'options'
+                if optionsObj instanceof Backbone.Collection
+                    optionsObj = optionsObj.models
 
                 @_parseOptions optionsObj
 
@@ -36,7 +44,6 @@ define ['app'
                         shuffleFlag = false
 
                 if shuffleFlag
-                    console.log 'shuffle'
                     optionsObj = _.shuffle optionsObj
 
                 optionCollection = App.request "create:new:option:collection", optionsObj
@@ -53,6 +60,10 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
+
+                if @answerModel.get('status') isnt 'not_attempted'
+                    @_submitAnswer()
+
                 # show the view
                 @layout.elementRegion.show @view
 
@@ -62,6 +73,7 @@ define ['app'
 
             # convert the option attributes to integers
             _parseOptions : (optionsObj)->
+                
                 _.each optionsObj,(option)->
                     option.marks = parseInt option.marks if option.marks?
                     option.optionNo = parseInt option.optionNo if option.optionNo?
@@ -96,6 +108,8 @@ define ['app'
                                 _.each answersNotMarked, (notMarked)=>
                                     totalMarks -= @layout.model.get('options').get(notMarked).get('marks')
                                 @answerModel.set 'marks', totalMarks
+
+
                 # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
                 # else
                 # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')

@@ -13,7 +13,6 @@ define ['app'], (App)->
                 @trigger "create:row:structure",
                     container : @$el
 
-
                 @$el.closest('.preview').find('#submit-answer-button').on 'click', =>
                     @trigger "submit:answer"
 

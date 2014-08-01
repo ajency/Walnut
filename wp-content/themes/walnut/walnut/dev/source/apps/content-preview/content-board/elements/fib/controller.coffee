@@ -7,10 +7,18 @@ define ['app'
 
 
             initialize : (options)->
-                answerData =
-                    answer : []
-                    marks : 0
-                @answerModel = App.request "create:new:answer", answerData
+
+                {answerWreqrObject,@answerModel} = options
+
+                @answerModel = App.request "create:new:answer" if not @answerModel
+
+                if answerWreqrObject
+                    answerWreqrObject.setHandler "get:question:answer", ()=>
+                        @_submitAnswer()
+
+                        data=
+                            'answerModel': @answerModel
+                            'totalMarks' : @layout.model.get('marks')
 
 
                 super options
@@ -18,6 +26,9 @@ define ['app'
             renderElement : ->
 
                 blanksArray = @layout.model.get 'blanksArray'
+
+                if blanksArray instanceof Backbone.Collection
+                    blanksArray = blanksArray.models
 
                 @_parseOptions blanksArray
 
@@ -33,7 +44,8 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
-
+                if @answerModel.get('status') isnt 'not_attempted'
+                    @_submitAnswer()
                 # show the view
                 @layout.elementRegion.show @view, (loading : true)
 

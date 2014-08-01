@@ -17,19 +17,32 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData;
-        answerData = {
-          answer: [],
-          marks: 0,
-          comment: 'Not Attempted'
-        };
-        this.answerModel = App.request("create:new:answer", answerData);
+        var answerWreqrObject;
+        answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        if (!this.answerModel) {
+          this.answerModel = App.request("create:new:answer");
+        }
+        if (answerWreqrObject) {
+          answerWreqrObject.setHandler("get:question:answer", (function(_this) {
+            return function() {
+              var data;
+              _this._submitAnswer();
+              return data = {
+                'answerModel': _this.answerModel,
+                'totalMarks': _this.layout.model.get('marks')
+              };
+            };
+          })(this));
+        }
         return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype.renderElement = function() {
         var optionCollection, optionsObj, shuffleFlag;
         optionsObj = this.layout.model.get('options');
+        if (optionsObj instanceof Backbone.Collection) {
+          optionsObj = optionsObj.models;
+        }
         this._parseOptions(optionsObj);
         shuffleFlag = true;
         _.each(optionsObj, (function(_this) {
@@ -40,7 +53,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           };
         })(this));
         if (shuffleFlag) {
-          console.log('shuffle');
           optionsObj = _.shuffle(optionsObj);
         }
         optionCollection = App.request("create:new:option:collection", optionsObj);
@@ -48,6 +60,9 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.view = this._getMcqView();
         this.listenTo(this.view, "create:row:structure", this.createRowStructure);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
+        if (this.answerModel.get('status') !== 'not_attempted') {
+          this._submitAnswer();
+        }
         return this.layout.elementRegion.show(this.view);
       };
 

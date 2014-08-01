@@ -5,13 +5,21 @@ define ['app'
 
 			class Answer.AnswerModel extends Backbone.Model 
 
+				defaults:
+                    answer : []
+                    marks : 0
+                    status : 'not_attempted'
+
+                name: 'answer'
+
+
 			API = 
 
 				createAnswer : (data = {})->
 
 						answer = new Answer.AnswerModel
 
-						answer.set data
+						answer.set data if data?
 
 						answer
 

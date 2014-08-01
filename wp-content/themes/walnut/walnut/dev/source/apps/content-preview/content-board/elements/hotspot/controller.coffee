@@ -11,11 +11,17 @@ define ['app'
 
             # intializer
             initialize : (options)->
-                answerData =
-                    answer : []
-                    marks : 0
-                    comment : 'Not Attempted'
-                @answerModel = App.request "create:new:answer", answerData
+                {answerWreqrObject,@answerModel} = options
+
+                @answerModel = App.request "create:new:answer" if not @answerModel
+
+                if answerWreqrObject
+                    answerWreqrObject.setHandler "get:question:answer", ()=>
+                        @_submitAnswer()
+
+                        data=
+                            'answerModel': @answerModel
+                            'totalMarks' : @layout.model.get('marks')
 
                 super(options)
 
@@ -30,9 +36,18 @@ define ['app'
             renderElement : ()=>
                 optionCollectionArray = @layout.model.get 'optionCollection'
 
+                if optionCollectionArray instanceof Backbone.Collection
+                    optionCollectionArray = optionCollectionArray.models
+
                 textCollectionArray = @layout.model.get 'textCollection'
 
+                if textCollectionArray instanceof Backbone.Collection
+                    textCollectionArray = textCollectionArray.models
+
                 imageCollectionArray = @layout.model.get 'imageCollection'
+
+                if imageCollectionArray instanceof Backbone.Collection
+                    imageCollectionArray = imageCollectionArray.models
 
                 @_parseArray optionCollectionArray, textCollectionArray, imageCollectionArray
 
@@ -53,6 +68,8 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
+                if @answerModel.get('status') isnt 'not_attempted'
+                    @_submitAnswer()
                 @layout.elementRegion.show @view,
                     loading : true
 

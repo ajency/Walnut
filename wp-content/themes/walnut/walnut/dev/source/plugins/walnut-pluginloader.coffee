@@ -40,4 +40,5 @@ define [
     'timerplugin'
     'countdowntimer'
     'spinedit'
+    'jPages'
 ], ->
