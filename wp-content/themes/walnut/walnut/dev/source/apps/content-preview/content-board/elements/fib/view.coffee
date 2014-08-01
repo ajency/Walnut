@@ -27,6 +27,19 @@ define ['app'], (App)->
                 @$el.closest('.preview').find('#submit-answer-button').on 'click', =>
                     @trigger "submit:answer"
 
+                @_autoPopulateAnswers()
+
+
+            _autoPopulateAnswers:->
+                answerModel=Marionette.getOption @, 'answerModel'
+                if answerModel and answerModel.get('status') isnt 'not_attempted'
+                    answerArray= answerModel.get 'answer'
+                    blanks = @$el.find '.fib-text input'
+                    _.each answerArray, (ans,index)=>
+                        $(blanks[index]).val ans
+
+                    @trigger "submit:answer"
+
             onShowFeedback : ->
                 @$el.find('.fibRightAns').show()
                 originalText = _.stripslashes @model.get 'text'

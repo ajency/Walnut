@@ -52,14 +52,13 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
-                if @answerModel.get('status') isnt 'not_attempted'
-                    @_submitAnswer()
                 # show the view
-                @layout.elementRegion.show @view, (loading : true)
+                @layout.elementRegion.show @view
 
             _getFibView : (model)->
                 new Fib.Views.FibView
                     model : model
+                    answerModel: @answerModel
 
             _parseOptions:(blanksArray)->
                 _.each blanksArray,(blank)->

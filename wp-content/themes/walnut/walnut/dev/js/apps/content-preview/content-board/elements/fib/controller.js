@@ -51,17 +51,13 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         console.log(this.blanksCollection.pluck('marks'));
         this.view = this._getFibView(this.layout.model);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
-        if (this.answerModel.get('status') !== 'not_attempted') {
-          this._submitAnswer();
-        }
-        return this.layout.elementRegion.show(this.view, {
-          loading: true
-        });
+        return this.layout.elementRegion.show(this.view);
       };
 
       Controller.prototype._getFibView = function(model) {
         return new Fib.Views.FibView({
-          model: model
+          model: model,
+          answerModel: this.answerModel
         });
       };
 

@@ -6,7 +6,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
   return App.module("QuizModuleApp.ViewQuiz", function(ViewQuiz, App) {
     var QuizViewLayout;
     ViewQuiz.Controller = (function(_super) {
-      var questionResponseCollection, questionsCollection, quizModel;
+      var display_mode, questionResponseCollection, questionsCollection, quizModel;
 
       __extends(Controller, _super);
 
@@ -22,6 +22,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       questionsCollection = null;
 
       questionResponseCollection = null;
+
+      display_mode = null;
 
       Controller.prototype.initialize = function(opts) {
         var quiz_id;
@@ -40,9 +42,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
             'collection_id': quizModel.get('id')
           });
         }
-        return App.execute("when:fetched", quizModel, (function(_this) {
+        return App.execute("when:fetched", [quizModel, questionResponseCollection], (function(_this) {
           return function() {
             var textbook_termIDs;
+            if (questionResponseCollection.length > 0) {
+              display_mode = 'replay';
+            }
+            if (questionResponseCollection.length > 0 && quizModel.hasPermission('disable_quiz_replay')) {
+              display_mode = 'disable_quiz_replay';
+            }
             textbook_termIDs = _.flatten(quizModel.get('term_ids'));
             _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
             if (!questionsCollection) {
@@ -74,7 +82,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           region: App.mainContentRegion,
           quizModel: quizModel,
           questionsCollection: questionsCollection,
-          display_mode: 'quiz_mode',
+          display_mode: display_mode,
           questionResponseCollection: questionResponseCollection,
           textbookNames: this.textbookNames
         });
@@ -84,9 +92,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         App.execute("show:view:quiz:detailsapp", {
           region: this.layout.quizDetailsRegion,
           model: quizModel,
+          display_mode: display_mode,
           textbookNames: this.textbookNames
         });
-        if (_.size(quizModel.get('content_pieces')) > 0) {
+        if (_.size(quizModel.get('content_pieces')) > 0 && !questionResponseCollection.isEmpty()) {
           return App.execute("show:quiz:items:app", {
             region: this.layout.contentDisplayRegion,
             model: quizModel,

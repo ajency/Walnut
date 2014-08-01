@@ -51,10 +51,20 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.view = this._getSortView(this.optionCollection);
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
-        if (this.answerModel.get('status') !== 'not_attempted') {
-          this._submitAnswer();
-        }
+        this.listenTo(this.view, "show", (function(_this) {
+          return function() {
+            if (_this.answerModel.get('status') !== 'not_attempted') {
+              _this._autoPopulateAnswers();
+              return _this._submitAnswer();
+            }
+          };
+        })(this));
         return this.layout.elementRegion.show(this.view);
+      };
+
+      Controller.prototype._autoPopulateAnswers = function() {
+        console.log('_autoPopulateAnswers');
+        return console.log(this.answerModel.get('answer'));
       };
 
       Controller.prototype._getSortView = function(collection) {

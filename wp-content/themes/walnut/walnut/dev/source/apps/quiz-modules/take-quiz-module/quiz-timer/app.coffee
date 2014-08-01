@@ -74,7 +74,7 @@ define ['app'
                         timeLeftOrElapsed =Marionette.getOption @,'timeLeftOrElapsed'
                         @display_mode = Marionette.getOption @, 'display_mode'
 
-                        if @display_mode is 'quiz_mode'
+                        if @display_mode isnt 'replay'
                             if timeLeftOrElapsed < 0
                                 @countUp timeLeftOrElapsed
                             else @countDown timeLeftOrElapsed

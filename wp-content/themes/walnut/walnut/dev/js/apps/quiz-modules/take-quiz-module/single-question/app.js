@@ -17,7 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       Controller.prototype.initialize = function(opts) {
         var answerData, layout;
-        this.model = opts.model, this.quizModel = opts.quizModel, this.questionResponseCollection = opts.questionResponseCollection;
+        this.model = opts.model, this.quizModel = opts.quizModel, this.questionResponseCollection = opts.questionResponseCollection, this.display_mode = opts.display_mode;
         this.questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': this.model.id
         });
@@ -107,7 +107,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         return new SingleQuestion.SingleQuestionLayout({
           model: model,
           questionResponseModel: this.questionResponseModel,
-          quizModel: this.quizModel
+          quizModel: this.quizModel,
+          display_mode: this.display_mode
         });
       };
 

@@ -13,7 +13,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
-        this.model = opts.model, this.textbookNames = opts.textbookNames;
+        this.model = opts.model, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
         this.view = view = this._getQuizDescriptionView();
         this.listenTo(view, 'start:quiz:module', (function(_this) {
           return function() {
@@ -29,6 +29,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         terms = this.model.get('term_ids');
         return new QuizDetailsView({
           model: this.model,
+          display_mode: this.display_mode,
           templateHelpers: {
             getTextbookName: (function(_this) {
               return function() {
@@ -67,6 +68,15 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         },
         'click #go-back-button': function() {
           return this.trigger("goto:previous:route");
+        }
+      };
+
+      QuizDetailsView.prototype.onShow = function() {
+        if (Marionette.getOption(this, 'display_mode') === 'replay') {
+          this.$el.find("#take-quiz").html('Replay');
+        }
+        if (Marionette.getOption(this, 'display_mode') === 'disable_quiz_replay') {
+          return this.$el.find("#take-quiz").remove();
         }
       };
 

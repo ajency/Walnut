@@ -66,16 +66,15 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
-
-                if @answerModel.get('status') isnt 'not_attempted'
-                    @_submitAnswer()
-
                 # show the view
                 @layout.elementRegion.show @view
+
+
 
             _getMcqView : ->
                 new Mcq.Views.McqView
                     model : @layout.model
+                    answerModel:@answerModel
 
             # convert the option attributes to integers
             _parseOptions : (optionsObj)->

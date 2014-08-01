@@ -10,6 +10,7 @@ define ['app'
             quizModel = null
             questionsCollection = null
             questionResponseCollection = null
+            display_mode = null
 
             initialize: (opts) ->
 
@@ -24,7 +25,14 @@ define ['app'
                     questionResponseCollection = App.request "get:quiz:response:collection",
                         'collection_id': quizModel.get 'id'
                 
-                App.execute "when:fetched", quizModel, =>
+                App.execute "when:fetched", [quizModel,questionResponseCollection], =>
+
+                    if questionResponseCollection.length>0
+                        display_mode = 'replay'
+
+                    if questionResponseCollection.length>0 and quizModel.hasPermission 'disable_quiz_replay'
+                        display_mode = 'disable_quiz_replay'
+
                     textbook_termIDs = _.flatten quizModel.get 'term_ids'
                     @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
 
@@ -49,25 +57,26 @@ define ['app'
                 
                 App.execute "start:take:quiz:app",
                     region: App.mainContentRegion
-                    quizModel: quizModel
-                    questionsCollection: questionsCollection
-                    display_mode: 'quiz_mode' 
+                    quizModel               : quizModel
+                    questionsCollection     : questionsCollection
+                    display_mode            : display_mode
                     questionResponseCollection: questionResponseCollection
-                    textbookNames: @textbookNames
+                    textbookNames           : @textbookNames
 
             showQuizViews: =>
 
                 App.execute "show:view:quiz:detailsapp",
-                    region: @layout.quizDetailsRegion
-                    model: quizModel
+                    region      : @layout.quizDetailsRegion
+                    model       : quizModel
+                    display_mode: display_mode
                     textbookNames: @textbookNames
 
-                if _.size(quizModel.get('content_pieces')) > 0
+                if _.size(quizModel.get('content_pieces')) > 0 and not questionResponseCollection.isEmpty()
                     
                     App.execute "show:quiz:items:app",
-                        region: @layout.contentDisplayRegion
-                        model: quizModel
-                        groupContentCollection: questionsCollection
+                        region                  : @layout.contentDisplayRegion
+                        model                   : quizModel
+                        groupContentCollection  : questionsCollection
                         questionResponseCollection: questionResponseCollection
 
             _getQuizViewLayout: =>

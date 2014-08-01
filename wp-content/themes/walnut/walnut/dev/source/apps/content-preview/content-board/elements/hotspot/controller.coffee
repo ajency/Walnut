@@ -72,10 +72,9 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
-                if @answerModel.get('status') isnt 'not_attempted'
-                    @_submitAnswer()
+                # show the view
                 @layout.elementRegion.show @view,
-                    loading : true
+                    loading:true
 
             _parseArray : (optionCollectionArray, textCollectionArray, imageCollectionArray)->
                 _.each optionCollectionArray, (option)=>

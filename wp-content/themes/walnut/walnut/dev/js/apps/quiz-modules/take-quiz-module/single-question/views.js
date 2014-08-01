@@ -37,28 +37,31 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       SingleQuestionLayout.prototype.mixinTemplateHelpers = function(data) {
-        var responseModel;
+        var display_mode, responseModel;
         responseModel = Marionette.getOption(this, 'questionResponseModel');
-        data.allow_submit_answer = true;
-        if (this.quizModel.hasPermission('allow_skip')) {
-          data.allow_skip = true;
-        }
-        if (this.quizModel.hasPermission('allow_hint') && _.trim(data.hint)) {
-          data.show_hint = true;
-        }
-        if (responseModel) {
-          if (responseModel.get('status') !== 'skipped') {
-            data.allow_submit_answer = false;
+        display_mode = Marionette.getOption(this, 'display_mode');
+        if (display_mode !== 'replay') {
+          data.allow_submit_answer = true;
+          if (this.quizModel.hasPermission('allow_skip')) {
+            data.allow_skip = true;
           }
-          if (this.quizModel.hasPermission('single_attempt')) {
-            data.allow_submit_answer = false;
+          if (this.quizModel.hasPermission('allow_hint') && _.trim(data.hint)) {
+            data.show_hint = true;
           }
-          if (this.quizModel.hasPermission('allow_resubmit')) {
-            data.allow_submit_answer = true;
+          if (responseModel) {
+            if (responseModel.get('status') !== 'skipped') {
+              data.allow_submit_answer = false;
+            }
+            if (this.quizModel.hasPermission('single_attempt')) {
+              data.allow_submit_answer = false;
+            }
+            if (this.quizModel.hasPermission('allow_resubmit')) {
+              data.allow_submit_answer = true;
+            }
           }
-        }
-        if (!data.allow_submit_answer) {
-          data.allow_skip = false;
+          if (!data.allow_submit_answer) {
+            data.allow_skip = false;
+          }
         }
         return data;
       };

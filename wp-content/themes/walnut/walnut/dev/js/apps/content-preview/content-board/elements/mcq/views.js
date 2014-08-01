@@ -17,11 +17,26 @@ define(['app'], function(App) {
         this.trigger("create:row:structure", {
           container: this.$el
         });
-        return this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
+        this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
           return function() {
             return _this.trigger("submit:answer");
           };
         })(this));
+        return this._autoPopulateAnswers();
+      };
+
+      McqView.prototype._autoPopulateAnswers = function() {
+        var answerArray, answerModel;
+        answerModel = Marionette.getOption(this, 'answerModel');
+        if (answerModel && answerModel.get('status') !== 'not_attempted') {
+          answerArray = answerModel.get('answer');
+          _.each(answerArray, (function(_this) {
+            return function(ans) {
+              return _this.$el.find('#option-' + ans).screwDefaultButtons("check");
+            };
+          })(this));
+          return this.trigger("submit:answer");
+        }
       };
 
       McqView.prototype.onAddOptionClasses = function(answer) {

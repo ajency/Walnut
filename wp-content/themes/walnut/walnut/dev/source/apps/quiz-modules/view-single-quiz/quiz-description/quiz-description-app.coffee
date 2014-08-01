@@ -6,7 +6,7 @@ define ['app'
 
             initialize : (opts)->
 
-                {@model,@textbookNames}= opts
+                {@model,@textbookNames, @display_mode}= opts
 
                 @view = view = @_getQuizDescriptionView()
 
@@ -23,6 +23,7 @@ define ['app'
 
                 new QuizDetailsView
                     model : @model
+                    display_mode: @display_mode
 
                     templateHelpers:
                         getTextbookName     :=> @textbookNames.getTextbookName terms
@@ -37,6 +38,18 @@ define ['app'
             events :
                 'click #take-quiz' :-> @trigger "start:quiz:module"
                 'click #go-back-button' : ->@trigger "goto:previous:route"
+
+            onShow:->
+                if Marionette.getOption(@, 'display_mode') is 'replay'
+                    @$el.find "#take-quiz"
+                    .html 'Replay'
+
+                if Marionette.getOption(@, 'display_mode') is 'disable_quiz_replay'
+                    @$el.find "#take-quiz"
+                    .remove()
+
+
+
 
 
         # set handlers

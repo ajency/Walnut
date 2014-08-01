@@ -20,8 +20,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype.initialize = function(opts) {
         var layout, questionID;
-        quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
-        this.display_mode = 'quiz_mode';
+        quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
         App.leftNavRegion.close();
         App.headerRegion.close();
         App.breadcrumbRegion.close();
@@ -141,7 +140,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             region: this.layout.questionDisplayRegion,
             model: questionModel,
             quizModel: quizModel,
-            questionResponseCollection: questionResponseCollection
+            questionResponseCollection: questionResponseCollection,
+            display_mode: this.display_mode
           });
           this.layout.quizProgressRegion.trigger("question:changed", questionModel);
           return this.layout.quizDescriptionRegion.trigger("question:changed", questionModel);
@@ -149,7 +149,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._showQuizViews = function() {
-        console.log('_showQuizViews');
         new View.QuizDescription.Controller({
           region: this.layout.quizDescriptionRegion,
           model: quizModel,

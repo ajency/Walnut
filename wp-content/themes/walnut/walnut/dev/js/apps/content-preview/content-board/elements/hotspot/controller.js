@@ -69,9 +69,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.view = this._getHotspotView();
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
-        if (this.answerModel.get('status') !== 'not_attempted') {
-          this._submitAnswer();
-        }
         return this.layout.elementRegion.show(this.view, {
           loading: true
         });

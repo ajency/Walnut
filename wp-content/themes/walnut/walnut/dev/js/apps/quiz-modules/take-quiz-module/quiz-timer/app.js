@@ -88,7 +88,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         var timeLeftOrElapsed;
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         this.display_mode = Marionette.getOption(this, 'display_mode');
-        if (this.display_mode === 'quiz_mode') {
+        if (this.display_mode !== 'replay') {
           if (timeLeftOrElapsed < 0) {
             return this.countUp(timeLeftOrElapsed);
           } else {

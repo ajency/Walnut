@@ -19,9 +19,7 @@ define ['app'
             class View.TakeQuizController extends RegionController
 
                 initialize : (opts)->
-                    {quizModel,questionsCollection,questionResponseCollection,@textbookNames} = opts
-
-                    @display_mode = 'quiz_mode'
+                    {quizModel,questionsCollection,questionResponseCollection,@textbookNames,@display_mode} = opts
 
                     App.leftNavRegion.close()
                     App.headerRegion.close()
@@ -147,12 +145,12 @@ define ['app'
                             model                   : questionModel
                             quizModel               : quizModel
                             questionResponseCollection   : questionResponseCollection
+                            display_mode            : @display_mode
 
                         @layout.quizProgressRegion.trigger "question:changed", questionModel
                         @layout.quizDescriptionRegion.trigger "question:changed", questionModel
 
                 _showQuizViews:->
-                    console.log '_showQuizViews'
                     new View.QuizDescription.Controller
                         region          : @layout.quizDescriptionRegion
                         model           : quizModel

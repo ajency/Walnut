@@ -66,15 +66,13 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.view = this._getMcqView();
         this.listenTo(this.view, "create:row:structure", this.createRowStructure);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
-        if (this.answerModel.get('status') !== 'not_attempted') {
-          this._submitAnswer();
-        }
         return this.layout.elementRegion.show(this.view);
       };
 
       Controller.prototype._getMcqView = function() {
         return new Mcq.Views.McqView({
-          model: this.layout.model
+          model: this.layout.model,
+          answerModel: this.answerModel
         });
       };
 

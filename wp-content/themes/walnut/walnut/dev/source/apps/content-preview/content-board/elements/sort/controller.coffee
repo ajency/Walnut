@@ -47,10 +47,18 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
-                if @answerModel.get('status') isnt 'not_attempted'
-                    @_submitAnswer()
+                
+                @listenTo @view, "show",=>
+                    if @answerModel.get('status') isnt 'not_attempted'
+                        @_autoPopulateAnswers()
+                        @_submitAnswer()
+
                 # show the view
                 @layout.elementRegion.show @view
+
+            _autoPopulateAnswers:->
+                console.log '_autoPopulateAnswers'
+                console.log @answerModel.get 'answer'
 
             _getSortView : (collection)->
                 new Sort.Views.SortView

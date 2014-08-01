@@ -12,7 +12,7 @@ define ['app'
                 class SingleQuestion.Controller extends RegionController
 
                     initialize: (opts)->
-                        {@model, @quizModel, @questionResponseCollection} = opts
+                        {@model, @quizModel, @questionResponseCollection,@display_mode} = opts
 
                         @questionResponseModel= @questionResponseCollection.findWhere 'content_piece_id' : @model.id
 
@@ -95,5 +95,6 @@ define ['app'
                     _showSingleQuestionLayout: (model) =>
                         new SingleQuestion.SingleQuestionLayout
                             model: model
-                            questionResponseModel : @questionResponseModel
-                            quizModel              : @quizModel
+                            questionResponseModel   : @questionResponseModel
+                            quizModel               : @quizModel
+                            display_mode            : @display_mode
