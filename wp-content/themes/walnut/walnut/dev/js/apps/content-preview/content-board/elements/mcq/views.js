@@ -35,7 +35,9 @@ define(['app'], function(App) {
               return _this.$el.find('#option-' + ans).screwDefaultButtons("check");
             };
           })(this));
-          return this.trigger("submit:answer");
+          if (Marionette.getOption(this, 'displayAnswer')) {
+            return this.trigger("submit:answer");
+          }
         }
       };
 

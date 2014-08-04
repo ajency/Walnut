@@ -16,12 +16,16 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       }
 
       Controller.prototype.initialize = function(opts) {
-        var answerData, layout;
+        var answerData, displayAnswer, layout;
         this.model = opts.model, this.quizModel = opts.quizModel, this.questionResponseCollection = opts.questionResponseCollection, this.display_mode = opts.display_mode;
         this.questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': this.model.id
         });
+        displayAnswer = this.quizModel.hasPermission('display_answer');
         this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
+        this.answerWreqrObject.options = {
+          'displayAnswer': displayAnswer
+        };
         this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
         if (this.questionResponseModel) {
@@ -44,13 +48,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         this.listenTo(layout, "submit:question", (function(_this) {
           return function() {
-            var displayAnswer;
-            displayAnswer = _this.quizModel.hasPermission('display_answer');
-            _this.answerWreqrObject.request("submit:answer", displayAnswer);
+            _this.answerWreqrObject.request("submit:answer");
             answer.set({
               'status': _this._getAnswerStatus(answer.get('marks'), answerData.totalMarks)
             });
-            console.log(answer);
             return _this.region.trigger("submit:question", answer);
           };
         })(this));

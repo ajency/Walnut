@@ -16,6 +16,9 @@ define ['app'
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
+                    
+                    @displayAnswer = answerWreqrObject.options.displayAnswer
+                    
                     answerWreqrObject.setHandler "get:question:answer", =>
 
                         data=
@@ -25,7 +28,7 @@ define ['app'
                     answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
                         #if displayAnswer is true, the correct & wrong answers & marks will be displayed
                         #default is true
-                        @_submitAnswer displayAnswer 
+                        @_submitAnswer @displayAnswer 
 
                 super(options)
 
@@ -33,6 +36,7 @@ define ['app'
                 new Hotspot.Views.HotspotView
                     model : @layout.model
                     answerModel : @answerModel
+                    displayAnswer: @displayAnswer
 
 
 

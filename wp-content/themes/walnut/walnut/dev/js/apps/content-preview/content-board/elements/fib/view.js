@@ -41,7 +41,9 @@ define(['app'], function(App) {
               return $(blanks[index]).val(ans);
             };
           })(this));
-          return this.trigger("submit:answer");
+          if (Marionette.getOption(this, 'displayAnswer')) {
+            return this.trigger("submit:answer");
+          }
         }
       };
 

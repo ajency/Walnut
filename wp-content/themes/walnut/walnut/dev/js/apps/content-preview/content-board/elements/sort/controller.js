@@ -18,7 +18,9 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         if (!this.answerModel) {
           this.answerModel = App.request("create:new:answer");
         }
+        this.displayAnswer = true;
         if (answerWreqrObject) {
+          this.displayAnswer = answerWreqrObject.options.displayAnswer;
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var data;
@@ -31,7 +33,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           })(this));
           answerWreqrObject.setHandler("submit:answer", (function(_this) {
             return function(displayAnswer) {
-              return _this._submitAnswer(displayAnswer);
+              return _this._submitAnswer(_this.displayAnswer);
             };
           })(this));
         }
@@ -54,17 +56,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         this.listenTo(this.view, "show", (function(_this) {
           return function() {
             if (_this.answerModel.get('status') !== 'not_attempted') {
-              _this._autoPopulateAnswers();
               return _this._submitAnswer();
             }
           };
         })(this));
         return this.layout.elementRegion.show(this.view);
-      };
-
-      Controller.prototype._autoPopulateAnswers = function() {
-        console.log('_autoPopulateAnswers');
-        return console.log(this.answerModel.get('answer'));
       };
 
       Controller.prototype._getSortView = function(collection) {
@@ -93,6 +89,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           displayAnswer = true;
         }
         this.answerModel.set('marks', this.layout.model.get('marks'));
+        displayAnswer = Marionette.getOption(this, 'displayAnswer');
         this.view.$el.find('input#optionNo').each((function(_this) {
           return function(index, element) {
             var answerOptionIndex;

@@ -79,7 +79,7 @@ define ['app'
                         currentQuestion = Marionette.getOption @,'currentQuestion'
 
                         questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
-                        questionResponseCollection.each (response)=> @changeClassName response
+                        questionResponseCollection.each (response)=> @changeClassName(response)  if quizModel.hasPermission 'display_answer'
 
                         @onQuestionChange currentQuestion
 

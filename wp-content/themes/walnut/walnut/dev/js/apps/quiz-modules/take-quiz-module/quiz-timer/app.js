@@ -22,14 +22,16 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           return function() {
             var timeElapsed, timerSign, timerTime, timerTimePeriod;
             timerTimePeriod = $(_this.view.el).find('#downUpTimer').countdown('getTimes');
-            timerTime = $.countdown.periodsToSeconds(timerTimePeriod);
-            timerSign = $(_this.view.el).find('#downUpTimer').attr('timerdirection');
-            if (timerSign === 'countDown') {
-              timeElapsed = _this.durationInSeconds - timerTime;
-            } else {
-              timeElapsed = _this.durationInSeconds + timerTime;
+            if (timerTimePeriod) {
+              timerTime = $.countdown.periodsToSeconds(timerTimePeriod);
+              timerSign = $(_this.view.el).find('#downUpTimer').attr('timerdirection');
+              if (timerSign === 'countDown') {
+                timeElapsed = _this.durationInSeconds - timerTime;
+              } else {
+                timeElapsed = _this.durationInSeconds + timerTime;
+              }
+              return timeElapsed;
             }
-            return timeElapsed;
           };
         })(this));
         this.view = view = this._showQuizTimerView(this.model);
@@ -76,7 +78,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       QuizTimerView.prototype.className = 'timerBox';
 
-      QuizTimerView.prototype.template = '<div class="bold small-text text-center p-t-10"> Quiz Time</div> <div id="downUpTimer" timerdirection=""></div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div>';
+      QuizTimerView.prototype.template = '<div class="bold small-text text-center p-t-10"> Quiz Time</div> <div id="downUpTimer" timerdirection=""></div> <div class="b-grey m-b-10 p-b-5" style="display:none" id="completed-quiz"> <div class="qstnStatus"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div>';
 
       QuizTimerView.prototype.events = {
         'click #end-quiz': function() {
@@ -88,7 +90,9 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         var timeLeftOrElapsed;
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         this.display_mode = Marionette.getOption(this, 'display_mode');
-        if (this.display_mode !== 'replay') {
+        if (this.display_mode === 'replay') {
+          return this.$el.find('#completed-quiz').show();
+        } else {
           if (timeLeftOrElapsed < 0) {
             return this.countUp(timeLeftOrElapsed);
           } else {

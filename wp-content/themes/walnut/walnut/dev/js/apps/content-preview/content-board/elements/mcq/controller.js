@@ -23,6 +23,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           this.answerModel = App.request("create:new:answer");
         }
         if (answerWreqrObject) {
+          this.displayAnswer = answerWreqrObject.options.displayAnswer;
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var data;
@@ -35,8 +36,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             };
           })(this));
           answerWreqrObject.setHandler("submit:answer", (function(_this) {
-            return function(displayAnswer) {
-              return _this._submitAnswer(displayAnswer);
+            return function() {
+              return _this._submitAnswer(_this.displayAnswer);
             };
           })(this));
         }
@@ -72,7 +73,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       Controller.prototype._getMcqView = function() {
         return new Mcq.Views.McqView({
           model: this.layout.model,
-          answerModel: this.answerModel
+          answerModel: this.answerModel,
+          displayAnswer: this.displayAnswer
         });
       };
 

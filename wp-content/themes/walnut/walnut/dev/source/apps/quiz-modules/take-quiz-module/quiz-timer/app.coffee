@@ -16,19 +16,20 @@ define ['app'
                             .find '#downUpTimer'
                                 .countdown 'getTimes'
 
-                            timerTime= $.countdown.periodsToSeconds timerTimePeriod
+                            if timerTimePeriod
+                                timerTime= $.countdown.periodsToSeconds timerTimePeriod
 
-                            timerSign= $ @view.el
-                            .find '#downUpTimer'
-                                .attr 'timerdirection'
+                                timerSign= $ @view.el
+                                .find '#downUpTimer'
+                                    .attr 'timerdirection'
 
-                            if timerSign is 'countDown'
-                                timeElapsed = @durationInSeconds - timerTime
+                                if timerSign is 'countDown'
+                                    timeElapsed = @durationInSeconds - timerTime
 
-                            else
-                                timeElapsed = @durationInSeconds + timerTime
+                                else
+                                    timeElapsed = @durationInSeconds + timerTime
 
-                            timeElapsed
+                                timeElapsed
 
                         @view = view = @_showQuizTimerView @model
 
@@ -62,6 +63,9 @@ define ['app'
 
                     template: '<div class="bold small-text text-center p-t-10"> Quiz Time</div>
                                 <div id="downUpTimer" timerdirection=""></div>
+                                <div class="b-grey m-b-10 p-b-5" style="display:none" id="completed-quiz"> 
+                                    <div class="qstnStatus"><i class="fa fa-check-circle"></i> Completed</div> 
+                                </div>
                                 <div class="endQuiz b-grey b-t p-t-10 p-b-10">
                                     <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> 
                                 </div>'
@@ -74,7 +78,11 @@ define ['app'
                         timeLeftOrElapsed =Marionette.getOption @,'timeLeftOrElapsed'
                         @display_mode = Marionette.getOption @, 'display_mode'
 
-                        if @display_mode isnt 'replay'
+                        if @display_mode is 'replay'
+                            @$el.find '#completed-quiz'
+                            .show()
+
+                        else
                             if timeLeftOrElapsed < 0
                                 @countUp timeLeftOrElapsed
                             else @countDown timeLeftOrElapsed

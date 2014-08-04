@@ -15,8 +15,11 @@ define ['app'
                         {@model, @quizModel, @questionResponseCollection,@display_mode} = opts
 
                         @questionResponseModel= @questionResponseCollection.findWhere 'content_piece_id' : @model.id
+                        
+                        displayAnswer = @quizModel.hasPermission 'display_answer'
 
                         @answerWreqrObject = new Backbone.Wreqr.RequestResponse()
+                        @answerWreqrObject.options = 'displayAnswer': displayAnswer
 
                         @layout = layout = @_showSingleQuestionLayout @model
 
@@ -44,14 +47,10 @@ define ['app'
 
                         @listenTo layout, "submit:question",=>
 
-                            #displayAnswer true or false based on permission
-                            displayAnswer = @quizModel.hasPermission 'display_answer'
-
-                            @answerWreqrObject.request "submit:answer", displayAnswer
+                            @answerWreqrObject.request "submit:answer"
 
                             answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
 
-                            console.log answer
                             @region.trigger "submit:question", answer
 
                         @listenTo layout, "goto:next:question",->

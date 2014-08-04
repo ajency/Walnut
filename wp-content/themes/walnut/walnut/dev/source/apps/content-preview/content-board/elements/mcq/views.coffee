@@ -20,6 +20,7 @@ define ['app'], (App)->
 
 
             _autoPopulateAnswers:->
+
                 answerModel=Marionette.getOption @, 'answerModel'
                 if answerModel and answerModel.get('status') isnt 'not_attempted'
                     answerArray= answerModel.get 'answer'
@@ -27,7 +28,7 @@ define ['app'], (App)->
                         @$el.find '#option-'+ans
                         .screwDefaultButtons "check"
 
-                    @trigger "submit:answer"
+                    @trigger "submit:answer" if Marionette.getOption @, 'displayAnswer'
 
             onAddOptionClasses : (answer)->
                 totalOptions = @model.get 'optioncount'

@@ -38,7 +38,7 @@ define ['app'], (App)->
                     _.each answerArray, (ans,index)=>
                         $(blanks[index]).val ans
 
-                    @trigger "submit:answer"
+                    @trigger "submit:answer"  if Marionette.getOption @, 'displayAnswer'
 
             onShowFeedback : ->
                 @$el.find('.fibRightAns').show()

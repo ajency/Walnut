@@ -10,7 +10,12 @@ define ['app'
 
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
+                @displayAnswer = true
+                
                 if answerWreqrObject
+                    
+                    @displayAnswer = answerWreqrObject.options.displayAnswer
+                    
                     answerWreqrObject.setHandler "get:question:answer",=>
 
                         data=
@@ -21,7 +26,7 @@ define ['app'
                     answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
                         #if displayAnswer is true, the correct & wrong answers & marks will be displayed
                         #default is true
-                        @_submitAnswer displayAnswer 
+                        @_submitAnswer @displayAnswer 
 
                 super options
 
@@ -50,15 +55,10 @@ define ['app'
                 
                 @listenTo @view, "show",=>
                     if @answerModel.get('status') isnt 'not_attempted'
-                        @_autoPopulateAnswers()
-                        @_submitAnswer()
+                        @_submitAnswer() 
 
                 # show the view
                 @layout.elementRegion.show @view
-
-            _autoPopulateAnswers:->
-                console.log '_autoPopulateAnswers'
-                console.log @answerModel.get 'answer'
 
             _getSortView : (collection)->
                 new Sort.Views.SortView
@@ -75,6 +75,7 @@ define ['app'
 
             _submitAnswer :(displayAnswer=true) =>
                 @answerModel.set 'marks', @layout.model.get 'marks'
+                displayAnswer = Marionette.getOption @, 'displayAnswer'
                 @view.$el.find('input#optionNo').each (index, element)=>
                     answerOptionIndex = @optionCollection.get($(element).val()).get('index')
                     @answerModel.get('answer').push answerOptionIndex

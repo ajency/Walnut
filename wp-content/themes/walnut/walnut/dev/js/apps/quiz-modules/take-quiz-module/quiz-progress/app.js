@@ -108,7 +108,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         questionResponseCollection = Marionette.getOption(this, 'questionResponseCollection');
         questionResponseCollection.each((function(_this) {
           return function(response) {
-            return _this.changeClassName(response);
+            if (quizModel.hasPermission('display_answer')) {
+              return _this.changeClassName(response);
+            }
           };
         })(this));
         this.onQuestionChange(currentQuestion);

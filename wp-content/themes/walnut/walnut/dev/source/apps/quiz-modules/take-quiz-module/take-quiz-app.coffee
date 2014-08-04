@@ -68,8 +68,6 @@ define ['app'
                     timeTaken= totalTime - timeBeforeCurrentQuestion
                     timeBeforeCurrentQuestion= totalTime
 
-                    console.log timeTaken
-
                     data =
                         'collection_id'     : quizModel.id
                         'content_piece_id'  : questionModel.id
@@ -81,11 +79,12 @@ define ['app'
 
                     quizResponseModel = questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
 
+                    #update existing model (incase of resubmit)
                     if quizResponseModel
-                        console.log 'update model'
                         quizResponseModel.set newResponseModel.toJSON()
+
+                    #add new model to collection
                     else
-                        console.log 'new model'
                         quizResponseModel = newResponseModel
                         questionResponseCollection.add newResponseModel
 
@@ -108,6 +107,19 @@ define ['app'
                         @_endQuiz()
 
                 _endQuiz:->
+                    answeredIDs= questionResponseCollection.pluck 'content_piece_id'
+                    allIDs= _.map quizModel.get('content_pieces'), (m)-> parseInt m
+
+                    unanswered= _.difference allIDs, answeredIDs
+
+                    if unanswered
+                        _.each unanswered, (question,index)=>
+                            questionModel = questionsCollection.get question
+                            answerModel = App.request "create:new:answer"
+                            answerModel.set 'status': 'wrong_answer'
+                            @_submitQuestion answerModel
+
+
                     App.execute "show:single:quiz:app",
                         region: App.mainContentRegion
                         quizModel: quizModel

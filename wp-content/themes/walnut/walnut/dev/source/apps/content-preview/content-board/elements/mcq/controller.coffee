@@ -12,18 +12,20 @@ define ['app'
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
+
+                    @displayAnswer = answerWreqrObject.options.displayAnswer
+
                     answerWreqrObject.setHandler "get:question:answer", =>
-                        #@_submitAnswer()
                         console.log "@answerModel.get 'answer'"
                         console.log @answerModel.get 'answer'
                         data=
                             'answerModel': @answerModel
                             'totalMarks' : @layout.model.get('marks')
 
-                    answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
+                    answerWreqrObject.setHandler "submit:answer", =>
                         #if displayAnswer is true, the correct & wrong answers & marks will be displayed
                         #default is true
-                        @_submitAnswer displayAnswer 
+                        @_submitAnswer @displayAnswer 
 
                 # _.defaults options.modelData,
 
@@ -75,6 +77,7 @@ define ['app'
                 new Mcq.Views.McqView
                     model : @layout.model
                     answerModel:@answerModel
+                    displayAnswer :@displayAnswer 
 
             # convert the option attributes to integers
             _parseOptions : (optionsObj)->

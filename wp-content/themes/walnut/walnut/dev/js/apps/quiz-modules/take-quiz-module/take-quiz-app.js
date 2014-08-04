@@ -54,7 +54,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime - timeBeforeCurrentQuestion;
         timeBeforeCurrentQuestion = totalTime;
-        console.log(timeTaken);
         data = {
           'collection_id': quizModel.id,
           'content_piece_id': questionModel.id,
@@ -67,10 +66,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           'content_piece_id': newResponseModel.get('content_piece_id')
         });
         if (quizResponseModel) {
-          console.log('update model');
           quizResponseModel.set(newResponseModel.toJSON());
         } else {
-          console.log('new model');
           quizResponseModel = newResponseModel;
           questionResponseCollection.add(newResponseModel);
         }
@@ -96,6 +93,25 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._endQuiz = function() {
+        var allIDs, answeredIDs, unanswered;
+        answeredIDs = questionResponseCollection.pluck('content_piece_id');
+        allIDs = _.map(quizModel.get('content_pieces'), function(m) {
+          return parseInt(m);
+        });
+        unanswered = _.difference(allIDs, answeredIDs);
+        if (unanswered) {
+          _.each(unanswered, (function(_this) {
+            return function(question, index) {
+              var answerModel;
+              questionModel = questionsCollection.get(question);
+              answerModel = App.request("create:new:answer");
+              answerModel.set({
+                'status': 'wrong_answer'
+              });
+              return _this._submitQuestion(answerModel);
+            };
+          })(this));
+        }
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
           quizModel: quizModel,
