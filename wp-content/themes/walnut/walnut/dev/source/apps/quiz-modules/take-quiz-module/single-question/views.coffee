@@ -109,9 +109,7 @@ define ['app'
                         else
                             @submitQuestion()
 
-                    submitQuestion:->
-
-                        @trigger "submit:question"
+                    onSubmitQuestion:->
 
                         if @model.get 'comment'
                             @trigger 'show:comment:dialog'

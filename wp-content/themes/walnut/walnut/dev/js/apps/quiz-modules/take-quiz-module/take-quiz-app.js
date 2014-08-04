@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/quiz-description/app', 'apps/quiz-modules/take-quiz-module/quiz-progress/app', 'apps/quiz-modules/take-quiz-module/quiz-timer/app', 'apps/quiz-modules/take-quiz-module/single-question/app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/quiz-description/app', 'apps/quiz-modules/take-quiz-module/quiz-progress/app', 'apps/quiz-modules/take-quiz-module/quiz-timer/app', 'apps/quiz-modules/take-quiz-module/single-question/app', 'apps/popup-dialog/alerts'], function(App, RegionController) {
   return App.module("TakeQuizApp", function(View, App) {
     var TakeQuizLayout, questionIDs, questionModel, questionResponseCollection, questionResponseModel, questionsCollection, quizModel, timeBeforeCurrentQuestion;
     quizModel = null;
@@ -40,8 +40,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.listenTo(this.layout.questionDisplayRegion, "submit:question", this._submitQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "goto:previous:question", this._gotoPreviousQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "skip:question", this._skipQuestion);
-        this.listenTo(this.layout.quizTimerRegion, "end:quiz", this._endQuiz);
-        return this.listenTo(this.layout.quizProgressRegion, "change:question", this._changeQuestion);
+        this.listenTo(this.layout.quizTimerRegion, "end:quiz", this._checkEndQuiz);
+        this.listenTo(this.layout.quizProgressRegion, "change:question", this._changeQuestion);
+        return this.listenTo(App.dialogRegion, "clicked:confirm:yes", this._handlePopups);
       };
 
       TakeQuizController.prototype._changeQuestion = function(id) {
@@ -90,6 +91,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         } else {
           return this._endQuiz();
         }
+      };
+
+      TakeQuizController.prototype._checkEndQuiz = function() {
+        return App.execute('show:alert:popup', {
+          region: App.dialogRegion,
+          message_content: 'You really want to end the quiz?',
+          alert_type: 'confirm',
+          message_type: 'end_quiz'
+        });
       };
 
       TakeQuizController.prototype._endQuiz = function() {
@@ -150,7 +160,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._showSingleQuestionApp = function() {
-        console.log('_showSingleQuestionApp');
         if (questionModel) {
           new View.SingleQuestion.Controller({
             region: this.layout.questionDisplayRegion,
@@ -187,6 +196,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         return this._showSingleQuestionApp(questionModel);
       };
 
+      TakeQuizController.prototype._handlePopups = function(message_type) {
+        switch (message_type) {
+          case 'end_quiz':
+            return this._endQuiz();
+          case 'not_answered':
+            return this.layout.questionDisplayRegion.trigger("trigger:submit");
+        }
+      };
+
       return TakeQuizController;
 
     })(RegionController);
@@ -196,8 +214,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       function TakeQuizLayout() {
         return TakeQuizLayout.__super__.constructor.apply(this, arguments);
       }
-
-      console.log('test TakeQuizLayout');
 
       TakeQuizLayout.prototype.template = '<div id="quiz-description-region"></div> <div class="sidebarContainer"> <div id="quiz-timer-region"></div> <div id="quiz-progress-region"></div> </div> <div id="question-display-region"></div>';
 

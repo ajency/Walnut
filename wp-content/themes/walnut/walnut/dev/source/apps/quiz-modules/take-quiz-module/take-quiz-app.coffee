@@ -3,7 +3,8 @@ define ['app'
         'apps/quiz-modules/take-quiz-module/quiz-description/app'
         'apps/quiz-modules/take-quiz-module/quiz-progress/app'
         'apps/quiz-modules/take-quiz-module/quiz-timer/app'
-        'apps/quiz-modules/take-quiz-module/single-question/app'], (App, RegionController)->
+        'apps/quiz-modules/take-quiz-module/single-question/app'
+        'apps/popup-dialog/alerts'], (App, RegionController)->
 
         App.module "TakeQuizApp", (View, App)->
 
@@ -24,10 +25,6 @@ define ['app'
                     App.leftNavRegion.close()
                     App.headerRegion.close()
                     App.breadcrumbRegion.close()
-
-                    #App.execute "when:fetched", [questionModel], =>
-                        #checking if model exists in collection. if so, replacing the empty model
-                        #@_getOrCreateModel questionModel.get 'ID'
 
                     questionIDs = questionsCollection.pluck 'ID'
                     questionIDs= _.map questionIDs, (m)-> parseInt m
@@ -51,9 +48,11 @@ define ['app'
 
                     @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
 
-                    @listenTo @layout.quizTimerRegion, "end:quiz", @_endQuiz
+                    @listenTo @layout.quizTimerRegion, "end:quiz", @_checkEndQuiz
 
                     @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
+
+                    @listenTo App.dialogRegion, "clicked:confirm:yes", @_handlePopups
 
                 _changeQuestion:(id)->
                     #save results here of previous question / skip the question
@@ -106,7 +105,16 @@ define ['app'
                     else
                         @_endQuiz()
 
+                _checkEndQuiz:->
+                    #check if any unanswred qt is there. if yes, show popup else endquiz
+                    App.execute 'show:alert:popup',
+                        region : App.dialogRegion
+                        message_content: 'You really want to end the quiz?'
+                        alert_type: 'confirm'
+                        message_type: 'end_quiz'
+
                 _endQuiz:->
+
                     answeredIDs= questionResponseCollection.pluck 'content_piece_id'
                     allIDs= _.map quizModel.get('content_pieces'), (m)-> parseInt m
 
@@ -150,7 +158,6 @@ define ['app'
 
 
                 _showSingleQuestionApp:->
-                    console.log '_showSingleQuestionApp'
                     if questionModel
                         new View.SingleQuestion.Controller
                             region                  : @layout.questionDisplayRegion
@@ -184,9 +191,13 @@ define ['app'
 
                     @_showSingleQuestionApp questionModel
 
-            class TakeQuizLayout extends Marionette.Layout
+                #after confirm box yes is clicked on dialog region
+                _handlePopups:(message_type)->
+                    switch message_type
+                        when 'end_quiz' then @_endQuiz()
+                        when 'not_answered' then @layout.questionDisplayRegion.trigger "trigger:submit"
 
-                console.log 'test TakeQuizLayout'
+            class TakeQuizLayout extends Marionette.Layout
 
                 template : '<div id="quiz-description-region"></div>
                                             <div class="sidebarContainer">

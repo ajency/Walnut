@@ -23,7 +23,7 @@ define ['app'
                             @view.triggerMethod "question:submitted", responseModel
 
 
-                    _showQuizProgressView: (collection,currentQuestion) ->
+                    _showQuizProgressView: (collection,currentQuestion) =>
                         
                         new QuizProgressView
                             collection                  : collection
@@ -79,6 +79,7 @@ define ['app'
                         currentQuestion = Marionette.getOption @,'currentQuestion'
 
                         questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
+                        quizModel = Marionette.getOption @,'quizModel'
                         questionResponseCollection.each (response)=> @changeClassName(response)  if quizModel.hasPermission 'display_answer'
 
                         @onQuestionChange currentQuestion

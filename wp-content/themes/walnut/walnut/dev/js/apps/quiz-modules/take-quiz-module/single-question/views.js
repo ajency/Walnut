@@ -86,8 +86,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         }
       };
 
-      SingleQuestionLayout.prototype.submitQuestion = function() {
-        this.trigger("submit:question");
+      SingleQuestionLayout.prototype.onSubmitQuestion = function() {
         if (this.model.get('comment')) {
           this.trigger('show:comment:dialog');
         }

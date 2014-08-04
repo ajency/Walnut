@@ -4,8 +4,9 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/single-question/views', 'apps/content-preview/dialogs/hint-dialog/hint-dialog-controller', 'apps/content-preview/dialogs/comment-dialog/comment-dialog-controller'], function(App, RegionController) {
   return App.module("TakeQuizApp.SingleQuestion", function(SingleQuestion, App) {
-    var answer;
+    var answer, answerData;
     answer = null;
+    answerData = null;
     return SingleQuestion.Controller = (function(_super) {
       __extends(Controller, _super);
 
@@ -16,7 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       }
 
       Controller.prototype.initialize = function(opts) {
-        var answerData, displayAnswer, layout;
+        var displayAnswer, layout;
         this.model = opts.model, this.quizModel = opts.quizModel, this.questionResponseCollection = opts.questionResponseCollection, this.display_mode = opts.display_mode;
         this.questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': this.model.id
@@ -44,17 +45,17 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           if (answerData.questionType === 'sort') {
             isEmptyAnswer = false;
           }
-          return this.layout.triggerMethod("answer:validated", isEmptyAnswer);
-        });
-        this.listenTo(layout, "submit:question", (function(_this) {
-          return function() {
-            _this.answerWreqrObject.request("submit:answer");
-            answer.set({
-              'status': _this._getAnswerStatus(answer.get('marks'), answerData.totalMarks)
+          if (isEmptyAnswer) {
+            return App.execute('show:alert:popup', {
+              region: App.dialogRegion,
+              message_content: 'You havent answered the question. Are you sure you want to continue?',
+              alert_type: 'confirm',
+              message_type: 'not_answered'
             });
-            return _this.region.trigger("submit:question", answer);
-          };
-        })(this));
+          } else {
+            return this._triggerSubmit();
+          }
+        });
         this.listenTo(layout, "goto:next:question", function() {
           return this.region.trigger("goto:next:question");
         });
@@ -74,13 +75,27 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             });
           };
         })(this));
-        return this.listenTo(layout, 'show:comment:dialog', (function(_this) {
+        this.listenTo(layout, 'show:comment:dialog', (function(_this) {
           return function() {
             return App.execute('show:comment:dialog', {
               comment: _this.model.get('comment')
             });
           };
         })(this));
+        return this.listenTo(this.region, 'trigger:submit', (function(_this) {
+          return function() {
+            return _this._triggerSubmit();
+          };
+        })(this));
+      };
+
+      Controller.prototype._triggerSubmit = function() {
+        this.layout.triggerMethod("submit:question");
+        this.answerWreqrObject.request("submit:answer");
+        answer.set({
+          'status': this._getAnswerStatus(answer.get('marks'), answerData.totalMarks)
+        });
+        return this.region.trigger("submit:question", answer);
       };
 
       Controller.prototype._getAnswerStatus = function(recievedMarks, totalMarks) {

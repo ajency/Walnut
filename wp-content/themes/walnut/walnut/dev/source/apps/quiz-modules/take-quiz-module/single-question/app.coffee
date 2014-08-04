@@ -8,6 +8,7 @@ define ['app'
             App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
 
                 answer=null
+                answerData= null
 
                 class SingleQuestion.Controller extends RegionController
 
@@ -43,15 +44,16 @@ define ['app'
 
                             isEmptyAnswer= false if answerData.questionType is 'sort'
 
-                            @layout.triggerMethod "answer:validated", isEmptyAnswer
+                            if isEmptyAnswer
+                                App.execute 'show:alert:popup',
+                                    region : App.dialogRegion
+                                    message_content: 'You havent answered the question. Are you sure you want to continue?'
+                                    alert_type: 'confirm'
+                                    message_type: 'not_answered'
 
-                        @listenTo layout, "submit:question",=>
+                            else @_triggerSubmit()
 
-                            @answerWreqrObject.request "submit:answer"
-
-                            answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
-
-                            @region.trigger "submit:question", answer
+                            #@layout.triggerMethod "answer:validated", isEmptyAnswer
 
                         @listenTo layout, "goto:next:question",->
                             @region.trigger "goto:next:question"
@@ -72,6 +74,17 @@ define ['app'
                         @listenTo layout,'show:comment:dialog',=>
                             App.execute 'show:comment:dialog',
                                 comment : @model.get 'comment'
+
+                        @listenTo @region, 'trigger:submit',=> @_triggerSubmit()
+
+                    _triggerSubmit:->
+                        @layout.triggerMethod "submit:question"
+
+                        @answerWreqrObject.request "submit:answer"
+
+                        answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
+
+                        @region.trigger "submit:question", answer
 
                     _getAnswerStatus:(recievedMarks, totalMarks)->
                         status = 'wrong_answer'
