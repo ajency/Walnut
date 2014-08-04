@@ -74,7 +74,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                   audioPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
                   _.each(audioPaths, function(localAudioPath, index) {
                     return (function(localAudioPath, index) {
-                      audioPath = 'file:///mnt/sdcard/' + localAudioPath;
+                      console.log(_.getSynapseMediaDirectoryPath());
+                      audioPath = 'file:///storage/emulated/0/' + localAudioPath;
                       return localAudioPaths.push(audioPath);
                     })(localAudioPath, index);
                   });

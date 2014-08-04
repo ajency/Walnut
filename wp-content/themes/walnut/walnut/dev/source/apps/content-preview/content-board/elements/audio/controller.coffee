@@ -67,9 +67,12 @@ define ['app'
 									
 									$.when(deferreds...).done (audioPaths...)=>
 										_.each audioPaths , (localAudioPath , index)=>
-											do(localAudioPath, index)=>
+											do(localAudioPath, index)=> 
 
-												audioPath = 'file:///mnt/sdcard/' + localAudioPath
+												# audioPath = 'file:///mnt/sdcard/' + localAudioPath
+												console.log _.getSynapseMediaDirectoryPath()
+												audioPath = 'file:///storage/emulated/0/' + localAudioPath
+
 
 												localAudioPaths.push audioPath
 
