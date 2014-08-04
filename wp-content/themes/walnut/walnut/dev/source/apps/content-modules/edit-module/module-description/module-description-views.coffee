@@ -8,7 +8,7 @@ define ['app'
 
             template : collectionDetailsTpl
 
-            className : 'tiles white grid simple vertical green animated fadeIn'
+            className : 'grid simple vertical green animated fadeIn'
 
             events :
                 'change #textbooks' : (e)->
@@ -36,7 +36,7 @@ define ['app'
             mixinTemplateHelpers : (data)->
                 data = super data
 
-                data.heading = if @model.isNew() then 'Add' else 'Edit'
+                data.heading = if @model.isNew() then 'Create a' else 'Edit a'
 
                 data.isModule = true if data.type is 'module'
 
