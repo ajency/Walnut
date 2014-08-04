@@ -57,6 +57,10 @@ define ['app'
 
             onShow : ->
                 Backbone.Syphon.deserialize @, @model.toJSON()
+                console.log @$el.find('#qType').val()
+                console.log @model.toJSON()
+
+                @$el.find('#qType').val @model.get 'quiz_type' if @model.get('type') is 'quiz'
 
                 if @model.get('type') is 'quiz'
                     @_showCustomMessages @$el.find('#msgs')

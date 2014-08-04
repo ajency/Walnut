@@ -268,10 +268,11 @@ function get_all_quiz_modules($args){
     $quiz_type_prepare = "%".$args['quiz_type']."%";
 
     if (empty($args['textbook'])){
-        $textbook_prepare = '';
+        $textbook_prepare = '%%';
     }
     else{
         $textbook_prepare = '%"'.$args['textbook'].'"%';
+        // print_r('ss'.$textbook_prepare.'ss');
     }
 
 
@@ -281,11 +282,20 @@ function get_all_quiz_modules($args){
 
     $result = array();
 
+
+    if(isset($args['search_str']) && trim($args['search_str']) !=''){
+        $quiz_ids = get_modules_by_search_string($args['search_str'],$quiz_ids);
+    }
+
+    $quiz_ids = __u::flatten($quiz_ids);
+
     foreach ($quiz_ids as $id){
+        // print_r($id."\n");
         $quiz_data = get_single_quiz_module((int)$id);
-        unset($quiz_data ->content_layout);
+        // unset($quiz_data ->content_layout);
         $result[] = $quiz_data;
     }
+    // exit;
 
     return $result;
 }

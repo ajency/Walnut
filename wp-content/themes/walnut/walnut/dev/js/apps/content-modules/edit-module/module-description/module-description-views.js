@@ -60,6 +60,11 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
 
       CollectionDetailsView.prototype.onShow = function() {
         Backbone.Syphon.deserialize(this, this.model.toJSON());
+        console.log(this.$el.find('#qType').val());
+        console.log(this.model.toJSON());
+        if (this.model.get('type') === 'quiz') {
+          this.$el.find('#qType').val(this.model.get('quiz_type'));
+        }
         if (this.model.get('type') === 'quiz') {
           this._showCustomMessages(this.$el.find('#msgs'));
           this._toggleNegativeMarks(this.$el.find('input[name="negMarksEnable"]:checked'));

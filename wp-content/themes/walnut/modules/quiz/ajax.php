@@ -93,7 +93,7 @@ function ajax_fetch_all_quizes(){
     );
     $args = wp_parse_args($args,$defaults);
     $quiz_modules = get_all_quiz_modules($args);
-    wp_send_json($quiz_modules);
+    wp_send_json(array('code' => 'OK', 'data' =>$quiz_modules));
 }
 
-add_action('wp_ajax_get_all_quiz','ajax_fetch_all_quizes');
+add_action('wp_ajax_get-quizes','ajax_fetch_all_quizes');

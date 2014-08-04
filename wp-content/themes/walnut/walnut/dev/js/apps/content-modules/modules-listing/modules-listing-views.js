@@ -18,7 +18,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<!--<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td>--> <td>{{name}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{&statusMessage}}</td> <td><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
+      ListItemView.prototype.template = '<!--<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td>--> <td>{{name}}</td> {{#isQuiz}}<td>{{quiz_type}}</td>{{/isQuiz}} <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> {{#isQuiz}}<td>{{marks}}</td>{{/isQuiz}} <td>{{&statusMessage}}</td> <td><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
 
       ListItemView.prototype.serializeData = function() {
         var data, _ref;
@@ -52,6 +52,11 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
             return data.duration;
           }
         };
+        if (this.groupType === 'quiz') {
+          data.quiz_type = _.capitalize(data.quiz_type);
+          data.view_url = SITEURL + ("/#view-quiz/" + data.id);
+          data.edit_url = SITEURL + ("/#edit-quiz/" + data.id);
+        }
         data.statusMessage = function() {
           if (data.post_status === 'underreview') {
             return '<span class="label label-important">Under Review</span>';
@@ -67,13 +72,22 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         return data;
       };
 
+      ListItemView.prototype.mixinTemplateHelpers = function(data) {
+        data = ListItemView.__super__.mixinTemplateHelpers.call(this, data);
+        if (this.groupType === 'quiz') {
+          data.isQuiz = true;
+        }
+        return data;
+      };
+
       ListItemView.prototype.events = {
         'click a.cloneModule': 'cloneModule'
       };
 
       ListItemView.prototype.initialize = function(options) {
         this.textbooks = options.textbooksCollection;
-        return this.chapters = options.chaptersCollection;
+        this.chapters = options.chaptersCollection;
+        return this.groupType = options.groupType;
       };
 
       ListItemView.prototype.cloneModule = function() {
@@ -160,8 +174,18 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       ModulesListingView.prototype.itemViewOptions = function() {
         return {
           textbooksCollection: this.textbooks,
-          chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
+          chaptersCollection: Marionette.getOption(this, 'chaptersCollection'),
+          groupType: this.groupType
         };
+      };
+
+      ModulesListingView.prototype.mixinTemplateHelpers = function(data) {
+        data = ModulesListingView.__super__.mixinTemplateHelpers.call(this, data);
+        if (this.groupType === 'quiz') {
+          data.isQuiz = true;
+        }
+        console.log(this.groupType);
+        return data;
       };
 
       ModulesListingView.prototype.events = {
@@ -174,6 +198,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ModulesListingView.prototype.initialize = function() {
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
+        this.groupType = Marionette.getOption(this, 'groupType');
         this.textbooks = new Array();
         return this.textbooksCollection.each((function(_this) {
           return function(textbookModel, ind) {
