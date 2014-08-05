@@ -68,9 +68,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       SetView.prototype.template = ' <div class="row"> <div class="col-md-12"> <table class="table table-bordered table-flip-scroll cf"> <thead class="cf"> <tr> <th>Total Questions</th> <th>Level 1</th> <th>Level 2</th> <th>Level 3</th> </tr> </thead> <tbody> <tr> <td> <input type="text" id="total-questions" class="disabled" size="1"  disabled="disabled" value="0"> </td> <td class="level-selection" id="lvl1"><span></span> <input type="text"  /></td> <td class="level-selection" id="lvl2"><span></span> <input type="text"  /></td> <td class="level-selection" id="lvl3"><span></span> <input type="text" /></td> </tr> </tbody> </table> <div class="checkbox check-info"> <input id="selectAll" type="checkbox" value="1"> <label for="selectAll" class="text-grey">Select All</label> </div> <div class="pull-right"> <button type="button" class="btn btn-success btn-cons2" id="add-set-button"><i class="fa fa-plus"></i> Add</button> </div> </div> </div>';
 
       SetView.prototype.events = {
-        'click input': function() {
-          return this.trigger('get:textbook:filter');
-        },
         'change .level-selection input': '_onSpinEditValueChanged',
         'click #add-set-button': function() {
           var _ref;
