@@ -4,7 +4,7 @@
 
   "description": "Synapse Android App",
 
-  "version": "Staging-0.5.2.07",                      // [Synapse Staging Version]
+  "version": "Staging-0.5.2.08",                      // [Synapse Staging Version]
   // "version": "Production-0.5.2.04",                   // [Synapse Production Version]
 
   "permissions": ["<all_urls>", "storage", "unlimitedStorage"],
