@@ -112,7 +112,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           region: this.layout.contentBoardRegion,
           model: model,
           answerWreqrObject: answerWreqrObject,
-          answerModel: this.answerModel
+          answerModel: this.answerModel,
+          quizModel: this.quizModel
         });
       };
 

@@ -119,10 +119,7 @@ define ['app'
 
                 _endQuiz:->
 
-                    answeredIDs= questionResponseCollection.pluck 'content_piece_id'
-                    allIDs= _.map quizModel.get('content_pieces'), (m)-> parseInt m
-
-                    unanswered= _.difference allIDs, answeredIDs
+                    unanswered = @_getUnansweredIDs()
 
                     if unanswered
                         _.each unanswered, (question,index)=>
@@ -138,6 +135,12 @@ define ['app'
                         questionsCollection: questionsCollection
                         questionResponseCollection: questionResponseCollection
 
+                _getUnansweredIDs:->
+                    
+                    answeredIDs= questionResponseCollection.pluck 'content_piece_id'
+                    allIDs= _.map quizModel.get('content_pieces'), (m)-> parseInt m
+
+                    unanswered= _.difference allIDs, answeredIDs
 
                 _gotoPreviousQuestion:->
 
@@ -153,6 +156,11 @@ define ['app'
 
                     if nextIndex < questionIDs.length
                         nextID = parseInt questionIDs[nextIndex]
+
+                    else 
+                        unanswered = @_getUnansweredIDs()
+                        nextID= _.first _.intersection questionIDs,unanswered if unanswered
+
 
                     nextID
 

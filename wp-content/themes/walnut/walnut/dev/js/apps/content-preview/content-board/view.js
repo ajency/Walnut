@@ -19,7 +19,7 @@ define(['app'], function(App) {
         data.correct_answer_msg = 'You are correct!';
         data.incorrect_answer_msg = 'Sorry, you did not answer correctly';
         data.partial_correct_answers_msg = 'You are almost correct';
-        quizModel = Marionette.getOption('quizModel');
+        quizModel = Marionette.getOption(this, 'quizModel');
         if (quizModel) {
           data.correct_answer_msg = quizModel.getMessageContent('correct_answer');
           data.incorrect_answer_msg = quizModel.getMessageContent('incorrect_answer');

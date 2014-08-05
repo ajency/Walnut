@@ -40,7 +40,6 @@ define ['app'
 
                             answer = answerData.answerModel
 
-                            
                             if answerData.questionType isnt 'sort'
                                 switch answerData.emptyOrIncomplete
                                     when 'empty'        then @region.trigger 'show:alert:popup', 'submit_without_attempting'
@@ -98,6 +97,7 @@ define ['app'
                                 model               : model
                                 answerWreqrObject   : answerWreqrObject
                                 answerModel         : @answerModel
+                                quizModel           : @quizModel
                             
                     _showSingleQuestionLayout: (model) =>
                         new SingleQuestion.SingleQuestionLayout

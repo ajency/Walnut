@@ -27,7 +27,7 @@ define ['app'], (App)->
                 data.incorrect_answer_msg            = 'Sorry, you did not answer correctly'
                 data.partial_correct_answers_msg     = 'You are almost correct'
 
-                quizModel = Marionette.getOption 'quizModel'
+                quizModel = Marionette.getOption @, 'quizModel'
 
                 if quizModel
                     data.correct_answer_msg              = quizModel.getMessageContent 'correct_answer'

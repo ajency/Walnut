@@ -105,12 +105,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._endQuiz = function() {
-        var allIDs, answeredIDs, unanswered;
-        answeredIDs = questionResponseCollection.pluck('content_piece_id');
-        allIDs = _.map(quizModel.get('content_pieces'), function(m) {
-          return parseInt(m);
-        });
-        unanswered = _.difference(allIDs, answeredIDs);
+        var unanswered;
+        unanswered = this._getUnansweredIDs();
         if (unanswered) {
           _.each(unanswered, (function(_this) {
             return function(question, index) {
@@ -132,6 +128,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
       };
 
+      TakeQuizController.prototype._getUnansweredIDs = function() {
+        var allIDs, answeredIDs, unanswered;
+        answeredIDs = questionResponseCollection.pluck('content_piece_id');
+        allIDs = _.map(quizModel.get('content_pieces'), function(m) {
+          return parseInt(m);
+        });
+        return unanswered = _.difference(allIDs, answeredIDs);
+      };
+
       TakeQuizController.prototype._gotoPreviousQuestion = function() {
         var prevQuestionID;
         if (questionModel != null) {
@@ -144,11 +149,16 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._getNextItemID = function() {
-        var nextID, nextIndex, pieceIndex;
+        var nextID, nextIndex, pieceIndex, unanswered;
         pieceIndex = _.indexOf(questionIDs, questionModel.id);
         nextIndex = pieceIndex + 1;
         if (nextIndex < questionIDs.length) {
           nextID = parseInt(questionIDs[nextIndex]);
+        } else {
+          unanswered = this._getUnansweredIDs();
+          if (unanswered) {
+            nextID = _.first(_.intersection(questionIDs, unanswered));
+          }
         }
         return nextID;
       };
