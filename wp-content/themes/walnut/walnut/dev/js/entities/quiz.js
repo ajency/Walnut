@@ -26,9 +26,9 @@ define(["app", 'backbone'], function(App, Backbone) {
           post_status: 'underreview',
           type: 'quiz',
           quiz_type: 'practice',
-          marks: '',
+          marks: 0,
           total_minutes: 0,
-          duration: '',
+          duration: 0,
           minshours: 'mins',
           negMarksEnable: 'false',
           negMarks: '',
@@ -59,12 +59,13 @@ define(["app", 'backbone'], function(App, Backbone) {
           incomplete_answer: 'You havent completed the question. Are you sure you want to continue?',
           correct_answer: 'You are correct!',
           incorrect_answer: 'Sorry, you did not answer correctly',
-          partial_correct_answers: 'You are almost correct'
+          partial_correct_answers: 'You are almost correct',
+          quiz_time_up: 'Sorry, your time is up'
         };
         message_content = default_messages[message_type];
-        if (this.hasPermission('customize_messages')) {
+        if (this.hasPermission('customize_messages') && !_.isEmpty(this.get('message'))) {
           custom_messages = this.get('message');
-          if (custom_messages[message_type] != null) {
+          if (custom_messages[message_type]) {
             message_content = custom_messages[message_type];
           }
         }

@@ -44,7 +44,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.listenTo(this.layout.questionDisplayRegion, "show:alert:popup", this._showPopup);
         this.listenTo(this.layout.quizTimerRegion, "show:alert:popup", this._showPopup);
         this.listenTo(this.layout.quizProgressRegion, "change:question", this._changeQuestion);
-        return this.listenTo(App.dialogRegion, "clicked:confirm:yes", this._handlePopups);
+        this.listenTo(App.dialogRegion, "clicked:confirm:yes", this._handlePopups);
+        return this.listenTo(App.dialogRegion, "clicked:alert:ok", this._handlePopups);
       };
 
       TakeQuizController.prototype._changeQuestion = function(id) {
@@ -95,11 +96,18 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         }
       };
 
-      TakeQuizController.prototype._showPopup = function(message_type) {
+      TakeQuizController.prototype._showPopup = function(message_type, alert_type) {
+        if (alert_type == null) {
+          alert_type = 'confirm';
+        }
+        if (message_type === 'end_quiz' && _.isEmpty(this._getUnansweredIDs())) {
+          this._endQuiz();
+          return false;
+        }
         return App.execute('show:alert:popup', {
           region: App.dialogRegion,
           message_content: quizModel.getMessageContent(message_type),
-          alert_type: 'confirm',
+          alert_type: alert_type,
           message_type: message_type
         });
       };
@@ -113,9 +121,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
               var answerModel;
               questionModel = questionsCollection.get(question);
               answerModel = App.request("create:new:answer");
-              answerModel.set({
-                'status': 'wrong_answer'
-              });
+              if (quizModel.hasPermission('allow_skip')) {
+                answerModel.set({
+                  'status': 'skipped'
+                });
+              } else {
+                answerModel.set({
+                  'status': 'wrong_answer'
+                });
+              }
               return _this._submitQuestion(answerModel);
             };
           })(this));
@@ -212,6 +226,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         console.log(message_type);
         switch (message_type) {
           case 'end_quiz':
+            return this._endQuiz();
+          case 'quiz_time_up':
             return this._endQuiz();
           case 'submit_without_attempting':
             return this.layout.questionDisplayRegion.trigger("trigger:submit");

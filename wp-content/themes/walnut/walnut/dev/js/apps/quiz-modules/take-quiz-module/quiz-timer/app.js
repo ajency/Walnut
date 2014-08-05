@@ -38,8 +38,11 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         this.show(view, {
           loading: true
         });
-        return this.listenTo(view, 'end:quiz', function() {
+        this.listenTo(view, 'end:quiz', function() {
           return this.region.trigger('show:alert:popup', 'end_quiz');
+        });
+        return this.listenTo(view, 'quiz:time:up', function() {
+          return this.region.trigger('show:alert:popup', 'quiz_time_up', 'alert');
         });
       };
 
@@ -71,7 +74,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       __extends(QuizTimerView, _super);
 
       function QuizTimerView() {
-        this.countUp = __bind(this.countUp, this);
+        this.quizTimedOut = __bind(this.quizTimedOut, this);
         this.countDown = __bind(this.countDown, this);
         return QuizTimerView.__super__.constructor.apply(this, arguments);
       }
@@ -105,18 +108,12 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return this.$el.find('#downUpTimer').attr('timerdirection', 'countDown').countdown('destroy').countdown({
           until: time,
           format: 'MS',
-          onExpiry: this.countUp
+          onExpiry: this.quizTimedOut
         });
       };
 
-      QuizTimerView.prototype.countUp = function(time) {
-        if (time == null) {
-          time = 0;
-        }
-        return this.$el.find('#downUpTimer').attr('timerdirection', 'countUp').addClass('negative').countdown('destroy').countdown({
-          since: time,
-          format: 'MS'
-        });
+      QuizTimerView.prototype.quizTimedOut = function() {
+        return this.trigger("quiz:time:up");
       };
 
       return QuizTimerView;

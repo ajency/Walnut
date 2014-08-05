@@ -71,6 +71,16 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         }
       };
 
+      QuizDetailsView.prototype.serializeData = function() {
+        var data, display_mode;
+        data = QuizDetailsView.__super__.serializeData.call(this, data);
+        display_mode = Marionette.getOption(this, 'display_mode');
+        if (this.model.hasPermission('answer_printing') && (display_mode === 'replay' || display_mode === 'disable_quiz_replay')) {
+          data.answer_printing = true;
+        }
+        return data;
+      };
+
       QuizDetailsView.prototype.onShow = function() {
         if (Marionette.getOption(this, 'display_mode') === 'replay') {
           this.$el.find("#take-quiz").html('Replay');

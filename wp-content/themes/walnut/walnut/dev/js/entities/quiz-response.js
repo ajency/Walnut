@@ -19,8 +19,7 @@ define(['app', 'backbone'], function(App, Backbone) {
         user_id: 0,
         question_response: [],
         time_taken: 0,
-        start_date: '',
-        end_date: '',
+        marks_scored: 0,
         status: ''
       };
 

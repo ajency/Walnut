@@ -19,9 +19,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                 post_status: 'underreview'
                 type: 'quiz'
                 quiz_type : 'practice'
-                marks : ''
+                marks : 0
                 total_minutes: 0
-                duration: ''
+                duration: 0
                 minshours: 'mins'
                 negMarksEnable: 'false'
                 negMarks: ''
@@ -29,7 +29,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                 content_pieces: []
                 message : {}
                 content_layout:[]
-#                training_date: ''
 
             name: 'quiz'
 
@@ -45,12 +44,13 @@ define ["app", 'backbone'], (App, Backbone) ->
                     correct_answer              : 'You are correct!'
                     incorrect_answer            : 'Sorry, you did not answer correctly'
                     partial_correct_answers     : 'You are almost correct'
+                    quiz_time_up                : 'Sorry, your time is up'
 
                 message_content = default_messages[message_type]
 
-                if @.hasPermission 'customize_messages'
+                if @.hasPermission('customize_messages') and not _.isEmpty @.get 'message'
                     custom_messages= @.get 'message'
-                    message_content = custom_messages[message_type] if custom_messages[message_type]?
+                    message_content = custom_messages[message_type] if custom_messages[message_type]
 
                 message_content
 

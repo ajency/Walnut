@@ -37,6 +37,7 @@ define ['app'
                             loading: true
 
                         @listenTo view, 'end:quiz', -> @region.trigger 'show:alert:popup', 'end_quiz'
+                        @listenTo view, 'quiz:time:up', -> @region.trigger 'show:alert:popup', 'quiz_time_up','alert'
 
                     _timeLeftOrElapsed : =>
                         timeTaken = 0
@@ -95,12 +96,7 @@ define ['app'
                         .countdown
                             until: time
                             format: 'MS'
-                            onExpiry: @countUp
+                            onExpiry: @quizTimedOut
 
-                    countUp:(time=0)=>
-
-                        @$el.find '#downUpTimer'
-                        .attr 'timerdirection','countUp'
-                        .addClass 'negative'
-                        .countdown 'destroy'
-                        .countdown since: time, format: 'MS'
+                    quizTimedOut:=>
+                        @trigger "quiz:time:up"

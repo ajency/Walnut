@@ -24,6 +24,11 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             return _this.region.trigger("clicked:confirm:yes", _this.message_type);
           };
         })(this));
+        this.listenTo(this.view, 'alert:ok', (function(_this) {
+          return function() {
+            return _this.region.trigger("clicked:alert:ok", _this.message_type);
+          };
+        })(this));
         return this.show(this.view);
       };
 
@@ -44,7 +49,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return AlertBoxView.__super__.constructor.apply(this, arguments);
       }
 
-      AlertBoxView.prototype.template = '{{message_content}} <div class="clearfix"> {{#confirm}} <button class="btn btn-primary comment-close">No</button> <button id="confirm-yes" class="btn btn-info comment-close m-r-10">Yes</button> {{/confirm}} {{#alert}} <button class="btn btn-info comment-close m-r-10">Ok</button> {{/alert}} </div>';
+      AlertBoxView.prototype.template = '{{message_content}} <div class="clearfix"> {{#confirm}} <button class="btn btn-primary comment-close">No</button> <button id="confirm-yes" class="btn btn-info comment-close m-r-10">Yes</button> {{/confirm}} {{#alert}} <button id="alert-ok" class="btn btn-info comment-close m-r-10">Ok</button> {{/alert}} </div>';
 
       AlertBoxView.prototype.dialogOptions = {
         modal_title: 'ALERT'
@@ -53,6 +58,9 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       AlertBoxView.prototype.events = {
         'click #confirm-yes': function() {
           return this.trigger('confirm:yes');
+        },
+        'click #alert-ok': function() {
+          return this.trigger('alert:ok');
         },
         'click .comment-close': '_closeComment'
       };

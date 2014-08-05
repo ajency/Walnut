@@ -57,6 +57,7 @@ define ['app'
                     @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 
                     @listenTo App.dialogRegion, "clicked:confirm:yes", @_handlePopups
+                    @listenTo App.dialogRegion, "clicked:alert:ok", @_handlePopups
 
                 _changeQuestion:(id)->
                     #save results here of previous question / skip the question
@@ -109,12 +110,15 @@ define ['app'
                     else
                         @_endQuiz()
 
-                _showPopup:(message_type)->
+                _showPopup:(message_type, alert_type='confirm')->
+                    if message_type is 'end_quiz' and _.isEmpty @_getUnansweredIDs()
+                        @_endQuiz()
+                        return false
 
                     App.execute 'show:alert:popup',
                         region : App.dialogRegion
                         message_content: quizModel.getMessageContent message_type
-                        alert_type: 'confirm'
+                        alert_type: alert_type
                         message_type: message_type
 
                 _endQuiz:->
@@ -125,7 +129,11 @@ define ['app'
                         _.each unanswered, (question,index)=>
                             questionModel = questionsCollection.get question
                             answerModel = App.request "create:new:answer"
-                            answerModel.set 'status': 'wrong_answer'
+                            if quizModel.hasPermission 'allow_skip'
+                                answerModel.set 'status': 'skipped'
+                            else
+                                answerModel.set 'status': 'wrong_answer'
+
                             @_submitQuestion answerModel
 
 
@@ -208,6 +216,7 @@ define ['app'
                     console.log message_type
                     switch message_type
                         when 'end_quiz' then @_endQuiz()
+                        when 'quiz_time_up' then @_endQuiz()
                         when 'submit_without_attempting' then @layout.questionDisplayRegion.trigger "trigger:submit"
                         when 'incomplete_answer'   then  @layout.questionDisplayRegion.trigger "trigger:submit"
 

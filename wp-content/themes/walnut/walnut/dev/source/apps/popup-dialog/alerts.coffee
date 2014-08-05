@@ -20,6 +20,7 @@ define ['app'
 
 
                 @listenTo @view, 'confirm:yes', => @region.trigger "clicked:confirm:yes", @message_type
+                @listenTo @view, 'alert:ok', => @region.trigger "clicked:alert:ok", @message_type
 
                 @show @view
 
@@ -38,7 +39,7 @@ define ['app'
                             <button id="confirm-yes" class="btn btn-info comment-close m-r-10">Yes</button>
                             {{/confirm}}
                             {{#alert}}
-                            <button class="btn btn-info comment-close m-r-10">Ok</button>
+                            <button id="alert-ok" class="btn btn-info comment-close m-r-10">Ok</button>
                             {{/alert}}
                         </div>'
 
@@ -47,6 +48,7 @@ define ['app'
 
             events :
                 'click #confirm-yes'    :-> @trigger 'confirm:yes'
+                'click #alert-ok'    :-> @trigger 'alert:ok'
                 'click .comment-close'  : '_closeComment'
 
             mixinTemplateHelpers :(data) ->

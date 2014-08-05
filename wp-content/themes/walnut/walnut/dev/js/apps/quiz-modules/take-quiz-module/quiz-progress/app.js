@@ -137,18 +137,21 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.changeClassName = function(responseModel) {
-        var answer, className, _ref;
+        var answer, className;
         answer = responseModel.get('question_response');
-        if ((_ref = answer.status) === 'correct_answer' || _ref === 'partially_correct') {
-          className = 'right';
-        }
-        if (answer.status === 'wrong_answer') {
-          className = 'wrong';
-        }
-        if (answer.status === 'skipped') {
-          className = 'skip';
-        }
-        return this.$el.find("a#" + responseModel.get('content_piece_id')).closest('li').removeClass('wrong').removeClass('right').removeClass('skip').addClass(className);
+        className = (function() {
+          switch (answer.status) {
+            case 'correct_answer':
+              return 'right';
+            case 'partially_correct':
+              return 'partiallyCorrect';
+            case 'wrong_answer':
+              return 'wrong';
+            case 'skipped':
+              return 'skip';
+          }
+        })();
+        return this.$el.find("a#" + responseModel.get('content_piece_id')).closest('li').removeClass('right wrong skip partiallyCorrect').addClass(className);
       };
 
       QuizProgressView.prototype.updateProgressBar = function() {

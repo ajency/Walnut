@@ -110,20 +110,15 @@ define ['app'
                         
                         answer = responseModel.get 'question_response'
                         
-                        if answer.status in ['correct_answer','partially_correct']
-                            className = 'right'  
-
-                        if answer.status is 'wrong_answer' 
-                            className = 'wrong'
-
-                        if answer.status is 'skipped' 
-                            className = 'skip'
+                        className = switch answer.status
+                            when 'correct_answer'       then 'right'
+                            when 'partially_correct'    then 'partiallyCorrect'
+                            when 'wrong_answer'         then 'wrong'
+                            when 'skipped'              then 'skip'
 
                         @$el.find "a#"+responseModel.get 'content_piece_id'
                         .closest 'li'
-                        .removeClass 'wrong'
-                        .removeClass 'right'
-                        .removeClass 'skip'
+                        .removeClass 'right wrong skip partiallyCorrect'
                         .addClass className
 
                     updateProgressBar:->

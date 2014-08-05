@@ -39,6 +39,13 @@ define ['app'
                 'click #take-quiz' :-> @trigger "start:quiz:module"
                 'click #go-back-button' : ->@trigger "goto:previous:route"
 
+
+            serializeData:->
+                data = super data
+                display_mode =  Marionette.getOption @, 'display_mode'
+                data.answer_printing = true if @model.hasPermission('answer_printing') and display_mode in ['replay','disable_quiz_replay']
+                data  
+
             onShow:->
                 if Marionette.getOption(@, 'display_mode') is 'replay'
                     @$el.find "#take-quiz"
