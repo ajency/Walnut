@@ -140,6 +140,9 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
 
     $content_items= $excerpts= array();
 
+    if (!is_array($content_pieces))
+        return false;
+
     foreach($content_pieces as $id){
 
         $content_layout= get_post_meta($id, 'layout_json', true);

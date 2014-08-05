@@ -12,6 +12,9 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
       }
 
       QuizModuleRouter.prototype.appRoutes = {
+        'create-quiz': 'createQuiz',
+        'edit-quiz/:id': 'editQuiz',
+        'quiz-list': 'showQuizList',
         'view-quiz/:id': 'viewQuiz'
       };
 
@@ -23,6 +26,25 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         return new QuizModuleApp.ViewQuiz.Controller({
           region: App.mainContentRegion,
           quiz_id: id
+        });
+      },
+      createQuiz: function() {
+        return App.execute('show:edit:module:controller', {
+          region: App.mainContentRegion,
+          groupType: 'quiz'
+        });
+      },
+      editQuiz: function(id) {
+        return App.execute('show:edit:module:controller', {
+          region: App.mainContentRegion,
+          group_id: id,
+          groupType: 'quiz'
+        });
+      },
+      showQuizList: function() {
+        return App.execute('show:module:listing:app', {
+          region: App.mainContentRegion,
+          groupType: 'quiz'
         });
       }
     };

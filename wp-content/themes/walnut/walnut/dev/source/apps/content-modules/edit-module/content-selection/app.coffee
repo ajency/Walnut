@@ -55,6 +55,7 @@ define ['app'
                         App.execute "show:content:search:results:app",
                             region: @layout.searchResultsRegion
                             contentGroupCollection:@contentGroupCollection
+                            groupType : @model.get('type')
 
                         if @model.get('type') is 'quiz'
                             App.execute 'show:add:set:app',

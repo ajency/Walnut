@@ -60,7 +60,8 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
               });
               App.execute("show:content:search:results:app", {
                 region: _this.layout.searchResultsRegion,
-                contentGroupCollection: _this.contentGroupCollection
+                contentGroupCollection: _this.contentGroupCollection,
+                groupType: _this.model.get('type')
               });
               if (_this.model.get('type') === 'quiz') {
                 return App.execute('show:add:set:app', {

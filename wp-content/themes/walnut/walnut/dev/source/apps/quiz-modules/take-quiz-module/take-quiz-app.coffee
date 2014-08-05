@@ -4,7 +4,6 @@ define ['app'
         'apps/quiz-modules/take-quiz-module/quiz-progress/app'
         'apps/quiz-modules/take-quiz-module/quiz-timer/app'
         'apps/quiz-modules/take-quiz-module/single-question/app'
-        'apps/quiz-modules/take-quiz-module/quiz-popups-controller'
         'apps/popup-dialog/alerts'], (App, RegionController)->
 
         App.module "TakeQuizApp", (View, App)->

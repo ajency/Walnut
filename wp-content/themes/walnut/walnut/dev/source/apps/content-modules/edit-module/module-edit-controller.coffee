@@ -8,7 +8,7 @@ define ['app'
         class Edit.GroupController extends RegionController
 
             initialize : (options) ->
-                {@group_id,@groupType}= options
+                {@group_id,@groupType} = options
 
                 if @group_id
                     @contentGroupModel = App.request "get:content:group:by:id", @group_id if @groupType is 'module'
@@ -92,6 +92,10 @@ define ['app'
                         region : @layout.contentDisplayRegion
                         model : model
                         contentGroupCollection : @contentGroupCollection
+
+
+        App.commands.setHandler 'show:edit:module:controller',(opts)->
+            new Edit.GroupController opts
 
 
 

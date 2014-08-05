@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       Controller.prototype.initialize = function(opts) {
         var layout;
-        this.contentGroupCollection = opts.contentGroupCollection;
+        this.contentGroupCollection = opts.contentGroupCollection, this.groupType = opts.groupType;
         this.layout = layout = this._getSearchResultsLayout();
         this.searchCollection = App.request("empty:content:pieces:collection");
         this.show(layout, {
@@ -34,8 +34,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       Controller.prototype._searchContent = function(searchStr) {
+        var content_type;
+        content_type = this.groupType === 'module' ? ['teacher_question', 'content_piece'] : ['student_question'];
         this.newCollection = App.request("get:content:pieces", {
-          content_type: ['teacher_question', 'content_piece'],
+          content_type: content_type,
           search_str: searchStr,
           exclude: this.contentGroupCollection.pluck('ID')
         });
