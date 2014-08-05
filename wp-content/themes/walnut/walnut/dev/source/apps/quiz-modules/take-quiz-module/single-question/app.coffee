@@ -45,11 +45,7 @@ define ['app'
                             isEmptyAnswer= false if answerData.questionType is 'sort'
 
                             if isEmptyAnswer
-                                App.execute 'show:alert:popup',
-                                    region : App.dialogRegion
-                                    message_content: 'You havent answered the question. Are you sure you want to continue?'
-                                    alert_type: 'confirm'
-                                    message_type: 'not_answered'
+                                @region.trigger 'show:alert:popup', 'empty_answer'
 
                             else @_triggerSubmit()
 

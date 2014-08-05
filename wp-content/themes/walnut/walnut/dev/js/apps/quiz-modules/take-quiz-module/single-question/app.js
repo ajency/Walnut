@@ -46,12 +46,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             isEmptyAnswer = false;
           }
           if (isEmptyAnswer) {
-            return App.execute('show:alert:popup', {
-              region: App.dialogRegion,
-              message_content: 'You havent answered the question. Are you sure you want to continue?',
-              alert_type: 'confirm',
-              message_type: 'not_answered'
-            });
+            return this.region.trigger('show:alert:popup', 'empty_answer');
           } else {
             return this._triggerSubmit();
           }

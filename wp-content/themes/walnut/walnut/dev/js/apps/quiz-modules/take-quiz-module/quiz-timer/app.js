@@ -39,7 +39,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           loading: true
         });
         return this.listenTo(view, 'end:quiz', function() {
-          return this.region.trigger('end:quiz');
+          return this.region.trigger('show:alert:popup', 'end_quiz');
         });
       };
 

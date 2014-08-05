@@ -36,7 +36,7 @@ define ['app'
                         @show view,
                             loading: true
 
-                        @listenTo view, 'end:quiz', -> @region.trigger 'end:quiz'
+                        @listenTo view, 'end:quiz', -> @region.trigger 'show:alert:popup', 'end_quiz'
 
                     _timeLeftOrElapsed : =>
                         timeTaken = 0

@@ -4,6 +4,7 @@ define ['app'
         'apps/quiz-modules/take-quiz-module/quiz-progress/app'
         'apps/quiz-modules/take-quiz-module/quiz-timer/app'
         'apps/quiz-modules/take-quiz-module/single-question/app'
+        'apps/quiz-modules/take-quiz-module/quiz-popups-controller'
         'apps/popup-dialog/alerts'], (App, RegionController)->
 
         App.module "TakeQuizApp", (View, App)->
@@ -48,7 +49,11 @@ define ['app'
 
                     @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
 
-                    @listenTo @layout.quizTimerRegion, "end:quiz", @_checkEndQuiz
+                    @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
+
+                    @listenTo @layout.questionDisplayRegion, "show:alert:popup", @_showPopup
+
+                    @listenTo @layout.quizTimerRegion, "show:alert:popup", @_showPopup
 
                     @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 
@@ -105,13 +110,18 @@ define ['app'
                     else
                         @_endQuiz()
 
-                _checkEndQuiz:->
-                    #check if any unanswred qt is there. if yes, show popup else endquiz
+                _showPopup:(message_type)->
+
+                    message =
+                        end_quiz     : 'You really want to end the quiz?'
+                        empty_answer : 'You havent answered the question. Are you sure you want to continue?'
+                        incomplete_answer : 'You havent completed the question. Are you sure you want to continue?'
+
                     App.execute 'show:alert:popup',
                         region : App.dialogRegion
-                        message_content: 'You really want to end the quiz?'
+                        message_content: message[message_type]
                         alert_type: 'confirm'
-                        message_type: 'end_quiz'
+                        message_type: message_type
 
                 _endQuiz:->
 
@@ -193,9 +203,10 @@ define ['app'
 
                 #after confirm box yes is clicked on dialog region
                 _handlePopups:(message_type)->
+                    console.log message_type
                     switch message_type
                         when 'end_quiz' then @_endQuiz()
-                        when 'not_answered' then @layout.questionDisplayRegion.trigger "trigger:submit"
+                        when 'empty_answer' then @layout.questionDisplayRegion.trigger "trigger:submit"
 
             class TakeQuizLayout extends Marionette.Layout
 
