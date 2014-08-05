@@ -151,7 +151,7 @@ function get_single_quiz_module ($id) {
 
             elseif ($content['type'] == 'content_set'){
                 $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
-                    $content['data']['lvl2'],$content['data']['lvl3']);
+                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids);
                 foreach($set_content_ids as $id){
                     $content_ids[] = $id;
                 }
@@ -164,7 +164,7 @@ function get_single_quiz_module ($id) {
     return $data;
 }
 
-function generate_set_items($term_ids, $level1,$level2,$level3){
+function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids){
     global $wpdb;
 //    get id for all student type question
     $query = "select ID from {$wpdb->base_prefix}posts
@@ -173,6 +173,11 @@ function generate_set_items($term_ids, $level1,$level2,$level3){
                         and meta_value = 'student_question')
              and post_status = 'publish'";
     $stud_quest_ids = $wpdb->get_col($query);
+
+    $stud_quest_ids = __u::reject($stud_quest_ids,function($num){
+        return __u::includ($content_ids,$num);
+    });
+
     $stud_quest_ids_string = implode(',',$stud_quest_ids);
     $term_id = '';
     foreach($term_ids as $val){
