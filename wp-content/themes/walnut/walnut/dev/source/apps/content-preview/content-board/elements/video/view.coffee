@@ -27,9 +27,12 @@ define ['app'], (App)->
 			# if present ignore else run the Holder.js to show a placeholder
 			# after run remove the data-src attribute of the image to avoid
 			# reloading placeholder image again
+
+			#setHeight is used to get the height of the video placeholder base on its
+			#width
 			onShow : ->
-
-
+				alert "width"
+				console.log @$el.find('video').attr 'width'
 				return if not @model.get('video_ids').length
 
 				@videos = @model.get('videoUrls')
@@ -37,6 +40,11 @@ define ['app'], (App)->
 
 				@videoId = _.uniqueId('video_')
 				@$el.find('video').attr 'id', @videoId
+				widthRatio = 16
+				heightRatio = 9
+				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+				@$el.find('video').attr 'height', setHeight
+				console.log @$el.find('video').attr 'height'
 
 				@$el.find('video').on 'ended', =>
 					console.log "done"
@@ -108,21 +116,22 @@ define ['app'], (App)->
 
 			_playPrevVideo : (e)->
 				e.stopPropagation()
+				@$el.find('video').attr 'height', 'auto !important'
 				@index-- if @index > 0
-				console.log @index
 				@_playVideo()
 
 			_playNextVideo : (e)->
 				e.stopPropagation() if e?
+				@$el.find('video').attr 'height', 'auto !important'
 				if @index < @videos.length-1
 					@index++
 					@_playVideo()
 
 			_playClickedVideo : (e)->
 				e.stopPropagation()
+				@$el.find('video').attr 'height', 'auto !important'
 				index = parseInt $(e.target).attr 'data-index'
 				@index = index
-				console.log @index
 				@_playVideo()
 
 
@@ -130,6 +139,7 @@ define ['app'], (App)->
 
 			_playVideo:=>
 				console.log @index
+				@$el.find('video').attr 'height', 'auto !important'
 				@$el.find('.playlist-video').removeClass 'currentVid'
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
 				@$el.find('#now-playing-tag').text @model.get('title')[@index]

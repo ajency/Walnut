@@ -24,7 +24,9 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype.onShow = function() {
-        var videosWebDirectory;
+        var heightRatio, setHeight, videosWebDirectory, widthRatio;
+        alert("width");
+        console.log(this.$el.find('video').attr('width'));
         if (!this.model.get('video_ids').length) {
           return;
         }
@@ -32,6 +34,11 @@ define(['app'], function(App) {
         this.index = 0;
         this.videoId = _.uniqueId('video_');
         this.$el.find('video').attr('id', this.videoId);
+        widthRatio = 16;
+        heightRatio = 9;
+        setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
+        this.$el.find('video').attr('height', setHeight);
+        console.log(this.$el.find('video').attr('height'));
         this.$el.find('video').on('ended', (function(_this) {
           return function() {
             console.log("done");
@@ -85,10 +92,10 @@ define(['app'], function(App) {
 
       VideoView.prototype._playPrevVideo = function(e) {
         e.stopPropagation();
+        this.$el.find('video').attr('height', 'auto !important');
         if (this.index > 0) {
           this.index--;
         }
-        console.log(this.index);
         return this._playVideo();
       };
 
@@ -96,6 +103,7 @@ define(['app'], function(App) {
         if (e != null) {
           e.stopPropagation();
         }
+        this.$el.find('video').attr('height', 'auto !important');
         if (this.index < this.videos.length - 1) {
           this.index++;
           return this._playVideo();
@@ -105,14 +113,15 @@ define(['app'], function(App) {
       VideoView.prototype._playClickedVideo = function(e) {
         var index;
         e.stopPropagation();
+        this.$el.find('video').attr('height', 'auto !important');
         index = parseInt($(e.target).attr('data-index'));
         this.index = index;
-        console.log(this.index);
         return this._playVideo();
       };
 
       VideoView.prototype._playVideo = function() {
         console.log(this.index);
+        this.$el.find('video').attr('height', 'auto !important');
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
