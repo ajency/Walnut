@@ -40,16 +40,15 @@ define ['app'
 
                             answer = answerData.answerModel
 
-                            isEmptyAnswer= _.isEmpty _.compact answer.get 'answer'
+                            
+                            if answerData.questionType isnt 'sort'
+                                switch answerData.emptyOrIncomplete
+                                    when 'empty'        then @region.trigger 'show:alert:popup', 'submit_without_attempting'
+                                    when 'incomplete'   then @region.trigger 'show:alert:popup', 'incomplete_answer'
+                                    when 'complete'     then @_triggerSubmit()
 
-                            isEmptyAnswer= false if answerData.questionType is 'sort'
-
-                            if isEmptyAnswer
-                                @region.trigger 'show:alert:popup', 'empty_answer'
-
-                            else @_triggerSubmit()
-
-                            #@layout.triggerMethod "answer:validated", isEmptyAnswer
+                            else 
+                                @_triggerSubmit()
 
                         @listenTo layout, "goto:next:question",->
                             @region.trigger "goto:next:question"

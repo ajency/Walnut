@@ -111,14 +111,9 @@ define ['app'
 
                 _showPopup:(message_type)->
 
-                    message =
-                        end_quiz     : 'You really want to end the quiz?'
-                        empty_answer : 'You havent answered the question. Are you sure you want to continue?'
-                        incomplete_answer : 'You havent completed the question. Are you sure you want to continue?'
-
                     App.execute 'show:alert:popup',
                         region : App.dialogRegion
-                        message_content: message[message_type]
+                        message_content: quizModel.getMessageContent message_type
                         alert_type: 'confirm'
                         message_type: message_type
 
@@ -205,7 +200,8 @@ define ['app'
                     console.log message_type
                     switch message_type
                         when 'end_quiz' then @_endQuiz()
-                        when 'empty_answer' then @layout.questionDisplayRegion.trigger "trigger:submit"
+                        when 'submit_without_attempting' then @layout.questionDisplayRegion.trigger "trigger:submit"
+                        when 'incomplete_answer'   then  @layout.questionDisplayRegion.trigger "trigger:submit"
 
             class TakeQuizLayout extends Marionette.Layout
 

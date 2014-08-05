@@ -21,7 +21,18 @@ define ['app'
                     
                     answerWreqrObject.setHandler "get:question:answer", =>
 
+                        answer = _.compact @answerModel.get 'answer'
+
+                        if _.isEmpty answer
+                            emptyOrIncomplete = 'empty' 
+
+                        else if _.size(answer)< _.size @layout.model.get 'correct_answer'
+                            emptyOrIncomplete = 'incomplete' 
+
+                        else emptyOrIncomplete = 'complete'
+
                         data=
+                            'emptyOrIncomplete' : emptyOrIncomplete
                             'answerModel': @answerModel
                             'totalMarks' : @layout.model.get('marks')
 

@@ -18,11 +18,27 @@ define ['app'
                     
                     answerWreqrObject.setHandler "get:question:answer",=>
 
-                        _.each @view.$el.find('input'), (blank, index)=>
+                        blanks= @view.$el.find 'input'
+
+                        #make it blank first to clear the previous attempted answers
+                        @answerModel.set 'answer' : []
+
+                        _.each blanks, (blank, index)=>
                             # save it in answerModel
                             @answerModel.get('answer').push($(blank).val())
 
+                        answer = _.compact @answerModel.get 'answer'
+
+                        if _.isEmpty answer
+                            emptyOrIncomplete = 'empty' 
+
+                        else if _.size(answer)< _.size blanks
+                            emptyOrIncomplete = 'incomplete' 
+
+                        else emptyOrIncomplete = 'complete'
+
                         data=
+                            'emptyOrIncomplete' : emptyOrIncomplete
                             'answerModel': @answerModel
                             'totalMarks' : @layout.model.get('marks')
 

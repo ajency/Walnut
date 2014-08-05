@@ -51,6 +51,26 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
       };
 
+      ItemModel.prototype.getMessageContent = function(message_type) {
+        var custom_messages, default_messages, message_content;
+        default_messages = {
+          end_quiz: 'You really want to end the quiz?',
+          submit_without_attempting: 'You havent answered the question. Are you sure you want to continue?',
+          incomplete_answer: 'You havent completed the question. Are you sure you want to continue?',
+          correct_answer: 'You are correct!',
+          incorrect_answer: 'Sorry, you did not answer correctly',
+          partial_correct_answers: 'You are almost correct'
+        };
+        message_content = default_messages[message_type];
+        if (this.hasPermission('customize_messages')) {
+          custom_messages = this.get('message');
+          if (custom_messages[message_type] != null) {
+            message_content = custom_messages[message_type];
+          }
+        }
+        return message_content;
+      };
+
       return ItemModel;
 
     })(Backbone.Model);

@@ -37,6 +37,23 @@ define ["app", 'backbone'], (App, Backbone) ->
                 all_permissions = @.get 'permissions'
                 if all_permissions[permsission] then return true else return false
 
+            getMessageContent:(message_type)->
+                default_messages =
+                    end_quiz                    : 'You really want to end the quiz?'
+                    submit_without_attempting   : 'You havent answered the question. Are you sure you want to continue?'
+                    incomplete_answer           : 'You havent completed the question. Are you sure you want to continue?'
+                    correct_answer              : 'You are correct!'
+                    incorrect_answer            : 'Sorry, you did not answer correctly'
+                    partial_correct_answers     : 'You are almost correct'
+
+                message_content = default_messages[message_type]
+
+                if @.hasPermission 'customize_messages'
+                    custom_messages= @.get 'message'
+                    message_content = custom_messages[message_type] if custom_messages[message_type]?
+
+                message_content
+
 
 
         # collection of group of content pieces eg. quizzes, teacher training modules etc.
@@ -79,15 +96,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             newQuiz:->
                 new Quiz.ItemModel
-#                quizu
-
-#            scheduleContentGroup:(data)->
-#                questionResponseModel= App.request "save:question:response"
-#
-#                questionResponseModel.set data
-#
-#                questionResponseModel.save()
-
+                
         # request handler to get all content groups
         App.reqres.setHandler "get:quizes", (opt) ->
             API.getQuizes(opt)
@@ -100,7 +109,4 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "new:quiz",->
             API.newQuiz()
-
-#        App.reqres.setHandler "schedule:quiz", (data)->
-#            API.scheduleQuiz data
 

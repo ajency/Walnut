@@ -26,10 +26,17 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           this.displayAnswer = answerWreqrObject.options.displayAnswer;
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
-              var data;
-              console.log("@answerModel.get 'answer'");
-              console.log(_this.answerModel.get('answer'));
+              var answer, data, emptyOrIncomplete;
+              answer = _.compact(_this.answerModel.get('answer'));
+              if (_.isEmpty(answer)) {
+                emptyOrIncomplete = 'empty';
+              } else if (_.size(answer) < _.size(_this.layout.model.get('correct_answer'))) {
+                emptyOrIncomplete = 'incomplete';
+              } else {
+                emptyOrIncomplete = 'complete';
+              }
               return data = {
+                'emptyOrIncomplete': emptyOrIncomplete,
                 'answerModel': _this.answerModel,
                 'totalMarks': _this.layout.model.get('marks')
               };

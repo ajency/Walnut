@@ -19,7 +19,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
       answerModel = null;
 
       Controller.prototype.initialize = function(options) {
-        this.model = options.model, answerWreqrObject = options.answerWreqrObject, answerModel = options.answerModel;
+        this.model = options.model, answerWreqrObject = options.answerWreqrObject, answerModel = options.answerModel, this.quizModel = options.quizModel;
         this.view = this._getContentBoardView();
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
@@ -42,7 +42,8 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
 
       Controller.prototype._getContentBoardView = function() {
         return new ContentBoard.Views.ContentBoardView({
-          model: this.model
+          model: this.model,
+          quizModel: this.quizModel
         });
       };
 

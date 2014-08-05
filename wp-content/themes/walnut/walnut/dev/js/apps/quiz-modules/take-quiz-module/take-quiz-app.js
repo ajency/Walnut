@@ -96,15 +96,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._showPopup = function(message_type) {
-        var message;
-        message = {
-          end_quiz: 'You really want to end the quiz?',
-          empty_answer: 'You havent answered the question. Are you sure you want to continue?',
-          incomplete_answer: 'You havent completed the question. Are you sure you want to continue?'
-        };
         return App.execute('show:alert:popup', {
           region: App.dialogRegion,
-          message_content: message[message_type],
+          message_content: quizModel.getMessageContent(message_type),
           alert_type: 'confirm',
           message_type: message_type
         });
@@ -209,7 +203,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         switch (message_type) {
           case 'end_quiz':
             return this._endQuiz();
-          case 'empty_answer':
+          case 'submit_without_attempting':
+            return this.layout.questionDisplayRegion.trigger("trigger:submit");
+          case 'incomplete_answer':
             return this.layout.questionDisplayRegion.trigger("trigger:submit");
         }
       };

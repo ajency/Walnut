@@ -38,15 +38,17 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         this.listenTo(layout, "show", this._showContentBoard(this.model, this.answerWreqrObject));
         this.listenTo(layout, "validate:answer", function() {
-          var isEmptyAnswer;
           answerData = this.answerWreqrObject.request("get:question:answer");
           answer = answerData.answerModel;
-          isEmptyAnswer = _.isEmpty(_.compact(answer.get('answer')));
-          if (answerData.questionType === 'sort') {
-            isEmptyAnswer = false;
-          }
-          if (isEmptyAnswer) {
-            return this.region.trigger('show:alert:popup', 'empty_answer');
+          if (answerData.questionType !== 'sort') {
+            switch (answerData.emptyOrIncomplete) {
+              case 'empty':
+                return this.region.trigger('show:alert:popup', 'submit_without_attempting');
+              case 'incomplete':
+                return this.region.trigger('show:alert:popup', 'incomplete_answer');
+              case 'complete':
+                return this._triggerSubmit();
+            }
           } else {
             return this._triggerSubmit();
           }

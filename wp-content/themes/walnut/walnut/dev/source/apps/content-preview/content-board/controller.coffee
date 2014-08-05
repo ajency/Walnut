@@ -11,7 +11,7 @@ define ['app'
             answerModel       = null
 
             initialize : (options)->
-                {@model,answerWreqrObject, answerModel}=options
+                {@model,answerWreqrObject, answerModel, @quizModel}=options
 
                 @view = @_getContentBoardView()
 
@@ -37,6 +37,7 @@ define ['app'
             _getContentBoardView : =>
                 new ContentBoard.Views.ContentBoardView
                     model : @model
+                    quizModel: @quizModel
 
             # start filling elements
             startFillingElements : ()->

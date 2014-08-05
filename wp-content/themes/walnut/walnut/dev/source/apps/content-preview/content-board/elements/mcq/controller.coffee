@@ -16,9 +16,19 @@ define ['app'
                     @displayAnswer = answerWreqrObject.options.displayAnswer
 
                     answerWreqrObject.setHandler "get:question:answer", =>
-                        console.log "@answerModel.get 'answer'"
-                        console.log @answerModel.get 'answer'
+
+                        answer = _.compact @answerModel.get 'answer'
+
+                        if _.isEmpty answer
+                            emptyOrIncomplete = 'empty' 
+
+                        else if _.size(answer)< _.size @layout.model.get 'correct_answer'
+                            emptyOrIncomplete = 'incomplete' 
+
+                        else emptyOrIncomplete = 'complete'
+
                         data=
+                            'emptyOrIncomplete' : emptyOrIncomplete
                             'answerModel': @answerModel
                             'totalMarks' : @layout.model.get('marks')
 

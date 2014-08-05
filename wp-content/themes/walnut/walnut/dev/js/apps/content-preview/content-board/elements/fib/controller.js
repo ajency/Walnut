@@ -20,11 +20,24 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           this.displayAnswer = answerWreqrObject.options.displayAnswer;
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
-              var data;
-              _.each(_this.view.$el.find('input'), function(blank, index) {
+              var answer, blanks, data, emptyOrIncomplete;
+              blanks = _this.view.$el.find('input');
+              _this.answerModel.set({
+                'answer': []
+              });
+              _.each(blanks, function(blank, index) {
                 return _this.answerModel.get('answer').push($(blank).val());
               });
+              answer = _.compact(_this.answerModel.get('answer'));
+              if (_.isEmpty(answer)) {
+                emptyOrIncomplete = 'empty';
+              } else if (_.size(answer) < _.size(blanks)) {
+                emptyOrIncomplete = 'incomplete';
+              } else {
+                emptyOrIncomplete = 'complete';
+              }
               return data = {
+                'emptyOrIncomplete': emptyOrIncomplete,
                 'answerModel': _this.answerModel,
                 'totalMarks': _this.layout.model.get('marks')
               };
