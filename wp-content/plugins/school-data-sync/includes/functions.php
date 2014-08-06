@@ -415,8 +415,19 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
     $retarray = array('success'=>true);
       $uploads_dir=wp_upload_dir();
       $upload_path = $uploads_dir['basedir'];
-      if ($mediatype != 'images')
-        $upload_path=str_replace("images", $mediatype, $uploads_dir['basedir']);
+
+        //REVERT BACK TO THESE TWO LINES AFTER DECRYPTION FEATURE DONE
+        // if ($mediatype != 'images')
+        //     $upload_path=str_replace("images", $mediatype, $uploads_dir['basedir']);
+
+        if ($mediatype != 'images'){
+            if($mediatype === 'audios')
+                $upload_path=str_replace("images", 'media-web/audio-web', $uploads_dir['basedir']);
+
+            if($mediatype === 'videos')
+                $upload_path=str_replace("images", 'media-web/video-web', $uploads_dir['basedir']);
+        }
+
         foreach ($files as $key=>$value){
             $url = $value;
             $savepath = $upload_path.'/'.$key;
