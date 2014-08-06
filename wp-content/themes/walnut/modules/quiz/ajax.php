@@ -97,3 +97,70 @@ function ajax_fetch_all_quizes(){
 }
 
 add_action('wp_ajax_get-quizes','ajax_fetch_all_quizes');
+
+
+
+
+function save_quiz_response_summary(){
+    
+    $args = $_POST;
+    // print_r($_POST['status']);exit;
+    unset($args['action']);
+
+    $summary_id = write_quiz_response_summary($args);
+
+    wp_send_json(array('code' => 'OK',array('summary_id' => $summary_id)));
+
+}
+
+add_action('wp_ajax_save-quiz-response-summary','save_quiz_response_summary');
+
+add_action('wp_ajax_undate-quiz-response-summary','save_quiz_response_summary');
+
+function fetch_quiz_response_summary(){
+
+    unset($_GET['action']);
+    $args = $_GET;
+    $quiz_summary = read_quiz_response_summary($args);
+
+    wp_send_json(array('code' => 'OK','data' => $quiz_summary));
+}
+
+add_action('wp_ajax_read-quiz-response-summary', 'fetch_quiz_response_summary');
+
+
+function save_quiz_question_response(){
+    $args = $_POST;
+
+    unset($args['action']);
+
+    $qr_id = write_quiz_question_response($args);
+
+    wp_send_json(array('code' => 'OK',array('qr_id' => $qr_id)));
+}
+
+add_action('wp_ajax_save-quiz-question-response','save_quiz_question_response');
+
+
+function update_quiz_question_response(){
+    $args = $_POST;
+
+    unset($args['action']);
+
+    $qr_id = write_quiz_question_response($args);
+
+    if($qr_id)
+        wp_send_json(array('code' => 'OK',array('qr_id' => $qr_id)));
+    else
+        wp_send_json(array('code' => 'error'));
+}
+
+add_action('wp_ajax_update-quiz-question-response','update_quiz_question_response');
+
+function get_quiz_question_response(){
+    $id = $_GET['qr_id'];
+    $quiz_question_response = read_quiz_question_response($id);
+    wp_send_json(array('code' => 'OK','data' => $quiz_question_response));
+}
+
+add_action('wp_ajax_read-quiz-question-response','get_quiz_question_response');
