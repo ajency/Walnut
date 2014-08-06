@@ -99,7 +99,13 @@ add_action( 'wp_ajax_nopriv_get-site-image-resources-data', 'get_site_image_reso
 function get_site_video_resources_data() {
 
     switch_to_blog( 1 );
-    $resource_data = get_videos_directory_json();
+
+    $originals=false;
+    if(isset($_REQUEST['originals']))
+        $originals= true;
+
+    $resource_data = get_videos_directory_json($originals);
+
     wp_die( json_encode( $resource_data ) );
 }
 
@@ -109,7 +115,12 @@ add_action( 'wp_ajax_nopriv_get-site-video-resources-data', 'get_site_video_reso
 function get_site_audio_resources_data() {
 
     switch_to_blog( 1 );
-    $resource_data = get_audio_directory_json();
+
+    $originals=false;
+    if(isset($_REQUEST['originals']))
+        $originals= true;
+
+    $resource_data = get_audio_directory_json($originals);
     wp_die( json_encode( $resource_data ) );
 }
 
