@@ -337,7 +337,9 @@ jQuery(document).ready(function() {
                 },
                 function(data) {           
                            if(data.code === 'OK'){ 
-                                       jQuery(referer).next().text('Video files downloaded...').fadeOut(5000);
+                                       jQuery(referer).next().text('Video files downloaded...').fadeOut(1000,function(){
+                                           jQuery(referer).next().text('Media Syncd Completed!').fadeIn(1000);
+                                       });
                                        jQuery(referer).prop('disabled', false);
                                        jQuery('#sync-data').prop('disabled', false);
 
