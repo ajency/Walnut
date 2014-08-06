@@ -48,7 +48,6 @@ function sds_validate_class_divisions_csv_row( $class_divisions_data ) {
 function sds_convert_csv_row_to_class_divisions_format( $class_divisions_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'id' => $class_divisions_data[0],
@@ -139,7 +138,6 @@ function sds_read_question_response_csv_file( $file_path ) {
 }
 
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -160,8 +158,7 @@ function sds_validate_question_response_csv_row( $question_response_data ) {
     return true;
 }
 
-/**
- * @param $question_response_data Expected array = array(CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0)
+/** Expected array = array(CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0)
  * @return array(
  * 'ref_id' => 'CP143C59D123456011',
  * 'teacher_id' => 78,
@@ -186,7 +183,8 @@ function sds_convert_csv_row_to_question_response_format( $question_response_dat
         'time_taken' => $question_response_data[6],
         'start_date' => $question_response_data[7],
         'end_date' => $question_response_data[8],
-        'status' => $question_response_data[9]
+        'status' => $question_response_data[9],
+        'sync' => 1
     );
 }
 
@@ -260,7 +258,6 @@ function sds_read_question_response_meta_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -286,7 +283,6 @@ function sds_validate_question_response_meta_csv_row( $question_response_meta_da
 function sds_convert_csv_row_to_question_response_meta_format( $question_response_meta_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'qr_ref_id' => $question_response_meta_data[0],
@@ -372,7 +368,6 @@ function sds_read_content_collection_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -399,7 +394,6 @@ function sds_validate_content_collection_csv_row( $content_collection_data ) {
 function sds_convert_csv_row_to_content_collection_format( $content_collection_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'id' => $content_collection_data[0],
@@ -487,7 +481,6 @@ function sds_read_collection_meta_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -513,7 +506,6 @@ function sds_validate_collection_meta_csv_row( $collection_meta_data ) {
 function sds_convert_csv_row_to_collection_meta_format( $collection_meta_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'id' => $collection_meta_data[0],
@@ -594,7 +586,6 @@ function sds_read_options_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -617,7 +608,6 @@ function sds_validate_options_csv_row( $options_data ) {
 function sds_convert_csv_row_to_options_format( $options_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'option_id' => $options_data[0],
@@ -697,7 +687,6 @@ function sds_read_posts_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -720,7 +709,6 @@ function sds_validate_posts_csv_row( $posts_data ) {
 function sds_convert_csv_row_to_posts_format( $posts_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'ID' => $posts_data[0],
@@ -819,7 +807,6 @@ function sds_read_postmeta_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -841,7 +828,6 @@ function sds_validate_postmeta_csv_row( $postmeta_data ) {
 
 function sds_convert_csv_row_to_postmeta_format( $postmeta_data ) {
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
 
     return array(
@@ -922,7 +908,6 @@ function sds_read_term_relationships_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -945,7 +930,6 @@ function sds_validate_term_relationships_csv_row( $term_relationships_data ) {
 function sds_convert_csv_row_to_term_relationships_format( $term_relationships_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'object_id' => $term_relationships_data[0],
@@ -1024,7 +1008,6 @@ function sds_read_term_taxonomy_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -1047,7 +1030,6 @@ function sds_validate_term_taxonomy_csv_row( $term_taxonomy_data ) {
 function sds_convert_csv_row_to_term_taxonomy_format( $term_taxonomy_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'term_taxonomy_id' => $term_taxonomy_data[0],
@@ -1129,7 +1111,6 @@ function sds_read_terms_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -1152,7 +1133,6 @@ function sds_validate_terms_csv_row( $terms_data ) {
 function sds_convert_csv_row_to_terms_format( $terms_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'term_id' => $terms_data[0],
@@ -1232,7 +1212,6 @@ function sds_read_textbook_relationships_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -1258,7 +1237,6 @@ function sds_validate_textbook_relationships_csv_row( $textbook_relationships_da
 function sds_convert_csv_row_to_textbook_relationships_format( $textbook_relationships_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'id' => $textbook_relationships_data[0],
@@ -1338,7 +1316,6 @@ function sds_read_usermeta_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -1364,7 +1341,6 @@ function sds_validate_usermeta_csv_row( $usermeta_data ) {
 function sds_convert_csv_row_to_usermeta_format( $usermeta_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     global $wpdb;
 
@@ -1456,7 +1432,6 @@ function sds_read_users_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 /**
- * @param $question_response_data
  * @return bool|WP_Error
  * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
  */
@@ -1482,7 +1457,6 @@ function sds_validate_users_csv_row( $users_data ) {
 function sds_convert_csv_row_to_users_format( $users_data ) {
 
     // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
 
     return array(
         'ID' => $users_data[0],
