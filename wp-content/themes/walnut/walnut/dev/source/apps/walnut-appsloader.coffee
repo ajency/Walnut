@@ -12,5 +12,5 @@ define [
     'apps/admin-content-modules/app'
     'apps/quiz-modules/quiz-module-app'
     'apps/popup-dialog/single-edit-popup/single-edit-popup-controller'
-    'apps/default-router/default-app'
+    #'apps/default-router/default-app'
 ], ->
