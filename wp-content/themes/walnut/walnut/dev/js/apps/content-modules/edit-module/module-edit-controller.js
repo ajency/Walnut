@@ -4,7 +4,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'apps/content-modules/edit-module/module-edit-views', 'apps/content-modules/edit-module/module-description/module-description-controller', 'apps/content-modules/edit-module/content-selection/app', 'apps/content-modules/edit-module/content-display/content-display-app'], function(App, RegionController) {
   return App.module("ContentModulesApp.Edit", function(Edit, App) {
-    return Edit.GroupController = (function(_super) {
+    Edit.GroupController = (function(_super) {
       __extends(GroupController, _super);
 
       function GroupController() {
@@ -130,5 +130,8 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
       return GroupController;
 
     })(RegionController);
+    return App.commands.setHandler('show:edit:module:controller', function(opts) {
+      return new Edit.GroupController(opts);
+    });
   });
 });

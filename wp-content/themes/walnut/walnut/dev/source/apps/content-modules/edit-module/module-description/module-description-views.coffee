@@ -8,7 +8,7 @@ define ['app'
 
             template : collectionDetailsTpl
 
-            className : 'tiles white grid simple vertical green animated fadeIn'
+            className : 'grid simple vertical green animated fadeIn'
 
             events :
                 'change #textbooks' : (e)->
@@ -36,7 +36,7 @@ define ['app'
             mixinTemplateHelpers : (data)->
                 data = super data
 
-                data.heading = if @model.isNew() then 'Add' else 'Edit'
+                data.heading = if @model.isNew() then 'Create a' else 'Edit a'
 
                 data.isModule = true if data.type is 'module'
 
@@ -57,6 +57,10 @@ define ['app'
 
             onShow : ->
                 Backbone.Syphon.deserialize @, @model.toJSON()
+                console.log @$el.find('#qType').val()
+                console.log @model.toJSON()
+
+                @$el.find('#qType').val @model.get 'quiz_type' if @model.get('type') is 'quiz'
 
                 if @model.get('type') is 'quiz'
                     @_showCustomMessages @$el.find('#msgs')
