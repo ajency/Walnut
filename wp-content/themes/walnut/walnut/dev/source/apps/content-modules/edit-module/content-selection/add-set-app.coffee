@@ -75,8 +75,8 @@ define ['app'
                                 </div>'
 
             events :
-                'click input' : ->
-                    @trigger 'get:textbook:filter'
+                # 'click input' : ->
+                #     @trigger 'get:textbook:filter'
 
                 'change .level-selection input' : '_onSpinEditValueChanged'
                 'click #add-set-button' : ->

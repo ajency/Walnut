@@ -13,7 +13,8 @@ define(['app', 'apps/quiz-modules/edit-quiz/edit-quiz-controller'], function(App
 
       QuizModuleRouter.prototype.appRoutes = {
         'create-quiz': 'createQuiz',
-        'edit-quiz/:id': 'editQuiz'
+        'edit-quiz/:id': 'editQuiz',
+        'quiz-list': 'showQuizList'
       };
 
       return QuizModuleRouter;
@@ -21,14 +22,22 @@ define(['app', 'apps/quiz-modules/edit-quiz/edit-quiz-controller'], function(App
     })(Marionette.AppRouter);
     Controller = {
       createQuiz: function() {
-        return new QuizModuleApp.EditQuiz.Controller({
-          region: App.mainContentRegion
+        return App.execute('show:edit:module:controller', {
+          region: App.mainContentRegion,
+          groupType: 'quiz'
         });
       },
       editQuiz: function(id) {
-        return new QuizModuleApp.EditQuiz.Controller({
+        return App.execute('show:edit:module:controller', {
           region: App.mainContentRegion,
-          quiz_id: id
+          group_id: id,
+          groupType: 'quiz'
+        });
+      },
+      showQuizList: function() {
+        return App.execute('show:module:listing:app', {
+          region: App.mainContentRegion,
+          groupType: 'quiz'
         });
       }
     };

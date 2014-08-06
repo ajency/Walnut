@@ -12,7 +12,7 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
 
       CollectionDetailsView.prototype.template = collectionDetailsTpl;
 
-      CollectionDetailsView.prototype.className = 'tiles white grid simple vertical green animated fadeIn';
+      CollectionDetailsView.prototype.className = 'grid simple vertical green animated fadeIn';
 
       CollectionDetailsView.prototype.events = {
         'change #textbooks': function(e) {
@@ -42,7 +42,7 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
         data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
-        data.heading = this.model.isNew() ? 'Add' : 'Edit';
+        data.heading = this.model.isNew() ? 'Create a' : 'Edit a';
         if (data.type === 'module') {
           data.isModule = true;
         }
@@ -60,6 +60,11 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
 
       CollectionDetailsView.prototype.onShow = function() {
         Backbone.Syphon.deserialize(this, this.model.toJSON());
+        console.log(this.$el.find('#qType').val());
+        console.log(this.model.toJSON());
+        if (this.model.get('type') === 'quiz') {
+          this.$el.find('#qType').val(this.model.get('quiz_type'));
+        }
         if (this.model.get('type') === 'quiz') {
           this._showCustomMessages(this.$el.find('#msgs'));
           this._toggleNegativeMarks(this.$el.find('input[name="negMarksEnable"]:checked'));

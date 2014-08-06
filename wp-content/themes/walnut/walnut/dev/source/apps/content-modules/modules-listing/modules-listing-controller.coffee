@@ -7,7 +7,7 @@ define ['app'
 
             initialize :(opts) ->
 
-                {@contentModulesCollection,@textbooksCollection }=opts
+                { @contentModulesCollection,@textbooksCollection,@groupType } = opts
 
                 @allChaptersCollection = null
 
@@ -53,6 +53,7 @@ define ['app'
                     fullCollection      : @fullCollection
                     textbooksCollection : @textbooksCollection
                     chaptersCollection  : @allChaptersCollection
+                    groupType : @groupType
 
 
 

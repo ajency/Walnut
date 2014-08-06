@@ -26,6 +26,9 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
         var term_ids, view;
         this.view = view = this._getCollectionDetailsView(this.model);
         if (this.model.get('type') === 'quiz') {
+          if ((this.model.get('message') == null) || this.model.get('message') === '') {
+            this.model.set('message', {});
+          }
           this.message = this.model.get('message');
           this.listenTo(this.view, 'show:custom:msg:popup', (function(_this) {
             return function(options) {

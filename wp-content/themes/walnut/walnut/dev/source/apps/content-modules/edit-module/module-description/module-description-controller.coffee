@@ -18,6 +18,10 @@ define ['app'
 
 
                 if @model.get('type') is 'quiz'
+
+                    if not @model.get('message')? or @model.get('message') is '' 
+                        @model.set 'message' ,{}
+
                     @message = @model.get('message')
 
                     @listenTo @view, 'show:custom:msg:popup',(options)=>

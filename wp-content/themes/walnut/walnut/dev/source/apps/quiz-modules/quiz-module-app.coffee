@@ -8,18 +8,26 @@ define ['app'
             appRoutes :
                 'create-quiz' : 'createQuiz'
                 'edit-quiz/:id' : 'editQuiz'
+                'quiz-list' : 'showQuizList'
 
 
         Controller =
 
             createQuiz : ->
-                new QuizModuleApp.EditQuiz.Controller
+                App.execute 'show:edit:module:controller',
                     region : App.mainContentRegion
+                    groupType : 'quiz'
 
             editQuiz : (id)->
-                new QuizModuleApp.EditQuiz.Controller
+                App.execute 'show:edit:module:controller',
                     region : App.mainContentRegion
-                    quiz_id : id
+                    group_id : id
+                    groupType : 'quiz'
+
+            showQuizList : ->
+                App.execute 'show:module:listing:app',
+                    region: App.mainContentRegion
+                    groupType : 'quiz'
 
 
         QuizModuleApp.on 'start',->

@@ -13,9 +13,11 @@ define ['app'
                           </div>
                         </td>-->
                         <td>{{name}}</td>
+                        {{#isQuiz}}<td>{{quiz_type}}</td>{{/isQuiz}}
                         <td>{{textbookName}}</td>
                         <td>{{chapterName}}</td>
                         <td>{{durationRounded}} {{minshours}}</td>
+                        {{#isQuiz}}<td>{{marks}}</td>{{/isQuiz}}
                         <td>{{&statusMessage}}</td>
                         <td><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span>
                             <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a>
@@ -42,6 +44,12 @@ define ['app'
                     else
                         data.duration
 
+                if @groupType is 'quiz'
+                    data.quiz_type = _.capitalize data.quiz_type
+                    data.view_url = SITEURL + "/#view-quiz/#{data.id}"
+                    data.edit_url = SITEURL + "/#edit-quiz/#{data.id}"
+
+
                 data.statusMessage = ->
                     if data.post_status is 'underreview'
                         return '<span class="label label-important">Under Review</span>'
@@ -54,12 +62,18 @@ define ['app'
 
                 data
 
+            mixinTemplateHelpers : (data)->
+                data = super data
+                data.isQuiz = true if @groupType is 'quiz'
+                data
+
             events:
                 'click a.cloneModule' : 'cloneModule'
 
             initialize : (options)->
                 @textbooks = options.textbooksCollection
                 @chapters = options.chaptersCollection
+                @groupType = options.groupType
 
             cloneModule :->
                 if @model.get('post_status') in ['publish','archive']
@@ -116,6 +130,13 @@ define ['app'
             itemViewOptions : ->
                 textbooksCollection : @textbooks
                 chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
+                groupType : @groupType
+
+            mixinTemplateHelpers : (data)->
+                data = super data
+                data.isQuiz = true if @groupType is 'quiz'
+                console.log @groupType
+                data
 
             events :
                 'change .textbook-filter' :(e)->
@@ -126,6 +147,7 @@ define ['app'
 
             initialize : ->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
+                @groupType = Marionette.getOption @, 'groupType'
                 @textbooks = new Array()
                 @textbooksCollection.each (textbookModel, ind)=>
                     @textbooks.push
