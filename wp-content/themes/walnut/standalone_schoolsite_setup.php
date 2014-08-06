@@ -112,7 +112,8 @@ function create_custom_tables(){
               `time_taken` varchar(255) NOT NULL DEFAULT '0',
               `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               `end_date` datetime NOT NULL,
-              `status` varchar(50) NOT NULL
+              `status` varchar(50) NOT NULL,
+              `sync` int(1)
             )";
 
     $wpdb->query( $question_response_table );

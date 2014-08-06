@@ -220,7 +220,7 @@ add_action( 'wp_ajax_sds_data_sync_local_upload', 'ajax_sds_local_upload_to_serv
 
 
 ///Media Sync functions
-function ajax_sds_media_sync_images(){
+function ajax_sds_media_sync(){
     $mediafetchactions = array('images' =>'get-site-image-resources-data',
                                 'audios'=>'get-site-audio-resources-data',
                                 'videos'=>'get-site-video-resources-data');
@@ -259,9 +259,9 @@ function ajax_sds_media_sync_images(){
     
     wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Files download error','files' => $download_resp) ) );
 }
-add_action( 'wp_ajax_sds_media_sync_images', 'ajax_sds_media_sync_images' );
+add_action( 'wp_ajax_sds_media_sync', 'ajax_sds_media_sync' );
 
-add_action( 'wp_ajax_nopriv_sds_media_sync_images', 'ajax_sds_media_sync_images' );
+add_action( 'wp_ajax_nopriv_sds_media_sync', 'ajax_sds_media_sync' );
 
 
 function ajax_save_standalone_school_blogid(){

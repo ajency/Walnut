@@ -279,7 +279,7 @@ jQuery(document).ready(function() {
                 var referer = jQuery(this);
                 jQuery.post( ajaxurl,
                 {
-                    action    : 'sds_media_sync_images',
+                    action    : 'sds_media_sync',
                     type : 'images'
                 },
                 function(data) {           
@@ -306,7 +306,7 @@ jQuery(document).ready(function() {
             referer.next().text('Downloading Audio files...');
                 jQuery.post( ajaxurl,
                 {
-                    action    : 'sds_media_sync_images',
+                    action    : 'sds_media_sync',
                     type : 'audios'
                 },
                 function(data) {           
@@ -332,7 +332,7 @@ jQuery(document).ready(function() {
             referer.next().text('Downloading Video files...');
                 jQuery.post( ajaxurl,
                 {
-                    action : 'sds_media_sync_images',
+                    action : 'sds_media_sync',
                     type : 'videos'
                 },
                 function(data) {           

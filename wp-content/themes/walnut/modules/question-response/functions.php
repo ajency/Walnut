@@ -17,6 +17,10 @@ function insert_question_response($data)
         'status' => $status
     );
 
+    //handling sync status for standalone sites. 
+    if (!is_multisite()) 
+        $insert_data['sync']=0;
+
     if (isset($start_date))
         $insert_data['start_date'] = $start_date;
 
