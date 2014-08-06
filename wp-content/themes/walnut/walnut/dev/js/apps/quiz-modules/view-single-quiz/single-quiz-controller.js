@@ -6,7 +6,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
   return App.module("QuizModuleApp.ViewQuiz", function(ViewQuiz, App) {
     var QuizViewLayout;
     ViewQuiz.Controller = (function(_super) {
-      var display_mode, questionResponseCollection, questionsCollection, quizModel;
+      var display_mode, questionResponseCollection, questionsCollection, quizModel, quizResponseSummary;
 
       __extends(Controller, _super);
 
@@ -20,6 +20,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       quizModel = null;
 
       questionsCollection = null;
+
+      quizResponseSummary = null;
 
       questionResponseCollection = null;
 
@@ -37,6 +39,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         App.execute("show:leftnavapp", {
           region: App.leftNavRegion
         });
+        quizResponseSummary = App.request("create:quiz:response:summary");
         if (!questionResponseCollection) {
           questionResponseCollection = App.request("get:quiz:response:collection", {
             'collection_id': quizModel.get('id')

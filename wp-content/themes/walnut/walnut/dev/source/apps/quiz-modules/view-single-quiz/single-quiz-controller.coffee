@@ -9,6 +9,7 @@ define ['app'
 
             quizModel = null
             questionsCollection = null
+            quizResponseSummary = null
             questionResponseCollection = null
             display_mode = null
 
@@ -20,6 +21,8 @@ define ['app'
 
                 App.execute "show:headerapp", region : App.headerRegion
                 App.execute "show:leftnavapp", region : App.leftNavRegion
+
+                quizResponseSummary =  App.request "create:quiz:response:summary"
 
                 if not questionResponseCollection
                     questionResponseCollection = App.request "get:quiz:response:collection",
