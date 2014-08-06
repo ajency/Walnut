@@ -377,10 +377,19 @@ function sds_get_media_files_directory_json($mediatype = 'images') {
     $wp_upload_dir = wp_upload_dir();
     if($mediatype == 'images'){
      $files = sds_read_folder_directory( $wp_upload_dir['path'], $wp_upload_dir['baseurl']);   
-    }else{
-     $files = sds_read_folder_directory( str_replace("images", $mediatype, $wp_upload_dir['path']), 
-             str_replace("images", $mediatype, $wp_upload_dir['baseurl']));
     }
+
+    else{
+        if($mediatype === 'audios')
+            $folderName='media-web/audio-web';
+
+        if($mediatype === 'videos')
+            $folderName='media-web/videos-web';
+
+        $files = sds_read_folder_directory( str_replace("images", $folderName, $wp_upload_dir['path']), 
+             str_replace("images", $folderName, $wp_upload_dir['baseurl']));
+    }
+
     return $files;
 }
 function sds_get_videos_directory_json() {
@@ -425,7 +434,7 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
                 $upload_path=str_replace("images", 'media-web/audio-web', $uploads_dir['basedir']);
 
             if($mediatype === 'videos')
-                $upload_path=str_replace("images", 'media-web/video-web', $uploads_dir['basedir']);
+                $upload_path=str_replace("images", 'media-web/videos-web', $uploads_dir['basedir']);
         }
 
         foreach ($files as $key=>$value){
