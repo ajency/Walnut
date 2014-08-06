@@ -1,11 +1,11 @@
 define ['app'
         'controllers/region-controller'
 ], (App, RegionController)->
-    App.module "ContentSelectionApp.Controller.SearchResults", (SearchResults, App, Backbone, Marionette, $, _)->
+    App.module "ContentSelectionApp.SearchResults", (SearchResults, App, Backbone, Marionette, $, _)->
         class SearchResults.Controller extends RegionController
             initialize: (opts) ->
 
-                {@contentGroupCollection}=opts
+                {@contentGroupCollection, @groupType} = opts
 
                 @layout = layout = @_getSearchResultsLayout()
 
@@ -24,8 +24,10 @@ define ['app'
 
             _searchContent:(searchStr)=>
 
+                content_type = if @groupType is 'module' then  ['teacher_question','content_piece'] else ['student_question']
+
                 @newCollection = App.request "get:content:pieces",
-                    content_type    : ['teacher_question','content_piece']
+                    content_type    : content_type
                     search_str      : searchStr
                     exclude         : @contentGroupCollection.pluck('ID')
 

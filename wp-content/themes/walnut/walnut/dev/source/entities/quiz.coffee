@@ -25,9 +25,10 @@ define ["app", 'backbone'], (App, Backbone) ->
                 minshours: 'mins'
                 negMarksEnable: 'false'
                 negMarks: ''
-#                term_ids: []
+                term_ids: []
                 content_pieces: []
                 message : {}
+                content_layout:[]
 #                training_date: ''
 
             name: 'quiz'

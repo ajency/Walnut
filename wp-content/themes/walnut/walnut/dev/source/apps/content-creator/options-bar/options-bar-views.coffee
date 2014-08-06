@@ -31,7 +31,8 @@ define ['app',
             mixinTemplateHelpers : (data)->
                 data = super data
                 data.isStudentQuestion = if @model.get('content_type') is 'student_question' then true else false
-
+                data.isTeacherQuestion = if @model.get('content_type') is 'teacher_question' then true else false
+                data.isContentPiece = if @model.get('content_type') is 'content_piece' then true else false
                 data.instructionsLabel = if @model.get('content_type') is 'content_piece' then 'Procedure Summary' else 'Instructions'
 
                 data

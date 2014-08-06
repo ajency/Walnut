@@ -27,6 +27,8 @@ define ['app'
             renderElement : ->
                 optionsObj = @layout.model.get 'elements'
 
+                optionsObj = @layout.model.get('elements').toJSON() if @layout.model.get('elements') instanceof Backbone.Collection
+
                 console.log optionsObj
 
                 @_parseOptions optionsObj
@@ -37,7 +39,7 @@ define ['app'
                 @layout.model.set 'elements', optionCollection
 
                 # get the view
-                @view = @_getSortView optionCollection
+                @view = @_getSortView()# optionCollection
 
                 # listen to show event, and trigger show property box event
                 # listen to show property box event and show the property by passing the current model
@@ -46,15 +48,15 @@ define ['app'
                         model : @layout.model
 
                 # # on show disable all question elements in d element box
-                # @listenTo view, "show",=>
-                # 	@eventObj.vent.trigger "question:dropped"
+#                @listenTo view, "show",=>
+#                	@eventObj.vent.trigger "question:dropped"
 
                 # show the view
                 @layout.elementRegion.show @view
 
-            _getSortView : (collection)->
+            _getSortView : ()->
                 new Sort.Views.SortView
-                    collection : collection
+                    collection : @layout.model.get 'elements' #collection
                     sort_model : @layout.model
 
             _parseOptions:(optionsObj)->
@@ -80,9 +82,9 @@ define ['app'
                     until oldval is newval
                         model.get('elements').pop() #remove model.get('elements').where({index:oldval})[0]
                         oldval--
-#                @view.triggerMethod 'close'
-#                @layout.elementRegion.show @view
 
+#                @view.triggerMethod 'close'
+                @renderElement()
 
                 # on delete remove the collection from the model
                 # coz the model cant be deleted with a collection in it

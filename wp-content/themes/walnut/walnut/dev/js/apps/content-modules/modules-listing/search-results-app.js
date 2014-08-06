@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       Controller.prototype.initialize = function(opts) {
         var layout;
-        this.textbooksCollection = opts.textbooksCollection, this.selectedFilterParamsObject = opts.selectedFilterParamsObject;
+        this.textbooksCollection = opts.textbooksCollection, this.selectedFilterParamsObject = opts.selectedFilterParamsObject, this.groupType = opts.groupType;
         this.layout = layout = this._getSearchResultsLayout();
         this.searchCollection = App.request("empty:content:modules:collection");
         this.show(layout, {
@@ -37,10 +37,18 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         if (useFilters) {
           this.selectedFilterParamsObject.request("get:selected:parameters");
         }
-        this.newCollection = App.request("get:content:groups", {
-          post_status: 'any',
-          search_str: searchStr
-        });
+        if (this.groupType === 'module') {
+          this.newCollection = App.request("get:content:groups", {
+            post_status: 'any',
+            search_str: searchStr
+          });
+        }
+        if (this.groupType === 'quiz') {
+          this.newCollection = App.request("get:quizes", {
+            post_status: 'any',
+            search_str: searchStr
+          });
+        }
         return App.execute("when:fetched", this.newCollection, (function(_this) {
           return function() {
             _this.searchCollection.reset(_this.newCollection.models);

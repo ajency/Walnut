@@ -21,6 +21,7 @@ function save_content_module($data = array()) {
         'last_modified_on'  => date('y-m-d H:i:s'),
         'last_modified_by'  => get_current_user_id(),
         'duration'          => $duration,
+        'type'              => $data['type'],
         'post_status'       => $data['post_status']
     );
 
@@ -150,7 +151,9 @@ function get_all_content_modules($args=array()){
     }
 
     $content_data=array();
-
+    
+    $content_modules_ids_array = __u::flatten($content_modules_ids_array);
+    
     foreach($content_modules_ids_array as $id)
         $content_data[]=  get_single_content_module($id, $division);
 
@@ -169,44 +172,44 @@ function get_modules_by_search_string($search_string, $all_module_ids){
     //search where module_name like search string
     $module_ids[]= search_modules_by_description($search_string);
 
-    $other_modules= __u::difference($all_module_ids, __u::flatten($module_ids));
+    // $other_modules= __u::difference($all_module_ids, __u::flatten($module_ids));
 
-    //select collection_id, meta_value from collection_meta where meta_key content_pieces
+    // //select collection_id, meta_value from collection_meta where meta_key content_pieces
 
-    $other_module_ids= join(',',$other_modules);
+    // $other_module_ids= join(',',$other_modules);
 
-    $content_modules_query= $wpdb->prepare("SELECT c.id, c.type, cm.meta_value
-                                FROM {$wpdb->base_prefix}content_collection c, {$wpdb->base_prefix}collection_meta cm
-                                WHERE c.id=cm.collection_id AND meta_key like %s
-                                AND collection_id in ($other_module_ids)",
-        'content_pieces'
-    );
+    // $content_modules_query= $wpdb->prepare("SELECT c.id, c.type, cm.meta_value
+    //                             FROM {$wpdb->base_prefix}content_collection c, {$wpdb->base_prefix}collection_meta cm
+    //                             WHERE c.id=cm.collection_id AND meta_key like %s
+    //                             AND collection_id in ($other_module_ids)",
+    //     'content_pieces'
+    // );
 
-    $content_modules = $wpdb->get_results($content_modules_query);
+    // $content_modules = $wpdb->get_results($content_modules_query);
 
-    if($content_modules){
+    // if($content_modules){
 
-        foreach($content_modules as $module){
+    //     foreach($content_modules as $module){
 
-            $content_pieces= maybe_unserialize($module->meta_value);
+    //         $content_pieces= maybe_unserialize($module->meta_value);
 
-            if($module->type == 'quiz')
-                $content_pieces =__u::pluck($content_pieces, 'id');
+    //         if($module->type == 'quiz')
+    //             $content_pieces =__u::pluck($content_pieces, 'id');
 
-            if(sizeof($content_pieces)>0){
+    //         if(sizeof($content_pieces)>0){
 
-                $string_exists= get_content_pieces_by_search_string($search_string,$content_pieces);
+    //             $string_exists= get_content_pieces_by_search_string($search_string,$content_pieces);
 
 
-                if(is_array($string_exists) && sizeof($string_exists)>0)
-                    $module_ids[]=$module->id;
+    //             if(is_array($string_exists) && sizeof($string_exists)>0)
+    //                 $module_ids[]=$module->id;
 
-            }
-        }
+    //         }
+    //     }
 
-        $module_ids = __u::flatten($module_ids);
+    //     $module_ids = __u::flatten($module_ids);
 
-    }
+    // }
 
     return $module_ids;
 
@@ -274,6 +277,7 @@ function get_single_content_module($id, $division=''){
     $data->term_ids         = maybe_unserialize ($data->term_ids);
     $duration               = $data->duration;
     $data->minshours        ='mins';
+    $data->type             = $data->type;
     $data->total_minutes    = $data->duration; // only used for sorting accoring to time
     if($duration >= 60){
         $data->duration     = $duration/60;
@@ -286,16 +290,17 @@ function get_single_content_module($id, $division=''){
     $description= $wpdb->get_results($query_description);
 
     $data->description=$data->content_pieces=array();
+    if($description){
+        foreach($description as $key=>$value){
+            $meta_val = maybe_unserialize ($value->meta_value);
 
-    foreach($description as $key=>$value){
-        $meta_val = maybe_unserialize ($value->meta_value);
+            if ($value->meta_key=='description')
+                $data->description= $meta_val;
 
-        if ($value->meta_key=='description')
-            $data->description= $meta_val;
+            if ($value->meta_key=='content_pieces' )
+                $data->content_pieces= $meta_val;
 
-        if ($value->meta_key=='content_pieces' )
-            $data->content_pieces= $meta_val;
-
+        }
     }
 
     if($division){

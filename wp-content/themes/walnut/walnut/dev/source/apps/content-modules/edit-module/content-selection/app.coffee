@@ -2,6 +2,7 @@ define ['app'
         'controllers/region-controller'
         'apps/content-modules/edit-module/content-selection/all-content-app'
         'apps/content-modules/edit-module/content-selection/search-results-app'
+        'apps/content-modules/edit-module/content-selection/add-set-app'
         'apps/textbook-filters/textbook-filters-app'
 ], (App, RegionController)->
     App.module "ContentSelectionApp.Controller", (Controller, App)->
@@ -9,26 +10,42 @@ define ['app'
 
             initialize: (opts) ->
 
-                @contentPiecesCollection = App.request "get:content:pieces",
-                    content_type: ['teacher_question','content_piece']
-                    post_status : 'publish'
-
                 {@model,@contentGroupCollection}= opts
+
+                if @model.get('type') is 'module'
+                    @contentPiecesCollection = App.request "get:content:pieces",
+                        content_type: ['teacher_question','content_piece']
+                        post_status : 'publish'
+
+                if @model.get('type') is 'quiz'
+                    @contentPiecesCollection = App.request "get:content:pieces",
+                        content_type: ['student_question']
+                        post_status : 'publish'
+
+
 
                 App.execute "when:fetched", [@contentPiecesCollection,@contentGroupCollection], =>
                     @contentPiecesCollection.remove model for model in @contentGroupCollection.models
+                    @fullCollection = @contentPiecesCollection.clone()
 
                     @layout = @_getContentSelectionLayout()
                     @show @layout,
                         loading: true
 
+                    @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
+
                     @listenTo @layout, "show",=>
+
+                        filters = ['textbooks', 'chapters','sections','subsections','content_type']
+
+                        filters.pop() if @model.get('type') is 'quiz'
 
                         App.execute "show:textbook:filters:app",
                             region: @layout.filtersRegion
                             collection: @contentPiecesCollection
+                            selectedFilterParamsObject : @selectedFilterParamsObject
                             model: @model
-                            filters : ['textbooks', 'chapters','sections','subsections','content_type']
+                            filters : filters
 
                         App.execute "show:all:content:selection:app",
                             region: @layout.allContentRegion
@@ -38,13 +55,22 @@ define ['app'
                         App.execute "show:content:search:results:app",
                             region: @layout.searchResultsRegion
                             contentGroupCollection:@contentGroupCollection
+                            groupType : @model.get('type')
+
+                        if @model.get('type') is 'quiz'
+                            App.execute 'show:add:set:app',
+                                region : @layout.addSetRegion
+                                contentPiecesCollection : @contentPiecesCollection
+                                contentGroupCollection : @contentGroupCollection
+                                selectedFilterParamsObject : @selectedFilterParamsObject
 
                     @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
 
 
 
             _getContentSelectionLayout:->
-                new ContentSelectionLayout()
+                new ContentSelectionLayout
+                    model : @model
 
 
             class ContentSelectionLayout extends Marionette.Layout
@@ -60,15 +86,25 @@ define ['app'
                                     <div id="filters-region" class="m-b-10"></div>
 
                                     <ul class="nav nav-tabs b-grey b-l b-r b-t" id="addContent">
-                					            <li class="active"><a href="#all-content-region"><span class="semi-bold">All</span> Questions</a></li>
-                					            <li><a href="#search-results-region"><span class="semi-bold">Search</span> Questions</a></li>
-                					          </ul>
+                                        <li class="active"><a href="#all-content-region"><span class="semi-bold">All</span> Questions</a></li>
+                                        {{#isQuiz}}<li><a href="#add-set-region"><span class="semi-bold">Add</span> Set</a></li>{{/isQuiz}}
+                                        <li><a href="#search-results-region"><span class="semi-bold">Search</span> Questions</a></li>
+
+                                    </ul>
 
                                 		<div id="tab-content" class="tab-content" >
                                         <div id="all-content-region" class="tab-pane active"></div>
+                                        <div id="add-set-region" class="tab-pane"></div>
                                         <div id="search-results-region" class="tab-pane"></div>
                                     </div>
                                 </div>'
+
+                mixinTemplateHelpers : (data)->
+                    data = super data
+
+                    data.isQuiz = true if data.type is 'quiz'
+
+                    data
 
                 className: 'tiles white grid simple vertical green'
 
@@ -76,6 +112,7 @@ define ['app'
                     filtersRegion       : '#filters-region'
                     allContentRegion    : '#all-content-region'
                     searchResultsRegion : '#search-results-region'
+                    addSetRegion        : '#add-set-region'
 
                 events:
                     'click #addContent a': 'changeTab'

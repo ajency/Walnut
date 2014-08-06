@@ -4,7 +4,7 @@ define ['app'
     App.module "ContentModulesApp.ModulesListing.SearchResults", (SearchResults, App, Backbone, Marionette, $, _)->
         class SearchResults.Controller extends RegionController
             initialize:(opts) ->
-                {@textbooksCollection,@selectedFilterParamsObject} =opts
+                {@textbooksCollection,@selectedFilterParamsObject,@groupType } = opts
 
                 @layout = layout = @_getSearchResultsLayout()
 
@@ -26,9 +26,15 @@ define ['app'
                 if useFilters
                     @selectedFilterParamsObject.request "get:selected:parameters"
 
-                @newCollection = App.request "get:content:groups",
-                    post_status     : 'any'
-                    search_str      : searchStr
+                if @groupType is 'module'
+                    @newCollection = App.request "get:content:groups",
+                        post_status     : 'any'
+                        search_str      : searchStr
+
+                if @groupType is 'quiz'
+                    @newCollection = App.request "get:quizes",
+                        post_status     : 'any'
+                        search_str      : searchStr
 
                 App.execute "when:fetched", @newCollection, =>
                     @searchCollection.reset @newCollection.models

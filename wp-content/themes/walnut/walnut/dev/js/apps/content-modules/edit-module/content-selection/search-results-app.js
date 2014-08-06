@@ -3,7 +3,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
-  return App.module("ContentSelectionApp.Controller.SearchResults", function(SearchResults, App, Backbone, Marionette, $, _) {
+  return App.module("ContentSelectionApp.SearchResults", function(SearchResults, App, Backbone, Marionette, $, _) {
     var SearchResultsLayout;
     SearchResults.Controller = (function(_super) {
       __extends(Controller, _super);
@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       Controller.prototype.initialize = function(opts) {
         var layout;
-        this.contentGroupCollection = opts.contentGroupCollection;
+        this.contentGroupCollection = opts.contentGroupCollection, this.groupType = opts.groupType;
         this.layout = layout = this._getSearchResultsLayout();
         this.searchCollection = App.request("empty:content:pieces:collection");
         this.show(layout, {
@@ -34,8 +34,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       Controller.prototype._searchContent = function(searchStr) {
+        var content_type;
+        content_type = this.groupType === 'module' ? ['teacher_question', 'content_piece'] : ['student_question'];
         this.newCollection = App.request("get:content:pieces", {
-          content_type: ['teacher_question', 'content_piece'],
+          content_type: content_type,
           search_str: searchStr,
           exclude: this.contentGroupCollection.pluck('ID')
         });

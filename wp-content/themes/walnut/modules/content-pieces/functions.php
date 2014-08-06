@@ -140,6 +140,9 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
 
     $content_items= $excerpts= array();
 
+    if (!is_array($content_pieces))
+        return false;
+
     foreach($content_pieces as $id){
 
         $content_layout= get_post_meta($id, 'layout_json', true);
@@ -432,7 +435,7 @@ function prettify_content_piece_excerpt($excerpt_array){
     foreach($excerpt_array as $excerpt_item){
         $ex = trim(stripslashes(strip_tags($excerpt_item)));
 
-        //IF CURRENT STRING HAS TEXT AND LENGTH OF EXCERPT TILL NOW IS LESS THAN 150
+        //IF CURRENT STRING HAS TEXT AND LENGTH OF EXCERPT TILL NOW IS LESS THAN 500
         //CONTINUE ADDING TO EXCERPT
 
         if(strlen($ex)>0 && $excerpt_length <500 ){
@@ -442,9 +445,9 @@ function prettify_content_piece_excerpt($excerpt_array){
         }
     }
 
-    //IF EXCERPT TOTAL LENGTH IS GREATER THAN 150, REDUCE IT
-    if(strlen($excerpt)>150)
-        $excerpt= substr($excerpt,0,150);
+    //IF EXCERPT TOTAL LENGTH IS GREATER THAN 500, REDUCE IT
+    if(strlen($excerpt)>500)
+        $excerpt= substr($excerpt,0,500);
 
     //REMOVAL OF LAST 3 CHARACTERS WHICH MAY CONTAIN THE DIVIDER
     $excerpt = substr($excerpt,0,-3);

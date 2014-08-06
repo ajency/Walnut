@@ -21,12 +21,14 @@ define ['app'
             addModule: ->
                 new ContentModulesApp.Edit.GroupController
                     region: App.mainContentRegion
+                    groupType : 'module'
 
 
             editModule:(id) ->
                 new ContentModulesApp.Edit.GroupController
                     region: App.mainContentRegion
                     group_id: id
+                    groupType : 'module'
 
 
             viewModule: (id)->
@@ -48,6 +50,8 @@ define ['app'
             modulesListing: ->
                 new ContentModulesApp.ModulesListing.ListController
                     region: App.mainContentRegion
+                    groupType : 'module'
+
 
             takeClassSingleModule: (classID, div, tID, mID)->
                 opts =
