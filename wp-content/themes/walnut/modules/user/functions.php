@@ -37,6 +37,10 @@ function get_primary_blog_details( $user_id = '' ) {
         'blog_logo' => $blog_logo,
         'site_url' => $blog->siteurl
     );
+    
+    if (!is_multisite()) 
+        $blog_data['site_url']=get_site_url();
+    
     return $blog_data;
 }
 
