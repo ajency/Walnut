@@ -65,6 +65,10 @@ function update_question_response($data)
         'status' => $status
     );
 
+    //handling sync status for standalone sites. 
+    if (!is_multisite()) 
+        $update_data['sync']=0;
+    
     $data_response = '';
 
 
