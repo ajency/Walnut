@@ -84,7 +84,12 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         'click #logout': function() {
           return this.trigger("user:logout");
         },
-        'click #user_logout': 'onAppLogout'
+        'click #user_logout': 'onAppLogout',
+        'click .dropdown-menu > li > a': function(e) {
+          return e.stopPropagation();
+        },
+        'click #user-options': 'showAudioCuesToggleValue',
+        'click #onOffSwitchToggle': 'onToggle'
       };
 
       HeaderView.prototype.serializeData = function() {
@@ -135,6 +140,18 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         return App.navigate('app-login', {
           trigger: true
         });
+      };
+
+      HeaderView.prototype.showAudioCuesToggleValue = function() {
+        return _.setAudioCuesToggle();
+      };
+
+      HeaderView.prototype.onToggle = function() {
+        if ($('#onOffSwitchToggle').prop("checked")) {
+          return _.setAudioCues('true');
+        } else {
+          return _.setAudioCues('false');
+        }
       };
 
       return HeaderView;

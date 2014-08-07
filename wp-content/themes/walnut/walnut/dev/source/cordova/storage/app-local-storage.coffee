@@ -71,3 +71,10 @@ define ['underscore'], ( _)->
 
         getSyncRequestId : ->
             _.localStorage.getItem("sync_request_id")
+
+        # Check/Uncheck audio cues
+        setAudioCues : (Value)->
+            _.localStorage.setItem("check_uncheck_value", Value)
+
+        getAudioCues : ->
+            _.localStorage.getItem("check_uncheck_value")

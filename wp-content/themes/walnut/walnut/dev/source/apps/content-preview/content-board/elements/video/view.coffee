@@ -31,7 +31,6 @@ define ['app'], (App)->
 			#setHeight is used to get the height of the video placeholder base on its
 			#width
 			onShow : ->
-				alert "width"
 				console.log @$el.find('video').attr 'width'
 				return if not @model.get('video_ids').length
 
@@ -40,11 +39,12 @@ define ['app'], (App)->
 
 				@videoId = _.uniqueId('video_')
 				@$el.find('video').attr 'id', @videoId
-				widthRatio = 16
-				heightRatio = 9
-				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
-				@$el.find('video').attr 'height', setHeight
-				console.log @$el.find('video').attr 'height'
+				if _.platform() is 'DEVICE'
+					widthRatio = 16
+					heightRatio = 9
+					setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+					@$el.find('video').attr 'height', setHeight
+					console.log @$el.find('video').attr 'height'
 
 				@$el.find('video').on 'ended', =>
 					console.log "done"

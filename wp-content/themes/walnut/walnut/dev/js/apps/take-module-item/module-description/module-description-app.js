@@ -171,6 +171,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         if (_.platform() === 'BROWSER') {
           return this.trigger("goto:previous:route");
         } else {
+          _.audioQueuesSelection('Click-Pause');
           console.log('Invoked onPauseSessionClick');
           this.trigger("goto:previous:route");
           _.clearMediaDirectory('videos-web');
@@ -186,13 +187,18 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       };
 
       ModuleDescriptionView.prototype.questionCompleted = function() {
-        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
-          if (confirm('This item will be marked as complete. Continue?')) {
-            return this.trigger("question:completed");
-          }
-        } else {
-          return this.trigger("question:completed");
-        }
+        _.audioQueuesSelection('Click-Next');
+        return setTimeout((function(_this) {
+          return function() {
+            if (Marionette.getOption(_this, 'display_mode') === 'class_mode') {
+              if (confirm('This item will be marked as complete. Continue?')) {
+                return _this.trigger("question:completed");
+              }
+            } else {
+              return _this.trigger("question:completed");
+            }
+          };
+        })(this), 400);
       };
 
       ModuleDescriptionView.prototype.onQuestionChanged = function(nextItemID) {

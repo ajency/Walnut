@@ -251,3 +251,55 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			return date if bit is 0
 			return time if bit is 1
 			return date+' '+time if bit is 2
+
+		
+		audioQueuesSelection : (selectedAction)->
+			if _.platform() is "DEVICE"
+				if not _.isNull(_.getAudioCues())
+					if _.getAudioCues() isnt 'false'
+						audioCues = null
+						filepathForIndividualAudio = null
+						
+						filepath = "/android_asset/www/audioCues/"
+						switch selectedAction
+							when 'Click-Next'
+							
+								filepathForIndividualAudio = filepath + "nextClick.WAV"
+
+							when 'Click-Select'
+
+								filepathForIndividualAudio = filepath + "selectClick.WAV"
+
+
+							when 'Click-Start'
+
+								filepathForIndividualAudio = filepath + "startClick.WAV"
+
+							when 'Click-Unselect'
+
+								filepathForIndividualAudio = filepath + "unselectClick.WAV"
+
+							when 'Click-Save'
+
+								filepathForIndividualAudio = filepath + "saveClick.WAV"
+
+							when 'Click-Pause'
+								
+								filepathForIndividualAudio = filepath + "pauseClick.WAV"
+
+						audioCues = new Media filepathForIndividualAudio 
+												,->
+													console.log "media played"
+												,(error)->
+													console.log "error"+error.code
+
+						audioCues.play()
+						setTimeout(=>
+							audioCues.release()
+						,2000)
+
+		setAudioCuesToggle : ->
+			if _.getAudioCues() is 'true'
+				$('#onOffSwitchToggle').prop "checked" : true
+			else
+				$('#onOffSwitchToggle').prop "checked" : false

@@ -139,6 +139,7 @@ define ['app'
 					@trigger "goto:previous:route"
 
 				else
+					_.audioQueuesSelection 'Click-Pause'
 					console.log 'Invoked onPauseSessionClick'
 
 					@trigger "goto:previous:route"
@@ -160,13 +161,16 @@ define ['app'
 					
 
 			questionCompleted: =>
+				_.audioQueuesSelection 'Click-Next'
+				setTimeout(=>
+					if Marionette.getOption(@, 'display_mode') is 'class_mode'
+						if confirm 'This item will be marked as complete. Continue?'
+								@trigger "question:completed"
 
-				if Marionette.getOption(@, 'display_mode') is 'class_mode'
-					if confirm 'This item will be marked as complete. Continue?'
-							@trigger "question:completed"
-
-				else @trigger "question:completed"
-
+					else @trigger "question:completed"
+					
+				,400)
+				
 			onQuestionChanged: (nextItemID)->
 
 				if not nextItemID

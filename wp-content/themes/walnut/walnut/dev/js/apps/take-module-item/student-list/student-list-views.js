@@ -102,11 +102,17 @@ define(['app'], function(App) {
       StudentsList.prototype.selectStudent = function(e) {
         this.$el.find('#select-an-item').remove();
         this.$el.find('.studentActions').show();
-        return $(e.target).closest('.tiles.single').toggleClass("selected");
+        $(e.target).closest('.tiles.single').toggleClass("selected");
+        if ($(e.target).closest('.tiles.single').hasClass("selected")) {
+          return _.audioQueuesSelection('Click-Select');
+        } else {
+          return _.audioQueuesSelection('Click-Unselect');
+        }
       };
 
       StudentsList.prototype.addToCorrectList = function() {
         var selectedStudents, student, _i, _len;
+        _.audioQueuesSelection('Click-Select');
         selectedStudents = this.$el.find('.tiles.single.selected');
         for (_i = 0, _len = selectedStudents.length; _i < _len; _i++) {
           student = selectedStudents[_i];
@@ -123,6 +129,7 @@ define(['app'], function(App) {
 
       StudentsList.prototype.removeFromCorrectList = function() {
         var selectedStudents, student, _i, _len;
+        _.audioQueuesSelection('Click-Unselect');
         selectedStudents = this.$el.find('.tiles.single.selected');
         for (_i = 0, _len = selectedStudents.length; _i < _len; _i++) {
           student = selectedStudents[_i];

@@ -45,6 +45,7 @@ define(['app'], function(App) {
       };
 
       EvaluationItemView.prototype._buttonClicked = function(e) {
+        _.audioQueuesSelection('Click-Select');
         if (this.display_mode === 'class_mode') {
           if ($(e.target).closest('button').hasClass('btn-primary')) {
             this.$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white');
@@ -109,6 +110,7 @@ define(['app'], function(App) {
       };
 
       EvaluationView.prototype._saveEvalParameters = function() {
+        _.audioQueuesSelection('Click-Save');
         if (_.size(this.responseObj) > 1) {
           return this.trigger("save:eval:parameters");
         }

@@ -50,6 +50,12 @@ define(['underscore'], function(_) {
     },
     getSyncRequestId: function() {
       return _.localStorage.getItem("sync_request_id");
+    },
+    setAudioCues: function(Value) {
+      return _.localStorage.setItem("check_uncheck_value", Value);
+    },
+    getAudioCues: function() {
+      return _.localStorage.getItem("check_uncheck_value");
     }
   });
 });
