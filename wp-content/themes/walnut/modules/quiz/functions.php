@@ -304,3 +304,126 @@ function get_all_quiz_modules($args){
 
     return $result;
 }
+
+function read_quiz_response_summary($args){
+    global $wpdb;
+    if(!isset($args['student_id'])){
+        $args['student_id'] = get_current_user_id();
+    }
+
+    // if id is passed
+    if(isset($args['summary_id'])){
+        $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->base_prefix}quiz_response_summary
+            where summary_id = %s", $args['summary_id']));
+
+    }
+    else {
+        $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->base_prefix}quiz_response_summary
+            where student_id = %d and collection_id = %d", $args['student_id'],$args['collection_id']));
+    }
+    
+    // geting status 
+    $quiz_meta = maybe_unserialize($quiz_response_summary->quiz_meta);
+    unset($quiz_response_summary->quiz_meta);
+    $quiz_response_summary->status = $quiz_meta['status'];
+
+    $marks_array = $wpdb->get_col($wpdb->prepare("select marks_scored from {$wpdb->base_prefix}quiz_question_response
+                    where summary_id = %s",$quiz_response_summary->summary_id));
+
+    $total_marks = 0;
+    foreach ($marks_array as $marks) {
+        $total_marks += $marks;
+    }
+
+    $quiz_response_summary->total_marks_scored = $total_marks;
+
+
+    return $quiz_response_summary;
+}
+
+
+function write_quiz_response_summary($args){
+    global $wpdb;
+    if(!isset($args['student_id'])){
+        $args['student_id'] = get_current_user_id();
+    }
+    $quiz_meta = array(
+            'status' => $args['status']);
+
+    if(!isset($args['summary_id'])){
+        $summary_id = 'Q'.$args['collection_id'].'S'.$args['student_id'];
+        
+        $data = array(
+            'summary_id' => $summary_id,
+            'collection_id' => $args['collection_id'],
+            'student_id' => $args['student_id'],
+            'quiz_meta' => maybe_serialize($quiz_meta)
+            );
+        $wpdb->insert(($wpdb->base_prefix).'quiz_response_summary', $data );
+    }
+    else{
+        $summary_id = $args['summary_id'];
+        $data = array('quiz_meta' => maybe_serialize($quiz_meta));
+        $where_array = array('summary_id' => $summary_id);
+        $wpdb->update(($wpdb->base_prefix).'quiz_response_summary', $data ,$where_array);
+    }
+
+    return $summary_id;
+
+}
+
+function write_quiz_question_response($args){
+    global $wpdb;
+    // if(!isset($args['student_id'])){
+    //     $args['student_id'] = get_current_user_id();
+    // }
+
+    $quiz_module = get_single_quiz_module($args['collection_id']);
+
+    if(!$quiz_module->permissions['allow_skip'] && $args['status'] == 'skipped'){
+            $args['status'] = 'wrong_answer';
+        }
+
+
+    $data = array(
+            // 'qr_id' => $args['qr_id'],
+            'summary_id' => $args['summary_id'],
+            'content_piece_id' => $args['content_piece_id'],
+            'question_response' => $args['question_response'],
+            'time_taken' => $args['time_taken'],
+            'marks_scored' => $args['marks_scored'],
+            'status' => $args['status']    );
+    // save
+    if(!isset($args['qr_id'])){
+        $qr_id = 'CP'.$args['content_piece_id'].$args['summary_id'];
+        $data['qr_id'] = $qr_id;
+        
+        
+
+        $wpdb->insert(($wpdb->base_prefix).'quiz_question_response', $data );
+    }
+    // update
+    else{
+        $where_array = array('qr_id' => $args['qr_id']);
+        //check for single attempt permission
+        if ($quiz_module->permissions['single_attempt'])
+            return false;
+        //get old question response data
+        $question_response = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->base_prefix}quiz_question_response
+                    where qr_id = %s",$data['qr_id']));
+
+        if(!$quiz_module->permissions['allow_resubmit'] && $question_response->status !== 'skipped')
+            return false;
+        $wpdb->update(($wpdb->base_prefix).'quiz_question_response', $data ,$where_array);
+    }
+
+    return $data['qr_id'];
+}
+
+
+function read_quiz_question_response($id){
+    global $wpdb;
+    $quiz_question_response = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->base_prefix}quiz_question_response
+                    where qr_id = %s",$id));
+    return $quiz_question_response;
+}
