@@ -432,15 +432,29 @@ function get_images_directory_json() {
 function get_videos_directory_json() {
     $wp_upload_dir = wp_upload_dir();
 
-    $files = read_folder_directory( str_replace("images", "videos", $wp_upload_dir['path']), str_replace("images", "videos", $wp_upload_dir['baseurl']));
+    $audio_path=str_replace("images", "videos", $wp_upload_dir['path']);
+    $audio_url = str_replace("images", "videos", $wp_upload_dir['baseurl']);
+
+    if($originals){
+        $audio_path=str_replace("images", "media-web/videos-web", $wp_upload_dir['path']);
+        $audio_url = str_replace("images", "media-web/videos-web", $wp_upload_dir['baseurl']);
+    }
+
+    $files = read_folder_directory( $audio_path, $audio_url);
     return $files;
+    
 }
 
-function get_audio_directory_json() {
+function get_audio_directory_json($originals=false) {
     $wp_upload_dir = wp_upload_dir();
 
     $audio_path=str_replace("images", "audios", $wp_upload_dir['path']);
     $audio_url = str_replace("images", "audios", $wp_upload_dir['baseurl']);
+
+    if($originals){
+        $audio_path=str_replace("images", "media-web/audio-web", $wp_upload_dir['path']);
+        $audio_url = str_replace("images", "media-web/audio-web", $wp_upload_dir['baseurl']);
+    }
 
     $files = read_folder_directory( $audio_path, $audio_url);
     return $files;
