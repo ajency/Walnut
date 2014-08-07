@@ -49,20 +49,24 @@ function get_sync_form_html($blog_id){
          <h3>School Data Sync</h3>';
     if($last_sync_imported->last_sync)
         $sync_form_html .= '<p>[Last Data Sync]:'.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'</p>';
-
-    $sync_form_html .= '<label>Data Sync </label> ->
-                    <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
-        . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
-        . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
-        . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
-        . 'data-blog-id='.$blog_id.' '
-        . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
-                        <span class="status-msg"></span>
-                     <br/><br/>
-                     <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
-                             <span class="status-msg"></span>
-                     </fieldset>
-                    </form>';
+        
+        $upsyncount = get_upsync_data_count();
+        
+        $sync_form_html .= '<p>Records To Be Upsyncd:'.$upsyncount.'</p>';
+        
+        $sync_form_html .= '<label>Data Sync </label> ->
+                        <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
+            . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
+            . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
+            . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
+            . 'data-blog-id='.$blog_id.' '
+            . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
+                            <span class="status-msg"></span>
+                         <br/><br/>
+                         <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
+                                 <span class="status-msg"></span>
+                         </fieldset>
+                        </form>';
 
     return $sync_form_html;
 
@@ -471,4 +475,10 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
         }
         
     return $retarray;
+}
+
+function get_upsync_data_count(){
+    global $wpdb;
+    $upsynccount = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}question_response where sync = 0" );
+    return $upsynccount[0];
 }
