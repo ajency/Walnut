@@ -392,10 +392,10 @@ function sds_get_media_files_directory_json($mediatype = 'images') {
 
     else{
         if($mediatype === 'audios')
-            $folderName='media-web/audio-web';
+            $folderName='audios';
 
         if($mediatype === 'videos')
-            $folderName='media-web/videos-web';
+            $folderName='videos';
 
         $files = sds_read_folder_directory( str_replace("images", $folderName, $wp_upload_dir['path']), 
              str_replace("images", $folderName, $wp_upload_dir['baseurl']));
@@ -436,16 +436,8 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
       $uploads_dir=wp_upload_dir();
       $upload_path = $uploads_dir['basedir'];
 
-        //REVERT BACK TO THESE TWO LINES AFTER DECRYPTION FEATURE DONE
-        // if ($mediatype != 'images')
-        //     $upload_path=str_replace("images", $mediatype, $uploads_dir['basedir']);
-
         if ($mediatype != 'images'){
-            if($mediatype === 'audios')
-                $upload_path=str_replace("images", 'media-web/audio-web', $uploads_dir['basedir']);
-
-            if($mediatype === 'videos')
-                $upload_path=str_replace("images", 'media-web/videos-web', $uploads_dir['basedir']);
+             $upload_path=str_replace("images", $mediatype, $uploads_dir['basedir']);
         }
 
         foreach ($files as $key=>$value){
@@ -463,7 +455,7 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
             curl_setopt($ch, CURLOPT_FILE, $localpath);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 200);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 400);
             $executefiledownload = curl_exec($ch);
             if(!$executefiledownload) {
                 $retarray['error'] = $executefiledownload;

@@ -227,14 +227,11 @@ function ajax_sds_media_sync(){
      if(!file_exists($upload_directory.'/images'))
          mkdir($upload_directory.'/images',0755);
 
-     if(!file_exists($upload_directory.'/media-web'))
-         mkdir($upload_directory.'/media-web',0755);
+     if(!file_exists($upload_directory.'/audios'))
+         mkdir($upload_directory.'/audios',0755);
 
-     if(!file_exists($upload_directory.'/media-web/audio-web'))
-         mkdir($upload_directory.'/media-web/audio-web',0755);
-
-     if(!file_exists($upload_directory.'/media-web/videos-web'))
-         mkdir($upload_directory.'/media-web/videos-web',0755);
+     if(!file_exists($upload_directory.'/videos'))
+         mkdir($upload_directory.'/videos',0755);
 
     $mediafetchactions = array('images' =>'get-site-image-resources-data',
                                 'audios'=>'get-site-audio-resources-data',
@@ -256,8 +253,7 @@ function ajax_sds_media_sync(){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     $post = array(
-        'action' => $mediafetchactions[$media_type],
-        'originals'=>true #remove this parameter once encryption/decryption has been implemented for site media
+        'action' => $mediafetchactions[$media_type]
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
     $response = curl_exec($ch);
