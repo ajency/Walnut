@@ -187,12 +187,19 @@ function sds_get_tables_to_export($last_sync=''){
 
     global $wpdb;
 
-    $tables_list= array(
+    $question_response_table = "{$wpdb->prefix}question_response";
+    $response_meta_table = "{$wpdb->prefix}question_response_meta";
 
-        "{$wpdb->prefix}question_response",
-        "{$wpdb->prefix}question_response_meta"
+    $tables_list[]= array(
+        'query'=> "SELECT * FROM $question_response_table WHERE sync = 0",
+        'table_name'=> $question_response_table
+        );
 
-    );
+    $tables_list[]= array(
+        'query'=> "SELECT qrm.* FROM $question_response_table qr, $response_meta_table qrm 
+        WHERE qr.sync = 0 AND qr.ref_id = qrm.qr_ref_id",
+        'table_name'=> $response_meta_table);
+
     return $tables_list;
 }
 
