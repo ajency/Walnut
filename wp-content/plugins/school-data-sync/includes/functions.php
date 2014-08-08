@@ -49,20 +49,24 @@ function get_sync_form_html($blog_id){
          <h3>School Data Sync</h3>';
     if($last_sync_imported->last_sync)
         $sync_form_html .= '<p>[Last Data Sync]:'.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'</p>';
-
-    $sync_form_html .= '<label>Data Sync </label> ->
-                    <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
-        . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
-        . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
-        . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
-        . 'data-blog-id='.$blog_id.' '
-        . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
-                        <span class="status-msg"></span>
-                     <br/><br/>
-                     <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
-                             <span class="status-msg"></span>
-                     </fieldset>
-                    </form>';
+        
+        $upsyncount = get_upsync_data_count();
+        
+        $sync_form_html .= '<p>Records To Be Upsyncd:'.$upsyncount.'</p>';
+        
+        $sync_form_html .= '<label>Data Sync </label> ->
+                        <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
+            . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
+            . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
+            . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
+            . 'data-blog-id='.$blog_id.' '
+            . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
+                            <span class="status-msg"></span>
+                         <br/><br/>
+                         <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
+                                 <span class="status-msg"></span>
+                         </fieldset>
+                        </form>';
 
     return $sync_form_html;
 
@@ -388,10 +392,10 @@ function sds_get_media_files_directory_json($mediatype = 'images') {
 
     else{
         if($mediatype === 'audios')
-            $folderName='media-web/audio-web';
+            $folderName='audios';
 
         if($mediatype === 'videos')
-            $folderName='media-web/videos-web';
+            $folderName='videos';
 
         $files = sds_read_folder_directory( str_replace("images", $folderName, $wp_upload_dir['path']), 
              str_replace("images", $folderName, $wp_upload_dir['baseurl']));
@@ -432,16 +436,8 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
       $uploads_dir=wp_upload_dir();
       $upload_path = $uploads_dir['basedir'];
 
-        //REVERT BACK TO THESE TWO LINES AFTER DECRYPTION FEATURE DONE
-        // if ($mediatype != 'images')
-        //     $upload_path=str_replace("images", $mediatype, $uploads_dir['basedir']);
-
         if ($mediatype != 'images'){
-            if($mediatype === 'audios')
-                $upload_path=str_replace("images", 'media-web/audio-web', $uploads_dir['basedir']);
-
-            if($mediatype === 'videos')
-                $upload_path=str_replace("images", 'media-web/videos-web', $uploads_dir['basedir']);
+             $upload_path=str_replace("images", $mediatype, $uploads_dir['basedir']);
         }
 
         foreach ($files as $key=>$value){
@@ -459,7 +455,7 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
             curl_setopt($ch, CURLOPT_FILE, $localpath);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 200);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 400);
             $executefiledownload = curl_exec($ch);
             if(!$executefiledownload) {
                 $retarray['error'] = $executefiledownload;
@@ -471,4 +467,10 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
         }
         
     return $retarray;
+}
+
+function get_upsync_data_count(){
+    global $wpdb;
+    $upsynccount = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}question_response where sync = 0" );
+    return $upsynccount[0];
 }
