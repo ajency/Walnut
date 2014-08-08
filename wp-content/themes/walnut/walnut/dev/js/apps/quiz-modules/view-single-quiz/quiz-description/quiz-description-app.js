@@ -80,7 +80,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.answer_printing = true;
         }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
-        if (responseSummary) {
+        if (!responseSummary.isNew()) {
           data.responseSummary = true;
           data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
           data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));

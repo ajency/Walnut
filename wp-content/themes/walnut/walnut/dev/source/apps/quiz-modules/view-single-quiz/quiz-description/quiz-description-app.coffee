@@ -47,7 +47,8 @@ define ['app'
                 data.answer_printing = true if @model.hasPermission('answer_printing') and display_mode in ['replay','disable_quiz_replay']
 
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
-                if responseSummary
+
+                if not responseSummary.isNew()
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
                     data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
