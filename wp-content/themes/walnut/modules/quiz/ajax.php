@@ -98,9 +98,6 @@ function ajax_fetch_all_quizes(){
 
 add_action('wp_ajax_get-quizes','ajax_fetch_all_quizes');
 
-
-
-
 function save_quiz_response_summary(){
     
     $args = $_POST;
@@ -109,13 +106,13 @@ function save_quiz_response_summary(){
 
     $summary_id = write_quiz_response_summary($args);
 
-    wp_send_json(array('code' => 'OK',array('summary_id' => $summary_id)));
+    wp_send_json(array('summary_id' => $summary_id));
 
 }
 
-add_action('wp_ajax_save-quiz-response-summary','save_quiz_response_summary');
+add_action('wp_ajax_create-quiz-response-summary','save_quiz_response_summary');
 
-add_action('wp_ajax_undate-quiz-response-summary','save_quiz_response_summary');
+add_action('wp_ajax_update-quiz-response-summary','save_quiz_response_summary');
 
 function fetch_quiz_response_summary(){
 
@@ -128,6 +125,7 @@ function fetch_quiz_response_summary(){
 
 add_action('wp_ajax_read-quiz-response-summary', 'fetch_quiz_response_summary');
 
+add_action('wp_ajax_get-quiz-response-summary', 'fetch_quiz_response_summary');
 
 function save_quiz_question_response(){
     $args = $_POST;
@@ -136,10 +134,10 @@ function save_quiz_question_response(){
 
     $qr_id = write_quiz_question_response($args);
 
-    wp_send_json(array('code' => 'OK',array('qr_id' => $qr_id)));
+    wp_send_json(array('qr_id' => $qr_id));
 }
 
-add_action('wp_ajax_save-quiz-question-response','save_quiz_question_response');
+add_action('wp_ajax_create-quiz-question-response','save_quiz_question_response');
 
 
 function update_quiz_question_response(){
@@ -150,17 +148,25 @@ function update_quiz_question_response(){
     $qr_id = write_quiz_question_response($args);
 
     if($qr_id)
-        wp_send_json(array('code' => 'OK',array('qr_id' => $qr_id)));
+        wp_send_json(array('qr_id' => $qr_id));
     else
         wp_send_json(array('code' => 'error'));
 }
 
 add_action('wp_ajax_update-quiz-question-response','update_quiz_question_response');
 
-function get_quiz_question_response(){
+function fetch_quiz_question_response(){
     $id = $_GET['qr_id'];
     $quiz_question_response = read_quiz_question_response($id);
     wp_send_json(array('code' => 'OK','data' => $quiz_question_response));
 }
 
-add_action('wp_ajax_read-quiz-question-response','get_quiz_question_response');
+add_action('wp_ajax_read-quiz-question-response','fetch_quiz_question_response');
+
+function ajax_get_all_quiz_question_responses(){
+    $summary_id = $_GET['summary_id'];
+    $quiz_question_response = get_all_quiz_question_responses($summary_id);
+    wp_send_json(array('code' => 'OK','data' => $quiz_question_response));
+}
+
+add_action('wp_ajax_get-all-quiz-question-responses','ajax_get_all_quiz_question_responses');

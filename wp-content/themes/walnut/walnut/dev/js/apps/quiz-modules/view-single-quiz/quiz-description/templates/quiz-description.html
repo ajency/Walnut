@@ -23,18 +23,30 @@
         <div class="row m-b-10">
             <div class="col-md-3">
                     <label class="form-label">No. of Questions</label>
-                    {{getQuestionsCount}}
+                    {{getQuestionsCount}} 
+                    {{#responseSummary}} 
+                        <h4 class="text-success semi-bold no-margin inline">(You attempted: <span class="bold">{{num_questions_answered}}</span>)</h4>
+                    {{/responseSummary}}
             </div>
             <div class="col-md-3 b-r b-grey">
                     <label class="form-label">Duration</label>
                     {{total_minutes}} mins
+                    {{#responseSummary}} 
+                        <h4 class="text-success semi-bold no-margin inline">(Completed in: <span class="bold">{{total_time_taken}}</span>)</h4>
+                    {{/responseSummary}}
             </div>
             <div class="col-md-3">
                     <label class="form-label">Marks</label>
                     {{marks}}
+                    {{#responseSummary}} 
+                        <h4 class="text-success semi-bold no-margin inline">(You scored: <span class="bold">{{total_marks_scored}}</span>)</h4>
+                    {{/responseSummary}}
             </div>
             <div class="col-md-3">
-                    
+                    {{#responseSummary}} 
+                    <label class="form-label">Quiz Taken On</label>
+                        <h4 class="text-success semi-bold no-margin inline">{{taken_on_date}}</h4>
+                    {{/responseSummary}}
             </div>
         </div>
     </div>

@@ -6,7 +6,7 @@ define ['app'
 
             initialize : (opts)->
 
-                {@model,@textbookNames, @display_mode}= opts
+                {@model,@textbookNames, @display_mode,@quizResponseSummary}= opts
 
                 @view = view = @_getQuizDescriptionView()
 
@@ -24,6 +24,7 @@ define ['app'
                 new QuizDetailsView
                     model : @model
                     display_mode: @display_mode
+                    quizResponseSummary: @quizResponseSummary
 
                     templateHelpers:
                         getTextbookName     :=> @textbookNames.getTextbookName terms
@@ -44,6 +45,15 @@ define ['app'
                 data = super data
                 display_mode =  Marionette.getOption @, 'display_mode'
                 data.answer_printing = true if @model.hasPermission('answer_printing') and display_mode in ['replay','disable_quiz_replay']
+
+                responseSummary = Marionette.getOption @, 'quizResponseSummary'
+                if responseSummary
+                    data.responseSummary    = true
+                    data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
+                    data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
+                    data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
+                    data.total_marks_scored = responseSummary.get 'total_marks_scored'
+
                 data  
 
             onShow:->
@@ -54,10 +64,6 @@ define ['app'
                 if Marionette.getOption(@, 'display_mode') is 'disable_quiz_replay'
                     @$el.find "#take-quiz"
                     .remove()
-
-
-
-
 
         # set handlers
         App.commands.setHandler "show:view:quiz:detailsapp", (opt = {})->

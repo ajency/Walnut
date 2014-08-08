@@ -20,7 +20,7 @@ define ['app'
 
                     data.dateCompleted= moment(responseModel.get('end_date')).format("Do MMM YYYY")
 
-                    data.timeTaken = @formatTimeTaken  responseModel.get 'time_taken'
+                    data.timeTaken =$.timeMinSecs responseModel.get 'time_taken'
 
                     data.responseStatus = responseModel.get 'status'
 
@@ -38,16 +38,7 @@ define ['app'
                         when 'skipped'            then divClass : 'text-error', text : 'Skipped', icon : 'fa-share-square'
                         when 'wrong_answer'       then divClass : 'text-error', text : 'Wrong', icon : 'fa-times'
 
-                console.log data        
                 data
-
-            formatTimeTaken:(time)->
-                mins=parseInt(time/60)
-                if mins >59
-                    mins= parseInt mins%60
-                seconds = parseInt time%60
-
-                timeTaken = mins + 'm '+ seconds+'s'
 
             onShow:->
                 content_icon= 'fa-question'

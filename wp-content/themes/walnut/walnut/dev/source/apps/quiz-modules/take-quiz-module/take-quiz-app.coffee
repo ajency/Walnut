@@ -10,6 +10,7 @@ define ['app'
 
             #Single Question description and answers
             quizModel = null
+            quizResponseSummary = null
             questionsCollection = null
             questionResponseCollection = null
             questionResponseModel = null
@@ -20,7 +21,23 @@ define ['app'
             class View.TakeQuizController extends RegionController
 
                 initialize : (opts)->
-                    {quizModel,questionsCollection,questionResponseCollection,@textbookNames,@display_mode} = opts
+                    {quizModel,quizResponseSummary,questionsCollection,
+                    questionResponseCollection,@textbookNames,@display_mode} = opts
+
+                    if quizResponseSummary.isNew()
+                        data = 
+                            'status' : 'started'
+
+                        quizResponseSummary.save 'status' : 'started', 
+                            success:=> 
+                                questionResponseCollection= App.request "create:empty:question:response:collection"
+                                @_startTakeQuiz()
+
+                            error :-> console.log 'error'
+                    else
+                        @_startTakeQuiz()
+                
+                _startTakeQuiz:=>
 
                     App.leftNavRegion.close()
                     App.headerRegion.close()
@@ -73,13 +90,14 @@ define ['app'
                     timeBeforeCurrentQuestion= totalTime
 
                     data =
-                        'collection_id'     : quizModel.id
+                        'summary_id'     : quizResponseSummary.id
                         'content_piece_id'  : questionModel.id
                         'question_response' : answer.toJSON()
                         'status'            : answer.get 'status'
+                        'marks_scored'      : answer.get 'marks'
                         'time_taken'        : timeTaken
 
-                    newResponseModel = App.request "create:quiz:response:model", data
+                    newResponseModel = App.request "create:quiz:question:response:model", data
 
                     quizResponseModel = questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
 
@@ -91,6 +109,8 @@ define ['app'
                     else
                         quizResponseModel = newResponseModel
                         questionResponseCollection.add newResponseModel
+
+                    quizResponseModel.save()
 
                     @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
@@ -136,6 +156,7 @@ define ['app'
 
                             @_submitQuestion answerModel
 
+                    quizResponseSummary.save 'status' : 'completed' 
 
                     App.execute "show:single:quiz:app",
                         region: App.mainContentRegion
@@ -213,7 +234,6 @@ define ['app'
 
                 #after confirm box yes is clicked on dialog region
                 _handlePopups:(message_type)->
-                    console.log message_type
                     switch message_type
                         when 'end_quiz' then @_endQuiz()
                         when 'quiz_time_up' then @_endQuiz()

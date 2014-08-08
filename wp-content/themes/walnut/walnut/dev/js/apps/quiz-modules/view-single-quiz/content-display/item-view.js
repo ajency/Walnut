@@ -20,7 +20,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         data.dateCompleted = 'N/A';
         if (responseModel) {
           data.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY");
-          data.timeTaken = this.formatTimeTaken(responseModel.get('time_taken'));
+          data.timeTaken = $.timeMinSecs(responseModel.get('time_taken'));
           data.responseStatus = responseModel.get('status');
           data.display_answer = Marionette.getOption(this, 'display_answer');
           data.marks_obtained = responseModel.get('question_response').marks;
@@ -60,18 +60,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             }
           })();
         }
-        console.log(data);
         return data;
-      };
-
-      View.prototype.formatTimeTaken = function(time) {
-        var mins, seconds, timeTaken;
-        mins = parseInt(time / 60);
-        if (mins > 59) {
-          mins = parseInt(mins % 60);
-        }
-        seconds = parseInt(time % 60);
-        return timeTaken = mins + 'm ' + seconds + 's';
       };
 
       View.prototype.onShow = function() {
