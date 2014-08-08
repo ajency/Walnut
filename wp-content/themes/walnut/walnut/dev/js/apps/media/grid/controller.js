@@ -36,6 +36,11 @@ define(['app', 'controllers/region-controller', 'apps/media/grid/views'], functi
             return Marionette.triggerMethod.call(_this.region, "media:element:selected", Marionette.getOption(iv, 'model'));
           };
         })(this));
+        App.commands.setHandler("new:media:added", (function(_this) {
+          return function(media) {
+            return _this.mediaCollection.add(media);
+          };
+        })(this));
         this.listenTo(this.view, "itemview:media:element:unselected", (function(_this) {
           return function(iv) {
             return Marionette.triggerMethod.call(_this.region, "media:element:unselected", Marionette.getOption(iv, 'model'));
