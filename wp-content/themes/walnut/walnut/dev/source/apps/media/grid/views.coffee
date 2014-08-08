@@ -93,6 +93,7 @@ define ['app'
                     .find('.all-media-tab').find('a').trigger 'click'
                     #trigger the selectable to point to the newly added image
                     imageView.$el.find('img').trigger 'click'
+                    @$el.find( '#selectable-images' ).selectSelectableElements imageView.$el
 
                 if not @collection.isEmpty() or mediaType is 'image'
                     @$el.find "#placeholder-video-txt"

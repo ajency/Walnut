@@ -29,6 +29,9 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
                       "media:element:selected",
                       Marionette.getOption(iv, 'model'));
 
+                App.commands.setHandler "new:media:added",(media)=>
+                    @mediaCollection.add media
+
                 @listenTo @view, "itemview:media:element:unselected", (iv) =>
                     Marionette.triggerMethod.call(@region,
                       "media:element:unselected",
