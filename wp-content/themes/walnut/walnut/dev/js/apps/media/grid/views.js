@@ -102,7 +102,6 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
               _this._changeChildClass('List');
             }
             _this.$el.closest('.tab-content').siblings('.nav-tabs').find('.all-media-tab').find('a').trigger('click');
-            console.log(imageView);
             imageView.$el.find('img').trigger('click');
             return _this.$el.find('#selectable-images').selectSelectableElements(imageView.$el);
           };
