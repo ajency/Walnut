@@ -121,14 +121,19 @@ define ['app'], (App)->
 				.show()
 
 				$(e.target).closest('.tiles.single').toggleClass "selected"
-				if $(e.target).closest('.tiles.single').hasClass("selected")
-					_.audioQueuesSelection 'Click-Select'
-				else
-					_.audioQueuesSelection 'Click-Unselect'
+				if _.platform() is "DEVICE"
+					if $(e.target).closest('.tiles.single').hasClass("selected")
+						navigator.notification.vibrate(1000);
+						_.audioQueuesSelection 'Click-Select'
+					else
+						navigator.notification.vibrate(1000);
+						_.audioQueuesSelection 'Click-Unselect'
 
 
 			addToCorrectList: =>
-				_.audioQueuesSelection 'Click-Select'
+				if _.platform() is "DEVICE"
+					_.audioQueuesSelection 'Click-Select'
+					navigator.notification.vibrate(1000);
 				selectedStudents = @$el.find '.tiles.single.selected'
 
 				for student in selectedStudents
@@ -148,7 +153,9 @@ define ['app'], (App)->
 									.addClass 'fa-check-circle'
 
 			removeFromCorrectList: ->
-				_.audioQueuesSelection 'Click-Unselect'
+				if _.platform() is "DEVICE"
+					_.audioQueuesSelection 'Click-Unselect'
+					navigator.notification.vibrate(1000);
 				selectedStudents = @$el.find '.tiles.single.selected'
 
 				for student in selectedStudents
