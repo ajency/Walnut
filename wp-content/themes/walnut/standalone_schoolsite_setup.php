@@ -19,10 +19,9 @@
  *
  */
 
-require_once( '../../../wp-load.php');
-require_once('../../../wp-admin/includes/plugin.php');
+//require_once( '../../../wp-load.php');
+//require_once('../../../wp-admin/includes/plugin.php');
 
-require_once( '../../..//wp-content/plugins/school-data-sync/school_data_sync.php');
 /**
  *
  */
@@ -42,7 +41,7 @@ function run_standalone_school_setup(){
 
     activate_school_data_sync_plugin('school-data-sync/school_data_sync.php');
 
-    wp_redirect(site_url().'/wp-admin/options-general.php?page=school_data_sync');
+    //wp_redirect(site_url().'/wp-admin/options-general.php?page=school_data_sync');
 }
 
 function create_custom_tables(){
