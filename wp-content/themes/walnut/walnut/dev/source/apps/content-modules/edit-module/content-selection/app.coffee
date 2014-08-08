@@ -51,6 +51,7 @@ define ['app'
                             region: @layout.allContentRegion
                             contentPiecesCollection: @contentPiecesCollection
                             contentGroupCollection:@contentGroupCollection
+                            groupType : @model.get('type')
 
                         App.execute "show:content:search:results:app",
                             region: @layout.searchResultsRegion

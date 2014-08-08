@@ -125,7 +125,7 @@ function get_all_content_modules($args=array()){
 
         $textbook_ids = join(',',$textbook_ids);
         $modules_query = $wpdb->prepare(
-            "SELECT collection_id FROM {$wpdb->prefix}collection_meta
+            "SELECT collection_id FROM {$wpdb->base_prefix}collection_meta
                 WHERE meta_key like %s
                 AND meta_value in ($textbook_ids)
                 AND collection_id in ($content_module_ids)", 'textbook');
