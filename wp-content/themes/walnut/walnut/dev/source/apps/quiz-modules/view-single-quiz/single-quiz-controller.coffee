@@ -31,14 +31,13 @@ define ['app'
 
                         display_mode = 'class_mode'
                             
-                        console.log questionResponseCollection.length
+                        if questionResponseCollection
+                            if questionResponseCollection.length>0
+                                console.log questionResponseCollection
+                                display_mode = 'replay'
 
-                        if questionResponseCollection.length>0
-                            console.log questionResponseCollection
-                            display_mode = 'replay'
-
-                        if questionResponseCollection.length>0 and quizModel.hasPermission 'disable_quiz_replay'
-                            display_mode = 'disable_quiz_replay'
+                            if questionResponseCollection.length>0 and quizModel.hasPermission 'disable_quiz_replay'
+                                display_mode = 'disable_quiz_replay'
 
                         textbook_termIDs = _.flatten quizModel.get 'term_ids'
                         @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
