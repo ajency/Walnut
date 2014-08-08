@@ -154,7 +154,17 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
             }
           }
         }
+        if (this.groupType === 'quiz') {
+          data.isQuiz = true;
+        }
+        if (this.groupType === 'module') {
+          data.isModule = true;
+        }
         return data;
+      };
+
+      ContentItemView.prototype.initialize = function() {
+        return this.groupType = Marionette.getOption(this, 'groupType');
       };
 
       ContentItemView.prototype.onShow = function() {
@@ -185,6 +195,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       ContentDisplayView.prototype.className = 'col-md-10';
 
       ContentDisplayView.prototype.id = 'myCanvas-miki';
+
+      ContentDisplayView.prototype.itemViewOptions = function() {
+        return {
+          groupType: this.model.get('type')
+        };
+      };
 
       ContentDisplayView.prototype.events = {
         'click .remove': 'removeItem'
