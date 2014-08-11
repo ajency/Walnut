@@ -44,27 +44,38 @@ define ['app'
             serializeData:->
                 data = super data
                 display_mode =  Marionette.getOption @, 'display_mode'
-                data.answer_printing = true if @model.hasPermission('answer_printing') and display_mode in ['replay','disable_quiz_replay']
+                data.answer_printing = true if @model.hasPermission('answer_printing') and display_mode is 'replay'
 
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
 
-                if not responseSummary.isNew()
+                if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
                     data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
                     data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
+                    data.display_marks = true if @model.hasPermission 'display_answer'
                     data.total_marks_scored = responseSummary.get 'total_marks_scored'
 
                 data  
 
             onShow:->
-                if Marionette.getOption(@, 'display_mode') is 'replay'
-                    @$el.find "#take-quiz"
-                    .html 'Replay'
 
-                if Marionette.getOption(@, 'display_mode') is 'disable_quiz_replay'
+                responseSummary = Marionette.getOption @, 'quizResponseSummary'
+                if responseSummary.get('status') is 'started'                    
                     @$el.find "#take-quiz"
-                    .remove()
+                    .html 'Continue'
+
+
+
+                if Marionette.getOption(@, 'display_mode') is 'replay'
+
+                    if @model.hasPermission 'disable_quiz_replay'
+                        @$el.find "#take-quiz"
+                        .remove()
+                    else
+                        @$el.find "#take-quiz"
+                        .html 'Replay'
+                    
 
         # set handlers
         App.commands.setHandler "show:view:quiz:detailsapp", (opt = {})->

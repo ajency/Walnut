@@ -67,7 +67,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.listenTo(this.layout.questionDisplayRegion, "submit:question", this._submitQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "goto:previous:question", this._gotoPreviousQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "skip:question", this._skipQuestion);
-        this.listenTo(this.layout.questionDisplayRegion, "skip:question", this._skipQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "show:alert:popup", this._showPopup);
         this.listenTo(this.layout.quizTimerRegion, "show:alert:popup", this._showPopup);
         this.listenTo(this.layout.quizProgressRegion, "change:question", this._changeQuestion);

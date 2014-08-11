@@ -76,26 +76,35 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         var data, display_mode, responseSummary;
         data = QuizDetailsView.__super__.serializeData.call(this, data);
         display_mode = Marionette.getOption(this, 'display_mode');
-        if (this.model.hasPermission('answer_printing') && (display_mode === 'replay' || display_mode === 'disable_quiz_replay')) {
+        if (this.model.hasPermission('answer_printing') && display_mode === 'replay') {
           data.answer_printing = true;
         }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
-        if (!responseSummary.isNew()) {
+        if (responseSummary.get('status') === 'completed') {
           data.responseSummary = true;
           data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
           data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
           data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY");
+          if (this.model.hasPermission('display_answer')) {
+            data.display_marks = true;
+          }
           data.total_marks_scored = responseSummary.get('total_marks_scored');
         }
         return data;
       };
 
       QuizDetailsView.prototype.onShow = function() {
-        if (Marionette.getOption(this, 'display_mode') === 'replay') {
-          this.$el.find("#take-quiz").html('Replay');
+        var responseSummary;
+        responseSummary = Marionette.getOption(this, 'quizResponseSummary');
+        if (responseSummary.get('status') === 'started') {
+          this.$el.find("#take-quiz").html('Continue');
         }
-        if (Marionette.getOption(this, 'display_mode') === 'disable_quiz_replay') {
-          return this.$el.find("#take-quiz").remove();
+        if (Marionette.getOption(this, 'display_mode') === 'replay') {
+          if (this.model.hasPermission('disable_quiz_replay')) {
+            return this.$el.find("#take-quiz").remove();
+          } else {
+            return this.$el.find("#take-quiz").html('Replay');
+          }
         }
       };
 

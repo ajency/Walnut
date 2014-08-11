@@ -65,8 +65,6 @@ define ['app'
 
                     @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
 
-                    @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
-
                     @listenTo @layout.questionDisplayRegion, "show:alert:popup", @_showPopup
 
                     @listenTo @layout.quizTimerRegion, "show:alert:popup", @_showPopup
@@ -84,7 +82,7 @@ define ['app'
 
                 _submitQuestion:(answer)->
                     #save results here
-
+                    
                     totalTime =@timerObject.request "get:elapsed:time"
                     timeTaken= totalTime - timeBeforeCurrentQuestion
                     timeBeforeCurrentQuestion= totalTime
