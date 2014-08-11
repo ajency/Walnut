@@ -48,7 +48,6 @@ require.config
         kineticresize: 'plugins/kinetic.plugin.resize'
         checkbox: 'plugins/flatui-checkbox'
         holder: 'plugins/holder'
-        videojs: 'plugins/video'
         panzer: 'plugins/panzer'
         panzerlist : 'plugins/panzerlist'
         mmenu: 'plugins/jquery.mmenu.min.all'
@@ -101,8 +100,7 @@ require.config
         jPages: ['jquery']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
-
-## Start with application
+# Start with application
 require [  'plugins/walnut-pluginloader'
            'config/walnut-configloader'
            'app'
