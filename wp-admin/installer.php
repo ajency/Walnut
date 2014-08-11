@@ -101,8 +101,8 @@ function display_setup_form( $error = null ) {
 <form id="setup" method="post" action="installer.php?step=2">
 	<table class="form-table">
 		<tr>
-			<th scope="row"><label for="weblog_title"><?php _e( 'School Name' ); ?></label></th>
-			<td><input name="weblog_title" type="text" id="weblog_title" size="25" value="<?php echo esc_attr( $weblog_title ); ?>" /></td>
+			<!--th scope="row"><label for="weblog_title"><?php _e( 'School Name' ); ?></label></th-->
+			<td><input name="weblog_title" type="hidden" id="weblog_title" size="25" value="<?php echo esc_attr( $weblog_title ); ?>" /></td>
 		</tr>
 		<tr>
 			<th scope="row"><label for="user_login"><?php _e('Username'); ?></label></th>
@@ -236,7 +236,7 @@ switch($step) {
 
 <h1><?php _e( 'Success!' ); ?></h1>
 
-<p><?php _e( 'WordPress has been installed. Were you expecting more steps? Sorry to disappoint.' ); ?></p>
+<p><?php _e( 'WordPress has been installed. Once you login, remember to sync your school data to continue to use the site.' ); ?></p>
 
 <table class="form-table install-success">
 	<tr>
@@ -270,7 +270,7 @@ jQuery(document).ready(function() {
 	jQuery("#install_wordpress").on('click',function(e){
 		e.preventDefault();
 		
-	    var SERVER_AJAXURL = 'http://synapsedu.info/wp-admin/admin-ajax.php';
+	var SERVER_AJAXURL = 'http://synapsedu.info/wp-admin/admin-ajax.php';
 		
 		data ={};
         data['txtusername'] = jQuery.trim(jQuery('#user_login').val());
@@ -292,8 +292,12 @@ jQuery(document).ready(function() {
             data: formData,
             success: function(data, textStatus, XMLHttpRequest){
               if(data.error){
-					var errormsg = '<p class="message">Invalid username or password</p>'
-					jQuery('#setup').prepend(errormsg);
+                    var errormsg = '<p class="message">Invalid username or password</p>';
+                    jQuery('#setup').prepend(errormsg);
+              }
+              else if(jQuery.inArray('school-admin',data.blog_details.blog_roles) == -1){
+                  var errormsg = '<p class="message">Not a valid School admin</p>';
+		  jQuery('#setup').prepend(errormsg);
               }
               else{
                 blog_id = data.blog_details.blog_id

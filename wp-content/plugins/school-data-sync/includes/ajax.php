@@ -104,6 +104,8 @@ function ajax_sds_data_sync_import() {
         
     }
 
+    sds_update_data_imported();
+    
     sds_mark_sync_complete( $sync_id );
 
     $files = glob($extract_path.'/*'); // get all file names from .tmp folder
