@@ -6,7 +6,7 @@ function school_data_sync_screen(){
     }
 	?>
 	<script>
-	SERVER_AJAXURL = 'http://synapsedu.info/wp-admin/admin-ajax.php';
+	SERVER_AJAXURL = '<?php echo REMOTE_SERVER_URL?>/wp-admin/admin-ajax.php';
 	</script>
 
 	<?php
@@ -473,4 +473,15 @@ function get_upsync_data_count(){
     global $wpdb;
     $upsynccount = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}question_response where sync = 0" );
     return $upsynccount[0];
+}
+
+function sds_update_data_imported(){
+    global $wpdb;
+    
+    $wpdb->query("UPDATE `{$wpdb->prefix}posts` SET guid = replace(guid, '".REMOTE_SERVER_URL."','".site_url()."')");
+    
+    $wpdb->query("UPDATE `{$wpdb->prefix}postmeta` SET meta_value = replace(meta_value, '".REMOTE_SERVER_URL."','".site_url()."')");
+    
+    $wpdb->query("UPDATE `{$wpdb->prefix}options` SET option_value = replace(option_value, '".REMOTE_SERVER_URL."','".site_url()."')");
+
 }
