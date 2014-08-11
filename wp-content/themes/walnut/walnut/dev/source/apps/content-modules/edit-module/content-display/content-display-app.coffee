@@ -97,7 +97,13 @@ define ['app'
                             data.contentLevels.push "Level #{i}"
                             lvl--
 
+                data.isQuiz = true if @groupType is 'quiz'
+                data.isModule = true if @groupType is 'module'
+
                 data
+
+            initialize :->
+                @groupType = Marionette.getOption @, 'groupType'
 
             onShow : ->
                 if @model.get('post_type')is 'content_set'
@@ -118,6 +124,9 @@ define ['app'
 
             id : 'myCanvas-miki'
 
+            itemViewOptions :->
+                groupType : @model.get 'type'
+
             events :
                 'click .remove' : 'removeItem'
 
@@ -133,6 +142,7 @@ define ['app'
 
 
             onShow : ->
+
                 @$el.find(".cbp_tmtimeline").sortable
 
                     stop : (event, ui)=>

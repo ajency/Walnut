@@ -10,8 +10,10 @@
             <h4 class="m-t-5 m-b-5"><span class="text-success semi-bold">{{&post_excerpt}}</span> </h4>
         </div>
         <div class="clearfix"></div>
-        <div class="tiles grey p-t-10 p-b-10 p-l-20">
-            <div class="muted">{{post_tags}}</div>
+        <div class="tiles grey p-t-10 p-b-10 p-l-20">           
+            <div class="muted">{{#isModule}}{{post_tags}}{{/isModule}}
+                {{#isQuiz}}Level {{difficulty_level}}{{/isQuiz}}
+            </div> 
             <div class="clearfix"></div>
         </div>
     </div>

@@ -56,7 +56,8 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
               App.execute("show:all:content:selection:app", {
                 region: _this.layout.allContentRegion,
                 contentPiecesCollection: _this.contentPiecesCollection,
-                contentGroupCollection: _this.contentGroupCollection
+                contentGroupCollection: _this.contentGroupCollection,
+                groupType: _this.model.get('type')
               });
               App.execute("show:content:search:results:app", {
                 region: _this.layout.searchResultsRegion,

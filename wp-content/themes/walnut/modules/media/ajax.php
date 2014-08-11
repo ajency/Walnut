@@ -34,6 +34,13 @@ function get_blog_media() {
     switch_to_blog(1);
 
     $media = wp_prepare_attachment_for_js ( $id );
+    
+    $enc_media_types = array('audio','video');
+    
+    if(in_array($media['type'], $enc_media_types)){
+            $media = modify_media_url($media,$media['type']);
+    }
+
     switch_to_blog($current_blog_id);
 
     wp_send_json ( array (
@@ -98,11 +105,18 @@ add_filter( 'upload_dir', 'change_uploads_directory', 100, 1 );
 function get_media_by_ids(){
     $ids = $_GET['ids'];
     $media = array();
+    $enc_media_types = array('audio','video');
     $current_blog_id= get_current_blog_id();
     switch_to_blog(1);
     foreach ($ids as $id){
 //        $media[] = $id;
-        $media[] = wp_prepare_attachment_for_js( $id );
+        $media_temp = wp_prepare_attachment_for_js( $id );
+        if(in_array($media_temp['type'], $enc_media_types)){
+            $media_temp = modify_media_url($media_temp,$media_temp['type']);
+        }
+        $media[] = $media_temp;
+
+        
     }
     switch_to_blog($current_blog_id);
     wp_send_json( array(
@@ -113,3 +127,29 @@ function get_media_by_ids(){
 }
 
 add_action('wp_ajax_get_media_by_ids','get_media_by_ids');
+/*
+ * function to delete a decrypted file
+ * @param string $_POST['source']  temporary decrypted file path 
+ */
+function ajax_decrypt_file_delete(){  
+     
+    $src_file_info = pathinfo($_POST['source']);
+
+    $user_id = get_current_user_id();
+            
+    $temp_path = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$user_id.DIRECTORY_SEPARATOR.$mediatype;
+    
+    if (file_exists($temp_path.DIRECTORY_SEPARATOR.$src_file_info['filename'])) {
+        unlink($temp_path.DIRECTORY_SEPARATOR.$src_file_info['filename']);
+            wp_send_json( array(
+            'code' => 'OK',
+            'data' => 'file deleted successfully'
+            ) );
+    }
+    else{
+            wp_send_json( array(
+            'code' => 'ERROR',
+            'data' => 'file does not exist'
+            ) );
+    }    
+}
