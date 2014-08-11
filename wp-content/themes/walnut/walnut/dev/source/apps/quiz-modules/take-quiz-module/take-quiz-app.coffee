@@ -24,20 +24,18 @@ define ['app'
                     {quizModel,quizResponseSummary,questionsCollection,
                     questionResponseCollection,@textbookNames,@display_mode} = opts
 
-                    if quizResponseSummary.isNew()
+                    if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
                         data = 
                             'status' : 'started'
 
-                        quizResponseSummary.save 'status' : 'started', 
-                            success:=> 
-                                questionResponseCollection= App.request "create:empty:question:response:collection"
-                                @_startTakeQuiz()
-
-                            error :-> console.log 'error'
-                    else
-                        @_startTakeQuiz()
+                        quizResponseSummary.save 'status' : 'started'
+                    
+                    @_startTakeQuiz()
                 
                 _startTakeQuiz:=>
+
+                    if not questionResponseCollection
+                        questionResponseCollection= App.request "create:empty:question:response:collection"
 
                     App.leftNavRegion.close()
                     App.headerRegion.close()
@@ -108,7 +106,7 @@ define ['app'
                         quizResponseModel = newResponseModel
                         questionResponseCollection.add newResponseModel
 
-                    quizResponseModel.save()
+                    quizResponseModel.save() if quizModel.get('quiz_type') is 'test'
 
                     @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
@@ -154,13 +152,23 @@ define ['app'
 
                             @_submitQuestion answerModel
 
-                    quizResponseSummary.save 'status' : 'completed' 
+                    quizResponseSummary.set 
+                        'status'            : 'completed' 
+                        'total_time_taken'  : timeBeforeCurrentQuestion
+                        'num_skipped'       : _.size questionResponseCollection.where 'status': 'skipped'
+                        'total_marks_scored': _.reduce questionResponseCollection.pluck('marks_scored'), (memo, num)->
+                            parseInt memo + parseInt num
+
+                    quizResponseSummary.save() if quizModel.get('quiz_type') is 'test'
+                    
+                        
 
                     App.execute "show:single:quiz:app",
-                        region: App.mainContentRegion
-                        quizModel: quizModel
-                        questionsCollection: questionsCollection
-                        questionResponseCollection: questionResponseCollection
+                        region                      : App.mainContentRegion
+                        quizModel                   : quizModel
+                        questionsCollection         : questionsCollection
+                        questionResponseCollection  : questionResponseCollection
+                        quizResponseSummary         : quizResponseSummary
 
                 _getUnansweredIDs:->
                     

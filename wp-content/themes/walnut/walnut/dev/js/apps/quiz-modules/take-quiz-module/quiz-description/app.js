@@ -81,6 +81,15 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       ModuleDescriptionView.prototype.template = quizDescriptionTemplate;
 
+      ModuleDescriptionView.prototype.serializeData = function() {
+        var data;
+        data = ModuleDescriptionView.__super__.serializeData.call(this);
+        if (this.model.get('quiz_type') === 'practice') {
+          data.practice_mode = true;
+        }
+        return data;
+      };
+
       ModuleDescriptionView.prototype.onQuestionChange = function(model) {
         return this.$el.find("#time-on-question").html(model.get('duration'));
       };

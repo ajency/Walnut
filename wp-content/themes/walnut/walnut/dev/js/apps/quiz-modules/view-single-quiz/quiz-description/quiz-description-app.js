@@ -79,16 +79,23 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         if (this.model.hasPermission('answer_printing') && display_mode === 'replay') {
           data.answer_printing = true;
         }
+        if (this.model.get('quiz_type') === 'practice') {
+          data.practice_mode = true;
+        }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         if (responseSummary.get('status') === 'completed') {
           data.responseSummary = true;
           data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
           data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
-          data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY");
           if (this.model.hasPermission('display_answer')) {
             data.display_marks = true;
           }
           data.total_marks_scored = responseSummary.get('total_marks_scored');
+          if (responseSummary.get('taken_on')) {
+            data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY");
+          } else {
+            data.taken_on_date = moment().format("Do MMM YYYY");
+          }
         }
         return data;
       };

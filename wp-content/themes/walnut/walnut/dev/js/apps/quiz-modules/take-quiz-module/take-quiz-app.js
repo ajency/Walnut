@@ -24,30 +24,22 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       TakeQuizController.prototype.initialize = function(opts) {
         var data;
         quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
-        if (quizResponseSummary.isNew()) {
+        if (quizResponseSummary.isNew() && quizModel.get('quiz_type') === 'test') {
           data = {
             'status': 'started'
           };
-          return quizResponseSummary.save({
+          quizResponseSummary.save({
             'status': 'started'
-          }, {
-            success: (function(_this) {
-              return function() {
-                questionResponseCollection = App.request("create:empty:question:response:collection");
-                return _this._startTakeQuiz();
-              };
-            })(this),
-            error: function() {
-              return console.log('error');
-            }
           });
-        } else {
-          return this._startTakeQuiz();
         }
+        return this._startTakeQuiz();
       };
 
       TakeQuizController.prototype._startTakeQuiz = function() {
         var layout, questionID;
+        if (!questionResponseCollection) {
+          questionResponseCollection = App.request("create:empty:question:response:collection");
+        }
         App.leftNavRegion.close();
         App.headerRegion.close();
         App.breadcrumbRegion.close();
@@ -102,7 +94,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           quizResponseModel = newResponseModel;
           questionResponseCollection.add(newResponseModel);
         }
-        quizResponseModel.save();
+        if (quizModel.get('quiz_type') === 'test') {
+          quizResponseModel.save();
+        }
         return this.layout.quizProgressRegion.trigger("question:submitted", quizResponseModel);
       };
 
@@ -162,14 +156,25 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             };
           })(this));
         }
-        quizResponseSummary.save({
-          'status': 'completed'
+        quizResponseSummary.set({
+          'status': 'completed',
+          'total_time_taken': timeBeforeCurrentQuestion,
+          'num_skipped': _.size(questionResponseCollection.where({
+            'status': 'skipped'
+          })),
+          'total_marks_scored': _.reduce(questionResponseCollection.pluck('marks_scored'), function(memo, num) {
+            return parseInt(memo + parseInt(num));
+          })
         });
+        if (quizModel.get('quiz_type') === 'test') {
+          quizResponseSummary.save();
+        }
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
           quizModel: quizModel,
           questionsCollection: questionsCollection,
-          questionResponseCollection: questionResponseCollection
+          questionResponseCollection: questionResponseCollection,
+          quizResponseSummary: quizResponseSummary
         });
       };
 

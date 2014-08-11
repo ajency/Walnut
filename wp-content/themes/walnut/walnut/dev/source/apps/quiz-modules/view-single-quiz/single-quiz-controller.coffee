@@ -15,7 +15,7 @@ define ['app'
 
             initialize: (opts) ->
 
-                {quiz_id,quizModel,questionsCollection,questionResponseCollection} = opts
+                {quiz_id,quizModel,questionsCollection,questionResponseCollection,quizResponseSummary} = opts
 
                 quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
 
@@ -61,24 +61,26 @@ define ['app'
             _fetchQuizResponseSummary:->
                 defer = $.Deferred();
 
+                #if the summary has been passed from the take-quiz-module app after quiz completion
+                if quizResponseSummary
+                    defer.resolve()
+                    return defer.promise()
+
                 @summary_data= 
                     'collection_id' : quizModel.get 'id'
                     'student_id'    : App.request "get:loggedin:user:id"
 
                 quizResponseSummaryCollection = App.request "get:quiz:response:summary", @summary_data
-                console.log quizResponseSummaryCollection
                 App.execute "when:fetched", quizResponseSummaryCollection, =>
 
                     if quizResponseSummaryCollection.length>0
                         quizResponseSummary= quizResponseSummaryCollection.first()
-                        console.log quizResponseSummary
                         defer.resolve()
 
                     else
                         quizResponseSummary =  App.request "create:quiz:response:summary", @summary_data
-                        console.log quizResponseSummary
                         defer.resolve()
-
+                        
                 defer.promise()
 
             _fetchQuestionResponseCollection:=>

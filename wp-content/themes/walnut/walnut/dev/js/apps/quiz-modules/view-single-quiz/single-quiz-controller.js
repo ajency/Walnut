@@ -30,7 +30,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype.initialize = function(opts) {
         var fetchQuestionResponseCollection, quiz_id;
-        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection;
+        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, quizResponseSummary = opts.quizResponseSummary;
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }
@@ -83,21 +83,22 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       Controller.prototype._fetchQuizResponseSummary = function() {
         var defer, quizResponseSummaryCollection;
         defer = $.Deferred();
+        if (quizResponseSummary) {
+          defer.resolve();
+          return defer.promise();
+        }
         this.summary_data = {
           'collection_id': quizModel.get('id'),
           'student_id': App.request("get:loggedin:user:id")
         };
         quizResponseSummaryCollection = App.request("get:quiz:response:summary", this.summary_data);
-        console.log(quizResponseSummaryCollection);
         App.execute("when:fetched", quizResponseSummaryCollection, (function(_this) {
           return function() {
             if (quizResponseSummaryCollection.length > 0) {
               quizResponseSummary = quizResponseSummaryCollection.first();
-              console.log(quizResponseSummary);
               return defer.resolve();
             } else {
               quizResponseSummary = App.request("create:quiz:response:summary", _this.summary_data);
-              console.log(quizResponseSummary);
               return defer.resolve();
             }
           };

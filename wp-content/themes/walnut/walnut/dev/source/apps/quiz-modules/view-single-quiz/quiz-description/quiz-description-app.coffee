@@ -46,15 +46,21 @@ define ['app'
                 display_mode =  Marionette.getOption @, 'display_mode'
                 data.answer_printing = true if @model.hasPermission('answer_printing') and display_mode is 'replay'
 
+                data.practice_mode =true if @model.get('quiz_type') is 'practice'
+
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
 
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
                     data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
-                    data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
                     data.display_marks = true if @model.hasPermission 'display_answer'
                     data.total_marks_scored = responseSummary.get 'total_marks_scored'
+                    
+                    if responseSummary.get('taken_on')
+                        data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
+                    else 
+                        data.taken_on_date = moment().format("Do MMM YYYY")
 
                 data  
 
