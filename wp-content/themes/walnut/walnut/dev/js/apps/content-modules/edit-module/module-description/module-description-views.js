@@ -43,7 +43,7 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
         data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
         data.heading = this.model.isNew() ? 'Create a' : 'Edit a';
-        if (data.type === 'module') {
+        if (data.type === 'teaching-module') {
           data.isModule = true;
         }
         if (data.type === 'quiz') {
@@ -197,7 +197,7 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
         this.$el.find('#saved-success').remove();
         attrs = model.changedAttributes();
         msg = attrs.id ? 'saved' : 'updated';
-        if (model.get('type') === 'module') {
+        if (model.get('type') === 'teaching-module') {
           this.$el.find('.grid-title').prepend('<div id="saved-success">Training module ' + msg + '. Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>');
         }
         if (model.get('type') === 'quiz') {

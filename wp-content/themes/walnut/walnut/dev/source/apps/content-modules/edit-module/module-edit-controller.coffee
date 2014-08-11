@@ -11,11 +11,11 @@ define ['app'
                 {@group_id,@groupType} = options
 
                 if @group_id
-                    @contentGroupModel = App.request "get:content:group:by:id", @group_id if @groupType is 'module'
+                    @contentGroupModel = App.request "get:content:group:by:id", @group_id if @groupType is 'teaching-module'
                     @contentGroupModel = App.request "get:quiz:by:id", @group_id if @groupType is 'quiz'
 
                 else
-                    @contentGroupModel = App.request "new:content:group" if @groupType is 'module'
+                    @contentGroupModel = App.request "new:content:group" if @groupType is 'teaching-module'
                     @contentGroupModel = App.request "new:quiz" if @groupType is 'quiz'
 
                 App.execute "when:fetched", @contentGroupModel, =>
@@ -63,7 +63,7 @@ define ['app'
                 new Edit.Views.ContentGroupEditLayout
 
             _showContentSelectionApp : (model)=>
-                @contentGroupCollection = App.request "get:content:pieces:of:group", model if @groupType is 'module'
+                @contentGroupCollection = App.request "get:content:pieces:of:group", model if @groupType is 'teaching-module'
 
                 if @groupType is 'quiz'
                     @contentGroupCollection = new Backbone.Collection

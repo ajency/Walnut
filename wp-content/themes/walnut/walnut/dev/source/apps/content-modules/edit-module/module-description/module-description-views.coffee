@@ -38,7 +38,7 @@ define ['app'
 
                 data.heading = if @model.isNew() then 'Create a' else 'Edit a'
 
-                data.isModule = true if data.type is 'module'
+                data.isModule = true if data.type is 'teaching-module'
 
                 data.isQuiz = true if data.type is 'quiz'
 
@@ -198,7 +198,7 @@ define ['app'
 
                 msg= if attrs.id then 'saved' else 'updated'
 
-                if model.get('type') is 'module'
+                if model.get('type') is 'teaching-module'
                     @$el.find('.grid-title').prepend '<div id="saved-success">Training module '+msg+'.
                         Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>'
 
