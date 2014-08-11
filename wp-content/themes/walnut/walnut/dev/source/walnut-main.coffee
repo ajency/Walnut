@@ -49,7 +49,6 @@ require.config
         checkbox: 'plugins/flatui-checkbox'
         holder: 'plugins/holder'
         videojs: 'plugins/video'
-        videojsplaylist : 'plugins/videojs-playlists.min'
         panzer: 'plugins/panzer'
         panzerlist : 'plugins/panzerlist'
         mmenu: 'plugins/jquery.mmenu.min.all'
@@ -99,7 +98,6 @@ require.config
         timerplugin: ['jquery']
         countdowntimer: ['jquery','timerplugin']
         spinedit : ['jquery','bootstrap']
-        videojsplaylist : ['videojs']
         jPages: ['jquery']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
