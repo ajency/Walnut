@@ -40,4 +40,6 @@ define [
     'timerplugin'
     'countdowntimer'
     'spinedit'
+    # 'resizablecolumns'
+    'bootbox'
 ], ->

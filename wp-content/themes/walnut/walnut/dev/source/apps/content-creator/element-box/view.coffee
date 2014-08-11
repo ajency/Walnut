@@ -18,17 +18,17 @@ define ['app'
                 contentType = Marionette.getOption @, 'contentType'
 
                 if contentType is 'teacher_question'
-                    elementSet = ['Row', 'TeacherQuestion', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio']
+                    elementSet = ['Row', 'TeacherQuestion', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio','Table']
 
                 else if contentType is 'content_piece'
                     elementSet = ['Row', 'Image', 'Text', 'ImageWithText',
-                                  'Video', 'Audio']
+                                  'Video', 'Audio','Table']
                     @$el.find '#questions_elements_label'
                     .hide()
 
                 else
                     elementSet = ['Row', 'Hotspot', 'Mcq', 'Fib', 'BigAnswer', 'Sort', 'Image', 'Text', 'ImageWithText',
-                                  'Video', 'Audio']
+                                  'Video', 'Audio','Table']
 
 
                 _.each @$el.find('li'), (el, ind)->

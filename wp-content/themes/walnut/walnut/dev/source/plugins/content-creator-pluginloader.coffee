@@ -25,8 +25,8 @@ define [
     'select2'
     'tagsinput'
     'screwbuttons'
-    'videojs'
     'panzer'
     'panzerlist'
-    'videojsplaylist'
+    'resizablecolumns'
+    'bootbox'
 ], ->

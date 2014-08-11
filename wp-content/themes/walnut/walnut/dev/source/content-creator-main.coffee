@@ -41,11 +41,11 @@ require.config
         select2: 'plugins/select2.min'
         tagsinput: 'plugins/bootstrap-tagsinput.min'
         screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
-        videojs: 'plugins/video'
-        videojsplaylist : 'plugins/videojs-playlists.min'
         panzer: 'plugins/panzer'
         panzerlist : 'plugins/panzerlist'
         sidr: 'plugins/jquery.sidr.min'
+        resizablecolumns : 'plugins/jquery.resizableColumns.min'
+        bootbox : 'plugins/bootbox.min'
 
     shim:
         underscore:
@@ -78,7 +78,9 @@ require.config
         screwbuttons: ['jquery']
         panzer: ['jquery']
         panzerlist : ['jquery']
-        videojsplaylist : ['videojs']
+        resizablecolumns : ['jquery']
+        bootbox : ['jquery', 'bootstrap']
+
         app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
 
 

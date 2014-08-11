@@ -19,6 +19,15 @@ define(['jquery', 'underscore'], function($, _) {
     })(this));
     return empty;
   };
+  $.fn.removeAllAttr = function() {
+    var attrs;
+    attrs = ['class', 'tabindex', 'contenteditable', 'id', 'spellcheck', 'role', 'aria-label', 'title', 'aria-describedby', 'style'];
+    return _.each(this, function(div) {
+      return _.each(attrs, function(attr) {
+        return $(div).removeAttr(attr);
+      });
+    });
+  };
   $.fn.center = function(parent) {
     if (parent) {
       parent = this.parent();

@@ -48,7 +48,7 @@ require.config
         kineticresize: 'plugins/kinetic.plugin.resize'
         checkbox: 'plugins/flatui-checkbox'
         holder: 'plugins/holder'
-        videojs: 'plugins/video'
+        # videojs: 'plugins/video'
         # videojsplaylist : 'plugins/videojs-playlists.min'
         panzer: 'plugins/panzer'
         panzerlist : 'plugins/panzerlist'
@@ -56,6 +56,8 @@ require.config
         timerplugin: 'plugins/jquery.countdown_plugin.min' #needed for jquerytimer to work
         countdowntimer: 'plugins/jquery.countdown.min'
         spinedit : 'plugins/bootstrap-spinedit'
+        resizablecolumns : 'plugins/jquery.resizableColumns.min'
+        bootbox : 'plugins/bootbox.min'
 
     shim:
         underscore:
@@ -98,6 +100,8 @@ require.config
         timerplugin: ['jquery']
         countdowntimer: ['jquery','timerplugin']
         spinedit : ['jquery','bootstrap']
+        resizablecolumns : ['jquery']
+        bootbox : ['jquery', 'bootstrap']
         # videojsplaylist : ['videojs']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
