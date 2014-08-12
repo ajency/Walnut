@@ -137,8 +137,8 @@ function display_setup_form( $error = null ) {
 			<p><?php _e( 'Double-check your email address before continuing.' ); ?></p></td>
 		</tr>
 		<tr>
-			<th scope="row"><label for="blog_public"><?php _e( 'Privacy' ); ?></label></th>
-			<td colspan="2"><label><input type="checkbox" name="blog_public" value="1" <?php checked( $blog_public ); ?> /> <?php _e( 'Allow search engines to index this site.' ); ?></label></td>
+			<!--th scope="row"><label for="blog_public"><?php _e( 'Privacy' ); ?></label></th-->
+			<td colspan="2"><label><input type="hidden" name="blog_public" value="1" /></label></td>
 		</tr>
 	</table>
 	<p class="step"><input id="install_wordpress" type="submit" name="Submit" value="<?php esc_attr_e( 'Install WordPress' ); ?>" class="button button-large" /></p>
@@ -199,7 +199,8 @@ switch($step) {
 		$admin_password = isset($_POST['admin_password']) ? wp_unslash( $_POST['admin_password'] ) : '';
 		$admin_password_check = isset($_POST['admin_password2']) ? wp_unslash( $_POST['admin_password2'] ) : '';
 		$admin_email  = isset( $_POST['admin_email']  ) ?trim( wp_unslash( $_POST['admin_email'] ) ) : '';
-		$public       = isset( $_POST['blog_public']  ) ? (int) $_POST['blog_public'] : 0;
+		//$public       = isset( $_POST['blog_public']  ) ? (int) $_POST['blog_public'] : 0;
+                $public       = 0;
 		// check e-mail address
 		$error = false;
 		if ( empty( $user_name ) ) {
@@ -300,6 +301,8 @@ jQuery(document).ready(function() {
 		  jQuery('#setup').prepend(errormsg);
               }
               else{
+                  jQuery('#weblog_title').val(data.blog_details.blog_name);
+                  jQuery('#admin_email').val(data.login_details.data.user_email);
                 blog_id = data.blog_details.blog_id
 				jQuery("<input type='hidden' value='"+blog_id+"' />")
 						.attr("id", "blog_id")
