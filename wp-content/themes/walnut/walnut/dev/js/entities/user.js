@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Users", function(Users, App, Backbone, Marionette, $, _) {
-    var API, UserCollection, user;
+    var API, UserCollection, loggedInUser;
     Users.UserModel = (function(_super) {
       __extends(UserModel, _super);
 
@@ -25,7 +25,10 @@ define(["app", 'backbone'], function(App, Backbone) {
       return UserModel;
 
     })(Backbone.Model);
-    user = new Users.UserModel;
+    loggedInUser = new Users.UserModel;
+    if (typeof USER !== "undefined" && USER !== null) {
+      loggedInUser.set(USER);
+    }
     UserCollection = (function(_super) {
       __extends(UserCollection, _super);
 
@@ -56,7 +59,10 @@ define(["app", 'backbone'], function(App, Backbone) {
       }
     };
     App.reqres.setHandler("get:user:model", function() {
-      return user;
+      return loggedInUser;
+    });
+    App.reqres.setHandler("get:loggedin:user:id", function() {
+      return loggedInUser.get('ID');
     });
     return App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);

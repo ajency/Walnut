@@ -60,7 +60,7 @@ define ['app'
                 @saveContentPieces content
 
             saveContentPieces : (content)=>
-                @model.set('content_pieces', content) if @model.get('type') is 'module'
+                @model.set('content_pieces', content) if @model.get('type') is 'teaching-module'
                 @model.set('content_layout', content) if @model.get('type') is 'quiz'
                 @model.save({ 'changed' : 'content_pieces' }, { wait : true })
 
@@ -98,7 +98,7 @@ define ['app'
                             lvl--
 
                 data.isQuiz = true if @groupType is 'quiz'
-                data.isModule = true if @groupType is 'module'
+                data.isModule = true if @groupType is 'teaching-module'
 
                 data
 

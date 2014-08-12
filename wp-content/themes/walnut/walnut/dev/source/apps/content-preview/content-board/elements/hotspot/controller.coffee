@@ -11,11 +11,35 @@ define ['app'
 
             # intializer
             initialize : (options)->
-                answerData =
-                    answer : []
-                    marks : 0
-                    comment : 'Not Attempted'
-                @answerModel = App.request "create:new:answer", answerData
+                {answerWreqrObject,@answerModel} = options
+
+                @answerModel = App.request "create:new:answer" if not @answerModel
+
+                if answerWreqrObject
+                    
+                    @displayAnswer = answerWreqrObject.options.displayAnswer
+                    
+                    answerWreqrObject.setHandler "get:question:answer", =>
+
+                        answer = _.compact @answerModel.get 'answer'
+
+                        if _.isEmpty answer
+                            emptyOrIncomplete = 'empty' 
+
+                        else if _.size(answer)< _.size @layout.model.get 'correct_answer'
+                            emptyOrIncomplete = 'incomplete' 
+
+                        else emptyOrIncomplete = 'complete'
+
+                        data=
+                            'emptyOrIncomplete' : emptyOrIncomplete
+                            'answerModel': @answerModel
+                            'totalMarks' : @layout.model.get('marks')
+
+                    answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
+                        #if displayAnswer is true, the correct & wrong answers & marks will be displayed
+                        #default is true
+                        @_submitAnswer @displayAnswer 
 
                 super(options)
 
@@ -23,6 +47,7 @@ define ['app'
                 new Hotspot.Views.HotspotView
                     model : @layout.model
                     answerModel : @answerModel
+                    displayAnswer: @displayAnswer
 
 
 
@@ -30,9 +55,18 @@ define ['app'
             renderElement : ()=>
                 optionCollectionArray = @layout.model.get 'optionCollection'
 
+                if optionCollectionArray instanceof Backbone.Collection
+                    optionCollectionArray = optionCollectionArray.models
+
                 textCollectionArray = @layout.model.get 'textCollection'
 
+                if textCollectionArray instanceof Backbone.Collection
+                    textCollectionArray = textCollectionArray.models
+
                 imageCollectionArray = @layout.model.get 'imageCollection'
+
+                if imageCollectionArray instanceof Backbone.Collection
+                    imageCollectionArray = imageCollectionArray.models
 
                 @_parseArray optionCollectionArray, textCollectionArray, imageCollectionArray
 
@@ -53,8 +87,9 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
+                # show the view
                 @layout.elementRegion.show @view,
-                    loading : true
+                    loading:true
 
             _parseArray : (optionCollectionArray, textCollectionArray, imageCollectionArray)->
                 _.each optionCollectionArray, (option)=>
@@ -76,7 +111,7 @@ define ['app'
                     object[key] = parseFloat value if key in Floats
                     object[key] = _.toBoolean value if key in Booleans
 
-            _submitAnswer : ->
+            _submitAnswer :(displayAnswer=true) ->
                 console.log @optionCollection
                 correctOptions = @optionCollection.where { correct : true }
                 console.log correctOptions
@@ -104,10 +139,10 @@ define ['app'
                         @answerModel.set 'marks', @layout.model.get 'marks'
 
 
-                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')
+                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks') if displayAnswer
 
                 # if @answerModel.get('marks') < @layout.model.get('marks')
-                @view.triggerMethod 'show:feedback'
+                @view.triggerMethod 'show:feedback' if displayAnswer
 
 
 

@@ -7,10 +7,45 @@ define ['app'
 
 
             initialize : (options)->
-                answerData =
-                    answer : []
-                    marks : 0
-                @answerModel = App.request "create:new:answer", answerData
+
+                {answerWreqrObject,@answerModel} = options
+
+                @answerModel = App.request "create:new:answer" if not @answerModel
+
+                if answerWreqrObject
+                    
+                    @displayAnswer = answerWreqrObject.options.displayAnswer
+                    
+                    answerWreqrObject.setHandler "get:question:answer",=>
+
+                        blanks= @view.$el.find 'input'
+
+                        #make it blank first to clear the previous attempted answers
+                        @answerModel.set 'answer' : []
+
+                        _.each blanks, (blank, index)=>
+                            # save it in answerModel
+                            @answerModel.get('answer').push($(blank).val())
+
+                        answer = _.compact @answerModel.get 'answer'
+
+                        if _.isEmpty answer
+                            emptyOrIncomplete = 'empty' 
+
+                        else if _.size(answer)< _.size blanks
+                            emptyOrIncomplete = 'incomplete' 
+
+                        else emptyOrIncomplete = 'complete'
+
+                        data=
+                            'emptyOrIncomplete' : emptyOrIncomplete
+                            'answerModel': @answerModel
+                            'totalMarks' : @layout.model.get('marks')
+
+                    answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
+                        #if displayAnswer is true, the correct & wrong answers & marks will be displayed
+                        #default is true
+                        @_submitAnswer @displayAnswer 
 
 
                 super options
@@ -18,6 +53,9 @@ define ['app'
             renderElement : ->
 
                 blanksArray = @layout.model.get 'blanksArray'
+
+                if blanksArray instanceof Backbone.Collection
+                    blanksArray = blanksArray.models
 
                 @_parseOptions blanksArray
 
@@ -33,13 +71,14 @@ define ['app'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
 
-
                 # show the view
-                @layout.elementRegion.show @view, (loading : true)
+                @layout.elementRegion.show @view
 
             _getFibView : (model)->
                 new Fib.Views.FibView
                     model : model
+                    answerModel: @answerModel
+                    displayAnswer :@displayAnswer 
 
             _parseOptions:(blanksArray)->
                 _.each blanksArray,(blank)->
@@ -48,7 +87,7 @@ define ['app'
                     blank.marks = parseInt blank.marks if blank.marks?
 
 
-            _submitAnswer : ->
+            _submitAnswer :(displayAnswer=true) ->
                 enableIndividualMarks = @layout.model.get('enableIndividualMarks')
                 @caseSensitive = @layout.model.get 'case_sensitive'
 
@@ -73,10 +112,10 @@ define ['app'
                         correctAnswersArray = @blanksCollection.get($(blank).attr('data-id')).get('correct_answers')
 
                         if @_checkAnswer $(blank).val(), correctAnswersArray
-                            $(blank).addClass('ansRight')
+                            $(blank).addClass('ansRight') if displayAnswer
                         else
                             @answerModel.set 'marks', 0
-                            $(blank).addClass('ansWrong')
+                            $(blank).addClass('ansWrong') if displayAnswer
 
 
                 else
@@ -100,10 +139,10 @@ define ['app'
                 # condition when enableIndividualMarks is true i.e. evaluate individual question
 
 
-                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')
+                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')  if displayAnswer
 
                 if @answerModel.get('marks') < @layout.model.get('marks')
-                    @view.triggerMethod 'show:feedback'
+                    @view.triggerMethod 'show:feedback'  if displayAnswer
 
             # function to check wether a given blank is correct
             _checkAnswer : (answer, correctAnswersArray)->

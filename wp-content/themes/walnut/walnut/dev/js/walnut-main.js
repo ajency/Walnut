@@ -39,13 +39,13 @@ require.config({
     kineticresize: 'plugins/kinetic.plugin.resize',
     checkbox: 'plugins/flatui-checkbox',
     holder: 'plugins/holder',
-    videojs: 'plugins/video',
     panzer: 'plugins/panzer',
     panzerlist: 'plugins/panzerlist',
     mmenu: 'plugins/jquery.mmenu.min.all',
     timerplugin: 'plugins/jquery.countdown_plugin.min',
     countdowntimer: 'plugins/jquery.countdown.min',
-    spinedit: 'plugins/bootstrap-spinedit'
+    spinedit: 'plugins/bootstrap-spinedit',
+    jPages: 'plugins/jPages.min'
   },
   shim: {
     underscore: {
@@ -91,6 +91,7 @@ require.config({
     timerplugin: ['jquery'],
     countdowntimer: ['jquery', 'timerplugin'],
     spinedit: ['jquery', 'bootstrap'],
+    jPages: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

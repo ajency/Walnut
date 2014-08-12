@@ -13,9 +13,22 @@ define ['app'], (App)->
                 @trigger "create:row:structure",
                     container : @$el
 
-
                 @$el.closest('.preview').find('#submit-answer-button').on 'click', =>
                     @trigger "submit:answer"
+
+                @_autoPopulateAnswers()
+
+
+            _autoPopulateAnswers:->
+
+                answerModel=Marionette.getOption @, 'answerModel'
+                if answerModel and answerModel.get('status') isnt 'not_attempted'
+                    answerArray= answerModel.get 'answer'
+                    _.each answerArray, (ans)=>
+                        @$el.find '#option-'+ans
+                        .screwDefaultButtons "check"
+
+                    @trigger "submit:answer" if Marionette.getOption @, 'displayAnswer'
 
             onAddOptionClasses : (answer)->
                 totalOptions = @model.get 'optioncount'
