@@ -62,6 +62,8 @@ define ['app'
                     else 
                         data.taken_on_date = moment().format("Do MMM YYYY")
 
+                data.negMarksEnable= _.toBool data.negMarksEnable
+                
                 data  
 
             onShow:->

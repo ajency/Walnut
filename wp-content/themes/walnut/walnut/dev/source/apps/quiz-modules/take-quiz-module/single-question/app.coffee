@@ -78,6 +78,9 @@ define ['app'
 
                         answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
 
+                        if answer.get('status') is 'wrong_answer' and _.toBool @quizModel.get 'negMarksEnable'
+                            answer.set 'marks': - answerData.totalMarks*@quizModel.get('negMarks')/100
+
                         @region.trigger "submit:question", answer
 
                     _getAnswerStatus:(recievedMarks, totalMarks)->

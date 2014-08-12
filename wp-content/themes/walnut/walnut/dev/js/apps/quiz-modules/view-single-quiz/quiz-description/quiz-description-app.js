@@ -97,6 +97,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             data.taken_on_date = moment().format("Do MMM YYYY");
           }
         }
+        data.negMarksEnable = _.toBool(data.negMarksEnable);
         return data;
       };
 

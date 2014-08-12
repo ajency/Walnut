@@ -9,7 +9,12 @@
     <div class="grid-title">
         <div class="row">
             <div class="col-md-6">
-                <h3 class="no-margin semi-bold">{{name}}</h3>
+                <h3 class="no-margin semi-bold">
+                    {{name}} 
+                    {{#responseSummary}} 
+                        <span class="small text-success semi-bold no-margin inline">(Taken On: {{taken_on_date}})</span>
+                    {{/responseSummary}} 
+                </h3>
             </div>
             <div class="col-md-6 b-l b-grey small-text">
                 <div class="row">
@@ -50,10 +55,10 @@
                     {{/display_marks}}
             </div>
             <div class="col-md-3">
-                    {{#responseSummary}} 
-                    <label class="form-label">Quiz Taken On</label>
-                        <h4 class="text-success semi-bold no-margin inline">{{taken_on_date}}</h4>
-                    {{/responseSummary}}
+                {{#negMarksEnable}}
+                    <label class="form-label">Negative Marks</label>
+                    {{negMarks}}%
+                {{/negMarksEnable}}
             </div>
         </div>
     </div>
