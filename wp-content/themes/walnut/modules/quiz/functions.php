@@ -97,6 +97,7 @@ function get_single_quiz_module ($id) {
     $select_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $id);
     $data = $wpdb->get_row ($select_query);
     $data->id = (int)$data->id;
+    $data->name = wp_unslash($data->name);
 
     $duration = (int)$data->duration;
     $data->term_ids = maybe_unserialize($data->term_ids);
@@ -125,8 +126,10 @@ function get_single_quiz_module ($id) {
                 }
             $data->permissions = $permissions;
 
-        if ($value->meta_key == 'description')
-            $data->description = maybe_unserialize($value->meta_value);
+        if ($value->meta_key == 'description'){
+            $description = maybe_unserialize($value->meta_value);
+            $data->instructions = wp_unslash($description['instruction']);
+        }
 
         if ($value->meta_key == 'quiz_type')
             $data->quiz_type = $value->meta_value;
