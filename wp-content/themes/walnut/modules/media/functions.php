@@ -89,6 +89,11 @@ function media_encrypt_files() {
 add_filter( 'admin_init', 'media_encrypt_files', 100);
 
 function encrypt_media_files($media_files){
+    
+    #setting memory limit to infinite for videos conversion.
+    ini_set('memory_limit', '-1');
+    ini_set('max_memory_limit', '-1');
+
     $mediatype =array('audios','videos');
     foreach($media_files as $filepath){
         $parse_file_path = parse_url($filepath);
