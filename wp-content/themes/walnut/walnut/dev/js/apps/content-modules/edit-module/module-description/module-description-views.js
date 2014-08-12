@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-modules/edit-module/module-description/templates/collection-details.html'], function(App, collectionDetailsTpl) {
@@ -7,6 +8,7 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
       __extends(CollectionDetailsView, _super);
 
       function CollectionDetailsView() {
+        this.permissionSelected = __bind(this.permissionSelected, this);
         return CollectionDetailsView.__super__.constructor.apply(this, arguments);
       }
 
@@ -32,7 +34,8 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
         },
         'change #msgs': function(e) {
           return this._showCustomMessages($(e.target));
-        }
+        },
+        'click .checkbox.perm': 'checkboxSelected'
       };
 
       CollectionDetailsView.prototype.modelEvents = {
@@ -56,6 +59,25 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
           }
         };
         return data;
+      };
+
+      CollectionDetailsView.prototype.permissionSelected = function(e) {
+        var permName;
+        permName = $(e.target).closest('.checkbox.perm').find('input').attr('id');
+        switch (permName) {
+          case 'attempt':
+            return this.unSelectCheckbox('resubmit');
+          case 'resubmit':
+            return this.unSelectCheckbox('attempt');
+          case 'check':
+            return this.unSelectCheckbox('answer');
+          case 'answer':
+            return this.unSelectCheckbox('check');
+        }
+      };
+
+      CollectionDetailsView.prototype.unSelectCheckbox = function(checkboxID) {
+        return this.$el.find('input#' + checkboxID).attr('checked', false);
       };
 
       CollectionDetailsView.prototype.onShow = function() {

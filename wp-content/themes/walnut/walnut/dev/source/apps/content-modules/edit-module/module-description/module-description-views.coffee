@@ -29,6 +29,8 @@ define ['app'
                 'change #msgs' : (e)->
                     @_showCustomMessages $(e.target)
 
+                'click .checkbox.perm' : 'checkboxSelected'
+
             modelEvents :
                 'change:post_status' : 'statusChanged'
                 'change:content_layout' : '_changeLayout'
@@ -49,11 +51,23 @@ define ['app'
                 data.textBookSelected = ->
                     return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
 
-#                data.statusSelected = ->
-#                    return 'selected' if @value is data.post_status
-
                 data
 
+            permissionSelected:(e)=>
+                permName= $(e.target)
+                .closest '.checkbox.perm' 
+                .find 'input' 
+                .attr 'id'
+
+                switch permName
+                    when 'attempt'      then @unSelectCheckbox 'resubmit'
+                    when 'resubmit'     then @unSelectCheckbox 'attempt'
+                    when 'check'        then @unSelectCheckbox 'answer'
+                    when 'answer'       then @unSelectCheckbox 'check'
+
+            unSelectCheckbox:(checkboxID)->
+                @$el.find 'input#'+checkboxID
+                .attr 'checked', false
 
             onShow : ->
                 Backbone.Syphon.deserialize @, @model.toJSON()
