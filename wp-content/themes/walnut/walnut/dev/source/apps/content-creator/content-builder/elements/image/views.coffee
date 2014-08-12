@@ -43,25 +43,93 @@ define ['app'], (App)->
                 data
 
             events:
-                'click': (e)->
-                    e.stopPropagation()
-                    ratio = @_getImageRatio()
-                    @trigger "show:media:manager", ratio
+                'click': 'imageClick'
+
+            initialize :(options)->
+                @imageHeightRatio = Marionette.getOption @,'imageHeightRatio'
+                @positionTopRatio = Marionette.getOption @, 'positionTopRatio' 
+                    
 
             # check if a valid image_id is set for the element
             # if present ignore else run the Holder.js to show a placeholder
             # after run remove the data-src attribute of the image to avoid
             # reloading placeholder image again
             onShow: ->
-                return if @model.isNew()
+                if @model.isNew()
+                    @$el.resizable
+                        helper : "ui-image-resizable-helper"
+                        handles: "s"
+                    return
 
-                # set the URL of the image depending on the available size
+                if @imageHeightRatio isnt 'auto'
+                    @$el.height parseFloat(@imageHeightRatio)*@$el.width()
+
+                if @positionTopRatio 
+                    @$el.find('img').css 'top',"#{@positionTopRatio*@$el.width()}px"
+
+                # image resizable
+                @$el.resizable
+                    helper : "ui-image-resizable-helper"
+                    handles: "s"
+
+                    stop : (evt, ui)=>
+                        # @assignImagePath @$el.height()
+                        @$el.css 'width','auto'
+                        @trigger 'set:image:height',@$el.height(),@$el.width()
+                        @adjustImagePosition()
+                        
+
+                    start:(evt,ui)=>
+                        $(@).addClass('noclick')
+
+                # @TODO be done in css
+                @$el.css 'overflow','hidden'
+                # allow moving of image
+                @$el.find('img').draggable
+                    axis: "y" 
+                    cursor: "move"
+
+                    drag : (evt,ui)=>
+                        topmarginpx = ui.position.top
+                        if topmarginpx > 0
+                            ui.position.top = 0
+
+                        if topmarginpx < @$el.height()-@$el.find('img').height()
+                            ui.position.top = @$el.height()-@$el.find('img').height()
+
+                    stop:(evt,ui)=>
+                        @trigger 'set:image:top:position',@$el.width(),parseInt @$el.find('img').css 'top'
+
+
+                # on change of column size
+                @$el.closest('.column').on 'class:changed',=>
+                    @assignImagePath()
+                    if @$el.height() > @$el.find('img').height()
+                        @$el.height( 'auto' )
+                        @trigger 'set:image:height','auto'
+
+                    else
+                        @trigger 'set:image:height',@$el.height(),@$el.width()
+
+                    @adjustImagePosition()
+
+
+                @assignImagePath()
+
+
+            imageClick : (e)->
+                e.stopPropagation()
+                if $(e.target).hasClass('noclick')
+                    $(e.target).removeClass('noclick')
+                else
+                    ratio = @_getImageRatio()
+                    @trigger "show:media:manager", ratio
+
+            assignImagePath :->                
                 width = @$el.width()
-
-                #height 	= @$el.height()
                 image = @model.getBestFit width
                 @$el.find('img').attr 'src', image.url
-
+                
                 @trigger "image:size:selected", image.size
 
             _getImageRatio : ->
@@ -70,39 +138,12 @@ define ['app'], (App)->
                 height = @$el.height()
                 "#{parseInt width}:#{parseInt height}"
 
+            adjustImagePosition:->
+                top = parseInt _(@$el.find('img').css('top')).rtrim('px')
+                if top > 0
+                    @$el.find('img').css 'top','0px'
 
-# set the URL of the image depending on the available size
-# width 	= @$el.width()
-# height 	= @$el.height()
-# src = @model.getBestFit width,height
-# src = @model.toJSON().sizes['full'].url
-# @$el.find('img').attr 'src',src
-# el = @$el
-# imageResize= @ui.imageResize
-
-# img = new Image()
-# img.src = @$el.find('img').attr 'src'
-
-# width = img.width
-# height= img.height
-# # console.log @ui.imageResize.width()
+                @trigger 'set:image:top:position',@$el.width(),parseInt @$el.find('img').css 'top'
 
 
-# @ui.imageResize.resizable
-# 		handles: "s"
-# 		maxHeight: height*@ui.imageResize.width()/width
-# 		resize:(event, ui)->
-# 			$(@).resizable "option", "maxHeight", height*$(@).width()/width
-# 			$(@).find('img').css "height",ui.size.height
 
-
-# @ui.imageResize.resize ->
-# 		setTimeout ->
-
-# 			if imageResize.height()>height*imageResize.width()/width and imageResize.width()>0
-# 				console.log imageResize.width()
-# 			# 	console.log height*imageResize.width()/width
-# 				imageResize.find('img').height height*imageResize.find('img').width()/width
-# 				imageResize.height height*imageResize.find('img').width()/width
-# 		,100
-							

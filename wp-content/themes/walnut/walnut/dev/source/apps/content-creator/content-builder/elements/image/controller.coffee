@@ -16,6 +16,8 @@ define ['app'
                     image_id: 0
                     size: 'thumbnail'
                     align: 'left'
+                    heightRatio : 'auto'
+                    topRatio : 0
 
                 super(options)
 
@@ -35,8 +37,12 @@ define ['app'
                 alignment: @layout.model.get 'align'
 
             _getImageView: (imageModel)->
+                if @layout.model.get('heightRatio') isnt 'auto'
+                    @layout.model.get 'heightRatio', parseFloat @layout.model.get 'heightRatio'
                 new Image.Views.ImageView
                     model: imageModel
+                    imageHeightRatio : @layout.model.get 'heightRatio'
+                    positionTopRatio : parseFloat @layout.model.get 'topRatio'
                     templateHelpers: @_getTemplateHelpers()
 
 
@@ -46,8 +52,6 @@ define ['app'
                 # get logo attachment
                 imageModel = App.request "get:media:by:id", @layout.model.get 'image_id'
 
-                console.log "imageModel "
-#                console.log imageModel
 
                 App.execute "when:fetched", imageModel, =>
                     view = @_getImageView imageModel
@@ -74,9 +78,19 @@ define ['app'
                     @listenTo view, "image:size:selected", (size)=>
                         @layout.model.set 'size', size
                         @layout.model.save()
-#                        localStorage.setItem 'ele' + @layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
-#                        console.log localStorage.getItem 'ele' + @layout.model.get('meta_id')
 
+                    @listenTo view, 'set:image:height',(height,width)=>
+                        @layout.model.set 'height', height
+                        if height is 'auto'
+                            @layout.model.set 'heightRatio','auto'
+                        else
+                            @layout.model.set 'heightRatio',height/width
+                        @layout.model.save()
+
+                    @listenTo view, 'set:image:top:position',(width,top)=>
+                        @layout.model.set 'top',top
+                        @layout.model.set 'topRatio',top/width
+                        @layout.model.save()
 
                     @layout.elementRegion.show view
 							
