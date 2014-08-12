@@ -38,8 +38,10 @@ define(['app'], function(App) {
 
       ImageView.prototype.events = {
         'click': function(e) {
+          var ratio;
           e.stopPropagation();
-          return this.trigger("show:media:manager");
+          ratio = this._getImageRatio();
+          return this.trigger("show:media:manager", ratio);
         }
       };
 
@@ -52,6 +54,14 @@ define(['app'], function(App) {
         image = this.model.getBestFit(width);
         this.$el.find('img').attr('src', image.url);
         return this.trigger("image:size:selected", image.size);
+      };
+
+      ImageView.prototype._getImageRatio = function() {
+        var height, width;
+        console.log(this.$el);
+        width = this.$el.width();
+        height = this.$el.height();
+        return "" + (parseInt(width)) + ":" + (parseInt(height));
       };
 
       return ImageView;

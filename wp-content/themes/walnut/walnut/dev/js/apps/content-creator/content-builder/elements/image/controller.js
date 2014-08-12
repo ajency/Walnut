@@ -50,16 +50,22 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           return function() {
             var view;
             view = _this._getImageView(imageModel);
-            _this.listenTo(view, "show:media:manager", function() {
+            _this.listenTo(view, "show:media:manager", function(ratio) {
+              if (ratio == null) {
+                ratio = false;
+              }
+              App.currentImageRatio = ratio;
               App.execute("show:media:manager:app", {
                 region: App.dialogRegion,
                 mediaType: 'image'
               });
               _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
                 _this.layout.model.set('image_id', media.get('id'));
+                App.currentImageRatio = false;
                 return _this.stopListening(App.vent, "media:manager:choosed:media");
               });
               return _this.listenTo(App.vent, "stop:listening:to:media:manager", function() {
+                App.currentImageRatio = false;
                 return _this.stopListening(App.vent, "media:manager:choosed:media");
               });
             });

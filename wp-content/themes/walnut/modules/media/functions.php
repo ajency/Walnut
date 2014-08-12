@@ -45,7 +45,20 @@ function get_site_media($query, $search_string=''){
 	$posts = array_map( 'wp_prepare_attachment_for_js', $query->posts );
 	$posts = array_filter( $posts );
 
-	return $posts;	
+	$media=array();
+
+    foreach($posts as $p){
+
+        if(current_user_can( 'edit_post', $p['id'] )){
+            $edit_nonce=wp_create_nonce( 'image_editor-' . $p['id'] );
+            $p['nonces']['edit']=$edit_nonce;
+            $media[]=$p;
+        }
+    }
+
+
+
+    return $media;
 }
 
 function update_media( $data, $media_id = 0 ) {

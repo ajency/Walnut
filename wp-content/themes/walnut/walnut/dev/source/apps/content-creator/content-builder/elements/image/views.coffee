@@ -45,7 +45,8 @@ define ['app'], (App)->
             events:
                 'click': (e)->
                     e.stopPropagation()
-                    @trigger "show:media:manager"
+                    ratio = @_getImageRatio()
+                    @trigger "show:media:manager", ratio
 
             # check if a valid image_id is set for the element
             # if present ignore else run the Holder.js to show a placeholder
@@ -62,6 +63,12 @@ define ['app'], (App)->
                 @$el.find('img').attr 'src', image.url
 
                 @trigger "image:size:selected", image.size
+
+            _getImageRatio : ->
+                console.log @$el
+                width = @$el.width()
+                height = @$el.height()
+                "#{parseInt width}:#{parseInt height}"
 
 
 # set the URL of the image depending on the available size
