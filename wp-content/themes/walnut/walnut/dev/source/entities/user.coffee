@@ -13,6 +13,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 					role 			: []
 					profile_pic 	: ''
 
+
+				current_user_can:(capability)->
+					all_capabilites = @.get 'allcaps'
+					if all_capabilites[capability] then return true else return false
+
 			loggedInUser = new Users.UserModel
 			loggedInUser.set USER if USER?
 			

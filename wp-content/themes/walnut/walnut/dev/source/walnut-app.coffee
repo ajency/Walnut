@@ -59,13 +59,11 @@ define ['marionette'], (Marionette)->
     App.vent.on "show:dashboard", (user_role) =>
         user = App.request "get:user:model"
 
-        user_role = user.get "roles"
-
-        if user_role[0] == 'administrator'
+        if user.current_user_can('administrator') or user.current_user_can('school-admin')
             App.navigate('textbooks', trigger: true)
 
-        else
-            App.navigate('teachers/dashboard', trigger: true)
+        if user.current_user_can 'teacher'
+            App.navigate('teachers/dashboard', trigger: true)            
 
         App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
         App.execute "show:headerapp", region: App.headerRegion
@@ -73,7 +71,6 @@ define ['marionette'], (Marionette)->
 
         Pace.on 'hide', ()->
             $("#site_main_container").addClass("showAll");
-
 
     App.vent.on "show:login", ->
         App.leftNavRegion.close()

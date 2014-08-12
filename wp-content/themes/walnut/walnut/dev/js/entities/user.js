@@ -22,6 +22,16 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
       };
 
+      UserModel.prototype.current_user_can = function(capability) {
+        var all_capabilites;
+        all_capabilites = this.get('allcaps');
+        if (all_capabilites[capability]) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+
       return UserModel;
 
     })(Backbone.Model);

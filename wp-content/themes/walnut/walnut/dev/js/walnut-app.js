@@ -55,12 +55,12 @@ define(['marionette'], function(Marionette) {
     return function(user_role) {
       var user;
       user = App.request("get:user:model");
-      user_role = user.get("roles");
-      if (user_role[0] === 'administrator') {
+      if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
         App.navigate('textbooks', {
           trigger: true
         });
-      } else {
+      }
+      if (user.current_user_can('teacher')) {
         App.navigate('teachers/dashboard', {
           trigger: true
         });
