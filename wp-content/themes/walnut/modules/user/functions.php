@@ -29,13 +29,16 @@ function get_primary_blog_details( $user_id = '' ) {
 
     switch_to_blog( $blog->blog_id );
 
+    $blog_user_data = new WP_User($user_id);
+  	
     $blog_logo = wp_get_attachment_thumb_url( $blog_logo_id );
 
     $blog_data = array(
         'blog_id' => $blog->blog_id,
         'blog_name' => $blog->blogname,
         'blog_logo' => $blog_logo,
-        'site_url' => $blog->siteurl
+        'site_url' => $blog->siteurl,
+        'blog_roles' =>$blog_user_data->roles
     );
     
     if (!is_multisite()) 
