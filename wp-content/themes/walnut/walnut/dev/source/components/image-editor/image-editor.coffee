@@ -3,7 +3,6 @@ define ['app', 'marionette'], ( App, Marionette )->
 	# overridden function of worpress imageEdit.initCrop
 	window.imageEdit.initCrop = (postid, image, parent) ->
 			t = this
-
 			selW = $("#imgedit-sel-width-" + postid)
 			selH = $("#imgedit-sel-height-" + postid)
 			$img = undefined
@@ -16,7 +15,7 @@ define ['app', 'marionette'], ( App, Marionette )->
 							minWidth: 3
 							minHeight: 3
 							onInit: (img) ->
-								console.log t
+								
 								# Ensure that the imgareaselect wrapper elements are position:absolute
 								# (even if we're in a position:fixed modal)
 								$img = $(img)
@@ -51,7 +50,6 @@ define ['app', 'marionette'], ( App, Marionette )->
 
 		initialize : ( options )->
 			super options
-			console.log @model
 			if @model._fetch
 				App.execute "when:fetched", [@model], @showImageEditor
 			else
@@ -74,8 +72,6 @@ define ['app', 'marionette'], ( App, Marionette )->
 		showImageEditor : =>
 			@render()
 			@$el.attr 'id', "image-editor-#{@model.get( 'id' )}"
-			console.log window.imageEdit
-
 			
 			_.delay =>
 				window.imageEdit.open @model.get( 'id' ), @model.get( 'nonces' ).edit, @

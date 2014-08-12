@@ -171,7 +171,7 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
       };
 
       GridView.prototype.onShowEditImage = function(editView) {
-        this.$el.find('#selectable-images').hide();
+        this.$el.find('#show-image').hide();
         this.$el.find('#edit-image-view').html(editView.render().$el).show();
         return editView.triggerMethod('show');
       };
@@ -181,7 +181,7 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
         self = this;
         return this.$el.find('#edit-image-view').fadeOut('fast', function() {
           $(this).empty();
-          return self.$el.find('#selectable-images').show();
+          return self.$el.find('#show-image').show();
         });
       };
 

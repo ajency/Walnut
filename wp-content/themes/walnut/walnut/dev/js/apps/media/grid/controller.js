@@ -54,8 +54,8 @@ define(['app', 'controllers/region-controller', 'apps/media/grid/views'], functi
               aspectRatio: ratio
             });
             _this.view.triggerMethod("show:edit:image", editView);
-            return _this.view.listenTo(editView, "image:editing:cancelled", function() {
-              return this.view.triggerMethod("image:editing:cancelled");
+            return _this.listenTo(editView, "image:editing:cancelled", function() {
+              return _this.view.triggerMethod("image:editing:cancelled");
             });
           };
         })(this));

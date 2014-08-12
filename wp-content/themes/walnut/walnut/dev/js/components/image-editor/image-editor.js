@@ -19,7 +19,6 @@ define(['app', 'marionette'], function(App, Marionette) {
       minWidth: 3,
       minHeight: 3,
       onInit: function(img) {
-        console.log(t);
         $img = $(img);
         $img.next().css("position", "absolute").nextAll(".imgareaselect-outer").css("position", "absolute");
         t._view.$el.find("#imgedit-crop-sel-" + postid).prev().hide();
@@ -66,7 +65,6 @@ define(['app', 'marionette'], function(App, Marionette) {
 
     ImageEditorView.prototype.initialize = function(options) {
       ImageEditorView.__super__.initialize.call(this, options);
-      console.log(this.model);
       if (this.model._fetch) {
         return App.execute("when:fetched", [this.model], this.showImageEditor);
       } else {
@@ -96,7 +94,6 @@ define(['app', 'marionette'], function(App, Marionette) {
     ImageEditorView.prototype.showImageEditor = function() {
       this.render();
       this.$el.attr('id', "image-editor-" + (this.model.get('id')));
-      console.log(window.imageEdit);
       return _.delay((function(_this) {
         return function() {
           return window.imageEdit.open(_this.model.get('id'), _this.model.get('nonces').edit, _this);

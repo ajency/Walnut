@@ -42,7 +42,7 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
                     editView = App.request "get:image:editor:view", model, 
                                                             aspectRatio : ratio
                     @view.triggerMethod "show:edit:image", editView
-                    @view.listenTo editView, "image:editing:cancelled", ->
+                    @listenTo editView, "image:editing:cancelled", =>
                         @view.triggerMethod "image:editing:cancelled"
 
 
