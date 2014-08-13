@@ -43,34 +43,89 @@ define ['marionette'], (Marionette)->
     App.on "initialize:after", (options) ->
 
         App.startHistory()
-        
-        if USER? and USER.ID
-            user = App.request "get:user:model" 
-            App.execute "show:headerapp", region: App.headerRegion
-            App.execute "show:leftnavapp", region: App.leftNavRegion
-            App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
-            App.vent.trigger "show:dashboard" if @getCurrentRoute() is 'login'
-            App.loginRegion.close()
+
+        if _.platform() is 'DEVICE'
+
+            # If the UserId is null or 'null' i.e id not set in local storage then the app
+            # is either installed for the first time or user has logged out.
+
+            if _.isNull(_.getUserID()) or _.getUserID() is 'null'
+
+                # If the blog_id is not set then the app is installed for the very first time.
+                # Navigate to main login screen if blog id is null, else show list of users view.
+
+                @rootRoute = 'app-login'
+                @rootRoute = 'login' if _.isNull _.getBlogID()
+                App.navigate(@rootRoute, trigger: true)
+            else
+                #If User ID is set, then navigate to dashboard.
+
+                user = App.request "get:user:model"
+                user.set 'ID' : ''+_.getUserID()
+                App.vent.trigger "show:dashboard"
+                App.loginRegion.close() 
+
+            return
 
         else
-            App.vent.trigger "show:login"
+
+            # check app login status
+            xhr = $.get "#{AJAXURL}?action=get-user-data",
+                {},
+                (resp)=>
+                    if(resp.success)
+                        console.log resp
+                        user = App.request "get:user:model"
+                        #todo: fix user entity
+                        user.set resp.data.data
+                        school = App.request "get:current:school"
+                        App.execute "show:headerapp", region: App.headerRegion
+                        App.execute "show:leftnavapp", region: App.leftNavRegion
+                        App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
+                        App.vent.trigger "show:dashboard" if @getCurrentRoute() is 'login'
+                        App.loginRegion.close()
+                    else
+                        App.vent.trigger "show:login"
+                ,'json'
 
 
     App.vent.on "show:dashboard", (user_role) =>
         user = App.request "get:user:model"
 
-        if user.current_user_can('administrator') or user.current_user_can('school-admin')
-            App.navigate('textbooks', trigger: true)
+        user_role = user.get "roles"
 
-        if user.current_user_can 'teacher'
-            App.navigate('teachers/dashboard', trigger: true)            
+        if _.platform() is 'DEVICE'
+
+            # If the last sync operation is 'none' i.e sync is not performed for the first time
+            # or if the operation is 'file_import' i.e sync process is not completed, then the user should
+            # not be allowed to navigate else where in the app and only the sync screen should be visible
+            # to the user.
+
+            lastSyncOperation = _.getLastSyncOperation()
+            lastSyncOperation.done (typeOfOperation)->
+
+                if typeOfOperation is 'none' or typeOfOperation isnt 'file_import'
+                    App.navigate('sync', trigger: true)
+                else
+                    App.navigate('teachers/dashboard', trigger: true)
+
+        else
+
+            if user_role[0] == 'administrator'
+                App.navigate('textbooks', trigger: true)
+
+            else
+                App.navigate('teachers/dashboard', trigger: true)
+                
 
         App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
         App.execute "show:headerapp", region: App.headerRegion
         App.execute "show:leftnavapp", region: App.leftNavRegion
 
-        Pace.on 'hide', ()->
-            $("#site_main_container").addClass("showAll");
+        if typeof Pace isnt 'undefined'
+            Pace.on 'hide', ()->
+                $("#site_main_container").addClass("showAll");
+
 
     App.vent.on "show:login", ->
         App.leftNavRegion.close()
