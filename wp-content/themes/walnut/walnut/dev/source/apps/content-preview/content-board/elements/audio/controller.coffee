@@ -21,7 +21,17 @@ define ['app'
                         new Audio.Views.AudioView
                             model: @layout.model
 
+                    _getAudioCollection: ->
+                        if not @audioCollection
+                            if @layout.model.get('audio_ids').length
+                              @audioCollection = App.request "get:media:collection:by:ids", @layout.model.get 'audio_ids'
+                            else
+                              @audioCollection = App.request "get:empty:media:collection"
 
+                        @audioCollection.comparator = 'order'
+
+
+                        @audioCollection
 
                     _parseInt:->
                         audio_ids = new Array()
@@ -39,7 +49,13 @@ define ['app'
                     renderElement: =>
                         @_parseInt()
 
-                        @view = @_getAudioView()
+                        audioCollection = @_getAudioCollection()
+
+                        App.execute "when:fetched", audioCollection, =>
+
+                            @layout.model.set 'audioUrls' : _.first audioCollection.pluck 'url'
+                            @layout.model.set 'audioUrls' : audioCollection.pluck 'url'
+                            @view = @_getAudioView()
 
 
-                        @layout.elementRegion.show @view
+                            @layout.elementRegion.show @view
