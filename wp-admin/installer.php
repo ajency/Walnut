@@ -289,9 +289,11 @@ jQuery(document).ready(function() {
 
         jQuery.ajax({
             type: 'POST',
-            url: SERVER_AJAXURL+'?action=get-user-profile',
+            url: '../wp-content/server_request.php',
             data: formData,
-            success: function(data, textStatus, XMLHttpRequest){
+            success: function(data, textStatus, XMLHttpRequest){         
+                var data = jQuery.parseJSON( data );
+                //console.log(data);
               if(data.error){
                     var errormsg = '<p class="message">Invalid username or password</p>';
                     jQuery('#setup').prepend(errormsg);
