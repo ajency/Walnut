@@ -84,12 +84,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         'click #logout': function() {
           return this.trigger("user:logout");
         },
-        'click #user_logout': 'onAppLogout',
-        'click .dropdown-menu > li > a': function(e) {
-          return e.stopPropagation();
-        },
-        'click #user-options': 'showAudioCuesToggleValue',
-        'click #onOffSwitchToggle': 'onToggle'
+        'click #user_logout': 'onAppLogout'
       };
 
       HeaderView.prototype.serializeData = function() {
@@ -110,6 +105,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         if ($(window).width() < 1025) {
           $("#gears-pc").remove();
         }
+        this.$el.find("#mobile-menu-toggle-wrapper").show();
         if ($('.creator').length > 0) {
           $('.page-content').addClass('condensed');
           $(".header-seperation").css("display", "none");
@@ -140,18 +136,6 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         return App.navigate('app-login', {
           trigger: true
         });
-      };
-
-      HeaderView.prototype.showAudioCuesToggleValue = function() {
-        return _.setAudioCuesToggle();
-      };
-
-      HeaderView.prototype.onToggle = function() {
-        if ($('#onOffSwitchToggle').prop("checked")) {
-          return _.setAudioCues('true');
-        } else {
-          return _.setAudioCues('false');
-        }
       };
 
       return HeaderView;
