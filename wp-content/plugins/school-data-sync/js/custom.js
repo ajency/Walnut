@@ -76,16 +76,17 @@ jQuery(document).ready(function() {
       console.log(referer);
        jQuery('#sync-media').prop('disabled', true);
        jQuery.ajax({  
-                type: 'GET',  
-                url: SERVER_AJAXURL,  
+                type: 'POST',  
+                url: ajaxurl,  
                 data: {  
-                    action: 'sync-database',
+                    action: 'sync-local-database',
                     blog_id: blog_id,
                     last_sync: last_sync,
                     device_type: 'standalone'
                 },  
                 success: function(data, textStatus, XMLHttpRequest){  
                     //alert('Success: ' + data);
+                    var data = jQuery.parseJSON( data ); 
                     jQuery(referer).next().text('Local Sync started...'); 
                     //jQuery("#test-div1").append(data);  
                     school_data_sync_start(referer,lastsync_id,syncstatus,data)
@@ -251,13 +252,14 @@ jQuery(document).ready(function() {
         var server_sync_id = referer.attr('data-server-sync-id');
         check_server_sync = setInterval(function()
                                 {
-                                  jQuery.get( SERVER_AJAXURL,
+                                  jQuery.get( ajaxurl,
                                   {
-                                    action    : 'check-app-data-sync-completion',
+                                    action    : 'check-server-app-data-sync-completion',
                                     blog_id :blog_id,
                                     sync_request_id:server_sync_id
                                   },
                                     function(data) { 
+                                        var data = jQuery.parseJSON( data );
                                         console.log(data);
                                         if(data === true){ 
                                         jQuery(referer).next().text('Server Syncd...').delay(250).text('Initializing download..');

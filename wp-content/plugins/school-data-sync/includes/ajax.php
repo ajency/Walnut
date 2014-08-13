@@ -289,3 +289,52 @@ function ajax_save_standalone_school_blogid(){
 
 add_action ('wp_ajax_save_standalone_school_blogid', 'ajax_save_standalone_school_blogid');
 
+function ajax_sync_local_database(){
+
+    $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_URL, $remote_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    $post = array(
+        'action' => 'sync-database',       
+        'blog_id' => $_POST['blog_id'],
+        'last_sync' => $_POST['last_sync'],
+        'device_type' => $_POST['device_type']
+    );
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    //$resp_decode = json_decode($response,true);
+    echo $response;
+    exit;
+
+}
+add_action ('wp_ajax_sync-local-database', 'ajax_sync_local_database');
+
+function ajax_check_server_app_data_sync_completion(){
+
+    $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_URL, $remote_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    $post = array(
+        'action' => 'check-app-data-sync-completion',       
+        'blog_id' => $_REQUEST['blog_id'],
+        'sync_request_id' => $_REQUEST['sync_request_id']
+    );
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    //$resp_decode = json_decode($response,true);
+    echo $response;
+    exit;
+
+}
+add_action ('wp_ajax_check-server-app-data-sync-completion', 'ajax_check_server_app_data_sync_completion');
+
