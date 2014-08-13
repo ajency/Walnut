@@ -24,6 +24,7 @@ define(['app'], function(App) {
           throw new Error("invalid json...");
         }
         data = contentPieceModel.toJSON();
+        delete data.layout;
         data.action = 'save-content-piece-json';
         data.json = _json;
         options = {

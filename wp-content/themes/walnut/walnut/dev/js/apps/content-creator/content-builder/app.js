@@ -58,7 +58,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-bu
 
       ContentBuilderController.prototype.addNestedElements = function(container, element) {
         var controller;
-        controller = App.request("add:new:element", container, element.element, element);
+        controller = App.request("add:new:element", container, element.element, null, element);
         return _.each(element.elements, (function(_this) {
           return function(column, index) {
             if (!column.elements) {
