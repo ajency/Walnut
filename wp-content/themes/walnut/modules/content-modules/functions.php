@@ -300,6 +300,7 @@ function get_single_content_module($id, $division=''){
     $data = $wpdb->get_row($query);
 
     $data->id               = (int) $data->id;
+    $data->name             = wp_unslash($data->name);
     $data->term_ids         = maybe_unserialize ($data->term_ids);
     $duration               = $data->duration;
     $data->minshours        ='mins';
@@ -319,8 +320,12 @@ function get_single_content_module($id, $division=''){
         foreach($description as $key=>$value){
             $meta_val = maybe_unserialize ($value->meta_value);
 
-            if ($value->meta_key=='description')
-                $data->description= $meta_val;
+            if ($value->meta_key=='description'){
+                foreach($meta_val as $k=>$v)
+                    $d[$k]=wp_unslash($v);
+                
+                $data->description= $d;
+            }
 
             if ($value->meta_key=='content_pieces' )
                 $data->content_pieces= $meta_val;
@@ -491,6 +496,6 @@ function get_module_name($module_id){
 
     $module_name=$wpdb->get_var($module_name_query);
 
-    return $module_name;
+    return wp_unslash($module_name);
 
 }
