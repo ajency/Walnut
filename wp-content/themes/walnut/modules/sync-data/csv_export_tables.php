@@ -291,11 +291,12 @@ function get_postmeta_table_query($last_sync='', $user_id=''){
         $postmeta_table_query=$wpdb->prepare(
             "SELECT pm.* FROM {$wpdb->base_prefix}postmeta pm,
                 {$wpdb->base_prefix}posts p
-                    WHERE p.post_type <> %s  AND p.ID = pm.post_id",
+                    WHERE p.post_type <> %s AND p.ID = pm.post_id
+            UNION SELECT * FROM {$wpdb->base_prefix}postmeta WHERE post_id=0
+            ",
             "page"
         );
     }
-
     else{
 
         $meta_ids_str = $post_ids_str = -1;
