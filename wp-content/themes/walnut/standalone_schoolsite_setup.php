@@ -117,13 +117,39 @@ function create_custom_tables(){
 
     $wpdb->query( $question_response_table );
 
-    $question_response_meta_table = "CREATE TABLE `{$wpdb->prefix}question_response_meta` (
+    $question_response_meta_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}question_response_meta` (
                 `qr_ref_id` varchar(30) NOT NULL,
               `meta_key` varchar(255) NOT NULL,
               `meta_value` text NOT NULL
             )";
 
     $wpdb->query( $question_response_meta_table );
+
+    $quiz_summary_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}quiz_response_summary` (
+        `summary_id` varchar(30) NOT NULL,
+        `collection_id` int(11) NOT NULL,
+        `student_id` bigint(20) NOT NULL,
+        `taken_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `quiz_meta` text NOT NULL,
+        PRIMARY KEY (`summary_id`)
+      )";
+
+    $wpdb->query( $quiz_summary_table );
+
+
+    $quiz_responses_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}quiz_question_response` (
+        `qr_id` varchar(50) NOT NULL,
+        `summary_id` varchar(30) NOT NULL,
+        `content_piece_id` bigint(20) NOT NULL,
+        `question_response` text NOT NULL,
+        `time_taken` int(11) NOT NULL,
+        `marks_scored` int(11) NOT NULL DEFAULT '0',
+        `status` varchar(30) NOT NULL,
+        PRIMARY KEY (`qr_id`)
+      )";
+
+    $wpdb->query( $quiz_responses_table );
+
 
 }
 create_custom_tables();

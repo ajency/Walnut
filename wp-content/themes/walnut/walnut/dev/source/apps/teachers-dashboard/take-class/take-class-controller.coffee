@@ -90,3 +90,9 @@ define ['app'
             template: classDescriptionTpl
 
 
+
+        # set handlers
+        App.commands.setHandler "show:take:class:textbooks:app", (opt = {})->
+            new View.TakeClassController opt
+
+

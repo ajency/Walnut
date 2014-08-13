@@ -4,12 +4,13 @@ function authenticate_login( $data ) {
 
     $login_data = $data;
     $login_check = wp_authenticate( $login_data['txtusername'], $login_data['txtpassword'] );
-
     if (is_wp_error( $login_check ))
         return array( "error" => "Invalid Username or Password" );
 
     else {
 
+        $login_check->division = get_user_meta($login_check->ID,'student_division',true);
+        
         $response_data['login_details'] = $login_check;
 
         $response_data['blog_details'] = get_primary_blog_details( $login_check->ID );
@@ -587,6 +588,7 @@ function getLoggedInUserModel(){
         unset($userdata['data']);
         $userdata['display_name']= $user_data->display_name;
         $userdata['user_email']= $user_data->user_email;
+        $userdata['division']= get_user_meta($user_data->ID,'student_division',true);
 
         $userModel="USER={}\n";
 

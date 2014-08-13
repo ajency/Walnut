@@ -16,7 +16,9 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
         'teachers/take-class/:classID/:div': 'takeClass',
         'teachers/take-class/:classID/:div/textbook/:tID': 'takeClassTextbookModules',
         'teachers/start-training/:classID': 'startTraining',
-        'teachers/start-training/:classID/textbook/:tID': 'startTrainingTextbookModules'
+        'teachers/start-training/:classID/textbook/:tID': 'startTrainingTextbookModules',
+        'students/dashboard': 'studentsDashboard',
+        'students/dashboard/textbook/:tID': 'studentsQuizModules'
       };
 
       return TeachersDashboardRouter;
@@ -58,6 +60,25 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
           textbookID: tID,
           classID: classID,
           mode: 'training'
+        });
+      },
+      studentsDashboard: function() {
+        var division;
+        division = App.request("get:user:data", "division");
+        return App.execute("show:take:class:textbooks:app", {
+          region: App.mainContentRegion,
+          division: division,
+          mode: 'take-class'
+        });
+      },
+      studentsQuizModules: function(tID) {
+        var division;
+        division = App.request("get:user:data", "division");
+        return new TeachersDashboardApp.View.textbookModulesController({
+          region: App.mainContentRegion,
+          textbookID: tID,
+          division: division,
+          mode: 'take-quiz'
         });
       }
     };

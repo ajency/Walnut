@@ -15,7 +15,8 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         'create-quiz': 'createQuiz',
         'edit-quiz/:id': 'editQuiz',
         'quiz-list': 'showQuizList',
-        'view-quiz/:id': 'viewQuiz'
+        'view-quiz/:id': 'viewQuiz',
+        'students/dashboard/textbook/:tID/quiz/:qID': 'startQuizClassMode'
       };
 
       return QuizModuleRouter;
@@ -26,6 +27,12 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         return new QuizModuleApp.ViewQuiz.Controller({
           region: App.mainContentRegion,
           quiz_id: id
+        });
+      },
+      startQuizClassMode: function(tID, qID) {
+        return new QuizModuleApp.ViewQuiz.Controller({
+          region: App.mainContentRegion,
+          quiz_id: qID
         });
       },
       createQuiz: function() {

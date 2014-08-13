@@ -108,7 +108,7 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
       return TextbookListLayout;
 
     })(Marionette.Layout);
-    return ClassDescriptionView = (function(_super) {
+    ClassDescriptionView = (function(_super) {
       __extends(ClassDescriptionView, _super);
 
       function ClassDescriptionView() {
@@ -120,5 +120,11 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
       return ClassDescriptionView;
 
     })(Marionette.ItemView);
+    return App.commands.setHandler("show:take:class:textbooks:app", function(opt) {
+      if (opt == null) {
+        opt = {};
+      }
+      return new View.TakeClassController(opt);
+    });
   });
 });

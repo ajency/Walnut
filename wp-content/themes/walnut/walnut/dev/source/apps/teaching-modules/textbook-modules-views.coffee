@@ -161,7 +161,12 @@ define ['app'], (App)->
             startTraining : (e)=>
                 dataID = $(e.currentTarget).attr 'data-id'
                 currentRoute = App.getCurrentRoute()
-                App.navigate currentRoute + "/module/" + dataID, true
+
+                if Marionette.getOption(@, 'mode') in ['training','take-class']
+                    App.navigate currentRoute + "/module/" + dataID, true
+
+                if Marionette.getOption(@, 'mode') is 'take-quiz'
+                    App.navigate currentRoute + "/quiz/" + dataID, true
 
             onScheduledModule : (id, date)->
                 @$el.find 'tr#row-' + id + ' .training-date'

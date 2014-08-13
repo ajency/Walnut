@@ -63,7 +63,10 @@ define ['marionette'], (Marionette)->
             App.navigate('textbooks', trigger: true)
 
         if user.current_user_can 'teacher'
-            App.navigate('teachers/dashboard', trigger: true)            
+            App.navigate('teachers/dashboard', trigger: true)     
+
+        if user.current_user_can 'student'
+            App.navigate('students/dashboard', trigger: true)             
 
         App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
         App.execute "show:headerapp", region: App.headerRegion

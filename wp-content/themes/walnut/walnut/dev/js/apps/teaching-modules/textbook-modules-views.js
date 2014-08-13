@@ -123,10 +123,15 @@ define(['app'], function(App) {
       };
 
       ContentGroupsView.prototype.startTraining = function(e) {
-        var currentRoute, dataID;
+        var currentRoute, dataID, _ref;
         dataID = $(e.currentTarget).attr('data-id');
         currentRoute = App.getCurrentRoute();
-        return App.navigate(currentRoute + "/module/" + dataID, true);
+        if ((_ref = Marionette.getOption(this, 'mode')) === 'training' || _ref === 'take-class') {
+          App.navigate(currentRoute + "/module/" + dataID, true);
+        }
+        if (Marionette.getOption(this, 'mode') === 'take-quiz') {
+          return App.navigate(currentRoute + "/quiz/" + dataID, true);
+        }
       };
 
       ContentGroupsView.prototype.onScheduledModule = function(id, date) {
