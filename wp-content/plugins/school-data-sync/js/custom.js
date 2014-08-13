@@ -81,7 +81,8 @@ jQuery(document).ready(function() {
                 data: {  
                     action: 'sync-database',
                     blog_id: blog_id,
-                    last_sync: last_sync
+                    last_sync: last_sync,
+                    device_type: 'standalone'
                 },  
                 success: function(data, textStatus, XMLHttpRequest){  
                     //alert('Success: ' + data);
