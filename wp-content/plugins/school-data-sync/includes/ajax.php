@@ -186,7 +186,7 @@ function ajax_sds_local_upload_to_server(){
 
     $filetoupload = get_local_uploaded_file($sync_request_id);
     
-    $remote_url = 'http://synapsedu.info/wp-admin/admin-ajax.php';          //temporary hard code url   
+    $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';          //temporary hard code url   
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -247,7 +247,7 @@ function ajax_sds_media_sync(){
     
     $localimages_key_val = sds_get_files_name_path($localimages);
     
-    $remote_url = 'http://synapsedu.info/wp-admin/admin-ajax.php';          //temporary hard code url 
+    $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';          //temporary hard code url 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
