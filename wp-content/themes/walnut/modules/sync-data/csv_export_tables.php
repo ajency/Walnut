@@ -14,7 +14,7 @@
  * @return mixed
  */
 
-function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
+function export_tables_for_app($blog_id='', $last_sync='', $user_id='',$device_type=''){
 
     if($blog_id=='')
         $blog_id=get_current_blog_id();
@@ -59,6 +59,7 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
         $uploaded_url= $upload_url.$upload_path;
         $export_details['exported_csv_url'] = $uploaded_url;
         $export_details['last_sync']=date('Y-m-d h:i:s');
+        create_sync_device_log($blog_id,$device_type,$export_details['last_sync']);
     }
     return $export_details;
 }
@@ -610,4 +611,15 @@ function create_zip($files = array(),$destination = '',$overwrite = false) {
 
     return $destination;
 
+}
+
+/*
+ * insert device sync log entry on every sync
+ */
+function create_sync_device_log($blog_id,$device_type,$last_sync){
+    global $wpdb;
+
+    $record_data = array('blog_id'=>$blog_id,'device_type'=>$device_type,'sync_date' =>$last_sync); 
+    $wpdb->insert( $wpdb->base_prefix . "sync_device_log", $record_data );
+    
 }
