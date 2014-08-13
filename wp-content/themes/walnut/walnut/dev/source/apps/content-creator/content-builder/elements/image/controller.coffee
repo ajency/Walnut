@@ -19,6 +19,12 @@ define ['app'
                     heightRatio : 'auto'
                     topRatio : 0
 
+                if options.modelData.heightRatio isnt 'auto'
+                    options.modelData.heightRatio =  parseFloat options.modelData.heightRatio
+
+                if _.isNaN options.modelData.topRatio
+                    options.modelData.topRatio = 0
+
                 super(options)
 
             bindEvents: ->
@@ -37,8 +43,7 @@ define ['app'
                 alignment: @layout.model.get 'align'
 
             _getImageView: (imageModel)->
-                if @layout.model.get('heightRatio') isnt 'auto'
-                    @layout.model.get 'heightRatio', parseFloat @layout.model.get 'heightRatio'
+                
                 new Image.Views.ImageView
                     model: imageModel
                     imageHeightRatio : @layout.model.get 'heightRatio'

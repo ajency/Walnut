@@ -13,6 +13,19 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
+        _.defaults(options.modelData, {
+          image_id: 0,
+          size: 'thumbnail',
+          align: 'left',
+          heightRatio: 'auto',
+          topRatio: 0
+        });
+        if (options.modelData.heightRatio !== 'auto') {
+          options.modelData.heightRatio = parseFloat(options.modelData.heightRatio);
+        }
+        if (_.isNaN(options.modelData.topRatio)) {
+          options.modelData.topRatio = 0;
+        }
         return Controller.__super__.initialize.call(this, options);
       };
 
@@ -26,6 +39,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       Controller.prototype._getImageView = function(imageModel) {
         return new Image.Views.ImageView({
           model: imageModel,
+          imageHeightRatio: this.layout.model.get('heightRatio'),
+          positionTopRatio: parseFloat(this.layout.model.get('topRatio')),
           templateHelpers: this._getTemplateHelpers()
         });
       };

@@ -21,6 +21,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           heightRatio: 'auto',
           topRatio: 0
         });
+        if (options.modelData.heightRatio !== 'auto') {
+          options.modelData.heightRatio = parseFloat(options.modelData.heightRatio);
+        }
+        if (_.isNaN(options.modelData.topRatio)) {
+          options.modelData.topRatio = 0;
+        }
         return Controller.__super__.initialize.call(this, options);
       };
 
@@ -37,9 +43,6 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype._getImageView = function(imageModel) {
-        if (this.layout.model.get('heightRatio') !== 'auto') {
-          this.layout.model.get('heightRatio', parseFloat(this.layout.model.get('heightRatio')));
-        }
         return new Image.Views.ImageView({
           model: imageModel,
           imageHeightRatio: this.layout.model.get('heightRatio'),
