@@ -23,7 +23,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 		class Textbooks.NameModel extends Backbone.Model
 
 			defaults:
-				name: ''
+				name: 'textbook'
 
 			name: 'textbookName'
 
