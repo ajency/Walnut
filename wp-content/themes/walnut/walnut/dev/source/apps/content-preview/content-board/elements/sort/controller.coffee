@@ -6,11 +6,27 @@ define ['app'
         class Sort.Controller extends Element.Controller
 
             initialize : (options)->
-                answerData =
-                    answer : []
-                    marks : 0
+                {answerWreqrObject,@answerModel} = options
 
-                @answerModel = App.request "create:new:answer", answerData
+                @answerModel = App.request "create:new:answer" if not @answerModel
+
+                @displayAnswer = true
+                
+                if answerWreqrObject
+                    
+                    @displayAnswer = answerWreqrObject.options.displayAnswer
+                    
+                    answerWreqrObject.setHandler "get:question:answer",=>
+
+                        data=
+                            'answerModel': @answerModel
+                            'totalMarks' : @layout.model.get('marks')
+                            'questionType': 'sort'
+
+                    answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
+                        #if displayAnswer is true, the correct & wrong answers & marks will be displayed
+                        #default is true
+                        @_submitAnswer @displayAnswer 
 
                 super options
 
@@ -18,6 +34,8 @@ define ['app'
 
             renderElement : ->
                 optionsObj = @layout.model.get 'elements'
+                if optionsObj instanceof Backbone.Collection
+                    optionsObj = optionsObj.models
 
                 @_parseOptions optionsObj
 
@@ -33,6 +51,11 @@ define ['app'
                 App.execute "show:total:marks", @layout.model.get 'marks'
 
                 @listenTo @view, "submit:answer", @_submitAnswer
+
+                
+                @listenTo @view, "show",=>
+                    if @answerModel.get('status') isnt 'not_attempted'
+                        @_submitAnswer() 
 
                 # show the view
                 @layout.elementRegion.show @view
@@ -50,24 +73,25 @@ define ['app'
 
 
 
-            _submitAnswer : =>
+            _submitAnswer :(displayAnswer=true) =>
                 @answerModel.set 'marks', @layout.model.get 'marks'
+                displayAnswer = Marionette.getOption @, 'displayAnswer'
                 @view.$el.find('input#optionNo').each (index, element)=>
                     answerOptionIndex = @optionCollection.get($(element).val()).get('index')
                     @answerModel.get('answer').push answerOptionIndex
 
                     if answerOptionIndex isnt index + 1
                         @answerModel.set 'marks', 0
-                        $(element).parent().addClass 'ansWrong'
+                        $(element).parent().addClass 'ansWrong' if displayAnswer
                     else
-                        $(element).parent().addClass 'ansRight'
+                        $(element).parent().addClass 'ansRight' if displayAnswer
 
-                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')
+                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks') if displayAnswer
 
                 console.log @answerModel.get('answer').toString()
 
                 if @answerModel.get('marks') is 0
-                    @view.triggerMethod 'show:feedback'
+                    @view.triggerMethod 'show:feedback' if displayAnswer
                 else
                     @view.triggerMethod 'destroy:sortable'
 

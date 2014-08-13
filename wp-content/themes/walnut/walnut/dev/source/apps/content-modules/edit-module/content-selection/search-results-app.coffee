@@ -24,7 +24,7 @@ define ['app'
 
             _searchContent:(searchStr)=>
 
-                content_type = if @groupType is 'module' then  ['teacher_question','content_piece'] else ['student_question']
+                content_type = if @groupType is 'teaching-module' then  ['teacher_question','content_piece'] else ['student_question']
 
                 @newCollection = App.request "get:content:pieces",
                     content_type    : content_type

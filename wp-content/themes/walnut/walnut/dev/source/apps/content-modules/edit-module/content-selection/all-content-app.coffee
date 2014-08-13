@@ -65,7 +65,7 @@ define ['app'
             serializeData:->
                 data= super()
                 data.isQuiz = true if @groupType is 'quiz'
-                data.isModule = true if @groupType is 'module'
+                data.isModule = true if @groupType is 'teaching-module'
 
                 #this is for display purpose only
                 data.modified_date= moment(data.post_modified).format("Do MMM YYYY")
@@ -84,7 +84,7 @@ define ['app'
                 _.each data.present_in_modules, (ele,index)->
                     modules.push "<a target='_blank' href='#view-group/"+ ele.id+"'>"+ ele.name+"</a>"
 
-                type = if data.content_type in ['student_question'] then 'quiz' else 'module'
+                type = if data.content_type in ['student_question'] then 'quiz' else 'teaching-module'
 
                 data.present_in_str=
                     if _.size(modules)>0
@@ -127,7 +127,7 @@ define ['app'
             mixinTemplateHelpers : (data)->
                 data = super data 
                 data.isQuiz = true if @groupType is 'quiz'
-                data.isModule = true if @groupType is 'module' 
+                data.isModule = true if @groupType is 'teaching-module' 
 
                 data
 

@@ -29,6 +29,8 @@ define ['app'
                 'change #msgs' : (e)->
                     @_showCustomMessages $(e.target)
 
+                'click .checkbox.perm' : 'checkboxSelected'
+
             modelEvents :
                 'change:post_status' : 'statusChanged'
                 'change:content_layout' : '_changeLayout'
@@ -38,7 +40,7 @@ define ['app'
 
                 data.heading = if @model.isNew() then 'Create a' else 'Edit a'
 
-                data.isModule = true if data.type is 'module'
+                data.isModule = true if data.type is 'teaching-module'
 
                 data.isQuiz = true if data.type is 'quiz'
 
@@ -49,11 +51,23 @@ define ['app'
                 data.textBookSelected = ->
                     return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
 
-#                data.statusSelected = ->
-#                    return 'selected' if @value is data.post_status
-
                 data
 
+            permissionSelected:(e)=>
+                permName= $(e.target)
+                .closest '.checkbox.perm' 
+                .find 'input' 
+                .attr 'id'
+
+                switch permName
+                    when 'attempt'      then @unSelectCheckbox 'resubmit'
+                    when 'resubmit'     then @unSelectCheckbox 'attempt'
+                    when 'check'        then @unSelectCheckbox 'answer'
+                    when 'answer'       then @unSelectCheckbox 'check'
+
+            unSelectCheckbox:(checkboxID)->
+                @$el.find 'input#'+checkboxID
+                .attr 'checked', false
 
             onShow : ->
                 Backbone.Syphon.deserialize @, @model.toJSON()
@@ -198,7 +212,7 @@ define ['app'
 
                 msg= if attrs.id then 'saved' else 'updated'
 
-                if model.get('type') is 'module'
+                if model.get('type') is 'teaching-module'
                     @$el.find('.grid-title').prepend '<div id="saved-success">Training module '+msg+'.
                         Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>'
 

@@ -1,17 +1,23 @@
 define ['app'
-        'apps/quiz-modules/edit-quiz/edit-quiz-controller'
+        'apps/quiz-modules/view-single-quiz/single-quiz-controller'
 ],(App)->
     App.module 'QuizModuleApp',(QuizModuleApp,App)->
 
         class QuizModuleRouter extends Marionette.AppRouter
 
             appRoutes :
-                'create-quiz' : 'createQuiz'
+                'create-quiz'   : 'createQuiz'
                 'edit-quiz/:id' : 'editQuiz'
-                'quiz-list' : 'showQuizList'
+                'quiz-list'     : 'showQuizList'
+                'view-quiz/:id' : 'viewQuiz'
 
 
         Controller =
+
+            viewQuiz: (id)->
+                new QuizModuleApp.ViewQuiz.Controller
+                    region: App.mainContentRegion
+                    quiz_id: id
 
             createQuiz : ->
                 App.execute 'show:edit:module:controller',
@@ -28,7 +34,6 @@ define ['app'
                 App.execute 'show:module:listing:app',
                     region: App.mainContentRegion
                     groupType : 'quiz'
-
 
         QuizModuleApp.on 'start',->
             new QuizModuleRouter

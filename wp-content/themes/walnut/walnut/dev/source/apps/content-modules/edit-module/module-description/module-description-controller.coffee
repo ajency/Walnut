@@ -72,7 +72,7 @@ define ['app'
                 @show view, (loading : true, entities : [@textbooksCollection])
 
             successFn : (model)=>
-                App.navigate "edit-module/#{model.get('id')}" if @model.get('type') is 'module'
+                App.navigate "edit-module/#{model.get('id')}" if @model.get('type') is 'teaching-module'
                 App.navigate "edit-quiz/#{model.get('id')}" if @model.get('type') is 'quiz'
                 @view.triggerMethod 'saved:content:group', model
 

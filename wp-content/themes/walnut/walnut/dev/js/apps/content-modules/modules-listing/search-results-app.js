@@ -37,7 +37,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         if (useFilters) {
           this.selectedFilterParamsObject.request("get:selected:parameters");
         }
-        if (this.groupType === 'module') {
+        if (this.groupType === 'teaching-module') {
           this.newCollection = App.request("get:content:groups", {
             post_status: 'any',
             search_str: searchStr

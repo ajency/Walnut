@@ -10,7 +10,7 @@ define ['app'
                 {@groupType} = options
 
                 @textbooksCollection = App.request "get:textbooks"
-                @contentModulesCollection = App.request "get:content:groups", 'post_status': 'any' if @groupType is 'module'
+                @contentModulesCollection = App.request "get:content:groups", 'post_status': 'any' if @groupType is 'teaching-module'
                 @contentModulesCollection = App.request "get:quizes", 'post_status': 'any' if @groupType is 'quiz'
 
                 
