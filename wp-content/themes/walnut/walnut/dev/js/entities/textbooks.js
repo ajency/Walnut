@@ -36,7 +36,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       }
 
       NameModel.prototype.defaults = {
-        name: 'textbook'
+        name: ''
       };
 
       NameModel.prototype.name = 'textbookName';
