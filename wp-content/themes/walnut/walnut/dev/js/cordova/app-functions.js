@@ -227,6 +227,59 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       if (bit === 2) {
         return date + ' ' + time;
       }
+    },
+    audioQueuesSelection: function(selectedAction) {
+      var audioCues, filepath, filepathForIndividualAudio;
+      if (_.platform() === "DEVICE") {
+        if (!_.isNull(_.getAudioCues())) {
+          if (_.getAudioCues() !== 'false') {
+            audioCues = null;
+            filepathForIndividualAudio = null;
+            filepath = "/android_asset/www/audioCues/";
+            switch (selectedAction) {
+              case 'Click-Next':
+                filepathForIndividualAudio = filepath + "nextClick.WAV";
+                break;
+              case 'Click-Select':
+                filepathForIndividualAudio = filepath + "selectClick.WAV";
+                break;
+              case 'Click-Start':
+                filepathForIndividualAudio = filepath + "startClick.WAV";
+                break;
+              case 'Click-Unselect':
+                filepathForIndividualAudio = filepath + "unselectClick.WAV";
+                break;
+              case 'Click-Save':
+                filepathForIndividualAudio = filepath + "saveClick.WAV";
+                break;
+              case 'Click-Pause':
+                filepathForIndividualAudio = filepath + "pauseClick.WAV";
+            }
+            audioCues = new Media(filepathForIndividualAudio, function() {
+              return console.log("media played");
+            }, function(error) {
+              return console.log("error" + error.code);
+            });
+            audioCues.play();
+            return setTimeout((function(_this) {
+              return function() {
+                return audioCues.release();
+              };
+            })(this), 2000);
+          }
+        }
+      }
+    },
+    setAudioCuesToggle: function() {
+      if (_.getAudioCues() === 'true') {
+        return $('#onOffSwitchToggle').prop({
+          "checked": true
+        });
+      } else {
+        return $('#onOffSwitchToggle').prop({
+          "checked": false
+        });
+      }
     }
   });
 });

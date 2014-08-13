@@ -102,11 +102,24 @@ define(['app'], function(App) {
       StudentsList.prototype.selectStudent = function(e) {
         this.$el.find('#select-an-item').remove();
         this.$el.find('.studentActions').show();
-        return $(e.target).closest('.tiles.single').toggleClass("selected");
+        $(e.target).closest('.tiles.single').toggleClass("selected");
+        if (_.platform() === "DEVICE") {
+          if ($(e.target).closest('.tiles.single').hasClass("selected")) {
+            navigator.notification.vibrate(1000);
+            return _.audioQueuesSelection('Click-Select');
+          } else {
+            navigator.notification.vibrate(1000);
+            return _.audioQueuesSelection('Click-Unselect');
+          }
+        }
       };
 
       StudentsList.prototype.addToCorrectList = function() {
         var selectedStudents, student, _i, _len;
+        if (_.platform() === "DEVICE") {
+          _.audioQueuesSelection('Click-Select');
+          navigator.notification.vibrate(1000);
+        }
         selectedStudents = this.$el.find('.tiles.single.selected');
         for (_i = 0, _len = selectedStudents.length; _i < _len; _i++) {
           student = selectedStudents[_i];
@@ -123,6 +136,10 @@ define(['app'], function(App) {
 
       StudentsList.prototype.removeFromCorrectList = function() {
         var selectedStudents, student, _i, _len;
+        if (_.platform() === "DEVICE") {
+          _.audioQueuesSelection('Click-Unselect');
+          navigator.notification.vibrate(1000);
+        }
         selectedStudents = this.$el.find('.tiles.single.selected');
         for (_i = 0, _len = selectedStudents.length; _i < _len; _i++) {
           student = selectedStudents[_i];

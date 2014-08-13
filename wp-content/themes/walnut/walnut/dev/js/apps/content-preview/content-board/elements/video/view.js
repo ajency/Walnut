@@ -33,11 +33,13 @@ define(['app'], function(App) {
         this.index = 0;
         this.videoId = _.uniqueId('video_');
         this.$el.find('video').attr('id', this.videoId);
-        widthRatio = 16;
-        heightRatio = 9;
-        setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
-        this.$el.find('video').attr('height', setHeight);
-        console.log(this.$el.find('video').attr('height'));
+        if (_.platform() === 'DEVICE') {
+          widthRatio = 16;
+          heightRatio = 9;
+          setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
+          this.$el.find('video').attr('height', setHeight);
+          console.log(this.$el.find('video').attr('height'));
+        }
         this.$el.find('video').on('ended', (function(_this) {
           return function() {
             console.log("done");

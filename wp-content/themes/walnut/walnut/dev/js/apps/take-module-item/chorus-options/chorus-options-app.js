@@ -78,6 +78,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
 
       ChorusOptionsView.prototype.selectStudent = function(e) {
         var dataValue;
+        _.audioQueuesSelection('Click-Select');
         this.$el.find('#select-an-item').remove();
         this.$el.find('.blue').removeClass('blue').addClass('unselected');
         dataValue = $(e.currentTarget).closest('.tiles.single').attr('id');

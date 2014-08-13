@@ -52,7 +52,7 @@ define ['app'
                         .addClass 'blue'
 
             selectStudent: (e)->
-
+                _.audioQueuesSelection 'Click-Select'
                 @$el.find '#select-an-item'
                 .remove()
 

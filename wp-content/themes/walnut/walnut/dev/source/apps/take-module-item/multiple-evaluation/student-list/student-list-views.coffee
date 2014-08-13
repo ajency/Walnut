@@ -77,6 +77,7 @@ define ['app'], (App)->
                                     .addClass 'fa-check-circle'
 
             selectStudent : (e)->
+                _.audioQueuesSelection 'Click-Select'
                 @$el.find('.tiles.single').removeClass 'selected'
                 $(e.target).closest('.tiles.single').addClass "selected"
 
