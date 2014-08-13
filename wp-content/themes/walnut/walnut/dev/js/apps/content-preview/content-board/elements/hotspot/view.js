@@ -10,6 +10,7 @@ define(['app'], function(App) {
       function HotspotView() {
         this._iterateThruOptions = __bind(this._iterateThruOptions, this);
         this._onOutsideClick = __bind(this._onOutsideClick, this);
+        this._autoPopulateAnswers = __bind(this._autoPopulateAnswers, this);
         return HotspotView.__super__.constructor.apply(this, arguments);
       }
 
@@ -62,11 +63,30 @@ define(['app'], function(App) {
         this._addBorderBox();
         this._drawExistingElements();
         this._clickHandler();
-        return this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
+        this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
           return function() {
             return _this.trigger("submit:answer");
           };
         })(this));
+        return this._autoPopulateAnswers();
+      };
+
+      HotspotView.prototype._autoPopulateAnswers = function() {
+        var answerArray, answerModel;
+        answerModel = Marionette.getOption(this, 'answerModel');
+        if (answerModel && answerModel.get('status') !== 'not_attempted') {
+          answerArray = answerModel.get('answer');
+          _.each(answerArray, (function(_this) {
+            return function(ans, index) {
+              var optionModel;
+              optionModel = _this.optionCollection.get(ans.id);
+              return _this._setBlinker(null, optionModel.toJSON());
+            };
+          })(this));
+          if (Marionette.getOption(this, 'displayAnswer')) {
+            return this.trigger("submit:answer");
+          }
+        }
       };
 
       HotspotView.prototype._clickHandler = function() {

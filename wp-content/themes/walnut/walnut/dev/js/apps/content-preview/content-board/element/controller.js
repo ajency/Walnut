@@ -39,8 +39,6 @@ define(['app', 'controllers/element-controller', 'apps/content-preview/content-b
       };
 
       Controller.prototype._getView = function(elementModel) {
-        console.log('elementModel');
-        console.log(elementModel);
         return new Element.Views.ElementView({
           model: elementModel
         });

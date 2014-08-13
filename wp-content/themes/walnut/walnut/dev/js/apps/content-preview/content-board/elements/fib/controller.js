@@ -11,18 +11,53 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData;
-        answerData = {
-          answer: [],
-          marks: 0
-        };
-        this.answerModel = App.request("create:new:answer", answerData);
+        var answerWreqrObject;
+        answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        if (!this.answerModel) {
+          this.answerModel = App.request("create:new:answer");
+        }
+        if (answerWreqrObject) {
+          this.displayAnswer = answerWreqrObject.options.displayAnswer;
+          answerWreqrObject.setHandler("get:question:answer", (function(_this) {
+            return function() {
+              var answer, blanks, data, emptyOrIncomplete;
+              blanks = _this.view.$el.find('input');
+              _this.answerModel.set({
+                'answer': []
+              });
+              _.each(blanks, function(blank, index) {
+                return _this.answerModel.get('answer').push($(blank).val());
+              });
+              answer = _.compact(_this.answerModel.get('answer'));
+              if (_.isEmpty(answer)) {
+                emptyOrIncomplete = 'empty';
+              } else if (_.size(answer) < _.size(blanks)) {
+                emptyOrIncomplete = 'incomplete';
+              } else {
+                emptyOrIncomplete = 'complete';
+              }
+              return data = {
+                'emptyOrIncomplete': emptyOrIncomplete,
+                'answerModel': _this.answerModel,
+                'totalMarks': _this.layout.model.get('marks')
+              };
+            };
+          })(this));
+          answerWreqrObject.setHandler("submit:answer", (function(_this) {
+            return function(displayAnswer) {
+              return _this._submitAnswer(_this.displayAnswer);
+            };
+          })(this));
+        }
         return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype.renderElement = function() {
         var blanksArray;
         blanksArray = this.layout.model.get('blanksArray');
+        if (blanksArray instanceof Backbone.Collection) {
+          blanksArray = blanksArray.models;
+        }
         this._parseOptions(blanksArray);
         this.blanksCollection = App.request("create:new:question:element:collection", blanksArray);
         App.execute("show:total:marks", this.layout.model.get('marks'));
@@ -30,14 +65,14 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         console.log(this.blanksCollection.pluck('marks'));
         this.view = this._getFibView(this.layout.model);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
-        return this.layout.elementRegion.show(this.view, {
-          loading: true
-        });
+        return this.layout.elementRegion.show(this.view);
       };
 
       Controller.prototype._getFibView = function(model) {
         return new Fib.Views.FibView({
-          model: model
+          model: model,
+          answerModel: this.answerModel,
+          displayAnswer: this.displayAnswer
         });
       };
 
@@ -55,8 +90,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         });
       };
 
-      Controller.prototype._submitAnswer = function() {
+      Controller.prototype._submitAnswer = function(displayAnswer) {
         var answerArray, enableIndividualMarks;
+        if (displayAnswer == null) {
+          displayAnswer = true;
+        }
         enableIndividualMarks = this.layout.model.get('enableIndividualMarks');
         this.caseSensitive = this.layout.model.get('case_sensitive');
         answerArray = this.answerModel.get('answer');
@@ -68,10 +106,14 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
               _this.answerModel.get('answer').push($(blank).val());
               correctAnswersArray = _this.blanksCollection.get($(blank).attr('data-id')).get('correct_answers');
               if (_this._checkAnswer($(blank).val(), correctAnswersArray)) {
-                return $(blank).addClass('ansRight');
+                if (displayAnswer) {
+                  return $(blank).addClass('ansRight');
+                }
               } else {
                 _this.answerModel.set('marks', 0);
-                return $(blank).addClass('ansWrong');
+                if (displayAnswer) {
+                  return $(blank).addClass('ansWrong');
+                }
               }
             };
           })(this));
@@ -93,9 +135,13 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             };
           })(this));
         }
-        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        if (displayAnswer) {
+          App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        }
         if (this.answerModel.get('marks') < this.layout.model.get('marks')) {
-          return this.view.triggerMethod('show:feedback');
+          if (displayAnswer) {
+            return this.view.triggerMethod('show:feedback');
+          }
         }
       };
 

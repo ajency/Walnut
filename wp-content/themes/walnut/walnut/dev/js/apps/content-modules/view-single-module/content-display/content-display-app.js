@@ -102,7 +102,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
       ContentDisplayView.prototype.itemViewContainer = 'ul.cbp_tmtimeline';
 
       ContentDisplayView.prototype.itemViewOptions = function(model, index) {
-        var additionalData, data, mins, responseCollection, responseModel, responseModelArray, seconds, time, _i, _len;
+        var additionalData, data, responseCollection, responseModel, responseModelArray, _i, _len;
         responseCollection = Marionette.getOption(this, 'responseCollection');
         responseModelArray = responseCollection.where({
           "content_piece_id": model.get('ID')
@@ -116,13 +116,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
         if (responseModel) {
           if (responseModel.get('status') === 'completed') {
             additionalData.responseStatus = responseModel.get('status');
-            time = responseModel.get('time_taken');
-            mins = parseInt(time / 60);
-            if (mins > 59) {
-              mins = parseInt(mins % 60);
-            }
-            seconds = parseInt(time % 60);
-            additionalData.timeTaken = mins + 'm ' + seconds + 's';
+            additionalData.timeTaken = $.timeMinSecs(responseModel.get('time_taken'));
             additionalData.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY");
             additionalData.correctAnswer = this.getResults(model, responseModel.get('question_response'));
             additionalData.teacherName = responseModel.get('teacher_name');

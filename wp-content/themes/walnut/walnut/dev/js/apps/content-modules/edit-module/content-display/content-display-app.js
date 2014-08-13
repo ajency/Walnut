@@ -89,7 +89,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       CollectionEditContentDisplayController.prototype.saveContentPieces = function(content) {
-        if (this.model.get('type') === 'module') {
+        if (this.model.get('type') === 'teaching-module') {
           this.model.set('content_pieces', content);
         }
         if (this.model.get('type') === 'quiz') {
@@ -157,7 +157,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         if (this.groupType === 'quiz') {
           data.isQuiz = true;
         }
-        if (this.groupType === 'module') {
+        if (this.groupType === 'teaching-module') {
           data.isModule = true;
         }
         return data;

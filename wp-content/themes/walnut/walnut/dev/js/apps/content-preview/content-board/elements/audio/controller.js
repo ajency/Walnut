@@ -26,6 +26,18 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         });
       };
 
+      Controller.prototype._getAudioCollection = function() {
+        if (!this.audioCollection) {
+          if (this.layout.model.get('audio_ids').length) {
+            this.audioCollection = App.request("get:media:collection:by:ids", this.layout.model.get('audio_ids'));
+          } else {
+            this.audioCollection = App.request("get:empty:media:collection");
+          }
+        }
+        this.audioCollection.comparator = 'order';
+        return this.audioCollection;
+      };
+
       Controller.prototype._parseInt = function() {
         var audio_ids;
         audio_ids = new Array();
@@ -40,9 +52,21 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       };
 
       Controller.prototype.renderElement = function() {
+        var audioCollection;
         this._parseInt();
-        this.view = this._getAudioView();
-        return this.layout.elementRegion.show(this.view);
+        audioCollection = this._getAudioCollection();
+        return App.execute("when:fetched", audioCollection, (function(_this) {
+          return function() {
+            _this.layout.model.set({
+              'audioUrls': _.first(audioCollection.pluck('url'))
+            });
+            _this.layout.model.set({
+              'audioUrls': audioCollection.pluck('url')
+            });
+            _this.view = _this._getAudioView();
+            return _this.layout.elementRegion.show(_this.view);
+          };
+        })(this));
       };
 
       return Controller;

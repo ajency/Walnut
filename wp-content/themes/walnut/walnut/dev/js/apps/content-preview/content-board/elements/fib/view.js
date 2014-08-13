@@ -22,11 +22,29 @@ define(['app'], function(App) {
 
       FibView.prototype.onShow = function() {
         this.$el.find('p').append(_.stripslashes(this.model.get('text')));
-        return this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
+        this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
           return function() {
             return _this.trigger("submit:answer");
           };
         })(this));
+        return this._autoPopulateAnswers();
+      };
+
+      FibView.prototype._autoPopulateAnswers = function() {
+        var answerArray, answerModel, blanks;
+        answerModel = Marionette.getOption(this, 'answerModel');
+        if (answerModel && answerModel.get('status') !== 'not_attempted') {
+          answerArray = answerModel.get('answer');
+          blanks = this.$el.find('.fib-text input');
+          _.each(answerArray, (function(_this) {
+            return function(ans, index) {
+              return $(blanks[index]).val(ans);
+            };
+          })(this));
+          if (Marionette.getOption(this, 'displayAnswer')) {
+            return this.trigger("submit:answer");
+          }
+        }
       };
 
       FibView.prototype.onShowFeedback = function() {

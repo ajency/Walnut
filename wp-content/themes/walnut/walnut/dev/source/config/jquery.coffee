@@ -35,6 +35,22 @@ define ['jquery', 'underscore'], ($, _)->
 
         this
 
+    $.timeMinSecs = (timeInSeconds)->
+        hours = 0
+        time = timeInSeconds
+        mins = parseInt timeInSeconds / 60
+        if mins > 59
+            hours = parseInt mins / 60
+            mins = parseInt mins % 60
+        seconds = parseInt time % 60
+        display_time = ''
+
+        if hours > 0
+            display_time = hours + 'h '
+
+        display_time += mins + 'm ' + seconds + 's'
+
+
     $( document ).on  "keyup", ".autogrow", (e)=>
 
         ele= $ e.target

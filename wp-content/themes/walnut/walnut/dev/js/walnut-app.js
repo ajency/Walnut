@@ -30,45 +30,37 @@ define(['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
-    var xhr;
+    var user;
     App.startHistory();
-    return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
-      return function(resp) {
-        var school, user;
-        if (resp.success) {
-          console.log(resp);
-          user = App.request("get:user:model");
-          user.set(resp.data.data);
-          school = App.request("get:current:school");
-          App.execute("show:headerapp", {
-            region: App.headerRegion
-          });
-          App.execute("show:leftnavapp", {
-            region: App.leftNavRegion
-          });
-          App.execute("show:breadcrumbapp", {
-            region: App.breadcrumbRegion
-          });
-          if (_this.getCurrentRoute() === 'login') {
-            App.vent.trigger("show:dashboard");
-          }
-          return App.loginRegion.close();
-        } else {
-          return App.vent.trigger("show:login");
-        }
-      };
-    })(this), 'json');
+    if ((typeof USER !== "undefined" && USER !== null) && USER.ID) {
+      user = App.request("get:user:model");
+      App.execute("show:headerapp", {
+        region: App.headerRegion
+      });
+      App.execute("show:leftnavapp", {
+        region: App.leftNavRegion
+      });
+      App.execute("show:breadcrumbapp", {
+        region: App.breadcrumbRegion
+      });
+      if (this.getCurrentRoute() === 'login') {
+        App.vent.trigger("show:dashboard");
+      }
+      return App.loginRegion.close();
+    } else {
+      return App.vent.trigger("show:login");
+    }
   });
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
       var user;
       user = App.request("get:user:model");
-      user_role = user.get("roles");
-      if (user_role[0] === 'administrator') {
+      if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
         App.navigate('textbooks', {
           trigger: true
         });
-      } else {
+      }
+      if (user.current_user_can('teacher')) {
         App.navigate('teachers/dashboard', {
           trigger: true
         });

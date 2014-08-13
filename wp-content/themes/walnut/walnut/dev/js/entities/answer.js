@@ -11,6 +11,16 @@ define(['app', 'backbone'], function(App, Backbone) {
         return AnswerModel.__super__.constructor.apply(this, arguments);
       }
 
+      AnswerModel.prototype.defaults = function() {
+        return {
+          answer: [],
+          marks: 0,
+          status: 'not_attempted'
+        };
+      };
+
+      AnswerModel.prototype.name = 'answer';
+
       return AnswerModel;
 
     })(Backbone.Model);
@@ -21,7 +31,9 @@ define(['app', 'backbone'], function(App, Backbone) {
           data = {};
         }
         answer = new Answer.AnswerModel;
-        answer.set(data);
+        if (data != null) {
+          answer.set(data);
+        }
         return answer;
       }
     };
