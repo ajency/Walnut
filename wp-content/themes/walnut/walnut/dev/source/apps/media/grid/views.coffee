@@ -23,6 +23,9 @@ define ['app'
                 'click .edit-image' : ->
                     @trigger 'show:image:editor', @model
 
+            modelEvents : 
+                'change' : 'render'
+
             # override serializeData to set holder property for the view
             #if no thumbnail thn dont show image
             mixinTemplateHelpers : (data)->

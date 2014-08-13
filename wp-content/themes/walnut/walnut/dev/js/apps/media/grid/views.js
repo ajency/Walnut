@@ -31,6 +31,10 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
         }
       };
 
+      MediaView.prototype.modelEvents = {
+        'change': 'render'
+      };
+
       MediaView.prototype.mixinTemplateHelpers = function(data) {
         data = MediaView.__super__.mixinTemplateHelpers.call(this, data);
         data.imagePreview = false;

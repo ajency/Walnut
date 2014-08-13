@@ -16,6 +16,9 @@ define ['app'], (App)->
             							<div class="image-placeholder"><span class="bicon icon-uniF10E"></span>Add Image</div>
             						{{/placeholder}}'
 
+            modelEvents : 
+                'change' : 'render'
+
 
             # override serializeData to set holder property for the view
             mixinTemplateHelpers: (data)->
