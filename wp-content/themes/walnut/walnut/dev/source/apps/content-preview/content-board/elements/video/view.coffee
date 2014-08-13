@@ -31,7 +31,6 @@ define ['app'], (App)->
 			#setHeight is used to get the height of the video placeholder base on its
 			#width
 			onShow : ->
-				alert "width"
 				console.log @$el.find('video').attr 'width'
 				return if not @model.get('video_ids').length
 

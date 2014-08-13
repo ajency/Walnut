@@ -25,7 +25,6 @@ define(['app'], function(App) {
 
       VideoView.prototype.onShow = function() {
         var heightRatio, setHeight, videosWebDirectory, widthRatio;
-        alert("width");
         console.log(this.$el.find('video').attr('width'));
         if (!this.model.get('video_ids').length) {
           return;
