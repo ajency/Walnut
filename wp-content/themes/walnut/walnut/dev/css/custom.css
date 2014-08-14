@@ -2277,6 +2277,20 @@ ul.classes .classesWrap {
   padding-top: 4px;
   padding-bottom: 4px;
 }
+#textbooks.list.myClass .meta.name {
+  width: 40%;
+}
+#textbooks.list.myClass .meta.rec {
+  width: 20%;
+}
+#textbooks.list.myClass .txtbook {
+  cursor: pointer;
+  z-index: 2;
+  position: relative;
+}
+#textbooks.list.myClass .chapStatus {
+  width: 49%;
+}
 body {
   background-color: #e5e9ec;
   overflow-y: scroll;
