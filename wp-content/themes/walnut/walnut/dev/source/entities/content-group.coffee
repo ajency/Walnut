@@ -20,7 +20,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                 type: 'teaching-module'
                 total_minutes: 0
                 duration: 0
-                type : 'module'
                 minshrs: 'mins'
                 term_ids: []
                 content_pieces: []

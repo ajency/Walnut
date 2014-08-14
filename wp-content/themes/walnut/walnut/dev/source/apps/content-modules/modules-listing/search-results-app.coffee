@@ -26,7 +26,7 @@ define ['app'
                 if useFilters
                     @selectedFilterParamsObject.request "get:selected:parameters"
 
-                if @groupType is 'module'
+                if @groupType is 'teaching-module'
                     @newCollection = App.request "get:content:groups",
                         post_status     : 'any'
                         search_str      : searchStr

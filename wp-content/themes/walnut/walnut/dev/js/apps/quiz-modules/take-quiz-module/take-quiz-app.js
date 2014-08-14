@@ -1,10 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/quiz-description/app', 'apps/quiz-modules/take-quiz-module/quiz-progress/app', 'apps/quiz-modules/take-quiz-module/quiz-timer/app', 'apps/quiz-modules/take-quiz-module/single-question/app', 'apps/popup-dialog/alerts'], function(App, RegionController) {
   return App.module("TakeQuizApp", function(View, App) {
-    var TakeQuizLayout, questionIDs, questionModel, questionResponseCollection, questionResponseModel, questionsCollection, quizModel, timeBeforeCurrentQuestion;
+    var TakeQuizLayout, questionIDs, questionModel, questionResponseCollection, questionResponseModel, questionsCollection, quizModel, quizResponseSummary, timeBeforeCurrentQuestion;
     quizModel = null;
+    quizResponseSummary = null;
     questionsCollection = null;
     questionResponseCollection = null;
     questionResponseModel = null;
@@ -15,12 +17,29 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       __extends(TakeQuizController, _super);
 
       function TakeQuizController() {
+        this._startTakeQuiz = __bind(this._startTakeQuiz, this);
         return TakeQuizController.__super__.constructor.apply(this, arguments);
       }
 
       TakeQuizController.prototype.initialize = function(opts) {
+        var data;
+        quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
+        if (quizResponseSummary.isNew() && quizModel.get('quiz_type') === 'test') {
+          data = {
+            'status': 'started'
+          };
+          quizResponseSummary.save({
+            'status': 'started'
+          });
+        }
+        return this._startTakeQuiz();
+      };
+
+      TakeQuizController.prototype._startTakeQuiz = function() {
         var layout, questionID;
-        quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
+        if (!questionResponseCollection) {
+          questionResponseCollection = App.request("create:empty:question:response:collection");
+        }
         App.leftNavRegion.close();
         App.headerRegion.close();
         App.breadcrumbRegion.close();
@@ -40,7 +59,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.listenTo(this.layout.questionDisplayRegion, "submit:question", this._submitQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "goto:previous:question", this._gotoPreviousQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "skip:question", this._skipQuestion);
-        this.listenTo(this.layout.questionDisplayRegion, "skip:question", this._skipQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "show:alert:popup", this._showPopup);
         this.listenTo(this.layout.quizTimerRegion, "show:alert:popup", this._showPopup);
         this.listenTo(this.layout.quizProgressRegion, "change:question", this._changeQuestion);
@@ -59,13 +77,14 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         timeTaken = totalTime - timeBeforeCurrentQuestion;
         timeBeforeCurrentQuestion = totalTime;
         data = {
-          'collection_id': quizModel.id,
+          'summary_id': quizResponseSummary.id,
           'content_piece_id': questionModel.id,
           'question_response': answer.toJSON(),
           'status': answer.get('status'),
+          'marks_scored': answer.get('marks'),
           'time_taken': timeTaken
         };
-        newResponseModel = App.request("create:quiz:response:model", data);
+        newResponseModel = App.request("create:quiz:question:response:model", data);
         quizResponseModel = questionResponseCollection.findWhere({
           'content_piece_id': newResponseModel.get('content_piece_id')
         });
@@ -74,6 +93,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         } else {
           quizResponseModel = newResponseModel;
           questionResponseCollection.add(newResponseModel);
+        }
+        if (quizModel.get('quiz_type') === 'test') {
+          quizResponseModel.save();
         }
         return this.layout.quizProgressRegion.trigger("question:submitted", quizResponseModel);
       };
@@ -134,11 +156,25 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             };
           })(this));
         }
+        quizResponseSummary.set({
+          'status': 'completed',
+          'total_time_taken': timeBeforeCurrentQuestion,
+          'num_skipped': _.size(questionResponseCollection.where({
+            'status': 'skipped'
+          })),
+          'total_marks_scored': _.reduce(questionResponseCollection.pluck('marks_scored'), function(memo, num) {
+            return parseInt(memo + parseInt(num));
+          })
+        });
+        if (quizModel.get('quiz_type') === 'test') {
+          quizResponseSummary.save();
+        }
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
           quizModel: quizModel,
           questionsCollection: questionsCollection,
-          questionResponseCollection: questionResponseCollection
+          questionResponseCollection: questionResponseCollection,
+          quizResponseSummary: quizResponseSummary
         });
       };
 
@@ -223,7 +259,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._handlePopups = function(message_type) {
-        console.log(message_type);
         switch (message_type) {
           case 'end_quiz':
             return this._endQuiz();

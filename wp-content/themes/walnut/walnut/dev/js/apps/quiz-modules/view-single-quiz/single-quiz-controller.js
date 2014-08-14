@@ -6,7 +6,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
   return App.module("QuizModuleApp.ViewQuiz", function(ViewQuiz, App) {
     var QuizViewLayout;
     ViewQuiz.Controller = (function(_super) {
-      var display_mode, questionResponseCollection, questionsCollection, quizModel;
+      var display_mode, questionResponseCollection, questionsCollection, quizModel, quizResponseSummary;
 
       __extends(Controller, _super);
 
@@ -14,6 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         this._getQuizViewLayout = __bind(this._getQuizViewLayout, this);
         this.showQuizViews = __bind(this.showQuizViews, this);
         this.startQuiz = __bind(this.startQuiz, this);
+        this._fetchQuestionResponseCollection = __bind(this._fetchQuestionResponseCollection, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -21,13 +22,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       questionsCollection = null;
 
+      quizResponseSummary = null;
+
       questionResponseCollection = null;
 
       display_mode = null;
 
       Controller.prototype.initialize = function(opts) {
-        var quiz_id;
-        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection;
+        var fetchQuestionResponseCollection, quiz_id;
+        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, quizResponseSummary = opts.quizResponseSummary;
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }
@@ -37,50 +40,97 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         App.execute("show:leftnavapp", {
           region: App.leftNavRegion
         });
-        if (!questionResponseCollection) {
-          questionResponseCollection = App.request("get:quiz:response:collection", {
-            'collection_id': quizModel.get('id')
-          });
-        }
-        return App.execute("when:fetched", [quizModel, questionResponseCollection], (function(_this) {
+        this.fetchQuizResponseSummary = this._fetchQuizResponseSummary();
+        fetchQuestionResponseCollection = this._fetchQuestionResponseCollection();
+        return fetchQuestionResponseCollection.done((function(_this) {
           return function() {
-            var textbook_termIDs;
-            if (questionResponseCollection.length > 0) {
-              display_mode = 'replay';
-            }
-            if (questionResponseCollection.length > 0 && quizModel.hasPermission('disable_quiz_replay')) {
-              display_mode = 'disable_quiz_replay';
-            }
-            textbook_termIDs = _.flatten(quizModel.get('term_ids'));
-            _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
-            if (!questionsCollection) {
-              questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
-              App.execute("when:fetched", questionsCollection, function() {
-                if (quizModel.get('permissions').randomize) {
-                  questionsCollection.each(function(e) {
-                    return e.unset('order');
-                  });
-                  return questionsCollection.reset(questionsCollection.shuffle());
-                }
+            return App.execute("when:fetched", quizModel, function() {
+              var textbook_termIDs;
+              display_mode = 'class_mode';
+              if (quizResponseSummary.get('status') === 'started') {
+                display_mode = 'class_mode';
+              }
+              if (quizResponseSummary.get('status') === 'completed') {
+                display_mode = 'replay';
+              }
+              textbook_termIDs = _.flatten(quizModel.get('term_ids'));
+              _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
+              if (!questionsCollection) {
+                questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+                App.execute("when:fetched", questionsCollection, function() {
+                  if (quizModel.get('permissions').randomize) {
+                    questionsCollection.each(function(e) {
+                      return e.unset('order');
+                    });
+                    return questionsCollection.reset(questionsCollection.shuffle());
+                  }
+                });
+              }
+              return App.execute("when:fetched", [questionsCollection, _this.textbookNames], function() {
+                var layout;
+                _this.layout = layout = _this._getQuizViewLayout();
+                _this.show(_this.layout, {
+                  loading: true
+                });
+                _this.listenTo(_this.layout, 'show', _this.showQuizViews);
+                return _this.listenTo(_this.layout.quizDetailsRegion, 'start:quiz:module', _this.startQuiz);
               });
-            }
-            return App.execute("when:fetched", [questionsCollection, _this.textbookNames], function() {
-              var layout;
-              _this.layout = layout = _this._getQuizViewLayout();
-              _this.show(_this.layout, {
-                loading: true
-              });
-              _this.listenTo(_this.layout, 'show', _this.showQuizViews);
-              return _this.listenTo(_this.layout.quizDetailsRegion, 'start:quiz:module', _this.startQuiz);
             });
           };
         })(this));
+      };
+
+      Controller.prototype._fetchQuizResponseSummary = function() {
+        var defer, quizResponseSummaryCollection;
+        defer = $.Deferred();
+        if (quizResponseSummary) {
+          defer.resolve();
+          return defer.promise();
+        }
+        this.summary_data = {
+          'collection_id': quizModel.get('id'),
+          'student_id': App.request("get:loggedin:user:id")
+        };
+        quizResponseSummaryCollection = App.request("get:quiz:response:summary", this.summary_data);
+        App.execute("when:fetched", quizResponseSummaryCollection, (function(_this) {
+          return function() {
+            if (quizResponseSummaryCollection.length > 0) {
+              quizResponseSummary = quizResponseSummaryCollection.first();
+              return defer.resolve();
+            } else {
+              quizResponseSummary = App.request("create:quiz:response:summary", _this.summary_data);
+              return defer.resolve();
+            }
+          };
+        })(this));
+        return defer.promise();
+      };
+
+      Controller.prototype._fetchQuestionResponseCollection = function() {
+        var defer;
+        defer = $.Deferred();
+        this.fetchQuizResponseSummary.done((function(_this) {
+          return function() {
+            if (!questionResponseCollection && !quizResponseSummary.isNew()) {
+              questionResponseCollection = App.request("get:quiz:question:response:collection", {
+                'summary_id': quizResponseSummary.get('summary_id')
+              });
+              return App.execute("when:fetched", questionResponseCollection, function() {
+                return defer.resolve();
+              });
+            } else {
+              return defer.resolve();
+            }
+          };
+        })(this));
+        return defer.promise();
       };
 
       Controller.prototype.startQuiz = function() {
         return App.execute("start:take:quiz:app", {
           region: App.mainContentRegion,
           quizModel: quizModel,
+          quizResponseSummary: quizResponseSummary,
           questionsCollection: questionsCollection,
           display_mode: display_mode,
           questionResponseCollection: questionResponseCollection,
@@ -93,9 +143,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           region: this.layout.quizDetailsRegion,
           model: quizModel,
           display_mode: display_mode,
+          quizResponseSummary: quizResponseSummary,
           textbookNames: this.textbookNames
         });
-        if (_.size(quizModel.get('content_pieces')) > 0 && !questionResponseCollection.isEmpty()) {
+        if (quizResponseSummary.get('status') === 'completed') {
           return App.execute("show:quiz:items:app", {
             region: this.layout.contentDisplayRegion,
             model: quizModel,

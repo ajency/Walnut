@@ -9,55 +9,102 @@ define ['app'
 
             quizModel = null
             questionsCollection = null
+            quizResponseSummary = null
             questionResponseCollection = null
             display_mode = null
 
             initialize: (opts) ->
 
-                {quiz_id,quizModel,questionsCollection,questionResponseCollection} = opts
+                {quiz_id,quizModel,questionsCollection,questionResponseCollection,quizResponseSummary} = opts
 
                 quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
 
                 App.execute "show:headerapp", region : App.headerRegion
                 App.execute "show:leftnavapp", region : App.leftNavRegion
 
-                if not questionResponseCollection
-                    questionResponseCollection = App.request "get:quiz:response:collection",
-                        'collection_id': quizModel.get 'id'
+                @fetchQuizResponseSummary = @_fetchQuizResponseSummary()
+
+                fetchQuestionResponseCollection = @_fetchQuestionResponseCollection()
+
+                fetchQuestionResponseCollection.done =>
+                    App.execute "when:fetched", quizModel, =>
+
+                        display_mode = 'class_mode'
+
+                        if quizResponseSummary.get('status') is 'started'
+                            display_mode = 'class_mode'
+
+                        if quizResponseSummary.get('status') is 'completed'
+                            display_mode = 'replay'
+
+
+                        textbook_termIDs = _.flatten quizModel.get 'term_ids'
+                        @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
+
+                        if not questionsCollection
+                            questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+
+                            App.execute "when:fetched", questionsCollection, ->
+                                if quizModel.get('permissions').randomize
+                                    questionsCollection.each (e)-> e.unset 'order'
+                                    questionsCollection.reset questionsCollection.shuffle()
+                        
+                        App.execute "when:fetched", [questionsCollection,@textbookNames],  =>
+                            @layout = layout = @_getQuizViewLayout()
+
+                            @show @layout, loading: true
+
+                            @listenTo @layout, 'show', @showQuizViews
+
+                            @listenTo @layout.quizDetailsRegion, 'start:quiz:module', @startQuiz
+
+            _fetchQuizResponseSummary:->
+                defer = $.Deferred();
+
+                #if the summary has been passed from the take-quiz-module app after quiz completion
+                if quizResponseSummary
+                    defer.resolve()
+                    return defer.promise()
+
+                @summary_data= 
+                    'collection_id' : quizModel.get 'id'
+                    'student_id'    : App.request "get:loggedin:user:id"
+
+                quizResponseSummaryCollection = App.request "get:quiz:response:summary", @summary_data
+                App.execute "when:fetched", quizResponseSummaryCollection, =>
+
+                    if quizResponseSummaryCollection.length>0
+                        quizResponseSummary= quizResponseSummaryCollection.first()
+                        defer.resolve()
+
+                    else
+                        quizResponseSummary =  App.request "create:quiz:response:summary", @summary_data
+                        defer.resolve()
+                        
+                defer.promise()
+
+            _fetchQuestionResponseCollection:=>
+                defer = $.Deferred();
+
+                @fetchQuizResponseSummary.done =>
+                    if not questionResponseCollection and not quizResponseSummary.isNew()
+                        questionResponseCollection = App.request "get:quiz:question:response:collection",
+                            'summary_id': quizResponseSummary.get 'summary_id'
+
+                        App.execute "when:fetched", questionResponseCollection, =>
+                            defer.resolve()
+                    else
+                        defer.resolve()
+
                 
-                App.execute "when:fetched", [quizModel,questionResponseCollection], =>
-
-                    if questionResponseCollection.length>0
-                        display_mode = 'replay'
-
-                    if questionResponseCollection.length>0 and quizModel.hasPermission 'disable_quiz_replay'
-                        display_mode = 'disable_quiz_replay'
-
-                    textbook_termIDs = _.flatten quizModel.get 'term_ids'
-                    @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
-
-                    if not questionsCollection
-                        questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
-
-                        App.execute "when:fetched", questionsCollection, ->
-                            if quizModel.get('permissions').randomize
-                                questionsCollection.each (e)-> e.unset 'order'
-                                questionsCollection.reset questionsCollection.shuffle()
-                    
-                    App.execute "when:fetched", [questionsCollection,@textbookNames],  =>
-                        @layout = layout = @_getQuizViewLayout()
-
-                        @show @layout, loading: true
-
-                        @listenTo @layout, 'show', @showQuizViews
-
-                        @listenTo @layout.quizDetailsRegion, 'start:quiz:module', @startQuiz
+                defer.promise()
 
             startQuiz: =>
-                
+
                 App.execute "start:take:quiz:app",
                     region: App.mainContentRegion
                     quizModel               : quizModel
+                    quizResponseSummary     : quizResponseSummary
                     questionsCollection     : questionsCollection
                     display_mode            : display_mode
                     questionResponseCollection: questionResponseCollection
@@ -66,12 +113,13 @@ define ['app'
             showQuizViews: =>
 
                 App.execute "show:view:quiz:detailsapp",
-                    region      : @layout.quizDetailsRegion
-                    model       : quizModel
-                    display_mode: display_mode
-                    textbookNames: @textbookNames
+                    region                  : @layout.quizDetailsRegion
+                    model                   : quizModel
+                    display_mode            : display_mode
+                    quizResponseSummary     : quizResponseSummary
+                    textbookNames           : @textbookNames
 
-                if _.size(quizModel.get('content_pieces')) > 0 and not questionResponseCollection.isEmpty()
+                if quizResponseSummary.get('status') is 'completed'
                     
                     App.execute "show:quiz:items:app",
                         region                  : @layout.contentDisplayRegion

@@ -14,7 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
 
       ContentSelectionController.prototype.initialize = function(opts) {
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
-        if (this.model.get('type') === 'module') {
+        if (this.model.get('type') === 'teaching-module') {
           this.contentPiecesCollection = App.request("get:content:pieces", {
             content_type: ['teacher_question', 'content_piece'],
             post_status: 'publish'
@@ -56,7 +56,8 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
               App.execute("show:all:content:selection:app", {
                 region: _this.layout.allContentRegion,
                 contentPiecesCollection: _this.contentPiecesCollection,
-                contentGroupCollection: _this.contentGroupCollection
+                contentGroupCollection: _this.contentGroupCollection,
+                groupType: _this.model.get('type')
               });
               App.execute("show:content:search:results:app", {
                 region: _this.layout.searchResultsRegion,

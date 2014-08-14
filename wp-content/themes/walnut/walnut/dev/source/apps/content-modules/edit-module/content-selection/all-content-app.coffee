@@ -6,7 +6,7 @@ define ['app'
         class AllContent.Controller extends RegionController
             initialize: (opts) ->
 
-                {@contentPiecesCollection,@contentGroupCollection}=opts
+                {@contentPiecesCollection,@contentGroupCollection,@groupType}=opts
 
                 @view = view = @_getContentSelectionView @contentPiecesCollection
 
@@ -38,6 +38,7 @@ define ['app'
                 new DataContentTableView
                     collection: collection
                     fullCollection : collection.clone()
+                    groupType : @groupType
 
 
         class DataContentItemView extends Marionette.ItemView
@@ -48,7 +49,12 @@ define ['app'
                                       </div>
                                     </td>
                                     <td class="cpHeight">{{&post_excerpt}}</td>
+                                    {{#isModule}}
                                     <td>{{content_type_str}}</td>
+                                    {{/isModule}}
+                                    {{#isQuiz}}
+                                    <td>{{difficulty_level}}</td>
+                                    {{/isQuiz}}
                                     <td class="cpHeight">
                                         {{&present_in_str}}
                                      </td>
@@ -58,6 +64,8 @@ define ['app'
 
             serializeData:->
                 data= super()
+                data.isQuiz = true if @groupType is 'quiz'
+                data.isModule = true if @groupType is 'teaching-module'
 
                 #this is for display purpose only
                 data.modified_date= moment(data.post_modified).format("Do MMM YYYY")
@@ -76,12 +84,17 @@ define ['app'
                 _.each data.present_in_modules, (ele,index)->
                     modules.push "<a target='_blank' href='#view-group/"+ ele.id+"'>"+ ele.name+"</a>"
 
+                type = if data.content_type in ['student_question'] then 'quiz' else 'teaching-module'
+
                 data.present_in_str=
                     if _.size(modules)>0
                     then _.toSentence(modules)
-                    else 'Not added to a module yet'
+                    else "Not added to a #{type} yet"
 
                 data
+
+            initialize : ->
+                @groupType = Marionette.getOption @, 'groupType'
 
         class NoDataItemView extends Marionette.ItemView
 
@@ -102,11 +115,24 @@ define ['app'
 
             itemViewContainer: '#dataContentTable tbody'
 
+            itemViewOptions :->
+                groupType : Marionette.getOption @, 'groupType'
+
             events:
 
                 'change #check_all_div'     : 'checkAll'
 
                 'click #add-content-pieces' : 'addContentPieces'
+
+            mixinTemplateHelpers : (data)->
+                data = super data 
+                data.isQuiz = true if @groupType is 'quiz'
+                data.isModule = true if @groupType is 'teaching-module' 
+
+                data
+
+            initialize: ->
+                @groupType = Marionette.getOption @,'groupType'
 
             onShow:->
                 @$el.find '#dataContentTable'

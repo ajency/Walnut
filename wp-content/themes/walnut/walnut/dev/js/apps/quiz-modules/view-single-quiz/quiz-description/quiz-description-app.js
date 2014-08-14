@@ -13,7 +13,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
-        this.model = opts.model, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
+        this.model = opts.model, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, this.quizResponseSummary = opts.quizResponseSummary;
         this.view = view = this._getQuizDescriptionView();
         this.listenTo(view, 'start:quiz:module', (function(_this) {
           return function() {
@@ -30,6 +30,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         return new QuizDetailsView({
           model: this.model,
           display_mode: this.display_mode,
+          quizResponseSummary: this.quizResponseSummary,
           templateHelpers: {
             getTextbookName: (function(_this) {
               return function() {
@@ -72,21 +73,46 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       };
 
       QuizDetailsView.prototype.serializeData = function() {
-        var data, display_mode;
+        var data, display_mode, responseSummary;
         data = QuizDetailsView.__super__.serializeData.call(this, data);
         display_mode = Marionette.getOption(this, 'display_mode');
-        if (this.model.hasPermission('answer_printing') && (display_mode === 'replay' || display_mode === 'disable_quiz_replay')) {
+        if (this.model.hasPermission('answer_printing') && display_mode === 'replay') {
           data.answer_printing = true;
         }
+        if (this.model.get('quiz_type') === 'practice') {
+          data.practice_mode = true;
+        }
+        responseSummary = Marionette.getOption(this, 'quizResponseSummary');
+        if (responseSummary.get('status') === 'completed') {
+          data.responseSummary = true;
+          data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
+          data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
+          if (this.model.hasPermission('display_answer')) {
+            data.display_marks = true;
+          }
+          data.total_marks_scored = responseSummary.get('total_marks_scored');
+          if (responseSummary.get('taken_on')) {
+            data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY");
+          } else {
+            data.taken_on_date = moment().format("Do MMM YYYY");
+          }
+        }
+        data.negMarksEnable = _.toBool(data.negMarksEnable);
         return data;
       };
 
       QuizDetailsView.prototype.onShow = function() {
-        if (Marionette.getOption(this, 'display_mode') === 'replay') {
-          this.$el.find("#take-quiz").html('Replay');
+        var responseSummary;
+        responseSummary = Marionette.getOption(this, 'quizResponseSummary');
+        if (responseSummary.get('status') === 'started') {
+          this.$el.find("#take-quiz").html('Continue');
         }
-        if (Marionette.getOption(this, 'display_mode') === 'disable_quiz_replay') {
-          return this.$el.find("#take-quiz").remove();
+        if (Marionette.getOption(this, 'display_mode') === 'replay') {
+          if (this.model.hasPermission('disable_quiz_replay')) {
+            return this.$el.find("#take-quiz").remove();
+          } else {
+            return this.$el.find("#take-quiz").html('Replay');
+          }
         }
       };
 

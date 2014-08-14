@@ -29,14 +29,21 @@ function get_primary_blog_details( $user_id = '' ) {
 
     switch_to_blog( $blog->blog_id );
 
+    $blog_user_data = new WP_User($user_id);
+  	
     $blog_logo = wp_get_attachment_thumb_url( $blog_logo_id );
 
     $blog_data = array(
         'blog_id' => $blog->blog_id,
         'blog_name' => $blog->blogname,
         'blog_logo' => $blog_logo,
-        'site_url' => $blog->siteurl
+        'site_url' => $blog->siteurl,
+        'blog_roles' =>$blog_user_data->roles
     );
+    
+    if (!is_multisite()) 
+        $blog_data['site_url']=get_site_url();
+    
     return $blog_data;
 }
 
@@ -571,3 +578,37 @@ function user_bulk_actions_admin($actions){
 add_filter( 'bulk_actions-users','user_bulk_actions_admin',10,1);
 
 /* functions to disable users delete option in admin dashboard end*/
+
+function getLoggedInUserModel(){
+    $user_data = get_userdata( get_current_user_id() );
+    $userModel='';
+    if($user_data){
+        $userdata = __u::toArray($user_data);
+        unset($userdata['data']);
+        $userdata['display_name']= $user_data->display_name;
+        $userdata['user_email']= $user_data->user_email;
+
+        $userModel="USER={}\n";
+
+        foreach ($userdata as $key => $value) {
+        
+            if(in_array($key,array('caps','roles','allcaps'))) {
+
+                $userModel .= "USER['$key']={}\n";
+
+                foreach($value as $k=>$v){
+
+                    $userModel .= "USER['$key']['$k']='$v'\n";
+
+                }
+            } 
+
+            else
+                $userModel .= "USER['$key']='$value'\n";
+
+        }
+    }
+
+    return $userModel;
+    
+}

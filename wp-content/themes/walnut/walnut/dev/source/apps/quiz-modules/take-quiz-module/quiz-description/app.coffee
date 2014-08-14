@@ -41,6 +41,14 @@ define ['app'
 
                     template: quizDescriptionTemplate
 
+                    serializeData:->
+
+                        data = super()
+                        
+                        data.practice_mode =true if @model.get('quiz_type') is 'practice'
+
+                        data
+
                     onQuestionChange:(model)->
                         @$el.find "#time-on-question"
                         .html model.get 'duration'

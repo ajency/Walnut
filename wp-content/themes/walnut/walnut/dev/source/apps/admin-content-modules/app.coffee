@@ -10,8 +10,15 @@ define ['app'
 
         Controller =
             adminViewModules:  ->
-                new AdminContentModulesApp.View.AdminModulesController
-                    region: App.mainContentRegion
+                user = App.request "get:user:model"
+
+                if user.current_user_can('administrator') or user.current_user_can('school-admin')
+                    new AdminContentModulesApp.View.AdminModulesController
+                        region: App.mainContentRegion
+
+                else
+                    App.execute "show:no:permissions:app",
+                        region: App.mainContentRegion
 
 
         AdminContentModulesApp.on "start", ->

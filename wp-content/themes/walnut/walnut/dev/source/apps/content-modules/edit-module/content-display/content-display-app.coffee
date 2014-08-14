@@ -60,7 +60,7 @@ define ['app'
                 @saveContentPieces content
 
             saveContentPieces : (content)=>
-                @model.set('content_pieces', content) if @model.get('type') is 'module'
+                @model.set('content_pieces', content) if @model.get('type') is 'teaching-module'
                 @model.set('content_layout', content) if @model.get('type') is 'quiz'
                 @model.save({ 'changed' : 'content_pieces' }, { wait : true })
 
@@ -97,7 +97,13 @@ define ['app'
                             data.contentLevels.push "Level #{i}"
                             lvl--
 
+                data.isQuiz = true if @groupType is 'quiz'
+                data.isModule = true if @groupType is 'teaching-module'
+
                 data
+
+            initialize :->
+                @groupType = Marionette.getOption @, 'groupType'
 
             onShow : ->
                 if @model.get('post_type')is 'content_set'
@@ -118,6 +124,9 @@ define ['app'
 
             id : 'myCanvas-miki'
 
+            itemViewOptions :->
+                groupType : @model.get 'type'
+
             events :
                 'click .remove' : 'removeItem'
 
@@ -133,6 +142,7 @@ define ['app'
 
 
             onShow : ->
+
                 @$el.find(".cbp_tmtimeline").sortable
 
                     stop : (event, ui)=>

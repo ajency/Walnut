@@ -13,7 +13,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 					role 			: []
 					profile_pic 	: ''
 
-			user = new Users.UserModel
+
+				current_user_can:(capability)->
+					all_capabilites = @.get 'allcaps'
+					if all_capabilites[capability] then return true else return false
+
+			loggedInUser = new Users.UserModel
+			loggedInUser.set USER if USER?
 			
 
 			class UserCollection extends Backbone.Collection
@@ -30,6 +36,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			# API
 			API =
+
 				getUsers:(params={})-> #returns a collection of users
 					userCollection = new UserCollection
 					userCollection.fetch
@@ -37,11 +44,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					userCollection
 
-
-
-
 			App.reqres.setHandler "get:user:model", ->
-				user	
+				loggedInUser	
+
+			App.reqres.setHandler "get:loggedin:user:id", ->
+				loggedInUser.get 'ID'
 
 			App.reqres.setHandler "get:user:collection",(opts) ->
 				API.getUsers opts

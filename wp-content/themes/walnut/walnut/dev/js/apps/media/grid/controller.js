@@ -41,6 +41,29 @@ define(['app', 'controllers/region-controller', 'apps/media/grid/views'], functi
             return Marionette.triggerMethod.call(_this.region, "media:element:unselected", Marionette.getOption(iv, 'model'));
           };
         })(this));
+        this.listenTo(this.view, "itemview:delete:media:image", (function(_this) {
+          return function(iv, model) {
+            return _this.deleteImage(model);
+          };
+        })(this));
+        this.listenTo(this.view, "itemview:show:image:editor", (function(_this) {
+          return function(iv, model) {
+            var editView, ratio;
+            ratio = App.currentImageRatio;
+            editView = App.request("get:image:editor:view", model, {
+              aspectRatio: ratio
+            });
+            _this.view.triggerMethod("show:edit:image", editView);
+            return _this.listenTo(editView, "image:editing:cancelled", function() {
+              return _this.view.triggerMethod("image:editing:cancelled");
+            });
+          };
+        })(this));
+        App.commands.setHandler("new:media:added", (function(_this) {
+          return function(media) {
+            return _this.mediaCollection.add(media);
+          };
+        })(this));
         return this.listenTo(this.view, "search:media", this._searchMedia);
       };
 
@@ -63,6 +86,13 @@ define(['app', 'controllers/region-controller', 'apps/media/grid/views'], functi
         return new Grid.Views.GridView({
           collection: this.mediaCollection,
           mediaType: this.mediaType
+        });
+      };
+
+      Controller.prototype.deleteImage = function(imageModel) {
+        return imageModel.destroy({
+          allData: false,
+          wait: true
         });
       };
 

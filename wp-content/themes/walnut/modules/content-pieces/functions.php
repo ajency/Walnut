@@ -148,6 +148,7 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
         $content_layout= get_post_meta($id, 'layout_json', true);
 
         $content_layout = maybe_unserialize($content_layout);
+
         $content_elements = get_json_to_clone($content_layout);
 
         $excerpts = $content_elements['excerpt'];
@@ -475,6 +476,28 @@ function get_meta_values($element, $create = FALSE)
             }
         }
         $ele['elements'] = $element['elements'];
+    }
+
+    if ($element['element'] == 'Video' || $element['element'] == 'Audio' ){
+        $newUrls=array();
+        if (!is_multisite()) {
+            if($element['element'] == 'Video'){
+                $ele['videoUrl'] = replace_media_urls($ele['videoUrl']);
+                foreach($ele['videoUrls'] as $url){
+                    $url = replace_media_urls($url);
+                    $newUrls[]=$url;
+                }
+                $ele['videoUrls']=$newUrls;
+            }
+            if($element['element'] == 'Audio'){
+                $ele['audioUrl'] = replace_media_urls($ele['audioUrl']);
+                foreach($ele['audioUrls'] as $url){
+                    $url = replace_media_urls($url);
+                    $newUrls[]=$url;
+                }
+                $ele['audioUrls']=$newUrls;
+            }
+        }
     }
 
     $ele['meta_id'] = $create ? create_new_element($ele) : $element['meta_id'];

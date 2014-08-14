@@ -16,7 +16,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
 
       Controller.prototype.initialize = function(opts) {
         var view;
-        this.contentPiecesCollection = opts.contentPiecesCollection, this.contentGroupCollection = opts.contentGroupCollection;
+        this.contentPiecesCollection = opts.contentPiecesCollection, this.contentGroupCollection = opts.contentGroupCollection, this.groupType = opts.groupType;
         this.view = view = this._getContentSelectionView(this.contentPiecesCollection);
         this.show(this.view, {
           loading: true
@@ -47,7 +47,8 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       Controller.prototype._getContentSelectionView = function(collection) {
         return new DataContentTableView({
           collection: collection,
-          fullCollection: collection.clone()
+          fullCollection: collection.clone(),
+          groupType: this.groupType
         });
       };
 
@@ -61,13 +62,19 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         return DataContentItemView.__super__.constructor.apply(this, arguments);
       }
 
-      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td>{{content_type_str}}</td> <td class="cpHeight"> {{&present_in_str}} </td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>';
+      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> {{#isModule}} <td>{{content_type_str}}</td> {{/isModule}} {{#isQuiz}} <td>{{difficulty_level}}</td> {{/isQuiz}} <td class="cpHeight"> {{&present_in_str}} </td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>';
 
       DataContentItemView.prototype.tagName = 'tr';
 
       DataContentItemView.prototype.serializeData = function() {
-        var data, modules;
+        var data, modules, type, _ref;
         data = DataContentItemView.__super__.serializeData.call(this);
+        if (this.groupType === 'quiz') {
+          data.isQuiz = true;
+        }
+        if (this.groupType === 'teaching-module') {
+          data.isModule = true;
+        }
         data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
         data.sort_date = moment(data.post_modified).format("YYYYMMDD");
         data.content_type_str = _(data.content_type).chain().humanize().titleize().value();
@@ -75,8 +82,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         _.each(data.present_in_modules, function(ele, index) {
           return modules.push("<a target='_blank' href='#view-group/" + ele.id + "'>" + ele.name + "</a>");
         });
-        data.present_in_str = _.size(modules) > 0 ? _.toSentence(modules) : 'Not added to a module yet';
+        type = (_ref = data.content_type) === 'student_question' ? 'quiz' : 'teaching-module';
+        data.present_in_str = _.size(modules) > 0 ? _.toSentence(modules) : "Not added to a " + type + " yet";
         return data;
+      };
+
+      DataContentItemView.prototype.initialize = function() {
+        return this.groupType = Marionette.getOption(this, 'groupType');
       };
 
       return DataContentItemView;
@@ -117,9 +129,30 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
 
       DataContentTableView.prototype.itemViewContainer = '#dataContentTable tbody';
 
+      DataContentTableView.prototype.itemViewOptions = function() {
+        return {
+          groupType: Marionette.getOption(this, 'groupType')
+        };
+      };
+
       DataContentTableView.prototype.events = {
         'change #check_all_div': 'checkAll',
         'click #add-content-pieces': 'addContentPieces'
+      };
+
+      DataContentTableView.prototype.mixinTemplateHelpers = function(data) {
+        data = DataContentTableView.__super__.mixinTemplateHelpers.call(this, data);
+        if (this.groupType === 'quiz') {
+          data.isQuiz = true;
+        }
+        if (this.groupType === 'teaching-module') {
+          data.isModule = true;
+        }
+        return data;
+      };
+
+      DataContentTableView.prototype.initialize = function() {
+        return this.groupType = Marionette.getOption(this, 'groupType');
       };
 
       DataContentTableView.prototype.onShow = function() {

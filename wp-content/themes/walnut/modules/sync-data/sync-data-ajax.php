@@ -99,7 +99,13 @@ add_action( 'wp_ajax_nopriv_get-site-image-resources-data', 'get_site_image_reso
 function get_site_video_resources_data() {
 
     switch_to_blog( 1 );
-    $resource_data = get_videos_directory_json();
+
+    $originals=false;
+    if(isset($_REQUEST['originals']))
+        $originals= true;
+
+    $resource_data = get_videos_directory_json($originals);
+
     wp_die( json_encode( $resource_data ) );
 }
 
@@ -109,7 +115,12 @@ add_action( 'wp_ajax_nopriv_get-site-video-resources-data', 'get_site_video_reso
 function get_site_audio_resources_data() {
 
     switch_to_blog( 1 );
-    $resource_data = get_audio_directory_json();
+
+    $originals=false;
+    if(isset($_REQUEST['originals']))
+        $originals= true;
+
+    $resource_data = get_audio_directory_json($originals);
     wp_die( json_encode( $resource_data ) );
 }
 
@@ -119,12 +130,28 @@ add_action( 'wp_ajax_nopriv_get-site-audio-resources-data', 'get_site_audio_reso
 function ajax_sync_database(){
 
     $blog_id= $_REQUEST['blog_id'];
+    
+    $device_type = $_REQUEST['device_type'];
 
     $last_sync= (isset($_REQUEST['last_sync']))? $_REQUEST['last_sync']: '';
 
-    $export_details = export_tables_for_app($blog_id, $last_sync);
+    $export_details = export_tables_for_app($blog_id, $last_sync ,$device_type);
 
     wp_send_json($export_details);
 
 }
 add_action( 'wp_ajax_nopriv_sync-database', 'ajax_sync_database' );
+
+
+function ajax_check_blog_validity(){
+    $blog_id = $_REQUEST['blog_id'];
+
+    switch_to_blog( $blog_id );
+    
+    $resp['blog_meta'] = get_option('blog_meta');
+    $resp['server_time'] = date('Y-m-d H:i:s');
+    wp_send_json($resp);
+} 
+add_action( 'wp_ajax_nopriv_check-blog-validity', 'ajax_check_blog_validity' );
+add_action( 'wp_ajax_check-blog-validity', 'ajax_check_blog_validity' );
+

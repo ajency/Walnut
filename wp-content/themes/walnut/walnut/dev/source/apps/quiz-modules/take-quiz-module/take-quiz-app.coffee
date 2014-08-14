@@ -10,6 +10,7 @@ define ['app'
 
             #Single Question description and answers
             quizModel = null
+            quizResponseSummary = null
             questionsCollection = null
             questionResponseCollection = null
             questionResponseModel = null
@@ -20,7 +21,21 @@ define ['app'
             class View.TakeQuizController extends RegionController
 
                 initialize : (opts)->
-                    {quizModel,questionsCollection,questionResponseCollection,@textbookNames,@display_mode} = opts
+                    {quizModel,quizResponseSummary,questionsCollection,
+                    questionResponseCollection,@textbookNames,@display_mode} = opts
+
+                    if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
+                        data = 
+                            'status' : 'started'
+
+                        quizResponseSummary.save 'status' : 'started'
+                    
+                    @_startTakeQuiz()
+                
+                _startTakeQuiz:=>
+
+                    if not questionResponseCollection
+                        questionResponseCollection= App.request "create:empty:question:response:collection"
 
                     App.leftNavRegion.close()
                     App.headerRegion.close()
@@ -48,8 +63,6 @@ define ['app'
 
                     @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
 
-                    @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
-
                     @listenTo @layout.questionDisplayRegion, "show:alert:popup", @_showPopup
 
                     @listenTo @layout.quizTimerRegion, "show:alert:popup", @_showPopup
@@ -67,19 +80,20 @@ define ['app'
 
                 _submitQuestion:(answer)->
                     #save results here
-
+                    
                     totalTime =@timerObject.request "get:elapsed:time"
                     timeTaken= totalTime - timeBeforeCurrentQuestion
                     timeBeforeCurrentQuestion= totalTime
 
                     data =
-                        'collection_id'     : quizModel.id
+                        'summary_id'     : quizResponseSummary.id
                         'content_piece_id'  : questionModel.id
                         'question_response' : answer.toJSON()
                         'status'            : answer.get 'status'
+                        'marks_scored'      : answer.get 'marks'
                         'time_taken'        : timeTaken
 
-                    newResponseModel = App.request "create:quiz:response:model", data
+                    newResponseModel = App.request "create:quiz:question:response:model", data
 
                     quizResponseModel = questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
 
@@ -91,6 +105,8 @@ define ['app'
                     else
                         quizResponseModel = newResponseModel
                         questionResponseCollection.add newResponseModel
+
+                    quizResponseModel.save() if quizModel.get('quiz_type') is 'test'
 
                     @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
@@ -136,12 +152,23 @@ define ['app'
 
                             @_submitQuestion answerModel
 
+                    quizResponseSummary.set 
+                        'status'            : 'completed' 
+                        'total_time_taken'  : timeBeforeCurrentQuestion
+                        'num_skipped'       : _.size questionResponseCollection.where 'status': 'skipped'
+                        'total_marks_scored': _.reduce questionResponseCollection.pluck('marks_scored'), (memo, num)->
+                            parseInt memo + parseInt num
+
+                    quizResponseSummary.save() if quizModel.get('quiz_type') is 'test'
+                    
+                        
 
                     App.execute "show:single:quiz:app",
-                        region: App.mainContentRegion
-                        quizModel: quizModel
-                        questionsCollection: questionsCollection
-                        questionResponseCollection: questionResponseCollection
+                        region                      : App.mainContentRegion
+                        quizModel                   : quizModel
+                        questionsCollection         : questionsCollection
+                        questionResponseCollection  : questionResponseCollection
+                        quizResponseSummary         : quizResponseSummary
 
                 _getUnansweredIDs:->
                     
@@ -213,7 +240,6 @@ define ['app'
 
                 #after confirm box yes is clicked on dialog region
                 _handlePopups:(message_type)->
-                    console.log message_type
                     switch message_type
                         when 'end_quiz' then @_endQuiz()
                         when 'quiz_time_up' then @_endQuiz()

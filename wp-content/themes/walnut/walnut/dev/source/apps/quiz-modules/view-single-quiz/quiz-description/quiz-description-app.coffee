@@ -6,7 +6,7 @@ define ['app'
 
             initialize : (opts)->
 
-                {@model,@textbookNames, @display_mode}= opts
+                {@model,@textbookNames, @display_mode,@quizResponseSummary}= opts
 
                 @view = view = @_getQuizDescriptionView()
 
@@ -24,6 +24,7 @@ define ['app'
                 new QuizDetailsView
                     model : @model
                     display_mode: @display_mode
+                    quizResponseSummary: @quizResponseSummary
 
                     templateHelpers:
                         getTextbookName     :=> @textbookNames.getTextbookName terms
@@ -43,21 +44,46 @@ define ['app'
             serializeData:->
                 data = super data
                 display_mode =  Marionette.getOption @, 'display_mode'
-                data.answer_printing = true if @model.hasPermission('answer_printing') and display_mode in ['replay','disable_quiz_replay']
+                data.answer_printing = true if @model.hasPermission('answer_printing') and display_mode is 'replay'
+
+                data.practice_mode =true if @model.get('quiz_type') is 'practice'
+
+                responseSummary = Marionette.getOption @, 'quizResponseSummary'
+
+                if responseSummary.get('status') is 'completed'
+                    data.responseSummary    = true
+                    data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
+                    data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
+                    data.display_marks = true if @model.hasPermission 'display_answer'
+                    data.total_marks_scored = responseSummary.get 'total_marks_scored'
+                    
+                    if responseSummary.get('taken_on')
+                        data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
+                    else 
+                        data.taken_on_date = moment().format("Do MMM YYYY")
+
+                data.negMarksEnable= _.toBool data.negMarksEnable
+                
                 data  
 
             onShow:->
+
+                responseSummary = Marionette.getOption @, 'quizResponseSummary'
+                if responseSummary.get('status') is 'started'                    
+                    @$el.find "#take-quiz"
+                    .html 'Continue'
+
+
+
                 if Marionette.getOption(@, 'display_mode') is 'replay'
-                    @$el.find "#take-quiz"
-                    .html 'Replay'
 
-                if Marionette.getOption(@, 'display_mode') is 'disable_quiz_replay'
-                    @$el.find "#take-quiz"
-                    .remove()
-
-
-
-
+                    if @model.hasPermission 'disable_quiz_replay'
+                        @$el.find "#take-quiz"
+                        .remove()
+                    else
+                        @$el.find "#take-quiz"
+                        .html 'Replay'
+                    
 
         # set handlers
         App.commands.setHandler "show:view:quiz:detailsapp", (opt = {})->
