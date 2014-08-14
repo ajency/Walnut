@@ -21,16 +21,19 @@ define ['app'
                                     <button type="button" style="display:none" id="next-question" class="btn btn-info pull-right">
                                         Next <i class="fa fa-forward"></i> 
                                     </button>
-                                    {{#allow_skip}}
-                                    <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small h-center block">
-                                        <i class="fa fa-refresh"></i> Skip 
-                                    </button>
-                                    {{/allow_skip}}
-                                    {{#show_hint}}
-                                    <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small h-center block">
-                                        <i class="fa fa-refresh"></i> Show Hint
-                                    </button>
-                                    {{/show_hint}}
+
+                                    <div class="text-center">
+                                        {{#show_hint}}
+                                        <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10">
+                                            <i class="fa fa-lightbulb-o"></i> Hint
+                                        </button>
+                                        {{/show_hint}}
+                                        {{#allow_skip}}
+                                        <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small">
+                                            Skip <i class="fa fa-step-forward"></i>
+                                        </button>
+                                        {{/allow_skip}}
+                                    </div>
                                     <div class="clearfix"></div>
                                 </div>                                
 

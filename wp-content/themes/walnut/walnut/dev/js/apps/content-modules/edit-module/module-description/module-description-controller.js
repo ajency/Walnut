@@ -18,7 +18,9 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
 
       Controller.prototype.initialize = function(opts) {
         this.model = opts.model;
-        this.textbooksCollection = App.request("get:textbooks");
+        this.textbooksCollection = App.request("get:textbooks", {
+          "fetch_all": true
+        });
         return App.execute("when:fetched", [this.textbooksCollection], this.showView);
       };
 

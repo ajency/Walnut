@@ -65,6 +65,11 @@ define(['marionette'], function(Marionette) {
           trigger: true
         });
       }
+      if (user.current_user_can('student')) {
+        App.navigate('students/dashboard', {
+          trigger: true
+        });
+      }
       App.execute("show:breadcrumbapp", {
         region: App.breadcrumbRegion
       });

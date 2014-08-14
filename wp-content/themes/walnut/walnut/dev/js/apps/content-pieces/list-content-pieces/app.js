@@ -13,7 +13,9 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
       }
 
       ListController.prototype.initialize = function() {
-        this.textbooksCollection = App.request("get:textbooks");
+        this.textbooksCollection = App.request("get:textbooks", {
+          "fetch_all": true
+        });
         this.contentPiecesCollection = App.request("get:content:pieces");
         this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
         this.layout = this._getContentPiecesLayout();

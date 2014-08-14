@@ -42,17 +42,6 @@ define ['app'
 
                     data.class_string = class_string;
 
-
-                subjects = @model.get 'subjects'
-                if subjects
-                    item_subjects = _.sortBy subjects, (subject)->subject
-                    subject_string = ''
-                    for subject in item_subjects
-                        subject_string += subject
-                        subject_string += ', ' if _.last(item_subjects) != subject
-
-                    data.subject_string = subject_string;
-
                 data
 
 

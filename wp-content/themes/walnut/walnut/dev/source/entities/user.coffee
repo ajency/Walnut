@@ -44,6 +44,12 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					userCollection
 
+				getUserData:(key)->
+					data=loggedInUser.get 'data'
+					console.log data[key]
+					data[key]
+
+
 			App.reqres.setHandler "get:user:model", ->
 				loggedInUser	
 
@@ -52,3 +58,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:user:collection",(opts) ->
 				API.getUsers opts
+
+			App.reqres.setHandler "get:user:data",(key)->
+				API.getUserData key

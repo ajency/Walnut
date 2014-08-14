@@ -22,10 +22,16 @@ define ['app'
                     @contentGroupsCollection = App.request "get:content:groups",
                         'textbook': textbookID
                         'division': @division
-                else
+
+                else if @mode is 'take-class'
                     @contentGroupsCollection = App.request "get:content:groups",
                         'textbook': textbookID
                         'division': @division
+
+                else if @mode is 'take-quiz'
+                    @contentGroupsCollection = App.request "get:quizes",
+                        'textbook': textbookID
+                        'user_id': App.request "get:user:data", "ID"
 
                 @chaptersCollection= App.request "get:chapters", ('parent' : textbookID)
 

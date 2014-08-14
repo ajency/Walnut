@@ -66,6 +66,12 @@ define(["app", 'backbone'], function(App, Backbone) {
           data: params
         });
         return userCollection;
+      },
+      getUserData: function(key) {
+        var data;
+        data = loggedInUser.get('data');
+        console.log(data[key]);
+        return data[key];
       }
     };
     App.reqres.setHandler("get:user:model", function() {
@@ -74,8 +80,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:loggedin:user:id", function() {
       return loggedInUser.get('ID');
     });
-    return App.reqres.setHandler("get:user:collection", function(opts) {
+    App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);
+    });
+    return App.reqres.setHandler("get:user:data", function(key) {
+      return API.getUserData(key);
     });
   });
 });

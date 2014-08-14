@@ -9,7 +9,7 @@ define ['app'
                 {@collection,@model,@filters,@selectedFilterParamsObject}=opts
 
                 @filters = ['textbooks', 'chapters','sections','subsections'] if not @filters
-                @textbooksCollection = App.request "get:textbooks"
+                @textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
                 @selectedFilterParamsObject.setHandler "get:selected:parameters", =>
                     textbook_filters= $(@view.el).find 'select.textbook-filter'

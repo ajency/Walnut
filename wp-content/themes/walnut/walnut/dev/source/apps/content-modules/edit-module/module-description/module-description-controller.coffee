@@ -9,7 +9,7 @@ define ['app'
             initialize : (opts)->
                 {@model}= opts
 
-                @textbooksCollection = App.request "get:textbooks"
+                @textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
                 App.execute "when:fetched", [@textbooksCollection], @showView
 
