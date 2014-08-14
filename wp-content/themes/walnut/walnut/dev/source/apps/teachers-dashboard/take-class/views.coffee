@@ -68,10 +68,12 @@ define ['app'
 			onShow:->
 
 				if  Marionette.getOption(@,'mode') is 'take-quiz'
-					@$el.addClass 'myClass'
+					@$el.find "#textbooks"
+					.addClass 'myClass'
 
 				else 
-					@$el.addClass 'takeClass'
+					@$el.find "#textbooks"
+					.addClass 'takeClass'
 
 				@$el.find('#textbooks').mixitup
 					layoutMode: 'list', # Start in list mode (display: block) by default

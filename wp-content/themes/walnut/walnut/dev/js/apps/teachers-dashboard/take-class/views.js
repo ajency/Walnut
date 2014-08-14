@@ -84,9 +84,9 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
 
       TextbooksListView.prototype.onShow = function() {
         if (Marionette.getOption(this, 'mode') === 'take-quiz') {
-          this.$el.addClass('myClass');
+          this.$el.find("#textbooks").addClass('myClass');
         } else {
-          this.$el.addClass('takeClass');
+          this.$el.find("#textbooks").addClass('takeClass');
         }
         this.$el.find('#textbooks').mixitup({
           layoutMode: 'list',
