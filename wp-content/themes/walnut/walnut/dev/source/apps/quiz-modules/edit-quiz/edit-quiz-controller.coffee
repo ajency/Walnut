@@ -17,7 +17,7 @@ define ['app'
                 else
                     @quizModel = App.request "new:quiz"
 
-                @textbooksCollection = App.request "get:textbooks"
+                @textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
                 App.execute "when:fetched", [@quizModel,@textbooksCollection], =>
                     @showQuizEditView()

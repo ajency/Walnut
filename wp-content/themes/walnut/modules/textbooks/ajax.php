@@ -9,10 +9,12 @@ function fetch_textbooks() {
     
     $args=$_GET;
     
-    $defaults = array(
-            'parent' => 0,
-            'fetch_all' => ($_GET['class_id'])?false:true
-        );
+    $defaults['parent']= 0;
+    
+    if(isset($_GET['parent']))
+      $defaults['fetch_all']= true;
+
+
     $args = wp_parse_args($args, $defaults);
     $textbooks=get_textbooks($args);
     

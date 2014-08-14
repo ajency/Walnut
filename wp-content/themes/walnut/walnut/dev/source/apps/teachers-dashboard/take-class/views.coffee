@@ -38,6 +38,13 @@ define ['app'
 
 				data.url= '#'+route+'/textbook/'+ @model.get 'term_id'
 
+
+				mode = Marionette.getOption @, 'mode'
+
+				if mode is 'take-quiz' 
+					data.take_quiz = true
+
+
 				data
 
 		class EmptyView extends Marionette.ItemView
@@ -57,6 +64,20 @@ define ['app'
 
 			itemViewContainer : 'ul.textbooks_list'
 
+			itemViewOptions:->
+				data = mode: Marionette.getOption @,'mode'
+
+
+			serializeData:->
+				data=super()
+
+				mode = Marionette.getOption @,'mode'
+
+				data.take_quiz = true if mode is 'take-quiz' 
+
+				data
+
+
 			onShow:->
 
 				@$el.find('#textbooks').mixitup
@@ -72,3 +93,4 @@ define ['app'
 				$("li.txtbook").click ->
 				  window.location = $(this).find("a").attr("href")
 				  false
+

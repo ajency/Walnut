@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/take-class/templates/class-description.html', 'apps/teachers-dashboard/take-class/views'], function(App, RegionController, classDescriptionTpl) {
@@ -10,15 +11,16 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
       __extends(TakeClassController, _super);
 
       function TakeClassController() {
+        this._showTextbooksListView = __bind(this._showTextbooksListView, this);
         return TakeClassController.__super__.constructor.apply(this, arguments);
       }
 
       TakeClassController.prototype.initialize = function(opts) {
-        var breadcrumb_items, breadcrumb_label, layout;
-        console.log(opts);
+        var breadcrumb_items, breadcrumb_label, layout, _ref;
         this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
         breadcrumb_label = 'Start Training';
-        if (this.mode === 'take-class') {
+        console.log(this.mode);
+        if ((_ref = this.mode) === 'take-class' || _ref === 'take-quiz') {
           divisionModel = App.request("get:division:by:id", this.division);
           breadcrumb_label = 'Take Class';
         } else {
@@ -36,10 +38,16 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
-        textbooks = App.request("get:textbooks", {
-          class_id: this.classID,
-          division: this.division
-        });
+        if (this.mode === 'take-quiz') {
+          textbooks = App.request("get:textbooks", {
+            user_id: App.request("get:user:data", "ID")
+          });
+        } else {
+          textbooks = App.request("get:textbooks", {
+            class_id: this.classID,
+            division: this.division
+          });
+        }
         this.layout = layout = this._getTrainingModuleLayout();
         this.show(layout, {
           loading: true,
@@ -53,7 +61,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
           return function() {
             var classDescriptionView, textbookListView;
             textbookListView = new View.TakeClass.TextbooksListView({
-              collection: textbooks
+              collection: textbooks,
+              mode: _this.mode
             });
             classDescriptionView = new ClassDescriptionView({
               templateHelpers: {

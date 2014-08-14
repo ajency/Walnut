@@ -24,7 +24,7 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
       };
 
       TextbooksItemView.prototype.serializeData = function() {
-        var data, item_subjects, route, subject, subject_string, subjects, _i, _len;
+        var data, item_subjects, mode, route, subject, subject_string, subjects, _i, _len;
         data = TextbooksItemView.__super__.serializeData.call(this);
         subjects = this.model.get('subjects');
         if (subjects) {
@@ -43,6 +43,10 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
         }
         route = App.getCurrentRoute();
         data.url = '#' + route + '/textbook/' + this.model.get('term_id');
+        mode = Marionette.getOption(this, 'mode');
+        if (mode === 'take-quiz') {
+          data.take_quiz = true;
+        }
         return data;
       };
 
@@ -77,6 +81,23 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
       TextbooksListView.prototype.emptyView = EmptyView;
 
       TextbooksListView.prototype.itemViewContainer = 'ul.textbooks_list';
+
+      TextbooksListView.prototype.itemViewOptions = function() {
+        var data;
+        return data = {
+          mode: Marionette.getOption(this, 'mode')
+        };
+      };
+
+      TextbooksListView.prototype.serializeData = function() {
+        var data, mode;
+        data = TextbooksListView.__super__.serializeData.call(this);
+        mode = Marionette.getOption(this, 'mode');
+        if (mode === 'take-quiz') {
+          data.take_quiz = true;
+        }
+        return data;
+      };
 
       TextbooksListView.prototype.onShow = function() {
         this.$el.find('#textbooks').mixitup({

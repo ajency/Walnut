@@ -19,7 +19,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edi
         } else {
           this.quizModel = App.request("new:quiz");
         }
-        this.textbooksCollection = App.request("get:textbooks");
+        this.textbooksCollection = App.request("get:textbooks", {
+          "fetch_all": true
+        });
         return App.execute("when:fetched", [this.quizModel, this.textbooksCollection], (function(_this) {
           return function() {
             return _this.showQuizEditView();

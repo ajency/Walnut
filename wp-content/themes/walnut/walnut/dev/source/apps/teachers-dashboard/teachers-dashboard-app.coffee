@@ -59,7 +59,7 @@ define ['app'
                 App.execute "show:take:class:textbooks:app",
                     region: App.mainContentRegion,
                     division: division
-                    mode        : 'take-class'
+                    mode        : 'take-quiz'
 
 
             studentsQuizModules: (tID) ->

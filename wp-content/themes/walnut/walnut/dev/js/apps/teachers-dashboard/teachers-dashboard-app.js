@@ -68,7 +68,7 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
         return App.execute("show:take:class:textbooks:app", {
           region: App.mainContentRegion,
           division: division,
-          mode: 'take-class'
+          mode: 'take-quiz'
         });
       },
       studentsQuizModules: function(tID) {

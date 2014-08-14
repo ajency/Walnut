@@ -193,7 +193,6 @@ add_action( 'edited_textbook', 'save_extra_taxonomy_fields', 10, 2 );
  */
 
 function get_textbooks( $args = array() ) {
-
     // set defaults
     $defaults = array(
         'hide_empty'    => false,
@@ -233,8 +232,9 @@ function get_textbooks( $args = array() ) {
 
     //get textbooks for logged in user depending on the class the user belongs to
     //generally used for logged in students
-    else
+    else{
         $textbooks = get_textbooks_for_user( $user_id );
+    }
 
 
     if (is_wp_error( $textbooks ))
@@ -317,10 +317,15 @@ function get_book( $book, $division=0 ) {
     $book_dets->classes = maybe_unserialize( $classes['class_id'] );
     $book_dets->subjects = maybe_unserialize( $classes['tags'] );
 
+    if($division)
+        $module_type = 'teaching-module';
+    else
+        $module_type = 'quiz';
+
     $modules_count_query=$wpdb->prepare("
         SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
-            WHERE term_ids LIKE %s AND post_status like %s",
-        array('%"'. $book_id . '";%', 'publish')
+            WHERE term_ids LIKE %s AND post_status like %s AND type like %s",
+        array('%"'. $book_id . '";%', 'publish', $module_type)
     );
     $modules_count = $wpdb->get_row( $modules_count_query );
     $book_dets->modules_count = $modules_count->count;
@@ -492,10 +497,9 @@ function get_textbooks_for_user( $user_id = '' ) {
     $data = array();
 
     $txtbooks_assigned = get_assigned_textbooks( $user_id );
-
     if (is_array( $txtbooks_assigned )) {
         foreach ($txtbooks_assigned as $book) {
-            $bookdets = get_book( $book->textbook_id );
+            $bookdets = get_book( $book );
             $data[] = $bookdets;
         }
     }

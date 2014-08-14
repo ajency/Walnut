@@ -585,16 +585,16 @@ function getLoggedInUserModel(){
     $userModel='';
     if($user_data){
         $userdata = __u::toArray($user_data);
-        unset($userdata['data']);
-        $userdata['display_name']= $user_data->display_name;
-        $userdata['user_email']= $user_data->user_email;
-        $userdata['division']= get_user_meta($user_data->ID,'student_division',true);
+        $userdata['data'] = __u::toArray($userdata['data']);
+        $userdata['data']['display_name']= $user_data->display_name;
+        $userdata['data']['user_email']= $user_data->user_email;
+        $userdata['data']['division']= get_user_meta($user_data->ID,'student_division',true);
 
         $userModel="USER={}\n";
 
         foreach ($userdata as $key => $value) {
         
-            if(in_array($key,array('caps','roles','allcaps'))) {
+            if(in_array($key,array('caps','roles','allcaps','data'))) {
 
                 $userModel .= "USER['$key']={}\n";
 
