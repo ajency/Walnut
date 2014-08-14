@@ -101,6 +101,29 @@ function setup_childsite_tables() {
 
     $wpdb->query( $question_response_meta_table );
 
+    $quiz_summary_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}quiz_response_summary` (
+        `summary_id` varchar(30) NOT NULL,
+        `collection_id` int(11) NOT NULL,
+        `student_id` bigint(20) NOT NULL,
+        `taken_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `quiz_meta` text NOT NULL,
+        PRIMARY KEY (`summary_id`)
+      )";
+
+    $wpdb->query( $quiz_summary_table );
+
+    $quiz_responses_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}quiz_question_response` (
+        `qr_id` varchar(50) NOT NULL,
+        `summary_id` varchar(30) NOT NULL,
+        `content_piece_id` bigint(20) NOT NULL,
+        `question_response` text NOT NULL,
+        `time_taken` int(11) NOT NULL,
+        `marks_scored` int(11) NOT NULL DEFAULT '0',
+        `status` varchar(30) NOT NULL,
+        PRIMARY KEY (`qr_id`)
+      )";
+
+    $wpdb->query( $quiz_responses_table );
 
     $sync_apps_data_query = "
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_apps_data` (

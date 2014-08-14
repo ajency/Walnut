@@ -492,8 +492,6 @@ function delete_site_content(){
     
     $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}content_collection`");
     $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}collection_meta`");
-    $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}question_response`");
-    $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}question_response_meta`");
     
     $posts_table_query=$wpdb->prepare(
             "SELECT ID FROM {$wpdb->prefix}posts
@@ -510,8 +508,8 @@ function delete_site_content(){
    }
 
    if(!empty($post_ids)){
-    $wpdb->query("DELETE FROM `{$wpdb->prefix}posts` where ID IN (".implode(',',$post_ids).")");
-    $wpdb->query("DELETE FROM `{$wpdb->prefix}post_meta` where post_id IN (".implode(',',$post_ids).")");
+    $wpdb->query("DELETE FROM `{$wpdb->prefix}posts` where ID IN (".implode($post_ids).")");
+    $wpdb->query("DELETE FROM `{$wpdb->prefix}postmeta` where post_id IN (".implode($post_ids).")");
    }
 
 }
@@ -522,12 +520,14 @@ function delete_site_content(){
 function cron_check_school_valid(){
        global $wpdb;
        
-       if(!is_multisite()){
-            $qry_last_import = "SELECT last_sync FROM {$wpdb->prefix}sync_local_data
-                                             WHERE status =  'imported'  
-                                             ORDER BY id DESC";
-           $last_sync_date = $wpdb->get_var($qry_last_import);
 
+       if(!is_multisite()){
+
+       $qry_last_import = "SELECT last_sync FROM {$wpdb->prefix}sync_local_data
+                                        WHERE status =  'imported'  
+                                        ORDER BY id DESC LIMIT 1";
+       $last_sync_date = $wpdb->get_var($qry_last_import);
+      
            if($last_sync_date){
 
                  $expirytime = strtotime("+30 days",strtotime($last_sync_date));
@@ -541,3 +541,38 @@ function cron_check_school_valid(){
        }
 }
 add_action('scheduled_school_validity', 'cron_check_school_valid');
+
+
+function get_sync_log_devices(){
+    global $wpdb;
+    
+    $qry = "SELECT * , MAX( sync_date) as last_sync FROM {$wpdb->prefix}sync_device_log GROUP BY blog_id,device_type ";
+    
+    $qry_results = $wpdb->get_results( $qry );
+    
+    $resultset = '';
+    if(count($qry_results) > 0){
+        foreach ($qry_results as $device) {
+               $blog_details = get_blog_details($device->blog_id);
+               $last_sync = strtotime($device->last_sync);
+               $currentdate = date('Y-m-d');
+               $last_syncdate = date('Y-m-d',$last_sync);
+
+               if($currentdate == $last_syncdate){
+                   $days_between = 'Today';
+               }else{
+                   $days_between = (ceil(abs(strtotime($currentdate) - $last_sync) / 86400) - 1).' days ago';
+               }
+               $resultset .='<tr>';
+               $resultset .='<td>'.$blog_details->blogname.'</td>';
+               $resultset .='<td>'.$device->device_type.'</td>';
+               $resultset .='<td>'.$days_between.'</td>';
+               $resultset .='</tr>';
+           }
+    }
+    else{
+        $resultset .='<tr><td colspan="3">No Results found</td> </tr>';
+    }
+        
+    return  $resultset;  
+}

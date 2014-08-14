@@ -10,6 +10,7 @@ define ['app'
                 'edit-quiz/:id' : 'editQuiz'
                 'quiz-list'     : 'showQuizList'
                 'view-quiz/:id' : 'viewQuiz'
+                'students/dashboard/textbook/:tID/quiz/:qID': 'startQuizClassMode'
 
 
         Controller =
@@ -18,6 +19,11 @@ define ['app'
                 new QuizModuleApp.ViewQuiz.Controller
                     region: App.mainContentRegion
                     quiz_id: id
+
+            startQuizClassMode:(tID,qID)->
+                new QuizModuleApp.ViewQuiz.Controller
+                    region: App.mainContentRegion
+                    quiz_id: qID
 
             createQuiz : ->
                 App.execute 'show:edit:module:controller',
