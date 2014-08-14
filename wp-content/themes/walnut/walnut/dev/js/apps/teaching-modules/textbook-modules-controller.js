@@ -38,7 +38,7 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
         } else if (this.mode === 'take-quiz') {
           this.contentGroupsCollection = App.request("get:quizes", {
             'textbook': textbookID,
-            'division': this.division
+            'user_id': App.request("get:user:data", "ID")
           });
         }
         this.chaptersCollection = App.request("get:chapters", {

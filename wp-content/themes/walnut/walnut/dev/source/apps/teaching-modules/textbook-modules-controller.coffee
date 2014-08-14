@@ -31,7 +31,7 @@ define ['app'
                 else if @mode is 'take-quiz'
                     @contentGroupsCollection = App.request "get:quizes",
                         'textbook': textbookID
-                        'division': @division
+                        'user_id': App.request "get:user:data", "ID"
 
                 @chaptersCollection= App.request "get:chapters", ('parent' : textbookID)
 
