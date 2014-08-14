@@ -170,6 +170,8 @@ define ['jquery', 'underscore'], ($, _)->
 
         content_post_status = _this.$el.find('#content-post-status-filter').val()
 
+        quiz_type = _this.$el.find('#quiz-type-filter').val()
+
         difficulty_level = parseInt _this.$el.find('#difficulty-level-filter').val()
 
         if content_type
@@ -180,6 +182,9 @@ define ['jquery', 'underscore'], ($, _)->
 
         if content_post_status
             filterCollection.reset  filterCollection.where 'post_status': content_post_status
+
+        if quiz_type
+            filterCollection.reset  filterCollection.where 'quiz_type': quiz_type            
 
         if difficulty_level
             filterCollection.reset filterCollection.where 'difficulty_level' : difficulty_level
