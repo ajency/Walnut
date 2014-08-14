@@ -24,20 +24,9 @@ define ['app'
 			serializeData : ->
 				data = super()
 
-				subjects =@model.get 'subjects'
-				if subjects
-					item_subjects= _.sortBy(subjects, (num)-> num)
-					subject_string= ''
-					for subject in item_subjects
-						subject_string += subject
-						subject_string += ', ' if _.last(item_subjects)!=subject
-
-					data.subject_string= subject_string;
-
 				route= App.getCurrentRoute()
 
 				data.url= '#'+route+'/textbook/'+ @model.get 'term_id'
-
 
 				mode = Marionette.getOption @, 'mode'
 
@@ -54,13 +43,11 @@ define ['app'
 
 		class TakeClass.TextbooksListView extends Marionette.CompositeView
 
-			template : textbooksListTpl
-
-			className : ''
+			template 	: textbooksListTpl
 
 			itemView 	: TextbooksItemView
 
-			emptyView  : EmptyView
+			emptyView  	: EmptyView
 
 			itemViewContainer : 'ul.textbooks_list'
 
@@ -79,6 +66,12 @@ define ['app'
 
 
 			onShow:->
+
+				if  Marionette.getOption(@,'mode') is 'take-quiz'
+					@$el.addClass 'myClass'
+
+				else 
+					@$el.addClass 'takeClass'
 
 				@$el.find('#textbooks').mixitup
 					layoutMode: 'list', # Start in list mode (display: block) by default
