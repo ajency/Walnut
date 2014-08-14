@@ -484,3 +484,37 @@ function read_folder_directory( $dir, $base_URL = '' ) {
     return $listDir;
 }
 
+
+function get_sync_log_devices(){
+    global $wpdb;
+    
+    $qry = "SELECT * , MAX( sync_date) as last_sync FROM {$wpdb->prefix}sync_device_log GROUP BY blog_id,device_type ";
+    
+    $qry_results = $wpdb->get_results( $qry );
+    
+    $resultset = '';
+    if(count($qry_results) > 0){
+        foreach ($qry_results as $device) {
+               $blog_details = get_blog_details($device->blog_id);
+               $last_sync = strtotime($device->last_sync);
+               $currentdate = date('Y-m-d');
+               $last_syncdate = date('Y-m-d',$last_sync);
+
+               if($currentdate == $last_syncdate){
+                   $days_between = 'Today';
+               }else{
+                   $days_between = (ceil(abs(strtotime($currentdate) - $last_sync) / 86400) - 1).' days ago';
+               }
+               $resultset .='<tr>';
+               $resultset .='<td>'.$blog_details->blogname.'</td>';
+               $resultset .='<td>'.$device->device_type.'</td>';
+               $resultset .='<td>'.$days_between.'</td>';
+               $resultset .='</tr>';
+           }
+    }
+    else{
+        $resultset .='<tr><td colspan="3">No Results found</td> </tr>';
+    }
+        
+    return  $resultset;  
+}
