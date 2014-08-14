@@ -27,14 +27,14 @@ define(['app', 'apps/content-modules/edit-module/module-edit-controller', 'apps/
       addModule: function() {
         return new ContentModulesApp.Edit.GroupController({
           region: App.mainContentRegion,
-          groupType: 'module'
+          groupType: 'teaching-module'
         });
       },
       editModule: function(id) {
         return new ContentModulesApp.Edit.GroupController({
           region: App.mainContentRegion,
           group_id: id,
-          groupType: 'module'
+          groupType: 'teaching-module'
         });
       },
       viewModule: function(id) {
@@ -64,7 +64,7 @@ define(['app', 'apps/content-modules/edit-module/module-edit-controller', 'apps/
       modulesListing: function() {
         return new ContentModulesApp.ModulesListing.ListController({
           region: App.mainContentRegion,
-          groupType: 'module'
+          groupType: 'teaching-module'
         });
       },
       takeClassSingleModule: function(classID, div, tID, mID) {

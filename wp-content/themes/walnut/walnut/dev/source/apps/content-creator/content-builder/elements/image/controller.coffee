@@ -16,6 +16,14 @@ define ['app'
                     image_id: 0
                     size: 'thumbnail'
                     align: 'left'
+                    heightRatio : 'auto'
+                    topRatio : 0
+
+                if options.modelData.heightRatio isnt 'auto'
+                    options.modelData.heightRatio =  parseFloat options.modelData.heightRatio
+
+                if _.isNaN options.modelData.topRatio
+                    options.modelData.topRatio = 0
 
                 super(options)
 
@@ -35,8 +43,11 @@ define ['app'
                 alignment: @layout.model.get 'align'
 
             _getImageView: (imageModel)->
+                
                 new Image.Views.ImageView
                     model: imageModel
+                    imageHeightRatio : @layout.model.get 'heightRatio'
+                    positionTopRatio : parseFloat @layout.model.get 'topRatio'
                     templateHelpers: @_getTemplateHelpers()
 
 
@@ -46,14 +57,15 @@ define ['app'
                 # get logo attachment
                 imageModel = App.request "get:media:by:id", @layout.model.get 'image_id'
 
-                console.log "imageModel "
-#                console.log imageModel
 
                 App.execute "when:fetched", imageModel, =>
                     view = @_getImageView imageModel
 
                     #trigger media manager popup and start listening to "media:manager:choosed:media" event
-                    @listenTo view, "show:media:manager", =>
+                    @listenTo view, "show:media:manager", (ratio = false)=>
+
+                        App.currentImageRatio = ratio
+
                         App.execute "show:media:manager:app",
                             region: App.dialogRegion
                             mediaType: 'image'
@@ -61,17 +73,29 @@ define ['app'
                         @listenTo App.vent, "media:manager:choosed:media", (media)=>
                             @layout.model.set 'image_id', media.get 'id'
                             # @layout.model.save()
+                            App.currentImageRatio = false
                             @stopListening App.vent, "media:manager:choosed:media"
 
                         @listenTo App.vent, "stop:listening:to:media:manager", =>
+                            App.currentImageRatio = false
                             @stopListening App.vent, "media:manager:choosed:media"
 
                     @listenTo view, "image:size:selected", (size)=>
                         @layout.model.set 'size', size
                         @layout.model.save()
-#                        localStorage.setItem 'ele' + @layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
-#                        console.log localStorage.getItem 'ele' + @layout.model.get('meta_id')
 
+                    @listenTo view, 'set:image:height',(height,width)=>
+                        @layout.model.set 'height', height
+                        if height is 'auto'
+                            @layout.model.set 'heightRatio','auto'
+                        else
+                            @layout.model.set 'heightRatio',height/width
+                        @layout.model.save()
+
+                    @listenTo view, 'set:image:top:position',(width,top)=>
+                        @layout.model.set 'top',top
+                        @layout.model.set 'topRatio',top/width
+                        @layout.model.save()
 
                     @layout.elementRegion.show view
 							

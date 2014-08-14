@@ -19,6 +19,7 @@ define ['app'], (App)->
                 #localStorage.setItem 'layout',JSON.stringify _json
 
                 data = contentPieceModel.toJSON()
+                delete data.layout
                 data.action = 'save-content-piece-json'
                 data.json = _json
 

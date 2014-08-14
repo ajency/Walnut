@@ -479,9 +479,5 @@ function sds_update_data_imported(){
     global $wpdb;
     
     $wpdb->query("UPDATE `{$wpdb->prefix}posts` SET guid = replace(guid, '".REMOTE_SERVER_URL."','".site_url()."')");
-    
-    $wpdb->query("UPDATE `{$wpdb->prefix}postmeta` SET meta_value = replace(meta_value, '".REMOTE_SERVER_URL."','".site_url()."')");
-    
-    $wpdb->query("UPDATE `{$wpdb->prefix}options` SET option_value = replace(option_value, '".REMOTE_SERVER_URL."','".site_url()."')");
 
 }

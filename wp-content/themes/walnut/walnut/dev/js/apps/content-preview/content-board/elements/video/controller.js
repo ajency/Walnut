@@ -58,6 +58,12 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         return App.execute("when:fetched", videoCollection, (function(_this) {
           return function() {
             var view;
+            _this.layout.model.set({
+              'videoUrl': _.first(videoCollection.pluck('url'))
+            });
+            _this.layout.model.set({
+              'videoUrls': videoCollection.pluck('url')
+            });
             view = _this._getVideoView();
             return _this.layout.elementRegion.show(view);
           };

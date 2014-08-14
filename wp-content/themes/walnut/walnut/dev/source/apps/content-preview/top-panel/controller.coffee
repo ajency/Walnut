@@ -85,76 +85,23 @@ define ['app'
                     timeLeftOrElapsed : @_timeLeftOrElapsed()
 
                     templateHelpers :
-                        getClass : @_getClass
-                        getTextbookName : _.bind @_getTextbookName , @, terms
-                        getChapterName : _.bind @_getChapterName, @, terms
-                        getSectionsNames : _.bind @_getSectionsNames, @, terms
-                        getSubSectionsNames : _.bind @_getSubSectionsNames, @, terms
+                        getClass :=> @textbookModel.getClasses()
+                        getTextbookName :=> @textbookNames.getTextbookName terms
+                        getChapterName :=> @textbookNames.getChapterName terms
+                        getSectionsNames :=> @textbookNames.getSectionsNames terms
+                        getSubSectionsNames :=> @textbookNames.getSubSectionsNames terms
                         getCompletedSummary : @_getCompletedSummary
-
-
 
             _timeLeftOrElapsed : =>
                 timeTaken = 0
 
                 responseTime = @questionResponseModel.get('time_taken') if @questionResponseModel
 
-                console.log 'responseTime'
-
-                console.log responseTime
-
-                console.log '@questionResponseModel'
-
-                console.log @questionResponseModel
-
                 if responseTime and responseTime isnt 'NaN'
                     timeTaken = responseTime
 
                 timer = @durationInSeconds - timeTaken
                 timer
-
-            _getClass : =>
-                classesArray = []
-                classes = @textbookModel.get 'classes'
-
-                if _.isArray classes
-                    classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
-                    classesArray.join()
-
-                classesArray
-
-            _getTextbookName : (terms)->
-                textbook = @textbookNames.get terms.textbook
-                texbookName = textbook.get 'name' if textbook?
-
-            _getChapterName : (terms)->
-                chapter = @textbookNames.get terms.chapter
-                chapterName = chapter.get 'name' if chapter?
-
-            _getSectionsNames : (terms)->
-                sections = _.flatten terms.sections
-                sectionString = ''
-                sectionNames = []
-
-                if sections
-                    for section in sections
-                        term = @textbookNames.get section
-                        sectionName = term.get 'name' if term?
-                        sectionNames.push sectionName
-
-                    sectionString = sectionNames.join()
-
-            _getSubSectionsNames : (terms)->
-                subsections = _.flatten terms.subsections
-                subSectionString = ''
-                subsectionNames = []
-
-                if subsections
-                    for sub in subsections
-                        subsection = @textbookNames.get sub
-                        subsectionNames.push subsection.get 'name' if subsection?
-
-                    subSectionString = subsectionNames.join()
 
             _getCompletedSummary : =>
                 if @questionResponseModel and @questionResponseModel.get("status") is 'completed'

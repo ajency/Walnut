@@ -12,7 +12,7 @@ define ['app'
 
                 {@model,@contentGroupCollection}= opts
 
-                if @model.get('type') is 'module'
+                if @model.get('type') is 'teaching-module'
                     @contentPiecesCollection = App.request "get:content:pieces",
                         content_type: ['teacher_question','content_piece']
                         post_status : 'publish'

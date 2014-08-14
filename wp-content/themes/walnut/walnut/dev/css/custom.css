@@ -2090,14 +2090,27 @@ input#duration {
   right: 6px;
 }
 .quizSteps ul li.skip a {
-  background: #0090d9;
+  background: #fdd01c;
   color: #ffffff;
 }
 .quizSteps ul li.skip a:hover {
-  background: #006ea6;
+  background: #e4b702;
 }
 .quizSteps ul li.skip a:before {
-  content: "\f021";
+  content: "\f051";
+  bottom: 6px;
+  right: 8px;
+  font-size: 18px;
+}
+.quizSteps ul li.partiallyCorrect a {
+  background: #0090d9;
+  color: #ffffff;
+}
+.quizSteps ul li.partiallyCorrect a:hover {
+  background: #006ea6;
+}
+.quizSteps ul li.partiallyCorrect a:before {
+  content: "\f046";
   bottom: 6px;
   right: 8px;
   font-size: 18px;
@@ -2276,6 +2289,20 @@ ul.classes .classesWrap {
 .dateInfo {
   padding-top: 4px;
   padding-bottom: 4px;
+}
+#textbooks.list.myClass .meta.name {
+  width: 40%;
+}
+#textbooks.list.myClass .meta.rec {
+  width: 20%;
+}
+#textbooks.list.myClass .txtbook {
+  cursor: pointer;
+  z-index: 2;
+  position: relative;
+}
+#textbooks.list.myClass .chapStatus {
+  width: 49%;
 }
 body {
   background-color: #e5e9ec;

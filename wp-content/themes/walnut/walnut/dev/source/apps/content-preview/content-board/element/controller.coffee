@@ -37,8 +37,8 @@ define ['app'
             # Get view
             _getView: (elementModel)->
 
-                console.log 'elementModel'
-                console.log elementModel
+                #console.log 'elementModel'
+               # console.log elementModel
                 new Element.Views.ElementView
                     model: elementModel
 

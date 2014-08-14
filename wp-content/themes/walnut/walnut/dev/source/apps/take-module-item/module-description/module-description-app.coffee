@@ -71,19 +71,7 @@ define ['app'
                             parseInt (numOfQuestionsCompleted / totalNumofQuestions)*100
 
                         moduleTime:->
-                            hours=0
-                            time= totalTimeTakenForModule
-                            mins=parseInt(time/60)
-                            if mins >59
-                                hours = parseInt mins/60
-                                mins= parseInt mins%60
-                            seconds = parseInt time%60
-                            display_time=''
-
-                            if hours >0
-                                display_time= hours+'h '
-
-                            display_time += mins + 'm '+ seconds+'s'
+                            display_time = $.timeMinSecs totalTimeTakenForModule
 
 
         class ModuleDescriptionView extends Marionette.ItemView

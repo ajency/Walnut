@@ -17,14 +17,14 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
       GroupController.prototype.initialize = function(options) {
         this.group_id = options.group_id, this.groupType = options.groupType;
         if (this.group_id) {
-          if (this.groupType === 'module') {
+          if (this.groupType === 'teaching-module') {
             this.contentGroupModel = App.request("get:content:group:by:id", this.group_id);
           }
           if (this.groupType === 'quiz') {
             this.contentGroupModel = App.request("get:quiz:by:id", this.group_id);
           }
         } else {
-          if (this.groupType === 'module') {
+          if (this.groupType === 'teaching-module') {
             this.contentGroupModel = App.request("new:content:group");
           }
           if (this.groupType === 'quiz') {
@@ -89,7 +89,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
       };
 
       GroupController.prototype._showContentSelectionApp = function(model) {
-        if (this.groupType === 'module') {
+        if (this.groupType === 'teaching-module') {
           this.contentGroupCollection = App.request("get:content:pieces:of:group", model);
         }
         if (this.groupType === 'quiz') {

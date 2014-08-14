@@ -72,7 +72,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         if (this.groupType === 'quiz') {
           data.isQuiz = true;
         }
-        if (this.groupType === 'module') {
+        if (this.groupType === 'teaching-module') {
           data.isModule = true;
         }
         data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
@@ -82,7 +82,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         _.each(data.present_in_modules, function(ele, index) {
           return modules.push("<a target='_blank' href='#view-group/" + ele.id + "'>" + ele.name + "</a>");
         });
-        type = (_ref = data.content_type) === 'student_question' ? 'quiz' : 'module';
+        type = (_ref = data.content_type) === 'student_question' ? 'quiz' : 'teaching-module';
         data.present_in_str = _.size(modules) > 0 ? _.toSentence(modules) : "Not added to a " + type + " yet";
         return data;
       };
@@ -145,7 +145,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         if (this.groupType === 'quiz') {
           data.isQuiz = true;
         }
-        if (this.groupType === 'module') {
+        if (this.groupType === 'teaching-module') {
           data.isModule = true;
         }
         return data;

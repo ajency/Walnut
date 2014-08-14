@@ -30,10 +30,15 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
             'textbook': textbookID,
             'division': this.division
           });
-        } else {
+        } else if (this.mode === 'take-class') {
           this.contentGroupsCollection = App.request("get:content:groups", {
             'textbook': textbookID,
             'division': this.division
+          });
+        } else if (this.mode === 'take-quiz') {
+          this.contentGroupsCollection = App.request("get:quizes", {
+            'textbook': textbookID,
+            'user_id': App.request("get:user:data", "ID")
           });
         }
         this.chaptersCollection = App.request("get:chapters", {

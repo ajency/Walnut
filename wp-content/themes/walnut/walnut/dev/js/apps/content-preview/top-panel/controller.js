@@ -9,7 +9,6 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
 
       function Controller() {
         this._getCompletedSummary = __bind(this._getCompletedSummary, this);
-        this._getClass = __bind(this._getClass, this);
         this._timeLeftOrElapsed = __bind(this._timeLeftOrElapsed, this);
         this.getResults = __bind(this.getResults, this);
         return Controller.__super__.constructor.apply(this, arguments);
@@ -98,11 +97,31 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
           display_mode: this.display_mode,
           timeLeftOrElapsed: this._timeLeftOrElapsed(),
           templateHelpers: {
-            getClass: this._getClass,
-            getTextbookName: _.bind(this._getTextbookName, this, terms),
-            getChapterName: _.bind(this._getChapterName, this, terms),
-            getSectionsNames: _.bind(this._getSectionsNames, this, terms),
-            getSubSectionsNames: _.bind(this._getSubSectionsNames, this, terms),
+            getClass: (function(_this) {
+              return function() {
+                return _this.textbookModel.getClasses();
+              };
+            })(this),
+            getTextbookName: (function(_this) {
+              return function() {
+                return _this.textbookNames.getTextbookName(terms);
+              };
+            })(this),
+            getChapterName: (function(_this) {
+              return function() {
+                return _this.textbookNames.getChapterName(terms);
+              };
+            })(this),
+            getSectionsNames: (function(_this) {
+              return function() {
+                return _this.textbookNames.getSectionsNames(terms);
+              };
+            })(this),
+            getSubSectionsNames: (function(_this) {
+              return function() {
+                return _this.textbookNames.getSubSectionsNames(terms);
+              };
+            })(this),
             getCompletedSummary: this._getCompletedSummary
           }
         });
@@ -114,80 +133,11 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
         if (this.questionResponseModel) {
           responseTime = this.questionResponseModel.get('time_taken');
         }
-        console.log('responseTime');
-        console.log(responseTime);
-        console.log('@questionResponseModel');
-        console.log(this.questionResponseModel);
         if (responseTime && responseTime !== 'NaN') {
           timeTaken = responseTime;
         }
         timer = this.durationInSeconds - timeTaken;
         return timer;
-      };
-
-      Controller.prototype._getClass = function() {
-        var classLabel, classes, classesArray, _i, _len;
-        classesArray = [];
-        classes = this.textbookModel.get('classes');
-        if (_.isArray(classes)) {
-          for (_i = 0, _len = classes.length; _i < _len; _i++) {
-            classLabel = classes[_i];
-            classesArray.push(CLASS_LABEL[classLabel]);
-          }
-          classesArray.join();
-        }
-        return classesArray;
-      };
-
-      Controller.prototype._getTextbookName = function(terms) {
-        var texbookName, textbook;
-        textbook = this.textbookNames.get(terms.textbook);
-        if (textbook != null) {
-          return texbookName = textbook.get('name');
-        }
-      };
-
-      Controller.prototype._getChapterName = function(terms) {
-        var chapter, chapterName;
-        chapter = this.textbookNames.get(terms.chapter);
-        if (chapter != null) {
-          return chapterName = chapter.get('name');
-        }
-      };
-
-      Controller.prototype._getSectionsNames = function(terms) {
-        var section, sectionName, sectionNames, sectionString, sections, term, _i, _len;
-        sections = _.flatten(terms.sections);
-        sectionString = '';
-        sectionNames = [];
-        if (sections) {
-          for (_i = 0, _len = sections.length; _i < _len; _i++) {
-            section = sections[_i];
-            term = this.textbookNames.get(section);
-            if (term != null) {
-              sectionName = term.get('name');
-            }
-            sectionNames.push(sectionName);
-          }
-          return sectionString = sectionNames.join();
-        }
-      };
-
-      Controller.prototype._getSubSectionsNames = function(terms) {
-        var sub, subSectionString, subsection, subsectionNames, subsections, _i, _len;
-        subsections = _.flatten(terms.subsections);
-        subSectionString = '';
-        subsectionNames = [];
-        if (subsections) {
-          for (_i = 0, _len = subsections.length; _i < _len; _i++) {
-            sub = subsections[_i];
-            subsection = this.textbookNames.get(sub);
-            if (subsection != null) {
-              subsectionNames.push(subsection.get('name'));
-            }
-          }
-          return subSectionString = subsectionNames.join();
-        }
       };
 
       Controller.prototype._getCompletedSummary = function() {

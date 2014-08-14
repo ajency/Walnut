@@ -58,7 +58,7 @@ define ['app'
 
 
             addNestedElements:(container,element)->
-                controller = App.request "add:new:element",container,element.element, element
+                controller = App.request "add:new:element",container,element.element,null, element
                 _.each element.elements, (column, index)=>
                     return if not column.elements
                     container = controller.layout.elementRegion.currentView.$el.children().eq(index)

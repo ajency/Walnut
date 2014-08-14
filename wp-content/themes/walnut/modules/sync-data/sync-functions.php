@@ -484,3 +484,117 @@ function read_folder_directory( $dir, $base_URL = '' ) {
     return $listDir;
 }
 
+/*
+ * function to delete site content on expiry/not syncing for 30 days
+ */
+function delete_site_content(){
+    global $wpdb;
+    
+    $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}content_collection`");
+    $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}collection_meta`");
+    
+    $posts_table_query=$wpdb->prepare(
+            "SELECT ID FROM {$wpdb->prefix}posts
+                    WHERE p.post_type <> %s ",
+            "page"
+        );
+            
+   $del_post_ids = $wpdb->get_col( $posts_table_query );
+   
+   $post_ids = array();
+   foreach ($del_post_ids as $post_id){
+       $post_ids[] = $post_id;
+   }
+   
+   if(!empty($post_ids)){
+    $wpdb->query("DELETE FROM `{$wpdb->prefix}posts` where ID IN (".implode($post_ids).")");
+    $wpdb->query("DELETE FROM `{$wpdb->prefix}postmeta` where post_id IN (".implode($post_ids).")");
+   }
+
+}
+
+/*
+ * cron function to check if standalone site is valid
+ */
+function cron_check_school_valid(){
+       global $wpdb;
+       
+       $qry_last_import = "SELECT last_sync FROM {$wpdb->prefix}sync_local_data
+                                        WHERE status =  'imported'  
+                                        ORDER BY id DESC LIMIT 1";
+      $last_sync_date = $wpdb->get_var($qry_last_import);
+      
+      if($last_sync_date){
+          
+            $expirytime = strtotime("+30 days",strtotime($last_sync_date));
+            
+            $valid_blog = is_school_valid();
+            
+            if($expirytime < time() || $valid_blog){
+                delete_site_content();
+            }
+          
+      }
+}
+
+function is_school_valid(){
+
+    $blog_id = get_option('blog_id');
+    $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';          //temporary hard code url 
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_URL, $remote_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    $post = array(
+        'action' => 'check-blog-validity',
+        'blog_id' => $blog_id
+    );
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $resp_decode = json_decode($response,true);
+    $resp = maybe_unserialize($resp_decode['blog_meta']);
+    if($resp['validto'] != ''){
+        if(strtotime($resp['validto']) < strtotime($resp_decode['server_time'])){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function get_sync_log_devices(){
+    global $wpdb;
+    
+    $qry = "SELECT * , MAX( sync_date) as last_sync FROM {$wpdb->prefix}sync_device_log GROUP BY blog_id,device_type ";
+    
+    $qry_results = $wpdb->get_results( $qry );
+    
+    $resultset = '';
+    if(count($qry_results) > 0){
+        foreach ($qry_results as $device) {
+               $blog_details = get_blog_details($device->blog_id);
+               $last_sync = strtotime($device->last_sync);
+               $currentdate = date('Y-m-d');
+               $last_syncdate = date('Y-m-d',$last_sync);
+
+               if($currentdate == $last_syncdate){
+                   $days_between = 'Today';
+               }else{
+                   $days_between = (ceil(abs(strtotime($currentdate) - $last_sync) / 86400) - 1).' days ago';
+               }
+               $resultset .='<tr>';
+               $resultset .='<td>'.$blog_details->blogname.'</td>';
+               $resultset .='<td>'.$device->device_type.'</td>';
+               $resultset .='<td>'.$days_between.'</td>';
+               $resultset .='</tr>';
+           }
+    }
+    else{
+        $resultset .='<tr><td colspan="3">No Results found</td> </tr>';
+    }
+        
+    return  $resultset;  
+}
