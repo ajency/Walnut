@@ -14,7 +14,7 @@
  * @return mixed
  */
 
-function export_tables_for_app($blog_id='', $last_sync='', $user_id='',$device_type=''){
+function export_tables_for_app($blog_id='', $last_sync='',$device_type='',$user_id=''){
 
     if($blog_id=='')
         $blog_id=get_current_blog_id();
