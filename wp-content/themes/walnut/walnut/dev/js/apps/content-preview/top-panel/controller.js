@@ -99,7 +99,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/top-panel/
           templateHelpers: {
             getClass: (function(_this) {
               return function() {
-                return _this.textbookModel.getClasses();
+                return CLASS_LABEL[_this.classID];
               };
             })(this),
             getTextbookName: (function(_this) {
