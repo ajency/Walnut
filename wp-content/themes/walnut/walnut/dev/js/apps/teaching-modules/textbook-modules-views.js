@@ -12,7 +12,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         return ContentGroupsItemView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> <span class="muted status_label">{{&status_str}}</span> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{&training_date}} </td>';
+      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> <span class="muted status_label">{{&status_str}}</span> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{&training_date}} </td>';
 
       ContentGroupsItemView.prototype.tagName = 'tr';
 
@@ -66,6 +66,10 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
             }
           }
         }
+        if (Marionette.getOption(this, 'mode') === 'take-quiz') {
+          data.take_quiz = true;
+          data.quiz_type = this.model.get('quiz_type') === 'practice' ? 'Practice' : 'Class Test';
+        }
         return data;
       };
 
@@ -88,7 +92,11 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        return this.$el.attr('colspan', 4);
+        if (Marionette.getOption(this, 'mode') === 'take-quiz') {
+          return this.$el.attr('colspan', 5);
+        } else {
+          return this.$el.attr('colspan', 4);
+        }
       };
 
       return EmptyView;
@@ -125,8 +133,18 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         },
         'change #content-status-filter': 'setFilteredContent',
+        'change #quiz-type-filter': 'setFilteredContent',
         'click .start-training': 'startTraining',
         'click .training-date': 'scheduleTraining'
+      };
+
+      ContentGroupsView.prototype.serializeData = function() {
+        var data;
+        data = ContentGroupsView.__super__.serializeData.call(this);
+        if (Marionette.getOption(this, 'mode') === 'take-quiz') {
+          data.take_quiz = true;
+        }
+        return data;
       };
 
       ContentGroupsView.prototype.startTraining = function(e) {
