@@ -17,6 +17,8 @@ define ['app'
 					row : 3
 					column : 3
 					style : 'style-1'
+					bordered : false
+					striped : false
 
 				super(options)
 
@@ -51,8 +53,15 @@ define ['app'
 					$(html).find('td div, th div').removeAllAttr()
 					@layout.model.set 'content', "#{$(html).html()}"
 					@layout.model.save() if @layout.model.hasChanged()
+
+				@listenTo @view, "show show:table:property", =>
+					App.execute "show:question:properties",
+						model : @layout.model
 				
 				@layout.elementRegion.show @view
+
+			onClose:->
+				App.execute "close:question:properties"
 
 
 

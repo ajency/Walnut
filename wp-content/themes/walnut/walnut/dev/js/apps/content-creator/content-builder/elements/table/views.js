@@ -13,9 +13,9 @@ define(['app', 'bootbox'], function(App, bootbox) {
         return TableView.__super__.constructor.apply(this, arguments);
       }
 
-      TableView.prototype.className = 'imp-table';
+      TableView.prototype.className = 'snp-table';
 
-      TableView.prototype.template = '<div class="table-settings-bar"> <div class="form-inline"> <div class="control-group"> <label for="spinner-01">Columns: </label> <div class="input-group spinner column-spinner"> <input type="text" class="form-control" value="{{column}}"> <div class="input-group-btn-vertical"> <button class="btn btn-default"><i class="glyphicon glyphicon-chevron-up"></i></button> <button class="btn btn-default"><i class="glyphicon glyphicon-chevron-down"></i></button> </div> </div> </div> <div class="control-group"> <label for="spinner-02">Rows: </label> <div class="input-group spinner row-spinner"> <input type="text" class="form-control" value="{{row}}"> <div class="input-group-btn-vertical"> <button class="btn btn-default"><i class="glyphicon glyphicon-chevron-up"></i></button> <button class="btn btn-default"><i class="glyphicon glyphicon-chevron-down"></i></button> </div> </div> </div> <div class="control-group check-props"> <label for="properties">Properties: </label> <div class="props"> <label class="checkbox" for="checkbox-bordered"> <input type="checkbox" value="" id="checkbox-bordered" data-toggle="checkbox"> Bordered </label> <label class="checkbox" for="checkbox-striped"> <input type="checkbox" value="" id="checkbox-striped" data-toggle="checkbox"> Striped </label> </div> </div> <div class="control-group styles"> <label for="style">Style: </label> <select id="table-style"> <option value="style-1">Style 1</option> <option value="style-2">Style 2</option> </select> </div> </div> </div> <div class="table-holder"></div>';
+      TableView.prototype.template = '<div class="table-holder"></div>';
 
       TableView.prototype.ui = {
         editableData: 'table td ',
@@ -31,55 +31,30 @@ define(['app', 'bootbox'], function(App, bootbox) {
           return e.preventDefault();
         },
         'click .table-holder': 'destroyEditor',
-        'click .spinner .btn:first-of-type': 'increaseCount',
-        'click .spinner .btn:last-of-type': 'decreaseCount',
-        'column:resize:stop.rc table': 'saveTableMarkup',
-        'change #checkbox-bordered': 'changeBordered',
-        'change #checkbox-striped': 'changeStriped',
-        'change #table-style': 'changeStyle'
+        'column:resize:stop.rc table': 'saveTableMarkup'
+      };
+
+      TableView.prototype.modelEvents = {
+        'change:row': 'rowChanged',
+        'change:column': 'columnChanged',
+        'change:bordered': 'changeBordered',
+        'change:striped': 'changeStriped',
+        'change:style': 'changeStyle'
       };
 
       TableView.prototype.onShow = function() {
         this.$el.find('.table-holder').html(_.stripslashes(this.model.get('content')));
-        if (this.$el.find('table').hasClass('table-bordered')) {
-          this.$el.find('#checkbox-bordered').prop('checked', true);
-        }
-        if (this.$el.find('table').hasClass('table-striped')) {
-          this.$el.find('#checkbox-striped').prop('checked', true);
-        }
-        this.$el.find('#table-style').val(this.model.get('style'));
-        this.$el.find('table').resizableColumns();
-        return this.$el.find('[data-toggle="checkbox"]').checkbox();
+        return this.$el.find('table').resizableColumns();
       };
 
-      TableView.prototype.increaseCount = function(evt) {
-        evt.stopPropagation();
-        $(evt.target).closest('.spinner').find('input').val(parseInt($(evt.target).closest('.spinner').find('input').val(), 10) + 1);
-        if ($(evt.target).closest('.spinner').hasClass('column-spinner')) {
-          this.columnChanged(parseInt($(evt.target).closest('.spinner').find('input').val()));
-        }
-        if ($(evt.target).closest('.spinner').hasClass('row-spinner')) {
-          return this.rowChanged(parseInt($(evt.target).closest('.spinner').find('input').val()));
-        }
-      };
+      TableView.prototype.rowChanged = function(model, rows) {
+        var currentRows, html, index, _i, _ref;
+        currentRows = this.$el.find('tbody tr').length;
+        if (currentRows === rows) {
 
-      TableView.prototype.decreaseCount = function(evt) {
-        evt.stopPropagation();
-        $(evt.target).closest('.spinner').find('input').val(parseInt($(evt.target).closest('.spinner').find('input').val(), 10) - 1);
-        if ($(evt.target).closest('.spinner').hasClass('column-spinner')) {
-          this.columnChanged(parseInt($(evt.target).closest('.spinner').find('input').val()));
-        }
-        if ($(evt.target).closest('.spinner').hasClass('row-spinner')) {
-          return this.rowChanged(parseInt($(evt.target).closest('.spinner').find('input').val()));
-        }
-      };
-
-      TableView.prototype.rowChanged = function(row) {
-        var html, index, _i, _ref;
-        if (row > this.model.get('row')) {
-          this.model.set('row', row);
+        } else if (currentRows < rows) {
           html = '<tr>';
-          for (index = _i = 1, _ref = this.model.get('column'); 1 <= _ref ? _i <= _ref : _i >= _ref; index = 1 <= _ref ? ++_i : --_i) {
+          for (index = _i = 1, _ref = model.get('column'); 1 <= _ref ? _i <= _ref : _i >= _ref; index = 1 <= _ref ? ++_i : --_i) {
             html += '<td><div>demo</div></td>';
           }
           html += '</tr>';
@@ -89,21 +64,22 @@ define(['app', 'bootbox'], function(App, bootbox) {
           return bootbox.confirm('Removing a ROW might cause a loss of data. Do you want to continue?', (function(_this) {
             return function(result) {
               if (result) {
-                _this.model.set('row', row);
                 _this.$el.find('tbody tr:last-of-type').remove();
                 return _this.saveTableMarkup();
               } else {
-                return _this.$el.find('.row-spinner input').val(_this.model.get('row'));
+                return model.set('row', currentRows);
               }
             };
           })(this));
         }
       };
 
-      TableView.prototype.columnChanged = function(column) {
-        var tableRows;
-        if (column > this.model.get('column')) {
-          this.model.set('column', column);
+      TableView.prototype.columnChanged = function(model, columns) {
+        var currentColumns, tableRows;
+        currentColumns = this.$el.find('thead th').length;
+        if (currentColumns === columns) {
+
+        } else if (currentColumns < columns) {
           this.$el.find('thead tr').append('<th><div>demo</div></th>');
           tableRows = this.$el.find('tbody tr');
           _.each(tableRows, function(row, index) {
@@ -116,12 +92,13 @@ define(['app', 'bootbox'], function(App, bootbox) {
           return bootbox.confirm('Removing a COLUMN might cause a loss of data. Do you want to continue?', (function(_this) {
             return function(result) {
               if (result) {
-                _this.model.set('column', column);
                 _this.$el.find('thead tr th:last-of-type').remove();
                 tableRows = _this.$el.find('tbody tr td:last-of-type').remove();
+                _this.$el.find('table').resizableColumns('destroy');
+                _this.$el.find('table').resizableColumns();
                 return _this.saveTableMarkup();
               } else {
-                return _this.$el.find('.column-spinner input').val(_this.model.get('column'));
+                return model.set('column', currentColumns);
               }
             };
           })(this));
@@ -131,6 +108,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
       TableView.prototype.showEditor = function(evt) {
         var id;
         evt.stopPropagation();
+        this.trigger('show:table:property');
         if (this.editor) {
           this.editor.destroy();
           this.$el.find('td div, th div').removeAttr('contenteditable').removeAttr('style').removeAttr('id');
@@ -157,6 +135,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
 
       TableView.prototype.destroyEditor = function(evt) {
         evt.stopPropagation();
+        this.trigger('show:table:property');
         if (this.editor) {
           this.editor.destroy();
           this.editor = null;
@@ -173,8 +152,8 @@ define(['app', 'bootbox'], function(App, bootbox) {
         return this.trigger('save:table', this.$el.find('.table-holder'));
       };
 
-      TableView.prototype.changeBordered = function(e) {
-        if ($(e.target).prop('checked')) {
+      TableView.prototype.changeBordered = function(model, bordered) {
+        if (bordered) {
           this.$el.find('table').addClass('table-bordered');
         } else {
           this.$el.find('table').removeClass('table-bordered');
@@ -182,8 +161,8 @@ define(['app', 'bootbox'], function(App, bootbox) {
         return this.saveTableMarkup();
       };
 
-      TableView.prototype.changeStriped = function(e) {
-        if ($(e.target).prop('checked')) {
+      TableView.prototype.changeStriped = function(model, striped) {
+        if (striped) {
           this.$el.find('table').addClass('table-striped');
         } else {
           this.$el.find('table').removeClass('table-striped');
@@ -191,9 +170,8 @@ define(['app', 'bootbox'], function(App, bootbox) {
         return this.saveTableMarkup();
       };
 
-      TableView.prototype.changeStyle = function(e) {
-        this.$el.find('table').removeClass('style-1 style-2').addClass(_.slugify($(e.target).val()));
-        this.model.set('style', _.slugify($(e.target).val()));
+      TableView.prototype.changeStyle = function(model, style) {
+        this.$el.find('table').removeClass('style-1 style-2').addClass(style);
         return this.saveTableMarkup();
       };
 

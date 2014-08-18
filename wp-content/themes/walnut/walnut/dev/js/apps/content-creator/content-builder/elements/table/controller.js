@@ -18,7 +18,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'text!
           content: tableTemplate,
           row: 3,
           column: 3,
-          style: 'style-1'
+          style: 'style-1',
+          bordered: false,
+          striped: false
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -48,7 +50,18 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'text!
             }
           };
         })(this));
+        this.listenTo(this.view, "show show:table:property", (function(_this) {
+          return function() {
+            return App.execute("show:question:properties", {
+              model: _this.layout.model
+            });
+          };
+        })(this));
         return this.layout.elementRegion.show(this.view);
+      };
+
+      Controller.prototype.onClose = function() {
+        return App.execute("close:question:properties");
       };
 
       return Controller;
