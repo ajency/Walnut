@@ -31,7 +31,7 @@ function get_primary_blog_details( $user_id = '' ) {
     switch_to_blog( $blog->blog_id );
 
     $blog_user_data = new WP_User($user_id);
-  	
+
     $blog_logo = wp_get_attachment_thumb_url( $blog_logo_id );
 
     $blog_data = array(
@@ -579,6 +579,18 @@ function user_bulk_actions_admin($actions){
 add_filter( 'bulk_actions-users','user_bulk_actions_admin',10,1);
 
 /* functions to disable users delete option in admin dashboard end*/
+
+
+function login_footer_custom_display(){
+    echo '<div>For further assistance please mail us at <a href="mailto:support@synapse.com">support@synapse.com</a> and we will get back to you immediately</div>';
+}
+add_action('login_footer','login_footer_custom_display',10);
+
+function login_message_custom($message){
+    $message = '<p>Login as a school admin to access the school</p>'.$message;
+    return $message;
+}
+add_filter('login_message','login_message_custom',10,1);
 
 function getLoggedInUserModel(){
     $user_data = get_userdata( get_current_user_id() );

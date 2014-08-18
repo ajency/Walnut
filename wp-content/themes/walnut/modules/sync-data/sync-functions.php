@@ -484,6 +484,64 @@ function read_folder_directory( $dir, $base_URL = '' ) {
     return $listDir;
 }
 
+/*
+ * function to delete site content on expiry/not syncing for 30 days
+ */
+function delete_site_content(){
+    global $wpdb;
+    
+    $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}content_collection`");
+    $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}collection_meta`");
+    
+    $posts_table_query=$wpdb->prepare(
+            "SELECT ID FROM {$wpdb->prefix}posts
+                    WHERE post_type <> %s ",
+            "page"
+        );
+            
+   $del_post_ids = $wpdb->get_col( $posts_table_query );
+   
+   $post_ids = array();
+
+   foreach ($del_post_ids as $post_id){
+       $post_ids[] = $post_id;
+   }
+
+   if(!empty($post_ids)){
+    $wpdb->query("DELETE FROM `{$wpdb->prefix}posts` where ID IN (".implode($post_ids).")");
+    $wpdb->query("DELETE FROM `{$wpdb->prefix}postmeta` where post_id IN (".implode($post_ids).")");
+   }
+
+}
+
+/*
+ * cron function to check if standalone site is valid
+ */
+function cron_check_school_valid(){
+       global $wpdb;
+       
+
+       if(!is_multisite()){
+
+       $qry_last_import = "SELECT last_sync FROM {$wpdb->prefix}sync_local_data
+                                        WHERE status =  'imported'  
+                                        ORDER BY id DESC LIMIT 1";
+       $last_sync_date = $wpdb->get_var($qry_last_import);
+      
+           if($last_sync_date){
+
+                 $expirytime = strtotime("+30 days",strtotime($last_sync_date));
+
+
+                 if($expirytime < time() ){
+                     delete_site_content();
+                 }
+
+           }
+       }
+}
+add_action('scheduled_school_validity', 'cron_check_school_valid');
+
 
 function get_sync_log_devices(){
     global $wpdb;

@@ -148,3 +148,58 @@ function aes_file_encrypt($orig_file,$encfile,$mediatype){
     fwrite($nfile, $enc);
     fclose($nfile);
 }
+
+
+
+/*
+ * function to decrypt a file 
+ * 
+ * @param string $src_url  source url as stored in posts table 
+ * @param string $mediatype media type  audios|videos
+ * 
+ * @return url $temp_url ur of the decrypted file
+ */
+function aes_file_decrypt($src_url,$mediatype){
+    
+    $src_file_info = pathinfo($src_url);
+    
+    $src_file_path = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$mediatype.DIRECTORY_SEPARATOR.$src_file_info['basename'];
+            
+    $temp_path = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$mediatype;
+    
+    if (!file_exists($temp_path)) {   
+        mkdir($temp_path, 0777, true);
+    }
+
+    $temp_user_path = $temp_path.DIRECTORY_SEPARATOR.get_current_user_id();
+    if (!file_exists($temp_user_path)) {   
+        mkdir($temp_user_path, 0777, true);
+    }
+    $inputKey = "kal/dvjBWAaD8+fl0a1b1JljOJtdv6G6"; //unique key to be used for AES encryption and decryption
+    
+    $file_data = file_get_contents($src_file_path);
+
+    $dec = mcrypt_decrypt(MCRYPT_RIJNDAEL_128,
+          $inputKey, $file_data, MCRYPT_MODE_ECB);
+   
+    
+    $nfile = fopen($temp_user_path.DIRECTORY_SEPARATOR.$src_file_info['basename'], "w") ;
+    fwrite($nfile, $dec);
+    fclose($nfile);
+    
+    $wp_upload_dir = wp_upload_dir();
+    $temp_url = str_replace("images", "", $wp_upload_dir['baseurl']);
+    
+    $temp_url = $temp_url.'/tmp/'.$mediatype.'/'.get_current_user_id().'/'.$src_file_info['basename'];
+    return $temp_url;
+       
+}
+
+
+function modify_media_url($mediaresponse,$media_type){
+    $temp_media_folder = array('audio'=>'audios','video'=>'videos');
+    
+    $mediaresponse['url'] =  aes_file_decrypt($mediaresponse['url'],$temp_media_folder[$media_type]);
+    
+    return $mediaresponse;
+}

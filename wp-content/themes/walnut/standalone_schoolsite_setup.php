@@ -19,13 +19,30 @@
  *
  */
 
-require_once( '../../../wp-load.php');
-require_once('../../../wp-admin/includes/plugin.php');
+//require_once( '../../../wp-load.php');
+//require_once('../../../wp-admin/includes/plugin.php');
 
-require_once( '../../..//wp-content/plugins/school-data-sync/school_data_sync.php');
 /**
  *
  */
+
+
+run_standalone_school_setup();
+
+function run_standalone_school_setup(){
+    create_custom_tables();
+    add_new_roles_main_site();
+
+    //setup the template and stylesheet for child sites
+    update_option( 'template', 'walnut' );
+    update_option( 'stylesheet', 'schoolsite' );
+
+    add_pages_to_main_site();
+
+    activate_school_data_sync_plugin('school-data-sync/school_data_sync.php');
+
+    //wp_redirect(site_url().'/wp-admin/options-general.php?page=school_data_sync');
+}
 
 function create_custom_tables(){
     global $wpdb;
@@ -112,7 +129,8 @@ function create_custom_tables(){
               `time_taken` varchar(255) NOT NULL DEFAULT '0',
               `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               `end_date` datetime NOT NULL,
-              `status` varchar(50) NOT NULL
+              `status` varchar(50) NOT NULL,
+              `sync` int(1)
             )";
 
     $wpdb->query( $question_response_table );
@@ -152,7 +170,7 @@ function create_custom_tables(){
 
 
 }
-create_custom_tables();
+
 /**
  *
  * add_new_roles
@@ -179,11 +197,6 @@ function add_new_roles_main_site()
     add_role( 'parent','Parent');
 
 }
-add_new_roles_main_site();
-
-//setup the template and stylesheet for child sites
-update_option( 'template', 'walnut' );
-update_option( 'stylesheet', 'schoolsite' );
 
 function add_pages_to_main_site()
 {
@@ -203,8 +216,6 @@ function add_pages_to_main_site()
 
 }
 
-add_pages_to_main_site();
-
 function activate_school_data_sync_plugin($plugin){
 
     $current = get_option( 'active_plugins' );
@@ -221,7 +232,3 @@ function activate_school_data_sync_plugin($plugin){
 
     set_sds_plugin_options();
 }
-
-activate_school_data_sync_plugin('school-data-sync/school_data_sync.php');
-
-wp_redirect(site_url().'/wp-admin/options-general.php?page=school_data_sync');
