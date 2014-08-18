@@ -18,7 +18,9 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         if (!this.filters) {
           this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
         }
-        this.textbooksCollection = App.request("get:textbooks");
+        this.textbooksCollection = App.request("get:textbooks", {
+          "fetch_all": true
+        });
         this.selectedFilterParamsObject.setHandler("get:selected:parameters", (function(_this) {
           return function() {
             var ele, term_id, textbook_filters, _i, _len, _results;

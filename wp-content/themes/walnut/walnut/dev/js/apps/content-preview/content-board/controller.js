@@ -5,7 +5,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['app', 'controllers/region-controller', 'apps/content-preview/content-board/element/controller', 'apps/content-preview/content-board/view', 'apps/content-preview/content-board/elements-loader'], function(App, RegionController) {
   return App.module("ContentPreview.ContentBoard", function(ContentBoard, App, Backbone, Marionette, $, _) {
     return ContentBoard.Controller = (function(_super) {
-      var API;
+      var API, answerModel, answerWreqrObject;
 
       __extends(Controller, _super);
 
@@ -14,8 +14,12 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
+      answerWreqrObject = null;
+
+      answerModel = null;
+
       Controller.prototype.initialize = function(options) {
-        this.model = options.model;
+        this.model = options.model, answerWreqrObject = options.answerWreqrObject, answerModel = options.answerModel, this.quizModel = options.quizModel;
         this.view = this._getContentBoardView();
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
@@ -27,7 +31,6 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
         })(this));
         App.commands.setHandler("show:response", (function(_this) {
           return function(marks, total) {
-            console.log("" + marks + "   " + total);
             return _this.view.triggerMethod('show:response', parseInt(marks), parseInt(total));
           };
         })(this));
@@ -39,7 +42,8 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
 
       Controller.prototype._getContentBoardView = function() {
         return new ContentBoard.Views.ContentBoardView({
-          model: this.model
+          model: this.model,
+          quizModel: this.quizModel
         });
       };
 
@@ -80,10 +84,11 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
 
       API = {
         addNewElement: function(container, type, modelData) {
-          console.log(type);
           return new ContentBoard.Element[type].Controller({
             container: container,
-            modelData: modelData
+            modelData: modelData,
+            answerWreqrObject: answerWreqrObject,
+            answerModel: answerModel
           });
         }
       };

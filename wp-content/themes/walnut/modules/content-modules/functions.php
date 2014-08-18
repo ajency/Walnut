@@ -21,8 +21,8 @@ function save_content_module($data = array()) {
         'last_modified_on'  => date('y-m-d H:i:s'),
         'last_modified_by'  => get_current_user_id(),
         'duration'          => $duration,
-        'type'              => $data['type'],
-        'post_status'       => $data['post_status']
+        'post_status'       => $data['post_status'],
+        'type'              => $data['type']
     );
 
     if (isset($data['id'])) {
@@ -167,98 +167,124 @@ function get_modules_by_search_string($search_string, $all_module_ids){
     $module_ids= array();
 
     //search where module_name like search string
-    $module_ids[]= search_modules_by_module_name($search_string);
+    $module_ids[]= search_modules_by_module_name($search_string, $all_module_ids);
 
     //search where module_name like search string
-    $module_ids[]= search_modules_by_description($search_string);
+    $module_ids[]= search_modules_by_description($search_string, $all_module_ids);
 
-    // $other_modules= __u::difference($all_module_ids, __u::flatten($module_ids));
+    if(sizeof($module_ids)>0)
+        $other_modules= __u::difference($all_module_ids, __u::flatten($module_ids));
 
-    // //select collection_id, meta_value from collection_meta where meta_key content_pieces
+    else
+        $other_modules = $all_module_ids;
 
-    // $other_module_ids= join(',',$other_modules);
+    //select collection_id, meta_value from collection_meta where meta_key content_pieces
 
-    // $content_modules_query= $wpdb->prepare("SELECT c.id, c.type, cm.meta_value
-    //                             FROM {$wpdb->base_prefix}content_collection c, {$wpdb->base_prefix}collection_meta cm
-    //                             WHERE c.id=cm.collection_id AND meta_key like %s
-    //                             AND collection_id in ($other_module_ids)",
-    //     'content_pieces'
-    // );
+    $other_module_ids= join(',',$other_modules);
 
-    // $content_modules = $wpdb->get_results($content_modules_query);
+    $content_modules_query= $wpdb->prepare("SELECT c.id, c.type, cm.meta_value
+                                FROM {$wpdb->base_prefix}content_collection c, {$wpdb->base_prefix}collection_meta cm
+                                WHERE c.id=cm.collection_id AND meta_key like %s
+                                AND collection_id in ($other_module_ids)",
+        'content_pieces'
+    );
 
-    // if($content_modules){
+    $content_modules = $wpdb->get_results($content_modules_query);
 
-    //     foreach($content_modules as $module){
+    if($content_modules){
 
-    //         $content_pieces= maybe_unserialize($module->meta_value);
+        foreach($content_modules as $module){
 
-    //         if($module->type == 'quiz')
-    //             $content_pieces =__u::pluck($content_pieces, 'id');
+            $content_pieces= maybe_unserialize($module->meta_value);
 
-    //         if(sizeof($content_pieces)>0){
+            if($content_pieces && $module->type == 'quiz')
+                $content_pieces =__u::pluck($content_pieces, 'id');
 
-    //             $string_exists= get_content_pieces_by_search_string($search_string,$content_pieces);
+            if(sizeof($content_pieces)>0){
+
+                $string_exists= get_content_pieces_by_search_string($search_string,$content_pieces);
 
 
-    //             if(is_array($string_exists) && sizeof($string_exists)>0)
-    //                 $module_ids[]=$module->id;
+                if(is_array($string_exists) && sizeof($string_exists)>0)
+                    $module_ids[]=$module->id;
 
-    //         }
-    //     }
+            }
+        }
 
-    //     $module_ids = __u::flatten($module_ids);
+        $module_ids = __u::flatten($module_ids);
 
-    // }
+    }
 
     return $module_ids;
 
 
 }
 
-function search_modules_by_module_name($search_string){
+function search_modules_by_module_name($search_string, $search_module_ids){
 
     global $wpdb;
 
-    $modules_by_module_name_query = $wpdb->prepare('SELECT id FROM '.$wpdb->base_prefix.'content_collection
-            WHERE name LIKE %s', "%$search_string%");
+    if(!$search_module_ids)
+        return false;
+
+    $search_module_ids= join(',',__u::flatten($search_module_ids));
+
+    $module_ids = array();
+
+    $modules_by_module_name_query = $wpdb->prepare("SELECT id FROM {$wpdb->base_prefix}content_collection
+            WHERE name LIKE %s AND id in ($search_module_ids)", "%$search_string%");
 
     $modules_by_module_name = $wpdb->get_results($modules_by_module_name_query, ARRAY_A);
 
-    $module_ids = __u::flatten($modules_by_module_name);
+
+    if($modules_by_module_name)
+        $module_ids = __u::flatten($modules_by_module_name);
 
     return $module_ids;
 
 }
 
-function search_modules_by_description($search_string){
+function search_modules_by_description($search_string, $search_module_ids){
 
     global $wpdb;
 
+    if(!$search_module_ids)
+        return false;
+
+    $search_module_ids= join(',',__u::flatten($search_module_ids));
+    
+    $module_ids = array();
+
     $modules_by_description_query = $wpdb->prepare('SELECT collection_id FROM '.$wpdb->base_prefix.'collection_meta
-            WHERE meta_value LIKE %s', "%$search_string%");
+            WHERE meta_value LIKE %s AND collection_id in ($search_module_ids)', "%$search_string%");
 
     $modules_by_description = $wpdb->get_results($modules_by_description_query, ARRAY_A);
 
-    $module_ids = __u::flatten($modules_by_description);
+    if($modules_by_description)
+        $module_ids = __u::flatten($modules_by_description);
 
     return $module_ids;
 
 }
 
-function get_modules_by_post_status($post_status='publish'){
+function get_modules_by_post_status($post_status='publish',$module_type='teaching-module'){
 
     global $wpdb;
 
     if ($post_status=='any')
         $post_status='%%';
 
+    $module_ids = array();
+
     $modules_by_status_query = $wpdb->prepare('SELECT id FROM '.$wpdb->base_prefix.'content_collection
-            WHERE post_status LIKE %s', $post_status);
+            WHERE post_status LIKE %s AND type like %s', 
+            array($post_status,$module_type)
+            );
 
     $modules_by_status = $wpdb->get_results($modules_by_status_query, ARRAY_A);
 
-    $module_ids = __u::flatten($modules_by_status);
+    if($modules_by_status)
+        $module_ids = __u::flatten($modules_by_status);
 
     return $module_ids;
 
@@ -274,10 +300,10 @@ function get_single_content_module($id, $division=''){
     $data = $wpdb->get_row($query);
 
     $data->id               = (int) $data->id;
+    $data->name             = wp_unslash($data->name);
     $data->term_ids         = maybe_unserialize ($data->term_ids);
     $duration               = $data->duration;
     $data->minshours        ='mins';
-    $data->type             = $data->type;
     $data->total_minutes    = $data->duration; // only used for sorting accoring to time
     if($duration >= 60){
         $data->duration     = $duration/60;
@@ -294,8 +320,12 @@ function get_single_content_module($id, $division=''){
         foreach($description as $key=>$value){
             $meta_val = maybe_unserialize ($value->meta_value);
 
-            if ($value->meta_key=='description')
-                $data->description= $meta_val;
+            if ($value->meta_key=='description'){
+                foreach($meta_val as $k=>$v)
+                    $d[$k]=wp_unslash($v);
+                
+                $data->description= $d;
+            }
 
             if ($value->meta_key=='content_pieces' )
                 $data->content_pieces= $meta_val;
@@ -466,6 +496,6 @@ function get_module_name($module_id){
 
     $module_name=$wpdb->get_var($module_name_query);
 
-    return $module_name;
+    return wp_unslash($module_name);
 
 }

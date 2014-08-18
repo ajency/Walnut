@@ -43,12 +43,19 @@ define(['app'], function(App) {
       };
 
       SortView.prototype.onShow = function() {
+        var displayAnswer;
         this._changeBGColor();
         this._enableSorting();
         this._changeHeight(this.sort_model, this.sort_model.get('height'));
+        displayAnswer = true;
+        if (Marionette.getOption(this, 'displayAnswer') === false) {
+          displayAnswer = false;
+        }
         return this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
           return function() {
-            return _this.trigger("submit:answer");
+            if (displayAnswer) {
+              return _this.trigger("submit:answer");
+            }
           };
         })(this));
       };

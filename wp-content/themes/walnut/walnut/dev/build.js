@@ -45,15 +45,14 @@
         kineticresize		: 'plugins/kinetic.plugin.resize',
         checkbox			: 'plugins/flatui-checkbox',
         holder				: 'plugins/holder',
-        // videojs				: 'plugins/video',
-        // videojsplaylist     : 'plugins/videojs-playlists.min',
         panzer              : 'plugins/panzer',
         panzerlist          : 'plugins/panzerlist',
         timerplugin         : 'plugins/jquery.countdown_plugin.min',
         countdowntimer      : 'plugins/jquery.countdown.min',
         spinedit            : 'plugins/bootstrap-spinedit',
         resizablecolumns : 'plugins/jquery.resizableColumns.min',
-        bootbox : 'plugins/bootbox.min'
+        bootbox : 'plugins/bootbox.min',
+        jPages: 'plugins/jPages.min'
     },
     shim: {
         underscore: {
@@ -93,14 +92,14 @@
         kineticresize : ['kinetic'],
         bridget : ['jquery'],
         isotope : ['jquery','bridget'],
-        // videojsplaylist : ['videojs'],
         panzer: ['jquery'],
         panzerlist : ['jquery'],
         timerplugin: ['jquery'],
         countdowntimer: ['jquery','timerplugin'],
         spinedit            : ['jquery','bootstrap'],
         resizablecolumns : ['jquery'],
-        bootbox : ['jquery', 'bootstrap'],
+        bootbox : ['jquery','bootstrap'],
+        jPages: ['jquery'],
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
     }
 })

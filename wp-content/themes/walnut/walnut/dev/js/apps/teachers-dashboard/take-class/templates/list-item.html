@@ -12,11 +12,25 @@
     <p>{{subjects}}</p>
 </div>
 
+{{#take_quiz}}
+<div class="meta">
+    <p>{{chapter_count}}</p>
+</div>
+{{/take_quiz}}
+
 <div class="meta modules rec">
+    {{#take_quiz}}
+        <h4 class="b-grey b-b p-b-10 m-t-20 m-b-10">Total Quizzes: {{modules_count}}</h4>
+        <div class="chapStatus text-success"><h5 class="no-margin">Completed</h5> {{quizzes_completed}}</div>
+        <div class="chapStatus text-error"><h5 class="no-margin">Not Started</h5> {{quizzes_not_started}}</div>
+    {{/take_quiz}}
+
+    {{^take_quiz}}
     <h4 class="b-grey b-b p-b-10 m-t-20 m-b-10">Total Chapters: {{chapter_count}}</h4>
       <div class="chapStatus text-success"><h5 class="no-margin">Completed</h5> {{chapters_completed}}</div>
       <div class="chapStatus text-info"><h5 class="no-margin">In Progress</h5> {{chapters_in_progress}}</div>
       <div class="chapStatus text-error"><h5 class="no-margin">Not Started</h5> {{chapters_not_started}}</div>
+    {{/take_quiz}}
 </div>
 
 <div class="clearfix"></div>

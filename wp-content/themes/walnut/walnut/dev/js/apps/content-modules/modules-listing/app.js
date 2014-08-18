@@ -13,8 +13,10 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
 
       ListController.prototype.initialize = function(options) {
         this.groupType = options.groupType;
-        this.textbooksCollection = App.request("get:textbooks");
-        if (this.groupType === 'module') {
+        this.textbooksCollection = App.request("get:textbooks", {
+          "fetch_all": true
+        });
+        if (this.groupType === 'teaching-module') {
           this.contentModulesCollection = App.request("get:content:groups", {
             'post_status': 'any'
           });

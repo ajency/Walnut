@@ -45,7 +45,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListItemView.prototype.serializeData = function() {
-        var class_id, class_ids, class_string, data, item_classes, item_subjects, subject, subject_string, subjects, _i, _j, _len, _len1;
+        var class_id, class_ids, class_string, data, item_classes, _i, _len;
         data = ListItemView.__super__.serializeData.call(this);
         class_ids = this.model.get('classes');
         if (class_ids) {
@@ -61,21 +61,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
             }
           }
           data.class_string = class_string;
-        }
-        subjects = this.model.get('subjects');
-        if (subjects) {
-          item_subjects = _.sortBy(subjects, function(subject) {
-            return subject;
-          });
-          subject_string = '';
-          for (_j = 0, _len1 = item_subjects.length; _j < _len1; _j++) {
-            subject = item_subjects[_j];
-            subject_string += subject;
-            if (_.last(item_subjects) !== subject) {
-              subject_string += ', ';
-            }
-          }
-          data.subject_string = subject_string;
         }
         return data;
       };

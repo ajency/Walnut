@@ -21,14 +21,14 @@ define ['app'
             addModule: ->
                 new ContentModulesApp.Edit.GroupController
                     region: App.mainContentRegion
-                    groupType : 'module'
+                    groupType : 'teaching-module'
 
 
             editModule:(id) ->
                 new ContentModulesApp.Edit.GroupController
                     region: App.mainContentRegion
                     group_id: id
-                    groupType : 'module'
+                    groupType : 'teaching-module'
 
 
             viewModule: (id)->
@@ -50,7 +50,7 @@ define ['app'
             modulesListing: ->
                 new ContentModulesApp.ModulesListing.ListController
                     region: App.mainContentRegion
-                    groupType : 'module'
+                    groupType : 'teaching-module'
 
 
             takeClassSingleModule: (classID, div, tID, mID)->

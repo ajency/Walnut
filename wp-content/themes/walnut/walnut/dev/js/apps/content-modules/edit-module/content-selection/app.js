@@ -14,7 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
 
       ContentSelectionController.prototype.initialize = function(opts) {
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
-        if (this.model.get('type') === 'module') {
+        if (this.model.get('type') === 'teaching-module') {
           this.contentPiecesCollection = App.request("get:content:pieces", {
             content_type: ['teacher_question', 'content_piece'],
             post_status: 'publish'

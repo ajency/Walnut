@@ -11,7 +11,7 @@ define ['app'
 
                 @view = @_getOptionsBarView()
 
-                @textbooksCollection = App.request "get:textbooks"
+                @textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
                 App.execute "when:fetched", [@textbooksCollection, @contentPieceModel], @showView
 

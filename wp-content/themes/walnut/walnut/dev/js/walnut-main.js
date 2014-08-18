@@ -46,7 +46,8 @@ require.config({
     countdowntimer: 'plugins/jquery.countdown.min',
     spinedit: 'plugins/bootstrap-spinedit',
     resizablecolumns: 'plugins/jquery.resizableColumns.min',
-    bootbox: 'plugins/bootbox.min'
+    bootbox: 'plugins/bootbox.min',
+    jPages: 'plugins/jPages.min'
   },
   shim: {
     underscore: {
@@ -94,6 +95,7 @@ require.config({
     spinedit: ['jquery', 'bootstrap'],
     resizablecolumns: ['jquery'],
     bootbox: ['jquery', 'bootstrap'],
+    jPages: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

@@ -48,8 +48,6 @@ require.config
         kineticresize: 'plugins/kinetic.plugin.resize'
         checkbox: 'plugins/flatui-checkbox'
         holder: 'plugins/holder'
-        # videojs: 'plugins/video'
-        # videojsplaylist : 'plugins/videojs-playlists.min'
         panzer: 'plugins/panzer'
         panzerlist : 'plugins/panzerlist'
         mmenu: 'plugins/jquery.mmenu.min.all'
@@ -58,6 +56,7 @@ require.config
         spinedit : 'plugins/bootstrap-spinedit'
         resizablecolumns : 'plugins/jquery.resizableColumns.min'
         bootbox : 'plugins/bootbox.min'
+        jPages: 'plugins/jPages.min'
 
     shim:
         underscore:
@@ -101,12 +100,11 @@ require.config
         countdowntimer: ['jquery','timerplugin']
         spinedit : ['jquery','bootstrap']
         resizablecolumns : ['jquery']
-        bootbox : ['jquery', 'bootstrap']
-        # videojsplaylist : ['videojs']
+        bootbox : ['jquery','bootstrap']
+        jPages: ['jquery']
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
-
-## Start with application
+# Start with application
 require [  'plugins/walnut-pluginloader'
            'config/walnut-configloader'
            'app'

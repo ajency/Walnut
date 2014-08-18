@@ -43,37 +43,30 @@ define ['marionette'], (Marionette)->
     App.on "initialize:after", (options) ->
 
         App.startHistory()
+        
+        if USER? and USER.ID
+            user = App.request "get:user:model" 
+            App.execute "show:headerapp", region: App.headerRegion
+            App.execute "show:leftnavapp", region: App.leftNavRegion
+            App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
+            App.vent.trigger "show:dashboard" if @getCurrentRoute() is 'login'
+            App.loginRegion.close()
 
-        # check app login status
-        xhr = $.get "#{AJAXURL}?action=get-user-data",
-            {},
-            (resp)=>
-                if(resp.success)
-                    console.log resp
-                    user = App.request "get:user:model"
-                    #todo: fix user entity
-                    user.set resp.data.data
-                    school = App.request "get:current:school"
-                    App.execute "show:headerapp", region: App.headerRegion
-                    App.execute "show:leftnavapp", region: App.leftNavRegion
-                    App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
-                    App.vent.trigger "show:dashboard" if @getCurrentRoute() is 'login'
-                    App.loginRegion.close()
-                else
-                    App.vent.trigger "show:login"
-            ,'json'
+        else
+            App.vent.trigger "show:login"
 
 
     App.vent.on "show:dashboard", (user_role) =>
         user = App.request "get:user:model"
 
-        user_role = user.get "roles"
-
-        if user_role[0] == 'administrator'
+        if user.current_user_can('administrator') or user.current_user_can('school-admin')
             App.navigate('textbooks', trigger: true)
 
-        else
-            App.navigate('teachers/dashboard', trigger: true)
+        if user.current_user_can 'teacher'
+            App.navigate('teachers/dashboard', trigger: true)     
+
+        if user.current_user_can 'student'
+            App.navigate('students/dashboard', trigger: true)             
 
         App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
         App.execute "show:headerapp", region: App.headerRegion
@@ -81,7 +74,6 @@ define ['marionette'], (Marionette)->
 
         Pace.on 'hide', ()->
             $("#site_main_container").addClass("showAll");
-
 
     App.vent.on "show:login", ->
         App.leftNavRegion.close()

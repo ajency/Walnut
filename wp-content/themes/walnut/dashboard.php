@@ -88,6 +88,9 @@ global $chorus_options; ?>
     AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
     SITEURL = '<?php echo site_url() ?>';
     THEMEURL = '<?php echo get_template_directory_uri()?>';
+
+    <?=getLoggedInUserModel()?>
+
     CLASS_LABEL = {};
     <?php foreach($class_ids as $class){ ?>
     CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';

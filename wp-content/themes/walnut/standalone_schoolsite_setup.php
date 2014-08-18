@@ -22,6 +22,7 @@
 require_once( '../../../wp-load.php');
 require_once('../../../wp-admin/includes/plugin.php');
 
+require_once( '../../..//wp-content/plugins/school-data-sync/school_data_sync.php');
 /**
  *
  */
@@ -54,7 +55,7 @@ function create_custom_tables(){
             `last_modified_by` int(11) NOT NULL,
             `published_on` datetime NOT NULL,
             `published_by` int(11) NOT NULL,
-            `status` varchar(255) NOT NULL,
+            `post_status` varchar(255) NOT NULL,
             `type` varchar(255) NOT NULL,
             `term_ids` varchar(255) NOT NULL,
             `duration` int(11) NOT NULL COMMENT 'in minutes',
@@ -116,13 +117,39 @@ function create_custom_tables(){
 
     $wpdb->query( $question_response_table );
 
-    $question_response_meta_table = "CREATE TABLE `{$wpdb->prefix}question_response_meta` (
+    $question_response_meta_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}question_response_meta` (
                 `qr_ref_id` varchar(30) NOT NULL,
               `meta_key` varchar(255) NOT NULL,
               `meta_value` text NOT NULL
             )";
 
     $wpdb->query( $question_response_meta_table );
+
+    $quiz_summary_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}quiz_response_summary` (
+        `summary_id` varchar(30) NOT NULL,
+        `collection_id` int(11) NOT NULL,
+        `student_id` bigint(20) NOT NULL,
+        `taken_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `quiz_meta` text NOT NULL,
+        PRIMARY KEY (`summary_id`)
+      )";
+
+    $wpdb->query( $quiz_summary_table );
+
+
+    $quiz_responses_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}quiz_question_response` (
+        `qr_id` varchar(50) NOT NULL,
+        `summary_id` varchar(30) NOT NULL,
+        `content_piece_id` bigint(20) NOT NULL,
+        `question_response` text NOT NULL,
+        `time_taken` int(11) NOT NULL,
+        `marks_scored` int(11) NOT NULL DEFAULT '0',
+        `status` varchar(30) NOT NULL,
+        PRIMARY KEY (`qr_id`)
+      )";
+
+    $wpdb->query( $quiz_responses_table );
+
 
 }
 create_custom_tables();
@@ -151,18 +178,12 @@ function add_new_roles_main_site()
     add_role( 'teacher','Teacher');
     add_role( 'parent','Parent');
 
-    $u = new WP_User( get_current_user_id() );
-
-    // Remove role
-    $u->remove_role( 'administrator' );
-
-    // Add role
-    $u->add_role( 'school-admin' );
-
-    if(get_role('administrator')!=NULL)remove_role( 'administrator' );//removes the editor role
-
 }
 add_new_roles_main_site();
+
+//setup the template and stylesheet for child sites
+update_option( 'template', 'walnut' );
+update_option( 'stylesheet', 'schoolsite' );
 
 function add_pages_to_main_site()
 {
@@ -174,16 +195,33 @@ function add_pages_to_main_site()
         $post['post_title'] = 'Dashboard';
         $postid = wp_insert_post($post);
 
-    }
-    update_post_meta($postid, '_wp_page_template', 'dashboard.php');
+        update_post_meta($postid, '_wp_page_template', 'dashboard.php');
 
-    update_option( 'page_on_front', $postid );
-    update_option( 'show_on_front', 'page' );
+        update_option( 'page_on_front', $postid );
+        update_option( 'show_on_front', 'page' );
+    }
+
 }
 
 add_pages_to_main_site();
 
+function activate_school_data_sync_plugin($plugin){
 
-//setup the template and stylesheet for child sites
-update_option( 'template', 'walnut' );
-update_option( 'stylesheet', 'schoolsite' );
+    $current = get_option( 'active_plugins' );
+    $plugin = plugin_basename( trim( $plugin ) );
+
+    if ( !in_array( $plugin, $current ) ) {
+        $current[] = $plugin;
+        sort( $current );
+        do_action( 'activate_plugin', trim( $plugin ) );
+        update_option( 'active_plugins', $current );
+        do_action( 'activate_' . trim( $plugin ) );
+        do_action( 'activated_plugin', trim( $plugin) );
+    }
+
+    set_sds_plugin_options();
+}
+
+activate_school_data_sync_plugin('school-data-sync/school_data_sync.php');
+
+wp_redirect(site_url().'/wp-admin/options-general.php?page=school_data_sync');
