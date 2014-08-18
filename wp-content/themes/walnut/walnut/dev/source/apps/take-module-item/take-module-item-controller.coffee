@@ -169,15 +169,20 @@ define ['app'
 
 
             _showQuestionDisplayView : (model) =>
-                App.execute "show:content:preview",
-                    region : @layout.questionsDetailsRegion
-                    model : model
-                    textbookNames : @textbookNames
-                    questionResponseModel : questionResponseModel
-                    timerObject : @timerObject
-                    display_mode : @display_mode
-                    classID : @classID
-                    students : studentCollection
+
+                if not questionResponseModel
+                    @_getOrCreateModel model.ID
+
+                App.execute "when:fetched", questionResponseModel, =>
+                    App.execute "show:content:preview",
+                        region : @layout.questionsDetailsRegion
+                        model : model
+                        textbookNames : @textbookNames
+                        questionResponseModel : questionResponseModel
+                        timerObject : @timerObject
+                        display_mode : @display_mode
+                        classID : @classID
+                        students : studentCollection
 
             _showStudentsListView : (questionResponseModel)=>
                 App.execute "when:fetched", contentPiece, =>

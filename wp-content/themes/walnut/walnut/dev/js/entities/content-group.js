@@ -101,6 +101,29 @@ define(["app", 'backbone'], function(App, Backbone) {
       getEmptyModulesCollection: function() {
         var contentGroupCollection;
         return contentGroupCollection = new ContentGroup.ItemCollection;
+      },
+      getDummyModules: function(content_piece_id) {
+        var contentGroup;
+        contentGroup = new ContentGroup.ItemModel;
+        return contentGroup.set({
+          'id': 3423432,
+          name: 'Dummy Module',
+          description: 'Dummy Module Description',
+          created_on: '',
+          created_by: '',
+          last_modified_on: '',
+          last_modified_by: '',
+          published_on: '',
+          published_by: '',
+          post_status: '',
+          type: 'teaching-module',
+          total_minutes: 0,
+          duration: 40,
+          minshrs: 'mins',
+          term_ids: [],
+          content_pieces: [content_piece_id],
+          training_date: ''
+        });
       }
     };
     App.reqres.setHandler("get:content:groups", function(opt) {
@@ -118,8 +141,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("schedule:content:group", function(data) {
       return API.scheduleContentGroup(data);
     });
-    return App.reqres.setHandler("empty:content:modules:collection", function() {
+    App.reqres.setHandler("empty:content:modules:collection", function() {
       return API.getEmptyModulesCollection();
+    });
+    return App.reqres.setHandler("create:dummy:content:module", function(content_piece_id) {
+      return API.getDummyModules(content_piece_id);
     });
   });
 });
