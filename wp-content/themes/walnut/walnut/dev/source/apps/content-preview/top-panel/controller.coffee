@@ -85,7 +85,7 @@ define ['app'
                     timeLeftOrElapsed : @_timeLeftOrElapsed()
 
                     templateHelpers :
-                        getClass :=> @textbookModel.getClasses()
+                        getClass :=> CLASS_LABEL[@classID]
                         getTextbookName :=> @textbookNames.getTextbookName terms
                         getChapterName :=> @textbookNames.getChapterName terms
                         getSectionsNames :=> @textbookNames.getSectionsNames terms

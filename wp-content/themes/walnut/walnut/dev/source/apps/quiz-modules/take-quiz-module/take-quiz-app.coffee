@@ -157,7 +157,7 @@ define ['app'
                         'total_time_taken'  : timeBeforeCurrentQuestion
                         'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
                         'total_marks_scored': _.reduce @questionResponseCollection.pluck('marks_scored'), (memo, num)->
-                            parseInt memo + parseInt num
+                            _.toNumber memo + num,1
 
                     quizResponseSummary.save() if quizModel.get('quiz_type') is 'test'
                     

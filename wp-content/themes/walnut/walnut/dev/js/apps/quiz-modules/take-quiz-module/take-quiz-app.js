@@ -164,7 +164,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             'status': 'skipped'
           })),
           'total_marks_scored': _.reduce(this.questionResponseCollection.pluck('marks_scored'), function(memo, num) {
-            return parseInt(memo + parseInt(num));
+            return _.toNumber(memo + num, 1);
           })
         });
         if (quizModel.get('quiz_type') === 'test') {
