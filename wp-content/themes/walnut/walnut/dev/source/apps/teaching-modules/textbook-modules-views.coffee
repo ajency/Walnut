@@ -9,6 +9,9 @@ define ['app',
 
 			template : '<td class="v-align-middle">{{name}}</td>
 						<td class="v-align-middle">{{chapterName}}</td>
+						{{#take_quiz}}
+						<td class="v-align-middle">{{quiz_type}}</td>
+						{{/take_quiz}}
 						<td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
 					   <td>
 						  <span class="muted status_label">{{&status_str}}</span>
@@ -75,6 +78,10 @@ define ['app',
 							data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-right m-r-10 training-date">
 																		<i class="fa fa-calendar"></i> ' + training_date + '</button>'
 
+				if Marionette.getOption(@, 'mode') is 'take-quiz'
+					data.take_quiz = true
+					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Class Test'
+
 				data
 
 			initialize : (options)->
@@ -87,7 +94,11 @@ define ['app',
 			tagName: 'td'
 
 			onShow:->
-				@$el.attr 'colspan',4
+				if Marionette.getOption(@, 'mode') is 'take-quiz'
+					@$el.attr 'colspan',5
+				else 
+					@$el.attr 'colspan',4
+
 
 
 		class TextbookModules.ContentGroupsView extends Marionette.CompositeView
@@ -111,9 +122,15 @@ define ['app',
 					@trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 				'change #content-status-filter'  : 'setFilteredContent'
 
+				'change #quiz-type-filter'  : 'setFilteredContent'
+
 				'click .start-training' : 'startTraining'
 				'click .training-date' : 'scheduleTraining'
 
+			serializeData:->
+				data = super()
+				data.take_quiz = true if Marionette.getOption(@, 'mode') is 'take-quiz'
+				data
 
 			startTraining : (e)=>
 				dataID = $(e.currentTarget).attr 'data-id'

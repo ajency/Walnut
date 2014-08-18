@@ -495,17 +495,18 @@ function delete_site_content(){
     
     $posts_table_query=$wpdb->prepare(
             "SELECT ID FROM {$wpdb->prefix}posts
-                    WHERE p.post_type <> %s ",
+                    WHERE post_type <> %s ",
             "page"
         );
             
    $del_post_ids = $wpdb->get_col( $posts_table_query );
    
    $post_ids = array();
+
    foreach ($del_post_ids as $post_id){
        $post_ids[] = $post_id;
    }
-   
+
    if(!empty($post_ids)){
     $wpdb->query("DELETE FROM `{$wpdb->prefix}posts` where ID IN (".implode($post_ids).")");
     $wpdb->query("DELETE FROM `{$wpdb->prefix}postmeta` where post_id IN (".implode($post_ids).")");
@@ -519,51 +520,28 @@ function delete_site_content(){
 function cron_check_school_valid(){
        global $wpdb;
        
+
+       if(!is_multisite()){
+
        $qry_last_import = "SELECT last_sync FROM {$wpdb->prefix}sync_local_data
                                         WHERE status =  'imported'  
                                         ORDER BY id DESC LIMIT 1";
-      $last_sync_date = $wpdb->get_var($qry_last_import);
+       $last_sync_date = $wpdb->get_var($qry_last_import);
       
-      if($last_sync_date){
-          
-            $expirytime = strtotime("+30 days",strtotime($last_sync_date));
-            
-            $valid_blog = is_school_valid();
-            
-            if($expirytime < time() || $valid_blog){
-                delete_site_content();
-            }
-          
-      }
+           if($last_sync_date){
+
+                 $expirytime = strtotime("+30 days",strtotime($last_sync_date));
+
+
+                 if($expirytime < time() ){
+                     delete_site_content();
+                 }
+
+           }
+       }
 }
+add_action('scheduled_school_validity', 'cron_check_school_valid');
 
-function is_school_valid(){
-
-    $blog_id = get_option('blog_id');
-    $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';          //temporary hard code url 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_VERBOSE, 0);
-    curl_setopt($ch, CURLOPT_URL, $remote_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    $post = array(
-        'action' => 'check-blog-validity',
-        'blog_id' => $blog_id
-    );
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    $resp_decode = json_decode($response,true);
-    $resp = maybe_unserialize($resp_decode['blog_meta']);
-    if($resp['validto'] != ''){
-        if(strtotime($resp['validto']) < strtotime($resp_decode['server_time'])){
-            return true;
-        }
-    }
-
-    return false;
-}
 
 function get_sync_log_devices(){
     global $wpdb;

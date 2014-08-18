@@ -15,6 +15,13 @@
                         <option value="not started">Not Started</option>
                         <option value="completed">Completed</option>
                     </select>
+                    {{#take_quiz}}
+                        <select class="select2-filters" id="quiz-type-filter" style="width:150px">
+                        <option value="">All Types</option>
+                            <option value="practice">Practice Quiz</option>
+                            <option value="test">Class Test</option>
+                        </select>
+                    {{/take_quiz}}
                     </div>
             </div>
         </div>
@@ -29,6 +36,9 @@
                   <tr>
                     <th>Name</th>
     		        <th>Chapter</th>
+                    {{#take_quiz}}
+                        <th class="v-align-middle">Quiz Type</th>
+                    {{/take_quiz}}
                     <th class="{sorter:\'minutesSort\'}">Duration</th>
                     <th><div id="status_header">Status</div></th>
                   </tr>
