@@ -555,7 +555,7 @@ function save_content_piece($data){
     if(!$content_id)
         return false;
 
-    $content_layout = maybe_serialize($data['json']);
+    $content_layout = $data['json'];
 
     update_post_meta ($content_id, 'layout_json',$content_layout);
 
@@ -625,7 +625,7 @@ function clone_json_of_content_piece($id, $clone_id){
 
     $layout_json = get_json_to_clone($layout='', $clone_id, true);
 
-    $layout_json = maybe_serialize($layout_json['elements']);
+    $layout_json = $layout_json['elements'];
 
     update_post_meta($id, 'layout_json',$layout_json);
 
