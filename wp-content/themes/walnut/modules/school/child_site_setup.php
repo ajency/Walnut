@@ -118,7 +118,7 @@ function setup_childsite_tables() {
         `content_piece_id` bigint(20) NOT NULL,
         `question_response` text NOT NULL,
         `time_taken` int(11) NOT NULL,
-        `marks_scored` int(11) NOT NULL DEFAULT '0',
+        `marks_scored` decimal(10,1) NOT NULL DEFAULT '0.0',
         `status` varchar(30) NOT NULL,
         PRIMARY KEY (`qr_id`)
       )";
