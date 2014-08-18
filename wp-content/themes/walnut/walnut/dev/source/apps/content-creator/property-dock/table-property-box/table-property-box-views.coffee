@@ -4,34 +4,34 @@ define ['app'],(App)->
 		class Views.PropertyView extends Marionette.ItemView
 
 			template : '<div class="tile-more-content no-padding">
-							<div class="tiles green">
+							<div class="tiles blue">
 								<div class="tile-footer drag">
-									Sort <i class="fa fa-chevron-right"></i> <span class="semi-bold">Sort Properties</span>
+									Table <i class="fa fa-chevron-right"></i> <span class="semi-bold">Table Properties</span>
 								</div>
 								<div class="docket-body">
-									<div class="control-group">
+									<div class="control-group m-b-20">
 										<label for="spinner-01">Columns: </label>
 										<div class="input-group spinner column-spinner">
-											<input type="text" class="form-control" value="{{column}}">
-											<div class="input-group-btn-vertical">
-												<button class="btn btn-default"><i class="glyphicon glyphicon-chevron-up"></i></button>
-												<button class="btn btn-default"><i class="glyphicon glyphicon-chevron-down"></i></button>
+											<input type="text" class="form-control rowColInput" value="{{column}}">
+											<div class="input-group-btn-vertical ">
+												<button class="btn btn-default btn-small m-r-5"><i class="fa fa-chevron-up"></i></button>
+												<button class="btn btn-default btn-small"><i class="fa fa-chevron-down"></i></button>
 											</div>
 										</div>
 									</div>
-									<div class="control-group">
+									<div class="control-group m-b-20">
 										<label for="spinner-02">Rows: </label>
 										<div class="input-group spinner row-spinner">
-											<input type="text" class="form-control" value="{{row}}">
+											<input type="text" class="form-control rowColInput" value="{{row}}">
 											<div class="input-group-btn-vertical">
-												<button class="btn btn-default"><i class="glyphicon glyphicon-chevron-up"></i></button>
-												<button class="btn btn-default"><i class="glyphicon glyphicon-chevron-down"></i></button>
+												<button class="btn btn-default btn-small m-r-5"><i class="fa fa-chevron-up"></i></button>
+												<button class="btn btn-default btn-small"><i class="fa fa-chevron-down"></i></button>
 											</div>
 										</div>
 									</div>
-									<div class="control-group ">
+									<div class="control-group m-b-20">
 										<label for="properties">Properties: </label>
-										<div class="checkbox check-success">
+										<div class="checkbox check-info">
 											<input type="checkbox" value="" id="checkbox-bordered" data-toggle="checkbox">
 											<label class="checkbox" for="checkbox-bordered">
 												
