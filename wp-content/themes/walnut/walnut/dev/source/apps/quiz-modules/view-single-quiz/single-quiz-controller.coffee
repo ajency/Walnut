@@ -10,12 +10,11 @@ define ['app'
             quizModel = null
             questionsCollection = null
             quizResponseSummary = null
-            questionResponseCollection = null
             display_mode = null
 
             initialize: (opts) ->
 
-                {quiz_id,quizModel,questionsCollection,questionResponseCollection,quizResponseSummary} = opts
+                {quiz_id,quizModel,questionsCollection,@questionResponseCollection,quizResponseSummary} = opts
 
                 quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
 
@@ -23,7 +22,7 @@ define ['app'
                 App.execute "show:leftnavapp", region : App.leftNavRegion
 
                 @fetchQuizResponseSummary = @_fetchQuizResponseSummary()
-
+                console.log @questionResponseCollection
                 fetchQuestionResponseCollection = @_fetchQuestionResponseCollection()
 
                 fetchQuestionResponseCollection.done =>
@@ -87,11 +86,11 @@ define ['app'
                 defer = $.Deferred();
 
                 @fetchQuizResponseSummary.done =>
-                    if not questionResponseCollection and not quizResponseSummary.isNew()
-                        questionResponseCollection = App.request "get:quiz:question:response:collection",
+                    if not @questionResponseCollection and not quizResponseSummary.isNew()
+                        @questionResponseCollection = App.request "get:quiz:question:response:collection",
                             'summary_id': quizResponseSummary.get 'summary_id'
 
-                        App.execute "when:fetched", questionResponseCollection, =>
+                        App.execute "when:fetched", @questionResponseCollection, =>
                             defer.resolve()
                     else
                         defer.resolve()
@@ -107,7 +106,7 @@ define ['app'
                     quizResponseSummary     : quizResponseSummary
                     questionsCollection     : questionsCollection
                     display_mode            : display_mode
-                    questionResponseCollection: questionResponseCollection
+                    questionResponseCollection: @questionResponseCollection
                     textbookNames           : @textbookNames
 
             showQuizViews: =>
@@ -125,7 +124,7 @@ define ['app'
                         region                  : @layout.contentDisplayRegion
                         model                   : quizModel
                         groupContentCollection  : questionsCollection
-                        questionResponseCollection: questionResponseCollection
+                        questionResponseCollection: @questionResponseCollection
 
             _getQuizViewLayout: =>
                 new QuizViewLayout
