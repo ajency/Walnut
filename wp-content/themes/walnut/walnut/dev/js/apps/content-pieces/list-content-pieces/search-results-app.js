@@ -34,11 +34,14 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       Controller.prototype._searchContent = function(searchStr, useFilters) {
+        var filters;
+        filters = {};
         if (useFilters) {
-          this.selectedFilterParamsObject.request("get:selected:parameters");
+          filters = this.selectedFilterParamsObject.request("get:parameters:for:search");
         }
         this.newCollection = App.request("get:content:pieces", {
-          search_str: searchStr
+          search_str: searchStr,
+          textbook: filters.term_id != null ? filters.term_id : void 0
         });
         return App.execute("when:fetched", this.newCollection, (function(_this) {
           return function() {
@@ -63,7 +66,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return SearchResultsLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SearchResultsLayout.prototype.template = 'Search: <input type="text" class="search-box" id="search-box"> <!--<input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span> <button class="btn btn-success btn-cons2" id="search-btn">Search</button>--> <div id="content-selection-region"></div>';
+      SearchResultsLayout.prototype.template = 'Search: <input type="text" class="search-box" id="search-box"> <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span> <button class="btn btn-success btn-cons2" id="search-btn">Search</button> <div id="content-selection-region"></div>';
 
       SearchResultsLayout.prototype.regions = {
         contentSelectionRegion: '#content-selection-region'

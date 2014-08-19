@@ -40,6 +40,33 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             return _results;
           };
         })(this));
+        this.selectedFilterParamsObject.setHandler("get:parameters:for:search", (function(_this) {
+          return function() {
+            var data, ele, post_status, term_id;
+            ele = $(_this.view.el).find('#textbooks-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
+            ele = $(_this.view.el).find('#chapters-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
+            ele = $(_this.view.el).find('#sections-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
+            ele = $(_this.view.el).find('#subsections-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
+            ele = $(_this.view.el).find('#content-post-status-filter');
+            post_status = $(ele).val();
+            return data = {
+              'term_id': term_id,
+              'post_status': post_status
+            };
+          };
+        })(this));
         return App.execute("when:fetched", this.textbooksCollection, (function(_this) {
           return function() {
             var view;

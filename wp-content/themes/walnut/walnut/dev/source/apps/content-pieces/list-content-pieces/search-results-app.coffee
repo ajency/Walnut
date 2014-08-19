@@ -21,12 +21,14 @@ define ['app'
                 @listenTo @layout, "search:content", @_searchContent
 
             _searchContent:(searchStr,useFilters)=>
-
+                
+                filters = {}
                 if useFilters
-                    @selectedFilterParamsObject.request "get:selected:parameters"
+                    filters= @selectedFilterParamsObject.request "get:parameters:for:search"
 
                 @newCollection = App.request "get:content:pieces",
                     search_str      : searchStr
+                    textbook        : filters.term_id if filters.term_id?
 
                 App.execute "when:fetched", @newCollection, =>
                     @searchCollection.reset @newCollection.models
@@ -38,8 +40,8 @@ define ['app'
         class SearchResultsLayout extends Marionette.Layout
 
             template: 'Search: <input type="text" class="search-box" id="search-box">
-                                     <!--<input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span>
-                                    <button class="btn btn-success btn-cons2" id="search-btn">Search</button>-->
+                                     <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span>
+                                    <button class="btn btn-success btn-cons2" id="search-btn">Search</button>
                                   <div id="content-selection-region"></div>'
 
             regions:

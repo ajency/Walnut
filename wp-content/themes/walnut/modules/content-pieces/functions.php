@@ -61,12 +61,11 @@ function get_content_pieces($args = array()) {
         $ids = implode(',',$args['ids']);
         $args['post__in'] = $args['ids'];
     }
-
-
+    
     if(isset($args['content_type'])){
 
         $content_type_meta_array = array('relation' => 'OR');
-//
+        
         foreach($args['content_type'] as $content_type){
             $content_type_meta_array[]= array(
                 'key'     => 'content_type',
@@ -75,32 +74,6 @@ function get_content_pieces($args = array()) {
             );
         }
         $args['meta_query']=$content_type_meta_array;
-//
-//        $content_type_meta= array_values($content_type_meta_array);
-//
-//        print_r($content_type_meta_array); exit;
-
-        //NEED TO CHANGE THIS !!
-
-//        $args['meta_query']=
-//            array(
-//                'relation' => 'OR',
-//
-//                array(
-//                    'key'     => 'content_type',
-//                    'value'   => 'teacher_question',
-//                    'compare' => '='
-//                ),
-//
-//                array(
-//                    'key'     => 'content_type',
-//                    'value'   => 'content_piece',
-//                    'compare' => '='
-//                ),
-//
-//            );
-
-//         print_r($args['meta_query']); exit;
     }
 
     $args['numberposts'] = -1;
@@ -108,9 +81,11 @@ function get_content_pieces($args = array()) {
 
     if(!isset($args['post_status']))
         $args['post_status'] = 'any';
-
+    
+    unset($args['textbook']);
+    
     $content_items = get_posts($args);
-
+    
     if(isset($args['search_str']) && trim($args['search_str']) !='')
         $content_items = get_content_pieces_by_search_string($args['search_str'], $content_items);
 
@@ -599,7 +574,7 @@ function save_content_piece($data){
         'term_ids'          => $data['term_ids'],
         'duration'          => $data['duration'],
         'post_tags'         => $data['post_tags'],
-        'instructions'         => $data['instructions'],
+        'instructions'      => $data['instructions'],
         'hint_enable'       => $data['hint_enable'],
         'hint'              => $data['hint'],
         'comment_enable'    => $data['comment_enable'],
@@ -610,7 +585,7 @@ function save_content_piece($data){
     if($data['post_status']=='publish')
         $content_piece_additional['published_by']=$post_author;
 
-    $content_piece_meta= maybe_serialize($content_piece_additional);
+    $content_piece_meta= $content_piece_additional;
 
     update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
 
