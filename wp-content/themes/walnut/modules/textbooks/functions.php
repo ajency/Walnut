@@ -405,7 +405,7 @@ function get_assigned_textbooks( $user_id = '' ) {
                     'fields'=>'ids')
                 );
     
-    if(current_user_can('student')){
+    elseif(current_user_can('student')){
         
         $division_id = get_user_meta(get_current_user_id(), 'student_division',true);
         $division = fetch_single_division($division_id);

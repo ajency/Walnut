@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="{{videoUrl}}"> </video> <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="{{videoUrl}}"> </video> {{/videoUrl}} {{^videoUrl}} Sorry, this video file is not available for use {{/videoUrl}} <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',

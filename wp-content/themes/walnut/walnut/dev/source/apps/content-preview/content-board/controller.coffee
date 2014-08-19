@@ -17,7 +17,13 @@ define ['app'
 
                 @listenTo @view, "add:new:element", (container, type)->
                     App.request "add:new:element", container, type
-
+                    
+                @listenTo @view, "close", => 
+                    audioEls = @view.$el.find '.audio'
+                    _.each audioEls,(el, ind)->
+                        $(el).find '.pause'
+                        .trigger 'click'
+                        
                 @listenTo @view, 'dependencies:fetched', =>
                     @startFillingElements()          
 
