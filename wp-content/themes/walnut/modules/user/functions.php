@@ -112,6 +112,10 @@ function user_extend_profile_fields($user){
       else{
          $user_divisions = array_map('intval', $user_divisions);
       }     
+      $hide_textbooks="style='display:none'";
+      if(user_can($user->ID,'teacher'))
+        $hide_textbooks= "";
+      
       switch_to_blog(1);
 ?> 
     
@@ -122,7 +126,7 @@ function user_extend_profile_fields($user){
 
         <td>
             <div>
-            <ul clsss="textbooks-list">
+            <ul class="textbooks-list" <?=$hide_textbooks?>>
     <?php
 
 
@@ -168,7 +172,7 @@ function user_extend_profile_fields($user){
 
         <td>
             <div>
-            <ul clsss="divisions-list">
+            <ul class="divisions-list">
     <?php
         restore_current_blog();
         $divisions =  get_class_divisions();
