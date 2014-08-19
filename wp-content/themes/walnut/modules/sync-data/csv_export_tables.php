@@ -297,18 +297,24 @@ function get_postmeta_table_query($last_sync='', $user_id=''){
             ",
             "page"
         );
+        
     }
     else{
 
         $meta_ids_str = $post_ids_str = -1;
 
-        $meta_ids_str = get_meta_ids_str($last_sync);
+        $m_ids_str = get_meta_ids_str($last_sync);
+        
+        if($m_ids_str)
+            $meta_ids_str = $m_ids_str;
+        
         $postmeta_table_query=$wpdb->prepare(
             "SELECT * FROM {$wpdb->base_prefix}postmeta
                     WHERE post_id in ($post_ids_str)
                     OR meta_id in ($meta_ids_str)",
             null
         );
+            
     }    
 
     $postmeta_table= array(

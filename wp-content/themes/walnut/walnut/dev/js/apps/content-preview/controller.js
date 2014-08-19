@@ -40,8 +40,6 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
       Controller.prototype.initialize = function(options) {
         var contentID, content_preview;
         contentID = options.contentID, this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.students = options.students, content_preview = options.content_preview, this.classID = options.classID;
-        console.log('questionResponseModel');
-        console.log(this.questionResponseModel);
         if (contentID) {
           this.model = App.request("get:content:piece:by:id", contentID);
         }
@@ -65,32 +63,30 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
         })(this));
         return this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
-            return App.execute("when:fetched", _this.questionResponseModel, function() {
-              App.execute("show:top:panel", {
-                region: _this.layout.topPanelRegion,
-                model: _this.model,
-                questionResponseModel: _this.questionResponseModel,
-                timerObject: _this.timerObject,
-                display_mode: _this.display_mode,
-                students: _this.students,
-                classID: _this.classID
-              });
-              if (_this.model.get('question_type') === 'multiple_eval') {
-                return App.execute("show:single:question:multiple:evaluation:app", {
-                  region: _this.layout.contentBoardRegion,
-                  questionResponseModel: _this.questionResponseModel,
-                  studentCollection: _this.students,
-                  display_mode: _this.display_mode,
-                  timerObject: _this.timerObject,
-                  evaluationParams: _this.model.get('grading_params')
-                });
-              } else {
-                return App.execute("show:content:board", {
-                  region: _this.layout.contentBoardRegion,
-                  model: _this.model
-                });
-              }
+            App.execute("show:top:panel", {
+              region: _this.layout.topPanelRegion,
+              model: _this.model,
+              questionResponseModel: _this.questionResponseModel,
+              timerObject: _this.timerObject,
+              display_mode: _this.display_mode,
+              students: _this.students,
+              classID: _this.classID
             });
+            if (_this.model.get('question_type') === 'multiple_eval') {
+              return App.execute("show:single:question:multiple:evaluation:app", {
+                region: _this.layout.contentBoardRegion,
+                questionResponseModel: _this.questionResponseModel,
+                studentCollection: _this.students,
+                display_mode: _this.display_mode,
+                timerObject: _this.timerObject,
+                evaluationParams: _this.model.get('grading_params')
+              });
+            } else {
+              return App.execute("show:content:board", {
+                region: _this.layout.contentBoardRegion,
+                model: _this.model
+              });
+            }
           };
         })(this));
       };

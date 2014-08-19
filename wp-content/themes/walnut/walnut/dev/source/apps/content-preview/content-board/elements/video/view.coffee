@@ -8,11 +8,16 @@ define ['app'], (App)->
 
             className : 'video'
 
-            template : '    <video  class="video-js vjs-default-skin" controls preload="none" width="100%"
+            template : '    {{#videoUrl}}
+                            <video  class="video-js vjs-default-skin" controls preload="none" width="100%"
                             poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
                                     data-setup="{}" controls src="{{videoUrl}}">
 
                             </video>
+                            {{/videoUrl}}
+                            {{^videoUrl}}
+                              Sorry, this video file is not available for use
+                            {{/videoUrl}}
                             <div class="clearfix"></div>
                       					'
 

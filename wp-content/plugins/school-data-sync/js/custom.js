@@ -101,7 +101,7 @@ jQuery(document).ready(function() {
     
     function school_data_sync_start(referer,lastsync_id,syncstatus,respdata){
         
-        if(respdata.valid_blog){
+
             jQuery.post( ajaxurl,
             {
                 action    : 'sds_data_sync_start',
@@ -123,10 +123,7 @@ jQuery(document).ready(function() {
                                    jQuery('#sync-media').prop('disabled', false);
                        }          
             },'json');
-        }
-        else{
-            /// code logic to delete site content
-        }
+
         
     }
     
