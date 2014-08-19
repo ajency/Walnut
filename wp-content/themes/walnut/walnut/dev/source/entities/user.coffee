@@ -49,6 +49,39 @@ define ["app", 'backbone'], (App, Backbone) ->
 					console.log data[key]
 					data[key]
 
+				getDummyStudents:->
+					userCollection = new UserCollection
+					students= [
+						{
+							ID 				: 2343424
+							display_name 	: 'Dummy Student 1'
+							user_email 		: 'dummystudent1@mailinator.com'
+						},
+						{
+							ID 				: 2343434
+							display_name 	: 'Dummy Student 2'
+							user_email 		: 'dummystudent2@mailinator.com'
+						},
+						{
+							ID 				: 23434234
+							display_name 	: 'Dummy Student 3'
+							user_email 		: 'dummystudent3@mailinator.com'
+						},
+						{
+							ID 				: 2343423432
+							display_name 	: 'Dummy Student 4'
+							user_email 		: 'dummystudent4@mailinator.com'
+						},
+						{
+							ID 				: 2343432342
+							display_name 	: 'Dummy Student 5'
+							user_email 		: 'dummystudent5@mailinator.com'
+						},
+					]
+
+					userCollection.set students
+					userCollection
+
 
 			App.reqres.setHandler "get:user:model", ->
 				loggedInUser	
@@ -61,3 +94,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:user:data",(key)->
 				API.getUserData key
+
+			App.reqres.setHandler "get:dummy:students",->
+				API.getDummyStudents()

@@ -17,14 +17,18 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td> <td>{{&statusMessage}}</td> <td class="text-center"><a target="_blank" href="{{view_url}}">View</a> {{&edit_link}} {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
+      ListItemView.prototype.template = '<td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#archivedModule}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> {{/archivedModule}} </td>';
 
       ListItemView.prototype.serializeData = function() {
         var data, edit_url, modules, _ref;
         data = ListItemView.__super__.serializeData.call(this);
         data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
         data.sort_date = moment(data.post_modified).format("YYYYMMDD");
-        data.view_url = SITEURL + '/#content-piece/' + data.ID;
+        if (data.content_type === 'student_question') {
+          data.view_url = SITEURL + '/#dummy-quiz/' + data.ID;
+        } else {
+          data.view_url = SITEURL + '/#dummy-module/' + data.ID;
+        }
         edit_url = SITEURL + '/content-creator/#edit-content/' + data.ID;
         data.edit_link = '';
         if (data.post_status === 'pending') {

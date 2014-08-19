@@ -30,9 +30,11 @@ define ['app'], (App)->
 
             mixinTemplateHelpers : (data)->
                 data = super data
-                data.content_preview = Marionette.getOption @, 'content_preview'
-                data.showHintButton = if data.content_type is 'student_question' and data.hint_enable then true else false
+                
+                if data.content_type is 'student_question' and Marionette.getOption @, 'content_preview'
+                    data.content_preview = true
 
+                data.showHintButton = if data.content_type is 'student_question' and data.hint_enable then true else false
                 data.instructionsLabel = if @model.get('content_type') is 'content_piece' then 'Procedure Summary' else 'Instructions'
 
                 data
