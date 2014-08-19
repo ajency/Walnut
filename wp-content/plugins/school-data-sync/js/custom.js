@@ -101,27 +101,32 @@ jQuery(document).ready(function() {
     
     function school_data_sync_start(referer,lastsync_id,syncstatus,respdata){
         
-        jQuery.post( ajaxurl,
-        {
-            action    : 'sds_data_sync_start',
-            filepath  : respdata.exported_csv_url,
-            last_sync : respdata.last_sync,
-            lastsync_id : lastsync_id,
-            syncstatus : syncstatus
-        },
-        function(data) {           
-                   if(data.code === 'OK'){ 
-                               jQuery(referer).next().text('File downloaded...');
-                               school_data_sync_import(referer,data.sync_request_id)
-                               
-                  
-                   } else if(data.code === 'ERROR') {
-                               //alert('error');
-                               jQuery(referer).next().text('File download failed'); 
-                               jQuery(referer).prop('disabled', false);
-                               jQuery('#sync-media').prop('disabled', false);
-                   }          
-        },'json');
+        if(respdata.valid_blog){
+            jQuery.post( ajaxurl,
+            {
+                action    : 'sds_data_sync_start',
+                filepath  : respdata.exported_csv_url,
+                last_sync : respdata.last_sync,
+                lastsync_id : lastsync_id,
+                syncstatus : syncstatus
+            },
+            function(data) {           
+                       if(data.code === 'OK'){ 
+                                   jQuery(referer).next().text('File downloaded...');
+                                   school_data_sync_import(referer,data.sync_request_id)
+
+
+                       } else if(data.code === 'ERROR') {
+                                   //alert('error');
+                                   jQuery(referer).next().text('File download failed'); 
+                                   jQuery(referer).prop('disabled', false);
+                                   jQuery('#sync-media').prop('disabled', false);
+                       }          
+            },'json');
+        }
+        else{
+            /// code logic to delete site content
+        }
         
     }
     
