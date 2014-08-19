@@ -10,3 +10,4 @@ wp-content/uploads
 composer.phar
 wp-content/themes/walnut/vendor
 wp-content/themes/walnut/csvupload
+/nbproject
