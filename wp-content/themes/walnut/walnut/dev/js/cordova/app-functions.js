@@ -294,14 +294,12 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
           'allcaps': _.getUserCapabilities()
         });
       }
-      if (workingSynapseProject === 'studentsApp') {
-        data = {
-          'division': _.getStudentDivision()
-        };
-        return user.set({
-          'data': data
-        });
-      }
+      data = {
+        'division': _.getStudentDivision()
+      };
+      return user.set({
+        'data': data
+      });
     }
   });
 });

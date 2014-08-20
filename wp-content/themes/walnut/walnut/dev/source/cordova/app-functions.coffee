@@ -314,8 +314,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			if not _.isNull(_.getUserCapabilities())
 				user.set 'allcaps' : _.getUserCapabilities()
 
-			if workingSynapseProject is 'studentsApp'
-				data = 
-					'division' : _.getStudentDivision()
+			data = 
+				'division' : _.getStudentDivision()
 
-				user.set 'data' : data
+			user.set 'data' : data

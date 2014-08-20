@@ -41,6 +41,30 @@ define ['underscore'], ( _)->
             _.localStorage.getItem("blog_name")
 
 
+        # save/get site url
+        setSiteUrl : (url)->
+            _.localStorage.setItem("site_url", url)
+
+        getSiteUrl : ->
+            _.localStorage.getItem("site_url")
+
+
+        # save/get student division
+        setStudentDivision : (division)->
+            _.localStorage.setItem("student_division", division)
+
+        getStudentDivision : ->
+            _.localStorage.getItem("student_division")
+
+
+        # save/get user capabilities
+        setUserCapabilities : (allcaps)->
+            _.localStorage.setItem("user_capabilities", JSON.stringify(allcaps))
+
+        getUserCapabilities : ->
+            JSON.parse(_.localStorage.getItem("user_capabilities"))
+
+
         # save/get school logo image source
         setSchoolLogoSrc : (src)->
             _.localStorage.setItem("school_logo_src", src)

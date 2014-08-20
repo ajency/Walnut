@@ -27,6 +27,24 @@ define(['underscore'], function(_) {
     getBlogName: function() {
       return _.localStorage.getItem("blog_name");
     },
+    setSiteUrl: function(url) {
+      return _.localStorage.setItem("site_url", url);
+    },
+    getSiteUrl: function() {
+      return _.localStorage.getItem("site_url");
+    },
+    setStudentDivision: function(division) {
+      return _.localStorage.setItem("student_division", division);
+    },
+    getStudentDivision: function() {
+      return _.localStorage.getItem("student_division");
+    },
+    setUserCapabilities: function(allcaps) {
+      return _.localStorage.setItem("user_capabilities", JSON.stringify(allcaps));
+    },
+    getUserCapabilities: function() {
+      return JSON.parse(_.localStorage.getItem("user_capabilities"));
+    },
     setSchoolLogoSrc: function(src) {
       return _.localStorage.setItem("school_logo_src", src);
     },
