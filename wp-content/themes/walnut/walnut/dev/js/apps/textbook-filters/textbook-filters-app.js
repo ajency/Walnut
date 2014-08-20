@@ -42,7 +42,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         })(this));
         this.selectedFilterParamsObject.setHandler("get:parameters:for:search", (function(_this) {
           return function() {
-            var data, ele, post_status, term_id;
+            var content_type, data, ele, post_status, term_id;
             ele = $(_this.view.el).find('#textbooks-filter');
             if ($(ele).val()) {
               term_id = $(ele).val();
@@ -61,9 +61,12 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             }
             ele = $(_this.view.el).find('#content-post-status-filter');
             post_status = $(ele).val();
+            ele = $(_this.view.el).find('#content-type-filter');
+            content_type = $(ele).val();
             return data = {
               'term_id': term_id,
-              'post_status': post_status
+              'post_status': post_status,
+              'content_type': content_type
             };
           };
         })(this));

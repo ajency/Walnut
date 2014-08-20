@@ -40,10 +40,14 @@ define ['app'
                     
                     ele= $(@view.el).find '#content-post-status-filter'
                     post_status= $(ele).val()
+
+                    ele= $(@view.el).find '#content-type-filter'
+                    content_type= $(ele).val()
                     
                     data=
                       'term_id': term_id
                       'post_status': post_status
+                      'content_type': content_type
 
 
                 App.execute "when:fetched", @textbooksCollection,=>

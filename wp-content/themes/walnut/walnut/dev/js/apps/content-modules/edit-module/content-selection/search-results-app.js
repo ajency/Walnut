@@ -40,6 +40,9 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         filters = {};
         if (useFilters) {
           filters = this.selectedFilterParamsObject.request("get:parameters:for:search");
+          if (filters.content_type) {
+            content_type = [filters.content_type];
+          }
         }
         this.newCollection = App.request("get:content:pieces", {
           content_type: content_type,
@@ -71,7 +74,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return SearchResultsLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SearchResultsLayout.prototype.template = 'Search Questions: <input type="text" class="search-box" id="search-box"> <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span> <button class="btn btn-success btn-cons2" id="search-btn">Search</button> <div id="content-selection-region"></div>';
+      SearchResultsLayout.prototype.template = 'Search: <input type="text" class="search-box" id="search-box"> <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span> <button class="btn btn-success btn-cons2" id="search-btn">Search</button> <label id="error-div" style="display:none"><span class="small text-error">Please enter the search keyword</span></label> <div id="content-selection-region"></div>';
 
       SearchResultsLayout.prototype.regions = {
         contentSelectionRegion: '#content-selection-region'
@@ -95,7 +98,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           useFilters = false;
         }
         if (searchStr) {
+          this.$el.find("#error-div").hide();
           return this.trigger("search:content", searchStr, useFilters);
+        } else {
+          return this.$el.find("#error-div").show();
         }
       };
 

@@ -25,8 +25,9 @@ define ['app'
                 filters= {}
                 if useFilters
                     filters= @selectedFilterParamsObject.request "get:parameters:for:search"
-                    filters.post_status = 'any' if not filters.post_status
 
+                filters.post_status = 'any' if not filters.post_status
+                
                 if @groupType is 'teaching-module'
                     @newCollection = App.request "get:content:groups",
                         post_status     : 'any'
@@ -53,6 +54,7 @@ define ['app'
             template: 'Search: <input type="text" class="search-box" id="search-box">
                           <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span>
                          <button class="btn btn-success btn-cons2" id="search-btn">Search</button>
+                       <label id="error-div" style="display:none"><span class="small text-error">Please enter the search keyword</span></label>
                        <div id="content-selection-region"></div>'
 
             regions:
@@ -72,4 +74,10 @@ define ['app'
                 then useFilters = true
                 else useFilters = false
 
-                @trigger("search:content", searchStr,useFilters) if searchStr
+                if searchStr
+                    @$el.find "#error-div"
+                    .hide()
+                    @trigger("search:content", searchStr,useFilters)
+                else
+                    @$el.find "#error-div"
+                    .show()
