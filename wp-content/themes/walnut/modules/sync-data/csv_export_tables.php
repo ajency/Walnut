@@ -71,10 +71,11 @@ function is_blog_expired($blog_id){
    switch_to_blog($blog_id);
    
    $blog_meta = get_option('blog_meta');
+   $blog_meta_array = maybe_unserialize($blog_meta);
    
    switch_to_blog($current_blog);
-   if($blog_meta['validto'] != ''){
-       if(strtotime($blog_meta['validto']) < time()){
+   if($blog_meta_array['validto'] != ''){
+       if(strtotime('+24 hours',strtotime($blog_meta_array['validto'])) < time()){
            return true;
        }
    }

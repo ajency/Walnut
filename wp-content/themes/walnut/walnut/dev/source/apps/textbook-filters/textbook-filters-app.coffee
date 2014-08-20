@@ -21,6 +21,34 @@ define ['app'
 #                        console.log ele.id
 #                        console.log term_id
 
+                @selectedFilterParamsObject.setHandler "get:parameters:for:search", =>
+                    
+                    #checks for selected id based on the following order.
+                    #the final term id is returned
+                    
+                    ele= $(@view.el).find '#textbooks-filter'
+                    term_id= $(ele).val() if $(ele).val()
+                    
+                    ele= $(@view.el).find '#chapters-filter'
+                    term_id= $(ele).val() if $(ele).val()
+                    
+                    ele= $(@view.el).find '#sections-filter'
+                    term_id= $(ele).val() if $(ele).val()
+                    
+                    ele= $(@view.el).find '#subsections-filter'
+                    term_id= $(ele).val() if $(ele).val()
+                    
+                    ele= $(@view.el).find '#content-post-status-filter'
+                    post_status= $(ele).val()
+
+                    ele= $(@view.el).find '#content-type-filter'
+                    content_type= $(ele).val()
+                    
+                    data=
+                      'term_id': term_id
+                      'post_status': post_status
+                      'content_type': content_type
+
 
                 App.execute "when:fetched", @textbooksCollection,=>
                     @view = view = @_getTextbookFiltersView @collection

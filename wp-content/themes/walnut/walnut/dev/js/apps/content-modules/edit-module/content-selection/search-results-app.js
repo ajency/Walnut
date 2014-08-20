@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       Controller.prototype.initialize = function(opts) {
         var layout;
-        this.contentGroupCollection = opts.contentGroupCollection, this.groupType = opts.groupType;
+        this.contentGroupCollection = opts.contentGroupCollection, this.groupType = opts.groupType, this.selectedFilterParamsObject = opts.selectedFilterParamsObject;
         this.layout = layout = this._getSearchResultsLayout();
         this.searchCollection = App.request("empty:content:pieces:collection");
         this.show(layout, {
@@ -26,19 +26,29 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             return App.execute("show:all:content:selection:app", {
               region: _this.layout.contentSelectionRegion,
               contentPiecesCollection: _this.searchCollection,
-              contentGroupCollection: _this.contentGroupCollection
+              contentGroupCollection: _this.contentGroupCollection,
+              groupType: _this.groupType
             });
           };
         })(this));
         return this.listenTo(this.layout, "search:content", this._searchContent);
       };
 
-      Controller.prototype._searchContent = function(searchStr) {
-        var content_type;
+      Controller.prototype._searchContent = function(searchStr, useFilters) {
+        var content_type, filters;
         content_type = this.groupType === 'teaching-module' ? ['teacher_question', 'content_piece'] : ['student_question'];
+        filters = {};
+        if (useFilters) {
+          filters = this.selectedFilterParamsObject.request("get:parameters:for:search");
+          if (filters.content_type) {
+            content_type = [filters.content_type];
+          }
+        }
         this.newCollection = App.request("get:content:pieces", {
           content_type: content_type,
           search_str: searchStr,
+          textbook: filters != null ? filters.term_id : void 0,
+          post_status: filters != null ? filters.post_status : void 0,
           exclude: this.contentGroupCollection.pluck('ID')
         });
         return App.execute("when:fetched", this.newCollection, (function(_this) {
@@ -64,24 +74,34 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return SearchResultsLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SearchResultsLayout.prototype.template = 'Search Questions: <input type="text" class="search-box" id="search-box"> <br><br> <div id="content-selection-region"></div>';
+      SearchResultsLayout.prototype.template = 'Search: <input type="text" class="search-box" id="search-box"> <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span> <button class="btn btn-success btn-cons2" id="search-btn">Search</button> <label id="error-div" style="display:none"><span class="small text-error">Please enter the search keyword</span></label> <div id="content-selection-region"></div>';
 
       SearchResultsLayout.prototype.regions = {
         contentSelectionRegion: '#content-selection-region'
       };
 
       SearchResultsLayout.prototype.events = {
-        'keypress #search-box': 'searchContent'
+        'click #search-btn': 'searchContent',
+        'keypress .search-box': function(e) {
+          if (e.which === 13) {
+            return this.searchContent();
+          }
+        }
       };
 
-      SearchResultsLayout.prototype.searchContent = function(e) {
-        var p, searchStr;
-        p = e.which;
-        if (p === 13) {
-          searchStr = _.trim($(e.target).val());
-          if (searchStr) {
-            return this.trigger("search:content", searchStr);
-          }
+      SearchResultsLayout.prototype.searchContent = function() {
+        var searchStr, useFilters;
+        searchStr = _.trim(this.$el.find('#search-box').val());
+        if (this.$el.find('#use-filters').is(":checked")) {
+          useFilters = true;
+        } else {
+          useFilters = false;
+        }
+        if (searchStr) {
+          this.$el.find("#error-div").hide();
+          return this.trigger("search:content", searchStr, useFilters);
+        } else {
+          return this.$el.find("#error-div").show();
         }
       };
 
