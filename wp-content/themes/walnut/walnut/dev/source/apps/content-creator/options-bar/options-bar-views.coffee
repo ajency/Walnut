@@ -141,4 +141,8 @@ define ['app',
                     .show()
 
             previewQuestion:->
-                window.open SITEURL + "/#content-piece/"+@model.id, 'target':'blank'
+                if @model.get('content_type') is 'student_question'
+                    window.open SITEURL + "/#dummy-quiz/"+@model.id, 'target':'blank'
+                else
+                    window.open SITEURL + "/#dummy-module/"+@model.id, 'target':'blank'
+

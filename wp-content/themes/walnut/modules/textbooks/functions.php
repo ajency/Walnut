@@ -391,16 +391,45 @@ function get_textbooks_for_class( $classid ) {
 }
 
 function get_assigned_textbooks( $user_id = '' ) {
-
+    
+    global $wpdb;
+    
     if ($user_id == '')
         $user_id = get_current_user_id();
+    
+    if(current_user_can('administrator') || current_user_can('school_admin'))
+        $txtbook_ids = get_terms(
+                'textbook', 
+                array(
+                    'hide_empty'=>false, 
+                    'fields'=>'ids')
+                );
+    
+    elseif(current_user_can('student')){
+        
+        $division_id = get_user_meta(get_current_user_id(), 'student_division',true);
+        $division = fetch_single_division($division_id);
+        
+        $class_id= $division['class_id'];
+        
+        $query= $wpdb->prepare(
+                "SELECT textbook_id from {$wpdb->base_prefix}textbook_relationships 
+                    WHERE class_id like %s",
+                '%"'.$class_id.'";%'
+                );
+                
+        $txtbook_ids= $wpdb->get_col($query);
+        
+    }
+    
+    else{
 
-    $txtbooks_assigned = get_user_meta( $user_id, 'textbooks', true );
+        $txtbooks_assigned = get_user_meta( $user_id, 'textbooks', true );
 
-    $txtbook_ids = maybe_unserialize( $txtbooks_assigned );
-
+        $txtbook_ids = maybe_unserialize( $txtbooks_assigned );
+    }
+    
     return $txtbook_ids;
-
 }
 
 /**

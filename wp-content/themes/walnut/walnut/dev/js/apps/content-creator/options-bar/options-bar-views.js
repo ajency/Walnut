@@ -140,9 +140,15 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype.previewQuestion = function() {
-        return window.open(SITEURL + "/#content-piece/" + this.model.id, {
-          'target': 'blank'
-        });
+        if (this.model.get('content_type') === 'student_question') {
+          return window.open(SITEURL + "/#dummy-quiz/" + this.model.id, {
+            'target': 'blank'
+          });
+        } else {
+          return window.open(SITEURL + "/#dummy-module/" + this.model.id, {
+            'target': 'blank'
+          });
+        }
       };
 
       return OptionsBarView;

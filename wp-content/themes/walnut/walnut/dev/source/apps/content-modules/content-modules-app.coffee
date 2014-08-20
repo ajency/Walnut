@@ -15,6 +15,7 @@ define ['app'
                 'module-list': 'modulesListing'
                 'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule'
                 'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule'
+                'dummy-module/:content_piece_id' : 'showDummyModule'
 
 
         Controller =
@@ -96,6 +97,29 @@ define ['app'
                     mode: mode
                     division: div
                     classID: classID
+
+
+            showDummyModule:(content_piece_id)->
+
+                @contentPiece = App.request "get:content:piece:by:id", content_piece_id
+                App.execute "when:fetched", @contentPiece, =>
+                    questionsCollection = App.request "empty:content:pieces:collection"
+                    questionsCollection.add @contentPiece
+
+                    if @contentPiece.get('content_type') isnt 'student_question'
+                        
+                        dummyGroupModel= App.request "create:dummy:content:module", content_piece_id
+
+                        App.execute "start:teacher:teaching:app",
+                            region: App.mainContentRegion
+                            division: 3
+                            contentPiece: @contentPiece
+                            questionResponseCollection: App.request "get:empty:question:response:collection"
+                            contentGroupModel: dummyGroupModel
+                            questionsCollection: questionsCollection
+                            classID: 2
+                            studentCollection: App.request "get:dummy:students"
+                            display_mode: 'class_mode'
 
         ContentModulesApp.on "start", ->
             new  ContentModulesRouter

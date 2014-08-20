@@ -114,16 +114,35 @@ function get_media_by_ids(){
     $current_blog_id= get_current_blog_id();
     switch_to_blog(1);
     foreach ($ids as $id){
-//        $media[] = $id;
-        $media_temp = wp_prepare_attachment_for_js( $id );
-        if(in_array($media_temp['type'], $enc_media_types)){
-            $media_temp = modify_media_url($media_temp,$media_temp['type']);
-        }
-        $media[] = $media_temp;
 
+        $media_file=wp_prepare_attachment_for_js( $id );
+
+        if(in_array($media_file['type'], $enc_media_types)){
+             
+            $media_file = modify_media_url($media_file,$media_file['type']); // change the media url to the decrypted file path
+        }
+        
+        $file_url= $media_file['url'];
+        
+        $upload_dir=wp_upload_dir();
+        
+        $directory= $upload_dir['basedir'];
+        
+        if($media_file['type'] === 'video')
+            $file_path= $directory.'/videos-web/'.$media_file['filename'];
+        else
+            $file_path= $directory.'/audio-web/'.$media_file['filename'];
+        
+        if(file_exists($file_path))
+            $media[] = $media_file;
+        
+        else 
+            $media[]= array('error'=>'file doesnt exist','url'=>false);
         
     }
+    
     switch_to_blog($current_blog_id);
+    
     wp_send_json( array(
         'code' => 'OK',
         'data' => $media

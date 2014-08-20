@@ -543,6 +543,30 @@ function cron_check_school_valid(){
 add_action('scheduled_school_validity', 'cron_check_school_valid');
 
 
+function school_is_syncd(){
+    global $wpdb;
+    
+    $qry_last_import = "SELECT last_sync FROM {$wpdb->prefix}sync_local_data
+                                     WHERE status =  'imported'  
+                                     ORDER BY id DESC LIMIT 1";
+    $last_sync_date = $wpdb->get_var($qry_last_import);
+
+    if($last_sync_date){
+        
+    $expirytime = strtotime("+30 days",strtotime($last_sync_date));
+
+    if($expirytime < time() ){
+       return false;
+    }else{
+        return true;
+    }
+
+   }
+   else{
+       return false;
+   }
+}
+
 function get_sync_log_devices(){
     global $wpdb;
     

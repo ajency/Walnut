@@ -128,6 +128,25 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       newQuiz: function() {
         return new Quiz.ItemModel;
+      },
+      getDummyQuiz: function(content_piece_id) {
+        var dummyQuiz;
+        dummyQuiz = new Quiz.ItemModel();
+        dummyQuiz.set({
+          id: 3423432,
+          name: 'Dummy Module',
+          description: 'Dummy Module Description',
+          type: 'quiz',
+          quiz_type: 'test',
+          duration: 40,
+          content_pieces: [content_piece_id],
+          permissions: {
+            allow_skip: true,
+            display_answer: true,
+            allow_hint: true
+          }
+        });
+        return dummyQuiz;
       }
     };
     App.reqres.setHandler("get:quizes", function(opt) {
@@ -139,8 +158,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("save:quiz:details", function(data) {
       return API.saveQuizDetails(data);
     });
-    return App.reqres.setHandler("new:quiz", function() {
+    App.reqres.setHandler("new:quiz", function() {
       return API.newQuiz();
+    });
+    return App.reqres.setHandler("create:dummy:quiz:module", function(content_piece_id) {
+      return API.getDummyQuiz(content_piece_id);
     });
   });
 });

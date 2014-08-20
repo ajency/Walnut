@@ -179,6 +179,7 @@ function create_custom_tables(){
 function add_new_roles_main_site()
 {
     global $wp_roles;
+    $role_cloned_teacher = $wp_roles->get_role('author');
     if(get_role('subscriber')!=NULL)remove_role( 'subscriber' );//removes the subscriber role
     if(get_role('contributor')!=NULL)remove_role( 'contributor' );//removes the contributor role
     if(get_role('author')!=NULL)remove_role( 'author' );//removes the author role
@@ -193,8 +194,13 @@ function add_new_roles_main_site()
         $wp_roles->add_role($role, $role_name, $role_cloned->capabilities);
     }
     add_role( 'student','Student');
-    add_role( 'teacher','Teacher');
     add_role( 'parent','Parent');
+   // add_role( 'teacher','Teacher');
+    $wp_roles->add_role('teacher', 'Teacher', $role_cloned_teacher->capabilities);
+;
+    
+    $role = get_role( 'teacher' );
+    $role->add_cap( 'manage_options' ); 
 
 }
 
