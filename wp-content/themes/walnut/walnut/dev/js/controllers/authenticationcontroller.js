@@ -70,11 +70,9 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             return _this.onErrorResponse(resp.error);
           } else {
             _this.onDeviceLoginSuccessOperation(resp.login_details.ID, _this.data.txtusername);
-            if (_.isNull(_.getBlogID())) {
-              return _this.initialAppLogin(resp);
-            } else {
-              return _this.authenticateUserBlogId(resp);
-            }
+            _.createDataTables(_.db);
+            _this.saveUpdateUserDetails(server_resp);
+            return _this.onSuccessResponse();
           }
         };
       })(this), 'json').fail((function(_this) {
@@ -107,28 +105,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       this.setUserModel();
       _.setUserID(id);
       return _.setUserName(username);
-    };
-
-    AuthenticationController.prototype.initialAppLogin = function(server_resp) {
-      var resp;
-      resp = server_resp.blog_details;
-      _.setBlogID(resp.blog_id);
-      _.setBlogName(resp.blog_name);
-      _.createDataTables(_.db);
-      _.downloadSchoolLogo(resp.blog_logo);
-      this.saveUpdateUserDetails(server_resp);
-      return this.onSuccessResponse();
-    };
-
-    AuthenticationController.prototype.authenticateUserBlogId = function(server_resp) {
-      var resp;
-      resp = server_resp.blog_details;
-      if (resp.blog_id !== _.getBlogID()) {
-        return this.onErrorResponse('The app is configured for school ' + _.getBlogName());
-      } else {
-        this.saveUpdateUserDetails(server_resp);
-        return this.onSuccessResponse();
-      }
     };
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {

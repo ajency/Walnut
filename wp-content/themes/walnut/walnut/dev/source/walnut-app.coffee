@@ -101,21 +101,8 @@ define ['marionette'], (Marionette)->
             # not be allowed to navigate else where in the app and only the sync screen should be visible
             # to the user.
 
-            lastSyncOperation = _.getLastSyncOperation()
-            lastSyncOperation.done (typeOfOperation)->
 
-                if typeOfOperation is 'none' or typeOfOperation isnt 'file_import'
-                    App.navigate('sync', trigger: true)
-                else
-                    App.navigate('teachers/dashboard', trigger: true)
-
-        else
-
-            if user_role[0] == 'administrator'
-                App.navigate('textbooks', trigger: true)
-
-            else
-                App.navigate('teachers/dashboard', trigger: true)
+            App.navigate('header', trigger: true)
                 
 
         App.execute "show:breadcrumbapp", region: App.breadcrumbRegion

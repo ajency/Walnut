@@ -80,32 +80,13 @@ define(['marionette'], function(Marionette) {
   });
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
-      var lastSyncOperation, user;
+      var user;
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        lastSyncOperation = _.getLastSyncOperation();
-        lastSyncOperation.done(function(typeOfOperation) {
-          if (typeOfOperation === 'none' || typeOfOperation !== 'file_import') {
-            return App.navigate('sync', {
-              trigger: true
-            });
-          } else {
-            return App.navigate('teachers/dashboard', {
-              trigger: true
-            });
-          }
+        App.navigate('header', {
+          trigger: true
         });
-      } else {
-        if (user_role[0] === 'administrator') {
-          App.navigate('textbooks', {
-            trigger: true
-          });
-        } else {
-          App.navigate('teachers/dashboard', {
-            trigger: true
-          });
-        }
       }
       App.execute("show:breadcrumbapp", {
         region: App.breadcrumbRegion

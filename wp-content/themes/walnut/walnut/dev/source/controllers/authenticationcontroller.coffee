@@ -63,8 +63,14 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 						# if the blog id is null, then the app is installed
 						# for the first time.
-						if _.isNull(_.getBlogID()) then @initialAppLogin(resp)
-						else @authenticateUserBlogId(resp)
+						# local transaction
+						_.createDataTables(_.db)
+
+						# download school logo
+						# _.downloadSchoolLogo(resp.blog_logo)
+						
+						@saveUpdateUserDetails(server_resp)
+						@onSuccessResponse()
 				,
 				'json'
 
@@ -99,36 +105,6 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			_.setUserName(username)
 
 
-		
-		# when the app is installed for the first time
-		initialAppLogin : (server_resp)->
-
-			resp = server_resp.blog_details
-			
-			# set blog id and blog name
-			_.setBlogID(resp.blog_id)
-			_.setBlogName(resp.blog_name)
-
-			# local transaction
-			_.createDataTables(_.db)
-
-			# download school logo
-			_.downloadSchoolLogo(resp.blog_logo)
-			
-			@saveUpdateUserDetails(server_resp)
-			@onSuccessResponse()
-
-		
-		# compare users blog id to that of the locally saved blog id
-		authenticateUserBlogId : (server_resp)->
-
-			resp = server_resp.blog_details
-
-			if resp.blog_id isnt _.getBlogID()
-				@onErrorResponse('The app is configured for school '+_.getBlogName())
-			else
-				@saveUpdateUserDetails(server_resp)
-				@onSuccessResponse()
 
 
 
