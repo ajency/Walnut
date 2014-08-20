@@ -68,7 +68,7 @@ function display_header() {
 	?>
        <style type="text/css">
         body.wp-core-ui  h1#logo a {
-            background-image: url(./wp-content/themes/walnut/images/synapse-logo-main.png);
+            background-image: url(../wp-content/themes/walnut/images/synapse-logo-main.png);
             padding-bottom: 0px;
             margin-bottom:10px;
             height:100px;

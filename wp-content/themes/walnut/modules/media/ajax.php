@@ -37,7 +37,7 @@ function get_blog_media() {
     
     $enc_media_types = array('audio','video');
     
-    if(in_array($media['type'], $enc_media_types)){
+    if(in_array($media['type'], $enc_media_types && !is_multisite())){
             $media = modify_media_url($media,$media['type']);
     }
 
@@ -117,7 +117,7 @@ function get_media_by_ids(){
 
         $media_file=wp_prepare_attachment_for_js( $id );
 
-        if(in_array($media_file['type'], $enc_media_types)){
+        if(in_array($media_file['type'], $enc_media_types) && !is_multisite()){
              
             $media_file = modify_media_url($media_file,$media_file['type']); // change the media url to the decrypted file path
         }
@@ -128,10 +128,18 @@ function get_media_by_ids(){
         
         $directory= $upload_dir['basedir'];
         
-        if($media_file['type'] === 'video')
-            $file_path= $directory.'/videos-web/'.$media_file['filename'];
-        else
-            $file_path= $directory.'/audio-web/'.$media_file['filename'];
+        if(is_multisite()){
+            if($media_file['type'] === 'video')
+                $file_path= $directory.'/videos-web/'.$media_file['filename'];
+            else
+                $file_path= $directory.'/audio-web/'.$media_file['filename'];
+        }
+        else{
+             if($media_file['type'] === 'video')
+                $file_path= $directory.'/videos/'.$media_file['filename'];
+            else
+                $file_path= $directory.'/audios/'.$media_file['filename'];
+        }
         
         if(file_exists($file_path))
             $media[] = $media_file;

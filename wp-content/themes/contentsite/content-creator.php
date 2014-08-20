@@ -81,7 +81,7 @@ Template Name: Content Creator
                     <?php endif;?>  
 
                     <?php global $current_user;?>       
-                    <?php if(!is_multisite() && in_array('teacher', $current_user->roles) && school_is_syncd()) :?>
+                    <?php if(!is_multisite() && in_array('teacher', $current_user->roles) && school_is_syncd() && is_user_logged_in()) :?>
                           <a href="<?php echo admin_url().'options-general.php?page=school_data_sync' ?>">Data Sync</a>
                      <?php endif;?>
                             
