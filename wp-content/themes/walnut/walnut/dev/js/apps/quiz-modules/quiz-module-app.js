@@ -16,7 +16,8 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         'edit-quiz/:id': 'editQuiz',
         'quiz-list': 'showQuizList',
         'view-quiz/:id': 'viewQuiz',
-        'students/dashboard/textbook/:tID/quiz/:qID': 'startQuizClassMode'
+        'students/dashboard/textbook/:tID/quiz/:qID': 'startQuizClassMode',
+        'dummy-quiz/:content_piece_id': 'showDummyQuiz'
       };
 
       return QuizModuleRouter;
@@ -53,6 +54,38 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
           region: App.mainContentRegion,
           groupType: 'quiz'
         });
+      },
+      showDummyQuiz: function(content_piece_id) {
+        var questionsCollection;
+        this.contentPiece = App.request("get:content:piece:by:id", content_piece_id);
+        questionsCollection = App.request("empty:content:pieces:collection");
+        return App.execute("when:fetched", this.contentPiece, (function(_this) {
+          return function() {
+            var data, dummyQuizModel, quizResponseSummary, term_ids, textbookNames;
+            questionsCollection.add(_this.contentPiece);
+            dummyQuizModel = App.request("create:dummy:quiz:module", content_piece_id);
+            term_ids = _this.contentPiece.get('term_ids');
+            dummyQuizModel.set({
+              'term_ids': term_ids
+            });
+            textbookNames = App.request("get:textbook:names:by:ids", term_ids);
+            data = {
+              'student_id': 5,
+              'collection_id': 152
+            };
+            quizResponseSummary = App.request("create:quiz:response:summary", data);
+            return App.execute("when:fetched", textbookNames, function() {
+              return App.execute("start:take:quiz:app", {
+                region: App.mainContentRegion,
+                quizModel: dummyQuizModel,
+                quizResponseSummary: quizResponseSummary,
+                questionsCollection: questionsCollection,
+                display_mode: 'take-quiz',
+                textbookNames: textbookNames
+              });
+            });
+          };
+        })(this));
       }
     };
     return QuizModuleApp.on('start', function() {

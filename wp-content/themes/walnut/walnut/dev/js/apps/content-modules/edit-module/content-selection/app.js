@@ -26,6 +26,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
             post_status: 'publish'
           });
         }
+        this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
         return App.execute("when:fetched", [this.contentPiecesCollection, this.contentGroupCollection], (function(_this) {
           return function() {
             var model, _i, _len, _ref;
@@ -62,6 +63,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
               App.execute("show:content:search:results:app", {
                 region: _this.layout.searchResultsRegion,
                 contentGroupCollection: _this.contentGroupCollection,
+                selectedFilterParamsObject: _this.selectedFilterParamsObject,
                 groupType: _this.model.get('type')
               });
               if (_this.model.get('type') === 'quiz') {

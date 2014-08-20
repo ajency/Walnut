@@ -66,6 +66,16 @@ function display_header() {
 	<?php
 	wp_admin_css( 'install', true );
 	?>
+       <style type="text/css">
+        body.wp-core-ui  h1#logo a {
+            background-image: url(../wp-content/themes/walnut/images/synapse-logo-main.png);
+            padding-bottom: 0px;
+            margin-bottom:10px;
+            height:100px;
+            background-size:220px auto;
+            width:250px;
+        }
+       </style>
 </head>
 <body class="wp-core-ui<?php if ( is_rtl() ) echo ' rtl'; ?>">
 <h1 id="logo"><a href="<?php echo esc_url( __( 'http://wordpress.org/' ) ); ?>"><?php _e( 'WordPress' ); ?></a></h1>

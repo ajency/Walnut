@@ -51,6 +51,8 @@ function export_tables_for_app($blog_id='', $last_sync='',$device_type='',$user_
 
     $export_details = array();
 
+    $export_details['blog_expired'] = is_blog_expired($blog_id);
+    
     if($result === false){
         $export_details['error'] = true;
         $export_details['message'] = 'Failed to create export file';
@@ -62,6 +64,23 @@ function export_tables_for_app($blog_id='', $last_sync='',$device_type='',$user_
         create_sync_device_log($blog_id,$device_type,$export_details['last_sync']);
     }
     return $export_details;
+}
+
+function is_blog_expired($blog_id){
+   $current_blog= get_current_blog_id(); 
+   switch_to_blog($blog_id);
+   
+   $blog_meta = get_option('blog_meta');
+   $blog_meta_array = maybe_unserialize($blog_meta);
+   
+   switch_to_blog($current_blog);
+   if($blog_meta_array['validto'] != ''){
+       if(strtotime('+24 hours',strtotime($blog_meta_array['validto'])) < time()){
+           return true;
+       }
+   }
+   
+   return false; 
 }
 
 // this function takes an array of tablenames as argument and makes an array of csv data for each table
@@ -297,18 +316,24 @@ function get_postmeta_table_query($last_sync='', $user_id=''){
             ",
             "page"
         );
+        
     }
     else{
 
         $meta_ids_str = $post_ids_str = -1;
 
-        $meta_ids_str = get_meta_ids_str($last_sync);
+        $m_ids_str = get_meta_ids_str($last_sync);
+        
+        if($m_ids_str)
+            $meta_ids_str = $m_ids_str;
+        
         $postmeta_table_query=$wpdb->prepare(
             "SELECT * FROM {$wpdb->base_prefix}postmeta
                     WHERE post_id in ($post_ids_str)
                     OR meta_id in ($meta_ids_str)",
             null
         );
+            
     }    
 
     $postmeta_table= array(

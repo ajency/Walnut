@@ -112,6 +112,10 @@ function user_extend_profile_fields($user){
       else{
          $user_divisions = array_map('intval', $user_divisions);
       }     
+      $hide_textbooks="style='display:none'";
+      if(user_can($user->ID,'teacher'))
+        $hide_textbooks= "";
+      
       switch_to_blog(1);
 ?> 
     
@@ -122,7 +126,7 @@ function user_extend_profile_fields($user){
 
         <td>
             <div>
-            <ul clsss="textbooks-list">
+            <ul class="textbooks-list" <?=$hide_textbooks?>>
     <?php
 
 
@@ -168,7 +172,7 @@ function user_extend_profile_fields($user){
 
         <td>
             <div>
-            <ul clsss="divisions-list">
+            <ul class="divisions-list">
     <?php
         restore_current_blog();
         $divisions =  get_class_divisions();
@@ -582,7 +586,7 @@ add_filter( 'bulk_actions-users','user_bulk_actions_admin',10,1);
 
 
 function login_footer_custom_display(){
-    echo '<div>For further assistance please mail us at <a href="mailto:support@synapse.com">support@synapse.com</a> and we will get back to you immediately</div>';
+    echo '<br/><div style="width: 320px;margin:auto">For further assistance please mail us at <a href="mailto:support@synapse.com">support@synapse.com</a> and we will get back to you immediately</div>';
 }
 add_action('login_footer','login_footer_custom_display',10);
 
@@ -626,3 +630,21 @@ function getLoggedInUserModel(){
     return $userModel;
     
 }
+
+//////custom logo on login page//////
+function custom_login_logo() {
+    ?>
+    <style type="text/css">
+        body.login div#login h1 a {
+            background-image: url(./wp-content/themes/walnut/images/synapse-logo-main.png);
+            padding-bottom: 0px;
+            margin-bottom:10px;
+            height:100px;
+            background-size:220px auto;
+            width:250px;
+        }
+    </style>
+    <?php
+}
+
+add_action('login_enqueue_scripts', 'custom_login_logo');

@@ -39,7 +39,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
 
       Controller.prototype.initialize = function(options) {
         var contentID, content_preview;
-        contentID = options.contentID, this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.students = options.students, content_preview = options.content_preview;
+        contentID = options.contentID, this.model = options.model, this.questionResponseModel = options.questionResponseModel, this.timerObject = options.timerObject, this.display_mode = options.display_mode, this.students = options.students, content_preview = options.content_preview, this.classID = options.classID;
         if (contentID) {
           this.model = App.request("get:content:piece:by:id", contentID);
         }
@@ -69,7 +69,8 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/view', 'ap
               questionResponseModel: _this.questionResponseModel,
               timerObject: _this.timerObject,
               display_mode: _this.display_mode,
-              students: _this.students
+              students: _this.students,
+              classID: _this.classID
             });
             if (_this.model.get('question_type') === 'multiple_eval') {
               return App.execute("show:single:question:multiple:evaluation:app", {

@@ -12,7 +12,6 @@ define ['app'
             quizModel = null
             quizResponseSummary = null
             questionsCollection = null
-            questionResponseCollection = null
             questionResponseModel = null
             questionModel = null
             questionIDs = null
@@ -22,20 +21,21 @@ define ['app'
 
                 initialize : (opts)->
                     {quizModel,quizResponseSummary,questionsCollection,
-                    questionResponseCollection,@textbookNames,@display_mode} = opts
+                    @questionResponseCollection,@textbookNames,@display_mode} = opts
 
                     if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
                         data = 
                             'status' : 'started'
 
                         quizResponseSummary.save 'status' : 'started'
-                    
+                    console.log @questionResponseCollection
                     @_startTakeQuiz()
                 
                 _startTakeQuiz:=>
 
-                    if not questionResponseCollection
-                        questionResponseCollection= App.request "create:empty:question:response:collection"
+                    if not @questionResponseCollection
+                        @questionResponseCollection= App.request "create:empty:question:response:collection"
+                        timeBeforeCurrentQuestion = 0
 
                     App.leftNavRegion.close()
                     App.headerRegion.close()
@@ -95,7 +95,7 @@ define ['app'
 
                     newResponseModel = App.request "create:quiz:question:response:model", data
 
-                    quizResponseModel = questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
+                    quizResponseModel = @questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
 
                     #update existing model (incase of resubmit)
                     if quizResponseModel
@@ -104,7 +104,7 @@ define ['app'
                     #add new model to collection
                     else
                         quizResponseModel = newResponseModel
-                        questionResponseCollection.add newResponseModel
+                        @questionResponseCollection.add newResponseModel
 
                     quizResponseModel.save() if quizModel.get('quiz_type') is 'test'
 
@@ -155,9 +155,9 @@ define ['app'
                     quizResponseSummary.set 
                         'status'            : 'completed' 
                         'total_time_taken'  : timeBeforeCurrentQuestion
-                        'num_skipped'       : _.size questionResponseCollection.where 'status': 'skipped'
-                        'total_marks_scored': _.reduce questionResponseCollection.pluck('marks_scored'), (memo, num)->
-                            parseInt memo + parseInt num
+                        'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
+                        'total_marks_scored': _.reduce @questionResponseCollection.pluck('marks_scored'), (memo, num)->
+                            _.toNumber memo + num,1
 
                     quizResponseSummary.save() if quizModel.get('quiz_type') is 'test'
                     
@@ -167,12 +167,12 @@ define ['app'
                         region                      : App.mainContentRegion
                         quizModel                   : quizModel
                         questionsCollection         : questionsCollection
-                        questionResponseCollection  : questionResponseCollection
+                        questionResponseCollection  : @questionResponseCollection
                         quizResponseSummary         : quizResponseSummary
 
                 _getUnansweredIDs:->
                     
-                    answeredIDs= questionResponseCollection.pluck 'content_piece_id'
+                    answeredIDs= @questionResponseCollection.pluck 'content_piece_id'
                     allIDs= _.map quizModel.get('content_pieces'), (m)-> parseInt m
 
                     unanswered= _.difference allIDs, answeredIDs
@@ -210,7 +210,7 @@ define ['app'
                             region                  : @layout.questionDisplayRegion
                             model                   : questionModel
                             quizModel               : quizModel
-                            questionResponseCollection   : questionResponseCollection
+                            questionResponseCollection   : @questionResponseCollection
                             display_mode            : @display_mode
 
                         @layout.quizProgressRegion.trigger "question:changed", questionModel
@@ -228,7 +228,7 @@ define ['app'
                         questionsCollection         : questionsCollection
                         currentQuestion             : questionModel
                         quizModel                   : quizModel
-                        questionResponseCollection  : questionResponseCollection
+                        questionResponseCollection  : @questionResponseCollection
 
                     new View.QuizTimer.Controller
                         region      : @layout.quizTimerRegion
@@ -269,6 +269,6 @@ define ['app'
             # set handlers
             App.commands.setHandler "start:take:quiz:app", (opt = {})->
                 new View.TakeQuizController opt
-		
+        
 
 
