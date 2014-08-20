@@ -52,7 +52,9 @@ function create_content_piece_post_type() {
 add_action('init', 'create_content_piece_post_type');
 
 function get_content_pieces($args = array()) {
-
+    
+    global $wpdb;
+    
     $current_blog_id= get_current_blog_id();
 
     switch_to_blog(1);
@@ -60,6 +62,17 @@ function get_content_pieces($args = array()) {
     if(isset($args['ids'])){
         $ids = implode(',',$args['ids']);
         $args['post__in'] = $args['ids'];
+    }
+    
+    if(isset($args['textbook'])){
+        
+        $post_ids= $wpdb->prepare(
+                "SELECT post_id from {$wpdb->base_prefix}postmeta WHERE meta_key LIKE %s
+                    AND meta_value like %s",
+                array('term_ids', '%"'.$args['textbook'].'";%')                
+        );
+        $args['post__in'] = $wpdb->get_col($post_ids);
+        unset($args['textbook']);
     }
     
     if(isset($args['content_type'])){
@@ -81,8 +94,6 @@ function get_content_pieces($args = array()) {
 
     if(!isset($args['post_status']))
         $args['post_status'] = 'any';
-    
-    unset($args['textbook']);
     
     $content_items = get_posts($args);
     
