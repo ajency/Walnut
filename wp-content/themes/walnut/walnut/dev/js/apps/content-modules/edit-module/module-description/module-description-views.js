@@ -52,7 +52,7 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
         if (data.type === 'quiz') {
           data.isQuiz = true;
         }
-        data.type = _.capitalize(data.type);
+        data.type = _.titleize(_.humanize(data.type));
         data.textBookSelected = function() {
           if (parseInt(this.id) === parseInt(data.term_ids['textbook'])) {
             return 'selected';
