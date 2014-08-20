@@ -156,8 +156,12 @@ function get_textbooks( $args = array() ) {
         if(isset($args['division']))
             $division = $args['division'];
 
-        foreach ($textbooks as $book)
-            $data[] = get_book( $book,$division,$user_id );
+        foreach ($textbooks as $book){
+            $book= get_book( $book,$division,$user_id );
+            if($book)
+                $data[]= $book;
+        }
+
 
     }
     $textbooks_data['data'] = $data;
@@ -204,6 +208,10 @@ function get_book( $book, $division=0,$user_id=0) {
     if (is_numeric( $book )) {
         $book_id = $book;
         $book_dets = get_term( $book, 'textbook' );
+
+        if(!$book_dets)
+            return false;
+
     } else if (is_numeric( $book->term_id )) {
         $book_id = $book->term_id;
         $book_dets = $book;
@@ -383,7 +391,8 @@ function get_textbooks_for_class( $classid ) {
         if (is_array( $textbook_ids )) {
             foreach ($textbook_ids as $book) {
                 $bookdets = get_book( $book->textbook_id );
-                $data[] = $bookdets;
+                if($bookdets)
+                    $data[] = $bookdets;
             }
         }
     }
@@ -445,7 +454,8 @@ function get_textbooks_for_user( $user_id = '' ) {
     if (is_array( $txtbooks_assigned )) {
         foreach ($txtbooks_assigned as $book) {
             $bookdets = get_book( $book );
-            $data[] = $bookdets;
+            if($bookdets)
+                $data[] = $bookdets;
         }
     }
     return $data;

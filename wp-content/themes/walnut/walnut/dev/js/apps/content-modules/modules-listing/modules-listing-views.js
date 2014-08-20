@@ -94,7 +94,12 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         var groupData, _ref;
         if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
           if (confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?") === true) {
-            this.cloneModel = App.request("new:content:group");
+            if (this.groupType === 'teaching-module') {
+              this.cloneModel = App.request("new:content:group");
+            }
+            if (this.groupType === 'quiz') {
+              this.cloneModel = App.request("new:quiz");
+            }
             groupData = this.model.toJSON();
             this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
             this.clonedData.name = "" + this.clonedData.name + " clone";
@@ -124,9 +129,15 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.successUpdateFn = function(model) {
-        return App.navigate("edit-module/" + (model.get('id')), {
-          trigger: true
-        });
+        if (this.groupType === 'teaching-module') {
+          return App.navigate("edit-module/" + (model.get('id')), {
+            trigger: true
+          });
+        } else {
+          return App.navigate("edit-quiz/" + (model.get('id')), {
+            trigger: true
+          });
+        }
       };
 
       ListItemView.prototype.errorFn = function() {

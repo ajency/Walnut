@@ -78,7 +78,11 @@ define ['app'
             cloneModule :->
                 if @model.get('post_status') in ['publish','archive']
                     if confirm("Are you sure you want to clone '#{@model.get('name')}' ?") is true
-                        @cloneModel = App.request "new:content:group"
+
+                        @cloneModel = App.request "new:content:group" if @groupType is 'teaching-module'
+
+                        @cloneModel = App.request "new:quiz" if @groupType is 'quiz'
+
                         groupData = @model.toJSON()
                         @clonedData = _.omit groupData,
                           ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
@@ -99,8 +103,13 @@ define ['app'
                     error : @errorFn
 
             successUpdateFn : (model)=>
-                App.navigate "edit-module/#{model.get('id')}",
-                    trigger : true
+                if @groupType is 'teaching-module'
+                    App.navigate "edit-module/#{model.get('id')}",
+                        trigger : true
+
+                else
+                    App.navigate "edit-quiz/#{model.get('id')}",
+                        trigger : true
 
             errorFn : ->
                 console.log 'error'
