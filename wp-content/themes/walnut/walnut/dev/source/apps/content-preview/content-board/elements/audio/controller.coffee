@@ -71,7 +71,7 @@ define ['app'
 
 												# audioPath = 'file:///mnt/sdcard/' + localAudioPath
 												console.log _.getSynapseMediaDirectoryPath()
-												audioPath = 'file:///storage/emulated/0/' + localAudioPath
+												audioPath = 'file:///mnt/sdcard/' + localAudioPath
 
 
 												localAudioPaths.push audioPath

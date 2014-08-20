@@ -105,10 +105,8 @@ define(['app'], function(App) {
         $(e.target).closest('.tiles.single').toggleClass("selected");
         if (_.platform() === "DEVICE") {
           if ($(e.target).closest('.tiles.single').hasClass("selected")) {
-            navigator.notification.vibrate(1000);
             return _.audioQueuesSelection('Click-Select');
           } else {
-            navigator.notification.vibrate(1000);
             return _.audioQueuesSelection('Click-Unselect');
           }
         }

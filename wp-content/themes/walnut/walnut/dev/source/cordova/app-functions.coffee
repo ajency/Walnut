@@ -267,7 +267,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 								filepathForIndividualAudio = filepath + "nextClick.WAV"
 
 							when 'Click-Select'
-
+								navigator.notification.vibrate(1000);
 								filepathForIndividualAudio = filepath + "selectClick.WAV"
 
 
@@ -276,7 +276,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 								filepathForIndividualAudio = filepath + "startClick.WAV"
 
 							when 'Click-Unselect'
-
+								navigator.notification.vibrate(1000);
 								filepathForIndividualAudio = filepath + "unselectClick.WAV"
 
 							when 'Click-Save'

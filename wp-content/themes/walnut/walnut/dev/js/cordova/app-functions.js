@@ -241,12 +241,14 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
                 filepathForIndividualAudio = filepath + "nextClick.WAV";
                 break;
               case 'Click-Select':
+                navigator.notification.vibrate(1000);
                 filepathForIndividualAudio = filepath + "selectClick.WAV";
                 break;
               case 'Click-Start':
                 filepathForIndividualAudio = filepath + "startClick.WAV";
                 break;
               case 'Click-Unselect':
+                navigator.notification.vibrate(1000);
                 filepathForIndividualAudio = filepath + "unselectClick.WAV";
                 break;
               case 'Click-Save':

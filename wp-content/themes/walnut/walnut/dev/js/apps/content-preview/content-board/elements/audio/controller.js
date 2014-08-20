@@ -75,7 +75,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                   _.each(audioPaths, function(localAudioPath, index) {
                     return (function(localAudioPath, index) {
                       console.log(_.getSynapseMediaDirectoryPath());
-                      audioPath = 'file:///storage/emulated/0/' + localAudioPath;
+                      audioPath = 'file:///mnt/sdcard/' + localAudioPath;
                       return localAudioPaths.push(audioPath);
                     })(localAudioPath, index);
                   });

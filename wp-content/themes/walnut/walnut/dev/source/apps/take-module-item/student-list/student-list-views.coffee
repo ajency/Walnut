@@ -123,10 +123,8 @@ define ['app'], (App)->
 				$(e.target).closest('.tiles.single').toggleClass "selected"
 				if _.platform() is "DEVICE"
 					if $(e.target).closest('.tiles.single').hasClass("selected")
-						navigator.notification.vibrate(1000);
 						_.audioQueuesSelection 'Click-Select'
 					else
-						navigator.notification.vibrate(1000);
 						_.audioQueuesSelection 'Click-Unselect'
 
 
