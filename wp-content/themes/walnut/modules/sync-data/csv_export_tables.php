@@ -51,6 +51,8 @@ function export_tables_for_app($blog_id='', $last_sync='',$device_type='',$user_
 
     $export_details = array();
 
+    $export_details['blog_expired'] = is_blog_expired($blog_id);
+    
     if($result === false){
         $export_details['error'] = true;
         $export_details['message'] = 'Failed to create export file';
@@ -62,6 +64,22 @@ function export_tables_for_app($blog_id='', $last_sync='',$device_type='',$user_
         create_sync_device_log($blog_id,$device_type,$export_details['last_sync']);
     }
     return $export_details;
+}
+
+function is_blog_expired($blog_id){
+   $current_blog= get_current_blog_id(); 
+   switch_to_blog($blog_id);
+   
+   $blog_meta = get_option('blog_meta');
+   
+   switch_to_blog($current_blog);
+   if($blog_meta['validto'] != ''){
+       if(strtotime($blog_meta['validto']) < time()){
+           return true;
+       }
+   }
+   
+   return false; 
 }
 
 // this function takes an array of tablenames as argument and makes an array of csv data for each table

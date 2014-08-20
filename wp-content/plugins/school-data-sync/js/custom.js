@@ -100,8 +100,23 @@ jQuery(document).ready(function() {
     }
     
     function school_data_sync_start(referer,lastsync_id,syncstatus,respdata){
-        
+        //console.log(respdata)
+        if(respdata.blog_expired){
+            /// code logic to delete site content
+            jQuery.post( ajaxurl,
+            {
+                action    : 'sds_delete_blog_content'
+            },
+            function(data) {           
+                       if(data.code === 'OK'){ 
+                                   jQuery(referer).next().text('Blog Validity Expired'); 
+                                   jQuery(referer).prop('disabled', false);
+                                   jQuery('#sync-media').prop('disabled', false);
 
+                       }       
+            },'json');    
+        }
+        else{
             jQuery.post( ajaxurl,
             {
                 action    : 'sds_data_sync_start',
@@ -122,8 +137,8 @@ jQuery(document).ready(function() {
                                    jQuery(referer).prop('disabled', false);
                                    jQuery('#sync-media').prop('disabled', false);
                        }          
-            },'json');
-
+            },'json');            
+        }
         
     }
     

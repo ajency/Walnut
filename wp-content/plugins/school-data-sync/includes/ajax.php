@@ -338,3 +338,10 @@ function ajax_check_server_app_data_sync_completion(){
 }
 add_action ('wp_ajax_check-server-app-data-sync-completion', 'ajax_check_server_app_data_sync_completion');
 
+
+function ajax_sds_delete_blog_content(){
+    delete_site_content();
+    $respcode = array('code' =>'OK');
+    wp_send_json($respcode);
+}
+add_action ('wp_ajax_sds_delete_blog_content', 'ajax_sds_delete_blog_content');
