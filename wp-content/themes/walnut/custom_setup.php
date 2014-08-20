@@ -138,7 +138,15 @@ function create_custom_tables(){
       )";
 
     $wpdb->query( $quiz_responses_table );
-
+    
+    $sync_device_log_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_device_log` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `blog_id` int(11) NOT NULL,
+        `device_type` varchar(50) NOT NULL,
+        `sync_date` datetime NOT NULL,
+         PRIMARY KEY (`id`)
+      )";
+    $wpdb->query( $sync_device_log_table );
 }
 create_custom_tables();
 /**
