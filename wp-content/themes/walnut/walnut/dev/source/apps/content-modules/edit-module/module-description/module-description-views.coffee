@@ -44,7 +44,7 @@ define ['app'
 
                 data.isQuiz = true if data.type is 'quiz'
 
-                data.type = _.capitalize data.type
+                data.type = _.titleize _.humanize data.type
 
                 # add status values
 
