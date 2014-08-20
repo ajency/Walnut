@@ -65,6 +65,9 @@ function get_sync_form_html($blog_id){
                          <br/><br/>
                          <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
                                  <span class="status-msg"></span>
+                          <br/><br/>
+                          <label>Test Request</label> -> <input type="button" name="req-test" value="Start" id="req-test"/>
+                                 <span class="status-msg"></span>
                          </fieldset>
                         </form>';
 

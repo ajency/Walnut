@@ -1,6 +1,24 @@
 
 
 jQuery(document).ready(function() {
+    
+    jQuery("#req-test").on('click',function(){
+       jQuery.ajax({  
+                type: 'POST',  
+                url: ajaxurl,  
+                data: {  
+                    action: 'test-server-request',
+                },  
+                success: function(data, textStatus, XMLHttpRequest){  
+                    //alert('Success: ' + data);
+                    console.log(data); 
+                },  
+                error: function(XMLHttpRequest, textStatus, errorThrown){  
+                    console.log(errorThrown);  
+
+                }  
+	    }); 
+    });
 
     jQuery("#validate-blog-user").on('click',function(){
 
