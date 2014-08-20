@@ -49,7 +49,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		
 		
-		onlineDeviceAuth:-> 
+		onlineDeviceAuth:->
 
 			$.post AJAXURL + '?action=get-user-app-profile',
 				data: @data,
@@ -63,14 +63,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 						# if the blog id is null, then the app is installed
 						# for the first time.
-						# local transaction
-						_.createDataTables(_.db)
-
-						# download school logo
-						# _.downloadSchoolLogo(resp.blog_logo)
-						
-						@saveUpdateUserDetails(server_resp)
-						@onSuccessResponse()
+						@initialAppLogin(resp)
 				,
 				'json'
 
@@ -95,16 +88,58 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 
 		
-		onDeviceLoginSuccessOperation : (id, username)->    
-
-			# set user model for back button navigation
-			@setUserModel() 
-
+		onDeviceLoginSuccessOperation : (id, username)-> 
 			# save logged in user id and username
 			_.setUserID(id)
 			_.setUserName(username)
 
+			# set user model for back button navigation
+			_.setUserModel()
 
+
+		
+		# when the app is installed for the first time
+		initialAppLogin : (server_resp)->
+
+			resp = server_resp.blog_details
+			
+			# set blog id, blog name and Site url
+			_.setSiteUrl(resp.site_url)
+
+			# local transaction
+			_.createDataTables(_.db)
+
+			# download school logo
+			# _.downloadSchoolLogo(resp.blog_logo)
+			
+			@saveUpdateUserDetails(server_resp)
+
+			_.setStudentDivision(server_resp.login_details.data.division)
+			@setUserCapabilities()
+
+
+
+		setUserCapabilities : ->
+
+			`var baseUrl =  AJAXURL.substr(AJAXURL.indexOf("/wp-admin"));
+			AJAXURL = _.getSiteUrl() + baseUrl;`
+
+			$.post AJAXURL + '?action=get-user-app-profile',
+				data: @data,
+				(resp)=>
+					console.log 'User Response'
+					console.log resp
+					if resp.error
+						@onErrorResponse(resp.error)
+					else
+						_.setUserCapabilities(resp.login_details.allcaps)
+						_.setUserModel()
+						@onSuccessResponse()
+				,
+				'json'
+
+			.fail =>
+				@onErrorResponse('Could not connect to server')
 
 
 
@@ -167,12 +202,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				error : ''+msg
 			@success response
 
-		
-		# user model set for back button navigation
-		setUserModel : ->
-			
-			user = App.request "get:user:model"
-			user.set 'ID' : ''+_.getUserID()
+
+
 
 
 	# request handler

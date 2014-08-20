@@ -70,9 +70,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             return _this.onErrorResponse(resp.error);
           } else {
             _this.onDeviceLoginSuccessOperation(resp.login_details.ID, _this.data.txtusername);
-            _.createDataTables(_.db);
-            _this.saveUpdateUserDetails(server_resp);
-            return _this.onSuccessResponse();
+            return _this.initialAppLogin(resp);
           }
         };
       })(this), 'json').fail((function(_this) {
@@ -102,9 +100,43 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.onDeviceLoginSuccessOperation = function(id, username) {
-      this.setUserModel();
       _.setUserID(id);
-      return _.setUserName(username);
+      _.setUserName(username);
+      return _.setUserModel();
+    };
+
+    AuthenticationController.prototype.initialAppLogin = function(server_resp) {
+      var resp;
+      resp = server_resp.blog_details;
+      _.setSiteUrl(resp.site_url);
+      _.createDataTables(_.db);
+      this.saveUpdateUserDetails(server_resp);
+      _.setStudentDivision(server_resp.login_details.data.division);
+      return this.setUserCapabilities();
+    };
+
+    AuthenticationController.prototype.setUserCapabilities = function() {
+      var baseUrl =  AJAXURL.substr(AJAXURL.indexOf("/wp-admin"));
+			AJAXURL = _.getSiteUrl() + baseUrl;;
+      return $.post(AJAXURL + '?action=get-user-app-profile', {
+        data: this.data
+      }, (function(_this) {
+        return function(resp) {
+          console.log('User Response');
+          console.log(resp);
+          if (resp.error) {
+            return _this.onErrorResponse(resp.error);
+          } else {
+            _.setUserCapabilities(resp.login_details.allcaps);
+            _.setUserModel();
+            return _this.onSuccessResponse();
+          }
+        };
+      })(this), 'json').fail((function(_this) {
+        return function() {
+          return _this.onErrorResponse('Could not connect to server');
+        };
+      })(this));
     };
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
@@ -167,14 +199,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         error: '' + msg
       };
       return this.success(response);
-    };
-
-    AuthenticationController.prototype.setUserModel = function() {
-      var user;
-      user = App.request("get:user:model");
-      return user.set({
-        'ID': '' + _.getUserID()
-      });
     };
 
     return AuthenticationController;

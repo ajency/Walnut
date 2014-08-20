@@ -282,6 +282,26 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
           "checked": false
         });
       }
+    },
+    setUserModel: function() {
+      var data, user;
+      user = App.request("get:user:model");
+      user.set({
+        'ID': '' + _.getUserID()
+      });
+      if (!_.isNull(_.getUserCapabilities())) {
+        user.set({
+          'allcaps': _.getUserCapabilities()
+        });
+      }
+      if (workingSynapseProject === 'studentsApp') {
+        data = {
+          'division': _.getStudentDivision()
+        };
+        return user.set({
+          'data': data
+        });
+      }
     }
   });
 });

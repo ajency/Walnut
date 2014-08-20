@@ -303,3 +303,19 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 				$('#onOffSwitchToggle').prop "checked" : true
 			else
 				$('#onOffSwitchToggle').prop "checked" : false
+		
+
+		# user model set for back button navigation
+		setUserModel : ->
+			
+			user = App.request "get:user:model"
+			user.set 'ID' : ''+_.getUserID()
+
+			if not _.isNull(_.getUserCapabilities())
+				user.set 'allcaps' : _.getUserCapabilities()
+
+			if workingSynapseProject is 'studentsApp'
+				data = 
+					'division' : _.getStudentDivision()
+
+				user.set 'data' : data
