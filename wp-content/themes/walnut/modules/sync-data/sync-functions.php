@@ -498,7 +498,7 @@ function delete_site_content(){
                     WHERE post_type <> %s ",
             "page"
         );
-            
+   
    $del_post_ids = $wpdb->get_col( $posts_table_query );
    
    $post_ids = array();
@@ -506,10 +506,10 @@ function delete_site_content(){
    foreach ($del_post_ids as $post_id){
        $post_ids[] = $post_id;
    }
-
+   
    if(!empty($post_ids)){
-    $wpdb->query("DELETE FROM `{$wpdb->prefix}posts` where ID IN (".implode($post_ids).")");
-    $wpdb->query("DELETE FROM `{$wpdb->prefix}postmeta` where post_id IN (".implode($post_ids).")");
+    $wpdb->query("DELETE FROM `{$wpdb->prefix}posts` where ID IN (".implode(',',$post_ids).")");
+    $wpdb->query("DELETE FROM `{$wpdb->prefix}postmeta` where post_id IN (".implode(',',$post_ids).")");
    }
 
 }
