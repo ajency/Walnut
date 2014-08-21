@@ -144,6 +144,7 @@ function create_custom_tables(){
         `blog_id` int(11) NOT NULL,
         `device_type` varchar(50) NOT NULL,
         `sync_date` datetime NOT NULL,
+        `meta` longtext NOT NULL,
          PRIMARY KEY (`id`)
       )";
     $wpdb->query( $sync_device_log_table );

@@ -503,7 +503,7 @@ function get_sync_log_devices(){
                if($currentdate == $last_syncdate){
                    $days_between = 'Today';
                }else{
-                   $days_between = (ceil(abs(strtotime($currentdate) - $last_sync) / 86400) - 1).' days ago';
+                   $days_between = (ceil(abs(strtotime($currentdate) - strtotime(date('Y-m-d',strtotime($last_sync)))) / 86400) - 1).' days ago';
                }
                $resultset .='<tr>';
                $resultset .='<td>'.$blog_details->blogname.'</td>';
@@ -517,4 +517,61 @@ function get_sync_log_devices(){
     }
         
     return  $resultset;  
+}
+
+function cron_send_site_expiry_notification(){
+    global $wpdb;
+    
+    $qry = "SELECT * , MAX( sync_date) as last_sync FROM {$wpdb->prefix}sync_device_log GROUP BY blog_id,device_type ";
+    
+    $qry_results = $wpdb->get_results( $qry );   
+    
+    if(count($qry_results) > 0){
+      foreach ($qry_results as $device) {
+          $last_sync = strtotime($device->last_sync);
+          $last_sync_date = date('Y-m-d',strtotime($device->last_sync));
+          $currentdate = date('Y-m-d');
+          $days_between = (ceil(abs(strtotime($currentdate) - strtotime($last_sync_date)) / 86400) );
+          if($days_between > 20 && $days_between < 30){
+              $days_remaining = 30 - $days_between;
+              //function call to send email using wp_mail 
+              send_user_notification_email($device->device_type,$device->blog_id,$device->meta,$days_remaining);
+          }
+      }
+          
+    }
+}
+add_action('send_site_expiry_notification','cron_send_site_expiry_notification');
+
+function send_user_notification_email($device_type,$blog_id,$device_meta,$days_remaining){
+    
+    $blog_details = get_blog_details($blog_id);
+    
+    if($device_type == 'standalone'){
+        switch_to_blog($blog_id);
+        $query_args = array();
+        $query_args['fields'] = array( 'user_email' );
+        $query_args['role'] = 'school-admin';
+        $users = get_users( $query_args );
+        
+        $recipients = array();
+        foreach ($users as $user){
+           $recipients[] = $user->user_email;
+        }
+        $recipient = implode(',', $recipients);
+        restore_current_blog();
+    }else{
+        $meta_data = maybe_unserialize($device_meta);
+        $user_id = $meta_data['user_id'];
+        $user_info = get_userdata( $user_id );
+        $recipient = $user_info->user_email;
+    }
+    
+    
+    $msgcontent = $blog_details->blogname .' On Your device/standalone site will expire in '.$days_remaining.' days. <br>'
+            . 'You have '.$days_remaining.' days to get the school internet to work and ping before complete deletion of data. ';
+    $headers = 'From: Synapse Learning <admin@synapsedu.info>' . "\r\n";
+    add_filter('wp_mail_content_type', create_function('', 'return "text/html";'));
+    $subject = "Site Content Delete Notification";
+    wp_mail($recipient, $subject, $msgcontent, $headers);
 }
