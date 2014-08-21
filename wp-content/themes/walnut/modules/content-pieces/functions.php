@@ -293,7 +293,7 @@ function get_modules_containing_content_piece($content_id){
     foreach($result as $module_meta){
 
         $m['id']=$module_meta->collection_id;
-        $m['name']=get_module_name($module_meta->collection_id);
+        $m['name']=wp_unslash(get_module_name($module_meta->collection_id));
 
         $modules[]=$m;
 
@@ -578,8 +578,6 @@ function save_content_piece($data){
             }
         }
     }
-
-
 
     $content_piece_additional = array(
         'term_ids'          => $data['term_ids'],
