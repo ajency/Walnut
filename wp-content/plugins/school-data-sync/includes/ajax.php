@@ -345,3 +345,24 @@ function ajax_sds_delete_blog_content(){
     wp_send_json($respcode);
 }
 add_action ('wp_ajax_sds_delete_blog_content', 'ajax_sds_delete_blog_content');
+
+function ajax_test_server_request(){
+    $remote_url = 'http://school15.synapsedu.info';
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_URL, $remote_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    $info = curl_getinfo($ch);
+    $error = curl_error($ch);
+    curl_close($ch);
+    //$resp_decode = json_decode($response,true);
+    //echo $response;
+    
+    //echo $info;
+    $respcode = array('resp' =>$response,'info'=>$error );
+    wp_send_json($respcode);
+    exit;
+}
+add_action ('wp_ajax_test-server-request', 'ajax_test_server_request');
