@@ -19,7 +19,7 @@ define ["backbone"], (Backbone) ->
 
 			if collection_name is 'textbook'
 				if typeof opts.class_id isnt 'undefined'
-					data = _.getTextbooksByClassIdAndDivision(opts.class_id, opts.division)
+					data = _.getTextbooksByUserId(_.getUserID())
 					data.done (d)->
 						console.log 'textbook by class id and division data'
 						console.log d

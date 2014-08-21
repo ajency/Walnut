@@ -38,13 +38,7 @@ require.config
 		unveil: 'plugins/jquery.unveil.min'
 		moment: 'plugins/moment.min'
 		select2: 'plugins/select2.min'
-		datepicker: 'plugins/bootstrap-datepicker'
-		timepicker: 'plugins/bootstrap-timepicker.min'
 		jquery_listnav: 'plugins/jquery-listnav'
-		bridget: 'plugins/jquery.bridget'
-		checkbox: 'plugins/flatui-checkbox'
-		holder: 'plugins/holder'
-		detect: 'plugins/detect'
 		unserialize         : 'plugins/unserialize'
 		serialize           : 'plugins/serialize'
 		fastclick           : 'plugins/fastclick'
@@ -73,13 +67,9 @@ require.config
 		jqueryspin: ['spin']
 		moment: ['jquery']
 		select2: ['jquery', 'bootstrap']
-		datepicker: ['jquery', 'bootstrap']
-		timepicker: ['jquery', 'bootstrap']
 		jquery_listnav: ['jquery']
-		checkbox: ['bootstrap']
 		jqueryvalidate: ['jquery']
 		syphon: ['backbone']
-		bridget: ['jquery']
 		app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
 
 

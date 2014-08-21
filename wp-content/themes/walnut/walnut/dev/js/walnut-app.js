@@ -30,7 +30,7 @@ define(['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
-    var user, xhr;
+    var xhr;
     App.startHistory();
     if (_.platform() === 'DEVICE') {
       if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
@@ -42,17 +42,14 @@ define(['marionette'], function(Marionette) {
           trigger: true
         });
       } else {
-        user = App.request("get:user:model");
-        user.set({
-          'ID': '' + _.getUserID()
-        });
+        _.setUserModel();
         App.vent.trigger("show:dashboard");
         App.loginRegion.close();
       }
     } else {
       return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
         return function(resp) {
-          var school;
+          var school, user;
           if (resp.success) {
             console.log(resp);
             user = App.request("get:user:model");
@@ -85,6 +82,9 @@ define(['marionette'], function(Marionette) {
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
         App.navigate('header', {
+          trigger: true
+        });
+        App.navigate('students/dashboard', {
           trigger: true
         });
       }

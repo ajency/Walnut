@@ -60,8 +60,7 @@ define ['marionette'], (Marionette)->
             else
                 #If User ID is set, then navigate to dashboard.
 
-                user = App.request "get:user:model"
-                user.set 'ID' : ''+_.getUserID()
+                _.setUserModel()
                 App.vent.trigger "show:dashboard"
                 App.loginRegion.close() 
 
@@ -103,6 +102,7 @@ define ['marionette'], (Marionette)->
 
 
             App.navigate('header', trigger: true)
+            App.navigate('students/dashboard', trigger: true)
                 
 
         App.execute "show:breadcrumbapp", region: App.breadcrumbRegion

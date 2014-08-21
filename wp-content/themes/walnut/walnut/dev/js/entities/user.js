@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Users", function(Users, App, Backbone, Marionette, $, _) {
-    var API, OfflineUserCollection, UserCollection, user;
+    var API, OfflineUserCollection, UserCollection, loggedInUser;
     Users.UserModel = (function(_super) {
       __extends(UserModel, _super);
 
@@ -22,10 +22,23 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
       };
 
+      UserModel.prototype.current_user_can = function(capability) {
+        var all_capabilites;
+        all_capabilites = this.get('allcaps');
+        if (all_capabilites[capability]) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+
       return UserModel;
 
     })(Backbone.Model);
-    user = new Users.UserModel;
+    loggedInUser = new Users.UserModel;
+    if (typeof USER !== "undefined" && USER !== null) {
+      loggedInUser.set(USER);
+    }
     UserCollection = (function(_super) {
       __extends(UserCollection, _super);
 
@@ -75,16 +88,28 @@ define(["app", 'backbone'], function(App, Backbone) {
         offlineUsers = new OfflineUserCollection;
         offlineUsers.fetch();
         return offlineUsers;
+      },
+      getUserData: function(key) {
+        var data;
+        data = loggedInUser.get('data');
+        console.log(data[key]);
+        return data[key];
       }
     };
     App.reqres.setHandler("get:user:model", function() {
-      return user;
+      return loggedInUser;
+    });
+    App.reqres.setHandler("get:loggedin:user:id", function() {
+      return loggedInUser.get('ID');
     });
     App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);
     });
-    return App.reqres.setHandler("get:offline:user:collection", function() {
+    App.reqres.setHandler("get:offline:user:collection", function() {
       return API.getOfflineUsers();
+    });
+    return App.reqres.setHandler("get:user:data", function(key) {
+      return API.getUserData(key);
     });
   });
 });

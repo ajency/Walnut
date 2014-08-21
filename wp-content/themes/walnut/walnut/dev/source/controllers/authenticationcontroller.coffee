@@ -55,20 +55,56 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				data: @data,
 				(resp)=>
 					console.log 'Login Response'
-					console.log resp
+					console.log JSON.stringify resp
 					if resp.error
 						@onErrorResponse(resp.error)
 					else
-						@onDeviceLoginSuccessOperation(resp.login_details.ID, @data.txtusername)
+						# @setUserDetails(resp.login_details.ID, @data.txtusername)
+						@onDeviceLoginSuccess(resp)
 
-						# if the blog id is null, then the app is installed
-						# for the first time.
-						@initialAppLogin(resp)
 				,
 				'json'
 
 			.fail =>
 				@onErrorResponse('Could not connect to server')
+
+
+		
+		onDeviceLoginSuccess :(serverResponse)->
+
+			_.setSiteUrl(serverResponse.blog_details.site_url)
+
+			`var baseUrl =  AJAXURL.substr(AJAXURL.indexOf("/wp-admin"));
+			AJAXURL = _.getSiteUrl() + baseUrl;`
+
+			$.post AJAXURL + '?action=get-user-app-profile',
+				data: @data,
+				(resp)=>
+					console.log 'User Response'
+					console.log JSON.stringify resp
+					
+					if resp.error
+						@onErrorResponse(resp.error)
+					else
+						userRole = resp.login_details.roles[0]
+						if userRole is "teacher"
+							@onErrorResponse("Your are not allowed to login")
+
+						else if userRole is "student"
+							@setUserDetails(resp.login_details.ID, @data.txtusername)
+							_.setUserCapabilities(resp.login_details.allcaps)
+							_.setStudentDivision(resp.login_details.data.division)
+							_.createDataTables(_.db)
+							@saveUpdateUserDetails(resp)
+							@onSuccessResponse()
+
+				,
+				'json'
+
+			.fail =>
+				@onErrorResponse('Could not connect to server')
+
+
 
 
 		offlineDeviceAuth : ->
@@ -79,7 +115,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				if user.exists
 					if user.password is @data.txtpassword
 
-						@onDeviceLoginSuccessOperation(user.user_id, @data.txtusername)
+						@setUserDetails(user.user_id, @data.txtusername)
 						@onSuccessResponse()
 
 					else @onErrorResponse('Invalid Password')       
@@ -88,58 +124,13 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 
 		
-		onDeviceLoginSuccessOperation : (id, username)-> 
+		setUserDetails : (id, username)-> 
 			# save logged in user id and username
 			_.setUserID(id)
 			_.setUserName(username)
 
 			# set user model for back button navigation
 			_.setUserModel()
-
-
-		
-		# when the app is installed for the first time
-		initialAppLogin : (server_resp)->
-
-			resp = server_resp.blog_details
-			
-			# set blog id, blog name and Site url
-			_.setSiteUrl(resp.site_url)
-
-			# local transaction
-			_.createDataTables(_.db)
-
-			# download school logo
-			# _.downloadSchoolLogo(resp.blog_logo)
-			
-			@saveUpdateUserDetails(server_resp)
-
-			_.setStudentDivision(server_resp.login_details.data.division)
-			@setUserCapabilities()
-
-
-
-		setUserCapabilities : ->
-
-			`var baseUrl =  AJAXURL.substr(AJAXURL.indexOf("/wp-admin"));
-			AJAXURL = _.getSiteUrl() + baseUrl;`
-
-			$.post AJAXURL + '?action=get-user-app-profile',
-				data: @data,
-				(resp)=>
-					console.log 'User Response'
-					console.log resp
-					if resp.error
-						@onErrorResponse(resp.error)
-					else
-						_.setUserCapabilities(resp.login_details.allcaps)
-						_.setUserModel()
-						@onSuccessResponse()
-				,
-				'json'
-
-			.fail =>
-				@onErrorResponse('Could not connect to server')
 
 
 
