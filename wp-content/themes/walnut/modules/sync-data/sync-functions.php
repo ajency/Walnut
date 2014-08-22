@@ -503,7 +503,7 @@ function get_sync_log_devices(){
                if($currentdate == $last_syncdate){
                    $days_between = 'Today';
                }else{
-                   $days_between = (ceil(abs(strtotime($currentdate) - strtotime(date('Y-m-d',strtotime($last_sync)))) / 86400) - 1).' days ago';
+                   $days_between = (ceil(abs(strtotime($currentdate) - strtotime(date('Y-m-d',strtotime($last_syncdate)))) / 86400) - 1).' days ago';
                }
                $resultset .='<tr>';
                $resultset .='<td>'.$blog_details->blogname.'</td>';
