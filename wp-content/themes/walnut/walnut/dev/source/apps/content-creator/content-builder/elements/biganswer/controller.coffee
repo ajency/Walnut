@@ -48,7 +48,9 @@ define ['app'
 									model : model
 
 					deleteElement:(model)->
-							model.destroy()
+							super model
 							App.execute "close:question:properties"
 							# # on delete enable all question elements in d element box
 							# @eventObj.vent.trigger "question:removed"
+
+
