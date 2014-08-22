@@ -31,7 +31,7 @@ define ['app'], (App)->
             							</div>'
 
             events:
-                'blur @ui.marksTextbox': '_changeMarks'
+                'blur input#marks': '_changeMarks'
                 'change @ui.individualMarksCheckbox': '_toggleIndividualMarks'
                 'change @ui.transparencyCheckbox': '_toggleTransparency'
 

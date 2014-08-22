@@ -22,6 +22,8 @@ define ['app'
 								case_sensitive : false
 								marks: 2
 								style : 'blank'
+								complete : false
+
 								# correct_answers : []
 
 							super options

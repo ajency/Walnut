@@ -22,6 +22,7 @@ define ['app'
                     text: 'Add text here'
                     numberOfBlanks: 0
                     blanksArray: []
+                    complete : false
 
                 super options
 

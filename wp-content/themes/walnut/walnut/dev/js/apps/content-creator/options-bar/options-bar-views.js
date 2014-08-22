@@ -131,12 +131,16 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype.saveQuestionSettings = function() {
-        var data;
-        if (this.$el.find('form').valid()) {
-          data = Backbone.Syphon.serialize(this);
-          this.trigger("save:data:to:model", data);
-          return this.$el.find('#preview-question').show();
-        }
+        return _.delay((function(_this) {
+          return function() {
+            var data;
+            if (_this.$el.find('form').valid()) {
+              data = Backbone.Syphon.serialize(_this);
+              _this.trigger("save:data:to:model", data);
+              return _this.$el.find('#preview-question').show();
+            }
+          };
+        })(this), 500);
       };
 
       OptionsBarView.prototype.previewQuestion = function() {
