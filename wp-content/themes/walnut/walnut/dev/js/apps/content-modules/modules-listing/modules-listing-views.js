@@ -195,6 +195,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         if (this.groupType === 'quiz') {
           data.isQuiz = true;
         }
+        data.type = _.titleize(_.humanize(data.type));
         console.log(this.groupType);
         return data;
       };
