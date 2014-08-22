@@ -62,12 +62,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         return DataContentItemView.__super__.constructor.apply(this, arguments);
       }
 
-      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> {{#isModule}} <td>{{content_type_str}}</td> {{/isModule}} {{#isQuiz}} <td>{{difficulty_level}}</td> {{/isQuiz}} <td class="cpHeight"> {{&present_in_str}} </td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>';
+      DataContentItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> {{#isModule}} <td>{{content_type_str}}</td> {{/isModule}} {{#isQuiz}} <td>{{difficulty_level}}</td> <td>{{marks}}</td> <td>{{duration}} mins</td> {{/isQuiz}} <td class="cpHeight"> {{&present_in_str}} </td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>';
 
       DataContentItemView.prototype.tagName = 'tr';
 
       DataContentItemView.prototype.serializeData = function() {
-        var data, modules, type, _ref;
+        var data, modules, type;
         data = DataContentItemView.__super__.serializeData.call(this);
         if (this.groupType === 'quiz') {
           data.isQuiz = true;
@@ -82,7 +82,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         _.each(data.present_in_modules, function(ele, index) {
           return modules.push("<a target='_blank' href='#view-group/" + ele.id + "'>" + ele.name + "</a>");
         });
-        type = (_ref = data.content_type) === 'student_question' ? 'quiz' : 'teaching-module';
+        type = data.content_type === 'student_question' ? 'quiz' : 'teaching-module';
+        if (data.content_type === 'student_question') {
+          data.marks = this.model.getMarks();
+        }
         data.present_in_str = _.size(modules) > 0 ? _.toSentence(modules) : "Not added to a " + type + " yet";
         return data;
       };
