@@ -76,6 +76,7 @@
                     <div id="login-region"></div>
                     <div id="breadcrumb-region"></div>
                     <div id="main-content-region">
+                        <?php if(is_user_logged_in()):?>
                         <table class="table table-condensed table-fixed-layout table-bordered takeClass tablesorter tablesorter-default" role="grid" aria-describedby="take-class-modules_pager_info">
                            <thead>
                             <tr>
@@ -86,6 +87,7 @@
                            </thead>
                             <?php echo get_sync_log_devices();?>
                         </table>
+                        <?php endif;?>
                     </div>
                 </div>
             </div>
