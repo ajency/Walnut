@@ -1,7 +1,7 @@
 define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
   return _.mixin({
     getTblPrefix: function() {
-      return 'wp_' + _.getBlogID() + '_';
+      return 'wp_' + 15 + '_';
     },
     displayConnectionStatusOnMainLoginPage: function() {
       if (_.isOnline()) {
@@ -287,15 +287,17 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       var data, user;
       user = App.request("get:user:model");
       user.set({
-        'ID': '' + _.getUserID()
+        'ID': 253
       });
       if (!_.isNull(_.getUserCapabilities())) {
         user.set({
-          'allcaps': _.getUserCapabilities()
+          'allcaps': {
+            "student": true
+          }
         });
       }
       data = {
-        'division': _.getStudentDivision()
+        'division': 12341534
       };
       return user.set({
         'data': data

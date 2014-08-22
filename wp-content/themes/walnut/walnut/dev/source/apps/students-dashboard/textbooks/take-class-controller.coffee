@@ -1,7 +1,7 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/teachers-dashboard/take-class/templates/class-description.html'
-        'apps/teachers-dashboard/take-class/views'
+        'text!apps/students-dashboard/textbooks/templates/class-description.html'
+        'apps/students-dashboard/textbooks/views'
 ], (App, RegionController, classDescriptionTpl)->
     App.module "TeachersDashboardApp.View", (View, App)->
         divisionModel = null
@@ -12,12 +12,12 @@ define ['app'
         class View.TakeClassController extends RegionController
 
             initialize: (opts)->
-                console.log opts
+
                 {@classID,@division, @mode} = opts
 
                 breadcrumb_label = 'Start Training'
-
-                if @mode is 'take-class'
+                console.log @mode
+                if @mode in ['take-class','take-quiz']
                     divisionModel = App.request "get:division:by:id", @division
                     breadcrumb_label = 'Take Class'
                 else
@@ -31,7 +31,11 @@ define ['app'
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-                textbooks = App.request "get:textbooks", (class_id: @classID, division:@division )
+                if @mode is 'take-quiz'
+                    textbooks = App.request "get:textbooks", user_id: App.request "get:user:data", "ID"
+                else
+                    textbooks = App.request "get:textbooks", (class_id: @classID, division:@division )
+
 
                 @layout = layout = @_getTrainingModuleLayout()
 
@@ -41,10 +45,11 @@ define ['app'
 
 
 
-            _showTextbooksListView: ->
+            _showTextbooksListView: =>
                 App.execute "when:fetched", textbooks, =>
                     textbookListView = new View.TakeClass.TextbooksListView
-                        collection: textbooks
+                        collection  : textbooks
+                        mode        : @mode
 
 
                     classDescriptionView = new ClassDescriptionView
@@ -78,7 +83,7 @@ define ['app'
         class TextbookListLayout extends Marionette.Layout
 
             template: '<div id="class-details-region"></div>
-            							<div id="textbooks-list-region"></div>'
+                                        <div id="textbooks-list-region"></div>'
 
             regions:
                 classDetailsRegion: '#class-details-region'
@@ -88,3 +93,11 @@ define ['app'
         class ClassDescriptionView extends Marionette.ItemView
 
             template: classDescriptionTpl
+
+
+
+        # set handlers
+        App.commands.setHandler "show:take:class:textbooks:app", (opt = {})->
+            new View.TakeClassController opt
+
+

@@ -18,17 +18,16 @@ define ["backbone"], (Backbone) ->
 			opts = options.data
 
 			if collection_name is 'textbook'
-				if typeof opts.class_id isnt 'undefined'
-					data = _.getTextbooksByUserId(_.getUserID())
-					data.done (d)->
-						console.log 'textbook by class id and division data'
-						console.log d
-						collection.set d
-			
-			if collection_name is 'menu-item'
-				data = _.getAppMenuItems()
+				data = _.getTextbooksByUserId(253)#_.getUserID())
 				data.done (d)->
+					console.log 'textbook by class id and division data'
+					console.log d
 					collection.set d
+			
+			# if collection_name is 'menu-item'
+			# 	data = _.getAppMenuItems()
+			# 	data.done (d)->
+			# 		collection.set d
 
 			if collection_name is 'chapter'
 				data = _.getChaptersByParentId(opts.parent)

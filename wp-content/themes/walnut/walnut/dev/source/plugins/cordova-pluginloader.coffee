@@ -21,9 +21,11 @@ define [
     'unveil'
     'moment'
     'select2'
+    'detect'
     'jquery_listnav'
     'unserialize'
     'serialize'
     'fastclick'
     'walnutGlobal'
+    'jPages'
 ], ->

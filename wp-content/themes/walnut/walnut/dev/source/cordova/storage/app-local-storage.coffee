@@ -11,7 +11,7 @@ define ['underscore'], ( _)->
 
         # save/get logged in user ID
         setUserID : (id)->
-            _.localStorage.setItem("user_id", id)
+            _.localStorage.setItem("user_id", 253)
 
         getUserID : ->
             _.localStorage.getItem("user_id")

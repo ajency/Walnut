@@ -81,23 +81,42 @@ define(['marionette'], function(Marionette) {
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        App.navigate('header', {
-          trigger: true
-        });
         App.navigate('students/dashboard', {
           trigger: true
         });
+      } else {
+        if (user_role[0] === 'administrator') {
+          App.navigate('textbooks', {
+            trigger: true
+          });
+        } else {
+          App.navigate('teachers/dashboard', {
+            trigger: true
+          });
+        }
+        if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
+          App.navigate('textbooks', {
+            trigger: true
+          });
+        }
+        if (user.current_user_can('teacher')) {
+          App.navigate('teachers/dashboard', {
+            trigger: true
+          });
+        }
+        if (user.current_user_can('student')) {
+          App.navigate('students/dashboard', {
+            trigger: true
+          });
+        }
       }
-      App.execute("show:breadcrumbapp", {
-        region: App.breadcrumbRegion
-      });
       App.execute("show:headerapp", {
         region: App.headerRegion
       });
       App.execute("show:leftnavapp", {
         region: App.leftNavRegion
       });
-      if (typeof Pace !== 'undefined') {
+      if (typeof Pace === !'undefined') {
         return Pace.on('hide', function() {
           return $("#site_main_container").addClass("showAll");
         });
@@ -108,7 +127,6 @@ define(['marionette'], function(Marionette) {
     App.leftNavRegion.close();
     App.headerRegion.close();
     App.mainContentRegion.close();
-    App.breadcrumbRegion.close();
     this.rootRoute = 'login';
     return App.navigate(this.rootRoute, {
       trigger: true

@@ -26,11 +26,13 @@ require.config({
     unveil: 'plugins/jquery.unveil.min',
     moment: 'plugins/moment.min',
     select2: 'plugins/select2.min',
+    detect: 'plugins/detect',
     jquery_listnav: 'plugins/jquery-listnav',
     unserialize: 'plugins/unserialize',
     serialize: 'plugins/serialize',
     fastclick: 'plugins/fastclick',
-    walnutGlobal: 'plugins/walnutapp-global'
+    walnutGlobal: 'plugins/walnutapp-global',
+    jPages: 'plugins/jPages.min'
   },
   shim: {
     underscore: {
@@ -61,6 +63,7 @@ require.config({
     jquery_listnav: ['jquery'],
     jqueryvalidate: ['jquery'],
     syphon: ['backbone'],
+    jPages: ['jquery'],
     app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
   }
 });

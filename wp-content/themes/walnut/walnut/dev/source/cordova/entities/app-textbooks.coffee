@@ -6,6 +6,7 @@ define ['underscore'], ( _) ->
 		#Get List of textbook from userid
 		getTextbooksByUserId : (user_id)->
 
+			console.log user_id
 			runQuery = ->
 
 				$.Deferred (d)->
@@ -32,7 +33,7 @@ define ['underscore'], ( _) ->
 						do (row ,i)->
 							modulesCount = _.getModulesCount(row['textbook_id'])
 							modulesCount.done (modules_count)->
-
+								
 								do(row, i, modules_count)->
 									textbookOptions = _.getTextbookOptions(row['term_id'])
 									textbookOptions.done (options)->
@@ -44,7 +45,6 @@ define ['underscore'], ( _) ->
 												do(row, i, modules_count, options,chapter_count)->
 													completedQuizCount = _.getCompletedQuizCount(row['textbook_id'])
 													completedQuizCount.done (quizzes_completed)->
-
 														result[i] = 
 															term_id: row["term_id"]
 															name: row["name"]
@@ -65,13 +65,13 @@ define ['underscore'], ( _) ->
 															chapter_count : chapter_count
 															quizzes_completed : quizzes_completed
 															quizzes_not_started : modules_count - quizzes_completed
-
+														console.log JSON.stringify result[i]
 
 
 					d.resolve(result)
 			
 			$.when(runQuery()).done (data)->
-				console.log 'getTextbooksByClassIdAndDivision transaction completed'
+				console.log 'getTextbooksByuserId transaction completed'
 			.fail _.failureHandler
 
 		
@@ -160,7 +160,7 @@ define ['underscore'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT meta_value FROM wp_usermeta 
-							WHERE meta_key=? AND user_id=?", ['textbooks', _.getUserID()]
+							WHERE meta_key=? AND user_id=?", ['textbooks', 253]
 							, onSuccess(d), _.deferredErrorHandler(d))
 			
 			onSuccess = (d)->
@@ -180,12 +180,6 @@ define ['underscore'], ( _) ->
 
 			pattern = '%"'+textbook_id+'"%'
 
-			if workingSynapseProject is 'teacherApp'
-				module_type =  "teaching-module"
-
-			else if workingSynapseProject is 'studentsApp'
-				module_type = "quiz"
-
 			
 			runQuery =->
 				$.Deferred (d)->
@@ -193,10 +187,10 @@ define ['underscore'], ( _) ->
 						tx.executeSql("SELECT COUNT(id) AS count FROM wp_content_collection 
 							WHERE 
 								term_ids LIKE '"+pattern+"' 
-								AND status=?
+								AND post_status=?
 								AND type=?", 
 
-								['publish', module_type]
+								['publish', 'quiz']
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess =(d)->
@@ -418,7 +412,7 @@ define ['underscore'], ( _) ->
 					_.db.transaction (tx)->
 						pattern = '%"'+chapter_id+'"%'
 						tx.executeSql("SELECT id FROM wp_content_collection WHERE 
-							term_ids LIKE '"+pattern+"' AND status=?", ['publish']
+							term_ids LIKE '"+pattern+"' AND post_status=?", ['publish']
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 

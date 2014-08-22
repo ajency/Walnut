@@ -1,6 +1,6 @@
 define ['app'
-		'text!apps/teachers-dashboard/take-class/templates/textbooks-list.html'
-		'text!apps/teachers-dashboard/take-class/templates/list-item.html'
+		'text!apps/students-dashboard/textbooks/templates/textbooks-list.html'
+		'text!apps/students-dashboard/textbooks/templates/list-item.html'
 		],(App,textbooksListTpl, listitemTpl)->
 
 	App.module "TeachersDashboardApp.View.TakeClass",(TakeClass, App)->		
@@ -24,19 +24,15 @@ define ['app'
 			serializeData : ->
 				data = super()
 
-				subjects =@model.get 'subjects'
-				if subjects
-					item_subjects= _.sortBy(subjects, (num)-> num)
-					subject_string= ''
-					for subject in item_subjects
-						subject_string += subject
-						subject_string += ', ' if _.last(item_subjects)!=subject
-
-					data.subject_string= subject_string;
-
 				route= App.getCurrentRoute()
 
 				data.url= '#'+route+'/textbook/'+ @model.get 'term_id'
+
+				mode = Marionette.getOption @, 'mode'
+
+				if mode is 'take-quiz' 
+					data.take_quiz = true
+
 
 				data
 
@@ -47,17 +43,35 @@ define ['app'
 
 		class TakeClass.TextbooksListView extends Marionette.CompositeView
 
-			template : textbooksListTpl
-
-			className : ''
+			template 	: textbooksListTpl
 
 			itemView 	: TextbooksItemView
 
-			emptyView  : EmptyView
+			emptyView  	: EmptyView
 
 			itemViewContainer : 'ul.textbooks_list'
 
+			itemViewOptions:->
+				data = mode: Marionette.getOption @,'mode'
+
+
+			serializeData:->
+				data=super()
+
+				mode = Marionette.getOption @,'mode'
+
+				data.take_quiz = true if mode is 'take-quiz' 
+
+				data
+
+
 			onShow:->
+
+				if  Marionette.getOption(@,'mode') is 'take-quiz'
+					@$el.addClass 'myClass'
+
+				else 
+					@$el.addClass 'takeClass'
 
 				@$el.find('#textbooks').mixitup
 					layoutMode: 'list', # Start in list mode (display: block) by default
@@ -70,8 +84,8 @@ define ['app'
 					status: 'all'
 
 				$("li.txtbook").click ->
-					window.location = $(this).find("a").attr("href")
-					false
+				  window.location = $(this).find("a").attr("href")
+				  false
 
 				if _.platform() is 'DEVICE'
 

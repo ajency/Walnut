@@ -7,7 +7,9 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 		getTblPrefix : ->
 
-			'wp_'+_.getBlogID()+'_'
+			# uncomment this after  server starts working
+			# 'wp_'+_.getBlogID()+'_'
+			'wp_'+15+'_'
 
 
 		displayConnectionStatusOnMainLoginPage : ->
@@ -309,12 +311,12 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		setUserModel : ->
 			
 			user = App.request "get:user:model"
-			user.set 'ID' : ''+_.getUserID()
+			user.set 'ID' : 253#''+_.getUserID()
 
 			if not _.isNull(_.getUserCapabilities())
-				user.set 'allcaps' : _.getUserCapabilities()
+				user.set 'allcaps' : {"student":true}#_.getUserCapabilities()
 
 			data = 
-				'division' : _.getStudentDivision()
+				'division' : 12341534#_.getStudentDivision()
 
 			user.set 'data' : data

@@ -12,18 +12,10 @@ define(["backbone"], function(Backbone) {
       console.log('Collection name: ' + collection_name);
       opts = options.data;
       if (collection_name === 'textbook') {
-        if (typeof opts.class_id !== 'undefined') {
-          data = _.getTextbooksByUserId(_.getUserID());
-          data.done(function(d) {
-            console.log('textbook by class id and division data');
-            console.log(d);
-            return collection.set(d);
-          });
-        }
-      }
-      if (collection_name === 'menu-item') {
-        data = _.getAppMenuItems();
+        data = _.getTextbooksByUserId(253);
         data.done(function(d) {
+          console.log('textbook by class id and division data');
+          console.log(d);
           return collection.set(d);
         });
       }

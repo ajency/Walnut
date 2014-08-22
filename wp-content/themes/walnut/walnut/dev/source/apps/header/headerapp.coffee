@@ -96,14 +96,16 @@ define ['app'
 				#      #display name of logged in user
 				#     @$el.find('#app_username').text('Hi '+_.getUserName()+',')
 
-				if _.platform() is 'DEVICE'
-					lastSyncOperation = _.getLastSyncOperation()
-					lastSyncOperation.done (typeOfOperation)->
 
-						if typeOfOperation is 'file_import'
-							$('#main-menu-toggle').css('display','block')
-						else
-							$('#main-menu-toggle').css('display','none')
+				#commented for time being
+				# if _.platform() is 'DEVICE'
+				# 	lastSyncOperation = _.getLastSyncOperation()
+				# 	lastSyncOperation.done (typeOfOperation)->
+
+				# 		if typeOfOperation is 'file_import'
+				# 			$('#main-menu-toggle').css('display','block')
+				# 		else
+				# 			$('#main-menu-toggle').css('display','none')
 							
 
 			

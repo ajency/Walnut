@@ -29,11 +29,13 @@
 		tablesorter: 'plugins/jquery.tablesorter',
 		tablesorter_pager: 'plugins/jquery.tablesorter.pager',
 		moment: 'plugins/moment.min',
+		detect: 'plugins/detect',
 		select2             : 'plugins/select2.min',
 		jquery_listnav      : 'plugins/jquery-listnav',
 		unserialize         : 'plugins/unserialize',
 		serialize           : 'plugins/serialize',
 		fastclick           : 'plugins/fastclick',
+		jPages				: 'plugins/jPages.min',
 		walnutGlobal        : 'plugins/walnutapp-global'
 	},
 	shim: {
@@ -64,6 +66,7 @@
 		moment: ['jquery'],
 		select2: ['jquery', 'bootstrap'],
 		jquery_listnav: ['jquery'],
+		jPages			: ['jquery'],
 		app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
 	}
 })

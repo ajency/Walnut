@@ -101,24 +101,40 @@ define ['marionette'], (Marionette)->
             # to the user.
 
 
-            App.navigate('header', trigger: true)
+            # App.navigate('header', trigger: true)
             App.navigate('students/dashboard', trigger: true)
                 
 
-        App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
+        else
+
+            if user_role[0] == 'administrator'
+                App.navigate('textbooks', trigger: true)
+
+            else
+                App.navigate('teachers/dashboard', trigger: true)
+
+            if user.current_user_can('administrator') or user.current_user_can('school-admin')
+                App.navigate('textbooks', trigger: true)
+
+            if user.current_user_can 'teacher'
+                App.navigate('teachers/dashboard', trigger: true)     
+
+            if user.current_user_can 'student'
+                App.navigate('students/dashboard', trigger: true)             
+
+        # App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
         App.execute "show:headerapp", region: App.headerRegion
         App.execute "show:leftnavapp", region: App.leftNavRegion
 
-        if typeof Pace isnt 'undefined'
+        if typeof(Pace) is not 'undefined'
             Pace.on 'hide', ()->
                 $("#site_main_container").addClass("showAll");
-
 
     App.vent.on "show:login", ->
         App.leftNavRegion.close()
         App.headerRegion.close()
         App.mainContentRegion.close()
-        App.breadcrumbRegion.close()
+        # App.breadcrumbRegion.close()
         @rootRoute = 'login'
         # if not logged in change rootRoute to login
         App.navigate(@rootRoute, trigger: true)

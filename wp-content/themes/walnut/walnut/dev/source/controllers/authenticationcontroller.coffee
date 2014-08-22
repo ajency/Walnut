@@ -50,32 +50,40 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		
 		
 		onlineDeviceAuth:->
+			_.setUserModel()
+			@onSuccessResponse()
 
-			$.post AJAXURL + '?action=get-user-app-profile',
-				data: @data,
-				(resp)=>
-					console.log 'Login Response'
-					console.log JSON.stringify resp
-					if resp.error
-						@onErrorResponse(resp.error)
-					else
-						# @setUserDetails(resp.login_details.ID, @data.txtusername)
-						@onDeviceLoginSuccess(resp)
+			# if _.isNull(_.getSiteUrl()) or _.getSiteUrl() is 'null'
+			
+			# 	$.post AJAXURL + '?action=get-user-app-profile',
+			# 		data: @data,
+			# 		(resp)=>
+			# 			console.log 'Login Response'
+			# 			console.log JSON.stringify resp
+			# 			if resp.error
+			# 				@onErrorResponse(resp.error)
+			# 			else
+			# 				_.setSiteUrl(resp.blog_details.site_url)
+			# 				@onSuccessResponse()
+			# 				#commented to bypass login 
+			# 				# @onDeviceLoginSuccess()
 
-				,
-				'json'
+			# 		,
+			# 		'json'
 
-			.fail =>
-				@onErrorResponse('Could not connect to server')
+			# 	.fail =>
+			# 		@onErrorResponse('Could not connect to server')
+
+			# else
+			# 	@onDeviceLoginSuccess()
 
 
 		
-		onDeviceLoginSuccess :(serverResponse)->
-
-			_.setSiteUrl(serverResponse.blog_details.site_url)
+		onDeviceLoginSuccess : ->
 
 			`var baseUrl =  AJAXURL.substr(AJAXURL.indexOf("/wp-admin"));
 			AJAXURL = _.getSiteUrl() + baseUrl;`
+			console.log AJAXURL
 
 			$.post AJAXURL + '?action=get-user-app-profile',
 				data: @data,
@@ -84,6 +92,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 					console.log JSON.stringify resp
 					
 					if resp.error
+						console.log "error"
 						@onErrorResponse(resp.error)
 					else
 						userRole = resp.login_details.roles[0]
@@ -145,7 +154,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		
 		
 		inputNewUser : (response)->
-
+ 
 			resp = response.login_details
 
 			_.db.transaction((tx)=>

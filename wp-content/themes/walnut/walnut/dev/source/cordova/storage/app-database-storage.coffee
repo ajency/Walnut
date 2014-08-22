@@ -7,7 +7,7 @@ define ['underscore', 'jquery'], (_, $)->
         
         cordovaOpenPrepopulatedDatabase : ->
 
-            _.db = window.sqlitePlugin.openDatabase({name: "synapseAppData"})
+            _.db = window.sqlitePlugin.openDatabase({name: "synapseStudentAppDb"})
 
             console.log 'Local database object: '+_.db
 
@@ -46,6 +46,16 @@ define ['underscore', 'jquery'], (_, $)->
 
                 tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'question_response_meta 
                     (qr_ref_id VARCHAR, meta_key VARCHAR, meta_value TEXT, sync INTEGER)')
+                
+
+                tx.executeSql('CREATE TABLE IF NOT EXISTS wp_quiz_question_response 
+                    (qr_id VARCHAR, summary_id VARCHAR, content_piece_id INTEGER
+                    , question_response TEXT, time_taken INTEGER, marks_scored INTEGER
+                    , status VARCHAR)')
+
+                tx.executeSql('CREATE TABLE IF NOT EXISTS wp_quiz_response_summary 
+                    (summary_id VARCHAR, collection_id INTEGER, student_id INTEGER, taken_on
+                    , quiz_meta TEXT)')
 
                 
             ,_.transactionErrorHandler

@@ -4,7 +4,7 @@ define(['underscore'], function(_) {
       return _.localStorage = window.localStorage;
     },
     setUserID: function(id) {
-      return _.localStorage.setItem("user_id", id);
+      return _.localStorage.setItem("user_id", 253);
     },
     getUserID: function() {
       return _.localStorage.getItem("user_id");

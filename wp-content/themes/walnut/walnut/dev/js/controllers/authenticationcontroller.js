@@ -60,29 +60,14 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.onlineDeviceAuth = function() {
-      return $.post(AJAXURL + '?action=get-user-app-profile', {
-        data: this.data
-      }, (function(_this) {
-        return function(resp) {
-          console.log('Login Response');
-          console.log(JSON.stringify(resp));
-          if (resp.error) {
-            return _this.onErrorResponse(resp.error);
-          } else {
-            return _this.onDeviceLoginSuccess(resp);
-          }
-        };
-      })(this), 'json').fail((function(_this) {
-        return function() {
-          return _this.onErrorResponse('Could not connect to server');
-        };
-      })(this));
+      _.setUserModel();
+      return this.onSuccessResponse();
     };
 
-    AuthenticationController.prototype.onDeviceLoginSuccess = function(serverResponse) {
-      _.setSiteUrl(serverResponse.blog_details.site_url);
+    AuthenticationController.prototype.onDeviceLoginSuccess = function() {
       var baseUrl =  AJAXURL.substr(AJAXURL.indexOf("/wp-admin"));
 			AJAXURL = _.getSiteUrl() + baseUrl;;
+      console.log(AJAXURL);
       return $.post(AJAXURL + '?action=get-user-app-profile', {
         data: this.data
       }, (function(_this) {
@@ -91,6 +76,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           console.log('User Response');
           console.log(JSON.stringify(resp));
           if (resp.error) {
+            console.log("error");
             return _this.onErrorResponse(resp.error);
           } else {
             userRole = resp.login_details.roles[0];

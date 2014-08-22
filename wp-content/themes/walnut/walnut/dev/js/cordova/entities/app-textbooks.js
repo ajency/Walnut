@@ -2,6 +2,7 @@ define(['underscore'], function(_) {
   return _.mixin({
     getTextbooksByUserId: function(user_id) {
       var onSuccess, runQuery;
+      console.log(user_id);
       runQuery = function() {
         return $.Deferred(function(d) {
           var textbookIds;
@@ -33,7 +34,7 @@ define(['underscore'], function(_) {
                         var completedQuizCount;
                         completedQuizCount = _.getCompletedQuizCount(row['textbook_id']);
                         return completedQuizCount.done(function(quizzes_completed) {
-                          return result[i] = {
+                          result[i] = {
                             term_id: row["term_id"],
                             name: row["name"],
                             slug: row["slug"],
@@ -54,6 +55,7 @@ define(['underscore'], function(_) {
                             quizzes_completed: quizzes_completed,
                             quizzes_not_started: modules_count - quizzes_completed
                           };
+                          return console.log(JSON.stringify(result[i]));
                         });
                       })(row, i, modules_count, options, chapter_count);
                     });
@@ -70,7 +72,7 @@ define(['underscore'], function(_) {
         };
       };
       return $.when(runQuery()).done(function(data) {
-        return console.log('getTextbooksByClassIdAndDivision transaction completed');
+        return console.log('getTextbooksByuserId transaction completed');
       }).fail(_.failureHandler);
     },
     getTextbooksByClassIdAndDivision: function(class_id, division) {
@@ -145,7 +147,7 @@ define(['underscore'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['textbooks', _.getUserID()], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['textbooks', 253], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -162,17 +164,12 @@ define(['underscore'], function(_) {
       }).fail(_.failureHandler);
     },
     getModulesCount: function(textbook_id) {
-      var module_type, onSuccess, pattern, runQuery;
+      var onSuccess, pattern, runQuery;
       pattern = '%"' + textbook_id + '"%';
-      if (workingSynapseProject === 'teacherApp') {
-        module_type = "teaching-module";
-      } else if (workingSynapseProject === 'studentsApp') {
-        module_type = "quiz";
-      }
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT COUNT(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND status=? AND type=?", ['publish', module_type], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT COUNT(id) AS count FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND post_status=? AND type=?", ['publish', 'quiz'], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -384,7 +381,7 @@ define(['underscore'], function(_) {
           return _.db.transaction(function(tx) {
             var pattern;
             pattern = '%"' + chapter_id + '"%';
-            return tx.executeSql("SELECT id FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND status=?", ['publish'], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT id FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND post_status=?", ['publish'], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
