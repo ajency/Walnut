@@ -1,0 +1,38 @@
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define(['app'], function(App) {
+  return App.module("ContentPreview.ContentBoard.Element.BigAnswer.Views", function(Views, App, Backbone, Marionette, $, _) {
+    return Views.BigAnswerView = (function(_super) {
+      __extends(BigAnswerView, _super);
+
+      function BigAnswerView() {
+        return BigAnswerView.__super__.constructor.apply(this, arguments);
+      }
+
+      BigAnswerView.prototype.template = '<textarea  type="text" maxlength="{{maxlength}}" contenteditable="false" style=" font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; max-width:100%; width :100%; height: 100%; line-height : inherit;" ></textarea>';
+
+      BigAnswerView.prototype.onShow = function() {
+        this._setBGColor();
+        return this._setBigAnswerStyle(this.model.get('style'));
+      };
+
+      BigAnswerView.prototype._setBGColor = function() {
+        return this.$el.find('textarea').css('background-color', _.convertHex(this.model.get('bg_color'), this.model.get('bg_opacity')));
+      };
+
+      BigAnswerView.prototype._setBigAnswerStyle = function(style) {
+        if (style === 'uline') {
+          return this.$el.find('textarea').removeClass("border").addClass("underline");
+        } else if (style === 'box') {
+          return this.$el.find('textarea').removeClass("underline").addClass("border");
+        } else {
+          return this.$el.find('textarea').removeClass("underline border");
+        }
+      };
+
+      return BigAnswerView;
+
+    })(Marionette.ItemView);
+  });
+});

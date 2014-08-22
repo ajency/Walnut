@@ -47,7 +47,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.deleteElement = function(model) {
-        model.destroy();
+        Controller.__super__.deleteElement.call(this, model);
         return App.execute("close:question:properties");
       };
 

@@ -13,7 +13,7 @@ define(['app', 'controllers/region-controller', 'apps/media-collection-manager/m
       }
 
       Controller.prototype.initialize = function(options) {
-        this.mediaCollection = options.mediaCollection;
+        this.mediaCollection = options.mediaCollection, this.mediaType = options.mediaType;
         this.view = this._getListView();
         this.listenTo(this.view, "itemview:remove:media", (function(_this) {
           return function(iv, media) {
@@ -37,7 +37,8 @@ define(['app', 'controllers/region-controller', 'apps/media-collection-manager/m
 
       Controller.prototype._getListView = function() {
         return new MediaList.Views.MediaListView({
-          collection: this.mediaCollection
+          collection: this.mediaCollection,
+          mediaType: this.mediaType
         });
       };
 
