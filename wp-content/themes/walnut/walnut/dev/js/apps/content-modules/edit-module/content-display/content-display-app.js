@@ -160,6 +160,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         if (this.groupType === 'teaching-module') {
           data.isModule = true;
         }
+        if (this.groupType === 'quiz' && data.post_type === 'content-piece') {
+          data.marks = this.model.getMarks();
+        }
         return data;
       };
 

@@ -17,7 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
       }
 
       Controller.prototype.initialize = function(opts) {
-        this.model = opts.model;
+        this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
         this.textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });
@@ -156,6 +156,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
       Controller.prototype._getCollectionDetailsView = function(model) {
         return new EditCollecionDetailsApp.Views.CollectionDetailsView({
           model: model,
+          contentGroupCollection: this.contentGroupCollection,
           templateHelpers: {
             textbooksFilter: (function(_this) {
               return function() {

@@ -54,6 +54,8 @@ define ['app'
                                     {{/isModule}}
                                     {{#isQuiz}}
                                     <td>{{difficulty_level}}</td>
+                                    <td>{{marks}}</td>
+                                    <td>{{duration}} mins</td>
                                     {{/isQuiz}}
                                     <td class="cpHeight">
                                         {{&present_in_str}}
@@ -84,7 +86,9 @@ define ['app'
                 _.each data.present_in_modules, (ele,index)->
                     modules.push "<a target='_blank' href='#view-group/"+ ele.id+"'>"+ ele.name+"</a>"
 
-                type = if data.content_type in ['student_question'] then 'quiz' else 'teaching-module'
+                type = if data.content_type is 'student_question' then 'quiz' else 'teaching-module'
+
+                data.marks = @model.getMarks() if data.content_type is 'student_question'
 
                 data.present_in_str=
                     if _.size(modules)>0

@@ -9,7 +9,7 @@ define ['app'
 
             initialize : (options) ->
                 {@group_id,@groupType} = options
-
+                @contentGroupCollection = null
                 if @group_id
                     @contentGroupModel = App.request "get:content:group:by:id", @group_id if @groupType is 'teaching-module'
                     @contentGroupModel = App.request "get:quiz:by:id", @group_id if @groupType is 'quiz'
@@ -19,11 +19,30 @@ define ['app'
                     @contentGroupModel = App.request "new:quiz" if @groupType is 'quiz'
 
                 App.execute "when:fetched", @contentGroupModel, =>
+                    @contentGroupCollection = @_getContentGroupCollection()
 #                    if @contentGroupModel.get('status') is 'underreview'
                     @showContentGroupView()
 #                    else
 #                        @noEditView = @_getNotEditView @contentGroupModel.get('status')
 #                        @show @noEditView
+            
+            _getContentGroupCollection:=>
+                @contentGroupCollection = App.request "get:content:pieces:of:group", @contentGroupModel if @groupType is 'teaching-module'
+
+                if @groupType is 'quiz'
+                    @contentGroupCollection = new Backbone.Collection
+
+                    _.each @contentGroupModel.get('content_layout'),(content)=>
+                        if content.type is 'content-piece'
+                            contentModel = App.request "get:content:piece:by:id",content.id
+                        else
+                            content.data.lvl1 = parseInt content.data.lvl1
+                            content.data.lvl2 = parseInt content.data.lvl2
+                            content.data.lvl3 = parseInt content.data.lvl3
+                            contentModel = new Backbone.Model content.data
+                        @contentGroupCollection.add contentModel
+
+                @contentGroupCollection
 
             showContentGroupView : ->
                 breadcrumb_items =
@@ -58,28 +77,12 @@ define ['app'
                 App.execute "show:editgroup:content:group:detailsapp",
                     region : @layout.collectionDetailsRegion
                     model : @contentGroupModel
+                    contentGroupCollection: @contentGroupCollection
 
             _getContentGroupEditLayout : =>
                 new Edit.Views.ContentGroupEditLayout
 
             _showContentSelectionApp : (model)=>
-                @contentGroupCollection = App.request "get:content:pieces:of:group", model if @groupType is 'teaching-module'
-
-                if @groupType is 'quiz'
-                    @contentGroupCollection = new Backbone.Collection
-
-                    _.each model.get('content_layout'),(content)=>
-                        if content.type is 'content-piece'
-                            contentModel = App.request "get:content:piece:by:id",content.id
-                        else
-                            content.data.lvl1 = parseInt content.data.lvl1
-                            content.data.lvl2 = parseInt content.data.lvl2
-                            content.data.lvl3 = parseInt content.data.lvl3
-                            contentModel = new Backbone.Model content.data
-                        @contentGroupCollection.add contentModel
-
-
-
 
                 App.execute "when:fetched", @contentGroupCollection, =>
                     if model.get('post_status') is 'underreview'

@@ -100,6 +100,9 @@ define ['app'
                 data.isQuiz = true if @groupType is 'quiz'
                 data.isModule = true if @groupType is 'teaching-module'
 
+                if @groupType is 'quiz' and data.post_type is  'content-piece'
+                    data.marks = @model.getMarks() 
+
                 data
 
             initialize :->
