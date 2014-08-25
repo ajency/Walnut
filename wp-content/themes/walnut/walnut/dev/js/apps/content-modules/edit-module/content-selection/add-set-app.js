@@ -134,7 +134,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       SetView.prototype.onAddSet = function(filters) {
-        var data, terms_id;
+        var data, setAvgs, terms_id;
         _.each(filters, function(term, index) {
           var newTerm;
           if ((term == null) || term.id === '') {
@@ -151,6 +151,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           section: filters[2].id,
           subsection: filters[3].id
         };
+        setAvgs = this.getSetAvgs();
         data = {
           terms_id: terms_id,
           textbook: filters[0].text,
@@ -160,11 +161,41 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           lvl1: this.$el.find("#lvl1 input").val(),
           lvl2: this.$el.find("#lvl2 input").val(),
           lvl3: this.$el.find("#lvl3 input").val(),
-          post_type: 'content_set'
+          post_type: 'content_set',
+          avg_marks: setAvgs.marks,
+          avg_duration: setAvgs.time
         };
         this.trigger("add:new:set", data);
         this.$el.find("input[type='text']").val(0);
         return this.$el.find('#selectAll').prop('checked', false);
+      };
+
+      SetView.prototype.getSetAvgs = function() {
+        var avgMarks, avgTime, lev, marks, models, numQuestions, setAvgs, time, _i;
+        avgMarks = avgTime = 0;
+        for (lev = _i = 1; _i <= 3; lev = ++_i) {
+          marks = time = 0;
+          models = this.collection.where({
+            'difficulty_level': lev
+          });
+          _.each(models, function(m, ele) {
+            if (m.getMarks()) {
+              marks += parseInt(m.getMarks());
+            }
+            return time += parseInt(m.get('duration'));
+          });
+          numQuestions = parseInt(this.$el.find("#lvl" + lev + " input").val());
+          if (numQuestions) {
+            avgMarks += numQuestions * marks / models.length;
+          }
+          if (numQuestions) {
+            avgTime += numQuestions * time / models.length;
+          }
+        }
+        return setAvgs = {
+          'marks': avgMarks,
+          'time': avgTime
+        };
       };
 
       return SetView;

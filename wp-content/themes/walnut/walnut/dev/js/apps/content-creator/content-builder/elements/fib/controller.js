@@ -24,7 +24,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           style: 'uline',
           text: 'Add text here',
           numberOfBlanks: 0,
-          blanksArray: []
+          blanksArray: [],
+          complete: false
         });
         return Controller.__super__.initialize.call(this, options);
       };

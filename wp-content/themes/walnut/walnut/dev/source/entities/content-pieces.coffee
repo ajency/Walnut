@@ -17,6 +17,15 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name : 'content-piece'
 
+            getMarks:->
+
+                layout= @.get 'layout'
+                
+                marks = parseInt _.compact _.pluck(layout,'marks')
+
+                marks=0 if not marks
+
+                marks
 
         # ContentPiece collection class
         class ContentPiece.ItemCollection extends Backbone.Collection

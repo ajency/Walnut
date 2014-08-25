@@ -73,7 +73,7 @@ define ['app'
             API =
             # add a new element to the builder region
                 addNewElement : (container, type, modelData)=>
-                    #console.log type
+                    console.log type
 
                     new ContentBoard.Element[type].Controller
                         container            : container

@@ -7,7 +7,7 @@ define ['app'
         class EditCollecionDetailsApp.Controller extends RegionController
 
             initialize : (opts)->
-                {@model}= opts
+                {@model,@contentGroupCollection}= opts
 
                 @textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
@@ -123,6 +123,7 @@ define ['app'
             _getCollectionDetailsView : (model)->
                 new EditCollecionDetailsApp.Views.CollectionDetailsView
                     model : model
+                    contentGroupCollection: @contentGroupCollection
                     templateHelpers :
                         textbooksFilter : =>
                             textbooks = []
