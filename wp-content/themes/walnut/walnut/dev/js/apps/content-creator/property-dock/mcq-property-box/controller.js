@@ -50,6 +50,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
 
       Controller.prototype.onClose = function() {
         var elements, models, optionCollection, optionElements;
+        if (this.model.get('marks') > 0 && this.model.get('correct_answer').length) {
+          this.model.set('complete', true);
+        } else {
+          this.model.set('complete', false);
+        }
         models = this.model.get('options').models;
         elements = _.map(models, function(m) {
           return m.toJSON();

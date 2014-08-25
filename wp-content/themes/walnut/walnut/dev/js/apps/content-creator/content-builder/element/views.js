@@ -23,6 +23,10 @@ define(['app', 'holder', 'text!apps/content-creator/content-builder/element/temp
 
       ElementView.prototype.className = 'element-wrapper';
 
+      ElementView.prototype.modelEvents = {
+        'change:complete': '_changeComplete'
+      };
+
       ElementView.prototype.events = {
         'click .aj-imp-settings-btn': function(evt) {
           evt.stopPropagation();
@@ -62,12 +66,19 @@ define(['app', 'holder', 'text!apps/content-creator/content-builder/element/temp
         })(this));
       };
 
+      ElementView.prototype._changeComplete = function(model, complete) {
+        return this.setHiddenField('complete', this.model.get('complete'));
+      };
+
       ElementView.prototype.onBeforeRenderElement = function() {
-        var field, _i, _len, _ref;
+        var field, _i, _len, _ref, _ref1;
         _ref = ['meta_id', 'style', 'element'];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           field = _ref[_i];
           this.setHiddenField(field, this.model.get(field));
+        }
+        if ((_ref1 = this.model.get('element')) === 'Fib' || _ref1 === 'Mcq' || _ref1 === 'Sort' || _ref1 === 'Hotspot' || _ref1 === 'BigAnswer') {
+          this.$el.find('form').append("<input type='hidden' name='complete' value=" + (this.model.get('complete')) + " />");
         }
         return this.setDraggable(this.model.get('draggable'));
       };

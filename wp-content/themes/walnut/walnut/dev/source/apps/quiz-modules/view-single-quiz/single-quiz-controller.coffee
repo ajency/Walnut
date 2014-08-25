@@ -44,6 +44,16 @@ define ['app'
                             questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
                             App.execute "when:fetched", questionsCollection, ->
+
+                                actualMarks= 0
+                                questionsCollection.each (m)-> actualMarks += m.getMarks() if m.getMarks()
+                                
+                                multiplicationFactor = quizModel.get('marks')/actualMarks if actualMarks>0
+
+                                if multiplicationFactor
+                                    questionsCollection.each (m)->
+                                        m.setMarks multiplicationFactor
+
                                 if quizModel.get('permissions').randomize
                                     questionsCollection.each (e)-> e.unset 'order'
                                     questionsCollection.reset questionsCollection.shuffle()

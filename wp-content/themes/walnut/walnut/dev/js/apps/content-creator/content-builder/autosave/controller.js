@@ -32,14 +32,33 @@ define(['app'], function(App) {
           url: AJAXURL,
           data: data
         };
-        return $.ajax(options).done(function(response) {
-          contentPieceModel.set({
-            'ID': response.ID
+        if (this._checkIfMarksEntered()) {
+          return $.ajax(options).done(function(response) {
+            contentPieceModel.set({
+              'ID': response.ID
+            });
+            $('#save-failure').remove();
+            $('#saved-successfully').remove();
+            return $(".page-title").before('<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>');
+          }).fail(function(resp) {
+            return console.log('error');
           });
-          $('#saved-successfully').remove();
-          return $(".page-title").before('<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>');
-        }).fail(function(resp) {
-          return console.log('error');
+        }
+      };
+
+      Controller.prototype._checkIfMarksEntered = function() {
+        var elements;
+        elements = App.mainContentRegion.$el.find('#myCanvas').find('.element-wrapper');
+        return _.every(elements, function(element) {
+          var _ref;
+          if (((_ref = $(element).find('form input[name="element"]').val()) === 'Fib' || _ref === 'Mcq' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer') && $(element).find('form input[name="complete"]').val() === 'false') {
+            $('#saved-successfully').remove();
+            $('#save-failure').remove();
+            $(".page-title").before('<div id="save-failure" style="text-align:center;" class="alert alert-failure">Ensure you have set the marks and added valid answers to save the question</div>');
+            return false;
+          } else {
+            return true;
+          }
         });
       };
 

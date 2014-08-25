@@ -48,6 +48,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         this.model.set({
           'textCollection': textModels
         });
+        if (this.model.get('marks') > 0 && !_.every(this.model.get('optionCollection'), function(option) {
+          return !option.correct;
+        })) {
+          this.model.set('complete', true);
+        } else {
+          this.model.set('complete', false);
+        }
         this.model.save();
         optionCollection = App.request("create:new:hotspot:element:collection", optionCollection);
         imageCollection = App.request("create:new:hotspot:element:collection", imageCollection);

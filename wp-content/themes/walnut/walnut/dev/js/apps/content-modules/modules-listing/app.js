@@ -93,10 +93,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
 
       ContentPiecesLayout.prototype.mixinTemplateHelpers = function(data) {
         data = ContentPiecesLayout.__super__.mixinTemplateHelpers.call(this, data);
-        data.type = _.capitalize(Marionette.getOption(this, 'groupType'));
-        if (data.type === 'Module') {
-          data.type = 'Training Module';
-        }
+        data.type = _.titleize(_.humanize(Marionette.getOption(this, 'groupType')));
         return data;
       };
 

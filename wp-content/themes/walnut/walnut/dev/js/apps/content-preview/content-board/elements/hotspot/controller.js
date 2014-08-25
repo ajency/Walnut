@@ -16,6 +16,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       Controller.prototype.initialize = function(options) {
         var answerWreqrObject;
         answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        Controller.__super__.initialize.call(this, options);
         if (!this.answerModel) {
           this.answerModel = App.request("create:new:answer");
         }
@@ -27,7 +28,9 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
               answer = _.compact(_this.answerModel.get('answer'));
               if (_.isEmpty(answer)) {
                 emptyOrIncomplete = 'empty';
-              } else if (_.size(answer) < _.size(_this.layout.model.get('correct_answer'))) {
+              } else if (_.size(answer) < _.size(_this.layout.model.get('optionCollection').where({
+                correct: 'true'
+              }))) {
                 emptyOrIncomplete = 'incomplete';
               } else {
                 emptyOrIncomplete = 'complete';
@@ -39,13 +42,12 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
               };
             };
           })(this));
-          answerWreqrObject.setHandler("submit:answer", (function(_this) {
+          return answerWreqrObject.setHandler("submit:answer", (function(_this) {
             return function(displayAnswer) {
               return _this._submitAnswer(_this.displayAnswer);
             };
           })(this));
         }
-        return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype._getHotspotView = function() {

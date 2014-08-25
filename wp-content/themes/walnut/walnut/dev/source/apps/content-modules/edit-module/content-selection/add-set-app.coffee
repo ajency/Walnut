@@ -139,6 +139,9 @@ define ['app'
                     chapter : filters[1].id
                     section : filters[2].id
                     subsection : filters[3].id
+
+                setAvgs = @getSetAvgs()
+
                 data =
                     terms_id : terms_id
                     textbook : filters[0].text
@@ -149,6 +152,8 @@ define ['app'
                     lvl2 : @$el.find("#lvl2 input").val()
                     lvl3 : @$el.find("#lvl3 input").val()
                     post_type : 'content_set'
+                    avg_marks     : setAvgs.marks
+                    avg_duration  : setAvgs.time
 
 #                _.each ['textbook','chapter','section','sub-section'],(attr)->
 #
@@ -161,6 +166,29 @@ define ['app'
                 @$el.find("input[type='text']").val 0
                 @$el.find('#selectAll').prop 'checked',false
 
+            #get average time & marks based on level and number of questions selected per level
+            getSetAvgs:->
+
+                avgMarks=avgTime=0
+
+                for lev in [1..3]
+
+                    marks =time= 0
+
+                    models= @collection.where 'difficulty_level': lev
+
+                    _.each models, (m,ele)-> 
+                        marks+=parseInt(m.getMarks()) if m.getMarks()
+                        time +=parseInt m.get 'duration'
+
+                    numQuestions = parseInt @$el.find("#lvl#{lev} input").val() 
+
+                    avgMarks += numQuestions*marks/models.length if numQuestions
+                    avgTime += numQuestions*time/models.length if numQuestions
+
+                setAvgs = 
+                    'marks':avgMarks
+                    'time' :avgTime             
 
 
         App.commands.setHandler 'show:add:set:app',(opt ={})->

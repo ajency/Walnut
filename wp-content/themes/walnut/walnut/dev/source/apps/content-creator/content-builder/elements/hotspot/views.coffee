@@ -66,7 +66,7 @@ define ['app'], (App)->
 
                 @$el.parent().parent().on 'mousedown', (evt)=>
                     @trigger 'close:hotspot:element:properties'
-                    evt.stopPropagation()
+                    # evt.stopPropagation()
 
                 # @_setPropertyBoxCloseHandlers()
                 @_drawExistingElements()
@@ -92,9 +92,12 @@ define ['app'], (App)->
 
             _setResizeHandler : =>
                 # console.log $('#'+@stageName+'.stage').width()
-                @stage.setSize
-                    width : @$el.width()
-                    height : @$el.height() - 5
+
+
+                if @$el.height()>0
+                    @stage.setSize
+                        width : @$el.width()
+                        height : @$el.height() - 7
 
                 @model.set 'height', @stage.height()
                 # resize the default image
@@ -123,14 +126,11 @@ define ['app'], (App)->
                     if i
                         if @stage.getChildren()[i].getChildren().length
                             @defaultLayer.removeChildren()
-                            console.log 'remove default'
                             isEmptyFlag = false
                             break
                     i++
                 if isEmptyFlag
-                    # console.log "in else"
                     if not @stage.getChildren()[0].getChildren().length
-                        # console.log 'in if'
                         @_setDefaultImage()
                 @defaultLayer.draw()
 
@@ -270,7 +270,6 @@ define ['app'], (App)->
 
                     hotspotElement = App.request 'create:new:hotspot:element', modelData
                     @model.get('optionCollection').add hotspotElement
-                    console.log @model.get('optionCollection')
 
                 self = @
 
@@ -359,7 +358,6 @@ define ['app'], (App)->
                     hotspotElement = App.request "create:new:hotspot:element", modelData
                     @model.get('optionCollection').add hotspotElement
 
-                    console.log @model.get('optionCollection')
 
 
                 self = @
@@ -391,7 +389,6 @@ define ['app'], (App)->
 
                 # on change of transparency redraw
                 @model.on "change:transparent", (model, transparent)=>
-                    console.log rectGrp
                     box.dashEnabled transparent
                     @optionLayer.draw()
 
@@ -658,7 +655,6 @@ define ['app'], (App)->
                 @layout.model.set 'content', @_getHotspotData()
                 # @layout.model.save() if @layout.model.hasChanged()
 
-                console.log 'updatedmodel             ' + @layout.model
 
             _getHotspotData : ->
                 @stage.toJSON()

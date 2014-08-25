@@ -17,7 +17,7 @@ define ['app'],(App)->
 
                                 <div class="col-sm-4">
                                     <div class="imgactions">
-                                        <a class="remove-media text-error" title="Delete Media"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete</a>
+                                        <a class="remove-media text-error" title="Delete Media"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete {{mediaType}}</a>
                                     </div>
                                 </div>
                             </div>
@@ -34,6 +34,7 @@ define ['app'],(App)->
             mixinTemplateHelpers : (data)->
                 data = super data
                 data.title_show = _.prune data.title, 50
+                data.mediaType = Marionette.getOption @,'mediaType'
                 data
 
             onRender: ->
@@ -41,7 +42,12 @@ define ['app'],(App)->
 
         class NoMediaView extends Marionette.ItemView
 
-            template: '<div class="alert">No media found. Please add media.</div>'
+            template: '<div class="alert">No {{mediaType}} found. Please add {{mediaType}}.</div>'
+
+            mixinTemplateHelpers :(data)->
+                data = super data
+                data.mediaType = Marionette.getOption @,'mediaType'
+                data
 
 
         class Views.MediaListView extends Marionette.CompositeView
@@ -60,6 +66,9 @@ define ['app'],(App)->
             itemView: MediaView
 
             emptyView: NoMediaView
+
+            itemViewOptions : ->
+                mediaType : Marionette.getOption @,'mediaType'
 
             itemViewContainer: '#media-accordion'
 

@@ -10,6 +10,7 @@
  * @param string $blog_id
  * @param string $last_sync if blank returns full data in the tables mentioned in get_tables_to_export function
  * if mentioned, returns the data from that time forward
+ * @param string $device_type uniques device type for app|'standalone' for a standalone site 
  * @param string $user_id # todo: sync by textbook id. Its not going to be by user
  * @return mixed
  */
@@ -61,7 +62,7 @@ function export_tables_for_app($blog_id='', $last_sync='',$device_type='',$user_
         $uploaded_url= $upload_url.$upload_path;
         $export_details['exported_csv_url'] = $uploaded_url;
         $export_details['last_sync']=date('Y-m-d h:i:s');
-        create_sync_device_log($blog_id,$device_type,$export_details['last_sync']);
+        create_sync_device_log($blog_id,$device_type,$export_details['last_sync'],$user_id);
     }
     return $export_details;
 }
@@ -642,10 +643,11 @@ function create_zip($files = array(),$destination = '',$overwrite = false) {
 /*
  * insert device sync log entry on every sync
  */
-function create_sync_device_log($blog_id,$device_type,$last_sync){
+function create_sync_device_log($blog_id,$device_type,$last_sync,$user_id){
     global $wpdb;
 
-    $record_data = array('blog_id'=>$blog_id,'device_type'=>$device_type,'sync_date' =>$last_sync); 
+    $device_meta = array('user_id' => $user_id);
+    $record_data = array('blog_id'=>$blog_id,'device_type'=>$device_type,'sync_date' =>$last_sync,'meta' => maybe_serialize($device_meta)); 
     $wpdb->insert( $wpdb->base_prefix . "sync_device_log", $record_data );
     
 }

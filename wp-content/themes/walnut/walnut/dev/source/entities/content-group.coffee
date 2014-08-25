@@ -33,12 +33,11 @@ define ["app", 'backbone'], (App, Backbone) ->
         class ContentGroup.ItemCollection extends Backbone.Collection
             model: ContentGroup.ItemModel
 
-
             url: ->
                 AJAXURL + '?action=get-content-groups'
 
             parse: (resp)->
-                resp.data
+                resp.data.reverse()
 
         # API
         API =

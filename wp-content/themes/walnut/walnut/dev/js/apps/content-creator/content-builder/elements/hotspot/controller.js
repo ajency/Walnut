@@ -23,7 +23,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           enableIndividualMarks: false,
           optionCollection: [],
           textCollection: [],
-          imageCollection: []
+          imageCollection: [],
+          complete: false
         });
         return Controller.__super__.initialize.call(this, options);
       };

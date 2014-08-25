@@ -22,6 +22,7 @@ add_action( 'wp_ajax_logout_user', 'logout_current_user' );
 function authenticate_web_login() {
 
     $login_details = authenticate_login( $_POST['data'] );
+
     if (!isset($login_details['error']))
         wp_set_auth_cookie( $login_details['login_details']->ID );
 
@@ -31,22 +32,8 @@ function authenticate_web_login() {
 
 add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_web_login' );
 
-function authenticate_app_login() {
-
-    $login_details = authenticate_login( $_POST['data'] );
-
-    if (!isset($login_details['error'])) {
-
-        $blog_id = $login_details['blog_details']['blog_id'];
-
-    }
-
-    wp_send_json( $login_details );
-
-}
-
-add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_app_login' );
-add_action( 'wp_ajax_get-user-app-profile', 'authenticate_app_login' );
+add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_web_login' );
+add_action( 'wp_ajax_get-user-app-profile', 'authenticate_web_login' );
 
 function ajax_fetch_users() {
 
