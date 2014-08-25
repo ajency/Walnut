@@ -24,6 +24,15 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
         });
+        this.listenTo(this.view, "close", (function(_this) {
+          return function() {
+            var audioEls;
+            audioEls = _this.view.$el.find('.audio');
+            return _.each(audioEls, function(el, ind) {
+              return $(el).find('.pause').trigger('click');
+            });
+          };
+        })(this));
         this.listenTo(this.view, 'dependencies:fetched', (function(_this) {
           return function() {
             return _this.startFillingElements();
@@ -84,6 +93,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
 
       API = {
         addNewElement: function(container, type, modelData) {
+          console.log(type);
           return new ContentBoard.Element[type].Controller({
             container: container,
             modelData: modelData,

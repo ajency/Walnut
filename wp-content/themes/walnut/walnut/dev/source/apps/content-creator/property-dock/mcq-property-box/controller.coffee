@@ -38,6 +38,11 @@ define ['app'
                     mcq_model: model
 
             onClose: ->
+                    if @model.get('marks') > 0 and @model.get('correct_answer').length 
+                        @model.set 'complete',true
+                    else                
+                        @model.set 'complete',false
+
                     models= this.model.get('options').models
 
                     elements= _.map models, (m)-> m.toJSON()
@@ -45,6 +50,8 @@ define ['app'
                     @model.set 'options': elements
                     optionElements = @model.get 'elements'
                     @model.unset 'elements'
+
+                    
 
                     @model.save()
 

@@ -9,12 +9,12 @@ define ['app'], (App)->
 
             className: 'audio'
 
-            template: '{{#audio}}
+            template: '{{#audioUrl}}
                         <audio title="{{title}}" class="audio1" controls>
                             <source src="{{audioUrl}}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
-                        {{/audio}}'
+                        {{/audioUrl}}'
 
 
 

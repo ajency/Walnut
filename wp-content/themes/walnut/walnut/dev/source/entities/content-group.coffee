@@ -33,12 +33,11 @@ define ["app", 'backbone'], (App, Backbone) ->
         class ContentGroup.ItemCollection extends Backbone.Collection
             model: ContentGroup.ItemModel
 
-
             url: ->
                 AJAXURL + '?action=get-content-groups'
 
             parse: (resp)->
-                resp.data
+                resp.data.reverse()
 
         # API
         API =
@@ -82,6 +81,28 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 contentGroupCollection = new ContentGroup.ItemCollection
 
+            getDummyModules:(content_piece_id)->
+                contentGroup = new ContentGroup.ItemModel
+
+                contentGroup.set 
+                    'id' : 3423432
+                    name: 'Dummy Module'
+                    description: 'Dummy Module Description'
+                    created_on: ''
+                    created_by: ''
+                    last_modified_on: ''
+                    last_modified_by: ''
+                    published_on: ''
+                    published_by: ''
+                    post_status: ''  # eg. underreview, publish, archive
+                    type: 'teaching-module'
+                    total_minutes: 0
+                    duration: 40
+                    minshrs: 'mins'
+                    term_ids: []
+                    content_pieces: [content_piece_id]
+                    training_date: ''
+
 
 
         # request handler to get all content groups
@@ -100,7 +121,9 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "schedule:content:group", (data)->
             API.scheduleContentGroup data
 
-
         App.reqres.setHandler "empty:content:modules:collection", ->
             API.getEmptyModulesCollection()
+
+        App.reqres.setHandler "create:dummy:content:module", (content_piece_id)->
+            API.getDummyModules content_piece_id
 

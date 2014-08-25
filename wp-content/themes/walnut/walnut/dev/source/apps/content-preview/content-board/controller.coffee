@@ -17,7 +17,13 @@ define ['app'
 
                 @listenTo @view, "add:new:element", (container, type)->
                     App.request "add:new:element", container, type
-
+                    
+                @listenTo @view, "close", => 
+                    audioEls = @view.$el.find '.audio'
+                    _.each audioEls,(el, ind)->
+                        $(el).find '.pause'
+                        .trigger 'click'
+                        
                 @listenTo @view, 'dependencies:fetched', =>
                     @startFillingElements()          
 
@@ -67,7 +73,7 @@ define ['app'
             API =
             # add a new element to the builder region
                 addNewElement : (container, type, modelData)=>
-                    #console.log type
+                    console.log type
 
                     new ContentBoard.Element[type].Controller
                         container            : container

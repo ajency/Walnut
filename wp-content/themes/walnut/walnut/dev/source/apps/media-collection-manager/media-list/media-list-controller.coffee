@@ -7,7 +7,7 @@ define ['app'
         class MediaList.Controller extends RegionController
 
             initialize : (options)->
-                {@mediaCollection} = options
+                {@mediaCollection,@mediaType} = options
                 @view = @_getListView()
 
                 @listenTo @view, "itemview:remove:media", (iv, media)=>
@@ -26,6 +26,7 @@ define ['app'
             _getListView :->
                 new MediaList.Views.MediaListView
                     collection : @mediaCollection
+                    mediaType : @mediaType
 
             showSuccessMessage: =>
                 Marionette.triggerMethod.call @region, "show:order:updated:msg"

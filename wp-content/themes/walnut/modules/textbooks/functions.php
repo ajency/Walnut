@@ -156,8 +156,12 @@ function get_textbooks( $args = array() ) {
         if(isset($args['division']))
             $division = $args['division'];
 
-        foreach ($textbooks as $book)
-            $data[] = get_book( $book,$division,$user_id );
+        foreach ($textbooks as $book){
+            $book= get_book( $book,$division,$user_id );
+            if($book)
+                $data[]= $book;
+        }
+
 
     }
     $textbooks_data['data'] = $data;
@@ -204,6 +208,10 @@ function get_book( $book, $division=0,$user_id=0) {
     if (is_numeric( $book )) {
         $book_id = $book;
         $book_dets = get_term( $book, 'textbook' );
+
+        if(!$book_dets)
+            return false;
+
     } else if (is_numeric( $book->term_id )) {
         $book_id = $book->term_id;
         $book_dets = $book;
@@ -383,7 +391,8 @@ function get_textbooks_for_class( $classid ) {
         if (is_array( $textbook_ids )) {
             foreach ($textbook_ids as $book) {
                 $bookdets = get_book( $book->textbook_id );
-                $data[] = $bookdets;
+                if($bookdets)
+                    $data[] = $bookdets;
             }
         }
     }
@@ -391,16 +400,45 @@ function get_textbooks_for_class( $classid ) {
 }
 
 function get_assigned_textbooks( $user_id = '' ) {
-
+    
+    global $wpdb;
+    
     if ($user_id == '')
         $user_id = get_current_user_id();
+    
+    if(current_user_can('administrator') || current_user_can('school_admin'))
+        $txtbook_ids = get_terms(
+                'textbook', 
+                array(
+                    'hide_empty'=>false, 
+                    'fields'=>'ids')
+                );
+    
+    elseif(current_user_can('student')){
+        
+        $division_id = get_user_meta(get_current_user_id(), 'student_division',true);
+        $division = fetch_single_division($division_id);
+        
+        $class_id= $division['class_id'];
+        
+        $query= $wpdb->prepare(
+                "SELECT textbook_id from {$wpdb->base_prefix}textbook_relationships 
+                    WHERE class_id like %s",
+                '%"'.$class_id.'";%'
+                );
+                
+        $txtbook_ids= $wpdb->get_col($query);
+        
+    }
+    
+    else{
 
-    $txtbooks_assigned = get_user_meta( $user_id, 'textbooks', true );
+        $txtbooks_assigned = get_user_meta( $user_id, 'textbooks', true );
 
-    $txtbook_ids = maybe_unserialize( $txtbooks_assigned );
-
+        $txtbook_ids = maybe_unserialize( $txtbooks_assigned );
+    }
+    
     return $txtbook_ids;
-
 }
 
 /**
@@ -416,7 +454,8 @@ function get_textbooks_for_user( $user_id = '' ) {
     if (is_array( $txtbooks_assigned )) {
         foreach ($txtbooks_assigned as $book) {
             $bookdets = get_book( $book );
-            $data[] = $bookdets;
+            if($bookdets)
+                $data[] = $bookdets;
         }
     }
     return $data;

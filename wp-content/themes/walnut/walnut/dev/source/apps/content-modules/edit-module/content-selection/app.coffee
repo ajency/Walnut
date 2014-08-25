@@ -22,7 +22,7 @@ define ['app'
                         content_type: ['student_question']
                         post_status : 'publish'
 
-
+                @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
 
                 App.execute "when:fetched", [@contentPiecesCollection,@contentGroupCollection], =>
                     @contentPiecesCollection.remove model for model in @contentGroupCollection.models
@@ -56,6 +56,7 @@ define ['app'
                         App.execute "show:content:search:results:app",
                             region: @layout.searchResultsRegion
                             contentGroupCollection:@contentGroupCollection
+                            selectedFilterParamsObject: @selectedFilterParamsObject
                             groupType : @model.get('type')
 
                         if @model.get('type') is 'quiz'

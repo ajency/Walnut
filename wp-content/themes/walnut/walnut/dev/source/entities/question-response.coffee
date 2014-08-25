@@ -48,10 +48,17 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 questionResponse
 
+            getEmptyQuestionResponseCollection:->
+                responseCollection = new QuestionResponseCollection
+
 
         # request handler to get all responses
         App.reqres.setHandler "get:question:response:collection", (params) ->
             API.getAllQuestionResponses params
+
+
+        App.reqres.setHandler "get:empty:question:response:collection",  ->
+            API.getEmptyQuestionResponseCollection()
 
         App.reqres.setHandler "save:question:response", (qID)->
             API.saveQuestionResponse qID

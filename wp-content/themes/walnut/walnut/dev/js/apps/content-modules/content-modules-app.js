@@ -17,7 +17,8 @@ define(['app', 'apps/content-modules/edit-module/module-edit-controller', 'apps/
         'edit-module/:id': 'editModule',
         'module-list': 'modulesListing',
         'teachers/take-class/:classID/:div/textbook/:tID/module/:mID': 'takeClassSingleModule',
-        'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule'
+        'teachers/start-training/:classID/textbook/:tID/module/:mID': 'startTrainingSingleModule',
+        'dummy-module/:content_piece_id': 'showDummyModule'
       };
 
       return ContentModulesRouter;
@@ -128,6 +129,30 @@ define(['app', 'apps/content-modules/edit-module/module-edit-controller', 'apps/
           division: div,
           classID: classID
         });
+      },
+      showDummyModule: function(content_piece_id) {
+        this.contentPiece = App.request("get:content:piece:by:id", content_piece_id);
+        return App.execute("when:fetched", this.contentPiece, (function(_this) {
+          return function() {
+            var dummyGroupModel, questionsCollection;
+            questionsCollection = App.request("empty:content:pieces:collection");
+            questionsCollection.add(_this.contentPiece);
+            if (_this.contentPiece.get('content_type') !== 'student_question') {
+              dummyGroupModel = App.request("create:dummy:content:module", content_piece_id);
+              return App.execute("start:teacher:teaching:app", {
+                region: App.mainContentRegion,
+                division: 3,
+                contentPiece: _this.contentPiece,
+                questionResponseCollection: App.request("get:empty:question:response:collection"),
+                contentGroupModel: dummyGroupModel,
+                questionsCollection: questionsCollection,
+                classID: 2,
+                studentCollection: App.request("get:dummy:students"),
+                display_mode: 'class_mode'
+              });
+            }
+          };
+        })(this));
       }
     };
     return ContentModulesApp.on("start", function() {

@@ -20,6 +20,9 @@ define ['app'
 					# class name
 					className : 'element-wrapper'
 
+					modelEvents : 
+						'change:complete' : '_changeComplete'
+
 					# element events
 					events : 
 						'click .aj-imp-settings-btn' : (evt)->
@@ -48,10 +51,16 @@ define ['app'
 						.mouseout ()=>
 							@$el.removeClass 'hover-class'
 
+					_changeComplete : (model,complete)->
+						@setHiddenField 'complete', @model.get 'complete'
+
 					# set the hidden fields before rendering the element
 					onBeforeRenderElement:->
 						for field in ['meta_id', 'style', 'element']
 							@setHiddenField field, @model.get field
+
+						if @model.get('element') in ['Fib','Mcq','Sort','Hotspot','BigAnswer']
+							@$el.find('form').append "<input type='hidden' name='complete' value=#{@model.get('complete')} />"
 
 						@setDraggable @model.get 'draggable'
 

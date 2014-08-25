@@ -29,7 +29,7 @@ define ['app'
                 'change #msgs' : (e)->
                     @_showCustomMessages $(e.target)
 
-                'click .checkbox.perm' : 'checkboxSelected'
+                'click .checkbox.perm' : 'permissionSelected'
 
             modelEvents :
                 'change:post_status' : 'statusChanged'
@@ -44,7 +44,7 @@ define ['app'
 
                 data.isQuiz = true if data.type is 'quiz'
 
-                data.type = _.capitalize data.type
+                data.type = _.titleize _.humanize data.type
 
                 # add status values
 
@@ -71,8 +71,6 @@ define ['app'
 
             onShow : ->
                 Backbone.Syphon.deserialize @, @model.toJSON()
-                console.log @$el.find('#qType').val()
-                console.log @model.toJSON()
 
                 @$el.find('#qType').val @model.get 'quiz_type' if @model.get('type') is 'quiz'
 
@@ -174,7 +172,7 @@ define ['app'
                     @trigger "save:content:collection:details", data
 
             _toggleNegativeMarks : (el)->
-                    console.log $(el).val()
+
                     if $(el).val() is 'true'
                         @$el.find("#negPercent").removeClass("none").addClass "inline"
                     else
@@ -194,6 +192,9 @@ define ['app'
 
 
             _changeLayout : ->
+
+                contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
+
                 totalQuestions = 0
                 _.each @model.get('content_layout'),(content)=>
                     if content.type is 'content-piece'
@@ -203,6 +204,21 @@ define ['app'
                         totalQuestions += parseInt content.data.lvl2
                         totalQuestions += parseInt content.data.lvl3
                 @$el.find('#total-question-number').val totalQuestions
+
+                marks=0
+                time=0
+
+                contentGroupCollection.each (m)->
+                    if m.get('post_type') is 'content_set'
+                        marks+= parseInt m.get 'avg_marks'
+                        time += parseInt m.get 'avg_duration'
+
+                    else
+                        marks+= parseInt m.getMarks()
+                        time += parseInt m.get 'duration'
+
+                @$el.find('#total-marks').val marks
+                @$el.find('#total-time').val time
 
 
             onSavedContentGroup : (model) ->

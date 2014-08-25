@@ -1,5 +1,5 @@
 jQuery(document).ready ($)-> 
-    $('#add-new-site').next().find('table tbody').append('
+    $('#add-new-site').next().find('table tbody').append '
         <tr class="form-field form-required">
             <th scope="row">Additional Admins</th>
             <td><input name="blog_additional[admins]" type="text" 
@@ -44,13 +44,18 @@ jQuery(document).ready ($)->
         <tr class="form-field form-required">
                 <th scope="row">Individual Server Authentication</th>
                 <td><input name="blog_additional[server_authentication]" type="text" class="regular-text" title="Individual Server Authentication"/></td>
-        </tr>');
+        </tr>'
 
 
     $('.date-field').datepicker 
             dateFormat : 'dd-mm-yy'
 
-    $('#validto').focus -> 
+    $('#validfrom').change -> 
         mindate=$('#validfrom').val();
-        $('#validto').datepicker('option', 'minDate', mindate);
+        $('#validto').val ''
+        $('#validto').datepicker 'option', 'minDate', mindate
 
+    $('#add-site').closest 'form'
+    .submit (e)->
+        if($('#validfrom').val()=='') || ($('#validto').val()=='')
+            return false

@@ -23,6 +23,7 @@ jQuery(document).ready(function() {
             case 'teacher':
                 jQuery(this).closest('form').find('.visible-student').hide();
                 jQuery(this).closest('form').find('.visible-teacher').show();
+                jQuery(this).closest('form').find('.textbooks-list').show();
                 //jQuery(this).closest('form').find('#adduser-noconfirmation').prop('checked', false)
                 //jQuery(this).closest('form').find('#adduser-noconfirmation').prop('disabled', false);
                 //jQuery(this).closest('form').find('#noconfirmation').prop('checked', false);
@@ -31,6 +32,7 @@ jQuery(document).ready(function() {
             case 'student':
                 jQuery(this).closest('form').find('.visible-student').show();
                 jQuery(this).closest('form').find('.visible-teacher').hide();
+                jQuery(this).closest('form').find('.textbooks-list').hide();
                 //jQuery(this).closest('form').find('#adduser-noconfirmation').prop('checked', true)
                 //jQuery(this).closest('form').find('#adduser-noconfirmation').prop('disabled', true);
                 //jQuery(this).closest('form').find('#noconfirmation').prop('checked', true);
@@ -39,6 +41,7 @@ jQuery(document).ready(function() {
             default:
                 jQuery(this).closest('form').find('.visible-student').hide();
                 jQuery(this).closest('form').find('.visible-teacher').hide();
+                jQuery(this).closest('form').find('.textbooks-list').hide();
                 //jQuery(this).closest('form').find('#adduser-noconfirmation').prop('checked', false)
                 //jQuery(this).closest('form').find('#adduser-noconfirmation').prop('disabled', false);
                 //jQuery(this).closest('form').find('#noconfirmation').prop('checked', false);

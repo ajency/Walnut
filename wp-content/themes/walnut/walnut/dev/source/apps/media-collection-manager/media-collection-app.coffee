@@ -39,12 +39,14 @@ define ['app'
                     App.execute 'show:media:list',
                         region : @layout.mediaListRegion
                         mediaCollection : @mediaCollection
+                        mediaType : @mediaType
 
 
                 @show @layout
 
             _getLayout : ->
                 new OuterLayout
+                    mediaType : @mediaType
 
 
         class OuterLayout extends Marionette.Layout
@@ -54,16 +56,22 @@ define ['app'
                         </div>
                         <div class="col-sm-5">
                             <div id="slides-info">
-                                Click the button to select images to add to your slider. You can change the order of the images by dragging them up or down in the list to the left.
+                                Click the button to select {{mediaType}}s to add to your playlist. You can change the order of the {{mediaType}}s by dragging them up or down in the list to the left.
                             </div>
                             
                         </div>
                         </div>
                         <div class="aj-imp-block-button add-new-media pull-right">
-                            <button class="btn btn-default btn-hg"><span class="bicon icon-uniF10C"></span>&nbsp;&nbsp;Add Media</button>
+                            <button class="btn btn-default btn-hg"><span class="bicon icon-uniF10C"></span>&nbsp;&nbsp;Add {{mediaType}}</button>
                         </div>
                         <div class="clearfix"></div>
                         <div id="add-media-region"></div>'
+
+            mixinTemplateHelpers : (data)->
+                data = super data 
+                data.mediaType = Marionette.getOption @ , 'mediaType'
+
+                data
 
             regions:
                 mediaListRegion: '#media-list-region'
@@ -76,7 +84,7 @@ define ['app'
                     @trigger "show:add:new:media"
 
             dialogOptions:
-                modal_title: 'Media Collection Manager'
+                modal_title: 'Playlist Manager'
                 modal_size: 'wide-modal'
 
             onShowAddMedia :->

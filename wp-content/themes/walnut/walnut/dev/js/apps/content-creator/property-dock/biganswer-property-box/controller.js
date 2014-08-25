@@ -26,6 +26,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
 
       Controller.prototype.onClose = function() {
         console.log(this.model);
+        if (this.model.get('marks') > 0) {
+          this.model.set('complete', true);
+        } else {
+          this.model.set('complete', false);
+        }
         return this.model.save();
       };
 
