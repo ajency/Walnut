@@ -603,6 +603,9 @@ function get_sync_log_devices(){
 
 
 
+
+
+
 function cron_send_site_expiry_notification(){
     global $wpdb;
     
@@ -659,4 +662,7 @@ function send_user_notification_email($device_type,$blog_id,$device_meta,$days_r
     $subject = "Site Content Delete Notification";
     wp_mail($recipient, $subject, $msgcontent, $headers);
 }
+
+
+
 
